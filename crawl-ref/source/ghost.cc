@@ -653,59 +653,27 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
-void ghost_demon::init_spectral_weapon(const item_def& weapon,
-                                       int power, int wpn_skill)
+void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)
 {
-    int damg  = property(weapon, PWPN_DAMAGE);
+    int damg = property(weapon, PWPN_DAMAGE);
 
     if (power > 100)
         power = 100;
 
-    // skill is on a 10 scale
-    if (wpn_skill > 270)
-        wpn_skill = 270;
-
     colour = weapon.get_colour();
     flies = true;
 
-    // Hit dice (to hit) scales with weapon skill alone.
-    // Damage scales with weapon skill, but how well depends on spell power.
-    // Defenses scale with spell power alone.
-    // Appropriate investment is rewarded with a stronger spectral weapon.
-
-    xl = max(wpn_skill / 10, 1);
-
-    // At 0 power, weapon skill is 1/3 as effective as on the player
-    // At max power, weapon skill is as effective as on the player.
-    // Power has a linear effect between those endpoints.
-    // It's possible this ends up too strong,
-    // but 100 power on Hexes/Charms will take significant investment
-    // most players wouldn't otherwise get.
-    //
-    // Damage multiplier table:
-    //     |            weapon skill
-    // pow |   3       9       15      21      27
-    // --- |   -----   ----    ----    ----    ----
-    // 0   |   1.04    1.12    1.20    1.28    1.36
-    // 10  |   1.05    1.14    1.24    1.34    1.43
-    // 20  |   1.06    1.17    1.28    1.39    1.50
-    // 30  |   1.06    1.19    1.32    1.45    1.58
-    // 40  |   1.07    1.22    1.36    1.50    1.65
-    // 50  |   1.08    1.24    1.40    1.56    1.72
-    // 60  |   1.09    1.26    1.44    1.62    1.79
-    // 70  |   1.10    1.29    1.48    1.67    1.87
-    // 80  |   1.10    1.31    1.52    1.73    1.94
-    // 90  |   1.11    1.34    1.56    1.79    2.01
-    // 100 |   1.12    1.36    1.60    1.84    2.08
-    damage  = damg;
+    // Offense and defenses all scale with power.
+    xl        = 2 + div_rand_round(power, 4);
+    damage    = damg;
     int scale = 250 * 150 / (50 + power);
-    damage *= scale + wpn_skill;
-    damage /= scale;
+    damage   *= scale + 125;
+    damage   /= scale;
 
-    speed   = 30;
-    ev      = 10 + div_rand_round(power,10);
-    ac      = 2 + div_rand_round(power,10);
-    max_hp  = 10 + div_rand_round(power,3);
+    speed  = 30;
+    ev     = 10 + div_rand_round(power, 10);
+    ac     = 2 + div_rand_round(power, 10);
+    max_hp = 10 + div_rand_round(power, 3);
 }
 
 // Used when creating ghosts: goes through and finds spells for the

@@ -52,7 +52,7 @@ while (<INFILE>)
     }
 
     s|//.*||; # Strip comments
-    s/=.*//;  # Strip enum asignments
+    s/=.*//;  # Strip enum assignments
     s/\s//g;  # Strip whitespace
     s/,$//;   # Strip comma
 

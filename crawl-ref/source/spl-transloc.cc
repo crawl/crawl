@@ -528,38 +528,10 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
     }
     else
     {
+        if (player_in_branch(BRANCH_LABYRINTH) && teleportitis)
+            return false;
+
         coord_def newpos;
-
-        // If in a labyrinth, always teleport well away from the centre.
-        // (Check done for the straight line, no pathfinding involved.)
-        bool need_distance_check = false;
-        coord_def centre;
-        if (player_in_branch(BRANCH_LABYRINTH))
-        {
-            if (teleportitis)
-                return false;
-
-            bool success = false;
-            for (int xpos = 0; xpos < GXM; xpos++)
-            {
-                for (int ypos = 0; ypos < GYM; ypos++)
-                {
-                    centre = coord_def(xpos, ypos);
-                    if (!in_bounds(centre))
-                        continue;
-
-                    if (grd(centre) == DNGN_EXIT_LABYRINTH)
-                    {
-                        success = true;
-                        break;
-                    }
-                }
-                if (success)
-                    break;
-            }
-            need_distance_check = success;
-        }
-
         int tries = 500;
         do
         {
@@ -567,8 +539,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
-                   || need_distance_check && (newpos - centre).rdist()
-                                              <= 30
                    || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
 
         // Running out of tries shouldn't happen; no message. Return false so
@@ -1006,7 +976,7 @@ static void _attract_actor(const actor* agent, actor* victim,
     }
 }
 
-bool fatal_attraction(const coord_def& pos, actor *agent, int pow)
+bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 {
     bool affected = false;
     for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)

@@ -111,10 +111,8 @@ CFWARN_L := -Wall -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
-ifdef ANDROID
-LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
-else
-LDFLAGS := $(EXTERNAL_LDFLAGS)
+ifndef ANDROID
+LDFLAGS :=
 endif
 
 #
@@ -1054,7 +1052,7 @@ ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-l
   LDFLAGS += -fuse-ld=gold
 endif
 
-LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
+LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
 
 ifdef REPORT
 CFOTHERS += -ftime-report
@@ -1307,7 +1305,7 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
 #
 # In such cases, the dependency forces a rebuild of that file. If the
-# dependency file referred to a non-existant header, as determined by
+# dependency file referred to a non-existent header, as determined by
 # util/good-depfile, then replace it with a rule that forces a rebuild.
 # That rebuild will overwrite the stopgap .d file with a good one for
 # the next build.

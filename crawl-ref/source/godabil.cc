@@ -131,8 +131,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true,
                                        false);
+
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     item_def& wpn(you.inv[item_slot]);
     // Only TSO allows blessing ranged weapons.
@@ -653,7 +657,7 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @param quiet[in]     Whether to suppress messenging.
+ * @param quiet[in]     Whether to suppress messaging.
  * @return  -1 if the monster is already affected. The eligibility vector
  *          is unchanged.
  * @return  0 if the monster is otherwise ineligible for recite. The
@@ -1512,7 +1516,6 @@ bool trog_burn_spellbooks()
     {
         cloud_struct* cloud = cloud_at(*ri);
         int count = 0;
-        int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
             if (!item_is_spellbook(*si))
@@ -1542,11 +1545,6 @@ bool trog_burn_spellbooks()
             }
 
             totalpiety += 2;
-
-            // Rarity influences the duration of the pyre.
-            rarity += book_rarity(static_cast<book_type>(si->sub_type));
-
-            dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
             item_was_destroyed(*si);
             destroy_item(si.index());
@@ -1559,13 +1557,13 @@ bool trog_burn_spellbooks()
             {
                 // Reinforce the cloud.
                 mpr("The fire roars with new energy!");
-                const int extra_dur = count + random2(rarity / 2);
+                const int extra_dur = count + random2(6);
                 cloud->decay += extra_dur * 5;
                 cloud->set_whose(KC_YOU);
                 continue;
             }
 
-            const int duration = min(4 + count + random2(rarity/2), 23);
+            const int duration = min(4 + count + random2(6), 20);
             place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
             mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
@@ -5830,7 +5828,7 @@ void ru_offer_new_sacrifices()
         }
 
         // add it to the list of chosen sacrifices to offer, and remove it from
-        // the list of possiblities for the later sacrifices
+        // the list of possibilities for the later sacrifices
         available_sacrifices.push_back(chosen_sacrifice);
         you.sacrifice_piety[chosen_sacrifice] =
                                 get_sacrifice_piety(chosen_sacrifice, false);

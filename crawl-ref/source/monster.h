@@ -19,6 +19,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
 
+#define DROPPER_MID_KEY "dropper_mid"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -341,7 +343,8 @@ public:
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
     bool polymorph(int pow) override;
-    void banish(actor *agent, const string &who = "", const int power = 0) override;
+    void banish(actor *agent, const string &who = "", const int power = 0,
+                bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;
 

@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-780-gd1db97e)
+Stone Soup 0.18 (up to 0.18-a0-1126-ga2d7f46)
 --------------------------------------------
 
 Highlights
@@ -7,8 +7,6 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The enemies in the Elven Halls ending vault are now less likely to be lured
-  out of the vault.
 * Ziggurat portals no longer appear in Pan.
 * The Orcish Mines are now two levels, and only spawn plain orcs as part of
   bands; gold generation is doubled to account for the shorter branch.
@@ -26,6 +24,9 @@ Character
   two floors.
 * Breath abilities are no longer mutations and are now unique to draconians
   and nagas.
+* Weapon types no longer have distinct strength weights. Instead of dex and str
+  both giving varying bonuses to damage, str now solely gives a bonus to-dam,
+  and dex now solely gives a bonus to accuracy.
 
 Gods
 ----
@@ -61,24 +62,34 @@ Gods
 * Followers of Elyvilon can pacify insects (again).
 * Zin's Recite is now only interrupted if the player is silenced or
   incapacitated (or goes berserk).
+* Gozag's Call Merchant now bases the shop quality on the player's level
+  rather than on their location.
 
 Items
 -----
 * New items:
   - The amulet of dismissal, which has a chance of teleporting away enemies
-    that attack you in melee combat, though subjects the player to a few turns
-    of vertigo (lowered accuracy, EV, and spell success) when first worn.
+    that damage the player, but causes a few turns of vertigo (lowered
+    accuracy, EV, and spell success) when first worn.
   - The amulet of reflection, which grants a few points of shielding that
     act as a shield of reflection.
-  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
-    executioner's axe with a chance of placing freezing clouds on enemies it
-    strikes.
-  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
-    plate mail.
+  - The amulet of harm, which increases damage dealt to and by the wearer by
+    25%.
+  - The amulet of magic regeneration, which increases the player MP regen rate
+    after a warmup period.
+  - The ring of resist corrosion, which has the same effect as the former
+    amulet.
   - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
     Zig:27 of all ziggurats and in the Tomb:3 loot.
   - Pieces from Xom's chessboard - evoke to randomly swap the positions of
     you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+  - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit
+    of plate mail.
+  - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
+    reflection of piercing effects and enchantments, among other things.
 * The robe of vines is now +2, Regen+7.
 * The Majin-Bo now speaks occasionally.
 * The amulet of Cekugob is now an amulet of dismissal.
@@ -89,8 +100,14 @@ Items
 * A new property can now generate on random artefacts: Fragile, which destroys
   the item when it is removed.
 * Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Potions of ambrosia now bypass clarity.
+* The evocable teleport property +Tele is removed. Rings of teleportation now
+  only have the *Tele teleportitis effect.
+* Potions of cure mutation are slightly more common.
 * Removed items:
-  - Amulets of resist mutation, stasis, and warding.
+  - Amulets of resist mutation, stasis, warding, and corrosion.
+  - Ring of invisibility.
+  - Potions of degeneration.
 
 Monsters
 --------
@@ -99,25 +116,18 @@ Monsters
     Spider and in packs in Depths.
   - Iron giants, with all the resilience that iron implies and the ability to
     throw you into the pack of giants they lead.
-  - Doom hounds, demonic canines lurking in Tartarus who can howl to summon a
-    pack of their brethren.
+  - Doom hounds, demonic canines lurking in Tartarus who can howl once to
+    create a pack of nasty creatures.
   - Deep elf archers, who have attained a notable level of skill in both
     archery and hexes.
   - Deep elf elementalists, with mastery of all of the elemental schools and
     the noted ability to turn rock into earth elementals to dig out entrenched
     foes.
-* All enemies, including uniques, now have (at least slightly) randomised HP.
 * Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
   ability which applies (usually) positive status effects to allies in its
   line of sight.
 * Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
-* Juggernauts now have two less damaging attacks instead of one powerful
-  attack.
-* Jellies and death oozes cannot be blinded.
-* Jumping spiders and mana vipers can be blinded.
-* Jumping spiders cannot see invisible.
-* Giant eyeballs and golden eyes can now see invisible.
 * Salamander stormcallers' chant does not need to be continuous; they now
   only need to try to cast Fire Storm at their target three times for it to
   trigger.
@@ -130,11 +140,25 @@ Monsters
 * Salamander mystics lose Localised Ignite Poison.
 * Natasha, deep elf knights, and salamander stormcallers can no longer cast
   Conjure Flame.
-* Spectral mist can no longer summon completely random spectral enemies.
 * Banishment from powerful monsters can now send you deeper into the Abyss
   than Abyss:1.
 * Deep elf mages are now HD 9 and have new spell sets, including spells
   previously cast by deep elf conjurers and summoners.
+* The Sap Magic effect from demonspawn warmongers now has three fixed levels of
+  success rate penalty, rather than scaling continuously. Each spell cast while
+  under the Sap effect has a fixed chance to increase the penalty level. The
+  penalty now expires when the "Sap" status expires.
+* Demonspawn corruptors' Corrupt Body spell is now a single-target version of
+  the same spell used by wretched stars. These spells both now try to apply
+  multiple levels of a single random temporary mutation instead of giving many
+  different kinds.
+* Ancient champions and death knights no longer have the Haunt spell.
+* Swamp worms are now amphibious and generate submerged, emerging to attack the
+  player and never resubmerging.
+* Deep elf high priests now have an Aura of Brilliance spell that affects all
+  allies in their view, making them cast spells more frequently and with more
+  spell power.
+* Natasha no longer becomes weaker upon revival.
 * Removed monsters:
   - Octopode crushers.
   - (Plain) spiders.
@@ -142,6 +166,7 @@ Monsters
   - Blue devils.
   - Brain worms.
   - Deep elf fighters, conjurers, priests, and summoners.
+  - Trapdoor spiders.
 
 Spells
 ------
@@ -149,6 +174,15 @@ Spells
   all cancellable effects on the target and, if any were dispelled, causes
   a damaging explosion of mutagenic energy around the victim.
 * Hydra Form now has a fixed number of heads.
+* The Infusion spell has a lower power cap, scaling more quickly to the same
+  damage bonus as before.
+* Spectral Weapon now bases the strength of the summoned weapon on spell power
+  instead of weapon skill.
+* Alistair's Intoxication is now level 5 and gives Vertigo status instead of
+  confusing the player or draining Int, and can sometimes affect rPois
+  monsters.
+* Monstrous Menagerie is now level 7.
+* Shadow creatures is now level 6.
 
 Interface
 ---------

@@ -1217,8 +1217,8 @@ void update_regen_amulet_attunement()
         you.props[REGEN_AMULET_ACTIVE] = 0;
 }
 
-// Amulet of mana regeneration needs to be worn while at full mana before it begins
-// to function.
+// Amulet of magic regeneration needs to be worn while at full magic before it
+// begins to function.
 void update_mana_regen_amulet_attunement()
 {
     if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
@@ -1229,7 +1229,7 @@ void update_mana_regen_amulet_attunement()
         {
             you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
             mpr("Your amulet attunes itself to your body and you begin to "
-                "regenerate mana more quickly.");
+                "regenerate magic more quickly.");
         }
     }
     else
@@ -2481,6 +2481,17 @@ int player_shield_class()
 int player_displayed_shield_class()
 {
     return player_shield_class() / 2;
+}
+
+/**
+ * Does the player have 'omnireflection' (the ability to reflect piercing
+ * effects and enchantments)?
+ *
+ * @return      Whether the player has the Warlock's Mirror equipped.
+ */
+bool player_omnireflects()
+{
+    return player_equip_unrand(UNRAND_WARLOCK_MIRROR);
 }
 
 /**
@@ -4354,21 +4365,30 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
 }
 
-bool confuse_player(int amount, bool quiet)
+/**
+ * Increase the player's confusion duration.
+ *
+ * @param amount   The number of turns to increase confusion duration by.
+ * @param quiet    Whether to suppress messaging on success/failure.
+ * @param force    Whether to ignore resistance (used only for intentional
+ *                 self-confusion, e.g. via ambrosia).
+ * @return         Whether confusion was successful.
+ */
+bool confuse_player(int amount, bool quiet, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (amount <= 0)
         return false;
 
-    if (you.clarity())
+    if (!force && you.clarity())
     {
         if (!quiet)
             mpr("You feel momentarily confused.");
         return false;
     }
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (!force && you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         if (!quiet)
             mpr("Your divine stamina protects you from confusion!");
@@ -5630,7 +5650,8 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(actor* /*agent*/, const string &who, const int power)
+void player::banish(actor* /*agent*/, const string &who, const int power,
+                    bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -5639,6 +5660,13 @@ void player::banish(actor* /*agent*/, const string &who, const int power)
     if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
         mpr("You resist the pull of the Abyss.");
+        return;
+    }
+
+    if (!force && player_in_branch(BRANCH_ABYSS)
+        && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    {
+        mpr("You wobble for a moment.");
         return;
     }
 
@@ -5793,7 +5821,7 @@ void player::ablate_deflection()
 }
 
 /**
- * What's the base value of the penalties the player recieves from their
+ * What's the base value of the penalties the player receives from their
  * body armour?
  *
  * Used as the base for adjusted armour penalty calculations, as well as for

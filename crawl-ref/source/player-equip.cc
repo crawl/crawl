@@ -745,7 +745,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
-                // effect in brand weapon scroll effect in read_scoll.
+                // effect in brand weapon scroll effect in read_scroll.
             }
 
             if (you.duration[DUR_WEAPON_BRAND])
@@ -1115,8 +1115,7 @@ static void _remove_amulet_of_harm()
 
 static void _equip_amulet_of_dismissal()
 {
-    mprf(MSGCH_DURATION, "The world spins around you as a field of "
-            "translocational energy flows through you!");
+    mprf(MSGCH_WARN, "The world spins around you!");
     you.increase_duration(DUR_VERTIGO, random2(4) + 3);
     you.redraw_evasion = true;
 }

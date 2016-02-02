@@ -468,30 +468,10 @@ public:
         static PotionAmbrosia inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        if (you.duration[DUR_DIVINE_STAMINA])
-        {
-            if (reason)
-            {
-                *reason = "Your divine stamina would prevent the potion's "
-                    "effects.";
-            }
-            return false;
-        }
-        else if (you.clarity())
-        {
-            if (reason)
-                *reason = "Your clarity would prevent the potion's effects.";
-            return false;
-        }
-        return true;
-    }
-
     bool effect(bool=true, int=40, bool=true) const override
     {
         const int ambrosia_turns = 3 + random2(8);
-        if (confuse_player(ambrosia_turns))
+        if (confuse_player(ambrosia_turns, false, true))
         {
             mprf("You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
@@ -661,7 +641,6 @@ public:
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
             mpr("You feel slightly irritated.");
-            make_hungry(100, false);
             return false;
         }
 
@@ -871,31 +850,6 @@ public:
     {
         mprf(MSGCH_DURATION, "You feel protected.");
         you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
-        return true;
-    }
-};
-
-class PotionDegeneration : public PotionEffect
-{
-private:
-    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
-public:
-    static const PotionDegeneration &instance()
-    {
-        static PotionDegeneration inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (effect())
-            xom_is_stimulated( 50 / _xom_factor(was_known));
         return true;
     }
 };
@@ -1218,6 +1172,31 @@ public:
         return nothing_happens;
     }
 };
+
+class PotionDegeneration : public PotionEffect
+{
+private:
+    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
+public:
+    static const PotionDegeneration &instance()
+    {
+        static PotionDegeneration inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        mpr("There was something very wrong with that liquid.");
+        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (effect())
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
+    }
+};
 #endif
 
 // placeholder 'buggy' potion
@@ -1261,9 +1240,7 @@ static const PotionEffect* potion_effects[] =
     &PotionInvisibility::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionPorridge::instance(),
-#endif
     &PotionDegeneration::instance(),
-#if TAG_MAJOR_VERSION == 34
     &PotionDecay::instance(),
     &PotionWater::instance(),
 #endif

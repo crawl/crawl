@@ -820,7 +820,7 @@ amulet of inaccuracy
 
 <amulet>
 %%%%
-amulet of mana regeneration
+amulet of magic regeneration
 
 <amulet>
 %%%%
@@ -1411,17 +1411,17 @@ giga bat
 glaive
 
 “To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lenghts, you
+Partiſan or Gleue, or ſuch like weapons of vantage and perfect lengths, you
 ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
 left hãd, reaching with your right hand your ſtaffe as high as you can, and
 then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thrust and ward, & that is the iuſt
+fight, wherein you may conueniently ſtrike, thruſt and ward, & that is the iuſt
 length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foor long, and will fit, although not
+commonly fall out to be eight or nine foot long, and will fit, although not
 iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
 fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
 to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmost hand doth no harme.”
+ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
 %%%%
 gnoll
@@ -3208,10 +3208,6 @@ summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.
 %%%%
-wand of cold
-
-<wand>
-%%%%
 wand of confusion
 
 <wand>
@@ -3232,10 +3228,6 @@ wand of enslavement
 
 <Enslavement spell>
 %%%%
-wand of fire
-
-<wand>
-%%%%
 wand of fireball
 
 <wand>
@@ -3244,23 +3236,11 @@ wand of flame
 
 <wand>
 %%%%
-wand of frost
-
-<wand>
-%%%%
 wand of hasting
 
 <wand>
 %%%%
-wand of invisibility
-
-<wand>
-%%%%
 wand of lightning
-
-<wand>
-%%%%
-wand of magic darts
 
 <wand>
 %%%%

@@ -1150,7 +1150,11 @@ void SkillMenu::init_switches()
     m_switches[SKM_SHOW] = sw;
     sw->add(SKM_SHOW_DEFAULT);
     if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+    {
         sw->add(SKM_SHOW_ALL);
+        if (Options.default_show_all_skills)
+            sw->set_state(SKM_SHOW_ALL);
+    }
     sw->update();
     sw->set_id(SKM_SHOW);
     add_item(sw, sw->size(), m_pos);

@@ -591,24 +591,18 @@ void debug_stethoscope(int mon)
 
     ostringstream inv;
     bool found_item = false;
-    for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+    for (mon_inv_iterator ii(mons); ii; ++ii)
     {
-        if (mons.inv[k] != NON_ITEM)
-        {
-            if (found_item)
-                inv << ", ";
+        if (found_item)
+            inv << ", ";
 
-            found_item = true;
+        found_item = true;
 
-            inv << k << ": ";
+        inv << ii.slot() << ": ";
 
-            if (mons.inv[k] >= MAX_ITEMS)
-                inv << " buggy item";
-            else
-                inv << item_base_name(mitm[mons.inv[k]]);
+        inv << item_base_name(*ii);
 
-            inv << " (" << static_cast<int>(mons.inv[k]) << ")";
-        }
+        inv << " (" << static_cast<int>(ii->index()) << ")";
     }
     if (found_item)
         mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
@@ -813,6 +807,7 @@ static void _move_monster(const coord_def& where, int idx1)
     direction_chooser_args args;
     args.needs_path = false;
     args.top_prompt = "Move monster to where?";
+    args.default_place = where;
     direction(moves, args);
 
     if (!moves.isValid || !in_bounds(moves.target))

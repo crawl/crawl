@@ -1244,7 +1244,7 @@ string scorefile_entry::short_kill_message() const
  *
  * @param[in,out] str   The string to modify.
  * @param[in]     infix The infix to remove.
- * @post If \c infix occured as a substring of <tt>str</tt>, \c str is updated
+ * @post If \c infix occurred as a substring of <tt>str</tt>, \c str is updated
  *       by removing all characters up to and including the last character
  *       of the the first occurrence. Otherwise, \c str is unchanged.
  * @return \c true if \c str was modified, \c false otherwise.

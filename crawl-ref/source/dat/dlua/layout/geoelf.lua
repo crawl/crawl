@@ -338,7 +338,7 @@ end
 -- Purpose: This function generates the layout from the rooms
 --          and possible corridors that have been specified.
 -- Parameter(s):
---  -> e: A reference to the gobal enviroment. Pass in _G.
+--  -> e: A reference to the global environment. Pass in _G.
 --  -> room_data: The array of room information
 --  -> corridor_data: The array of corridor information
 --  -> extra_fraction: The fraction of the extra corridors to

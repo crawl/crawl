@@ -484,7 +484,7 @@ function coven_setup(e)
   e.kitem("a = any book good_item ident:all")
   e.kitem("b = amulet of faith randart not_cursed ident:all /\
           amulet of guardian spirit randart not_cursed ident:all /\
-          amulet of mana regeneration randart not_cursed ident:all /\
+          amulet of magic regeneration randart not_cursed ident:all /\
           amulet of rage randart not_cursed ident:all /\
           amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\

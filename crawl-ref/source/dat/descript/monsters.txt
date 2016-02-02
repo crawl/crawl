@@ -2828,7 +2828,7 @@ Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
 dimme
 
-A terrible demon, or perhaps a demigodess, with powers over death, disease,
+A terrible demon, or perhaps a demigoddess, with powers over death, disease,
 and suffering. Its presence is horrifying, but supernaturally compelling.
 %%%%
 drunken dwarf

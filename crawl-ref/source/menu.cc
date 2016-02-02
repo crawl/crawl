@@ -1542,30 +1542,43 @@ void Menu::webtiles_set_suffix(const formatted_string suffix)
     }
 }
 
-void Menu::webtiles_update_item(int index) const
+void Menu::webtiles_update_items(int start, int end) const
 {
+    ASSERT_RANGE(start, 0, (int) items.size());
+    ASSERT_RANGE(end, start, (int) items.size());
+
     tiles.json_open_object();
 
     tiles.json_write_string("msg", "update_menu_items");
-    tiles.json_write_int("chunk_start", index);
+    tiles.json_write_int("chunk_start", start);
 
     tiles.json_open_array("items");
-    tiles.json_open_object();
 
-    const MenuEntry* me = items[index];
-    if (me->selected_qty)
-        tiles.json_write_int("sq", me->selected_qty);
-    tiles.json_write_string("text", me->get_text());
-    int col = item_colour(index, me);
-    if (col != MENU_ITEM_STOCK_COLOUR)
-        tiles.json_write_int("colour", col);
-    webtiles_write_tiles(*me);
+    for (int i = start; i <= end; ++i)
+    {
+        tiles.json_open_object();
+        const MenuEntry* me = items[i];
+        if (me->selected_qty)
+            tiles.json_write_int("sq", me->selected_qty);
+        tiles.json_write_string("text", me->get_text());
+        int col = item_colour(i, me);
+        // previous colour field is deleted by client if new one not sent
+        if (col != MENU_ITEM_STOCK_COLOUR)
+            tiles.json_write_int("colour", col);
+        webtiles_write_tiles(*me);
+        tiles.json_close_object();
+    }
 
-    tiles.json_close_object();
     tiles.json_close_array();
 
     tiles.json_close_object();
     tiles.finish_message();
+}
+
+
+void Menu::webtiles_update_item(int index) const
+{
+    webtiles_update_items(index, index);
 }
 
 void Menu::webtiles_update_title() const
@@ -2060,7 +2073,7 @@ bool formatted_scroller::process_key(int keyin)
     case CK_MOUSE_CMD:
     CASE_ESCAPE
         return false;
-    case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
+    case ' ': case '+': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
     case CK_MOUSE_CLICK:
         repaint = page_down();
@@ -2131,8 +2144,7 @@ int ToggleableMenu::pre_process(int key)
         draw_menu();
 
 #ifdef USE_TILE_WEB
-        for (unsigned int i = 0; i < items.size(); ++i)
-            webtiles_update_item(i);
+        webtiles_update_items(0, items.size() - 1);
 #endif
 
         if (flags & MF_TOGGLE_ACTION)

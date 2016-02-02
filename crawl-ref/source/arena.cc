@@ -1121,18 +1121,13 @@ void arena_placed_monster(monster* mons)
                                              : "enters the arena");
 #endif
 
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        short it = mons->inv[i];
-        if (it != NON_ITEM)
-        {
-            item_def &item(mitm[it]);
-            item.flags |= ISFLAG_IDENT_MASK;
+        ii->flags |= ISFLAG_IDENT_MASK;
 
-            // Set the "drop" time here in case the monster drops the
-            // item without dying, like being polymorphed.
-            arena::item_drop_times[it] = arena::turns;
-        }
+        // Set the "drop" time here in case the monster drops the
+        // item without dying, like being polymorphed.
+        arena::item_drop_times[ii->index()] = arena::turns;
     }
 
     if (arena::name_monsters && !mons->is_named())
@@ -1144,12 +1139,8 @@ void arena_placed_monster(monster* mons)
         if (arena::real_summons)
         {
             mons->del_ench(ENCH_ABJ, true, false);
-            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            {
-                short it = mons->inv[i];
-                if (it != NON_ITEM)
-                    mitm[it].flags &= ~ISFLAG_SUMMONED;
-            }
+            for (mon_inv_iterator ii(*mons); ii; ++ii)
+                ii->flags &= ~ISFLAG_SUMMONED;
         }
 
         if (arena::move_summons)
@@ -1262,16 +1253,12 @@ void arena_monster_died(monster* mons, killer_type killer,
     if (mons->flags & MF_HARD_RESET)
         return;
 
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        int idx = mons->inv[i];
-        if (idx == NON_ITEM)
+        if (ii->flags & ISFLAG_SUMMONED)
             continue;
 
-        if (mitm[idx].flags & ISFLAG_SUMMONED)
-            continue;
-
-        arena::item_drop_times[idx] = arena::turns;
+        arena::item_drop_times[ii->index()] = arena::turns;
     }
 }
 

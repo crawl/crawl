@@ -989,7 +989,7 @@ static bool _handle_scroll(monster& mons)
 
     case SCR_BLINKING:
         if ((mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
-            && mons_near(&mons) && !mons.no_tele(true, false))
+            && mons.can_see(you) && !mons.no_tele(true, false))
         {
             simple_monster_message(&mons, " reads a scroll.");
             read = true;
@@ -1001,7 +1001,7 @@ static bool _handle_scroll(monster& mons)
         break;
 
     case SCR_SUMMONING:
-        if (mons_near(&mons))
+        if (mons.can_see(you))
         {
             simple_monster_message(&mons, " reads a scroll.");
             mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
@@ -1052,6 +1052,9 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
 
 static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 {
+    if (item_type_removed(wand.base_type, wand.sub_type))
+        return false;
+
     //XXX: Why aren't these allowed?
     if (wand.sub_type == WAND_FIREBALL
         || wand.sub_type == WAND_RANDOM_EFFECTS)
@@ -1180,7 +1183,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     item_def* rod = mons.mslot_item(MSLOT_WEAPON);
     // FIXME: monsters should be able to use rods
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
@@ -1191,7 +1194,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
         return false;
     }
 
-    // was the player visible when we started?
+    // was the monster visible when we started?
     bool was_visible = you.can_see(mons);
 
     spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
@@ -1299,7 +1302,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
@@ -1358,18 +1361,6 @@ static bool _handle_wand(monster& mons, bolt &beem)
 
     case WAND_HEAL_WOUNDS:
         if (mons.hit_points <= mons.max_hit_points / 2)
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_INVISIBILITY:
-        if (!mons.has_ench(ENCH_INVIS)
-            && !mons.has_ench(ENCH_SUBMERGED)
-            && !mons.glows_naturally()
-            && (!mons.friendly() || you.can_see_invisible(false)))
         {
             beem.target = mons.pos();
             niceWand = true;
@@ -1447,7 +1438,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     const bool liquefied = mons->liquefied_ground();
 
     // Don't allow offscreen throwing for now.
-    if (mons->foe == MHITYOU && !mons_near(mons))
+    if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
         return false;
 
     // Monsters won't shoot in melee range, largely for balance reasons.
@@ -1939,7 +1930,7 @@ void handle_monster_move(monster* mons)
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
         && in_good_standing(GOD_GOZAG)
-        && mons_near(mons)
+        && you.see_cell(mons->pos())
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
@@ -1992,24 +1983,10 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (igrd(mons->pos()) != NON_ITEM
-        && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
-            || mons_eats_items(mons)))
+    if (_handle_pickup(mons))
     {
-        // Keep neutral, charmed, summoned, and friendly monsters from
-        // picking up stuff.
-        if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-             && !mons->has_ench(ENCH_HEXED)
-             || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
-            && !mons->is_summoned() && !mons->is_perm_summoned()
-            && !mons->friendly())
-        {
-            if (_handle_pickup(mons))
-            {
-                DEBUG_ENERGY_USE("handle_pickup()");
-                return;
-            }
-        }
+        DEBUG_ENERGY_USE("handle_pickup()");
+        return;
     }
 
     // Lurking monsters only stop lurking if their target is right
@@ -2391,11 +2368,12 @@ void monster::struggle_against_net()
 
             if (coinflip())
             {
-                if (mons_near(this) && !visible_to(&you))
-                    mpr("Something you can't see is thrashing in a web.");
-                else
+                if (you.see_cell(pos()))
                 {
-                    simple_monster_message(this,
+                    if (!visible_to(&you))
+                        mpr("Something you can't see is thrashing in a web.");
+                    else
+                        simple_monster_message(this,
                                            " struggles to get unstuck from the web.");
                 }
                 return;
@@ -2414,10 +2392,13 @@ void monster::struggle_against_net()
     if (mon_size < random2(SIZE_BIG)  // BIG = 5
         && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
     {
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles to escape the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles to escape the net.");
+        }
 
         // Confused monsters have trouble finding the exit.
         if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
@@ -2432,10 +2413,13 @@ void monster::struggle_against_net()
     else // Large (and above) monsters always thrash the net and destroy it
     {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
 
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles against the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles against the net.");
+        }
 
         // Confused monsters more likely to struggle without result.
         if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
@@ -2487,7 +2471,7 @@ void monster::struggle_against_net()
 
         if (mitm[net].net_durability < -7)
         {
-            if (mons_near(this))
+            if (you.see_cell(pos()))
             {
                 if (visible_to(&you))
                 {
@@ -2816,7 +2800,7 @@ static bool _jelly_divide(monster& parent)
 }
 
 // XXX: This function assumes that only jellies eat items.
-static bool _monster_eat_item(monster* mons, bool nearby)
+static bool _monster_eat_item(monster* mons)
 {
     if (!mons_eats_items(mons))
         return false;
@@ -2868,7 +2852,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 nearby ? "" : " distant");
+                 you.see_cell(mons->pos()) ? "" : " distant");
             shown_msg = true;
         }
 
@@ -2911,8 +2895,13 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
 static bool _handle_pickup(monster* mons)
 {
-    if (mons->asleep() || mons->submerged())
+    if (igrd(mons->pos()) == NON_ITEM
+        // Summoned monsters never pick anything up.
+        || mons->is_summoned() || mons->is_perm_summoned()
+        || mons->asleep() || mons->submerged())
+    {
         return false;
+    }
 
     // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
@@ -2922,33 +2911,32 @@ static bool _handle_pickup(monster* mons)
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->airborne())
         return false;
 
-    const bool nearby = mons_near(mons);
     int count_pickup = 0;
 
-    if (mons_eats_items(mons) && _monster_eat_item(mons, nearby))
+    if (mons_eats_items(mons) && _monster_eat_item(mons))
         return false;
 
-    if (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR)
+    if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
+        return false;
+
+    // Note: Monsters only look at stuff near the top of stacks.
+    //
+    // XXX: Need to put in something so that monster picks up
+    // multiple items (e.g. ammunition) identical to those it's
+    // carrying.
+    //
+    // Monsters may now pick up up to two items in the same turn.
+    // (jpeg)
+    for (stack_iterator si(mons->pos()); si; ++si)
     {
-        // Note: Monsters only look at stuff near the top of stacks.
-        //
-        // XXX: Need to put in something so that monster picks up
-        // multiple items (e.g. ammunition) identical to those it's
-        // carrying.
-        //
-        // Monsters may now pick up up to two items in the same turn.
-        // (jpeg)
-        for (stack_iterator si(mons->pos()); si; ++si)
-        {
-            if (si->flags & ISFLAG_NO_PICKUP)
-                continue;
+        if (si->flags & ISFLAG_NO_PICKUP)
+            continue;
 
-            if (mons->pickup_item(*si, nearby, false))
-                count_pickup++;
+        if (mons->pickup_item(*si, you.see_cell(mons->pos()), false))
+            count_pickup++;
 
-            if (count_pickup > 1 || coinflip())
-                break;
-        }
+        if (count_pickup > 1 || coinflip())
+            break;
     }
 
     return count_pickup > 0;
@@ -3435,7 +3423,7 @@ static void _jelly_grows(monster& mons)
     if (player_can_hear(mons.pos()))
     {
         mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-             mons_near(&mons) ? "" : " distant");
+             you.see_cell(mons.pos()) ? "" : " distant");
     }
 
     const int avg_hp = mons_avg_hp(mons.type);

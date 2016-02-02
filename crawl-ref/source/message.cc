@@ -95,7 +95,7 @@ struct message_particle
      */
     bool needs_semicolon() const
     {
-        return repeats <= 1 && !_ends_in_punctuation(pure_text());
+        return repeats > 1 || !_ends_in_punctuation(pure_text());
     }
 };
 
@@ -1776,7 +1776,7 @@ bool simple_monster_message(const monster* mons, const char *event,
                             int param,
                             description_level_type descrip)
 {
-    if (mons_near(mons)
+    if (you.see_cell(mons->pos())
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || mons->visible_to(&you)))
     {

@@ -117,6 +117,12 @@ bool bolt::is_blockable() const
            && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
 }
 
+/// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
+bool bolt::is_omnireflectable() const
+{
+    return !is_explosion && flavour != BEAM_VISUAL;
+}
+
 void bolt::emit_message(const char* m)
 {
     const string message = m;
@@ -909,7 +915,6 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
         if (see)
         {
             msg = (feature_description_at(p, false, DESC_THE, false)
@@ -995,7 +1000,6 @@ void bolt::destroy_wall_effect()
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
     {
         set<coord_def> doors;
         find_connected_identical(pos(), doors);
@@ -1739,7 +1743,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
-    if (pbolt.affects_items && doFlavouredEffects)
+    if (doFlavouredEffects)
     {
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.pierce)       ? 3
@@ -2616,19 +2620,19 @@ void bolt::affect_endpoint()
         break;
 
     case SPELL_BLINKBOLT:
-        if (!agent() || !agent()->alive())
+    {
+        actor *act = agent(true); // use orig actor even when reflected
+        if (!act || !act->alive())
             return;
 
         for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
              citr != path_taken.rend(); ++citr)
         {
-            if (agent()->is_habitable(*citr) &&
-                agent()->blink_to(*citr, false))
-            {
+            if (act->is_habitable(*citr) && act->blink_to(*citr, false))
                 return;
-            }
         }
         return;
+    }
 
     case SPELL_SEARING_BREATH:
         if (!path_taken.empty())
@@ -3285,16 +3289,13 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if (is_enchantment())
-        return false;
-
     const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_explosion || aimed_at_feet || auto_hit)
     {
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
-        if (flavour != BEAM_VISUAL)
+        if (flavour != BEAM_VISUAL && !is_enchantment())
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         return false;
     }
@@ -3320,21 +3321,33 @@ bool bolt::misses_player()
 
     bool train_shields_more = false;
 
-    if (is_blockable()
+    if ((player_omnireflects() && is_omnireflectable()
+         || is_blockable())
         && you.shielded()
         && !aimed_at_feet
         && player_shield_class() > 0)
     {
         // We use the original to-hit here.
+        // (so that effects increasing dodge chance don't increase block...?)
         const int testhit = random2(hit * 130 / 100
                                     + you.shield_block_penalty());
 
         const int block = you.shield_bonus();
 
+        // 50% chance of blocking ench-type effects at 20 displayed sh
+        const bool omnireflected
+            = hit == AUTOMATIC_HIT
+              && x_chance_in_y(player_shield_class(),
+                               player_shield_class() + 40);
+
         dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
-        if (testhit < block)
+        if (testhit < block || omnireflected)
         {
             bool penet = false;
+
+            const string refl_name = name.empty() && origin_spell ?
+                                     spell_title(origin_spell) :
+                                     name;
 
             const item_def *shield = you.shield();
             if (is_reflectable(you))
@@ -3343,12 +3356,12 @@ bool bolt::misses_player()
                 {
                     mprf("Your %s reflects the %s!",
                             shield->name(DESC_PLAIN).c_str(),
-                            name.c_str());
+                            refl_name.c_str());
                 }
                 else
                 {
                     mprf("The %s reflects off an invisible shield around you!",
-                            name.c_str());
+                            refl_name.c_str());
                 }
                 reflect();
             }
@@ -3356,7 +3369,7 @@ bool bolt::misses_player()
             {
                 penet = true;
                 mprf("The %s pierces through your %s!",
-                      name.c_str(),
+                      refl_name.c_str(),
                       shield ? shield->name(DESC_PLAIN).c_str()
                              : "shielding");
             }
@@ -3373,6 +3386,13 @@ bool bolt::misses_player()
 
         // Some training just for the "attempt".
         train_shields_more = true;
+    }
+
+    if (is_enchantment())
+    {
+        if (train_shields_more)
+            practise(EX_SHIELD_BEAM_FAIL);
+        return false;
     }
 
     if (!aimed_at_feet)
@@ -3878,6 +3898,9 @@ void bolt::affect_player()
         return;
     }
 
+    if (misses_player())
+        return;
+
     const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_enchantment())
@@ -3902,9 +3925,6 @@ void bolt::affect_player()
     }
 
     msg_generated = true;
-
-    if (misses_player())
-        return;
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
@@ -4057,7 +4077,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, affects_items);
+        you.splash_with_acid(agent(), 5, true);
 
     extra_range_used += range_used_on_hit();
 
@@ -4378,7 +4398,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             if (in_good_standing(GOD_BEOGH, 2)
                 && mons_genus(mon->type) == MONS_ORC
-                && mon->asleep() && mons_near(mon))
+                && mon->asleep() && you.see_cell(mon->pos()))
             {
                 hit_woke_orc = true;
             }
@@ -4491,7 +4511,7 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for scattershot.
-    if (YOU_KILL(thrower) && mons_near(mon)
+    if (YOU_KILL(thrower) && you.see_cell(mon->pos())
         && name != "burst of metal fragments")
     {
         print_wounds(mon);
@@ -4861,7 +4881,7 @@ void bolt::affect_monster(monster* mon)
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
-            if (mons_near(mon))
+            if (you.see_cell(mon->pos()))
             {
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_THE).c_str());
@@ -5018,7 +5038,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
     // The beam hit.
-    if (mons_near(mon))
+    if (you.see_cell(mon->pos()))
     {
         // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
@@ -5291,11 +5311,12 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
     const string monster_name = mon->name(DESC_THE);
+    const bool could_see = you.can_see(*mon);
 
     if (mon->has_ench(ENCH_INVIS) || !mon->add_ench(ENCH_INVIS))
         return false;
 
-    if (mons_near(mon))
+    if (could_see)
     {
         const bool is_visible = mon->visible_to(&you);
 
@@ -5401,10 +5422,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
-            simple_monster_message(mon, " wobbles for a moment.");
-        else
-            mon->banish(agent());
+        mon->banish(agent());
         obvious_effect = true;
         return MON_AFFECTED;
 
@@ -5502,7 +5520,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             // currently from potion, hence voluntary
             mon->go_berserk(true);
             // can't return this from go_berserk, unfortunately
-            obvious_effect = mons_near(mon);
+            obvious_effect = you.can_see(*mon);
         }
         return MON_AFFECTED;
 
@@ -5637,12 +5655,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                       MONS_HELL_HOG : mon->holiness() & MH_HOLY ?
                       MONS_HOLY_SWINE : MONS_HOG))
         {
-            // If the monster was a Beogh follower with gifted equipment,
-            // it just dropped that equipment. Allow re-gifting once it
-            // converts back.
-            orig_mon.props.erase(BEOGH_WPN_GIFT_KEY);
-            orig_mon.props.erase(BEOGH_ARM_GIFT_KEY);
-            orig_mon.props.erase(BEOGH_SH_GIFT_KEY);
             obvious_effect = true;
 
             // Don't restore items to monster if it reverts.

@@ -406,14 +406,14 @@ static join_the_dots_path _calculate_join_the_dots_path (const coord_def& from,
             || (!vault_y  && good_y)
             || (!vault_xy && good_xy))
         {
-            // if there is a good path the doesn't hit a vault,
+            // if there is a good path that doesn't hit a vault,
             //  disable the otherwise-good paths that do
 
             if (vault_x)  path.avoid_vault_count++;
             if (vault_y)  path.avoid_vault_count++;
             if (vault_xy) path.avoid_vault_count++;
 
-            // There is no &&= operator because short-circut
+            // There is no &&= operator because short-circuit
             //  evaluation can do strange and terrible things
             //  when combined with function calls.
             good_x  &= !vault_x;
@@ -1515,14 +1515,14 @@ LUAFN(dgn_remove_disconnected_doors)
 
     // TODO: Improve this to handle gates correctly.
     //  -> Right now it just removes them.
-    //  -> I (infiniplex) tried to find formulas for this and their were
+    //  -> I (infiniplex) tried to find formulas for this and there were
     //     too many weird cases.
     //    -> 2-long hallway with doors at both end should not be a gate
     //    -> end(s) of gate surround by wall should become wall
     //    -> door glyphs in a shape other than a straight line
     //    -> walls of either side of the middle of a gate when the ends
     //       are open may connect otherwise-disconnected regions
-    //    -> results must be direction-independant
+    //    -> results must be direction-independent
 
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)

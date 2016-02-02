@@ -196,6 +196,7 @@ public:
     int         autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_turns; // Show game turns instead of player turns.
@@ -414,10 +415,7 @@ public:
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
 
-    bool        regex_search;            // whether to default to regex search
-                                         // for ^F
-    int         search_highlight_colour; // colour to use when highlighting
-                                         // search results
+    bool        regex_search; // whether to default to regex search for ^F
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

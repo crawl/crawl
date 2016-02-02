@@ -653,7 +653,7 @@ SUBST:  3 = 334
 KMONS:  3 = crocodile
 KMONS:  4 = Purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
-        potion of invisibility / potion of mutation / potion of degeneration /\
+        potion of invisibility / potion of mutation / potion of poison /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
         scroll of random uselessness / meat ration / potion of blood / \
         nothing w:140
@@ -781,7 +781,7 @@ MONS:   kobold w:40 / bat / giant newt / giant cockroach / \
         adder w:5 / big kobold w:1
 KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
-        potion of invisibility / potion of mutation / potion of degeneration / \
+        potion of invisibility / potion of mutation / potion of poison / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
         scroll of random uselessness / meat ration / potion of blood / \
         nothing w:140

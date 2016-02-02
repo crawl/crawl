@@ -182,7 +182,7 @@ LUAFN(debug_cull_monsters)
     // menv[] is full
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
             continue;
 
         mi->flags |= MF_HARD_RESET;

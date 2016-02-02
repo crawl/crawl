@@ -1012,8 +1012,8 @@ KFEAT:  s = altar_pakellas
 KFEAT:  t = altar_ukayaw
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
-            wand of fire charges:5 ident:all, \
-            wand of cold charges:5 ident:all, \
+            wand of fireball charges:5 ident:all, \
+            wand of draining charges:5 ident:all, \
             potion of resistance ident:all, gold q:200
 KFEAT:  { = {
 
@@ -1096,7 +1096,7 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             quad damage | quad damage | quad damage |\
             wand of heal wounds charges:5 | wand of heal wounds charges:5 |\
             wand of hasting charges:5 | wand of hasting charges:5 |\
-            wand of invisibility charges:5 | crystal ball of energy
+            crystal ball of energy
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             fruit q:100 | potion of blood q:5 | potion of blood q:5 |\
             potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\

@@ -141,7 +141,7 @@ bool attack::handle_phase_end()
 int attack::calc_to_hit(bool random)
 {
     int mhit = attacker->is_player() ?
-                15 + (calc_stat_to_hit_base() / 2)
+                15 + (you.dex() / 2)
               : calc_mon_to_hit_base();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -320,7 +320,7 @@ string attack::anon_name(description_level_type desc)
         return "";
     case DESC_YOUR:
     case DESC_ITS:
-        return "its";
+        return "something's";
     case DESC_THE:
     case DESC_A:
     case DESC_PLAIN:
@@ -511,13 +511,10 @@ bool attack::distortion_affects_defender()
             blink_fineff::schedule(defender);
         break;
     case BANISH:
-        if (!player_in_branch(BRANCH_ABYSS))
-        {
-            if (defender_visible)
-                    obvious_effect = true;
-            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                             attacker->get_experience_level());
-        }
+        if (defender_visible)
+            obvious_effect = true;
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                         attacker->get_experience_level());
         return true;
     case TELE_INSTANT:
     case TELE_DELAYED:
@@ -532,7 +529,7 @@ bool attack::distortion_affects_defender()
         }
 
         if (choice == TELE_INSTANT)
-            distortion_tele_fineff::schedule(defender);
+            teleport_fineff::schedule(defender);
         else
             defender->teleport();
         break;
@@ -613,7 +610,7 @@ void attack::chaos_affects_defender()
     int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
-    int probs[NUM_CHAOS_TYPES] =
+    int probs[] =
     {
         clone_chance,   // CHAOS_CLONE
         poly_chance,    // CHAOS_POLY
@@ -630,11 +627,12 @@ void attack::chaos_affects_defender()
         para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
+    COMPILE_CHECK(ARRAYSZ(probs) == NUM_CHAOS_TYPES);
 
     bolt beam;
     beam.flavour = BEAM_NONE;
 
-    int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+    int choice = choose_random_weighted(probs, end(probs));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
     string chaos_effect = "CHAOS effect: ";
     switch (choice)
@@ -1211,12 +1209,11 @@ string attack::defender_name(bool allow_reflexive)
 int attack::player_stat_modify_damage(int damage)
 {
     int dammod = 39;
-    const int dam_stat_val = calc_stat_to_dam_base();
 
-    if (dam_stat_val > 11)
-        dammod += (random2(dam_stat_val - 11) * 2);
-    else if (dam_stat_val < 9)
-        dammod -= (random2(9 - dam_stat_val) * 3);
+    if (you.strength() > 11)
+        dammod += (random2(you.strength() - 11) * 2);
+    else if (you.strength() < 9)
+        dammod -= (random2(9 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1331,25 +1328,6 @@ int attack::calc_base_unarmed_damage()
         damage = 0;
 
     return damage;
-}
-
-// TODO: Potentially remove, consider integrating with other to-hit or stat
-// calculating methods
-// weighted average of strength and dex, between (str+dex)/2 and dex
-int attack::calc_stat_to_hit_base()
-{
-    const int weight = weapon ? weapon_str_weight(*weapon) : 4;
-
-    // dex is modified by strength towards the average, by the
-    // weighted amount weapon_str_weight() / 20.
-    return you.dex() + (you.strength() - you.dex()) * weight / 20;
-}
-
-// weighted average of strength and dex, between str and (str+dex)/2
-int attack::calc_stat_to_dam_base()
-{
-    const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
-    return you.strength() + (you.dex() - you.strength()) * weight / 20;
 }
 
 int attack::calc_damage()
@@ -1755,8 +1733,7 @@ bool attack::apply_damage_brand(const char *what)
         // AF_CONFUSE.
         if (defender->is_player())
         {
-            if (one_chance_in(10)
-                || (damage_done > 2 && one_chance_in(3)))
+            if (one_chance_in(3))
             {
                 defender->confuse(attacker,
                                   1 + random2(3+attacker->get_hit_dice()));

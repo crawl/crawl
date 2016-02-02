@@ -1213,7 +1213,7 @@ OBJ:     OBJ_ARMOUR/ARM_HELMET
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_etheric_cage
 TILE_EQ: etheric_cage
-INSCRIP: RegenMP
+INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
@@ -1272,6 +1272,15 @@ TILE_EQ:  talos
 COLOUR:   ETC_FIRE
 BRAND:    SPARM_PONDEROUSNESS
 FIRE:     1
+
+ENUM:     WARLOCK_MIRROR
+NAME:     warlock's mirror
+OBJ:      OBJ_ARMOUR/ARM_BUCKLER
+PLUS:     +3
+TILE:     urand_warlock
+TILE_EQ:  buckler_warlock
+COLOUR:   ETC_SILVER
+BRAND:    SPARM_REFLECTION
 
 # This entry must always be last.
 ENUM:   DUMMY2

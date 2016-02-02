@@ -189,8 +189,8 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = beef jerky / nothing / animal skin / potion of poison /\
-             potion of degeneration / w:2 potion of haste / w:2 potion of might
+KITEM:   1 = beef jerky / nothing / animal skin / potion of poison w:20 /\
+             w:2 potion of haste / w:2 potion of might
 KFEAT:   1 = 1
 ITEM:    club, potion of poison ident:type, slice of pizza
 ITEM:    beef jerky / weight:40 nothing, potion of poison ident:type

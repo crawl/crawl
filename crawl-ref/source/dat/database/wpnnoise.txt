@@ -1202,7 +1202,7 @@ w:1
 @The_weapon@ @_screams_@, "I AM A SEXY SHOELESS GOD OF WAR!"
 
 # Terry Pratchett, Foul Old Ron
-@The_weapon@ @_screams_@, "BUGGRIT, MILLENIUM HAND AND SHRIMP!"
+@The_weapon@ @_screams_@, "BUGGRIT, MILLENNIUM HAND AND SHRIMP!"
 
 ###############################################################################
 # Lines from real songs.
