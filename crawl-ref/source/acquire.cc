@@ -772,8 +772,8 @@ static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
         // normally 15
         { WAND_TELEPORTATION,   _tele_wand_weight(divine) },
         { WAND_LIGHTNING,       16 },
-        { WAND_DRAINING,        16 },
-        { WAND_FIREBALL,        16 },
+        { WAND_ACID,            16 },
+        { WAND_ICEBLAST,        16 },
         { WAND_DISINTEGRATION,  5 },
         { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },
@@ -896,6 +896,8 @@ static int _book_weight(book_type book)
     {
         // Skip over spells already seen.
         if (you.seen_spell[stype])
+            continue;
+        if (god_hates_spell(stype, you.religion))
             continue;
 
         total_weight += _spell_weight(stype);

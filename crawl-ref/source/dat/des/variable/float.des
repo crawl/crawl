@@ -2247,7 +2247,7 @@ MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of draining . \
+MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
 KMONS:   A = fire drake / salamander / fire elemental

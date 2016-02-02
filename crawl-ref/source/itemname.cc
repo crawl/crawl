@@ -597,12 +597,12 @@ static const char* _wand_type_name(int wandtype)
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
     case WAND_DIGGING:         return "digging";
-    case WAND_FIREBALL:        return "fireball";
+    case WAND_ICEBLAST:        return "iceblast";
     case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
-    case WAND_DRAINING:        return "draining";
+    case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)

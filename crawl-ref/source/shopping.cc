@@ -614,13 +614,13 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_FIREBALL:
+            case WAND_ACID:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;
                 break;
 
-            case WAND_DRAINING:
+            case WAND_ICEBLAST:
             case WAND_LIGHTNING:
             case WAND_DISINTEGRATION:
                 valued += 40;

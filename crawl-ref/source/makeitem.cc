@@ -1291,16 +1291,16 @@ static monster_type _choose_random_monster_corpse()
  */
 static int _random_wand_subtype()
 {
-    // total weight 80 [historical]
+    // total weight 84 [historical]
     return random_choose_weighted(10, WAND_FLAME,
                                   10, WAND_LIGHTNING,
-                                  10, WAND_DRAINING,
+                                  10, WAND_ICEBLAST,
                                   6, WAND_SLOWING,
                                   6, WAND_PARALYSIS,
                                   6, WAND_CONFUSION,
                                   6, WAND_POLYMORPH,
                                   6, WAND_RANDOM_EFFECTS,
-                                  6, WAND_FIREBALL,
+                                  6, WAND_ACID,
                                   5, WAND_DISINTEGRATION,
                                   5, WAND_DIGGING,
                                   3, WAND_ENSLAVEMENT,
@@ -1310,13 +1310,24 @@ static int _random_wand_subtype()
                                   0);
 }
 
+/**
+ * Should wands of this type NOT spawn extremely early on? (At very low
+ * item_level, or in the hands of very low HD monsters?)
+ *
+ * @param type      The wand_type in question.
+ * @return          Whether it'd be excessively mean for this wand to be used
+ *                  against very early players.
+ */
 bool is_high_tier_wand(int type)
 {
     switch (type)
     {
+    case WAND_ENSLAVEMENT:
+    case WAND_CONFUSION:
     case WAND_PARALYSIS:
     case WAND_LIGHTNING:
-    case WAND_DRAINING:
+    case WAND_ACID:
+    case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
         return true;
     default:

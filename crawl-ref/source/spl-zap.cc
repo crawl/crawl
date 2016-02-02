@@ -71,6 +71,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_ORB_OF_ELECTRICITY, ZAP_ORB_OF_ELECTRICITY },
     { SPELL_CHILLING_BREATH, ZAP_BREATHE_FROST },
     { SPELL_MINOR_HEALING, ZAP_HEAL_WOUNDS },
+    { SPELL_ICEBLAST, ZAP_ICEBLAST },
 };
 
 zap_type spell_to_zap(spell_type spell)

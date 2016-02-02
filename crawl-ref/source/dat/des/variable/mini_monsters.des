@@ -1697,13 +1697,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   Depths
-# this wand is wrong but idk what to do with it tbh
-MONS:    necromancer ; wand of draining . \
+MONS:    necromancer ; wand of iceblast . \
          staff of fire ident:type w:15 | quarterstaff ego:flaming ident:type w:14 | \
          rod of ignition w:1 ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
-MONS:    necromancer ; wand of fireball | wand of flame w:5 . \
+MONS:    necromancer ; wand of lightning | wand of flame w:5 . \
          staff of cold ident:type | quarterstaff ego:freezing ident:type | \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
