@@ -208,8 +208,6 @@ bool is_evil_item(const item_def& item)
                || item_brand == SPWPN_REAPING;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_DRAINING;
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
@@ -442,7 +440,7 @@ bool is_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME || item.sub_type == WAND_FIREBALL)
+        if (item.sub_type == WAND_FLAME)
             return true;
         break;
     case OBJ_SCROLLS:

@@ -76,7 +76,7 @@ TAGS:   no_rotate
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater / smoke demon
 ITEM:   good_item demon blade / good_item demon whip / \
-        good_item demon trident / wand of draining ident:type
+        good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 SUBST:  d=de, ?:?.l, ?=l.
@@ -112,7 +112,7 @@ TAGS:   no_monster_gen transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
 ITEM:   good_item demon blade / good_item demon whip /\
-        good_item demon trident / wand of draining ident:type
+        good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 ITEM:   good_item demon blade / good_item demon whip /\

@@ -1055,8 +1055,8 @@ static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
     if (item_type_removed(wand.base_type, wand.sub_type))
         return false;
 
-    //XXX: Why aren't these allowed?
-    if (wand.sub_type == WAND_FIREBALL
+    //XXX: implement these for monsters... (:
+    if (wand.sub_type == WAND_ICEBLAST
         || wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         return false;

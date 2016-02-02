@@ -1564,9 +1564,9 @@ int wand_charge_value(int type)
     case WAND_HASTING:
         return 3;
 
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_LIGHTNING:
-    case WAND_DRAINING:
+    case WAND_ACID:
         return 5;
 
     default:
@@ -1611,6 +1611,14 @@ bool is_known_empty_wand(const item_def &item)
     return item_ident(item, ISFLAG_KNOW_PLUSES) && item.charges <= 0;
 }
 
+/**
+ * For purpose of Ashenzari's monster equipment identification & warning
+ * passive, what wands are a potential threat to the player in monsters'
+ * hands?
+ *
+ * @param item      The wand to be examined.
+ * @return          Whether the player should be warned about the given wand.
+ */
 bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
@@ -1629,11 +1637,11 @@ bool is_offensive_wand(const item_def& item)
     case WAND_SLOWING:
     case WAND_PARALYSIS:
     case WAND_CONFUSION:
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_TELEPORTATION:
     case WAND_LIGHTNING:
     case WAND_POLYMORPH:
-    case WAND_DRAINING:
+    case WAND_ACID:
     case WAND_DISINTEGRATION:
         return true;
     }

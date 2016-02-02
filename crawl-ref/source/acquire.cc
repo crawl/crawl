@@ -772,8 +772,8 @@ static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
         // normally 15
         { WAND_TELEPORTATION,   _tele_wand_weight(divine) },
         { WAND_LIGHTNING,       16 },
-        { WAND_DRAINING,        16 },
-        { WAND_FIREBALL,        16 },
+        { WAND_ACID,            16 },
+        { WAND_ICEBLAST,        16 },
         { WAND_DISINTEGRATION,  5 },
         { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },

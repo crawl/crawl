@@ -56,7 +56,8 @@
       if s == "A" then i = "akashic record | arbalest | book of alchemy | " ..
        "book of air | manual of air magic | book of annihilations | arrow | " ..
        "potion of agility | potion of ambrosia | scroll of acquirement q:1 | " ..
-       "scroll of amnesia | staff of air | manual of axes | manual of armour"
+       "scroll of amnesia | staff of air | manual of axes | manual of armour | " ..
+       "wand of acid"
 
       elseif s == "B" then i = "bardiche | battleaxe | beef jerky | " ..
        "bolt | book of battle | book of beasts | book of burglary | " ..
@@ -78,9 +79,8 @@
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
        "dire flail | disc of storms | double sword | " ..
-       "ring of dexterity | rod of destruction | " ..
-       "staff of death | wand of digging | wand of disintegration | " ..
-       "wand of draining | manual of dodging"
+       "ring of dexterity | rod of destruction | manual of dodging" ..
+       "staff of death | wand of digging | wand of disintegration | "
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
        "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
@@ -92,7 +92,7 @@
        "book of frost | falchion | fan of gales | fire dragon armour | " ..
        "potion of flight | ring of fire | scroll of fear | " ..
        "fen folio | ring of flight | scroll of fog | staff of fire | " ..
-       "wand of fireball | fruit | wand of flame | " ..
+       "fruit | wand of flame | " ..
        "manual of fighting | amulet of faith | manual of fire magic"
 
       elseif s == "G" then i = "amulet of guardian spirit | giant club | " ..
@@ -108,7 +108,7 @@
       elseif s == "I" then i = "amulet of inaccuracy | ring of ice | " ..
        "scroll of immolation | ice dragon armour | book of ice | iron rod | " ..
        "rod of ignition | potion of invisibility | ring of intelligence | " ..
-       "scroll of identify | " ..
+       "scroll of identify | wand of iceblast | " ..
        "rod of inaccuracy | manual of ice magic | manual of invocations "
 
       elseif s == "J" then i = "javelin"

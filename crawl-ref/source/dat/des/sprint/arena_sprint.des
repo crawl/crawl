@@ -1011,8 +1011,8 @@ KFEAT:  r = altar_ru
 KFEAT:  s = altar_pakellas
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
-            wand of fireball charges:5 ident:all, \
-            wand of draining charges:5 ident:all, \
+            wand of iceblast charges:5 ident:all, \
+            wand of acid charges:5 ident:all, \
             potion of resistance ident:all, gold q:200
 KFEAT:  { = {
 
