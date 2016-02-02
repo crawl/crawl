@@ -104,18 +104,26 @@ function trove.get_trove_item(e, value, base_item)
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
 
-  local wpn_arm = {
-       {base="armour", type="gold dragon armour", quant=1+d(2)},
-       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
-       {base="armour", type="ice dragon armour", quant=d(3)+d(3)},
+  local wpn = {
        {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
        {base="weapon", type="demon trident", quant=2+d(3)+d(3)},
        {base="weapon", type="demon blade", quant=2+d(3)+d(3)} }
 
   if you.race() ~= "Felid" then
-    for _, toll in ipairs(wpn_arm) do
+    for _, toll in ipairs(wpn) do
+      table.insert(prices, toll)
+    end
+  end
+
+  local arm = {
+       {base="armour", type="gold dragon armour", quant=1+d(2)},
+       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
+       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
+       {base="armour", type="ice dragon armour", quant=d(3)+d(3)} }
+
+  if you.race() ~= "Felid" and you.race() ~= "Octopode" and you.race() ~= "Draconian" then
+    for _, toll in ipairs(arm) do
       table.insert(prices, toll)
     end
   end
