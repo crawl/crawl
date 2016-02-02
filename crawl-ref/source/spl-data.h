@@ -3691,6 +3691,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ICEBLAST, "Iceblast",
+    SPTYP_CONJURATION | SPTYP_ICE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    5,
+    200,
+    5, 5,
+    5, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
