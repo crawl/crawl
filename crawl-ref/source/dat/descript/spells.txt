@@ -674,6 +674,11 @@ instantly devoured, reinvigorating the caster in their reptilian rampage.
 The form's number of heads is fixed upon casting the spell, and increases with
 power.
 %%%%
+Iceblast spell
+
+Fires a large mass of ice, which explodes on impact. It affects even
+cold-resistant creatures somewhat, due to the strong impact and cutting edges.
+%%%%
 Ice Form spell
 
 Transforms the caster into a frozen ice-creature, light enough to float on
