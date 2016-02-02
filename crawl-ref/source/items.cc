@@ -3823,10 +3823,9 @@ colour_t item_def::miscellany_colour() const
             return WHITE;
 #if TAG_MAJOR_VERSION == 34
         case MISC_BUGGY_EBONY_CASKET:
+        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
-        case MISC_XOMS_CHESSBOARD:
-            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

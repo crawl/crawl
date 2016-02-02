@@ -972,7 +972,9 @@ static string misc_type_name(int type, bool known)
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
+#endif
 
     default:
         return "buggy miscellaneous item";
@@ -3414,15 +3416,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return true;
         case POT_AMBROSIA:
             return you.species != SP_DEEP_DWARF; // VERY good for dd
-        default:
-            return false;
-        }
-
-    case OBJ_MISCELLANY:
-        switch (item.sub_type)
-        {
-        case MISC_XOMS_CHESSBOARD:
-            return true;
         default:
             return false;
         }
