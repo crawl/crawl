@@ -544,10 +544,6 @@ rod of inaccuracy
 
 このロッドは手にしている者に強力だがとても不正確な力の矢を射つことを可能にする。
 %%%%
-rod of the swarm
-
-このロッドは手にしている者に昆虫の群れを召喚することを可能にする。
-%%%%
 royal jelly
 
 とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost

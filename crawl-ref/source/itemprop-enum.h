@@ -474,7 +474,9 @@ enum stave_type
 enum rod_type
 {
     ROD_LIGHTNING,
+#if TAG_MAJOR_VERSION == 34
     ROD_SWARM,
+#endif
     ROD_IGNITION,
     ROD_CLOUDS,
 #if TAG_MAJOR_VERSION == 34

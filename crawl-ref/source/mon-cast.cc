@@ -1373,8 +1373,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_MINOR_DEMON:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
-#endif
     case SPELL_SUMMON_SWARM:
+#endif
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:
@@ -5678,11 +5678,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_SWARM:
-        _do_high_level_summon(mons, spell_cast, pick_swarmer,
-                              random_range(3, 6), god, nullptr, nullptr);
-        return;
-
     case SPELL_SUMMON_UFETUBUS:
         sumcount2 = 2 + random2(2);
 
@@ -8364,6 +8359,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SHAFT_SELF:
     case SPELL_MISLEAD:
     case SPELL_SUMMON_SCORPIONS:
+    case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_SINGULARITY:

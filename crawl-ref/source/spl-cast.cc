@@ -1675,9 +1675,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
 
-    case SPELL_SUMMON_SWARM:
-        return cast_summon_swarm(powc, god, fail);
-
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
@@ -1951,6 +1948,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SURE_BLADE:
     case SPELL_FLY:
     case SPELL_STONESKIN:
+    case SPELL_SUMMON_SWARM:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

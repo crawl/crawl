@@ -164,9 +164,7 @@ dragon_form DRAGON_FORM
 %sdir misc
 error PARALYSE
 error BOLT_OF_INACCURACY
-error SUMMON_SWARM
 error THUNDERBOLT
-error MELEE
 error EXPLOSIVE_BOLT
 %sdir gui/spells/air
 cloud_cone CLOUD_CONE

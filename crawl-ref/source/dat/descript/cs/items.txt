@@ -230,10 +230,6 @@ ring of wizardry
 
 Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.
 %%%%
-rod of the swarm
-
-Tato hůl umožňuje jeho nositely přivolat roj hmyzu.
-%%%%
 scroll of fear
 
 Tento svitek způsobuje velký strach v těch, které vidí ten, kdo ho čte.

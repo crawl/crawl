@@ -561,6 +561,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
     SPTYP_SUMMONING,
@@ -571,6 +572,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",

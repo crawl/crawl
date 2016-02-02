@@ -1126,7 +1126,7 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 static bool _sack_of_spiders(item_def &sack)
 {
     if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_SUMMON_SWARM); // approx
+        pakellas_evoke_backfire(SPELL_SUMMON_VERMIN); // approx
     else if (!pakellas_device_surge())
         return false;
     surge_power(you.spec_evoke());

@@ -640,8 +640,7 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
     {
         result = random2(NUM_RODS);
     }
-    while (player_mutation_level(MUT_NO_LOVE)
-              && (result == ROD_SWARM || result == ROD_SHADOWS)
+    while (player_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
            || item_type_removed(OBJ_RODS, result));
     return result;
 }

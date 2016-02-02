@@ -556,10 +556,6 @@ Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
 wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
 skutki są dość brutalne.
 %%%%
-rod of the swarm
-
-Ten pręt pozwala przyzwać chmarę owadów.
-%%%%
 royal jelly
 
 Lekko złotawa galaretowata substancja, wyjątkowo bogata w składniki odżywcze.

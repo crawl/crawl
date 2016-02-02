@@ -843,10 +843,6 @@ rod of shadows
 
 Ce sceptre tire des créatures des ombres et de l’éther.
 %%%%
-rod of the swarm
-
-Ce sceptre permet à son porteur de convoquer un essaim d'insectes.
-%%%%
 royal jelly
 
 Une gelée dorée et particulièrement nourrissante. La consommer restaure les
