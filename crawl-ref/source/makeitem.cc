@@ -1310,10 +1310,20 @@ static int _random_wand_subtype()
                                   0);
 }
 
+/**
+ * Should wands of this type NOT spawn extremely early on? (At very low
+ * item_level, or in the hands of very low HD monsters?)
+ *
+ * @param type      The wand_type in question.
+ * @return          Whether it'd be excessively mean for this wand to be used
+ *                  against very early players.
+ */
 bool is_high_tier_wand(int type)
 {
     switch (type)
     {
+    case WAND_ENSLAVEMENT:
+    case WAND_CONFUSION:
     case WAND_PARALYSIS:
     case WAND_LIGHTNING:
     case WAND_ACID:
