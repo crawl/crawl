@@ -260,7 +260,7 @@ static void _tweak_randart(item_def &item)
 #endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            *(prompt.end() - 1) = '\n'; // Replace the space
+            prompt.back() = '\n'; // Replace the space
 
         char choice;
         char buf[80];
