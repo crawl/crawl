@@ -1469,7 +1469,7 @@ int skill_bump(skill_type skill, int scale)
 // (i.e., old-style aptitude 50).
 #define APT_DOUBLE 4
 
-static float _apt_to_factor(int apt)
+float apt_to_factor(int apt)
 {
     return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
@@ -1511,7 +1511,7 @@ int species_apt(skill_type skill, species_type species)
 
 float species_apt_factor(skill_type sk, species_type sp)
 {
-    return _apt_to_factor(species_apt(sk, sp));
+    return apt_to_factor(species_apt(sk, sp));
 }
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)
