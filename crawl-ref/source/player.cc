@@ -3683,6 +3683,9 @@ unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
 
+    // Note: For historical reasons, all of the following numbers are for a
+    // species (like human) with XP aptitude 1, not 0 as one might expect.
+
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
     // Section 2: levels  6-13, second derivative is exponential/doubling.
