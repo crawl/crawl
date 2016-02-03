@@ -522,24 +522,25 @@ gem_plastic
 
 %sdir item/wand
 #### These must be in the same order as the enum in itemprop-enum.h!
+# Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
-i-frost WAND_FROST
+i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
-i-magic_darts WAND_MAGIC_DARTS
+i-flame WAND_REMOVEME2
 i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
-i-fire WAND_FIRE
-i-cold WAND_COLD
+i-flame WAND_REMOVEME3
+i-flame WAND_REMOVEME4
 i-confusion WAND_CONFUSION
-i-invisibility WAND_INVISIBILITY
+i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
-i-fireball WAND_FIREBALL
+i-iceblast WAND_ICEBLAST
 i-teleportation WAND_TELEPORTATION
 i-lightning WAND_LIGHTNING
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
-i-draining WAND_DRAINING
+i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
