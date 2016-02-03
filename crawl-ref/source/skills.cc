@@ -1439,13 +1439,18 @@ bool is_harmful_skill(skill_type skill)
     return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
-bool all_skills_maxed(bool inc_harmful)
+/**
+ * Has the player maxed out all skills?
+ *
+ * @param really_all If true, also consider skills that are harmful and/or
+ *        currently untrainable. Useless skills are never considered.
+ */
+bool all_skills_maxed(bool really_all)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] < MAX_SKILL_LEVEL && you.can_train[i]
-            && !is_useless_skill((skill_type) i)
-            && (inc_harmful || !is_harmful_skill((skill_type) i)))
+        if (you.skills[i] < MAX_SKILL_LEVEL && !is_useless_skill(i)
+            && (really_all || you.can_train[i] && !is_harmful_skill(i)))
         {
             return false;
         }
