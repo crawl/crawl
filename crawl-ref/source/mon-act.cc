@@ -1306,7 +1306,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip()
+        || x_chance_in_y(3, 4)
         || !wand
         || wand->base_type != OBJ_WANDS)
     {
