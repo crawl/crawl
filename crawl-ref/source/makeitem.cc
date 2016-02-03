@@ -1341,13 +1341,7 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
-    {
-        do
-        {
-            item.sub_type = _random_wand_subtype();
-        }
-        while (item_level < 2 && is_high_tier_wand(item.sub_type));
-    }
+        item.sub_type = _random_wand_subtype();
 
     // Generate charges randomly...
     item.plus = random2avg(wand_max_charges(item), 3);
@@ -1357,6 +1351,10 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.charges++;
 
     item.used_count = 0;
+
+    // don't let monsters pickup early high-tier wands
+    if (item_level < 2 && is_high_tier_wand(item.sub_type))
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 static void _generate_food_item(item_def& item, int force_quant, int force_type)
