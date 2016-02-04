@@ -1600,7 +1600,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->max_hit_points *= mon->blob_size;
     }
 
-    if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5) && !summoned)
+    if (monster_can_submerge(mon, grd(fpos)) && !summoned)
         mon->add_ench(ENCH_SUBMERGED);
 
     // Set attitude, behaviour and target.
