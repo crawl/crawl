@@ -4867,9 +4867,6 @@ enum seen_context_type
     SC_NEWLY_SEEN,      // regular walking into view
     SC_ALREADY_SEEN,    // wasn't a threat before, is now
     SC_TELEPORT_IN,
-    SC_SURFACES,                      // land-capable
-    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
-    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
     SC_FISH_SURFACES,                 // water/lava-only
     SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
     SC_UNCHARM,
