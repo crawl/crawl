@@ -1152,7 +1152,7 @@ static monster* _mons_get_parent_monster(monster* mons)
 // of that tentacle.
 bool destroy_tentacle(monster* mons)
 {
-    int num = 0;
+    bool any = false;
 
     monster* head = mons_is_tentacle_segment(mons->type)
             ? _mons_get_parent_monster(mons) : mons;
@@ -1168,7 +1168,7 @@ bool destroy_tentacle(monster* mons)
     {
         if (mi->is_child_tentacle_of(head))
         {
-            num++;
+            any = true;
             //mi->hurt(*mi, INSTANT_DEATH);
             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
@@ -1176,31 +1176,29 @@ bool destroy_tentacle(monster* mons)
 
     if (mons != head)
     {
-        num++;
-
+        any = true;
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
 
-    return num;
+    return any;
 }
 
 bool destroy_tentacles(monster* head)
 {
-    int num = 0;
+    bool any = false;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->is_child_tentacle_of(head))
         {
-            if (destroy_tentacle(*mi))
-                num++;
+            any |= destroy_tentacle(*mi);
             if (!mi->is_child_tentacle_segment())
             {
                 monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
-                num++;
+                any = true;
             }
         }
     }
-    return num;
+    return any;
 }
 
 static int _max_tentacles(const monster* mon)
