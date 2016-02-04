@@ -721,16 +721,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(*this))
         {
-            if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
+            if (!quiet && feat_is_watery(grd(pos())))
             {
-                // Already set somewhere else.
-                if (!seen_context)
-                    seen_context = SC_FISH_SURFACES;
-            }
-            else if (!quiet && feat_is_watery(grd(pos())))
-            {
-                mprf("%s bursts forth from the water.",
+                mprf(MSGCH_WARN, "%s bursts forth from the water.",
                      name(DESC_A, true).c_str());
+                seen_monster(this);
             }
         }
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
