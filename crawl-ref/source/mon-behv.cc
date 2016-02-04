@@ -1333,12 +1333,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // stop doing so just because they noticed something.
         mon->behaviour = old_behaviour;
     }
-    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
-    {
-        // The same goes for submerged monsters, if they can't
-        // unsubmerge.
-        mon->behaviour = BEH_LURK;
-    }
 
     // mons_speaks_msg already handles the LOS check.
     if (!msg.empty() && mon->visible_to(&you))
