@@ -381,7 +381,11 @@ int spell_hunger(spell_type which_spell, bool rod)
         hunger = max(hunger, level * 5);
     }
     else
+    {
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
+        if (in_good_standing(GOD_SIF_MUNA, 1))
+            hunger /= 2;
+    }
 
     if (hunger < 0)
         hunger = 0;

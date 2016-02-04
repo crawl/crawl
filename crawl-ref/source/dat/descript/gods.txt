@@ -352,8 +352,9 @@ Sif Muna powers
 
 Followers of Sif Muna can channel magical energy when they need it the most,
 and they gain a power to forget any spell at will, so as to learn new ones. Sif
-Muna protects spellcasters against the negative effects of miscasting a spell.
-Over time, followers will receive spellbooks containing a vast range of spells.
+Muna protects spellcasters against the negative effects of miscasting a spell
+and reduces the nutrition costs of casting spells. Over time, followers will 
+receive spellbooks containing a vast range of spells.
 %%%%
 the Shining One powers
 
