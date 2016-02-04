@@ -2202,7 +2202,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     bool had_effect = false;
 
     // Friendly wardens are already excluded by _ms_waste_of_time()
-    if (warden->can_see(you) || warden->foe != MHITYOU)
+    if (!warden->can_see(you) || warden->foe != MHITYOU)
         return false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
