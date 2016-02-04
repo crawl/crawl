@@ -1439,14 +1439,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " appears from thin air!";
         else if (at.context == SC_LEAP_IN)
             text += " leaps into view!";
-        // The monster surfaced and submerged in the same turn without
-        // doing anything else.
-        else if (at.context == SC_SURFACES_BRIEFLY)
-            text += "surfaces briefly.";
-        else if (at.context == SC_SURFACES)
-                text += " surfaces.";
-        else if (at.context == SC_FISH_SURFACES_SHOUT
-              || at.context == SC_FISH_SURFACES)
+        else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
             if (mons_primary_habitat(mon) == HT_LAVA)

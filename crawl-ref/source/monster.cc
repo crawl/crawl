@@ -249,22 +249,6 @@ bool monster::swimming() const
     return feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER;
 }
 
-bool monster::wants_submerge() const
-{
-    // Swamp worms don't re-submerge randomly.
-    if (type == MONS_SWAMP_WORM)
-        return false;
-
-    // Don't submerge if we just unsubmerged to shout.
-    if (seen_context == SC_FISH_SURFACES_SHOUT)
-        return false;
-
-    if (!mons_is_retreating(this) && mons_can_move_towards_target(this))
-        return false;
-
-    return !mons_landlubbers_in_reach(this);
-}
-
 bool monster::submerged() const
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.

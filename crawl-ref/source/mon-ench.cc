@@ -215,29 +215,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        mons_clear_trapping_net(this);
-
-        // Don't worry about invisibility. You should be able to see if
-        // something has submerged.
-        if (!quiet && you.see_cell(pos()))
-        {
-            if (seen_context == SC_SURFACES)
-            {
-                // The monster surfaced and submerged in the same turn
-                // without doing anything else.
-                interrupt_activity(AI_SEE_MONSTER,
-                                   activity_interrupt_data(this,
-                                                           SC_SURFACES_BRIEFLY));
-                // Why does this handle only land-capables?  I'd imagine this
-                // to happen mostly (only?) for fish. -- 1KB
-            }
-            else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_A, true).c_str());
-        }
-
-        // Pacified monsters leave the level when they submerge.
-        if (pacified())
-            make_mons_leave_level(this);
+        dprf("%s submerges.", name(DESC_A, true).c_str());
         break;
 
     case ENCH_CONFUSION:
@@ -342,26 +320,6 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
         return true;
-
-    // Unbreathing stuff that can't swim stays on the bottom.
-    if (grd(mon->pos()) == DNGN_DEEP_WATER
-        && !mon->can_drown()
-        && !monster_habitable_grid(mon, DNGN_DEEP_WATER))
-    {
-        return false;
-    }
-
-    // Lurking monsters only unsubmerge when their foe is in sight if the foe
-    // is right next to them.
-    if (mons_is_lurking(mon))
-    {
-        const actor* foe = mon->get_foe();
-        if (foe != nullptr && mon->can_see(*foe)
-            && !adjacent(mon->pos(), foe->pos()))
-        {
-            return false;
-        }
-    }
 
     int midx = mon->mindex();
 
@@ -766,13 +724,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
                 // Already set somewhere else.
-                if (seen_context)
-                    return;
-
-                if (!monster_habitable_grid(this, DNGN_FLOOR))
+                if (!seen_context)
                     seen_context = SC_FISH_SURFACES;
-                else
-                    seen_context = SC_SURFACES;
             }
             else if (!quiet && crawl_state.game_is_arena())
                 mprf("%s surfaces.", name(DESC_A, true).c_str());
@@ -1557,20 +1510,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         const dungeon_feature_type grid = grd(pos());
 
         if (!monster_can_submerge(this, grid))
-        {
-            // unbreathing stuff can stay on the bottom
-            if (grid != DNGN_DEEP_WATER
-                || monster_habitable_grid(this, grid)
-                || can_drown())
-            {
-                del_ench(ENCH_SUBMERGED); // forced to surface
-            }
-        }
-        else if (mons_landlubbers_in_reach(this))
-        {
-            del_ench(ENCH_SUBMERGED);
-            make_mons_stop_fleeing(this);
-        }
+            del_ench(ENCH_SUBMERGED); // forced to surface
         break;
     }
     case ENCH_POISON:

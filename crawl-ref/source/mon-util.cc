@@ -4768,25 +4768,6 @@ bool player_or_mon_in_sanct(const monster* mons)
     return is_sanctuary(you.pos()) || is_sanctuary(mons->pos());
 }
 
-bool mons_landlubbers_in_reach(const monster* mons)
-{
-    if (mons_has_ranged_attack(mons))
-        return true;
-
-    actor *act;
-    for (radius_iterator ai(mons->pos(),
-                            mons->reach_range(),
-                            C_SQUARE,
-                            true);
-         ai; ++ai)
-    {
-        if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
-            return true;
-    }
-
-    return false;
-}
-
 int get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
