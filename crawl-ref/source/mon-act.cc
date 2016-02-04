@@ -1770,26 +1770,6 @@ static void _pre_monster_move(monster& mons)
     mons.check_speed();
 }
 
-static void _maybe_submerge(monster* mons)
-{
-    if (mons->asleep() || mons->submerged())
-        return;
-
-    if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()         // No submerging while caught.
-        && !mons->asleep()         // No submerging when asleep.
-        && !you.beheld_by(mons)    // No submerging if player entranced.
-        && !mons_is_lurking(mons)  // Handled elsewhere.
-        && mons->wants_submerge())
-    {
-        const monsterentry* entry = get_monster_data(mons->type);
-
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-}
-
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1991,9 +1971,6 @@ void handle_monster_move(monster* mons)
 
     // Lurking monsters only stop lurking if their target is right
     // next to them, otherwise they just sit there.
-    // However, if the monster is involuntarily submerged but
-    // still alive (e.g., nonbreathing which had water poured
-    // on top of it), this doesn't apply.
     if (mons_is_lurking(mons) || mons->has_ench(ENCH_SUBMERGED))
     {
         if (mons->foe != MHITNOT
@@ -2055,7 +2032,6 @@ void handle_monster_move(monster* mons)
             }
         }
     }
-    _maybe_submerge(mons);
     if (!mons->asleep() && !mons->submerged())
         maybe_mons_speaks(mons);
 

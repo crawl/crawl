@@ -193,6 +193,7 @@ void handle_monster_shouts(monster* mons, bool force)
         strip_channel_prefix(message, channel);
 
         // Monster must come up from being submerged if it wants to shout.
+        // XXX: this code is probably unreachable now?
         if (mons->submerged())
         {
             if (!mons->del_ench(ENCH_SUBMERGED))
@@ -203,10 +204,7 @@ void handle_monster_shouts(monster* mons, bool force)
 
             if (you.can_see(*mons))
             {
-                if (!monster_habitable_grid(mons, DNGN_FLOOR))
-                    mons->seen_context = SC_FISH_SURFACES_SHOUT;
-                else
-                    mons->seen_context = SC_SURFACES;
+                mons->seen_context = SC_FISH_SURFACES;
 
                 // Give interrupt message before shout message.
                 handle_seen_interrupt(mons);
