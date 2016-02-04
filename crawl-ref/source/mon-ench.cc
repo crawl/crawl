@@ -727,8 +727,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (!seen_context)
                     seen_context = SC_FISH_SURFACES;
             }
-            else if (!quiet && crawl_state.game_is_arena())
-                mprf("%s surfaces.", name(DESC_A, true).c_str());
+            else if (!quiet && feat_is_watery(grd(pos())))
+            {
+                mprf("%s bursts forth from the water.",
+                     name(DESC_A, true).c_str());
+            }
         }
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
