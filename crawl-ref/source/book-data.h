@@ -126,7 +126,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transfigurations
-    SPELL_STONESKIN,
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -245,7 +244,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
-    SPELL_STONESKIN,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,

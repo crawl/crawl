@@ -1116,8 +1116,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
             return "your stony body would shatter the ice.";
-        if (spell == SPELL_STONESKIN)
-            return "your skin is already made of stone.";
 
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
@@ -1185,7 +1183,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're already a statue.";
         // fallthrough to other forms
 
-    case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
