@@ -4827,10 +4827,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     *SysEnv.map_gen_range =
                         depth_ranges::parse_depth_ranges(next_arg);
                 }
-                catch (const string &error)
+                catch (const bad_level_id &err)
                 {
-                    fprintf(stderr, "Error parsing depth ranges: %s\n",
-                            error.c_str());
+                    fprintf(stderr, "Error parsing depths: %s\n", err.what());
                     end(1);
                 }
                 nextUsed = true;

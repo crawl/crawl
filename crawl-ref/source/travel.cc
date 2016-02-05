@@ -3151,7 +3151,7 @@ string level_id::describe(bool long_name, bool with_number) const
     return result;
 }
 
-level_id level_id::parse_level_id(const string &s) throw (string)
+level_id level_id::parse_level_id(const string &s)
 {
     string::size_type cpos = s.find(':');
     string brname  = (cpos != string::npos? s.substr(0, cpos)  : s);
@@ -3161,8 +3161,8 @@ level_id level_id::parse_level_id(const string &s) throw (string)
 
     if (br == NUM_BRANCHES)
     {
-        throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
-                           brname.c_str(), s.c_str());
+        throw bad_level_id_f("Invalid branch \"%s\" in spec \"%s\"",
+                             brname.c_str(), s.c_str());
     }
 
     // Branch:$ uses static data -- it never comes from the current game.
@@ -3173,8 +3173,8 @@ level_id level_id::parse_level_id(const string &s) throw (string)
     // The branch might have been longer when the save has been created.
     if (dep < 0 || dep > brdepth[br] && dep > branches[br].numlevels)
     {
-        throw make_stringf("Invalid depth for %s in spec \"%s\"",
-                           brname.c_str(), s.c_str());
+        throw bad_level_id_f("Invalid depth for %s in spec \"%s\"",
+                             brname.c_str(), s.c_str());
     }
 
     return level_id(br, dep);

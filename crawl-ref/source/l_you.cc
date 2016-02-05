@@ -448,9 +448,9 @@ LUAFN(you_is_level_on_stack)
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        return luaL_argerror(ls, 1, err.c_str());
+        return luaL_argerror(ls, 1, err.what());
     }
 
     PLUARET(boolean, is_level_on_stack(lev));

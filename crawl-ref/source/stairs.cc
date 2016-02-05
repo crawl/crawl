@@ -931,9 +931,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         {
             return level_id::parse_level_id(dst);
         }
-        catch (const string &err)
+        catch (const bad_level_id &err)
         {
-            die("Invalid destination for portal: %s", err.c_str());
+            die("Invalid destination for portal: %s", err.what());
         }
 #endif
 
