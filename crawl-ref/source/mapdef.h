@@ -848,6 +848,12 @@ struct feature_slot
     feature_spec get_feat(int default_glyph);
 };
 
+struct bad_map_flag : public runtime_error
+{
+    explicit bad_map_flag(const string &flag) : runtime_error(flag) {}
+    explicit bad_map_flag(const char *flag) : runtime_error(flag) {}
+};
+
 struct map_flags
 {
     unsigned long flags_set, flags_unset;
@@ -856,8 +862,8 @@ struct map_flags
     void clear();
     map_flags &operator |= (const map_flags &o);
 
-    static map_flags parse(const string flag_list[],
-                           const string &s) throw(string);
+    /// @throws bad_map_flag if one of the flags was invalid.
+    static map_flags parse(const string flag_list[], const string &s);
 };
 
 struct keyed_mapspec

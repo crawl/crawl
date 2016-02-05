@@ -5788,11 +5788,9 @@ map_flags &map_flags::operator |= (const map_flags &o)
 
     return *this;
 }
-
 typedef map<string, unsigned long> flag_map;
 
-map_flags map_flags::parse(const string flag_list[],
-                           const string &s) throw(string)
+map_flags map_flags::parse(const string flag_list[], const string &s)
 {
     map_flags mf;
 
@@ -5820,7 +5818,7 @@ map_flags map_flags::parse(const string flag_list[],
                 mf.flags_set |= *val;
         }
         else
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
+            throw bad_map_flag(flag);
     }
 
     return mf;
@@ -6040,10 +6038,9 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask |= map_flags::parse(flag_list, s);
     }
-    catch (const string &error)
+    catch (const bad_map_flag &error)
     {
-        err = error;
-        return err;
+        err = make_stringf("Unknown flag: '%s'", error.what());
     }
 
     return err;
