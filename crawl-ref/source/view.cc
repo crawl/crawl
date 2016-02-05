@@ -1496,9 +1496,13 @@ static void _config_layers_menu()
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>|"
+                           "<%s>(c)louds</%s>"
+#ifndef USE_TILE_LOCAL
+                           "|"
                            "<%s>monster (w)eapons</%s>|"
-                           "<%s>monster (h)ealth</%s>",
+                           "<%s>monster (h)ealth</%s>"
+#endif
+                           ,
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
@@ -1506,11 +1510,14 @@ static void _config_layers_menu()
            _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
            _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
            _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey"
+#ifndef USE_TILE_LOCAL
+           ,
            _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
+#endif
         );
         mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
@@ -1522,8 +1529,10 @@ static void _config_layers_menu()
         case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
         case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
         case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
+#ifndef USE_TILE_LOCAL
         case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
         case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
+#endif
 
         // Remaining cases fall through to exit.
         case '|':
