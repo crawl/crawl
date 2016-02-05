@@ -5750,9 +5750,9 @@ string map_marker_spec::apply_transform(map_lines &map)
             mark->pos = p;
             map.add_marker(mark);
         }
-        catch (const string &err)
+        catch (const bad_map_marker &err)
         {
-            return err;
+            return err.what();
         }
     }
     return "";
