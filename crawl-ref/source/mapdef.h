@@ -965,7 +965,7 @@ class depth_ranges
 private:
     depth_ranges_v depths;
 public:
-    static depth_ranges parse_depth_ranges(const string &depth_ranges_string);
+    static depth_ranges parse_depth_ranges(const string &depth_ranges_string) throw (string);
     void read(reader &);
     void write(writer &) const;
     void clear() { depths.clear(); }

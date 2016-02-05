@@ -927,7 +927,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             else
                 return level_id();
         }
-        return level_id::parse_level_id(dst);
+        try
+        {
+            return level_id::parse_level_id(dst);
+        }
+        catch (const string &err)
+        {
+            die("Invalid destination for portal: %s", err.c_str());
+        }
 #endif
 
     case DNGN_ENTER_HELL:

@@ -4822,8 +4822,17 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
             {
                 SysEnv.map_gen_range.reset(new depth_ranges);
-                *SysEnv.map_gen_range =
-                    depth_ranges::parse_depth_ranges(next_arg);
+                try
+                {
+                    *SysEnv.map_gen_range =
+                        depth_ranges::parse_depth_ranges(next_arg);
+                }
+                catch (const string &error)
+                {
+                    fprintf(stderr, "Error parsing depth ranges: %s\n",
+                            error.c_str());
+                    end(1);
+                }
                 nextUsed = true;
             }
             break;
