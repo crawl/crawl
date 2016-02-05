@@ -11,7 +11,6 @@
 #include "mapdef.h"
 #include "unwind.h"
 
-struct level_range;
 class map_def;
 struct map_file_place;
 struct vault_placement;
@@ -67,7 +66,6 @@ typedef map<string, map_file_place> map_load_info_t;
 extern map_load_info_t lc_loaded_maps;
 extern string          lc_desfile;
 extern map_def         lc_map;
-extern level_range     lc_range;
 extern depth_ranges    lc_default_depths;
 extern dlua_chunk      lc_global_prelude;
 extern bool            lc_run_global_prelude;
