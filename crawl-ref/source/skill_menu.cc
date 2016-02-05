@@ -1185,8 +1185,8 @@ void SkillMenu::init_switches()
 
         sw->add(SKM_VIEW_COST);
 
-        if (Options.default_manual_training)
-                sw->set_state(SKM_VIEW_COST);
+        if (!you.auto_training)
+            sw->set_state(SKM_VIEW_COST);
     }
 
     if (you.wizard)
