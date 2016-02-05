@@ -47,7 +47,7 @@ extern void world_reacts();
 namespace arena
 {
     static void write_error(const string &error);
-    
+
     struct arena_error : public runtime_error
     {
         explicit arena_error(const string &msg) : runtime_error(msg) {}
