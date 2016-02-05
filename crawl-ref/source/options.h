@@ -123,7 +123,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = nullptr) throw (string);
+                            const vector<string> *rcdirs = nullptr);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
