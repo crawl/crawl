@@ -1171,7 +1171,6 @@ static vector<dlua_chunk> global_preludes;
 dlua_chunk lc_global_prelude("global_prelude");
 string lc_desfile;
 map_def     lc_map;
-level_range lc_range;
 depth_ranges lc_default_depths;
 bool lc_run_global_prelude = true;
 map_load_info_t lc_loaded_maps;
@@ -1183,7 +1182,6 @@ extern int yylineno;
 static void _reset_map_parser()
 {
     lc_map.init();
-    lc_range.reset();
     lc_default_depths.clear();
     lc_global_prelude.clear();
 
