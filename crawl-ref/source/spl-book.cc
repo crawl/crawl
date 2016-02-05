@@ -1979,14 +1979,14 @@ bool make_book_theme_randart(item_def &book,
 
 // Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
 // that includes Statue Form and is named after her.
-void make_book_Roxanne_special(item_def *book)
+void make_book_roxanne_special(item_def *book)
 {
     spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
     make_book_theme_randart(*book, disc, SPTYP_NONE, 5, 19,
                             SPELL_STATUE_FORM, "Roxanne");
 }
 
-void make_book_Kiku_gift(item_def &book, bool first)
+void make_book_kiku_gift(item_def &book, bool first)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);

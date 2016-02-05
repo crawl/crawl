@@ -116,7 +116,7 @@ static void _give_book(monster* mon, int level)
 
         // Maybe give Roxanne a random book containing Statue Form instead.
         if (coinflip())
-            make_book_Roxanne_special(&mitm[thing_created]);
+            make_book_roxanne_special(&mitm[thing_created]);
 
         _give_monster_item(mon, thing_created, true);
     }

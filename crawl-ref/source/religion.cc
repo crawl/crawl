@@ -1972,7 +1972,7 @@ bool do_god_gift(bool forced)
                 // Replace a Kiku gift by a custom-random book.
                 if (you_worship(GOD_KIKUBAAQUDGHA))
                 {
-                    make_book_Kiku_gift(mitm[thing_created],
+                    make_book_kiku_gift(mitm[thing_created],
                                         gift == BOOK_NECROMANCY);
                 }
                 if (thing_created == NON_ITEM)
