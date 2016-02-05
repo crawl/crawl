@@ -1530,8 +1530,14 @@ static void _config_layers_menu()
         case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
         case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
 #ifndef USE_TILE_LOCAL
-        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
-        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS;
+                  if (_layers & LAYER_MONSTER_WEAPONS)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;
+                  if (_layers & LAYER_MONSTER_HEALTH)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
 #endif
 
         // Remaining cases fall through to exit.
