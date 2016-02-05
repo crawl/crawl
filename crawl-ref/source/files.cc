@@ -656,7 +656,7 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
-                dprf("%s: %s", filename.c_str(), E.msg.c_str());
+                dprf("%s: %s", filename.c_str(), E.what());
             }
         }
 
@@ -1941,7 +1941,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)

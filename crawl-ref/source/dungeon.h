@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <set>
+#include <stdexcept>
 #include <vector>
 
 #include "env.h"
@@ -53,17 +54,10 @@ enum map_mask_type
 class dgn_region;
 typedef vector<dgn_region> dgn_region_list;
 
-class dgn_veto_exception : public exception
+struct dgn_veto_exception : public runtime_error
 {
-public:
-    dgn_veto_exception(const string& _msg) : msg(_msg) { }
-    ~dgn_veto_exception() throw () { }
-    const char *what() const throw () override
-    {
-        return msg.c_str();
-    }
-private:
-    string msg;
+    dgn_veto_exception(const string& msg) : runtime_error(msg) {}
+    dgn_veto_exception(const char *msg) : runtime_error(msg) {}
 };
 
 class dgn_region

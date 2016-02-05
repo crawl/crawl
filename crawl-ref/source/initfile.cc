@@ -4318,7 +4318,7 @@ static void _print_save_version(char *name)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 
@@ -4511,7 +4511,7 @@ static void _edit_save(int argc, char **argv)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 #undef FAIL
