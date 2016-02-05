@@ -1,22 +1,22 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+#include <stdexcept>
+
 NORETURN void fail(PRINTF(0, ));
 NORETURN void sysfail(PRINTF(0, ));
 NORETURN void corrupted(PRINTF(0, ));
 
-class ext_fail_exception : public exception
+struct ext_fail_exception : public runtime_error
 {
-public:
-    ext_fail_exception(const string &_msg) : msg(_msg) {}
-    ~ext_fail_exception() throw() {}
-    const string msg;
+    ext_fail_exception(const string &msg) : runtime_error(msg) {}
+    ext_fail_exception(const char *msg) : runtime_error(msg) {}
 };
 
-class corrupted_save : public ext_fail_exception
+struct corrupted_save : public ext_fail_exception
 {
-public:
-    corrupted_save(const string &_msg) : ext_fail_exception(_msg) {}
+    corrupted_save(const string &msg) : ext_fail_exception(msg) {}
+    corrupted_save(const char *msg) : ext_fail_exception(msg) {}
 };
 
 extern bool CrawlIsCrashing;

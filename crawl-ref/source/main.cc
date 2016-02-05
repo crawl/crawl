@@ -391,7 +391,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.msg.c_str());
+            end(1, false, "%s", fe.what());
         }
         catch (short_read_exception &E)
         {
