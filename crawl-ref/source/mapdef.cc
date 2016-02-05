@@ -2123,6 +2123,7 @@ void depth_ranges::read(reader &inf)
 }
 
 depth_ranges depth_ranges::parse_depth_ranges(const string &depth_range_string)
+    throw (string)
 {
     depth_ranges ranges;
     for (const string &frag : split_string(",", depth_range_string))
