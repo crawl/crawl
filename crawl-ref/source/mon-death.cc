@@ -2010,17 +2010,9 @@ item_def* monster_die(monster* mons, killer_type killer,
         && killer == KILL_YOU
         && gives_player_xp)
     {
-        int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
-        mon_threat_level_type threat = mons_threat_level(mons, true);
-        // Only certain kinds of threats at different sos levels will increase
-        // the bonus
-        if (threat == MTHRT_TRIVIAL && sos_bonus < 3
-            || threat == MTHRT_EASY && sos_bonus < 5
-            || threat == MTHRT_TOUGH && sos_bonus < 7
-            || threat == MTHRT_NASTY)
-        {
+        const int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
+        if (sos_bonus <= 8) // cap at +9 slay
             you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
-        }
     }
 
     switch (killer)
