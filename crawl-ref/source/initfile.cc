@@ -4024,12 +4024,11 @@ void game_options::set_fake_langs(const string &input)
 }
 
 // Checks an include file name for safety and resolves it to a readable path.
-// If safety check fails, throws a string with the reason for failure.
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
+/// @throws unsafe_path if included_file fails the safety check.
 string game_options::resolve_include(string parent_file, string included_file,
                                      const vector<string> *rcdirs)
-    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.
@@ -4084,9 +4083,9 @@ string game_options::resolve_include(const string &file, const char *type)
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
         return resolved;
     }
-    catch (const string &err)
+    catch (const unsafe_path &err)
     {
-        report_error("Cannot include %sfile: %s", type, err.c_str());
+        report_error("Cannot include %sfile: %s", type, err.what());
         return "";
     }
 }

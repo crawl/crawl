@@ -8,6 +8,7 @@
 
 #include <cstdio>
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -21,10 +22,24 @@ enum load_mode_type
     LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 
+/// Exception indicating that a dangerous path was supplied.
+struct unsafe_path : public runtime_error
+{
+    explicit unsafe_path(const string &msg) : runtime_error(msg) {}
+    explicit unsafe_path(const char *msg) : runtime_error(msg) {}
+};
+
+/**
+ * Create an unsafe_path exception from a printf-like specification.
+ * Users of this macro must #include "stringutil.h" themselves.
+ */
+#define unsafe_path_f(...) unsafe_path(make_stringf(__VA_ARGS__))
+
 bool file_exists(const string &name);
 bool dir_exists(const string &dir);
 bool is_absolute_path(const string &path);
-void assert_read_safe_path(const string &path) throw (string);
+/// @throws unsafe_path if the path was not safe.
+void assert_read_safe_path(const string &path);
 off_t file_size(FILE *handle);
 
 vector<string> get_dir_files(const string &dir);
