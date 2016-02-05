@@ -1443,13 +1443,15 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              2, POT_EXPERIENCE,
                                              0);
         }
-        while (// Too dangerous on monsters early on
-               stype == POT_BERSERK_RAGE && item_level < 2
-               || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
-                   && --tries > 0));
+        while (agent == GOD_XOM
+               && _is_boring_item(OBJ_POTIONS, stype)
+               && --tries > 0);
 
         item.sub_type = stype;
     }
+    // don't let monsters pickup early dangerous potions
+    if (item_level < 2 && item.sub_type == POT_BERSERK_RAGE)
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
@@ -1496,8 +1498,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
-               && _is_boring_item(OBJ_SCROLLS, item.sub_type)
-               && --tries > 0);
+                  && _is_boring_item(OBJ_SCROLLS, item.sub_type)
+                  && --tries > 0);
     }
 
     if (one_chance_in(24))
