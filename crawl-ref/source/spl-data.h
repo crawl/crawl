@@ -1559,7 +1559,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STONESKIN, "Stoneskin",
     SPTYP_EARTH | SPTYP_TRANSMUTATION,
-    SPFLAG_HELPFUL | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
+    SPFLAG_HELPFUL | SPFLAG_UTILITY | SPFLAG_NO_GHOST | SPFLAG_MONSTER,
     2,
     100,
     -1, -1,
