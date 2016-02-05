@@ -2277,7 +2277,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("Another wave of unholy energy enters you.");
         else
         {
-            mprf("You offer yourself to %s, and fill with unholy energy.",
+            mprf("You offer yourself to %s, and are filled with unholy energy.",
                  god_name(you.religion).c_str());
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
