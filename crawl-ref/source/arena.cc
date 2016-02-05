@@ -350,11 +350,11 @@ namespace arena
             {
                 place = level_id::parse_level_id(arena_place);
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
                 throw make_stringf("Bad place '%s': %s",
                                    arena_place.c_str(),
-                                   err.c_str());
+                                   err.what());
             }
         }
 

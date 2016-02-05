@@ -47,9 +47,9 @@ string dgn_set_default_depth(const string &s)
     {
         lc_default_depths = depth_ranges::parse_depth_ranges(s);
     }
-    catch (const string &error)
+    catch (const bad_level_id &err)
     {
-        return error;
+        return err.what();
     }
     return "";
 }
@@ -63,9 +63,9 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             drs.add_depths(depth_ranges::parse_depth_ranges(depth));
         }
-        catch (const string &error)
+        catch (const bad_level_id &err)
         {
-            luaL_error(ls, error.c_str());
+            luaL_error(ls, err.what());
         }
     }
 }
@@ -110,9 +110,9 @@ static int dgn_place(lua_State *ls)
             {
                 map->place = depth_ranges::parse_depth_ranges(luaL_checkstring(ls, 2));
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                luaL_error(ls, err.c_str());
+                luaL_error(ls, err.what());
             }
         }
     }
@@ -214,9 +214,9 @@ static int dgn_depth_chance(lua_State *ls)
     {
         map->_chance.add_range(depth, map_chance(chance_priority, chance));
     }
-    catch (const string &error)
+    catch (const bad_level_id &error)
     {
-        luaL_error(ls, error.c_str());
+        luaL_error(ls, error.what());
     }
     return 0;
 }

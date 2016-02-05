@@ -62,9 +62,9 @@ LUAFN(debug_goto_place)
         if (bind_entrance != -1)
             brentry[you.where_are_you].depth = bind_entrance;
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        luaL_error(ls, err.c_str());
+        luaL_error(ls, err.what());
     }
     return 0;
 }
