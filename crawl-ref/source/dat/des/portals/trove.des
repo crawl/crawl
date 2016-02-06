@@ -862,11 +862,11 @@ COLOUR: x = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = generate_awake shining eye
 # 21 items, 'cos this one is *nasty*.
-# There are 4 extra potions of cure mutation, anyway.
+# There are 4 extra potions of cure/beneficial mutation, anyway.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of cure mutation ident:type
+ITEM:   potion of cure mutation ident:type / potion of beneficial mutation ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
@@ -950,7 +950,7 @@ ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \
          potion of magic q:2 / potion of haste q:2
-ITEM:    potion of cure mutation
+ITEM:    potion of cure mutation / potion of beneficial mutation
 SHUFFLE: df
 SHUFFLE: eg
 : trove.setup_features(_G)
