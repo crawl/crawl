@@ -571,16 +571,8 @@ int player::halo_radius() const
     return size;
 }
 
-int monster::halo_radius() const
+static int _mons_class_halo_radius(monster_type type)
 {
-    item_def* weap = mslot_item(MSLOT_WEAPON);
-    int size = -1;
-
-    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
-        size = 3;
-
-    if (!(holiness() & MH_HOLY))
-        return size;
     // The values here depend on 1. power, 2. sentience. Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // little or none.
@@ -603,6 +595,20 @@ int monster::halo_radius() const
     default:
         return -1;
     }
+}
+
+int monster::halo_radius() const
+{
+    item_def* weap = mslot_item(MSLOT_WEAPON);
+    int size = -1;
+
+    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
+        size = 3;
+
+    if (!(holiness() & MH_HOLY))
+        return size;
+
+    return _mons_class_halo_radius(type);
 }
 
 //////////////////////
@@ -731,6 +737,10 @@ int monster::umbra_radius() const
 
     if (!(holiness() & MH_UNDEAD))
         return -1;
+
+    // Enslaved holies get an umbra.
+    if (mons_enslaved_soul(this))
+        return _mons_class_halo_radius(base_monster);
 
     switch (type)
     {

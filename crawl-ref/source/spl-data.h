@@ -2349,7 +2349,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_HOLIES, "Summon Holies",
     SPTYP_SUMMONING,
-    SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
+    SPFLAG_MONSTER | SPFLAG_MONS_ABJURE | SPFLAG_HOLY,
     5,
     0,
     -1, -1,
@@ -2372,7 +2372,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HOLY_FLAMES, "Holy Flames",
     SPTYP_NONE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE | SPFLAG_HOLY,
     7,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -2383,7 +2383,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HOLY_BREATH, "Holy Breath",
     SPTYP_CONJURATION,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD
+        | SPFLAG_HOLY,
     5,
     200,
     5, 5,
@@ -3585,7 +3586,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CLEANSING_FLAME, "Cleansing Flame",
     SPTYP_NONE,
-    SPFLAG_AREA | SPFLAG_MONSTER,
+    SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_HOLY,
     8,
     200,
     -1, -1,

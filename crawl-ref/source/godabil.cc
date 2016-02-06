@@ -1879,7 +1879,10 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.
     mon->flags |= orig.flags & MF_MELEE_MASK;
-    mon->spells = orig.spells;
+    monster_spells spl = orig.spells;
+    for (const mon_spell_slot &slot : spl)
+        if (!(get_spell_flags(slot.spell) & SPFLAG_HOLY))
+            mon->spells.push_back(slot);
 
     name_zombie(mon, &orig);
 
@@ -1891,6 +1894,13 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     mon->stop_constricting_all(false);
     mon->stop_being_constricted();
+
+    if (orig.halo_radius()
+        || orig.umbra_radius()
+        || orig.silence_radius())
+    {
+        invalidate_agrid();
+    }
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");

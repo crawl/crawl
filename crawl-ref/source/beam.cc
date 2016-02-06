@@ -5215,9 +5215,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = mon->holiness() & MH_NATURAL
+        rc = (mon->holiness() & MH_NATURAL
+              || mon->holiness() & MH_DEMONIC
+              || mon->holiness() & MH_HOLY)
+             && !mon->is_summoned()
+             && !mons_enslaved_body_and_soul(mon)
              && mon->attitude != ATT_FRIENDLY
-             && mons_can_be_zombified(mon)
              && mons_intel(mon) >= I_HUMAN;
         break;
 
