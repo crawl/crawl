@@ -1793,9 +1793,7 @@ enum duration_type
     DUR_DEATH_CHANNEL,
 #if TAG_MAJOR_VERSION == 34
     DUR_DEFLECT_MISSILES,
-#endif
     DUR_PHASE_SHIFT,
-#if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
 #endif
     DUR_WEAPON_BRAND,           // general "branding" spell counter
@@ -4330,8 +4328,8 @@ enum spell_type
     SPELL_ENGLACIATION,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SEE_INVISIBLE,
-#endif
     SPELL_PHASE_SHIFT,
+#endif
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_WARP_BRAND,
     SPELL_SILENCE,

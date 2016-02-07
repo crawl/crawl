@@ -283,13 +283,6 @@ static const duration_def duration_data[] =
       {{ "Your life is in your own hands again!", []() {
             you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
       }}, { "Your time is quickly running out!", 5 }}},
-    { DUR_PHASE_SHIFT,
-      0, "",
-      "phasing", "phase shift",
-      "You are out of phase with the material plane.", D_DISPELLABLE | D_EXPIRES,
-        {{ "You are firmly grounded in the material plane once more.", []() {
-            you.redraw_evasion = true;
-        }}, { "You feel closer to the material plane.", 1 }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
       "quad damage", "",
@@ -630,5 +623,6 @@ static const duration_def duration_data[] =
     { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
+    { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
 #endif
 };

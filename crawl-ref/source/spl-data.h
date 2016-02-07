@@ -1411,7 +1411,6 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
-#endif
 
 {
     SPELL_PHASE_SHIFT, "Phase Shift",
@@ -1423,6 +1422,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies",

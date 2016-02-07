@@ -3518,14 +3518,6 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
         ev += jewellery_plus;
     }
 
-    // ignore phase shift if dimension-anchored (or if told to)
-    if (mons_class_flag(type, M_PHASE_SHIFT)
-        && !((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
-    {
-        ev += 8;
-    }
-
-
     if (has_ench(ENCH_AGILE))
         ev += 5;
 

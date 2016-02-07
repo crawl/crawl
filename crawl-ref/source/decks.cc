@@ -1901,7 +1901,7 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 static void _helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    bool do_phaseshift = false;
+    bool do_agility    = false;
     bool do_armour     = false;
     bool do_shield     = false;
     bool do_resistance = false;
@@ -1909,27 +1909,27 @@ static void _helm_card(int power, deck_rarity_type rarity)
     // Chances are cumulative.
     if (power_level >= 2)
     {
-        if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_armour     = true;
-        if (coinflip()) do_shield     = true;
+        if (coinflip()) do_agility = true;
+        if (coinflip()) do_armour  = true;
+        if (coinflip()) do_shield  = true;
         do_resistance = true;
     }
     if (power_level >= 1)
     {
-        if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_armour     = true;
-        if (coinflip()) do_shield     = true;
+        if (coinflip()) do_agility = true;
+        if (coinflip()) do_armour  = true;
+        if (coinflip()) do_shield  = true;
     }
     if (power_level >= 0)
     {
         if (coinflip())
-            do_phaseshift = true;
+            do_agility = true;
         else
-            do_armour     = true;
+            do_armour = true;
     }
 
-    if (do_phaseshift)
-        cast_phase_shift(random2(power/4));
+    if (do_agility)
+        potionlike_effect(POT_AGILITY, random2(power/4));
     if (do_armour)
     {
         int pow = random2(power/4);

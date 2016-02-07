@@ -11,8 +11,7 @@ enum ev_ignore_bit
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1<<0,
-    EV_IGNORE_PHASESHIFT = 1<<1,
-    EV_IGNORE_UNIDED     = 1<<2,
+    EV_IGNORE_UNIDED     = 1<<1,
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore_bit);
 

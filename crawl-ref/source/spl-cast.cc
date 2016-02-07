@@ -1844,9 +1844,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CIGOTUVIS_EMBRACE:
         return corpse_armour(powc, fail);
 
-    case SPELL_PHASE_SHIFT:
-        return cast_phase_shift(powc, fail);
-
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
 
@@ -1947,6 +1944,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_FLY:
     case SPELL_STONESKIN:
     case SPELL_SUMMON_SWARM:
+    case SPELL_PHASE_SHIFT:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif
