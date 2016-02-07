@@ -638,6 +638,8 @@ static const food_def Food_prop[] =
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  1 },
 
 #if TAG_MAJOR_VERSION == 34
+    // is_real_food assumes we list FOOD_UNUSED as the first removed
+    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy",           0,     0,     0,  1 },
     { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  1 },
     { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  1 },
@@ -2285,6 +2287,13 @@ bool ring_has_stackable_effect(const item_def &item)
 //
 // Food functions:
 //
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food)
+{
+    return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
+}
+
+#endif
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)

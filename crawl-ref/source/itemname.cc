@@ -2545,7 +2545,8 @@ void check_item_knowledge(bool unknown_items)
 {
     vector<const item_def*> items;
     vector<const item_def*> items_missile; //List of missiles should go after normal items
-    vector<const item_def*> items_other;    //List of other items should go after everything
+    vector<const item_def*> items_food;    //List of foods should come next
+    vector<const item_def*> items_other;   //List of other items should go after everything
     vector<SelItem> selected_items;
 
     bool all_items_known = true;
@@ -2648,16 +2649,46 @@ void check_item_knowledge(bool unknown_items)
                     selected_items.emplace_back(0,2,ptmp);
             }
         }
+        // Foods
+        for (int i = 0; i < NUM_FOODS; i++)
+        {
+#if TAG_MAJOR_VERSION == 34
+            if (!is_real_food(static_cast<food_type>(i)))
+                continue;
+#endif
+
+            item_def* ptmp = new item_def;
+            if (ptmp != 0)
+            {
+                ptmp->base_type = OBJ_FOOD;
+                ptmp->sub_type  = i;
+                ptmp->rnd       = 1;
+                ptmp->quantity  = 1;
+
+                // Make chunks fresh, non-poisonous, etc.
+                if (ptmp->sub_type == FOOD_CHUNK)
+                {
+                    ptmp->freshness = 100;
+                    ptmp->mon_type = MONS_RAT;
+                }
+
+                items_food.push_back(ptmp);
+
+                if (you.force_autopickup[OBJ_FOOD][i] == 1)
+                    selected_items.emplace_back(0,1,ptmp);
+                if (you.force_autopickup[OBJ_FOOD][i] == -1)
+                    selected_items.emplace_back(0,2,ptmp);
+            }
+        }
+
         // Misc.
         static const object_class_type misc_list[] =
         {
-            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_RUNES,
         };
         static const int misc_ST_list[] =
         {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1,
             NUM_MISCELLANY, NUM_RUNE_TYPES,
         };
@@ -2672,13 +2703,6 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->rnd       = 1;
                 //show a good amount of gold
                 ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
-
-                // Make chunks fresh, non-poisonous, etc.
-                if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
-                {
-                    ptmp->freshness = 100;
-                    ptmp->mon_type = MONS_RAT;
-                }
 
                 // stupid fake decks
                 if (is_deck(*ptmp, true))
@@ -2696,6 +2720,7 @@ void check_item_knowledge(bool unknown_items)
 
     sort(items.begin(), items.end(), _identified_item_names);
     sort(items_missile.begin(), items_missile.end(), _identified_item_names);
+    sort(items_food.begin(), items_food.end(), _identified_item_names);
 
     KnownMenu menu;
     string stitle;
@@ -2723,6 +2748,7 @@ void check_item_knowledge(bool unknown_items)
                                               : known_item_mangle, 'a', false);
 
     ml = menu.load_items(items_missile, known_item_mangle, ml, false);
+    ml = menu.load_items(items_food, known_item_mangle, ml, false);
     menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
     menu.load_items_seq(items_other, known_item_mangle, ml);
 
@@ -2733,6 +2759,7 @@ void check_item_knowledge(bool unknown_items)
 
     deleteAll(items);
     deleteAll(items_missile);
+    deleteAll(items_food);
     deleteAll(items_other);
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
