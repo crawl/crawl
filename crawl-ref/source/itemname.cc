@@ -2696,8 +2696,11 @@ void check_item_knowledge(bool unknown_items)
 
     ml = menu.load_items(items_missile, known_item_mangle, ml, false);
     ml = menu.load_items(items_food, known_item_mangle, ml, false);
-    menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
-    menu.load_items_seq(items_other, known_item_mangle, ml);
+    if (!items_other.empty())
+    {
+        menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
+        ml = menu.load_items_seq(items_other, known_item_mangle, ml);
+    }
 
     menu.set_title(stitle);
     menu.show(true);
