@@ -136,8 +136,8 @@ enum monster_info_flags
     MB_REPEL_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
-#endif
     MB_CONDENSATION_SHIELD,
+#endif
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,

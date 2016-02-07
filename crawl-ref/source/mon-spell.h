@@ -819,7 +819,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
-       { SPELL_CONDENSATION_SHIELD, 10, MON_SPELL_WIZARD },
       }
     },
 
@@ -1985,7 +1984,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_ICICLE, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-       { SPELL_CONDENSATION_SHIELD, 12, MON_SPELL_WIZARD },
       }
     },
 
@@ -1994,7 +1992,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STONE_ARROW, 24, MON_SPELL_WIZARD },
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-       { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
       }
     },
 

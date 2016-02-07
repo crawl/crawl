@@ -36,7 +36,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_SAP_MAGIC,
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
-    ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
     ENCH_HEXED,
 };

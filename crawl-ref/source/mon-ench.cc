@@ -946,13 +946,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer deflecting missiles.");
         break;
 
-    case ENCH_CONDENSATION_SHIELD:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy shield evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
-
     case ENCH_RESISTANCE:
         if (!quiet)
             simple_monster_message(this, " is no longer unusually resistant.");
@@ -2138,10 +2131,9 @@ static const char *enchant_names[] =
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles",
 #if TAG_MAJOR_VERSION == 34
-    "negative_vuln",
+    "negative_vuln", "condensation_shield",
 #endif
-    "condensation_shield", "resistant",
-    "hexed", "corpse_armour",
+    "resistant", "hexed", "corpse_armour",
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif

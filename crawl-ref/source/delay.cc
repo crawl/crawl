@@ -1036,11 +1036,6 @@ static void _armour_wear_effects(const int item_slot)
             remove_ice_armour();
         }
     }
-    else if (eq_slot == EQ_SHIELD)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-    }
 
     equip_item(eq_slot, item_slot);
 

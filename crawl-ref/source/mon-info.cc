@@ -105,7 +105,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
-    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
@@ -1543,8 +1542,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.emplace_back("heavily drained");
-    if (is(MB_CONDENSATION_SHIELD))
-        v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))

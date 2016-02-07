@@ -509,8 +509,7 @@ static bool _boosted_ev()
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_CONDENSATION_SHIELD]
-           || you.duration[DUR_MAGIC_SHIELD]
+    return you.duration[DUR_MAGIC_SHIELD]
            || you.duration[DUR_DIVINE_SHIELD]
            || qazlal_sh_boost() > 0
            || you.attribute[ATTR_BONE_ARMOUR] > 0;

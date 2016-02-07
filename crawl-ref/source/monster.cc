@@ -916,9 +916,6 @@ void monster::equip_armour(item_def &item, bool msg)
                            item.name(DESC_A) + ".";
         simple_monster_message(this, str.c_str());
     }
-
-    if (is_shield(item) && has_ench(ENCH_CONDENSATION_SHIELD))
-        del_ench(ENCH_CONDENSATION_SHIELD);
 }
 
 void monster::equip_jewellery(item_def &item, bool msg)
@@ -3158,9 +3155,9 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
-                    || has_ench(ENCH_BONE_ARMOUR)
-                    || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
+    return shield()
+           || has_ench(ENCH_BONE_ARMOUR)
+           || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
 int monster::shield_bonus() const
@@ -3178,17 +3175,11 @@ int monster::shield_bonus() const
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
-    if (has_ench(ENCH_CONDENSATION_SHIELD))
-    {
-        const int condensation_shield = get_hit_dice() / 2;
-        sh = max(sh + condensation_shield, condensation_shield);
-    }
     if (has_ench(ENCH_BONE_ARMOUR))
     {
         const int bone_armour = 6 + get_hit_dice() / 3;
         sh = max(sh + bone_armour, bone_armour);
     }
-
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)

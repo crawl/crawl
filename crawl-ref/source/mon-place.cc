@@ -1536,13 +1536,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_CIGOTUVIS_EMBRACE))
         mon->add_ench(ENCH_BONE_ARMOUR);
 
-    if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
-    {
-        const int power = (mon->spell_hd(SPELL_CONDENSATION_SHIELD) * 15) / 10;
-        mon->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD, 15 + random2(power),
-                                  mon));
-    }
-
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
