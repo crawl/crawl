@@ -13,10 +13,6 @@ extern "C" {
 #include <set>
 #include <string>
 
-#ifndef CLUA_MAX_MEMORY_USE
-#define CLUA_MAX_MEMORY_USE (6 * 1024)
-#endif
-
 class CLua;
 
 class lua_stack_cleaner
