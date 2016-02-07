@@ -574,7 +574,7 @@ MONS:    plant col:white
 MONS:    plant col:white / plant col:blue w:6
 MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
 #
-# Items: d = scrolls from header function, e/E = jewellery/amulets, 
+# Items: d = scrolls from header function, e/E = jewellery/amulets,
 #        f/F/B = armour/weapon/book, g = potions
 SHUFFLE: eE, fFB
 : trove.good_scroll(_G)
