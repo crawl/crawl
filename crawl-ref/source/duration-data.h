@@ -251,12 +251,12 @@ static const duration_def duration_data[] =
       0, "",
       "sleeping", "sleep",
       "You are sleeping.", D_NO_FLAGS},
-    { DUR_STONESKIN,
+    { DUR_MAGIC_ARMOUR,
       0, "",
-      "stone skin", "stoneskin",
-      "Your skin is tough as stone.", D_DISPELLABLE,
-      {{ "Your skin feels tender.", [](){
-          you.props.erase(STONESKIN_KEY);
+      "magic armour", "magic armour",
+      "You are magically armoured.", D_DISPELLABLE,
+      {{ "Your magical armour fades away.", [](){
+          you.props.erase(MAGIC_ARMOUR_KEY);
           you.redraw_armour_class = true;
       }}}},
     { DUR_SWIFTNESS,

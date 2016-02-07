@@ -96,7 +96,7 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
-    MB_STONESKIN,
+    MB_MAGIC_ARMOUR,
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,

@@ -1394,7 +1394,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERKER_RAGE:
     case SPELL_TROGS_HAND:
     case SPELL_SWIFTNESS:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_STONESKIN:
+#endif
     case SPELL_WATER_ELEMENTALS:
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
@@ -5454,19 +5456,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             simple_monster_message(mons, " seems to move somewhat quicker.");
         return;
 
-    case SPELL_STONESKIN:
-    {
-        if (you.can_see(*mons))
-        {
-            mprf("%s skin hardens.",
-                 apostrophise(mons->name(DESC_THE)).c_str());
-        }
-        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
-        mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
-                       BASELINE_DELAY * (10 + (2 * random2(power)))));
-        return;
-    }
-
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
         invalidate_agrid(true);
@@ -7868,9 +7857,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->has_ench(ENCH_RAISED_MR)
                || mon->has_ench(ENCH_REGENERATION);
 
-    case SPELL_STONESKIN:
-        return mon->is_insubstantial() || mon->has_ench(ENCH_STONESKIN);
-
     case SPELL_INVISIBILITY:
         return mon->has_ench(ENCH_INVIS)
                || mon->glows_naturally();
@@ -8353,6 +8339,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_IGNITE_POISON_SINGLE:
     case SPELL_CONDENSATION_SHIELD:
+    case SPELL_STONESKIN:
 #endif
     case SPELL_NO_SPELL:
         return true;

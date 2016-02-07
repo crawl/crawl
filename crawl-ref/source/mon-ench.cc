@@ -480,10 +480,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s skin looks tender.",
+            mprf("%s magical armour fades away.",
                  apostrophise(name(DESC_THE)).c_str());
         }
         break;
@@ -1411,7 +1411,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
@@ -2279,7 +2279,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:

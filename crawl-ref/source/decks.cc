@@ -1902,7 +1902,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     bool do_phaseshift = false;
-    bool do_stoneskin  = false;
+    bool do_armour     = false;
     bool do_shield     = false;
     bool do_resistance = false;
 
@@ -1910,14 +1910,14 @@ static void _helm_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_stoneskin  = true;
+        if (coinflip()) do_armour     = true;
         if (coinflip()) do_shield     = true;
         do_resistance = true;
     }
     if (power_level >= 1)
     {
         if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_stoneskin  = true;
+        if (coinflip()) do_armour     = true;
         if (coinflip()) do_shield     = true;
     }
     if (power_level >= 0)
@@ -1925,13 +1925,20 @@ static void _helm_card(int power, deck_rarity_type rarity)
         if (coinflip())
             do_phaseshift = true;
         else
-            do_stoneskin  = true;
+            do_armour     = true;
     }
 
     if (do_phaseshift)
         cast_phase_shift(random2(power/4));
-    if (do_stoneskin)
-        cast_stoneskin(random2(power/4));
+    if (do_armour)
+    {
+        int pow = random2(power/4);
+        if (you.duration[DUR_MAGIC_ARMOUR] == 0)
+            mpr("You gain magical protection.");
+        you.increase_duration(DUR_MAGIC_ARMOUR,
+                              10 + random2(pow) + random2(pow), 50);
+        you.props[MAGIC_ARMOUR_KEY] = pow;
+    }
     if (do_resistance)
     {
         mpr("You feel resistant.");
@@ -1949,8 +1956,20 @@ static void _helm_card(int power, deck_rarity_type rarity)
         monster* mon = monster_at(*ri);
 
         if (mon && mon->wont_attack() && x_chance_in_y(power_level, 2))
-            mon->add_ench(coinflip() ? ENCH_STONESKIN : ENCH_SHROUD);
+        {
+            bool armour = coinflip();
+            mon->add_ench(armour ? ENCH_MAGIC_ARMOUR : ENCH_SHROUD);
+            if (armour)
+                simple_monster_message(mon, " gains magical protection.");
+            else
+            {
+                mprf("Space distorts along a thin shroud covering %s %s.",
+                     apostrophise(mon->name(DESC_THE)).c_str(),
+                     mon->is_insubstantial() ? "form" : "body");
+            }
+        }
     }
+    you.redraw_armour_class = true;
 }
 
 static void _blade_card(int power, deck_rarity_type rarity)

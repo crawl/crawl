@@ -1812,16 +1812,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans)
-        && which_trans != TRAN_STATUE
-        && you.duration[DUR_STONESKIN])
-    {
-        mprf("Your stony body turns to %s.",
-             get_form(which_trans)->flesh_equivalent.c_str());
-        you.duration[DUR_STONESKIN] = 0;
-    }
-
     // Update your status.
     you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, _transform_duration(which_trans, pow));

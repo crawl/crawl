@@ -6072,8 +6072,8 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
-    if (duration[DUR_STONESKIN])
-        AC += 200 + you.props[STONESKIN_KEY].get_int() * 5;
+    if (duration[DUR_MAGIC_ARMOUR])
+        AC += 200 + you.props[MAGIC_ARMOUR_KEY].get_int() * 5;
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
