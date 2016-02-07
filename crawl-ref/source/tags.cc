@@ -1021,7 +1021,14 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 {
     dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUnsigned(th));
-    return rewrite_feature(x, th.getMinorVersion());
+    x = rewrite_feature(x, th.getMinorVersion());
+
+    // There was a period of time when this function (only this one, not
+    // unmarshallFeatureType) lacked some of the conversions now done by
+    // rewrite_feature. In case any saves were transferred through those
+    // versions, replace bad features with DNGN_UNSEEN. Questionable, but
+    // this is just map_knowledge so the impact should be low.
+    return is_valid_feature_type(x) ? x : DNGN_UNSEEN;
 }
 #endif
 
