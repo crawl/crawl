@@ -1518,8 +1518,8 @@ static mutation_type _beastly_appendage()
 }
 
 static bool _transformation_is_safe(transformation_type which_trans,
-                                    dungeon_feature_type feat, bool quiet,
-                                    string *fail_reason = nullptr)
+                                    dungeon_feature_type feat,
+                                    string *fail_reason)
 {
 #if TAG_MAJOR_VERSION == 34
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
@@ -1528,12 +1528,12 @@ static bool _transformation_is_safe(transformation_type which_trans,
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
-    const string msg = make_stringf("You would %s in your new form.",
-                                    feat == DNGN_DEEP_WATER ? "drown" : "burn");
     if (fail_reason)
-        *fail_reason = msg;
-    if (!quiet)
-        mpr(msg);
+    {
+        *fail_reason = make_stringf("You would %s in your new form.",
+                                    feat == DNGN_DEEP_WATER ? "drown" : "burn");
+    }
+
     return false;
 }
 
@@ -1692,8 +1692,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg = "You are stuck in your current form!";
         success = false;
     }
-    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-                                      involuntary || fail_reason, &msg))
+    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()), &msg))
     {
         success =  false;
     }
