@@ -349,7 +349,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DEATHS_DOOR, "Death's Door",
     SPTYP_CHARMS | SPTYP_NECROMANCY,
-    SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+    SPFLAG_EMERGENCY | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
     8,
     200,
     -1, -1,
