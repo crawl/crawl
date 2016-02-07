@@ -1489,7 +1489,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
     case SPELL_HUNTING_CRY:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CONDENSATION_SHIELD:
+#endif
     case SPELL_CONTROL_UNDEAD:
     case SPELL_CLEANSING_FLAME:
     case SPELL_PARALYSIS_GAZE:
@@ -6638,21 +6640,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_HUNTING_CRY:
         return;
 
-    case SPELL_CONDENSATION_SHIELD:
-    {
-        if (you.can_see(*mons))
-        {
-            mprf("A crackling disc of dense vapour forms near %s!",
-                 mons->name(DESC_THE).c_str());
-        }
-        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
-        mons->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD,
-                                   15 + random2(power),
-                                   mons));
-
-        return;
-    }
-
     case SPELL_CONJURE_FLAME:
     {
         if (in_bounds(pbolt.target))
@@ -8301,10 +8288,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DRAINING_GAZE:
         return !foe || !mon->can_see(*foe);
 
-    case SPELL_CONDENSATION_SHIELD:
-        return mon->shield()
-               || mon->has_ench(ENCH_CONDENSATION_SHIELD);
-
     case SPELL_CONTROL_UNDEAD:
         return _mons_control_undead(mon, false) < 0;
 
@@ -8369,6 +8352,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SIMULACRUM:
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_IGNITE_POISON_SINGLE:
+    case SPELL_CONDENSATION_SHIELD:
 #endif
     case SPELL_NO_SPELL:
         return true;

@@ -1123,7 +1123,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             {
                 case SPELL_STATUE_FORM:
                 case SPELL_ICE_FORM:
-                case SPELL_CONDENSATION_SHIELD:
                     return "you're too hot.";
                 default:
                     break;

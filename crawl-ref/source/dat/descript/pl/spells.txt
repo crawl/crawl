@@ -91,14 +91,6 @@ Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
-Condensation Shield spell
-
-Ten czar tworzy lodowy dysk z wilgoci zawartej w powietrzu, który unosi się
-przez okres działania czaru, sterowany umysłem czarującego. Działa jak zwykła
-tarcza, jednak nie wymaga wolnej ręki a więc nie koliduje z oburęcznymi brońmi.
-Grubość, rozmiar i wytrzymałość tego dysku zależy od umiejętności z dziedziny
-Magii Lodu.
-%%%%
 Confuse spell
 
 Ten czar, jeśli nie zostanie odparty, powoduje tymczasowe zaćmienie umysłu u

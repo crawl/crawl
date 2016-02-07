@@ -274,14 +274,6 @@ Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
 %%%%
-Condensation Shield spell
-
-Causes a disc of dense vapour to condense out of the air surrounding the
-caster. It blocks attacks like a normal shield, but its effectiveness depends
-solely on power, and not on the Shields skill. The disc is controlled by the
-caster's mind, and thus will not conflict with the wielding of a two-handed
-weapon.
-%%%%
 Confuse spell
 
 Induces a state of bewilderment and confusion in a creature's mind.

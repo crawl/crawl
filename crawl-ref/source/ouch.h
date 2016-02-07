@@ -17,7 +17,6 @@
  * matter, only the key's existence in the hash.
  */
 #define MELT_ARMOUR_KEY "melt_armour"
-#define MELT_SHIELD_KEY "melt_shield"
 
 // Keep in sync with names in hiscores.cc.
 // Note that you can't ever remove entries from here -- not even when a major

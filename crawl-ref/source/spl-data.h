@@ -1547,6 +1547,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
     SPTYP_ICE,
@@ -1557,6 +1558,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_STONESKIN, "Stoneskin",

@@ -4709,7 +4709,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_HIBERNATION:              return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
     case SPELL_THROW_ICICLE:             return TILEG_THROW_ICICLE;
-    case SPELL_CONDENSATION_SHIELD:      return TILEG_CONDENSATION_SHIELD;
     case SPELL_OZOCUBUS_REFRIGERATION:   return TILEG_OZOCUBUS_REFRIGERATION;
     case SPELL_BOLT_OF_COLD:             return TILEG_BOLT_OF_COLD;
     case SPELL_FREEZING_CLOUD:           return TILEG_FREEZING_CLOUD;

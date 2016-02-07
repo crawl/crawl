@@ -2448,17 +2448,8 @@ int player_shield_class()
 
         shield += stat;
     }
-    else
-    {
-        if (you.duration[DUR_MAGIC_SHIELD])
-        {
-            shield += 900 + player_adjust_evoc_power(
-                                you.skill(SK_EVOCATIONS, 75));
-        }
-
-        if (you.duration[DUR_CONDENSATION_SHIELD])
-            shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
-    }
+    else if (you.duration[DUR_MAGIC_SHIELD])
+        shield += 900 + player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 75));
 
     // mutations
     // +2, +3, +4 (displayed values)
@@ -3360,7 +3351,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
-    case DUR_CONDENSATION_SHIELD:
     case DUR_PHASE_SHIFT:
     case DUR_DEATH_CHANNEL:
     case DUR_SHROUD_OF_GOLUBRIA:
@@ -5744,7 +5734,6 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
-           || duration[DUR_CONDENSATION_SHIELD]
            || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0

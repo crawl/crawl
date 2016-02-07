@@ -4716,28 +4716,6 @@ void bolt::hit_shield(actor* blocker) const
 {
     if (flavour == BEAM_ACID)
         blocker->corrode_equipment();
-    if (is_fiery() || flavour == BEAM_STEAM)
-    {
-        monster* mon = blocker->as_monster();
-        if (mon && mon->has_ench(ENCH_CONDENSATION_SHIELD))
-        {
-            if (!mon->lose_ench_levels(mon->get_ench(ENCH_CONDENSATION_SHIELD),
-                                       10 * BASELINE_DELAY, true)
-                && you.can_see(*mon))
-            {
-                mprf("The heat melts %s icy shield.",
-                     apostrophise(mon->name(DESC_THE)).c_str());
-            }
-        }
-        else if (!mon && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            you.duration[DUR_CONDENSATION_SHIELD] -= 10 * BASELINE_DELAY;
-            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
-                remove_condensation_shield();
-            else
-                you.props[MELT_SHIELD_KEY] = true;
-        }
-    }
     if (blocker->is_player())
         you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
 }

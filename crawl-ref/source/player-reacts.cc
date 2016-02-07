@@ -255,31 +255,16 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
- * Check whether the player's ice (ozocubu's) armour and/or condensation shield
- * were melted this turn; if so, print the appropriate message.
+ * Check whether the player's ice (Ozocubu's) armour was melted this turn.
+ * If so, print the appropriate message.
  */
 static void _maybe_melt_armour()
 {
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
-    string what;
     if (you.props.exists(MELT_ARMOUR_KEY))
-    {
-        what = "armour";
-        you.props.erase(MELT_ARMOUR_KEY);
-    }
-
-    if (you.props.exists(MELT_SHIELD_KEY))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase(MELT_SHIELD_KEY);
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
+        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
 }
 
 /**
