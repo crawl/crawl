@@ -911,10 +911,10 @@ impact. Its damage partially bypasses armour.
 %%%%
 Ozocubu's Armour spell
 
-Envelops the caster's body in a protective layer of ice. The caster will not
-suffer cold from this layer, yet can be affected by other sources of cold
-normally. The spell will not function for casters already wearing heavy armour
-(any body armour with an encumbrance rating of 5 or more).
+Envelops the caster's body in a protective layer of thick ice. This will slow
+the caster's movement slightly, and provides no special protection against cold.
+The spell will not function for casters already wearing heavy armour (any body
+armour with an encumbrance rating of 5 or more).
 %%%%
 Ozocubu's Refrigeration spell
 
