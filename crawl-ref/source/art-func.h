@@ -1274,25 +1274,44 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
+static void _CAPTAIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you_worship(GOD_SHINING_ONE))
+    {
+        _equip_mpr(show_msgs,
+                   "You feel dishonourable wielding this.");
+    }
+    else
+    {
+        _equip_mpr(show_msgs,
+                   "You feel a cutthroat vibe.");
+    }
+}
+
 static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                actor* defender, bool mondied, int dam)
 {
     // Player disarming sounds like a bad idea; monster-on-monster might
     // work but would be complicated.
-    if (!attacker->is_player() || !defender->is_monster() || mondied)
-        return;
-
-    if (x_chance_in_y(dam, 75))
+    if (coinflip()
+        && dam >= (3 + random2(defender->get_hit_dice()))
+        && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam*4)
+        && attacker->is_player()
+        && defender->is_monster()
+        && !mondied)
     {
         item_def *wpn = defender->as_monster()->disarm();
         if (wpn)
         {
-            mprf("You knock %s %s to the ground with your cutlass!",
-                 apostrophise(defender->name(DESC_THE)).c_str(),
-                 wpn->name(DESC_PLAIN).c_str());
+            mprf("The captain's cutlass flashes! You lacerate %s!!",
+                defender->name(DESC_THE).c_str());
+            mprf("%s %s falls to the floor!",
+                apostrophise(defender->name(DESC_THE)).c_str(),
+                wpn->name(DESC_PLAIN).c_str());
+            defender->hurt(attacker, 18 + random2(18));
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 3);
         }
     }
-
 }
 
 ///////////////////////////////////////////////////

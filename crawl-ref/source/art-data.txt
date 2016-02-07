@@ -637,7 +637,7 @@ ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
 INSCRIP:  disarm
-PLUS:     +5
+PLUS:     +7
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass
