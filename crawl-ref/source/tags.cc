@@ -970,12 +970,11 @@ static spell_type unmarshallSpellType(reader &th
     return x;
 }
 
-static dungeon_feature_type unmarshallFeatureType(reader &th)
+static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
+                                            int minor_version)
 {
-    dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
-
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() == TAG_MINOR_0_11)
+    if (minor_version == TAG_MINOR_0_11)
     {
         // turn old trees into...trees
         if (x == DNGN_OPEN_SEA)
@@ -984,9 +983,9 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
             x = (dungeon_feature_type)(x - 1);
     }
     // turn mangroves into trees
-    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
+    else if (minor_version < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
         x = DNGN_TREE;
-    else if (th.getMinorVersion() < TAG_MINOR_FIX_FEAT_SHIFT
+    else if (minor_version < TAG_MINOR_FIX_FEAT_SHIFT
              && x > DNGN_OPEN_SEA && x < DNGN_LAVA)
     {
         x = static_cast<dungeon_feature_type>(x - 1);
@@ -994,9 +993,27 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 
     if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
         x = DNGN_DRY_FOUNTAIN;
+
+    if (x == DNGN_SEALED_DOOR && minor_version < TAG_MINOR_0_12)
+        x = DNGN_CLOSED_DOOR;
+    if (x == DNGN_BADLY_SEALED_DOOR)
+        x = DNGN_SEALED_DOOR;
+    if (x == DNGN_ESCAPE_HATCH_UP && player_in_branch(BRANCH_LABYRINTH))
+        x = DNGN_EXIT_LABYRINTH;
+    if (x == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
+        && minor_version < TAG_MINOR_SHOALS_LITE)
+    {
+        x = DNGN_SHALLOW_WATER;
+    }
 #endif
 
     return x;
+}
+
+static dungeon_feature_type unmarshallFeatureType(reader &th)
+{
+    dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+    return rewrite_feature(x, th.getMinorVersion());
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1004,18 +1021,7 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 {
     dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUnsigned(th));
-
-    if (th.getMinorVersion() == TAG_MINOR_0_11)
-    {
-        if (x == DNGN_OPEN_SEA)
-            x = DNGN_TREE;
-        else if (x >= DNGN_LAVA_SEA && x < 30)
-            x = (dungeon_feature_type)(x - 1);
-    }
-    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
-        x = DNGN_TREE;
-
-    return x;
+    return rewrite_feature(x, th.getMinorVersion());
 }
 #endif
 
@@ -4601,20 +4607,6 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE)
 #if TAG_MAJOR_VERSION == 34
         feature = unmarshallFeatureType_Info(th);
-    if (feature == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
-        feature = DNGN_CLOSED_DOOR;
-    if (feature == DNGN_BADLY_SEALED_DOOR)
-        feature = DNGN_SEALED_DOOR;
-    if (feature == DNGN_ESCAPE_HATCH_UP
-        && player_in_branch(BRANCH_LABYRINTH))
-    {
-        feature = DNGN_EXIT_LABYRINTH;
-    }
-    if (feature == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
-        && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
-    {
-        feature = DNGN_SHALLOW_WATER;
-    }
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -5312,22 +5304,6 @@ static void tag_read_level(reader &th)
             dungeon_feature_type feat = unmarshallFeatureType(th);
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
-#if TAG_MAJOR_VERSION == 34
-            if (feat == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
-                grd[i][j] = DNGN_CLOSED_DOOR;
-            if (feat == DNGN_BADLY_SEALED_DOOR)
-                grd[i][j] = DNGN_SEALED_DOOR;
-            if (feat == DNGN_ESCAPE_HATCH_UP
-                && player_in_branch(BRANCH_LABYRINTH))
-            {
-                grd[i][j] = DNGN_EXIT_LABYRINTH;
-            }
-            if (feat == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
-                && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
-            {
-                grd[i][j] = DNGN_SHALLOW_WATER;
-            }
-#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
