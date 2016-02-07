@@ -359,12 +359,6 @@ czas. Trwa to chwilę: początkowo ofiara jest tylko spowolniona, aż w końcu
 stopniowo zmieni się całkowicie w kamień. Oczywiście, łupanie kamienia jest
 trudniejsze niż żywego ciała, jednak ofiara, mimo że twarda, jest bezbronna.
 %%%%
-Phase Shift spell
-
-Ten czar pozwala rzucającemu „migotać” pomiędzy światem rzeczywistym a
-urojonym, co czasem pozwala całkowicie uniknąć pocisków i ciosów, jeśli w
-momencie ich zadania akurat będzie się „migniętym” poza świat.
-%%%%
 Poison Arrow spell
 
 Ten czar ciska magiczną strzałę zatrutą skrajnie zjadliwą toksyną, przed którą

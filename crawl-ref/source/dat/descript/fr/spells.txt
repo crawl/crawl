@@ -634,11 +634,6 @@ Ce sort tente de pétrifier un monstre. En cas de succès, le monstre est ralent
 pendant un certain temps jusqu'à ce qu'il soit temporairement transformé en
 pierre. Dans cet état, un monstre souffrira de moins de dégâts lorsque frappé.
 %%%%
-Phase Shift spell
-
-Ce sort permet au sorcier de se déphaser temporairement du plan matériel, lui
-permettant d'occasionnellement éviter entièrement des attaques.
-%%%%
 Poison Arrow spell
 
 Ce sort projette une flèche magique enduite d'une toxine des plus nuisibles.

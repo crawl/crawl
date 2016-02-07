@@ -2230,9 +2230,6 @@ static int _player_para_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = 0;
 
-    if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
-        evbonus += 8;
-
     if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
         evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
@@ -3351,7 +3348,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
-    case DUR_PHASE_SHIFT:
     case DUR_DEATH_CHANNEL:
     case DUR_SHROUD_OF_GOLUBRIA:
     case DUR_INFUSION:

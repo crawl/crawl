@@ -252,26 +252,6 @@ void end_recall()
     you.recall_list.clear();
 }
 
-// Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
-spret_type cast_phase_shift(int pow, bool fail)
-{
-    if (you.duration[DUR_DIMENSION_ANCHOR])
-    {
-        mpr("You are anchored firmly to the material plane!");
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    if (!you.duration[DUR_PHASE_SHIFT])
-        mpr("You feel the strange sensation of being on two planes at once.");
-    else
-        mpr("You feel the material plane grow further away.");
-
-    you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
-    you.redraw_evasion = true;
-    return SPRET_SUCCESS;
-}
-
 static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Worked stone walls are out, they're not diggable and

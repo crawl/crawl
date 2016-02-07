@@ -3301,7 +3301,6 @@ bool bolt::misses_player()
     }
 
     const int dodge = you.evasion();
-    const int dodge_less = you.evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
@@ -3403,19 +3402,14 @@ bool bolt::misses_player()
 
     int defl = you.missile_deflection();
 
-    if (!_test_beam_hit(real_tohit, dodge_less, pierce, 0, r))
+    if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
         mprf("The %s misses you.", name.c_str());
-    else if (defl && !_test_beam_hit(real_tohit, dodge_less, pierce, defl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
         you.ablate_deflection();
-    }
-    else if (!_test_beam_hit(real_tohit, dodge, pierce, defl, r))
-    {
-        mprf("You momentarily phase out as the %s "
-             "passes through you.", name.c_str());
     }
     else
     {
@@ -3696,7 +3690,6 @@ void bolt::affect_player_enchantment(bool resistible)
             you.duration[DUR_TELEPORT] = 0;
             mpr("Your teleport is interrupted.");
         }
-        you.duration[DUR_PHASE_SHIFT] = 0;
         you.redraw_evasion = true;
         obvious_effect = true;
         break;
@@ -4968,14 +4961,6 @@ void bolt::affect_monster(monster* mon)
                 msg::stream << mon->name(DESC_THE) << " "
                             << deflects << " the " << name
                             << '!' << endl;
-            }
-            else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
-                     && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       pierce, 0, r))
-            {
-                msg::stream << mon->name(DESC_THE) << " momentarily phases "
-                            << "out as the " << name << " passes through "
-                            << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
             }
             else
             {

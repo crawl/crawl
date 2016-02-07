@@ -249,38 +249,19 @@ bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
-    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
+    if (needs_message)
     {
-        if (needs_message && defender_visible)
+        // TODO: Unify these, placed player_warn_miss here so I can remove
+        // player_attack
+        if (attacker->is_player())
+            player_warn_miss();
+        else
         {
-            mprf("%s momentarily %s out as %s "
-                 "attack passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 atk_name(DESC_ITS).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+            mprf("%s%s misses %s%s",
+                 atk_name(DESC_THE).c_str(),
+                 evasion_margin_adverb().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(damage_done).c_str());
-        }
-    }
-    else
-    {
-        if (needs_message)
-        {
-            // TODO: Unify these, placed player_warn_miss here so I can remove
-            // player_attack
-            if (attacker->is_player())
-                player_warn_miss();
-            else
-            {
-                mprf("%s%s misses %s%s",
-                     atk_name(DESC_THE).c_str(),
-                     evasion_margin_adverb().c_str(),
-                     defender_name(true).c_str(),
-                     attack_strength_punctuation(damage_done).c_str());
-            }
         }
     }
 
@@ -1241,21 +1222,8 @@ bool melee_attack::player_aux_test_hit()
     if (to_hit >= evasion || auto_hit)
         return true;
 
-    const int phaseless_evasion =
-        defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (to_hit >= phaseless_evasion && defender_visible)
-    {
-        mprf("Your %s passes through %s as %s momentarily phases out.",
-            aux_attack.c_str(),
-            defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN_SUBJECTIVE).c_str());
-    }
-    else
-    {
-        mprf("Your %s misses %s.", aux_attack.c_str(),
-             defender->name(DESC_THE).c_str());
-    }
+    mprf("Your %s misses %s.", aux_attack.c_str(),
+         defender->name(DESC_THE).c_str());
 
     return false;
 }

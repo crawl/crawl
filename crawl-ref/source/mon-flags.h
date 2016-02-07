@@ -107,8 +107,7 @@ enum monclass_flag_type : uint64_t
     /// can do damage when attacked in melee
     M_SPINY             = BIT(32),
 
-    /// phase shift (EV bonus not included)
-    M_PHASE_SHIFT       = BIT(33),
+                        //BIT(33),
 
     /// not a valid polymorph target (but can be polymorphed)
     M_NO_POLY_TO        = BIT(34),
