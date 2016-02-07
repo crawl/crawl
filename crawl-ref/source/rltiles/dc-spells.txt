@@ -33,7 +33,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE

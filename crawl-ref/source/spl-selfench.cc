@@ -82,7 +82,7 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
         mpr("The film of ice won't work on stone.");
         return SPRET_ABORT;
@@ -178,7 +178,7 @@ int harvest_corpses(const actor &harvester, bool dry_run)
  */
 spret_type corpse_armour(int pow, bool fail)
 {
-    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
         mpr("The corpses won't embrace your stony flesh.");
         return SPRET_ABORT;

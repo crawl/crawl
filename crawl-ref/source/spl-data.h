@@ -1558,7 +1558,6 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
-#endif
 
 {
     SPELL_STONESKIN, "Stoneskin",
@@ -1570,6 +1569,7 @@ static const struct spell_desc spelldata[] =
     2, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SIMULACRUM, "Simulacrum",

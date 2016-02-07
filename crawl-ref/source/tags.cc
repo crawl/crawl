@@ -2564,7 +2564,7 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
-        you.duration[DUR_STONESKIN] = 0;
+        you.duration[DUR_MAGIC_ARMOUR] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
         you.duration[DUR_CONFUSING_TOUCH] = 0;
