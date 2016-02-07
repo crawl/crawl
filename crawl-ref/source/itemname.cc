@@ -2541,6 +2541,44 @@ static bool _identified_item_names(const item_def *it1,
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
 
+// Allocate (with new) a new item_def with the given base and sub types,
+// add a pointer to it to the items vector, and if it has a force_autopickup
+// setting add a corresponding SelItem to selected.
+static void _add_fake_item(object_class_type base, int sub,
+                           vector<SelItem> &selected,
+                           vector<const item_def*> &items,
+                           bool force_known_type = false)
+{
+    item_def* ptmp = new item_def;
+
+    ptmp->base_type = base;
+    ptmp->sub_type  = sub;
+    ptmp->quantity  = 1;
+    ptmp->rnd       = 1;
+
+    if (base == OBJ_WANDS && sub != NUM_WANDS)
+        ptmp->charges = wand_max_charges(*ptmp);
+    else if (base == OBJ_GOLD)
+        ptmp->quantity = 18;
+    else if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
+    {
+        ptmp->freshness = 100;
+        ptmp->mon_type = MONS_RAT;
+    }
+    else if (is_deck(*ptmp, true)) // stupid fake decks
+        ptmp->deck_rarity = DECK_RARITY_COMMON;
+
+    if (force_known_type)
+        ptmp->flags |= ISFLAG_KNOW_TYPE;
+
+    items.push_back(ptmp);
+
+    if (you.force_autopickup[base][sub] == 1)
+        selected.emplace_back(0, 1, ptmp);
+    else if (you.force_autopickup[base][sub] == -1)
+        selected.emplace_back(0, 2, ptmp);
+}
+
 void check_item_knowledge(bool unknown_items)
 {
     vector<const item_def*> items;
@@ -2577,26 +2615,7 @@ void check_item_knowledge(bool unknown_items)
             }
 
             if (you.type_ids[i][j] != unknown_items) // logical xor
-            {
-                item_def* ptmp = new item_def;
-                if (ptmp != 0)
-                {
-                    ptmp->base_type = i;
-                    ptmp->sub_type  = j;
-                    ptmp->quantity  = 1;
-                    ptmp->rnd       = 1;
-                    if (!unknown_items)
-                        ptmp->flags |= ISFLAG_KNOW_TYPE;
-                    if (i == OBJ_WANDS)
-                        ptmp->plus = wand_max_charges(*ptmp);
-                    items.push_back(ptmp);
-
-                    if (you.force_autopickup[i][j] == 1)
-                        selected_items.emplace_back(0,1,ptmp);
-                    if (you.force_autopickup[i][j] == -1)
-                        selected_items.emplace_back(0,2,ptmp);
-                }
-            }
+                _add_fake_item(i, j, selected_items, items, !unknown_items);
             else
                 all_items_known = false;
         }
@@ -2612,20 +2631,7 @@ void check_item_knowledge(bool unknown_items)
             object_class_type i = (object_class_type)ii;
             if (!item_type_has_ids(i))
                 continue;
-            item_def* ptmp = new item_def;
-            if (ptmp != 0)
-            {
-                ptmp->base_type = i;
-                ptmp->sub_type  = get_max_subtype(i);
-                ptmp->quantity  = 1;
-                ptmp->rnd       = 1;
-                items.push_back(ptmp);
-
-                if (you.force_autopickup[i][ptmp->sub_type] == 1)
-                    selected_items.emplace_back(0,1,ptmp);
-                if (you.force_autopickup[i][ptmp->sub_type ] == -1)
-                    selected_items.emplace_back(0,2,ptmp);
-            }
+            _add_fake_item(i, get_max_subtype(i), selected_items, items);
         }
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
@@ -2634,20 +2640,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == MI_DART)
                 continue;
 #endif
-            item_def* ptmp = new item_def;
-            if (ptmp != 0)
-            {
-                ptmp->base_type = OBJ_MISSILES;
-                ptmp->sub_type  = i;
-                ptmp->quantity  = 1;
-                ptmp->rnd       = 1;
-                items_missile.push_back(ptmp);
-
-                if (you.force_autopickup[OBJ_MISSILES][i] == 1)
-                    selected_items.emplace_back(0,1,ptmp);
-                if (you.force_autopickup[OBJ_MISSILES][i] == -1)
-                    selected_items.emplace_back(0,2,ptmp);
-            }
+            _add_fake_item(OBJ_MISSILES, i, selected_items, items_missile);
         }
         // Foods
         for (int i = 0; i < NUM_FOODS; i++)
@@ -2656,66 +2649,20 @@ void check_item_knowledge(bool unknown_items)
             if (!is_real_food(static_cast<food_type>(i)))
                 continue;
 #endif
-
-            item_def* ptmp = new item_def;
-            if (ptmp != 0)
-            {
-                ptmp->base_type = OBJ_FOOD;
-                ptmp->sub_type  = i;
-                ptmp->rnd       = 1;
-                ptmp->quantity  = 1;
-
-                // Make chunks fresh, non-poisonous, etc.
-                if (ptmp->sub_type == FOOD_CHUNK)
-                {
-                    ptmp->freshness = 100;
-                    ptmp->mon_type = MONS_RAT;
-                }
-
-                items_food.push_back(ptmp);
-
-                if (you.force_autopickup[OBJ_FOOD][i] == 1)
-                    selected_items.emplace_back(0,1,ptmp);
-                if (you.force_autopickup[OBJ_FOOD][i] == -1)
-                    selected_items.emplace_back(0,2,ptmp);
-            }
+            _add_fake_item(OBJ_FOOD, i, selected_items, items_food);
         }
 
         // Misc.
-        static const object_class_type misc_list[] =
+        static const pair<object_class_type, int> misc_list[] =
         {
-            OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_RUNES,
+            { OBJ_BOOKS, BOOK_MANUAL },
+            { OBJ_RODS, NUM_RODS },
+            { OBJ_GOLD, 1 },
+            { OBJ_MISCELLANY, NUM_MISCELLANY },
+            { OBJ_RUNES, NUM_RUNE_TYPES },
         };
-        static const int misc_ST_list[] =
-        {
-            BOOK_MANUAL, NUM_RODS, 1,
-            NUM_MISCELLANY, NUM_RUNE_TYPES,
-        };
-        COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
-        for (unsigned i = 0; i < ARRAYSZ(misc_list); i++)
-        {
-            item_def* ptmp = new item_def;
-            if (ptmp != 0)
-            {
-                ptmp->base_type = misc_list[i];
-                ptmp->sub_type  = misc_ST_list[i];
-                ptmp->rnd       = 1;
-                //show a good amount of gold
-                ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
-
-                // stupid fake decks
-                if (is_deck(*ptmp, true))
-                    ptmp->deck_rarity = DECK_RARITY_COMMON;
-
-                items_other.push_back(ptmp);
-
-                if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
-                    selected_items.emplace_back(0,1,ptmp);
-                if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == -1)
-                    selected_items.emplace_back(0,2,ptmp);
-            }
-        }
+        for (auto e : misc_list)
+            _add_fake_item(e.first, e.second, selected_items, items_other);
     }
 
     sort(items.begin(), items.end(), _identified_item_names);
