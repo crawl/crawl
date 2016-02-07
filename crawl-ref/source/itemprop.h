@@ -186,6 +186,9 @@ bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
 // food functions:
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food) PURE;
+#endif
 bool is_blood_potion(const item_def &item) PURE;
 bool food_is_meaty(int food_type) PURE;
 bool food_is_meaty(const item_def &item) PURE;
