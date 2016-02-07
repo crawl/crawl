@@ -1974,15 +1974,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
 
-    // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.airborne()
-                   || feat_is_water(grd(you.pos()))
-                      && (which_trans == TRAN_BLADE_HANDS
-                          || which_trans == TRAN_APPENDAGE)
-                      && you.species == SP_MERFOLK)
-    {
+    // Land the player if we stopped flying.
+    if (was_flying && !you.airborne())
         move_player_to_grid(you.pos(), false);
-    }
+
+    // Update merfolk swimming for the form change.
+    if (you.species == SP_MERFOLK)
+        merfolk_check_swimming(false);
 
     if (you.hp <= 0)
     {
@@ -2064,13 +2062,15 @@ void untransform(bool skip_move)
 
     _unmeld_equipment(melded);
 
-    // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (was_flying && !you.airborne()
-                       || (feat_is_water(grd(you.pos()))
-                           && (old_form == TRAN_ICE_BEAST
-                               || you.species == SP_MERFOLK))))
+    if (!skip_move)
     {
-        move_player_to_grid(you.pos(), false);
+        // Land the player if we stopped flying.
+        if (was_flying && !you.airborne())
+            move_player_to_grid(you.pos(), false);
+
+        // Update merfolk swimming for the form change.
+        if (you.species == SP_MERFOLK)
+            merfolk_check_swimming(false);
     }
 
 #ifdef USE_TILE
@@ -2152,6 +2152,27 @@ void emergency_untransform()
 
     if (you.species == SP_MERFOLK)
         merfolk_start_swimming(false);
+}
+
+/**
+ * Update whether a merfolk should be swimming.
+ *
+ * Idempotent, so can be called after position/transformation change without
+ * redundantly checking conditions.
+ *
+ * @param stepped Whether the player is performing a normal walking move.
+ */
+void merfolk_check_swimming(bool stepped)
+{
+    const dungeon_feature_type grid = env.grid(you.pos());
+    if (you.ground_level()
+        && feat_is_water(grid)
+        && !form_changed_physiology(you.form))
+    {
+        merfolk_start_swimming(stepped);
+    }
+    else if (!is_feat_dangerous(grid)) // don't bother, the player is dying
+        merfolk_stop_swimming();
 }
 
 void merfolk_start_swimming(bool stepped)
