@@ -296,6 +296,14 @@ NORETURN void end_game(scorefile_entry &se)
                 }
             }
             break;
+
+        case GOD_PAKELLAS:
+        {
+            const string result = getSpeakString("Pakellas death");
+            god_speaks(GOD_PAKELLAS, result.c_str());
+            break;
+        }
+
         default:
             break;
         }

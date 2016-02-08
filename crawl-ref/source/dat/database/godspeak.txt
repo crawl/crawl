@@ -805,6 +805,18 @@ Pakellas says: No one tells a god not to play god!
 w:1
 Pakellas says: They called me mad... well, we'll show them!
 %%%%
+Pakellas death
+
+Pakellas says: Back to the drawing board!
+
+Pakellas says: Good help is so hard to find these days!
+
+Pakellas says: Time to find a new assistant...
+
+Pakellas says: That's one more possible approach eliminated.
+
+Pakellas says: Time to start the next experiment...
+%%%%
 Qazlal penance
 
 Qazlal thunders: Do not interfere with the natural order!
