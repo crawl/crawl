@@ -256,7 +256,7 @@ static void _decrement_paralysis(int delay)
 
 /**
  * Check whether the player's ice (Ozocubu's) armour was melted this turn.
- * If so, print the appropriate message.
+ * If so, print the appropriate message and clear the flag.
  */
 static void _maybe_melt_armour()
 {
@@ -264,7 +264,10 @@ static void _maybe_melt_armour()
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
     if (you.props.exists(MELT_ARMOUR_KEY))
+    {
+        you.props.erase(MELT_ARMOUR_KEY);
         mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+    }
 }
 
 /**
