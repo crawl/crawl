@@ -1852,8 +1852,14 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    // Drop the monster's holy equipment, and keep wielding the rest. Also
-    // remove any of its active avatars.
+    // Rebrand or drop any holy equipment, and keep wielding the rest. Also
+    // remove any active avatars.
+    item_def *wpn = mon->mslot_item(MSLOT_WEAPON);
+    if (wpn && get_weapon_brand(*wpn) == SPWPN_HOLY_WRATH)
+    {
+        set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_DRAINING);
+        convert2bad(*wpn);
+    }
     monster_drop_things(mon, false, is_holy_item);
     mon->remove_avatars();
 
