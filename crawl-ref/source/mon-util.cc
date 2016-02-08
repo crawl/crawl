@@ -5582,7 +5582,7 @@ void radiate_pain_bond(const monster* mon, int damage){
 
         if (damage > 0) {
             behaviour_event(target, ME_ANNOY, &you, you.pos());
-            target->hurt(&you, damage);
+            target->hurt(&you, damage, BEAM_SHARED_PAIN);
         }
     }
 }

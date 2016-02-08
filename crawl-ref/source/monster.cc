@@ -4557,9 +4557,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
-        // Hurt conducts
-        if (agent && agent->is_player() && mons_gives_xp(this, agent))
-            did_hurt_conduct(DID_HURT_FOE, *this, amount);
+        // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
+        if (agent && agent->is_player() && mons_gives_xp(this, agent)
+            && flavour != BEAM_SHARED_PAIN)
+        {
+           did_hurt_conduct(DID_HURT_FOE, *this, amount);
+        }
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly).
