@@ -961,7 +961,7 @@ void ukayaw_prepares_audience()
 
         // Increment a delay timer to prevent players from spamming this ability
         // via piety loss and gain. Timer is in AUT.
-        you.props[UKAYAW_AUDIENCE_TIMER] = 200 + random2(201);
+        you.props[UKAYAW_AUDIENCE_TIMER] = 300 + random2(201);
     }
     else // Reset the timer because we didn't actually execute.
         you.props[UKAYAW_AUDIENCE_TIMER] = 0;
@@ -1001,7 +1001,7 @@ void ukayaw_bonds_audience()
 
         // Increment a delay timer to prevent players from spamming this ability
         // via piety loss and gain. Timer is in AUT.
-        you.props[UKAYAW_BOND_TIMER] = 200 + random2(201);
+        you.props[UKAYAW_BOND_TIMER] = 300 + random2(201);
     }
     else // Reset the timer because we didn't actually execute.
         you.props[UKAYAW_BOND_TIMER] = 0;

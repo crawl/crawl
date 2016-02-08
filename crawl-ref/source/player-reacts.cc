@@ -397,12 +397,16 @@ static void _handle_ukayaw_time(int time_taken)
     // need to trigger the abilities this turn. Otherwise we'll decrement the
     // timer down to a minimum of 0, at which point it becomes eligible to
     // trigger again.
-    if (audience_timer == -1)
+    if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
+            && x_chance_in_y(time_taken, time_taken * 10 + audience_timer)))
+    {
         ukayaw_prepares_audience();
+    }
     else
         you.props[UKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
-    if (bond_timer == -1)
+    if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
+            && x_chance_in_y(time_taken, time_taken * 10 + bond_timer)))
         ukayaw_bonds_audience();
     else
         you.props[UKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
