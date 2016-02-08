@@ -1007,12 +1007,12 @@ void did_hurt_conduct(conduct_type thing_done,
                       const monster &victim,
                       int damage_done)
 {
-    // If you do any damage, you get 3 piety
-    int piety_gain = 4;
+    // If you do any damage, you get some piety.
+    int piety_gain = 1;
 
-    // Get up to 3 additional piety based on the percentage of the victim's max
-    // hp you took away.
-    piety_gain += piety_gain * 100 * damage_done / victim.max_hit_points / 100;
+    // Get up to significantly more piety based on the percentage of the
+    // victim's max hp you took away.
+    piety_gain += 500 * damage_done / victim.max_hit_points / 100;
     did_god_conduct(thing_done, piety_gain, true, &victim);
 
     // Set this to avoid piety loss this turn.
