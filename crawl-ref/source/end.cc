@@ -238,66 +238,66 @@ NORETURN void end_game(scorefile_entry &se)
 
         switch (you.religion)
         {
-            case GOD_FEDHAS:
-                simple_god_message(" appreciates your contribution to the "
-                                   "ecosystem.");
-                break;
+        case GOD_FEDHAS:
+            simple_god_message(" appreciates your contribution to the "
+                               "ecosystem.");
+            break;
 
-            case GOD_NEMELEX_XOBEH:
-                nemelex_death_message();
-                break;
+        case GOD_NEMELEX_XOBEH:
+            nemelex_death_message();
+            break;
 
-            case GOD_KIKUBAAQUDGHA:
+        case GOD_KIKUBAAQUDGHA:
+        {
+            const mon_holy_type holi = you.holiness();
+
+            if (holi & (MH_NONLIVING | MH_UNDEAD))
             {
-                const mon_holy_type holi = you.holiness();
-
-                if (holi & (MH_NONLIVING | MH_UNDEAD))
-                {
-                    simple_god_message(" rasps: \"You have failed me! "
-                                       "Welcome... oblivion!\"");
-                }
-                else
-                {
-                    simple_god_message(" rasps: \"You have failed me! "
-                                       "Welcome... death!\"");
-                }
-                break;
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... oblivion!\"");
             }
+            else
+            {
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... death!\"");
+            }
+            break;
+        }
 
-            case GOD_YREDELEMNUL:
-                if (you.undead_state() != US_ALIVE)
-                    simple_god_message(" claims you as an undead slave.");
-                else if (se.get_death_type() != KILLED_BY_DISINT
-                         && se.get_death_type() != KILLED_BY_LAVA)
+        case GOD_YREDELEMNUL:
+            if (you.undead_state() != US_ALIVE)
+                simple_god_message(" claims you as an undead slave.");
+            else if (se.get_death_type() != KILLED_BY_DISINT
+                     && se.get_death_type() != KILLED_BY_LAVA)
+            {
+                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
+                     "zombie.");
+            }
+            // No message if you're not undead and your corpse is lost.
+            break;
+
+        case GOD_GOZAG:
+            if (se.get_death_type() != KILLED_BY_DISINT
+                && se.get_death_type() != KILLED_BY_LAVA)
+            {
+                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+            }
+            break;
+
+        case GOD_BEOGH:
+            if (actor* killer = se.killer())
+            {
+                if (killer->is_monster() && killer->deity() == GOD_BEOGH)
                 {
-                    mprf(MSGCH_GOD, "Your body rises from the dead as a mindless zombie.");
+                    const string msg = " appreciates "
+                        + killer->name(DESC_ITS)
+                        + " killing of a heretic priest.";
+                    simple_god_message(msg.c_str());
                 }
-                // No message if you're not undead and your corpse is lost.
-                break;
-
-            case GOD_GOZAG:
-                if (se.get_death_type() != KILLED_BY_DISINT
-                    && se.get_death_type() != KILLED_BY_LAVA)
-                {
-                    mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-                }
-                break;
-
-            case GOD_BEOGH:
-                if (actor* killer = se.killer())
-                {
-                    if (killer->is_monster() && killer->deity() == GOD_BEOGH)
-                    {
-                        const string msg = " appreciates "
-                            + killer->name(DESC_ITS)
-                            + " killing of a heretic priest.";
-                        simple_god_message(msg.c_str());
-                    }
-                }
-                break;
-
-            default:
-                break;
+            }
+            break;
+        default:
+            break;
         }
 
         flush_prev_message();
