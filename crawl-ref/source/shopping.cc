@@ -677,7 +677,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case POT_CURE_MUTATION:
-                valued += 250;
+                valued += 200;
                 break;
 
             case POT_RESISTANCE:
