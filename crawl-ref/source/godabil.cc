@@ -6922,5 +6922,7 @@ bool ukayaw_grand_finale()
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
+    you.set_piety(piety_breakpoint(0)); // Reset piety to 1*.
+
     return true;
 }

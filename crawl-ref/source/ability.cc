@@ -444,7 +444,7 @@ static const ability_def Ability_List[] =
     { ABIL_UKAYAW_LINE_PASS, "Line Pass",
         4, 0, 200, generic_cost::fixed(40), abflag::NONE},
     { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
-        8, 0, 500, generic_cost::fixed(119), abflag::NONE},
+        8, 0, 500, generic_cost::fixed(0), abflag::NONE},
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
