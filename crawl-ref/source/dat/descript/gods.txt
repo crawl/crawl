@@ -389,7 +389,7 @@ focused on damage.
 Ukayaw powers
 
 Ukayaw offers powers that help worshippers continue the dance. Worshippers can
-stomp to damage foes around them and to rapidly move through a line of creatures
+stomp to damage foes around them and rapidly move through a line of creatures
 while confusing them. When a worshipper's dance reaches a certain point, Ukayaw
 will freeze all foes so that the dancer may take a solo. If the dance continues,
 Ukayaw will link the emotions of foes, forcing them to share their pain. If the
