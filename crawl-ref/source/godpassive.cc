@@ -963,6 +963,8 @@ void ukayaw_prepares_audience()
         // via piety loss and gain. Timer is in AUT.
         you.props[UKAYAW_AUDIENCE_TIMER] = 200 + random2(201);
     }
+    else // Reset the timer because we didn't actually execute.
+        you.props[UKAYAW_AUDIENCE_TIMER] = 0;
 }
 
 /**
@@ -1001,5 +1003,6 @@ void ukayaw_bonds_audience()
         // via piety loss and gain. Timer is in AUT.
         you.props[UKAYAW_BOND_TIMER] = 200 + random2(201);
     }
-
+    else // Reset the timer because we didn't actually execute.
+        you.props[UKAYAW_BOND_TIMER] = 0;
 }
