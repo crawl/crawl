@@ -1090,7 +1090,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_UKAYAW_GRAND_FINALE:
       invoc = true;
-      failure = 100 - (you.piety - piety_breakpoint(4))
+      failure = 120 - (you.piety - piety_breakpoint(4))
                 - you.skill(SK_INVOCATIONS, 5);
       break;
 
