@@ -215,7 +215,7 @@ static const char *divine_title[][8] =
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
 
-    // Pakellas -- reveler theme
+    // Ukayaw -- reveler theme
     {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
         "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
 };
