@@ -619,6 +619,7 @@ i-torment SCR_TORMENT
 %back scroll-grey
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
@@ -644,6 +645,7 @@ i-silence SCR_SILENCE
 %back scroll-yellow
 i-amnesia SCR_AMNESIA
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 

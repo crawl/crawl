@@ -33,6 +33,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -3809,6 +3810,33 @@ bool ashenzari_end_transfer(bool finished, bool force)
     you.transfer_skill_points = 0;
     you.transfer_total_skill_points = 0;
     return true;
+}
+
+/**
+ * Give a prompt to curse an item.
+ *
+ * This is the core logic behind Ash's Curse Item ability.
+ * Player can abort without penalty.
+ * Player can curse any item (not just worn ones).
+ *
+ * @return          Whether the player cursed anything.
+ */
+bool ashenzari_curse_item()
+{
+    while (1)
+    {
+        int item_slot = prompt_invent_item("Curse which item? (Esc to abort)", MT_INVLIST,
+                                           OSEL_CURSABLE,
+                                           true, true, false);
+        if (prompt_failed(item_slot))
+            return false;
+
+        item_def& item(you.inv[item_slot]);
+
+        do_curse_item(item, false);
+        learned_something_new(HINT_YOU_CURSED);
+        return true;
+    }
 }
 
 bool can_convert_to_beogh()

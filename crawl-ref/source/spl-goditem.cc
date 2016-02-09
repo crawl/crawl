@@ -694,6 +694,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     return success;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
@@ -749,6 +750,7 @@ bool curse_item(bool armour, const string &pre_msg)
 
     return _selectively_curse_item(armour, pre_msg);
 }
+#endif
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
