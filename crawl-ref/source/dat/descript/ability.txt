@@ -772,3 +772,7 @@ Donate Gold ability
 
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
+%%%%
+Curse Item ability
+
+In exchange for a scroll of remove curse, Ashenzari will curse one of your items.

@@ -384,7 +384,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    { { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
+    { { 0, ABIL_ASHENZARI_CURSE, "curse your items" },
+      { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
       { 2, "The more cursed you are, the more Ashenzari supports your skills.",
            "Ashenzari no longer supports your skills." },
       { 3, "Ashenzari reveals the unseen.",
