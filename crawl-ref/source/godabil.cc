@@ -1234,8 +1234,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (affected
         && one_chance_in(3)
         && mon->alive()
-        && !mon->asleep()
-        && !mon->cannot_move()
         && mons_shouts(mon->type, false) != S_SILENT)
     {
         handle_monster_shouts(mon, true);
