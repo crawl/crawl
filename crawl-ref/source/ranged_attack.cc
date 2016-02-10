@@ -317,7 +317,7 @@ bool ranged_attack::handle_phase_hit()
         && should_alert_defender)
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
-                        coord_def(), !stab_attempt);
+                        coord_def());
     }
 
     return true;
