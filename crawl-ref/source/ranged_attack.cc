@@ -443,7 +443,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                     10, SPMSL_POISONED,
                     10, SPMSL_CHAOS,
                      5, SPMSL_PARALYSIS,
-                     5, SPMSL_SLOW,
                      5, SPMSL_SLEEP,
                      5, SPMSL_FRENZY,
                      2, SPMSL_CURARE,
@@ -480,7 +479,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 break;
             }
             // fall through
-        case SPMSL_SLOW:
         case SPMSL_SLEEP:
         case SPMSL_PARALYSIS:
             if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
@@ -514,7 +512,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     case SPMSL_CURARE:          brand_name += "curare"; break;
     case SPMSL_CHAOS:           brand_name += "chaos"; break;
     case SPMSL_DISPERSAL:       brand_name += "dispersal"; break;
-    case SPMSL_SLOW:            brand_name += "slow"; break;
     case SPMSL_SLEEP:           brand_name += "sleep"; break;
     case SPMSL_CONFUSION:       brand_name += "confusion"; break;
     case SPMSL_FRENZY:          brand_name += "frenzy"; break;
@@ -622,8 +619,6 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                 return 5 + random2(5);
             case SPMSL_CONFUSION:
                 return 2 + random2(4);
-            case SPMSL_SLOW:
-                return 5 + random2(7);
             default:
                 return 5 + random2(5);
         }
@@ -747,11 +742,6 @@ bool ranged_attack::apply_missile_brand()
         if (!blowgun_check(brand))
             break;
         defender->paralyse(attacker, damage_done);
-        break;
-    case SPMSL_SLOW:
-        if (!blowgun_check(brand))
-            break;
-        defender->slow_down(attacker, damage_done);
         break;
     case SPMSL_SLEEP:
         if (!blowgun_check(brand))
