@@ -365,8 +365,10 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return "silver";
     case SPMSL_PARALYSIS:
         return "paralysis";
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SLOW:
         return t == MBN_TERSE ? "slow" : "slowing";
+#endif
     case SPMSL_SLEEP:
         return t == MBN_TERSE ? "sleep" : "sleeping";
     case SPMSL_CONFUSION:

@@ -212,6 +212,7 @@ i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
+# Remove sickness and slowing when TAG_MAJOR_VERSION > 34
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS

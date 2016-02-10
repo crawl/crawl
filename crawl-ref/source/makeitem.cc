@@ -518,9 +518,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             break;
         }
 
-        rc = random_choose_weighted(20, SPMSL_SLEEP,
-                                    20, SPMSL_SLOW,
-                                    20, SPMSL_CONFUSION,
+        rc = random_choose_weighted(30, SPMSL_SLEEP,
+                                    30, SPMSL_CONFUSION,
                                     10, SPMSL_PARALYSIS,
                                     10, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED,
@@ -610,7 +609,9 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 
     case SPMSL_CURARE:
     case SPMSL_PARALYSIS:
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SLOW:
+#endif
     case SPMSL_SLEEP:
     case SPMSL_CONFUSION:
 #if TAG_MAJOR_VERSION == 34
