@@ -562,6 +562,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 #if TAG_MAJOR_VERSION == 34
     case MI_DART:
 #endif
+    case MI_THROWING_NET:
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -575,12 +576,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     15, SPMSL_STEEL,
                                     15, SPMSL_SILVER,
                                     20, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL,
-                                    0);
-        break;
-    case MI_THROWING_NET:
-        rc = random_choose_weighted(30, SPMSL_STEEL,
-                                    30, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
@@ -661,7 +656,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_CHAOS:
         return type == MI_SLING_BULLET || type == MI_ARROW
                || type == MI_BOLT || type == MI_TOMAHAWK
-               || type == MI_JAVELIN || type == MI_THROWING_NET;
+               || type == MI_JAVELIN;
     case SPMSL_PENETRATION:
         return type == MI_JAVELIN || type == MI_BOLT;
     case SPMSL_DISPERSAL:
@@ -671,8 +666,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
         return type == MI_BOLT || type == MI_SLING_BULLET
-               || type == MI_JAVELIN || type == MI_TOMAHAWK
-               || type == MI_THROWING_NET;
+               || type == MI_JAVELIN || type == MI_TOMAHAWK;
     default: break;
     }
 
