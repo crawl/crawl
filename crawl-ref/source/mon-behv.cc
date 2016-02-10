@@ -1316,7 +1316,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it was unaware of you and you're its new foe, it might shout.
-    if (was_unaware && !mon->asleep() && allow_shout
+    if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
         handle_monster_shouts(mon);
