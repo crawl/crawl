@@ -694,9 +694,11 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
     case SCR_RANDOM_USELESSNESS: return "random uselessness";
+#if TAG_MAJOR_VERSION == 34
     case SCR_CURSE_WEAPON:       return "curse weapon";
     case SCR_CURSE_ARMOUR:       return "curse armour";
     case SCR_CURSE_JEWELLERY:    return "curse jewellery";
+#endif
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
@@ -2166,13 +2168,6 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
-static constexpr bool _item_type_has_curses(object_class_type base_type)
-{
-    return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
-        || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES
-        || base_type == OBJ_RODS;
-}
-
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
@@ -2603,16 +2598,6 @@ void check_item_knowledge(bool unknown_items)
 
             if (item_type_removed(i, j))
                 continue;
-
-            // Curse scrolls are only created by Ashenzari.
-            if (i == OBJ_SCROLLS
-                && (j == SCR_CURSE_WEAPON
-                    || j == SCR_CURSE_ARMOUR
-                    || j == SCR_CURSE_JEWELLERY)
-                && !you_worship(GOD_ASHENZARI))
-            {
-                continue;
-            }
 
             if (you.type_ids[i][j] != unknown_items) // logical xor
                 _add_fake_item(i, j, selected_items, items, !unknown_items);
@@ -3290,12 +3275,14 @@ bool is_bad_item(const item_def &item, bool temp)
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
         case SCR_CURSE_WEAPON:
             if (you.species == SP_FELID)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return !you_worship(GOD_ASHENZARI);
+#endif
         default:
             return false;
         }
@@ -3531,8 +3518,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FORMICID;
         case SCR_AMNESIA:
             return you_worship(GOD_TROG);
+#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
+#endif
         case SCR_ENCHANT_WEAPON:
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
@@ -3847,7 +3836,7 @@ string item_prefix(const item_def &item, bool temp)
 
     // Sometimes this is abbreviated out of the item name, or suppressed
     // by the show_uncursed option.
-    if (_item_type_has_curses(item.base_type)
+    if (item_type_has_curses(item.base_type)
         && item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed())
     {
         prefixes.push_back("uncursed");

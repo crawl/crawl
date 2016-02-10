@@ -79,30 +79,30 @@
 
 enum class abflag
 {
-    NONE           = 0x00000000,
-    BREATH         = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    DELAY          = 0x00000002, // ability has its own delay
-    PAIN           = 0x00000004, // ability must hurt player (ie torment)
-    PIETY          = 0x00000008, // ability has its own piety cost
-    EXHAUSTION     = 0x00000010, // fails if you.exhausted
-    INSTANT        = 0x00000020, // doesn't take time to use
-    PERMANENT_HP   = 0x00000040, // costs permanent HPs
-    PERMANENT_MP   = 0x00000080, // costs permanent MPs
-    CONF_OK        = 0x00000100, // can use even if confused
-    FRUIT          = 0x00000200, // ability requires fruit
-    VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
-    VARIABLE_MP    = 0x00000800, // costs a variable amount of MP
-                   //0x00001000,
-                   //0x00002000,
-                   //0x00004000,
-                   //0x00008000,
-                   //0x00010000,
-                   //0x00020000,
-                   //0x00040000,
-    SKILL_DRAIN    = 0x00080000, // drains skill levels
-    GOLD           = 0x00100000, // costs gold
-    SACRIFICE      = 0x00200000, // sacrifice (Ru)
-    HOSTILE        = 0x00400000, // failure summons a hostile (Makhleb)
+    NONE                = 0x00000000,
+    BREATH              = 0x00000001, // ability uses DUR_BREATH_WEAPON
+    DELAY               = 0x00000002, // ability has its own delay
+    PAIN                = 0x00000004, // ability must hurt player (ie torment)
+    PIETY               = 0x00000008, // ability has its own piety cost
+    EXHAUSTION          = 0x00000010, // fails if you.exhausted
+    INSTANT             = 0x00000020, // doesn't take time to use
+    PERMANENT_HP        = 0x00000040, // costs permanent HPs
+    PERMANENT_MP        = 0x00000080, // costs permanent MPs
+    CONF_OK             = 0x00000100, // can use even if confused
+    FRUIT               = 0x00000200, // ability requires fruit
+    VARIABLE_FRUIT      = 0x00000400, // ability requires fruit or piety
+    VARIABLE_MP         = 0x00000800, // costs a variable amount of MP
+                        //0x00001000,
+                        //0x00002000,
+                        //0x00004000,
+                        //0x00008000,
+                        //0x00010000,
+                        //0x00020000,
+    REMOVE_CURSE_SCROLL = 0x00040000, // Uses ?rc
+    SKILL_DRAIN         = 0x00080000, // drains skill levels
+    GOLD                = 0x00100000, // costs gold
+    SACRIFICE           = 0x00200000, // sacrifice (Ru)
+    HOSTILE             = 0x00400000, // failure summons a hostile (Makhleb)
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -358,6 +358,8 @@ static const ability_def Ability_List[] =
       10, 0, 200, 10, abflag::NONE },
 
     // Ashenzari
+    { ABIL_ASHENZARI_CURSE, "Curse Item",
+      0, 0, 0, 0, abflag::REMOVE_CURSE_SCROLL },
     { ABIL_ASHENZARI_SCRYING, "Scrying",
       4, 0, 50, 2, abflag::INSTANT },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
@@ -588,6 +590,9 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::SKILL_DRAIN)
         ret += ", Skill drain";
 
+    if (abil.flags & abflag::REMOVE_CURSE_SCROLL)
+        ret += ", Scroll of remove curse";
+
     if (abil.flags & abflag::GOLD)
     {
         const int amount = get_gold_cost(ability);
@@ -683,6 +688,12 @@ static const string _detailed_cost_description(ability_type ability)
             ret << "free";
         else
             ret << "variable";
+    }
+
+    if (abil.flags & abflag::REMOVE_CURSE_SCROLL)
+    {
+        have_cost = true;
+        ret << "\nOne scroll of remove curse";
     }
 
     if (!have_cost)
@@ -893,6 +904,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_TROG_BURN_SPELLBOOKS:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
+    case ABIL_ASHENZARI_CURSE:
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_BEOGH_GIFT_ITEM:
     case ABIL_JIYVA_CALL_JELLY:
@@ -2786,6 +2798,37 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (!cheibriados_slouch())
             return SPRET_ABORT;
         break;
+
+    case ABIL_ASHENZARI_CURSE:
+    {
+        fail_check();
+        auto iter = find_if(
+                            begin(you.inv),
+                            end(you.inv),
+                            [] (const item_def &it)
+                            {
+                                return it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
+                            }
+                           );
+        if (iter != end(you.inv))
+        {
+            if (ashenzari_curse_item())
+            {
+                dec_inv_item_quantity(iter - begin(you.inv), 1);
+            }
+            else
+            {
+                canned_msg(MSG_OK);
+                return SPRET_ABORT;
+            }
+        }
+        else
+        {
+            mpr("You need a scroll of remove curse to do this.");
+            return SPRET_ABORT;
+        }
+        break;
+    }
 
     case ABIL_ASHENZARI_SCRYING:
         fail_check();

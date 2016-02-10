@@ -5431,6 +5431,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_CHEIBRIADOS_DISTORTION:
         return TILEG_ABILITY_CHEIBRIADOS_TEMPORAL_DISTORTION;
     // Ashenzari
+    case ABIL_ASHENZARI_CURSE:
+        return TILEG_ABILITY_ASHENZARI_CURSE;
     case ABIL_ASHENZARI_SCRYING:
         return TILEG_ABILITY_ASHENZARI_SCRY;
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:

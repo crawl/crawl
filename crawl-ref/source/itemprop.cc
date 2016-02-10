@@ -717,6 +717,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
     { OBJ_WANDS,     WAND_COLD_REMOVED },
     { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
+    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
+    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
+    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -742,6 +745,29 @@ bool item_known_cursed(const item_def &item)
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
+/**
+ * Is the provided item cursable? Note: this function would leak
+ * information about unidentified holy wrath weapons, which is alright
+ * because only Ashenzari worshippers can deliberately curse items and
+ * they see all weapon egos anyway.
+ *
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a blessed weapon.
+ */
+bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
+{
+    if (!item_type_has_curses(item.base_type))
+        return false;
+    if (item_known_cursed(item))
+        return false;
+    if (!ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        return false;
+    }
+    return true;
+}
+
 // Curses a random player inventory item.
 bool curse_an_item(bool ignore_holy_wrath)
 {
@@ -761,24 +787,13 @@ bool curse_an_item(bool ignore_holy_wrath)
         if (!item.defined())
             continue;
 
-        if (is_weapon(item)
-            || item.base_type == OBJ_ARMOUR
-            || item.base_type == OBJ_JEWELLERY)
-        {
-            if (item.cursed())
-                continue;
+        if (!item_is_cursable(item, ignore_holy_wrath))
+            continue;
 
-            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
-                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-            {
-                continue;
-            }
-
-            // Item is valid for cursing, so we'll give it a chance.
-            count++;
-            if (one_chance_in(count))
-                found = &item;
-        }
+        // Item is valid for cursing, so we'll give it a chance.
+        count++;
+        if (one_chance_in(count))
+            found = &item;
     }
 
     // Any item to curse?
