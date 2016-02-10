@@ -287,72 +287,6 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
     return taken;
 }
 
-/**
- * Sacrifice a scroll to Ashenzari, transforming it into three new curse
- * scrolls.
- *
- * The types of scrolls generated are random, weighted by the number of slots
- * of the appropriate type available to the player.
- *
- * @param item         The scroll to be sacrificed.
- *                     Is not destroyed by this function (obviously!)
- */
-static void _ashenzari_sac_scroll(const item_def& item)
-{
-    mprf("%s flickers black.",
-         get_desc_quantity(1, item.quantity,
-                           item.name(DESC_THE)).c_str());
-
-    const int wpn_weight = 3;
-    const int jwl_weight = (you.species != SP_OCTOPODE) ? 3 : 9;
-    int arm_weight = 0;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
-        if (you_can_wear(static_cast<equipment_type>(i)))
-            arm_weight++;
-
-    map<int, int> generated_scrolls = {
-        { SCR_CURSE_WEAPON, 0 },
-        { SCR_CURSE_ARMOUR, 0 },
-        { SCR_CURSE_JEWELLERY, 0 },
-    };
-    for (int i = 0; i < 3; i++)
-    {
-        const int scroll_type = you.species == SP_FELID ?
-                        SCR_CURSE_JEWELLERY :
-                        random_choose_weighted(wpn_weight, SCR_CURSE_WEAPON,
-                                               arm_weight, SCR_CURSE_ARMOUR,
-                                               jwl_weight, SCR_CURSE_JEWELLERY,
-                                               0);
-        generated_scrolls[scroll_type]++;
-        dprf("%d: %d", scroll_type, generated_scrolls[scroll_type]);
-    }
-
-    vector<string> scroll_names;
-    for (auto gen_scroll : generated_scrolls)
-    {
-        const int scroll_type = gen_scroll.first;
-        const int num_generated = gen_scroll.second;
-        if (!num_generated)
-            continue;
-
-        int it = items(false, OBJ_SCROLLS, scroll_type, 0);
-        if (it == NON_ITEM)
-        {
-            mpr("You feel the world is against you.");
-            return;
-        }
-
-        mitm[it].quantity = num_generated;
-        scroll_names.push_back(mitm[it].name(DESC_A));
-
-        if (!move_item_to_grid(&it, you.pos(), true))
-            destroy_item(it, true); // can't happen
-    }
-
-    mprf("%s appear.", comma_separated_line(scroll_names.begin(),
-                                            scroll_names.end()).c_str());
-}
-
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.). Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
@@ -490,21 +424,10 @@ static bool _offer_items()
             }
         }
 
-        if (GOD_ASHENZARI == you.religion)
-            _ashenzari_sac_scroll(item);
-        else
-        {
-            const piety_gain_t relative_gain = sacrifice_item_stack(item);
-            print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        }
-
-        if (GOD_ASHENZARI == you.religion && item.quantity > 1)
-            item.quantity -= 1;
-        else
-        {
-            item_was_destroyed(mitm[i]);
-            destroy_item(i);
-        }
+        const piety_gain_t relative_gain = sacrifice_item_stack(item);
+        print_sacrifice_message(you.religion, mitm[i], relative_gain);
+        item_was_destroyed(mitm[i]);
+        destroy_item(i);
 
         i = next;
         num_sacced++;
@@ -515,8 +438,6 @@ static bool _offer_items()
     {
         if (you_worship(GOD_BEOGH))
             simple_god_message(" only cares about orcish remains!");
-        else if (you_worship(GOD_ASHENZARI))
-            simple_god_message(" can corrupt only scrolls of remove curse.");
     }
 
     return num_sacced > 0;

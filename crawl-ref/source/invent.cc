@@ -26,6 +26,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -448,6 +449,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be enchanted.";
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
+    case OSEL_CURSABLE:
+        return "You don't have any cursable items.";
     }
 
     return "You aren't carrying any such object.";
@@ -975,7 +978,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 
 bool item_is_selected(const item_def &i, int selector)
 {
-    const int itype = i.base_type;
+    const object_class_type itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
                                 && itype != OBJ_FOOD && itype != OBJ_ARMOUR)
     {
@@ -1001,10 +1004,10 @@ bool item_is_selected(const item_def &i, int selector)
         if (you_worship(GOD_TROG) && item_is_spellbook(i))
             return true;
 
-        if (you.has_spell(SPELL_CORPSE_ROT) && i.base_type == OBJ_CORPSES)
+        if (you.has_spell(SPELL_CORPSE_ROT) && itype == OBJ_CORPSES)
             return true;
 
-        if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
+        if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
             return false;
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
@@ -1075,11 +1078,14 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
 
     case OSEL_BEOGH_GIFT:
-        return (i.base_type == OBJ_WEAPONS
+        return (itype == OBJ_WEAPONS
                 || is_shield(i)
-                || i.base_type == OBJ_ARMOUR
+                || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
                 && !item_is_selected(i, OSEL_CURSED_WORN);
+
+    case OSEL_CURSABLE:
+        return item_is_cursable(i);
 
     default:
         return false;

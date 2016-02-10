@@ -35,6 +35,10 @@ enum object_selector
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
     OSEL_SUPERCHARGE             = -19,
+    OSEL_CURSABLE                = -20, // Items that are cursable and not
+                                        // known-cursed. Unknown-cursed items
+                                        // are included, to prevent information
+                                        // leakage.
 };
 
 #define PROMPT_ABORT         -1
