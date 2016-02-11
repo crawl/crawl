@@ -764,7 +764,7 @@ the reveler's Invocations skill.
 %%%%
 Line Pass ability
 
-The reveler passes through a continguous line of dancers with superhuman speed,
+The reveler passes through a contiguous line of dancers with superhuman speed,
 ending up in a new location and leaving the dance partners confused. The power
 of the confusion increases with Invocations skill.
 %%%%
