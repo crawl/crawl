@@ -758,7 +758,6 @@ static void _describe_god_powers(god_type which_god)
     case GOD_ASHENZARI:
         have_any = true;
         cprintf("You are provided with a bounty of information.\n");
-        cprintf("You can pray to corrupt scrolls of remove curse on your square.\n");
         break;
 
     case GOD_CHEIBRIADOS:
