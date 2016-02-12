@@ -3146,25 +3146,20 @@ bool god_likes_item(god_type god, const item_def& item)
 
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
-        && you.form == TRAN_LICH)
-    {
-        return false;
-    }
-
-    if (is_good_god(which_god) && you.form == TRAN_SHADOW)
-        return false;
-
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
-        return false;
-
-    if (which_god == GOD_YREDELEMNUL
-        && (you.form == TRAN_STATUE || you.petrified()))
-    {   // it's rather hard to pray while petrified, though
-        return false;
+        return false; // zin hates everything
+    // all these clauses are written with a ! in front of them, so that
+    // the stuff to the right of that is uniformly "gods that hate this form"
+    switch (you.form) {
+    case TRAN_LICH:
+        return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
+    case TRAN_SHADOW:
+        return !is_good_god(which_god);
+    case TRAN_STATUE:
+        return !(which_god == GOD_YREDELEMNUL);
+    default:
+        return true;
     }
-
-    return true;
 }
 
 int gozag_service_fee()
