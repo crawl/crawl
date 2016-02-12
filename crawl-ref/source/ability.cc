@@ -2813,9 +2813,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (iter != end(you.inv))
         {
             if (ashenzari_curse_item())
-            {
                 dec_inv_item_quantity(iter - begin(you.inv), 1);
-            }
             else
             {
                 canned_msg(MSG_OK);
