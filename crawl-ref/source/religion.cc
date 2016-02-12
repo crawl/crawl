@@ -3139,9 +3139,6 @@ bool god_likes_item(god_type god, const item_def& item)
         return item.base_type == OBJ_CORPSES
                && mons_genus(item.mon_type) == MONS_ORC;
 
-    case GOD_ASHENZARI:
-        return item.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-
     default:
         return false;
     }
