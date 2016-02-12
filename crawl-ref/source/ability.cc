@@ -299,7 +299,7 @@ static const ability_def Ability_List[] =
 
     // Elyvilon
     { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
-      0, 0, 0, 0, abflag::NONE },
+      0, 0, 0, 0, abflag::PIETY },
     { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing",
       1, 0, 100, generic_cost::range(0, 1), abflag::CONF_OK },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
