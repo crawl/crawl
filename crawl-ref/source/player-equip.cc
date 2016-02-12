@@ -811,7 +811,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_POISON_RESISTANCE:
-            if(player_res_poison(false, false, false) < 3)
+            if (player_res_poison(false, false, false) < 3)
                 mpr("You feel resistant to poison.");
             break;
 
