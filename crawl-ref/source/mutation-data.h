@@ -102,7 +102,7 @@ static const mutation_def mut_data[] =
 
   {"You digest meat inefficiently.",
    "You digest meat very inefficiently.",
-   "You are a herbivore."},
+   "You are an herbivore."},
 
   {"You hunger for vegetation.",
    "You hunger for vegetation.",
