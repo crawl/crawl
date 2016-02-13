@@ -1839,8 +1839,8 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (!target->res_rotting())
             {
-                you_msg      = "You begin to rot!";
-                mon_msg_seen = "@The_monster@ begins to rot!";
+                you_msg      = "Your flesh rots away!";
+                mon_msg_seen = "@The_monster@ rots away!";
 
                 // Must produce the message before rotting, because that
                 // might kill a target monster, and do_msg does not like
