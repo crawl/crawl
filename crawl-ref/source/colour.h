@@ -36,7 +36,6 @@ enum element_type
     ETC_DWARVEN,        // used for colouring dwarf fabric items
     ETC_ORCISH,         // used for colouring orc fabric items
     ETC_FLASH,          // flashy colours
-    ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
     ETC_MIST,           // colour of mist

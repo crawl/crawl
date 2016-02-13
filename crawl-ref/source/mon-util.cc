@@ -2825,10 +2825,6 @@ void define_monster(monster* mons)
         mons->num_heads = 27;
         break;
 
-    case MONS_KRAKEN:
-        col = element_colour(ETC_KRAKEN);
-        break;
-
     case MONS_TIAMAT:
         // Initialise to a random draconian type.
         draconian_change_colour(mons);
