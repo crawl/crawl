@@ -3758,7 +3758,7 @@ colour_t item_def::rune_colour() const
             static const element_type types[] =
             {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
              ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
-             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH};
 
             return types[rnd % ARRAYSZ(types)];
         }
