@@ -2186,10 +2186,10 @@ bool player_is_shapechanged()
 
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
-static int _player_evasion_size_factor()
+static int _player_evasion_size_factor(bool base = false)
 {
     // XXX: you.body_size() implementations are incomplete, fix.
-    const size_type size = you.body_size(PSIZE_BODY);
+    const size_type size = you.body_size(PSIZE_BODY, base);
     return 2 * (SIZE_MEDIUM - size);
 }
 
@@ -2198,7 +2198,7 @@ static int _player_evasion_size_factor()
 int player_shield_racial_factor()
 {
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
-                                                  : _player_evasion_size_factor()));
+                                                  : _player_evasion_size_factor(true)));
 }
 
 // The total EV penalty to the player for all their worn armour items
