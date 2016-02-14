@@ -533,22 +533,18 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD:
         beam.flavour  = BEAM_DISPEL_UNDEAD;
         beam.damage   = dice_def(3, min(6 + power / 10, 40));
-        beam.pierce   = true;
         break;
 
     case SPELL_PARALYSE:
         beam.flavour  = BEAM_PARALYSIS;
-        beam.pierce   = true;
         break;
 
     case SPELL_PETRIFY:
         beam.flavour  = BEAM_PETRIFY;
-        beam.pierce   = true;
         break;
 
     case SPELL_SLOW:
         beam.flavour  = BEAM_SLOW;
-        beam.pierce   = true;
         break;
 
     case SPELL_HASTE_OTHER:
@@ -563,32 +559,26 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_CORONA:
         beam.flavour  = BEAM_CORONA;
-        beam.pierce   = true;
         break;
 
     case SPELL_CONFUSE:
         beam.flavour  = BEAM_CONFUSION;
-        beam.pierce   = true;
         break;
 
     case SPELL_HIBERNATION:
         beam.flavour  = BEAM_HIBERNATION;
-        beam.pierce   = true;
         break;
 
     case SPELL_SLEEP:
         beam.flavour    = BEAM_SLEEP;
-        beam.pierce     = true;
         break;
 
     case SPELL_POLYMORPH:
         beam.flavour  = BEAM_POLYMORPH;
-        beam.pierce   = true;
         break;
 
     case SPELL_MALMUTATE:
         beam.flavour  = BEAM_MALMUTATE;
-        beam.pierce   = true;
         /*
           // Be careful with this one.
           // Having allies mutate you is infuriating.
@@ -764,7 +754,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_TELEPORT_OTHER:
         beam.flavour  = BEAM_TELEPORT;
-        beam.pierce   = true;
         break;
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
@@ -819,12 +808,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PAIN:
         beam.flavour    = BEAM_PAIN;
         beam.damage     = dice_def(1, 7 + (power / 20));
-        beam.pierce     = true;
         break;
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
-        beam.pierce     = true;
         break;
 
     case SPELL_STICKY_FLAME:
@@ -916,7 +903,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_DISINTEGRATION;
         beam.ench_power = 50;
         beam.damage     = dice_def(1, 30 + (power / 10));
-        beam.pierce     = true;
         break;
 
     case SPELL_MEPHITIC_CLOUD:
@@ -969,17 +955,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_BANISHMENT:
         beam.flavour  = BEAM_BANISH;
-        beam.pierce   = true;
         break;
 
     case SPELL_BLINK_OTHER:
         beam.flavour    = BEAM_BLINK;
-        beam.pierce     = true;
         break;
 
     case SPELL_BLINK_OTHER_CLOSE:
         beam.flavour    = BEAM_BLINK_CLOSE;
-        beam.pierce     = true;
         break;
 
     case SPELL_FIRE_BREATH:
@@ -1044,7 +1027,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.glyph    = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;
-        beam.pierce   = true;
         break;
 
     case SPELL_IOOD:                  // tracer only
@@ -1105,7 +1087,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_SENTINEL_MARK:
         beam.flavour    = BEAM_SENTINEL_MARK;
-        beam.pierce     = true;
         break;
 
     case SPELL_SPECTRAL_CLOUD:
@@ -1128,7 +1109,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_DIMENSION_ANCHOR:
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
-        beam.pierce     = true;
         break;
 
     case SPELL_THORN_VOLLEY:
@@ -1141,7 +1121,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_STRIP_RESISTANCE:
         beam.flavour    = BEAM_VULNERABILITY;
-        beam.pierce     = true;
         break;
 
     // XXX: This seems needed to give proper spellcasting messages, even though
@@ -1153,12 +1132,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_MALIGN_OFFERING:
         beam.flavour    = BEAM_MALIGN_OFFERING;
         beam.damage     = dice_def(2, 7 + (power / 13));
-        beam.pierce     = true;
         break;
 
     case SPELL_VIRULENCE:
         beam.flavour    = BEAM_VIRULENCE;
-        beam.pierce     = true;
         break;
 
     case SPELL_ORB_OF_ELECTRICITY:
@@ -1191,12 +1168,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_SAP_MAGIC:
         beam.flavour    = BEAM_SAP_MAGIC;
-        beam.pierce     = true;
         break;
 
     case SPELL_CORRUPT_BODY:
         beam.flavour    = BEAM_CORRUPT_BODY;
-        beam.pierce     = true;
         break;
 
     case SPELL_SHADOW_BOLT:
@@ -1287,7 +1262,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_ENSLAVEMENT:
         beam.flavour  = BEAM_ENSLAVE;
-        beam.pierce   = true;
         break;
 
     default:
