@@ -2113,8 +2113,10 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
              || friendly()
         // Monsters being able to pick up items you've seen encourages
         // tediously moving everything away from a place where they could use
-        // them.
-             || testbits(item.flags, ISFLAG_SEEN))
+        // them. Maurice being able to pick up such items encourages killing
+        // Maurice, since there's just one of him.
+             || (testbits(item.flags, ISFLAG_SEEN)
+                 && !has_attack_flavour(AF_STEAL)))
         // ...but it's ok if it dropped the item itself.
             && !(item.props.exists(DROPPER_MID_KEY)
                  && item.props[DROPPER_MID_KEY].get_int() == (int)mid))
