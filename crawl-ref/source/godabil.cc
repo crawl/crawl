@@ -6654,6 +6654,8 @@ static int _get_stomped(monster* mons)
     if (mons == nullptr)
         return 0;
 
+    behaviour_event(mons, ME_ANNOY, &you);
+
     int power = player_adjust_invoc_power(you.skill(SK_INVOCATIONS));
 
     // flat and percentage damage scales with Invocations
@@ -6831,7 +6833,7 @@ bool ukayaw_grand_finale()
     while (1)
     {
         direction_chooser_args args;
-        args.mode = TARG_ANY;
+        args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.may_target_monster = true;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
