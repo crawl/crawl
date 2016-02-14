@@ -2767,24 +2767,44 @@ void display_runes()
 
     vector<item_def> items;
 
-    // Add the runes in branch order.
-    for (branch_iterator it; it; ++it)
+    if (!crawl_state.game_is_sprint())
     {
-        const branch_type br = it->id;
-        if (!connected_branch_can_exist(br))
-            continue;
-
-        for (auto rune : branches[br].runes)
+        // Add the runes in branch order.
+        for (branch_iterator it; it; ++it)
         {
-            item_def item;
-            item.base_type = OBJ_RUNES;
-            item.sub_type = rune;
-            item.quantity = 1;
-            item_colour(item);
-            items.push_back(item);
+            const branch_type br = it->id;
+            if (!connected_branch_can_exist(br))
+                continue;
+
+            for (auto rune : branches[br].runes)
+            {
+                item_def item;
+                item.base_type = OBJ_RUNES;
+                item.sub_type = rune;
+                item.quantity = 1;
+                item_colour(item);
+                items.push_back(item);
+            }
         }
     }
-
+    else
+    {
+        // We don't know what runes are accessible in the sprint, so just show
+        // the ones you have. We can't iterate over branches as above since the
+        // elven rune and mossy rune may exist in sprint.
+        for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+        {
+            if (you.runes[i])
+            {
+                item_def item;
+                item.base_type = OBJ_RUNES;
+                item.sub_type = i;
+                item.quantity = 1;
+                item_colour(item);
+                items.push_back(item);
+            }
+        }
+    }
     item_def item;
     item.base_type = OBJ_ORBS;
     item.sub_type = ORB_ZOT;
