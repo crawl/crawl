@@ -1528,12 +1528,12 @@ attack_flavour attack::random_chaos_attack_flavour()
                 susceptible = false;
             break;
         case AF_POISON:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case AF_VAMPIRIC:
         case AF_DRAIN_XP:
-            if (defender->holiness() != MH_NATURAL)
+            if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case AF_HOLY:

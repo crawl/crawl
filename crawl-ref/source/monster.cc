@@ -5162,7 +5162,7 @@ bool monster::can_go_frenzy() const
 
     // Brainless natural monsters can still be berserked/frenzied.
     // This could maybe all be replaced by mons_is_object()?
-    if (mons_intel(this) == I_BRAINLESS && holiness() != MH_NATURAL)
+    if (mons_intel(this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
     if (paralysed() || petrified() || petrifying() || asleep())
