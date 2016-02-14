@@ -3543,7 +3543,7 @@ static vector<monster_type> _zombifiables()
         if (mons_species(mcls) != mcls
             || !mons_zombie_size(mcls)
             || mons_is_unique(mcls)
-            || mons_class_holiness(mcls) != MH_NATURAL
+            || !(mons_class_holiness(mcls) & MH_NATURAL)
             || mons_class_flag(mcls, M_NO_GEN_DERIVED))
         {
             continue;
