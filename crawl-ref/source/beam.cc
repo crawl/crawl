@@ -4165,12 +4165,12 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
         {
             foe_info.count++;
-            foe_info.power += mons_power(mon->type);
+            foe_info.power += mon->get_experience_level();
         }
         else
         {
             friend_info.count++;
-            friend_info.power += mons_power(mon->type);
+            friend_info.power += mon->get_experience_level();
         }
     }
 
@@ -4308,12 +4308,13 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         // Counting foes is only important for monster tracers.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
         {
-            foe_info.power += 2 * final * mons_power(mon->type) / preac;
+            foe_info.power += 2 * final * mon->get_experience_level() / preac;
             foe_info.count++;
         }
         else
         {
-            friend_info.power += 2 * final * mons_power(mon->type) / preac;
+            friend_info.power
+                += 2 * final * mon->get_experience_level() / preac;
             friend_info.count++;
         }
     }
