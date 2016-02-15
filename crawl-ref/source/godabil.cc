@@ -1769,8 +1769,13 @@ bool beogh_resurrect()
 {
     item_def* corpse = nullptr;
     for (stack_iterator si(you.pos()); si; ++si)
-        if (si->props.exists(ORC_CORPSE_KEY))
+        if (si->props.exists(ORC_CORPSE_KEY)
+            && yesno(("Resurrect "
+                      + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
+                      + "?").c_str(), true, 'n'))
+        {
             corpse = &*si;
+        }
     if (!corpse)
     {
         mpr("There's nobody here you can resurrect.");
