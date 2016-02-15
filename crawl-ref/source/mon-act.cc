@@ -1970,7 +1970,7 @@ void handle_monster_move(monster* mons)
 
     // Lurking monsters only stop lurking if their target is right
     // next to them, otherwise they just sit there.
-    if (mons_is_lurking(mons) || mons->has_ench(ENCH_SUBMERGED))
+    if (mons->has_ench(ENCH_SUBMERGED))
     {
         if (mons->foe != MHITNOT
             && grid_distance(mons->target, mons->pos()) <= 1)

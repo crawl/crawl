@@ -479,8 +479,6 @@ void handle_behaviour(monster* mon)
             new_foe = MHITNOT;
             break;
 
-        case BEH_LURK:
-            // Get a target, but don't change to wandering.
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -492,8 +490,7 @@ void handle_behaviour(monster* mon)
                     || mon->type == MONS_GIANT_SPORE
                     || mon->type == MONS_BALL_LIGHTNING)
                 {
-                    if (mon->behaviour != BEH_LURK)
-                        new_beh = BEH_WANDER;
+                    new_beh = BEH_WANDER;
                 }
                 else
                 {
@@ -1322,15 +1319,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         handle_monster_shouts(mon);
     }
 
-    const bool wasLurking =
-        (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
     const bool isPacified = mon->pacified();
 
-    if ((wasLurking || isPacified)
+    if (isPacified
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
     {
-        // Lurking monsters or pacified monsters leaving the level won't
-        // stop doing so just because they noticed something.
+        // Pacified monsters leaving the level won't stop doing so just because
+        // they noticed something.
         mon->behaviour = old_behaviour;
     }
 

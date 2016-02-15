@@ -194,15 +194,9 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // deliberate fall-through
 
     case ENCH_INSANE:
-
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
         calc_speed();
         break;
 
@@ -216,15 +210,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_SUBMERGED:
         dprf("%s submerges.", name(DESC_A, true).c_str());
-        break;
-
-    case ENCH_CONFUSION:
-    case ENCH_MAD:
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
         break;
 
     case ENCH_CHARM:
@@ -701,7 +686,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
-        if (mons_is_wandering(this) || mons_is_lurking(this))
+        if (mons_is_wandering(this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);

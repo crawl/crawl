@@ -3530,9 +3530,9 @@ enum beh_type
                                        //  obstacle or monster
 #if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
-#endif
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
+#endif
     BEH_RETREAT,                       //  like flee but when cannot attack
     BEH_WITHDRAW,                      //  an ally given a command to withdraw
                                        //  (will not respond to attacks)

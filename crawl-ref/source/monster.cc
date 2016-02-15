@@ -6623,7 +6623,7 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     if (!stasis())
         return false;
 
-    if (!silent && you.can_see(*this) && !mons_is_lurking(this))
+    if (!silent && you.can_see(*this))
         simple_monster_message(this, " looks uneasy for a moment.");
 
     return true;
