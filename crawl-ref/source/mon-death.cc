@@ -2087,7 +2087,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;
                 case GOD_PAKELLAS:
-                    mp_heal = random2(2 + mons->get_experience_level() / 4);
+                    mp_heal = random2(2 + mons->get_experience_level() / 6);
                     break;
                 default:
                     die("bad kill-on-healing god!");
@@ -2106,8 +2106,38 @@ item_def* monster_die(monster* mons, killer_type killer,
 
                 if (mp_heal && you.magic_points < you.max_magic_points)
                 {
+                    int tmp = min(you.max_magic_points - you.magic_points,
+                                  mp_heal);
                     canned_msg(MSG_GAIN_MAGIC);
                     inc_mp(mp_heal);
+                    mp_heal -= tmp;
+                }
+
+                // perhaps this should go to its own function
+                if (mp_heal && in_good_standing(GOD_PAKELLAS, 2))
+                {
+                    simple_god_message(" collects the excess magic power.");
+                    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
+
+                    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
+                        && (feat_has_solid_floor(grd(you.pos()))
+                            || feat_is_watery(grd(you.pos()))
+                               && species_likes_water(you.species)))
+                    {
+                        int thing_created = items(true, OBJ_POTIONS,
+                                                  POT_MAGIC, 1, 0,
+                                                  GOD_PAKELLAS);
+                        if (thing_created != NON_ITEM)
+                        {
+                            move_item_to_grid(&thing_created, you.pos(), true);
+                            mitm[thing_created].flags |= ISFLAG_KNOW_TYPE;
+                            // not a conventional gift, but use the same
+                            // messaging
+                            simple_god_message(" grants you a gift!");
+                            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
+                                += POT_MAGIC_MP;
+                        }
+                    }
                 }
             }
 
