@@ -1268,7 +1268,7 @@ void direction_chooser::feature_cycle_forward(int feature)
                                  return map_bounds(where)
                                         && (you.see_cell(where)
                                             || env.map_knowledge(where).seen())
-                                        && is_feature(mode, where);
+                                        && is_feature(feature, where);
                              },
                              hitfunc,
                              LS_FLIPVH))
