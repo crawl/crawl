@@ -3843,7 +3843,6 @@ enum operation_types
     OPER_MEMORISE = 'M',
     OPER_ZAP      = 'Z',
     OPER_FIRE     = 'f',
-    OPER_PRAY     = 'p',
     OPER_EVOKE    = 'v',
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',

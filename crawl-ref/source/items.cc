@@ -2048,17 +2048,6 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-void mark_items_non_visit_at(const coord_def &pos)
-{
-    int item = igrd(pos);
-    while (item != NON_ITEM)
-    {
-        if (god_likes_item(you.religion, mitm[item]))
-            mitm[item].flags |= ISFLAG_DROPPED;
-        item = mitm[item].link;
-    }
-}
-
 void clear_item_pickup_flags(item_def &item)
 {
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
@@ -4022,27 +4011,6 @@ bool item_def::is_mundane() const
     }
 
     return false;
-}
-
-// Does the item cause autoexplore to visit it?
-// Excludes visited items (dropped flag) and ?RC for Ash.
-bool item_def::is_greedy_sacrificeable() const
-{
-    if (!god_likes_items(you.religion, true))
-        return false;
-
-    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
-        || item_needs_autopickup(*this)
-        || item_is_stationary_net(*this)
-        || inscription.find("!p") != string::npos
-        || inscription.find("=p") != string::npos
-        || inscription.find("!*") != string::npos
-        || inscription.find("!D") != string::npos)
-    {
-        return false;
-    }
-
-    return god_likes_item(you.religion, *this);
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)

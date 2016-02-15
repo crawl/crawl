@@ -10,6 +10,7 @@
 #include "database.h"
 #include "english.h"
 #include "env.h"
+#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -32,33 +33,6 @@
 #include "terrain.h"
 #include "unwind.h"
 #include "view.h"
-
-static bool _offer_items();
-
-static bool _confirm_pray_sacrifice(god_type god)
-{
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        bool penance = false;
-        if (god_likes_item(god, *si)
-            && needs_handle_warning(*si, OPER_PRAY, penance))
-        {
-            string prompt = "Really sacrifice stack with ";
-            prompt += si->name(DESC_A);
-            prompt += " in it?";
-            if (penance)
-                prompt += " This could place you under penance!";
-
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
 
 string god_prayer_reaction()
 {
@@ -212,8 +186,8 @@ void pray(bool allow_conversion)
          you.cannot_speak() ? "silent " : "",
          god_name(you.religion).c_str());
 
-    you.turn_is_over = _offer_items()
-                      || (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom());
+    if (you_worship(GOD_FEDHAS))
+        you.turn_is_over = fedhas_fungal_bloom();
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
@@ -287,10 +261,28 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
     return taken;
 }
 
+enum jiyva_slurp_results
+{
+    JS_NONE = 0,
+    JS_FOOD = 1 << 0,
+    JS_HP   = 1 << 1,
+    JS_MP   = 1 << 2,
+};
+
+struct slurp_gain
+{
+    int jiyva_bonus;
+    piety_gain_t piety_gain;
+
+    slurp_gain(int bonus, piety_gain_t gain)
+        : jiyva_bonus(bonus), piety_gain(gain)
+    {
+    }
+};
+
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.). Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
-       int *js, bool first)
+static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
 {
     // item_value() multiplies by quantity.
     const int shop_value = item_value(item, true) / item.quantity;
@@ -305,111 +297,66 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
 
-    piety_gain_t relative_piety_gain = PIETY_NONE;
-    switch (you.religion)
+    slurp_gain gain(JS_NONE, PIETY_NONE);
+
+    // compress into range 0..250
+    const int stepped = stepdown_value(value, 50, 50, 200, 250);
+    gain_piety(stepped, 50);
+    gain.piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
+
+    if (player_under_penance(GOD_JIYVA))
+        return gain;
+
+    int item_value = div_rand_round(stepped, 50);
+    if (you.piety >= piety_breakpoint(1)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && !you_foodless())
     {
-    case GOD_JIYVA:
-    {
-        // compress into range 0..250
-        const int stepped = stepdown_value(value, 50, 50, 200, 250);
-        gain_piety(stepped, 50);
-        relative_piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
-        jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
-        break;
+        //same as a sultana
+        lessen_hunger(70, true);
+        gain.jiyva_bonus |= JS_FOOD;
     }
 
-    default:
-        break;
+    if (you.piety >= piety_breakpoint(3)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.magic_points < you.max_magic_points)
+    {
+        inc_mp(max(random2(item_value), 1));
+        gain.jiyva_bonus |= JS_MP;
     }
 
-    return relative_piety_gain;
+    if (you.piety >= piety_breakpoint(4)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR])
+    {
+        inc_hp(max(random2(item_value), 1));
+        gain.jiyva_bonus |= JS_HP;
+    }
+
+    return gain;
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
+void jiyva_slurp_item_stack(const item_def& item, int quantity)
 {
+    ASSERT(you_worship(GOD_JIYVA));
     if (quantity <= 0)
         quantity = item.quantity;
-    piety_gain_t relative_gain = PIETY_NONE;
+    slurp_gain gain(JS_NONE, PIETY_NONE);
     for (int j = 0; j < quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
+        const slurp_gain new_gain = _sacrifice_one_item_noncount(item);
 
-        // Update piety gain if necessary.
-        if (gain != PIETY_NONE)
-        {
-            if (relative_gain == PIETY_NONE)
-                relative_gain = gain;
-            else            // some + some = lots
-                relative_gain = PIETY_LOTS;
-        }
-    }
-    return relative_gain;
-}
-
-/**
- * Sacrifice the items at the player's location to the player's god.
- *
- * @return  True if an item was sacrificed, false otherwise.
-*/
-static bool _offer_items()
-{
-    if (!god_likes_items(you.religion))
-        return false;
-
-    if (!_confirm_pray_sacrifice(you.religion))
-        return false;
-
-    int i = you.visible_igrd(you.pos());
-
-    god_acting gdact;
-
-    int num_sacced = 0;
-    int num_disliked = 0;
-
-    while (i != NON_ITEM)
-    {
-        item_def &item(mitm[i]);
-        const int next = item.link;  // in case we can't get it later.
-        const bool disliked = !god_likes_item(you.religion, item);
-
-        if (item_is_stationary_net(item) || disliked)
-        {
-            if (disliked)
-                num_disliked++;
-            i = next;
-            continue;
-        }
-
-        // Ignore {!D} inscribed items.
-        if (!check_warning_inscriptions(item, OPER_DESTROY))
-        {
-            mpr("Won't sacrifice {!D} inscribed item.");
-            i = next;
-            continue;
-        }
-
-        if (god_likes_item(you.religion, item)
-            && ((item.inscription.find("=p") != string::npos)
-                || item_needs_autopickup(item)
-                    && GOD_ASHENZARI != you.religion))
-        {
-            const string msg = "Really sacrifice " + item.name(DESC_A) + "?";
-
-            if (!yesno(msg.c_str(), false, 'n'))
-            {
-                i = next;
-                continue;
-            }
-        }
-
-        const piety_gain_t relative_gain = sacrifice_item_stack(item);
-        print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        item_was_destroyed(mitm[i]);
-        destroy_item(i);
-
-        i = next;
-        num_sacced++;
+        gain.piety_gain = max(gain.piety_gain, new_gain.piety_gain);
+        gain.jiyva_bonus |= new_gain.jiyva_bonus;
     }
 
-    return num_sacced > 0;
+    if (gain.piety_gain > PIETY_NONE)
+        simple_god_message(" appreciates your sacrifice.");
+    if (gain.jiyva_bonus & JS_FOOD)
+        mpr("You feel a little less hungry.");
+    if (gain.jiyva_bonus & JS_MP)
+        canned_msg(MSG_GAIN_MAGIC);
+    if (gain.jiyva_bonus & JS_HP)
+        canned_msg(MSG_GAIN_HEALTH);
 }

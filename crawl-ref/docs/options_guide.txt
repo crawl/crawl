@@ -736,7 +736,6 @@ explore_greedy = true
 
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
-explore_stop += greedy_sacrificeable
         (List option)
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
@@ -781,9 +780,6 @@ explore_stop += greedy_sacrificeable
             previously unknown to the player, even if the stack contains
             nothing eligible for autopickup.
 
-        greedy_sacrificeable: Visit and stop at stacks containing items which
-            can be sacrificed to your god.
-
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
 
@@ -813,19 +809,8 @@ explore_improved = false
         pathological cases causing a 13% increase.
 
 auto_sacrifice = false
-       If set to true, eligible items will be automatically sacrificed during
-       auto-explore.
-       When set to "before_explore", if you are standing on items which can be
-       sacrificed when you start auto-explore, they will be automatically
-       sacrificed.
-       When set to "prompt", you will have a confirmation prompt before the
-       items are sacrificed.
-       When set to "prompt_ignore", items will not be automatically sacrificed,
-       but you will be reminded and asked whether to ignore them if you attempt
-       to continue exploring without sacrificing.
-
-       This option has no effect when explore_stop doesn't include
-       greedy_sacrificeable.
+       If set to true, the player is worshipping Fedhas, and there are corpses
+       around when autoexplore is initiated, they will be sacrificed.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.

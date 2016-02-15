@@ -107,8 +107,6 @@ bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
 bool fedhas_neutralises(const monster* target);
-void print_sacrifice_message(god_type, const item_def &,
-                             piety_gain_t, bool = false);
 void nemelex_death_message();
 
 bool tso_unchivalric_attack_safe_monster(const monster* mon);
@@ -127,8 +125,6 @@ bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
 bool god_hates_attacking_friend(god_type god, const monster *fr);
-bool god_likes_item(god_type god, const item_def& item);
-bool god_likes_items(god_type god, bool greedy_explore = false);
 
 void religion_turn_start();
 void religion_turn_end();

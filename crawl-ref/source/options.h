@@ -356,7 +356,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    autosac_type auto_sacrifice;
+    bool        auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;

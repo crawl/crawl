@@ -209,19 +209,10 @@ bool Stash::pickup_eligible() const
     return false;
 }
 
-bool Stash::sacrificeable() const
-{
-    for (const item_def &item : items)
-        if (item.is_greedy_sacrificeable())
-            return true;
-
-    return false;
-}
-
 bool Stash::needs_stop() const
 {
     for (const item_def &item : items)
-        if (!item.is_greedy_sacrificeable() && !item_needs_autopickup(item))
+        if (!item_needs_autopickup(item))
             return true;
 
     return false;
@@ -781,12 +772,10 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
     return shop && !shop->is_visited();
 }
 
-bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
-                               bool sacrifice) const
+bool LevelStashes::needs_visit(const coord_def& c, bool autopickup) const
 {
     const Stash *s = find_stash(c);
     if (s && (s->unverified()
-              || sacrifice && s->sacrificeable()
               || autopickup && s->pickup_eligible()))
     {
         return true;
@@ -798,12 +787,6 @@ bool LevelStashes::needs_stop(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
     return s && s->unverified() && s->needs_stop();
-}
-
-bool LevelStashes::sacrificeable(const coord_def &c) const
-{
-    const Stash *s = find_stash(c);
-    return s && s->sacrificeable();
 }
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
