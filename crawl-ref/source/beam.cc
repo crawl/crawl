@@ -5846,7 +5846,7 @@ int bolt::range_used_on_hit() const
     // Non-beams can only affect one thing (player/monster).
     if (!pierce)
         used = BEAM_STOP;
-    else if (is_enchantment() && !pierce)
+    else if (is_enchantment() && name != "line pass")
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
     // Hellfire stops for nobody!
     else if (flavour == BEAM_HELLFIRE)
