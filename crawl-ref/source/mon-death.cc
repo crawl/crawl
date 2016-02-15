@@ -152,7 +152,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     }
 
     if (mons_genus(mons.type) == MONS_ORC)
-        corpse.props[ORC_CORPSE_KEY] = mons;
+        corpse.props[ORC_CORPSE_KEY].get_monster() = mons;
 
     return true;
 }
