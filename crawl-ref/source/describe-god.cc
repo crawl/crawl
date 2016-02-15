@@ -725,12 +725,6 @@ static void _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_BEOGH:
-        have_any = true;
-        cprintf("You can pray to sacrifice all orcish remains on your "
-                "square.\n");
-        break;
-
     case GOD_JIYVA:
         have_any = true;
         if (piety < piety_breakpoint(2))

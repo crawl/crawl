@@ -636,15 +636,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    case GOD_BEOGH:
-    {
-        string like = "you bless dead orcs";
-        if (verbose)
-            like += " (by standing over their remains and <w>p</w>raying)";
-        likes.push_back(like);
-        break;
-    }
-
     case GOD_NEMELEX_XOBEH:
         likes.emplace_back("you explore the world");
         break;
@@ -3130,20 +3121,7 @@ bool god_hates_attacking_friend(god_type god, const monster *fr)
 */
 bool god_likes_items(god_type god, bool greedy_explore)
 {
-    if (greedy_explore && !(Options.explore_stop & ES_GREEDY_SACRIFICEABLE))
-        return false;
-
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return true;
-
-    case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
-        die("Bad god for item sacrifice check: %d", static_cast<int>(god));
-
-    default:
-        return false;
-    }
+    return false;
 }
 
 /**
@@ -3155,18 +3133,7 @@ bool god_likes_items(god_type god, bool greedy_explore)
 */
 bool god_likes_item(god_type god, const item_def& item)
 {
-    if (!god_likes_items(god))
-        return false;
-
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return item.base_type == OBJ_CORPSES
-               && mons_genus(item.mon_type) == MONS_ORC;
-
-    default:
-        return false;
-    }
+    return false;
 }
 
 static bool _transformed_player_can_join_god(god_type which_god)

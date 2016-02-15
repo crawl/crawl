@@ -768,7 +768,7 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_PRIEST, {
-            -6, 10, 0, " appreciates your killing of a heretic priest."
+            -6, 18, 0, " appreciates your killing of a heretic priest."
         } },
     },
     // GOD_JIYVA,

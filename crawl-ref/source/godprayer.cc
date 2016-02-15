@@ -308,28 +308,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     piety_gain_t relative_piety_gain = PIETY_NONE;
     switch (you.religion)
     {
-    case GOD_BEOGH:
-    {
-        const int item_orig = item.orig_monnum;
-
-        int chance = 4;
-
-        if (item_orig == MONS_SAINT_ROKA)
-            chance += 12;
-        else if (item_orig == MONS_ORC_HIGH_PRIEST)
-            chance += 8;
-        else if (item_orig == MONS_ORC_PRIEST)
-            chance += 4;
-
-        if (item.sub_type == CORPSE_SKELETON)
-            chance -= 2;
-
-        gain_piety(chance, 20);
-        if (x_chance_in_y(chance, 20))
-            relative_piety_gain = PIETY_SOME;
-        break;
-    }
-
     case GOD_JIYVA:
     {
         // compress into range 0..250
@@ -431,13 +409,6 @@ static bool _offer_items()
 
         i = next;
         num_sacced++;
-    }
-
-    // Explanatory messages if nothing the god likes is sacrificed.
-    if (num_sacced == 0 && num_disliked > 0)
-    {
-        if (you_worship(GOD_BEOGH))
-            simple_god_message(" only cares about orcish remains!");
     }
 
     return num_sacced > 0;
