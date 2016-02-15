@@ -884,8 +884,7 @@ void game_options::reset_options()
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK
-                              | ES_GREEDY_SACRIFICEABLE);
+                              | ES_GREEDY_VISITED_ITEM_STACK);
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -900,7 +899,7 @@ void game_options::reset_options()
     explore_auto_rest      = false;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = AS_NO;
+    auto_sacrifice         = false;
 
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
@@ -2088,12 +2087,6 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
-        else if (c == "greedy_sacrificeable" || c == "greedy_sacrificeables"
-                 || c == "greedy_sacrificable" || c == "greedy_sacrificables"
-                 || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
-        {
-            conditions |= ES_GREEDY_SACRIFICEABLE;
-        }
     }
     return conditions;
 }
@@ -3495,17 +3488,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(explore_auto_rest);
     else BOOL_OPTION(travel_key_stop);
-    else if (key == "auto_sacrifice")
-    {
-        if (field == "prompt_ignore")
-            auto_sacrifice = AS_PROMPT_IGNORE;
-        else if (field == "prompt" || field == "ask")
-            auto_sacrifice = AS_PROMPT;
-        else if (field == "before_explore")
-            auto_sacrifice = AS_BEFORE_EXPLORE;
-        else
-            auto_sacrifice = _read_bool(field, false) ? AS_YES : AS_NO;
-    }
+    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
         if (plain)

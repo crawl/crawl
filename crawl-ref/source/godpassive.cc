@@ -308,7 +308,6 @@ void jiyva_eat_offlevel_items()
             break;
 
         const int branch = random2(NUM_BRANCHES);
-        int js = JS_NONE;
 
         // Choose level based on main dungeon depth so that levels of
         // short branches aren't picked more often.
@@ -348,58 +347,12 @@ void jiyva_eat_offlevel_items()
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                sacrifice_item_stack(*si, &js);
+                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
-                jiyva_slurp_message(js);
             }
             return;
         }
-    }
-}
-
-void jiyva_slurp_bonus(int item_value, int *js)
-{
-    if (player_under_penance(GOD_JIYVA))
-        return;
-
-    if (you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && !you_foodless())
-    {
-        //same as a sultana
-        lessen_hunger(70, true);
-        *js |= JS_FOOD;
-    }
-
-    if (you.piety >= piety_breakpoint(3)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.magic_points < you.max_magic_points)
-    {
-        inc_mp(max(random2(item_value), 1));
-        *js |= JS_MP;
-    }
-
-    if (you.piety >= piety_breakpoint(4)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.hp < you.hp_max
-        && !you.duration[DUR_DEATHS_DOOR])
-    {
-        inc_hp(max(random2(item_value), 1));
-        *js |= JS_HP;
-    }
-}
-
-void jiyva_slurp_message(int js)
-{
-    if (js != JS_NONE)
-    {
-        if (js & JS_FOOD)
-            mpr("You feel a little less hungry.");
-        if (js & JS_MP)
-            canned_msg(MSG_GAIN_MAGIC);
-        if (js & JS_HP)
-            canned_msg(MSG_GAIN_HEALTH);
     }
 }
 

@@ -652,9 +652,6 @@ public:
     /** Is this item of a type that should not be generated enchanted? */
     bool is_mundane() const;
 
-    /** Should greedy-sacrifice autoexplore visit this item? */
-    bool is_greedy_sacrificeable() const;
-
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;

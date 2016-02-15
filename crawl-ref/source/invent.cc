@@ -1502,7 +1502,6 @@ static string _operation_verb(operation_types oper)
     case OPER_MEMORISE:       return "memorise from";
     case OPER_ZAP:            return "zap";
     case OPER_FIRE:           return "fire";
-    case OPER_PRAY:           return "sacrifice";
     case OPER_EVOKE:          return "evoke";
     case OPER_DESTROY:        return "destroy";
     case OPER_QUIVER:         return "quiver";
