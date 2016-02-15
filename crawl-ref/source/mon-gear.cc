@@ -1782,12 +1782,8 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_CHERUB:
-        if ((!main_weap || mon->hands_reqd(*main_weap) == HANDS_ONE)
-            && (!alt_weap || mon->hands_reqd(*alt_weap) == HANDS_ONE))
-        {
-            // Big shields interfere with ranged combat, at least theme-wise.
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
-        }
+        // Big shields interfere with ranged combat, at least theme-wise.
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
         break;
 
     case MONS_MINOTAUR:
@@ -1799,6 +1795,7 @@ static void _give_shield(monster* mon, int level)
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
+    case MONS_ORC_WARLORD:
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
