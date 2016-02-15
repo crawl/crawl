@@ -438,6 +438,9 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 1, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
+      { 2, "Pakellas will collect and distill excess magic from your kills.",
+           "Pakellas no longer collects and distills excess magic from your "
+           "kills." },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
@@ -3600,6 +3603,15 @@ static void _join_zin()
     }
 }
 
+// Setup when becoming an overworked assistant to Pakellas.
+static void _join_pakellas()
+{
+    mprf(MSGCH_GOD, "You stop regenerating magic.");
+    mprf(MSGCH_GOD, "You can now gain magical power from killing.");
+    pakellas_id_device_charges();
+    you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3622,11 +3634,7 @@ static const map<god_type, function<void ()>> on_join = {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
-    { GOD_PAKELLAS, []() {
-        mprf(MSGCH_GOD, "You stop regenerating magic.");
-        mprf(MSGCH_GOD, "You can now gain magical power from killing.");
-        pakellas_id_device_charges();
-    }},
+    { GOD_PAKELLAS, _join_pakellas },
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },

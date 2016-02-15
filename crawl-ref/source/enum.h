@@ -534,6 +534,7 @@ enum attribute_type
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
     ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
+    ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     NUM_ATTRIBUTES
 };
 

@@ -616,7 +616,7 @@ public:
             return PotionHealWounds::instance().effect(pow);
         }
 #endif
-        inc_mp(10 + random2avg(28, 3));
+        inc_mp(POT_MAGIC_MP);
         mpr("Magic courses through your body.");
         return true;
     }

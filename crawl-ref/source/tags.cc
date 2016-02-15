@@ -2592,6 +2592,10 @@ static void tag_read_you(reader &th)
 #endif
         you.attribute[j] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 34
+    if (count == ATTR_PAKELLAS_EXTRA_MP && you_worship(GOD_PAKELLAS))
+        you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
+#endif
     for (int j = count; j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = 0;
     for (int j = NUM_ATTRIBUTES; j < count; ++j)
