@@ -762,6 +762,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         vector<coord_def> veto_spots(8);
         for (adjacent_iterator ai(where); ai; ++ai)
             veto_spots.push_back(*ai);
+        vector<coord_def> adj_spots = veto_spots;
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -781,6 +782,18 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 }
                 else
                     veto_spots.push_back(newpos);
+            }
+
+            // don't try to shove the orb of zot into lava and/or crash
+            if (igrd(*ai) != NON_ITEM)
+            {
+                coord_def newpos;
+                if (!get_push_space(*ai, newpos, nullptr, true, &adj_spots))
+                {
+                    success = false;
+                    none_vis = false;
+                    break;
+                }
             }
 
             // Make sure we have a legitimate tile.
@@ -815,6 +828,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, act, true);
+                ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
             }
         }
@@ -839,6 +853,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, nullptr, true);
+                if (zin) // zin should've checked for this earlier
+                    ASSERT(!newpos.origin());
+                else if (newpos.origin())  // tomb just skips the tile
+                    continue;
                 move_items(*ai, newpos);
             }
 
