@@ -40,9 +40,8 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
     if (mon->is_stationary())
         return !sleepy;
 
-    // Auto exclusion only makes sense if the monster is still asleep or if it
-    // is lurking (discovered mimics).
-    return mon->asleep() || mons_is_lurking(mon);
+    // Auto exclusion only makes sense if the monster is still asleep.
+    return mon->asleep();
 }
 
 // Check whether a given monster is listed in the auto_exclude option.

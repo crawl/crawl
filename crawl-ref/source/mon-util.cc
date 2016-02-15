@@ -3451,11 +3451,6 @@ bool mons_is_cornered(const monster* m)
     return m->behaviour == BEH_CORNERED;
 }
 
-bool mons_is_lurking(const monster* m)
-{
-    return m->behaviour == BEH_LURK;
-}
-
 bool mons_is_influenced_by_sanctuary(const monster* m)
 {
     return !m->wont_attack() && !m->is_stationary();
