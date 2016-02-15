@@ -3099,18 +3099,12 @@ bool god_hates_attacking_friend(god_type god, const monster *fr)
 */
 bool god_likes_items(god_type god, bool greedy_explore)
 {
-    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
-                           || you_worship(GOD_ASHENZARI)))
-        // Ash's sacrifice isn't trading items for piety so it shouldn't make
-        // explore greedy for ?RC
-    {
+    if (greedy_explore && !(Options.explore_stop & ES_GREEDY_SACRIFICEABLE))
         return false;
-    }
 
     switch (god)
     {
     case GOD_BEOGH:
-    case GOD_ASHENZARI:
         return true;
 
     case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
