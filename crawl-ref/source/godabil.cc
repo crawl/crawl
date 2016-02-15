@@ -1778,6 +1778,7 @@ bool beogh_resurrect()
     }
 
     coord_def pos;
+    ASSERT(corpse->props.exists(ORC_CORPSE_KEY));
     for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         if (!actor_at(*ai)
@@ -1795,6 +1796,7 @@ bool beogh_resurrect()
     monster* mon = get_free_monster();
     *mon = corpse->props[ORC_CORPSE_KEY];
     destroy_item(corpse->index());
+    env.mid_cache[mon->mid] = mon->mindex();
     mon->hit_points = mon->max_hit_points;
     mon->inv.init(NON_ITEM);
     for (stack_iterator si(you.pos()); si; ++si)
