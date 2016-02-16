@@ -8,6 +8,7 @@
 #include "orb.h"
 
 #include "areas.h"
+#include "godpassive.h" // passive_t::slow_orb_run
 #include "shout.h"
 #include "view.h"
 #include "religion.h"
@@ -79,8 +80,8 @@ void start_orb_run(game_chapter chapter, const char* message)
     if (you.chapter != CHAPTER_ANGERED_PANDEMONIUM)
     {
         mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
-        if (you_worship(GOD_CHEIBRIADOS))
-          simple_god_message(" tells them not to hurry.");
+        if (have_passive(passive_t::slow_orb_run))
+            simple_god_message(" tells them not to hurry.");
     }
 
     mprf(MSGCH_ORB, "%s", message);

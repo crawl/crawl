@@ -1600,7 +1600,7 @@ static bool _animate_dead_okay(spell_type spell)
         return false;
 
     // Annoying to drag around hordes of the undead as well as the living.
-    if (you_worship(GOD_BEOGH))
+    if (will_have_passive(passive_t::convert_orcs))
         return false;
 
     return true;
@@ -3942,7 +3942,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
 
     // TSO and Trog's abjuration protection.
     bool shielded = false;
-    if (you_worship(GOD_SHINING_ONE))
+    if (have_passive(passive_t::abjuration_protection_hd))
     {
         pow = pow * (30 - target->get_hit_dice()) / 30;
         if (pow < duration)
@@ -3952,7 +3952,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
             shielded = true;
         }
     }
-    else if (you_worship(GOD_TROG))
+    else if (have_passive(passive_t::abjuration_protection))
     {
         pow = pow / 2;
         if (pow < duration)

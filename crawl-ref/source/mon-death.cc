@@ -32,6 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -252,7 +253,7 @@ static void _give_monster_experience(int experience, int killer_index)
 
     if (mon->gain_exp(experience))
     {
-        if (!in_good_standing(GOD_BEOGH) || !one_chance_in(3))
+        if (!have_passive(passive_t::bless_followers) || !one_chance_in(3))
             return;
 
         // Randomly bless the follower who gained experience.
@@ -344,7 +345,7 @@ static void _give_player_experience(int experience, killer_type killer,
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
 
-    if (kc == KC_YOU && you_worship(GOD_BEOGH))
+    if (kc == KC_YOU && have_passive(passive_t::share_exp))
         _beogh_spread_experience(experience / 2);
 }
 
@@ -411,7 +412,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Under Gozag, monsters turn into gold on death.
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
-    bool goldify = in_good_standing(GOD_GOZAG)
+    bool goldify = have_passive(passive_t::goldify_corpses)
                    && mons_gives_xp(&mons, &you)
                    && !force;
 
@@ -583,7 +584,7 @@ int exp_rate(int killer)
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
-    if (!you_worship(GOD_ELYVILON))
+    if (!have_passive(passive_t::protect_ally))
         return false;
 
     if (!MON_KILL(killer) && !YOU_KILL(killer))
@@ -708,7 +709,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
                                     int killer_index)
 {
-    if (!in_good_standing(GOD_BEOGH, 2)
+    if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
         || !you.see_cell(mons.pos()) || mons_is_god_gift(&mons))
@@ -1548,9 +1549,9 @@ static bool _reaping(monster *mons)
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return in_good_standing(GOD_BEOGH)
+    return have_passive(passive_t::bless_followers)
            && random2(you.piety) >= piety_breakpoint(2)
-           || in_good_standing(GOD_SHINING_ONE)
+           || have_passive(passive_t::bless_followers_vs_unholy)
               && (victim->is_evil() || victim->is_unholy())
               && random2(you.piety) >= piety_breakpoint(0);
 }
@@ -1815,14 +1816,16 @@ item_def* monster_die(monster* mons, killer_type killer,
     // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
-        if (in_good_standing(GOD_TROG) && you.piety > random2(1000))
+        if (have_passive(passive_t::extend_berserk)
+            && you.piety > random2(1000))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
             you.increase_duration(DUR_BERSERK, bonus);
 
-            mprf(MSGCH_GOD, GOD_TROG,
-                 "You feel the power of Trog in you as your rage grows.");
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel the power of %s in you as your rage grows.",
+                 uppercase_first(god_name(you.religion)).c_str());
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
         {
@@ -1922,7 +1925,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
             if (!summoned_it
-                && (!in_good_standing(GOD_GOZAG)
+                && (!have_passive(passive_t::goldify_corpses)
                     || mons->has_ench(ENCH_ABJ)))
             {
                 simple_monster_message(mons, " falls from the air.",
@@ -2061,10 +2064,10 @@ item_def* monster_die(monster* mons, killer_type killer,
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
             if (gives_player_xp
-                && (you_worship(GOD_MAKHLEB)
+                && (have_passive(passive_t::restore_hp)
                     || you_worship(GOD_PAKELLAS)
                     || you_worship(GOD_VEHUMET)
-                    || you_worship(GOD_SHINING_ONE)
+                    || have_passive(passive_t::restore_hp_mp_vs_unholy)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
@@ -2073,16 +2076,19 @@ item_def* monster_die(monster* mons, killer_type killer,
             {
                 int hp_heal = 0, mp_heal = 0;
 
-                switch (you.religion)
+                if (have_passive(passive_t::restore_hp))
                 {
-                case GOD_MAKHLEB:
                     hp_heal = mons->get_experience_level()
                         + random2(mons->get_experience_level());
-                    break;
-                case GOD_SHINING_ONE:
+                }
+                if (have_passive(passive_t::restore_hp_mp_vs_unholy))
+                {
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
                     mp_heal = random2(2 + mons->get_experience_level() / 3);
-                    break;
+                }
+
+                switch (you.religion)
+                {
                 case GOD_VEHUMET:
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;
@@ -2090,7 +2096,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                     mp_heal = random2(2 + mons->get_experience_level() / 6);
                     break;
                 default:
-                    die("bad kill-on-healing god!");
+                    break;
                 }
 
 #if TAG_MAJOR_VERSION == 34

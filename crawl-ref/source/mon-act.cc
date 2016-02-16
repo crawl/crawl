@@ -1908,7 +1908,7 @@ void handle_monster_move(monster* mons)
         aura_of_brilliance(mons);
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
-        && in_good_standing(GOD_GOZAG)
+        && have_passive(passive_t::gold_aura)
         && you.see_cell(mons->pos())
         && !mons->asleep()
         && !mons_is_conjured(mons->type)

@@ -27,6 +27,7 @@
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"
@@ -346,7 +347,7 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
@@ -561,7 +562,7 @@ static void _hydra_devour(monster &victim)
         static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
 
     // will eating this actually fill the player up?
-    const bool filling = !in_good_standing(GOD_GOZAG)
+    const bool filling = !have_passive(passive_t::goldify_corpses)
                           && player_mutation_level(MUT_HERBIVOROUS, false) < 3
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
