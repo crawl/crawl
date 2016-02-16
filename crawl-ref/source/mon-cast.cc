@@ -95,6 +95,7 @@ static void _siren_sing(monster* mons, bool avatar);
 static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
+static string _god_name(god_type god);
 
 void init_mons_spells()
 {
