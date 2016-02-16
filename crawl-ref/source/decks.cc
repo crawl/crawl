@@ -25,6 +25,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "ghost.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "godwrath.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -1425,7 +1426,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
-        if (you_worship(GOD_CHEIBRIADOS))
+        if (have_passive(passive_t::no_haste))
             simple_god_message(" protects you from inadvertent hurry.");
         else
         {
@@ -1483,7 +1484,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_hostiles == ENCH_HASTE && haste_immune))
                     {
-                        if (you_worship(GOD_CHEIBRIADOS))
+                        if (have_passive(passive_t::no_haste))
                             _suppressed_card_message(you.religion, DID_HASTY);
                         else
                         {
@@ -1508,7 +1509,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_allies == ENCH_HASTE && haste_immune))
                     {
-                        if (you_worship(GOD_CHEIBRIADOS))
+                        if (have_passive(passive_t::no_haste))
                             _suppressed_card_message(you.religion, DID_HASTY);
                         else
                         {
@@ -2038,8 +2039,8 @@ static void _potion_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_HEAL_WOUNDS : POT_MAGIC);
 
-    if (you_worship(GOD_CHEIBRIADOS) && (pot == POT_HASTE
-                                         || pot == POT_BERSERK_RAGE))
+    if (have_passive(passive_t::no_haste)
+        && (pot == POT_HASTE || pot == POT_BERSERK_RAGE))
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;

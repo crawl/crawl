@@ -470,7 +470,7 @@ string describe_mutations(bool center_title)
         }
     }
 
-    if (beogh_water_walk())
+    if (have_passive(passive_t::water_walk))
         result += "<green>You can walk on water.</green>\n";
 
     if (you.duration[DUR_FIRE_SHIELD])
@@ -1253,7 +1253,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::resist_mutation)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -2401,7 +2401,8 @@ void check_monster_detect()
             if (remembered_monster != mon->type)
             {
                 const monster_type mc = mon->friendly() ? MONS_SENSED_FRIENDLY
-                      : in_good_standing(GOD_ASHENZARI) ? ash_monster_tier(mon)
+                                      : have_passive(passive_t::detect_montier)
+                                                        ? ash_monster_tier(mon)
                                                         : MONS_SENSED;
 
                 env.map_knowledge(*ri).set_detected_monster(mc);

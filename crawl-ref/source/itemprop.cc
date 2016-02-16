@@ -772,10 +772,10 @@ bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
 bool curse_an_item(bool ignore_holy_wrath)
 {
     // allowing these would enable mummy scumming
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
     {
         mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(GOD_ASHENZARI).c_str());
+             god_name(you.religion).c_str());
         return false;
     }
 
@@ -891,7 +891,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (no_ash && you_worship(GOD_ASHENZARI))
+    if (no_ash && have_passive(passive_t::want_curses))
     {
         simple_god_message(" preserves the curse.");
         return;
@@ -1682,7 +1682,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
     {
-        if (!uncurse || you_worship(GOD_ASHENZARI))
+        if (!uncurse || have_passive(passive_t::want_curses))
             return false;
         if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
             return true;
@@ -3024,7 +3024,7 @@ void seen_item(const item_def &item)
 
     // major hack. Deconstify should be safe here, but it's still repulsive.
     const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::identify_items))
         const_cast<item_def &>(item).flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         const_cast<item_def &>(item).plus = (you_worship(GOD_ZIN)) ? 2 : 1;

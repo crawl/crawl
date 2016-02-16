@@ -22,6 +22,7 @@
 #include "env.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1060,7 +1061,7 @@ bool item_is_selected(const item_def &i, int selector)
             return false;
         if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
             // Ashenzari would just preserve the curse.
-            && !you_worship(GOD_ASHENZARI))
+            && !have_passive(passive_t::want_curses))
         {
             return true;
         }
@@ -1592,7 +1593,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !you_worship(GOD_LUGONU)
+            && !have_passive(passive_t::safe_distortion)
             && !you.duration[DUR_WEAPON_BRAND])
         {
             return true;

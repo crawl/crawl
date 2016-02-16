@@ -648,7 +648,7 @@ static void _describe_god_powers(god_type which_god)
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // his life.
-    if (god_can_protect_from_harm(which_god))
+    if (have_passive(passive_t::protect_from_harm))
     {
         have_any = true;
 

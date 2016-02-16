@@ -1672,7 +1672,7 @@ void StashTracker::update_corpses()
 
 void StashTracker::update_identification()
 {
-    if (!you_worship(GOD_ASHENZARI))
+    if (!have_passive(passive_t::identify_items))
         return;
 
     for (auto &entry : levels)

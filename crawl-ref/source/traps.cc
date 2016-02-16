@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
+#include "godpassive.h" // passive_t::search_traps
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1086,7 +1087,7 @@ void search_around()
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
     + (base_skill/200.0) + 15;
 
-    if (in_good_standing(GOD_ASHENZARI))
+    if (have_passive(passive_t::search_traps))
         skill += you.piety * 2;
 
     int max_dist = div_rand_round(skill, 32);

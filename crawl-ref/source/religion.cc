@@ -1069,6 +1069,9 @@ void dec_penance(god_type god, int val)
 #endif
     if (you.penance[god] <= val)
     {
+        const bool had_halo = have_passive(passive_t::halo);
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] = 0;
 
         mark_milestone("god.mollify",
@@ -1091,41 +1094,40 @@ void dec_penance(god_type god, int val)
             // Redraw piety display and, in case the best skill is Invocations,
             // redraw the god title.
             you.redraw_title = true;
-        }
 
-        if (you_worship(god))
-        {
-            // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH)
-                 you.redraw_armour_class = true;
-            // TSO's halo is once more available.
-            else if (god == GOD_SHINING_ONE
-                     && you.piety >= piety_breakpoint(0))
+            if (!had_halo && have_passive(passive_t::halo))
             {
                 mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_ASHENZARI
-                     && you.piety >= piety_breakpoint(2))
+            if (!had_umbra && have_passive(passive_t::umbra))
+            {
+                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                invalidate_agrid(true);
+            }
+            // Orcish bonuses are now once more effective.
+            if (have_passive(passive_t::bonus_ac))
+                 you.redraw_armour_class = true;
+            if (have_passive(passive_t::sinv))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS)
+            if (have_passive(passive_t::stat_boost))
             {
                 simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
                 notify_stat_change();
             }
-            // Likewise Dithmenos's umbra.
-            else if (god == GOD_DITHMENOS
+
+            // TSO's halo is once more available.
+            if (god == GOD_SHINING_ONE
                      && you.piety >= piety_breakpoint(0))
             {
-                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL
-                     && you.piety >= piety_breakpoint(0))
+            else if (god == GOD_QAZLAL && you.piety >= piety_breakpoint(0))
             {
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
                 you.redraw_armour_class = true; // also handles shields
@@ -1217,19 +1219,41 @@ static void _inc_penance(god_type god, int val)
 
         take_note(Note(NOTE_PENANCE, god));
 
+        const bool had_halo = have_passive(passive_t::halo);
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] += val;
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
 
-        // Orcish bonuses don't apply under penance.
-        if (god == GOD_BEOGH)
+        if (had_halo && !have_passive(passive_t::halo))
         {
+            mprf(MSGCH_GOD, god, "Your divine halo fades away.");
+            invalidate_agrid();
+        }
+        if (had_umbra && !have_passive(passive_t::umbra))
+        {
+            mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
+            invalidate_agrid();
+        }
+
+        // Orcish bonuses don't apply under penance.
+        if (will_have_passive(passive_t::bonus_ac))
             you.redraw_armour_class = true;
 
-            if (_need_water_walking() && !beogh_water_walk())
-                fall_into_a_pool(grd(you.pos()));
+        if (will_have_passive(passive_t::water_walk)
+            && _need_water_walking() && !have_passive(passive_t::water_walk))
+        {
+            fall_into_a_pool(grd(you.pos()));
         }
+
+        if (will_have_passive(passive_t::stat_boost))
+        {
+            redraw_screen();
+            notify_stat_change();
+        }
+
         // Neither does Trog's regeneration or magic resistance.
-        else if (god == GOD_TROG)
+        if (god == GOD_TROG)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
@@ -1245,14 +1269,10 @@ static void _inc_penance(god_type god, int val)
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
-            if (you.haloed())
-                mprf(MSGCH_GOD, god, "Your divine halo fades away.");
-
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
-            invalidate_agrid();
         }
         // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
@@ -1264,17 +1284,6 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
-        }
-        else if (god == GOD_CHEIBRIADOS)
-        {
-            redraw_screen();
-            notify_stat_change();
-        }
-        else if (god == GOD_DITHMENOS)
-        {
-            if (you.umbraed())
-                mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
-            invalidate_agrid();
         }
         else if (god == GOD_QAZLAL)
         {
@@ -1638,7 +1647,7 @@ bool is_follower(const monster* mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
         return is_yred_undead_slave(mon);
-    else if (you_worship(GOD_BEOGH))
+    else if (will_have_passive(passive_t::convert_orcs))
         return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
         return is_fellow_slime(mon);
@@ -2390,22 +2399,21 @@ static void _gain_piety_point()
                 }
             }
         }
-        if (you_worship(GOD_SHINING_ONE) && rank == 1)
+        if (rank == rank_for_passive(passive_t::halo))
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
-        if (you_worship(GOD_DITHMENOS) && rank == 1)
+        if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
-        if (you_worship(GOD_ASHENZARI))
+        if (rank == rank_for_passive(passive_t::sinv))
+            autotoggle_autopickup(false);
+        if (rank == rank_for_passive(passive_t::clarity))
         {
-            if (rank == 3)
-                autotoggle_autopickup(false);
-            if (rank == 4)
-            {
-                // Inconsistent with donning amulets, but matches the
-                // message better and is not abusable.
-                you.duration[DUR_CONF] = 0;
-            }
-            auto_id_inventory();
+            // Inconsistent with donning amulets, but matches the
+            // message better and is not abusable.
+            you.duration[DUR_CONF] = 0;
         }
+        if (rank >= rank_for_passive(passive_t::identify_items))
+            auto_id_inventory();
+
         if (you_worship(GOD_JIYVA) && can_do_capstone_ability(you.religion))
         {
             simple_god_message(" will now unseal the treasures of the "
@@ -2421,18 +2429,22 @@ static void _gain_piety_point()
         }
     }
 
-    if (you_worship(GOD_BEOGH))
-    {
-        // Every piety level change also affects AC.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-        // The player's symbol depends on Beogh piety.
-        update_player_symbol();
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    // The player's symbol depends on Beogh piety.
+    if (you_worship(GOD_BEOGH))
+        update_player_symbol();
+
+    if (have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) < chei_stat_boost())
     {
-        simple_god_message(" raises the support of your attributes as your movement slows.");
+        string msg = " raises the support of your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2442,7 +2454,7 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2564,18 +2576,23 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
-    if (you_worship(GOD_BEOGH))
-    {
-        if (_need_water_walking() && !beogh_water_walk())
-            fall_into_a_pool(grd(you.pos()));
-        // Every piety level change also affects AC from orcish gear.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    if (will_have_passive(passive_t::water_walk) && _need_water_walking()
+        && !have_passive(passive_t::water_walk))
+    {
+        fall_into_a_pool(grd(you.pos()));
+    }
+    if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
-        simple_god_message(" lowers the support of your attributes as your movement quickens.");
+        string msg = " lowers the support of your attributes";
+        if (will_have_passive(passive_t::slowed))
+            msg += " as your movement quickens";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2585,7 +2602,8 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (will_have_passive(passive_t::halo)
+        || will_have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2645,9 +2663,11 @@ void excommunication(bool voluntary, god_type new_god)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed  = you.haloed();
-    const bool was_umbraed = you.umbraed();
-    const int  old_piety   = you.piety;
+    const bool had_halo       = have_passive(passive_t::halo);
+    const bool had_umbra      = have_passive(passive_t::umbra);
+    const bool had_water_walk = have_passive(passive_t::water_walk);
+    const bool had_stat_boost = have_passive(passive_t::stat_boost);
+    const int  old_piety      = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -2706,6 +2726,25 @@ void excommunication(bool voluntary, god_type new_god)
             old_god);
     }
 
+    if (had_halo)
+    {
+        mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
+        invalidate_agrid(true);
+    }
+    if (had_umbra)
+    {
+        mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
+        invalidate_agrid(true);
+    }
+    // You might have lost water walking at a bad time...
+    if (had_water_walk && _need_water_walking())
+        fall_into_a_pool(grd(you.pos()));
+    if (had_stat_boost)
+    {
+        redraw_screen();
+        notify_stat_change();
+    }
+
     switch (old_god)
     {
     case GOD_XOM:
@@ -2751,10 +2790,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_BEOGH:
-        // You might have lost water walking at a bad time...
-        if (_need_water_walking())
-            fall_into_a_pool(grd(you.pos()));
-
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
@@ -2783,12 +2818,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
-        if (was_haloed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
-            invalidate_agrid(true);
-        }
-
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
@@ -2864,11 +2893,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_DITHMENOS:
-        if (was_umbraed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
-            invalidate_agrid(true);
-        }
         if (you.form == TRAN_SHADOW)
             untransform();
         _set_penance(old_god, 25);
@@ -2936,8 +2960,6 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25);
-        redraw_screen();
-        notify_stat_change();
         break;
 
     default:
@@ -3232,21 +3254,26 @@ static void _god_welcome_handle_gear()
 
     if (you_worship(GOD_ASHENZARI))
     {
+        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
+        {
+            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
+            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
+        }
+    }
+
+    if (have_passive(passive_t::identify_items))
+    {
         // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (auto &item : you.inv)
             if (item.defined())
                 item.flags |= ISFLAG_KNOW_CURSE;
 
-        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
-        {
-            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
-            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-        }
-
         auto_id_inventory();
-        ash_detect_portals(true);
     }
+
+    if (have_passive(passive_t::detect_portals))
+        ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
@@ -3689,6 +3716,21 @@ void join_religion(god_type which_god)
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
+    // Chei worshippers start their stat gain immediately.
+    if (have_passive(passive_t::stat_boost))
+    {
+        string msg = " begins to support your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
+        notify_stat_change();
+    }
+
+    // Move gold to top of piles with Gozag.
+    if (have_passive(passive_t::detect_gold))
+        add_daction(DACT_GOLD_ON_TOP);
+
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
         (*join_effect)();
@@ -4034,21 +4076,6 @@ bool god_hates_ability(ability_type ability, god_type god)
     return false;
 }
 
-bool god_can_protect_from_harm(god_type god)
-{
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return !you.penance[god];
-    case GOD_ZIN:
-    case GOD_SHINING_ONE:
-    case GOD_ELYVILON:
-        return true;
-    default:
-        return false;
-    }
-}
-
 int elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
@@ -4077,7 +4104,7 @@ bool god_protects_from_harm()
         }
     }
 
-    if (god_can_protect_from_harm(you.religion)
+    if (have_passive(passive_t::protect_from_harm)
         && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
         return true;
@@ -4608,8 +4635,11 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_BEOGH))
+            if (you_worship(GOD_YREDELEMNUL)
+                || have_passive(passive_t::convert_orcs))
+            {
                 add_companion(mon);
+            }
             placed++;
         }
 

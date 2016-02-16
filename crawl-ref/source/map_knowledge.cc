@@ -5,6 +5,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "godpassive.h" // passive_t::auto_map
 #include "notes.h"
 #include "religion.h"
 #include "terrain.h"
@@ -70,9 +71,10 @@ static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
     {
+        const bool godly = have_passive(passive_t::auto_map);
         magic_mapping(8 * mutated,
-                      you_worship(GOD_ASHENZARI) ? 25 + you.piety / 8 : 25,
-                      true, you_worship(GOD_ASHENZARI),
+                      godly ? 25 + you.piety / 8 : 25,
+                      true, godly,
                       true, coord_def(x,y));
     }
 }
@@ -82,7 +84,7 @@ static int _map_quality()
     int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
     // the explanation of this 51 vs max_piety of 200 is left as
     // an exercise to the reader
-    if (in_good_standing(GOD_ASHENZARI))
+    if (have_passive(passive_t::auto_map))
         passive = max(passive, you.piety / 51);
     return passive;
 }

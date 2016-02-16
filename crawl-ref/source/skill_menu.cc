@@ -12,7 +12,9 @@
 #include "clua.h"
 #include "command.h"
 #include "describe.h"
+#include "english.h" // apostrophise
 #include "evoke.h"
+#include "godpassive.h" // passive_t::bondage_skill_boost
 #include "hints.h"
 #include "options.h"
 #include "output.h"
@@ -567,11 +569,16 @@ string SkillMenuSwitch::get_help()
         string result;
         if (skm.is_set(SKMF_ENHANCED))
         {
-            vector<const char *> causes;
+            vector<string> causes;
             if (you.duration[DUR_HEROISM])
                 causes.push_back("Heroism");
-            if (!you.skill_boost.empty() && in_good_standing(GOD_ASHENZARI, 1))
-                causes.push_back("Ashenzari's power");
+
+            if (!you.skill_boost.empty()
+                && have_passive(passive_t::bondage_skill_boost))
+            {
+                causes.push_back(apostrophise(god_name(you.religion))
+                                 + " power");
+            }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
             if (player_equip_unrand(UNRAND_FENCERS))
