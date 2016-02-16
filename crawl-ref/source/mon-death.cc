@@ -2136,6 +2136,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                         if (thing_created != NON_ITEM)
                         {
                             move_item_to_grid(&thing_created, you.pos(), true);
+                            mitm[thing_created].quantity = 1;
                             mitm[thing_created].flags |= ISFLAG_KNOW_TYPE;
                             // not a conventional gift, but use the same
                             // messaging
