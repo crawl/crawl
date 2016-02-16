@@ -5337,7 +5337,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SMITING:
         if (foe->is_player())
-            mpr("Something smites you!");
+            mprf("%s smites you!", god == GOD_NO_GOD ? "Something" : god_name(god).c_str());
         else
             simple_monster_message(foe->as_monster(), " is smitten.");
 
