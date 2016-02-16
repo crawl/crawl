@@ -145,9 +145,7 @@ bool player::extra_balanced() const
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && (form == TRAN_LICH || form == TRAN_STATUE
-                      || form == TRAN_SHADOW
-                      || !form_changed_physiology());
+                  && form_keeps_mutations();
 }
 
 int player::get_hit_dice() const
