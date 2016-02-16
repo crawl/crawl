@@ -35,6 +35,8 @@
 #include "throw.h"
 
 // TODO: template out the differences between this and god_power.
+// TODO: use the display method rather than dummy powers in god_powers.
+// TODO: finish using these for implementing passive abilities.
 struct god_passive
 {
     // 1-6 means it unlocks at that many stars of piety;
@@ -127,7 +129,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Sif Muna
     {
-        {  4, passive_t::miscast_protection, "GOD protects you from miscasts" },
+        {  2, passive_t::miscast_protection, "GOD protects you from miscasts" },
     },
 
     // Trog
@@ -239,6 +241,9 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Ru
+    { },
+
+    // Pakellas
     { },
 };
 
