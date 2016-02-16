@@ -5338,7 +5338,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SMITING:
         if (foe->is_player())
-            mprf("%s smites you!", god == GOD_NO_GOD ? "Something" : god_name(god).c_str());
+            mprf("%s smites you!", _god_name(god).c_str());
         else
             simple_monster_message(foe->as_monster(), " is smitten.");
 
@@ -8340,4 +8340,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     default:
         return false;
     }
+}
+
+static string _god_name(god_type god)
+{
+    return god_has_name(god) ? god_name(god) : "Something";
 }
