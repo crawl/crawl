@@ -526,6 +526,11 @@ bool is_unavailable_god(god_type god)
     return god == GOD_JIYVA && jiyva_is_dead();
 }
 
+bool god_has_name(god_type god)
+{
+    return god != GOD_NO_GOD && god != GOD_NAMELESS;
+}
+
 god_type random_god()
 {
     god_type god;
