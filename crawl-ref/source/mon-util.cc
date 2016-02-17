@@ -3182,6 +3182,8 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     }
 
     mon->mname = _get_proper_monster_name(mon);
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
 
     if (mon->friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname));
