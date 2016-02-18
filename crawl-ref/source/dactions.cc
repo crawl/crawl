@@ -67,6 +67,7 @@ static const char *daction_names[] =
     "apply Gozag bribes",
     "Makhleb's servants go hostile",
     "make all monsters hate you",
+    "ancestor vanishes",
 };
 #endif
 
@@ -96,6 +97,8 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
         return mons_is_plant(mon);
+    case DACT_ALLY_HEPLIAKLQANA:
+        return mon->wont_attack() && mons_is_god_gift(mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
     case DACT_ALLY_TROG:
@@ -220,6 +223,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             }
             break;
 
+        case DACT_ALLY_HEPLIAKLQANA:
+            simple_monster_message(mon, " returns to the mists of memory.");
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            break;
+
         case DACT_OLD_ENSLAVED_SOULS_POOF:
             simple_monster_message(mon, " is freed.");
             // The monster disappears.
@@ -288,6 +296,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_SPELLCASTER:
     case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
+    case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
     case DACT_ALLY_TROG:
