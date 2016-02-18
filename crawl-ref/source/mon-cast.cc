@@ -7752,9 +7752,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     const bool friendly = mon->friendly();
 
     // Keep friendly summoners from spamming summons constantly.
+    // ditto, for non-summoned pals with haste
     if (friendly
         && !foe
-        && spell_typematch(monspell, SPTYP_SUMMONING))
+        && (spell_typematch(monspell, SPTYP_SUMMONING)
+            || !mon->is_summoned() && monspell == SPELL_HASTE))
     {
         return true;
     }

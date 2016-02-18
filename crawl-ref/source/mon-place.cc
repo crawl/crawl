@@ -1516,6 +1516,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
     }
 
+    // this MUST follow hd initialization!
+    if (mons_is_hepliaklqana_ancestor(mon->type))
+    {
+        set_ancestor_spells(*mon);
+        mon->props[MON_GENDER_KEY] = mg.props[MON_GENDER_KEY].get_int();
+        mon->props["dbname"] = mons_class_name(mon->type);
+    }
+
     if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
     {
         const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;

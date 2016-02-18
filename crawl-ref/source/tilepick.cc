@@ -2012,6 +2012,14 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_FREEZING_WRAITH;
     case MONS_PHANTASMAL_WARRIOR:
         return TILEP_MONS_PHANTASMAL_WARRIOR;
+    case MONS_ANCESTOR:
+        return TILEP_MONS_ANCESTOR;
+    case MONS_ANCESTOR_KNIGHT:
+        return TILEP_MONS_ANCESTOR_KNIGHT;
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return TILEP_MONS_ANCESTOR_BATTLEMAGE;
+    case MONS_ANCESTOR_HEXER:
+        return TILEP_MONS_ANCESTOR_HEXER;
     case MONS_SPECTRAL_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
     case MONS_EIDOLON:

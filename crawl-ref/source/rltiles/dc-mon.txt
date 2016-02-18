@@ -821,6 +821,10 @@ shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 %rim 0
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+ancestor MONS_ANCESTOR
+ancestor_knight MONS_ANCESTOR_KNIGHT
+ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
+ancestor_hexer MONS_ANCESTOR_HEXER
 %rim 1
 eidolon MONS_EIDOLON
 

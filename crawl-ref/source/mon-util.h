@@ -211,6 +211,7 @@ bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);
 bool mons_is_job(monster_type mc);
+bool mons_is_hepliaklqana_ancestor(monster_type mc);
 
 int mutant_beast_tier(int xl);
 
@@ -512,4 +513,5 @@ bool mons_is_notable(const monster& mon);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);
+void set_ancestor_spells(monster &ancestor, bool notify = false);
 #endif

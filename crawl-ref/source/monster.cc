@@ -2397,7 +2397,13 @@ string monster::full_name(description_level_type desc, bool use_comma) const
 
 string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return mons_pronoun(type, pro, force_visible || you.can_see(*this));
+    const bool seen = force_visible || you.can_see(*this);
+    if (seen && props.exists(MON_GENDER_KEY))
+    {
+        return decline_pronoun((gender_type)props[MON_GENDER_KEY].get_int(),
+                               pro);
+    }
+    return mons_pronoun(type, pro, seen);
 }
 
 string monster::conj_verb(const string &verb) const
@@ -3346,6 +3352,14 @@ int monster::base_armour_class() const
     if (type == MONS_ABOMINATION_SMALL)
         return min(10, 3 + get_hit_dice() * 2 / 3);
 
+    // Hepliaklqana ancestors scale with xl.
+    if (mons_is_hepliaklqana_ancestor(type))
+    {
+        if (type == MONS_ANCESTOR_KNIGHT)
+            return get_experience_level() * 3 / 2 + 5;
+        return get_experience_level();
+    }
+
     const int base_ac = get_monster_data(type)->AC;
 
     // demonspawn & draconians combine base & class ac values.
@@ -4140,6 +4154,10 @@ int monster::res_magic() const
     // Negative values get multiplied with monster hit dice.
     if (u < 0)
         u = get_hit_dice() * -u * 4 / 3;
+
+    // Hepliaklqana ancestors scale with xl.
+    if (mons_is_hepliaklqana_ancestor(type))
+        u = get_experience_level() * get_experience_level() / 2; // 0-160ish
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
@@ -5236,6 +5254,8 @@ bool monster::can_see_invisible() const
     {
         return true;
     }
+    else if (mons_is_hepliaklqana_ancestor(type) && hit_dice >= 15)
+        return true;
     else if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
@@ -5466,6 +5486,8 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
+    if (type == MONS_ANCESTOR_KNIGHT)
+        return get_experience_level() >= 16;
     return mons_class_flag(mons_is_job(type) ? base_monster : type,
                            M_SPINY);
 }
@@ -6636,6 +6658,12 @@ bool monster::is_illusion() const
 
 bool monster::is_divine_companion() const
 {
+    // hepliaklqana's companions don't depend on attitude, and shouldn't ever
+    // be summoned or lack stair-climbing capability.
+    // (in principle, this shouldn't matter, but things get broken...)
+    if (mons_is_god_gift(this, GOD_HEPLIAKLQANA))
+        return true;
+
     return attitude == ATT_FRIENDLY
            && !is_summoned()
            && (mons_is_god_gift(this, GOD_BEOGH)

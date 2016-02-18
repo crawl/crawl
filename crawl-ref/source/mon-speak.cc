@@ -351,6 +351,10 @@ void maybe_mons_speaks(monster* mons)
     if (mons->attitude == ATT_NEUTRAL)
         return;
 
+    // too annoying for a permanent companion without more thought put into it
+    if (mons_is_hepliaklqana_ancestor(mons->type))
+        return;
+
     int chance = 21; // this is a very old number; no idea why it was chosen
 
     // allies stick around longer, so should probably have longer to say
