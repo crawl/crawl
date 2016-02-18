@@ -446,6 +446,8 @@ static const ability_def Ability_List[] =
         2, 0, 50, 0, abflag::NONE },
     { ABIL_HEPLIAKLQANA_ROMANTICIZE, "Romanticize",
         2, 0, 50, 3, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
+        2, 0, 50, 5, abflag::NONE },
 
     { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
         0, 0, 0, 0, abflag::NONE },
@@ -798,6 +800,7 @@ ability_type fixup_ability(ability_type ability)
     // only available while your ancestor is alive.
     case ABIL_HEPLIAKLQANA_ROMANTICIZE:
     case ABIL_HEPLIAKLQANA_RECALL:
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
         if (hepliaklqana_ancestor() == MID_NOBODY)
             return ABIL_NON_ABILITY;
         return ability;
@@ -1089,6 +1092,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_OKAWARU_FINESSE:
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
         invoc = true;
         failure = 60 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -3131,6 +3135,44 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         try_recall(ancestor_mid);
         break;
+    }
+
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+    {
+        const mid_t ancestor_mid = hepliaklqana_ancestor();
+        if (ancestor_mid == MID_NOBODY)
+        {
+            mpr("You have no ancestor to swap with!");
+            return SPRET_ABORT;
+        }
+
+        monster *ancestor = monster_by_mid(ancestor_mid);
+        if (!ancestor || !you.can_see(*ancestor))
+        {
+            mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
+            return SPRET_ABORT;
+        }
+
+        if (is_feat_dangerous(grd(ancestor->pos())))
+        {
+            mpr("That would be overly suicidal.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        const coord_def ancestor_pos = ancestor->pos();
+        const coord_def your_pos = you.pos();
+
+        ancestor->move_to_pos(you.pos(), true, true);
+        you.move_to_pos(ancestor_pos, true, true);
+        mprf("You swap with %s!", ancestor->name(DESC_YOUR).c_str());
+
+        hepliaklqana_on_deathswap(ancestor_pos, false);
+
+        ancestor->apply_location_effects(ancestor_pos);
+        you.apply_location_effects(your_pos);
+        return SPRET_SUCCESS;
     }
 
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
