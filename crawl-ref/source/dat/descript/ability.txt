@@ -789,6 +789,22 @@ the wounds and ailments that harm them and coating them in a sparkling,
 short-lived protective sheen. The quality of the healing & duration of the
 protection granted are both improved by the Invocations skill.
 %%%%
+Ancestor Life: Knight ability
+
+Choose to remember your ancestor as a knight, a strong melee combatant with
+superior defenses. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Battlemage ability
+
+Choose to remember your ancestor as a battlemage, a warrior equipped with
+powerful conjurations. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Hexer ability
+
+Choose to remember your ancestor as a hexer, a cunning rogue capable of skilled
+knifework & debilitating spellcasting. This choice is permanent and cannot be
+undone.
+%%%%
 Ancestor Death: Slow ability
 
 Choose to remember your ancestor's death as a slow and lingering one. Whenever

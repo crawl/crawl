@@ -2747,6 +2747,11 @@ static void _gain_piety_point()
         }
         if (you_worship(GOD_HEPLIAKLQANA))
         {
+            if (rank == 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+            {
+                god_speaks(you.religion,
+                           "You may now remember your ancestor's life.");
+            }
             if (rank == 6 && !you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
             {
                 hepliaklqana_pick_death_types();

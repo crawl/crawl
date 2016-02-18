@@ -160,6 +160,7 @@ bool pakellas_check_quick_charge(bool quiet);
 int pakellas_effective_hex_power(int pow);
 bool pakellas_device_surge();
 
+bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 void hepliaklqana_pick_death_types();
 bool hepliaklqana_choose_death_type(int death_type);
 void hepliaklqana_on_deathswap(const coord_def &loc, bool death);

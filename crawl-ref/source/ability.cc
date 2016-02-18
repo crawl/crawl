@@ -447,6 +447,13 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_ROMANTICIZE, "Romanticize",
         2, 0, 50, 3, abflag::NONE },
 
+    { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
+        0, 0, 0, 0, abflag::NONE },
+
     { ABIL_HEPLIAKLQANA_DEATH_SLOW,     "Ancestor Death: Slow",
         0, 0, 0, 0, abflag::NONE },
     { ABIL_HEPLIAKLQANA_DEATH_FOG,      "Ancestor Death: Fog",
@@ -965,6 +972,9 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
     case ABIL_HEPLIAKLQANA_DEATH_DISPERSE:
     case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_STOP_RECALL:
     case ABIL_RENOUNCE_RELIGION:
     case ABIL_CONVERT_TO_BEOGH:
@@ -3123,6 +3133,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        if (!hepliaklqana_choose_ancestor_type(abil.ability))
+            return SPRET_ABORT;
+        break;
+
     case ABIL_HEPLIAKLQANA_DEATH_SLOW:
     case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
     case ABIL_HEPLIAKLQANA_DEATH_FOG:
@@ -3701,6 +3718,9 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
     case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
     case ABIL_HEPLIAKLQANA_DEATH_SLOW:
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         first_slot = letter_to_index('G');
         break;
     default:
@@ -3748,6 +3768,16 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
     }
     if (you_worship(GOD_HEPLIAKLQANA))
     {
+        if (piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        {
+            for (int anc_type = ABIL_HEPLIAKLQANA_FIRST_TYPE;
+                 anc_type <= ABIL_HEPLIAKLQANA_LAST_TYPE;
+                 ++anc_type)
+            {
+                abilities.push_back(static_cast<ability_type>(anc_type));
+            }
+        }
+
         if (piety_rank() >= 6 && !you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
         {
             ASSERT(you.props.exists(HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY));

@@ -49,6 +49,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h"
+#include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mutation.h"
@@ -6468,6 +6469,51 @@ bool pakellas_device_surge()
         return false;
     }
 
+    return true;
+}
+
+/**
+ * Permanently choose a class for the player's companion,
+ * after prompting to make sure the player is certain.
+ *
+ * @param ancestor_choice     The ancestor's class; should be an ability enum.
+ * @return                  Whether the player went through with the choice.
+ */
+bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
+{
+    static const map<int, monster_type> ancestor_types = {
+        { ABIL_HEPLIAKLQANA_TYPE_KNIGHT, MONS_ANCESTOR_KNIGHT },
+        { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE, MONS_ANCESTOR_BATTLEMAGE },
+        { ABIL_HEPLIAKLQANA_TYPE_HEXER, MONS_ANCESTOR_HEXER },
+    };
+
+    const monster_type *ancestor_type = map_find(ancestor_types,
+                                                 ancestor_choice);
+    ASSERT(ancestor_type);
+    if (!yesno(make_stringf("Are you sure you want to remember your ancestor "
+                            "as a %s?",
+                            mons_type_name(*ancestor_type,
+                                           DESC_A).c_str()).c_str(),
+               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.props[HEPLIAKLQANA_ALLY_TYPE_KEY] = *ancestor_type;
+
+    monster* ancestor = hepliaklqana_ancestor_mon();
+    if (ancestor)
+    {
+        ancestor->type = *ancestor_type;
+        give_weapon(ancestor, -1, true);
+        give_shield(ancestor);
+        set_ancestor_spells(*ancestor);
+    }
+
+    simple_god_message(" will remember this.");
+    take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0,
+                   mons_type_name(*ancestor_type, DESC_A)));
     return true;
 }
 
