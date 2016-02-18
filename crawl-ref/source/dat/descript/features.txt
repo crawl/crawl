@@ -179,6 +179,12 @@ A granite statue
 
 A stone statue whose features have long since withered away.
 %%%%
+A hazy altar of Hepliaklqanal
+
+An altar to Hepliaklqanal the Forgotten, shrouded in mist and difficult to make
+out clearly. Something about it seems terribly familiar, but it's impossible to
+say exactly why.
+%%%%
 A hole to the Spider Nest
 
 A passage leading to the Spider Nest.

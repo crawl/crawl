@@ -201,6 +201,10 @@ static const char *divine_title[][8] =
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
+
+    // Hepliaklqana -- memory/ancestry theme
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+        "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 

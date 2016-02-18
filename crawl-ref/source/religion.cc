@@ -228,6 +228,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " falls apart.",
         " is torn apart in a burst of bright light.",
     },
+    // Hepliaklqana
+    {
+        " slowly fade% into mist.",
+        " fade% into mist.",
+        " instantly & vanished into memory.",
+    },
 };
 
 const vector<god_power> god_powers[NUM_GODS] =
@@ -578,10 +584,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    case GOD_ELYVILON:
-        likes.emplace_back("you explore the world");
-        break;
-
     case GOD_JIYVA:
     {
         string like = "you sacrifice items";
@@ -645,6 +647,8 @@ string get_god_likes(god_type which_god, bool verbose)
     }
 
     case GOD_NEMELEX_XOBEH:
+    case GOD_HEPLIAKLQANA:
+    case GOD_ELYVILON:
         likes.emplace_back("you explore the world");
         break;
 
@@ -1050,6 +1054,7 @@ bool active_penance(god_type god)
            && god != GOD_ASHENZARI
            && god != GOD_GOZAG
            && god != GOD_RU
+           && god != GOD_HEPLIAKLQANA
            && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
@@ -2136,6 +2141,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_PAKELLAS:      return "Pakellas";
+    case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -3212,6 +3218,9 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
+    if (which_god == GOD_HEPLIAKLQANA && you.species == SP_FELID)
+        return false;
+
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
@@ -3232,7 +3241,8 @@ bool player_can_join_god(god_type which_god)
     if (player_mutation_level(MUT_NO_LOVE)
         && (which_god == GOD_BEOGH
             ||  which_god == GOD_JIYVA
-            ||  which_god == GOD_ELYVILON))
+            ||  which_god == GOD_ELYVILON
+            ||  which_god == GOD_HEPLIAKLQANA))
     {
         return false;
     }
@@ -3811,7 +3821,8 @@ void god_pitch(god_type which_god)
         else if (player_mutation_level(MUT_NO_LOVE)
                  && (which_god == GOD_BEOGH
                  || which_god == GOD_ELYVILON
-                 || which_god == GOD_JIYVA))
+                 || which_god == GOD_JIYVA
+                 || which_god == GOD_HEPLIAKLQANA))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
@@ -3821,6 +3832,10 @@ void god_pitch(god_type which_god)
         {
             simple_god_message(" does not accept worship for those who cannot "
                               "deal a hand of cards!", which_god);
+        } else if (you.species == SP_FELID && which_god == GOD_HEPLIAKLQANA)
+        {
+            simple_god_message(" does not accept worship from the spawn of "
+                               "common housecats!", which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
@@ -4183,6 +4198,7 @@ void handle_god_time(int /*time_delta*/)
             break;
 
         case GOD_ELYVILON:
+        case GOD_HEPLIAKLQANA:
             if (one_chance_in(50))
                 lose_piety(1);
             break;
@@ -4267,6 +4283,7 @@ int god_colour(god_type god) // mv - added
         return GREEN;
 
     case GOD_CHEIBRIADOS:
+    case GOD_HEPLIAKLQANA:
         return LIGHTCYAN;
 
     case GOD_DITHMENOS:
@@ -4365,6 +4382,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_PAKELLAS:
         return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
+
+    case GOD_HEPLIAKLQANA:
+        return coinflip() ? LIGHTGREEN : LIGHTBLUE;
 
     default:
         return YELLOW;
