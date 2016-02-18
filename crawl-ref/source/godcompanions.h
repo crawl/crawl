@@ -40,6 +40,9 @@ bool recall_offlevel_ally(mid_t mid);
 
 void wizard_list_companions();
 
+mid_t hepliaklqana_ancestor();
+monster* hepliaklqana_ancestor_mon();
+
 #if TAG_MAJOR_VERSION == 34
 void fixup_bad_companions();
 #endif

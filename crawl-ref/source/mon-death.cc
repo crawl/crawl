@@ -2605,6 +2605,19 @@ item_def* monster_die(monster* mons, killer_type killer,
         && !(mons->flags & MF_BANISHED))
     {
         remove_companion(mons);
+        if (mons_is_hepliaklqana_ancestor(mons->type))
+        {
+            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
+            if (!was_banished)
+                hepliaklqana_on_deathswap(mons->pos(), true);
+            if (!you.can_see(*mons))
+            {
+                mprf("%s has departed this plane of existence.",
+                     hepliaklqana_ally_name().c_str());
+            }
+            // respawn in ~30-60 turns
+            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+        }
     }
 
     // If we kill an invisible monster reactivate autopickup.
@@ -2724,6 +2737,13 @@ void monster_cleanup(monster* mons)
 
     if (mons_is_tentacle_head(mons_base_type(mons)))
         destroy_tentacles(mons);
+
+    // make sure we don't end up with an invalid hep ancestor
+    if (hepliaklqana_ancestor() == mons->mid)
+    {
+        remove_companion(mons);
+        you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
+    }
 
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();

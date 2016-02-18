@@ -347,6 +347,22 @@ static resists_t _beast_facet_resists(beast_facet facet)
     return lookup(resists, facet, 0);
 }
 
+/**
+ * What special resistances does a hepliaklqana-provided ancestor have?
+ *
+ * @param HD    The ancestor's current HD.
+ * @return      A bitfield of resists.
+ */
+static resists_t _hepliaklqana_ancestor_resists(int HD)
+{
+    resists_t resists = MR_NO_FLAGS;
+    if (HD >= 11)
+        resists |= MR_RES_FIRE;
+    if (HD >= 12)
+        resists |= MR_RES_COLD;
+    return resists;
+}
+
 resists_t get_mons_class_resists(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
@@ -385,6 +401,9 @@ resists_t get_mons_resists(const monster* mon)
     if (mon->props.exists(MUTANT_BEAST_FACETS))
         for (auto facet : mon->props[MUTANT_BEAST_FACETS].get_vector())
             resists |= _beast_facet_resists((beast_facet)facet.get_int());
+
+    if (mons_is_hepliaklqana_ancestor(mon->type))
+        resists |= _hepliaklqana_ancestor_resists(mon->get_experience_level());
 
     // This is set from here in case they're undead due to the
     // MF_FAKE_UNDEAD flag. See the comment in get_mons_class_resists.
@@ -1504,6 +1523,17 @@ bool mons_is_or_was_unique(const monster& mon)
 }
 
 /**
+ * Is the given type one of Hepliaklqana's granted ancestors?
+ *
+ * @param mc    The type of monster in question.
+ * @return      Whether that monster is a player ancestor.
+ */
+bool mons_is_hepliaklqana_ancestor(monster_type mc)
+{
+    return mons_class_flag(mc, M_ANCESTOR);
+}
+
+/**
  * Can this type of monster be blinded?
  *
  * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
@@ -1861,6 +1891,26 @@ static mon_attack_def _mutant_beast_attack(const monster &mon, int attk_number)
     return { };
 }
 
+/**
+ * Get the attack type, attack flavour and damage for the given attack of an
+ * ancestor granted by Hepliaklqana_ancestor_attack.
+ *
+ * @param mon           The monster in question.
+ * @param attk_number   Which attack number to get.
+ * @return              A mon_attack_def for the specified attack.
+ */
+static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
+                                                     int attk_number)
+{
+    if (attk_number != 0)
+        return { };
+
+    const int HD = mon.get_experience_level();
+    const int dam = HD*3/2 + 3; // 3 at 1 HD, 30 at 18 HD (max)
+
+    return { AT_HIT, AF_PLAIN, dam };
+}
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -1897,6 +1947,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(*mon, attk_number);
+    else if (mons_is_hepliaklqana_ancestor(mc))
+        return _hepliaklqana_ancestor_attack(*mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
@@ -5590,5 +5642,85 @@ void throw_monster_bits(const monster* mon)
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());
         target->hurt(&you, damage);
+    }
+}
+
+/**
+ * Set the correct spells for a given ancestor, corresponding to their HD and
+ * type.
+ *
+ * @param ancestor      The ancestor in question.
+ * @param notify        Whether to print messages if anything changes.
+ */
+void set_ancestor_spells(monster &ancestor, bool notify)
+{
+    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
+
+    vector<spell_type> old_spells;
+    for (auto spellslot : ancestor.spells)
+        old_spells.emplace_back(spellslot.spell);
+
+    ancestor.spells = {};
+
+    // list of req HD and spells
+    // must be listed from most desirable to least
+    static const map<monster_type, vector<pair<int, spell_type>>> splist = {
+        { MONS_ANCESTOR, {} },
+        { MONS_ANCESTOR_KNIGHT, {} },
+        { MONS_ANCESTOR_BATTLEMAGE, {
+            { 18, SPELL_LEHUDIBS_CRYSTAL_SPEAR },
+            { 16, SPELL_CORROSIVE_BOLT },
+            { 13, SPELL_IRON_SHOT },
+            { 10, SPELL_BOLT_OF_MAGMA },
+            { 8,  SPELL_THROW_ICICLE },
+            { 6,  SPELL_STONE_ARROW },
+            { 3,  SPELL_THROW_FROST },
+            { 1,  SPELL_MAGIC_DART },
+        } },
+        { MONS_ANCESTOR_HEXER, {
+            { 17, SPELL_MASS_CONFUSION },
+            { 13, SPELL_ENGLACIATION },
+            { 10, SPELL_PETRIFY },
+            { 7,  SPELL_CONFUSE },
+            { 4,  SPELL_SLOW },
+            { 1,  SPELL_CORONA },
+        } },
+    };
+    static const int MAX_SPELLS = 2;
+    const int HD = ancestor.get_experience_level();
+
+    const vector<pair<int, spell_type>> spells_for_class
+        = *map_find(splist, ancestor.type);
+    for (auto spellspec : spells_for_class)
+    {
+        if (spellspec.first <= HD)
+        {
+            ancestor.spells.emplace_back(spellspec.second, 30,
+                                         MON_SPELL_WIZARD);
+
+            if (ancestor.spells.size() >= MAX_SPELLS)
+                break;
+        }
+    }
+
+    if (HD >= 14)
+        ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
+
+    if (ancestor.spells.size())
+        ancestor.props[CUSTOM_SPELLS_KEY] = true;
+
+    if (!notify)
+        return;
+
+    for (auto spellslot : ancestor.spells)
+    {
+        if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
+            == old_spells.end())
+        {
+            mprf("%s regains %s memory of %s.",
+                 ancestor.name(DESC_YOUR, true).c_str(),
+                 ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
+                 spell_title(spellslot.spell));
+        }
     }
 }

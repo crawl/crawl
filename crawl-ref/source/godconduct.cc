@@ -467,6 +467,8 @@ static peeve_map divine_peeves[] =
     },
     // GOD_UKAYAW,
     peeve_map(),
+    // GOD_HEPLIAKLQANA,
+    peeve_map(),
 };
 
 
@@ -869,6 +871,17 @@ static like_map divine_likes[] =
                 denom = 1;
             } } },
     },
+    // GOD_HEPLIAKLQANA,
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 14;
+            }
+        } },
+    }
 };
 
 /**

@@ -1658,11 +1658,16 @@ bool monster_info::can_see_invisible() const
             if (facet.get_int() == BF_WEIRD)
                 return true;
 
+    if (mons_is_hepliaklqana_ancestor(type))
+        return hd >= 15;
+
     return mons_class_flag(type, M_SEE_INVIS)
            || mons_is_demonspawn(type)
               && mons_class_flag(draco_or_demonspawn_subspecies(), M_SEE_INVIS);
 }
 
+// this function sucks and should not exist.
+// (cache a value when mon-info is created, from known items.)
 int monster_info::res_magic() const
 {
     int mr = (get_monster_data(type))->resist_magic;
@@ -1672,6 +1677,10 @@ int monster_info::res_magic() const
     // Negative values get multiplied with monster hit dice.
     if (mr < 0)
         mr = hd * (-mr) * 4 / 3;
+
+    // Hepliaklqana ancestors scale with xl.
+    if (mons_is_hepliaklqana_ancestor(type))
+        mr = hd * hd / 2;
 
     // Randarts
     mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);

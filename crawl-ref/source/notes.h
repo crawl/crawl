@@ -57,6 +57,8 @@ enum NOTE_TYPES
     NOTE_PERM_MUTATION,         /* needs: mutation idx, reason (string) */
     NOTE_FOCUS_CARD,            /* needs: increased stat value, decreased stat value,
                                    increased stat name (string), decreased stat name (string) */
+    NOTE_ANCESTOR_TYPE,          /* needs: ancestor class (string) */
+    NOTE_ANCESTOR_DEATH,         /* needs: ancestor death (string) */
     NOTE_NUM_TYPES
 };
 

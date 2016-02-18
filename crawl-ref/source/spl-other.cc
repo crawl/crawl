@@ -183,7 +183,7 @@ void recall_orders(monster *mons)
 
 // Attempt to recall a single monster by mid, which might be either on or off
 // our current level. Returns whether this monster was successfully recalled.
-static bool _try_recall(mid_t mid)
+bool try_recall(mid_t mid)
 {
     monster* mons = monster_by_mid(mid);
     // Either it's dead or off-level.
@@ -227,7 +227,7 @@ void do_recall(int time)
         // Try to recall an ally.
         mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
         you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (_try_recall(mid))
+        if (try_recall(mid))
         {
             time -= you.attribute[ATTR_NEXT_RECALL_TIME];
             you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);

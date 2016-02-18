@@ -2014,6 +2014,14 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_FREEZING_WRAITH;
     case MONS_PHANTASMAL_WARRIOR:
         return TILEP_MONS_PHANTASMAL_WARRIOR;
+    case MONS_ANCESTOR:
+        return TILEP_MONS_ANCESTOR;
+    case MONS_ANCESTOR_KNIGHT:
+        return TILEP_MONS_ANCESTOR_KNIGHT;
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return TILEP_MONS_ANCESTOR_BATTLEMAGE;
+    case MONS_ANCESTOR_HEXER:
+        return TILEP_MONS_ANCESTOR_HEXER;
     case MONS_SPECTRAL_THING:
         return TILEP_MONS_SPECTRAL_LARGE;
     case MONS_EIDOLON:
@@ -5511,6 +5519,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
     case ABIL_PAKELLAS_SUPERCHARGE:
         return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
+    // Hepliaklqana
+    case ABIL_HEPLIAKLQANA_RECALL:
+        return TILEG_ABILITY_HEP_RECALL;
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
+        return TILEG_ABILITY_HEP_ROMANTICIZE;
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+        return TILEG_ABILITY_HEP_TRANSFERENCE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

@@ -2656,6 +2656,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         reduce_xp_penance(god, exp_gained);
     }
 
+    if (player_under_penance(GOD_HEPLIAKLQANA))
+        return; // no xp for you!
+
     const unsigned int old_exp = you.experience;
 
     dprf("gain_exp: %d", exp_gained);
@@ -3053,6 +3056,8 @@ void level_change(bool skip_attribute_increase)
             _gain_and_note_hp_mp();
 
         xom_is_stimulated(12);
+        if (in_good_standing(GOD_HEPLIAKLQANA))
+            upgrade_hepliaklqana_ancestor();
 
         learned_something_new(HINT_NEW_LEVEL);
     }

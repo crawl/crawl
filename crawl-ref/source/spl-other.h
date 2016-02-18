@@ -18,6 +18,7 @@ enum recall_t
 spret_type cast_recall(bool fail);
 void start_recall(recall_t type);
 void recall_orders(monster *mons);
+bool try_recall(mid_t mid);
 void do_recall(int time);
 void end_recall();
 

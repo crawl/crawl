@@ -420,6 +420,25 @@ enum ability_type
     ABIL_UKAYAW_LINE_PASS,
     ABIL_UKAYAW_GRAND_FINALE,
 
+    // Hepliaklqana
+    ABIL_HEPLIAKLQANA_RECALL = 1250,
+    ABIL_HEPLIAKLQANA_ROMANTICIZE,
+    ABIL_HEPLIAKLQANA_TRANSFERENCE,
+
+    ABIL_HEPLIAKLQANA_DEATH_SLOW,
+        ABIL_HEPLIAKLQANA_FIRST_DEATH = ABIL_HEPLIAKLQANA_DEATH_SLOW,
+    ABIL_HEPLIAKLQANA_DEATH_FOG,
+    ABIL_HEPLIAKLQANA_DEATH_EXPLODE,
+    ABIL_HEPLIAKLQANA_DEATH_DISPERSE,
+    ABIL_HEPLIAKLQANA_DEATH_IMPLODE,
+        ABIL_HEPLIAKLQANA_LAST_DEATH = ABIL_HEPLIAKLQANA_DEATH_IMPLODE,
+
+    ABIL_HEPLIAKLQANA_TYPE_KNIGHT,
+        ABIL_HEPLIAKLQANA_FIRST_TYPE = ABIL_HEPLIAKLQANA_TYPE_KNIGHT,
+    ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,
+    ABIL_HEPLIAKLQANA_TYPE_HEXER,
+        ABIL_HEPLIAKLQANA_LAST_TYPE = ABIL_HEPLIAKLQANA_TYPE_HEXER,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -598,6 +617,7 @@ enum beam_type                  // bolt::flavour
     BEAM_CHAOS,
     BEAM_GHOSTLY_FLAME,
     BEAM_UNRAVELLED_MAGIC,
+    BEAM_HEPLIAKLQANA_EXPLOSION,
 
     // Enchantments
     BEAM_SLOW,
@@ -1679,6 +1699,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_RU,
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_UKAYAW,
+    DNGN_ALTAR_HEPLIAKLQANA,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1746,6 +1767,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_ECUMENICAL,
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_UKAYAW,
+    DNGN_ALTAR_HEPLIAKLQANA,
 #endif
 
     NUM_FEATURES
@@ -1928,6 +1950,7 @@ enum duration_type
     DUR_DOOM_HOWL_IMMUNITY,
 #endif
     DUR_VERTIGO,
+    DUR_ANCESTOR_DELAY,
     NUM_DURATIONS
 };
 
@@ -2213,6 +2236,7 @@ enum god_type
     GOD_RU,
     GOD_PAKELLAS,
     GOD_UKAYAW,
+    GOD_HEPLIAKLQANA,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -3332,6 +3356,10 @@ enum monster_type                      // menv[].type
     MONS_PLAYER,                // a certain ugly creature
 #if TAG_MAJOR_VERSION > 34
     MONS_PLAYER_SHADOW,         // Dithmenos
+    MONS_ANCESTOR,              // Hepliaklqana
+    MONS_ANCESTOR_KNIGHT,
+    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_HEXER,
 #endif
     MONS_TEST_SPAWNER,
 
@@ -3494,6 +3522,10 @@ enum monster_type                      // menv[].type
     MONS_DEEP_ELF_ARCHER,
     MONS_DEMONIC_PLANT,
     MONS_WITHERED_PLANT,
+    MONS_ANCESTOR,
+    MONS_ANCESTOR_KNIGHT,
+    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_HEXER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4856,6 +4888,7 @@ enum daction_type
 #if TAG_MAJOR_VERSION == 34
     DACT_ALLY_SACRIFICE_LOVE,
 #endif
+    DACT_ALLY_HEPLIAKLQANA,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

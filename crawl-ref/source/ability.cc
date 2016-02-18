@@ -31,6 +31,7 @@
 #include "exercise.h"
 #include "food.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -448,6 +449,33 @@ static const ability_def Ability_List[] =
     { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
         8, 0, 500, generic_cost::fixed(0), abflag::NONE},
 
+    // Hepliaklqana
+    { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
+        2, 0, 50, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_ROMANTICIZE, "Romanticize",
+        2, 0, 50, 3, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
+        2, 0, 50, 5, abflag::NONE },
+
+    { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
+        0, 0, 0, 0, abflag::NONE },
+
+    { ABIL_HEPLIAKLQANA_DEATH_SLOW,     "Ancestor Death: Slow",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_DEATH_FOG,      "Ancestor Death: Fog",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_DEATH_EXPLODE,  "Ancestor Death: Explode",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_DEATH_DISPERSE, "Ancestor Death: Disperse",
+        0, 0, 0, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_DEATH_IMPLODE,  "Ancestor Death: Implode",
+        0, 0, 0, 0, abflag::NONE },
+
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh", 0, 0, 0, 0, abflag::NONE },
@@ -778,6 +806,14 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
+    case ABIL_HEPLIAKLQANA_RECALL:
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+        if (hepliaklqana_ancestor() == MID_NOBODY)
+            return ABIL_NON_ABILITY;
+        return ability;
+
     default:
         return ability;
     }
@@ -944,6 +980,14 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_PAKELLAS_SUPERCHARGE:
     case ABIL_UKAYAW_STOMP:
+    case ABIL_HEPLIAKLQANA_DEATH_SLOW:
+    case ABIL_HEPLIAKLQANA_DEATH_FOG:
+    case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
+    case ABIL_HEPLIAKLQANA_DEATH_DISPERSE:
+    case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_STOP_RECALL:
     case ABIL_RENOUNCE_RELIGION:
     case ABIL_CONVERT_TO_BEOGH:
@@ -980,6 +1024,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_HEPLIAKLQANA_RECALL:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_ELYVILON_LESSER_HEALING:
     case ABIL_LUGONU_ABYSS_EXIT:
@@ -1015,6 +1060,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
     case ABIL_UKAYAW_LINE_PASS:
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -1057,6 +1103,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_OKAWARU_FINESSE:
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
         invoc = true;
         failure = 60 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -3108,6 +3155,77 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
+        return hepliaklqana_romanticize(fail);
+
+    case ABIL_HEPLIAKLQANA_RECALL:
+    {
+        const mid_t ancestor_mid = hepliaklqana_ancestor();
+        if (ancestor_mid == MID_NOBODY)
+        {
+            mpr("You have no ancestor to recall!");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+        try_recall(ancestor_mid);
+        break;
+    }
+
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+    {
+        const mid_t ancestor_mid = hepliaklqana_ancestor();
+        if (ancestor_mid == MID_NOBODY)
+        {
+            mpr("You have no ancestor to swap with!");
+            return SPRET_ABORT;
+        }
+
+        monster *ancestor = monster_by_mid(ancestor_mid);
+        if (!ancestor || !you.can_see(*ancestor))
+        {
+            mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
+            return SPRET_ABORT;
+        }
+
+        if (is_feat_dangerous(grd(ancestor->pos())))
+        {
+            mpr("That would be overly suicidal.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        const coord_def ancestor_pos = ancestor->pos();
+        const coord_def your_pos = you.pos();
+
+        ancestor->move_to_pos(you.pos(), true, true);
+        you.move_to_pos(ancestor_pos, true, true);
+        mprf("You swap with %s!", ancestor->name(DESC_YOUR).c_str());
+
+        hepliaklqana_on_deathswap(ancestor_pos, false);
+
+        ancestor->apply_location_effects(ancestor_pos);
+        you.apply_location_effects(your_pos);
+        return SPRET_SUCCESS;
+    }
+
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        if (!hepliaklqana_choose_ancestor_type(abil.ability))
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_HEPLIAKLQANA_DEATH_SLOW:
+    case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
+    case ABIL_HEPLIAKLQANA_DEATH_FOG:
+    case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
+    case ABIL_HEPLIAKLQANA_DEATH_DISPERSE:
+        if (!hepliaklqana_choose_death_type(abil.ability))
+            return SPRET_ABORT;
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3672,6 +3790,14 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
+    case ABIL_HEPLIAKLQANA_DEATH_DISPERSE:
+    case ABIL_HEPLIAKLQANA_DEATH_FOG:
+    case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
+    case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
+    case ABIL_HEPLIAKLQANA_DEATH_SLOW:
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         first_slot = letter_to_index('G');
         break;
     default:
@@ -3716,6 +3842,28 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         }
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
+    }
+    if (you_worship(GOD_HEPLIAKLQANA))
+    {
+        if (piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        {
+            for (int anc_type = ABIL_HEPLIAKLQANA_FIRST_TYPE;
+                 anc_type <= ABIL_HEPLIAKLQANA_LAST_TYPE;
+                 ++anc_type)
+            {
+                abilities.push_back(static_cast<ability_type>(anc_type));
+            }
+        }
+
+        if (piety_rank() >= 6 && !you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
+        {
+            ASSERT(you.props.exists(HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY));
+            for (int death_poss
+                 : you.props[HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY].get_vector())
+            {
+                abilities.push_back(static_cast<ability_type>(death_poss));
+            }
+        }
     }
     if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);

@@ -800,3 +800,89 @@ overall increase is determined by the size of your donation.
 Curse Item ability
 
 In exchange for a scroll of remove curse, Ashenzari will curse one of your items.
+%%%%
+Recall Ancestor ability
+
+Recalls your ancestor from anywhere in the dungeon to your immediate
+surroundings.
+%%%%
+Romanticize ability
+
+Restores your ancestor to an idyllic vision of their past self, forgetting
+the wounds and ailments that harm them and coating them in a sparkling,
+short-lived protective sheen. The quality of the healing & duration of the
+protection granted are both improved by the Invocations skill.
+%%%%
+Transference ability
+
+By passing through the realms of memory, exchange lives with your ancestor,
+leaving each of you where the other stood a moment before. If you remember your
+ancestor's death, the passage through memory will evoke a brief, weak echo of
+it.
+%%%%
+Ancestor Life: Knight ability
+
+Choose to remember your ancestor as a knight, a strong melee combatant with
+superior defenses. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Battlemage ability
+
+Choose to remember your ancestor as a battlemage, a warrior equipped with
+powerful conjurations. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Hexer ability
+
+Choose to remember your ancestor as a hexer, a cunning rogue capable of skilled
+knifework & debilitating spellcasting. This choice is permanent and cannot be
+undone.
+%%%%
+Ancestor Death: Slow ability
+
+Choose to remember your ancestor's death as a slow and lingering one. Whenever
+your ancestor returns to the realms of memory, an echo of their death will
+reach out and afflict nearby enemies, slowing them momentarily. This will occur
+when your ancestor is destroyed and when they merely pass through memory during
+transference, though the latter will have a weaker effect.
+
+This choice is permanent and cannot be undone.
+%%%%
+Ancestor Death: Fog ability
+
+Choose to remember your ancestor's death as an unclear and hazy event. Whenever
+your ancestor returns to the realms of memory, an echo of their death will
+reach out and into the world, leaving behind a layer of concealing fog. This
+will occur when your ancestor is destroyed and when they merely pass through
+memory during transference, though the latter will have a weaker effect.
+
+This choice is permanent and cannot be undone.
+%%%%
+Ancestor Death: Explode ability
+
+Choose to remember your ancestor's death as a dramatic and explosive one.
+Whenever your ancestor returns to the realms of memory, an echo of their death
+will explode outward, harming everyone nearby who does not share your blood.
+This will occur when your ancestor is destroyed and when they merely pass
+through memory during transference, though the latter will have a weaker effect.
+
+This choice is permanent and cannot be undone.
+%%%%
+Ancestor Death: Disperse ability
+
+Choose to remember your ancestor's death as a distant and off-putting one.
+Whenever your ancestor returns to the realms of memory, an echo of their death
+will reach out and disperse nearby enemies, blinking or teleporting them away.
+This will occur when your ancestor is destroyed and when they merely pass
+through memory during transference, though the latter will have a weaker effect.
+
+This choice is permanent and cannot be undone.
+%%%%
+Ancestor Death: Implode ability
+
+Choose to remember your ancestor's death as one that brought people together.
+Whenever your ancestor returns to the realms of memory, an echo of their death
+will reach out and grasp any creature nearby that does not share your blood,
+hurling them toward your ancestor's last location. This will occur when your
+ancestor is destroyed and when they merely pass through memory during
+transference, though the latter will have a weaker effect.
+
+This choice is permanent and cannot be undone.
