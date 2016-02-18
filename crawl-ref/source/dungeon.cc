@@ -41,6 +41,7 @@
 #include "flood_find.h"
 #include "food.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -250,7 +251,7 @@ static void _count_gold()
 
     you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
@@ -3543,7 +3544,7 @@ static vector<monster_type> _zombifiables()
         if (mons_species(mcls) != mcls
             || !mons_zombie_size(mcls)
             || mons_is_unique(mcls)
-            || mons_class_holiness(mcls) != MH_NATURAL
+            || !(mons_class_holiness(mcls) & MH_NATURAL)
             || mons_class_flag(mcls, M_NO_GEN_DERIVED))
         {
             continue;

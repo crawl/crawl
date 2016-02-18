@@ -1284,15 +1284,19 @@ static string _describe_armour(const item_def &item, bool verbose)
             const float skill = you.get_shield_skill_to_offset_penalty(item);
             description += "\n";
             description += "\nBase shield rating: "
-                        + to_string(property(item, PARM_AC))
-                        + "       Skill to remove penalty: "
-                        + make_stringf("%.1f", skill);
-
-            if (crawl_state.need_save)
+                        + to_string(property(item, PARM_AC));
+            if (!is_useless_item(item))
             {
-                description += "\n                            "
-                            + make_stringf("(Your skill: %.1f)",
-                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                description += "       Skill to remove penalty: "
+                            + make_stringf("%.1f", skill);
+                if (crawl_state.need_save)
+                {
+                    description += "\n                            "
+                                + make_stringf("(Your skill: %.1f)",
+                                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                }
+                else
+                    description += "\n";
             }
         }
         else

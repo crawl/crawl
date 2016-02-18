@@ -723,11 +723,11 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
                 if (you.duration[DUR_WEAPON_BRAND] == 0 && !meld)
                 {
-                    if (you_worship(GOD_LUGONU))
+                    if (have_passive(passive_t::safe_distortion))
                     {
-                        god_speaks(GOD_LUGONU,
-                                   "Lugonu absorbs the residual spatial "
-                                   "distortion as you unwield your weapon.");
+                        simple_god_message(" absorbs the residual spatial "
+                                           "distortion as you unwield your "
+                                           "weapon.");
                         break;
                     }
                     // Makes no sense to discourage unwielding a temporarily
@@ -811,7 +811,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_POISON_RESISTANCE:
-            mpr("You feel resistant to poison.");
+            if (player_res_poison(false, false, false) < 3)
+                mpr("You feel resistant to poison.");
             break;
 
         case SPARM_SEE_INVISIBLE:

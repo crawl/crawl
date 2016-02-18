@@ -338,23 +338,23 @@ static bool _create_dirs(const string &dir)
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const string &path) throw (string)
+void assert_read_safe_path(const string &path)
 {
     // Check for rank tomfoolery first:
     if (path.empty())
-        throw "Empty file name.";
+        throw unsafe_path("Empty file name.");
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-        throw make_stringf("\"%s\" contains bad characters.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains bad characters.", path.c_str());
 #endif
 
 #ifdef DATA_DIR_PATH
     if (is_absolute_path(path))
-        throw make_stringf("\"%s\" is an absolute path.", path.c_str());
+        throw unsafe_path_f("\"%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != string::npos)
-        throw make_stringf("\"%s\" contains \"..\" sequences.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains \"..\" sequences.", path.c_str());
 #endif
 
     // Path is okay.
@@ -656,7 +656,7 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
-                dprf("%s: %s", filename.c_str(), E.msg.c_str());
+                dprf("%s: %s", filename.c_str(), E.what());
             }
         }
 
@@ -1941,7 +1941,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)

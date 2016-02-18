@@ -495,7 +495,7 @@ static bool _boosted_mp()
 static bool _boosted_ac()
 {
     return you.duration[DUR_ICY_ARMOUR]
-           || you.duration[DUR_STONESKIN]
+           || you.duration[DUR_MAGIC_ARMOUR]
            || player_icemail_armour_class()
            || you.duration[DUR_QAZLAL_AC]
            || you.attribute[ATTR_BONE_ARMOUR] > 0;
@@ -503,14 +503,12 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_PHASE_SHIFT]
-           || you.duration[DUR_AGILITY];
+    return you.duration[DUR_AGILITY];
 }
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_CONDENSATION_SHIELD]
-           || you.duration[DUR_MAGIC_SHIELD]
+    return you.duration[DUR_MAGIC_SHIELD]
            || you.duration[DUR_DIVINE_SHIELD]
            || qazlal_sh_boost() > 0
            || you.attribute[ATTR_BONE_ARMOUR] > 0;
@@ -2655,7 +2653,7 @@ static string _status_mut_abilities(int sw)
             !form_keeps_mutations()));
     }
 
-    if (beogh_water_walk())
+    if (have_passive(passive_t::water_walk))
         mutations.emplace_back("walk on water");
 
     string current;

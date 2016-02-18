@@ -199,8 +199,8 @@ static void _hell_effects(int /*time_delta*/)
         return;
 
     // 50% chance at max piety
-    if (you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY * 2)
-        || is_sanctuary(you.pos()))
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
         return;
@@ -819,9 +819,7 @@ static void _handle_sickness(int /*time_delta*/)
     // If Cheibriados has slowed your biology, disease might
     // not actually do anything.
     if (you.disease && one_chance_in(30)
-        && !(you_worship(GOD_CHEIBRIADOS)
-             && you.piety >= piety_breakpoint(0)
-             && coinflip()))
+        && !(have_passive(passive_t::slow_metabolism) && coinflip()))
     {
         mprf(MSGCH_WARN, "Your disease is taking its toll.");
         lose_stat(STAT_RANDOM, 1);
@@ -847,7 +845,7 @@ static void _abyss_speed(int /*time_delta*/)
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
-    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+    if (have_passive(passive_t::slow_abyss) && coinflip())
         ; // Speed change less often for Chei.
     else if (coinflip() && you.abyss_speed < 100)
         ++you.abyss_speed;
@@ -1318,7 +1316,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILENCE: case ENCH_LOWERED_MR:
         case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
-        case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_MIRROR_DAMAGE: case ENCH_MAGIC_ARMOUR: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_WRETCHED: case ENCH_SCREAMED:

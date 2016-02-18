@@ -1085,8 +1085,8 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         randart hunting sling ego:chaos | randart shortbow ego:chaos | \
         randart arbalest ego:chaos | hunting sling | shortbow | arbalest | \
         nothing w:15 . sling bullet | arrow | bolt . \
-        lightning rod w:6 | rod of shadows w:4 | rod of the swarm w:4 | \
-        rod of destruction w:2 | iron rod w:6 | wand of hasting w:16 | \
+        lightning rod w:7 | rod of shadows w:8 | \
+        iron rod w:7 | wand of hasting w:16 | \
         wand of confusion | wand of random effects w:6 | \
         wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
         scroll of summoning w:45 . randart ring mail | \

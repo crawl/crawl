@@ -21,6 +21,7 @@
 #include "dungeon.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -640,8 +641,7 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
     {
         result = random2(NUM_RODS);
     }
-    while (player_mutation_level(MUT_NO_LOVE)
-              && (result == ROD_SWARM || result == ROD_SHADOWS)
+    while (player_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
            || item_type_removed(OBJ_RODS, result));
     return result;
 }
@@ -670,17 +670,16 @@ static int _acquirement_misc_subtype(bool divine, int & /*quantity*/)
         {MISC_DECK_OF_WONDERS,              (divine ? 0 :  1)},
         {MISC_DECK_OF_CHANGES,              (divine ? 0 :  2)},
         {MISC_DECK_OF_DEFENCE,              (divine ? 0 :  2)},
-        {MISC_XOMS_CHESSBOARD,                              5},
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  6)},
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
         {MISC_SACK_OF_SPIDERS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  6)},
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
         {MISC_PHANTOM_MIRROR,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  6)},
+            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
         // The player never needs more than one.
         {MISC_DISC_OF_STORMS,
-            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  6)},
+            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7)},
         {MISC_LAMP_OF_FIRE,
             (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 15)},
         {MISC_PHIAL_OF_FLOODS,
@@ -690,7 +689,7 @@ static int _acquirement_misc_subtype(bool divine, int & /*quantity*/)
         {MISC_STONE_OF_TREMORS,
             (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)},
         {MISC_LANTERN_OF_SHADOWS,
-            (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  6)}
+            (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7)}
     };
 
     int result = *random_choose_weighted(choices);
@@ -1441,7 +1440,7 @@ int acquirement_create_item(object_class_type class_wanted,
             acq_item.quantity = quant;
 
         // Remove curse flag from item, unless worshipping Ashenzari.
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::want_curses))
             do_curse_item(acq_item, true);
         else
             do_uncurse_item(acq_item, false);

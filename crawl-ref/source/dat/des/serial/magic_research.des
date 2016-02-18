@@ -137,7 +137,7 @@ MONS:    spiny frog / black mamba, redback
 MONS:    sea snake / redback, hornet / wasp
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
-KITEM:   E = potion of poison ident:type / \
+KITEM:   E = potion of degeneration ident:type / \
              potion of mutation ident:type
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss

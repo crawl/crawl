@@ -2148,15 +2148,6 @@ potion of blood
 and thou mayest not eat the life with the flesh.”
     -KJV Bible, Deuteronomy 12:23
 %%%%
-potion of poison
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of curing
 
 “But if when you say ‘whiskey’ you mean the oil of conversation,
@@ -2164,6 +2155,15 @@ potion of curing
  get together, that puts a song in their hearts and laughter on
  their lips, and the warm glow of contentment in their eyes...
  then certainly I am for it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
+%%%%
+potion of degeneration
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 profane servitor

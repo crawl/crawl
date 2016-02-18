@@ -559,22 +559,10 @@ potion of mutation
 
 En drik, som gør overordentligt underlige ting ved dig.
 %%%%
-potion of poison
-
-En fæl, giftig væske.
-%%%%
-potion of porridge
-
-En mættende portion slim, som er fyldt med kornfiber.
-%%%%
 potion of resistance
 
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
-%%%%
-potion of slowing
-
-En drik, som forsinker dine handlinger.
 %%%%
 quad damage
 
@@ -655,12 +643,6 @@ ring of wizardry
 
 Denne ring øger bærerens evne til at bruge magiske besværgelser.
 %%%%
-rod of destruction
-
-Denne stok kan vækkes til at udløse en skadelig besværgelse der udvalgt
-tilfældigt fra et lille sæt, som alle kan gennembore uhyrer og skade dem, der
-står bag dem.
-%%%%
 rod of inaccuracy
 
 Denne stok lader brugeren affyre en kraftfuld, men utroligt upræcis kraftkile.
@@ -671,10 +653,6 @@ Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
 forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
 den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
 grundlæggende effektivitet med våbnet.
-%%%%
-rod of the swarm
-
-Denne stok lader brugeren hidkalde en sværm af insekter.
 %%%%
 royal jelly
 

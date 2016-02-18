@@ -4024,12 +4024,11 @@ void game_options::set_fake_langs(const string &input)
 }
 
 // Checks an include file name for safety and resolves it to a readable path.
-// If safety check fails, throws a string with the reason for failure.
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
+/// @throws unsafe_path if included_file fails the safety check.
 string game_options::resolve_include(string parent_file, string included_file,
                                      const vector<string> *rcdirs)
-    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.
@@ -4084,9 +4083,9 @@ string game_options::resolve_include(const string &file, const char *type)
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
         return resolved;
     }
-    catch (const string &err)
+    catch (const unsafe_path &err)
     {
-        report_error("Cannot include %sfile: %s", type, err.c_str());
+        report_error("Cannot include %sfile: %s", type, err.what());
         return "";
     }
 }
@@ -4319,7 +4318,7 @@ static void _print_save_version(char *name)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 
@@ -4512,7 +4511,7 @@ static void _edit_save(int argc, char **argv)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 #undef FAIL
@@ -4822,8 +4821,16 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
             {
                 SysEnv.map_gen_range.reset(new depth_ranges);
-                *SysEnv.map_gen_range =
-                    depth_ranges::parse_depth_ranges(next_arg);
+                try
+                {
+                    *SysEnv.map_gen_range =
+                        depth_ranges::parse_depth_ranges(next_arg);
+                }
+                catch (const bad_level_id &err)
+                {
+                    fprintf(stderr, "Error parsing depths: %s\n", err.what());
+                    end(1);
+                }
                 nextUsed = true;
             }
             break;

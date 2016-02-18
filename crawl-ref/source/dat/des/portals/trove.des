@@ -574,9 +574,19 @@ MONS:    plant col:white
 MONS:    plant col:white / plant col:blue w:6
 MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
 #
-ITEM:    any useful good_item
-ITEM:    any useful jewellery good_item / any useful good_item w:5
-ITEM:    any useful weapon good_item / any useful armour good_item / any useful good_item w:5
+# Items: d = scrolls from header function, e/E = jewellery/amulets,
+#        f/F/B = armour/weapon/book, g = potions
+SHUFFLE: eE, fFB
+: trove.good_scroll(_G)
+KITEM:   e = acquire jewellery w:5 / any useful jewellery good_item / any jewellery w:2
+KITEM:   E = any amulet useful good_item / any amulet randart w:2
+KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
+KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
+KITEM:   B = acquire book / acquire:sif_muna book / any book
+KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
+             potion of cure mutation q:1 / potion of beneficial mutation q:1 / \
+             potion of might / potion of agility / potion of brilliance / \
+             potion of resistance / potion of magic / potion of haste
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
@@ -595,13 +605,13 @@ MAP
 .1."'"wwW''1.o_____________o.1.1.1.1.1.1.1
 1.1'"'Www'm'1o_____________o1.1.1.1.1.1.1.
 .1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
-1.1."'"Www'''o__xddx_xedx__o1.1.1.1.1.1.1.
-.1.1."'"Www''o__xefx_xdex__o.1.1.1.1.1.1.1
+1.1."'"Www'''o__xddx_xeex__o1.1.1.1.1.1.1.
+.1.1."'"Www''o__xddx_xeex__o.1.1.1.1.1.1.1
 1.1.1."'"Ww''o__xxx+_+xxx__o1.1.1.1.1.1.1.
 .1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
 1.1.1.1'"'mwWo__xxx+_+xxx__o1.1.1.1.1.1.1.
-.1.1.1.1'"'wwo__xdfx_xdex__o.1.1.1.1.1.1.1
-1.1.1.1."'"WwoV_xdex_xdfx__o1.1.1.1.1.1.1.
+.1.1.1.1'"'wwo__xffx_xggx__o.1.1.1.1.1.1.1
+1.1.1.1."'"WwoV_xffx_xggx__o1.1.1.1.1.1.1.
 .1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
 1.1.1.1.1.1'"oVvV__________o1.1.1.1.1.1.1.
 .1.1.1.1.m.1'o_vvvV________o.1.m.1.1.1.1.1
@@ -862,11 +872,11 @@ COLOUR: x = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = generate_awake shining eye
 # 21 items, 'cos this one is *nasty*.
-# There are 4 extra potions of cure mutation, anyway.
+# There are 4 extra potions of cure/beneficial mutation, anyway.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of cure mutation ident:type
+ITEM:   potion of cure mutation ident:type / potion of beneficial mutation ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
@@ -950,7 +960,7 @@ ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \
          potion of magic q:2 / potion of haste q:2
-ITEM:    potion of cure mutation
+ITEM:    potion of cure mutation / potion of beneficial mutation
 SHUFFLE: df
 SHUFFLE: eg
 : trove.setup_features(_G)

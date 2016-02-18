@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -365,6 +366,19 @@ struct delay_queue_item
     bool        started;
 };
 
+/// Exception indicating a bad level_id, level_range, or depth_range.
+struct bad_level_id : public runtime_error
+{
+    explicit bad_level_id(const string &msg) : runtime_error(msg) {}
+    explicit bad_level_id(const char *msg) : runtime_error(msg) {}
+};
+
+/**
+ * Create a bad_level_id exception from a printf-like specification.
+ * Users of this macro must #include "stringutil.h" themselves.
+ */
+#define bad_level_id_f(...) bad_level_id(make_stringf(__VA_ARGS__))
+
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
 // stack in l_dgn.cc)
@@ -392,7 +406,8 @@ public:
     {
     }
 
-    static level_id parse_level_id(const string &s) throw (string);
+    /// @throws bad_level_id if s could not be parsed.
+    static level_id parse_level_id(const string &s);
 #if TAG_MAJOR_VERSION == 34
     static level_id from_packed_place(const unsigned short place);
 #endif

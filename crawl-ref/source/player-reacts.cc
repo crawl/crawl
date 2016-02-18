@@ -255,31 +255,19 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
- * Check whether the player's ice (ozocubu's) armour and/or condensation shield
- * were melted this turn; if so, print the appropriate message.
+ * Check whether the player's ice (Ozocubu's) armour was melted this turn.
+ * If so, print the appropriate message and clear the flag.
  */
 static void _maybe_melt_armour()
 {
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
-    string what;
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
-        what = "armour";
         you.props.erase(MELT_ARMOUR_KEY);
+        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
     }
-
-    if (you.props.exists(MELT_SHIELD_KEY))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase(MELT_SHIELD_KEY);
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
 }
 
 /**
@@ -439,7 +427,7 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
+    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
 
     if (you.duration[DUR_TELEPATHY])
@@ -848,7 +836,10 @@ static void _rot_ghoul_players()
     if (you.species != SP_GHOUL)
         return;
 
-    int resilience = in_good_standing(GOD_CHEIBRIADOS, 0) ? 600 : 400;
+    int resilience = 400;
+    if (have_passive(passive_t::slow_metabolism))
+        resilience = resilience * 3 / 2;
+
 
     // Faster rotting when hungry.
     if (you.hunger_state < HS_SATIATED)

@@ -33,6 +33,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
@@ -3301,7 +3302,6 @@ bool bolt::misses_player()
     }
 
     const int dodge = you.evasion();
-    const int dodge_less = you.evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
@@ -3403,19 +3403,14 @@ bool bolt::misses_player()
 
     int defl = you.missile_deflection();
 
-    if (!_test_beam_hit(real_tohit, dodge_less, pierce, 0, r))
+    if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
         mprf("The %s misses you.", name.c_str());
-    else if (defl && !_test_beam_hit(real_tohit, dodge_less, pierce, defl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
         you.ablate_deflection();
-    }
-    else if (!_test_beam_hit(real_tohit, dodge, pierce, defl, r))
-    {
-        mprf("You momentarily phase out as the %s "
-             "passes through you.", name.c_str());
     }
     else
     {
@@ -3696,7 +3691,6 @@ void bolt::affect_player_enchantment(bool resistible)
             you.duration[DUR_TELEPORT] = 0;
             mpr("Your teleport is interrupted.");
         }
-        you.duration[DUR_PHASE_SHIFT] = 0;
         you.redraw_evasion = true;
         obvious_effect = true;
         break;
@@ -4172,12 +4166,12 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
         {
             foe_info.count++;
-            foe_info.power += mons_power(mon->type);
+            foe_info.power += mon->get_experience_level();
         }
         else
         {
             friend_info.count++;
-            friend_info.power += mons_power(mon->type);
+            friend_info.power += mon->get_experience_level();
         }
     }
 
@@ -4315,12 +4309,13 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         // Counting foes is only important for monster tracers.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
         {
-            foe_info.power += 2 * final * mons_power(mon->type) / preac;
+            foe_info.power += 2 * final * mon->get_experience_level() / preac;
             foe_info.count++;
         }
         else
         {
-            friend_info.power += 2 * final * mons_power(mon->type) / preac;
+            friend_info.power
+                += 2 * final * mon->get_experience_level() / preac;
             friend_info.count++;
         }
     }
@@ -4396,7 +4391,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(*mon));
 
-            if (in_good_standing(GOD_BEOGH, 2)
+            if (have_passive(passive_t::convert_orcs)
                 && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && you.see_cell(mon->pos()))
             {
@@ -4716,28 +4711,6 @@ void bolt::hit_shield(actor* blocker) const
 {
     if (flavour == BEAM_ACID)
         blocker->corrode_equipment();
-    if (is_fiery() || flavour == BEAM_STEAM)
-    {
-        monster* mon = blocker->as_monster();
-        if (mon && mon->has_ench(ENCH_CONDENSATION_SHIELD))
-        {
-            if (!mon->lose_ench_levels(mon->get_ench(ENCH_CONDENSATION_SHIELD),
-                                       10 * BASELINE_DELAY, true)
-                && you.can_see(*mon))
-            {
-                mprf("The heat melts %s icy shield.",
-                     apostrophise(mon->name(DESC_THE)).c_str());
-            }
-        }
-        else if (!mon && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            you.duration[DUR_CONDENSATION_SHIELD] -= 10 * BASELINE_DELAY;
-            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
-                remove_condensation_shield();
-            else
-                you.props[MELT_SHIELD_KEY] = true;
-        }
-    }
     if (blocker->is_player())
         you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
 }
@@ -4991,14 +4964,6 @@ void bolt::affect_monster(monster* mon)
                             << deflects << " the " << name
                             << '!' << endl;
             }
-            else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
-                     && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       pierce, 0, r))
-            {
-                msg::stream << mon->name(DESC_THE) << " momentarily phases "
-                            << "out as the " << name << " passes through "
-                            << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
-            }
             else
             {
                 msg::stream << "The " << name << " misses "
@@ -5237,9 +5202,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = mon->holiness() & MH_NATURAL
+        rc = (mon->holiness() & MH_NATURAL
+              || mon->holiness() & MH_DEMONIC
+              || mon->holiness() & MH_HOLY)
+             && !mon->is_summoned()
+             && !mons_enslaved_body_and_soul(mon)
              && mon->attitude != ATT_FRIENDLY
-             && mons_can_be_zombified(mon)
              && mons_intel(mon) >= I_HUMAN;
         break;
 
@@ -5561,7 +5529,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_CONFUSION:
         if (mon->check_clarity(false))
         {
-            if (you.can_see(*mon) && !mons_is_lurking(mon))
+            if (you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }

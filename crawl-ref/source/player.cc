@@ -398,7 +398,7 @@ static void _splash()
 {
     if (you.can_swim())
         noisy(4, you.pos(), "Floosh!");
-    else if (!beogh_water_walk())
+    else if (!have_passive(passive_t::water_walk))
         noisy(8, you.pos(), "Splash!");
 }
 
@@ -459,7 +459,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         if (feat_is_water(new_grid) && !stepped)
             _splash();
 
-        if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
+        if (feat_is_water(new_grid) && !you.can_swim()
+            && !have_passive(passive_t::water_walk))
         {
             if (stepped)
             {
@@ -586,7 +587,7 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return !permanently && beogh_water_walk()
+    return !permanently && have_passive(passive_t::water_walk)
            || (species_likes_water(you.species) || !permanently)
                && form_likes_water();
 }
@@ -1301,7 +1302,7 @@ int player_hunger_rate(bool temp)
     }
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
+    if (have_passive(passive_t::slow_metabolism))
         hunger /= 2;
 
     if (hunger < 1)
@@ -1652,8 +1653,9 @@ bool player_res_torment(bool random)
 // Kiku protects you from torment to a degree.
 bool player_kiku_res_torment()
 {
-    return in_good_standing(GOD_KIKUBAAQUDGHA, 3)
-           && !you.gift_timeout; // no protection during pain branding weapon
+    // no protection during pain branding weapon
+    return have_passive(passive_t::resist_torment)
+           && !(you_worship(GOD_KIKUBAAQUDGHA) && you.gift_timeout);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -2020,7 +2022,7 @@ int player_movement_speed()
     mv += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
-    if (you_worship(GOD_CHEIBRIADOS))
+    if (have_passive(passive_t::slowed))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
@@ -2034,6 +2036,9 @@ int player_movement_speed()
 
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 3;
+
+    if (you.duration[DUR_ICY_ARMOUR])
+        ++mv; // as ponderous
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = player_mutation_level(MUT_FAST))
@@ -2091,7 +2096,7 @@ int player_speed()
     if (you.duration[DUR_SLOW] || have_stat_zero())
         ps = haste_mul(ps);
 
-    if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
+    if (you.duration[DUR_BERSERK] && !have_passive(passive_t::no_haste))
         ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
@@ -2133,7 +2138,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 
     int bonus = 0;
 
-    if (in_good_standing(GOD_BEOGH))
+    if (have_passive(passive_t::bonus_ac))
     {
         if (you.piety >= piety_breakpoint(5))
             bonus = 10;
@@ -2183,10 +2188,10 @@ bool player_is_shapechanged()
 
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
-static int _player_evasion_size_factor()
+static int _player_evasion_size_factor(bool base = false)
 {
     // XXX: you.body_size() implementations are incomplete, fix.
-    const size_type size = you.body_size(PSIZE_BODY);
+    const size_type size = you.body_size(PSIZE_BODY, base);
     return 2 * (SIZE_MEDIUM - size);
 }
 
@@ -2195,7 +2200,7 @@ static int _player_evasion_size_factor()
 int player_shield_racial_factor()
 {
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
-                                                  : _player_evasion_size_factor()));
+                                                  : _player_evasion_size_factor(true)));
 }
 
 // The total EV penalty to the player for all their worn armour items
@@ -2226,9 +2231,6 @@ static int _player_adjusted_evasion_penalty(const int scale)
 static int _player_para_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = 0;
-
-    if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
-        evbonus += 8;
 
     if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
         evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
@@ -2445,17 +2447,8 @@ int player_shield_class()
 
         shield += stat;
     }
-    else
-    {
-        if (you.duration[DUR_MAGIC_SHIELD])
-        {
-            shield += 900 + player_adjust_evoc_power(
-                                you.skill(SK_EVOCATIONS, 75));
-        }
-
-        if (you.duration[DUR_CONDENSATION_SHIELD])
-            shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
-    }
+    else if (you.duration[DUR_MAGIC_SHIELD])
+        shield += 900 + player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 75));
 
     // mutations
     // +2, +3, +4 (displayed values)
@@ -2520,7 +2513,7 @@ void forget_map(bool rot)
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
                             || player_in_branch(BRANCH_ABYSS)
-                                && you_worship(GOD_LUGONU);
+                                && have_passive(passive_t::map_rot_res_abyss);
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
 
@@ -2739,7 +2732,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     if (you.attribute[ATTR_STAT_LOSS_XP] > 0)
     {
         int loss = div_rand_round(exp_gained * 3 / 2,
-                                  calc_skill_cost(you.skill_cost_level));
+                       max(1, calc_skill_cost(you.skill_cost_level) - 3));
         you.attribute[ATTR_STAT_LOSS_XP] -= loss;
         dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
         if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
@@ -3299,7 +3292,7 @@ int check_stealth()
     if (you.umbra())
     {
         int umbra_mul = 1, umbra_div = 1;
-        if (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL))
+        if (you.nightvision())
         {
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
@@ -3357,8 +3350,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
-    case DUR_CONDENSATION_SHIELD:
-    case DUR_PHASE_SHIFT:
     case DUR_DEATH_CHANNEL:
     case DUR_SHROUD_OF_GOLUBRIA:
     case DUR_INFUSION:
@@ -3656,7 +3647,7 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 3))
+    if (have_passive(passive_t::clarity))
         return true;
 
     return actor::clarity(calc_unid, items);
@@ -3682,6 +3673,9 @@ bool player::stasis(bool calc_unid, bool items) const
 unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
+
+    // Note: For historical reasons, all of the following numbers are for a
+    // species (like human) with XP aptitude 1, not 0 as one might expect.
 
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
@@ -3752,7 +3746,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     if (exp_apt == -99)
         exp_apt = species_exp_modifier(you.species);
 
-    return (unsigned int) ((level - 1) * exp(-log(2.0) * (exp_apt - 1) / 4));
+    return (unsigned int) ((level - 1) * apt_to_factor(exp_apt - 1));
 }
 
 // returns bonuses from rings of slaying, etc.
@@ -4628,7 +4622,7 @@ int poison_survival()
     if (!get_player_poisoning())
         return you.hp;
     const int rr = player_regen();
-    const bool chei = (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0));
+    const bool chei = have_passive(passive_t::slow_metabolism);
     const bool dd = (you.species == SP_DEEP_DWARF);
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
@@ -5552,7 +5546,7 @@ bool player::is_sufficiently_rested() const
 
 bool player::in_water() const
 {
-    return ground_level() && !beogh_water_walk()
+    return ground_level() && !have_passive(passive_t::water_walk)
            && feat_is_water(grd(pos()));
 }
 
@@ -5738,7 +5732,6 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
-           || duration[DUR_CONDENSATION_SHIELD]
            || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
@@ -5938,7 +5931,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (in_good_standing(GOD_ASHENZARI, 1))
+    else if (have_passive(passive_t::bondage_skill_boost))
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
@@ -6077,8 +6070,8 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
-    if (duration[DUR_STONESKIN])
-        AC += 200 + you.props[STONESKIN_KEY].get_int() * 5;
+    if (duration[DUR_MAGIC_ARMOUR])
+        AC += 200 + you.props[MAGIC_ARMOUR_KEY].get_int() * 5;
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -6667,8 +6660,7 @@ undead_state_type player::undead_state(bool temp) const
 
 bool player::nightvision() const
 {
-    return religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
-           || religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2);
+    return have_passive(passive_t::nightvision);
 }
 
 reach_type player::reach_range() const
@@ -7182,7 +7174,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (have_passive(passive_t::sinv))
         return true;
 
     return false;
@@ -7848,7 +7840,7 @@ int player_monster_detect_radius()
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
-    if (in_good_standing(GOD_ASHENZARI))
+    if (have_passive(passive_t::detect_montier))
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);
 }
@@ -8598,7 +8590,7 @@ void player_end_berserk()
     {
         // Note the beauty of Trog!  They get an extra save that's at
         // the very least 20% and goes up to 100%.
-        if (in_good_standing(GOD_TROG)
+        if (have_passive(passive_t::extend_berserk)
             && x_chance_in_y(you.piety, piety_breakpoint(5)))
         {
             mpr("Trog's vigour flows through your veins.");

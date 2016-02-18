@@ -149,7 +149,6 @@ LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
 LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
-LUARET1(you_phase_shifted, boolean, you.duration[DUR_PHASE_SHIFT])
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
 LUARET1(you_contaminated, number, get_contamination_level())
@@ -448,9 +447,9 @@ LUAFN(you_is_level_on_stack)
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        return luaL_argerror(ls, 1, err.c_str());
+        return luaL_argerror(ls, 1, err.what());
     }
 
     PLUARET(boolean, is_level_on_stack(lev));
@@ -570,7 +569,6 @@ static const struct luaL_reg you_clib[] =
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
     { "shrouded",     you_shrouded },
-    { "phase_shifted", you_phase_shifted },
     { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },

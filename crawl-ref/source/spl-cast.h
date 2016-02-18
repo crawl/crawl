@@ -48,6 +48,8 @@ enum spflag_type
                                                  // instead of this spell
     SPFLAG_NOT_EVIL           = 0x20000000,      // not considered evil by the
                                                  // good gods
+    SPFLAG_HOLY               = 0x40000000,      // considered holy (can't be
+                                                 // used by Yred enslaved souls)
 };
 
 enum spret_type

@@ -182,13 +182,14 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
 }
 
-static bool _try_make_item_unrand(item_def& item, int force_type)
+static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
 {
-    if (player_in_branch(BRANCH_PANDEMONIUM))
+    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == -1)
         return false;
 
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  player_in_branch(BRANCH_ABYSS));
+                                  player_in_branch(BRANCH_ABYSS)
+                                      && agent == -1);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return true;
@@ -198,7 +199,8 @@ static bool _try_make_item_unrand(item_def& item, int force_type)
 
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
-                                      int item_level, bool force_randart = false)
+                                      int item_level, bool force_randart,
+                                      int agent)
 {
     if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
@@ -209,7 +211,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type))
+            if (_try_make_item_unrand(item, force_type, agent))
                 return true;
         }
 
@@ -376,7 +378,8 @@ static void _roll_weapon_type(item_def& item, int item_level)
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
-                                  int force_type, int item_level)
+                                  int force_type, int item_level,
+                                  int agent = -1)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -389,7 +392,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_weapon_artefact(item, force_type, 0, true) && is_artefact(item))
+            if (_try_make_weapon_artefact(item, force_type, 0, true, agent)
+                && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
                     item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
@@ -410,7 +414,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     // If we make the unique roll, no further generation necessary.
     if (allow_uniques
-        && _try_make_weapon_artefact(item, force_type, item_level))
+        && _try_make_weapon_artefact(item, force_type, item_level, false, agent))
     {
         return;
     }
@@ -562,6 +566,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 #if TAG_MAJOR_VERSION == 34
     case MI_DART:
 #endif
+    case MI_THROWING_NET:
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -575,12 +580,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     15, SPMSL_STEEL,
                                     15, SPMSL_SILVER,
                                     20, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL,
-                                    0);
-        break;
-    case MI_THROWING_NET:
-        rc = random_choose_weighted(30, SPMSL_STEEL,
-                                    30, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
@@ -661,7 +660,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_CHAOS:
         return type == MI_SLING_BULLET || type == MI_ARROW
                || type == MI_BOLT || type == MI_TOMAHAWK
-               || type == MI_JAVELIN || type == MI_THROWING_NET;
+               || type == MI_JAVELIN;
     case SPMSL_PENETRATION:
         return type == MI_JAVELIN || type == MI_BOLT;
     case SPMSL_DISPERSAL:
@@ -671,8 +670,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
         return type == MI_BOLT || type == MI_SLING_BULLET
-               || type == MI_JAVELIN || type == MI_TOMAHAWK
-               || type == MI_THROWING_NET;
+               || type == MI_JAVELIN || type == MI_TOMAHAWK;
     default: break;
     }
 
@@ -743,7 +741,8 @@ static void _generate_missile_item(item_def& item, int force_type,
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
-                                      int item_level, bool force_randart = false)
+                                      int item_level, bool force_randart,
+                                      int agent)
 {
     if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
@@ -754,7 +753,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type))
+            if (_try_make_item_unrand(item, force_type, agent))
                 return true;
         }
 
@@ -1140,7 +1139,8 @@ static armour_type _get_random_armour_type(int item_level)
 }
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
-                                  int force_type, int item_level)
+                                  int force_type, int item_level,
+                                  int agent = -1)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1158,7 +1158,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item_level == ISPEC_RANDART)
     {
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, 0, true)
+            if (_try_make_armour_artefact(item, force_type, 0, true, agent)
                 && is_artefact(item))
             {
                 return;
@@ -1168,7 +1168,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     if (allow_uniques
-        && _try_make_armour_artefact(item, force_type, item_level))
+        && _try_make_armour_artefact(item, force_type, item_level, false, agent))
     {
         return;
     }
@@ -1341,13 +1341,7 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
-    {
-        do
-        {
-            item.sub_type = _random_wand_subtype();
-        }
-        while (item_level < 2 && is_high_tier_wand(item.sub_type));
-    }
+        item.sub_type = _random_wand_subtype();
 
     // Generate charges randomly...
     item.plus = random2avg(wand_max_charges(item), 3);
@@ -1357,6 +1351,10 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.charges++;
 
     item.used_count = 0;
+
+    // don't let monsters pickup early high-tier wands
+    if (item_level < 2 && is_high_tier_wand(item.sub_type))
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 static void _generate_food_item(item_def& item, int force_quant, int force_type)
@@ -1426,7 +1424,7 @@ static void _generate_potion_item(item_def& item, int force_type,
             // total weight is 1065
             stype = random_choose_weighted(192, POT_CURING,
                                             95, POT_HEAL_WOUNDS,
-                                            72, POT_POISON,
+                                            72, POT_DEGENERATION,
                                             72, POT_LIGNIFY,
                                             72, POT_FLIGHT,
                                             66, POT_MIGHT,
@@ -1445,14 +1443,15 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              2, POT_EXPERIENCE,
                                              0);
         }
-        while (stype == POT_POISON && item_level < 1
-               // Too dangerous on monsters early on
-               || stype == POT_BERSERK_RAGE && item_level < 2
-               || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
-                   && --tries > 0));
+        while (agent == GOD_XOM
+               && _is_boring_item(OBJ_POTIONS, stype)
+               && --tries > 0);
 
         item.sub_type = stype;
     }
+    // don't let monsters pickup early dangerous potions
+    if (item_level < 2 && item.sub_type == POT_BERSERK_RAGE)
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
@@ -1499,8 +1498,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
-               && _is_boring_item(OBJ_SCROLLS, item.sub_type)
-               && --tries > 0);
+                  && _is_boring_item(OBJ_SCROLLS, item.sub_type)
+                  && --tries > 0);
     }
 
     if (one_chance_in(24))
@@ -1592,7 +1591,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_staff_item(item_def& item, bool allow_uniques, int force_type, int item_level)
+static void _generate_staff_item(item_def& item, bool allow_uniques,
+                                 int force_type, int item_level, int agent)
 {
     // If we make the unique roll, no further generation necessary.
     // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
@@ -1602,7 +1602,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
     {
         // Temporarily fix the base_type to get enhancer staves
         item.base_type = OBJ_WEAPONS;
-        if (_try_make_item_unrand(item, WPN_STAFF))
+        if (_try_make_item_unrand(item, WPN_STAFF, agent))
             return;
         item.base_type = OBJ_STAVES;
     }
@@ -1664,7 +1664,7 @@ static void _generate_rune_item(item_def& item, int force_type)
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
-                                          int item_level)
+                                          int item_level, int agent)
 {
     int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
                (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
@@ -1673,7 +1673,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, type))
+        if (_try_make_item_unrand(item, type, agent))
             return true;
     }
 
@@ -1749,7 +1749,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                                      int agent)
 {
     if (allow_uniques && item_level != ISPEC_RANDART
-        && _try_make_jewellery_unrandart(item, force_type, item_level))
+        && _try_make_jewellery_unrandart(item, force_type, item_level, agent))
     {
         return;
     }
@@ -1819,8 +1819,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
                                       MISC_LANTERN_OF_SHADOWS,
-                                      MISC_PHANTOM_MIRROR,
-                                      MISC_XOMS_CHESSBOARD);
+                                      MISC_PHANTOM_MIRROR);
     }
 
     // set initial charges
@@ -1990,7 +1989,7 @@ int items(bool allow_uniques,
     {
     case OBJ_WEAPONS:
         _generate_weapon_item(item, allow_uniques, force_type,
-                              item_level);
+                              item_level, agent);
         break;
 
     case OBJ_MISSILES:
@@ -1998,7 +1997,8 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_ARMOUR:
-        _generate_armour_item(item, allow_uniques, force_type, item_level);
+        _generate_armour_item(item, allow_uniques, force_type, item_level,
+                              agent);
         break;
 
     case OBJ_WANDS:
@@ -2029,7 +2029,7 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != -1), force_type, item_level);
+        _generate_staff_item(item, (agent != -1), force_type, item_level, agent);
         break;
 
     case OBJ_RODS:

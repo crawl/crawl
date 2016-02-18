@@ -102,7 +102,7 @@ static const mutation_def mut_data[] =
 
   {"You digest meat inefficiently.",
    "You digest meat very inefficiently.",
-   "You are a herbivore."},
+   "You are an herbivore."},
 
   {"You hunger for vegetation.",
    "You hunger for vegetation.",
@@ -2047,9 +2047,9 @@ static const mutation_def mut_data[] =
 { MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::BAD, false,
   "reduced AC",
 
-  {"You take slightly more damage. (-3 AC)",
-    "You take more damage. (-6 AC)",
-    "You take considerably more damage. (-9 AC)"},
+  {"You take slightly more damage. (AC -3)",
+    "You take more damage. (AC -6)",
+    "You take considerably more damage. (AC -9)"},
   {"You feel more vulnerable to harm.",
     "You feel more vulnerable to harm.",
     "You feel more vulnerable to harm."},
@@ -2063,9 +2063,9 @@ static const mutation_def mut_data[] =
 { MUT_SLOW_REFLEXES, 0, 3, mutflag::BAD, false,
   "reduced EV",
 
-  {"You have somewhat slow reflexes. (-3 EV)",
-    "You have slow reflexes. (-6 EV)",
-    "You have very slow reflexes. (-9 EV)"},
+  {"You have somewhat slow reflexes. (EV -3)",
+    "You have slow reflexes. (EV -6)",
+    "You have very slow reflexes. (EV -9)"},
   {"Your reflexes slow.",
     "Your reflexes slow further.",
     "Your reflexes slow further."},

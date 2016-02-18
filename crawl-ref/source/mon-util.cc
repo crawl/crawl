@@ -2825,10 +2825,6 @@ void define_monster(monster* mons)
         mons->num_heads = 27;
         break;
 
-    case MONS_KRAKEN:
-        col = element_colour(ETC_KRAKEN);
-        break;
-
     case MONS_TIAMAT:
         // Initialise to a random draconian type.
         draconian_change_colour(mons);
@@ -3186,6 +3182,8 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     }
 
     mon->mname = _get_proper_monster_name(mon);
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
 
     if (mon->friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname));
@@ -3453,11 +3451,6 @@ bool mons_is_retreating(const monster* m)
 bool mons_is_cornered(const monster* m)
 {
     return m->behaviour == BEH_CORNERED;
-}
-
-bool mons_is_lurking(const monster* m)
-{
-    return m->behaviour == BEH_LURK;
 }
 
 bool mons_is_influenced_by_sanctuary(const monster* m)
@@ -4766,25 +4759,6 @@ string get_mon_shape_str(const mon_body_shape shape)
 bool player_or_mon_in_sanct(const monster* mons)
 {
     return is_sanctuary(you.pos()) || is_sanctuary(mons->pos());
-}
-
-bool mons_landlubbers_in_reach(const monster* mons)
-{
-    if (mons_has_ranged_attack(mons))
-        return true;
-
-    actor *act;
-    for (radius_iterator ai(mons->pos(),
-                            mons->reach_range(),
-                            C_SQUARE,
-                            true);
-         ai; ++ai)
-    {
-        if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
-            return true;
-    }
-
-    return false;
 }
 
 int get_dist_to_nearest_monster()

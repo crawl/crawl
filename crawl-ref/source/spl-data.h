@@ -349,7 +349,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DEATHS_DOOR, "Death's Door",
     SPTYP_CHARMS | SPTYP_NECROMANCY,
-    SPFLAG_EMERGENCY | SPFLAG_UTILITY,
+    SPFLAG_EMERGENCY | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
     8,
     200,
     -1, -1,
@@ -561,6 +561,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
     SPTYP_SUMMONING,
@@ -571,6 +572,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",
@@ -1325,7 +1327,7 @@ static const struct spell_desc spelldata[] =
     SPELL_PASSWALL, "Passwall",
     SPTYP_TRANSMUTATION | SPTYP_EARTH,
     SPFLAG_DIR | SPFLAG_ESCAPE | SPFLAG_NOT_SELF | SPFLAG_UTILITY,
-    3,
+    2,
     200,
     1, 1,
     0, 0, // make silent to keep passwall a viable stabbing spell [rob]
@@ -1409,7 +1411,6 @@ static const struct spell_desc spelldata[] =
     3, 0,
     nullptr,
 },
-#endif
 
 {
     SPELL_PHASE_SHIFT, "Phase Shift",
@@ -1421,6 +1422,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies",
@@ -1545,6 +1547,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
     SPTYP_ICE,
@@ -1559,13 +1562,14 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STONESKIN, "Stoneskin",
     SPTYP_EARTH | SPTYP_TRANSMUTATION,
-    SPFLAG_HELPFUL | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
+    SPFLAG_HELPFUL | SPFLAG_UTILITY | SPFLAG_NO_GHOST | SPFLAG_MONSTER,
     2,
     100,
     -1, -1,
     2, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SIMULACRUM, "Simulacrum",
@@ -2345,7 +2349,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_HOLIES, "Summon Holies",
     SPTYP_SUMMONING,
-    SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
+    SPFLAG_MONSTER | SPFLAG_MONS_ABJURE | SPFLAG_HOLY,
     5,
     0,
     -1, -1,
@@ -2368,7 +2372,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HOLY_FLAMES, "Holy Flames",
     SPTYP_NONE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE | SPFLAG_HOLY,
     7,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -2379,7 +2383,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HOLY_BREATH, "Holy Breath",
     SPTYP_CONJURATION,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD
+        | SPFLAG_HOLY,
     5,
     200,
     5, 5,
@@ -3581,7 +3586,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CLEANSING_FLAME, "Cleansing Flame",
     SPTYP_NONE,
-    SPFLAG_AREA | SPFLAG_MONSTER,
+    SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_HOLY,
     8,
     200,
     -1, -1,

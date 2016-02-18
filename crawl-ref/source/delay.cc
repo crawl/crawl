@@ -1036,11 +1036,6 @@ static void _armour_wear_effects(const int item_slot)
             remove_ice_armour();
         }
     }
-    else if (eq_slot == EQ_SHIELD)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-    }
 
     equip_item(eq_slot, item_slot);
 
@@ -1439,14 +1434,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " appears from thin air!";
         else if (at.context == SC_LEAP_IN)
             text += " leaps into view!";
-        // The monster surfaced and submerged in the same turn without
-        // doing anything else.
-        else if (at.context == SC_SURFACES_BRIEFLY)
-            text += "surfaces briefly.";
-        else if (at.context == SC_SURFACES)
-                text += " surfaces.";
-        else if (at.context == SC_FISH_SURFACES_SHOUT
-              || at.context == SC_FISH_SURFACES)
+        else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
             if (mons_primary_habitat(mon) == HT_LAVA)
@@ -1476,7 +1464,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         bool zin_id = false;
         string god_warning;
 
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::warn_shapeshifter)
             && mon->is_shapeshifter()
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
@@ -1484,7 +1472,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             zin_id = true;
             mon->props["zin_id"] = true;
             discover_shifter(mon);
-            god_warning = "Zin warns you: "
+            god_warning = uppercase_first(god_name(you.religion))
+                          + " warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
                           + " is a foul ";
             if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1502,7 +1491,10 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         if (!mweap.empty())
         {
             if (ash_id)
-                god_warning = "Ashenzari warns you:";
+            {
+                god_warning = uppercase_first(god_name(you.religion))
+                              + " warns you:";
+            }
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"

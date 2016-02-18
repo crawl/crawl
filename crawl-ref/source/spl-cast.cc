@@ -27,6 +27,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::shadow_spells
 #include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
@@ -1156,7 +1157,7 @@ static double _chance_miscast_prot()
 {
     double miscast_prot = 0;
 
-    if (in_good_standing(GOD_SIF_MUNA, 3))
+    if (have_passive(passive_t::miscast_protection))
         miscast_prot = (double) you.piety/piety_breakpoint(5);
 
     return min(1.0, miscast_prot);
@@ -1454,9 +1455,9 @@ spret_type your_spells(spell_type spell, int powc,
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
         actor* victim = actor_at(beam.target);
-        if (you_worship(GOD_DITHMENOS)
+        if (will_have_passive(passive_t::shadow_spells)
             && allow_fail
-            && !god_hates_spell(spell, GOD_DITHMENOS, !allow_fail)
+            && !god_hates_spell(spell, you.religion, !allow_fail)
             && (flags & SPFLAG_TARGETING_MASK)
             && !(flags & SPFLAG_NEUTRAL)
             && (beam.is_enchantment()
@@ -1675,9 +1676,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
 
-    case SPELL_SUMMON_SWARM:
-        return cast_summon_swarm(powc, god, fail);
-
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
@@ -1841,20 +1839,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
-    case SPELL_STONESKIN:
-        return cast_stoneskin(powc, fail);
-
-    case SPELL_CONDENSATION_SHIELD:
-        return cast_condensation_shield(powc, fail);
-
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
 
     case SPELL_CIGOTUVIS_EMBRACE:
         return corpse_armour(powc, fail);
-
-    case SPELL_PHASE_SHIFT:
-        return cast_phase_shift(powc, fail);
 
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
@@ -1934,6 +1923,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Removed spells.
     case SPELL_ABJURATION:
     case SPELL_CIGOTUVIS_DEGENERATION:
+    case SPELL_CONDENSATION_SHIELD:
     case SPELL_CONTROL_TELEPORT:
     case SPELL_DEMONIC_HORDE:
     case SPELL_ENSLAVEMENT:
@@ -1953,6 +1943,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SURE_BLADE:
     case SPELL_FLY:
+    case SPELL_STONESKIN:
+    case SPELL_SUMMON_SWARM:
+    case SPELL_PHASE_SHIFT:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

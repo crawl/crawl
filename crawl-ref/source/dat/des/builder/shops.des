@@ -294,7 +294,6 @@ TAGS:    no_monster_gen
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:30 potion of poison | \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
          w:14 arrow ego:poisoned | w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
@@ -409,7 +408,7 @@ SUBST: G : YlG
 :   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
 :   centaur barding unrand:black_knights_horse_barding w:1 | \
 :   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:hellfire w:1 | \
-:   double sword unrand:sword_of_zonguldrok w:1 | rod of destruction w:3")
+:   double sword unrand:sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP
@@ -480,7 +479,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of lightning | staff of conjuration | lightning rod | \
-   rod of inaccuracy | rod of destruction | iron rod | \
+   rod of inaccuracy | iron rod | \
    large rock ego:exploding | arrow ego:exploding | bolt ego:exploding | \
    javelin ego:exploding | wand of acid | \
    tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \

@@ -638,6 +638,8 @@ static const food_def Food_prop[] =
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  1 },
 
 #if TAG_MAJOR_VERSION == 34
+    // is_real_food assumes we list FOOD_UNUSED as the first removed
+    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy",           0,     0,     0,  1 },
     { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  1 },
     { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  1 },
@@ -699,13 +701,15 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_PORRIDGE },
     { OBJ_POTIONS,   POT_SLOWING },
     { OBJ_POTIONS,   POT_DECAY },
-    { OBJ_POTIONS,   POT_DEGENERATION },
+    { OBJ_POTIONS,   POT_POISON },
     { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
+    { OBJ_RODS,      ROD_DESTRUCTION },
+    { OBJ_RODS,      ROD_SWARM },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
@@ -713,6 +717,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
     { OBJ_WANDS,     WAND_COLD_REMOVED },
     { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
+    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
+    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
+    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -738,14 +745,37 @@ bool item_known_cursed(const item_def &item)
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
+/**
+ * Is the provided item cursable? Note: this function would leak
+ * information about unidentified holy wrath weapons, which is alright
+ * because only Ashenzari worshippers can deliberately curse items and
+ * they see all weapon egos anyway.
+ *
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a blessed weapon.
+ */
+bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
+{
+    if (!item_type_has_curses(item.base_type))
+        return false;
+    if (item_known_cursed(item))
+        return false;
+    if (!ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        return false;
+    }
+    return true;
+}
+
 // Curses a random player inventory item.
 bool curse_an_item(bool ignore_holy_wrath)
 {
     // allowing these would enable mummy scumming
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
     {
         mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(GOD_ASHENZARI).c_str());
+             god_name(you.religion).c_str());
         return false;
     }
 
@@ -757,24 +787,13 @@ bool curse_an_item(bool ignore_holy_wrath)
         if (!item.defined())
             continue;
 
-        if (is_weapon(item)
-            || item.base_type == OBJ_ARMOUR
-            || item.base_type == OBJ_JEWELLERY)
-        {
-            if (item.cursed())
-                continue;
+        if (!item_is_cursable(item, ignore_holy_wrath))
+            continue;
 
-            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
-                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-            {
-                continue;
-            }
-
-            // Item is valid for cursing, so we'll give it a chance.
-            count++;
-            if (one_chance_in(count))
-                found = &item;
-        }
+        // Item is valid for cursing, so we'll give it a chance.
+        count++;
+        if (one_chance_in(count))
+            found = &item;
     }
 
     // Any item to curse?
@@ -872,7 +891,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (no_ash && you_worship(GOD_ASHENZARI))
+    if (no_ash && have_passive(passive_t::want_curses))
     {
         simple_god_message(" preserves the curse.");
         return;
@@ -1663,7 +1682,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
     {
-        if (!uncurse || you_worship(GOD_ASHENZARI))
+        if (!uncurse || have_passive(passive_t::want_curses))
             return false;
         if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
             return true;
@@ -2283,6 +2302,13 @@ bool ring_has_stackable_effect(const item_def &item)
 //
 // Food functions:
 //
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food)
+{
+    return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
+}
+
+#endif
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
@@ -2998,7 +3024,7 @@ void seen_item(const item_def &item)
 
     // major hack. Deconstify should be safe here, but it's still repulsive.
     const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::identify_items))
         const_cast<item_def &>(item).flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         const_cast<item_def &>(item).plus = (you_worship(GOD_ZIN)) ? 2 : 1;

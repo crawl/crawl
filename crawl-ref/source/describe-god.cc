@@ -667,7 +667,7 @@ static void _describe_god_powers(god_type which_god)
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // his life.
-    if (god_can_protect_from_harm(which_god))
+    if (have_passive(passive_t::protect_from_harm))
     {
         have_any = true;
 
@@ -777,7 +777,6 @@ static void _describe_god_powers(god_type which_god)
     case GOD_ASHENZARI:
         have_any = true;
         cprintf("You are provided with a bounty of information.\n");
-        cprintf("You can pray to corrupt scrolls of remove curse on your square.\n");
         break;
 
     case GOD_CHEIBRIADOS:

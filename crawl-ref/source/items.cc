@@ -2067,7 +2067,7 @@ void clear_item_pickup_flags(item_def &item)
 // Move gold to the the top of a pile if following Gozag.
 static void _gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (int gold = igrd(p); gold != NON_ITEM;
              gold = mitm[gold].link)
@@ -3758,7 +3758,7 @@ colour_t item_def::rune_colour() const
             static const element_type types[] =
             {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
              ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
-             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH};
 
             return types[rnd % ARRAYSZ(types)];
         }
@@ -3823,10 +3823,9 @@ colour_t item_def::miscellany_colour() const
             return WHITE;
 #if TAG_MAJOR_VERSION == 34
         case MISC_BUGGY_EBONY_CASKET:
+        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
-        case MISC_XOMS_CHESSBOARD:
-            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

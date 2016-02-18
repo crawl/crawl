@@ -276,24 +276,24 @@ level_range::operator raw_range () const
     return r;
 }
 
-void level_range::set(const string &br, int s, int d) throw (string)
+void level_range::set(const string &br, int s, int d)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
     else if ((branch = branch_by_abbrevname(br)) == NUM_BRANCHES)
-        throw make_stringf("Unknown branch: '%s'", br.c_str());
+        throw bad_level_id_f("Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
     deepest    = d;
 
     if (deepest < shallowest || deepest <= 0)
     {
-        throw make_stringf("Level-range %s:%d-%d is malformed",
-                           br.c_str(), s, d);
+        throw bad_level_id_f("Level-range %s:%d-%d is malformed",
+                             br.c_str(), s, d);
     }
 }
 
-level_range level_range::parse(string s) throw (string)
+level_range level_range::parse(string s)
 {
     level_range lr;
     trim_string(s);
@@ -325,7 +325,7 @@ level_range level_range::parse(string s) throw (string)
     return lr;
 }
 
-void level_range::parse_partial(level_range &lr, const string &s) throw (string)
+void level_range::parse_partial(level_range &lr, const string &s)
 {
     if (isadigit(s[0]))
     {
@@ -337,7 +337,6 @@ void level_range::parse_partial(level_range &lr, const string &s) throw (string)
 }
 
 void level_range::parse_depth_range(const string &s, int *l, int *h)
-    throw (string)
 {
     if (s == "*")
     {
@@ -358,7 +357,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
     {
         *l = *h = strict_aton<int>(s.c_str());
         if (!*l)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
     else
     {
@@ -371,7 +370,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
             *h = strict_aton<int>(tail.c_str());
 
         if (!*l || !*h || *l > *h)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
 }
 
@@ -384,7 +383,7 @@ void level_range::set(int s, int d)
         deepest = shallowest;
 
     if (deepest < shallowest)
-        throw make_stringf("Bad depth range: %d-%d", shallowest, deepest);
+        throw bad_level_id_f("Bad depth range: %d-%d", shallowest, deepest);
 }
 
 void level_range::reset()
@@ -3820,9 +3819,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             {
                 mspec.place = level_id::parse_level_id(place);
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                error = err;
+                error = err.what();
                 return slot;
             }
         }
@@ -5122,9 +5121,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         {
             result.place = level_id::parse_level_id(place);
         }
-        catch (const string &err)
+        catch (const bad_level_id &err)
         {
-            error = err;
+            error = err.what();
             return false;
         }
     }
@@ -5751,9 +5750,9 @@ string map_marker_spec::apply_transform(map_lines &map)
             mark->pos = p;
             map.add_marker(mark);
         }
-        catch (const string &err)
+        catch (const bad_map_marker &err)
         {
-            return err;
+            return err.what();
         }
     }
     return "";
@@ -5789,11 +5788,9 @@ map_flags &map_flags::operator |= (const map_flags &o)
 
     return *this;
 }
-
 typedef map<string, unsigned long> flag_map;
 
-map_flags map_flags::parse(const string flag_list[],
-                           const string &s) throw(string)
+map_flags map_flags::parse(const string flag_list[], const string &s)
 {
     map_flags mf;
 
@@ -5821,7 +5818,7 @@ map_flags map_flags::parse(const string flag_list[],
                 mf.flags_set |= *val;
         }
         else
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
+            throw bad_map_flag(flag);
     }
 
     return mf;
@@ -6041,10 +6038,9 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask |= map_flags::parse(flag_list, s);
     }
-    catch (const string &error)
+    catch (const bad_map_flag &error)
     {
-        err = error;
-        return err;
+        err = make_stringf("Unknown flag: '%s'", error.what());
     }
 
     return err;

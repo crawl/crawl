@@ -1223,7 +1223,6 @@ static bool _handle_rod(monster &mons, bolt &beem)
         }
         break;
 
-    case SPELL_SUMMON_SWARM:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
@@ -1306,7 +1305,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip()
+        || x_chance_in_y(3, 4)
         || !wand
         || wand->base_type != OBJ_WANDS)
     {
@@ -1770,26 +1769,6 @@ static void _pre_monster_move(monster& mons)
     mons.check_speed();
 }
 
-static void _maybe_submerge(monster* mons)
-{
-    if (mons->asleep() || mons->submerged())
-        return;
-
-    if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()         // No submerging while caught.
-        && !mons->asleep()         // No submerging when asleep.
-        && !you.beheld_by(mons)    // No submerging if player entranced.
-        && !mons_is_lurking(mons)  // Handled elsewhere.
-        && mons->wants_submerge())
-    {
-        const monsterentry* entry = get_monster_data(mons->type);
-
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-}
-
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1929,7 +1908,7 @@ void handle_monster_move(monster* mons)
         aura_of_brilliance(mons);
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
-        && in_good_standing(GOD_GOZAG)
+        && have_passive(passive_t::gold_aura)
         && you.see_cell(mons->pos())
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
@@ -1991,10 +1970,7 @@ void handle_monster_move(monster* mons)
 
     // Lurking monsters only stop lurking if their target is right
     // next to them, otherwise they just sit there.
-    // However, if the monster is involuntarily submerged but
-    // still alive (e.g., nonbreathing which had water poured
-    // on top of it), this doesn't apply.
-    if (mons_is_lurking(mons) || mons->has_ench(ENCH_SUBMERGED))
+    if (mons->has_ench(ENCH_SUBMERGED))
     {
         if (mons->foe != MHITNOT
             && grid_distance(mons->target, mons->pos()) <= 1)
@@ -2055,7 +2031,6 @@ void handle_monster_move(monster* mons)
             }
         }
     }
-    _maybe_submerge(mons);
     if (!mons->asleep() && !mons->submerged())
         maybe_mons_speaks(mons);
 

@@ -274,14 +274,6 @@ Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
 %%%%
-Condensation Shield spell
-
-Causes a disc of dense vapour to condense out of the air surrounding the
-caster. It blocks attacks like a normal shield, but its effectiveness depends
-solely on power, and not on the Shields skill. The disc is controlled by the
-caster's mind, and thus will not conflict with the wielding of a two-handed
-weapon.
-%%%%
 Confuse spell
 
 Induces a state of bewilderment and confusion in a creature's mind.
@@ -911,10 +903,10 @@ impact. Its damage partially bypasses armour.
 %%%%
 Ozocubu's Armour spell
 
-Envelops the caster's body in a protective layer of ice. The caster will not
-suffer cold from this layer, yet can be affected by other sources of cold
-normally. The spell will not function for casters already wearing heavy armour
-(any body armour with an encumbrance rating of 5 or more).
+Envelops the caster's body in a protective layer of thick ice. This will slow
+the caster's movement slightly, and provides no special protection against cold.
+The spell will not function for casters already wearing heavy armour (any body
+armour with an encumbrance rating of 5 or more).
 %%%%
 Ozocubu's Refrigeration spell
 
@@ -964,11 +956,6 @@ Phantom Mirror spell
 
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
-%%%%
-Phase Shift spell
-
-Causes the caster to phase in and out of the material plane, allowing them to
-occasionally avoid blows entirely.
 %%%%
 Plane Rend spell
 

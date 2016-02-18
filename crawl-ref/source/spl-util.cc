@@ -1116,8 +1116,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
             return "your stony body would shatter the ice.";
-        if (spell == SPELL_STONESKIN)
-            return "your skin is already made of stone.";
 
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
@@ -1125,7 +1123,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             {
                 case SPELL_STATUE_FORM:
                 case SPELL_ICE_FORM:
-                case SPELL_CONDENSATION_SHIELD:
                     return "you're too hot.";
                 default:
                     break;
@@ -1185,7 +1182,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're already a statue.";
         // fallthrough to other forms
 
-    case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
@@ -1279,15 +1275,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
             return "you can only summon one forest at a time.";
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_ANIMATE_DEAD:
@@ -1300,29 +1292,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot coerce anything to obey you.";
         break;
 
-    case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_HAUNT:
-    case SPELL_SUMMON_ICE_BEAST:
-    case SPELL_CALL_IMP:
-    case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_SHADOW_CREATURES:
-    case SPELL_CALL_CANINE_FAMILIAR:
-    case SPELL_SUMMON_DRAGON:
-    case SPELL_SUMMON_BUTTERFLIES:
-    case SPELL_MONSTROUS_MENAGERIE:
-    case SPELL_SUMMON_HYDRA:
-    case SPELL_SUMMON_MINOR_DEMON:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
-    case SPELL_SUMMON_GUARDIAN_GOLEM:
-    case SPELL_DRAGON_CALL:
-    case SPELL_SUMMON_MANA_VIPER:
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
-        break;
-
     default:
         break;
+    }
+
+    if (get_spell_disciplines(spell) & SPTYP_SUMMONING
+        && spell != SPELL_AURA_OF_ABJURATION
+        && spell != SPELL_RECALL
+        && player_mutation_level(MUT_NO_LOVE))
+    {
+        return "you cannot coerce anything to answer your summons.";
     }
 
     return "";

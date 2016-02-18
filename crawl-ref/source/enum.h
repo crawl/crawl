@@ -372,6 +372,7 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
+    ABIL_ASHENZARI_CURSE,
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
@@ -538,6 +539,7 @@ enum attribute_type
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
     ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
+    ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     NUM_ATTRIBUTES
 };
 
@@ -1801,17 +1803,17 @@ enum duration_type
     DUR_DEATH_CHANNEL,
 #if TAG_MAJOR_VERSION == 34
     DUR_DEFLECT_MISSILES,
-#endif
     DUR_PHASE_SHIFT,
-#if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
 #endif
     DUR_WEAPON_BRAND,           // general "branding" spell counter
     DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONDENSATION_SHIELD,
-    DUR_STONESKIN,
+#endif
+    DUR_MAGIC_ARMOUR,
     DUR_GOURMAND,
 #if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
@@ -1999,7 +2001,7 @@ enum enchant_type
     ENCH_REGENERATION,
     ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
-    ENCH_STONESKIN,
+    ENCH_MAGIC_ARMOUR,
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
@@ -2076,8 +2078,8 @@ enum enchant_type
     ENCH_DEFLECT_MISSILES,
 #if TAG_MAJOR_VERSION == 34
     ENCH_NEGATIVE_VULN,
-#endif
     ENCH_CONDENSATION_SHIELD,
+#endif
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
@@ -3538,9 +3540,9 @@ enum beh_type
                                        //  obstacle or monster
 #if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
-#endif
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
+#endif
     BEH_RETREAT,                       //  like flee but when cannot attack
     BEH_WITHDRAW,                      //  an ally given a command to withdraw
                                        //  (will not respond to attacks)
@@ -3888,8 +3890,8 @@ enum potion_type
     POT_GAIN_INTELLIGENCE,
 #endif
     POT_FLIGHT,
-    POT_POISON,
 #if TAG_MAJOR_VERSION == 34
+    POT_POISON,
     POT_SLOWING,
 #endif
     POT_CANCELLATION,
@@ -3897,7 +3899,9 @@ enum potion_type
     POT_INVISIBILITY,
 #if TAG_MAJOR_VERSION == 34
     POT_PORRIDGE,
+#endif
     POT_DEGENERATION,
+#if TAG_MAJOR_VERSION == 34
     POT_DECAY,
     POT_WATER,
 #endif
@@ -4239,7 +4243,9 @@ enum spell_type
     SPELL_FIRE_STORM,
     SPELL_BLINK,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SUMMON_SWARM,
+#endif
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_ENSLAVEMENT,
     SPELL_ANIMATE_DEAD,
@@ -4334,8 +4340,8 @@ enum spell_type
     SPELL_ENGLACIATION,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SEE_INVISIBLE,
-#endif
     SPELL_PHASE_SHIFT,
+#endif
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_WARP_BRAND,
     SPELL_SILENCE,
@@ -4349,8 +4355,10 @@ enum spell_type
 #endif
     SPELL_LRD,
     SPELL_SANDBLAST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_CONDENSATION_SHIELD,
     SPELL_STONESKIN,
+#endif
     SPELL_SIMULACRUM,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
@@ -4877,9 +4885,6 @@ enum seen_context_type
     SC_NEWLY_SEEN,      // regular walking into view
     SC_ALREADY_SEEN,    // wasn't a threat before, is now
     SC_TELEPORT_IN,
-    SC_SURFACES,                      // land-capable
-    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
-    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
     SC_FISH_SURFACES,                 // water/lava-only
     SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
     SC_UNCHARM,

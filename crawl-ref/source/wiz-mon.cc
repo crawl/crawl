@@ -138,26 +138,10 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.type == MONS_KRAKEN)
+    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
     {
-        unsigned short idx = mgrd(place);
-
-        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
-        {
-            for (auto &mons : menv)
-            {
-                if (mons.type == MONS_KRAKEN && mons.alive())
-                {
-                    mons.colour = element_colour(ETC_KRAKEN);
-                    return;
-                }
-            }
-        }
-        if (idx >= MAX_MONSTERS)
-        {
-            mpr("Couldn't find player kraken!");
-            return;
-        }
+        mpr("Couldn't find player kraken!");
+        return;
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
@@ -507,7 +491,6 @@ void debug_stethoscope(int mon)
          : mons_is_fleeing(&mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
          : mons_is_cornered(&mons)        ? "cornered"
-         : mons_is_lurking(&mons)         ? "lurk"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,

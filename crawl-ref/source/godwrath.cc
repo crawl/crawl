@@ -20,6 +20,7 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godpassive.h" // shadow_monster
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"

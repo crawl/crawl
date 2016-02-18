@@ -96,7 +96,7 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
-    MB_STONESKIN,
+    MB_MAGIC_ARMOUR,
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
@@ -136,8 +136,8 @@ enum monster_info_flags
     MB_REPEL_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
-#endif
     MB_CONDENSATION_SHIELD,
+#endif
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,

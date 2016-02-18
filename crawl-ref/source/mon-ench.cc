@@ -194,15 +194,9 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         // deliberate fall-through
 
     case ENCH_INSANE:
-
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
         calc_speed();
         break;
 
@@ -215,38 +209,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        mons_clear_trapping_net(this);
-
-        // Don't worry about invisibility. You should be able to see if
-        // something has submerged.
-        if (!quiet && you.see_cell(pos()))
-        {
-            if (seen_context == SC_SURFACES)
-            {
-                // The monster surfaced and submerged in the same turn
-                // without doing anything else.
-                interrupt_activity(AI_SEE_MONSTER,
-                                   activity_interrupt_data(this,
-                                                           SC_SURFACES_BRIEFLY));
-                // Why does this handle only land-capables?  I'd imagine this
-                // to happen mostly (only?) for fish. -- 1KB
-            }
-            else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_A, true).c_str());
-        }
-
-        // Pacified monsters leave the level when they submerge.
-        if (pacified())
-            make_mons_leave_level(this);
-        break;
-
-    case ENCH_CONFUSION:
-    case ENCH_MAD:
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
+        dprf("%s submerges.", name(DESC_A, true).c_str());
         break;
 
     case ENCH_CHARM:
@@ -342,26 +305,6 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
         return true;
-
-    // Unbreathing stuff that can't swim stays on the bottom.
-    if (grd(mon->pos()) == DNGN_DEEP_WATER
-        && !mon->can_drown()
-        && !monster_habitable_grid(mon, DNGN_DEEP_WATER))
-    {
-        return false;
-    }
-
-    // Lurking monsters only unsubmerge when their foe is in sight if the foe
-    // is right next to them.
-    if (mons_is_lurking(mon))
-    {
-        const actor* foe = mon->get_foe();
-        if (foe != nullptr && mon->can_see(*foe)
-            && !adjacent(mon->pos(), foe->pos()))
-        {
-            return false;
-        }
-    }
 
     int midx = mon->mindex();
 
@@ -522,10 +465,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s skin looks tender.",
+            mprf("%s magical armour fades away.",
                  apostrophise(name(DESC_THE)).c_str());
         }
         break;
@@ -743,7 +686,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
-        if (mons_is_wandering(this) || mons_is_lurking(this))
+        if (mons_is_wandering(this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);
@@ -763,19 +706,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(*this))
         {
-            if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
+            if (!quiet && feat_is_watery(grd(pos())))
             {
-                // Already set somewhere else.
-                if (seen_context)
-                    return;
-
-                if (!monster_habitable_grid(this, DNGN_FLOOR))
-                    seen_context = SC_FISH_SURFACES;
-                else
-                    seen_context = SC_SURFACES;
+                mprf(MSGCH_WARN, "%s bursts forth from the water.",
+                     name(DESC_A, true).c_str());
+                seen_monster(this);
             }
-            else if (!quiet && crawl_state.game_is_arena())
-                mprf("%s surfaces.", name(DESC_A, true).c_str());
         }
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
@@ -994,13 +930,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " is no longer deflecting missiles.");
         break;
-
-    case ENCH_CONDENSATION_SHIELD:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy shield evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
 
     case ENCH_RESISTANCE:
         if (!quiet)
@@ -1467,7 +1396,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
@@ -1557,20 +1486,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         const dungeon_feature_type grid = grd(pos());
 
         if (!monster_can_submerge(this, grid))
-        {
-            // unbreathing stuff can stay on the bottom
-            if (grid != DNGN_DEEP_WATER
-                || monster_habitable_grid(this, grid)
-                || can_drown())
-            {
-                del_ench(ENCH_SUBMERGED); // forced to surface
-            }
-        }
-        else if (mons_landlubbers_in_reach(this))
-        {
-            del_ench(ENCH_SUBMERGED);
-            make_mons_stop_fleeing(this);
-        }
+            del_ench(ENCH_SUBMERGED); // forced to surface
         break;
     }
     case ENCH_POISON:
@@ -2200,10 +2116,9 @@ static const char *enchant_names[] =
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles",
 #if TAG_MAJOR_VERSION == 34
-    "negative_vuln",
+    "negative_vuln", "condensation_shield",
 #endif
-    "condensation_shield", "resistant",
-    "hexed", "corpse_armour",
+    "resistant", "hexed", "corpse_armour",
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
@@ -2349,7 +2264,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
-    case ENCH_STONESKIN:
+    case ENCH_MAGIC_ARMOUR:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:

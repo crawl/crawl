@@ -1126,7 +1126,7 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 static bool _sack_of_spiders(item_def &sack)
 {
     if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_SUMMON_SWARM); // approx
+        pakellas_evoke_backfire(SPELL_SUMMON_VERMIN); // approx
     else if (!pakellas_device_surge())
         return false;
     surge_power(you.spec_evoke());
@@ -2072,48 +2072,6 @@ static bool _phial_of_floods()
     return false;
 }
 
-static bool _xoms_chessboard(item_def &board)
-{
-    if (get_nearby_monsters(false, true).empty())
-    {
-        mpr("You can't see any nearby monsters.");
-        return false;
-    }
-
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_DISJUNCTION); // approx
-    else if (!pakellas_device_surge())
-    {
-        you.turn_is_over = true;
-        return false;
-    }
-    surge_power(you.spec_evoke());
-    mpr("You make a move on Xom's chessboard...");
-
-    if (one_chance_in(100))
-    {
-        god_speaks(GOD_XOM, "Xom booms, \"MINE!\"");
-        mpr("...but Xom just steals the piece!");
-        ASSERT(in_inventory(board));
-        dec_inv_item_quantity(board.link, 1);
-        return true;
-    }
-
-    // Chance of a bad Xom action instead.
-    int fail_rate = 30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
-    if (x_chance_in_y(fail_rate, 100))
-    {
-        god_speaks(GOD_XOM, "Xom laughs nastily.");
-        xom_acts(false, random_range(0, 100));
-        return true;
-    }
-
-    xom_rearrange_pieces(
-        player_adjust_evoc_power(you.skill_rdiv(SK_EVOCATIONS, 100, 27)));
-    xom_is_stimulated(10);
-    return true;
-}
-
 void expend_xp_evoker(item_def &item)
 {
     evoker_debt(item.sub_type) = XP_EVOKE_DEBT;
@@ -2546,13 +2504,6 @@ bool evoke_item(int slot, bool check_range)
                 expend_xp_evoker(item);
                 pract = 1;
             }
-            else
-                return false;
-            break;
-
-        case MISC_XOMS_CHESSBOARD:
-            if (_xoms_chessboard(item))
-                pract = 1;
             else
                 return false;
             break;

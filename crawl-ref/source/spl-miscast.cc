@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "godwrath.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -1725,7 +1726,8 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && in_good_standing(GOD_KIKUBAAQUDGHA, 1))
+    if (target->is_player()
+        && have_passive(passive_t::miscast_protection_necromancy))
     {
         if (spell != SPELL_NO_SPELL)
         {
@@ -1839,8 +1841,8 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (!target->res_rotting())
             {
-                you_msg      = "You begin to rot!";
-                mon_msg_seen = "@The_monster@ begins to rot!";
+                you_msg      = "Your flesh rots away!";
+                mon_msg_seen = "@The_monster@ rots away!";
 
                 // Must produce the message before rotting, because that
                 // might kill a target monster, and do_msg does not like

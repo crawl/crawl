@@ -55,8 +55,8 @@ bool make_book_theme_randart(item_def &book,
                              int num_spells = -1, int max_levels = -1,
                              string owner = "", string title = "",
                              bool exact_level = false);
-void make_book_Roxanne_special(item_def *book);
-void make_book_Kiku_gift(item_def &book, bool first);
+void make_book_roxanne_special(item_def *book);
+void make_book_kiku_gift(item_def &book, bool first);
 
 bool book_has_title(const item_def &book);
 

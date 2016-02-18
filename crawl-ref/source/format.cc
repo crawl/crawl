@@ -456,7 +456,7 @@ void formatted_string::add_glyph(cglyph_t g)
 void formatted_string::textcolour(int colour)
 {
     if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
-        ops.erase(ops.end() - 1);
+        ops.pop_back();
 
     ops.push_back(colour);
 }

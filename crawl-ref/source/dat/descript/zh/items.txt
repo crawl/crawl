@@ -421,21 +421,9 @@ potion of mutation
 
 这瓶药水会对你的身体作出各种奇怪的改变。
 %%%%
-potion of poison
-
-一瓶味道苦涩的毒液。
-%%%%
-potion of porridge
-
-一瓶糊状的营养药水。富含谷物纤维。
-%%%%
 potion of resistance
 
 饮用这瓶药水暂时赋予你对各种元素以及毒药的抗性。
-%%%%
-potion of slowing
-
-饮用这瓶药水会使你的动作速度变慢。
 %%%%
 quad damage
 
@@ -508,10 +496,6 @@ ring of wizardry
 rod of inaccuracy
 
 这根法杖能射出一道威力强大但命中率极度低下的力能矢。
-%%%%
-rod of the swarm
-
-这根法杖能召唤出一大群昆虫。
 %%%%
 royal jelly
 

@@ -79,7 +79,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
     { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
     { ENCH_ROLLING,         MB_ROLLING },
-    { ENCH_STONESKIN,       MB_STONESKIN },
+    { ENCH_MAGIC_ARMOUR,    MB_MAGIC_ARMOUR },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -105,7 +105,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
-    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
@@ -1485,8 +1484,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("regenerating");
     if (is(MB_ROLLING))
         v.emplace_back("rolling");
-    if (is(MB_STONESKIN))
-        v.emplace_back("stone skin");
+    if (is(MB_MAGIC_ARMOUR))
+        v.emplace_back("magically armoured");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.emplace_back("covered in an icy film");
     if (is(MB_WRETCHED))
@@ -1544,8 +1543,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.emplace_back("heavily drained");
-    if (is(MB_CONDENSATION_SHIELD))
-        v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))

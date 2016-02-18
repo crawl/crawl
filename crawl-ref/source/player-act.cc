@@ -21,6 +21,7 @@
 #include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -144,9 +145,7 @@ bool player::extra_balanced() const
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && (form == TRAN_LICH || form == TRAN_STATUE
-                      || form == TRAN_SHADOW
-                      || !form_changed_physiology());
+                  && form_keeps_mutations();
 }
 
 int player::get_hit_dice() const
@@ -691,9 +690,11 @@ void player::attacking(actor *other, bool ranged)
  *                    messages can be printed if we can't berserk.
  * @return            True if Chei will slow the player, false otherwise.
  */
-static bool _chei_prevents_berserk_haste(bool intentional)
+static bool _god_prevents_berserk_haste(bool intentional)
 {
-    if (!you_worship(GOD_CHEIBRIADOS))
+    const god_type old_religion = you.religion;
+
+    if (!have_passive(passive_t::no_haste))
         return false;
 
     // Chei makes berserk not speed you up.
@@ -709,7 +710,7 @@ static bool _chei_prevents_berserk_haste(bool intentional)
 
     did_god_conduct(DID_HASTY, 8);
     // Let's see if you've lost your religion...
-    if (!you_worship(GOD_CHEIBRIADOS))
+    if (!you_worship(old_religion))
         return false;
 
     simple_god_message(" forces you to slow down.");
@@ -746,7 +747,7 @@ bool player::go_berserk(bool intentional, bool potion)
         mpr("Your finesse ends abruptly.");
     }
 
-    if (!_chei_prevents_berserk_haste(intentional))
+    if (!_god_prevents_berserk_haste(intentional))
         mpr("You feel yourself moving faster!");
 
     mpr("You feel mighty!");

@@ -248,24 +248,6 @@ bool ranged_attack::handle_phase_dodged()
         return true;
     }
 
-    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
-    {
-        if (needs_message && defender_visible)
-        {
-            mprf("%s momentarily %s out as %s "
-                 "passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 projectile->name(DESC_THE).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation(damage_done).c_str());
-        }
-
-        return true;
-    }
-
     if (needs_message)
     {
         mprf("%s%s misses %s%s",
@@ -335,7 +317,7 @@ bool ranged_attack::handle_phase_hit()
         && should_alert_defender)
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
-                        coord_def(), !stab_attempt);
+                        coord_def());
     }
 
     return true;

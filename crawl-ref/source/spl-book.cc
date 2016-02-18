@@ -57,10 +57,14 @@
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
+#if TAG_MAJOR_VERSION == 34
     { ROD_SWARM,       SPELL_SUMMON_SWARM },
+#endif
     { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
     { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
+#if TAG_MAJOR_VERSION == 34
     { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
+#endif
     { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
     { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
     { ROD_IRON,        SPELL_SCATTERSHOT },
@@ -1979,14 +1983,14 @@ bool make_book_theme_randart(item_def &book,
 
 // Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
 // that includes Statue Form and is named after her.
-void make_book_Roxanne_special(item_def *book)
+void make_book_roxanne_special(item_def *book)
 {
     spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
     make_book_theme_randart(*book, disc, SPTYP_NONE, 5, 19,
                             SPELL_STATUE_FORM, "Roxanne");
 }
 
-void make_book_Kiku_gift(item_def &book, bool first)
+void make_book_kiku_gift(item_def &book, bool first)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);

@@ -260,7 +260,7 @@ static void _tweak_randart(item_def &item)
 #endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            *(prompt.rend()) = '\n'; // Replace the space
+            prompt.back() = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -614,7 +614,7 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);

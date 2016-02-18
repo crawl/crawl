@@ -79,7 +79,7 @@
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
        "dire flail | disc of storms | double sword | " ..
-       "ring of dexterity | rod of destruction | manual of dodging | " ..
+       "potion of degeneration | ring of dexterity | manual of dodging | " ..
        "staff of death | wand of digging | wand of disintegration"
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
@@ -133,7 +133,7 @@
 
       elseif s == "P" then i = "book of party tricks | book of power | " ..
        "pearl dragon armour | phantom mirror | phial of floods | " ..
-       "plate armour | potion of poison | ring of poison resistance | " ..
+       "plate armour | ring of poison resistance | " ..
        "wand of polymorph | ring of positive energy | ring of protection | " ..
        "manual of poison magic | staff of power | wand of paralysis | " ..
        "ring of protection from fire | ring of protection from magic | " ..
@@ -153,7 +153,7 @@
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
        "deck of summoning | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..
-       "rod of shadows | rod of the swarm | ring of sustain attributes | " ..
+       "rod of shadows | ring of sustain attributes | " ..
        "sack of spiders | scroll of summoning | scythe | " ..
        "book of spatial translocations | scroll of silence | shield | " ..
        "shortbow | stone of tremors | wand of slowing | manual of staves | " ..

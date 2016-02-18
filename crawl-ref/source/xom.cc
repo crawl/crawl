@@ -105,7 +105,6 @@ static const spell_type _xom_tension_spells[] =
     SPELL_CAUSE_FEAR,
     SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
-    SPELL_SUMMON_SWARM,
     SPELL_SHADOW_CREATURES,
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_WARP_BRAND,
@@ -1322,7 +1321,7 @@ bool swap_monsters(monster* m1, monster* m2)
 // Swap places with a random monster and, depending on severity, also
 // between monsters. This can be pretty bad if there are a lot of
 // hostile monsters around.
-int xom_rearrange_pieces(int sever, bool debug)
+static int _xom_rearrange_pieces(int sever, bool debug)
 {
     if (player_stair_delay() || monster_at(you.pos()))
         return XOM_DID_NOTHING;
@@ -2084,7 +2083,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (tension > 0 && x_chance_in_y(13, sever))
         done = _xom_destruction(sever, debug);
     else if (tension > 0 && x_chance_in_y(14, sever))
-        done = xom_rearrange_pieces(sever, debug);
+        done = _xom_rearrange_pieces(sever, debug);
     else if (tension > 0 && x_chance_in_y(15, sever))
     {
 

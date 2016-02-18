@@ -18,6 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1460,10 +1461,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 
     if (feat == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk())
-            return false;
-
-        return !form_likes_water(which_trans);
+        return !have_passive(passive_t::water_walk)
+            && !form_likes_water(which_trans);
     }
 
     return false;
@@ -1677,7 +1676,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     string msg;
 
     // Zin's protection.
-    if (!just_check && you_worship(GOD_ZIN)
+    if (!just_check && have_passive(passive_t::resist_polymorph)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -1812,16 +1811,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans)
-        && which_trans != TRAN_STATUE
-        && you.duration[DUR_STONESKIN])
-    {
-        mprf("Your stony body turns to %s.",
-             get_form(which_trans)->flesh_equivalent.c_str());
-        you.duration[DUR_STONESKIN] = 0;
-    }
-
     // Update your status.
     you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, _transform_duration(which_trans, pow));
@@ -1842,7 +1831,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     _extra_hp(form_hp_mod());
 
-    if (you.digging && which_trans == TRAN_TREE)
+    if (you.digging && !form_keeps_mutations(which_trans))
     {
         mpr("Your mandibles meld away.");
         you.digging = false;

@@ -18,6 +18,7 @@
 #include "exercise.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -951,7 +952,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     if (!teleport
         && projected
-        && you_worship(GOD_DITHMENOS)
+        && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
     {

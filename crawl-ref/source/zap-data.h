@@ -1231,7 +1231,7 @@ static const zap_info zap_data[] =
     ZAP_ICEBLAST,
     "iceblast",
     200,
-    new calcdice_calculator<3, 10, 1, 2>,
+    new calcdice_calculator<3, 14, 3, 5>,
     new tohit_calculator<40>,
     WHITE,
     false,

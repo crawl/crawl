@@ -391,7 +391,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.msg.c_str());
+            end(1, false, "%s", fe.what());
         }
         catch (short_read_exception &E)
         {
@@ -2359,7 +2359,7 @@ static void _prep_input()
 
     if (you.seen_portals)
     {
-        ASSERT(you_worship(GOD_ASHENZARI));
+        ASSERT(have_passive(passive_t::detect_portals));
         if (you.seen_portals == 1)
             mprf(MSGCH_GOD, "You have a vision of a gate.");
         else

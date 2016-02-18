@@ -262,8 +262,8 @@ An infamous weapon, once used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
 cutlass was thought to be lost with him.
 
-This weapon is perfectly suited for relieving opponents of their weapons, just
-before it relieves them of their lives.
+This blade has the capability to suddenly relieve opponents of their weapons,
+dealing extra damage in the process.
 %%%%
 storm bow
 

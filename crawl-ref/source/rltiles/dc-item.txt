@@ -522,24 +522,25 @@ gem_plastic
 
 %sdir item/wand
 #### These must be in the same order as the enum in itemprop-enum.h!
+# Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
-i-frost WAND_FROST
+i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
-i-magic_darts WAND_MAGIC_DARTS
+i-flame WAND_REMOVEME2
 i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
-i-fire WAND_FIRE
-i-cold WAND_COLD
+i-flame WAND_REMOVEME3
+i-flame WAND_REMOVEME4
 i-confusion WAND_CONFUSION
-i-invisibility WAND_INVISIBILITY
+i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
-i-fireball WAND_FIREBALL
+i-iceblast WAND_ICEBLAST
 i-teleportation WAND_TELEPORTATION
 i-lightning WAND_LIGHTNING
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
-i-draining WAND_DRAINING
+i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
@@ -618,6 +619,7 @@ i-torment SCR_TORMENT
 %back scroll-grey
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
@@ -643,6 +645,7 @@ i-silence SCR_SILENCE
 %back scroll-yellow
 i-amnesia SCR_AMNESIA
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 
@@ -824,14 +827,15 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
+# please remove POT_POISON when TAG_MAJOR_VERSION is bumped
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-cancel POT_CANCELLATION
 i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
-# please remove these 3 when TAG_MAJOR_VERSION is bummped
 i-degeneration POT_DEGENERATION
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
@@ -946,9 +950,11 @@ rod09
 
 # These must be in the same order as the enum in itemprop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_summoning ROD_SUMMONING
 i-rod_ignition ROD_IGNITION
 i-rod_clouds ROD_CLOUDS
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_destruction ROD_DESTRUCTION
 i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
@@ -985,13 +991,6 @@ misc_disc MISC_DISC_OF_STORMS
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
-misc_pawn MISC_CHESSPIECE_FIRST
-misc_rook
-misc_knight
-misc_bishop
-misc_queen
-misc_king
-misc_thimble MISC_CHESSPIECE_LAST
 misc_deck MISC_DECK
 %start
 %compose misc_deck

@@ -33,7 +33,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE
@@ -70,7 +69,6 @@ inner_flame INNER_FLAME
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
-condensation_shield CONDENSATION_SHIELD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
 freezing_cloud FREEZING_CLOUD
@@ -146,7 +144,6 @@ controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
-phase_shift PHASE_SHIFT
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
@@ -164,9 +161,7 @@ dragon_form DRAGON_FORM
 %sdir misc
 error PARALYSE
 error BOLT_OF_INACCURACY
-error SUMMON_SWARM
 error THUNDERBOLT
-error MELEE
 error EXPLOSIVE_BOLT
 %sdir gui/spells/air
 cloud_cone CLOUD_CONE

@@ -251,12 +251,12 @@ static const duration_def duration_data[] =
       0, "",
       "sleeping", "sleep",
       "You are sleeping.", D_NO_FLAGS},
-    { DUR_STONESKIN,
+    { DUR_MAGIC_ARMOUR,
       0, "",
-      "stone skin", "stoneskin",
-      "Your skin is tough as stone.", D_DISPELLABLE,
-      {{ "Your skin feels tender.", [](){
-          you.props.erase(STONESKIN_KEY);
+      "magic armour", "magic armour",
+      "You are magically armoured.", D_DISPELLABLE,
+      {{ "Your magical armour fades away.", [](){
+          you.props.erase(MAGIC_ARMOUR_KEY);
           you.redraw_armour_class = true;
       }}}},
     { DUR_SWIFTNESS,
@@ -283,13 +283,6 @@ static const duration_def duration_data[] =
       {{ "Your life is in your own hands again!", []() {
             you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
       }}, { "Your time is quickly running out!", 5 }}},
-    { DUR_PHASE_SHIFT,
-      0, "",
-      "phasing", "phase shift",
-      "You are out of phase with the material plane.", D_DISPELLABLE | D_EXPIRES,
-        {{ "You are firmly grounded in the material plane once more.", []() {
-            you.redraw_evasion = true;
-        }}, { "You feel closer to the material plane.", 1 }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
       "quad damage", "",
@@ -531,14 +524,6 @@ static const duration_def duration_data[] =
       "no scrolls", "",
       "You cannot read scrolls.", D_NO_FLAGS,
       {{ "You can read scrolls again." }, {}, true }},
-    { DUR_CONDENSATION_SHIELD,
-      0, "",
-      "icy shield", "",
-      "You are shielded by a disc of ice.", D_DISPELLABLE,
-      {{ "Your icy shield evaporates.", [](){
-         you.props.erase(CONDENSATION_SHIELD_KEY);
-         you.redraw_armour_class = true;
-      }}, { "Your icy shield starts to melt.", 1 }}},
     { DUR_DIVINE_SHIELD,
       0, "",
       "divine shield", "",
@@ -637,5 +622,7 @@ static const duration_def duration_data[] =
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
     { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
+    { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
 #endif
 };

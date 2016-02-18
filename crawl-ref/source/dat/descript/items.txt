@@ -844,6 +844,10 @@ potion of curing
 A potion which heals some wounds, clears the mind and cures poison and disease.
 It can also slightly repair rotting.
 %%%%
+potion of degeneration
+
+A noxious concotion which reduces strength, intelligence and dexterity.
+%%%%
 potion of experience
 
 A truly wonderful and very rare drink.
@@ -879,10 +883,6 @@ who drinks it.
 potion of mutation
 
 A potion which does very strange things to you.
-%%%%
-potion of poison
-
-A nasty poisonous liquid.
 %%%%
 potion of resistance
 
@@ -1049,11 +1049,6 @@ This rod allows its wielder to blast a cone-shaped area in front of them with
 various destructive clouds, their lethality increasing with the evocation
 ability of the wielder.
 %%%%
-rod of destruction
-
-This rod can be evoked to release a damaging spell picked at random from a
-small set, all able to pierce through monsters to damage the ones behind them.
-%%%%
 rod of ignition
 
 This rod allows its wielder to launch a fiery bolt of explosive energy.
@@ -1066,10 +1061,6 @@ power.
 rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
-%%%%
-rod of the swarm
-
-This rod allows its wielder to summon a swarm of insects.
 %%%%
 royal jelly
 
@@ -1514,12 +1505,6 @@ whip
 A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
-%%%%
-piece from Xom's chessboard
-
-A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. Moving
-it in the presence of other creatures will invite Xom to take a turn in some
-cosmic game. A bad move may instead incur Xom's displeasure.
 %%%%
 young poisoner's handbook
 

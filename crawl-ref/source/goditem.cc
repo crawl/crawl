@@ -136,11 +136,8 @@ bool is_potentially_evil_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;
@@ -401,11 +398,8 @@ static bool _is_potentially_fiery_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;
@@ -585,6 +579,8 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_SHINING_ONE:
         if (item_type_known(item) && is_poisoned_item(item))
             return DID_POISON;
+        if (is_unrandom_artefact(item, UNRAND_CAPTAIN))
+            return DID_UNCHIVALRIC_ATTACK;
         break;
 
     case GOD_YREDELEMNUL:

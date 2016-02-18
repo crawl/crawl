@@ -8,6 +8,7 @@
 
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -32,6 +33,18 @@ vector<map_marker*> find_markers_by_prop(const string &prop,
                                          const string &expected = "",
                                          unsigned maxresults = 0);
 
+struct bad_map_marker : public runtime_error
+{
+    explicit bad_map_marker(const string &msg) : runtime_error(msg) {}
+    explicit bad_map_marker(const char *msg) : runtime_error(msg) {}
+};
+
+/**
+ * Create a bad_map_marker exception from a printf-like specification.
+ * Users of this macro must #include "stringutil.h" themselves.
+ */
+#define bad_map_marker_f(...) bad_map_marker(make_stringf(__VA_ARGS__))
+
 class map_marker
 {
 public:
@@ -48,8 +61,8 @@ public:
     virtual string property(const string &pname) const;
 
     static map_marker *read_marker(reader &);
-    static map_marker *parse_marker(const string &text,
-                                    const string &ctx = "") throw (string);
+    /// @throws bad_map_marker if text could not be parsed.
+    static map_marker *parse_marker(const string &text, const string &ctx = "");
 
 public:
     coord_def pos;
@@ -74,7 +87,8 @@ public:
     string debug_describe() const override;
     map_marker *clone() const override;
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    /// @throws bad_map_marker if s could not be parsed.
+    static map_marker *parse(const string &s, const string &);
 
 public:
     dungeon_feature_type feat;
@@ -263,7 +277,8 @@ public:
     bool notify_dgn_event(const dgn_event &e) override;
 
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    /// @throws bad_map_marker if s could not be parsed.
+    static map_marker *parse(const string &s, const string &);
 
     string debug_to_string() const;
 private:
@@ -290,7 +305,8 @@ public:
     string set_property(const string &key, const string &val);
     map_marker *clone() const override;
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    /// @throws bad_map_marker if s could not be parsed.
+    static map_marker *parse(const string &s, const string &);
 
 public:
     map<string, string> properties;

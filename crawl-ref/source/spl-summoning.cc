@@ -219,63 +219,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-monster_type pick_swarmer()
-{
-    return random_choose_weighted(4, MONS_KILLER_BEE,
-                                  3, MONS_SCORPION,
-                                  2, MONS_RIVER_RAT,
-                                  1, MONS_WASP,
-                                  1, MONS_VAMPIRE_MOSQUITO,
-                                  1, MONS_BUTTERFLY,
-                                  0);
-}
-
-// Creates a mixed swarm of typical swarming animals.
-// Number and duration depend on spell power.
-spret_type cast_summon_swarm(int pow, god_type god, bool fail)
-{
-    fail_check();
-    bool success = false;
-    const int dur = min(2 + (random2(pow) / 4), 6);
-    const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
-                                        2, 2, 6, 8);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-
-        monster_type mon = MONS_NO_MONSTER;
-
-        // If you worship a good god, don't summon an evil/unclean
-        // swarmer (in this case, the vampire mosquito).
-        const int MAX_TRIES = 100;
-        int tries = 0;
-        do
-        {
-            mon = pick_swarmer();
-        }
-        while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
-
-        // If a hundred tries wasn't enough, it's never going to work.
-        if (tries >= MAX_TRIES)
-            break;
-
-        if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY, &you,
-                          dur, SPELL_SUMMON_SWARM,
-                          you.pos(),
-                          MHITYOU,
-                          MG_AUTOFOE, god)))
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3389,7 +3332,6 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     // Rod specials
-    { SPELL_SUMMON_SWARM,              { 12, 2 } },
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };
 

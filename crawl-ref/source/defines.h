@@ -160,6 +160,9 @@ const int INSTANT_DEATH = -9999;
 const int MAX_WPN_ENCHANT = 9;
 const int MAX_SEC_ENCHANT = 2;
 
+// formula for MP from a potion of magic
+#define POT_MAGIC_MP (10 + random2avg(28, 3))
+
 const int MAX_KNOWN_SPELLS = 21;
 
 const int INVALID_ABSDEPTH = -1000;

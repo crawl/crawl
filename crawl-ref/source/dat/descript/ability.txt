@@ -256,10 +256,10 @@ the damage dealt.
 %%%%
 Enslave Soul ability
 
-Marks a living intelligent monster's soul as ripe for the taking. Once the
-marked monster dies, its soul will be yours. Only a relatively uninjured
-monster can have its soul marked, and the duration of the mark is dependent
-on Invocations skill.
+Marks a monster's soul as ripe for the taking. Intelligent living, demonic and
+holy monsters can be targeted, as long as they are relatively uninjured. The
+duration of the mark is dependent on Invocations skill. If the monster dies
+while still marked, its soul will become yours.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
@@ -796,3 +796,7 @@ Donate Gold ability
 
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
+%%%%
+Curse Item ability
+
+In exchange for a scroll of remove curse, Ashenzari will curse one of your items.

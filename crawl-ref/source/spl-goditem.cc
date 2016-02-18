@@ -488,7 +488,7 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
     else
     {
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::detect_items))
         {
             map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
@@ -648,7 +648,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
 bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
-    if (you_worship(GOD_ASHENZARI) && alreadyknown)
+    if (have_passive(passive_t::want_curses) && alreadyknown)
     {
         if (_selectively_remove_curse(pre_msg))
         {
@@ -694,6 +694,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     return success;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
@@ -749,6 +750,7 @@ bool curse_item(bool armour, const string &pre_msg)
 
     return _selectively_curse_item(armour, pre_msg);
 }
+#endif
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
@@ -779,6 +781,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         vector<coord_def> veto_spots(8);
         for (adjacent_iterator ai(where); ai; ++ai)
             veto_spots.push_back(*ai);
+        vector<coord_def> adj_spots = veto_spots;
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -798,6 +801,18 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 }
                 else
                     veto_spots.push_back(newpos);
+            }
+
+            // don't try to shove the orb of zot into lava and/or crash
+            if (igrd(*ai) != NON_ITEM)
+            {
+                coord_def newpos;
+                if (!get_push_space(*ai, newpos, nullptr, true, &adj_spots))
+                {
+                    success = false;
+                    none_vis = false;
+                    break;
+                }
             }
 
             // Make sure we have a legitimate tile.
@@ -832,6 +847,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, act, true);
+                ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
             }
         }
@@ -856,6 +872,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, nullptr, true);
+                if (zin) // zin should've checked for this earlier
+                    ASSERT(!newpos.origin());
+                else if (newpos.origin())  // tomb just skips the tile
+                    continue;
                 move_items(*ai, newpos);
             }
 
