@@ -416,7 +416,7 @@ static bool _two_handed()
     if (!wpn)
         return false;
 
-    hands_reqd_type wep_type = you.hands_reqd(*wpn);
+    hands_reqd_type wep_type = you.hands_reqd(*wpn, true);
     return wep_type == HANDS_TWO;
 }
 

@@ -1775,7 +1775,9 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
     item_def item;
     item.base_type = base_type;
     item.sub_type  = sub_type;
-    return ac->hands_reqd(item);
+    // This function is used for item generation only, so use the actor's
+    // (player's) base size, not its current form.
+    return ac->hands_reqd(item, true);
 }
 
 /**
