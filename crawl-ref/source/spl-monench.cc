@@ -20,17 +20,10 @@ int englaciate(coord_def where, int pow, actor *agent)
     if (!victim || victim == agent)
         return 0;
 
-    if (victim->is_player() && agent->wont_attack())
-        return 0;
+    if (agent->is_monster() && mons_aligned(agent, victim))
+        return 0; // don't let monsters hit friendlies
 
     monster* mons = victim->as_monster();
-    if (mons
-        && agent->is_monster()
-        && mons_atts_aligned(agent->as_monster()->attitude, mons->attitude))
-    {
-        return 0; // don't hit friendlies
-    }
-
 
     if (victim->res_cold() > 0
         || victim->is_stationary())
