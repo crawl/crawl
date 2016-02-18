@@ -83,6 +83,7 @@
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -458,6 +459,22 @@ static void _handle_recitation(int step)
     }
 }
 
+/**
+ * Try to respawn the player's ancestor, if possible.
+ */
+static void _try_to_respawn_ancestor()
+{
+     monster *ancestor = create_monster(hepliaklqana_ancestor_gen_data());
+     if (!ancestor)
+         return;
+
+    mprf("%s emerges from the mists of memory!",
+         ancestor->name(DESC_YOUR).c_str());
+    add_companion(ancestor);
+    check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
+                      ancestor); // ;)
+}
+
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -760,6 +777,13 @@ static void _decrement_durations()
 
     if (!env.sunlight.empty())
         process_sunlights();
+
+    if (!you.duration[DUR_ANCESTOR_DELAY]
+        && in_good_standing(GOD_HEPLIAKLQANA)
+        && hepliaklqana_ancestor() == MID_NOBODY)
+    {
+        _try_to_respawn_ancestor();
+    }
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)

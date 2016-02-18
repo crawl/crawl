@@ -1922,6 +1922,7 @@ enum duration_type
     DUR_DOOM_HOWL_IMMUNITY,
 #endif
     DUR_VERTIGO,
+    DUR_ANCESTOR_DELAY,
     NUM_DURATIONS
 };
 
