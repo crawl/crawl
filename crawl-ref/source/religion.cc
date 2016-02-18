@@ -456,7 +456,11 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },
-    }
+    },
+
+    // Hepliaklqana
+    { { 0, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)

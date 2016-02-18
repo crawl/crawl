@@ -776,3 +776,8 @@ overall increase is determined by the size of your donation.
 Curse Item ability
 
 In exchange for a scroll of remove curse, Ashenzari will curse one of your items.
+%%%%
+Recall Ancestor ability
+
+Recalls your ancestor from anywhere in the dungeon to your immediate
+surroundings.

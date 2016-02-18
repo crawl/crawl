@@ -31,6 +31,7 @@
 #include "exercise.h"
 #include "food.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -440,6 +441,10 @@ static const ability_def Ability_List[] =
         0, 0, 100, 2, abflag::NONE },
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
+    // Hepliaklqana
+    { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
+        2, 0, 50, 0, abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh", 0, 0, 0, 0, abflag::NONE },
@@ -770,6 +775,12 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_RECALL:
+        if (hepliaklqana_ancestor() == MID_NOBODY)
+            return ABIL_NON_ABILITY;
+        return ability;
+
     default:
         return ability;
     }
@@ -971,6 +982,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_HEPLIAKLQANA_RECALL:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_ELYVILON_LESSER_HEALING:
     case ABIL_LUGONU_ABYSS_EXIT:
@@ -3071,6 +3083,20 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // Allow extra time for the flash to linger.
         delay(1000);
 #endif
+        break;
+    }
+
+    case ABIL_HEPLIAKLQANA_RECALL:
+    {
+        const mid_t ancestor_mid = hepliaklqana_ancestor();
+        if (ancestor_mid == MID_NOBODY)
+        {
+            mpr("You have no ancestor to recall!");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+        try_recall(ancestor_mid);
         break;
     }
 

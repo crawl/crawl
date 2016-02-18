@@ -75,6 +75,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_QAZLAL_UPHEAVAL:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
     case ABIL_QAZLAL_DISASTER_AREA:
+    case ABIL_HEPLIAKLQANA_RECALL:
         return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
