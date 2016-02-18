@@ -281,7 +281,8 @@ public:
     item_def *missiles() const;
     item_def *shield() const override;
 
-    hands_reqd_type hands_reqd(const item_def &item) const override;
+    hands_reqd_type hands_reqd(const item_def &item,
+                               bool base = false) const override;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
