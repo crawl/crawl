@@ -234,6 +234,7 @@ KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
 KFEAT:  w = altar_pakellas
+KFEAT:  y = altar_hepliaklqana
 MAP
 ..u.d...
 .t.g.h..
@@ -241,7 +242,7 @@ MAP
 .w.o.p.v
 ..a.i.m.
 ...r.q.j
-....n.f.
+..y.n.f.
 .....b.e
 ENDMAP
 

@@ -121,9 +121,10 @@ KFEAT:  U = altar_ru
 KFEAT:  V = altar_pakellas
 KMONS:  X = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
+KFEAT:  Y = altar_hepliaklqana
 
 MAP
-.T....V....T.
+.T..Y.V....T.
 .A.B.C.D.E.F.
 M.N.OXP.Q.R.S
 .G.H.I.J.K.L.

@@ -265,6 +265,7 @@ KFEAT: G = altar_gozag
 KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
+KFEAT: H = altar_hepliaklqana
 KMONS: l = patrolling spatial vortex
 KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva
@@ -282,7 +283,7 @@ SUBST: x = c
 MAP
 xxxxxxxxxxx
 xE1ZxOToxCF
-xe..x..txyY
+xe..x.HtxyY
 xxx+x+xxx+x
 x..........
 #.f........
