@@ -326,11 +326,10 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     // Reset offset to default.
     mdisplay->set_offset(1 + title_height());
 
-#ifdef USE_TILE_LOCAL
-    // Title/more already accounted for in MenuRegion::maxpagesize
-    pagesize = max_pagesize;
-#else
     // Lose lines for the title + room for -more- line.
+#ifdef USE_TILE_LOCAL
+    pagesize = max_pagesize - title_height() - 1;
+#else
     pagesize = get_number_of_lines() - title_height() - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
