@@ -904,15 +904,16 @@ static int _disperse_monster(monster* mon, int pow)
     return 1;
 }
 
-spret_type cast_dispersal(int pow, bool fail)
+spret_type cast_dispersal(int pow, bool fail, const coord_def *loc)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
     if (!apply_monsters_around_square([pow] (monster* mon) {
             return _disperse_monster(mon, pow);
-        }, you.pos(), radius))
+        }, loc ? *loc : you.pos(), radius))
     {
-        mpr("The air shimmers briefly around you.");
+        mprf("The air shimmers briefly%s.",
+             !loc || *loc == you.pos() ? " around you" : "");
     }
     return SPRET_SUCCESS;
 }

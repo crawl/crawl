@@ -65,6 +65,7 @@
 #include "shout.h"
 #include "skill_menu.h"
 #include "spl-book.h"
+#include "spl-clouds.h" // big_cloud
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
@@ -6468,6 +6469,209 @@ bool pakellas_device_surge()
     }
 
     return true;
+}
+
+/**
+ * Initialize the list of on-ancestor-death effects available to the player,
+ * if we haven't done so already.
+ */
+void hepliaklqana_pick_death_types()
+{
+    if (you.props.exists(HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY))
+        return;
+
+    // assumes death effects are contiguous
+    static const int num_types = 1 + ABIL_HEPLIAKLQANA_LAST_DEATH
+                                   - ABIL_HEPLIAKLQANA_FIRST_DEATH;
+    static const int to_choose = 3;
+
+    // In Knuth's notation, suppose you have N elements and you want to choose
+    // n of them at random. The next element should be chosen with probability
+    // (n - m) / (N - t) where t is the number of elements visited so far,
+    // and m is the number of elements chosen so far.
+
+    CrawlVector &chosen = you.props[HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY].get_vector();
+    for (int t = 0; t < num_types; ++t)
+        if (x_chance_in_y(to_choose - chosen.size(), num_types - t))
+            chosen.push_back(ABIL_HEPLIAKLQANA_FIRST_DEATH + t);
+
+    ASSERT(chosen.size() == to_choose);
+}
+
+/// What's a short name for the given death type, for note-taking purposes?
+static string _death_name(int death_type)
+{
+    switch (death_type)
+    {
+        // XXX: almost all of these are really bad
+        case ABIL_HEPLIAKLQANA_DEATH_SLOW:     return "slow";
+        case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:  return "implosive";
+        case ABIL_HEPLIAKLQANA_DEATH_FOG:      return "foggy";
+        case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:  return "explosive";
+        case ABIL_HEPLIAKLQANA_DEATH_DISPERSE: return "dispersing";
+        default:                                return "buggy";
+    }
+}
+
+/**
+ * Permanently choose an on-death/on-swap effect for the player's companion,
+ * after prompting to make sure the player is certain.
+ *
+ * @param death_type        The on-death effect; should be an ability enum.
+ * @return                  Whether the player went through with the choice.
+ */
+bool hepliaklqana_choose_death_type(int death_type)
+{
+    static const map<int, const char *> effect_descriptions = {
+        { ABIL_HEPLIAKLQANA_DEATH_SLOW, "slow nearby enemies" },
+        { ABIL_HEPLIAKLQANA_DEATH_IMPLODE, "send enemies crashing inward" },
+        { ABIL_HEPLIAKLQANA_DEATH_FOG, "create a cloud of concealing fog" },
+        { ABIL_HEPLIAKLQANA_DEATH_EXPLODE, "explode violently" },
+        { ABIL_HEPLIAKLQANA_DEATH_DISPERSE, "disperse nearby enemies" },
+    };
+
+    const char *const *death_desc = map_find(effect_descriptions, death_type);
+    ASSERT(death_desc);
+    if (!yesno(make_stringf("Are you sure you want your ancestor to %s after "
+                            "transferring or dying?", *death_desc).c_str(),
+               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.props[HEPLIAKLQANA_ALLY_DEATH_KEY] = death_type;
+    you.props.erase(HEPLIAKLQANA_DEATH_POSSIBILTIES_KEY);
+    simple_god_message(" will remember this.");
+    take_note(Note(NOTE_ANCESTOR_DEATH, 0, 0, _death_name(death_type)));
+    return true;
+}
+
+/**
+ * Apply Slow to all monsters near the ancestor's last location.
+ *
+ * @param loc       The center of the slow.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+static void _on_deathswap_slow(const coord_def &loc, bool death)
+{
+    const int radius = death ? 3 : 1;
+    for (radius_iterator ri(loc, radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        if (mon && !mons_is_hepliaklqana_ancestor(mon->type))
+            do_slow_monster(mon, nullptr); // XXX: scale dur by hd delta?
+    }
+}
+
+/**
+ * Cast Gell's Gravitas at the ancestor's last location, sending enemies
+ * hurling toward it.
+ *
+ * @param loc       The center of the effect.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+static void _on_deathswap_implode(const coord_def &loc, bool death)
+{
+    // if the ancestor is alive, we must have transferred, so make the ancestor
+    // the caster so they're not affected
+    // if they're dead, make us the caster so we're not affected
+    actor* caster = hepliaklqana_ancestor_mon();
+    if (!caster)
+        caster = &you;
+    fatal_attraction(loc, caster, death ? 40 : 100);
+}
+
+/**
+ * Create a cloud of smoke around the ancestor's last location.
+ *
+ * @param loc       The center of the fog.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+static void _on_deathswap_fog(const coord_def &loc, bool death)
+{
+    mprf("As %s %s, fog sprays out.",
+         hepliaklqana_ally_name().c_str(),
+         death ? "is destroyed" : "swaps");
+    big_cloud(random_smoke_type(), &you, loc, 50,
+              death ? 9 + random2(9) : 6 + random2(6));
+}
+
+/**
+ * Explode, damaging non-ancestor monsters in a radius around the ancestor's
+ * last location.
+ *
+ * @param loc   The center of the explosion.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+static void _on_deathswap_explode(const coord_def &loc, bool death)
+{
+    bolt beam;
+    beam.name         = "all-erasing light";
+    beam.ex_size      = death ? 2 : 1;
+    beam.flavour      = BEAM_HEPLIAKLQANA_EXPLOSION;
+    beam.real_flavour = beam.flavour;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour       = RED;
+    beam.source_id    = hepliaklqana_ancestor();
+    beam.thrower      = KILL_MON;
+    beam.aux_source.clear();
+    beam.obvious_effect = false;
+    beam.pierce       = false;
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.hit          = 30; // needed?
+    const int base_dam = 10 + you.get_experience_level();
+    beam.damage       = calc_dice(4, death ? base_dam * 2 : base_dam);
+    beam.target = loc;
+
+    beam.refine_for_explosion();
+    beam.explode(false, true);
+
+    viewwindow();
+}
+
+
+/**
+ * Cast Dispersal at the ancestor's last location, blinking and teleporting
+ * enemies away.
+ *
+ * @param loc       The center of the effect.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+static void _on_deathswap_disperse(const coord_def &loc, bool death)
+{
+    mprf("As %s %s, translocational energy flares.",
+         hepliaklqana_ally_name().c_str(),
+         death ? "is destroyed" : "swaps");
+    cast_dispersal(death ? 100 : 30, false, &loc);
+}
+
+typedef void (*deathswap_effect)(const coord_def&, bool);
+static const map<int, deathswap_effect> on_deathswap = {
+    { ABIL_HEPLIAKLQANA_DEATH_SLOW,       _on_deathswap_slow },
+    { ABIL_HEPLIAKLQANA_DEATH_IMPLODE,    _on_deathswap_implode },
+    { ABIL_HEPLIAKLQANA_DEATH_FOG,        _on_deathswap_fog },
+    { ABIL_HEPLIAKLQANA_DEATH_EXPLODE,    _on_deathswap_explode },
+    { ABIL_HEPLIAKLQANA_DEATH_DISPERSE,   _on_deathswap_disperse },
+};
+
+/**
+ * Activate the on-death/on-swap effect for a hepliaklqana ally.
+ *
+ * @param loc       Where the effect should occur.
+ * @param death     Whether the ancestor actually died, or just swapped.
+ */
+void hepliaklqana_on_deathswap(const coord_def &loc, bool death)
+{
+    // haven't chosen an effect
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
+        return;
+
+    const int effect_type = you.props[HEPLIAKLQANA_ALLY_DEATH_KEY];
+    const deathswap_effect* effect_func = map_find(on_deathswap, effect_type);
+    ASSERT(effect_func);
+    (*effect_func)(loc, death);
 }
 
 /**

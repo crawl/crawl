@@ -2745,6 +2745,15 @@ static void _gain_piety_point()
 
             you.one_time_ability_used.set(you.religion);
         }
+        if (you_worship(GOD_HEPLIAKLQANA))
+        {
+            if (rank == 6 && !you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
+            {
+                hepliaklqana_pick_death_types();
+                god_speaks(you.religion,
+                           "You may now remember your ancestor's death.");
+            }
+        }
     }
 
     // Every piety level change also affects AC.

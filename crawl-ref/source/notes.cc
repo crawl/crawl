@@ -108,7 +108,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_FOCUS_CARD)
+        || note.type == NOTE_FOCUS_CARD
+        || note.type == NOTE_ANCESTOR_DEATH)
     {
         return true;
     }
@@ -361,6 +362,11 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_FOCUS_CARD:
             result << "Drew Focus: " << name << " increased to " << first << ", "
                    << desc << " decreased to " << second;
+            break;
+        case NOTE_ANCESTOR_DEATH:
+            result << "Remembered your ancestor "
+                   << apostrophise(hepliaklqana_ally_name())
+                   << " " << name << " death";
             break;
         default:
             result << "Buggy note description: unknown note type";

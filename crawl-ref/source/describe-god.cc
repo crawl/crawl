@@ -366,6 +366,41 @@ static string _describe_branch_bribability()
 }
 
 /**
+ * What death effect has been chosen, if any?
+ *
+ * @return      A description of the chosen death effect, or "".
+ *              E.g. "When your ancestor is destroyed or swaps with you,
+ *              fog will spray from its prior location."
+ */
+static string _describe_hep_death_effect()
+{
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_DEATH_KEY))
+        return "";
+
+    const string prf = "When your ancestor is destroyed or swaps with you, ";
+
+    const int death_type = you.props[HEPLIAKLQANA_ALLY_DEATH_KEY].get_int();
+    switch (death_type)
+    {
+        case ABIL_HEPLIAKLQANA_DEATH_SLOW:
+            return prf + "creatures near its last location will be slowed.";
+        case ABIL_HEPLIAKLQANA_DEATH_IMPLODE:
+            return prf + "creatures near its last location will be sucked in,"
+                         " potentially harming them.";
+        case ABIL_HEPLIAKLQANA_DEATH_FOG:
+            return prf + "concealing fog will spray from its last location.";
+        case ABIL_HEPLIAKLQANA_DEATH_EXPLODE:
+            return prf + "there will be an explosion at its last location, "
+                         "harming everything nearby but it and you.";
+        case ABIL_HEPLIAKLQANA_DEATH_DISPERSE:
+            return prf + "creatures near its last location will be dispersed,"
+                         " either teleporting or blinking them away.";
+        default:
+            return prf + "something buggy will happen.";
+    }
+}
+
+/**
  * Print a guide to cycling between description screens, and check if the
  * player does so.
  *
@@ -559,6 +594,11 @@ static string _get_god_misc_info(god_type which_god)
         case GOD_PAKELLAS:
             return "The power of Pakellas' abilities is governed by "
                    "Evocations skill instead of Invocations.";
+
+        case GOD_HEPLIAKLQANA:
+            if (in_good_standing(which_god, 1))
+                return _describe_hep_death_effect();
+            return "";
 
         default:
             return "";
