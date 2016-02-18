@@ -444,6 +444,8 @@ static const ability_def Ability_List[] =
     // Hepliaklqana
     { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
         2, 0, 50, 0, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_ROMANTICIZE, "Romanticize",
+        2, 0, 50, 3, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
@@ -776,6 +778,7 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
     case ABIL_HEPLIAKLQANA_RECALL:
         if (hepliaklqana_ancestor() == MID_NOBODY)
             return ABIL_NON_ABILITY;
@@ -1017,6 +1020,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -3085,6 +3089,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 #endif
         break;
     }
+
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
+        return hepliaklqana_romanticize(fail);
 
     case ABIL_HEPLIAKLQANA_RECALL:
     {

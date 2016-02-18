@@ -417,6 +417,7 @@ enum ability_type
 
     // Hepliaklqana
     ABIL_HEPLIAKLQANA_RECALL = 1240,
+    ABIL_HEPLIAKLQANA_ROMANTICIZE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

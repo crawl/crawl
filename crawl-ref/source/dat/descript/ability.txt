@@ -781,3 +781,11 @@ Recall Ancestor ability
 
 Recalls your ancestor from anywhere in the dungeon to your immediate
 surroundings.
+%%%%
+Romanticize ability
+
+Restores your ancestor to an idyllic vision of their past self, forgetting
+the wounds and ailments that harm them and coating them in a sparkling,
+short-lived protective sheen. The quality of the healing & duration of the
+protection granted are both improved by the Invocations skill.
+%%%%

@@ -159,4 +159,6 @@ bool ru_apocalypse();
 bool pakellas_check_quick_charge(bool quiet);
 int pakellas_effective_hex_power(int pow);
 bool pakellas_device_surge();
+
+spret_type hepliaklqana_romanticize(bool fail);
 #endif
