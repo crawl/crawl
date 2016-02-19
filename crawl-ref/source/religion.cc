@@ -1866,7 +1866,7 @@ void upgrade_hepliaklqana_ancestor()
     // so give them out as appropriate
     if (ancestor->shield())
         upgrade_hepliaklqana_shield(*ancestor, *ancestor->shield());
-    else
+    else if (!companion_is_elsewhere(ancestor->mid)) // buggy... FIXME
         give_shield(ancestor);
 
     const armour_type shld = _hepliaklqana_shield_type(ancestor->type, hd);
@@ -1960,6 +1960,8 @@ void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item)
     ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
     if (ancestor.type == MONS_ANCESTOR)
         return; // bare-handed!
+    if (companion_is_elsewhere(ancestor.mid))
+        return; // buggy... FIXME
 
     item.base_type = OBJ_WEAPONS;
     item.sub_type = _hepliaklqana_weapon_type(ancestor.type,
@@ -2006,6 +2008,8 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
                                                               HD);
     if (shield_type == NUM_ARMOURS)
         return; // no shield yet!
+    if (companion_is_elsewhere(ancestor.mid))
+        return; // buggy... FIXME
 
     item.base_type = OBJ_ARMOUR;
     item.sub_type = shield_type;
