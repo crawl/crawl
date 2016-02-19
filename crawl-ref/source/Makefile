@@ -1013,17 +1013,27 @@ endif
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; this is the case on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
-NC_LIB = ncurses
-NC_INCLUDE = $(NC_PREFIX)/include/ncurses
+  ifndef NO_PKGCONFIG
+    NC_LIBS = $(shell $(PKGCONFIG) --libs ncurses 2>/dev/null || echo "-L$(NC_PREFIX)/lib -lncurses")
+    NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncurses 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncurses")
+  else
+    NC_LIBS = -L$(NC_PREFIX)/lib -lncurses
+    NC_CFLAGS = -isystem $(NC_PREFIX)/include/ncurses
+  endif
 else
-NC_LIB = ncursesw
-NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
+  ifndef NO_PKGCONFIG
+    NC_LIBS = $(shell $(PKGCONFIG) --libs ncursesw || echo "-L$(NC_PREFIX)/lib -lncursesw")
+    NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncursesw 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncursesw")
+  else
+    NC_LIBS = -L$(NC_PREFIX)/lib -lncursesw
+    NC_CFLAGS = -isystem $(NC_PREFIX)/include/ncursesw
+  endif
 endif
 
-INCLUDES_L += -isystem $(NC_INCLUDE)
+CFOTHERS_L += $(NC_CFLAGS)
 
 ifndef TILES
-LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
+LIBS += $(NC_LIBS)
 endif
 
 endif
