@@ -605,7 +605,7 @@ endif
 #
 
 ifndef NO_PKGCONFIG
-ifeq ($(shell which pkg-config 2> /dev/null),)
+ifeq ($(shell which $(PKGCONFIG) 2> /dev/null),)
 NO_PKGCONFIG = YesPlease
 endif
 endif
