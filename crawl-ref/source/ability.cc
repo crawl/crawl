@@ -806,14 +806,6 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
-    // only available while your ancestor is alive.
-    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
-    case ABIL_HEPLIAKLQANA_RECALL:
-    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
-        if (hepliaklqana_ancestor() == MID_NOBODY)
-            return ABIL_NON_ABILITY;
-        return ability;
-
     default:
         return ability;
     }
@@ -1621,6 +1613,18 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return pakellas_check_quick_charge(quiet);
+
+        // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
+    case ABIL_HEPLIAKLQANA_RECALL:
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+        if (hepliaklqana_ancestor() == MID_NOBODY)
+        {
+            if (!quiet)
+                mpr("Your ancestor is still trapped in memory!");
+            return false;
+        }
+        return true;
 
     default:
         return true;
@@ -3159,29 +3163,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         return hepliaklqana_romanticize(fail);
 
     case ABIL_HEPLIAKLQANA_RECALL:
-    {
-        const mid_t ancestor_mid = hepliaklqana_ancestor();
-        if (ancestor_mid == MID_NOBODY)
-        {
-            mpr("You have no ancestor to recall!");
-            return SPRET_ABORT;
-        }
-
         fail_check();
-        try_recall(ancestor_mid);
+        try_recall(hepliaklqana_ancestor());
         break;
-    }
 
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
     {
-        const mid_t ancestor_mid = hepliaklqana_ancestor();
-        if (ancestor_mid == MID_NOBODY)
-        {
-            mpr("You have no ancestor to swap with!");
-            return SPRET_ABORT;
-        }
-
-        monster *ancestor = monster_by_mid(ancestor_mid);
+        // XXX: move into _check_ability_possible()?
+        monster *ancestor = hepliaklqana_ancestor_mon();
         if (!ancestor || !you.can_see(*ancestor))
         {
             mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
