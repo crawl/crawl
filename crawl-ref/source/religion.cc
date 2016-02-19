@@ -1874,7 +1874,7 @@ void upgrade_hepliaklqana_ancestor()
         _regain_item_memory(*ancestor, OBJ_ARMOUR, shld);
 
     // XXX: deduplicate me!
-    if (hd == 14 && ancestor->type == MONS_ANCESTOR_KNIGHT)
+    if (hd == 13 && ancestor->type == MONS_ANCESTOR_KNIGHT)
     {
         mprf("%s remembers %s %s reflectiveness.",
              ancestor->name(DESC_YOUR, true).c_str(),
@@ -2009,7 +2009,7 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
 
     item.base_type = OBJ_ARMOUR;
     item.sub_type = shield_type;
-    item.brand = HD < 14 ? SPARM_NORMAL : SPARM_REFLECTION;
+    item.brand = HD < 13 ? SPARM_NORMAL : SPARM_REFLECTION;
     item.plus = 0;
     item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
     item.quantity = 1;
