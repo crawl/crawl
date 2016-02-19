@@ -6771,7 +6771,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
                                                  ancestor_choice);
     ASSERT(ancestor_type);
     if (!yesno(make_stringf("Are you sure you want to remember your ancestor "
-                            "as a %s?",
+                            "as %s?",
                             mons_type_name(*ancestor_type,
                                            DESC_A).c_str()).c_str(),
                false, 'n'))
