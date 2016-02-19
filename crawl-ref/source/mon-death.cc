@@ -2738,13 +2738,6 @@ void monster_cleanup(monster* mons)
     if (mons_is_tentacle_head(mons_base_type(mons)))
         destroy_tentacles(mons);
 
-    // make sure we don't end up with an invalid hep ancestor
-    if (hepliaklqana_ancestor() == mons->mid)
-    {
-        remove_companion(mons);
-        you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
-    }
-
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();

@@ -5681,8 +5681,7 @@ bool monster::do_shaft()
 
     // Tentacles & player ghosts are immune to shafting
     if (mons_is_tentacle_or_tentacle_segment(type)
-        || type == MONS_PLAYER_GHOST
-        || mons_is_hepliaklqana_ancestor(type)) // XXX: hack
+        || type == MONS_PLAYER_GHOST)
     {
         return false;
     }
