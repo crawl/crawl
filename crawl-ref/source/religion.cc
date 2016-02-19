@@ -1938,8 +1938,8 @@ void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item,
     item.base_type = OBJ_WEAPONS;
     item.sub_type = _hepliaklqana_weapon_type(ancestor);
     item.brand = _hepliaklqana_weapon_brand(ancestor);
-    item.plus = ancestor.get_experience_level() / 2;
-    item.flags |= ISFLAG_IDENT_MASK | ISFLAG_SUMMONED;
+    item.plus = 0;
+    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
 
     if (!notify)
         return;
@@ -2005,8 +2005,8 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item,
     item.base_type = OBJ_ARMOUR;
     item.sub_type = shield_type;
     item.brand = HD < 14 ? SPARM_NORMAL : SPARM_REFLECTION;
-    item.plus = ancestor.get_experience_level() / 3;
-    item.flags |= ISFLAG_IDENT_MASK | ISFLAG_SUMMONED;
+    item.plus = 0;
+    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
     item.quantity = 1;
 
     if (!notify)
