@@ -1014,21 +1014,17 @@ endif
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; this is the case on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
-  ifndef NO_PKGCONFIG
-    NC_LIBS = $(shell $(PKGCONFIG) --libs ncurses 2>/dev/null || echo "-L$(NC_PREFIX)/lib -lncurses")
-    NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncurses 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncurses")
-  else
-    NC_LIBS = -L$(NC_PREFIX)/lib -lncurses
-    NC_CFLAGS = -isystem $(NC_PREFIX)/include/ncurses
-  endif
+  NCURSESLIB = ncurses
 else
-  ifndef NO_PKGCONFIG
-    NC_LIBS = $(shell $(PKGCONFIG) --libs ncursesw || echo "-L$(NC_PREFIX)/lib -lncursesw")
-    NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncursesw 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncursesw")
-  else
-    NC_LIBS = -L$(NC_PREFIX)/lib -lncursesw
-    NC_CFLAGS = -isystem $(NC_PREFIX)/include/ncursesw
-  endif
+  NCURSESLIB = ncursesw
+endif
+
+ifndef NO_PKGCONFIG
+  NC_LIBS = $(shell $(PKGCONFIG) --libs $(NCURSESLIB) 2>/dev/null || echo "-L$(NC_PREFIX)/lib -l$(NCURSESLIB)")
+  NC_CFLAGS = $(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/$(NCURSESLIB)")
+else
+  NC_LIBS = -L$(NC_PREFIX)/lib -l$(NCURSESLIB)
+  NC_CFLAGS = -isystem $(NC_PREFIX)/include/$(NCURSESLIB)
 endif
 
 CFOTHERS_L += $(NC_CFLAGS)
