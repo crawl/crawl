@@ -3164,7 +3164,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HEPLIAKLQANA_RECALL:
         fail_check();
-        try_recall(hepliaklqana_ancestor());
+        if (try_recall(hepliaklqana_ancestor()))
+            upgrade_hepliaklqana_ancestor(true);
         break;
 
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:

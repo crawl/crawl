@@ -1815,8 +1815,11 @@ static void _regain_item_memory(const monster &ancestor,
  * Update the ancestor's stats after the player levels up. Upgrade HD and HP,
  * and give appropriate messaging for that and any other notable upgrades
  * (spells, resists, etc).
+ *
+ * @param quiet_force     Whether to squash messages & force upgrades,
+ *                        even if the HD is unchanged.
  */
-void upgrade_hepliaklqana_ancestor()
+void upgrade_hepliaklqana_ancestor(bool quiet_force)
 {
     monster* ancestor = hepliaklqana_ancestor_mon();
     if (!ancestor || !ancestor->alive())
@@ -1825,7 +1828,7 @@ void upgrade_hepliaklqana_ancestor()
     const int old_hd = ancestor->get_experience_level();
     const int hd = _hepliaklqana_ally_hd();
     ancestor->set_hit_dice(hd);
-    if (old_hd == hd)
+    if (old_hd == hd && !quiet_force)
         return; // assume nothing changes except at different HD
 
     const int old_mhp = ancestor->max_hit_points;
@@ -1834,24 +1837,36 @@ void upgrade_hepliaklqana_ancestor()
         div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
                        old_mhp);
 
-    mprf("%s remembers more of %s old skill.",
-         ancestor->name(DESC_YOUR, true).c_str(),
-         ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+    if (!quiet_force)
+    {
+        mprf("%s remembers more of %s old skill.",
+             ancestor->name(DESC_YOUR, true).c_str(),
+             ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+    }
 
-    set_ancestor_spells(*ancestor, true);
+    set_ancestor_spells(*ancestor, !quiet_force);
+
+    const bool ancestor_offlevel = companion_is_elsewhere(ancestor->mid);
+    if (ancestor_offlevel)
+        add_daction(DACT_UPGRADE_ANCESTOR);
 
     // assumption: ancestors can lose weapons (very rarely - tukima's),
     // and it's weird for them to just reappear, so only upgrade existing ones
     if (ancestor->weapon())
     {
-        upgrade_hepliaklqana_weapon(*ancestor, *ancestor->weapon());
+        if (!ancestor_offlevel)
+            upgrade_hepliaklqana_weapon(*ancestor, *ancestor->weapon());
 
         const weapon_type wpn = _hepliaklqana_weapon_type(ancestor->type, hd);
-        if (wpn != _hepliaklqana_weapon_type(ancestor->type, old_hd))
+        if (wpn != _hepliaklqana_weapon_type(ancestor->type, old_hd)
+            && !quiet_force)
+        {
             _regain_item_memory(*ancestor, OBJ_WEAPONS, wpn);
+        }
 
         const brand_type brand = _hepliaklqana_weapon_brand(ancestor->type, hd);
-        if (brand != _hepliaklqana_weapon_brand(ancestor->type, old_hd))
+        if (brand != _hepliaklqana_weapon_brand(ancestor->type, old_hd)
+            && !quiet_force)
         {
             mprf("%s remembers %s %s %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
@@ -1864,17 +1879,23 @@ void upgrade_hepliaklqana_ancestor()
     }
     // but shields can't be lost, and *can* be gained (knight at hd 5)
     // so give them out as appropriate
-    if (ancestor->shield())
-        upgrade_hepliaklqana_shield(*ancestor, *ancestor->shield());
-    else if (!companion_is_elsewhere(ancestor->mid)) // buggy... FIXME
-        give_shield(ancestor);
+    if (!ancestor_offlevel)
+    {
+        if (ancestor->shield())
+            upgrade_hepliaklqana_shield(*ancestor, *ancestor->shield());
+        else
+            give_shield(ancestor);
+    }
 
     const armour_type shld = _hepliaklqana_shield_type(ancestor->type, hd);
-    if (shld != _hepliaklqana_shield_type(ancestor->type, old_hd))
+    if (shld != _hepliaklqana_shield_type(ancestor->type, old_hd)
+        && !quiet_force)
+    {
         _regain_item_memory(*ancestor, OBJ_ARMOUR, shld);
+    }
 
     // XXX: deduplicate me!
-    if (hd == 13 && ancestor->type == MONS_ANCESTOR_KNIGHT)
+    if (hd == 13 && ancestor->type == MONS_ANCESTOR_KNIGHT && !quiet_force)
     {
         mprf("%s remembers %s %s reflectiveness.",
              ancestor->name(DESC_YOUR, true).c_str(),
@@ -1882,20 +1903,22 @@ void upgrade_hepliaklqana_ancestor()
              apostrophise(item_base_name(OBJ_ARMOUR, shld)).c_str());
     }
 
-    const int HD = ancestor->get_experience_level();
+    if (quiet_force)
+        return;
+
     // not a big fan of this hardcoding
     // consider using _hepliaklqana_ancestor_resists
-    if (HD == 11)
+    if (hd == 11)
         _regain_memory(*ancestor, "gloves of protection from fire");
-    if (HD == 12)
+    if (hd == 12)
         _regain_memory(*ancestor, "cloak of protection from cold");
     // also hardcoded....
-    if (HD == 15)
+    if (hd == 15)
         _regain_memory(*ancestor, "ring of see invisible");
     // if innate relec comes back, those are clearly boots...
 
     // spiny
-    if (HD == 16 && ancestor->type == MONS_ANCESTOR_KNIGHT)
+    if (hd == 16 && ancestor->type == MONS_ANCESTOR_KNIGHT)
         _regain_memory(*ancestor, "spiked armour");
 }
 
@@ -1960,8 +1983,6 @@ void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item)
     ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
     if (ancestor.type == MONS_ANCESTOR)
         return; // bare-handed!
-    if (companion_is_elsewhere(ancestor.mid))
-        return; // buggy... FIXME
 
     item.base_type = OBJ_WEAPONS;
     item.sub_type = _hepliaklqana_weapon_type(ancestor.type,
@@ -2008,8 +2029,6 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
                                                               HD);
     if (shield_type == NUM_ARMOURS)
         return; // no shield yet!
-    if (companion_is_elsewhere(ancestor.mid))
-        return; // buggy... FIXME
 
     item.base_type = OBJ_ARMOUR;
     item.sub_type = shield_type;

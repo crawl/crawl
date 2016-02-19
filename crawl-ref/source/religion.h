@@ -124,7 +124,7 @@ bool is_follower(const monster* mon);
 
 mgen_data hepliaklqana_ancestor_gen_data();
 string hepliaklqana_ally_name();
-void upgrade_hepliaklqana_ancestor();
+void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
 void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item);
 void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item);
 

@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "godcompanions.h" // hepliaklqana_ancestor
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -68,6 +69,7 @@ static const char *daction_names[] =
     "Makhleb's servants go hostile",
     "make all monsters hate you",
     "ancestor vanishes",
+    "upgrade ancestor",
 };
 #endif
 
@@ -98,6 +100,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         // the moment you converted to Fedhas.
         return mons_is_plant(mon);
     case DACT_ALLY_HEPLIAKLQANA:
+    case DACT_UPGRADE_ANCESTOR:
         return mon->wont_attack() && mons_is_god_gift(mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
@@ -226,6 +229,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_HEPLIAKLQANA:
             simple_monster_message(mon, " returns to the mists of memory.");
             monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            break;
+
+        case DACT_UPGRADE_ANCESTOR:
+            upgrade_hepliaklqana_ancestor(true);
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
@@ -379,6 +386,10 @@ static void _apply_daction(daction_type act)
         }
         break;
     }
+    case DACT_UPGRADE_ANCESTOR:
+        if (!companion_is_elsewhere(hepliaklqana_ancestor()))
+            upgrade_hepliaklqana_ancestor(true);
+        break;
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
