@@ -1020,16 +1020,19 @@ void did_hurt_conduct(conduct_type thing_done,
                       const monster &victim,
                       int damage_done)
 {
-    // If you do any damage, you get some piety.
-    int piety_gain = 1;
+    // Currently only used by Ukayaw; initially planned to use god conduct
+    // logic more heavily, but the god seems to need something different.
 
-    // Get up to significantly more piety based on the percentage of the
-    // victim's max hp you took away.
-    piety_gain += 500 * damage_done / victim.max_hit_points / 100;
-    did_god_conduct(thing_done, piety_gain, true, &victim);
+    // Give a "value" for the percent of the monster's hp done in damage,
+    // scaled by the monster's threat level.
+    int value = random2(3) + sqr((mons_threat_level(&victim) + 1) * 2) * damage_done /
+                (victim.max_hit_points);
 
-    // Set this to avoid piety loss this turn.
-    you.props[UKAYAW_DID_CONDUCT_THIS_TURN] = true;
+    you.props[UKAYAW_NUM_MONSTERS_HURT] =
+        you.props[UKAYAW_NUM_MONSTERS_HURT].get_int() += 1;
+    you.props[UKAYAW_MONSTER_HURT_VALUE] =
+        you.props[UKAYAW_MONSTER_HURT_VALUE].get_int() += value;
+
 }
 
 /**

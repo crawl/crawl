@@ -25,6 +25,7 @@
 #include "exercise.h"
 #include "fineff.h"
 #include "food.h"
+#include "godabil.h" // for UKAYAW_DID_DANCE_ACTION
 #include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::convert_orcs
@@ -1758,6 +1759,8 @@ void melee_attack::player_exercise_combat_skills()
     // Slow down the practice of low-damage weapons.
     if (x_chance_in_y(damage, 20))
         practise(EX_WILL_HIT, wpn_skill);
+
+    you.props[UKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /*
