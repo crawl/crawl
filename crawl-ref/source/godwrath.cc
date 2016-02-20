@@ -1323,7 +1323,7 @@ static void _jiyva_slimify()
         }
     }
 
-    if (success)
+    if (!success)
         return;
 
     simple_god_message(make_stringf("'s putrescence saturates %s!",
