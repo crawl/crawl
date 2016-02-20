@@ -2456,7 +2456,7 @@ static void _give_gold(monster* mon, int level)
     _give_monster_item(mon, it);
 }
 
-void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number, bool spectral_orcs)
 {
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
