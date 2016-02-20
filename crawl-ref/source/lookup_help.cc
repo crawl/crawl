@@ -416,16 +416,12 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
-    if (!ends_with(key, " ability"))
+
+    if (!strip_suffix(key, "ability"))
         return true;
-    key.erase(key.length() - 8);
 
-    if (string_matches_ability_name(key))
-        return false;
-
-    return true;
+    return !string_matches_ability_name(key);
 }
-
 
 
 static void _recap_mon_keys(vector<string> &keys)
@@ -461,13 +457,11 @@ static void _recap_spell_keys(vector<string> &keys)
  */
 static void _recap_ability_keys(vector<string> &keys)
 {
-    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    for (auto &key : keys)
     {
-        // first, strip " ability"
-        const string key_name = keys[i].substr(0, keys[i].length() - 8);
-        // then get the real name
-        keys[i] = make_stringf("%s ability",
-                               ability_name(ability_by_name(key_name)));
+        strip_suffix(key, "ability");
+        // get the real name
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
     }
 }
 
