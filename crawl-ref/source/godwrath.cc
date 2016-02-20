@@ -1830,31 +1830,25 @@ static bool _pakellas_retribution()
     return true;
 }
 
+static bool _choose_hostile_monster(const monster* mon)
+{
+    return mon->attitude == ATT_HOSTILE;
+}
+
+
 static bool _ukayaw_retribution()
 {
     const god_type god = GOD_UKAYAW;
 
     // check if we have monsters around
     monster* mon = nullptr;
-
-    const int max_tries = 10;
-    bool success = false;
-    for (int i = 0; i < max_tries; i++)
-    {
-        mon = choose_random_nearby_monster(0);
-
-        if (mon && mon->attitude == ATT_HOSTILE)
-        {
-            success = true;
-            break;
-        }
-    }
+    mon = choose_random_nearby_monster(0, _choose_hostile_monster);
 
     switch (random2(5))
     {
     case 0:
     case 1:
-        if (success && mon->can_go_berserk())
+        if (mon && mon->can_go_berserk())
         {
             simple_god_message(make_stringf(" drives %s into a dance frenzy!",
                                      mon->name(DESC_THE).c_str()).c_str(), god);
@@ -1865,7 +1859,7 @@ static bool _ukayaw_retribution()
 
     case 2:
     case 3:
-        if (success)
+        if (mon)
         {
             simple_god_message(" booms out, \"Time for someone else to take a solo\"",
                                     god);
