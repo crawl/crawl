@@ -110,7 +110,8 @@ public:
                                bool calc_unid = true,
                                vector<item_def> *matches = nullptr) const = 0;
 
-    virtual hands_reqd_type hands_reqd(const item_def &item) const;
+    virtual hands_reqd_type hands_reqd(const item_def &item,
+                                       bool base = false) const;
 
             bool can_wield(const item_def* item,
                            bool ignore_curse = false,

@@ -454,6 +454,23 @@ static void _recap_spell_keys(vector<string> &keys)
     }
 }
 
+/**
+ * Fixup ability names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of ability names.
+ */
+static void _recap_ability_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " ability"
+        const string key_name = keys[i].substr(0, keys[i].length() - 8);
+        // then get the real name
+        keys[i] = make_stringf("%s ability",
+                               ability_name(ability_by_name(key_name)));
+    }
+}
+
 static void _recap_feat_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
@@ -1252,7 +1269,7 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
                lookup_type::SUPPORT_TILES),
-    LookupType('A', "ability", nullptr, _ability_filter,
+    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),

@@ -61,9 +61,9 @@ bool actor::stand_on_solid_ground() const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type actor::hands_reqd(const item_def &item) const
+hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {
-    return basic_hands_reqd(item, body_size());
+    return basic_hands_reqd(item, body_size(PSIZE_TORSO, base));
 }
 
 /**

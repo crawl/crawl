@@ -85,7 +85,7 @@ static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool _write_dump(const string &fname, dump_params &,
+static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
 struct dump_section_handler
@@ -96,15 +96,17 @@ struct dump_section_handler
 
 struct dump_params
 {
-    string &text;
+    string text;
     string section;
     bool full_id;
     const scorefile_entry *se;
 
-    dump_params(string &_text, const string &sec = "",
-                bool id = false, const scorefile_entry *s = nullptr)
-        : text(_text), section(sec), full_id(id), se(s)
+    dump_params(const string &sec = "", bool id = false,
+                const scorefile_entry *s = nullptr)
+        : section(sec), full_id(id), se(s)
     {
+        // Start with enough room for 100 80 character lines.
+        text.reserve(100 * 80);
     }
 };
 
@@ -160,14 +162,10 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const string &fname, bool quiet, bool full_id,
-               const scorefile_entry *se)
+static dump_params _get_dump(bool full_id = false,
+                             const scorefile_entry *se = nullptr)
 {
-    // Start with enough room for 100 80 character lines.
-    string text;
-    text.reserve(100 * 80);
-
-    dump_params par(text, "", full_id, se);
+    dump_params par("", full_id, se);
 
     for (const string &section : Options.dump_order)
     {
@@ -175,7 +173,14 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
         dump_section(par);
     }
 
-    return _write_dump(fname, par, quiet);
+    // Hopefully we get RVO so we don't have to copy the text.
+    return par;
+}
+
+bool dump_char(const string &fname, bool quiet, bool full_id,
+               const scorefile_entry *se)
+{
+    return _write_dump(fname, _get_dump(full_id, se), quiet);
 }
 
 static void _sdump_header(dump_params &par)
@@ -1325,7 +1330,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const string &fname, dump_params &par, bool quiet)
+static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 {
     bool succeeded = false;
 
@@ -1397,6 +1402,17 @@ void display_notes()
                                         string("| ") + parts[j]));
         }
     }
+    scr.show();
+    redraw_screen();
+}
+
+void display_char_dump()
+{
+    formatted_scroller scr;
+    scr.set_flags(MF_ALWAYS_SHOW_MORE);
+    scr.add_raw_text(_get_dump().text);
+    scr.set_more();
+    scr.set_tag("dump");
     scr.show();
     redraw_screen();
 }

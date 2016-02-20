@@ -486,11 +486,11 @@ item_def *monster::melee_weapon() const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type monster::hands_reqd(const item_def &item) const
+hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
 {
     if (mons_genus(type) == MONS_FORMICID)
         return HANDS_ONE;
-    return actor::hands_reqd(item);
+    return actor::hands_reqd(item, base);
 }
 
 bool monster::can_wield(const item_def& item, bool ignore_curse,

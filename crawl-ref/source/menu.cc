@@ -326,11 +326,10 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
     // Reset offset to default.
     mdisplay->set_offset(1 + title_height());
 
-#ifdef USE_TILE_LOCAL
-    // Title/more already accounted for in MenuRegion::maxpagesize
-    pagesize = max_pagesize;
-#else
     // Lose lines for the title + room for -more- line.
+#ifdef USE_TILE_LOCAL
+    pagesize = max_pagesize - title_height() - 1;
+#else
     pagesize = get_number_of_lines() - title_height() - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
@@ -1850,6 +1849,31 @@ void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
     formatted_string::parse_string_to_multiple(s, parts, wrap_col);
     for (const formatted_string &part : parts)
         add_item_formatted_string(part);
+
+    if (new_line)
+        add_item_formatted_string(formatted_string::parse_string("\n"));
+}
+
+void formatted_scroller::add_raw_text(const string& s, bool new_line,
+                                      int wrap_col)
+{
+    vector<formatted_string> parts;
+
+    vector<string> lines = split_string("\n", s, false, true);
+    if (wrap_col > 0)
+    {
+        vector<string> pre_split = move(lines);
+        for (string &line : pre_split)
+        {
+            if (line.empty())
+                lines.emplace_back(" ");
+            while (!line.empty())
+                lines.push_back(wordwrap_line(line, wrap_col, true, true));
+        }
+    }
+
+    for (const string &line : lines)
+        add_item_formatted_string(formatted_string(line));
 
     if (new_line)
         add_item_formatted_string(formatted_string::parse_string("\n"));

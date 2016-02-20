@@ -46,6 +46,7 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
+#    NO_TRY_GOLD   -- if set don't try to detect a working gold linker
 #    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
@@ -605,7 +606,7 @@ endif
 #
 
 ifndef NO_PKGCONFIG
-ifeq ($(shell which pkg-config 2> /dev/null),)
+ifeq ($(shell which $(PKGCONFIG) 2> /dev/null),)
 NO_PKGCONFIG = YesPlease
 endif
 endif
@@ -1013,17 +1014,23 @@ endif
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; this is the case on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
-NC_LIB = ncurses
-NC_INCLUDE = $(NC_PREFIX)/include/ncurses
+  NCURSESLIB = ncurses
 else
-NC_LIB = ncursesw
-NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
+  NCURSESLIB = ncursesw
 endif
 
-INCLUDES_L += -isystem $(NC_INCLUDE)
+NC_LIBS := -L$(NC_PREFIX)/lib -l$(NCURSESLIB)
+NC_CFLAGS := -isystem $(NC_PREFIX)/include/$(NCURSESLIB)
+
+ifndef NO_PKGCONFIG
+  NC_LIBS := $(shell $(PKGCONFIG) --libs $(NCURSESLIB) 2>/dev/null || echo "$(NC_LIBS)")
+  NC_CFLAGS := $(subst -I,-isystem ,$(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "$(NC_CFLAGS)"))
+endif
+
+CFOTHERS_L += $(NC_CFLAGS)
 
 ifndef TILES
-LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
+LIBS += $(NC_LIBS)
 endif
 
 endif
@@ -1048,8 +1055,10 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
+ifndef NO_TRY_GOLD
 ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=gold 2>&1))
   LDFLAGS += -fuse-ld=gold
+endif
 endif
 
 LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
