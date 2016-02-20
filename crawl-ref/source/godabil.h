@@ -172,5 +172,5 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 void hepliaklqana_pick_death_types();
 bool hepliaklqana_choose_death_type(int death_type);
 void hepliaklqana_on_deathswap(const coord_def &loc, bool death);
-spret_type hepliaklqana_romanticize(bool fail);
+spret_type hepliaklqana_romanticise(bool fail);
 #endif

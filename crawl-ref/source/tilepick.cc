@@ -5522,8 +5522,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Hepliaklqana
     case ABIL_HEPLIAKLQANA_RECALL:
         return TILEG_ABILITY_HEP_RECALL;
-    case ABIL_HEPLIAKLQANA_ROMANTICIZE:
-        return TILEG_ABILITY_HEP_ROMANTICIZE;
+    case ABIL_HEPLIAKLQANA_ROMANTICISE:
+        return TILEG_ABILITY_HEP_ROMANTICISE;
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
         return TILEG_ABILITY_HEP_TRANSFERENCE;
 
