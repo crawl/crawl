@@ -1830,6 +1830,58 @@ static bool _pakellas_retribution()
     return true;
 }
 
+static bool _ukayaw_retribution()
+{
+    const god_type god = GOD_UKAYAW;
+
+    // check if we have monsters around
+    monster* mon = nullptr;
+
+    const int max_tries = 10;
+    bool success = false;
+    for (int i = 0; i < max_tries; i++)
+    {
+        mon = choose_random_nearby_monster(0);
+
+        if (mon && mon->attitude == ATT_HOSTILE)
+        {
+            success = true;
+            break;
+        }
+    }
+
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+        if (success && mon->can_go_berserk())
+        {
+            simple_god_message(make_stringf(" drives %s into a dance frenzy!",
+                                     mon->name(DESC_THE).c_str()).c_str(), god);
+            mon->go_berserk(true);
+            return true;
+        }
+        // else we intentionally fall through
+
+    case 2:
+    case 3:
+        if (success)
+        {
+            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+                                    god);
+            paralyse_player(_god_wrath_name(god));
+            return false;
+        }
+        // else we intentionally fall through
+
+    case 5:
+        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        noisy(35, you.pos());
+        break;
+    }
+    return true;
+}
+
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -1874,11 +1926,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_PAKELLAS:      do_more = _pakellas_retribution(); break;
+    case GOD_UKAYAW:        do_more = _ukayaw_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:
     case GOD_RU:
-    case GOD_UKAYAW:
     case GOD_HEPLIAKLQANA:
         // No reduction with time.
         return false;
