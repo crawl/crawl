@@ -848,18 +848,15 @@ static void _describe_god_powers(god_type which_god)
         string buf = power.gain;
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
+        const int desc_len = buf.size();
 
-        const string abil_cost = "(" + make_cost_description(power.abil) + ")";
+        string abil_cost = "(" + make_cost_description(power.abil) + ")";
+        if (abil_cost == "(None)")
+            abil_cost = "";
 
-        if (abil_cost != "(None)")
-        {
-            // XXX: Handle the display better when the description and cost
-            // are too long for the screen.
-            buf = chop_string(buf, get_number_of_cols() - 1 - strwidth(abil_cost));
-            buf += abil_cost;
-        }
-
-        cprintf("%s\n", buf.c_str());
+        cprintf("%s%*s%s\n", buf.c_str(),
+                min(80, get_number_of_cols()) - 1 - desc_len - abil_cost.size(),
+                "", abil_cost.c_str());
         textcolour(god_colour(which_god));
     }
 
