@@ -541,7 +541,7 @@ static const duration_def duration_data[] =
         { "Your device surge is dissipating.", 1 }}},
     { DUR_DOOM_HOWL,
       RED, "Howl",
-      "doom howling", "howl",
+      "doom-hounded", "howl",
       "A terrible howling echoes in your mind.", D_DISPELLABLE,
       {{ "The infernal howling subsides.", []() {
           you.props.erase(NEXT_DOOM_HOUND_KEY);
