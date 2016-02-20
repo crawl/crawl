@@ -1579,7 +1579,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         give_item(mon, place.absdepth(), summoned, false, mg.props.exists("mercenary items"));
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_weapon(mon, place.absdepth(), summoned);
+            give_weapon(mon, place.absdepth());
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(MB_FALSE);
