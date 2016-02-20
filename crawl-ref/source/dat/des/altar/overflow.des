@@ -71,6 +71,64 @@ function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
     dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false, false)
   end
 end
+
+function species_mock(e)
+  if you.race() == "Centaur" then
+    e.kmons("1 = orb spider")
+  elseif you.race() == "Demigod" then
+    e.kmons("1 = titan simulacrum")
+  elseif you.race() == "Demonspawn" then
+    e.kmons("1 = hell beast")
+  elseif you.race() == "Draconian" then
+    e.kmons("1 = death drake")
+  elseif you.race() == "Deep Dwarf" then
+    e.kmons("1 = dwarf zombie")
+  elseif you.race() == "Deep Elf" then
+    e.kmons("1 = insubstantial wisp")
+  elseif you.race() == "Halfling" then
+    e.kmons("1 = hobgoblin")
+  elseif you.race() == "High Elf" then
+    e.kmons("1 = giant orange brain")
+  elseif you.race() == "Hill Orc" then
+    e.kmons("1 = goblin")
+  elseif you.race() == "Human" then
+    e.kmons("1 = killer klown")
+  elseif you.race() == "Felid" then
+    e.kmons("1 = sphinx zombie")
+  elseif you.race() == "Formicid" then
+    e.kmons("1 = soldier ant")
+  elseif you.race() == "Gargoyle" then
+    e.kmons("1 = dancing weapon ; mundane mace")
+  elseif you.race() == "Ghoul" then
+    e.kmons("1 = death ooze")
+  elseif you.race() == "Kobold" then
+    e.kmons("1 = boggart")
+  elseif you.race() == "Merfolk" then
+    e.kmons("1 = giant frog")
+  elseif you.race() == "Minotaur" then
+    e.kmons("1 = death yak")
+  elseif you.race() == "Mummy" then
+    e.kmons("1 = human zombie")
+  elseif you.race() == "Naga" then
+    e.kmons("1 = torpor snail")
+  elseif you.race() == "Octopode" then
+    e.kmons("1 = tentacled monstrosity")
+  elseif you.race() == "Ogre" then
+    e.kmons("1 = ettin simulacrum")
+  elseif you.race() == "Spriggan" then
+    e.kmons("1 = unseen horror")
+  elseif you.race() == "Tengu" then
+    e.kmons("1 = caustic shrike")
+  elseif you.race() == "Troll" then
+    e.kmons("1 = hungry ghost")
+  elseif you.race() == "Vampire" then
+    e.kmons("1 = giant leech")
+  elseif you.race() == "Vine Stalker" then
+    e.kmons("1 = thorn hunter")
+  else
+    e.kmons("1 = spectral ugly thing")
+  end
+end
 }}
 
 default-depth: D, Depths
@@ -3844,4 +3902,34 @@ MAP
  xxG...G...Gxx
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
+ENDMAP
+
+# Xom seems to not think much of Hepliaklqana's ancestral focus,
+# and mocks the species roots of incoming pilgrims.
+# This will probably go over most players' heads, but it's neat anyway -- PF
+NAME:    regret_index_temple_of_mockery
+TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
+DEPTH:   D:2-9
+KFEAT:   A = altar_xom
+KFEAT:   B = altar_hepliaklqana
+SHUFFLE: AB
+SUBST:   G = G...
+KPROP:   1'" = no_tele_into
+KMASK:   1'" = no_item_gen
+KMASK:   '" = no_monster_gen
+MARKER:  " = lua:fog_machine { cloud_type = "thin mist", \
+pow_min = 100, pow_max = 100, delay = 1, \
+size = 1, walk_dist = 0, start_clouds = 1 }
+: species_mock(_G)
+MAP
+ccccc
+ccb'bccccc
+cb"n1bc.+.
+c'nnnnc.c.
+cb1nA...cc
+ccbn.G.bc
+ccc..Bcc
+c...bcc
+c+cccc
+c..c
 ENDMAP
