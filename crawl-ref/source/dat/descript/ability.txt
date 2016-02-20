@@ -863,6 +863,7 @@ Whenever your ancestor returns to the realms of memory, an echo of their death
 will explode outward, harming everyone nearby who does not share your blood.
 This will occur when your ancestor is destroyed and when they merely pass
 through memory during transference, though the latter will have a weaker effect.
+ Invocations skill will improve this effect.
 
 This choice is permanent and cannot be undone.
 %%%%
@@ -873,6 +874,7 @@ Whenever your ancestor returns to the realms of memory, an echo of their death
 will reach out and disperse nearby enemies, blinking or teleporting them away.
 This will occur when your ancestor is destroyed and when they merely pass
 through memory during transference, though the latter will have a weaker effect.
+ Invocations skill will improve this effect.
 
 This choice is permanent and cannot be undone.
 %%%%
@@ -883,6 +885,7 @@ Whenever your ancestor returns to the realms of memory, an echo of their death
 will reach out and grasp any creature nearby that does not share your blood,
 hurling them toward your ancestor's last location. This will occur when your
 ancestor is destroyed and when they merely pass through memory during
-transference, though the latter will have a weaker effect.
+transference, though the latter will have a weaker effect. Invocations skill
+will improve this effect.
 
 This choice is permanent and cannot be undone.

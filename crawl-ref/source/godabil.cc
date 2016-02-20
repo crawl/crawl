@@ -6916,7 +6916,8 @@ static void _on_deathswap_implode(const coord_def &loc, bool death)
     actor* caster = hepliaklqana_ancestor_mon();
     if (!caster)
         caster = &you;
-    fatal_attraction(loc, caster, death ? 40 : 100);
+    const int base_pow = min(100, you.skill(SK_INVOCATIONS, 2) + 50);
+    fatal_attraction(loc, caster, death ? base_pow*2 : base_pow);
 }
 
 /**
@@ -6958,7 +6959,7 @@ static void _on_deathswap_explode(const coord_def &loc, bool death)
     beam.is_tracer    = false;
     beam.is_explosion = true;
     beam.hit          = 30; // needed?
-    const int base_dam = 10 + you.get_experience_level();
+    const int base_dam = 16 + you.skill(SK_INVOCATIONS, 2);
     beam.damage       = calc_dice(4, death ? base_dam * 2 : base_dam);
     beam.target = loc;
 
@@ -6981,7 +6982,8 @@ static void _on_deathswap_disperse(const coord_def &loc, bool death)
     mprf("As %s %s, translocational energy flares.",
          hepliaklqana_ally_name().c_str(),
          death ? "is destroyed" : "swaps");
-    cast_dispersal(death ? 100 : 30, false, &loc);
+    const int base_pow = 10 + div_rand_round(you.skill(SK_INVOCATIONS), 2);
+    cast_dispersal(death ? base_pow * 3 : base_pow, false, &loc);
 }
 
 typedef void (*deathswap_effect)(const coord_def&, bool);
