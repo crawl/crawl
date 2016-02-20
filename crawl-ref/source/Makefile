@@ -1019,12 +1019,12 @@ else
   NCURSESLIB = ncursesw
 endif
 
+NC_LIBS := -L$(NC_PREFIX)/lib -l$(NCURSESLIB)
+NC_CFLAGS := -isystem $(NC_PREFIX)/include/$(NCURSESLIB)
+
 ifndef NO_PKGCONFIG
-  NC_LIBS = $(shell $(PKGCONFIG) --libs $(NCURSESLIB) 2>/dev/null || echo "-L$(NC_PREFIX)/lib -l$(NCURSESLIB)")
-  NC_CFLAGS = $(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/$(NCURSESLIB)")
-else
-  NC_LIBS = -L$(NC_PREFIX)/lib -l$(NCURSESLIB)
-  NC_CFLAGS = -isystem $(NC_PREFIX)/include/$(NCURSESLIB)
+  NC_LIBS := $(shell $(PKGCONFIG) --libs $(NCURSESLIB) 2>/dev/null || echo "$(NC_LIBS)")
+  NC_CFLAGS := $(subst -I,-isystem ,$(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "$(NC_CFLAGS)"))
 endif
 
 CFOTHERS_L += $(NC_CFLAGS)
