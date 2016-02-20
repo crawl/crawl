@@ -528,6 +528,15 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
+    case '#':
+        // If the game has begun, show dump.
+        if (crawl_state.need_save)
+        {
+            display_char_dump();
+            return -1;
+        }
+        break;
+
     case '/':
         keyhelp_query_descriptions();
         return -1;
@@ -624,6 +633,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "<w>?</w>: List of commands\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
+            "<w>#</w>: Browse character dump\n"
             "<w>~</w>: Macros help\n"
             "<w>&</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
