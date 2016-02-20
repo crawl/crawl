@@ -1854,6 +1854,31 @@ void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
         add_item_formatted_string(formatted_string::parse_string("\n"));
 }
 
+void formatted_scroller::add_raw_text(const string& s, bool new_line,
+                                      int wrap_col)
+{
+    vector<formatted_string> parts;
+
+    vector<string> lines = split_string("\n", s, false, true);
+    if (wrap_col > 0)
+    {
+        vector<string> pre_split = move(lines);
+        for (string &line : pre_split)
+        {
+            if (line.empty())
+                lines.emplace_back(" ");
+            while (!line.empty())
+                lines.push_back(wordwrap_line(line, wrap_col, true, true));
+        }
+    }
+
+    for (const string &line : lines)
+        add_item_formatted_string(formatted_string(line));
+
+    if (new_line)
+        add_item_formatted_string(formatted_string::parse_string("\n"));
+}
+
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
                                                    int hotkey)
 {
