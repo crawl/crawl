@@ -371,9 +371,8 @@ static bool _monster_filter(string key, string body)
 
 static bool _spell_filter(string key, string body)
 {
-    if (!ends_with(key, " spell"))
+    if (!strip_suffix(key, "spell"))
         return true;
-    key.erase(key.length() - 6);
 
     spell_type spell = spell_by_name(key);
 
@@ -401,9 +400,8 @@ static bool _card_filter(string key, string body)
     lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (!ends_with(key, " card"))
+    if (!strip_suffix(key, "card"))
         return true;
-    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
@@ -885,10 +883,8 @@ MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
 string LookupType::key_to_menu_str(const string &key) const
 {
     string str = uppercase_first(key);
-
-    if (ends_with(str, suffix())) // perhaps we should assert this?
-        str.erase(str.length() - suffix().length());
-
+    // perhaps we should assert this?
+    strip_suffix(str, suffix());
     return str;
 }
 
@@ -926,8 +922,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.body << desc << extra_info;
 
     string title = key;
-    if (ends_with(title, suffix))
-        title.erase(title.length() - suffix.length());
+    strip_suffix(title, suffix);
     title = uppercase_first(title);
     linebreak_string(footer, width - 1);
 
