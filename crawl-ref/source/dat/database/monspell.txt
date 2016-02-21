@@ -323,6 +323,10 @@ Volley of Thorns cast
 Hunting Cry cast
 
 @The_monster@ howls a hunting cry!
+%%%%
+Slug Dart cast
+
+@The_monster@ launches a dart @at@ @target@.
 ########################################################################
 # Unique monsters
 ########################################################################

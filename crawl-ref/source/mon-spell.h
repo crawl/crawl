@@ -2069,4 +2069,10 @@ static const mon_spellbook mspell_list[] =
        { SPELL_REPEL_MISSILES, 12, MON_SPELL_WIZARD },
       }
     },
+
+    { MST_DART_SLUG,
+      {
+        { SPELL_SLUG_DART, 40, MON_SPELL_NATURAL },
+      }
+    },
 };

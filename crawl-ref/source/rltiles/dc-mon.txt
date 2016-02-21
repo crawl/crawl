@@ -163,6 +163,7 @@ swamp_worm_water MONS_SWAMP_WORM_WATER
 %sdir mon/animals
 worm MONS_WORM
 giant_leech MONS_GIANT_LEECH
+dart_slug MONS_DART_SLUG
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
 %rim 1

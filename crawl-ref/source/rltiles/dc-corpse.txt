@@ -91,6 +91,7 @@ worm CORPSE_WORM
 giant_leech CORPSE_GIANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
 elephant_slug CORPSE_ELEPHANT_SLUG
+dart_slug CORPSE_DART_SLUG
 
 ## Flying Insects ('y')
 killer_bee CORPSE_KILLER_BEE

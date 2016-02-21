@@ -1397,4 +1397,21 @@ static const zap_info zap_data[] =
     0 // Noise comes from explosion
 },
 
+{
+    ZAP_SLUG_DART,
+    "slug dart",
+    25,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 4, 1, 25>,
+    new tohit_calculator<14, 1, 35>,
+    CYAN, // match slug's own colour
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    true,
+    false,
+    false,
+    1
+},
 };

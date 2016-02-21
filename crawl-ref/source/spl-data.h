@@ -3707,6 +3707,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SLUG_DART, "Slug Dart",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    1,
+    25,
+    LOS_RADIUS, LOS_RADIUS,
+    1, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

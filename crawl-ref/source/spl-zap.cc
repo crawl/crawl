@@ -61,6 +61,9 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_CORROSIVE_BOLT, ZAP_CORROSIVE_BOLT },
     { SPELL_DEBUGGING_RAY, ZAP_DEBUGGING_RAY },
 
+    // monster-specific
+    { SPELL_SLUG_DART, ZAP_SLUG_DART },
+
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
     { SPELL_QUICKSILVER_BOLT, ZAP_BREATHE_POWER },
