@@ -2804,23 +2804,19 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ASHENZARI_CURSE:
     {
         fail_check();
-        auto iter = find_if(
-                            begin(you.inv),
-                            end(you.inv),
-                            [] (const item_def &it)
-                            {
-                                return it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-                            }
-                           );
+        auto iter = find_if(begin(you.inv), end(you.inv),
+                [] (const item_def &it) -> bool
+                {
+                    return it.defined()
+                           && it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE)
+                           && check_warning_inscriptions(it, OPER_DESTROY);
+                });
         if (iter != end(you.inv))
         {
-            if (ashenzari_curse_item())
+            if (ashenzari_curse_item(iter->quantity))
                 dec_inv_item_quantity(iter - begin(you.inv), 1);
             else
-            {
-                canned_msg(MSG_OK);
                 return SPRET_ABORT;
-            }
         }
         else
         {
