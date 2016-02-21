@@ -333,8 +333,8 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
-int zap_ench_power(zap_type z_type, int pow);
-void zappy(zap_type z_type, int power, bolt &pbolt);
+int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
