@@ -3087,16 +3087,16 @@ ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
 ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
-SHUFFLE: Ad / Be / Cf
+SHUFFLE: AdB"C` / A'BeC` / A'B"Cf
 MAP
      xxxxx
     xx.B.xx
-  xxxG.e.Gxxx
+  xxxG.".Gxxx
  xxGxx...xxGxx
  x...xx.xx...x
- xAd.......fCx
+ xAd.......`Cx
  x...x.U.x...x
- xxGxx...xxGxx
+ xGxx...xxGxx
   xxx  @  xxx
 ENDMAP
 
@@ -3250,14 +3250,15 @@ DEPTH:   D:6-9
 TAGS:    temple_overflow_3 temple_overflow_sif_muna
 TAGS:    temple_overflow_kikubaaqudgha temple_overflow_vehumet
 TAGS:    no_item_gen no_monster_gen patrolling
-# 3/5 chance for one altar to have a low-level randbook and four extra orc wizards.
-KMONS:   xyz~ = orc wizard
+# 3/5 chance for one altar to have a low-level randbook and extra orc wizards.
+KMONS:   xyzXYZ = orc wizard
+KMONS:   ~ = orc wizard / nothing
 KFEAT:   xX = altar_sif_muna
 KFEAT:   yY = altar_kikubaaqudgha
 KFEAT:   zZ = altar_vehumet
-KITEM:   X = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:3
-KITEM:   Y = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:3
-KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:3
+KITEM:   X = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
+KITEM:   Y = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1
+KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
 SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~
 SUBST:   '"` = .
 MAP
