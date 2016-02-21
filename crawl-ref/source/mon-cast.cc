@@ -542,6 +542,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_AGONY:
     case SPELL_BANISHMENT:
     case SPELL_ENSLAVEMENT:
+    case SPELL_SLUG_DART:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 

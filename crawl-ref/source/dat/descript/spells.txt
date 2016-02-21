@@ -1140,6 +1140,10 @@ Slow spell
 
 Slows the actions of a creature.
 %%%%
+Slug Dart spell
+
+Fires a sharp dart of hardened chitin.
+%%%%
 Smiting spell
 
 <Smiting ability>
