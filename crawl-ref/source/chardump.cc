@@ -1480,7 +1480,7 @@ void display_char_dump()
 {
     formatted_scroller scr;
     scr.set_flags(MF_ALWAYS_SHOW_MORE);
-    scr.add_raw_text(_get_dump().text);
+    scr.add_raw_text(_get_dump().text, false, get_number_of_cols());
     scr.set_more();
     scr.set_tag("dump");
     scr.show();
