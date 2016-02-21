@@ -57,6 +57,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "random.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -1810,6 +1811,31 @@ static void _regain_item_memory(const monster &ancestor,
     _regain_memory(ancestor, item_base_name(base_type, sub_type));
 }
 
+struct hepliaklqana_unlock
+{
+    string description;
+    string key;
+};
+
+/**
+ * Array of unlocks for Hepliaklqana ancestors. If you add anything to this list,
+ * existing games will need you.props[key] set to an int from 0-28.
+ */
+static const hepliaklqana_unlock hepliaklqana_unlocks[] =
+{
+    {
+        "ring of resist fire",
+        HEPLIAKLQANA_RESIST_FIRE_KEY,
+    },
+    {
+        "ring of resist cold",
+        HEPLIAKLQANA_RESIST_COLD_KEY,
+    },
+    {
+        "hat of see invisible",
+        HEPLIAKLQANA_SINV_KEY,
+    },
+};
 /**
  * Update the ancestor's stats after the player levels up. Upgrade HD and HP,
  * and give appropriate messaging for that and any other notable upgrades
@@ -1905,16 +1931,9 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
     if (quiet_force)
         return;
 
-    // not a big fan of this hardcoding
-    // consider using _hepliaklqana_ancestor_resists
-    if (hd == 11)
-        _regain_memory(*ancestor, "gloves of protection from fire");
-    if (hd == 12)
-        _regain_memory(*ancestor, "cloak of protection from cold");
-    // also hardcoded....
-    if (hd == 15)
-        _regain_memory(*ancestor, "ring of see invisible");
-    // if innate relec comes back, those are clearly boots...
+    for (const auto &unlock : hepliaklqana_unlocks)
+        if (you.props[unlock.key].get_int() == hd)
+            _regain_memory(*ancestor, unlock.description.c_str());
 
     // spiny
     if (hd == 16 && ancestor->type == MONS_ANCESTOR_KNIGHT)
@@ -3985,6 +4004,16 @@ static void _join_hepliaklqana()
         you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(female);
         you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = female ? GENDER_FEMALE
                                                          : GENDER_MALE;
+    }
+    int hepliaklqana_unlock_hds[] = { 11, 12, 15 };
+    shuffle_array(hepliaklqana_unlock_hds);
+    COMPILE_CHECK(ARRAYSZ(hepliaklqana_unlocks) == ARRAYSZ(hepliaklqana_unlock_hds));
+    for (int i=0; i<ARRAYSZ(hepliaklqana_unlocks); i++)
+    {
+        hepliaklqana_unlock unlock = hepliaklqana_unlocks[i];
+        int hd = hepliaklqana_unlock_hds[i];
+        you.props[unlock.key] = hd;
+        dprf("Set the unlock time for %s to %d", unlock.description.c_str(), hd);
     }
 
     // Complimentary ancestor upon joining.

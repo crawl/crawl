@@ -47,6 +47,10 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define UKAYAW_MONSTER_HURT_VALUE "ukayaw_monster_hurt_value"
 #define UKAYAW_AUT_SINCE_PIETY_GAIN "ukayaw_aut_since_piety_gain"
 
+#define HEPLIAKLQANA_RESIST_FIRE_KEY "hepliaklqana_resist_fire"
+#define HEPLIAKLQANA_RESIST_COLD_KEY "hepliaklqana_resist_cold"
+#define HEPLIAKLQANA_SINV_KEY "hepliaklqana_sinv"
+
 struct bolt;
 class stack_iterator;
 

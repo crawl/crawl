@@ -31,6 +31,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -356,9 +357,9 @@ static resists_t _beast_facet_resists(beast_facet facet)
 static resists_t _hepliaklqana_ancestor_resists(int HD)
 {
     resists_t resists = MR_NO_FLAGS;
-    if (HD >= 11)
+    if (HD >= you.props[HEPLIAKLQANA_RESIST_FIRE_KEY].get_int())
         resists |= MR_RES_FIRE;
-    if (HD >= 12)
+    if (HD >= you.props[HEPLIAKLQANA_RESIST_COLD_KEY].get_int())
         resists |= MR_RES_COLD;
     return resists;
 }

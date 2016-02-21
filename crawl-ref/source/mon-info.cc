@@ -19,6 +19,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "godabil.h"
 #include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1658,8 +1659,9 @@ bool monster_info::can_see_invisible() const
             if (facet.get_int() == BF_WEIRD)
                 return true;
 
-    if (mons_is_hepliaklqana_ancestor(type))
-        return hd >= 15;
+    if (mons_is_hepliaklqana_ancestor(type)
+        && hd >= you.props[HEPLIAKLQANA_SINV_KEY].get_int())
+        return true;
 
     return mons_class_flag(type, M_SEE_INVIS)
            || mons_is_demonspawn(type)
