@@ -232,7 +232,8 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_UPGRADE_ANCESTOR:
-            upgrade_hepliaklqana_ancestor(true);
+            if (!in_transit)
+                upgrade_hepliaklqana_ancestor(true);
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
