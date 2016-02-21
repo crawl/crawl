@@ -1737,7 +1737,7 @@ static bool _sticky_flame_can_hit(const actor *act)
         const monster* mons = act->as_monster();
         bolt testbeam;
         testbeam.thrower = KILL_YOU;
-        zappy(ZAP_BREATHE_STICKY_FLAME, 100, testbeam);
+        zappy(ZAP_BREATHE_STICKY_FLAME, 100, false, testbeam);
 
         return !testbeam.ignores_monster(mons);
     }
@@ -2606,8 +2606,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(ZAP_BANISHMENT, pow), false,
-                                  nullptr);
+                                  zap_ench_power(ZAP_BANISHMENT, pow, false),
+                                  false, nullptr);
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
 

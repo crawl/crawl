@@ -60,6 +60,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-zap.h" // spell_to_zap
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -496,31 +497,43 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
 
-    // FIXME: this should use the zap_data[] struct from beam.cc!
+    // FIXME: more of these should use the zap_data[] struct from beam.cc!
     switch (real_spell)
     {
+    case SPELL_ORB_OF_ELECTRICITY:
+        beam.foe_ratio      = random_range(40, 55); // ...
+        // fallthrough to other zaps
     case SPELL_MAGIC_DART:
-        beam.colour   = LIGHTMAGENTA;
-        beam.name     = "magic dart";
-        beam.damage   = dice_def(3, 4 + (power / 100));
-        beam.hit      = AUTOMATIC_HIT;
-        beam.flavour  = BEAM_MMISSILE;
-        break;
-
     case SPELL_THROW_FLAME:
-        beam.colour   = RED;
-        beam.name     = "puff of flame";
-        beam.damage   = dice_def(3, 5 + (power / 40));
-        beam.hit      = 25 + power / 40;
-        beam.flavour  = BEAM_FIRE;
+    case SPELL_THROW_FROST:
+    case SPELL_FLAME_TONGUE:
+    case SPELL_VENOM_BOLT:
+    case SPELL_POISON_ARROW:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_BOLT_OF_COLD:
+    case SPELL_THROW_ICICLE:
+    case SPELL_BOLT_OF_INACCURACY:
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_FIREBALL:
+    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+    case SPELL_BOLT_OF_DRAINING:
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+    case SPELL_STICKY_FLAME:
+    case SPELL_STICKY_FLAME_SPLASH:
+    case SPELL_STICKY_FLAME_RANGE:
+    case SPELL_STING:
+    case SPELL_IRON_SHOT:
+    case SPELL_STONE_ARROW:
+    case SPELL_FORCE_LANCE:
+    case SPELL_EXPLOSIVE_BOLT:
+    case SPELL_CORROSIVE_BOLT:
+        zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
-    case SPELL_THROW_FROST:
-        beam.colour   = WHITE;
-        beam.name     = "puff of frost";
-        beam.damage   = dice_def(3, 5 + (power / 40));
-        beam.hit      = 25 + power / 40;
-        beam.flavour  = BEAM_COLD;
+    case SPELL_DAZZLING_SPRAY: // special-cased because of a spl-zap hack...
+        zappy(ZAP_DAZZLING_SPRAY, power, true, beam);
         break;
 
     case SPELL_SANDBLAST:
@@ -582,77 +595,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MALMUTATE;
         break;
 
-    case SPELL_FLAME_TONGUE:
-        beam.name     = "flame tongue";
-        beam.damage   = dice_def(3, 3 + power / 12);
-        beam.colour   = RED;
-        beam.flavour  = BEAM_FIRE;
-        beam.hit      = 7 + power / 6;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_VENOM_BOLT:
-        beam.name     = "bolt of poison";
-        beam.damage   = dice_def(3, 6 + power / 13);
-        beam.colour   = LIGHTGREEN;
-        beam.flavour  = BEAM_POISON;
-        beam.hit      = 19 + power / 20;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_POISON_ARROW:
-        beam.name     = "poison arrow";
-        beam.damage   = dice_def(3, 7 + power / 12);
-        beam.colour   = LIGHTGREEN;
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.flavour  = BEAM_POISON_ARROW;
-        beam.hit      = 20 + power / 25;
-        break;
-
-    case SPELL_BOLT_OF_MAGMA:
-        beam.name     = "bolt of magma";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = RED;
-        beam.flavour  = BEAM_LAVA;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_BOLT_OF_FIRE:
-        beam.name     = "bolt of fire";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = RED;
-        beam.flavour  = BEAM_FIRE;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_THROW_ICICLE:
-        beam.name     = "shard of ice";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = WHITE;
-        beam.flavour  = BEAM_ICE;
-        beam.hit      = 17 + power / 25;
-        break;
-
-    case SPELL_BOLT_OF_COLD:
-        beam.name     = "bolt of cold";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = WHITE;
-        beam.flavour  = BEAM_COLD;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_BOLT_OF_INACCURACY:
-        beam.name     = "narrow beam of energy";
-        beam.damage   = calc_dice(12, 40 + 3 * power / 2);
-        beam.colour   = YELLOW;
-        beam.flavour  = BEAM_ENERGY;
-        beam.hit      = 1;
-        beam.pierce   = true;
-        break;
-
     case SPELL_PRIMAL_WAVE:
         beam.name     = "great wave of water";
         // Water attack is weaker than the pure elemental damage
@@ -675,15 +617,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_SHOCK:
-        beam.name     = "zap";
-        beam.damage   = dice_def(1, 8 + (power / 20));
-        beam.colour   = LIGHTCYAN;
-        beam.flavour  = BEAM_ELECTRICITY;
-        beam.hit      = 17 + power / 20;
-        beam.pierce   = true;
-        break;
-
     case SPELL_BLINKBOLT:
         beam.name     = "living lightning";
         beam.damage   = dice_def(2, 10 + power / 17);
@@ -693,27 +626,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_LIGHTNING_BOLT:
-        beam.name     = "bolt of lightning";
-        beam.damage   = dice_def(3, 10 + power / 17);
-        beam.colour   = LIGHTCYAN;
-        beam.flavour  = BEAM_ELECTRICITY;
-        beam.hit      = 16 + power / 40;
-        beam.pierce   = true;
-        break;
-
     case SPELL_INVISIBILITY:
     case SPELL_INVISIBILITY_OTHER:
         beam.flavour  = BEAM_INVISIBILITY;
-        break;
-
-    case SPELL_FIREBALL:
-        beam.colour   = RED;
-        beam.name     = "fireball";
-        beam.damage   = dice_def(3, 7 + power / 10);
-        beam.hit      = 40;
-        beam.flavour  = BEAM_FIRE;
-        beam.is_explosion = true;
         break;
 
     case SPELL_FIRE_STORM:
@@ -750,45 +665,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_TELEPORT;
         break;
 
-    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
-        beam.name     = "crystal spear";
-        beam.damage   = dice_def(3, 16 + power / 10);
-        beam.colour   = WHITE;
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.flavour  = BEAM_MMISSILE;
-        beam.hit      = 22 + power / 20;
-        break;
-
     case SPELL_DIG:
         beam.flavour  = BEAM_DIGGING;
         beam.pierce   = true;
-        break;
-
-    case SPELL_BOLT_OF_DRAINING:      // negative energy
-        beam.name     = "bolt of negative energy";
-        beam.damage   = dice_def(3, 9 + power / 13);
-        beam.colour   = DARKGREY;
-        beam.flavour  = BEAM_NEG;
-        beam.hit      = 16 + power / 35;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_ISKENDERUNS_MYSTIC_BLAST: // mystic blast
-        beam.colour     = LIGHTMAGENTA;
-        beam.name       = "orb of energy";
-        beam.short_name = "energy";
-        beam.damage     = dice_def(3, 7 + (power / 14));
-        beam.hit        = 20 + (power / 20);
-        beam.flavour    = BEAM_MMISSILE;
-        break;
-
-    case SPELL_DAZZLING_SPRAY:
-        beam.colour     = LIGHTMAGENTA;
-        beam.name       = "spray of energy";
-        beam.short_name = "energy";
-        beam.damage     = dice_def(3, 5 + (power / 17));
-        beam.hit        = 16 + (power / 22);
-        beam.flavour    = BEAM_MMISSILE;
         break;
 
     case SPELL_STEAM_BALL:
@@ -806,19 +685,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
-        break;
-
-    case SPELL_STICKY_FLAME:
-        beam.hit = AUTOMATIC_HIT;
-    case SPELL_STICKY_FLAME_SPLASH:
-    case SPELL_STICKY_FLAME_RANGE:
-        if (real_spell != SPELL_STICKY_FLAME)
-            beam.hit      = 18 + power / 15;
-        beam.colour   = RED;
-        beam.name     = real_spell == SPELL_STICKY_FLAME_SPLASH ?
-                        "splash of liquid fire" : "sticky flame";
-        beam.damage   = dice_def(3, 3 + power / 50);
-        beam.flavour  = BEAM_FIRE;
         break;
 
     case SPELL_NOXIOUS_CLOUD:
@@ -847,32 +713,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit        = 15 + power / 30;
         beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
         beam.pierce     = true;             // except it also destroys walls
-        break;
-
-    case SPELL_STING:              // sting
-        beam.colour   = GREEN;
-        beam.name     = "sting";
-        beam.damage   = dice_def(1, 6 + power / 25);
-        beam.hit      = 60;
-        beam.flavour  = BEAM_POISON;
-        break;
-
-    case SPELL_IRON_SHOT:
-        beam.colour   = LIGHTCYAN;
-        beam.name     = "iron shot";
-        beam.damage   = dice_def(3, 8 + (power / 9));
-        beam.hit      = 20 + (power / 25);
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
-        break;
-
-    case SPELL_STONE_ARROW:
-        beam.colour   = LIGHTGREY;
-        beam.name     = "stone arrow";
-        beam.damage   = dice_def(3, 5 + (power / 10));
-        beam.hit      = 14 + power / 35;
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
         break;
 
     case SPELL_SPIT_POISON:
@@ -1071,14 +911,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
-    case SPELL_FORCE_LANCE:
-        beam.colour   = LIGHTGREY;
-        beam.name     = "lance of force";
-        beam.damage   = dice_def(3, 6 + (power / 15));
-        beam.hit      = 20 + power / 20;
-        beam.flavour  = BEAM_MMISSILE;
-        break;
-
     case SPELL_SENTINEL_MARK:
         beam.flavour    = BEAM_SENTINEL_MARK;
         break;
@@ -1132,26 +964,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_VIRULENCE;
         break;
 
-    case SPELL_ORB_OF_ELECTRICITY:
-        beam.name           = "orb of electricity";
-        beam.colour         = LIGHTBLUE;
-        beam.damage         = dice_def(3, 7 + power / 9);
-        beam.hit            = 40;
-        beam.flavour        = BEAM_ELECTRICITY;
-        beam.is_explosion   = true;
-        beam.foe_ratio      = random_range(40, 55);
-        break;
-
-    case SPELL_EXPLOSIVE_BOLT:
-        beam.name       = "explosive bolt";
-        beam.damage     = dice_def(1, 0); // deals damage through explosions
-        beam.colour     = RED;
-        beam.flavour    = BEAM_FIRE;
-        beam.hit        = 17 + power / 25;
-        beam.ench_power = power;
-        beam.pierce     = true;
-        break;
-
     case SPELL_FLASH_FREEZE:
         beam.name     = "flash freeze";
         beam.damage   = dice_def(3, 9 + (power / 13));
@@ -1192,15 +1004,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_DRAIN_MAGIC:
         beam.flavour    = BEAM_DRAIN_MAGIC;
-        break;
-
-    case SPELL_CORROSIVE_BOLT:
-        beam.colour   = YELLOW;
-        beam.name     = "bolt of acid";
-        beam.damage   = dice_def(3, 9 + power / 17);
-        beam.flavour  = BEAM_ACID;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
         break;
 
     case SPELL_SPIT_LAVA:

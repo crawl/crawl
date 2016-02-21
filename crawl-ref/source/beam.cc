@@ -243,7 +243,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
 
     fail_check();
     // Fill in the bolt structure.
-    zappy(ztype, power, pbolt);
+    zappy(ztype, power, false, pbolt);
 
     if (msg)
         mpr(msg);
@@ -272,7 +272,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     if (you.confused())
         return true;
 
-    zappy(ztype, power, pbolt);
+    zappy(ztype, power, false, pbolt);
 
     pbolt.is_tracer     = true;
     pbolt.source        = you.pos();
@@ -397,8 +397,10 @@ struct zap_info
     zap_type ztype;
     const char* name;           // nullptr means handled specially
     int power_cap;
-    dam_deducer* damage;
-    tohit_deducer* tohit;       // Enchantments have power modifier here
+    dam_deducer* player_damage;
+    tohit_deducer* player_tohit;    // Enchantments have power modifier here
+    dam_deducer* monster_damage;
+    tohit_deducer* monster_tohit;
     colour_t colour;
     bool is_enchantment;
     beam_type flavour;
@@ -438,7 +440,7 @@ int zap_power_cap(zap_type z_type)
     return zinfo ? zinfo->power_cap : 0;
 }
 
-int zap_ench_power(zap_type z_type, int pow)
+int zap_ench_power(zap_type z_type, int pow, bool is_monster)
 {
     const zap_info* zinfo = _seek_zap(z_type);
     if (!zinfo)
@@ -447,13 +449,15 @@ int zap_ench_power(zap_type z_type, int pow)
     if (zinfo->power_cap > 0)
         pow = min(zinfo->power_cap, pow);
 
-    if (zinfo->is_enchantment && zinfo->tohit)
-        return (*zinfo->tohit)(pow);
+    tohit_deducer* ench_calc = is_monster ? zinfo->monster_tohit
+                                          : zinfo->player_tohit;
+    if (zinfo->is_enchantment && ench_calc)
+        return (*ench_calc)(pow);
     else
         return pow;
 }
 
-void zappy(zap_type z_type, int power, bolt &pbolt)
+void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
 
@@ -479,24 +483,32 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
-    pbolt.ench_power = zap_ench_power(z_type, power);
+    pbolt.ench_power = zap_ench_power(z_type, power, is_monster);
 
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
     else
     {
-        pbolt.hit = (*zinfo->tohit)(power);
-        if (pbolt.hit != AUTOMATIC_HIT)
+        tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
+                                             : zinfo->player_tohit;
+        ASSERT(hit_calc);
+        pbolt.hit = (*hit_calc)(power);
+        if (pbolt.hit != AUTOMATIC_HIT && !is_monster)
             pbolt.hit = max(0, pbolt.hit - 5 * you.inaccuracy());
     }
 
-    if (zinfo->damage)
-        pbolt.damage = (*zinfo->damage)(power);
+    dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
+                                       : zinfo->player_damage;
+    if (dam_calc)
+        pbolt.damage = (*dam_calc)(power);
 
     pbolt.origin_spell = zap_to_spell(z_type);
 
-    if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN)
+    if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN
+        && !is_monster)
+    {
         pbolt.origin_spell = SPELL_SEARING_BREATH;
+    }
 
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
@@ -6598,8 +6610,10 @@ void clear_zap_info_on_exit()
 {
     for (const zap_info &zap : zap_data)
     {
-        delete zap.damage;
-        delete zap.tohit;
+        delete zap.player_damage;
+        delete zap.player_tohit;
+        delete zap.monster_damage;
+        delete zap.monster_tohit;
     }
 }
 

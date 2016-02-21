@@ -1318,7 +1318,8 @@ spret_type your_spells(spell_type spell, int powc,
         {
             const zap_type zap = spell_to_zap(spell);
             const int eff_pow = zap == NUM_ZAPS ? powc
-                                                : zap_ench_power(zap, powc);
+                                                : zap_ench_power(zap, powc,
+                                                                 false);
             additional_desc = bind(desc_success_chance, placeholders::_1,
                                    eff_pow, evoked, hitfunc.get());
         }
@@ -2104,7 +2105,7 @@ string spell_noise_string(spell_type spell)
     if (effect_noise == 0 && zap != NUM_ZAPS)
     {
         bolt beem;
-        zappy(zap, 0, beem);
+        zappy(zap, 0, false, beem);
         effect_noise = beem.loudness;
     }
 

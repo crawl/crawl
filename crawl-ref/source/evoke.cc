@@ -616,8 +616,8 @@ void zap_wand(int slot)
                              SPFLAG_MR_CHECK))
     {
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(type_zapped, power), true,
-                                  hitfunc);
+                                  zap_ench_power(type_zapped, power, false),
+                                  true, hitfunc);
     }
     direction(zap_wand, args);
 
@@ -1998,7 +1998,7 @@ static bool _phial_of_floods()
 
     const int power =
         player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6));
-    zappy(ZAP_PRIMAL_WAVE, power, beam);
+    zappy(ZAP_PRIMAL_WAVE, power, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
