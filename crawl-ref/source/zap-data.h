@@ -8,11 +8,11 @@ struct zap_info
 {
     zap_type ztype;
     const char* name;
-    int power_cap;
+    int player_power_cap;
     dam_deducer* player_damage;
     tohit_deducer* player_tohit;       // Enchantments have power modifier here
     dam_deducer* monster_damage;
-    tohit_deducer* monster_tohit;
+    tohit_deducer* monster_tohit;      // Enchantments have power modifier here
     colour_t colour;
     bool is_enchantment;
     beam_type flavour;
@@ -70,7 +70,7 @@ static const zap_info zap_data[] =
     nullptr,
     new tohit_calculator<0, 3, 2>,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_SLOW,
@@ -160,7 +160,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_PARALYSIS,
@@ -232,7 +232,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_CONFUSION,
@@ -358,7 +358,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_POLYMORPH,
@@ -466,7 +466,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_ENSLAVE,
@@ -481,7 +481,7 @@ static const zap_info zap_data[] =
     ZAP_PAIN,
     "",
     100,
-    new dicedef_calculator<1, 4, 1,5>,
+    new dicedef_calculator<1, 4, 1, 5>,
     new tohit_calculator<0, 7, 2>,
     nullptr,
     nullptr,
@@ -556,7 +556,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_BANISH,
@@ -827,7 +827,7 @@ static const zap_info zap_data[] =
     nullptr,
     new tohit_calculator<0, 5, 1>,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_PAIN,
@@ -899,7 +899,7 @@ static const zap_info zap_data[] =
     nullptr,
     new tohit_calculator<0, 3, 2>,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLUE,
     true,
     BEAM_CORONA,
@@ -917,7 +917,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_HIBERNATION,
@@ -1043,7 +1043,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_PETRIFY,
@@ -1079,7 +1079,7 @@ static const zap_info zap_data[] =
     nullptr,
     nullptr,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_SLEEP,

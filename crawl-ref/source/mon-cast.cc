@@ -529,6 +529,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_FORCE_LANCE:
     case SPELL_EXPLOSIVE_BOLT:
     case SPELL_CORROSIVE_BOLT:
+    case SPELL_PARALYSE:
+    case SPELL_PETRIFY:
+    case SPELL_SLOW:
+    case SPELL_HASTE:
+    case SPELL_CORONA:
+    case SPELL_CONFUSE:
+    case SPELL_HIBERNATION:
+    case SPELL_SLEEP:
+    case SPELL_POLYMORPH:
+    case SPELL_DIG:
+    case SPELL_AGONY:
+    case SPELL_BANISHMENT:
+    case SPELL_ENSLAVEMENT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -549,46 +562,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(3, min(6 + power / 10, 40));
         break;
 
-    case SPELL_PARALYSE:
-        beam.flavour  = BEAM_PARALYSIS;
-        break;
-
-    case SPELL_PETRIFY:
-        beam.flavour  = BEAM_PETRIFY;
-        break;
-
-    case SPELL_SLOW:
-        beam.flavour  = BEAM_SLOW;
-        break;
-
     case SPELL_HASTE_OTHER:
-    case SPELL_HASTE:
         beam.flavour  = BEAM_HASTE;
         break;
 
     case SPELL_MIGHT_OTHER:
     case SPELL_MIGHT:
         beam.flavour  = BEAM_MIGHT;
-        break;
-
-    case SPELL_CORONA:
-        beam.flavour  = BEAM_CORONA;
-        break;
-
-    case SPELL_CONFUSE:
-        beam.flavour  = BEAM_CONFUSION;
-        break;
-
-    case SPELL_HIBERNATION:
-        beam.flavour  = BEAM_HIBERNATION;
-        break;
-
-    case SPELL_SLEEP:
-        beam.flavour    = BEAM_SLEEP;
-        break;
-
-    case SPELL_POLYMORPH:
-        beam.flavour  = BEAM_POLYMORPH;
         break;
 
     case SPELL_MALMUTATE:
@@ -665,11 +645,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_TELEPORT;
         break;
 
-    case SPELL_DIG:
-        beam.flavour  = BEAM_DIGGING;
-        beam.pierce   = true;
-        break;
-
     case SPELL_STEAM_BALL:
         beam.colour   = LIGHTGREY;
         beam.name     = "ball of steam";
@@ -681,10 +656,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PAIN:
         beam.flavour    = BEAM_PAIN;
         beam.damage     = dice_def(1, 7 + (power / 20));
-        break;
-
-    case SPELL_AGONY:
-        beam.flavour    = BEAM_PAIN;
         break;
 
     case SPELL_NOXIOUS_CLOUD:
@@ -785,10 +756,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_FRAG;
         beam.hit        = 19 + power / 30;
         beam.pierce     = true;
-        break;
-
-    case SPELL_BANISHMENT:
-        beam.flavour  = BEAM_BANISH;
         break;
 
     case SPELL_BLINK_OTHER:
@@ -1057,10 +1024,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_ENSLAVEMENT:
-        beam.flavour  = BEAM_ENSLAVE;
-        break;
-
     default:
         if (check_validity)
         {
@@ -1083,11 +1046,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     {
         beam.hit = AUTOMATIC_HIT;
         beam.glyph = 0;
-        beam.name = "";
+        if (spell_cast != SPELL_AGONY)
+            beam.name = "";
     }
-
-    if (spell_cast == SPELL_AGONY)
-        beam.name = "agony";
 
     return beam;
 }
