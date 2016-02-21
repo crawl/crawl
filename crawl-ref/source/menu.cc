@@ -496,7 +496,7 @@ bool Menu::process_key(int keyin)
     case CK_END:
     {
         nav = true;
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
         {
             first_entry = breakpoint;
@@ -2119,7 +2119,7 @@ bool formatted_scroller::process_key(int keyin)
         break;
     case CK_END:
     {
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
             repaint = jump_to(breakpoint);
         break;
