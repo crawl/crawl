@@ -6481,6 +6481,12 @@ string bolt::get_short_name() const
     if (flavour == BEAM_ELECTRICITY && pierce)
         return "lightning";
 
+    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
+        || origin_spell == SPELL_DAZZLING_SPRAY)
+    {
+        return "energy";
+    }
+
     if (flavour == BEAM_NONE || flavour == BEAM_MISSILE
         || flavour == BEAM_MMISSILE)
     {
