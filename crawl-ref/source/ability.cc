@@ -2807,18 +2807,20 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                             end(you.inv),
                             [] (const item_def &it)
                             {
-                                return it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
+                                return it.defined()
+                                    && it.is_type(OBJ_SCROLLS,
+                                                  SCR_REMOVE_CURSE)
+                                    && check_warning_inscriptions(it,
+                                                                  OPER_DESTROY);
                             }
                            );
-        if (iter != end(you.inv))
+        int index = iter == end(you.inv) ? -1 : iter - begin(you.inv);
+        if (index >= 0)
         {
-            if (ashenzari_curse_item())
-                dec_inv_item_quantity(iter - begin(you.inv), 1);
+            if (ashenzari_curse_item(index))
+                dec_inv_item_quantity(index, 1);
             else
-            {
-                canned_msg(MSG_OK);
                 return SPRET_ABORT;
-            }
         }
         else
         {
