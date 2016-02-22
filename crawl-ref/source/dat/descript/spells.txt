@@ -1103,7 +1103,7 @@ redirecting their force to the air nearby. Ranged attacks cannot be diverted in
 this way. The shroud is highly unstable, and may fall apart unexpectedly under
 stress.
 %%%%
-Signal Horn spell
+Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
 %%%%
@@ -1506,6 +1506,10 @@ Wall of Brambles spell
 Causes brambles to rapidly grow nearby. They have almost no structural
 strength, but the wicked thorns they bear make their removal difficult. Such
 brambles are sparse enough that almost any missile can pass through unhindered.
+%%%%
+Warning Cry spell
+
+Generates a loud noise, alerting nearby enemies.
 %%%%
 Warp Weapon spell
 

@@ -1211,7 +1211,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
     case SPELL_BATTLECRY:
-    case SPELL_SIGNAL_HORN:
+    case SPELL_WARNING_CRY:
     case SPELL_SEAL_DOORS:
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
@@ -6286,7 +6286,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _battle_cry(*mons);
         return;
 
-    case SPELL_SIGNAL_HORN:
+    case SPELL_WARNING_CRY:
         return; // the entire point is the noise, handled elsewhere
 
     case SPELL_SEAL_DOORS:
@@ -7873,7 +7873,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BATTLECRY:
         return !_battle_cry(*mon, true);
 
-    case SPELL_SIGNAL_HORN:
+    case SPELL_WARNING_CRY:
         return friendly;
 
     case SPELL_SEAL_DOORS:

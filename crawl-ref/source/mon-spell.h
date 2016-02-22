@@ -1266,7 +1266,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAULT_SENTINEL,
       {
-       { SPELL_SIGNAL_HORN, 50, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
+       { SPELL_WARNING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
                                 | MON_SPELL_BREATH },
        { SPELL_SENTINEL_MARK, 58, MON_SPELL_WIZARD },
       }
@@ -2073,6 +2073,12 @@ static const mon_spellbook mspell_list[] =
     { MST_DART_SLUG,
       {
         { SPELL_SLUG_DART, 40, MON_SPELL_NATURAL },
+      }
+    },
+
+    { MST_HOWLER_MONKEY,
+      {
+        { SPELL_WARNING_CRY, 40, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
 };
