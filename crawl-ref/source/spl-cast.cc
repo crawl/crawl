@@ -1358,6 +1358,13 @@ spret_type your_spells(spell_type spell, int powc,
 
             return SPRET_ABORT;
         }
+
+        if (spd.isMe()
+            && (spell == SPELL_HASTE && check_stasis(NO_HASTE_MSG)
+                || spell == SPELL_INVISIBILITY && !invis_allowed()))
+        {
+            return SPRET_ABORT;
+        }
     }
 
     if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
