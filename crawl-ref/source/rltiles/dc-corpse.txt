@@ -29,6 +29,7 @@ shard_shrike CORPSE_SHARD_SHRIKE
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
 hound CORPSE_HOUND
+howler CORPSE_HOWLER_MONKEY
 warg CORPSE_WARG
 wolf CORPSE_WOLF
 hog CORPSE_HOG

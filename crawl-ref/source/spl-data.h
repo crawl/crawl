@@ -3408,7 +3408,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SIGNAL_HORN, "Signal Horn",
+    SPELL_WARNING_CRY, "Warning Cry",
     SPTYP_HEXES,
     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
     6,

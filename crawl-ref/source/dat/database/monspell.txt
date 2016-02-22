@@ -215,11 +215,11 @@ __NONE
 # Individual innate spells (breathing and spitting).
 #####################################################
 %%%%
-unseen Signal Horn cast
+unseen Warning Cry cast
 
 You hear a note loudly blown on a horn!
 %%%%
-Signal Horn cast
+Warning Cry cast
 
 @The_monster@ blows a loud note on a signal horn!
 %%%%
@@ -629,6 +629,15 @@ insubstantial wisp cast
 Blink insubstantial wisp cast
 
 __NONE
+%%%%
+unseen Warning Cry howler monkey cast
+
+You hear a tremendous hooting and howling!
+%%%%
+Warning Cry howler monkey cast
+
+@The_monster@ hoots and howls with incredible vigour!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
