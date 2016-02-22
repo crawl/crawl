@@ -4840,6 +4840,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_WEAVE_SHADOWS:            return TILEG_WEAVE_SHADOWS;
     case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;
     case SPELL_RANDOM_BOLT:              return TILEG_RANDOM_BOLT;
+    case SPELL_SCATTERSHOT:              return TILEG_SCATTERSHOT;
+    case SPELL_CORROSIVE_BOLT:           return TILEG_CORROSIVE_BOLT;
+    case SPELL_ICEBLAST:                 return TILEG_ICEBLAST;
 
     // --------------------------------------------
     // Monster spells
