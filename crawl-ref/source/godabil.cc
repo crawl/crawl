@@ -3811,22 +3811,30 @@ bool ashenzari_end_transfer(bool finished, bool force)
  *
  * @return          Whether the player cursed anything.
  */
-bool ashenzari_curse_item()
+bool ashenzari_curse_item(int index)
 {
-    while (1)
+    ASSERT(index >= 0);
+    const int num_rc = you.inv[index].quantity;
+    ASSERT(num_rc > 0);
+
+    const string prompt_msg = make_stringf("Curse which item? (%d remove curse scroll%s left) (Esc to abort)", num_rc, num_rc > 1 ? "s" : "");
+    const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
+                                             OSEL_CURSABLE,
+                                             true, true, false);
+    if (prompt_failed(item_slot))
+        return false;
+
+    if (!item_is_cursable(you.inv[item_slot]))
     {
-        int item_slot = prompt_invent_item("Curse which item? (Esc to abort)", MT_INVLIST,
-                                           OSEL_CURSABLE,
-                                           true, true, false);
-        if (prompt_failed(item_slot))
-            return false;
-
-        item_def& item(you.inv[item_slot]);
-
-        do_curse_item(item, false);
-        learned_something_new(HINT_YOU_CURSED);
-        return true;
+        mpr("You can't curse that!");
+        return false;
     }
+
+    item_def& item(you.inv[item_slot]);
+
+    do_curse_item(item, false);
+    learned_something_new(HINT_YOU_CURSED);
+    return true;
 }
 
 bool can_convert_to_beogh()
