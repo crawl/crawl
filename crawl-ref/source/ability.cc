@@ -2069,6 +2069,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, cloaks, randarts
+        if (!invis_allowed())
+            return SPRET_ABORT;
         fail_check();
         if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
             pakellas_evoke_backfire(SPELL_INVISIBILITY);

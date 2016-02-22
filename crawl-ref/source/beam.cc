@@ -3264,12 +3264,6 @@ void bolt::tracer_affect_player()
                 finish_beam();
             }
         }
-        else if (flavour == BEAM_HASTE && check_stasis(NO_HASTE_MSG)
-                 || flavour == BEAM_INVISIBILITY && !invis_allowed())
-        {
-            beam_cancelled = true;
-            finish_beam();
-        }
     }
     else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
     {
