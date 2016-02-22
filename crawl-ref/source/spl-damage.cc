@@ -2611,7 +2611,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     center_beam.dont_stop_player = false;
     center_beam.foe_info.dont_stop = false;
     center_beam.friend_info.dont_stop = false;
-    beams.push_back(center_beam);
+    // Prevent self-hits, specifically when you aim at an adjacent wall.
+    if (center_beam.path_taken.back() != caster->pos())
+        beams.push_back(center_beam);
 
     for (distance_iterator di(aim, false, false, max_spacing); di; ++di)
     {
