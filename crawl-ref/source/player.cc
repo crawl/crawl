@@ -4977,11 +4977,6 @@ void dec_ambrosia_player(int delay)
         mpr("You feel less invigorated.");
 }
 
-bool prompt_contam_invis()
-{
-    return true;
-}
-
 bool invis_allowed(bool quiet, string *fail_reason)
 {
     string msg;

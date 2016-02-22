@@ -1066,7 +1066,6 @@ bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
-bool prompt_contam_invis();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
