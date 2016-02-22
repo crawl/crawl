@@ -157,18 +157,20 @@ irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 
-# rod spells
-%sdir misc
-error PARALYSE
-error BOLT_OF_INACCURACY
-error THUNDERBOLT
-error EXPLOSIVE_BOLT
-%sdir gui/spells/air
+# item-based spells
+%sdir gui/spells/misc
+paralyse PARALYSE
+bolt_inacc BOLT_OF_INACCURACY
+bolt_thunder THUNDERBOLT
+bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
+bolt_random RANDOM_BOLT
+scattershot SCATTERSHOT
+bolt_corrosive CORROSIVE_BOLT
+iceblast ICEBLAST
 %sdir gui/spells/summoning
 summon_shadow_creatures WEAVE_SHADOWS
-%sdir misc
-error RANDOM_BOLT
+
 
 # spells normally only used by monsters
 %sdir gui/spells/monster
