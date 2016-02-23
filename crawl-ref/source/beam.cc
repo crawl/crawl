@@ -478,7 +478,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     pbolt.pierce         = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
 
-    if (zinfo->player_power_cap > 0 && is_monster)
+    if (zinfo->player_power_cap > 0 && !is_monster)
         power = min(zinfo->player_power_cap, power);
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
