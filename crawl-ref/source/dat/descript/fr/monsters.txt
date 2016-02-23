@@ -714,12 +714,6 @@ deep elf priest
 Cet elfe profond est un serviteur de l'ancien dieu sombre des elfes profond, et
 a été mis au commandement des énergies tortueuse de son seigneur énigmatique.
 %%%%
-deep elf sorcerer
-
-Un lanceur de sorts puissant qui tient ses pouvoirs des Enfers, et qui possède
-les capacités arcaniques mortelles de la destruction, de la convocation et du
-bannissement.
-%%%%
 deep elf summoner
 
 Cet elfe profond est entrainé dans l'art de la convocation de petits démons et

@@ -905,7 +905,7 @@ dismissing magic as a frivolous distraction.
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal
-arcane abilities of destruction, summoning and banishment.
+arcane abilities.
 %%%%
 deep dwarf
 
