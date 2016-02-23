@@ -15,7 +15,7 @@
     - row 3: monster resistance flags
     - row 4: experience modifier, genus, species, holiness, resist magic
     - row 5: damage for each of four attacks
-    - row 6: hit dice, described by four parameters
+    - row 6: hit dice, hit points
     - row 7: AC, evasion, spells, corpse effect, shouts
     - row 8: intel, habitat, speed, energy_usage
     - row 9: gmon_use class, body size, body shape
@@ -56,6 +56,7 @@
 
    HD: like player level, used for misc things
    avg_hp_10x: average hp for the monster, * 10 for precision
+               (see hit_points() for details)
 
    sec: if the monster has only one possible spellbook, sec is set to that book.
      If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
