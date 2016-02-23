@@ -253,6 +253,7 @@ static void initialize_crawl()
     init_properties();
     init_item_name_cache();
 
+    init_zap_index();
     init_spell_descs();
     init_monster_symbols();
     init_mon_name_cache();
