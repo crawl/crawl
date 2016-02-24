@@ -173,7 +173,7 @@ mon/spriggan/spriggan CORPSE_SPRIGGAN
 ## Drakes ('k')
 %sdir mon/dragons
 swamp_drake CORPSE_SWAMP_DRAKE
-fire_drake CORPSE_FIRE_DRAKE
+rime_drake CORPSE_RIME_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
 wind_drake CORPSE_WIND_DRAKE

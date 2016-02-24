@@ -1474,8 +1474,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // drakes (also 'l', but dragon type)
     case MONS_SWAMP_DRAKE:
         return TILEP_MONS_SWAMP_DRAKE;
-    case MONS_FIRE_DRAKE:
-        return TILEP_MONS_FIRE_DRAKE;
+    case MONS_RIME_DRAKE:
+        return TILEP_MONS_RIME_DRAKE;
     case MONS_LINDWURM:
         return TILEP_MONS_LINDWURM;
     case MONS_DEATH_DRAKE:
@@ -3593,8 +3593,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // drakes (also 'l')
     case MONS_SWAMP_DRAKE:
         return TILE_CORPSE_SWAMP_DRAKE;
-    case MONS_FIRE_DRAKE:
-        return TILE_CORPSE_FIRE_DRAKE;
+    case MONS_RIME_DRAKE:
+        return TILE_CORPSE_RIME_DRAKE;
     case MONS_LINDWURM:
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:

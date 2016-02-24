@@ -259,12 +259,12 @@ function arena_sprint_get_monster_set(round, boss)
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
-                "w:20 fire bat / fire elemental / w:5 fire drake / w:5 mottled dragon",
+                "w:20 fire bat / fire elemental w:5 mottled dragon",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
                     w:15 rust devil / w:15 iron imp",
-                "w:20 ice beast / w:20 simulacrum / w:5 water elemental",
+                "w:20 ice beast / w:20 simulacrum / rime drake / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
                 "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
@@ -300,13 +300,13 @@ function arena_sprint_get_monster_set(round, boss)
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death
-                "fire bat / fire elemental / fire drake / mottled dragon /\
+                "fire bat / fire elemental / mottled dragon /\
                     w:5 sun demon / w:2 efreet / hell hound",
                 "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
                 "earth elemental w:15 / gargoyle w:5 / boulder beetle /\
                     rust devil / iron imp / w:5 iron troll",
-                "ice beast / ogre simulacrum / water elemental",
+                "ice beast / rime drake / ogre simulacrum / water elemental",
                 "wraith w:20 / w:5 eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
@@ -314,7 +314,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "giant leech / worm",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
-                "fire drake / swamp drake / steam dragon / swamp dragon /\
+                "rime drake / swamp drake / steam dragon / swamp dragon /\
                  mottled dragon / komodo dragon",
                 "necrophage / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
@@ -344,7 +344,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "common demon w:30 / kobold demonologist w:5 / frances w:3",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
                 -- Fire, Air, Earth, Water, Death
-                "w:5 fire bat / fire elemental / fire drake / mottled dragon /\
+                "w:5 fire bat / fire elemental / mottled dragon /\
                     sun demon / efreet / hell hound /\
                     hell hog / w:5 fire crab",
                 "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
@@ -352,7 +352,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "earth elemental w:20 / boulder beetle /\
                     rust devil / w:5 iron troll / w:1 roxanne /\
                     w:2 iron dragon / w:3 iron elemental",
-                "ice beast / hydra simulacrum / stone giant simulacrum /\
+                "ice beast w:5 / rime drake w:5 / hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental",
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
@@ -361,7 +361,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "vampire mosquito / hornet w:5 / wasp",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
-                "fire drake w:5 / swamp drake / swamp dragon /\
+                "rime drake w:5 / swamp drake / swamp dragon /\
                     mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     fire dragon w:5 / ice dragon w:5 / storm dragon w:1",
                 "necrophage / ghoul / bog body",

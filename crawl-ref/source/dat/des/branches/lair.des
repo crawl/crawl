@@ -297,7 +297,7 @@ ENDMAP
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = fire drake
+KMONS:  1 = hell hound
 SUBST:  L = l.
 KFEAT:  O = enter_lair
 MAP
@@ -305,7 +305,7 @@ MAP
 ...lLll..
 ..lllllL.
 ..ll1Lll.
-.LlLOLll.
+.LlLO1ll.
 .ll.Llll.
 .l.llll..
 ..lllL...
@@ -672,10 +672,10 @@ DEPTH:  Lair:2-
 TAGS:   no_monster_gen
 : if you.depth() >= 7 then
 MONS:   fire dragon w:9 / lindwurm w:1
-MONS:   fire drake / w:2 mottled dragon / w:4 nothing
+MONS:   rime drake / w:2 mottled dragon / w:4 nothing
 : else
 MONS:   mottled dragon / steam dragon
-MONS:   fire drake / w:15 nothing
+MONS:   rime drake / w:15 nothing
 : end
 ITEM:   any good_item
 SUBST:  ! = $:3 d:2
@@ -709,7 +709,7 @@ ENDMAP
 #
 NAME:   minmay_lair_drake_nest
 DEPTH:  Lair:4-
-MONS:   fire drake, plant w:20 / fungus w:1 / bush w:1
+MONS:   rime drake, plant w:20 / fungus w:1 / bush w:1
 NSUBST: 1 = 1:1 / * = 1.., . = 1:2 / * = ...2, . = 1:% / * = ...%
 MAP
    ...
@@ -949,7 +949,7 @@ NAME:   guppyfry_lair_drakes
 DEPTH:  Lair
 WEIGHT: 15
 : if you.depth() > 3 and crawl.coinflip() then
-MONS:   fire drake / swamp drake / mottled dragon
+MONS:   rime drake / swamp drake / mottled dragon
 MONS:   steam dragon
 MONS:   plant
 SUBST:  -_ = wwWW..%
@@ -2495,7 +2495,7 @@ NAME:    evil_forest
 PLACE:   Lair:$
 TAGS:    no_pool_fixup no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
-MONS:    hydra / fire drake / dire elephant
+MONS:    hydra / rime drake / dire elephant
 MONS:    red devil / ice devil w:15 / orange demon w:15 / hell hound w:5
 MONS:    hellwing, sun demon, sixfirhy, smoke demon, hell beast
 KMONS:   8 = wizard
@@ -2791,7 +2791,7 @@ NAME:   guppyfry_lair_end_dragon
 PLACE:  Lair:$
 TAGS:   patrolling no_monster_gen
 ORIENT: southeast
-KMONS:  1 = fire drake / swamp drake / mottled dragon / steam dragon
+KMONS:  1 = rime drake / swamp drake / mottled dragon / steam dragon
 KMONS:  2 = fire dragon
 KMONS:  3 = plant
 KMONS:  4 = basilisk / komodo dragon
@@ -2837,7 +2837,7 @@ ORIENT:  float
 PLACE:   Lair:$
 # mons are in groups of four, each ordered from least to most dangerous.
 # mythological or dragon-y reptiles
-MONS:    basilisk, fire drake, komodo dragon, hydra
+MONS:    basilisk, rime drake, komodo dragon, hydra
 # mythological non-reptiles
 MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas

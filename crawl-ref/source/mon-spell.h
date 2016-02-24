@@ -2080,4 +2080,10 @@ static const mon_spellbook mspell_list[] =
                                  | MON_SPELL_NO_SILENT },
       }
     },
+
+    { MST_RIME_DRAKE,
+      {
+        { SPELL_FLASH_FREEZE, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+      }
+    },
 };

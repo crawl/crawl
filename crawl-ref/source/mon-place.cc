@@ -4115,7 +4115,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
             5, MONS_SWAMP_DRAKE,
             5, MONS_KOMODO_DRAGON,
             5, MONS_WIND_DRAKE,
-            6, MONS_FIRE_DRAKE,
+            6, MONS_RIME_DRAKE,
             6, MONS_DEATH_DRAKE,
             3, MONS_DRAGON, // genus, to reroll for DRAGON_DRAGON
             0);

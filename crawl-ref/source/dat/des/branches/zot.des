@@ -34,7 +34,7 @@ function st_zot_vaults_setup(e)
     e.kmons("D = mottled dragon / fire dragon w:25 / ice dragon w:25 /\
                storm dragon w:20 / shadow dragon w:20 / golden dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
-               lindwurm w:2 / fire drake w:2 / death drake w:2 /\
+               lindwurm w:2 / rime drake w:2 / death drake w:2 /\
                swamp dragon w:5")
     e.kmons("d = base draconian / nonbase draconian")
     e.kmons("Y = patrolling golden dragon")

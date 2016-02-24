@@ -596,7 +596,7 @@ iron_giant MONS_IRON_GIANT
 ## Drakes (also 'l')
 %sdir mon/dragons
 swamp_drake MONS_SWAMP_DRAKE
-fire_drake MONS_FIRE_DRAKE
+rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
