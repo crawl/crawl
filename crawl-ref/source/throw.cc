@@ -543,7 +543,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
     beam.flavour      = BEAM_MISSILE;
-    beam.pierce       = false;
+    beam.pierce       = is_penetrating_attack(*agent, launcher, item);
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
