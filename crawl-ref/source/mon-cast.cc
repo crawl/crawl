@@ -4851,24 +4851,6 @@ extern const spell_type serpent_of_hell_breaths[][3] =
     }
 };
 
-/**
- * Get the enchant_type for a given chanted spell.
- * This probably could be further generalized and maybe move into a map.
- * I'll return to this later.
- *
- * @param chant The spell_type to convert to an enchant_type.
- */
-static enchant_type get_enchant_type_from_chant(spell_type chant)
-{
-    switch (chant)
-    {
-        default:
-            return ENCH_NONE;
-        case SPELL_WORD_OF_RECALL:
-            return ENCH_WORD_OF_RECALL;
-    }
-}
-
 static bool _spell_charged(monster *mons, int count)
 {
     mon_enchant ench = mons->get_ench(ENCH_SPELL_CHARGED);
@@ -5992,8 +5974,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WORD_OF_RECALL:
     {
-        mon_enchant chant_timer =
-            mon_enchant(get_enchant_type_from_chant(spell_cast), 1, mons, 30);
+        mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
         mons->add_ench(chant_timer);
         mons->speed_increment -= 30;
         return;
