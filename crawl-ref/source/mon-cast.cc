@@ -4851,10 +4851,10 @@ extern const spell_type serpent_of_hell_breaths[][3] =
     }
 };
 
-static bool _spell_charged(monster *mons, int count)
+static bool _spell_charged(monster *mons)
 {
     mon_enchant ench = mons->get_ench(ENCH_SPELL_CHARGED);
-    if (ench.ench == ENCH_NONE || ench.degree < count)
+    if (ench.ench == ENCH_NONE || ench.degree < max_mons_charge(mons->type))
     {
         if (ench.ench == ENCH_NONE)
         {
@@ -5888,7 +5888,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IOOD:
-        if (mons->type == MONS_ORB_SPIDER && !_spell_charged(mons, 1))
+        if (mons->type == MONS_ORB_SPIDER && !_spell_charged(mons))
             return;
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
@@ -6388,11 +6388,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_FIRE_STORM:
-        if (mons->type == MONS_SALAMANDER_STORMCALLER
-            && !_spell_charged(mons, 2))
-        {
+        if (mons->type == MONS_SALAMANDER_STORMCALLER && !_spell_charged(mons))
             return;
-        }
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         break;

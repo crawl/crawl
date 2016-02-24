@@ -5529,3 +5529,24 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
         }
     }
 }
+
+/**
+ * If a monster needs to charge up to cast a spell (by 'casting' the spell
+ * repeatedly), how many charges does it need until it can actually set the
+ * spell off?
+ *
+ * @param m     The type of monster in question.
+ * @return      The required number of charges.
+ */
+int max_mons_charge(monster_type m)
+{
+    switch (m)
+    {
+        case MONS_ORB_SPIDER:
+            return 1;
+        case MONS_SALAMANDER_STORMCALLER:
+            return 2;
+        default:
+            return 0;
+    }
+}
