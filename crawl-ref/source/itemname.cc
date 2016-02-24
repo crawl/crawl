@@ -3404,9 +3404,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case POT_MUTATION:
         case POT_LIGNIFY:
-            return true;
         case POT_AMBROSIA:
-            return you.species != SP_DEEP_DWARF; // VERY good for dd
+            return true;
         default:
             return false;
         }

@@ -5,19 +5,11 @@ ae := autopickup_exceptions
 # Autopickup runes by default.
 ae = <rune of Zot
 
-# curare is always dangerous on the floor, so you may wish to always pick
-# it up. Disabled by default.
-# ae = <curare-tipped
-
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as
 # inedible food or armour you can't wear).
 ae += useless_item
-
-# Exclude potentially useful items of high risk, like ?torment or
-# !mutation.
-ae += dangerous_item
 
 # Exclude items which your god disapproves of.
 ae += forbidden
