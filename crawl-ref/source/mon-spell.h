@@ -2076,7 +2076,8 @@ static const mon_spellbook mspell_list[] =
 
     { MST_HOWLER_MONKEY,
       {
-        { SPELL_WARNING_CRY, 40, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+        { SPELL_WARNING_CRY, 40, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                 | MON_SPELL_NO_SILENT },
       }
     },
 };
