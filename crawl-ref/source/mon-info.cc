@@ -153,6 +153,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BRILLIANCE_AURA;
     case ENCH_EMPOWERED_SPELLS:
         return MB_EMPOWERED_SPELLS;
+    case ENCH_SPELL_CHARGED:
+        if (mons.get_ench(ench).degree < max_mons_charge(mons.type))
+            return MB_PARTIALLY_CHARGED;
+        return MB_FULLY_CHARGED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1554,6 +1558,10 @@ vector<string> monster_info::attributes() const
         v.emplace_back("spells empowered");
     if (is(MB_READY_TO_HOWL))
         v.emplace_back("ready to howl");
+    if (is(MB_PARTIALLY_CHARGED))
+        v.emplace_back("partially charged");
+    if (is(MB_FULLY_CHARGED))
+        v.emplace_back("fully charged");
     return v;
 }
 
