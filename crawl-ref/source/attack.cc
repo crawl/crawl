@@ -1475,7 +1475,7 @@ bool attack::attack_shield_blocked(bool verbose)
     {
         perceived_attack = true;
 
-        if (attack_ignores_shield(verbose))
+        if (ignores_shield(verbose))
             return false;
 
         if (needs_message && verbose)

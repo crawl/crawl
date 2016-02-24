@@ -21,6 +21,7 @@
 #include "player.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "throw.h"
 #include "traps.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
@@ -171,7 +172,7 @@ bool ranged_attack::handle_phase_attempted()
 
 bool ranged_attack::handle_phase_blocked()
 {
-    ASSERT(!attack_ignores_shield(false));
+    ASSERT(!ignores_shield(false));
     string punctuation = ".";
     string verb = "block";
 
@@ -263,7 +264,7 @@ bool ranged_attack::handle_phase_dodged()
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
-    if (!attack_ignores_shield(false))
+    if (!is_penetrating_attack(*attacker, weapon, *projectile))
         range_used = BEAM_STOP;
 
     if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
@@ -385,12 +386,9 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max)
     return damage;
 }
 
-bool ranged_attack::attack_ignores_shield(bool verbose)
+bool ranged_attack::ignores_shield(bool verbose)
 {
-    if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
-            && projectile->base_type == OBJ_MISSILES
-            && get_ammo_brand(*projectile) == SPMSL_PENETRATION
-        || using_weapon() && get_weapon_brand(*weapon) == SPWPN_PENETRATION)
+    if (is_penetrating_attack(*attacker, weapon, *projectile))
     {
         if (verbose)
         {
@@ -402,7 +400,6 @@ bool ranged_attack::attack_ignores_shield(bool verbose)
         }
         return true;
     }
-
     return false;
 }
 
@@ -829,7 +826,7 @@ bool ranged_attack::player_good_stab()
 
 void ranged_attack::set_attack_verb(int/* damage*/)
 {
-    attack_verb = attack_ignores_shield(false) ? "pierces through" : "hits";
+    attack_verb = is_penetrating_attack(*attacker, weapon, *projectile) ? "pierces through" : "hits";
 }
 
 void ranged_attack::announce_hit()
