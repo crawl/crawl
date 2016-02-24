@@ -912,6 +912,10 @@ salamander stormcaller charge
 @The_monster@ heats up noticeably.
 
 @The_monster@ prepares to call down a storm.
+%%%%
+kobold cultist charge
+
+TODO
 #########################################
 # Speech strings by monster symbol
 #########################################

@@ -6427,6 +6427,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_BRILLIANCE_AURA);
         aura_of_brilliance(mons);
         return;
+
+    case SPELL_BANISHMENT:
+        if (mons->type == MONS_KOBOLD_CULTIST && !_spell_charged(mons))
+            return;
+        break;
     }
 
     // If a monster just came into view and immediately cast a spell,

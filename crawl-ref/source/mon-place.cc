@@ -1349,6 +1349,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
+        // Kobold cultists follow Lugonu.
+        else if (mg.cls == MONS_KOBOLD_CULTIST)
+            mon->god = GOD_LUGONU;
         else
         {
             switch (mons_genus(mg.cls))

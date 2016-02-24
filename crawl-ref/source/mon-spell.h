@@ -2086,4 +2086,10 @@ static const mon_spellbook mspell_list[] =
         { SPELL_FLASH_FREEZE, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
+
+    { MST_KOBOLD_CULTIST,
+      {
+        { SPELL_BANISHMENT, 60, MON_SPELL_PRIEST },
+      }
+    },
 };

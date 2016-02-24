@@ -2833,6 +2833,9 @@ enum monster_type                      // menv[].type
     MONS_KOBOLD,
     MONS_BIG_KOBOLD,
     MONS_KOBOLD_DEMONOLOGIST,
+#if TAG_MAJOR_VERSION > 34
+    MONS_KOBOLD_CULTIST,
+#endif
     MONS_ORC,
     MONS_ORC_WARRIOR,
     MONS_ORC_PRIEST,
@@ -3489,6 +3492,7 @@ enum monster_type                      // menv[].type
     MONS_WITHERED_PLANT,
     MONS_DART_SLUG,
     MONS_HOWLER_MONKEY,
+    MONS_KOBOLD_CULTIST,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
