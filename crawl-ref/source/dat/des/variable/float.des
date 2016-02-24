@@ -1406,7 +1406,7 @@ DEPTH:   D:10-13, Lair:1-5
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
 MONS:    giant gecko / giant newt, crocodile, iguana
-MONS:    fire drake / swamp drake
+MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
@@ -1962,7 +1962,7 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
+MONS:   molten gargoyle / hell hound / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
@@ -2250,7 +2250,7 @@ MONS:    golden dragon / crystal guardian w:8
 MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
-KMONS:   A = fire drake / salamander / fire elemental
+KMONS:   A = hell hound / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
 KMONS:   C = salamander stormcaller / ophan w:5 / balrug w:5
 KMONS:   D = hydra simulacrum / bog body / polar bear

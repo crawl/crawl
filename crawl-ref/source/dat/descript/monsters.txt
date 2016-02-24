@@ -1130,10 +1130,6 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 red scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
-fire drake
-
-A small but dangerous dragon, puffing clouds of smoke.
-%%%%
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as
@@ -2025,6 +2021,10 @@ revenant
 
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
+%%%%
+rime drake
+
+A small but dangerous dragon. Its breath is visible even on the warmest days.
 %%%%
 river rat
 

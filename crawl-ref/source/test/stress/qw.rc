@@ -1076,7 +1076,7 @@ local scary_monsters = {
   {12, "spiny frog"},
   {12, "black mamba"},
   {12, "Snorg"},
-  {12, "fire drake"},
+  {12, "rime drake"},
   {12, "Harold"},
   {12, "komodo dragon"},
   {12, "Gastronok"},

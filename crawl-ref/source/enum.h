@@ -2600,7 +2600,7 @@ enum monster_type                      // menv[].type
     MONS_DRAKE,                 // genus
 #endif
     MONS_LINDWURM,
-    MONS_FIRE_DRAKE,
+    MONS_RIME_DRAKE,
     MONS_SWAMP_DRAKE,
     MONS_DEATH_DRAKE,
 #if TAG_MAJOR_VERSION > 34

@@ -1907,7 +1907,7 @@ TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
 PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  float
-MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
+MONS:    swamp dragon, swamp drake, hydra, rime drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
@@ -1996,7 +1996,7 @@ TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
 MONS:    fire dragon, lindwurm / fire crab w:8, swamp dragon / hydra w:12
-MONS:    fire drake / mottled dragon w:6 / swamp drake / steam dragon w:4
+MONS:    mottled dragon w:6 / swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \

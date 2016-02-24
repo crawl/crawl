@@ -34,7 +34,7 @@ function base_monster_setup(e)
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            redback w:20 / phantasmal warrior / spiny frog / hell rat /\
-           black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
+           black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
            swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
@@ -147,7 +147,7 @@ function base_monster_setup(e)
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
   e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\
-           storm dragon / swamp drake / lindwurm / fire drake /\
+           storm dragon / swamp drake / lindwurm / rime drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
            golden dragon")
@@ -2047,7 +2047,7 @@ KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         freezing wraith w:3 / flayed ghost
 KMONS:  D = lich
 KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
-        catoblepas / dire elephant / fire drake / lindwurm / komodo dragon /\
+        catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
         basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
 KMONS:  E = golden dragon
 SUBST:  1 : a, 2 : A

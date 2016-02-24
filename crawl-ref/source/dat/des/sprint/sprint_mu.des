@@ -488,7 +488,7 @@ KMONS: p = plant
 KMONS: 1 = patrolling wandering mushroom
 KMONS: 2 = komodo dragon
 KMONS: 3 = spiny frog
-KMONS: 4 = fire drake
+KMONS: 4 = rime drake
 KMONS: 5 = swamp drake
 KMONS: v = blink frog
 KFEAT: v = shallow_water
@@ -749,7 +749,7 @@ MARKER:  ! = lua:fog_machine { \
                  size_buildup_time = 5, cloud_type = "freezing vapour" \
              }
 : else
-MONS: fire drake, fire dragon, hydra, Xtahua
+MONS: hell hound, fire dragon, hydra, Xtahua
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
                  size = 2, size_buildup_amnt = 3, \
