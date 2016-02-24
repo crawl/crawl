@@ -135,7 +135,10 @@ protected:
     int apply_defender_ac(int damage, int damage_max = 0) const;
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
-    virtual bool attack_ignores_shield(bool verbose) = 0;
+    virtual bool ignores_shield(bool verbose)
+    {
+        return false;
+    }
     virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
                                      const char *verb,

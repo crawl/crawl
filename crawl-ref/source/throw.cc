@@ -47,6 +47,17 @@
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
 
+bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
+                           const item_def& projectile)
+{
+    return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
+            && projectile.base_type == OBJ_MISSILES
+            && get_ammo_brand(projectile) == SPMSL_PENETRATION
+           || weapon
+              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
+              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+}
+
 bool item_is_quivered(const item_def &item)
 {
     return in_inventory(item) && item.link == you.m_quiver.get_fire_item();

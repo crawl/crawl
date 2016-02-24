@@ -2272,11 +2272,6 @@ bool melee_attack::player_good_stab()
               && (!weapon || is_melee_weapon(*weapon));
 }
 
-bool melee_attack::attack_ignores_shield(bool verbose)
-{
-    return false;
-}
-
 /* Select the attack verb for attacker
  *
  * If klown, select randomly from klown_attack, otherwise check for any special
