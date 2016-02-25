@@ -4715,8 +4715,6 @@ bool bolt::god_cares() const
  */
 void bolt::hit_shield(actor* blocker) const
 {
-    if (flavour == BEAM_ACID)
-        blocker->corrode_equipment();
     if (blocker->is_player())
         you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
 }
