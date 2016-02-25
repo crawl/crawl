@@ -454,8 +454,8 @@ public:
     bool is_web_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
-    bool can_see_invisible() const override;
-    bool can_see_invisible(bool unid, bool items = true) const;
+    bool can_see_invisible(bool calc_unid = true) const override;
+    bool innate_sinv() const;
     bool visible_to(const actor *looker) const override;
     bool can_see(const actor& a) const override;
     undead_state_type undead_state(bool temp = true) const;
@@ -696,7 +696,7 @@ public:
     bool res_wind() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
-    int res_magic() const override;
+    int res_magic(bool /*calc_unid*/ = true) const override;
     bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
                  bool blink = false) const override;
     string no_tele_reason(bool calc_unid = true, bool blink = false) const;

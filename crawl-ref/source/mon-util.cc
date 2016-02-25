@@ -1302,6 +1302,20 @@ monster_type mons_species(monster_type mc)
     return me ? me->species : MONS_PROGRAM_BUG;
 }
 
+static monster_type _draco_or_demonspawn_subspecies(monster_type type,
+                                                    monster_type base)
+{
+    const monster_type species = mons_species(type);
+
+    if ((species == MONS_DRACONIAN || species == MONS_DEMONSPAWN)
+        && type != species)
+    {
+        return base;
+    }
+
+    return species;
+}
+
 monster_type draco_or_demonspawn_subspecies(const monster* mon)
 {
     ASSERT(mons_genus(mon->type) == MONS_DRACONIAN
@@ -1313,15 +1327,7 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
         return player_species_to_mons_species(mon->ghost->species);
     }
 
-    monster_type retval = mons_species(mon->type);
-
-    if ((retval == MONS_DRACONIAN || retval == MONS_DEMONSPAWN)
-        && mon->type != retval)
-    {
-        retval = mon->base_monster;
-    }
-
-    return retval;
+    return _draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -2034,6 +2040,51 @@ int mons_class_hit_dice(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return me ? me->HD : 0;
+}
+
+/**
+ * What base MR does a monster of the given type have?
+ *
+ * @param type    The monster type in question.
+ * @param base    The base type of the monster. (For e.g. draconians.)
+ * @return        The MR of a normal monster of that type.
+ */
+int mons_class_res_magic(monster_type type, monster_type base)
+{
+    const monster_type base_type =
+        (mons_is_draconian(type) || mons_is_demonspawn(base))
+            ? _draco_or_demonspawn_subspecies(type, base)
+            : type;
+
+    const int type_mr = (get_monster_data(base_type))->resist_magic;
+
+    // Negative values get multiplied with monster hit dice.
+    if (type_mr >= 0)
+        return type_mr;
+    return mons_class_hit_dice(base_type) * -type_mr * 4 / 3;
+}
+
+/**
+ * Can a monster of the given type see invisible creatures?
+ *
+ * @param type    The monster type in question.
+ * @param base    The base type of the monster. (For e.g. draconians.)
+ * @return        Whether a normal monster of that type can see invisible
+ *                things.
+ */
+bool mons_class_sees_invis(monster_type type, monster_type base)
+{
+    if (mons_class_flag(type, M_SEE_INVIS))
+        return true;
+
+    if (mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
+        && mons_class_flag(_draco_or_demonspawn_subspecies(type, base),
+                           M_SEE_INVIS))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 /**

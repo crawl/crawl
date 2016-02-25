@@ -4900,6 +4900,10 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     mi.props.write(th);
 }
 
+// XXX: this function does not actually work (unmarshalling is not in the same
+// order as marshalling. to reproduce: look at a monster, move out of sight,
+// save, load, Xv the monster - holiness will be blank
+// FIXME
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
     unmarshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
@@ -4971,6 +4975,9 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.ev = mi.base_ev = get_mons_class_ev(mi.type);
     }
 #endif
+
+    mi.mr = mons_class_res_magic(mi.type, mi.base_type);
+    mi.can_see_invis = mons_class_sees_invis(mi.type, mi.base_type);
 
     uint64_t holi_flags = unmarshallUnsigned(th);
 #if TAG_MAJOR_VERSION == 34

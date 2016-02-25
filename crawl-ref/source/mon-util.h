@@ -221,6 +221,8 @@ int exper_value(const monster* mon, bool real = true);
 int hit_points(int avg_hp, int scale = 10);
 
 int mons_class_hit_dice(monster_type mc);
+int mons_class_res_magic(monster_type type, monster_type base);
+bool mons_class_sees_invis(monster_type type, monster_type base);
 
 bool mons_immune_magic(const monster* mon);
 

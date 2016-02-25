@@ -6417,7 +6417,7 @@ int player::res_constrict() const
     return 0;
 }
 
-int player::res_magic() const
+int player::res_magic(bool /*calc_unid*/) const
 {
     return player_res_magic();
 }
@@ -7138,23 +7138,27 @@ bool player::sicken(int amount)
     return true;
 }
 
-bool player::can_see_invisible(bool calc_unid, bool items) const
+/// Can the player see invisible things?
+bool player::can_see_invisible(bool calc_unid) const
 {
     if (crawl_state.game_is_arena())
         return true;
 
-    if (items)
+    if (wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
+        // armour: (checks head armour only)
+        || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
+        // randart gear
+        || scan_artefacts(ARTP_SEE_INVISIBLE, calc_unid) > 0)
     {
-        if (wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
-            // armour: (checks head armour only)
-            || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
-            // randart gear
-            || scan_artefacts(ARTP_SEE_INVISIBLE, calc_unid) > 0)
-        {
-            return true;
-        }
+        return true;
     }
 
+    return innate_sinv();
+}
+
+/// Can the player see invisible things without needing items' help?
+bool player::innate_sinv() const
+{
     // Possible to have both with a temp mutation.
     if (player_mutation_level(MUT_ACUTE_VISION)
         && !player_mutation_level(MUT_BLURRY_VISION))
@@ -7173,11 +7177,6 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
         return true;
 
     return false;
-}
-
-bool player::can_see_invisible() const
-{
-    return can_see_invisible(true, true);
 }
 
 bool player::invisible() const

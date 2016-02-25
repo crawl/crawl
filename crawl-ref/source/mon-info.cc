@@ -315,6 +315,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
+    mr = mons_class_res_magic(type, base_type);
+    can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
 
@@ -546,6 +548,8 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
+    mr = m->res_magic(false);
+    can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m, true);
@@ -1642,67 +1646,14 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 
 /**
  * Can the monster described by this monster_info see invisible creatures?
- *
- * This should match the logic in monster::can_see_invisible().
- *
- * XXX: This is an abomination and should be destroyed, probably by adding a
- * sees_invisible field that's initialized by monster::can_see_invisible();
- * just need to avoid leaking info from e.g. jewellery.
- *
- * @return
  */
 bool monster_info::can_see_invisible() const
 {
-    if (mons_is_ghost_demon(type))
-        return i_ghost.can_sinv;
-
-    if (props.exists(MUTANT_BEAST_FACETS))
-        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
-            if (facet.get_int() == BF_WEIRD)
-                return true;
-
-    return mons_class_flag(type, M_SEE_INVIS)
-           || mons_is_demonspawn(type)
-              && mons_class_flag(draco_or_demonspawn_subspecies(), M_SEE_INVIS);
+    return can_see_invis;
 }
 
 int monster_info::res_magic() const
 {
-    int mr = (get_monster_data(type))->resist_magic;
-    if (mr == MAG_IMMUNE)
-        return MAG_IMMUNE;
-
-    // Negative values get multiplied with monster hit dice.
-    if (mr < 0)
-        mr = hd * (-mr) * 4 / 3;
-
-    // Randarts
-    mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);
-
-    // ego armour resistance
-    if (inv[MSLOT_ARMOUR].get()
-        && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    if (inv[MSLOT_SHIELD].get()
-        && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    item_def *jewellery = inv[MSLOT_JEWELLERY].get();
-
-    if (jewellery
-        && jewellery->is_type(OBJ_JEWELLERY, RING_PROTECTION_FROM_MAGIC))
-    {
-        mr += 40;
-    }
-
-    if (is(MB_VULN_MAGIC))
-        mr /= 2;
-
     return mr;
 }
 
