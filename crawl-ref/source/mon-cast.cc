@@ -7888,7 +7888,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return _mons_mass_confuse(mon, false) < 0;
 
     case SPELL_THROW:
-        return !_get_throw_victim(*mon);
+    {
+        const actor* victim = _get_throw_victim(*mon);
+        return !victim || _choose_throwing_target(*mon, *victim,
+                                                  _throw_site_score).origin();
+    }
 
     case SPELL_THROW_ALLY:
         return !_find_ally_to_throw(*mon);
