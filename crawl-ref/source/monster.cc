@@ -4127,21 +4127,19 @@ int monster::res_acid(bool calc_unid) const
     return u;
 }
 
-int monster::res_magic() const
+/**
+ * What MR (resistance to hexes, etc) does this monster have?
+ *
+ * @param calc_unid     Whether to include items & effects the player may not
+ *                      know about.
+ * @return              The monster's magic resistance value.
+ */
+int monster::res_magic(bool calc_unid) const
 {
     if (mons_immune_magic(this))
         return MAG_IMMUNE;
 
-    const monster_type base_type =
-        (mons_is_draconian(type) || mons_is_demonspawn(type))
-        ? draco_or_demonspawn_subspecies(this)
-        : type;
-
-    int u = (get_monster_data(base_type))->resist_magic;
-
-    // Negative values get multiplied with monster hit dice.
-    if (u < 0)
-        u = get_hit_dice() * -u * 4 / 3;
+    int u = mons_class_res_magic(type, base_monster);
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
@@ -4151,14 +4149,23 @@ int monster::res_magic() const
     const int shld      = inv[MSLOT_SHIELD];
     const int jewellery = inv[MSLOT_JEWELLERY];
 
-    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
+        && (calc_unid || mitm[armour].flags | ISFLAG_KNOW_TYPE))
+    {
         u += get_armour_res_magic(mitm[armour], false);
+    }
 
-    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
+    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
+        && (calc_unid || mitm[shld].flags | ISFLAG_KNOW_TYPE))
+    {
         u += get_armour_res_magic(mitm[shld], false);
+    }
 
-    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+        && calc_unid) // XXX: can you ever see monster jewellery?
+    {
         u += get_jewellery_res_magic(mitm[jewellery], false);
+    }
 
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
         u += 80;
@@ -5225,27 +5232,32 @@ bool monster::needs_berserk(bool check_spells) const
     return true;
 }
 
-bool monster::can_see_invisible() const
+/**
+ * Can this monster see invisible creatures?
+ *
+ * @param calc_unid     Should effects the player doesn't know about be
+ *                      considered?
+ * @return              Whether the monster can see invisible things.
+ */
+bool monster::can_see_invisible(bool calc_unid) const
 {
-    // If you change the non-item parts of this method, be sure to update
-    // monster_info::can_see_invisible() to match!
     if (mons_is_ghost_demon(type))
         return ghost->see_invis;
-    else if (mons_class_flag(type, M_SEE_INVIS)
-             || (mons_is_demonspawn(type)
-                 && mons_class_flag(draco_or_demonspawn_subspecies(this),
-                                    M_SEE_INVIS)))
-    {
+    else if (mons_class_sees_invis(type, base_monster))
         return true;
-    }
-    else if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
+    else if (has_facet(BF_WEIRD))
+        return true;
+
+    if (!calc_unid)
+        return false;
+
+    if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
         return true;
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
-    else if (has_facet(BF_WEIRD))
-        return true;
+
     return false;
 }
 

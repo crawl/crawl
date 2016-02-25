@@ -162,7 +162,7 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
-    virtual bool can_see_invisible() const = 0;
+    virtual bool can_see_invisible(bool calc_unid = true) const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
@@ -298,7 +298,7 @@ public:
     virtual bool res_wind() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int res_magic() const = 0;
+    virtual int res_magic(bool calc_unid = true) const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;

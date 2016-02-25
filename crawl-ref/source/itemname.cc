@@ -3706,7 +3706,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_PAKELLAS);
 
         case RING_SEE_INVISIBLE:
-            return you.can_see_invisible(false, false);
+            return you.innate_sinv();
 
         case RING_POISON_RESISTANCE:
             return player_res_poison(false, temp, false) > 0
