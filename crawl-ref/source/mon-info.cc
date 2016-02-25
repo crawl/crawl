@@ -108,6 +108,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
+    { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
+    { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -149,10 +151,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
-    case ENCH_BRILLIANCE_AURA:
-        return MB_BRILLIANCE_AURA;
-    case ENCH_EMPOWERED_SPELLS:
-        return MB_EMPOWERED_SPELLS;
     case ENCH_SPELL_CHARGED:
         if (mons.get_ench(ench).degree < max_mons_charge(mons.type))
             return MB_PARTIALLY_CHARGED;
