@@ -4149,6 +4149,9 @@ int monster::res_magic(bool calc_unid) const
     const int shld      = inv[MSLOT_SHIELD];
     const int jewellery = inv[MSLOT_JEWELLERY];
 
+    // XXX: should also include artefacts mr props
+    // (remove ", false" and add appropriate flag checks for calc_unid)
+
     if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
         && (calc_unid || mitm[armour].flags | ISFLAG_KNOW_TYPE))
     {
