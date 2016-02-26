@@ -2060,6 +2060,7 @@ int mons_class_hit_dice(monster_type mc)
 int mons_class_res_magic(monster_type type, monster_type base)
 {
     const monster_type base_type =
+        base != MONS_NO_MONSTER &&
         (mons_is_draconian(type) || mons_is_demonspawn(type))
             ? _draco_or_demonspawn_subspecies(type, base)
             : type;
@@ -2085,7 +2086,7 @@ bool mons_class_sees_invis(monster_type type, monster_type base)
     if (mons_class_flag(type, M_SEE_INVIS))
         return true;
 
-    if (mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
+    if (base != MONS_NO_MONSTER && mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
         && mons_class_flag(_draco_or_demonspawn_subspecies(type, base),
                            M_SEE_INVIS))
     {
