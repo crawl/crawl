@@ -1175,9 +1175,17 @@ bool mons_is_conjured(monster_type mc)
            || mons_class_flag(mc, M_CONJURED);
 }
 
+size_type mons_class_body_size(monster_type mc)
+{
+    // Should pass base_type to get the right size for zombies, skeletons &c.
+    // For normal monsters, base_type is set to type in the constructor.
+    const monsterentry *e = get_monster_data(mc);
+    return e ? e->size : SIZE_MEDIUM;
+}
+
 int max_corpse_chunks(monster_type mc)
 {
-    switch (monster_info(mc).body_size())
+    switch (mons_class_body_size(mc))
     {
     case SIZE_TINY:
         return 1;
