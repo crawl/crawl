@@ -95,12 +95,10 @@ Items
   - The ring of resist corrosion, which has the same effect as the former
     amulet.
   - Wands of acid, which cause significant damage and corrosion.
-  - Wands of frostblast, which cause an explosion that is only partly affected
+  - Wands of iceblast, which cause an explosion that is only partly affected
     by rC, similar to Throw Icicle and Glaciate.
   - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
     Zig:27 of all ziggurats and in the Tomb:3 loot.
-  - Pieces from Xom's chessboard - evoke to randomly swap the positions of
-    you and all enemies and LOS, or (on failure) to trigger a Xom effect.
   - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
     executioner's axe with a chance of placing freezing clouds on enemies it
     strikes.
@@ -132,7 +130,6 @@ Items
   - Rods of destruction and of the swarm.
   - Ring of invisibility.
   - Potions of poison.
-  - Xom's chesspieces.
 
 Monsters
 --------
