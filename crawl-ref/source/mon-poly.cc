@@ -573,7 +573,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     return player_messaged;
 }
 
-bool mon_can_be_slimified(monster* mons)
+bool mon_can_be_slimified(const monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 

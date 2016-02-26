@@ -32,7 +32,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                        bool force_beh = false);
 
 void slimify_monster(monster* mons, bool hostile = false);
-bool mon_can_be_slimified(monster* mons);
+bool mon_can_be_slimified(const monster* mons);
 
 void seen_monster(monster* mons);
 #endif
