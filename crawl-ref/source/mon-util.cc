@@ -2052,7 +2052,7 @@ int mons_class_hit_dice(monster_type mc)
 int mons_class_res_magic(monster_type type, monster_type base)
 {
     const monster_type base_type =
-        (mons_is_draconian(type) || mons_is_demonspawn(base))
+        (mons_is_draconian(type) || mons_is_demonspawn(type))
             ? _draco_or_demonspawn_subspecies(type, base)
             : type;
 
