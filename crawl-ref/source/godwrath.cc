@@ -1303,33 +1303,27 @@ static void _jiyva_mutate_player()
         mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
 }
 
+static bool _choose_slimify_target(const monster* mon)
+{
+    return mon_can_be_slimified(mon) && mon->attitude == ATT_HOSTILE;
+}
+
 /**
- * Make Jiyva slmify a nearby enemy.
+ * Make Jiyva slimify a nearby enemy.
  */
-static void _jiyva_slimify()
+static bool _jiyva_slimify()
 {
     monster* mon = nullptr;
+    mon = choose_random_nearby_monster(0, _choose_slimify_target);
 
-    const int max_tries = 10;
-    bool success = false;
-    for (int i = 0; i < max_tries; i++)
-    {
-        mon = choose_random_nearby_monster(0);
-
-        if (mon && mon_can_be_slimified(mon) && mon->attitude == ATT_HOSTILE)
-        {
-            success = true;
-            break;
-        }
-    }
-
-    if (!success)
-        return;
+    if (!mon)
+        return false;
 
     simple_god_message(make_stringf("'s putrescence saturates %s!",
                                     mon->name(DESC_THE).c_str()).c_str(),
                        GOD_JIYVA);
     slimify_monster(mon, true);
+    return true;
 }
 
 /**
@@ -1408,8 +1402,12 @@ static bool _jiyva_retribution()
     if (you.can_safely_mutate() && one_chance_in(7))
         _jiyva_mutate_player();
     // Don't create hostile slimes while under penance.
-    else if (!you_worship(god) && there_are_monsters_nearby() && coinflip())
-        _jiyva_slimify();
+    else if (!you_worship(god)
+             && coinflip()
+             && _jiyva_slimify())
+    {
+        return true;
+    }
     else if (!one_chance_in(3) || you_worship(god))
         _jiyva_tmut();
     else
