@@ -2961,14 +2961,32 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "Your scales start taking on %s colour.",
+                         article_a(scale_type(you.species)).c_str());
+
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
                     // skill being checked is at the wrong level.
                     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
                     {
+                        const int oldapt = species_apt(sk, SP_BASE_DRACONIAN);
+                        const int newapt = species_apt(sk, you.species);
+                        if (oldapt != newapt)
+                        {
+                            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                                 skill_name(sk),
+                                 abs(oldapt - newapt) > 1 ? "much " : "",
+                                 oldapt > newapt ? "slower" : "quicker");
+                        }
+
                         you.skills[sk] = saved_skills[sk];
                         check_skill_level_change(sk);
                     }
+
+                    // Tell the player about their new species
+                    for (auto &mut : fake_mutations(you.species, false))
+                        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
                     // needs to be done early here, so HP doesn't look rotted
                     // when we redraw the screen
@@ -2976,10 +2994,6 @@ void level_change(bool skip_attribute_increase)
                     updated_maxhp = true;
 
                     redraw_screen();
-
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your scales start taking on %s colour.",
-                         article_a(scale_type(you.species)).c_str());
                 }
                 break;
 
