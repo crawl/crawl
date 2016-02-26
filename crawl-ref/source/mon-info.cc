@@ -1703,25 +1703,22 @@ reach_type monster_info::reach_range() const
 
 size_type monster_info::body_size() const
 {
-    // Using base_type to get the right size for zombies, skeletons and such.
-    // For normal monsters, base_type is set to type in the constructor.
-    const monsterentry *e = get_monster_data(base_type);
-    size_type ret = (e ? e->size : SIZE_MEDIUM);
+    const size_type class_size = mons_class_body_size(base_type);
 
     // Slime creature size is increased by the number merged.
     if (type == MONS_SLIME_CREATURE)
     {
         if (slime_size == 2)
-            ret = SIZE_MEDIUM;
+            return SIZE_MEDIUM;
         else if (slime_size == 3)
-            ret = SIZE_LARGE;
+            return SIZE_LARGE;
         else if (slime_size == 4)
-            ret = SIZE_BIG;
+            return SIZE_BIG;
         else if (slime_size == 5)
-            ret = SIZE_GIANT;
+            return SIZE_GIANT;
     }
 
-    return ret;
+    return class_size;
 }
 
 bool monster_info::cannot_move() const
