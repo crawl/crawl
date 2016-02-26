@@ -1223,8 +1223,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REPEL_MISSILES:
     case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
-    case SPELL_HUNTING_CRY:
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_HUNTING_CRY:
     case SPELL_CONDENSATION_SHIELD:
 #endif
     case SPELL_CONTROL_UNDEAD:
@@ -6340,9 +6340,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_HUNTING_CRY:
-        return;
-
     case SPELL_CONJURE_FLAME:
     {
         if (in_bounds(pbolt.target))
@@ -6793,9 +6790,6 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 {
     bool force_silent = false;
     noise_flag_type noise_flags = NF_NONE;
-
-    if (spell_cast == SPELL_HUNTING_CRY)
-        noise_flags = (noise_flag_type)(noise_flags | NF_HUNTING_CRY);
 
     if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
@@ -7981,9 +7975,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DEFLECT_MISSILES:
         return mon->has_ench(ENCH_DEFLECT_MISSILES);
 
-    case SPELL_HUNTING_CRY:
-        return !foe;
-
     case SPELL_PARALYSIS_GAZE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_DRAINING_GAZE:
@@ -8054,6 +8045,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_IGNITE_POISON_SINGLE:
     case SPELL_CONDENSATION_SHIELD:
     case SPELL_STONESKIN:
+    case SPELL_HUNTING_CRY:
 #endif
     case SPELL_NO_SPELL:
         return true;

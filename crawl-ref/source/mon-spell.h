@@ -1970,7 +1970,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ANUBIS_GUARD,
       {
-       { SPELL_HUNTING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NOISY
+       { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NOISY
                                 | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
        { SPELL_BOLT_OF_DRAINING, 56, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_DISPEL_UNDEAD, 44, MON_SPELL_PRIEST },
@@ -1995,7 +1995,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SERAPH,
       {
-       { SPELL_HUNTING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+       { SPELL_WARNING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
                                 | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
        { SPELL_SUMMON_HOLIES, 50, MON_SPELL_PRIEST },
        { SPELL_INJURY_BOND, 50, MON_SPELL_PRIEST },

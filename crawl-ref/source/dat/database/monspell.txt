@@ -215,14 +215,6 @@ __NONE
 # Individual innate spells (breathing and spitting).
 #####################################################
 %%%%
-unseen Warning Cry cast
-
-You hear a note loudly blown on a horn!
-%%%%
-Warning Cry cast
-
-@The_monster@ blows a loud note on a signal horn!
-%%%%
 Spit Acid cast
 
 @The_monster@ spits acid @at@ @target@.
@@ -320,9 +312,13 @@ Volley of Thorns cast
 
 @The_monster@ fires a volley of thorns @at@ @target@.
 %%%%
-Hunting Cry cast
+Warning Cry cast
 
-@The_monster@ howls a hunting cry!
+@The_monster@ howls a warning cry!
+%%%%
+unseen Warning Cry cast
+
+You hear a loud warning cry!
 %%%%
 Slug Dart cast
 
@@ -606,9 +602,13 @@ Blink Away revenant cast
 
 __NONE
 %%%%
-Hunting Cry seraph cast
+Warning Cry seraph cast
 
 @The_monster@ shouts a warning to @possessive@ allies!
+%%%%
+unseen Warning Cry seraph cast
+
+You hear a loud warning shout!
 %%%%
 Battlecry seraph cast
 
@@ -637,6 +637,14 @@ You hear a tremendous hooting and howling!
 Warning Cry howler monkey cast
 
 @The_monster@ hoots and howls with incredible vigour!
+%%%%
+unseen Warning Cry vault sentinel cast
+
+You hear a note loudly blown on a horn!
+%%%%
+Warning Cry vault sentinel cast
+
+@The_monster@ blows a loud note on a signal horn!
 %%%%
 ########################################################################
 # Monster species and genus messages.
