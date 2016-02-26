@@ -648,10 +648,6 @@ Exhales a large cloud of blessed flame, shining with the glory of the good
 gods. These flames are especially dangerous to evil creatures, and have no
 effect on holy creatures.
 %%%%
-Hunting Cry spell
-
-Alerts nearby allies of the user to their target's location.
-%%%%
 Holy Flames spell
 
 Traps an enemy in a ring of blessed flame. These flames are especially

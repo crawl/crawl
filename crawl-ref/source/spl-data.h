@@ -3572,6 +3572,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_HUNTING_CRY, "Hunting Cry",
     SPTYP_HEXES,
@@ -3582,6 +3583,7 @@ static const struct spell_desc spelldata[] =
     25, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_CLEANSING_FLAME, "Cleansing Flame",

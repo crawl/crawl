@@ -1309,7 +1309,6 @@ static void _actor_apply_noise(actor *act,
     else
     {
         monster *mons = act->as_monster();
-        actor *source = actor_by_mid(noise.noise_producer_mid);
         // If the noise came from the character, any nearby monster
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)
@@ -1319,16 +1318,6 @@ static void _actor_apply_noise(actor *act,
                  && !mons->friendly())
         {
             // Sirens/merfolk avatar call (hostile) aquatic monsters.
-            behaviour_event(mons, ME_ALERT, 0, apparent_source);
-        }
-        else if ((noise.noise_flags & NF_HUNTING_CRY)
-                 && source
-                 && (mons_genus(mons->type) == mons_genus(source->type)
-                     || mons->holiness() & MH_HOLY
-                        && source->holiness() & MH_HOLY))
-        {
-            // Hunting cries alert monsters of the same genus, or other
-            // holy creatures if the source is holy.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else
