@@ -387,7 +387,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
 
-    you.props["gozag_gold_aura_amount"].get_int()++;
+    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
+    if (!x_chance_in_y(chance, chance + 9))
+        ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
 /**
