@@ -10,8 +10,8 @@ Branches, Environment
 * Ziggurat portals no longer appear in Pan.
 * After clearing multiple ziggurats, enemies found in later ziggurats will be
   considerably more dangerous.
-* The Orcish Mines are now two levels, and only spawn plain orcs as part of
-  bands; gold generation is doubled to account for the shorter branch.
+* The Orcish Mines are now two levels, and generate fewer plain orcs. Gold
+  generation is doubled to account for the shorter branch.
 * The Elven Halls now contains elementals and dancing weapons (in addition to
   the ones normally found in the Hall of Blades).
 
@@ -19,52 +19,32 @@ Character
 ---------
 * A new mutation: Sturdy Frame, reducing base ER by 2/4/6 and thus making
   heavy armour easier to wear. Can be a demonspawn mutation.
-* The player no longer takes an accuracy penalty for fighting while invisible
-  but without SInv (also true of monsters).
 * Formicids now have 0 Throwing aptitude (was -2).
 * Taking a known shaft now has a 2/3 chance of shafting one floor and 1/3 of
   two floors.
 * Breath abilities are no longer mutations and are now unique to draconians
   and nagas.
-* Weapon types no longer have distinct strength weights. Instead of dex and str
-  both giving varying bonuses to damage, str now solely gives a bonus to-dam,
-  and dex now solely gives a bonus to accuracy.
+* Weapon types no longer have distinct strength weights. Strength now only
+  gives a bonus to damage, and dexterity only gives a bonus to accuracy.
 * Formicids can no longer dig while in most non-Formicid forms.
 * Statue Form now gives somewhat more AC.
-* Statue Form, Hydra Form and Bat Form no longer modify your str or dex.
-* Early-game stat damage is recovered significantly more quickly.
+* Early-game attribute loss is recovered significantly more quickly.
 
 Gods
 ----
-* New god: Pakellas the Inventive. Pakellas is a temple god, with an altar
-  either in Temple or on D:2-9.
-  - Grants MP on kills (at about half the rate of Vehumet) and passive
-    wand charge identification. MP gained while full will eventually be turned
-    into potions of magic.
-  - Blocks MP regeneration and hates channeling (staff of energy, crystal
-    ball of energy, the Staff of Wucad Mu, and Sublimation of Blood).
-  - Piety on kills.
-  - 1*: Quick Charge: spend 2/3 your current MP pool to add some charges
-    to a wand or rod proportional to your Evocations, your current MP pool,
-    and the capacity of the device.
-  - At 2*, Pakellas gifts you a wand once (of any type other than heal
-    wounds, hasting, and teleportation).
-  - 3*: Device Surge: on your next use of an evocable item, spends 1-9 MP
-    to apply one to three enhancers to its power output, with maximum
-    MP and number of enhancers dependent on piety.
-  - Starting at 4*, Pakellas occasionally gifts rods, wands, and miscellaneous
-    evokables (always starting with a rod unless you are a felid).
+* New temple god: Pakellas the Inventive.
+  - Grants MP on kills and passive wand charge identification. MP gained while
+    full will eventually be turned into potions of magic.
+  - Blocks MP regeneration and hates channeling.
+  - Gifts wands, rods and miscellaneous evokables.
+  - 1*: Quick Charge: uses a portion of current MP to recharge a wand or rod.
+  - 3*: Device Surge: spends variable MP to apply power enhancers to your next
+    use of an evocable item.
   - 6* capstone: Supercharge: sets a rod to +10 (18/18), or sets a wand's
-    capacity to 50% above normal for that wand type (in addition to recharging
-    it - this has the effect of improving Quick Charge's efficiency on the
-    wand).
+    capacity to 50% above normal for that wand type.
 * Ashenzari now allows followers to curse items with an ability that consumes
-  a scroll of remove curse. Praying over scrolls of remove curse no longer
-  transforms them into scrolls of cursing.
-* Cheibriados now blocks chaos effects from hasting the player.
+  a scroll of remove curse, instead of using prayer to create curse scrolls.
 * Followers of Elyvilon can pacify insects (again).
-* Gozag's Call Merchant now bases the shop quality on the player's level
-  rather than on their location.
 * Jiyva altars in Dungeon no longer appear as early.
 * Okawaru's abilities now cost less piety, but don't last as long at low
   Invocations skill.
@@ -74,7 +54,6 @@ Gods
   the other way around.
 * Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
   again.
-* Xom's random spell list has been adjusted slightly.
 * Yredremnul's Enslave Soul can now affect demons & holy beings.
 * Abandoning Yredelemnul now destroys your zombie minions.
 * Zin's Recite is now only interrupted if the player is silenced or
@@ -83,33 +62,28 @@ Gods
 Items
 -----
 * New items:
-  - The amulet of dismissal, which has a chance of teleporting away enemies
-    that damage the player, but causes a few turns of vertigo (lowered
-    accuracy, EV, and spell success) when first worn.
+  - The amulet of dismissal, which may teleport away enemies that damage the
+    player, but causes a brief combat penalty when equipped.
   - The amulet of reflection, which grants a few points of shielding that
     act as a shield of reflection.
   - The amulet of harm, which increases damage dealt to and by the wearer by
     25%.
-  - The amulet of magic regeneration, which increases the player MP regen rate
-    after a warmup period.
-  - The ring of resist corrosion, which has the same effect as the former
-    amulet.
+  - The amulet of magic regeneration, which increases MP regeneration after a
+    warmup period.
+  - The ring of resist corrosion, replacing the amulet.
   - Wands of acid, which cause significant damage and corrosion.
-  - Wands of iceblast, which cause an explosion that is only partly affected
-    by rC, similar to Throw Icicle and Glaciate.
-  - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
-    Zig:27 of all ziggurats and in the Tomb:3 loot.
+  - Wands of iceblast, which cause a partially irresistible explosion of cold.
+  - A figurine of a ziggurat, which can be evoked to create a ziggurat portal.
+    Appears on Zig:27 of all ziggurats and in the Tomb:3 loot.
   - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
-    executioner's axe with a chance of placing freezing clouds on enemies it
-    strikes.
-  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit
-    of plate mail.
+    executioner's axe that may create freezing clouds on those it strikes.
+  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized plate
+    armour.
   - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
     reflection of piercing effects and enchantments, among other things.
-* The robe of vines is now +2, Regen+7.
+* The robe of vines now grants slightly less regeneration.
 * The Majin-Bo now speaks occasionally.
-* The captain's cutlass now causes bonus damage when disarming, and its
-  enchantment has been upgraded from +5 to +7.
+* The captain's cutlass now causes bonus damage when disarming.
 * The amulet of Cekugob is now an amulet of dismissal.
 * The brooch of Shielding is now a +8 amulet of reflection with no AC or EV
   bonus.
@@ -122,7 +96,7 @@ Items
 * The evocable teleport property +Tele is removed. Rings of teleportation now
   only have the *Tele teleportitis effect.
 * Potions of cure mutation are slightly more common.
-* Potions of degeneration now cause 1d3 damage to every stat.
+* Potions of degeneration now cause 1-3 damage to every stat.
 * Removed items:
   - Amulets of resist mutation, stasis, warding, and corrosion.
   - Wands of cold, fire, frost, magic darts, invisibility, draining, and
@@ -134,25 +108,17 @@ Items
 Monsters
 --------
 * New monsters:
-  - Spark wasps, lethally electric swarming insects that appear singularly in
-    Spider and in packs in Depths.
-  - Iron giants, with all the resilience that iron implies and the ability to
-    throw you into the pack of giants they lead.
-  - Doom hounds, demonic canines lurking in Tartarus who can howl once to
-    create a pack of nasty creatures.
-  - Deep elf archers, who have attained a notable level of skill in both
-    archery and hexes.
-  - Deep elf elementalists, with mastery of all of the elemental schools and
-    the noted ability to turn rock into earth elementals to dig out entrenched
-    foes.
-  - Dart slugs, slow-moving, squishy gastropods with a surprisingly painful
-    ranged attack.
-  - Howler monkeys: fast, extremely loud, and often found in packs.
-  - Rime drakes: small flying lizards which breathe Flash Freeze, freezing &
-    slowing their victims' movements.
+  - Spark wasps, electric swarming insects appearing in Spider and Depths.
+  - Iron giants, with the ability to throw you towards their pack of allies.
+  - Doom hounds, who can howl to create a pack of dangerous creatures.
+  - Deep elf archers, with skill in archery and hexes.
+  - Deep elf elementalists, with mastery of elemental magic and the ability to
+    turn rock into earth elementals to dig out entrenched foes.
+  - Dart slugs, slow-moving, squishy gastropods with a ranged dart attack.
+  - Howler monkeys, fast and extremely loud creatures, often found in packs.
+  - Rime drakes, small flying lizards which breathe Flash Freeze.
 * Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
-  ability which applies (usually) positive status effects to allies in its
-  line of sight.
+  ability which applies (usually) positive status effects to nearby allies.
 * Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
 * Salamander stormcallers' chant does not need to be continuous; they now
@@ -160,22 +126,19 @@ Monsters
   trigger.
 * Entropy weavers' corrosion is now instant and smite-targeted, but only
   applies one level of corrosion.
-* Ice devils are now tier 4 demons, with lowered HD to match.
+* Ice devils are now tier 4 demons, and are weakened slightly.
 * Hellwings now have the swoop attack formerly possessed by blue devils.
-* Orange demons have their attacks split - they now have a reaching poison
-  sting and a melee-only weakness attack.
 * Salamander mystics lose Localised Ignite Poison.
 * Deep elf high priests & sorcerers can no longer cast Summon Demon.
 * Natasha, deep elf knights, and salamander stormcallers can no longer cast
   Conjure Flame.
 * Banishment from powerful monsters can now send you deeper into the Abyss
   than Abyss:1.
-* Deep elf mages are now HD 9 and have new spell sets, including spells
+* Deep elf mages are now stronger and have new spell sets, including spells
   previously cast by deep elf conjurers and summoners.
 * The Sap Magic effect from demonspawn warmongers now has three fixed levels of
   success rate penalty, rather than scaling continuously. Each spell cast while
-  under the Sap effect has a fixed chance to increase the penalty level. The
-  penalty now expires when the "Sap" status expires.
+  under the Sap effect has a fixed chance to increase the penalty level.
 * Demonspawn corruptors' Corrupt Body spell is now a single-target version of
   the same spell used by wretched stars. These spells both now try to apply
   multiple levels of a single random temporary mutation instead of giving many
@@ -220,7 +183,7 @@ Spells
 * Monstrous Menagerie is now level 7 (was 6).
 * Shadow creatures is now level 6 (was 5).
 * Passwall is now level 2 (was 3).
-* Ozocubu's Armour now has ponderous 1, slowing movement slightly while active.
+* Ozocubu's Armour now slows movement slightly while active.
 * Removed spells: Stoneskin, Condensation Shield, and Phase Shift.
 
 Interface
