@@ -2426,22 +2426,16 @@ void inscribe_item(item_def &item)
         return;
     }
 
-    // Strip spaces from the end.
-    for (int i = strlen(buf) - 1; i >= 0; --i)
-    {
-        if (isspace(buf[i]))
-            buf[i] = 0;
-        else
-            break;
-    }
+    string new_inscrip = buf;
+    trim_string_right(new_inscrip);
 
-    if (item.inscription == buf)
+    if (item.inscription == new_inscrip)
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    item.inscription = buf;
+    item.inscription = new_inscrip;
 
     mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
