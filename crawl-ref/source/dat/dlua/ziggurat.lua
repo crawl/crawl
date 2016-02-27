@@ -3,11 +3,6 @@
 --
 -- Code for ziggurats.
 --
--- Important notes:
--- ----------------
--- Functions that are attached to Lua markers' onclimb properties
--- cannot be closures, because Lua markers must be saved and closure
--- upvalues cannot (yet) be saved.
 ------------------------------------------------------------------------------
 
 function zig()
@@ -40,11 +35,6 @@ function initialise_ziggurat(z, portal)
   z.colour = ziggurat_wall_colour()
 end
 
-function callback.ziggurat_initialiser(portal)
-  dgn.persist.ziggurat = { }
-  initialise_ziggurat(dgn.persist.ziggurat, portal)
-end
-
 -- Common setup for ziggurat levels.
 function ziggurat_level(e)
   e.tags("allow_dup")
@@ -66,6 +56,10 @@ function ziggurat_awaken_all(mons)
 end
 
 function ziggurat_build_level(e)
+  if you.depth() == 1 then
+    dgn.persist.ziggurat = { }
+    initialise_ziggurat(dgn.persist.ziggurat, portal)
+  end
   local builder = zig().builder
 
   -- Deeper levels can have all monsters awake.
