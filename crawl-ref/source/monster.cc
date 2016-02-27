@@ -4733,6 +4733,10 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (intel == I_BRAINLESS)
         return true;
 
+    // Ditto, berserkers & frenzied creatures.
+    if (berserk_or_insane())
+        return true;
+
     // Hostile monsters are not afraid of non-mechanical traps.
     // Allies will try to avoid teleportation and zot traps.
     const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
