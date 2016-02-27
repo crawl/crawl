@@ -23,15 +23,18 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
        e.mons("spriggan")
        e.mons("wolf / black bear w:4 / yak w:2")
     else
-        if you.absdepth() >= 14 then
+        if you.absdepth() >= 13 then
             e.mons("centaur warrior / hill giant")
             e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")
             e.mons("porcupine")
-        else
+        elseif you.absdepth() >= 5 then
             e.mons("gnoll / ogre w:1")
-            e.mons("river rat")
+            e.mons("green rat")
+        else
+            e.mons("gnoll")
+            e.mons("quokka")
         end
     end
 

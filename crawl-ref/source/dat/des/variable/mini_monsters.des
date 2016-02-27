@@ -5826,8 +5826,7 @@ KMONS:   M = Wiglaf / ancient champion, ancient champion / nothing
 KMONS:   N = Frederick / draconian knight, draconian knight / nothing
 KMONS:   O = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   W = gnoll sergeant ; trident . scale mail | chain mail . shield
-KMONS:   X = deep elf knight ; rapier | long sword . robe | leather armour . buckler | nothing
-KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
+KMONS:   X = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item triple sword / good_item double sword
 KFEAT:   S = known permanent teleport trap
@@ -5841,7 +5840,7 @@ KMONS:   k = orc warrior / orc knight w:5 / orc w:1
 NSUBST:  k = 2 = EFIJ / *:k
 KMONS:   k = deep elf knight
 : elseif you.absdepth() < 10 then
-SUBST:   k = ABWXY
+SUBST:   k = ABWX
 : elseif you.absdepth() < 13 then
 SUBST:   k = ABCDEF
 : elseif you.absdepth() < 16 then
