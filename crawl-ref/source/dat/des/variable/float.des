@@ -3134,6 +3134,9 @@ NAME:    minmay_opposing_rooms
 DEPTH:   D:4-
 ORIENT:  float
 SHUFFLE: 0%
+: if you.absdepth() < 6 then
+SUBST:   9 = 0
+: end
 MAP
 xxxxxxxxxxxxxxcccccxx
 xxxx........xcc%.%ccx
@@ -4062,29 +4065,31 @@ ORIENT:  float
 TAGS:    transparent no_monster_gen
 DEPTH:   D:6-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
-KMONS:   " = 0
-KMONS:   ` = 9
-KITEM:   "` = % / $ w:5
-KMASK:   , = !no_monster_gen
-SHUFFLE: XzZ / '"`
+KMONS:   0 = 0
+KMONS:   9 = 9
+KITEM:   09 = % / $ w:5
+SHUFFLE: XzZ / '09
 SUBST:   XzZ = x, ' = ., x : x:90 c
+: if you.absdepth() < 13 then
+NSUBST:  0 = 4:0 / * = 00., 9 = 1:9 / 1:90 / * = 0
+: end
 MAP
-           ,,,,,,,,,,,,,,,,,,,,,
-          ,,,,,,,,,,,,,,,,,,,,,,,
-         ,,.X..'..X..'..X..'..X.,,
-        ,,.'x'XxX'x'XxX'x'XxX'x',,
-       ,,.,,X..'..X..'..X..'..X.,,
-      ,,.X,,'..z..`..z..'..X...,,
-     ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
-    ,,..,X..'..z..`..z..'..X.,,
-   ,,.X,,'..z..`..z..'..X...,,
-  ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
- ,,...X..'..z..`..z..'..X.,,
-,,.X..'..X..'..X..'..X...,,
-,,'x'XxX'x'XxX'x'XxX'x'.,,
-,,.X..'..X..'..X..'..X.,,
- ,,,,,,,,,,,,,,,,,,,,,,,
-  ,,,,,,,,,,,,,,,,,,,,,
+           .....................
+          .......................
+         ...X..'..X..'..X..'..X...
+        ...'x'XxX'x'XxX'x'XxX'x'..
+       .....X..'..X..'..X..'..X...
+      ...X..'..z..9..z..'..X.....
+     ...'x'XxX0x0ZxZ0x0XxX'x'...
+    .....X..'..z..9..z..'..X...
+   ...X..'..z..9..z..'..X.....
+  ...'x'XxX0x0ZxZ0x0XxX'x'...
+ .....X..'..z..9..z..'..X...
+...X..'..X..'..X..'..X.....
+..'x'XxX'x'XxX'x'XxX'x'...
+...X..'..X..'..X..'..X...
+ .......................
+  .....................
 ENDMAP
 
 ###############################################################################
@@ -4104,34 +4109,34 @@ KITEM:   45 = * / % w:5
 SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
 : elseif you.absdepth() > 20 then
 SUBST:   x : x m:5, X : ccccbv, ' : .:70 w:20 l
-: elseif you.absdepth() > 13 then
+: elseif you.absdepth() > 11 then
 SUBST:   x : x m:3, X : xcc, ' : .:80 wW
 : else
-SUBST:   x : x m:2, X : xxc, ' : .:90 W
+SUBST:   x : x m:2, X : xxc, ' : .:90 W, 5 = 4
 : end
 MAP
   xxxxxxxx
- xxXXXXXxxx
-xxxX1'1Xxxxx
+ xxXXXXXXxx
+xxxX1'.1Xxxx
 xXXXX.XXXXxx
 xX.XX.XX1Xxx
 +.'..'..'Xxxxxx
 xX.XX.XX1Xxxxxxx
 xXXXX.XXXXXXXXxxx
-xxxX.'.XX5.'4Xxxxx
-xXXXX.XXXXX.XXXXxx
-xX2XX.XX.XX.XX4Xxx
+xXXX.'.XX5.'4Xxxxx
+xX2XX.XXXXX.XXXXxx
+xX.XX.XX.XX.XX4Xxx
 xX'..'..'..'..'Xxxxxx
 xX3XX.XX.XX.XX.Xxxxxxx
 xXXXX.XXXXX.XX5XXXXXxxx
-xxxX3'3XxX.'.XXX1'1Xxxx
-xxxXXXXXXXX.XXXXX.XXXXx
- xxxxxxX3XX.XX.XX.XX1Xx
+xxX3.'3XxX.'.XXX1'1XXXx
+xxXXXXXXXXX.XXXXX.XX1Xx
+ xxxxxxX3XX.XX.XX.XX.Xx
   xxxxxX'..'..'..'..'Xx
-     xxX3XX.XX.XX.XX1Xx
-     xxXXXX.XXXXX.XXXXx
-     xxxxX3'2XxX.'.Xxxx
-      xxxXXXXXxXX.XXxx
+     xxX.XX.XX.XX.XX1Xx
+     xxX3XX.XXXXX.XXXXx
+     xxXXX3'.2XX.'.Xxxx
+      xxxXXXXXXXX.XXxx
        xxxxxxxxxx+xxx
 ENDMAP
 
@@ -4139,10 +4144,13 @@ ENDMAP
 
 NAME:   hangedman_cross_cluster
 TAGS:   patrolling transparent no_monster_gen
-DEPTH:  D:8-, !D:$, Depths, !Depths:$
+DEPTH:  D:9-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  C = CTUV, y : xc, z : ccvb, 1 = 0''
 KMASK:  ' = !no_monster_gen
+: if you.in_branch("D") then
+SUBST:  8 = 009
+: end
 MAP
               '''''''''
              '''.xxx.'''
@@ -4158,15 +4166,15 @@ MAP
 ''..x......x......c......x......x...'
 'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
 'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
-'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'x.$x0.x'''''''c.8c9.c'''''''x.0x$.x'
 '...x.....ccc.....c.....ccc.....x...'
 ''.xxx.....c.....ccc.....c.....xxx.''
-'''''...c.%c9.c.......c.9c%.c...'''''
+'''''...c.%c9.c.......c.8c%.c...'''''
  '''''..ccczccc..|C|..ccczccc..'''''
-'''''...c.%c9.c.......c.9c%.c...'''''
+'''''...c.%c8.c.......c.9c%.c...'''''
 ''.xxx.....c.....ccc.....c.....xxx.''
 '...x.....ccc.....c.....ccc.....x...'
-'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'x.$x0.x'''''''c.9c8.c'''''''x.0x$.x'
 'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
 'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
 '...x......x......c......x......x...'
@@ -5003,6 +5011,9 @@ ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  F : .:40 GTUb
 SUBST:  9 = 9.
+: if you.absdepth() < 12 then
+SUBST:  8 = 9
+: end
 MAP
             .......
           ....9x9....
