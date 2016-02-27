@@ -15,7 +15,7 @@
     - row 3: monster resistance flags
     - row 4: experience modifier, genus, species, holiness, resist magic
     - row 5: damage for each of four attacks
-    - row 6: hit dice, described by four parameters
+    - row 6: hit dice, hit points
     - row 7: AC, evasion, spells, corpse effect, shouts
     - row 8: intel, habitat, speed, energy_usage
     - row 9: gmon_use class, body size, body shape
@@ -29,9 +29,9 @@
     - name: if an empty string, name generated automagically (see moname)
     - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
     - species: corpse type of monster (i.e. orc for orc wizard)
-    - holiness:
+    - holiness: a bitwise OR of one or more of:
        MH_HOLY       - irritates some gods when killed, immunity from
-                        holy wrath weapons
+                        holy wrath weapons. Includes good priests.
        MH_NATURAL    - baseline monster type
        MH_UNDEAD     - immunity from draining, pain, torment; resistance
                         to poison; extra damage from holy wrath;
@@ -40,6 +40,10 @@
                         *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
+
+      along with optional flags that affect some god conducts and abilities:
+       MH_EVIL       - inherently evil (and not MH_UNDEAD)
+       MH_UNHOLY     - inherently unholy (and not MH_DEMONIC)
 
    exp_mod: multiplies xp value after most other calculations.
             see exper_value() in mon-util.cc
@@ -50,18 +54,9 @@
    damage [4]
    - up to 4 different attacks
 
-   hp_dice [4]
-   - hit dice, min hp per HD, extra random hp per HD, fixed HP (unique mons)
-
-    Further explanations copied from mon-util.h:
-        hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-        min hp = [0]*[1] + [3]
-        max hp = [0]*([1]+[2]) + [3]
-        hp     = [0] *times_do* { [1] + random2(1+[2]) }, *then* + [3]
-        example: the Iron Golem, hpdice={15,7,4,0}
-           15*7 < hp < 15*(7+4),
-           105 < hp < 165
-        hp will be around 135 each time.
+   HD: like player level, used for misc things
+   avg_hp_10x: average hp for the monster, * 10 for precision
+               (see hit_points() for details)
 
    sec: if the monster has only one possible spellbook, sec is set to that book.
      If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
@@ -143,7 +138,7 @@ static monsterentry mondata[] =
     // up to four attacks
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     // hit points
-    { 0, 0, 0, 0 },
+    0, 0,
     // AC, EV, spells, corpse type, shout type
     0, 0, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     // intelligence, habitat, speed, energy usage
@@ -162,7 +157,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS, \
     10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, \
-    { 0, 0, 0, 0 }, \
+    0, 0, \
     0, 0, MST_NO_SPELLS, CE_CLEAN, S_SILENT, \
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY, \
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC \
@@ -251,6 +246,11 @@ static monsterentry mondata[] =
     AXED_MON(MONS_OCTOPODE_CRUSHER)
     AXED_MON(MONS_BLUE_DEVIL)
     AXED_MON(MONS_BRAIN_WORM)
+    AXED_MON(MONS_DEEP_ELF_SUMMONER)
+    AXED_MON(MONS_DEEP_ELF_CONJURER)
+    AXED_MON(MONS_DEEP_ELF_PRIEST)
+    AXED_MON(MONS_DEEP_ELF_FIGHTER)
+    AXED_MON(MONS_TRAPDOOR_SPIDER)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -262,7 +262,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS, \
     10, (id), (id), MH_NONLIVING, 10, \
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, \
-    { 0, 0, 0, 0 }, \
+    0, 0, \
     0, 0, MST_NO_SPELLS, CE_CLEAN, S_SILENT, \
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY, \
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC \
@@ -278,9 +278,9 @@ static monsterentry mondata[] =
     MR_VUL_POISON,
     10, MONS_WORKER_ANT, MONS_WORKER_ANT, MH_NATURAL, 10,
     { {AT_BITE, AF_POISON, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     4, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_INSECT
 },
 
@@ -290,9 +290,9 @@ static monsterentry mondata[] =
     MR_VUL_POISON,
     10, MONS_WORKER_ANT, MONS_QUEEN_ANT, MH_NATURAL, 60,
     { {AT_STING, AF_POISON_STRONG, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     14, 3, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_INSECT
 },
 
@@ -302,9 +302,9 @@ static monsterentry mondata[] =
     MR_VUL_POISON,
     10, MONS_WORKER_ANT, MONS_SOLDIER_ANT, MH_NATURAL, 20,
     { {AT_STING, AF_POISON, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     8, 10, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_INSECT
 },
 
@@ -316,7 +316,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_FORMICID, MONS_FORMICID, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 4, 6, 0 },
+    6, 420,
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -329,7 +329,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     4, MONS_BAT, MONS_BAT, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 3, 0 },
+    1, 35,
     1, 14, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
@@ -341,7 +341,7 @@ static monsterentry mondata[] =
     MR_VUL_POISON,
     10, MONS_BUTTERFLY, MONS_BUTTERFLY, MH_NATURAL, 10,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 1 },
+    1, 10,
     0, 25, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
@@ -353,7 +353,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     8, MONS_BAT, MONS_VAMPIRE_BAT, MH_UNDEAD, 10,
     { {AT_BITE, AF_VAMPIRIC, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 2, 3, 0 },
+    3, 105,
     1, 14, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
@@ -365,7 +365,7 @@ static monsterentry mondata[] =
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD | MR_VUL_WATER,
     8, MONS_BAT, MONS_FIRE_BAT, MH_NATURAL, 10,
     { {AT_BITE, AF_FIRE, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 3, 0 },
+    5, 225,
     1, 14, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
@@ -380,7 +380,7 @@ static monsterentry mondata[] =
     6, MONS_BENNU, MONS_BENNU, MH_NATURAL, 140,
     { {AT_PECK, AF_HOLY, 27}, {AT_CLAW, AF_DRAIN_XP, 18},
       {AT_CLAW, AF_PLAIN, 18}, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     6, 16, MST_NO_SPELLS, CE_NOCORPSE, S_SCREECH,
     I_HUMAN, HT_LAND, 16, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_BAT
@@ -392,7 +392,7 @@ static monsterentry mondata[] =
     MR_RES_COLD | MR_RES_FIRE,
     15, MONS_CAUSTIC_SHRIKE, MONS_CAUSTIC_SHRIKE, MH_NATURAL, 80,
     { {AT_CLAW, AF_ACID, 36}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 4, 4, 0 },
+    18, 1080,
     8, 18, MST_NO_SPELLS, CE_CLEAN, S_SCREECH,
     I_ANIMAL, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
@@ -404,7 +404,7 @@ static monsterentry mondata[] =
     mrd(MR_RES_COLD, 2),
     12, MONS_SHARD_SHRIKE, MONS_SHARD_SHRIKE, MH_NATURAL, 80,
     { {AT_CLAW, AF_COLD, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 21, 3, 4, 0 },
+    21, 1050,
     2, 18, MST_SHARD_SHRIKE, CE_CLEAN, S_SCREECH,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_BAT
@@ -417,7 +417,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_CENTAUR, MONS_CENTAUR, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    4, 220,
     3, 7, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_CENTAUR
@@ -429,7 +429,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     12, MONS_CENTAUR, MONS_CENTAUR, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     4, 8, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_CENTAUR
@@ -441,7 +441,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     9, MONS_YAKTAUR, MONS_YAKTAUR, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     4, 4, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_BIG, MON_SHAPE_CENTAUR
@@ -453,7 +453,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     9, MONS_YAKTAUR, MONS_YAKTAUR, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     5, 5, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_BIG, MON_SHAPE_CENTAUR
@@ -465,7 +465,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     8, MONS_FAUN, MONS_FAUN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 4, 0 },
+    10, 500,
     2, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -478,7 +478,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_SATYR, MONS_SATYR, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     2, 12, MST_SATYR, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -492,7 +492,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 6, 4, 0 },
+    8, 640,
     10, 11, MST_NO_SPELLS, CE_CLEAN, S_ROAR, I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
         MON_SHAPE_HUMANOID_TAILED
@@ -504,7 +504,7 @@ static monsterentry mondata[] =
     mrd(MR_RES_ELEC, 3),
     10, MONS_DRACONIAN, MONS_BLACK_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -517,7 +517,7 @@ static monsterentry mondata[] =
     MR_RES_ACID,
     10, MONS_DRACONIAN, MONS_YELLOW_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -532,7 +532,7 @@ static monsterentry mondata[] =
     MR_RES_STEAM,
     10, MONS_DRACONIAN, MONS_PALE_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 14, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -546,7 +546,7 @@ static monsterentry mondata[] =
     10, MONS_DRACONIAN, MONS_GREEN_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, {AT_TAIL_SLAP, AF_POISON, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_NOXIOUS, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -559,7 +559,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_PURPLE_DRACONIAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     8, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -572,7 +572,7 @@ static monsterentry mondata[] =
     MR_RES_FIRE,
     10, MONS_DRACONIAN, MONS_RED_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -585,7 +585,7 @@ static monsterentry mondata[] =
     MR_RES_COLD,
     10, MONS_DRACONIAN, MONS_WHITE_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -599,7 +599,7 @@ static monsterentry mondata[] =
     10, MONS_DRACONIAN, MONS_GREY_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TAIL_SLAP, AF_PLAIN, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     16, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -612,7 +612,7 @@ static monsterentry mondata[] =
     MR_RES_FIRE | MR_RES_STICKY_FLAME,
     10, MONS_DRACONIAN, MONS_MOTTLED_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 4, 0 },
+    14, 980,
     9, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -627,7 +627,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 3, 0 },
+    16, 880,
     0, 0, MST_DRAC_CALLER, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -641,7 +641,7 @@ static monsterentry mondata[] =
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 35}, {AT_KICK, AF_PLAIN, 20},
       {AT_TAIL_SLAP, AF_PLAIN, 15}, AT_NO_ATK },
-    { 16, 6, 3, 0 },
+    16, 1200,
     -3, 10, MST_NO_SPELLS, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -652,9 +652,9 @@ static monsterentry mondata[] =
     MONS_DRACONIAN_ZEALOT, 'q', LIGHTGREEN, "draconian zealot",
     M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
+    10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL | MH_EVIL | MH_UNHOLY, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 2, 0 },
+    16, 800,
     3, 0, MST_DRACONIAN_ZEALOT, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -667,7 +667,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 4, 0 },
+    16, 960,
     -1, 6, MST_DRAC_SHIFTER, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -680,8 +680,8 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 2, 0 },
-    -1, 0, MST_DRACONIAN_ANNIHILATOR, CE_CLEAN, S_ROAR,
+    16, 800,
+    -1, 0, MST_ANNIHILATOR, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
         MON_SHAPE_HUMANOID_TAILED
@@ -693,7 +693,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 6, 2, 0 },
+    16, 1120,
     3, 2, MST_DRACONIAN_KNIGHT, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -704,9 +704,9 @@ static monsterentry mondata[] =
     MONS_DRACONIAN_SCORCHER, 'q', LIGHTRED, "draconian scorcher",
     M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
+    10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL | MH_UNHOLY, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 2, 0 },
+    16, 800,
     -1, 2, MST_DRAC_SCORCHER, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -720,20 +720,8 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 3, 0 },
+    8, 360,
     3, 15, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
-    MONS_DEEP_ELF_FIGHTER, 'e', LIGHTRED, "deep elf fighter",
-    M_WARM_BLOOD | M_FIGHTER | M_SPEAKS,
-    MR_NO_FLAGS,
-    10, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
-    { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 3, 0 },
-    0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -744,8 +732,20 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 3, 0 },
-    0, 15, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
+    11, 495,
+    0, 17, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+},
+
+{
+    MONS_DEEP_ELF_ARCHER, 'e', BROWN, "deep elf archer",
+    M_WARM_BLOOD | M_ARCHER | M_DONT_MELEE | M_SPEAKS,
+    MR_NO_FLAGS,
+    10, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
+    { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    10, 500,
+    0, 15, MST_DEEP_ELF_ARCHER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -756,7 +756,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },
-    { 16, 5, 3, 0 },
+    16, 1040,
     0, 25, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -769,7 +769,7 @@ static monsterentry mondata[] =
     30, MONS_ELF, MONS_ELF, MH_NATURAL, 100,
     // Attack damage gets rolled into their ranged attacks.
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 2, 0 },
+    15, 750,
     0, 15, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MISSILE_ENERGY(5),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -781,44 +781,8 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     12, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 3, 0 },
+    9, 405,
     0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
-    MONS_DEEP_ELF_SUMMONER, 'e', BROWN, "deep elf summoner",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    13, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
-    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 4, 3, 0 },
-    0, 13, MST_DEEP_ELF_SUMMONER, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
-    MONS_DEEP_ELF_CONJURER, 'e', BLUE, "deep elf conjurer",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    12, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
-    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 3, 0 },
-    0, 13, MST_DEEP_ELF_CONJURER, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
-
-{
-    MONS_DEEP_ELF_PRIEST, 'e', GREEN, "deep elf priest",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    11, MONS_ELF, MONS_ELF, MH_NATURAL, 60,
-    { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 3, 0 },
-    0, 13, MST_DEEP_ELF_PRIEST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -827,9 +791,9 @@ static monsterentry mondata[] =
     MONS_DEEP_ELF_HIGH_PRIEST, 'e', LIGHTGREEN, "deep elf high priest",
     M_SPEAKS | M_WARM_BLOOD | M_SEE_INVIS,
     MR_NO_FLAGS,
-    15, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
+    15, MONS_ELF, MONS_ELF, MH_NATURAL | MH_EVIL | MH_UNHOLY, 80,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 3, 0 },
+    11, 495,
     3, 13, MST_DEEP_ELF_HIGH_PRIEST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -839,9 +803,9 @@ static monsterentry mondata[] =
     MONS_DEEP_ELF_DEMONOLOGIST, 'e', YELLOW, "deep elf demonologist",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
     MR_NO_FLAGS,
-    20, MONS_ELF, MONS_ELF, MH_NATURAL, 100,
+    20, MONS_ELF, MONS_ELF, MH_NATURAL | MH_UNHOLY, 100,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 3, 0 },
+    12, 540,
     0, 13, MST_DEEP_ELF_DEMONOLOGIST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -853,8 +817,8 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 3, 0 },
-    0, 13, MST_DEEP_ELF_ANNIHILATOR, CE_CLEAN, S_SHOUT,
+    15, 675,
+    0, 13, MST_ANNIHILATOR, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -863,9 +827,9 @@ static monsterentry mondata[] =
     MONS_DEEP_ELF_SORCERER, 'e', LIGHTMAGENTA, "deep elf sorcerer",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
     MR_NO_FLAGS,
-    17, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
+    17, MONS_ELF, MONS_ELF, MH_NATURAL | MH_UNHOLY, 120,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 3, 0 },
+    14, 630,
     0, 13, MST_DEEP_ELF_SORCERER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -875,10 +839,22 @@ static monsterentry mondata[] =
     MONS_DEEP_ELF_DEATH_MAGE, 'e', WHITE, "deep elf death mage",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
+    10, MONS_ELF, MONS_ELF, MH_NATURAL | MH_EVIL, 120,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 3, 0 },
+    15, 675,
     0, 13, MST_DEEP_ELF_DEATH_MAGE, CE_CLEAN, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+},
+
+{
+    MONS_DEEP_ELF_ELEMENTALIST, 'e', LIGHTRED, "deep elf elementalist",
+    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS,
+    MR_NO_FLAGS,
+    17, MONS_ELF, MONS_ELF, MH_NATURAL, 120,
+    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    14, 630,
+    0, 13, MST_DEEP_ELF_ELEMENTALIST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -890,7 +866,7 @@ static monsterentry mondata[] =
     MR_RES_POISON,
     10, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_PLANT, 40,
     { {AT_SPORE, AF_CONFUSE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     5, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -900,9 +876,9 @@ static monsterentry mondata[] =
     MONS_DEATHCAP, 'f', LIGHTMAGENTA, "deathcap",
     M_NO_FLAGS,
     MR_RES_COLD,
-    6, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_UNDEAD, 80,
+    6, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_UNDEAD | MH_PLANT, 80,
     { {AT_SPORE, AF_CONFUSE, 33}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 2, 4, 0 },
+    13, 520,
     5, 0, MST_DEATHCAP, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -915,7 +891,7 @@ static monsterentry mondata[] =
     14, MONS_PLANT, MONS_THORN_HUNTER, MH_PLANT, 100,
     { {AT_HIT, AF_PLAIN, 27}, {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK,
        AT_NO_ATK },
-    { 15, 4, 5, 0 },
+    15, 975,
     9, 9, MST_THORN_HUNTER, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 12, SWIM_ENERGY(12),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_PLANT
@@ -927,7 +903,7 @@ static monsterentry mondata[] =
     MR_RES_POISON,
     12, MONS_SHAMBLING_MANGROVE, MONS_SHAMBLING_MANGROVE, MH_PLANT, 100,
     { {AT_HIT, AF_PLAIN, 41}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 5, 4, 0 },
+    13, 910,
     13, 3, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_PLANT
@@ -940,8 +916,8 @@ static monsterentry mondata[] =
     10, MONS_VINE_STALKER, MONS_VINE_STALKER, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, {AT_BITE, AF_ANTIMAGIC, 10}, AT_NO_ATK,
        AT_NO_ATK },
-    { 8, 3, 3, 0 },
-    2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
+    8, 360,
+    2, 12, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -953,7 +929,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_GOBLIN, MONS_GOBLIN, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 4, 0 },
+    1, 40,
     0, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -965,7 +941,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_GOBLIN, MONS_HOBGOBLIN, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 4, 3, 0 },
+    1, 55,
     2, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -977,7 +953,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 4, 5, 0 },
+    2, 130,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -989,7 +965,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 4, 5, 0 },
+    3, 195,
     2, 9, MST_GNOLL_SHAMAN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1001,7 +977,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 4, 5, 0 },
+    4, 260,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1013,7 +989,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     14, MONS_BOGGART, MONS_BOGGART, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 4, 0 },
+    4, 200,
     0, 12, MST_BOGGART, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1025,7 +1001,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DWARF, MONS_DWARF, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1037,7 +1013,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1050,7 +1026,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_HOUND, MONS_JACKAL, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 5, 0 },
+    1, 55,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_BARK,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
@@ -1062,10 +1038,22 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_HOUND, MONS_HOUND, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     2, 13, MST_NO_SPELLS, CE_CLEAN, S_BARK,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
+},
+
+{
+    MONS_HOWLER_MONKEY, 'h', LIGHTGREEN, "howler monkey",
+    M_WARM_BLOOD,
+    MR_NO_FLAGS,
+    15, MONS_HOWLER_MONKEY, MONS_HOWLER_MONKEY, MH_NATURAL, 10,
+    { {AT_HIT, AF_PLAIN, 3}, {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK },
+    3, 185,
+    1, 11, MST_HOWLER_MONKEY, CE_CLEAN, S_HOWL,
+    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_HUMANOID_TAILED
 },
 
 {
@@ -1074,7 +1062,7 @@ static monsterentry mondata[] =
     MR_RES_POISON,
     12, MONS_HOUND, MONS_WARG, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 4, 5, 0 },
+    5, 325,
     4, 12, MST_NO_SPELLS, CE_CLEAN, S_HOWL,
     I_ANIMAL, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -1086,7 +1074,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     19, MONS_HOUND, MONS_WOLF, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    4, 220,
     4, 15, MST_NO_SPELLS, CE_CLEAN, S_HOWL,
     I_ANIMAL, HT_LAND, 17, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
@@ -1098,7 +1086,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_HOG, MONS_HOG, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
@@ -1108,11 +1096,23 @@ static monsterentry mondata[] =
     MONS_HELL_HOUND, 'h', CYAN, "hell hound",
     M_SEE_INVIS | M_UNBLINDABLE | M_BLOOD_SCENT,
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
-    10, MONS_HOUND, MONS_HELL_HOUND, MH_DEMONIC, 20,
+    10, MONS_HOUND, MONS_HELL_HOUND, MH_DEMONIC | MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     6, 13, MST_HELL_HOUND, CE_NOXIOUS, S_BARK,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
+},
+
+{
+    MONS_DOOM_HOUND, 'h', GREEN, "doom hound",
+    M_SEE_INVIS | M_UNBLINDABLE | M_BLOOD_SCENT,
+    MR_NO_FLAGS,
+    10, MONS_HOUND, MONS_DOOM_HOUND, MH_DEMONIC, 20,
+    { {AT_BITE, AF_PLAIN, 45}, {AT_CLAW, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK },
+    20, 1100,
+    6, 13, MST_DOOM_HOUND, CE_CLEAN, S_BARK,
+    I_ANIMAL, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
 },
 
@@ -1122,7 +1122,7 @@ static monsterentry mondata[] =
     mrd(MR_RES_ELEC, 3),
     12, MONS_HOUND, MONS_RAIJU, MH_NATURAL, 20,
     { {AT_BITE, AF_ELEC, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     4, 14, MST_RAIJU, CE_CLEAN, S_BARK,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
@@ -1132,9 +1132,9 @@ static monsterentry mondata[] =
     MONS_HELL_HOG, 'h', LIGHTRED, "hell hog",
     M_NO_FLAGS,
     MR_NO_FLAGS,
-    10, MONS_HOG, MONS_HELL_HOG, MH_DEMONIC, 40,
+    10, MONS_HOG, MONS_HELL_HOG, MH_DEMONIC | MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     2, 9, MST_HELL_HOG, CE_NOXIOUS, S_SILENT,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
@@ -1146,7 +1146,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_HOG, MONS_HOLY_SWINE, MH_HOLY, 40,
     { {AT_BITE, AF_HOLY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     2, 9, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
@@ -1158,7 +1158,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     10, MONS_FELID, MONS_FELID, MH_NATURAL, 40,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 2, 3, 0 },
+    5, 175,
     2, 18, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(8),
     MONUSE_STARTING_EQUIPMENT, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -1173,7 +1173,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     12, MONS_BEAR, MONS_POLAR_BEAR, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 7, 5, 3, 0 },
+    7, 455,
     7, 8, MST_BERSERK_ESCAPE, CE_CLEAN, S_GROWL,
     I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_TAILLESS
@@ -1186,7 +1186,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     9, MONS_BEAR, MONS_BLACK_BEAR, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 9}, {AT_CLAW, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 6, 3, 3, 0 },
+    6, 270,
     2, 8, MST_BERSERK_ESCAPE, CE_CLEAN, S_GROWL,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
@@ -1199,7 +1199,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_NO_FLAGS,
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 2, 3, 0 },
+    7, 245,
     1, 18, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1211,7 +1211,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_VUL_POISON, // the mount
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 4, 3, 0 },
+    11, 605,
     1, 18, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID // ??
@@ -1223,7 +1223,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_NO_FLAGS,
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 2, 0 },
+    11, 440,
     1, 18, MST_SPRIGGAN_DRUID, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1235,7 +1235,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_NO_FLAGS,
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 3, 0 },
+    12, 540,
     2, 18, MST_BK_TROG, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1247,7 +1247,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_NO_FLAGS,
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 2, 3, 0 },
+    14, 490,
     1, 22, MST_SPRIGGAN_AIR_MAGE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1259,7 +1259,7 @@ DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
     MR_NO_FLAGS,
     10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 3, 0 },
+    15, 675,
     3, 22, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 16, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -1274,20 +1274,20 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake")
     MR_RES_POISON,
     20, MONS_DRAKE, MONS_SWAMP_DRAKE, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 5, 5, 0 },
+    4, 300,
     3, 11, MST_SWAMP_DRAKE, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
 },
 
 {
-    MONS_FIRE_DRAKE, 'k', LIGHTRED, "fire drake",
+    MONS_RIME_DRAKE, 'k', BLUE, "rime drake",
     M_WARM_BLOOD | M_FLIES,
-    MR_RES_FIRE,
-    20, MONS_DRAKE, MONS_FIRE_DRAKE, MH_NATURAL, 20,
+    MR_RES_COLD,
+    22, MONS_DRAKE, MONS_RIME_DRAKE, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
-    3, 12, MST_FIRE_BREATH, CE_CLEAN, S_SILENT,
+    6, 330,
+    3, 12, MST_RIME_DRAKE, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
 },
@@ -1298,7 +1298,7 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake")
     MR_RES_WIND,
     6, MONS_DRAKE, MONS_WIND_DRAKE, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 5, 5, 0 },
+    8, 600,
     3, 12, MST_WIND_DRAKE, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
@@ -1311,7 +1311,7 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake")
     13, MONS_DRAKE, MONS_LINDWURM, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 10},
       {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     8, 6, MST_FIRE_BREATH, CE_CLEAN, S_ROAR,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -1323,7 +1323,7 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake")
     MR_RES_POISON | MR_RES_ROTTING,
     10, MONS_DRAKE, MONS_DEATH_DRAKE, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 5, 7, 0 },
+    9, 765,
     6, 14, MST_DEATH_DRAKE, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
@@ -1338,7 +1338,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_GIANT_LIZARD, MONS_GIANT_NEWT, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 2, 0 },
+    1, 20,
     0, 15, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED
@@ -1350,7 +1350,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     16, MONS_GIANT_LIZARD, MONS_GIANT_GECKO, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 5, 0 },
+    1, 55,
     1, 14, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -1362,7 +1362,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     13, MONS_GIANT_LIZARD, MONS_IGUANA, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     5, 9, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
@@ -1374,7 +1374,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_GIANT_LIZARD, MONS_BASILISK, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 4, 4, 0 },
+    6, 360,
     3, 12, MST_BASILISK, CE_NOXIOUS, S_HISS,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -1386,7 +1386,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     15, MONS_WYVERN, MONS_WYVERN, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     5, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
@@ -1398,7 +1398,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_GIANT_LIZARD, MONS_KOMODO_DRAGON, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 34}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     7, 8, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -1411,7 +1411,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     4, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 4, 3, 0 },
+    10, 550,
     4, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1423,7 +1423,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     13, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 5, 3, 0 },
+    12, 780,
     // Impalers prefer light armour, and are dodging experts.
     0, 18, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, {10, 6, 6, 10, 10, 10, 10, 100},
@@ -1436,7 +1436,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 5, 2, 0 },
+    13, 780,
     0, 14, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1448,7 +1448,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 3, 0 },
+    14, 630,
     0, 12, MST_MERFOLK_AQUAMANCER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1460,7 +1460,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 3, 0 },
+    9, 405,
     4, 12, MST_SIREN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1472,7 +1472,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 120,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 5, 3, 0 },
+    13, 845,
     4, 12, MST_MERFOLK_AVATAR, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1484,7 +1484,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_WATER_NYMPH, MONS_WATER_NYMPH, MH_NATURAL, 100,
     { {AT_TOUCH, AF_DROWN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 4, 0 },
+    10, 500,
     4, 13, MST_WATER_NYMPH, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1497,7 +1497,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_RES_FIRE | MR_RES_COLD,
     16, MONS_GHOUL, MONS_BOG_BODY, MH_UNDEAD, 40,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_COLD, 4}, AT_NO_ATK, AT_NO_ATK },
-    { 6, 5, 3, 0 },
+    6, 390,
     1, 9, MST_BOG_BODY, CE_NOXIOUS, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(14),
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1509,7 +1509,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_RES_COLD,
     12, MONS_GHOUL, MONS_NECROPHAGE, MH_UNDEAD, 40,
     { {AT_HIT, AF_ROT, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 10, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1521,7 +1521,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_RES_COLD,
     10, MONS_GHOUL, MONS_GHOUL, MH_UNDEAD, 80,
     { {AT_CLAW, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK },
-    { 14, 8, 5, 0 },
+    14, 1470,
     4, 10, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1534,7 +1534,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     15, MONS_ORC, MONS_ORC, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 4, 6, 0 },
+    1, 70,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1546,7 +1546,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_ORC, MONS_ORC, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 4, 0 },
+    3, 150,
     1, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1556,9 +1556,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_ORC_PRIEST, 'o', GREEN, "orc priest",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_ORC, MONS_ORC, MH_NATURAL, 20,
+    10, MONS_ORC, MONS_ORC, MH_NATURAL | MH_EVIL, 20,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 4, 0 },
+    3, 150,
     1, 10, MST_ORC_PRIEST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1570,7 +1570,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     16, MONS_ORC, MONS_ORC, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 4, 6, 0 },
+    4, 280,
     0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1582,7 +1582,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     9, MONS_ORC, MONS_ORC, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 4, 7, 0 },
+    9, 675,
     2, 13, MST_BATTLECRY, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1594,7 +1594,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     11, MONS_ORC, MONS_ORC, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 7, 0 },
+    15, 1125,
     3, 10, MST_BATTLECRY, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1606,7 +1606,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_ORC, MONS_ORC, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 2, 3, 0 },
+    9, 315,
     5, 12, MST_ORC_SORCERER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1616,9 +1616,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_ORC_HIGH_PRIEST, 'o', LIGHTGREEN, "orc high priest",
     M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD,
     MR_NO_FLAGS,
-    10, MONS_ORC, MONS_ORC, MH_NATURAL, 60,
+    10, MONS_ORC, MONS_ORC, MH_NATURAL | MH_EVIL, 60,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 4, 0 },
+    11, 550,
     1, 12, MST_ORC_HIGH_PRIEST, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1631,7 +1631,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     mrd(MR_RES_FIRE, 3),
     15, MONS_ORC, MONS_LAVA_ORC, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 4, 6, 0 },
+    1, 70,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1645,7 +1645,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     3, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1657,7 +1657,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1665,11 +1665,11 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 
 {
     MONS_ENTROPY_WEAVER, 'p', BROWN, "entropy weaver",
-    M_NO_SKELETON | M_FIGHTER,
+    M_WARM_BLOOD | M_NO_SKELETON | M_FIGHTER,
     MR_NO_FLAGS,
     10, MONS_ENTROPY_WEAVER, MONS_ENTROPY_WEAVER, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17} },
-    { 13, 3, 5, 0 },
+    13, 715,
     7, 13, MST_ENTROPY_WEAVER, CE_CLEAN, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1679,9 +1679,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_HELL_KNIGHT, 'p', RED, "hell knight",
     M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
     mrd(MR_RES_FIRE, 3),
-    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
+    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_EVIL, 40,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 4, 5, 0 },
+    10, 650,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1691,9 +1691,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_DEATH_KNIGHT, 'p', GREEN, "death knight",
     M_WARM_BLOOD | M_FIGHTER | M_SPEAKS,
     MR_NO_FLAGS,
-    12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 80,
+    12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_EVIL, 80,
     { {AT_HIT, AF_PLAIN, 28}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 6, 0 },
+    10, 800,
     2, 12, MST_DEATH_KNIGHT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1703,9 +1703,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_NECROMANCER, 'p', WHITE, "necromancer",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
+    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_EVIL, 60,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 2, 4, 0 },
+    10, 400,
     0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1715,9 +1715,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_WIZARD, 'p', MAGENTA, "wizard",
     M_SPEAKS | M_WARM_BLOOD,
     MR_NO_FLAGS,
-    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
+    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_UNHOLY, 60,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 2, 4, 0 },
+    10, 400,
     0, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1729,7 +1729,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     1, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1741,7 +1741,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     1, 13, MST_VAULT_SENTINEL, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1753,7 +1753,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 36}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     1, 13, MST_VAULT_WARDEN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1765,7 +1765,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     0, 10, MST_IRONBRAND_CONVOKER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1777,7 +1777,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     12, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 5, 6, 0 },
+    14, 1120,
     0, 6, MST_IRONHEART_PRESERVER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1789,7 +1789,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_SHAPESHIFTER, MONS_SHAPESHIFTER, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     0, 10, MST_NO_SPELLS, CE_MUTAGEN, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1801,7 +1801,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_SHAPESHIFTER, MONS_GLOWING_SHAPESHIFTER, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     0, 10, MST_NO_SPELLS, CE_MUTAGEN, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1814,7 +1814,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     17, MONS_HUMAN, MONS_KILLER_KLOWN, MH_NATURAL, 160,
     { {AT_HIT, AF_KLOWN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 5, 5, 0 },
+    20, 1500,
     10, 15, MST_BLINKER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1826,7 +1826,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_DEMIGOD, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 5, 5, 0 },
+    5, 375,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -1838,7 +1838,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_HALFLING, MONS_HALFLING, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 2, 3, 0 },
+    3, 105,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -1851,7 +1851,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     1, MONS_RAT, MONS_RAT, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 3, 0 },
+    1, 25,
     1, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED
@@ -1863,7 +1863,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     10, MONS_QUOKKA, MONS_QUOKKA, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 5, 0 },
+    1, 55,
     2, 13, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -1875,7 +1875,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     13, MONS_RAT, MONS_RIVER_RAT, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     5, 11, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED
@@ -1885,9 +1885,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONS_HELL_RAT, 'r', LIGHTRED, "hell rat",
     M_WARM_BLOOD | M_GLOWS,
     MR_NO_FLAGS,
-    10, MONS_RAT, MONS_HELL_RAT, MH_DEMONIC, 20,
+    10, MONS_RAT, MONS_HELL_RAT, MH_DEMONIC | MH_NATURAL, 20,
     { {AT_BITE, AF_DRAIN_XP, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     7, 10, MST_NO_SPELLS, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -1899,7 +1899,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_NO_FLAGS,
     26, MONS_RAT, MONS_PORCUPINE, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 2, 4, 0 },
+    4, 160,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED
@@ -1912,9 +1912,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_VUL_POISON,
     10, MONS_GIANT_COCKROACH, MONS_GIANT_COCKROACH, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 4, 0 },
+    1, 50,
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_INSECT
 },
 
@@ -1924,9 +1924,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MR_VUL_POISON,
     13, MONS_SCORPION, MONS_SCORPION, MH_NATURAL, 20,
     { {AT_STING, AF_POISON, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 3, 0 },
+    4, 180,
     5, 10, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ARACHNID
 },
 
@@ -1937,9 +1937,9 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     13, MONS_SCORPION, MONS_EMPEROR_SCORPION, MH_NATURAL, 60,
     { {AT_STING, AF_POISON, 30}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
-    { 14, 6, 5, 0 },
+    14, 1190,
     20, 12, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_ARACHNID
 },
 
@@ -1951,9 +1951,9 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     MR_VUL_POISON,
     6, MONS_SPIDER, MONS_TARANTELLA, MH_NATURAL, 20,
     { {AT_BITE, AF_CONFUSE, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 2, 3, 0 },
+    8, 280,
     3, 14, MST_NO_SPELLS, CE_CLEAN, S_HISS,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ARACHNID
 },
 
@@ -1964,9 +1964,9 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     8, MONS_SPIDER, MONS_JUMPING_SPIDER, MH_NATURAL, 20,
     { {AT_POUNCE, AF_ENSNARE, 20}, {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK,
        AT_NO_ATK },
-    { 8, 2, 4, 0 },
+    8, 320,
     6, 12, MST_JUMPING_SPIDER, CE_NOXIOUS, S_HISS,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ARACHNID
 },
 
@@ -1977,22 +1977,10 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     4, MONS_SPIDER, MONS_WOLF_SPIDER, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 25}, {AT_BITE, AF_POISON, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 11, 3, 4, 0 },
+    11, 550,
     3, 10, MST_NO_SPELLS, CE_NOXIOUS, S_HISS,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ARACHNID
-},
-
-{
-    MONS_TRAPDOOR_SPIDER, 's', LIGHTCYAN, "trapdoor spider",
-    M_NO_SKELETON | M_SUBMERGES | M_WEB_SENSE,
-    MR_VUL_POISON,
-    5, MONS_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, 20,
-    { {AT_BITE, AF_POISON, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 4, 0 },
-    3, 10, MST_NO_SPELLS, CE_NOXIOUS, S_HISS,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ARACHNID
 },
 
 {
@@ -2001,9 +1989,9 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     MR_VUL_POISON,
     5, MONS_SPIDER, MONS_REDBACK, MH_NATURAL, 20,
     { {AT_BITE, AF_POISON_STRONG, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 2, 2, 0 },
+    9, 270,
     2, 12, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_ARACHNID
 },
 
@@ -2014,9 +2002,9 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     4, MONS_DEMONIC_CRAWLER, MONS_DEMONIC_CRAWLER, MH_DEMONIC, 100,
     { {AT_HIT, AF_PLAIN, 13}, {AT_HIT, AF_PLAIN, 13}, {AT_HIT, AF_PLAIN, 13},
        AT_NO_ATK },
-    { 9, 4, 5, 0 },
+    9, 585,
     10, 6, MST_NO_SPELLS, CE_NOXIOUS, S_SCREAM,
-    I_BRAINLESS, HT_LAND, 13, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_CENTIPEDE
 },
 
@@ -2026,20 +2014,20 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     MR_VUL_POISON,
     20, MONS_SPIDER, MONS_ORB_SPIDER, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 4, 4, 0 },
+    7, 420,
     3, 10, MST_ORB_SPIDER, CE_CLEAN, S_HISS,
-    I_BRAINLESS, HT_LAND, 12, SPELL_ENERGY(20),
+    I_ANIMAL, HT_LAND, 12, SPELL_ENERGY(20),
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ARACHNID
 },
 
 // testudines and crocodiles ('t')
 {
     MONS_CROCODILE, 't', BROWN, "crocodile",
-    M_COLD_BLOOD | M_SUBMERGES,
+    M_COLD_BLOOD,
     MR_NO_FLAGS,
     10, MONS_CROCODILE, MONS_CROCODILE, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     4, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -2047,12 +2035,12 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
 
 {
     MONS_ALLIGATOR, 't', LIGHTBLUE, "alligator",
-    M_COLD_BLOOD | M_SUBMERGES,
+    M_COLD_BLOOD,
     MR_NO_FLAGS,
     10, MONS_CROCODILE, MONS_ALLIGATOR, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 30}, {AT_TAIL_SLAP, AF_PLAIN, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 12, 3, 6, 0 },
+    12, 720,
     5, 9, MST_ALLIGATOR, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 10, {10, 6, 8, 8, 8, 8, 8, 80},
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -2064,7 +2052,7 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     MR_NO_FLAGS,
     10, MONS_SNAPPING_TURTLE, MONS_SNAPPING_TURTLE, MH_NATURAL, 40,
     { {AT_BITE, AF_REACH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 6, 0 },
+    10, 600,
     16, 5, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 8, {10, 6, 8, 8, 8, 8, 8, 80},
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
@@ -2077,7 +2065,7 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider")
     10, MONS_SNAPPING_TURTLE, MONS_ALLIGATOR_SNAPPING_TURTLE,
         MH_NATURAL, 60,
     { {AT_BITE, AF_REACH, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 7, 4, 0 },
+    16, 1440,
     19, 1, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 8, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_TAILLESS
@@ -2091,9 +2079,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON | mrd(MR_RES_FIRE, 3),
     25, MONS_CRAB, MONS_FIRE_CRAB, MH_NATURAL, 40,
     { {AT_BITE, AF_FIRE, 15}, {AT_CLAW, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     9, 6, MST_FIRE_CRAB, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED // ??
 },
 
@@ -2101,11 +2089,11 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MONS_GHOST_CRAB, 't', LIGHTGREY, "ghost crab",
     M_NO_SKELETON,
     MR_VUL_POISON | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING,
-    25, MONS_CRAB, MONS_GHOST_CRAB, MH_NATURAL, 40,
+    25, MONS_CRAB, MONS_GHOST_CRAB, MH_NATURAL | MH_UNDEAD, 40,
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_DRAIN_XP, 15}, AT_NO_ATK, AT_NO_ATK },
-    { 9, 4, 5, 0 },
+    9, 585,
     9, 6, MST_GHOST_CRAB, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
 },
 
@@ -2115,9 +2103,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON | mrd(MR_RES_FIRE | MR_RES_COLD, 2),
     13, MONS_CRAB, MONS_APOCALYPSE_CRAB, MH_DEMONIC, 60,
     { {AT_BITE, AF_CHAOS, 15}, {AT_CLAW, AF_CHAOS, 15}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     11, 6, MST_APOCALYPSE_CRAB, CE_MUTAGEN, S_SILENT,
-    I_BRAINLESS, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
 },
 
@@ -2130,7 +2118,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     6, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     4, 10, MST_NO_SPELLS, CE_MUTAGEN, S_GURGLE,
     I_ANIMAL, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -2142,7 +2130,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     6, 10, MST_NO_SPELLS, CE_MUTAGEN, S_GURGLE,
     I_ANIMAL, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_MISC
@@ -2156,7 +2144,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD | MR_RES_ELEC,
     5, MONS_FIRE_VORTEX, MONS_FIRE_VORTEX, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PURE_FIRE, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 2, 2, 0 },
+    10, 300,
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -2168,7 +2156,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     5, MONS_FIRE_VORTEX, MONS_SPATIAL_VORTEX, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_DISTORT, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 6, 6, 0 },
+    6, 540,
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -2182,7 +2170,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
         MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_DISTORT, 20}, {AT_HIT, AF_DISTORT, 20}, AT_NO_ATK,
        AT_NO_ATK },
-    { 10, 6, 3, 0 },
+    10, 750,
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 16, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2195,7 +2183,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     8, MONS_INSUBSTANTIAL_WISP, MONS_INSUBSTANTIAL_WISP,
         MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_BLINK, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 2, 1, 0 },
+    8, 200,
     4, 18, MST_INSUBSTANTIAL_WISP, CE_NOCORPSE, S_MOAN,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -2208,7 +2196,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
         | MR_RES_WIND,
     5, MONS_FIRE_VORTEX, MONS_TWISTER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 0, 0, 10000 },
+    12, 120000,
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -2221,9 +2209,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     3, MONS_WORM, MONS_WORM, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 3, 0 },
+    4, 180,
     1, 5, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 6, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
 },
 
@@ -2233,9 +2221,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     3, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 2, 3, 0 },
+    10, 350,
     3, 12, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_WATER, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_AMPHIBIOUS, 12, MOVE_ENERGY(12),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
 },
 
@@ -2245,10 +2233,22 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     8, MONS_GIANT_LEECH, MONS_GIANT_LEECH, MH_NATURAL, 40,
     { {AT_BITE, AF_VAMPIRIC, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 4, 0 },
+    12, 600,
     5, 15, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_AMPHIBIOUS, 8, SWIM_ENERGY(6),
+    I_ANIMAL, HT_AMPHIBIOUS, 8, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
+},
+
+{
+    MONS_DART_SLUG, 'w', CYAN, "dart slug",
+    M_NO_SKELETON,
+    MR_VUL_POISON,
+    40, MONS_ELEPHANT_SLUG, MONS_DART_SLUG, MH_NATURAL, 0,
+    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    1, 100,
+    1, 1, MST_DART_SLUG, CE_CLEAN, S_SILENT,
+    I_ANIMAL, HT_LAND, 7, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_SNAIL
 },
 
 {
@@ -2257,9 +2257,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     20, MONS_ELEPHANT_SLUG, MONS_TORPOR_SNAIL, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 2, 0 },
+    10, 600,
     8, 1, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_AMPHIBIOUS, 7, DEFAULT_ENERGY,
+    I_ANIMAL, HT_AMPHIBIOUS, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAIL
 },
 
@@ -2270,9 +2270,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON,
     2, MONS_ELEPHANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, 80,
     { {AT_BITE, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 5, 3, 0 },
+    20, 1300,
     2, 1, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 4, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 4, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_SNAIL
 },
 
@@ -2283,7 +2283,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     12, MONS_UNSEEN_HORROR, MONS_UNSEEN_HORROR, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -2295,7 +2295,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_SMALL, MH_UNDEAD, 40,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 2, 5, 0 },
+    6, 270,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -2307,7 +2307,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     mrd(MR_RES_COLD, 2),
     8, MONS_MACABRE_MASS, MONS_CRAWLING_CORPSE, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -2319,7 +2319,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     mrd(MR_RES_COLD, 2),
     8, MONS_MACABRE_MASS, MONS_MACABRE_MASS, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 2, 0 },
+    1, 30,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -2331,7 +2331,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     8, MONS_ANCIENT_ZYME, MONS_ANCIENT_ZYME, MH_NONLIVING, 60,
     { {AT_HIT, AF_PLAIN, 16}, {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     6, 6, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -2344,7 +2344,7 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     13, MONS_WORLDBINDER, MONS_WORLDBINDER, MH_NONLIVING, 60,
     { {AT_HIT, AF_PLAIN, 8}, {AT_HIT, AF_PLAIN, 8},
        AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 4, 0 },
+    8, 400,
     12, 4, MST_WORLDBINDER, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_MISC
@@ -2357,9 +2357,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON,
     11, MONS_KILLER_BEE, MONS_KILLER_BEE, MH_NATURAL, 10,
     { {AT_STING, AF_POISON, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     2, 18, MST_NO_SPELLS, CE_NOXIOUS, S_BUZZ,
-    I_BRAINLESS, HT_LAND, 20, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2369,9 +2369,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON,
     14, MONS_KILLER_BEE, MONS_QUEEN_BEE, MH_NATURAL, 20,
     { {AT_STING, AF_POISON, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     10, 10, MST_QUEEN_BEE, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2381,9 +2381,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON,
     15, MONS_WASP, MONS_WASP, MH_NATURAL, 20,
     { {AT_STING, AF_PARALYSE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    4, 220,
     5, 14, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2393,9 +2393,9 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_NO_FLAGS,
     10, MONS_VAMPIRE_MOSQUITO, MONS_VAMPIRE_MOSQUITO, MH_UNDEAD, 20,
     { {AT_BITE, AF_VAMPIRIC, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 15, MST_NO_SPELLS, CE_NOXIOUS, S_BUZZ,
-    I_BRAINLESS, HT_LAND, 19, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 19, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2405,21 +2405,21 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     MR_VUL_POISON,
     12, MONS_HORNET, MONS_HORNET, MH_NATURAL, 40,
     { {AT_STING, AF_PARALYSE, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     7, 14, MST_NO_SPELLS, CE_NOXIOUS, S_BUZZ,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
 {
     MONS_SPARK_WASP, 'y', LIGHTCYAN, "spark wasp",
     M_NO_SKELETON | M_FLIES,
-    MR_RES_FIRE | MR_RES_COLD | mrd(MR_RES_ELEC, 3) | MR_VUL_POISON,
+    mrd(MR_RES_ELEC, 3) | MR_VUL_POISON,
     12, MONS_SPARK_WASP, MONS_SPARK_WASP, MH_NATURAL, 40,
     { {AT_STING, AF_ELEC, 33}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
-    9, 14, MST_RAIJU, CE_NOXIOUS, S_BUZZ,
-    I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
+    12, 660,
+    9, 14, MST_SPARK_WASP, CE_NOXIOUS, S_BUZZ,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2432,9 +2432,9 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     18, MONS_MOTH, MONS_GHOST_MOTH, MH_NATURAL, 100,
     { {AT_HIT, AF_DRAIN_STAT, 18}, {AT_HIT, AF_DRAIN_STAT, 18},
       {AT_STING, AF_POISON_STRONG, 12}, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     8, 10, MST_DRAIN_GAZE, CE_MUTAGEN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2444,9 +2444,9 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     MR_NO_FLAGS,
     10, MONS_MOTH, MONS_MOTH_OF_WRATH, MH_NATURAL, 40,
     { {AT_BITE, AF_RAGE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     0, 10, MST_MOTH_OF_WRATH, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_INSECT_WINGED
 },
 
@@ -2457,7 +2457,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     mrd(MR_RES_COLD, 2),
     16, MONS_WIGHT, MONS_WIGHT, MH_UNDEAD, 20,
     { {AT_HIT, AF_DRAIN_XP, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     4, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -2469,7 +2469,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     MR_RES_COLD,
     10, MONS_SKELETAL_WARRIOR, MONS_SKELETAL_WARRIOR, MH_UNDEAD, 100,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 3, 0 },
+    10, 650,
     15, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -2481,7 +2481,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     MR_RES_COLD,
     24, MONS_ANCIENT_CHAMPION, MONS_ANCIENT_CHAMPION, MH_UNDEAD, 120,
     { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 4, 2, 0 },
+    14, 700,
     15, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -2493,7 +2493,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     10, MONS_FLYING_SKULL, MONS_FLYING_SKULL, MH_UNDEAD, 20,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 2, 2, 0 },
+    7, 210,
     10, 17, MST_NO_SPELLS, CE_NOCORPSE, S_SCREAM,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -2505,7 +2505,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC,
     20, MONS_CURSE_SKULL, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 0, 0, 55 },
+    13, 520,
     35, 3, MST_CURSE_SKULL, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -2517,7 +2517,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     MR_RES_ELEC | mrd(MR_RES_FIRE, 3) | MR_RES_COLD,
     60, MONS_LICH, MONS_CURSE_TOE, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 100 },
+    14, 980,
     25, 1, MST_CURSE_TOE, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -2531,7 +2531,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, 120,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
-    { 12, 6, 5, 0 },
+    12, 1020,
     10, 20, MST_ANGEL, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -2545,7 +2545,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     10, MONS_ANGEL, MONS_CHERUB, MH_HOLY, 100,
     { {AT_HIT, AF_PLAIN, 15}, {AT_CHERUB, AF_PLAIN, 8}, AT_NO_ATK,
        AT_NO_ATK },
-    { 9, 6, 5, 0 },
+    9, 765,
     10, 20, MST_BATTLECRY, CE_NOCORPSE, S_CHERUB,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -2554,12 +2554,12 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
 
 {
     MONS_SERAPH, 'A', LIGHTMAGENTA, "seraph",
-    M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS | M_FLIES,
+    M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3),
     10, MONS_ANGEL, MONS_SERAPH, MH_HOLY, 160,
     { {AT_HIT, AF_PLAIN, 50}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK,
        AT_NO_ATK },
-    { 25, 6, 5, 0 },
+    25, 2125,
     10, 20, MST_SERAPH, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -2573,7 +2573,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     12, MONS_ANGEL, MONS_DAEVA, MH_HOLY, 140,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
-    { 14, 6, 5, 0 },
+    14, 1190,
     10, 13, MST_DAEVA, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -2587,7 +2587,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth")
     10, MONS_ANGEL, MONS_PROFANE_SERVITOR, MH_UNDEAD, 140,
     { {AT_HIT, AF_VAMPIRIC, 25}, {AT_HIT, AF_DRAIN_XP, 10}, AT_NO_ATK,
        AT_NO_ATK },
-    { 18, 6, 5, 0 },
+    18, 1530,
     10, 20, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -2603,9 +2603,9 @@ DUMMY(MONS_BEETLE, 'B', LIGHTBLUE, "beetle")
     MR_VUL_POISON,
     14, MONS_BEETLE, MONS_BOULDER_BEETLE, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 6, 5, 0 },
+    9, 765,
     20, 2, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_BRAINLESS, HT_LAND, 6, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_INSECT
 },
 
@@ -2615,9 +2615,9 @@ DUMMY(MONS_BEETLE, 'B', LIGHTBLUE, "beetle")
     MR_NO_FLAGS,
     12, MONS_BEETLE, MONS_DEATH_SCARAB, MH_UNDEAD, 60,
     { {AT_BITE, AF_SCARAB, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 2, 3, 0 },
+    8, 280,
     7, 14, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
-    I_BRAINLESS, HT_LAND, 30, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_INSECT
 },
 
@@ -2630,7 +2630,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     MR_NO_FLAGS,
     7, MONS_GIANT, MONS_HILL_GIANT, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     3, 4, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2642,7 +2642,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     MR_NO_FLAGS,
     14, MONS_GIANT, MONS_CYCLOPS, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     5, 3, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2654,7 +2654,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     MR_NO_FLAGS,
     12, MONS_GIANT, MONS_ETTIN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 45}, {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     9, 4, MST_NO_SPELLS, CE_CLEAN, S_SHOUT2,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2666,7 +2666,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     mrd(MR_RES_FIRE, 2),
     13, MONS_GIANT, MONS_FIRE_GIANT, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 3, 6, 0 },
+    16, 960,
     8, 4, MST_FIRE_GIANT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2678,7 +2678,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     mrd(MR_RES_COLD, 2),
     11, MONS_GIANT, MONS_FROST_GIANT, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 4, 5, 0 },
+    16, 1040,
     9, 3, MST_FROST_GIANT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2690,7 +2690,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     MR_NO_FLAGS,
     9, MONS_GIANT, MONS_STONE_GIANT, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     12, 2, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2702,7 +2702,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     mrd(MR_RES_ELEC, 3),
     12, MONS_GIANT, MONS_TITAN, MH_NATURAL, 180,
     { {AT_HIT, AF_PLAIN, 55}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 3, 5, 0 },
+    20, 1100,
     10, 3, MST_TITAN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2714,7 +2714,7 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
     MR_NO_FLAGS,
     12, MONS_GIANT, MONS_JUGGERNAUT, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 80}, {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK },
-    { 20, 7, 3, 0 },
+    20, 1700,
     20, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, ATTACK_ENERGY(45),
     MONUSE_OPEN_DOORS, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2722,12 +2722,11 @@ DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
 
 {
     MONS_IRON_GIANT, 'C', CYAN, "iron giant",
-    M_WARM_BLOOD | M_SPEAKS | M_FIGHTER,
+    M_WARM_BLOOD | M_SPEAKS | M_FIGHTER | M_SEE_INVIS,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD,
     10, MONS_GIANT, MONS_IRON_GIANT, MH_NATURAL, 120,
-    { {AT_HIT, AF_PLAIN, 75}, {AT_CONSTRICT, AF_CRUSH, 0}, AT_NO_ATK,
-      AT_NO_ATK },
-    { 22, 9, 2, 0 },
+    { {AT_HIT, AF_PLAIN, 75}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    22, 2200,
     18, 2, MST_IRON_GIANT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -2743,7 +2742,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     12, MONS_DRAGON, MONS_FIRE_DRAGON, MH_NATURAL, 60,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 13},
       {AT_TRAMPLE, AF_TRAMPLE, 13}, AT_NO_ATK },
-    { 12, 5, 5, 0 },
+    12, 900,
     10, 8, MST_FIRE_DRAGON_BREATH, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2755,7 +2754,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     MR_RES_POISON,
     11, MONS_HYDRA, MONS_HYDRA, MH_NATURAL, 60,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     0, 5, MST_NO_SPELLS, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED
@@ -2768,7 +2767,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     10, MONS_DRAGON, MONS_ICE_DRAGON, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 17}, {AT_CLAW, AF_PLAIN, 17},
       {AT_TRAMPLE, AF_TRAMPLE, 17}, AT_NO_ATK },
-    { 12, 5, 5, 0 },
+    12, 900,
     10, 8, MST_ICE_DRAGON_BREATH, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2780,7 +2779,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     MR_RES_STEAM,
     29, MONS_DRAGON, MONS_STEAM_DRAGON, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK },
-    { 4, 5, 5, 0 },
+    4, 300,
     5, 10, MST_STEAM_DRAGON, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED_WINGED
@@ -2793,7 +2792,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     11, MONS_DRAGON, MONS_SWAMP_DRAGON, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 11},
       {AT_TRAMPLE, AF_TRAMPLE, 11}, AT_NO_ATK },
-    { 9, 5, 5, 0 },
+    9, 675,
     7, 7, MST_SWAMP_DRAGON, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2805,7 +2804,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     MR_RES_POISON | MR_RES_FIRE | MR_RES_STICKY_FLAME,
     16, MONS_DRAGON, MONS_MOTTLED_DRAGON, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     5, 10, MST_MOTTLED_DRAGON, CE_NOXIOUS, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED_WINGED
@@ -2817,7 +2816,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     MR_NO_FLAGS,
     14, MONS_DRAGON, MONS_QUICKSILVER_DRAGON, MH_NATURAL, 140,
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     10, 15, MST_QUICKSILVER_DRAGON, CE_CLEAN, S_ROAR,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2830,7 +2829,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     14, MONS_DRAGON, MONS_IRON_DRAGON, MH_NATURAL, 160,
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 25},
       {AT_TRAMPLE, AF_TRAMPLE, 25}, AT_NO_ATK },
-    { 18, 5, 3, 0 },
+    18, 1170,
     20, 6, MST_IRON_DRAGON, CE_CLEAN, S_ROAR,
     I_ANIMAL, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -2843,7 +2842,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     13, MONS_DRAGON, MONS_STORM_DRAGON, MH_NATURAL, 100,
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 15},
       {AT_TRAMPLE, AF_TRAMPLE, 15}, AT_NO_ATK },
-    { 14, 5, 5, 0 },
+    14, 1050,
     13, 10, MST_STORM_DRAGON, CE_CLEAN, S_ROAR,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2856,7 +2855,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     26, MONS_DRAGON, MONS_GOLDEN_DRAGON, MH_NATURAL, 180,
     { {AT_BITE, AF_PLAIN, 40}, {AT_CLAW, AF_PLAIN, 20},
       {AT_TRAMPLE, AF_TRAMPLE, 20}, AT_NO_ATK },
-    { 18, 4, 4, 0 },
+    18, 1080,
     15, 7, MST_GOLDEN_DRAGON, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2869,7 +2868,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     12, MONS_DRAGON, MONS_SHADOW_DRAGON, MH_NATURAL, 120,
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
-    { 17, 5, 5, 0 },
+    17, 1275,
     15, 10, MST_SHADOW_DRAGON, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2882,7 +2881,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     12, MONS_DRAGON, MONS_BONE_DRAGON, MH_UNDEAD, 100,
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
       {AT_TRAMPLE, AF_TRAMPLE, 20}, AT_NO_ATK },
-    { 20, 6, 6, 0 },
+    20, 1800,
     20, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2894,7 +2893,7 @@ DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
     MR_NO_FLAGS,
     16, MONS_DRAGON, MONS_PEARL_DRAGON, MH_HOLY, 160,
     { {AT_BITE, AF_HOLY, 35}, {AT_CLAW, AF_HOLY, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 18, 4, 5, 0 },
+    18, 1170,
     10, 15, MST_PEARL_DRAGON, CE_CLEAN, S_ROAR,
     I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -2910,7 +2909,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
         | MR_RES_PETRIFY,
     13, MONS_ELEMENTAL, MONS_EARTH_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 5, 5, 0 },
+    6, 450,
     14, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2923,7 +2922,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
         | MR_VUL_WATER,
     10, MONS_ELEMENTAL, MONS_FIRE_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PURE_FIRE, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     4, 12, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS_LAVA, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2935,7 +2934,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_VUL_FIRE | MR_RES_ELEC,
     12, MONS_ELEMENTAL, MONS_WATER_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_ENGULF, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 5, 4, 0 },
+    6, 420,
     4, 7, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2947,7 +2946,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     mrd(MR_RES_ELEC, 3) | MR_RES_WIND,
     6, MONS_ELEMENTAL, MONS_AIR_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     2, 18, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2959,7 +2958,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     mrd(MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     13, MONS_ELEMENTAL, MONS_IRON_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 6, 6, 0 },
+    12, 1080,
     20, 2, MST_IRON_ELEMENTAL, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2971,7 +2970,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_ELEC,
     15, MONS_ELEMENTAL, MONS_ELEMENTAL_WELLSPRING, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 2, 0 },
+    15, 750,
     8, 8, MST_ELEMENTAL_WELLSPRING, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_WATER, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -2984,7 +2983,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     10, MONS_GIANT_FROG, MONS_GIANT_FROG, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    4, 220,
     0, 12, MST_NO_SPELLS, CE_CLEAN, S_CROAK,
     I_ANIMAL, HT_AMPHIBIOUS, 15, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
@@ -2996,7 +2995,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_POISON,
     16, MONS_GIANT_FROG, MONS_SPINY_FROG, MH_NATURAL, 20,
     { {AT_STING, AF_POISON, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     6, 9, MST_NO_SPELLS, CE_NOXIOUS, S_CROAK,
     I_ANIMAL, HT_AMPHIBIOUS, 12, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
@@ -3004,12 +3003,12 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 
 {
     MONS_BLINK_FROG, 'F', LIGHTGREEN, "blink frog",
-    M_COLD_BLOOD | M_PHASE_SHIFT,
+    M_COLD_BLOOD,
     MR_NO_FLAGS,
     13, MONS_BLINK_FROG, MONS_BLINK_FROG, MH_NATURAL, 40,
     { {AT_HIT, AF_BLINK, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
-    0, 8, MST_BLINKER, CE_CLEAN, S_CROAK,
+    6, 330,
+    0, 16, MST_BLINKER, CE_CLEAN, S_CROAK,
     I_ANIMAL, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
 },
@@ -3021,7 +3020,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     10, MONS_GIANT_EYEBALL, MONS_GIANT_EYEBALL, MH_NATURAL, 10,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     0, 1, MST_GIANT_EYEBALL, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 3, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3033,7 +3032,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     10, MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING, MH_NATURAL, 60,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     3, 1, MST_DRAIN_GAZE, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3045,7 +3044,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     13, MONS_GIANT_ORANGE_BRAIN, MONS_GIANT_ORANGE_BRAIN, MH_NATURAL, 100,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     2, 4, MST_GIANT_ORANGE_BRAIN, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3057,7 +3056,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_POISON,
     13, MONS_GIANT_EYEBALL, MONS_GREAT_ORB_OF_EYES, MH_NATURAL, 120,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     10, 3, MST_GREAT_ORB_OF_EYES, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_ORB
@@ -3069,7 +3068,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     14, MONS_GIANT_EYEBALL, MONS_SHINING_EYE, MH_NATURAL, 100,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     3, 1, MST_SHINING_EYE, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3082,7 +3081,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     11, MONS_GIANT_EYEBALL, MONS_EYE_OF_DEVASTATION,
         MH_NATURAL, 100,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     12, 1, MST_EYE_OF_DEVASTATION, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3094,7 +3093,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, 60,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 1, 2, 0 },
+    6, 120,
     0, 20, MST_GOLDEN_EYE, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_ORB
@@ -3106,7 +3105,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     14, MONS_ANGEL, MONS_OPHAN, MH_HOLY, 140,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 5, 0 },
+    15, 975,
     10, 10, MST_OPHAN, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB
@@ -3120,7 +3119,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     8, MONS_HIPPOGRIFF, MONS_HIPPOGRIFF, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
        AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     2, 7, MST_NO_SPELLS, CE_CLEAN, S_SCREECH,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
@@ -3133,7 +3132,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     10, MONS_MANTICORE, MONS_MANTICORE, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 26}, {AT_CLAW, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 14},
        AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     5, 7, MST_MANTICORE, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -3145,7 +3144,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     5, 7, MST_NO_SPELLS, CE_CLEAN, S_BELLOW,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3158,7 +3157,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     5, MONS_GRIFFON, MONS_GRIFFON, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 18}, {AT_PECK, AF_PLAIN, 10},
       {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     4, 6, MST_NO_SPELLS, CE_CLEAN, S_SCREECH,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED_WINGED
@@ -3171,7 +3170,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     12, MONS_SPHINX, MONS_SPHINX, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
        AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     5, 5, MST_SPHINX, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 11, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_BIG, MON_SHAPE_QUADRUPED_WINGED
@@ -3184,7 +3183,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     9, MONS_HARPY, MONS_HARPY, MH_NATURAL, 20,
     { {AT_CLAW, AF_PLAIN, 19}, {AT_CLAW, AF_PLAIN, 14}, AT_NO_ATK,
        AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     2, 10, MST_NO_SPELLS, CE_CLEAN, S_SCREECH,
     I_HUMAN, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID_WINGED
@@ -3197,7 +3196,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_NO_FLAGS,
     11, MONS_MUTANT_BEAST, MONS_MUTANT_BEAST, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 5, 0 },
+    15, 825,
     8, 5, MST_NO_SPELLS, CE_MUTAGEN, S_RANDOM,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED
@@ -3210,7 +3209,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     10, MONS_ANUBIS_GUARD, MONS_ANUBIS_GUARD, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 30}, {AT_BITE, AF_DRAIN_XP, 20},
       AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     3, 13, MST_ANUBIS_GUARD, CE_CLEAN, S_BARK,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3223,7 +3222,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     3, MONS_JELLY, MONS_OOZE, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 2, 0 },
+    3, 120,
     1, 3, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_BLOB
@@ -3235,7 +3234,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     15, MONS_JELLY, MONS_JELLY, MH_NATURAL, 10,
     { {AT_HIT, AF_ACID, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 4, 3, 0 },
+    3, 165,
     0, 2, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB
@@ -3247,7 +3246,7 @@ DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MR_RES_POISON,
     3, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     1, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB
@@ -3263,7 +3262,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     14, MONS_JELLY, MONS_AZURE_JELLY, MH_NATURAL, 80,
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12},
       {AT_HIT, AF_PLAIN, 12} },
-    { 15, 3, 5, 0 },
+    15, 825,
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB
@@ -3275,7 +3274,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_COLD | mrd(MR_RES_ACID, 3),
     15, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, 120,
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 3, 0 },
+    11, 495,
     2, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_BLOB
@@ -3287,7 +3286,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, 160,
     { {AT_HIT, AF_ACID, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     1, 3, MST_ACID_SPIT, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB
@@ -3300,7 +3299,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_NO_FLAGS,
     10, MONS_KOBOLD, MONS_KOBOLD, MH_NATURAL, 0,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 3, 0 },
+    1, 35,
     2, 12, MST_NO_SPELLS, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -3312,7 +3311,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_NO_FLAGS,
     7, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     3, 12, MST_NO_SPELLS, CE_NOXIOUS, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3322,9 +3321,9 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MONS_KOBOLD_DEMONOLOGIST, 'K', MAGENTA, "kobold demonologist",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    18, MONS_KOBOLD, MONS_KOBOLD, MH_NATURAL, 40,
+    18, MONS_KOBOLD, MONS_KOBOLD, MH_NATURAL | MH_UNHOLY, 40,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 4, 5, 0 },
+    6, 390,
     2, 13, MST_KOBOLD_DEMONOLOGIST, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -3337,7 +3336,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     mrd(MR_RES_COLD, 2),
     18, MONS_LICH, MONS_LICH, MH_UNDEAD, MAG_IMMUNE,
     { {AT_TOUCH, AF_DRAIN_XP, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 2, 4, 0 },
+    20, 800,
     10, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3349,7 +3348,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     mrd(MR_RES_COLD, 2) | MR_RES_FIRE | MR_RES_ELEC,
     24, MONS_LICH, MONS_LICH, MH_UNDEAD, MAG_IMMUNE,
     { {AT_TOUCH, AF_DRAIN_XP, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 27, 2, 4, 0 },
+    27, 1080,
     20, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3361,7 +3360,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     mrd(MR_RES_COLD, 2),
     18, MONS_REVENANT, MONS_REVENANT, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 3, 3, 0 },
+    18, 810,
     8, 12, MST_REVENANT, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3374,7 +3373,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_VUL_FIRE | MR_RES_COLD,
     21, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 20,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 5, 3, 0 },
+    3, 195,
     3, 6, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 6, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3386,7 +3385,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_COLD,
     13, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 40,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 5, 3, 0 },
+    7, 455,
     6, 9, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3398,7 +3397,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_COLD | MR_RES_ELEC,
     24, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 160,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 5, 3, 100 },
+    15, 1950,
     10, 6, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3410,7 +3409,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_COLD | MR_RES_ELEC,
     20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 120,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 3, 0 },
+    10, 650,
     8, 7, MST_MUMMY_PRIEST, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3424,7 +3423,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     13, MONS_NAGA, MONS_NAGA, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 17}, {AT_CONSTRICT, AF_CRUSH, 3},
        AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     6, 10, MST_NAGA, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3437,7 +3436,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     14, MONS_NAGA, MONS_NAGA, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 17}, {AT_CONSTRICT, AF_CRUSH, 4},
        AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     6, 10, MST_NAGA_MAGE, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3450,7 +3449,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     14, MONS_NAGA, MONS_NAGA, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 17}, {AT_CONSTRICT, AF_CRUSH, 5}, AT_NO_ATK, AT_NO_ATK },
-    { 9, 6, 4, 0 },
+    9, 720,
     6, 10, MST_NAGA_SNIPER, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3463,7 +3462,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     14, MONS_NAGA, MONS_NAGA, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 14}, {AT_CONSTRICT, AF_CRUSH, 4},
        AT_NO_ATK, AT_NO_ATK },
-    { 8, 5, 5, 0 },
+    8, 600,
     6, 10, MST_NAGA_RITUALIST, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3476,7 +3475,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     11, MONS_NAGA, MONS_NAGA, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 28}, {AT_CONSTRICT, AF_CRUSH, 6},
        AT_NO_ATK, AT_NO_ATK },
-    { 10, 9, 2, 0 },
+    10, 1000,
     6, 10, MST_NAGA, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3489,7 +3488,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     15, MONS_NAGA, MONS_NAGA, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 27}, {AT_CONSTRICT, AF_CRUSH, 7},
        AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 5, 0 },
+    15, 825,
     6, 10, MST_NAGA_MAGE, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
@@ -3502,7 +3501,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_NO_FLAGS,
     9, MONS_OGRE, MONS_OGRE, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     1, 6, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3516,7 +3515,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_NO_FLAGS,
     15, MONS_OGRE, MONS_TWO_HEADED_OGRE, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     1, 4, MST_NO_SPELLS, CE_CLEAN, S_SHOUT2,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3526,9 +3525,9 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MONS_OGRE_MAGE, 'O', MAGENTA, "ogre mage",
     M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    16, MONS_OGRE, MONS_OGRE, MH_NATURAL, 80,
+    16, MONS_OGRE, MONS_OGRE, MH_NATURAL | MH_UNHOLY, 80,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     1, 7, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3541,7 +3540,31 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_PLANT, MONS_PLANT, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
+    10, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
+},
+
+{
+    MONS_DEMONIC_PLANT, 'P', ETC_RANDOM, "demonic plant",
+    M_STATIONARY | M_NOT_DANGEROUS,
+    MR_RES_POISON,
+    10, MONS_PLANT, MONS_DEMONIC_PLANT, MH_PLANT | MH_DEMONIC, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    10, 550,
+    10, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
+},
+
+{
+    MONS_WITHERED_PLANT, 'P', DARKGREY, "withered plant",
+    M_STATIONARY | M_NOT_DANGEROUS,
+    MR_NO_FLAGS,
+    10, MONS_PLANT, MONS_WITHERED_PLANT, MH_PLANT | MH_NONLIVING, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    10, 550,
     10, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
@@ -3553,7 +3576,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, 20,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    4, 220,
     10, 0, MST_OKLOB_SAPLING, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
@@ -3565,7 +3588,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, 40,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     10, 0, MST_ACID_SPIT, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
@@ -3577,7 +3600,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | MR_VUL_FIRE,
     10, MONS_PLANT, MONS_BUSH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 3, 5, 0 },
+    20, 1100,
     15, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_PLANT
@@ -3589,7 +3612,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | MR_RES_FIRE,
     10, MONS_PLANT, MONS_BUSH, MH_PLANT, 40,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     10, 0, MST_BURNING_BUSH, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_PLANT
@@ -3601,7 +3624,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_FUNGUS, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 2, 0 },
+    1, 30,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -3613,7 +3636,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -3625,7 +3648,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 5, 3, 0 },
+    4, 260,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -3638,7 +3661,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     // expected explosion damage: 25, expected HP: 60
-    { 6, 5, 10, 0 },
+    6, 600,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS
@@ -3650,7 +3673,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | MR_VUL_FIRE,
     10, MONS_PLANT, MONS_BRIAR_PATCH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 1, 1, 0 },
+    10, 150,
     10, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_PLANT
@@ -3664,7 +3687,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     10, MONS_TENGU, MONS_TENGU, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 5, 3, 3, 0 },
+    5, 225,
     2, 12, MST_NO_SPELLS, CE_CLEAN /*chicken*/, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3677,7 +3700,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     13, MONS_TENGU, MONS_TENGU, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 7, 3, 3, 0 },
+    7, 315,
     2, 17, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3690,7 +3713,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     13, MONS_TENGU, MONS_TENGU, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 16}, {AT_PECK, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
        AT_NO_ATK },
-    { 10, 4, 4, 0 },
+    10, 600,
     2, 17, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3703,7 +3726,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     13, MONS_TENGU, MONS_TENGU, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 27}, {AT_PECK, AF_PLAIN, 11}, {AT_CLAW, AF_PLAIN, 11},
        AT_NO_ATK },
-    { 17, 3, 4, 0 },
+    17, 850,
     2, 17, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3716,7 +3739,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD | MR_VUL_WATER,
     12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, 20,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     10, 5, MST_EFREET, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3728,7 +3751,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     15, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, 140,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 6, 0 },
+    11, 660,
     6, 14, MST_RAKSHASA, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3740,7 +3763,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_VUL_FIRE,
     10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     6, 12, MST_DRYAD, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3752,7 +3775,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_PLANT, MONS_SNAPLASHER_VINE, MH_PLANT, 40,
     { {AT_CONSTRICT, AF_CRUSH, 0}, {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK },
-    { 12, 1, 2, 0 },
+    12, 240,
     4, 7, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
@@ -3764,7 +3787,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
     MR_RES_POISON,
     10, MONS_PLANT, MONS_SNAPLASHER_VINE, MH_PLANT, 40,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 2, 2, 0 },
+    12, 360,
     6, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -3780,7 +3803,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     13, MONS_SNAKE, MONS_BALL_PYTHON, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 2}, {AT_CONSTRICT, AF_CRUSH, 1},
        AT_NO_ATK, AT_NO_ATK },
-    { 1, 2, 3, 0 },
+    1, 35,
     0, 11, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 12, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
@@ -3792,7 +3815,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_SNAKE, MONS_ADDER, MH_NATURAL, 10,
     { {AT_BITE, AF_POISON, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     1, 15, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 13, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_SNAKE
@@ -3804,7 +3827,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_POISON,
     11, MONS_SNAKE, MONS_WATER_MOCCASIN, MH_NATURAL, 20,
     { {AT_BITE, AF_POISON, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     2, 15, MST_NO_SPELLS, CE_NOXIOUS, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
@@ -3816,7 +3839,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_POISON,
     12, MONS_SNAKE, MONS_BLACK_MAMBA, MH_NATURAL, 20,
     { {AT_BITE, AF_POISON, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     4, 15, MST_NO_SPELLS, CE_NOXIOUS, S_HISS,
     I_ANIMAL, HT_LAND, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
@@ -3824,11 +3847,11 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 {
     MONS_SEA_SNAKE, 'S', LIGHTCYAN, "sea snake",
-    M_COLD_BLOOD | M_SUBMERGES,
+    M_COLD_BLOOD,
     MR_NO_FLAGS,
     10, MONS_SNAKE, MONS_SEA_SNAKE, MH_NATURAL, 40,
     { {AT_BITE, AF_POISON_STRONG, 24}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 4, 5, 0 },
+    10, 650,
     2, 15, MST_NO_SPELLS, CE_NOXIOUS, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 12, SWIM_ENERGY(4),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
@@ -3841,7 +3864,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_SNAKE, MONS_ANACONDA, MH_NATURAL, 40,
     { {AT_CONSTRICT, AF_CRUSH, 6}, {AT_BITE, AF_PLAIN, 20},
        AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     4, 16, MST_NO_SPELLS, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_AMPHIBIOUS, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
@@ -3853,7 +3876,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_POISON,
     10, MONS_GUARDIAN_SERPENT, MONS_GUARDIAN_SERPENT, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     6, 14, MST_GUARDIAN_SERPENT, CE_MUTAGEN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
@@ -3865,7 +3888,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_ELEC, 3),
     12, MONS_SNAKE, MONS_SHOCK_SERPENT, MH_NATURAL, 40,
     { {AT_BITE, AF_ELEC, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     2, 15, MST_SHOCK_SERPENT, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
@@ -3877,7 +3900,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_POISON,
     10, MONS_SNAKE, MONS_MANA_VIPER, MH_NATURAL, 100,
     { {AT_BITE, AF_ANTIMAGIC, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     3, 14, MST_NO_SPELLS, CE_NOCORPSE, S_HISS,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_SNAKE
@@ -3891,7 +3914,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_TROLL, MONS_TROLL, MH_NATURAL, 20,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3904,7 +3927,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_TROLL, MONS_IRON_TROLL, MH_NATURAL, 100,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 25},
       {AT_CLAW, AF_PLAIN, 25}, AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     20, 4, MST_NO_SPELLS, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_BIG, MON_SHAPE_HUMANOID
@@ -3917,7 +3940,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     9, MONS_TROLL, MONS_DEEP_TROLL, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 27}, {AT_CLAW, AF_PLAIN, 20},
       {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     6, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3930,7 +3953,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_TROLL, MONS_DEEP_TROLL, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 27}, {AT_CLAW, AF_PLAIN, 20},
       {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
-    { 12, 2, 4, 0 },
+    12, 480,
     // the extra AC is essentially a perma-stoneskin
     12, 10, MST_DEEP_TROLL_EARTH_MAGE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
@@ -3944,7 +3967,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     12, MONS_TROLL, MONS_DEEP_TROLL, MH_NATURAL, 40,
     { {AT_BITE, AF_PLAIN, 27}, {AT_CLAW, AF_PLAIN, 20},
       {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
-    { 12, 2, 4, 0 },
+    12, 480,
     6, 10, MST_DEEP_TROLL_SHAMAN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -3958,7 +3981,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     11, MONS_VAMPIRE, MONS_VAMPIRE, MH_UNDEAD, 40,
     { {AT_HIT, AF_PLAIN, 15}, {AT_BITE, AF_VAMPIRIC, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     10, 10, MST_VAMPIRE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3972,7 +3995,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     16, MONS_VAMPIRE, MONS_VAMPIRE, MH_UNDEAD, 80,
     { {AT_HIT, AF_PLAIN, 33}, {AT_BITE, AF_VAMPIRIC, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 11, 3, 7, 0 },
+    11, 715,
     10, 10, MST_VAMPIRE_KNIGHT, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3985,7 +4008,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     15, MONS_VAMPIRE, MONS_VAMPIRE, MH_UNDEAD, 80,
     { {AT_HIT, AF_PLAIN, 15}, {AT_BITE, AF_VAMPIRIC, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     10, 10, MST_VAMPIRE_MAGE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -3998,7 +4021,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_JIANGSHI, MONS_VAMPIRE, MH_UNDEAD, 80,
     { {AT_CLAW, AF_VAMPIRIC, 27}, {AT_CLAW, AF_VAMPIRIC, 27}, AT_NO_ATK,
        AT_NO_ATK },
-    { 10, 4, 5, 0 },
+    10, 650,
     10, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 18, MOVE_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4011,7 +4034,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     0, MONS_GHOST, MONS_GHOST, MH_UNDEAD, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4025,7 +4048,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     5, MONS_GHOST, MONS_PHANTOM, MH_UNDEAD, 40,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     3, 13, MST_BLINKER, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4037,7 +4060,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     8, MONS_GHOST, MONS_HUNGRY_GHOST, MH_UNDEAD, 40,
     { {AT_HIT, AF_HUNGER, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     0, 17, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4049,7 +4072,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, 60,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     0, 14, MST_FLAYED_GHOST, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4062,7 +4085,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     15, MONS_GHOST, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 2, 3, 0 },
+    4, 140,
     1, 2, MST_GHOST, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4075,7 +4098,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 3),
     18, MONS_WRAITH, MONS_SHADOW, MH_UNDEAD, 40,
     { {AT_HIT, AF_SHADOWSTAB, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 2, 4, 0 },
+    6, 240,
     7, 10, MST_SHADOW, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -4087,7 +4110,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 3),
     10, MONS_WRAITH, MONS_SILENT_SPECTRE, MH_UNDEAD, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     5, 15, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4099,7 +4122,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 3),
     8, MONS_GHOST, MONS_DROWNED_SOUL, MH_UNDEAD, 60,
     { {AT_TOUCH, AF_DROWN, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 1, 1, 0 },
+    13, 195,
     0, 13, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4110,8 +4133,8 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     M_SEE_INVIS | M_INSUBSTANTIAL | M_FLIES,
     MR_RES_COLD,
     14, MONS_WRAITH, MONS_WRAITH, MH_UNDEAD, 60,
-    { {AT_HIT, AF_DRAIN_SPEED, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    { {AT_HIT, AF_DRAIN_SPEED, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    6, 330,
     10, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4123,7 +4146,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     15, MONS_WRAITH, MONS_SHADOW_WRAITH, MH_UNDEAD, 100,
     { {AT_HIT, AF_DRAIN_SPEED, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     7, 7, MST_NO_SPELLS, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4134,8 +4157,8 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     M_SEE_INVIS | M_INSUBSTANTIAL | M_FLIES,
     MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     10, MONS_WRAITH, MONS_FREEZING_WRAITH, MH_UNDEAD, 40,
-    { {AT_HIT, AF_COLD, 16}, {AT_HIT, AF_DRAIN_SPEED, 13}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    { {AT_HIT, AF_COLD, 16}, {AT_HIT, AF_DRAIN_SPEED, 15}, AT_NO_ATK, AT_NO_ATK },
+    8, 440,
     12, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4148,7 +4171,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     14, MONS_WRAITH, MONS_EIDOLON, MH_UNDEAD, 140,
     { {AT_HIT, AF_DRAIN_SPEED, 27}, {AT_HIT, AF_DRAIN_STAT, 17}, AT_NO_ATK,
        AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     12, 10, MST_EIDOLON, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4160,7 +4183,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_COLD,
     13, MONS_WRAITH, MONS_PHANTASMAL_WARRIOR, MH_UNDEAD, 80,
     { {AT_HIT, AF_VULN, 39}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     12, 10, MST_PHANTASMAL_WARRIOR, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4173,7 +4196,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_UNDEAD, 100,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 2, 5, 0 },
+    11, 495,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_MISC
@@ -4186,7 +4209,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_THRASHING_HORROR, MONS_THRASHING_HORROR, MH_NONLIVING, 60,
     { {AT_TRAMPLE, AF_TRAMPLE, 17}, {AT_TRAMPLE, AF_TRAMPLE, 9},
        AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
+    9, 495,
     5, 10, MST_THRASHING_HORROR, CE_NOCORPSE, S_ROAR,
     I_ANIMAL, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_BIG, MON_SHAPE_MISC
@@ -4200,7 +4223,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
         MH_DEMONIC, 160,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 22}, {AT_TENTACLE_SLAP, AF_PLAIN, 17},
       {AT_TENTACLE_SLAP, AF_PLAIN, 13}, {AT_CONSTRICT, AF_CRUSH, 9} },
-    { 23, 3, 5, 0 },
+    23, 1265,
     5, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_GIANT, MON_SHAPE_MISC
@@ -4212,7 +4235,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     20, MONS_ORB_GUARDIAN, MONS_ORB_GUARDIAN, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 3, 5, 0 },
+    15, 825,
     13, 13, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_GIANT, MON_SHAPE_MISC
@@ -4225,7 +4248,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     20, MONS_TENTACLED_STARSPAWN, MONS_TENTACLED_STARSPAWN, MH_NONLIVING, 120,
     { {AT_BITE, AF_PLAIN, 40}, {AT_ENGULF, AF_PLAIN, 25}, AT_NO_ATK,
        AT_NO_ATK },
-    { 16, 3, 5, 0 },
+    16, 880,
     5, 5, MST_TENTACLED_STARSPAWN, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_GIANT, MON_SHAPE_MISC
@@ -4238,7 +4261,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
         MH_NONLIVING, MAG_IMMUNE,
     { {AT_CONSTRICT, AF_CRUSH, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 22, 0, 1, 10 },
+    11, 220,
     8, 2, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
@@ -4251,7 +4274,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE_SEGMENT,
         MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 22, 0, 1, 10 },
+    11, 220,
     8, 2, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -4263,7 +4286,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     12, MONS_STARCURSED_MASS, MONS_STARCURSED_MASS, MH_NONLIVING, 100,
     { {AT_ENGULF, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 9, 7, 0 },
+    12, 1500,
     10, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC
@@ -4276,7 +4299,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_SHEEP, MONS_SHEEP, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     2, 7, MST_NO_SPELLS, CE_CLEAN, S_BELLOW,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
@@ -4288,7 +4311,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     9, MONS_YAK, MONS_YAK, MH_NATURAL, 20,
     { {AT_GORE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     4, 7, MST_NO_SPELLS, CE_CLEAN, S_BELLOW,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -4300,7 +4323,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     8, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, 100,
     { {AT_GORE, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     9, 5, MST_NO_SPELLS, CE_NOXIOUS, S_BELLOW,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED
@@ -4312,7 +4335,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_PETRIFY,
     8, MONS_YAK, MONS_CATOBLEPAS, MH_NATURAL, 100,
     { {AT_GORE, AF_PLAIN, 36}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     10, 2, MST_CATOBLEPAS, CE_CLEAN, S_BELLOW,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED
@@ -4325,7 +4348,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     9, MONS_ELEPHANT, MONS_ELEPHANT, MH_NATURAL, 60,
     { {AT_TRAMPLE, AF_TRAMPLE, 20}, {AT_TRUNK_SLAP, AF_PLAIN, 5}, AT_NO_ATK,
        AT_NO_ATK },
-    { 9, 5, 5, 0 },
+    9, 675,
     8, 2, MST_NO_SPELLS, CE_CLEAN, S_TRUMPET,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -4338,7 +4361,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     8, MONS_ELEPHANT, MONS_DIRE_ELEPHANT, MH_NATURAL, 100,
     { {AT_TRAMPLE, AF_TRAMPLE, 40}, {AT_TRUNK_SLAP, AF_PLAIN, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 15, 5, 5, 0 },
+    15, 1125,
     13, 2, MST_NO_SPELLS, CE_CLEAN, S_TRUMPET,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -4348,10 +4371,10 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MONS_HELLEPHANT, 'Y', LIGHTRED, "hellephant",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
-    10, MONS_ELEPHANT, MONS_HELLEPHANT, MH_DEMONIC, 140,
+    10, MONS_ELEPHANT, MONS_HELLEPHANT, MH_DEMONIC | MH_NATURAL, 140,
     { {AT_TRAMPLE, AF_TRAMPLE, 45}, {AT_BITE, AF_PLAIN, 20},
       {AT_GORE, AF_PLAIN, 15 }, AT_NO_ATK },
-    { 20, 5, 7, 0 },
+    20, 1700,
     13, 10, MST_HELLEPHANT, CE_CLEAN, S_TRUMPET,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -4361,9 +4384,9 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MONS_APIS, 'Y', WHITE, "apis",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
-    8, MONS_APIS, MONS_APIS, MH_HOLY, 100,
+    8, MONS_APIS, MONS_APIS, MH_HOLY | MH_NATURAL, 100,
     { {AT_GORE, AF_HOLY, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 5, 5, 0 },
+    16, 1200,
     9, 5, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED
@@ -4375,7 +4398,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     13, MONS_ICE_BEAST, MONS_ICE_BEAST, MH_NATURAL, 20,
     { {AT_HIT, AF_COLD, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -4387,7 +4410,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_ELEC, 3),
     13, MONS_SKY_BEAST, MONS_SKY_BEAST, MH_NATURAL, 20,
     { {AT_HIT, AF_ELEC, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     3, 13, MST_NO_SPELLS, CE_MUTAGEN, S_SILENT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
@@ -4402,7 +4425,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_ZOMBIE, MONS_ZOMBIE, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 5, 5, 0 },
+    1, 75,
     0, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4414,7 +4437,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_SKELETON, MONS_SKELETON, MH_UNDEAD, -1,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 0, 0, 0, 0 },
+    0, 0,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4426,7 +4449,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     9, MONS_SIMULACRUM, MONS_SIMULACRUM, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     10, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4438,7 +4461,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_ZOMBIE, MONS_ZOMBIE, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 5, 5, 0 },
+    1, 75,
     0, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4450,7 +4473,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_SKELETON, MONS_SKELETON, MH_UNDEAD, -1,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 0, 0, 0, 0 },
+    0, 0,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4462,7 +4485,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     9, MONS_SIMULACRUM, MONS_SIMULACRUM, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     10, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4474,7 +4497,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_ZOMBIE, MONS_ZOMBIE, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     8, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -4486,7 +4509,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_COLD, 2),
     9, MONS_SKELETON, MONS_SKELETON, MH_UNDEAD, -1,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 0, 0, 0, 0 },
+    0, 0,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -4498,7 +4521,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     9, MONS_SIMULACRUM, MONS_SIMULACRUM, MH_UNDEAD, -1,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
+    5, 275,
     10, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -4511,7 +4534,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_RES_COLD,
     11, MONS_WRAITH, MONS_SPECTRAL_THING, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     8, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -4520,11 +4543,11 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 // water monsters
 {
     MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
-    M_NO_GEN_DERIVED | M_COLD_BLOOD | M_SUBMERGES,
+    M_NO_GEN_DERIVED | M_COLD_BLOOD,
     mrd(MR_RES_ELEC, 3),
     19, MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL, MH_NATURAL, 10,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     1, 15, MST_ELECTRIC_EEL, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_WATER, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
@@ -4532,36 +4555,36 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 // A kraken and its tentacles get a random colour from ETC_KRAKEN.
 {
-    MONS_KRAKEN, 'X', COLOUR_UNDEF, "kraken",
+    MONS_KRAKEN, 'X', LIGHTMAGENTA, "kraken",
     M_NO_SKELETON | M_COLD_BLOOD,
     MR_NO_FLAGS,
     6, MONS_KRAKEN, MONS_KRAKEN, MH_NATURAL, 60,
     { {AT_BITE, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 10, 6, 0 },
+    16, 2080,
     20, 0, MST_KRAKEN, CE_NOXIOUS, S_SILENT,
     I_ANIMAL, HT_WATER, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC
 },
 
 {
-    MONS_KRAKEN_TENTACLE, 'w', COLOUR_UNDEF, "tentacle",
+    MONS_KRAKEN_TENTACLE, 'w', LIGHTMAGENTA, "tentacle",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO | M_FLIES,
     MR_NO_FLAGS,
     10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE, MH_NATURAL, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 29}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 2, 0 },
+    12, 480,
     5, 7, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 17, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
 },
 
 {
-    MONS_KRAKEN_TENTACLE_SEGMENT, '*', COLOUR_UNDEF, "tentacle segment",
+    MONS_KRAKEN_TENTACLE_SEGMENT, '*', LIGHTMAGENTA, "tentacle segment",
     M_COLD_BLOOD | M_NOT_DANGEROUS | M_STATIONARY | M_SUBMERGES | M_NO_POLY_TO | M_FLIES,
     MR_NO_FLAGS,
     10, MONS_KRAKEN, MONS_KRAKEN_TENTACLE_SEGMENT, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 2, 0 },
+    12, 480,
     5, 7, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 18, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -4576,7 +4599,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     10, MONS_OCTOPODE, MONS_OCTOPODE, MH_NATURAL, 10,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 24}, {AT_CONSTRICT, AF_CRUSH, 5},
        AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 6, 0 },
+    8, 560,
     1, 5, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -4585,11 +4608,11 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 // lava monsters
 {
     MONS_LAVA_SNAKE, 'S', LIGHTRED, "lava snake",
-    M_WARM_BLOOD | M_SUBMERGES,
+    M_WARM_BLOOD,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     17, MONS_SNAKE, MONS_LAVA_SNAKE, MH_NATURAL, 10,
     { {AT_BITE, AF_FIRE, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     2, 17, MST_LAVA_SNAKE, CE_CLEAN, S_HISS,
     I_ANIMAL, HT_LAVA, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_SNAKE
@@ -4597,11 +4620,11 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 {
     MONS_SALAMANDER, 'N', LIGHTRED, "salamander",
-    M_FIGHTER | M_WARM_BLOOD | M_SUBMERGES,
+    M_FIGHTER | M_WARM_BLOOD,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, 40,
     { {AT_HIT, AF_FIRE, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 5, 6, 0 },
+    8, 640,
     5, 7, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS_LAVA, 10, SWIM_ENERGY(7),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_NAGA
@@ -4613,7 +4636,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, 60,
     { {AT_HIT, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 4, 2, 0 },
+    15, 750,
     5, 10, MST_SALAMANDER_STORMCALLER, CE_CLEAN, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS_LAVA, 10, SWIM_ENERGY(7),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_NAGA
@@ -4621,11 +4644,11 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 {
     MONS_SALAMANDER_MYSTIC, 'N', YELLOW, "salamander mystic",
-    M_WARM_BLOOD | M_SUBMERGES,
+    M_WARM_BLOOD,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, 60,
     { {AT_HIT, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 4, 5, 0 },
+    10, 650,
     5, 7, MST_SALAMANDER_MYSTIC, CE_CLEAN, S_SILENT,
     I_HUMAN, HT_AMPHIBIOUS_LAVA, 10, SWIM_ENERGY(7),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_NAGA
@@ -4638,7 +4661,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 0, 0, 150 },
+    20, 1500,
     0, 13, MST_HELLBINDER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4650,7 +4673,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 0, 0, 150 },
+    20, 1500,
     0, 13, MST_CLOUD_MAGE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4667,7 +4690,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON,
     15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 2, 3, 0 },
+    4, 140,
     1, 2, MST_GHOST, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4679,7 +4702,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NONLIVING, -3,
     { {AT_HIT, AF_PLAIN, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 0, 0, 0, 1 },
+    1, 10,
     3, 13, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4693,7 +4716,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | mrd(MR_RES_ELEC, 3),
     10, MONS_DANCING_WEAPON, MONS_DANCING_WEAPON, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 15 },
+    15, 150,
     10, 20, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -4707,7 +4730,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_FIRE | MR_RES_COLD |  MR_RES_ELEC,
     11, MONS_WRAITH, MONS_SPECTRAL_WEAPON, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 0, 0},
+    5, 150,
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -4723,7 +4746,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
         MH_NONLIVING, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_CHAOS, 30}, {AT_CLAW, AF_CHAOS, 40}, AT_NO_ATK,
        AT_NO_ATK },
-    { 16, 5, 5, 0 },
+    16, 1200,
     13, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_SNAKE
@@ -4737,7 +4760,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     10, MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT,
         MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 5, 5, 0 },
+    16, 1200,
     13, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_AMPHIBIOUS, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC
@@ -4748,9 +4771,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_DEMONSPAWN, '6', BROWN, "demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 20,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     3, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4760,10 +4783,10 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_MONSTROUS_DEMONSPAWN, '6', LIGHTGRAY, "monstrous demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_NO_POLY_TO,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_MONSTROUS_DEMONSPAWN, MH_NATURAL, 40,
+    10, MONS_DEMONSPAWN, MONS_MONSTROUS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_GORE, AF_PLAIN, 15}, AT_NO_ATK },
-    { 10, 9, 2, 0 },
+    10, 1000,
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4773,9 +4796,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_GELID_DEMONSPAWN, '6', BLUE, "gelid demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     mrd(MR_RES_COLD, 2),
-    10, MONS_DEMONSPAWN, MONS_GELID_DEMONSPAWN, MH_NATURAL, 40,
+    10, MONS_DEMONSPAWN, MONS_GELID_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     6, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4785,9 +4808,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_INFERNAL_DEMONSPAWN, '6', RED, "infernal demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     mrd(MR_RES_FIRE, 2),
-    10, MONS_DEMONSPAWN, MONS_INFERNAL_DEMONSPAWN, MH_NATURAL, 40,
+    10, MONS_DEMONSPAWN, MONS_INFERNAL_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 40,
     { {AT_HIT, AF_FIRE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     6, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4797,9 +4820,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_PUTRID_DEMONSPAWN, '6', GREEN, "putrid demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_ALWAYS_CORPSE | M_NO_POLY_TO,
     MR_RES_POISON,
-    10, MONS_DEMONSPAWN, MONS_PUTRID_DEMONSPAWN, MH_NATURAL, 40,
+    10, MONS_DEMONSPAWN, MONS_PUTRID_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 4, 0 },
+    10, 500,
     3, 13, MST_NO_SPELLS, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4809,9 +4832,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_TORTUROUS_DEMONSPAWN, '6', MAGENTA, "torturous demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_SPINY,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_TORTUROUS_DEMONSPAWN, MH_NATURAL, 40,
+    10, MONS_DEMONSPAWN, MONS_TORTUROUS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 4, 0 },
+    10, 500,
     3, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4823,9 +4846,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_BLOOD_SAINT, '6', LIGHTBLUE, "blood saint",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 60,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 0 },
+    15, 300,
     0, 0, MST_DEMONSPAWN_BLOOD_SAINT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4835,9 +4858,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_CHAOS_CHAMPION, '6', ETC_RANDOM, "chaos champion",
     M_WARM_BLOOD | M_SPEAKS | M_FIGHTER,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 60,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 1, 0 },
+    15, 375,
     0, 0, MST_DEMONSPAWN_CHAOS_CHAMPION, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4847,9 +4870,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_WARMONGER, '6', LIGHTCYAN, "warmonger",
     M_WARM_BLOOD | M_SPEAKS | M_FIGHTER,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 60,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 1, 2, 0 },
+    15, 600,
     0, 2, MST_DEMONSPAWN_WARMONGER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4859,9 +4882,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_CORRUPTER, '6', LIGHTGREEN, "corrupter",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 60,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 1, 0 },
+    15, 375,
     0, 0, MST_DEMONSPAWN_CORRUPTER, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4871,9 +4894,9 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_BLACK_SUN, '6', LIGHTMAGENTA, "black sun",
     M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS,
     MR_NO_FLAGS,
-    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, 60,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 0 },
+    15, 300,
     0, 0, MST_DEMONSPAWN_BLACK_SUN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4886,7 +4909,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     13, MONS_CRIMSON_IMP, MONS_CRIMSON_IMP, MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 3, 0 },
+    3, 135,
     3, 14, MST_BLINKER, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE,
@@ -4900,7 +4923,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     13, MONS_QUASIT, MONS_QUASIT, MH_DEMONIC, 10,
     { {AT_BITE, AF_DRAIN_DEX, 3}, {AT_CLAW, AF_DRAIN_DEX, 2},
       {AT_CLAW, AF_DRAIN_DEX, 2}, AT_NO_ATK },
-    { 3, 2, 6, 0 },
+    3, 150,
     5, 17, MST_NO_SPELLS, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -4912,7 +4935,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_VUL_FIRE,
     10, MONS_WHITE_IMP, MONS_WHITE_IMP, MH_DEMONIC, 10,
     { {AT_HIT, AF_COLD, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     4, 10, MST_WHITE_IMP, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LITTLE,
@@ -4925,7 +4948,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_VUL_FIRE | MR_RES_COLD,
     28, MONS_UFETUBUS, MONS_UFETUBUS, MH_DEMONIC, 10,
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK },
-    { 1, 4, 6, 0 },
+    1, 70,
     2, 15, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4937,7 +4960,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3) | MR_RES_COLD,
     14, MONS_IRON_IMP, MONS_IRON_IMP, MH_DEMONIC, 10,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 3, 5, 0 },
+    3, 165,
     6, 8, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -4949,7 +4972,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     11, MONS_SHADOW_IMP, MONS_SHADOW_IMP, MH_DEMONIC, 10,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
+    2, 110,
     3, 11, MST_SHADOW_IMP, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -4962,7 +4985,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3) | MR_RES_COLD,
     15, MONS_RUST_DEVIL, MONS_RUST_DEVIL, MH_DEMONIC, 60,
     { {AT_HIT, AF_CORRODE, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     10, 8, MST_NO_SPELLS, CE_NOCORPSE, S_SCREECH,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -4975,7 +4998,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     12, MONS_ORANGE_DEMON, MONS_ORANGE_DEMON, MH_DEMONIC, 60,
     { {AT_STING, AF_REACH_STING, 15}, {AT_HIT, AF_WEAKNESS, 8}, AT_NO_ATK,
        AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    8, 520,
     3, 7, MST_NO_SPELLS, CE_NOCORPSE, S_SCREECH,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID_TAILED
@@ -4987,7 +5010,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     13, MONS_RED_DEVIL, MONS_RED_DEVIL, MH_DEMONIC, 60,
     { {AT_HIT, AF_KITE, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 3, 0 },
+    7, 315,
     7, 13, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -5001,7 +5024,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
                  // in that case. We want to "suffer" the damage to get healed.
     6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, 60,
     { {AT_HIT, AF_ELEC, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     2, 20, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 40, MOVE_ENERGY(6), // speed is cut to 1/3 later
     MONUSE_OPEN_DOORS, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -5013,7 +5036,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON,
     12, MONS_HELLWING, MONS_HELLWING, MH_DEMONIC, 60,
     { {AT_HIT, AF_SWOOP, 17}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK },
-    { 7, 4, 5, 0 },
+    7, 455,
     8, 10, MST_HELLWING, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID_WINGED
@@ -5025,7 +5048,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     11, MONS_ICE_DEVIL, MONS_ICE_DEVIL, MH_DEMONIC, 80,
     { {AT_HIT, AF_COLD, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
+    8, 440,
     12, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5039,7 +5062,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
         | MR_VUL_WATER,
     14, MONS_SUN_DEMON, MONS_SUN_DEMON, MH_DEMONIC, 80,
     { {AT_HIT, AF_FIRE, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     10, 12, MST_NO_SPELLS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5051,7 +5074,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_COLD,
     13, MONS_SOUL_EATER, MONS_SOUL_EATER, MH_DEMONIC, 140,
     { {AT_HIT, AF_DRAIN_XP, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
+    11, 605,
     18, 10, MST_SOUL_EATER, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5064,7 +5087,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     15, MONS_SMOKE_DEMON, MONS_SMOKE_DEMON, MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 8}, {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     5, 9, MST_SMOKE_DEMON, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -5076,7 +5099,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON,
     12, MONS_NEQOXEC, MONS_NEQOXEC, MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     4, 12, MST_NEQOXEC, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5088,7 +5111,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD,
     13, MONS_YNOXINUL, MONS_YNOXINUL, MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     3, 10, MST_YNOXINUL, CE_NOCORPSE, S_BELLOW,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID_WINGED
@@ -5100,7 +5123,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_NO_FLAGS,
     12, MONS_CHAOS_SPAWN, MONS_CHAOS_SPAWN, MH_DEMONIC, 60,
     { {AT_RANDOM, AF_CHAOS, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
+    6, 330,
     7, 12, MST_NO_SPELLS, CE_NOCORPSE, S_RANDOM,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_BIG, MON_SHAPE_MISC
@@ -5114,7 +5137,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     13, MONS_SHADOW_DEMON, MONS_SHADOW_DEMON, MH_DEMONIC, 100,
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
+    10, 550,
     7, 12, MST_SHADOW_DEMON, CE_NOCORPSE, S_CROAK,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -5126,7 +5149,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON,
     14, MONS_GREEN_DEATH, MONS_GREEN_DEATH, MH_DEMONIC, 160,
     { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
+    13, 715,
     5, 7, MST_GREEN_DEATH, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5138,7 +5161,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 2) | mrd(MR_RES_ELEC, 3),
     16, MONS_BLIZZARD_DEMON, MONS_BLIZZARD_DEMON, MH_DEMONIC, 140,
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     10, 10, MST_BLIZZARD_DEMON, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5150,7 +5173,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD | MR_VUL_WATER,
     12, MONS_BALRUG, MONS_BALRUG, MH_DEMONIC, 160,
     { {AT_HIT, AF_FIRE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     5, 12, MST_BALRUG, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID_WINGED
@@ -5162,7 +5185,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_ELEC,
     16, MONS_CACODEMON, MONS_CACODEMON, MH_DEMONIC, 160,
     { {AT_HIT, AF_PLAIN, 22}, {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK },
-    { 13, 5, 5, 0 },
+    13, 975,
     11, 10, MST_CACODEMON, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5175,7 +5198,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     17, MONS_HELL_BEAST, MONS_HELL_BEAST, MH_DEMONIC, 20,
     { {AT_BITE, AF_PLAIN, 28}, {AT_TRAMPLE, AF_TRAMPLE, 20}, AT_NO_ATK,
        AT_NO_ATK },
-    { 7, 9, 6, 0 },
+    7, 840,
     5, 14, MST_NO_SPELLS, CE_NOCORPSE, S_RANDOM,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_QUADRUPED
@@ -5187,7 +5210,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD | MR_VUL_WATER,
     12, MONS_HELLION, MONS_HELLION, MH_DEMONIC, 60,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     5, 10, MST_HELLION, CE_NOCORPSE, S_SCREAM,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5199,7 +5222,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_COLD,
     14, MONS_REAPER, MONS_REAPER, MH_DEMONIC, 100,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     15, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5211,7 +5234,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_COLD | MR_RES_FIRE | MR_RES_ELEC,
     14, MONS_LOROCYPROCA, MONS_LOROCYPROCA, MH_DEMONIC, 140,
     { {AT_HIT, AF_ANTIMAGIC, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
+    14, 770,
     10, 12, MST_NO_SPELLS, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5223,7 +5246,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_RES_FIRE,
     10, MONS_TORMENTOR, MONS_TORMENTOR, MH_DEMONIC, 60,
     { {AT_HIT, AF_PAIN, 8}, {AT_HIT, AF_PAIN, 8}, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
+    7, 385,
     12, 12, MST_TORMENTOR, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5237,7 +5260,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     17, MONS_BRIMSTONE_FIEND, MONS_BRIMSTONE_FIEND, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15},
        AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     15, 6, MST_FIEND, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID_WINGED
@@ -5249,7 +5272,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     17, MONS_ICE_FIEND, MONS_ICE_FIEND, MH_DEMONIC, MAG_IMMUNE,
     { {AT_CLAW, AF_COLD, 25}, {AT_CLAW, AF_COLD, 25}, AT_NO_ATK, AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     15, 6, MST_ICE_FIEND, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID_WINGED
@@ -5262,7 +5285,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     14, MONS_SHADOW_FIEND, MONS_SHADOW_FIEND, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PAIN, 25}, {AT_HIT, AF_DRAIN_XP, 15},
       {AT_HIT, AF_DRAIN_XP, 15}, AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     15, 6, MST_SHADOW_FIEND, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5274,7 +5297,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MR_RES_HELLFIRE | mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3),
     10, MONS_HELL_SENTINEL, MONS_HELL_SENTINEL, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },
-    { 19, 5, 5, 0 },
+    19, 1425,
     25, 3, MST_HELL_SENTINEL, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5287,7 +5310,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     18, MONS_EXECUTIONER, MONS_EXECUTIONER, MH_DEMONIC, 140,
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10},
        AT_NO_ATK },
-    { 12, 3, 5, 0 },
+    12, 660,
     10, 15, MST_EXECUTIONER, CE_NOCORPSE, S_SCREAM,
     I_HUMAN, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5306,7 +5329,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     10, MONS_GOLEM, MONS_IRON_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 7, 4, 0 },
+    15, 1350,
     15, 3, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5318,7 +5341,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     10, MONS_GOLEM, MONS_CRYSTAL_GUARDIAN, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 3, 2, 0 },
+    16, 640,
     22, 0, MST_CRYSTAL_GUARDIAN, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5330,7 +5353,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     10, MONS_GOLEM, MONS_TOENAIL_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 5, 3, 0 },
+    9, 585,
     8, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5344,7 +5367,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     12, MONS_GOLEM, MONS_ELECTRIC_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_PLAIN, 15},
       {AT_HIT, AF_PLAIN, 15} },
-    { 15, 7, 4, 0 },
+    15, 1350,
     5, 20, MST_ELECTRIC_GOLEM, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 16, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5356,7 +5379,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     10, MONS_GOLEM, MONS_USHABTI, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 5, 3, 0 },
+    7, 455,
     9, 6, MST_USHABTI, CE_NOCORPSE, S_RUMBLE,
     I_HUMAN, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_MISC
@@ -5368,7 +5391,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     10, MONS_GOLEM, MONS_GUARDIAN_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 6, 4, 0 },
+    5, 400,
     10, 2, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5380,7 +5403,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC,
     10, MONS_GOLEM, MONS_SPELLFORGED_SERVITOR, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 0, 0, 80 },
+    8, 800,
     10, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5393,7 +5416,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_VUL_FIRE | mrd(MR_RES_COLD, 3) | MR_RES_ELEC | MR_RES_PETRIFY,
     10, MONS_STATUE, MONS_ICE_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 0, 0, 70 },
+    8, 720,
     12, 1, MST_ICE_STATUE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5404,9 +5427,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     M_ARTIFICIAL | M_STATIONARY | M_SPEAKS,
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC
         | MR_RES_PETRIFY,
-    10, MONS_STATUE, MONS_OBSIDIAN_STATUE, MH_NONLIVING, MAG_IMMUNE,
+    10, MONS_STATUE, MONS_OBSIDIAN_STATUE, MH_NONLIVING | MH_UNHOLY, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 70 },
+    10, 700,
     12, 1, MST_OBSIDIAN_STATUE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5418,7 +5441,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_PETRIFY,
     10, MONS_STATUE, MONS_ORANGE_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 70 },
+    10, 700,
     12, 1, MST_ORANGE_CRYSTAL_STATUE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5430,7 +5453,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC | MR_RES_PETRIFY,
     10, MONS_STATUE, MONS_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { {AT_WEAP_ONLY, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 0, 0, 70 },
+    8, 720,
     12, 1, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5442,7 +5465,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_PETRIFY,
     10, MONS_TRAINING_DUMMY, MONS_TRAINING_DUMMY, MH_NONLIVING, MAG_IMMUNE,
     { {AT_WEAP_ONLY, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 6 },
+    1, 60,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5454,7 +5477,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_PILLAR_OF_SALT, MONS_PILLAR_OF_SALT, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 1 },
+    1, 10,
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -5466,7 +5489,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_COLD, 3) | MR_VUL_FIRE,
     10, MONS_BLOCK_OF_ICE, MONS_BLOCK_OF_ICE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 5, 20 },
+    3, 285,
     15, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -5478,7 +5501,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_PETRIFY,
     10, MONS_DIAMOND_OBELISK, MONS_DIAMOND_OBELISK, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 0, 0, 10000 },
+    8, 96000,
     12, 1, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_MISC
@@ -5490,7 +5513,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | mrd(MR_RES_ELEC, 3) | MR_RES_PETRIFY,
     10, MONS_LIGHTNING_SPIRE, MONS_LIGHTNING_SPIRE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 20 },
+    3, 210,
     13, 3, MST_ELECTRIC_EEL, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_MISC
@@ -5503,7 +5526,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_ELEC | MR_RES_PETRIFY,
     26, MONS_GARGOYLE, MONS_GARGOYLE, MH_NONLIVING, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 3, 0 },
+    6, 270,
     18, 6, MST_GARGOYLE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -5516,7 +5539,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD | MR_RES_PETRIFY,
     18, MONS_GARGOYLE, MONS_WAR_GARGOYLE, MH_NONLIVING, 100,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 2, 4, 0 },
+    13, 520,
     22, 4, MST_IRON_DRAGON, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -5529,7 +5552,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_ELEC | mrd(MR_RES_FIRE, 3) | MR_RES_PETRIFY,
     18, MONS_GARGOYLE, MONS_MOLTEN_GARGOYLE, MH_NONLIVING, 60,
     { {AT_HIT, AF_FIRE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 3, 0 },
+    7, 315,
     14, 7, MST_MOLTEN_GARGOYLE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
@@ -5541,11 +5564,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 {
     MONS_PANDEMONIUM_LORD, '&', COLOUR_UNDEF, "pandemonium lord",
     // See invis is also set in ghost.cc
-    M_FIGHTER | M_SPEAKS | M_HYBRID | M_SEE_INVIS | M_GHOST_DEMON,
+    M_FIGHTER | M_SPEAKS | M_HYBRID | M_SEE_INVIS | M_GHOST_DEMON | M_TALL_TILE,
     MR_RES_POISON,
     14, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 19, 0, 8, 100 },
+    19, 1710,
     1, 2, MST_GHOST, CE_NOCORPSE, S_DEMON_TAUNT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5558,7 +5581,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON,
     14, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 19, 0, 8, 100 },
+    19, 1710,
     1, 2, MST_GHOST, CE_NOCORPSE, S_DEMON_TAUNT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -5571,7 +5594,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD, 3) | MR_RES_WIND,
     20, MONS_BALL_LIGHTNING, MONS_BALL_LIGHTNING, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 12, 0, 0, 1 },
+    1, 10,
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5583,7 +5606,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON,
     10, MONS_FUNGUS, MONS_GIANT_SPORE, MH_PLANT, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 1 },
+    1, 10,
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ORB
@@ -5591,11 +5614,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_LOST_SOUL, '*', LIGHTGREEN, "lost soul",
-    M_INSUBSTANTIAL | M_MAINTAIN_RANGE | M_SUBMERGES | M_FLIES | M_NO_EXP_GAIN,
+    M_INSUBSTANTIAL | M_MAINTAIN_RANGE | M_FLIES | M_NO_EXP_GAIN,
     MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     2, MONS_LOST_SOUL, MONS_LOST_SOUL, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 1, 3, 0 },
+    10, 250,
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ORB
@@ -5607,7 +5630,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_LURKING_HORROR, MONS_LURKING_HORROR, MH_NONLIVING, 10,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 1 },
+    1, 10,
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_ORB
@@ -5619,7 +5642,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_ELEC, 3) | MR_RES_COLD | MR_VUL_WATER,
     13, MONS_ORB_OF_FIRE, MONS_ORB_OF_FIRE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 30, 0, 0, 150 },
+    30, 1500,
     20, 20, MST_ORB_OF_FIRE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5634,7 +5657,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     0, MONS_ORB_OF_DESTRUCTION, MONS_ORB_OF_DESTRUCTION,
         MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 0, 0, 1000 /* unkillable */ },
+    5, 50000, /* unkillable */
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5647,7 +5670,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, MONS_FULMINANT_PRISM, MONS_FULMINANT_PRISM, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 2, 2, 0},
+    5, 150,
     3, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5659,7 +5682,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     13, MONS_WRETCHED_STAR, MONS_WRETCHED_STAR, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 70 },
+    10, 700,
     10, 10, MST_WRETCHED_STAR, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(8),
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5673,7 +5696,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
         | MR_RES_ACID | MR_RES_STICKY_FLAME,
     0, MONS_BATTLESPHERE, MONS_BATTLESPHERE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 2, 2, 0},
+    5, 150,
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB
@@ -5684,9 +5707,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_DEATH_COB, 'z', YELLOW, "death cob",
     M_SPEAKS,
     MR_RES_COLD,
-    10, MONS_DEATH_COB, MONS_DEATH_COB, MH_UNDEAD, 40,
-    { {AT_HIT, AF_HUNGER, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 4, 5, 0 },
+    10, MONS_DEATH_COB, MONS_DEATH_COB, MH_UNDEAD | MH_PLANT, 40,
+    { {AT_HIT, AF_DRAIN_SPEED, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    14, 910,
     10, 15, MST_NO_SPELLS, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 25, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_TINY, MON_SHAPE_HUMANOID
@@ -5701,7 +5724,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     18, MONS_ANGEL, MONS_ANGEL, MH_HOLY, 160,
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK,
        AT_NO_ATK },
-    { 19, 0, 0, 150 },
+    19, 1520,
     15, 28, MST_MENNAS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
@@ -5715,7 +5738,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     18, MONS_CENTAUR, MONS_CENTAUR, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 0, 0, 72 },
+    9, 720,
     4, 8, MST_NESSOS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_CENTAUR
@@ -5728,7 +5751,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_GIANT, MONS_STONE_GIANT, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 120 },
+    18, 1170,
     14, 2, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -5740,7 +5763,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_GIANT, MONS_CYCLOPS, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 45}, {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 150 },
+    16, 1520,
     10, 3, MST_POLYPHEMUS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -5749,11 +5772,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
     M_UNIQUE | M_WARM_BLOOD | M_FIGHTER | M_SEE_INVIS | M_MALE
-        | M_SPEAKS,
+        | M_SPEAKS | M_TALL_TILE,
     mrd(MR_RES_ELEC, 3) | mrd(MR_RES_COLD, 2) | MR_VUL_FIRE,
     10, MONS_GIANT, MONS_TITAN, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_COLD, 75}, {AT_HIT, AF_COLD, 30}, AT_NO_ATK, AT_NO_ATK },
-    { 22, 0, 0, 700 },
+    22, 6820,
     28, 4, MST_ANTAEUS, CE_NOCORPSE, S_DEMON_TAUNT,
     I_HUMAN, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -5767,7 +5790,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 60}, {AT_TAIL_SLAP, AF_PLAIN, 45}, AT_NO_ATK,
        AT_NO_ATK },
-    { 22, 0, 0, 380 },
+    22, 3850,
     // Gets her breath in
     30, 10, MST_NO_SPELLS, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
@@ -5783,7 +5806,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     18, MONS_DRAGON, MONS_FIRE_DRAGON, MH_NATURAL, 180,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 17},
       {AT_TRAMPLE, AF_TRAMPLE, 20}, AT_NO_ATK },
-    { 19, 0, 0, 133 },
+    19, 1330,
     15, 7, MST_XTAHUA, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -5791,11 +5814,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_LERNAEAN_HYDRA, 'D', YELLOW, "the Lernaean hydra",
-    M_UNIQUE | M_COLD_BLOOD | M_FAST_REGEN,
+    M_UNIQUE | M_COLD_BLOOD | M_FAST_REGEN | M_TALL_TILE,
     MR_RES_POISON,
     11, MONS_HYDRA, MONS_HYDRA, MH_NATURAL, 120,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 30, 0, 0, 150 },
+    30, 1500,
     0, 5, MST_NO_SPELLS, CE_NOXIOUS, S_ROAR,
     I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -5803,12 +5826,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_SERPENT_OF_HELL, 'D', ETC_FIRE, "the Serpent of Hell",
-    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES,
+    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | MR_RES_HELLFIRE,
     21, MONS_DRAGON, MONS_SERPENT_OF_HELL, MH_DEMONIC, 180,
     { {AT_BITE, AF_FIRE, 35}, {AT_CLAW, AF_PLAIN, 15},
       {AT_TRAMPLE, AF_TRAMPLE, 15}, AT_NO_ATK },
-    { 17, 0, 0, 280 },
+    17, 2805,
     16, 12, MST_SERPENT_OF_HELL, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -5816,12 +5839,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_SERPENT_OF_HELL_COCYTUS, 'D', ETC_ICE, "the Serpent of Hell",
-    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES,
+    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | mrd(MR_RES_COLD, 3),
     21, MONS_DRAGON, MONS_SERPENT_OF_HELL, MH_DEMONIC, 180,
     { {AT_BITE, AF_COLD, 35}, {AT_CLAW, AF_PLAIN, 15},
       {AT_TRAMPLE, AF_TRAMPLE, 15}, AT_NO_ATK },
-    { 17, 0, 0, 280 },
+    17, 2805,
     20, 12, MST_SERPENT_OF_HELL, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -5829,12 +5852,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_SERPENT_OF_HELL_DIS, 'D', ETC_IRON, "the Serpent of Hell",
-    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS,
+    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_TALL_TILE,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD,
     16, MONS_DRAGON, MONS_SERPENT_OF_HELL, MH_DEMONIC, 180,
     { {AT_BITE, AF_REACH, 35}, {AT_CLAW, AF_PLAIN, 25},
       {AT_TRAMPLE, AF_TRAMPLE, 25}, {AT_TAIL_SLAP, AF_PLAIN, 15} },
-    { 17, 0, 0, 320 },
+    17, 3230,
     30, 8, MST_SERPENT_OF_HELL, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -5842,12 +5865,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_SERPENT_OF_HELL_TARTARUS, 'D', ETC_DEATH, "the Serpent of Hell",
-    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES,
+    M_SEE_INVIS | M_UNIQUE | M_CRASH_DOORS | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     18, MONS_DRAGON, MONS_SERPENT_OF_HELL, MH_DEMONIC, 180,
     { {AT_BITE, AF_DRAIN_XP, 35}, {AT_CLAW, AF_PLAIN, 15},
       {AT_TRAMPLE, AF_TRAMPLE, 15}, AT_NO_ATK },
-    { 17, 0, 0, 320 },
+    17, 3230,
     16, 12, MST_SERPENT_OF_HELL, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
@@ -5860,7 +5883,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 0, 0, 35 },
+    4, 360,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5872,7 +5895,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_ELF, MONS_ELF, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 25 },
+    3, 240,
     0, 13, MST_DOWAN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5884,8 +5907,8 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     16, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 80 },
-    0, 13, MST_FANNAR, CE_CLEAN, S_SHOUT,
+    10, 800,
+    0, 15, MST_FANNAR, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -5893,13 +5916,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 // "F"rogs.
 {
     MONS_PRINCE_RIBBIT, 'F', LIGHTCYAN, "Prince Ribbit",
-    M_UNIQUE | M_COLD_BLOOD | M_SPEAKS | M_MALE
-        | M_PHASE_SHIFT,
+    M_UNIQUE | M_COLD_BLOOD | M_SPEAKS | M_MALE,
     MR_NO_FLAGS,
     12, MONS_BLINK_FROG, MONS_HUMAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 0, 0, 40 },
-    0, 8, MST_PRINCE_RIBBIT, CE_CLEAN, S_CROAK,
+    6, 390,
+    0, 16, MST_PRINCE_RIBBIT, CE_CLEAN, S_CROAK,
     I_HUMAN, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS
 },
@@ -5911,7 +5933,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     8, MONS_GOBLIN, MONS_GOBLIN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 28 },
+    3, 240,
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -5923,7 +5945,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_GOBLIN, MONS_HOBGOBLIN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 0, 0, 16 },
+    2, 160,
     1, 8, MST_ROBIN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5935,7 +5957,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     19, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 0, 0, 40 },
+    4, 400,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_GROWL,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5947,7 +5969,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 20 },
+    3, 195,
     2, 9, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5959,7 +5981,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     8, MONS_DWARF, MONS_DWARF, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 17, 0, 0, 140 },
+    17, 1360,
     1, 10, MST_BK_OKAWARU, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5971,7 +5993,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     18, MONS_DWARF, MONS_DWARF, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 120 },
+    15, 1200,
     2, 15, MST_JORGRUN, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -5982,9 +6004,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_NATASHA, 'h', MAGENTA, "Natasha",
     M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_FEMALE,
     MR_NO_FLAGS,
-    10, MONS_FELID, MONS_FELID, MH_NATURAL, 20,
+    10, MONS_FELID, MONS_FELID, MH_NATURAL | MH_UNHOLY, 20,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 5, 0, 0 },
+    3, 150,
     2, 12, MST_NATASHA, CE_CLEAN, S_HISS,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(8),
     MONUSE_STARTING_EQUIPMENT, SIZE_LITTLE, MON_SHAPE_QUADRUPED
@@ -5997,7 +6019,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS, // no rPois- (breathes through the human half)
     10, MONS_SPIDER, MONS_ARACHNE, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 17, 0, 0, 200 },
+    17, 2040,
     3, 10, MST_ARACHNE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_ARACHNID
@@ -6010,7 +6032,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     20, MONS_TENGU, MONS_TENGU, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 28}, {AT_PECK, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 14},
        AT_NO_ATK },
-    { 20, 0, 0, 150 },
+    20, 1500,
     2, 22, MST_SOJOBO, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(9),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6020,9 +6042,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_ASTERION, 'H', LIGHTBLUE, "Asterion",
     M_HYBRID | M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_UNIQUE | M_MALE,
     MR_NO_FLAGS,
-    15, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, 100,
+    15, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL | MH_EVIL, 100,
     { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 130 },
+    15, 1275,
     4, 4, MST_ASTERION, CE_CLEAN, S_BELLOW,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6035,7 +6057,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 0, 0, 100 },
+    11, 990,
     0, 20, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 18, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -6043,27 +6065,27 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_THE_ENCHANTRESS, 'i', LIGHTMAGENTA, "the Enchantress",
-    M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_UNIQUE | M_PHASE_SHIFT | M_FEMALE,
+    M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_UNIQUE | M_FEMALE,
     MR_NO_FLAGS,
     35, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, 160,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 100 },
-    1, 20, MST_THE_ENCHANTRESS, CE_CLEAN, S_SHOUT,
+    15, 975,
+    1, 28, MST_THE_ENCHANTRESS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE, MON_SHAPE_HUMANOID
 },
 
 // "J"ellies.
 {
-    MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
-    M_SEE_INVIS | M_UNBLINDABLE | M_ACID_SPLASH | M_UNIQUE | M_EAT_ITEMS,
+    MONS_ROYAL_JELLY, 'J', YELLOW, "the Royal Jelly",
+    M_SEE_INVIS | M_UNBLINDABLE | M_ACID_SPLASH | M_UNIQUE | M_EAT_ITEMS | M_TALL_TILE,
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     20, MONS_JELLY, MONS_JELLY, MH_NATURAL, 180,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
-    { 21, 0, 0, 230 },
+    21, 2310,
     8, 4, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 14, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_BLOB
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_BLOB
 },
 
 {
@@ -6073,10 +6095,10 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON | mrd(MR_RES_ACID, 3),
     60, MONS_JELLY, MONS_JELLY, MH_NATURAL, 120,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 180 },
+    16, 1760,
     10, 1, MST_DISSOLUTION, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_BLOB
+    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_BLOB
 },
 
 // Snails and other gastropods.
@@ -6086,7 +6108,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     16, MONS_ELEPHANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, 80,
     { {AT_BITE, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 0, 0, 150 },
+    20, 1500,
     2, 1, MST_GASTRONOK, CE_NOXIOUS, S_GURGLE,
     I_HUMAN, HT_AMPHIBIOUS, 5, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_BIG, MON_SHAPE_SNAIL
@@ -6100,7 +6122,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     40, MONS_KOBOLD, MONS_KOBOLD, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 9}, {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5},
        AT_NO_ATK },
-    { 6, 0, 0, 30 },
+    6, 300,
     2, 24, MST_SONJA, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL, MON_SHAPE_HUMANOID
@@ -6113,7 +6135,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     32, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 0, 0, 40 },
+    6, 390,
     4, 12, MST_NO_SPELLS, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6128,7 +6150,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     15, MONS_LICH, MONS_LICH, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_DRAIN_XP, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 22, 0, 0, 154 },
+    22, 1540,
     12, 10, MST_BORIS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6141,7 +6163,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_VUL_FIRE | MR_RES_COLD,
     48, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 20,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 24 },
+    3, 240,
     3, 6, MST_MENKAURE, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 8, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6153,7 +6175,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_COLD | MR_RES_ELEC,
     20, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, 160,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 240 },
+    18, 2430,
     10, 6, MST_KHUFU, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6166,7 +6188,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 150 },
+    16, 1520,
     5, 18, MST_ILSUIW, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6176,12 +6198,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 {
     MONS_VASHNIA, 'N', LIGHTCYAN, "Vashnia",
     M_SEE_INVIS | M_WARM_BLOOD | M_FEMALE
-        | M_ARCHER | M_DONT_MELEE | M_PHASE_SHIFT | M_SPEAKS | M_UNIQUE,
+        | M_ARCHER | M_DONT_MELEE | M_SPEAKS | M_UNIQUE,
     MR_RES_POISON,
     27, MONS_NAGA, MONS_NAGA, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 25}, {AT_CONSTRICT, AF_CRUSH, 7}, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 160 },
-    6, 10, MST_VASHNIA, CE_NOXIOUS, S_SHOUT,
+    16, 1600,
+    6, 18, MST_VASHNIA, CE_NOXIOUS, S_SHOUT,
     I_HUMAN, HT_LAND, 10, MOVE_ENERGY(14),
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_NAGA
 },
@@ -6193,7 +6215,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     50, MONS_OGRE, MONS_OGRE, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 0, 0, 54 },
+    6, 540,
     3, 7, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6206,7 +6228,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_ORC, MONS_ORC, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 32 },
+    3, 315,
     0, 9, MST_ORC_WIZARD_III, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6218,7 +6240,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_ORC, MONS_ORC, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 0, 0, 66 },
+    9, 675,
     2, 13, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6228,9 +6250,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_NERGALLE, 'o', WHITE, "Nergalle",
     M_UNIQUE | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_FEMALE,
     MR_NO_FLAGS,
-    12, MONS_ORC, MONS_ORC, MH_NATURAL, 60,
+    12, MONS_ORC, MONS_ORC, MH_NATURAL | MH_EVIL, 60,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 60 },
+    10, 600,
     9, 11, MST_NERGALLE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6240,9 +6262,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_SAINT_ROKA, 'o', LIGHTBLUE, "Saint Roka",
     M_UNIQUE | M_FIGHTER | M_WARM_BLOOD | M_SPEAKS | M_MALE,
     MR_NO_FLAGS,
-    15, MONS_ORC, MONS_ORC, MH_NATURAL, 80,
+    15, MONS_ORC, MONS_ORC, MH_NATURAL | MH_EVIL, 80,
     { {AT_HIT, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 200 },
+    18, 1980,
     3, 10, MST_SAINT_ROKA, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6257,7 +6279,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD | MR_VUL_WATER,
     12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, 40,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 0, 0, 88 },
+    11, 880,
     10, 5, MST_AZRAEL, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6269,7 +6291,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON | mrd(MR_RES_FIRE, 2),
     35, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, 140,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 140 },
+    18, 1440,
     10, 14, MST_MARA, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6282,7 +6304,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON,
     10, MONS_GUARDIAN_SERPENT, MONS_GUARDIAN_SERPENT, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 142 },
+    14, 1400,
     8, 18, MST_AIZUL, CE_MUTAGEN, S_SHOUT,
     I_HUMAN, HT_LAND, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
@@ -6297,7 +6319,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     25, MONS_TROLL, MONS_TROLL, MH_NATURAL, 60,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
-    { 8, 0, 0, 96 },
+    8, 960,
     0, 10, MST_SNORG, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6310,7 +6332,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     10, MONS_TROLL, MONS_TROLL, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 9}, {AT_CLAW, AF_PLAIN, 4},
       {AT_CLAW, AF_PLAIN, 4}, AT_NO_ATK },
-    { 5, 0, 0, 35 },
+    5, 350,
     1, 12, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6325,7 +6347,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     10, MONS_TROLL, MONS_MOON_TROLL, MH_NATURAL, 140,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 25},
       {AT_CLAW, AF_PLAIN, 25}, AT_NO_ATK },
-    { 18, 3, 5, 0 },
+    18, 990,
     20, 4, MST_MOON_TROLL, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_BIG, MON_SHAPE_HUMANOID
@@ -6341,7 +6363,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     13, MONS_VAMPIRE, MONS_VAMPIRE, MH_UNDEAD, 160,
     { {AT_HIT, AF_PLAIN, 40}, {AT_BITE, AF_VAMPIRIC, 15}, AT_NO_ATK,
        AT_NO_ATK },
-    { 18, 0, 0, 180 },
+    18, 1800,
     10, 15, MST_JORY, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6355,7 +6377,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     8, MONS_ELEPHANT, MONS_HELLEPHANT, MH_DEMONIC, 140,
     { {AT_TRAMPLE, AF_TRAMPLE, 45}, {AT_BITE, AF_PLAIN, 20},
       {AT_GORE, AF_PLAIN, 15 }, AT_NO_ATK },
-   { 20, 0, 0, 240 },
+    20, 2400,
     13, 10, MST_HELLEPHANT, CE_CLEAN, S_TRUMPET,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED
@@ -6368,7 +6390,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     mrd(MR_RES_FIRE | MR_RES_COLD, 2) | MR_RES_ELEC,
     15, MONS_CURSE_SKULL, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
     { {AT_BITE, AF_PLAIN, 20}, {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 160 },
+    14, 1610,
     30, 10, MST_MURRAY, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_MISC
@@ -6382,7 +6404,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     14, MONS_EXECUTIONER, MONS_EXECUTIONER, MH_DEMONIC, 160,
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10},
       {AT_HIT, AF_PLAIN, 5} },
-    { 18, 0, 0, 250 },
+    18, 2520,
     10, 15, MST_IGNACIO, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6394,7 +6416,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     11, MONS_SHADOW_IMP, MONS_SHADOW_IMP, MH_DEMONIC, 20,
     { {AT_HIT, AF_PAIN, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 0, 0, 40 },
+    6, 390,
     3, 11, MST_GRINDER, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LITTLE, MON_SHAPE_HUMANOID
@@ -6409,7 +6431,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
         | MR_RES_PETRIFY,
     10, MONS_STATUE, MONS_STATUE, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 180 },
+    14, 1820,
     20, 0, MST_ROXANNE, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6422,7 +6444,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 0, 0, 20 },
+    2, 200,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6432,9 +6454,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_JESSICA, '@', LIGHTGREY, "Jessica",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_FEMALE,
     MR_NO_FLAGS,
-    125, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 10,
+    125, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_EVIL, 10,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 10 },
+    1, 95,
     0, 10, MST_JESSICA, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6446,7 +6468,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     50, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 3, 0, 0, 30 },
+    3, 300,
     0, 11, MST_ORC_WIZARD_II, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6458,7 +6480,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 0, 0, 44 },
+    4, 440,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6470,7 +6492,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 0, 0, 39 },
+    5, 400,
     0, 12, MST_ORC_WIZARD_III, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6482,7 +6504,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 84 },
+    14, 840,
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6494,7 +6516,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 0, 0, 66 },
+    6, 660,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6506,7 +6528,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 0, 0, 64 },
+    9, 630,
     0, 11, MST_WIZARD_II, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6516,9 +6538,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_JOSEPHINE, '@', WHITE, "Josephine",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_FEMALE,
     mrd(MR_RES_NEG, 3),
-    20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
+    20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_EVIL, 60,
     { {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 0, 0, 69 },
+    10, 700,
     0, 10, MST_JOSEPHINE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6530,7 +6552,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 0, 0, 76 },
+    9, 765,
     0, 8, MST_HAROLD, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6542,7 +6564,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 0, 0, 118 },
+    13, 1170,
     0, 10, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6554,7 +6576,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 0, 0, 106 },
+    13, 1040,
     0, 10, MST_WIZARD_IV, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6564,9 +6586,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_FRANCES, '@', YELLOW, "Frances",
     M_UNIQUE | M_WARM_BLOOD | M_SEE_INVIS | M_FEMALE | M_SPEAKS,
     MR_NO_FLAGS,
-    15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
+    15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_UNHOLY, 100,
     { {AT_HIT, AF_PLAIN, 29}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 121 },
+    14, 1330,
     0, 10, MST_FRANCES, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6578,7 +6600,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     18, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 123 },
+    16, 1200,
     0, 10, MST_RUPERT, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6590,7 +6612,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 100,
     { {AT_HIT, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 110 },
+    16, 1120,
     0, 10, MST_KIRKE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6602,7 +6624,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 36}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 0, 0, 214 },
+    20, 2100,
     1, 9, MST_NORRIS, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6614,7 +6636,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_DEMIGOD, MONS_DEMIGOD, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 21, 0, 0, 159 },
+    21, 1575,
     0, 10, MST_FREDERICK, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6626,7 +6648,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 140,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 22, 0, 0, 164 },
+    22, 1650,
     0, 10, MST_MARGERY, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6636,9 +6658,9 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONS_EUSTACHIO, '@', BLUE, "Eustachio",
     M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_MALE,
     MR_NO_FLAGS,
-    20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
+    20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL | MH_UNHOLY, 20,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 0, 0, 40 },
+    4, 400,
     0, 13, MST_EUSTACHIO, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6650,7 +6672,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     24, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 20,
     { {AT_HIT, AF_STEAL, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 0, 0, 60 },
+    5, 600,
     1, 13, MST_MAURICE, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6662,7 +6684,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS, // Xom would hate MR_RES_ELEC here.
     13, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 120,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 190 },
+    18, 1890,
     1, 9, MST_NIKOLA, CE_CLEAN, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID
@@ -6671,12 +6693,12 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 // unique major demons ('&')
 {
     MONS_MNOLEG, '&', LIGHTGREEN, "Mnoleg",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_TALL_TILE,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE,
     15, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_CLAW, AF_PLAIN, 40}, {AT_TENTACLE_SLAP, AF_MUTATE, 35},
       {AT_GORE, AF_PLAIN, 30}, {AT_KICK, AF_BLINK, 23} },
-    { 17, 0, 0, 350 },
+    17, 3485,
     10, 25, MST_MNOLEG, CE_NOCORPSE, S_BUZZ,
     I_HUMAN, HT_LAND, 13, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6684,11 +6706,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_LOM_LOBON, '&', LIGHTBLUE, "Lom Lobon",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | MR_RES_FIRE | mrd(MR_RES_COLD | MR_RES_ELEC, 3),
     15, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_ANTIMAGIC, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 19, 0, 0, 360 },
+    19, 3895,
     10, 20, MST_LOM_LOBON, CE_NOCORPSE, S_SCREAM,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6696,11 +6718,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_CEREBOV, '&', RED, "Cerebov",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_TALL_TILE,
     MR_RES_POISON | MR_RES_HELLFIRE,
     15, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 60}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 21, 0, 0, 650 },
+    21, 6510,
     30, 8, MST_CEREBOV, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_GIANT, MON_SHAPE_HUMANOID
@@ -6708,11 +6730,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_GLOORX_VLOQ, '&', LIGHTGREY, "Gloorx Vloq",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES | M_TALL_TILE,
     MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC,
     15, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 350 },
+    16, 3520,
     10, 10, MST_GLOORX_VLOQ, CE_NOCORPSE, S_MOAN,
     I_HUMAN, HT_LAND, 20, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6720,11 +6742,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_GERYON, '&', GREEN, "Geryon",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES | M_TALL_TILE,
     MR_NO_FLAGS,
     15, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, 120,
     { {AT_TAIL_SLAP, AF_REACH, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 15, 0, 0, 300 },
+    15, 3000,
     15, 6, MST_GERYON, CE_NOCORPSE, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, SIZE_GIANT,
@@ -6733,11 +6755,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_DISPATER, '&', MAGENTA, "Dispater",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_TALL_TILE,
     mrd(MR_RES_ELEC, 3) | MR_RES_POISON | MR_RES_HELLFIRE | MR_RES_COLD,
     15, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 0, 0, 450 },
+    16, 4480,
     40, 3, MST_DISPATER, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6745,11 +6767,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_ASMODEUS, '&', LIGHTRED, "Asmodeus",
-    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES,
+    M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE | M_FLIES | M_TALL_TILE,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_HELLFIRE,
     25, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 17, 0, 0, 450 },
+    17, 4505,
     30, 7, MST_ASMODEUS, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6757,11 +6779,11 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_ERESHKIGAL, '&', WHITE, "Ereshkigal",
-    M_UNIQUE | M_SEE_INVIS | M_SPEAKS | M_FEMALE,
+    M_UNIQUE | M_SEE_INVIS | M_SPEAKS | M_FEMALE | M_TALL_TILE,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_COLD,
     15, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_DRAIN_XP, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 18, 0, 0, 350 },
+    18, 3510,
     10, 30, MST_ERESHKIGAL, CE_NOCORPSE, S_SHOUT,
     I_HUMAN, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_LARGE, MON_SHAPE_HUMANOID
@@ -6778,7 +6800,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
         | MR_RES_ROTTING | MR_RES_ACID, 4) | MR_RES_STICKY_FLAME,
     15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1000, 1000, 0, 0 },
+    1000, 10000000,
     127, 127, MST_TEST_SPAWNER, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC
@@ -6791,7 +6813,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -6803,7 +6825,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -6815,7 +6837,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -6827,7 +6849,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -6839,7 +6861,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
@@ -6851,7 +6873,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MR_NO_FLAGS,
     0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 0, 0 },
+    1, 10,
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC

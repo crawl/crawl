@@ -85,7 +85,7 @@ ENDMAP
 
 NAME: grunt_enter_depths_magical_seal
 KMONS: O = ogre mage band / necromancer band
-MONS: wizard / deep elf conjurer / orc sorcerer / naga mage
+MONS: wizard / deep elf mage / orc sorcerer / naga mage
 : depths_entry(_G)
 MAP
   bbbbbbb
@@ -125,9 +125,7 @@ ENDMAP
 
 NAME: gammafunk_depths_entry_grave
 TAGS: patrolling
-KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-            name_adjective tile:mons_withered_plant
+KMONS: t = withered plant
 MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
 MONS: skeletal warrior / guardian mummy w:2
 KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
@@ -178,8 +176,9 @@ xxx'Xxx+xXx
 ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
-MONS:    hill giant w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf priest w:2
-MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight / centaur warrior
+MONS:    hill giant w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf mage w:2
+MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight w:5 /\
+         deep elf archer w:5 / centaur warrior
 MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4
 KMONS:   O = ettin w:14 / yaktaur captain w:2 / glowing shapeshifter w:2
 SUBST:   c : c:9 v:2 b:1

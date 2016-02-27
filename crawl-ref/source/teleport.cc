@@ -255,7 +255,7 @@ void mons_relocated(monster* mons)
 void monster_teleport(monster* mons, bool instan, bool silent)
 {
     ASSERT(mons); // XXX: change to monster &mons
-    bool was_seen = !silent && you.can_see(*mons) && !mons_is_lurking(mons);
+    bool was_seen = !silent && you.can_see(*mons);
 
     if (!instan)
     {
@@ -292,7 +292,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Move it to its new home.
     mons->move_to_pos(newpos);
 
-    const bool now_visible = mons_near(mons);
+    const bool now_visible = you.see_cell(newpos);
     if (!silent && now_visible)
     {
         if (was_seen)

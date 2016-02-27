@@ -12,6 +12,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "cloud.h"
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
@@ -137,26 +138,10 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.type == MONS_KRAKEN)
+    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
     {
-        unsigned short idx = mgrd(place);
-
-        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
-        {
-            for (auto &mons : menv)
-            {
-                if (mons.type == MONS_KRAKEN && mons.alive())
-                {
-                    mons.colour = element_colour(ETC_KRAKEN);
-                    return;
-                }
-            }
-        }
-        if (idx >= MAX_MONSTERS)
-        {
-            mpr("Couldn't find player kraken!");
-            return;
-        }
+        mpr("Couldn't find player kraken!");
+        return;
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
@@ -308,7 +293,7 @@ void debug_list_monsters()
         {
             continue;
         }
-        if (mi->flags & MF_GOT_HALF_XP)
+        if (mi->flags & MF_PACIFIED)
             exp /= 2;
 
         total_adj_exp += exp;
@@ -437,11 +422,10 @@ void debug_stethoscope(int mon)
         else
             stethpos = you.pos() + stth.delta;
 
-        if (env.cgrid(stethpos) != EMPTY_CLOUD)
+        if (cloud_struct* cloud = cloud_at(stethpos))
         {
             mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
-                 env.cloud[ env.cgrid(stethpos) ].type,
-                 env.cloud[ env.cgrid(stethpos) ].decay);
+                 cloud->type, cloud->decay);
         }
 
         if (!monster_at(stethpos))
@@ -507,7 +491,6 @@ void debug_stethoscope(int mon)
          : mons_is_fleeing(&mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
          : mons_is_cornered(&mons)        ? "cornered"
-         : mons_is_lurking(&mons)         ? "lurk"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,
@@ -591,24 +574,18 @@ void debug_stethoscope(int mon)
 
     ostringstream inv;
     bool found_item = false;
-    for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+    for (mon_inv_iterator ii(mons); ii; ++ii)
     {
-        if (mons.inv[k] != NON_ITEM)
-        {
-            if (found_item)
-                inv << ", ";
+        if (found_item)
+            inv << ", ";
 
-            found_item = true;
+        found_item = true;
 
-            inv << k << ": ";
+        inv << ii.slot() << ": ";
 
-            if (mons.inv[k] >= MAX_ITEMS)
-                inv << " buggy item";
-            else
-                inv << item_base_name(mitm[mons.inv[k]]);
+        inv << item_base_name(*ii);
 
-            inv << " (" << static_cast<int>(mons.inv[k]) << ")";
-        }
+        inv << " (" << static_cast<int>(ii->index()) << ")";
     }
     if (found_item)
         mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
@@ -813,6 +790,7 @@ static void _move_monster(const coord_def& where, int idx1)
     direction_chooser_args args;
     args.needs_path = false;
     args.top_prompt = "Move monster to where?";
+    args.default_place = where;
     direction(moves, args);
 
     if (!moves.isValid || !in_bounds(moves.target))
@@ -1059,8 +1037,7 @@ static void _miscast_screen_update()
 {
     viewwindow();
 
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_status_lights = true;
     print_stats();
 
 #ifndef USE_TILE_LOCAL

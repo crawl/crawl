@@ -19,6 +19,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -103,7 +104,7 @@ static bool _marker_vetoes_level_change()
 
 static void _maybe_destroy_trap(const coord_def &p)
 {
-    trap_def* trap = find_trap(p);
+    trap_def* trap = trap_at(p);
     if (trap)
         trap->destroy(true);
 }
@@ -194,7 +195,7 @@ static void _clear_golubria_traps()
 {
     for (auto c : find_golubria_on_level())
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
             trap->destroy();
     }
@@ -218,10 +219,6 @@ void leaving_level_now(dungeon_feature_type stair_used)
         mark_milestone("zig.exit", make_stringf("left a ziggurat at level %d.",
                        you.depth));
     }
-
-    // Note the name ahead of time because the events may cause markers
-    // to be discarded.
-    const string newtype = env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
@@ -372,13 +369,13 @@ static void _rune_effect(dungeon_feature_type ftype)
             flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
             mpr("The lock glows eerily!");
-            more();
+            // included in default force_more_message
 
             mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
             big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
             viewwindow();
             mpr("Heavy smoke blows from the lock!");
-            more();
+            // included in default force_more_message
         }
 
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
@@ -387,7 +384,7 @@ static void _rune_effect(dungeon_feature_type ftype)
             mpr("The gate opens wide!");
         else
             mpr("With a loud hiss the gate opens wide!");
-        more();
+        // these are included in default force_more_message
     }
 }
 
@@ -676,10 +673,11 @@ void floor_transition(dungeon_feature_type how,
             mpr("You enter the Abyss!");
 
         mpr("To return, you must find a gate leading back.");
-        if (you_worship(GOD_CHEIBRIADOS))
+        if (have_passive(passive_t::slow_abyss))
         {
-            mprf(MSGCH_GOD, GOD_CHEIBRIADOS,
-                 "You feel Cheibriados slowing down the madness of this place.");
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel %s slowing down the madness of this place.",
+                 god_name(you.religion).c_str());
         }
 
         // Re-entering the Abyss halves accumulated speed.
@@ -718,7 +716,7 @@ void floor_transition(dungeon_feature_type how,
                 && !you.branches_left[old_level.branch])
             {
                 string old_branch_string = branches[old_level.branch].longname;
-                if (old_branch_string.find("The ") == 0)
+                if (starts_with(old_branch_string, "The "))
                     old_branch_string[0] = tolower(old_branch_string[0]);
                 mark_milestone("br.exit", "left " + old_branch_string + ".",
                                old_level.describe());
@@ -745,6 +743,10 @@ void floor_transition(dungeon_feature_type how,
                 enter_branch(branch, old_level);
         }
     }
+
+    // Warn Formicids if they cannot shaft here
+    if (you.species == SP_FORMICID && !is_valid_shaft_level())
+        mpr("Beware, you cannot shaft yourself on this level.");
 
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 
@@ -780,7 +782,7 @@ void floor_transition(dungeon_feature_type how,
 
     you.clear_fearmongers();
 
-    if (!wizard)
+    if (!wizard && !shaft)
         _update_travel_cache(old_level, stair_pos);
 
     // Preventing obvious finding of stairs at your position.
@@ -927,7 +929,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             else
                 return level_id();
         }
-        return level_id::parse_level_id(dst);
+        try
+        {
+            return level_id::parse_level_id(dst);
+        }
+        catch (const bad_level_id &err)
+        {
+            die("Invalid destination for portal: %s", err.what());
+        }
 #endif
 
     case DNGN_ENTER_HELL:

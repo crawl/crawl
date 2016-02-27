@@ -133,7 +133,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 
             if (ignite_blood
                 && !cell_is_solid(where)
-                && env.cgrid(where) == EMPTY_CLOUD)
+                && !cloud_at(where))
             {
                 place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you);
             }

@@ -41,6 +41,7 @@
 #include "flood_find.h"
 #include "food.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -89,7 +90,7 @@ static bool _builder_normal();
 static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
-static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
+static void _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges = 0, bool known = false);
 static void _place_branch_entrances(bool use_vaults);
 static void _place_extra_vaults();
@@ -196,6 +197,9 @@ static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
 static vector<string> _you_vault_list;
+#ifdef DEBUG_STATISTICS
+static vector<string> _you_all_vault_list;
+#endif
 
 struct coloured_feature
 {
@@ -247,7 +251,7 @@ static void _count_gold()
 
     you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
@@ -426,6 +430,11 @@ static bool _build_level_vetoable(bool enable_random_maps,
         vec.insert(vec.end(), _you_vault_list.begin(), _you_vault_list.end());
     }
 
+#ifdef DEBUG_STATISTICS
+    for (auto vault : _you_all_vault_list)
+        mapstat_report_map_success(vault);
+#endif
+
     return true;
 }
 
@@ -601,7 +610,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-static void _dgn_register_vault(const string name, const string spaced_tags)
+static void _dgn_register_vault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);
@@ -611,9 +620,9 @@ static void _dgn_register_vault(const string name, const string spaced_tags)
 
     for (const string &tag : split_string(" ", spaced_tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.insert(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.insert(tag);
     }
 }
@@ -625,9 +634,9 @@ static void _dgn_unregister_vault(const map_def &map)
 
     for (const string &tag : split_string(" ", map.tags))
     {
-        if (tag.find("uniq_") == 0)
+        if (starts_with(tag, "uniq_"))
             you.uniq_map_tags.erase(tag);
-        else if (tag.find("luniq_") == 0)
+        else if (starts_with(tag, "luniq_"))
             env.level_uniq_map_tags.erase(tag);
     }
 
@@ -640,7 +649,7 @@ bool dgn_square_travel_ok(const coord_def &c)
     const dungeon_feature_type feat = grd(c);
     if (feat_is_trap(feat))
     {
-        const trap_def * const trap = find_trap(c);
+        const trap_def * const trap = trap_at(c);
         return !(trap && trap->type == TRAP_TELEPORT_PERMANENT);
     }
     else
@@ -1120,6 +1129,9 @@ void dgn_reset_level(bool enable_random_maps)
     you.unique_items = temp_unique_items;
 
     _you_vault_list.clear();
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.clear();
+#endif
     env.level_build_method.clear();
     env.level_layout_types.clear();
     level_clear_vault_memory();
@@ -1150,8 +1162,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.map_seen.reset();
 
     // Delete all traps.
-    for (int i = 0; i < MAX_TRAPS; i++)
-        env.trap[i].type = TRAP_UNASSIGNED;
+    env.trap.clear();
 
     // Initialise all items.
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -1165,20 +1176,13 @@ void dgn_reset_level(bool enable_random_maps)
     env.mons_alloc.init(MONS_NO_MONSTER);
     setup_vault_mon_list();
 
-    // Zap clouds
-    env.cgrid.init(EMPTY_CLOUD);
-
-    const cloud_struct empty;
-    env.cloud.init(empty);
-    env.cloud_no = 0;
+    env.cloud.clear();
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
-    env.tgrid.init(NON_ENTITY);
 
     // Reset all shops.
-    for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
-        env.shop[shcount].type = SHOP_UNASSIGNED;
+    env.shop.clear();
 
     // Clear all markers.
     env.markers.clear();
@@ -3038,17 +3042,12 @@ static void _place_traps()
     const int num_traps = num_traps_for_place();
     int level_number = env.absdepth0;
 
-    ASSERT_RANGE(num_traps, 0, MAX_TRAPS + 1);
+    ASSERT(num_traps >= 0);
     dprf("attempting to place %d traps", num_traps);
 
     for (int i = 0; i < num_traps; i++)
     {
-        trap_def& ts(env.trap[i]);
-        if (ts.type != TRAP_UNASSIGNED)
-        {
-            dprf("trap %d already placed (by a vault?)", i);
-            continue;
-        }
+        trap_def ts;
 
         int tries;
         for (tries = 0; tries < 200; ++tries)
@@ -3078,10 +3077,10 @@ static void _place_traps()
 
         ts.type = type;
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && _shaft_known(level_number))
             ts.reveal();
         ts.prepare_ammo();
+        env.trap[ts.pos] = ts;
         dprf("placed a trap");
     }
 
@@ -3545,7 +3544,7 @@ static vector<monster_type> _zombifiables()
         if (mons_species(mcls) != mcls
             || !mons_zombie_size(mcls)
             || mons_is_unique(mcls)
-            || mons_class_holiness(mcls) != MH_NATURAL
+            || !(mons_class_holiness(mcls) & MH_NATURAL)
             || mons_class_flag(mcls, M_NO_GEN_DERIVED))
         {
             continue;
@@ -3686,7 +3685,10 @@ static void _builder_items()
         items_levels /= 10;
     }
     else if (player_in_branch(BRANCH_ORC))
+    {
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
+        items_levels *= 2;       // Four levels' worth, in fact.
+    }
 
     for (i = 0; i < items_wanted; i++)
     {
@@ -4240,7 +4242,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         return false;
     }
     if (item.base_type == OBJ_WANDS && props.exists("charges"))
-        item.plus = props["charges"].get_int();
+        item.charges = props["charges"].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
         && props.exists("plus") && !is_unrandom_artefact(item))
@@ -4415,14 +4417,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (mon->inv[i] != NON_ITEM)
-        {
-            item_def &item(mitm[mon->inv[i]]);
-            mon->unequip(item, false, true);
-            destroy_item(mon->inv[i], true);
-            mon->inv[i] = NON_ITEM;
-        }
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+    {
+        mon->unequip(*ii, false, true);
+        destroy_item(ii->index(), true);
+    }
 
     item_list &list = mspec.items;
 
@@ -4539,7 +4538,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         type = RANDOM_MONSTER;
     }
 
-    if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
+    if (type < NUM_MONSTERS)
     {
         // Don't place a unique monster a second time.
         // (Boris is handled specially.)
@@ -4587,7 +4586,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         break;
     }
     mg.base_type = mspec.monbase;
-    mg.number    = mspec.number;
     mg.colour    = mspec.colour;
 
     if (mspec.god != GOD_NO_GOD)
@@ -4692,7 +4690,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (mons->type == MONS_DANCING_WEAPON)
             mons->ghost->init_dancing_weapon(*wpn, 100);
         else if (mons->type == MONS_SPECTRAL_WEAPON)
-            mons->ghost->init_spectral_weapon(*wpn, 100, 270);
+            mons->ghost->init_spectral_weapon(*wpn, 100);
         mons->ghost_demon_init();
     }
 
@@ -4911,7 +4909,7 @@ static void _vault_grid(vault_placement &place,
         _vault_grid_glyph(place, where, vgrid);
 
     if (cell_is_solid(where))
-        delete_cloud_at(where);
+        delete_cloud(where);
 }
 
 static void _vault_grid_glyph_mons(vault_placement &place,
@@ -4975,7 +4973,7 @@ static void _vault_grid_mons(vault_placement &place,
 
 // Currently only used for Slime: branch end
 // where it will turn the stone walls into clear rock walls
-// once the royal jelly has been killed.
+// once the Royal Jelly has been killed.
 bool seen_replace_feat(dungeon_feature_type old_feat,
                        dungeon_feature_type new_feat)
 {
@@ -5251,20 +5249,6 @@ int greed_for_shop_type(shop_type shop, int level_number)
 }
 
 /**
- * Attempts to find a free space in env.shop for a new shop to be placed.
- *
- * @return      An index into env.shop that isn't currently assigned, or
- *              MAX_SHOPS if none was found.
- */
-static int _get_free_shop_index()
-{
-    for (int i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-            return i;
-    return MAX_SHOPS;
-}
-
-/**
  * How greedy should a given shop be? (Applies a multiplier to prices.)
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
@@ -5424,12 +5408,14 @@ static int _make_delicious_corpse()
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
  * @param spec              The specification of the shop.
  * @param shop              The shop.
+ * @param shop_level        The effective depth to use for the shop.
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS],
-                             shop_spec &spec, shop_struct &shop)
+                             shop_spec &spec, shop_struct &shop,
+                             int shop_level)
 {
-    const int level_number = env.absdepth0;
+    const int level_number = shop_level ? shop_level : env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
 
     int item_index; // index into mitm (global item array)
@@ -5527,18 +5513,16 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  * @param where             The location to place the shop.
  * @param spec              The details of the shop.
  *                          Would be const if not for list method nonsense.
+ * @param shop_level        The effective depth to use for the shop.
+
  */
-void place_spec_shop(const coord_def& where, shop_spec &spec)
+void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
 {
     no_notes nx;
 
-    const int shop_index = _get_free_shop_index();
-    if (shop_index == MAX_SHOPS)
-        return;
+    shop_struct& shop = env.shop[where];
 
-    shop_struct& shop = env.shop[shop_index];
-
-    const int level_number = env.absdepth0;
+    const int level_number = shop_level ? shop_level : env.absdepth0;
 
     for (int j = 0; j < 3; j++)
         shop.keeper_name[j] = 1 + random2(200);
@@ -5552,7 +5536,6 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
 
-    env.tgrid(where) = shop_index;
     _set_grd(where, DNGN_ENTER_SHOP);
 
     const int num_items = _shop_num_items(shop.type, spec);
@@ -5563,7 +5546,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec)
 
     shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-        _stock_shop_item(j, shop.type, stocked, spec, shop);
+        _stock_shop_item(j, shop.type, stocked, spec, shop, shop_level);
 }
 
 object_class_type item_in_shop(shop_type shop_type)
@@ -5709,14 +5692,14 @@ static bool _connect_spotty(const coord_def& from,
     return !spotty_path.empty();
 }
 
-bool place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
+void place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
 {
     trap_spec spec(spec_type);
 
-    return _place_specific_trap(where, &spec, charges);
+    _place_specific_trap(where, &spec, charges);
 }
 
-static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
+static void _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges, bool known)
 {
     trap_type spec_type = spec->tr_type;
@@ -5737,19 +5720,13 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
         spec_type = static_cast<trap_type>(random2(TRAP_MAX_REGULAR + 1));
     }
 
-    for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
-        if (env.trap[tcount].type == TRAP_UNASSIGNED)
-        {
-            env.trap[tcount].type = spec_type;
-            env.trap[tcount].pos  = where;
-            grd(where)            = known ? trap_category(spec_type)
-                                          : DNGN_UNDISCOVERED_TRAP;
-            env.tgrid(where)      = tcount;
-            env.trap[tcount].prepare_ammo(charges);
-            return true;
-        }
-
-    return false;
+    trap_def t;
+    t.type = spec_type;
+    t.pos = where;
+    grd(where) = known ? trap_category(spec_type)
+                       : DNGN_UNDISCOVERED_TRAP;
+    t.prepare_ammo(charges);
+    env.trap[where] = t;
 }
 
 static void _add_plant_clumps(int frequency /* = 10 */,
@@ -6746,6 +6723,10 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
         else
             you.vault_list[level_id::current()].push_back(place.map.name);
     }
+
+#ifdef DEBUG_STATISTICS
+    _you_all_vault_list.push_back(place.map.name);
+#endif
 }
 
 string dump_vault_maps()

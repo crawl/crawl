@@ -260,7 +260,9 @@ enum ability_type
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
     ABIL_MIN_EVOKE = ABIL_EVOKE_BERSERK,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TELEPORTATION,
+#endif
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
@@ -370,6 +372,7 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
+    ABIL_ASHENZARI_CURSE,
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
@@ -406,6 +409,11 @@ enum ability_type
     ABIL_RU_SACRIFICE_RESISTANCE,
         ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
     ABIL_RU_REJECT_SACRIFICES,
+
+    // Pakellas
+    ABIL_PAKELLAS_DEVICE_SURGE = 1230,
+    ABIL_PAKELLAS_QUICK_CHARGE,
+    ABIL_PAKELLAS_SUPERCHARGE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -473,7 +481,7 @@ enum attribute_type
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
-    ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
+    ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
     ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
@@ -494,7 +502,9 @@ enum attribute_type
     ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
+#if TAG_MAJOR_VERSION == 34
     ATTR_RECITE_HP,            // HP on start of recitation.
+#endif
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
 #if TAG_MAJOR_VERSION == 34
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
@@ -523,6 +533,8 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
+    ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
+    ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     NUM_ATTRIBUTES
 };
 
@@ -618,7 +630,6 @@ enum beam_type                  // bolt::flavour
     BEAM_AGILITY,
     BEAM_SAP_MAGIC,
     BEAM_CORRUPT_BODY,
-    BEAM_CHAOTIC_REFLECTION,
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
@@ -638,7 +649,7 @@ enum beam_type                  // bolt::flavour
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
     BEAM_BOUNCY_TRACER,           // Used for random bolt tracer (bounces as
-                                  // crystal bolt, but irresistable).
+                                  // crystal bolt, but irresistible).
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
@@ -833,6 +844,7 @@ enum canned_message_type
     MSG_GHOSTLY_OUTLINE,
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
+    MSG_MAGIC_DRAIN,
 };
 
 enum char_set_type
@@ -1272,6 +1284,7 @@ enum conduct_type
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
+    DID_CHANNEL,                          // Pakellas
 
     NUM_CONDUCTS
 };
@@ -1453,18 +1466,10 @@ enum dungeon_char_type
     DCHAR_TELEPORTER,
 
     DCHAR_SPACE,
-    DCHAR_FIRED_FLASK,
     DCHAR_FIRED_BOLT,
-    DCHAR_FIRED_CHUNK,
-    DCHAR_FIRED_BOOK,
-    DCHAR_FIRED_WEAPON,
     DCHAR_FIRED_ZAP,
     DCHAR_FIRED_BURST,
-    DCHAR_FIRED_STICK,
-    DCHAR_FIRED_TRINKET,
-    DCHAR_FIRED_SCROLL,
     DCHAR_FIRED_DEBUG,
-    DCHAR_FIRED_ARMOUR,
     DCHAR_FIRED_MISSILE,
     DCHAR_EXPLOSION,
 
@@ -1474,6 +1479,19 @@ enum dungeon_char_type
     DCHAR_FRAME_TR,
     DCHAR_FRAME_BL,
     DCHAR_FRAME_BR,
+
+    DCHAR_DRAW_HORIZ,
+    DCHAR_DRAW_VERT,
+    DCHAR_DRAW_SLASH,
+    DCHAR_DRAW_BACKSLASH,
+    DCHAR_DRAW_TL,
+    DCHAR_DRAW_TR,
+    DCHAR_DRAW_BL,
+    DCHAR_DRAW_BR,
+    DCHAR_DRAW_DOWN,
+    DCHAR_DRAW_UP,
+    DCHAR_DRAW_RIGHT,
+    DCHAR_DRAW_LEFT,
 
     NUM_DCHAR_TYPES
 };
@@ -1653,6 +1671,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1718,6 +1737,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
     DNGN_ALTAR_ECUMENICAL,
+    DNGN_ALTAR_PAKELLAS,
 #endif
 
     NUM_FEATURES
@@ -1775,17 +1795,17 @@ enum duration_type
     DUR_DEATH_CHANNEL,
 #if TAG_MAJOR_VERSION == 34
     DUR_DEFLECT_MISSILES,
-#endif
     DUR_PHASE_SHIFT,
-#if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
 #endif
     DUR_WEAPON_BRAND,           // general "branding" spell counter
     DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONDENSATION_SHIELD,
-    DUR_STONESKIN,
+#endif
+    DUR_MAGIC_ARMOUR,
     DUR_GOURMAND,
 #if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
@@ -1894,6 +1914,12 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+    DUR_DEVICE_SURGE,
+    DUR_DOOM_HOWL,
+#if TAG_MAJOR_VERSION == 34
+    DUR_DOOM_HOWL_IMMUNITY,
+#endif
+    DUR_VERTIGO,
     NUM_DURATIONS
 };
 
@@ -1967,7 +1993,7 @@ enum enchant_type
     ENCH_REGENERATION,
     ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
-    ENCH_STONESKIN,
+    ENCH_MAGIC_ARMOUR,
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
@@ -2044,8 +2070,8 @@ enum enchant_type
     ENCH_DEFLECT_MISSILES,
 #if TAG_MAJOR_VERSION == 34
     ENCH_NEGATIVE_VULN,
-#endif
     ENCH_CONDENSATION_SHIELD,
+#endif
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
@@ -2053,6 +2079,8 @@ enum enchant_type
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
 #endif
+    ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
+    ENCH_EMPOWERED_SPELLS, // affected by above
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2109,6 +2137,7 @@ enum equipment_type
     EQ_RINGS_PLUS2,                    // check both rings and sum plus2
 #endif
     EQ_ALL_ARMOUR,                     // check all armour types
+    EQ_AMULET_PLUS,                    // check amulet for pluses.
 };
 
 enum eq_type
@@ -2173,6 +2202,7 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
+    GOD_PAKELLAS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2438,15 +2468,19 @@ enum menu_type
     MT_SELONE,                         // Select one
 };
 
-enum mon_holy_type
+enum mon_holy_type_flags
 {
-    MH_HOLY,
-    MH_NATURAL,
-    MH_UNDEAD,
-    MH_DEMONIC,
-    MH_NONLIVING, // golems and other constructs
-    MH_PLANT,
+    MH_NONE              = 0,
+    MH_HOLY              = 1<<0,
+    MH_NATURAL           = 1<<1,
+    MH_UNDEAD            = 1<<2,
+    MH_DEMONIC           = 1<<3,
+    MH_NONLIVING         = 1<<4, // golems and other constructs
+    MH_PLANT             = 1<<5,
+    MH_EVIL              = 1<<6, // priests/wizards with evil spells
+    MH_UNHOLY            = 1<<7, // ditto, unholy spells
 };
+DEF_BITFIELD(mon_holy_type, mon_holy_type_flags, 7);
 
 enum targ_mode_type
 {
@@ -2456,9 +2490,8 @@ enum targ_mode_type
     TARG_HOSTILE,
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
     TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
-    TARG_HOSTILE_UNDEAD,    // For dispel undead
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
-    TARG_DISPELLABLE,       // For hostiles that have dispellable enchs
+    TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_NUM_MODES
 };
 
@@ -2506,12 +2539,15 @@ enum monster_type                      // menv[].type
     MONS_HOUND,
 #if TAG_MAJOR_VERSION == 34
     MONS_WAR_DOG,
+#else
+    MONS_HOWLER_MONKEY,
 #endif
     MONS_WOLF,
     MONS_WARG,
     MONS_HELL_HOUND,
 #if TAG_MAJOR_VERSION > 34
     MONS_RAIJU,
+    MONS_DOOM_HOUND,
 #endif
     MONS_HOG,
     MONS_HELL_HOG,
@@ -2520,6 +2556,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_SLUG,
     MONS_AGATE_SNAIL,
 #else
+    MONS_DART_SLUG,
     MONS_TORPOR_SNAIL,
 #endif
     MONS_ELEPHANT_SLUG,
@@ -2563,7 +2600,7 @@ enum monster_type                      // menv[].type
     MONS_DRAKE,                 // genus
 #endif
     MONS_LINDWURM,
-    MONS_FIRE_DRAKE,
+    MONS_RIME_DRAKE,
     MONS_SWAMP_DRAKE,
     MONS_DEATH_DRAKE,
 #if TAG_MAJOR_VERSION > 34
@@ -2663,7 +2700,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_SPIDER,
     MONS_WOLF_SPIDER,
+#if TAG_MAJOR_VERSION == 34
     MONS_TRAPDOOR_SPIDER,
+#endif
     MONS_JUMPING_SPIDER,
     MONS_ORB_SPIDER,
     MONS_TARANTELLA,
@@ -2778,6 +2817,8 @@ enum monster_type                      // menv[].type
     MONS_SHAMBLING_MANGROVE,
     MONS_VINE_STALKER,
     MONS_ANIMATED_TREE,
+    MONS_DEMONIC_PLANT,
+    MONS_WITHERED_PLANT,
 #endif
     MONS_GIANT_SPORE,
     MONS_BALLISTOMYCETE,
@@ -2813,18 +2854,26 @@ enum monster_type                      // menv[].type
     MONS_ELF,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SOLDIER,
-#endif
     MONS_DEEP_ELF_FIGHTER,
+#endif
     MONS_DEEP_ELF_KNIGHT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DEEP_ELF_ARCHER
+#endif
     MONS_DEEP_ELF_MAGE,
+#if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
     MONS_DEEP_ELF_PRIEST,
+#endif
     MONS_DEEP_ELF_HIGH_PRIEST,
     MONS_DEEP_ELF_DEMONOLOGIST,
     MONS_DEEP_ELF_ANNIHILATOR,
     MONS_DEEP_ELF_SORCERER,
     MONS_DEEP_ELF_DEATH_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DEEP_ELF_ELEMENTALIST,
+#endif
     MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
     MONS_SPRIGGAN,
@@ -3433,6 +3482,13 @@ enum monster_type                      // menv[].type
     MONS_MUTANT_BEAST,
     MONS_JUGGERNAUT,
     MONS_SPARK_WASP,
+    MONS_DOOM_HOUND,
+    MONS_DEEP_ELF_ELEMENTALIST,
+    MONS_DEEP_ELF_ARCHER,
+    MONS_DEMONIC_PLANT,
+    MONS_WITHERED_PLANT,
+    MONS_DART_SLUG,
+    MONS_HOWLER_MONKEY,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3479,9 +3535,9 @@ enum beh_type
                                        //  obstacle or monster
 #if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
-#endif
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
+#endif
     BEH_RETREAT,                       //  like flee but when cannot attack
     BEH_WITHDRAW,                      //  an ally given a command to withdraw
                                        //  (will not respond to attacks)
@@ -3565,8 +3621,8 @@ enum mutation_type
     MUT_BERSERK,
     MUT_BLINK,
     MUT_BLURRY_VISION,
-    MUT_BREATHE_FLAMES,
 #if TAG_MAJOR_VERSION == 34
+    MUT_BREATHE_FLAMES,
     MUT_BREATHE_POISON,
 #endif
     MUT_CARNIVOROUS,
@@ -3829,8 +3885,8 @@ enum potion_type
     POT_GAIN_INTELLIGENCE,
 #endif
     POT_FLIGHT,
-    POT_POISON,
 #if TAG_MAJOR_VERSION == 34
+    POT_POISON,
     POT_SLOWING,
 #endif
     POT_CANCELLATION,
@@ -3941,6 +3997,8 @@ enum artefact_prop_type
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_CONFUSE,
+    ARTP_FRAGILE,
+    ARTP_SHIELDING,
     ARTP_NUM_PROPERTIES
 };
 
@@ -4180,7 +4238,9 @@ enum spell_type
     SPELL_FIRE_STORM,
     SPELL_BLINK,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SUMMON_SWARM,
+#endif
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_ENSLAVEMENT,
     SPELL_ANIMATE_DEAD,
@@ -4275,8 +4335,8 @@ enum spell_type
     SPELL_ENGLACIATION,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SEE_INVISIBLE,
-#endif
     SPELL_PHASE_SHIFT,
+#endif
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_WARP_BRAND,
     SPELL_SILENCE,
@@ -4290,8 +4350,10 @@ enum spell_type
 #endif
     SPELL_LRD,
     SPELL_SANDBLAST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_CONDENSATION_SHIELD,
     SPELL_STONESKIN,
+#endif
     SPELL_SIMULACRUM,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
@@ -4473,7 +4535,7 @@ enum spell_type
     SPELL_FORCEFUL_INVITATION,
     SPELL_PLANEREND,
     SPELL_CHAIN_OF_CHAOS,
-    SPELL_CHAOTIC_MIRROR,
+    SPELL_CALL_OF_CHAOS,
     SPELL_BLACK_MARK,
 #if TAG_MAJOR_VERSION == 34
     SPELL_GRAND_AVATAR,
@@ -4514,7 +4576,7 @@ enum spell_type
     SPELL_FLAMING_CLOUD,
     SPELL_THROW_BARBS,
     SPELL_BATTLECRY,
-    SPELL_SIGNAL_HORN,
+    SPELL_WARNING_CRY,
     SPELL_SEAL_DOORS,
     SPELL_FLAY,
     SPELL_BERSERK_OTHER,
@@ -4527,7 +4589,9 @@ enum spell_type
     SPELL_DRAINING_GAZE,
     SPELL_DEATH_RATTLE,
     SPELL_SUMMON_SCARABS,
+#if TAG_MAJOR_VERSION == 34
     SPELL_HUNTING_CRY,
+#endif
     SPELL_SEARING_BREATH,
     SPELL_CHILLING_BREATH,
     SPELL_SCATTERSHOT,
@@ -4544,6 +4608,11 @@ enum spell_type
     SPELL_ENTROPIC_WEAVE,
     SPELL_SUMMON_EXECUTIONERS,
     SPELL_VIOLENT_UNRAVELLING,
+    SPELL_DOOM_HOWL,
+    SPELL_AWAKEN_EARTH,
+    SPELL_AURA_OF_BRILLIANCE,
+    SPELL_ICEBLAST,
+    SPELL_SLUG_DART,
     NUM_SPELLS
 };
 
@@ -4565,13 +4634,11 @@ enum stat_type
 
 enum targeting_type
 {
-    DIR_NONE,
+    DIR_NONE,           // smite or in a cardinal direction
     DIR_TARGET,         // smite targeting
     DIR_DIR,            // target in a cardinal direction only
-    DIR_TARGET_OBJECT,  // targets items
-    DIR_MOVABLE_OBJECT, // skips corpses
     DIR_SHADOW_STEP,    // a shadow step target
-    DIR_LEAP,           // power leap -- short-range cblink
+    DIR_LEAP,           // like DIR_TARGET, but the range is a hard limit
 };
 
 enum torment_source_type
@@ -4715,6 +4782,8 @@ enum zap_type
     ZAP_SCATTERSHOT,
     ZAP_MEPHITIC,
     ZAP_UNRAVELLING,
+    ZAP_ICEBLAST,
+    ZAP_SLUG_DART,
     NUM_ZAPS
 };
 
@@ -4815,9 +4884,6 @@ enum seen_context_type
     SC_NEWLY_SEEN,      // regular walking into view
     SC_ALREADY_SEEN,    // wasn't a threat before, is now
     SC_TELEPORT_IN,
-    SC_SURFACES,                      // land-capable
-    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
-    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
     SC_FISH_SURFACES,                 // water/lava-only
     SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
     SC_UNCHARM,
@@ -5016,6 +5082,7 @@ enum tile_flags ENUM_INT64
     // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
     // flags and there's no room.
     TILE_FLAG_LANDING     = 0x20000000000ULL,
+    TILE_FLAG_RAY_MULTI   = 0x40000000000ULL,
 
     // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,

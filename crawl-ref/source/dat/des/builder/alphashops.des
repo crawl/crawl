@@ -56,7 +56,8 @@
       if s == "A" then i = "akashic record | arbalest | book of alchemy | " ..
        "book of air | manual of air magic | book of annihilations | arrow | " ..
        "potion of agility | potion of ambrosia | scroll of acquirement q:1 | " ..
-       "scroll of amnesia | staff of air | manual of axes | manual of armour"
+       "scroll of amnesia | staff of air | manual of axes | manual of armour | " ..
+       "wand of acid"
 
       elseif s == "B" then i = "bardiche | battleaxe | beef jerky | " ..
        "bolt | book of battle | book of beasts | book of burglary | " ..
@@ -65,10 +66,10 @@
        "potion of blood | potion of brilliance | scroll of blinking | " ..
        "scroll of brand weapon | manual of bows | buckler"
 
-      elseif s == "C" then i = "amulet of clarity | book of callings | " ..
+      elseif s == "C" then i = "book of callings | " ..
        "book of cantrips | book of changes | book of conjurations | " ..
        "centaur barding | chain mail | club | crystal ball of energy | " ..
-       "crystal plate armour | rod of clouds | wand of cold | " ..
+       "crystal plate armour | rod of clouds | " ..
        "potion of cancellation | potion of cure mutation | " ..
        "book of clouds | cloak | staff of cold | wand of confusion | " ..
        "staff of conjuration | deck of changes | manual of crossbows | " ..
@@ -78,9 +79,8 @@
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
        "dire flail | disc of storms | double sword | " ..
-       "potion of degeneration | ring of dexterity | rod of destruction | " ..
-       "staff of death | wand of digging | wand of disintegration | " ..
-       "wand of draining | manual of dodging"
+       "potion of degeneration | ring of dexterity | manual of dodging | " ..
+       "staff of death | wand of digging | wand of disintegration"
 
       elseif s == "E" then i = "book of enchantments | executioner's axe | " ..
        "staff of earth | deck of escape | eveningstar | ring of evasion | " ..
@@ -90,9 +90,9 @@
 
       elseif s == "F" then i = "book of fire | book of flames | flail | " ..
        "book of frost | falchion | fan of gales | fire dragon armour | " ..
-       "wand of fire | potion of flight | ring of fire | scroll of fear | " ..
+       "potion of flight | ring of fire | scroll of fear | " ..
        "fen folio | ring of flight | scroll of fog | staff of fire | " ..
-       "wand of fireball | fruit | wand of flame | wand of frost | " ..
+       "fruit | wand of flame | " ..
        "manual of fighting | amulet of faith | manual of fire magic"
 
       elseif s == "G" then i = "amulet of guardian spirit | giant club | " ..
@@ -100,7 +100,7 @@
        "glaive | gold dragon armour | grand grimoire | great mace | " ..
        "greatsling | great sword | pair of gloves"
 
-      elseif s == "H" then i = "book of hinderance | halberd | " ..
+      elseif s == "H" then i = "amulet of harm | book of hinderance | halberd | " ..
        "hand axe | hand crossbow | hunting sling | wand of hasting | " ..
        "potion of heal wounds | potion of haste | scroll of holy word | " ..
        "wand of heal wounds | manual of hexes | hat | helmet"
@@ -108,7 +108,7 @@
       elseif s == "I" then i = "amulet of inaccuracy | ring of ice | " ..
        "scroll of immolation | ice dragon armour | book of ice | iron rod | " ..
        "rod of ignition | potion of invisibility | ring of intelligence | " ..
-       "ring of invisibility | scroll of identify | wand of invisibility | " ..
+       "scroll of identify | wand of iceblast | " ..
        "rod of inaccuracy | manual of ice magic | manual of invocations "
 
       elseif s == "J" then i = "javelin"
@@ -123,8 +123,8 @@
       elseif s == "M" then i = "manual of maces & flails | meat ration | " ..
        "book of minor magic | morningstar | mottled dragon armour | mace | " ..
        "potion of magic | ring of magical power | potion of mutation | " ..
-       "potion of might | scroll of magic mapping | wand of magic darts | " ..
-       "book of maledictions"
+       "potion of might | scroll of magic mapping | " ..
+       "book of maledictions | amulet of magic regeneration"
 
       elseif s == "N" then i = "book of necromancy | naga barding | " ..
        "necronomicon | needle | scroll of noise | manual of necromancy"
@@ -133,7 +133,7 @@
 
       elseif s == "P" then i = "book of party tricks | book of power | " ..
        "pearl dragon armour | phantom mirror | phial of floods | " ..
-       "plate armour | potion of poison | ring of poison resistance | " ..
+       "plate armour | ring of poison resistance | " ..
        "wand of polymorph | ring of positive energy | ring of protection | " ..
        "manual of poison magic | staff of power | wand of paralysis | " ..
        "ring of protection from fire | ring of protection from magic | " ..
@@ -143,17 +143,17 @@
       elseif s == "Q" then i = "quarterstaff | quicksilver dragon armour | " ..
        "quick blade"
 
-      elseif s == "R" then i = "amulet of rage | amulet of regeneration | " ..
-       "rapier | amulet of resist corrosion | amulet of resist mutation | " ..
+      elseif s == "R" then i = "amulet of rage | amulet of reflection | " ..
+       "amulet of regeneration | rapier | ring of resist corrosion | " ..
        "royal jelly | potion of resistance | scroll of recharging | robe | " ..
        "ring mail | scroll of random uselessness | scroll of remove curse | " ..
        "wand of random effects"
 
-      elseif s == "S" then i = "scimitar | amulet of stasis | short sword | " ..
+      elseif s == "S" then i = "scimitar | short sword | " ..
        "sling bullet | scale mail | book of summonings | book of the sky | " ..
-       "deck of summoning | potion of slowing | ring of see invisible | " ..
+       "deck of summoning | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..
-       "rod of shadows | rod of the swarm | ring of sustain attributes | " ..
+       "rod of shadows | ring of sustain attributes | " ..
        "sack of spiders | scroll of summoning | scythe | " ..
        "book of spatial translocations | scroll of silence | shield | " ..
        "shortbow | stone of tremors | wand of slowing | manual of staves | " ..
@@ -174,7 +174,7 @@
       elseif s == "V" then i = "scroll of vulnerability"
 
       elseif s == "W" then i = "ring of wizardry | book of the warp | " ..
-       "deck of war | deck of wonders | whip | amulet of warding | " ..
+       "deck of war | deck of wonders | whip | amulet of dismissal | " ..
        "staff of wizardry | war axe"
 
       elseif s == "X" then i = "any"

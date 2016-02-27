@@ -117,10 +117,7 @@ struct monsterentry
     monclass_flags_t bitfields;
     resists_t resists;
 
-    // [Obsolete] Experience used to be calculated like this:
-    // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
-    //     ^^^^^^ see below at hpdice
-    //   Note that this may make draining attacks less attractive (LRH)
+    // Multiplier for calculated monster XP value; see exper_value() for use.
     int8_t exp_mod;
 
     monster_type genus,         // "team" the monster plays for
@@ -133,13 +130,10 @@ struct monsterentry
     // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
 
-    // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-    // min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
-    // example: the Iron Golem, hpdice={15,7,4,0}
-    //      15*7 < hp < 15*(7+4),
-    //       105 < hp < 165
-    // hp will be around 135 each time.
-    unsigned       hpdice[4];
+    /// Similar to player level; used for misc purposes.
+    int HD;
+    /// Average hp; multiplied by 10 for precision.
+    int avg_hp_10x;
 
     int8_t AC; // armour class
     int8_t ev; // evasion
@@ -186,6 +180,7 @@ int get_mons_class_ev(monster_type mc) IMMUTABLE;
 resists_t get_mons_class_resists(monster_type mc) IMMUTABLE;
 resists_t get_mons_resists(const monster* mon);
 int get_mons_resist(const monster* mon, mon_resist_flags res);
+const bool monster_resists_this_poison(const monster* mons, bool force = false);
 
 void init_monsters();
 void init_monster_symbols();
@@ -198,6 +193,7 @@ string mons_type_name(monster_type type, description_level_type desc);
 bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
 bool mons_flattens_trees(const monster* mon);
+size_type mons_class_body_size(monster_type mc);
 bool mons_class_res_wind(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
@@ -220,11 +216,14 @@ bool mons_is_job(monster_type mc);
 int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc);
+int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
 int exper_value(const monster* mon, bool real = true);
 
-int hit_points(int hit_dice, int min_hp, int rand_hp);
+int hit_points(int avg_hp, int scale = 10);
 
 int mons_class_hit_dice(monster_type mc);
+int mons_class_res_magic(monster_type type, monster_type base);
+bool mons_class_sees_invis(monster_type type, monster_type base);
 
 bool mons_immune_magic(const monster* mon);
 
@@ -234,6 +233,9 @@ corpse_effect_type mons_corpse_effect(monster_type mc);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
+mon_holy_type holiness_by_name(string name);
+const char * holiness_name(mon_holy_type_flags which_holiness);
+string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
 void discover_mimic(const coord_def& pos);
@@ -348,7 +350,6 @@ bool mons_is_seeking(const monster* m);
 bool mons_is_fleeing(const monster* m);
 bool mons_is_retreating(const monster* m);
 bool mons_is_cornered(const monster* m);
-bool mons_is_lurking(const monster* m);
 bool mons_is_batty(const monster* m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
@@ -511,6 +512,8 @@ bool mons_is_threatening(const monster* mon);
 bool mons_class_gives_xp(monster_type mc, bool indirect = false);
 bool mons_gives_xp(const monster* mon, const actor* agent);
 bool mons_is_notable(const monster& mon);
+
+int max_mons_charge(monster_type m);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);

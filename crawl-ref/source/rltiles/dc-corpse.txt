@@ -29,10 +29,12 @@ shard_shrike CORPSE_SHARD_SHRIKE
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
 hound CORPSE_HOUND
+howler CORPSE_HOWLER_MONKEY
 warg CORPSE_WARG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
+doom_hound CORPSE_DOOM_HOUND
 raiju CORPSE_RAIJU
 hell_hog CORPSE_HELL_HOG
 holy_swine CORPSE_HOLY_SWINE
@@ -65,7 +67,6 @@ spider CORPSE_SPIDER
 tarantella CORPSE_TARANTELLA
 jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
-trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
 orb_spider CORPSE_ORB_SPIDER
 %sdir mon/demons
@@ -91,6 +92,7 @@ worm CORPSE_WORM
 giant_leech CORPSE_GIANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
 elephant_slug CORPSE_ELEPHANT_SLUG
+dart_slug CORPSE_DART_SLUG
 
 ## Flying Insects ('y')
 killer_bee CORPSE_KILLER_BEE
@@ -171,7 +173,7 @@ mon/spriggan/spriggan CORPSE_SPRIGGAN
 ## Drakes ('k')
 %sdir mon/dragons
 swamp_drake CORPSE_SWAMP_DRAKE
-fire_drake CORPSE_FIRE_DRAKE
+rime_drake CORPSE_RIME_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
 wind_drake CORPSE_WIND_DRAKE

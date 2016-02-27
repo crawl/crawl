@@ -27,6 +27,7 @@
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"
@@ -148,9 +149,9 @@ bool melee_attack::handle_phase_attempted()
         {
             if (weapon->base_type == OBJ_WEAPONS)
                 if (is_unrandom_artefact(*weapon)
-                    && get_unrand_entry(weapon->special)->type_name)
+                    && get_unrand_entry(weapon->unrand_idx)->type_name)
                 {
-                    count_action(CACT_MELEE, weapon->special);
+                    count_action(CACT_MELEE, weapon->unrand_idx);
                 }
                 else
                     count_action(CACT_MELEE, weapon->sub_type);
@@ -249,38 +250,19 @@ bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
-    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
+    if (needs_message)
     {
-        if (needs_message && defender_visible)
+        // TODO: Unify these, placed player_warn_miss here so I can remove
+        // player_attack
+        if (attacker->is_player())
+            player_warn_miss();
+        else
         {
-            mprf("%s momentarily %s out as %s "
-                 "attack passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 atk_name(DESC_ITS).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+            mprf("%s%s misses %s%s",
+                 atk_name(DESC_THE).c_str(),
+                 evasion_margin_adverb().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(damage_done).c_str());
-        }
-    }
-    else
-    {
-        if (needs_message)
-        {
-            // TODO: Unify these, placed player_warn_miss here so I can remove
-            // player_attack
-            if (attacker->is_player())
-                player_warn_miss();
-            else
-            {
-                mprf("%s%s misses %s%s",
-                     atk_name(DESC_THE).c_str(),
-                     evasion_margin_adverb().c_str(),
-                     defender_name(true).c_str(),
-                     attack_strength_punctuation(damage_done).c_str());
-            }
         }
     }
 
@@ -315,7 +297,6 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_SHADOWSTAB
            || flavour == AF_DROWN
            || flavour == AF_CORRODE
-           || flavour == AF_SCARAB
            || flavour == AF_HUNGER;
 }
 
@@ -366,11 +347,11 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
-            && mons_near(defender->as_monster()) && defender->asleep())
+            && you.see_cell(defender->pos()) && defender->asleep())
         {
             hit_woke_orc = true;
         }
@@ -396,7 +377,7 @@ bool melee_attack::handle_phase_hit()
         {
             // infusion_power is set when the infusion spell is cast
             const int pow = you.props["infusion_power"].get_int();
-            const int dmg = 2 + div_rand_round(pow, 25);
+            const int dmg = 2 + div_rand_round(pow, 12);
             const int hurt = defender->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Infusion: dmg = %d hurt = %d", dmg, hurt);
@@ -581,7 +562,7 @@ static void _hydra_devour(monster &victim)
         static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
 
     // will eating this actually fill the player up?
-    const bool filling = !in_good_standing(GOD_GOZAG)
+    const bool filling = !have_passive(passive_t::goldify_corpses)
                           && player_mutation_level(MUT_HERBIVOROUS, false) < 3
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
@@ -699,7 +680,7 @@ bool melee_attack::handle_phase_killed()
     // be called twice. Adding another entry for a single artefact would
     // be overkill, so here we call it by hand. check_unrand_effects()
     // avoided triggering Wyrmbane's death effect earlier in the attack.
-    if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+    if (unrand_entry && weapon && weapon->unrand_idx == UNRAND_WYRMBANE)
     {
         unrand_entry->melee_effects(weapon, attacker, defender,
                                                true, special_damage);
@@ -740,8 +721,12 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    if (!cleaving && !handle_phase_attempted())
-        return false;
+    if (!cleaving)
+    {
+        cleave_setup();
+        if (!handle_phase_attempted())
+            return false;
+    }
 
     if (attacker != defender && attacker->is_monster()
         && mons_self_destructs(attacker->as_monster()))
@@ -750,22 +735,25 @@ bool melee_attack::attack()
         return did_hit = perceived_attack = true;
     }
 
-    if (!cleaving)
-        cleave_setup();
-
-    string dummy;
-    const bool gyre = weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE);
-    if (gyre && !weapon->props.exists(ARTEFACT_NAME_KEY))
-       set_artefact_name(*weapon, get_artefact_name(*weapon));
-    unwind_var<string> gyre_name(gyre ? weapon->props[ARTEFACT_NAME_KEY].get_string()
-                                      : dummy);
-    if (gyre)
+    string saved_gyre_name;
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
     {
-        if (!cleaving)
-            set_artefact_name(*weapon, "quick blade \"Gyre\"");
-        else
-            set_artefact_name(*weapon, "quick blade \"Gimble\"");
+        saved_gyre_name = get_artefact_name(*weapon);
+        set_artefact_name(*weapon, cleaving ? "quick blade \"Gimble\""
+                                            : "quick blade \"Gyre\"");
     }
+
+    // Restore gyre's name before we return. We cannot use an unwind_var here
+    // because the precise address of the ARTEFACT_NAME_KEY property might
+    // change, for example if a summoned item is reset.
+    ON_UNWIND
+    {
+        if (!saved_gyre_name.empty() && weapon
+                && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+        {
+            set_artefact_name(*weapon, saved_gyre_name);
+        }
+    };
 
     // Attacker might have died from effects of cleaving handled prior to this
     if (!attacker->alive())
@@ -831,13 +819,6 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                perceived_attack = true;
-                handle_phase_end();
-                return false;
-            }
-
             bool cont = handle_phase_hit();
 
             attacker_sustain_passive_damage();
@@ -943,7 +924,7 @@ bool melee_attack::check_unrand_effects()
 
         // Don't trigger the Wyrmbane death effect yet; that is done in
         // handle_phase_killed().
-        if (weapon->special == UNRAND_WYRMBANE && died)
+        if (weapon->unrand_idx == UNRAND_WYRMBANE && died)
             return true;
 
         // Recent merge added damage_done to this method call
@@ -1242,21 +1223,8 @@ bool melee_attack::player_aux_test_hit()
     if (to_hit >= evasion || auto_hit)
         return true;
 
-    const int phaseless_evasion =
-        defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (to_hit >= phaseless_evasion && defender_visible)
-    {
-        mprf("Your %s passes through %s as %s momentarily phases out.",
-            aux_attack.c_str(),
-            defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN_SUBJECTIVE).c_str());
-    }
-    else
-    {
-        mprf("Your %s misses %s.", aux_attack.c_str(),
-             defender->name(DESC_THE).c_str());
-    }
+    mprf("Your %s misses %s.", aux_attack.c_str(),
+         defender->name(DESC_THE).c_str());
 
     return false;
 }
@@ -1468,13 +1436,11 @@ void melee_attack::player_warn_miss()
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
     int dammod = 20;
-    // Use the same str/dex weighting that unarmed combat does, for now.
-    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
 
-    if (dam_stat_val > 10)
-        dammod += random2(dam_stat_val - 9);
-    else if (dam_stat_val < 10)
-        dammod -= random2(11 - dam_stat_val);
+    if (you.strength() > 10)
+        dammod += random2(you.strength() - 9);
+    else if (you.strength() < 10)
+        dammod -= random2(11 - you.strength());
 
     damage *= dammod;
     damage /= 20;
@@ -1681,17 +1647,14 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = "thrash";
         else
         {
-            switch (defender->holiness())
+            if (defender->holiness() & (MH_HOLY | MH_NATURAL | MH_DEMONIC))
             {
-            case MH_HOLY:
-            case MH_NATURAL:
-            case MH_DEMONIC:
                 attack_verb = "punish";
                 verb_degree = ", causing immense pain";
                 break;
-            default:
-                attack_verb = "devastate";
             }
+            else
+                attack_verb = "devastate";
         }
         break;
 
@@ -1938,12 +1901,8 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (!defender->alive())
         return true;
 
-    // Player hydras can't grow more heads.
-    if (defender->is_player())
-        return false;
-
     // Only living hydras get to regenerate heads.
-    if (defender->holiness() != MH_NATURAL)
+    if (!(defender->holiness() & MH_NATURAL))
         return false;
 
     // What's the largest number of heads the defender can have?
@@ -1963,7 +1922,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
 
     simple_monster_message(defender->as_monster(), " grows two more!");
     defender->as_monster()->num_heads += 2;
-    defender->heal(8 + random2(8), true);
+    defender->heal(8 + random2(8));
 
     return false;
 }
@@ -1983,9 +1942,6 @@ static bool actor_can_lose_heads(const actor* defender)
     {
         return true;
     }
-
-    if (defender->is_player() && you.form == TRAN_HYDRA)
-        return true;
 
     return false;
 }
@@ -2048,6 +2004,9 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
+    // Player hydras don't gain or lose heads.
+    ASSERT(defender->is_monster());
+
     const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
@@ -2075,13 +2034,6 @@ void melee_attack::decapitate(int dam_type)
                  apostrophise(defender_name(true)).c_str());
         }
 
-
-        if (defender->is_player())
-        {
-            untransform();
-            return;
-        }
-
         if (!defender->is_summoned())
         {
             bleed_onto_floor(defender->pos(), defender->type,
@@ -2101,10 +2053,7 @@ void melee_attack::decapitate(int dam_type)
              apostrophise(defender_name(true)).c_str());
     }
 
-    if (defender->is_player())
-        set_hydra_form_heads(heads - 1);
-    else
-        defender->as_monster()->num_heads--;
+    defender->as_monster()->num_heads--;
 }
 
 /**
@@ -2120,6 +2069,9 @@ void melee_attack::attacker_sustain_passive_damage()
         return;
 
     if (attacker->res_acid() >= 3)
+        return;
+
+    if (!adjacent(attacker->pos(), defender->pos()))
         return;
 
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
@@ -2320,11 +2272,6 @@ bool melee_attack::player_good_stab()
               && (!weapon || is_melee_weapon(*weapon));
 }
 
-bool melee_attack::attack_ignores_shield(bool verbose)
-{
-    return false;
-}
-
 /* Select the attack verb for attacker
  *
  * If klown, select randomly from klown_attack, otherwise check for any special
@@ -2495,7 +2442,7 @@ void melee_attack::mons_do_napalm()
     if (defender->res_sticky_flame())
         return;
 
-    if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
+    if (one_chance_in(3))
     {
         if (needs_message)
         {
@@ -2695,8 +2642,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ROT:
-        if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(damage_done > 5 ? 2 : 1);
+        if (one_chance_in(3))
+            rot_defender(1);
         break;
 
     case AF_FIRE:
@@ -2813,7 +2760,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HUNGER:
-        if (defender->holiness() == MH_UNDEAD)
+        if (defender->holiness() & MH_UNDEAD)
             break;
 
         defender->make_hungry(you.hunger / 4, false);
@@ -2844,8 +2791,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
         }
 
-        if (one_chance_in(10)
-            || (damage_done > 2 && one_chance_in(3)))
+        if (one_chance_in(3))
         {
             defender->confuse(attacker,
                               1 + random2(3+attacker->get_hit_dice()));
@@ -2853,7 +2799,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
+        if (coinflip())
             drain_defender();
         break;
 
@@ -2878,17 +2824,20 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_WASP)
-            paralyse_roll += 3;
+        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
 
-        const int flat_bonus  = attacker->type == MONS_HORNET ? 1 : 0;
         const bool strong_result = one_chance_in(paralyse_roll);
 
-        if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-        else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+        if (strong_result
+            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->paralyse(attacker, roll_dice(1, 3));
+        }
+        else if (strong_result
+                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->slow_down(attacker, roll_dice(1, 3));
+        }
 
         break;
     }
@@ -3315,7 +3264,7 @@ void melee_attack::emit_foul_stench()
 
         if (damage_done > 4 && x_chance_in_y(mut, 5)
             && !cell_is_solid(mon->pos())
-            && env.cgrid(mon->pos()) == EMPTY_CLOUD)
+            && !cloud_at(mon->pos()))
         {
             mpr("You emit a cloud of foul miasma!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
@@ -3564,8 +3513,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 60
-                + you.strength() * 15
+                + you.dex() * 75
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 

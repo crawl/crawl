@@ -34,14 +34,12 @@ typedef uint32_t ucs_t;
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
 
-#define NON_ENTITY 27000
-
 enum extra_monster_index_type
 {
     MAX_MONSTERS = 700,                  // max size of monster array {dlb}
     ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
     YOU_FAULTLESS,                       // full xp but no penalty (reflection)
-    NON_MONSTER  = NON_ENTITY,           // no monster
+    NON_MONSTER  = 27000,                // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
@@ -59,7 +57,7 @@ enum extra_monster_index_type
 // max size of item list {dlb}:
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM  NON_ENTITY
+#define NON_ITEM 27000
 #define ITEM_IN_INVENTORY (coord_def(-1, -1))
 #define ITEM_IN_MONSTER_INVENTORY (coord_def(-2, -2))
 #define ITEM_IN_SHOP 32767
@@ -69,16 +67,6 @@ COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS
-#endif
-
-// max size of cloud array {dlb}:
-#define MAX_CLOUDS 600
-
-// empty cloud -- (CLOUDS + 1) {dlb}:
-#define EMPTY_CLOUD NON_ENTITY
-
-#if EMPTY_CLOUD <= MAX_CLOUDS
-#error EMPTY_CLOUD must be > MAX_CLOUDS
 #endif
 
 // max x-bound for level generation {dlb}
@@ -126,12 +114,6 @@ const int LABYRINTH_BORDER = 4;
 #define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
 #define MSG_MIN_HEIGHT  5
 
-// max traps per level
-#define MAX_TRAPS         400
-
-// max shops per level
-#define MAX_SHOPS         64
-
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
@@ -177,6 +159,9 @@ const int INSTANT_DEATH = -9999;
 // Note: use armour_max_enchant(item) to get the correct limit for item
 const int MAX_WPN_ENCHANT = 9;
 const int MAX_SEC_ENCHANT = 2;
+
+// formula for MP from a potion of magic
+#define POT_MAGIC_MP (10 + random2avg(28, 3))
 
 const int MAX_KNOWN_SPELLS = 21;
 
@@ -252,7 +237,7 @@ typedef uint8_t colour_t;
 // value in the low byte.
 
 // This is used to signal curses (which has seven base colours) to
-// try to get a brighter version using recommisioned attribute flags.
+// try to get a brighter version using recommissioned attribute flags.
 #define COLFLAG_CURSES_BRIGHTEN          0x0080
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
@@ -296,7 +281,7 @@ enum CHAR_ATTRIBUTES
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
-const char * const MONSTER_NUMBER = "monster-number";
+const char * const CORPSE_HEADS = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 const char * const MONSTER_MID = "monster-mid";
 

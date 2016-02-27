@@ -459,22 +459,9 @@ potion of mutation
 
 Eliksir który powoduje trwałe nieprzewidywalne zmiany w ciele pijącego.
 %%%%
-potion of poison
-
-Paskudna trująca ciecz.
-%%%%
-potion of porridge
-
-To nie magiczny eliksir, a porcja zwykłej potrawy, w postaci gęstej, pożywnej
-lecz niezbyt smacznej mazi.
-%%%%
 potion of resistance
 
 Eliksir który zapewnia tymczasową odporność na ogień, zimno, prąd i truciznę.
-%%%%
-potion of slowing
-
-Eliksir który spowalnia szybkość ruchów.
 %%%%
 quad damage
 
@@ -555,10 +542,6 @@ rod of inaccuracy
 Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
 wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
 skutki są dość brutalne.
-%%%%
-rod of the swarm
-
-Ten pręt pozwala przyzwać chmarę owadów.
 %%%%
 royal jelly
 

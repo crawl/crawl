@@ -150,9 +150,7 @@ Reverts you to your normal form.
 # Zin
 Recite ability
 
-Preaches to nearby monsters about Zin's laws. The recitation will continue for
-a short while, but will be interrupted by actions such as spellcasting, reading
-scrolls, or quaffing potions.
+Preaches to nearby monsters about Zin's laws for a short duration.
 
 The recitation will have different effects depending on the target: the chaotic
 and unclean will be affected by powerful and damaging effects, undead and
@@ -258,10 +256,10 @@ the damage dealt.
 %%%%
 Enslave Soul ability
 
-Marks a living intelligent monster's soul as ripe for the taking. Once the
-marked monster dies, its soul will be yours. Only a relatively uninjured
-monster can have its soul marked, and the duration of the mark is dependent
-on Invocations skill.
+Marks a monster's soul as ripe for the taking. Intelligent living, demonic and
+holy monsters can be targeted, as long as they are relatively uninjured. The
+duration of the mark is dependent on Invocations skill. If the monster dies
+while still marked, its soul will become yours.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
@@ -355,9 +353,10 @@ Heal Other ability
 
 Heals a creature other than yourself by a moderate amount, depending on
 Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on animals, worse on humanoids of your species, still
-worse on other humanoids, and worst of all on demons and undead. Mindless
-creatures cannot be pacified, and no monster can be pacified while it is asleep.
+neutral. This works best on animals, and is less effective on humanoids and
+other intelligent creatures. Undead and demons are harder still to pacify.
+Mindless creatures cannot be pacified, and no monster can be pacified while it
+is asleep.
 
 Whether the pacification succeeds or not, the invested food, piety and magic
 points are lost. If it does succeed, the monster is healed and you gain half
@@ -593,6 +592,27 @@ though they will not leave their home branch. Enemies accepting a bribe will
 lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
 indifferent if they have not become your allies.
 %%%%
+# Pakellas
+Device Surge ability
+
+Ready a device surge, which - on the next use of a magical device - triggers
+to convert some of your magical power to strengthen the effect of the device.
+The amount of magical power that can be used for a surge varies, but
+correlates with how devoted a follower is to Pakellas.
+%%%%
+Quick Charge ability
+
+Spend two thirds of your current pool of magic to charge a wand or rod. The
+effectiveness of this depends on your current pool of magic and your
+Evocations skill.
+%%%%
+Supercharge ability
+
+Infuses magical energy into a rod or wand. For a rod, its recharge rate and
+capacity are set to slightly above the normal maximums for such a device;
+for wands, their capacity is significantly increased beyond normal and fully
+charged to this new capacity.
+%%%%
 # Qazlal
 Upheaval ability
 
@@ -752,3 +772,7 @@ Donate Gold ability
 
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
+%%%%
+Curse Item ability
+
+In exchange for a scroll of remove curse, Ashenzari will curse one of your items.

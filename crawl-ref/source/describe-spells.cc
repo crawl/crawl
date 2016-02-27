@@ -55,7 +55,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type,
                                        mon_holy_type caster_holiness)
 {
     // special case (:
-    if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
+    if (type == MON_SPELL_DEMONIC && caster_holiness & MH_HOLY)
         return "angelic";
 
     static const map<mon_spell_slot_flag, string> descriptors =
@@ -163,7 +163,7 @@ static void _monster_spellbooks(const monster_info &mi,
             const size_t *s_i_ptr = map_find(serpent_indices, mi.type);
             ASSERT(s_i_ptr);
             const size_t serpent_index = *s_i_ptr;
-            ASSERT_RANGE(serpent_index, 0, ARRAYSZ(serpent_of_hell_breaths));
+            ASSERT_LESS(serpent_index, ARRAYSZ(serpent_of_hell_breaths));
 
             for (auto breath : serpent_of_hell_breaths[serpent_index])
                 output_book.spells.emplace_back(breath);
@@ -231,11 +231,8 @@ static vector<spell_type> _spellset_contents(const spellset &spells)
     {
         for (auto spell : book.spells)
         {
-            if (unique_spells.find(spell) != unique_spells.end())
-            {
-                unique_spells.erase(spell);
+            if (unique_spells.erase(spell) == 1)
                 spell_list.emplace_back(spell);
-            }
         }
     }
 

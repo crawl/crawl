@@ -199,8 +199,8 @@ static void _hell_effects(int /*time_delta*/)
         return;
 
     // 50% chance at max piety
-    if (you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY * 2)
-        || is_sanctuary(you.pos()))
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
         return;
@@ -819,9 +819,7 @@ static void _handle_sickness(int /*time_delta*/)
     // If Cheibriados has slowed your biology, disease might
     // not actually do anything.
     if (you.disease && one_chance_in(30)
-        && !(you_worship(GOD_CHEIBRIADOS)
-             && you.piety >= piety_breakpoint(0)
-             && coinflip()))
+        && !(have_passive(passive_t::slow_metabolism) && coinflip()))
     {
         mprf(MSGCH_WARN, "Your disease is taking its toll.");
         lose_stat(STAT_RANDOM, 1);
@@ -847,7 +845,7 @@ static void _abyss_speed(int /*time_delta*/)
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
-    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+    if (have_passive(passive_t::slow_abyss) && coinflip())
         ; // Speed change less often for Chei.
     else if (coinflip() && you.abyss_speed < 100)
         ++you.abyss_speed;
@@ -875,11 +873,11 @@ static void _jiyva_effects(int /*time_delta*/)
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
-                   || env.cgrid(newpos) != EMPTY_CLOUD
+                   || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
-                         MHITNOT, 0, GOD_JIYVA);
+                         MHITNOT, MG_NONE, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
             if (create_monster(mg))
@@ -951,7 +949,6 @@ static int _div(int num, int denom)
 
 struct timed_effect
 {
-    timed_effect_type effect;
     void              (*trigger)(int);
     int               min_time;
     int               max_time;
@@ -960,25 +957,25 @@ struct timed_effect
 
 static struct timed_effect timed_effects[] =
 {
-    { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
-    { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
-    { TIMER_SICKNESS,      _handle_sickness,              100,   300, false },
-    { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
+    { rot_floor_items,               200,   200, true  },
+    { _hell_effects,                 200,   600, false },
+    { _handle_sickness,              100,   300, false },
+    { _handle_magic_contamination,   200,   600, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_DETERIORATION, nullptr,                         0,     0, false },
+    { nullptr,                         0,     0, false },
 #endif
-    { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
+    { handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_SCREAM, nullptr,                                0,     0, false },
+    { nullptr,                                0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      rot_inventory_food,            100,   300, false },
-    { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
-    { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
-    { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
-    { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
-    { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
+    { rot_inventory_food,            100,   300, false },
+    { _wait_practice,                100,   300, false },
+    { _lab_change,                  1000,  3000, false },
+    { _abyss_speed,                  100,   300, false },
+    { _jiyva_effects,                100,   300, false },
+    { _evolve,                      5000, 15000, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_BRIBE_TIMEOUT, nullptr,                         0,     0, false },
+    { nullptr,                         0,     0, false },
 #endif
 };
 
@@ -1319,7 +1316,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILENCE: case ENCH_LOWERED_MR:
         case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
-        case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_MIRROR_DAMAGE: case ENCH_MAGIC_ARMOUR: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_WRETCHED: case ENCH_SCREAMED:
@@ -1477,8 +1474,7 @@ void update_level(int elapsedTime)
     dprf("total monsters on level = %d", mons_total);
 #endif
 
-    for (int i = 0; i < MAX_CLOUDS; i++)
-        delete_cloud(i);
+    delete_all_clouds();
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
@@ -1491,7 +1487,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     // -4 rods don't recharge at all.
     aut = min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
 
-    int rate = 4 + rod.special;
+    int rate = 4 + rod.rod_plus;
 
     rate *= 10 * aut;
     if (in_inv)

@@ -174,15 +174,18 @@ void debug_item_scan()
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; ++j)
-                for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+            {
+                monster& mons(menv[j]);
+                for (mon_inv_iterator ii(mons); ii; ++ii)
                 {
-                    if (menv[j].inv[k] == i)
+                    if (ii->index() == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
-                             j, menv[j].name(DESC_A, true).c_str(),
-                             menv[j].pos().x, menv[j].pos().y);
+                             j, mons.name(DESC_A, true).c_str(),
+                             mons.pos().x, mons.pos().y);
                     }
                 }
+            }
         }
 
         // Current bad items of interest:
@@ -212,9 +215,9 @@ void debug_item_scan()
         }
         else if (!is_artefact(mitm[i])
                  && (mitm[i].base_type == OBJ_WEAPONS
-                     && mitm[i].special >= NUM_SPECIAL_WEAPONS
+                        && mitm[i].brand >= NUM_SPECIAL_WEAPONS
                      || mitm[i].base_type == OBJ_ARMOUR
-                        && mitm[i].special >= NUM_SPECIAL_ARMOURS))
+                        && mitm[i].brand >= NUM_SPECIAL_ARMOURS))
         {
             _dump_item(name, i, mitm[i], "Bad special value:");
         }
@@ -685,9 +688,9 @@ void check_map_validity()
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
 
-        find_trap(*ri); // this has all needed asserts already
+        trap_at(*ri); // this has all needed asserts already
 
-        if (shop_struct *shop = get_shop(*ri))
+        if (shop_struct *shop = shop_at(*ri))
             ASSERT_RANGE(shop->type, 0, NUM_SHOPS);
 
         // border must be impassable

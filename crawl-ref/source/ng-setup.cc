@@ -106,11 +106,15 @@ item_def* newgame_make_item(object_class_type base,
     int slot;
     for (slot = 0; slot < ENDOFPACK; ++slot)
     {
+        if (base == OBJ_FOOD && slot == letter_to_index('e'))
+            continue;
+
         item_def& item = you.inv[slot];
         if (!item.defined())
             break;
 
-        if (item.is_type(base, sub_type) && item.special == force_ego && is_stackable_item(item))
+        if (item.is_type(base, sub_type) && item.brand == force_ego
+            && is_stackable_item(item))
         {
             item.quantity += qty;
             return &item;
@@ -122,7 +126,7 @@ item_def* newgame_make_item(object_class_type base,
     item.sub_type  = sub_type;
     item.quantity  = qty;
     item.plus      = plus;
-    item.special   = force_ego;
+    item.brand     = force_ego;
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
@@ -171,7 +175,7 @@ item_def* newgame_make_item(object_class_type base,
 
     // Wanderers may or may not already have a spell. - bwr
     // Also, when this function gets called their possible randbook
-    // has not been initalised and will trigger an ASSERT.
+    // has not been initialised and will trigger an ASSERT.
     if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
     {
         spell_type which_spell = spells_in_book(item)[0];
@@ -189,13 +193,9 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_SHORTBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORTBOW, 1, plus);
-        break;
     case WPN_HAND_CROSSBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_HAND_CROSSBOW, 1, plus);
-        break;
     case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
+        newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
         break;
     default:
         break;
@@ -371,11 +371,6 @@ static void _give_basic_knowledge()
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
-
-    // Won't appear unidentified anywhere.
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = true;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_JEWELLERY] = true;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_ARMOUR] = true;
 
     // Removed item types are handled in _set_removed_types_as_identified.
 }

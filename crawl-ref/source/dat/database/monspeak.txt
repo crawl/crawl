@@ -825,12 +825,6 @@ VISUAL:@The_monster@ smiles happily.
 %%%%
 _friendly_humanoid_rare_
 
-@The_monster@ says, "I will never give you up."
-
-@The_monster@ says, "I will never let you down."
-
-@The_monster@ says, "I will never run around and desert you."
-
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
 %%%%
@@ -1443,6 +1437,14 @@ Okawaru player ghost
 @The_monster@ says, "I was once a great warrior, and I still am!"
 
 @The_monster@ says, "Ah, a second chance to prove myself in battle!"
+%%%%
+Pakellas player ghost
+
+@The_monster@ says, "You're just another problem to be solved."
+
+@The_monster@ says, "You're really going to get a charge out of this one."
+
+@The_monster@ says, "Spells? Hah! My gadgets will show what real magic is!"
 %%%%
 Qazlal player ghost
 
@@ -2087,6 +2089,13 @@ Xom Crazy Yiuf
 # Robert Ingersoll
 @The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
 
+# Hume
+@The_monster@ says, "Reason is nothing but a wonderful and unintelligible
+instinct in our souls."
+
+# Kant
+@The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
+
 VISUAL:@The_monster@ considers dialectic materialism.
 
 VISUAL:@The_monster@ ponders an existential dilemma.
@@ -2094,6 +2103,16 @@ VISUAL:@The_monster@ ponders an existential dilemma.
 VISUAL:@The_monster@ shuffles @possessive@ notes under @possessive@ cloak.
 
 VISUAL:@The_monster@ heaves a sigh in contemplation.
+%%%%
+orb Crazy Yiuf
+
+@The_monster@ says, "Wait for me!"
+
+@The_monster@ says, "You found it!"
+
+@The_monster@ says, "Get me out of this place."
+
+@The_monster@ says, "You came back for me."
 %%%%
 # Not quite so mad when he's confused.
 confused Crazy Yiuf
@@ -2955,6 +2974,29 @@ w:50
 @The_monster@ says, "I saw some tasty-looking corn earlier, but it tried to eat me. I hate that."
 
 %%%%
+orb Donald
+
+w:25
+@_generic_Donald_@
+
+@The_monster@ says, "Thanks for carrying the Orb of Power for me."
+
+@The_monster@ says, "Isn't that thing heavy? I could take a turn."
+
+@The_monster@ says, "Aren't you worried about radiation? You should put that down."
+
+@The_monster@ says, "What are you going to do with that Orb?"
+
+@The_monster@ says, "Don't you think the Orb of Power was down there for a reason?"
+
+@The_monster@ says, "I heard that the world ends if you bring it to the surface."
+
+@The_monster@ says, "Someone is going to come looking for that Orb."
+
+@The_monster@ says, "Are you sure that's the real Orb, and not some cheap imitation?"
+
+@The_monster@ says, "You have the Orb. Was it worth it?"
+
 ######################################################################## GODS #
 Zin Donald
 
@@ -3459,6 +3501,21 @@ w:50
 @The_monster@ says, "I hate existential doubt."
 
 @The_monster@ says, "The great annihilating truth is that I hate you."
+%%%%
+Pakellas Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I hate inventors."
+
+@The_monster@ says, "What are you with all those gadgets, some kind of pawn shop?"
+
+@The_monster@ says, "What would you do with the Orb, anyway? Experiment on it?"
+
+@The_monster@ says, "Bet you can't [analyse|invent] your way out of this one."
+
+@The_monster@ says, "Can I borrow that [wand|rod|lamp|fan] for a second? You must have some to spare."
 %%%%
 No God Donald
 
@@ -6677,13 +6734,13 @@ VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
 VISUAL:@The_monster@ salutes you.
 %%%%
-holy_being_speech
+holy_being_pacification_speech
 
-@The_monster@ shouts @at_foe@, "Continue thy quest, mortal!"
+@The_monster@ shouts at you, "Continue thy quest, mortal!"
 
-@The_monster@ says @to_foe@, "Forge ahead, servant of @foe_god@!"
+@The_monster@ says to you, "Forge ahead, servant of Elyvilon!"
 
-@The_monster@ says @to_foe@, "Carry on, mortal."
+@The_monster@ says to you, "Carry on, mortal."
 %%%%
 #############################################################
 # evil monsters may also have some choice things to say...

@@ -23,11 +23,11 @@
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "english.h"       // For apostrophise
-#include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
+#include "godpassive.h"    // passive_t::want_curses
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
@@ -171,7 +171,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _CURSES_world_reacts(item_def *item)
 {
     // don't spam messages for ash worshippers
-    if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
+    if (one_chance_in(30) && !have_passive(passive_t::want_curses))
         curse_an_item(true);
 }
 
@@ -216,7 +216,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -283,14 +283,15 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power,
+                    false, false, true) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false);
+        your_spells(SPELL_VENOM_BOLT, power, false, false, true);
 
     dec_mp(4);
     make_hungry(50, false, true);
@@ -482,6 +483,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
     if (one_chance_in(4))
     {
         _wucad_miscast(&you, random2(9), random2(70));
+        did_god_conduct(DID_CHANNEL, 10, true);
         return false;
     }
 
@@ -492,6 +494,8 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     *pract    = 1;
     *did_work = true;
+
+    did_god_conduct(DID_CHANNEL, 10, true);
 
     return false;
 }
@@ -563,7 +567,7 @@ static void _STORM_BOW_world_reacts(item_def *item)
         return;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(5))
             place_cloud(CLOUD_RAIN, *ri, random2(20), &you, 3);
 }
 
@@ -594,11 +598,8 @@ static void _RCLOUDS_world_reacts(item_def *item)
         cloud = CLOUD_MIST;
 
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
-        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD
-                && one_chance_in(20))
-        {
+        if (!cell_is_solid(*ri) && !cloud_at(*ri) && one_chance_in(20))
             place_cloud(cloud, *ri, random2(10), &you, 1);
-        }
 }
 
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -783,7 +784,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 static void _UNDEADHUNTER_melee_effects(item_def* item, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {
-    if (defender->holiness() == MH_UNDEAD && !one_chance_in(3)
+    if (defender->holiness() & MH_UNDEAD && !one_chance_in(3)
         && !mondied && dam)
     {
         mprf("%s %s blasted by disruptive energy!",
@@ -1274,25 +1275,44 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
+static void _CAPTAIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you_worship(GOD_SHINING_ONE))
+    {
+        _equip_mpr(show_msgs,
+                   "You feel dishonourable wielding this.");
+    }
+    else
+    {
+        _equip_mpr(show_msgs,
+                   "You feel a cutthroat vibe.");
+    }
+}
+
 static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                actor* defender, bool mondied, int dam)
 {
     // Player disarming sounds like a bad idea; monster-on-monster might
     // work but would be complicated.
-    if (!attacker->is_player() || !defender->is_monster() || mondied)
-        return;
-
-    if (x_chance_in_y(dam, 75))
+    if (coinflip()
+        && dam >= (3 + random2(defender->get_hit_dice()))
+        && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam*4)
+        && attacker->is_player()
+        && defender->is_monster()
+        && !mondied)
     {
         item_def *wpn = defender->as_monster()->disarm();
         if (wpn)
         {
-            mprf("You knock %s %s to the ground with your cutlass!",
-                 apostrophise(defender->name(DESC_THE)).c_str(),
-                 wpn->name(DESC_PLAIN).c_str());
+            mprf("The captain's cutlass flashes! You lacerate %s!!",
+                defender->name(DESC_THE).c_str());
+            mprf("%s %s falls to the floor!",
+                apostrophise(defender->name(DESC_THE)).c_str(),
+                wpn->name(DESC_PLAIN).c_str());
+            defender->hurt(attacker, 18 + random2(18));
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 3);
         }
     }
-
 }
 
 ///////////////////////////////////////////////////
@@ -1315,7 +1335,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
     ASSERT(delay > 0);
 
     // coinflip() chance of 1 MP per turn.
-    if (!(you.spirit_shield() && you.species == SP_DEEP_DWARF))
+    if (player_regenerates_mp())
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
     // It's more interesting to get a lump of contamination then to just add a
     // small amount every turn, plus there's a small chance of rapid buildup.
@@ -1384,7 +1404,7 @@ static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
     coord_def spot = defender->pos();
     if (!mondied
         && !cell_is_solid(spot)
-        && env.cgrid(spot) == EMPTY_CLOUD
+        && !cloud_at(spot)
         && one_chance_in(5))
     {
          place_cloud(CLOUD_COLD, spot, random_range(3, 5), attacker, 0);

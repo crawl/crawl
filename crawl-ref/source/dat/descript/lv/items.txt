@@ -103,10 +103,6 @@ potion of invisibility
 
 Dzira, kas tevi paslēpj no pārējo skatieniem.
 %%%%
-potion of poison
-
-Nejauki indīgs šķidrums.
-%%%%
 quarterstaff
 
 Izturīga koka nūja, kas paredzēta cīņai.

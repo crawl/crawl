@@ -12,6 +12,7 @@ enum aff_type // sign and non-zeroness matters
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
+    AFF_MULTIPLE,    // Passes through multiple times
 };
 
 class targetter
@@ -31,6 +32,7 @@ public:
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool has_additional_sites(coord_def a);
+    virtual bool affects_monster(const monster_info& mon);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -45,6 +47,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
+    virtual bool affects_monster(const monster_info& mon) override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
     void set_explosion_aim(bolt tempbeam);
@@ -269,15 +272,4 @@ private:
     size_t num_beams;
     int range;
 };
-
-class targetter_list : public targetter
-{
-public:
-    targetter_list(vector<coord_def> targets, coord_def center);
-    aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def a) override;
-private:
-    vector<coord_def> targets;
-};
-
 #endif

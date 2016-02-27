@@ -300,6 +300,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     switch (mon_tile)
     {
     // No shift necessary.
+    case TILEP_MONS_DEEP_ELF_ARCHER:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_CRIMSON_IMP:
@@ -430,7 +431,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_BLORK_THE_ORC:
     case TILEP_MONS_BOGGART:
-    case TILEP_MONS_DEEP_ELF_FIGHTER:
     case TILEP_MONS_JORGRUN:
     case TILEP_MONS_DIMME:
     case TILEP_MONS_HALFLING:
@@ -439,9 +439,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift upwards and to the left.
     case TILEP_MONS_DEEP_ELF_MAGE:
-    case TILEP_MONS_DEEP_ELF_SUMMONER:
-    case TILEP_MONS_DEEP_ELF_CONJURER:
-    case TILEP_MONS_DEEP_ELF_PRIEST:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
     case TILEP_MONS_MINOTAUR:
@@ -526,7 +523,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_MARGERY:
     case TILEP_MONS_FAUN:
-    case TILEP_MONS_OCTOPODE_CRUSHER:
         *ofs_x = 1;
         *ofs_y = -3;
         break;
@@ -814,7 +810,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
     case TILEP_MONS_VAULT_WARDEN:
-    case TILEP_MONS_DEEP_ELF_FIGHTER:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -830,7 +825,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_FORMICID:
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_OCTOPODE:
-    case TILEP_MONS_OCTOPODE_CRUSHER:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
         *ofs_x = 0;
@@ -969,10 +963,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 5;
         break;
 
-    case TILEP_MONS_DEEP_ELF_SUMMONER:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_MAGE:
-    case TILEP_MONS_DEEP_ELF_CONJURER:
         *ofs_x = 3;
         *ofs_y = -7;
         break;

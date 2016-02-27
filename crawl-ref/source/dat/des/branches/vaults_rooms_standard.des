@@ -244,13 +244,12 @@ MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
 MONS:   ghoul / necrophage / vampire
 MONS:   wizard / necromancer
 MONS:   big kobold / kobold demonologist
-MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
-        w:2 deep elf priest
+MONS:   w:5 deep elf knight / w:5 deep elf archer / deep elf mage
 MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of mutation, \
-            any potion / potion of poison, any potion
+            any potion / potion of degeneration, any potion
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
 MAP
 vvvvvvvvvvvvv....

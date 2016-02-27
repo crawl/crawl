@@ -150,7 +150,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     // if not, we'd need special checks in player gifting, etc... better to
     // go along for now.
     if (ammo.sub_type == MI_NEEDLE)
-        ammo.special = SPMSL_POISONED;
+        ammo.brand = SPMSL_POISONED;
 
     ammo.quantity = 30 + random2(10);
     if (initial_gift || !launcher)
@@ -301,8 +301,8 @@ static void _upgrade_body_armour(item_def &arm)
     if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
         && arm.sub_type < ARM_LAST_MUNDANE_BODY
         // These are supposed to be robe-only.
-        && arm.special != SPARM_ARCHMAGI
-        && arm.special != SPARM_RESISTANCE)
+        && arm.brand != SPARM_ARCHMAGI
+        && arm.brand != SPARM_RESISTANCE)
     {
         arm.sub_type++;
     }
@@ -540,7 +540,7 @@ static void _beogh_blessing_reinforcements()
 
         delayed_monster(
                          mgen_data(follower_type, BEH_FRIENDLY, &you, 0, 0,
-                                   you.pos(), MHITYOU, 0, GOD_BEOGH),
+                                   you.pos(), MHITYOU, MG_NONE, GOD_BEOGH),
                          _beogh_reinf_callback);
     }
 }

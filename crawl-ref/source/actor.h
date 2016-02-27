@@ -11,8 +11,7 @@ enum ev_ignore_bit
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1<<0,
-    EV_IGNORE_PHASESHIFT = 1<<1,
-    EV_IGNORE_UNIDED     = 1<<2,
+    EV_IGNORE_UNIDED     = 1<<1,
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore_bit);
 
@@ -111,7 +110,8 @@ public:
                                bool calc_unid = true,
                                vector<item_def> *matches = nullptr) const = 0;
 
-    virtual hands_reqd_type hands_reqd(const item_def &item) const;
+    virtual hands_reqd_type hands_reqd(const item_def &item,
+                                       bool base = false) const;
 
             bool can_wield(const item_def* item,
                            bool ignore_curse = false,
@@ -162,7 +162,7 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
-    virtual bool can_see_invisible() const = 0;
+    virtual bool can_see_invisible(bool calc_unid = true) const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
@@ -201,8 +201,9 @@ public:
                       string aux = "",
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
-    virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const string &who = "", const int power = 0) = 0;
+    virtual bool heal(int amount) = 0;
+    virtual void banish(actor *agent, const string &who = "",
+                        const int power = 0, bool force = false) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
@@ -297,7 +298,7 @@ public:
     virtual bool res_wind() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int res_magic() const = 0;
+    virtual int res_magic(bool calc_unid = true) const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
@@ -314,9 +315,13 @@ public:
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
-    virtual bool warding(bool calc_unid = true, bool items = true) const;
+    virtual bool dismissal(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
+    virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
+    virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
+    virtual bool reflection(bool calc_unid = true, bool items = true) const;
+    virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
@@ -423,7 +428,7 @@ public:
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(actor* defender);
+    bool can_constrict(const actor* defender) const;
     void clear_far_constrictions();
     void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();

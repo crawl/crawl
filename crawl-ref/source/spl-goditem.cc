@@ -36,11 +36,11 @@
 #include "view.h"
 #include "viewchar.h"
 
-static void _print_holy_pacification_speech(const string key,
+static void _print_holy_pacification_speech(const string &key,
                                             monster* mon,
                                             msg_channel_type channel)
 {
-    string full_key = "holy_being_";
+    string full_key = "holy_being_pacification";
     full_key += key;
 
     string msg = getSpeakString(full_key);
@@ -78,13 +78,8 @@ int is_pacifiable(const monster* mon)
 
     const mon_holy_type holiness = mon->holiness();
 
-    if (!mon->is_holy()
-        && holiness != MH_UNDEAD
-        && holiness != MH_DEMONIC
-        && holiness != MH_NATURAL)
-    {
+    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
         return -1;
-    }
 
     if (mon->is_stationary()) // not able to leave the level
         return -1;
@@ -112,18 +107,17 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     if (healed < 1)
         return 0;
 
-    const int factor = (mons_intel(mon) < I_HUMAN)         ? 3 : // animals
-                       (is_player_same_genus(mon->type))   ? 2   // same genus
-                                                           : 1;  // other
+    const int factor = (mons_intel(mon) < I_HUMAN) ? 3  // animals
+                                                   : 1; // other
 
     int divisor = 3;
 
     const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
-    else if (holiness == MH_UNDEAD)
+    else if (holiness & MH_UNDEAD)
         divisor++;
-    else if (holiness == MH_DEMONIC)
+    else if (holiness & MH_DEMONIC)
         divisor += 2;
 
     if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
@@ -155,44 +149,52 @@ static vector<string> _desc_mindless(const monster_info& mi)
         return {};
 }
 
-static spret_type _healing_spell(int healed, int max_healed,
-                                 bool divine_ability, const coord_def& where,
-                                 bool not_self, targ_mode_type mode)
+/**
+ * Heal a monster and print an appropriate message.
+ *
+ * Should only be called if the player is responsible!
+ * @param patient the monster to be healed
+ * @param amount  how many HP to restore
+ * @return whether the monster could be healed.
+ */
+bool heal_monster(monster& patient, int amount)
 {
+    if (!patient.heal(amount))
+        return false;
+
+    mprf("You heal %s.", patient.name(DESC_THE).c_str());
+
+    if (patient.hit_points == patient.max_hit_points)
+        simple_monster_message(&patient, " is completely healed.");
+    else
+        print_wounds(&patient);
+
+    return true;
+}
+
+spret_type cast_healing(int pow, int max_pow, bool fail)
+{
+    const int healed = pow + roll_dice(2, pow) - 2;
+    const int max_healed = (3 * max_pow) - 2;
     ASSERT(healed >= 1);
 
-    bolt beam;
     dist spd;
 
-    if (where.origin())
-    {
-        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                      mode != TARG_NUM_MODES ? mode :
-                                      you_worship(GOD_ELYVILON) ?
-                                            TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS, false, true, true, "Heal",
-                                      nullptr, false, nullptr, _desc_mindless);
-    }
-    else
-    {
-        spd.target  = where;
-        spd.isValid = in_bounds(spd.target);
-    }
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_INJURED_FRIEND;
+    args.needs_path = false;
+    args.self = CONFIRM_CANCEL;
+    args.target_prefix = "Heal";
+    args.get_desc_func = _desc_mindless;
+    direction(spd, args);
 
     if (!spd.isValid)
         return SPRET_ABORT;
-
-    if (spd.target == you.pos())
+    if (cell_is_solid(spd.target))
     {
-        if (not_self)
-        {
-            mpr("You can only heal others!");
-            return SPRET_ABORT;
-        }
-
-        mpr("You are healed.");
-        inc_hp(healed);
-        return SPRET_SUCCESS;
+        canned_msg(MSG_NOTHING_THERE);
+        return SPRET_ABORT;
     }
 
     monster* mons = monster_at(spd.target);
@@ -201,63 +203,55 @@ static spret_type _healing_spell(int healed, int max_healed,
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     bool did_something = false;
 
-    if (divine_ability
-        && you_worship(GOD_ELYVILON)
-        && _mons_hostile(mons))
+    if (_mons_hostile(mons))
     {
         const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-
-        // Don't divinely heal a monster you can't pacify.
-        if (can_pacify <= 0)
+        if (can_pacify == -1)
         {
-            if (can_pacify == 0)
-            {
-                mprf("The light of Elyvilon fails to reach %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -3)
-            {
-                mprf("The light of Elyvilon almost touches upon %s.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else if (can_pacify == -4)
-            {
-                mprf("%s is completely unfazed by your meager offer of peace.",
-                     mons->name(DESC_THE).c_str());
-                return SPRET_FAIL;
-            }
-            else
-            {
-                if (can_pacify == -2)
-                {
-                    mprf("You cannot pacify this monster while %s is sleeping!",
-                         mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-                }
-                else
-                    mpr("You cannot pacify this monster!");
-                return SPRET_ABORT;
-            }
+            mpr("You cannot pacify this monster!");
+            return SPRET_ABORT;
         }
-
-        if (can_pacify == 1)
+        if (can_pacify == -2)
         {
+            mprf("You cannot pacify this monster while %s is sleeping!",
+                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+            return SPRET_ABORT;
+        }
+        fail_check();
+
+        switch (can_pacify)
+        {
+        case 0:
+            mprf("The light of Elyvilon fails to reach %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case -3:
+            mprf("The light of Elyvilon almost touches upon %s.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case -4:
+            mprf("%s is completely unfazed by your meager offer of peace.",
+                 mons->name(DESC_THE).c_str());
+            return SPRET_SUCCESS;
+
+        case 1:
             did_something = true;
 
             if (mons->is_holy())
             {
-                string key = "pacification";
+                string key;
 
                 // Quadrupeds can't salute, etc.
                 mon_body_shape shape = get_mon_shape(mons);
                 if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
-                    key += "_humanoid";
+                    key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,
                                                 MSGCH_FRIEND_ENCHANT);
@@ -266,7 +260,7 @@ static spret_type _healing_spell(int healed, int max_healed,
                     && mons->can_speak()
                     && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
                 {
-                    _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                    _print_holy_pacification_speech("_speech", mons, MSGCH_TALK);
                 }
             }
             else
@@ -274,37 +268,24 @@ static spret_type _healing_spell(int healed, int max_healed,
 
             record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
+            break;
+
+        default:
+            die("bad _can_pacify_monster return type %d", can_pacify);
         }
     }
 
-    if (mons->heal(healed))
-    {
+    fail_check();
+    if (heal_monster(*mons, healed))
         did_something = true;
-        mprf("You heal %s.", mons->name(DESC_THE).c_str());
-
-        if (mons->hit_points == mons->max_hit_points)
-            simple_monster_message(mons, " is completely healed.");
-        else
-            print_wounds(mons);
-    }
 
     if (!did_something)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_FAIL;
+        return SPRET_SUCCESS;
     }
 
     return SPRET_SUCCESS;
-}
-
-spret_type cast_healing(int pow, int max_pow, bool divine_ability,
-                        const coord_def& where, bool not_self,
-                        targ_mode_type mode)
-{
-    pow = min(50, pow);
-    max_pow = min(50, max_pow);
-    return _healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
-                          divine_ability, where, not_self, mode);
 }
 
 /// Effects that occur when the player is debuffed.
@@ -507,7 +488,7 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
     else
     {
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::detect_items))
         {
             map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
@@ -526,7 +507,7 @@ int detect_items(int pow)
         if (pow != -1 && env.map_knowledge(*ri).changed())
             continue;
 
-        if (igrd(*ri) != NON_ITEM
+        if (you.visible_igrd(*ri) != NON_ITEM
             && !env.map_knowledge(*ri).item())
         {
             items_found++;
@@ -618,7 +599,7 @@ int detect_creatures(int pow, bool telepathic)
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
-            if (!mons_near(mon) || !mon->visible_to(&you))
+            if (!you.can_see(*mon))
             {
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
@@ -667,7 +648,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
 bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
-    if (you_worship(GOD_ASHENZARI) && alreadyknown)
+    if (have_passive(passive_t::want_curses) && alreadyknown)
     {
         if (_selectively_remove_curse(pre_msg))
         {
@@ -680,24 +661,16 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
 
     bool success = false;
 
-    // Only cursed *weapons* in hand count as cursed. - bwr
-    // Not you.weapon() because we want to handle melded weapons too.
-    item_def * const weapon = you.slot_item(EQ_WEAPON, true);
-    if (weapon && is_weapon(*weapon) && weapon->cursed())
-    {
-        // Also sets wield_change.
-        do_uncurse_item(*weapon);
-        success = true;
-    }
-
-    // Everything else uses the same paradigm - are we certain?
-    // What of artefact rings and amulets? {dlb}:
-    for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
+    // Players can no longer wield armour and jewellery as weapons, so we do
+    // not need to check whether the EQ_WEAPON slot actually contains a weapon:
+    // only weapons (and rods and staves) are both wieldable and cursable.
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
-        if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+        item_def * const it = you.slot_item(equipment_type(i), true);
+        if (it && it->cursed())
         {
-            do_uncurse_item(you.inv[you.equip[i]]);
+            do_uncurse_item(*it);
             success = true;
         }
     }
@@ -721,6 +694,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     return success;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
@@ -776,6 +750,7 @@ bool curse_item(bool armour, const string &pre_msg)
 
     return _selectively_curse_item(armour, pre_msg);
 }
+#endif
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
@@ -806,6 +781,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         vector<coord_def> veto_spots(8);
         for (adjacent_iterator ai(where); ai; ++ai)
             veto_spots.push_back(*ai);
+        vector<coord_def> adj_spots = veto_spots;
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -825,6 +801,18 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 }
                 else
                     veto_spots.push_back(newpos);
+            }
+
+            // don't try to shove the orb of zot into lava and/or crash
+            if (igrd(*ai) != NON_ITEM)
+            {
+                coord_def newpos;
+                if (!get_push_space(*ai, newpos, nullptr, true, &adj_spots))
+                {
+                    success = false;
+                    none_vis = false;
+                    break;
+                }
             }
 
             // Make sure we have a legitimate tile.
@@ -859,6 +847,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, act, true);
+                ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
             }
         }
@@ -883,15 +872,15 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, nullptr, true);
+                if (zin) // zin should've checked for this earlier
+                    ASSERT(!newpos.origin());
+                else if (newpos.origin())  // tomb just skips the tile
+                    continue;
                 move_items(*ai, newpos);
             }
 
-            // All clouds are destroyed.
-            if (env.cgrid(*ai) != EMPTY_CLOUD)
-                delete_cloud(env.cgrid(*ai));
-
             // All traps are destroyed.
-            if (trap_def *ptrap = find_trap(*ai))
+            if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
                 grd(*ai) = DNGN_FLOOR;
@@ -1278,7 +1267,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
     }
-    else if (attacker && attacker->is_player())
+    else if (attacker->is_player())
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;

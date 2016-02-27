@@ -302,6 +302,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
+        you.duration[DUR_DOOM_HOWL] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         while (delete_temp_mutation());
@@ -605,7 +606,7 @@ bool wizard_add_mutation()
     const bool god_gift = (answer == 1);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
-                    "'xom', 'slime', 'corrupt', 'qazlal')? ",
+                    "'xom', 'slime', 'qazlal')? ",
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
@@ -625,8 +626,6 @@ bool wizard_add_mutation()
         mutat = RANDOM_XOM_MUTATION;
     else if (spec == "slime")
         mutat = RANDOM_SLIME_MUTATION;
-    else if (spec == "corrupt")
-        mutat = RANDOM_CORRUPT_MUTATION;
     else if (spec == "qazlal")
         mutat = RANDOM_QAZLAL_MUTATION;
 
@@ -1009,11 +1008,11 @@ void wizard_god_wrath()
 void wizard_god_mollify()
 {
     bool mollified = false;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        if (player_under_penance((god_type) i))
+        if (player_under_penance(*it))
         {
-            dec_penance((god_type) i, you.penance[i]);
+            dec_penance(*it, you.penance[*it]);
             mollified = true;
         }
     }
@@ -1094,6 +1093,6 @@ void wizard_join_religion()
     {
         if (god == GOD_GOZAG)
             you.gold = max(you.gold, gozag_service_fee());
-        join_religion(god, true);
+        join_religion(god);
     }
 }

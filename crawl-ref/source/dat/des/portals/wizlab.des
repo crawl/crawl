@@ -889,7 +889,11 @@ KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
 ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
             potion of cure mutation
 ITEM:       potion of beneficial mutation q:1, potion of cure mutation
-ITEM:       amulet of resist mutation good_item
+: if you.unrands("hat of the alchemist") then
+ITEM:       any jewellery randart
+: else
+ITEM:       any jewellery randart / w:5 hat unrand:hat_of_the_alchemist
+: end
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
@@ -1320,7 +1324,7 @@ ENDMAP
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
 KMONS:   1 = spatial vortex w:7 / blink frog / insubstantial wisp w:3 / nothing w:5
-KMONS:   2 = deep elf summoner w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
+KMONS:   2 = deep elf mage w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              rakshasa w:5 ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing / \
              boggart ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing /  \
              wizard ; tomahawk ego:dispersal w:20 | tomahawk w:5 | nothing
@@ -1428,7 +1432,7 @@ for i = 1, #teleporter_glyph do
     lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
 end
 
-set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
+set_random_mon_list([[rakshasa w:15 / deep elf mage w:15 / wizard w:15 / spatial vortex w:15 /
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
@@ -1685,8 +1689,8 @@ kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wi
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
-            demon whip w:1 / demon trident w:1 / gold / wand of fire /\
-            wand of draining / staff of summoning / any book w:30 / any good_item w:15
+            demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
+            wand of acid / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / 1:j / *:i
@@ -1792,8 +1796,7 @@ SUBST:      o = 1, ' = llc, I = .KKKKK, up = .
 NSUBST:     g = 2:1 / ., h = 2:1 / ., i = 2:1 / ., j = 2:1 / .
 NSUBST:     k = 2:1 / ., q = 3:1 / ., r = 3:1 / ., s = 1:1 / .
 NSUBST:     " = 3:K / ., ` = 8:N / d / 4 / 233 / .
-KMONS:      MNO = col:random name:demonic name_adjective plant \
-                tile:mons_demonic_plant
+KMONS:      MNO = demonic plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
 MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
             / w:3 golden eye band

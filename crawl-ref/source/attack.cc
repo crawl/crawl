@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fineff.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "itemname.h"
 #include "itemprop.h"
 #include "message.h"
@@ -141,7 +142,7 @@ bool attack::handle_phase_end()
 int attack::calc_to_hit(bool random)
 {
     int mhit = attacker->is_player() ?
-                15 + (calc_stat_to_hit_base() / 2)
+                15 + (you.dex() / 2)
               : calc_mon_to_hit_base();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -194,7 +195,7 @@ int attack::calc_to_hit(bool random)
             else if (weapon->base_type == OBJ_RODS)
             {
                 mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->special;
+                mhit += weapon->rod_plus;
             }
         }
 
@@ -213,6 +214,10 @@ int attack::calc_to_hit(bool random)
 
         // armour penalty
         mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
+
+        // vertigo penalty
+        if (you.duration[DUR_VERTIGO])
+            mhit -= 5;
 
         // mutation
         if (player_mutation_level(MUT_EYEBALLS))
@@ -236,7 +241,7 @@ int attack::calc_to_hit(bool random)
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
 
         if (using_weapon() && weapon->base_type == OBJ_RODS)
-            mhit += weapon->special;
+            mhit += weapon->rod_plus;
     }
 
     // Penalties for both players and monsters:
@@ -316,7 +321,7 @@ string attack::anon_name(description_level_type desc)
         return "";
     case DESC_YOUR:
     case DESC_ITS:
-        return "its";
+        return "something's";
     case DESC_THE:
     case DESC_A:
     case DESC_PLAIN:
@@ -367,7 +372,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     {
         artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
-            unrand_entry = get_unrand_entry(weapon->special);
+            unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }
 
     attacker_visible   = attacker->observable();
@@ -460,7 +465,7 @@ bool attack::distortion_affects_defender()
                                  defender->conj_verb("bask").c_str());
             }
 
-            defender->heal(1 + random2avg(7, 2), true); // heh heh
+            defender->heal(1 + random2avg(7, 2)); // heh heh
         }
         return false;
     }
@@ -507,13 +512,10 @@ bool attack::distortion_affects_defender()
             blink_fineff::schedule(defender);
         break;
     case BANISH:
-        if (!player_in_branch(BRANCH_ABYSS))
-        {
-            if (defender_visible)
-                    obvious_effect = true;
-            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                             attacker->get_experience_level());
-        }
+        if (defender_visible)
+            obvious_effect = true;
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                         attacker->get_experience_level());
         return true;
     case TELE_INSTANT:
     case TELE_DELAYED:
@@ -528,7 +530,7 @@ bool attack::distortion_affects_defender()
         }
 
         if (choice == TELE_INSTANT)
-            distortion_tele_fineff::schedule(defender);
+            teleport_fineff::schedule(defender);
         else
             defender->teleport();
         break;
@@ -589,7 +591,7 @@ void attack::chaos_affects_defender()
     monster * const mon    = defender->as_monster();
     const bool firewood    = mon && mons_is_firewood(mon);
     const bool immune      = mon && mons_immune_magic(mon);
-    const bool is_natural  = mon && defender->holiness() == MH_NATURAL;
+    const bool is_natural  = mon && defender->holiness() & MH_NATURAL;
     const bool is_shifter  = mon && mon->is_shapeshifter();
     const bool can_clone   = mon && mons_clonable(mon, true);
     const bool can_poly    = is_shifter || (defender->can_safely_mutate()
@@ -609,7 +611,7 @@ void attack::chaos_affects_defender()
     int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
-    int probs[NUM_CHAOS_TYPES] =
+    int probs[] =
     {
         clone_chance,   // CHAOS_CLONE
         poly_chance,    // CHAOS_POLY
@@ -626,11 +628,12 @@ void attack::chaos_affects_defender()
         para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
+    COMPILE_CHECK(ARRAYSZ(probs) == NUM_CHAOS_TYPES);
 
     bolt beam;
     beam.flavour = BEAM_NONE;
 
-    int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+    int choice = choose_random_weighted(probs, end(probs));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
     string chaos_effect = "CHAOS effect: ";
     switch (choice)
@@ -749,7 +752,7 @@ void attack::chaos_affects_defender()
         beam.flavour = BEAM_HEALING;
         break;
     case CHAOS_HASTE:
-        if (defender->is_player() && you_worship(GOD_CHEIBRIADOS))
+        if (defender->is_player() && have_passive(passive_t::no_haste))
         {
             simple_god_message(" protects you from inadvertent hurry.");
             obvious_effect = true;
@@ -863,7 +866,7 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_VENOM:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case SPWPN_VAMPIRISM:
@@ -874,7 +877,7 @@ brand_type attack::random_chaos_brand()
             }
             // intentional fall-through
         case SPWPN_DRAINING:
-            if (defender->holiness() != MH_NATURAL)
+            if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case SPWPN_HOLY_WRATH:
@@ -882,11 +885,8 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_CONFUSE:
-            if (defender->holiness() == MH_NONLIVING
-                || defender->holiness() == MH_PLANT)
-            {
+            if (defender->holiness() & (MH_NONLIVING | MH_PLANT))
                 susceptible = false;
-            }
             break;
         case SPWPN_ANTIMAGIC:
             if (!defender->antimagic_susceptible())
@@ -992,7 +992,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (defender->holiness() != MH_NATURAL)
+    if (!(defender->holiness() & MH_NATURAL))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -1018,19 +1018,14 @@ void attack::drain_defender()
 
 void attack::drain_defender_speed()
 {
-    if (!defender->res_negative_energy())
+    if (needs_message)
     {
-        if (needs_message)
-        {
-            mprf("%s %s %s vigour!",
-                 atk_name(DESC_THE).c_str(),
-                 attacker->conj_verb("drain").c_str(),
-                 def_name(DESC_ITS).c_str());
-        }
-
-        special_damage = 1 + random2(damage_done) / 2;
-        defender->slow_down(attacker, 5 + random2(7));
+        mprf("%s %s %s vigour!",
+             atk_name(DESC_THE).c_str(),
+             attacker->conj_verb("drain").c_str(),
+             def_name(DESC_ITS).c_str());
     }
+    defender->slow_down(attacker, 5 + random2(7));
 }
 
 int attack::inflict_damage(int dam, beam_type flavour, bool clean)
@@ -1210,12 +1205,11 @@ string attack::defender_name(bool allow_reflexive)
 int attack::player_stat_modify_damage(int damage)
 {
     int dammod = 39;
-    const int dam_stat_val = calc_stat_to_dam_base();
 
-    if (dam_stat_val > 11)
-        dammod += (random2(dam_stat_val - 11) * 2);
-    else if (dam_stat_val < 9)
-        dammod -= (random2(9 - dam_stat_val) * 3);
+    if (you.strength() > 11)
+        dammod += (random2(you.strength() - 11) * 2);
+    else if (you.strength() < 9)
+        dammod -= (random2(9 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1255,7 +1249,7 @@ int attack::player_apply_misc_modifiers(int damage)
 int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_RODS)
-        return weapon->special;
+        return weapon->rod_plus;
     if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
         return 0;
     return weapon->plus;
@@ -1330,25 +1324,6 @@ int attack::calc_base_unarmed_damage()
         damage = 0;
 
     return damage;
-}
-
-// TODO: Potentially remove, consider integrating with other to-hit or stat
-// calculating methods
-// weighted average of strength and dex, between (str+dex)/2 and dex
-int attack::calc_stat_to_hit_base()
-{
-    const int weight = weapon ? weapon_str_weight(*weapon) : 4;
-
-    // dex is modified by strength towards the average, by the
-    // weighted amount weapon_str_weight() / 20.
-    return you.dex() + (you.strength() - you.dex()) * weight / 20;
-}
-
-// weighted average of strength and dex, between str and (str+dex)/2
-int attack::calc_stat_to_dam_base()
-{
-    const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
-    return you.strength() + (you.dex() - you.strength()) * weight / 20;
 }
 
 int attack::calc_damage()
@@ -1469,25 +1444,6 @@ int attack::apply_defender_ac(int damage, int damage_max) const
     return after_ac;
 }
 
-bool attack::attack_warded_off()
-{
-    const int WARDING_CHECK = 60;
-
-    if (defender->warding()
-        && attacker->is_summoned()
-        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
-    {
-        if (needs_message)
-        {
-            mprf("%s attack is warded away.",
-                 attacker->name(DESC_ITS).c_str());
-        }
-        return true;
-    }
-
-    return false;
-}
-
 /* Determine whether a block occurred
  *
  * No blocks if defender is incapacitated, would be nice to eventually expand
@@ -1519,7 +1475,7 @@ bool attack::attack_shield_blocked(bool verbose)
     {
         perceived_attack = true;
 
-        if (attack_ignores_shield(verbose))
+        if (ignores_shield(verbose))
             return false;
 
         if (needs_message && verbose)
@@ -1573,12 +1529,12 @@ attack_flavour attack::random_chaos_attack_flavour()
                 susceptible = false;
             break;
         case AF_POISON:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case AF_VAMPIRIC:
         case AF_DRAIN_XP:
-            if (defender->holiness() != MH_NATURAL)
+            if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case AF_HOLY:
@@ -1714,7 +1670,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_VAMPIRISM:
     {
         if (!weapon
-            || defender->holiness() != MH_NATURAL
+            || !(defender->holiness() & MH_NATURAL)
             || defender->res_negative_energy()
             || damage_done < 1
             || attacker->stat_hp() == attacker->stat_maxhp()
@@ -1773,8 +1729,7 @@ bool attack::apply_damage_brand(const char *what)
         // AF_CONFUSE.
         if (defender->is_player())
         {
-            if (one_chance_in(10)
-                || (damage_done > 2 && one_chance_in(3)))
+            if (one_chance_in(3))
             {
                 defender->confuse(attacker,
                                   1 + random2(3+attacker->get_hit_dice()));
@@ -1792,7 +1747,7 @@ bool attack::apply_damage_brand(const char *what)
         }
 
         const int hdcheck =
-            (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
+            (defender->holiness() & MH_NATURAL ? random2(30) : random2(22));
 
         if (hdcheck < defender->get_hit_dice()
             || one_chance_in(5)

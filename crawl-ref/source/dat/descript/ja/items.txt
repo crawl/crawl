@@ -452,21 +452,9 @@ potion of mutation
 
 これは水薬だ。これはあなたに非常に奇妙な作用を及ぼす。
 %%%%
-potion of poison
-
-これは危険な毒物の液体だ。
-%%%%
-potion of porridge
-
-これは満腹をもたらす水薬だ。穀物繊維をたくさん含んだ粥だ。
-%%%%
 potion of resistance
 
 これは水薬だ。これはあなたに一時的な四大元素と毒の耐性を与える。
-%%%%
-potion of slowing
-
-これは水薬だ。これはあなたの動作を遅くする。
 %%%%
 quad damage
 
@@ -543,10 +531,6 @@ ring of wizardry
 rod of inaccuracy
 
 このロッドは手にしている者に強力だがとても不正確な力の矢を射つことを可能にする。
-%%%%
-rod of the swarm
-
-このロッドは手にしている者に昆虫の群れを召喚することを可能にする。
 %%%%
 royal jelly
 

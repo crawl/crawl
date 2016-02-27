@@ -26,7 +26,7 @@
 #include "spl-util.h"
 
 static bool _is_bookrod_type(const item_def& item,
-                             bool (*suitable)(spell_type spell))
+                             bool (*matches)(spell_type spell))
 {
     if (!item.defined())
         return false;
@@ -40,24 +40,18 @@ static bool _is_bookrod_type(const item_def& item,
     }
 
     if (item.base_type == OBJ_RODS)
-        return suitable(spell_in_rod(static_cast<rod_type>(item.sub_type)));
+        return matches(spell_in_rod(static_cast<rod_type>(item.sub_type)));
 
     if (!item_is_spellbook(item))
         return false;
 
-    int total       = 0;
-    int total_liked = 0;
-
+    // Book matches only if all the spells match
     for (spell_type spell : spells_in_book(item))
     {
-        total++;
-        if (suitable(spell))
-            total_liked++;
+        if (!matches(spell))
+            return false;
     }
-
-    // If at least half of the available spells are suitable, the whole
-    // spellbook is, too.
-    return total_liked >= (total / 2) + 1;
+    return true;
 }
 
 bool is_holy_item(const item_def& item)
@@ -66,7 +60,7 @@ bool is_holy_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_HOLY)
             return true;
@@ -94,7 +88,7 @@ bool is_unholy_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_UNHOLY)
             return true;
@@ -142,11 +136,8 @@ bool is_potentially_evil_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;
@@ -162,7 +153,7 @@ bool is_corpse_violating_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_CORPSE_VIOLATING)
             return true;
@@ -191,7 +182,7 @@ bool is_evil_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_EVIL)
             return true;
@@ -208,8 +199,6 @@ bool is_evil_item(const item_def& item)
                || item_brand == SPWPN_REAPING;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_DRAINING;
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
@@ -221,6 +210,8 @@ bool is_evil_item(const item_def& item)
         return _is_bookrod_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_LANTERN_OF_SHADOWS;
+    case OBJ_JEWELLERY:
+        return item.sub_type == AMU_HARM;
     default:
         return false;
     }
@@ -230,7 +221,7 @@ bool is_unclean_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_UNCLEAN)
             return true;
@@ -248,7 +239,7 @@ bool is_chaotic_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        const unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->flags & UNRAND_FLAG_CHAOTIC)
             return true;
@@ -361,6 +352,9 @@ bool is_hasty_item(const item_def& item)
 
 bool is_poisoned_item(const item_def& item)
 {
+    if (is_unrandom_artefact(item, UNRAND_OLGREB))
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -404,11 +398,8 @@ static bool _is_potentially_fiery_item(const item_def& item)
             return true;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_DESTRUCTION
-            || item.sub_type == ROD_CLOUDS)
-        {
+        if (item.sub_type == ROD_CLOUDS)
             return true;
-        }
         break;
     default:
         break;
@@ -440,12 +431,8 @@ bool is_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_FLAME
-            || item.sub_type == WAND_FIRE
-            || item.sub_type == WAND_FIREBALL)
-        {
+        if (item.sub_type == WAND_FLAME)
             return true;
-        }
         break;
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_IMMOLATION)
@@ -470,6 +457,16 @@ bool is_fiery_item(const item_def& item)
     return false;
 }
 
+bool is_channeling_item(const item_def& item)
+{
+    if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+        return true;
+
+    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY
+           || item.base_type == OBJ_MISCELLANY
+              && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY;
+}
+
 bool is_unholy_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
@@ -487,8 +484,10 @@ bool is_corpse_violating_spell(spell_type spell)
 bool is_evil_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
+    unsigned int flags = get_spell_flags(spell);
 
-    return bool(disciplines & SPTYP_NECROMANCY);
+    return bool(disciplines & SPTYP_NECROMANCY)
+           && !bool(flags & SPFLAG_NOT_EVIL);
 }
 
 bool is_unclean_spell(spell_type spell)
@@ -522,6 +521,11 @@ bool is_fiery_spell(spell_type spell)
 static bool _your_god_hates_spell(spell_type spell)
 {
     return god_hates_spell(spell, you.religion);
+}
+
+static bool _your_god_hates_rod_spell(spell_type spell)
+{
+    return god_hates_spell(spell, you.religion, true);
 }
 
 static conduct_type good_god_hates_item_handling(const item_def &item)
@@ -575,6 +579,8 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_SHINING_ONE:
         if (item_type_known(item) && is_poisoned_item(item))
             return DID_POISON;
+        if (is_unrandom_artefact(item, UNRAND_CAPTAIN))
+            return DID_UNCHIVALRIC_ATTACK;
         break;
 
     case GOD_YREDELEMNUL:
@@ -590,7 +596,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         {
             return DID_SPELL_PRACTISE;
         }
-        // Only Trog cares about spellsbooks vs rods.
+        // Only Trog cares about spellbooks vs rods.
         if (item.base_type == OBJ_RODS)
             return DID_NOTHING;
         break;
@@ -618,6 +624,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
+    case GOD_PAKELLAS:
+        if (item_type_known(item) && is_channeling_item(item))
+            return DID_CHANNEL;
+        break;
+
     default:
         break;
     }
@@ -628,7 +639,10 @@ conduct_type god_hates_item_handling(const item_def &item)
         return DID_NECROMANCY;
     }
 
-    if (item_type_known(item) && _is_bookrod_type(item, _your_god_hates_spell))
+    if (item_type_known(item) && _is_bookrod_type(item,
+                                                  item.base_type == OBJ_RODS
+                                                  ? _your_god_hates_rod_spell
+                                                  : _your_god_hates_spell))
     {
         return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.

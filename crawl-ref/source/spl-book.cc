@@ -57,10 +57,14 @@
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
+#if TAG_MAJOR_VERSION == 34
     { ROD_SWARM,       SPELL_SUMMON_SWARM },
+#endif
     { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
     { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
+#if TAG_MAJOR_VERSION == 34
     { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
+#endif
     { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
     { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
     { ROD_IRON,        SPELL_SCATTERSHOT },
@@ -1369,20 +1373,15 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 
     if (num_discs == 0)
     {
-#ifdef DEBUG
-        mprf(MSGCH_ERROR, "No valid disciplines with which to make a themed "
-                          "randart spellbook.");
-#endif
-        // Only happens if !completely_random and the player already knows
-        // all available spells. We could simply re-allow all disciplines
-        // but the player isn't going to get any new spells, anyway, so just
-        // consider this acquirement failed. (jpeg)
+        dprf("No valid disciplines with which to make a themed randart "
+             "spellbook.");
+        // Should only happen if !completely_random and the player already knows
+        // all available spells. make_book_theme_randart may attempt to retry
+        // with completely_random == true next.
         return false;
     }
 
-    int skill_weights[SPTYP_LAST_EXPONENT + 1];
-
-    memset(skill_weights, 0, (SPTYP_LAST_EXPONENT + 1) * sizeof(int));
+    int skill_weights[SPTYP_LAST_EXPONENT + 1] = { 0 };
 
     if (!completely_random)
     {
@@ -1412,9 +1411,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     do
     {
         disc1 = ok_discs[choose_random_weighted(skill_weights,
-                                                skill_weights + num_discs)];
+                                                end(skill_weights))];
         disc2 = ok_discs[choose_random_weighted(skill_weights,
-                                                skill_weights + num_discs)];
+                                                end(skill_weights))];
     }
     while (disciplines_conflict(disc1, disc2));
 
@@ -1433,8 +1432,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
     ASSERT(num_spells > 0);
     ASSERT(max_levels > 0);
 
-    int spell_weights[NUM_SPELLS];
-    memset(spell_weights, 0, NUM_SPELLS * sizeof(int));
+    int spell_weights[NUM_SPELLS] = { 0 };
 
     if (completely_random)
     {
@@ -1504,7 +1502,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
         spell_type spell =
             (spell_type) choose_random_weighted(spell_weights,
-                                                spell_weights + NUM_SPELLS);
+                                                end(spell_weights));
         ASSERT(is_valid_spell(spell));
         ASSERT(spell_weights[spell] > 0);
 
@@ -1608,7 +1606,7 @@ static string _maybe_gen_book_subject(string owner)
  * @param   owner       The name of the book's 'owner', if any.
  *                      (E.g., Xom, Cerebov, Boris...)
  *                      Prepended to the book's name (Foo's...); "Xom" has
- *                      futher effects.
+ *                      further effects.
  * @param   disc1       A spellschool (discipline) associated with the book.
  * @param   disc2       A spellschool (discipline) associated with the book.
  * @return              A book name. May contain placeholders (@foo@).
@@ -1985,14 +1983,14 @@ bool make_book_theme_randart(item_def &book,
 
 // Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
 // that includes Statue Form and is named after her.
-void make_book_Roxanne_special(item_def *book)
+void make_book_roxanne_special(item_def *book)
 {
     spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
     make_book_theme_randart(*book, disc, SPTYP_NONE, 5, 19,
                             SPELL_STATUE_FORM, "Roxanne");
 }
 
-void make_book_Kiku_gift(item_def &book, bool first)
+void make_book_kiku_gift(item_def &book, bool first)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);

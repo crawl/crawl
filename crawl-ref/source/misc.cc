@@ -400,7 +400,7 @@ void bring_to_safety()
         pos.y = random2(GYM);
         if (!in_bounds(pos)
             || grd(pos) != DNGN_FLOOR
-            || env.cgrid(pos) != EMPTY_CLOUD
+            || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
@@ -484,7 +484,7 @@ void revive()
     }
 
     mpr("You rejoin the land of the living...");
-    more();
+    // included in default force_more_message
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
@@ -596,9 +596,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = mon->name(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
-        mon_name.erase(0, 4);
-    if (adj.find("your"))
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
     string verb;
@@ -673,9 +673,9 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = victims.describe(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
-        mon_name.erase(0, 4);
-    if (adj.find("your"))
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
 
@@ -702,7 +702,7 @@ void swap_with_monster(monster* mon_to_swap)
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
-    if (stasis_blocks_effect(true, "%s makes your neck tingle."))
+    if (check_stasis())
         return;
 
     // Be nice: no swapping into uninhabitable environments.

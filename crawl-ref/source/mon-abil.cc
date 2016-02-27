@@ -328,7 +328,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
             // Adding to an existing abomination.
-            const int hp_gain = hit_points(addhd, 2, 5);
+            const int hp_gain = hit_points(addhd * 45); // 4.5 avg hp/hd
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
             hp += hp/10;
@@ -346,7 +346,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         else
         {
             // Making a new abomination.
-            hp = mhp = hit_points(newhd, 2, 5);
+            hp = mhp = hit_points(newhd * 45); // 4.5 avg hp/hd
         }
     }
 
@@ -799,7 +799,7 @@ static bool _lost_soul_affectable(const monster &mons)
         return false;
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck
-    if (mons.holiness() != MH_UNDEAD && mons.holiness() != MH_NATURAL)
+    if (!(mons.holiness() & (MH_UNDEAD | MH_NATURAL)))
         return false;
 
     // already been revived once
@@ -847,7 +847,6 @@ static bool _lost_soul_teleport(monster* mons)
         if (find_habitable_spot_near(candidate.first->pos(), mons_base_type(mons), 3, false, empty)
             && mons->move_to_pos(empty))
         {
-            mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_WANDER;
             mons->foe = MHITNOT;
             mons->props["band_leader"].get_int() = candidate.first->mid;
@@ -861,7 +860,7 @@ static bool _lost_soul_teleport(monster* mons)
     }
 
     // If we can't find anywhere useful to go, flicker away to stop the player
-    // being annoyed chasing after us
+    // being annoyed chasing after us.
     if (one_chance_in(3))
     {
         if (seen)
@@ -927,7 +926,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
 
         // save this before we revive it
         const string revivee_name = mons->name(DESC_THE);
-        const bool was_alive = mons->holiness() == MH_NATURAL;
+        const bool was_alive = bool(mons->holiness() & MH_NATURAL);
 
         // In this case the old monster will be replaced by
         // a ghostly version, so we should record defeat now.

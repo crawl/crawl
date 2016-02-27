@@ -812,15 +812,19 @@ static int kill_lualc_holiness(lua_State *ls)
     if (ke)
     {
         const char *verdict = "strange";
-        switch (mons_class_holiness(ke->monnum))
-        {
-        case MH_HOLY:       verdict = "holy"; break;
-        case MH_NATURAL:    verdict = "natural"; break;
-        case MH_UNDEAD:     verdict = "undead"; break;
-        case MH_DEMONIC:    verdict = "demonic"; break;
-        case MH_NONLIVING:  verdict = "nonliving"; break;
-        case MH_PLANT:      verdict = "plant"; break;
-        }
+        mon_holy_type holi = mons_class_holiness(ke->monnum);
+        if (holi & MH_HOLY)
+            verdict = "holy";
+        else if (holi & MH_NATURAL)
+            verdict = "natural";
+        else if (holi & MH_UNDEAD)
+            verdict = "undead";
+        else if (holi & MH_DEMONIC)
+            verdict = "demonic";
+        else if (holi & MH_NONLIVING)
+            verdict = "nonliving";
+        else if (holi & MH_PLANT)
+            verdict = "plant";
         if (ke->modifier != kill_monster_desc::M_NORMAL
             && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
         {

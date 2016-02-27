@@ -487,6 +487,9 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
         target->hurt(agent, hurted, BEAM_COLD);
 
+        if (target->alive() && you.can_see(*target))
+            print_wounds(target);
+
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
         {
@@ -826,7 +829,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (mons->observable() && mons->holiness() != MH_NATURAL)
+    if (mons->observable() && !(mons->holiness() & MH_NATURAL))
     {
         mpr("You can't drain life from that!");
         return SPRET_ABORT;
@@ -860,7 +863,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (mons->holiness() != MH_NATURAL || mons->res_negative_energy())
+    if (!(mons->holiness() & MH_NATURAL) || mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -1559,22 +1562,21 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
-    const int i = env.cgrid(where);
-    if (i == EMPTY_CLOUD)
+    cloud_struct* cloud = cloud_at(where);
+    if (!cloud)
         return false;
 
-    cloud_struct& cloud = env.cloud[i];
-    if (cloud.type != CLOUD_MEPHITIC && cloud.type != CLOUD_POISON)
+    if (cloud->type != CLOUD_MEPHITIC && cloud->type != CLOUD_POISON)
         return false;
 
     if (tracer)
         return _ignite_tracer_cloud_value(where, agent);
 
-    cloud.type = CLOUD_FIRE;
-    cloud.decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
-    cloud.whose = agent->kill_alignment();
-    cloud.killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    cloud.source = agent->mid;
+    cloud->type = CLOUD_FIRE;
+    cloud->decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
+    cloud->whose = agent->kill_alignment();
+    cloud->killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    cloud->source = agent->mid;
     return true;
 }
 
@@ -1738,15 +1740,12 @@ static bool maybe_abort_ignite()
 
     // XXX XXX XXX major code duplication (ChrisOelmueller)
 
-    const int i = env.cgrid(you.pos());
-    if (i != EMPTY_CLOUD)
+    if (const cloud_struct* cloud = cloud_at(you.pos()))
     {
-        cloud_struct& cloud = env.cloud[i];
-
-        if (cloud.type == CLOUD_MEPHITIC || cloud.type == CLOUD_POISON)
+        if (cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
         {
             prompt += "in a cloud of ";
-            prompt += cloud_type_name(cloud.type, true);
+            prompt += cloud->cloud_name(true);
             prompt += "! Ignite poison anyway?";
             if (!yesno(prompt.c_str(), false, 'n'))
                 return true;
@@ -2537,24 +2536,15 @@ void forest_damage(const actor *mon)
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
-                int evnp = foe->evasion(EV_IGNORE_PHASESHIFT, mon);
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, evnp))
+                if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch.",
                             "A tree reaches out but misses @foe@.",
                             "A root lunges up near @foe@.");
-                }
-                else if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)
-                                              - evnp))
-                {
-                    msg = random_choose(
-                            "A branch passes through @foe@!",
-                            "A tree reaches out and and passes through @foe@!",
-                            "A root lunges and passes through @foe@ from below.");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                AC_PROPORTIONAL)))
@@ -2621,7 +2611,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     center_beam.dont_stop_player = false;
     center_beam.foe_info.dont_stop = false;
     center_beam.friend_info.dont_stop = false;
-    beams.push_back(center_beam);
+    // Prevent self-hits, specifically when you aim at an adjacent wall.
+    if (center_beam.path_taken.back() != caster->pos())
+        beams.push_back(center_beam);
 
     for (distance_iterator di(aim, false, false, max_spacing); di; ++di)
     {
@@ -2688,11 +2680,9 @@ static bool _dazzle_can_hit(const actor *act)
         const monster* mons = act->as_monster();
         bolt testbeam;
         testbeam.thrower = KILL_YOU;
-        zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
+        zappy(ZAP_DAZZLING_SPRAY, 100, false, testbeam);
 
-        return !mons_is_avatar(mons->type)
-               && mons_species(mons->type) != MONS_BUSH
-               && !shoot_through_monster(testbeam, mons);
+        return !testbeam.ignores_monster(mons);
     }
     else
         return false;
@@ -2717,7 +2707,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 
     for (bolt &beam : hitfunc.beams)
     {
-        zappy(ZAP_DAZZLING_SPRAY, pow, beam);
+        zappy(ZAP_DAZZLING_SPRAY, pow, false, beam);
         beam.fire();
     }
 
@@ -2906,7 +2896,7 @@ void handle_searing_ray()
         return;
     }
 
-    zappy(zap, pow, beam);
+    zappy(zap, pow, false, beam);
 
     aim_battlesphere(&you, SPELL_SEARING_RAY, pow, beam);
     beam.fire();
@@ -3036,7 +3026,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 {
     // Need to use a 'generic' tracer regardless of the actual beam type,
-    // to account for the possibility of both bouncing and irresistable damage
+    // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
     bolt tracer = beam;
     if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
@@ -3088,7 +3078,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     beam.source      = caster->pos();
     beam.source_id   = caster->mid;
     beam.source_name = caster->name(DESC_PLAIN, true);
-    zappy(ZAP_SCATTERSHOT, pow, beam);
+    zappy(ZAP_SCATTERSHOT, pow, false, beam);
     beam.aux_source  = beam.name;
 
     if (!caster->is_player())

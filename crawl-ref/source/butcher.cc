@@ -76,7 +76,7 @@ void finish_butchering(item_def& corpse, bool bottling)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
-    const bool was_holy = mons_class_holiness(corpse.mon_type) == MH_HOLY;
+    const bool was_holy = bool(mons_class_holiness(corpse.mon_type) & MH_HOLY);
     const bool was_intelligent = corpse_intelligence(corpse) >= I_HUMAN;
     const bool was_same_genus = is_player_same_genus(corpse.mon_type);
 
@@ -328,7 +328,7 @@ done:
 }
 
 
-static void _create_monster_hide(const item_def corpse)
+static void _create_monster_hide(const item_def &corpse)
 {
     // make certain sources of dragon hides less scummable
     // (kiku's corpse drop, gozag ghoul corpse shops)
@@ -360,7 +360,7 @@ static void _create_monster_hide(const item_def corpse)
         move_item_to_grid(&o, pos);
 }
 
-void maybe_drop_monster_hide(const item_def corpse)
+void maybe_drop_monster_hide(const item_def &corpse)
 {
     if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse);
@@ -382,13 +382,13 @@ bool turn_corpse_into_skeleton(item_def &item)
         return false;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = FRESHEST_CORPSE; // reset rotting counter
+    item.freshness = FRESHEST_CORPSE; // reset rotting counter
     item.rnd = 1 + random2(255); // not sure this is necessary, but...
     item.props.erase(FORCED_ITEM_COLOUR_KEY);
     return true;
 }
 
-static void _bleed_monster_corpse(const item_def corpse)
+static void _bleed_monster_corpse(const item_def &corpse)
 {
     const coord_def pos = item_pos(corpse);
     if (!pos.origin())
@@ -424,7 +424,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         clear_item_pickup_flags(item);
 
     // Initialise timer depending on corpse age
-    init_perishable_stack(item, item.special * ROT_TIME_FACTOR);
+    init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
 
     // Happens after the corpse has been butchered.
     if (make_hide)
@@ -520,7 +520,7 @@ void turn_corpse_into_blood_potions(item_def &item)
 
     // Initialise timer depending on corpse age
     init_perishable_stack(item,
-                          item.special * ROT_TIME_FACTOR + FRESHEST_BLOOD);
+                          item.freshness * ROT_TIME_FACTOR + FRESHEST_BLOOD);
 
     // Happens after the blood has been bottled.
     maybe_drop_monster_hide(corpse);

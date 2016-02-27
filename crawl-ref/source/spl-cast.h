@@ -13,12 +13,13 @@ enum spflag_type
     SPFLAG_NONE                 = 0x000000,
     SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targeting
     SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targeting
-    SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targeting
+                                //0x000004,
     SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targeting
-    // TODO: we need a new targetting flag if we want to target corpses too.
-    SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_MOVABLE_OBJECT targ.
-    SPFLAG_TARGETING_MASK       = 0x00001f,      // used to test for targeting
-    SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIENDS used
+    SPFLAG_TARGETING_MASK       = SPFLAG_DIR_OR_TARGET | SPFLAG_TARGET
+                                   | SPFLAG_DIR , // used to test for targeting
+    // TODO: we need a new flag if we want to target corpses too.
+    SPFLAG_OBJ                  = 0x000010,      // TARG_MOVABLE_OBJECT used
+    SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIEND used
     SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x000080,      // aborts on isMe
     SPFLAG_UNHOLY               = 0x000100,      // counts as "unholy"
@@ -45,6 +46,10 @@ enum spflag_type
     SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
     SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
                                                  // instead of this spell
+    SPFLAG_NOT_EVIL           = 0x20000000,      // not considered evil by the
+                                                 // good gods
+    SPFLAG_HOLY               = 0x40000000,      // considered holy (can't be
+                                                 // used by Yred enslaved souls)
 };
 
 enum spret_type
@@ -70,6 +75,8 @@ enum spret_type
 
 #define fail_check() if (fail) return SPRET_FAIL
 
+void surge_power(const int enhanced, const string adj = "");
+
 typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
@@ -77,6 +84,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 const string &title = "Your Spells",
                 spell_selector selector = nullptr);
 int raw_spell_fail(spell_type spell);
+int stepdown_spellpower(int power);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);
@@ -84,14 +92,18 @@ int calc_spell_range(spell_type spell, int power = 0, bool rod = false);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
+int apply_enhancement(const int initial_power, const int enhancer_levels);
+
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int mr, int powc, int scale,
                        bool round_up = false);
-vector<string> desc_success_chance(const monster_info& mi, int pow);
+class targetter;
+vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
+                                   targetter* hitfunc);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-    bool evoked = false);
+    bool evoked = false, bool fake_spell = false);
 
 extern const char *fail_severity_adjs[];
 

@@ -47,9 +47,9 @@ string dgn_set_default_depth(const string &s)
     {
         lc_default_depths = depth_ranges::parse_depth_ranges(s);
     }
-    catch (const string &error)
+    catch (const bad_level_id &err)
     {
-        return error;
+        return err.what();
     }
     return "";
 }
@@ -63,9 +63,9 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             drs.add_depths(depth_ranges::parse_depth_ranges(depth));
         }
-        catch (const string &error)
+        catch (const bad_level_id &err)
         {
-            luaL_error(ls, error.c_str());
+            luaL_error(ls, err.what());
         }
     }
 }
@@ -110,9 +110,9 @@ static int dgn_place(lua_State *ls)
             {
                 map->place = depth_ranges::parse_depth_ranges(luaL_checkstring(ls, 2));
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                luaL_error(ls, err.c_str());
+                luaL_error(ls, err.what());
             }
         }
     }
@@ -214,9 +214,9 @@ static int dgn_depth_chance(lua_State *ls)
     {
         map->_chance.add_range(depth, map_chance(chance_priority, chance));
     }
-    catch (const string &error)
+    catch (const bad_level_id &error)
     {
-        luaL_error(ls, error.c_str());
+        luaL_error(ls, error.what());
     }
     return 0;
 }
@@ -933,12 +933,10 @@ static int dgn_cloud_at(lua_State *ls)
     if (!in_bounds(c))
         return 0;
 
-    int cloudno = env.cgrid(c);
-
-    if (cloudno == EMPTY_CLOUD)
-        lua_pushstring(ls, "none");
+    if (cloud_struct* cloud = cloud_at(c))
+        lua_pushstring(ls, cloud->cloud_name(true).c_str());
     else
-        lua_pushstring(ls, cloud_name_at_index(cloudno).c_str());
+        lua_pushstring(ls, "none");
 
     return 1;
 }
@@ -1249,7 +1247,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return 0;
     }
 
-    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
+    if (kc != KC_OTHER)
     {
         string error = "Invalid kill category '";
         error += kname;
@@ -1276,8 +1274,8 @@ static int dgn_delete_cloud(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
-        delete_cloud(env.cgrid(c));
+    if (in_bounds(c))
+        delete_cloud(c);
 
     return 0;
 }
@@ -1925,7 +1923,7 @@ LUAFN(_vp_size)
 LUAFN(_vp_orient)
 {
     VP(vp);
-    PLUARET(number, vp.orient)
+    PLUARET(number, vp.orient);
 }
 
 LUAFN(_vp_map)

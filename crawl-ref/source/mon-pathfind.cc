@@ -82,6 +82,11 @@ void monster_pathfind::set_range(int r)
         range = r;
 }
 
+void monster_pathfind::set_monster(const monster *mon)
+{
+    mons = mon;
+}
+
 coord_def monster_pathfind::next_pos(const coord_def &c) const
 {
     return c + Compass[prev[c.x][c.y]];
@@ -470,7 +475,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     // Try to avoid (known) traps.
-    const trap_def* ptrap = find_trap(npos);
+    const trap_def* ptrap = trap_at(npos);
     if (ptrap)
     {
         const bool knows_trap = ptrap->is_known(mons);

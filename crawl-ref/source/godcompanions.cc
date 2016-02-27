@@ -19,10 +19,8 @@
 map<mid_t, companion> companion_list;
 
 companion::companion(const monster& m)
+    : mons(follower(m)), level(level_id::current()), timestamp(you.elapsed_time)
 {
-    mons = follower(m);
-    level = level_id::current();
-    timestamp = you.elapsed_time;
 }
 
 void init_companions()

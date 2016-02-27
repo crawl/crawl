@@ -157,14 +157,6 @@ Cold Breath spell
 Cette créature peut cracher un souffle concentré d'air glacial. Il peut
 repousser les cibles aériennes.
 %%%%
-Condensation Shield spell
-
-Ce sort force l'air à se condenser en un disque de vapeur à proximité du
-sorcier. Il agit comme un bouclier normal, mais sa densité (et donc son pouvoir
-bloquant) dépend de la compétence du lanceur en Magie de la Glace. Le disque
-est contrôlé par l'esprit du sorcier et de fait, n'interfèrera pas avec le port
-d'une arme à deux mains.
-%%%%
 Confuse spell
 
 Ce sort induit un état de perplexité et de confusion dans l'esprit d'une
@@ -641,11 +633,6 @@ Petrify spell
 Ce sort tente de pétrifier un monstre. En cas de succès, le monstre est ralenti
 pendant un certain temps jusqu'à ce qu'il soit temporairement transformé en
 pierre. Dans cet état, un monstre souffrira de moins de dégâts lorsque frappé.
-%%%%
-Phase Shift spell
-
-Ce sort permet au sorcier de se déphaser temporairement du plan matériel, lui
-permettant d'occasionnellement éviter entièrement des attaques.
 %%%%
 Poison Arrow spell
 

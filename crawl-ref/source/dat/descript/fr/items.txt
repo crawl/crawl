@@ -728,21 +728,9 @@ potion of mutation
 
 Une potion qui vous fait des choses vraiment étranges.
 %%%%
-potion of poison
-
-Un atroce liquide empoisonné.
-%%%%
-potion of porridge
-
-Une potion nourrissante et pâteuse, riches en fibres de céréales.
-%%%%
 potion of resistance
 
 Une potion qui vous donne une résistance temporaire aux éléments et au poison.
-%%%%
-potion of slowing
-
-Une potion qui ralentit vos actions.
 %%%%
 potion of haste
 
@@ -834,11 +822,6 @@ Ce sceptre permet à son utilisateur de libérer un cône de différents gaz
 destructeurs. Leur dangerosité augmente avec les capacités d’évocation de
 l'utilisateur.
 %%%%
-rod of destruction
-
-Ce sceptre contient un ensemble varié de sorts de destruction et
-d'extermination.
-%%%%
 rod of inaccuracy
 
 Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,
@@ -847,10 +830,6 @@ mais de façon très imprécise.
 rod of shadows
 
 Ce sceptre tire des créatures des ombres et de l’éther.
-%%%%
-rod of the swarm
-
-Ce sceptre permet à son porteur de convoquer un essaim d'insectes.
 %%%%
 royal jelly
 

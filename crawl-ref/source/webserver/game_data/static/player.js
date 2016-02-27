@@ -342,6 +342,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
+        $("#stats_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else

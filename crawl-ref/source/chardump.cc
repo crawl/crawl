@@ -80,12 +80,13 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
+static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool _write_dump(const string &fname, dump_params &,
+static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
 struct dump_section_handler
@@ -96,15 +97,17 @@ struct dump_section_handler
 
 struct dump_params
 {
-    string &text;
+    string text;
     string section;
     bool full_id;
     const scorefile_entry *se;
 
-    dump_params(string &_text, const string &sec = "",
-                bool id = false, const scorefile_entry *s = nullptr)
-        : text(_text), section(sec), full_id(id), se(s)
+    dump_params(const string &sec = "", bool id = false,
+                const scorefile_entry *s = nullptr)
+        : section(sec), full_id(id), se(s)
     {
+        // Start with enough room for 100 80 character lines.
+        text.reserve(100 * 80);
     }
 };
 
@@ -135,6 +138,7 @@ static dump_section_handler dump_handlers[] =
     { "vaults",         _sdump_vault_list    },
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
+    { "skill_gains",    _sdump_skill_gains   },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -160,14 +164,10 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const string &fname, bool quiet, bool full_id,
-               const scorefile_entry *se)
+static dump_params _get_dump(bool full_id = false,
+                             const scorefile_entry *se = nullptr)
 {
-    // Start with enough room for 100 80 character lines.
-    string text;
-    text.reserve(100 * 80);
-
-    dump_params par(text, "", full_id, se);
+    dump_params par("", full_id, se);
 
     for (const string &section : Options.dump_order)
     {
@@ -175,7 +175,14 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
         dump_section(par);
     }
 
-    return _write_dump(fname, par, quiet);
+    // Hopefully we get RVO so we don't have to copy the text.
+    return par;
+}
+
+bool dump_char(const string &fname, bool quiet, bool full_id,
+               const scorefile_entry *se)
+{
+    return _write_dump(fname, _get_dump(full_id, se), quiet);
 }
 
 static void _sdump_header(dump_params &par)
@@ -537,10 +544,12 @@ static void _sdump_notes(dump_params &par)
     if (note_list.empty())
         return;
 
-    text += "\nNotes\nTurn   | Place    | Note\n";
+    text += "Notes\nTurn   | Place    | Note\n";
     text += "--------------------------------------------------------------\n";
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         text += note.describe();
         text += "\n";
     }
@@ -827,6 +836,7 @@ static void _sdump_spells(dump_params &par)
 static void _sdump_kills(dump_params &par)
 {
     par.text += you.kills.kill_info();
+    par.text += "\n";
 }
 
 static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
@@ -950,6 +960,7 @@ static void _sdump_vault_list(dump_params &par)
     {
         par.text += "Vault maps used:\n";
         par.text += dump_vault_maps();
+        par.text += "\n";
     }
 }
 
@@ -1097,7 +1108,7 @@ static void _sdump_action_counts(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("\n%-24s", "Action");
+    par.text += make_stringf("%-24s", "Action");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
     par.text += make_stringf(" || %5s", "total");
@@ -1147,6 +1158,68 @@ static void _sdump_action_counts(dump_params &par)
             par.text += make_stringf(" ||%6d", ac->second[27]);
             par.text += "\n";
         }
+    }
+    par.text += "\n";
+}
+
+static void _sdump_skill_gains(dump_params &par)
+{
+    typedef map<int, int> XlToSkillLevelMap;
+    map<skill_type, XlToSkillLevelMap> skill_gains;
+    vector<skill_type> skill_order;
+    int xl = 0;
+    int max_xl = 0;
+    for (const Note &note : note_list)
+    {
+        if (note.type == NOTE_XP_LEVEL_CHANGE)
+            xl = note.first;
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        {
+            skill_type skill = static_cast<skill_type>(note.first);
+            int skill_level = note.second;
+            if (skill_gains.find(skill) == skill_gains.end())
+                skill_order.push_back(skill);
+            skill_gains[skill][xl] = skill_level;
+            max_xl = max(max_xl, xl);
+        }
+    }
+
+    if (skill_order.empty())
+        return;
+
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (you.skill(skill, 10, true) > 0
+            && skill_gains.find(skill) == skill_gains.end())
+        {
+            skill_order.push_back(skill);
+        }
+    }
+
+    par.text += "Skill      XL: |";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += make_stringf(" %2d", xl);
+    par.text += " |\n";
+    par.text += "---------------+";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += "---";
+    par.text += "-+-----\n";
+
+    for (skill_type skill : skill_order)
+    {
+        par.text += make_stringf("%-14s |", skill_name(skill));
+        const XlToSkillLevelMap &gains = skill_gains[skill];
+        for (xl = 1; xl <= max_xl; xl++)
+        {
+            auto it = gains.find(xl);
+            if (it != gains.end())
+                par.text += make_stringf(" %2d", it->second);
+            else
+                par.text += "   ";
+        }
+        par.text += make_stringf(" | %4.1f\n",
+                                 you.skill(skill, 10, true) * 0.1);
     }
     par.text += "\n";
 }
@@ -1325,7 +1398,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const string &fname, dump_params &par, bool quiet)
+static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 {
     bool succeeded = false;
 
@@ -1376,6 +1449,8 @@ void display_notes()
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         string prefix = note.describe(true, true, false);
         string suffix = note.describe(false, false, true);
         if (suffix.empty())
@@ -1397,6 +1472,17 @@ void display_notes()
                                         string("| ") + parts[j]));
         }
     }
+    scr.show();
+    redraw_screen();
+}
+
+void display_char_dump()
+{
+    formatted_scroller scr;
+    scr.set_flags(MF_ALWAYS_SHOW_MORE);
+    scr.add_raw_text(_get_dump().text, false, get_number_of_cols());
+    scr.set_more();
+    scr.set_tag("dump");
     scr.show();
     redraw_screen();
 }

@@ -79,7 +79,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
     { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
     { ENCH_ROLLING,         MB_ROLLING },
-    { ENCH_STONESKIN,       MB_STONESKIN },
+    { ENCH_MAGIC_ARMOUR,    MB_MAGIC_ARMOUR },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -105,10 +105,11 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
-    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
+    { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
+    { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -150,6 +151,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
+    case ENCH_SPELL_CHARGED:
+        if (mons.get_ench(ench).degree < max_mons_charge(mons.type))
+            return MB_PARTIALLY_CHARGED;
+        return MB_FULLY_CHARGED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -184,7 +189,8 @@ static bool _is_public_key(string key)
      || key == CUSTOM_SPELLS_KEY
      || key == ELVEN_IS_ENERGIZED_KEY
      || key == MUTANT_BEAST_FACETS
-     || key == MUTANT_BEAST_TIER)
+     || key == MUTANT_BEAST_TIER
+     || key == DOOM_HOUND_HOWLED_KEY)
     {
         return true;
     }
@@ -309,6 +315,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
+    mr = mons_class_res_magic(type, base_type);
+    can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
 
@@ -540,6 +548,8 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
+    mr = m->res_magic(false);
+    can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m, true);
@@ -637,6 +647,12 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->submerged())
         mb.set(MB_SUBMERGED);
+
+    if (m->type == MONS_DOOM_HOUND && !m->props.exists(DOOM_HOUND_HOWLED_KEY)
+        && !m->is_summoned())
+    {
+        mb.set(MB_READY_TO_HOWL);
+    }
 
     if (mons_is_pghost(type))
     {
@@ -843,7 +859,7 @@ string monster_info::_core_name() const
     else if (nametype == MONS_LERNAEAN_HYDRA)
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
     else if (nametype == MONS_ROYAL_JELLY)
-        s = "royal jelly";
+        s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
@@ -1358,9 +1374,9 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = _MLC_NEUTRAL;
         break;
     case ATT_STRICT_NEUTRAL:
-         out << " (fellow slime)";
-         colour_type = _MLC_STRICT_NEUTRAL;
-         break;
+        out << " (fellow slime)";
+        colour_type = _MLC_STRICT_NEUTRAL;
+        break;
     case ATT_HOSTILE:
         // out << " (hostile)";
         switch (threat)
@@ -1473,8 +1489,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("regenerating");
     if (is(MB_ROLLING))
         v.emplace_back("rolling");
-    if (is(MB_STONESKIN))
-        v.emplace_back("stone skin");
+    if (is(MB_MAGIC_ARMOUR))
+        v.emplace_back("magically armoured");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.emplace_back("covered in an icy film");
     if (is(MB_WRETCHED))
@@ -1532,14 +1548,22 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.emplace_back("heavily drained");
-    if (is(MB_CONDENSATION_SHIELD))
-        v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
         v.emplace_back("control wrested from you");
     if (is(MB_BONE_ARMOUR))
         v.emplace_back("corpse armoured");
+    if (is(MB_BRILLIANCE_AURA))
+        v.emplace_back("aura of brilliance");
+    if (is(MB_EMPOWERED_SPELLS))
+        v.emplace_back("spells empowered");
+    if (is(MB_READY_TO_HOWL))
+        v.emplace_back("ready to howl");
+    if (is(MB_PARTIALLY_CHARGED))
+        v.emplace_back("partially charged");
+    if (is(MB_FULLY_CHARGED))
+        v.emplace_back("fully charged");
     return v;
 }
 
@@ -1622,67 +1646,14 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 
 /**
  * Can the monster described by this monster_info see invisible creatures?
- *
- * This should match the logic in monster::can_see_invisible().
- *
- * XXX: This is an abomination and should be destroyed, probably by adding a
- * sees_invisible field that's initialized by monster::can_see_invisible();
- * just need to avoid leaking info from e.g. jewellery.
- *
- * @return
  */
 bool monster_info::can_see_invisible() const
 {
-    if (mons_is_ghost_demon(type))
-        return i_ghost.can_sinv;
-
-    if (props.exists(MUTANT_BEAST_FACETS))
-        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
-            if (facet.get_int() == BF_WEIRD)
-                return true;
-
-    return mons_class_flag(type, M_SEE_INVIS)
-           || mons_is_demonspawn(type)
-              && mons_class_flag(draco_or_demonspawn_subspecies(), M_SEE_INVIS);
+    return can_see_invis;
 }
 
 int monster_info::res_magic() const
 {
-    int mr = (get_monster_data(type))->resist_magic;
-    if (mr == MAG_IMMUNE)
-        return MAG_IMMUNE;
-
-    // Negative values get multiplied with monster hit dice.
-    if (mr < 0)
-        mr = hd * (-mr) * 4 / 3;
-
-    // Randarts
-    mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);
-
-    // ego armour resistance
-    if (inv[MSLOT_ARMOUR].get()
-        && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    if (inv[MSLOT_SHIELD].get()
-        && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    item_def *jewellery = inv[MSLOT_JEWELLERY].get();
-
-    if (jewellery
-        && jewellery->is_type(OBJ_JEWELLERY, RING_PROTECTION_FROM_MAGIC))
-    {
-        mr += 40;
-    }
-
-    if (is(MB_VULN_MAGIC))
-        mr /= 2;
-
     return mr;
 }
 
@@ -1732,25 +1703,22 @@ reach_type monster_info::reach_range() const
 
 size_type monster_info::body_size() const
 {
-    // Using base_type to get the right size for zombies, skeletons and such.
-    // For normal monsters, base_type is set to type in the constructor.
-    const monsterentry *e = get_monster_data(base_type);
-    size_type ret = (e ? e->size : SIZE_MEDIUM);
+    const size_type class_size = mons_class_body_size(base_type);
 
     // Slime creature size is increased by the number merged.
     if (type == MONS_SLIME_CREATURE)
     {
         if (slime_size == 2)
-            ret = SIZE_MEDIUM;
+            return SIZE_MEDIUM;
         else if (slime_size == 3)
-            ret = SIZE_LARGE;
+            return SIZE_LARGE;
         else if (slime_size == 4)
-            ret = SIZE_BIG;
+            return SIZE_BIG;
         else if (slime_size == 5)
-            ret = SIZE_GIANT;
+            return SIZE_GIANT;
     }
 
-    return ret;
+    return class_size;
 }
 
 bool monster_info::cannot_move() const

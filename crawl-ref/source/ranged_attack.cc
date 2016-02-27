@@ -21,6 +21,7 @@
 #include "player.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "throw.h"
 #include "traps.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
@@ -105,15 +106,7 @@ bool ranged_attack::attack()
     disable_attack_conducts(conducts);
 
     if (attacker->is_player() && attacker != defender)
-    {
         set_attack_conducts(conducts, defender->as_monster());
-        player_stab_check();
-        if (stab_attempt && stab_bonus > 0)
-        {
-            ev_margin = AUTOMATIC_HIT;
-            shield_blocked = false;
-        }
-    }
 
     if (shield_blocked)
         handle_phase_blocked();
@@ -121,12 +114,6 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
-            if (attacker != defender && attack_warded_off())
-            {
-                handle_phase_end();
-                return false;
-            }
-
             if (!handle_phase_hit())
             {
                 if (!defender->alive())
@@ -177,20 +164,35 @@ bool ranged_attack::handle_phase_attempted()
 
 bool ranged_attack::handle_phase_blocked()
 {
-    ASSERT(!attack_ignores_shield(false));
+    ASSERT(!ignores_shield(false));
     string punctuation = ".";
     string verb = "block";
-    if (defender_shield && is_shield(*defender_shield)
-        && shield_reflects(*defender_shield))
+
+    const bool reflected_by_shield = defender_shield
+                                     && is_shield(*defender_shield)
+                                     && shield_reflects(*defender_shield);
+    if (reflected_by_shield || defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
-                          + " " + defender_shield->name(DESC_PLAIN).c_str()
-                          + "!";
-            ident_reflector(defender_shield);
+            if (reflected_by_shield)
+            {
+                punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
+                              + " " + defender_shield->name(DESC_PLAIN).c_str()
+                              + "!";
+                ident_reflector(defender_shield);
+            }
+            else
+            {
+                punctuation = " off an invisible shield around "
+                            + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
+
+                item_def *amulet = defender->slot_item(EQ_AMULET, false);
+                if (amulet)
+                   ident_reflector(amulet);
+            }
         }
         else
             punctuation = "!";
@@ -239,24 +241,6 @@ bool ranged_attack::handle_phase_dodged()
         return true;
     }
 
-    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
-    {
-        if (needs_message && defender_visible)
-        {
-            mprf("%s momentarily %s out as %s "
-                 "passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 projectile->name(DESC_THE).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation(damage_done).c_str());
-        }
-
-        return true;
-    }
-
     if (needs_message)
     {
         mprf("%s%s misses %s%s",
@@ -272,15 +256,13 @@ bool ranged_attack::handle_phase_dodged()
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
-    if (!attack_ignores_shield(false))
+    if (!is_penetrating_attack(*attacker, weapon, *projectile))
         range_used = BEAM_STOP;
 
     if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
     {
-        int dur = blowgun_duration_roll(get_ammo_brand(*projectile));
+        damage_done = blowgun_duration_roll(get_ammo_brand(*projectile));
         set_attack_verb(0);
-        int stab = player_stab(dur);
-        damage_done = dur + (stab - dur) / 10;
         announce_hit();
     }
     else if (projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
@@ -326,7 +308,7 @@ bool ranged_attack::handle_phase_hit()
         && should_alert_defender)
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
-                        coord_def(), !stab_attempt);
+                        coord_def());
     }
 
     return true;
@@ -394,12 +376,9 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max)
     return damage;
 }
 
-bool ranged_attack::attack_ignores_shield(bool verbose)
+bool ranged_attack::ignores_shield(bool verbose)
 {
-    if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
-            && projectile->base_type == OBJ_MISSILES
-            && get_ammo_brand(*projectile) == SPMSL_PENETRATION
-        || using_weapon() && get_weapon_brand(*weapon) == SPWPN_PENETRATION)
+    if (is_penetrating_attack(*attacker, weapon, *projectile))
     {
         if (verbose)
         {
@@ -411,7 +390,6 @@ bool ranged_attack::attack_ignores_shield(bool verbose)
         }
         return true;
     }
-
     return false;
 }
 
@@ -455,7 +433,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                     10, SPMSL_POISONED,
                     10, SPMSL_CHAOS,
                      5, SPMSL_PARALYSIS,
-                     5, SPMSL_SLOW,
                      5, SPMSL_SLEEP,
                      5, SPMSL_FRENZY,
                      2, SPMSL_CURARE,
@@ -478,7 +455,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_POISONED:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case SPMSL_DISPERSAL:
@@ -486,24 +463,19 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_CONFUSION:
-            if (defender->holiness() == MH_PLANT)
+            if (defender->holiness() & MH_PLANT)
             {
                 susceptible = false;
                 break;
             }
             // fall through
-        case SPMSL_SLOW:
         case SPMSL_SLEEP:
         case SPMSL_PARALYSIS:
-            if (defender->holiness() == MH_UNDEAD
-                || defender->holiness() == MH_NONLIVING)
-            {
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
-            }
             break;
         case SPMSL_FRENZY:
-            if (defender->holiness() == MH_UNDEAD
-                || defender->holiness() == MH_NONLIVING
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING)
                 || defender->is_player()
                    && !you.can_go_berserk(false, false, false)
                 || defender->is_monster()
@@ -530,7 +502,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     case SPMSL_CURARE:          brand_name += "curare"; break;
     case SPMSL_CHAOS:           brand_name += "chaos"; break;
     case SPMSL_DISPERSAL:       brand_name += "dispersal"; break;
-    case SPMSL_SLOW:            brand_name += "slow"; break;
     case SPMSL_SLEEP:           brand_name += "sleep"; break;
     case SPMSL_CONFUSION:       brand_name += "confusion"; break;
     case SPMSL_FRENZY:          brand_name += "frenzy"; break;
@@ -547,8 +518,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
 
 bool ranged_attack::blowgun_check(special_missile_type type)
 {
-    if (defender->holiness() == MH_UNDEAD
-        || defender->holiness() == MH_NONLIVING)
+    if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
     {
         if (needs_message)
         {
@@ -562,9 +532,6 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         }
         return false;
     }
-
-    if (stab_attempt)
-        return true;
 
     const int enchantment = using_weapon() ? weapon->plus : 0;
 
@@ -639,8 +606,6 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                 return 5 + random2(5);
             case SPMSL_CONFUSION:
                 return 2 + random2(4);
-            case SPMSL_SLOW:
-                return 5 + random2(7);
             default:
                 return 5 + random2(5);
         }
@@ -686,10 +651,9 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_COLD, 2);
         break;
     case SPMSL_POISONED:
-        if (stab_attempt
-            || (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
-                && using_weapon()
-                && damage_done > 0)
+        if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
+            && using_weapon()
+            && damage_done > 0
             || !one_chance_in(4))
         {
             int old_poison;
@@ -765,11 +729,6 @@ bool ranged_attack::apply_missile_brand()
             break;
         defender->paralyse(attacker, damage_done);
         break;
-    case SPMSL_SLOW:
-        if (!blowgun_check(brand))
-            break;
-        defender->slow_down(attacker, damage_done);
-        break;
     case SPMSL_SLEEP:
         if (!blowgun_check(brand))
             break;
@@ -826,24 +785,18 @@ bool ranged_attack::mons_attack_effects()
 
 void ranged_attack::player_stab_check()
 {
-    if (player_good_stab())
-        attack::player_stab_check();
-    else
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
-    }
+    stab_attempt = false;
+    stab_bonus = 0;
 }
 
 bool ranged_attack::player_good_stab()
 {
-    return using_weapon()
-           && projectile->is_type(OBJ_MISSILES, MI_NEEDLE);
+    return false;
 }
 
 void ranged_attack::set_attack_verb(int/* damage*/)
 {
-    attack_verb = attack_ignores_shield(false) ? "pierces through" : "hits";
+    attack_verb = is_penetrating_attack(*attacker, weapon, *projectile) ? "pierces through" : "hits";
 }
 
 void ranged_attack::announce_hit()
@@ -851,13 +804,10 @@ void ranged_attack::announce_hit()
     if (!needs_message)
         return;
 
-    mprf("%s %s %s%s%s%s",
+    mprf("%s %s %s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
          defender_name(false).c_str(),
-         damage_done > 0 && stab_attempt && stab_bonus > 0
-             ? " in a vulnerable spot"
-             : "",
          debug_damage_number().c_str(),
          attack_strength_punctuation(damage_done).c_str());
 }

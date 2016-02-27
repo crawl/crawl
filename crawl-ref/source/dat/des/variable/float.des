@@ -43,7 +43,7 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs ruin_lair")
+  e.tags("extra luniq_grunt_megastairs transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
@@ -1406,7 +1406,7 @@ DEPTH:   D:10-13, Lair:1-5
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
 MONS:    giant gecko / giant newt, crocodile, iguana
-MONS:    fire drake / swamp drake
+MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
@@ -1804,14 +1804,8 @@ KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
-KMONS:  Z = col:flash deep elf sorcerer \
-        name:deep_elf_elementalist n_rpl n_des n_noc \
-        tile:mons_deep_elf_elementalist \
-        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
-               sticky_flame_range.11.wizard;\
-               summon_water_elementals.11.wizard;\
-               haste.11.wizard;blink.11.wizard \
-        ; robe ego:fire_resistance | \
+KMONS:  Z = deep elf elementalist ; \
+        robe ego:fire_resistance | \
         robe ego:cold_resistance | \
         robe ego:resistance . dagger ego:freezing | \
         dagger ego:flaming | dagger ego:electrocution
@@ -1968,7 +1962,7 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
+MONS:   molten gargoyle / hell hound / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
@@ -2246,18 +2240,17 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . arbalest ego:flaming . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
+MONS:    orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          siren ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of draining . \
+MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
-KMONS:   A = fire drake / salamander / fire elemental
+KMONS:   A = hell hound / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
 KMONS:   C = salamander stormcaller / ophan w:5 / balrug w:5
 KMONS:   D = hydra simulacrum / bog body / polar bear
@@ -2276,7 +2269,7 @@ KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
 KMONS:   Q = naga warrior / orc warlord / minotaur
 KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
 KMONS:   S = deep elf mage / wizard / boggart
-KMONS:   T = deep elf conjurer / orc sorcerer / giant orange brain
+KMONS:   T = deep elf mage / orc sorcerer / giant orange brain
 KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
 KMONS:   V = cyclops / centaur warrior / naga sharpshooter
 KMONS:   W = manticore / yaktaur captain / stone giant
@@ -2376,13 +2369,14 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
-         deep elf knight / phantasmal warrior / spriggan berserker / \
-         guardian serpent w:5 / harpy w:5 / salamander mystic
+         deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
+         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
+         salamander mystic
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
@@ -2506,8 +2500,9 @@ KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
 KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
-KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
-           deep elf summoner / deep elf sorcerer
+KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
+           deep elf annihilator w:5 / deep elf death mage / \
+           deep elf mage / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2567,8 +2562,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf conjurer / deep elf knight
-MONS:    deep elf fighter band w:6 / deep elf knight band
+KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
 SUBST:   a : X., A : Y., b : XX., B : YY.
@@ -5940,8 +5935,7 @@ KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
 KFEAT:  ~ = floor
 MONS:   kobold demonologist
-KMONS:  P = plant col:magenta name:demonic name_adjective \
-        tile:mons_demonic_plant
+KMONS:  P = demonic plant
 KMONS:  p = plant
 NSUBST: p = 3=xcbtvmnw.' / 5:P
 NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'

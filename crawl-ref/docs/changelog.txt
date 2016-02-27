@@ -1,11 +1,19 @@
-Stone Soup 0.18 (up to 0.18-a0-346-ga0a4001)
+Stone Soup 0.18 (up to 0.18-a0-1418-ga86aa8f)
 --------------------------------------------
+
+Highlights
+----------
+* New god: Pakellas the Inventive.
 
 Branches, Environment
 ---------------------
-* The enemies in the Elven Halls ending vault are now less likely to be lured
-  out of the vault.
 * Ziggurat portals no longer appear in Pan.
+* After clearing multiple ziggurats, enemies found in later ziggurats will be
+  considerably more dangerous.
+* The Orcish Mines are now two levels, and only spawn plain orcs as part of
+  bands; gold generation is doubled to account for the shorter branch.
+* The Elven Halls now contains elementals and dancing weapons (in addition to
+  the ones normally found in the Hall of Blades).
 
 Character
 ---------
@@ -16,31 +24,112 @@ Character
 * Formicids now have 0 Throwing aptitude (was -2).
 * Taking a known shaft now has a 2/3 chance of shafting one floor and 1/3 of
   two floors.
+* Breath abilities are no longer mutations and are now unique to draconians
+  and nagas.
+* Weapon types no longer have distinct strength weights. Instead of dex and str
+  both giving varying bonuses to damage, str now solely gives a bonus to-dam,
+  and dex now solely gives a bonus to accuracy.
+* Formicids can no longer dig while in most non-Formicid forms.
+* Statue Form now gives somewhat more AC.
+* Statue Form, Hydra Form and Bat Form no longer modify your str or dex.
+* Early-game stat damage is recovered significantly more quickly.
 
 Gods
 ----
+* New god: Pakellas the Inventive. Pakellas is a temple god, with an altar
+  either in Temple or on D:2-9.
+  - Grants MP on kills (at about half the rate of Vehumet) and passive
+    wand charge identification. MP gained while full will eventually be turned
+    into potions of magic.
+  - Blocks MP regeneration and hates channeling (staff of energy, crystal
+    ball of energy, the Staff of Wucad Mu, and Sublimation of Blood).
+  - Piety on kills.
+  - 1*: Quick Charge: spend 2/3 your current MP pool to add some charges
+    to a wand or rod proportional to your Evocations, your current MP pool,
+    and the capacity of the device.
+  - At 2*, Pakellas gifts you a wand once (of any type other than heal
+    wounds, hasting, and teleportation).
+  - 3*: Device Surge: on your next use of an evocable item, spends 1-9 MP
+    to apply one to three enhancers to its power output, with maximum
+    MP and number of enhancers dependent on piety.
+  - Starting at 4*, Pakellas occasionally gifts rods, wands, and miscellaneous
+    evokables (always starting with a rod unless you are a felid).
+  - 6* capstone: Supercharge: sets a rod to +10 (18/18), or sets a wand's
+    capacity to 50% above normal for that wand type (in addition to recharging
+    it - this has the effect of improving Quick Charge's efficiency on the
+    wand).
+* Ashenzari now allows followers to curse items with an ability that consumes
+  a scroll of remove curse. Praying over scrolls of remove curse no longer
+  transforms them into scrolls of cursing.
+* Cheibriados now blocks chaos effects from hasting the player.
+* Followers of Elyvilon can pacify insects (again).
+* Gozag's Call Merchant now bases the shop quality on the player's level
+  rather than on their location.
+* Jiyva altars in Dungeon no longer appear as early.
+* Okawaru's abilities now cost less piety, but don't last as long at low
+  Invocations skill.
+* Finesse is no longer blocked by stasis.
+* Piety given for a Ru sacrifice is more explicitly stated.
+* Sif Muna now grants miscast protection at 2* and amnesia at 4*, rather than
+  the other way around.
 * Xom now chaos brands more weapon gifts, and can chaos brand ranged weapons
   again.
-* Finesse is no longer blocked by stasis.
-* Jiyva altars in Dungeon no longer appear as early in Dungeon.
-* Cheibriados now blocks chaos effects from hasting the player.
-* Piety given for a Ru sacrifice is more explicitly stated.
+* Xom's random spell list has been adjusted slightly.
+* Yredremnul's Enslave Soul can now affect demons & holy beings.
+* Abandoning Yredelemnul now destroys your zombie minions.
+* Zin's Recite is now only interrupted if the player is silenced or
+  incapacitated (or goes berserk).
 
 Items
 -----
 * New items:
-  - The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
-    executioner's axe with a chance of placing freezing clouds on enemies it
-    strikes.
-  - The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit of
-    plate mail.
+  - The amulet of dismissal, which has a chance of teleporting away enemies
+    that damage the player, but causes a few turns of vertigo (lowered
+    accuracy, EV, and spell success) when first worn.
+  - The amulet of reflection, which grants a few points of shielding that
+    act as a shield of reflection.
+  - The amulet of harm, which increases damage dealt to and by the wearer by
+    25%.
+  - The amulet of magic regeneration, which increases the player MP regen rate
+    after a warmup period.
+  - The ring of resist corrosion, which has the same effect as the former
+    amulet.
+  - Wands of acid, which cause significant damage and corrosion.
+  - Wands of iceblast, which cause an explosion that is only partly affected
+    by rC, similar to Throw Icicle and Glaciate.
   - A figurine of a ziggurat - evoke to create a ziggurat portal. Appears on
     Zig:27 of all ziggurats and in the Tomb:3 loot.
-  - Pieces from Xom's chessboard - evoke to randomly swap the positions of
-    you and all enemies and LOS, or (on failure) to trigger a Xom effect.
+  - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
+    executioner's axe with a chance of placing freezing clouds on enemies it
+    strikes.
+  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized suit
+    of plate mail.
+  - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
+    reflection of piercing effects and enchantments, among other things.
 * The robe of vines is now +2, Regen+7.
-* Amulets of stasis do not generate sound when blocking an effect.
 * The Majin-Bo now speaks occasionally.
+* The captain's cutlass now causes bonus damage when disarming, and its
+  enchantment has been upgraded from +5 to +7.
+* The amulet of Cekugob is now an amulet of dismissal.
+* The brooch of Shielding is now a +8 amulet of reflection with no AC or EV
+  bonus.
+* Wearing an amulet of regeneration has no effect until the next time you are
+  at full health.
+* A new property can now generate on random artefacts: Fragile, which destroys
+  the item when it is removed.
+* Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Potions of ambrosia now bypass clarity.
+* The evocable teleport property +Tele is removed. Rings of teleportation now
+  only have the *Tele teleportitis effect.
+* Potions of cure mutation are slightly more common.
+* Potions of degeneration now cause 1d3 damage to every stat.
+* Removed items:
+  - Amulets of resist mutation, stasis, warding, and corrosion.
+  - Wands of cold, fire, frost, magic darts, invisibility, draining, and
+    fireball.
+  - Rods of destruction and of the swarm.
+  - Ring of invisibility.
+  - Potions of poison.
 
 Monsters
 --------
@@ -49,15 +138,23 @@ Monsters
     Spider and in packs in Depths.
   - Iron giants, with all the resilience that iron implies and the ability to
     throw you into the pack of giants they lead.
-* Mnoleg gains Random Bolt and Dig.
+  - Doom hounds, demonic canines lurking in Tartarus who can howl once to
+    create a pack of nasty creatures.
+  - Deep elf archers, who have attained a notable level of skill in both
+    archery and hexes.
+  - Deep elf elementalists, with mastery of all of the elemental schools and
+    the noted ability to turn rock into earth elementals to dig out entrenched
+    foes.
+  - Dart slugs, slow-moving, squishy gastropods with a surprisingly painful
+    ranged attack.
+  - Howler monkeys: fast, extremely loud, and often found in packs.
+  - Rime drakes: small flying lizards which breathe Flash Freeze, freezing &
+    slowing their victims' movements.
+* Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
+  ability which applies (usually) positive status effects to allies in its
+  line of sight.
+* Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
-* Juggernauts now have two less damaging attacks instead of one powerful
-  attack.
-* Jellies and death oozes cannot be blinded.
-* Jumping spiders and mana vipers can be blinded.
-* Jumping spiders cannot see invisible.
-* Giant eyeballs and golden eyes can now see invisible.
-* Monsters no longer lose rod power by wearing a shield.
 * Salamander stormcallers' chant does not need to be continuous; they now
   only need to try to cast Fire Storm at their target three times for it to
   trigger.
@@ -68,25 +165,63 @@ Monsters
 * Orange demons have their attacks split - they now have a reaching poison
   sting and a melee-only weakness attack.
 * Salamander mystics lose Localised Ignite Poison.
+* Deep elf high priests & sorcerers can no longer cast Summon Demon.
 * Natasha, deep elf knights, and salamander stormcallers can no longer cast
   Conjure Flame.
-* Spectral mist can no longer summon completely random spectral enemies.
 * Banishment from powerful monsters can now send you deeper into the Abyss
   than Abyss:1.
+* Deep elf mages are now HD 9 and have new spell sets, including spells
+  previously cast by deep elf conjurers and summoners.
+* The Sap Magic effect from demonspawn warmongers now has three fixed levels of
+  success rate penalty, rather than scaling continuously. Each spell cast while
+  under the Sap effect has a fixed chance to increase the penalty level. The
+  penalty now expires when the "Sap" status expires.
+* Demonspawn corruptors' Corrupt Body spell is now a single-target version of
+  the same spell used by wretched stars. These spells both now try to apply
+  multiple levels of a single random temporary mutation instead of giving many
+  different kinds.
+* Ancient champions and death knights no longer have the Haunt spell.
+* Swamp worms are now amphibious and generate submerged, emerging to attack the
+  player and never resubmerging.
+* Deep elf high priests now have an Aura of Brilliance spell that affects all
+  allies in their view, making them cast spells more frequently and with more
+  spell power.
+* Maurice can now steal from the floor as well as your inventory.
+* Natasha no longer becomes weaker upon revival.
+* Death cobs now drain speed, rather than causing hunger.
+* Monsters that drain speed can now do so even to creatures with rN.
+* Corroding monsters now reduces their AC by 8, rather than halving it.
+* Monsters can now shout after being hit by needles.
 * Removed monsters:
   - Octopode crushers.
   - (Plain) spiders.
   - Salamander firebrands.
   - Blue devils.
   - Brain worms.
+  - Deep elf fighters, conjurers, priests, and summoners.
+  - Trapdoor spiders.
+  - Fire drakes.
 
 Spells
 ------
-* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations); dispels
-  all cancellable effects on the target and - if any were dispelled - causes
-  a radius 1 explosion with damage proportional to the number of dispelled
-  effects.
-* Sticks to Snakes now caps its maximum spell power at 100.
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations). Dispels
+  all cancellable effects on the target and, if any were dispelled, causes
+  a damaging explosion of mutagenic energy around the victim.
+* Hydra Form now has a fixed number of heads.
+* The Infusion spell has a lower power cap, scaling more quickly to the same
+  damage bonus as before.
+* Song of Slaying now increases its slaying bonus with every kill, but caps at
+  +9 total.
+* Spectral Weapon now bases the strength of the summoned weapon on spell power
+  instead of weapon skill.
+* Alistair's Intoxication is now level 5 and gives Vertigo status instead of
+  confusing the player or draining Int, and can sometimes affect rPois
+  monsters.
+* Monstrous Menagerie is now level 7 (was 6).
+* Shadow creatures is now level 6 (was 5).
+* Passwall is now level 2 (was 3).
+* Ozocubu's Armour now has ponderous 1, slowing movement slightly while active.
+* Removed spells: Stoneskin, Condensation Shield, and Phase Shift.
 
 Interface
 ---------
@@ -95,6 +230,12 @@ Interface
   on b by default.
 * An option is added to the butchering prompt to allow butchering only
   (e)dible corpses.
+* Auto-eat now triggers for ghouls if they are rotted.
+* The religion screen now shows all god powers, with currently accessible
+  powers (per level of piety) being highlighted.
+* Many previously hardcoded forced mores are now optional and present in the
+  default init.txt.
+* New character dump option: skill_gains, which shows when skills were gained.
 
 Stone Soup 0.17 (20151106)
 --------------------------

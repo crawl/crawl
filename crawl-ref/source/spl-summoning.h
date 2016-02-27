@@ -19,14 +19,14 @@
 #define SW_READIED "sw_readied"
 #define SW_TRACKING "sw_tracking"
 
+// How many aut until the next doom hound pops out of doom howl?
+#define NEXT_DOOM_HOUND_KEY "next_doom_hound"
+
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
 spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
-
-monster_type pick_swarmer();
-spret_type cast_summon_swarm(int pow, god_type god, bool fail);
 
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
@@ -66,6 +66,8 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail);
 
 spret_type cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);
+
+void doom_howl(int time);
 
 void init_servitor(monster* servitor, actor* caster);
 spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);

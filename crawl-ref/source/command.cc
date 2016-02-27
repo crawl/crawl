@@ -122,7 +122,7 @@ static string _get_version_changes()
         help = buf;
 
         // Look for version headings
-        if (help.find("Stone Soup ") == 0)
+        if (starts_with(help, "Stone Soup "))
         {
             // Stop if this is for an older major version; otherwise, highlight
             if (help.find(string("Stone Soup ")+Version::Major) == string::npos)
@@ -313,7 +313,7 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward\n"
+    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
     "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
@@ -528,6 +528,15 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
+    case '#':
+        // If the game has begun, show dump.
+        if (crawl_state.need_save)
+        {
+            display_char_dump();
+            return -1;
+        }
+        break;
+
     case '/':
         keyhelp_query_descriptions();
         return -1;
@@ -624,6 +633,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "<w>?</w>: List of commands\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
+            "<w>#</w>: Browse character dump\n"
             "<w>~</w>: Macros help\n"
             "<w>&</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
@@ -769,7 +779,7 @@ void show_skill_menu_help()
 
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
-                         const string desc,
+                         const string &desc,
                          const unsigned int space_to_colon = 7)
 {
     string command_name = command_to_string(cmd);
@@ -1044,7 +1054,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
     cols.add_formatted(1, "         in view\n",
                        false, true, _cmdhelp_textfilter);
-    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");

@@ -76,34 +76,54 @@
 #    define DEBUG_GIFTS
 #endif
 
-// Which spells?  First I copied all spells from your_spells(), and then
-// I filtered some out, especially conjurations. Then I sorted them in
-// roughly ascending order of power.
-
 // Spells to be cast at tension 0 (no or only low-level monsters around),
 // mostly flavour.
 static const spell_type _xom_nontension_spells[] =
 {
-    SPELL_SUMMON_BUTTERFLIES, SPELL_BEASTLY_APPENDAGE,
-    SPELL_SPIDER_FORM, SPELL_STATUE_FORM, SPELL_ICE_FORM, SPELL_DRAGON_FORM,
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_STATUE_FORM,
+    SPELL_HYDRA_FORM,
+    SPELL_DRAGON_FORM,
     SPELL_NECROMUTATION
 };
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
+// Spells later in the list require higher severity to have a chance of being
+// selected.
 static const spell_type _xom_tension_spells[] =
 {
-    SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR, SPELL_ENGLACIATION,
-    SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES, SPELL_DISCORD,
-    SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_SMALL_MAMMAL, SPELL_SUMMON_SWARM,
-    SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
-    SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_HYDRA_FORM,
-    SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_ICE_BEAST,
-    SPELL_MONSTROUS_MENAGERIE, SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_SUMMON_HYDRA, SPELL_SUMMON_DRAGON,
-    SPELL_DEATH_CHANNEL, SPELL_NECROMUTATION, SPELL_CHAIN_OF_CHAOS
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_SMALL_MAMMAL,
+    SPELL_CONFUSING_TOUCH,
+    SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_SPIDER_FORM,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_SUMMON_ICE_BEAST,
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_CAUSE_FEAR,
+    SPELL_ICE_FORM,
+    SPELL_RING_OF_FLAMES,
+    SPELL_SHADOW_CREATURES,
+    SPELL_EXCRUCIATING_WOUNDS,
+    SPELL_WARP_BRAND,
+    SPELL_SUMMON_MANA_VIPER,
+    SPELL_STATUE_FORM,
+    SPELL_HYDRA_FORM,
+    SPELL_DISPERSAL,
+    SPELL_ENGLACIATION,
+    SPELL_DEATH_CHANNEL,
+    SPELL_SUMMON_HYDRA,
+    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_DISCORD,
+    SPELL_DISJUNCTION,
+    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_DRAGON_FORM,
+    SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_DRAGON,
+    SPELL_NECROMUTATION,
+    SPELL_CHAIN_OF_CHAOS
 };
 
 static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
@@ -177,7 +197,7 @@ const string describe_xom_favour()
 }
 
 #define XOM_SPEECH(x) x
-static string _get_xom_speech(const string key)
+static string _get_xom_speech(const string &key)
 {
     string result = getSpeakString("Xom " + key);
 
@@ -561,12 +581,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
 
     // Don't attempt to cast spells that will do nothing, or that the player
     // cannot memorise/cast.
-    if (spell_is_useless(spell, true, true))
-        return XOM_DID_NOTHING;
-
-    // Don't attempt to teleport the player if the teleportation will
-    // fail.
-    if (!_teleportation_check(spell))
+    if (spell_is_useless(spell, true, true, false, true))
         return XOM_DID_NOTHING;
 
     // Don't attempt to transform the player if the transformation will
@@ -591,7 +606,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, note), true);
 
-    your_spells(spell, sever, false);
+    your_spells(spell, sever, false, false, true);
     return result;
 }
 
@@ -709,7 +724,7 @@ static void _try_brand_switch(const int item_index)
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
-        item.special = SPWPN_CHAOS;
+        item.brand = SPWPN_CHAOS;
 }
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
@@ -990,7 +1005,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     }
     else
     {
-        item.special = brand;
+        item.brand = brand;
 
         if (seen)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -1218,7 +1233,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             if (one_chance_in(8)
                 && !mons_is_ghost_demon(mon->type)
                 && !mon->is_shapeshifter()
-                && mon->holiness() == MH_NATURAL)
+                && mon->holiness() & MH_NATURAL)
             {
                 mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                                : ENCH_SHAPESHIFTER);
@@ -1306,7 +1321,7 @@ bool swap_monsters(monster* m1, monster* m2)
 // Swap places with a random monster and, depending on severity, also
 // between monsters. This can be pretty bad if there are a lot of
 // hostile monsters around.
-int xom_rearrange_pieces(int sever, bool debug)
+static int _xom_rearrange_pieces(int sever, bool debug)
 {
     if (player_stair_delay() || monster_at(you.pos()))
         return XOM_DID_NOTHING;
@@ -1504,7 +1519,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
 
     mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
                  SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
-                 0, GOD_XOM);
+                 MG_NONE, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -2068,11 +2083,11 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (tension > 0 && x_chance_in_y(13, sever))
         done = _xom_destruction(sever, debug);
     else if (tension > 0 && x_chance_in_y(14, sever))
-        done = xom_rearrange_pieces(sever, debug);
+        done = _xom_rearrange_pieces(sever, debug);
     else if (tension > 0 && x_chance_in_y(15, sever))
     {
 
-        if (cloud_type_at(you.pos()) != CLOUD_NONE)
+        if (cloud_at(you.pos()))
             return XOM_DID_NOTHING;
         if (debug)
             return XOM_GOOD_FOG;
@@ -2364,6 +2379,7 @@ static void _xom_zero_miscast()
             string str = "You compulsively click the heels of your ";
             str += name;
             str += " together three times.";
+            messages.push_back(str);
         }
     }
 
@@ -3033,7 +3049,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             if (create_monster(
                     mgen_data::hostile_at(
                         RANDOM_MOBILE_MONSTER, "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
                         GOD_XOM)))
             {
                 num_summoned++;
@@ -3062,7 +3078,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             if (create_monster(
                     mgen_data::hostile_at(
                         _xom_random_demon(sever), "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
                         GOD_XOM)))
             {
                 num_summoned++;
@@ -3359,7 +3375,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         }
         else if (tension > 0 && x_chance_in_y(22, sever))
         {
-            if (cloud_type_at(you.pos()) != CLOUD_NONE)
+            if (cloud_at(you.pos()))
                 return XOM_DID_NOTHING;
             if (debug)
                 return XOM_BAD_CHAOS_CLOUD;

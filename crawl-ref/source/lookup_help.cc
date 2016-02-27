@@ -364,16 +364,15 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key.c_str());
+    monster_type mon_num = get_monster_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
 
 static bool _spell_filter(string key, string body)
 {
-    if (!ends_with(key, " spell"))
+    if (!strip_suffix(key, "spell"))
         return true;
-    key.erase(key.length() - 6);
 
     spell_type spell = spell_by_name(key);
 
@@ -401,9 +400,8 @@ static bool _card_filter(string key, string body)
     lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (!ends_with(key, " card"))
+    if (!strip_suffix(key, "card"))
         return true;
-    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
@@ -416,16 +414,12 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
-    if (!ends_with(key, " ability"))
+
+    if (!strip_suffix(key, "ability"))
         return true;
-    key.erase(key.length() - 8);
 
-    if (string_matches_ability_name(key))
-        return false;
-
-    return true;
+    return !string_matches_ability_name(key);
 }
-
 
 
 static void _recap_mon_keys(vector<string> &keys)
@@ -434,6 +428,38 @@ static void _recap_mon_keys(vector<string> &keys)
     {
         monster_type type = get_monster_by_name(keys[i]);
         keys[i] = mons_type_name(type, DESC_PLAIN);
+    }
+}
+
+/**
+ * Fixup spell names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of spell names.
+ */
+static void _recap_spell_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " spell"
+        const string key_name = keys[i].substr(0, keys[i].length() - 6);
+        // then get the real name
+        keys[i] = make_stringf("%s spell",
+                               spell_title(spell_by_name(key_name)));
+    }
+}
+
+/**
+ * Fixup ability names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of ability names.
+ */
+static void _recap_ability_keys(vector<string> &keys)
+{
+    for (auto &key : keys)
+    {
+        strip_suffix(key, "ability");
+        // get the real name
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
     }
 }
 
@@ -857,10 +883,8 @@ MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
 string LookupType::key_to_menu_str(const string &key) const
 {
     string str = uppercase_first(key);
-
-    if (ends_with(str, suffix())) // perhaps we should assert this?
-        str.erase(str.length() - suffix().length());
-
+    // perhaps we should assert this?
+    strip_suffix(str, suffix());
     return str;
 }
 
@@ -898,8 +922,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.body << desc << extra_info;
 
     string title = key;
-    if (ends_with(title, suffix))
-        title.erase(title.length() - suffix.length());
+    strip_suffix(title, suffix);
     title = uppercase_first(title);
     linebreak_string(footer, width - 1);
 
@@ -1009,7 +1032,7 @@ static int _describe_cloud(const string &key, const string &suffix,
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
 
-    const string extra_info = is_opaque_cloud_type(cloud) ?
+    const string extra_info = is_opaque_cloud(cloud) ?
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will."
         : "";
@@ -1048,14 +1071,6 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    // spellbooks/rods are interactive & so require special handling
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        item_colour(item);
-        return _describe_spell_item(item);
-    }
-
     string stats;
     if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
         || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
@@ -1064,6 +1079,13 @@ static int _describe_item(const string &key, const string &suffix,
     {
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
+    }
+    // spellbooks/rods are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        item_colour(item);
+        return _describe_spell_item(item);
     }
 
     return _describe_key(key, suffix, footer, stats);
@@ -1228,7 +1250,7 @@ static const vector<LookupType> lookup_types = {
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
                lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
-    LookupType('S', "spell", nullptr, _spell_filter,
+    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
@@ -1236,7 +1258,7 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
                lookup_type::SUPPORT_TILES),
-    LookupType('A', "ability", nullptr, _ability_filter,
+    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),

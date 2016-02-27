@@ -7,6 +7,7 @@
 #define ADJUST_H
 
 void adjust();
+void adjust_item(int from_slot = -1);
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 #endif

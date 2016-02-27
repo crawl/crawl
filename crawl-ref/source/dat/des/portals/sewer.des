@@ -862,8 +862,9 @@ ITEM:     scroll of identify / scroll of recharging / \
           buckler / nothing
 KITEM:    ' = scroll of random uselessness w:30 / \
               scroll of identify / scroll of teleportation / \
-              potion of poison w:100 / potion of mutation / potion of flight /\
-              hat / buckler / pair of gloves w:5 / pair of boots w:5
+              potion of degeneration w:100 / potion of mutation / \
+              potion of flight / hat / buckler / pair of gloves w:5 / \
+              pair of boots w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx

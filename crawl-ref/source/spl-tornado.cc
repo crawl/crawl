@@ -9,6 +9,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
@@ -50,8 +51,8 @@ public:
 };
 
 WindSystem::WindSystem(coord_def _org)
+    : org(_org)
 {
-    org = _org;
     depth.init(-1);
     cut.init(false);
     visit(org, 0, coord_def(0,0));
@@ -172,17 +173,17 @@ static double _get_ang(int x, int y)
 {
     if (abs(x) > abs(y))
     {
-       if (x > 0)
-           return double(y)/double(x);
-       else
-           return 4 + double(y)/double(x);
+        if (x > 0)
+            return double(y)/double(x);
+        else
+            return 4 + double(y)/double(x);
     }
     else
     {
-       if (y > 0)
-           return 2 - double(x)/double(y);
-       else
-           return -2 - double(x)/double(y);
+        if (y > 0)
+            return 2 - double(x)/double(y);
+        else
+            return -2 - double(x)/double(y);
     }
 }
 
@@ -258,6 +259,9 @@ void tornado_damage(actor *caster, int dur)
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
+
+    const coord_def old_player_pos = you.pos();
+    coord_def new_player_pos = old_player_pos;
 
     int age = _tornado_age(caster);
     ASSERT(age >= 0);
@@ -391,8 +395,7 @@ void tornado_damage(actor *caster, int dur)
             if (cell_is_solid(*dam_i))
                 continue;
 
-            if ((env.cgrid(*dam_i) == EMPTY_CLOUD
-                || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
+            if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_TORNADO)
                 && x_chance_in_y(rpow, 20))
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
@@ -444,10 +447,24 @@ void tornado_damage(actor *caster, int dur)
             ASSERT(!actor_at(newpos));
             act->move_to_pos(newpos);
             ASSERT(act->pos() == newpos);
+
+            if (act->is_player())
+                new_player_pos = newpos;
         }
 
     if (caster->is_player())
         fire_final_effects();
+    else
+    {
+        if (new_player_pos != old_player_pos
+            && !need_expiration_warning(old_player_pos)
+            && need_expiration_warning(new_player_pos))
+        {
+            mprf(MSGCH_DANGER, "Careful! You are now flying above %s",
+                 feature_description_at(new_player_pos, false, DESC_PLAIN)
+                     .c_str());
+        }
+    }
 }
 
 void cancel_tornado(bool tloc)

@@ -123,7 +123,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = nullptr) throw (string);
+                            const vector<string> *rcdirs = nullptr);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -196,6 +196,7 @@ public:
     int         autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_turns; // Show game turns instead of player turns.
@@ -413,6 +414,8 @@ public:
                                 // fully restored.
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
+
+    bool        regex_search; // whether to default to regex search for ^F
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

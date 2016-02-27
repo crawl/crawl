@@ -69,8 +69,6 @@ private:
     void check_autoberserk();
     bool check_unrand_effects() override;
 
-    bool attack_ignores_shield(bool verbose) override;
-
     void rot_defender(int amount);
     void splash_defender_with_acid(int strength);
 

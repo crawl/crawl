@@ -6,10 +6,12 @@ Translocations spells in existence. It is notoriously difficult to track down
 and understand, as copies of the book and their contents have a tendency to
 shift between planes at a moment's notice.
 %%%%
-amulet of clarity
+amulet of dismissal
 
-This amulet protects its wearer from some forms of mental confusion, including
-being berserked against one's will.
+This amulet generates a field of translocational energy that will teleport away
+creatures that harm you, one time in ten. It takes a few moments to get used
+to the translocational energy field, initially disorienting the wearer for a
+few turns.
 %%%%
 amulet of faith
 
@@ -23,49 +25,48 @@ amulet of guardian spirit
 This amulet contains a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
 %%%%
+amulet of harm
+
+This unholy amulet contains a vicious spirit that increases damage dealt
+to and by its wearer by one fourth. The spirit wants only to spread harm, and
+removing the amulet will cause the spirit to punish the wearer with draining.
+%%%%
 amulet of inaccuracy
 
 This amulet makes its wearer less accurate in melee combat and when targeting
 monsters via ranged attacks or spells.
 %%%%
+amulet of magic regeneration
+
+This amulet substantially increases the wearer's normal rate of magic
+regeneration. In order to function, it must first attune itself to the wearer's
+body with full reserves of magic.
+%%%%
+amulet of nothing
+
+This amulet has no base properties.
+%%%%
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
+amulet of reflection
+
+These carefully-faceted amulets exert a force that blocks some incoming attacks.
+More miraculously, it also will reflect ranged attacks back towards the
+attackers, making them particularly prized by travellers, merchants, and others
+who fear ambush by bandits.
+%%%%
 amulet of regeneration
 
-This amulet greatly increases the recuperative powers of its wearer.
-%%%%
-amulet of resist corrosion
-
-This amulet protects the wearer from acid damage and from corrosion caused by
-acids, although not infallibly so.
-%%%%
-amulet of resist mutation
-
-This amulet protects its wearer from mutations, although not infallibly so.
-%%%%
-amulet of stasis
-
-An amulet meticulously constructed with magical wards to block magical and
-physiological effects that would otherwise teleport, slow, haste, enrage, or
-paralyse its wearer. Equipping it whilst already under such an effect will
-immediately end the effect, causing a large amount of magical contamination
-in the process.
-
-While the amulet is effective against most translocations, plane shifts such as
-banishment are beyond its ability to block.
+This amulet increases the wearer's natural regeneration rate. In order to
+function, it must first attune itself to the wearer's body at full health.
 %%%%
 amulet of the gourmand
 
 This amulet allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
 digestion are cumulative over time and are initially small.
-%%%%
-amulet of warding
-
-This amulet repels some of the attacks of creatures which have been magically
-summoned, and also makes the wearer more resistant to draining attacks.
 %%%%
 animal skin
 
@@ -845,7 +846,7 @@ It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
-A noxious concoction which reduces strength, intelligence or dexterity.
+A noxious concotion which reduces strength, intelligence and dexterity.
 %%%%
 potion of experience
 
@@ -882,10 +883,6 @@ who drinks it.
 potion of mutation
 
 A potion which does very strange things to you.
-%%%%
-potion of poison
-
-A nasty poisonous liquid.
 %%%%
 potion of resistance
 
@@ -968,10 +965,10 @@ ring of intelligence
 This ring increases or decreases the mental ability of its wearer, depending on
 the degree to which it has been enchanted.
 %%%%
-ring of invisibility
+ring of resist corrosion
 
-This powerful ring can be activated to hide its wearer from the view of others,
-but increases the speed of their metabolism greatly while doing so.
+This ring protects the wearer from acid damage and from corrosion caused by
+acids, although not infallibly so.
 %%%%
 ring of loudness
 
@@ -1033,9 +1030,8 @@ intelligence.
 %%%%
 ring of teleportation
 
-This ring occasionally exerts its power to teleport its wearer into the
-vicinity of nearby monsters. It can also be deliberately evoked to randomly
-teleport the wearer.
+This ring occasionally exerts its power to teleport its wearer next to
+monsters.
 %%%%
 ring of wizardry
 
@@ -1053,11 +1049,6 @@ This rod allows its wielder to blast a cone-shaped area in front of them with
 various destructive clouds, their lethality increasing with the evocation
 ability of the wielder.
 %%%%
-rod of destruction
-
-This rod can be evoked to release a damaging spell picked at random from a
-small set, all able to pierce through monsters to damage the ones behind them.
-%%%%
 rod of ignition
 
 This rod allows its wielder to launch a fiery bolt of explosive energy.
@@ -1070,10 +1061,6 @@ power.
 rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
-%%%%
-rod of the swarm
-
-This rod allows its wielder to summon a swarm of insects.
 %%%%
 royal jelly
 
@@ -1208,16 +1195,17 @@ Reading this scroll removes curses from the items you are using.
 %%%%
 scroll of silence
 
-This scroll eliminates all sound near the reader. This makes actions such as
-reading scrolls, casting spells or shouting impossible in the reader's
-vicinity. The oppressive, unnatural effect will greatly hamper any attempt to
-be stealthy.
+Eliminates all sound near the reader. This makes reading scrolls, casting
+spells, invoking divine abilities, or shouting impossible in the caster's
+vicinity. The scroll's oppressive, unnatural effect will greatly hamper
+stealth.
 
-Silence starts out with a radius depending on power, which will then shrink,
-eventually covering only the reader, before the effect times out. Some
-creatures, such as demons, cast magic without speaking and so will be
-unaffected, and those with innate magical abilities will also still be able to
-use them.
+Certain monsters have demonic or angelic abilities which can be activated
+without speaking, and innate magical or special abilities will also still be
+usable while silenced.
+
+The effect starts out with a large radius, which will then shrink, eventually
+covering only the reader, before it times out.
 %%%%
 scroll of summoning
 
@@ -1442,9 +1430,9 @@ troll leather armour
 Armour made from the stiff and knobbly skin of a common troll. It magically
 regenerates its wearer's flesh.
 %%%%
-wand of cold
+wand of acid
 
-A magical device which throws great bolts of cold.
+A magical device which throws a bolt of corrosive acid.
 %%%%
 wand of confusion
 
@@ -1459,30 +1447,18 @@ wand of disintegration
 A magical device which disrupts the physical structure of anything but the
 hardest walls — even granite statues, to say nothing of flesh.
 %%%%
-wand of draining
-
-A magical device which throws a bolt of negative energy which drains the life
-essences of living creatures.
-%%%%
 wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
-%%%%
-wand of fire
-
-A magical device which throws great bolts of fire.
-%%%%
-wand of fireball
-
-A magical device which throws exploding blasts of flame.
 %%%%
 wand of flame
 
 A magical device which throws little puffs of flame.
 %%%%
-wand of frost
+wand of iceblast
 
-A magical device which throws little puffs of frost.
+A magical device which throws exploding shards of ice, partially harming even
+creatures resistant to cold.
 %%%%
 wand of hasting
 
@@ -1493,18 +1469,9 @@ wand of heal wounds
 
 A magical device which can heal a creature's wounds.
 %%%%
-wand of invisibility
-
-A magical device which hides a creature from the view of others.
-%%%%
 wand of lightning
 
 A magical device which throws great bolts of lightning.
-%%%%
-wand of magic darts
-
-A magical device which throws small bolts of destructive energy. They never
-miss.
 %%%%
 wand of paralysis
 
@@ -1538,12 +1505,6 @@ whip
 A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
-%%%%
-piece from Xom's chessboard
-
-A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. Moving
-it in the presence of other creatures will invite Xom to take a turn in some
-cosmic game. A bad move may instead incur Xom's displeasure.
 %%%%
 young poisoner's handbook
 

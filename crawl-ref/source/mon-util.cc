@@ -316,13 +316,13 @@ int get_mons_class_ev(monster_type mc)
 static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
 {
     // Undead and non-living beings get full poison resistance.
-    if (mh == MH_UNDEAD || mh == MH_NONLIVING)
+    if (mh & (MH_UNDEAD | MH_NONLIVING))
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
     // benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
-    if (mh != MH_NATURAL)
+    if (!(mh & MH_NATURAL))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
     return resists;
@@ -396,6 +396,17 @@ int get_mons_resist(const monster* mon, mon_resist_flags res)
     return get_resist(get_mons_resists(mon), res);
 }
 
+// Returns true if the monster successfully resists this attempt to poison it.
+const bool monster_resists_this_poison(const monster* mons, bool force)
+{
+    const int res = mons->res_poison();
+    if (res >= 3)
+        return true;
+    if (!force && res >= 1 && x_chance_in_y(2, 3))
+        return true;
+    return false;
+}
+
 monster* monster_at(const coord_def &pos)
 {
     if (!in_bounds(pos))
@@ -465,13 +476,14 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULET_PLUS:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
         item = mslot_item(MSLOT_JEWELLERY);
         if (item && item->is_type(OBJ_JEWELLERY, sub_type)
             && (calc_unid || item_type_known(*item)))
         {
-            if (slot == EQ_RINGS_PLUS)
+            if (slot == EQ_RINGS_PLUS || slot == EQ_AMULET_PLUS)
                 ret += item->plus;
             else
                 ret++;
@@ -597,6 +609,57 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
     return ret;
 }
 
+mon_holy_type holiness_by_name(string name)
+{
+    lowercase(name);
+    for (const auto bit : mon_holy_type::range())
+    {
+        if (name == holiness_name(mon_holy_type::exponent(bit)))
+            return mon_holy_type::exponent(bit);
+    }
+    return MH_NONE;
+}
+
+const char * holiness_name(mon_holy_type_flags which_holiness)
+{
+    switch (which_holiness)
+    {
+    case MH_HOLY:
+        return "holy";
+    case MH_NATURAL:
+        return "natural";
+    case MH_UNDEAD:
+        return "undead";
+    case MH_DEMONIC:
+        return "demonic";
+    case MH_NONLIVING:
+        return "nonliving";
+    case MH_PLANT:
+        return "plant";
+    case MH_EVIL:
+        return "evil";
+    case MH_UNHOLY:
+        return "unholy";
+    default:
+        return "bug";
+    }
+}
+
+string holiness_description(mon_holy_type holiness)
+{
+    string description = "";
+    for (const auto bit : mon_holy_type::range())
+    {
+        if (holiness & bit)
+        {
+            if (!description.empty())
+                description += ",";
+            description += holiness_name(bit);
+        }
+    }
+    return description;
+}
+
 mon_holy_type mons_class_holiness(monster_type mc)
 {
     ASSERT_smc();
@@ -611,13 +674,14 @@ bool mons_class_is_stationary(monster_type mc)
 /**
  * Can killing this class of monster ever reward xp?
  *
- * This answers whether any agent could recieve XP for killing a monster of
+ * This answers whether any agent could receive XP for killing a monster of
  * this class. Monsters that fail this have M_NO_EXP_GAIN set.
  * @param mc       The monster type
  * @param indirect If true this will count monsters that are parts of a parent
- *                 monster as xp rewarding even the parts themselves don't
+ *                 monster as xp rewarding even if the parts themselves don't
  *                 reward xp (e.g. tentacles).
- * @returns True if killing a monster of this could reward xp, false otherwise.
+ * @returns True if killing a monster of this class could reward xp, false
+ * otherwise.
  */
 bool mons_class_gives_xp(monster_type mc, bool indirect)
 {
@@ -628,7 +692,7 @@ bool mons_class_gives_xp(monster_type mc, bool indirect)
 /**
  * Can killing this monster reward xp to the given actor?
  *
- * This answers whether the player or a monster could ever recieve XP for
+ * This answers whether the player or a monster could ever receive XP for
  * killing the monster, assuming an appropriate kill_type.
  * @param mon      The monster.
  * @param agent    The actor who would be responsible for the kill.
@@ -640,7 +704,7 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
     ASSERT(victim && agent);
 
     // Either the player killed a monster that's no reward (created friendly or
-    // the royal jelly spawns), or a monster killed an aligned monster, or a
+    // the Royal Jelly spawns), or a monster killed an aligned monster, or a
     // friendly monster killed a no-reward monster.
     bool killed_friend;
     if (agent->is_player())
@@ -743,8 +807,7 @@ bool mons_has_flesh(const monster* mon)
     //    mainly muscle tissue and fat)
     // 3. pulp, flesh -- (a soft moist part of a fruit)
     // yet I exclude sense 3 anyway but include arthropods and molluscs.
-    return mon->holiness() != MH_PLANT
-           && mon->holiness() != MH_NONLIVING
+    return !(mon->holiness() & (MH_PLANT | MH_NONLIVING))
            && mons_genus(mon->type) != MONS_GIANT_EYEBALL
            && mons_genus(mon->type) != MONS_GIANT_ORANGE_BRAIN
            && mons_genus(mon->type) != MONS_JELLY
@@ -801,7 +864,8 @@ bool mons_is_boulder(const monster* mon)
 static bool _mons_class_is_clingy(monster_type type)
 {
     return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_DEMONIC_CRAWLER;
+        || type == MONS_GIANT_COCKROACH || type == MONS_DEMONIC_CRAWLER
+        || type == MONS_DART_SLUG;
 }
 
 bool mons_can_cling_to_walls(const monster* mon)
@@ -981,13 +1045,11 @@ bool herd_monster(const monster* mon)
     return mons_class_flag(mon->type, M_HERD);
 }
 
-// Plant or fungus really
+// Plant or fungus or really anything with
+// permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
 {
-    return mons_genus(mc) == MONS_PLANT
-           || mons_genus(mc) == MONS_FUNGUS
-           || mons_species(mc) == MONS_BUSH
-           || mc == MONS_SHAMBLING_MANGROVE;
+    return bool(mons_class_holiness(mc) & MH_PLANT);
 }
 
 bool mons_is_plant(const monster* mon)
@@ -1033,7 +1095,7 @@ bool mons_is_statue(monster_type mc)
  */
 static void _mimic_vanish(const coord_def& pos, const string& name)
 {
-    const bool can_place_smoke = env.cgrid(pos) == EMPTY_CLOUD;
+    const bool can_place_smoke = !cloud_at(pos);
     if (can_place_smoke)
         place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), nullptr);
     if (!you.see_cell(pos))
@@ -1122,8 +1184,7 @@ void discover_shifter(monster* shifter)
 
 bool mons_is_demon(monster_type mc)
 {
-    // Not every demonic monster is a demon (hell hog, hell hound, etc.)
-    return mons_class_holiness(mc) == MH_DEMONIC
+    return mons_class_holiness(mc) & MH_DEMONIC
              && (mons_demon_tier(mc) != 0 && mc != MONS_ANTAEUS
                  || mons_species(mc) == MONS_RAKSHASA);
 }
@@ -1184,9 +1245,17 @@ bool mons_is_conjured(monster_type mc)
            || mons_class_flag(mc, M_CONJURED);
 }
 
+size_type mons_class_body_size(monster_type mc)
+{
+    // Should pass base_type to get the right size for zombies, skeletons &c.
+    // For normal monsters, base_type is set to type in the constructor.
+    const monsterentry *e = get_monster_data(mc);
+    return e ? e->size : SIZE_MEDIUM;
+}
+
 int max_corpse_chunks(monster_type mc)
 {
-    switch (monster_info(mc).body_size())
+    switch (mons_class_body_size(mc))
     {
     case SIZE_TINY:
         return 1;
@@ -1241,6 +1310,20 @@ monster_type mons_species(monster_type mc)
     return me ? me->species : MONS_PROGRAM_BUG;
 }
 
+static monster_type _draco_or_demonspawn_subspecies(monster_type type,
+                                                    monster_type base)
+{
+    const monster_type species = mons_species(type);
+
+    if ((species == MONS_DRACONIAN || species == MONS_DEMONSPAWN)
+        && type != species)
+    {
+        return base;
+    }
+
+    return species;
+}
+
 monster_type draco_or_demonspawn_subspecies(const monster* mon)
 {
     ASSERT(mons_genus(mon->type) == MONS_DRACONIAN
@@ -1252,15 +1335,7 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
         return player_species_to_mons_species(mon->ghost->species);
     }
 
-    monster_type retval = mons_species(mon->type);
-
-    if ((retval == MONS_DRACONIAN || retval == MONS_DEMONSPAWN)
-        && mon->type != retval)
-    {
-        retval = mon->base_monster;
-    }
-
-    return retval;
+    return _draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -1477,8 +1552,8 @@ bool mons_can_be_dazzled(monster_type mc)
     // that's useful
 
     const mon_holy_type holiness = mons_class_holiness(mc);
-    return holiness != MH_UNDEAD && holiness != MH_NONLIVING
-           && holiness != MH_PLANT && mons_can_be_blinded(mc);
+    return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
+        && mons_can_be_blinded(mc);
 }
 
 ucs_t mons_char(monster_type mc)
@@ -1943,18 +2018,28 @@ bool mons_class_res_wind(monster_type mc)
     return get_resist(get_mons_class_resists(mc), MR_RES_WIND);
 }
 
-// This nice routine we keep in exactly the way it was.
-int hit_points(int hit_dice, int min_hp, int rand_hp)
+/**
+ * Given an average max HP value for a given monster type, what should a given
+ * monster have?
+ *
+ * @param avg_hp    The mean hp.
+ * @param scale     A scale that the input avg_hp are multiplied by.
+ * @return          A max HP value; no more than +-33% from the given average,
+ *                  and within about +-10% of the average 95% of the time.
+ *                  This value is not multiplied by the scale - it's an actual
+ *                  hp value, regardless of the scale on the input.
+ *                  If avg_hp is nonzero, always returns at least 1.
+ */
+int hit_points(int avg_hp, int scale)
 {
-    int hrolled = 0;
+    if (!avg_hp)
+        return 0;
 
-    for (int hroll = 0; hroll < hit_dice; ++hroll)
-    {
-        hrolled += random2(1 + rand_hp);
-        hrolled += min_hp;
-    }
-
-    return hrolled;
+    const int min_perc = 33;
+    const int hp_variance = div_rand_round(avg_hp * min_perc, 100);
+    const int min_hp = avg_hp - hp_variance;
+    const int hp = min_hp + random2avg(hp_variance * 2, 8);
+    return max(1, div_rand_round(hp, scale));
 }
 
 // This function returns the standard number of hit dice for a type of
@@ -1962,12 +2047,63 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 int mons_class_hit_dice(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return me ? me->hpdice[0] : 0;
+    return me ? me->HD : 0;
 }
 
+/**
+ * What base MR does a monster of the given type have?
+ *
+ * @param type    The monster type in question.
+ * @param base    The base type of the monster. (For e.g. draconians.)
+ * @return        The MR of a normal monster of that type.
+ */
+int mons_class_res_magic(monster_type type, monster_type base)
+{
+    const monster_type base_type =
+        base != MONS_NO_MONSTER &&
+        (mons_is_draconian(type) || mons_is_demonspawn(type))
+            ? _draco_or_demonspawn_subspecies(type, base)
+            : type;
+
+    const int type_mr = (get_monster_data(base_type))->resist_magic;
+
+    // Negative values get multiplied with monster hit dice.
+    if (type_mr >= 0)
+        return type_mr;
+    return mons_class_hit_dice(base_type) * -type_mr * 4 / 3;
+}
+
+/**
+ * Can a monster of the given type see invisible creatures?
+ *
+ * @param type    The monster type in question.
+ * @param base    The base type of the monster. (For e.g. draconians.)
+ * @return        Whether a normal monster of that type can see invisible
+ *                things.
+ */
+bool mons_class_sees_invis(monster_type type, monster_type base)
+{
+    if (mons_class_flag(type, M_SEE_INVIS))
+        return true;
+
+    if (base != MONS_NO_MONSTER && mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
+        && mons_class_flag(_draco_or_demonspawn_subspecies(type, base),
+                           M_SEE_INVIS))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * What's the average hp for a given type of monster?
+ *
+ * @param mc        The type of monster in question.
+ * @return          The average hp for that monster; rounds down.
+ */
 int mons_avg_hp(monster_type mc)
 {
-    // Currently, difficulty is defined as "average hp". Leaks too much info?
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
@@ -1980,15 +2116,42 @@ int mons_avg_hp(monster_type mc)
         && mons_species(mc) == MONS_DEMONSPAWN)
     {
         const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
-        return me->hpdice[0] *
-               (2 * (me->hpdice[1] + mbase->hpdice[1])
-                + me->hpdice[2] + mbase->hpdice[2])
-               / 2 + me->hpdice[3] + mbase->hpdice[3];
+        return (mbase->avg_hp_10x + me->avg_hp_10x) / 10;
     }
 
-    // [ds] XXX: Use monster experience value as a better indicator of diff.?
-    return me->hpdice[0] * (2 * me->hpdice[1] + me->hpdice[2]) / 2
-           + me->hpdice[3];
+    return me->avg_hp_10x / 10;
+}
+
+/**
+ * What's the maximum hp for a given type of monster?
+ *
+ * @param mc        The type of monster in question.
+ * @param mbase     The type of the base monster, if applicable (for classed
+ *                  monsters).
+ * @return          The maximum hp for that monster; rounds down.
+ */
+int mons_max_hp(monster_type mc, monster_type mbase_type)
+{
+    const monsterentry* me = get_monster_data(mc);
+
+    if (!me)
+        return 0;
+
+    // TODO: merge the 133% with their use in hit_points()
+
+    // Hack for nonbase demonspawn: pretend it's a basic demonspawn with
+    // a job.
+    if (mons_is_demonspawn(mc)
+        && mc != MONS_DEMONSPAWN
+        && mons_species(mc) == MONS_DEMONSPAWN)
+    {
+        const monsterentry* mbase =
+            get_monster_data(mbase_type != MONS_NO_MONSTER ? mbase_type
+                                                           : MONS_DEMONSPAWN);
+        return (mbase->avg_hp_10x + me->avg_hp_10x) * 133 / 1000;
+    }
+
+    return me->avg_hp_10x * 133 / 1000;
 }
 
 int exper_value(const monster* mon, bool real)
@@ -2020,8 +2183,8 @@ int exper_value(const monster* mon, bool real)
         // this is hardly ever a leak. Only Pan lords are unknown in the
         // general.
         if (m->mc == MONS_PANDEMONIUM_LORD)
-            hd = m->hpdice[0];
-        maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2 + m->hpdice[3];
+            hd = m->HD;
+        maxhp = mons_max_hp(mc);
     }
 
     // Hacks to make merged slime creatures not worth so much exp. We
@@ -2229,7 +2392,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         return { MST_NECROMANCER_I, MST_NECROMANCER_II };
 
     case MONS_ORC_WIZARD:
-    case MONS_DEEP_ELF_FIGHTER:
         return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
 
     case MONS_WIZARD:
@@ -2243,7 +2405,7 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 
     case MONS_ANCIENT_CHAMPION:
         return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II,
-                 MST_ANCIENT_CHAMPION_III, MST_ANCIENT_CHAMPION_IV };
+                 MST_ANCIENT_CHAMPION_III };
 
     case MONS_TENGU_CONJURER:
         return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
@@ -2256,7 +2418,7 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
     case MONS_DEEP_ELF_MAGE:
         return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
                  MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
-                 MST_DEEP_ELF_MAGE_V };
+                 MST_DEEP_ELF_MAGE_V, MST_DEEP_ELF_MAGE_VI };
 
     case MONS_FAUN:
         return { MST_FAUN_I, MST_FAUN_II };
@@ -2374,19 +2536,19 @@ mon_spell_slot drac_breath(monster_type drac_type)
     return slot;
 }
 
-const mon_spell_slot lich_primary_summoner_spells[] =
+static const vector<mon_spell_slot> lich_primary_summoner_spells =
 {
     { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_primary_conjurer_spells[] =
+static const vector<mon_spell_slot> lich_primary_conjurer_spells =
 {
     { SPELL_IOOD, 18, MON_SPELL_WIZARD },
     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
     { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_secondary_spells[] =
+static const vector<mon_spell_slot> lich_secondary_spells =
 {
     { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
     { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
@@ -2412,14 +2574,15 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_buff_spells[] =
+static const vector<mon_spell_slot> lich_buff_spells =
 {
     { SPELL_HASTE, 12, MON_SPELL_WIZARD },
     { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
     { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
 };
 
-static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
+static bool _random_caster_spell_is_used(const monster_spells &spells,
+                                         spell_type spell)
 {
     for (auto slot : spells)
         if (slot.spell == spell)
@@ -2428,8 +2591,8 @@ static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
     return false;
 }
 
-static bool _lich_has_spell_of_school(const monster_spells &spells,
-                                      spschool_flag_type discipline)
+static bool _random_caster_has_spell_of_school(const monster_spells &spells,
+                                               spschool_flag_type discipline)
 {
     for (auto slot : spells)
         if (spell_typematch(slot.spell, discipline))
@@ -2438,14 +2601,16 @@ static bool _lich_has_spell_of_school(const monster_spells &spells,
     return false;
 }
 
-static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
-                                int *weights, int total_weight,
-                                bool use_weights, bool force_conj)
+static bool _random_caster_spell_is_good(const monster_spells &spells,
+                                         spell_type spell,
+                                         int *weights, int total_weight,
+                                         bool use_weights, bool force_conj)
 {
-    if (_lich_spell_is_used(spells, spell))
+    if (_random_caster_spell_is_used(spells, spell))
         return false;
 
-    if (force_conj && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
+    if (force_conj
+        && !_random_caster_has_spell_of_school(spells, SPTYP_CONJURATION))
     {
         return spell_typematch(spell, SPTYP_CONJURATION)
                && spell != SPELL_BATTLESPHERE
@@ -2469,8 +2634,9 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
     return false;
 }
 
-static void _calculate_lich_spell_weights(const monster_spells &spells,
-                                          int *weights, int &total_weight)
+static void _calculate_random_caster_spell_weights(const monster_spells &spells,
+                                                   int *weights,
+                                                   int &total_weight)
 {
     for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
         // there are no primary hexes, and hexes are interesting to have on
@@ -2502,59 +2668,107 @@ static void _calculate_lich_spell_weights(const monster_spells &spells,
 
 }
 
-static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
-                            size_t set_len, bool force_conj)
+static void _add_random_caster_spell(monster_spells &spells,
+                                     const vector<mon_spell_slot> *set,
+                                     bool secondary, bool force_conj)
 {
     int weights[SPTYP_LAST_EXPONENT + 1];
     int total_weight;
-    _calculate_lich_spell_weights(spells, weights, total_weight);
+    const size_t set_len = set->size();
+    _calculate_random_caster_spell_weights(spells, weights, total_weight);
 
     mon_spell_slot next_spell;
     do
     {
-        next_spell = set[random2(set_len)];
+        next_spell = (*set)[random2(set_len)];
     }
-    while (!_lich_spell_is_good(spells, next_spell.spell, weights,
-                                total_weight, set == lich_secondary_spells,
-                                force_conj));
+    while (!_random_caster_spell_is_good(spells, next_spell.spell, weights,
+                                         total_weight, secondary, force_conj));
 
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);
 }
 
-static void _load_lich_spells(monster &lich)
+struct random_caster_spell_def
 {
-    const size_t num_spells = 5 + random2(3);
+    size_t min_spells;
+    size_t max_spells;
+    bool force_second_conj;
+    bool bonus_conj;
+    const vector<mon_spell_slot> *primary_summoner_spells;
+    const vector<mon_spell_slot> *primary_conjurer_spells;
+    const vector<mon_spell_slot> *secondary_spells;
+    const vector<mon_spell_slot> *buff_spells;
+};
+
+static const map<monster_type, random_caster_spell_def> random_caster_spells =
+{
+    {
+      MONS_LICH,
+      {
+        5, 7,
+        true,
+        false,
+        &lich_primary_summoner_spells,
+        &lich_primary_conjurer_spells,
+        &lich_secondary_spells,
+        &lich_buff_spells
+      }
+    },
+    {
+      MONS_ANCIENT_LICH,
+      {
+        5, 7,
+        true,
+        true,
+        &lich_primary_summoner_spells,
+        &lich_primary_conjurer_spells,
+        &lich_secondary_spells,
+        &lich_buff_spells
+      }
+    },
+};
+
+static void _load_random_caster_spells(monster &caster)
+{
+    const auto entry = random_caster_spells.find(caster.type);
+    ASSERT(entry != random_caster_spells.end());
+    const auto def = entry->second;
+
+    const size_t num_spells = random_range(def.min_spells, def.max_spells);
 
     if (coinflip())
     {
-        _add_lich_spell(lich.spells, lich_primary_summoner_spells,
-                        ARRAYSZ(lich_primary_summoner_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_summoner_spells,
+                                 false, false);
     }
     else
-        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
+                                 false, false);
 
-    if (lich.type == MONS_ANCIENT_LICH && coinflip())
+    if (def.bonus_conj && coinflip())
     {
-        _add_lich_spell(lich.spells, lich_primary_conjurer_spells,
-                        ARRAYSZ(lich_primary_conjurer_spells), false);
+        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
+                                 false, false);
     }
 
-    bool force_conj = true;
-    while (lich.spells.size() < num_spells - 1)
+    const unsigned int max = def.buff_spells > 0 ? num_spells - 1 : num_spells;
+    bool force_conj = def.force_second_conj;
+    while (caster.spells.size() < max)
     {
-        _add_lich_spell(lich.spells, lich_secondary_spells,
-                        ARRAYSZ(lich_secondary_spells), force_conj);
+        _add_random_caster_spell(caster.spells, def.secondary_spells,
+                                 true, force_conj);
         force_conj = false;
     }
 
-    _add_lich_spell(lich.spells, lich_buff_spells,
-                    ARRAYSZ(lich_buff_spells), false);
+    if (def.buff_spells)
+    {
+        _add_random_caster_spell(caster.spells, def.buff_spells,
+                                 false, false);
+    }
 
-    normalize_spell_freq(lich.spells, lich.get_experience_level());
+    normalize_spell_freq(caster.spells, caster.get_experience_level());
 }
-
 
 void mons_load_spells(monster* mon)
 {
@@ -2572,7 +2786,7 @@ void mons_load_spells(monster* mon)
             mon->spells.push_back(breath);
     }
     else if (mon->type == MONS_LICH || mon->type == MONS_ANCIENT_LICH)
-        _load_lich_spells(*mon);
+        _load_random_caster_spells(*mon);
 
     if (book == MST_NO_SPELLS)
         return;
@@ -2618,7 +2832,7 @@ bool init_abomination(monster* mon, int hd)
     mon->set_hit_dice(min(max_hd, hd));
 
     const monsterentry *m = get_monster_data(mon->type);
-    int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
+    const int hp = hit_points(div_rand_round(hd * m->avg_hp_10x, m->HD));
 
     mon->max_hit_points = hp;
     mon->hit_points     = hp;
@@ -2630,11 +2844,13 @@ bool init_abomination(monster* mon, int hd)
 void define_monster(monster* mons)
 {
     monster_type mcls         = mons->type;
+    ASSERT(!mons_class_is_zombified(mcls)); // should have called define_zombie
+
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
     int col                   = mons_class_colour(mcls);
     int hd                    = mons_class_hit_dice(mcls);
-    int hp = 0, hp_max;
+    int hp = 0;
 
     mons->mname.clear();
 
@@ -2668,10 +2884,6 @@ void define_monster(monster* mons)
     case MONS_LERNAEAN_HYDRA:
         // The Lernaean hydra starts off with 27 heads.
         mons->num_heads = 27;
-        break;
-
-    case MONS_KRAKEN:
-        col = element_colour(ETC_KRAKEN);
         break;
 
     case MONS_TIAMAT:
@@ -2730,10 +2942,7 @@ void define_monster(monster* mons)
                   : mons->base_monster;
 
         const monsterentry* mbase = get_monster_data(monbase);
-        hp     = hit_points(hd,
-                            mbase->hpdice[1] + m->hpdice[1],
-                            mbase->hpdice[2] + m->hpdice[2]);
-        hp    += mbase->hpdice[3] + m->hpdice[3];
+        hp = hit_points(mbase->avg_hp_10x + m->avg_hp_10x);
     }
 
     if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
@@ -2741,11 +2950,8 @@ void define_monster(monster* mons)
 
     // Some calculations.
     if (hp == 0)
-    {
-        hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
-        hp    += m->hpdice[3];
-    }
-    hp_max = hp;
+        hp = hit_points(m->avg_hp_10x);
+    const int hp_max = hp;
 
     // So let it be written, so let it be done.
     mons->set_hit_dice(hd);
@@ -2823,6 +3029,11 @@ void define_monster(monster* mons)
     }
 
     mons->calc_speed();
+
+    // When all is said and done, this monster had better have some hit
+    // points, or it will be dead on arrival
+    ASSERT(mons->hit_points > 0);
+    ASSERT(mons->max_hit_points > 0);
 }
 
 static const char *ugly_colour_names[] =
@@ -3032,6 +3243,8 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
     }
 
     mon->mname = _get_proper_monster_name(mon);
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
 
     if (mon->friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname));
@@ -3301,11 +3514,6 @@ bool mons_is_cornered(const monster* m)
     return m->behaviour == BEH_CORNERED;
 }
 
-bool mons_is_lurking(const monster* m)
-{
-    return m->behaviour == BEH_LURK;
-}
-
 bool mons_is_influenced_by_sanctuary(const monster* m)
 {
     return !m->wont_attack() && !m->is_stationary();
@@ -3386,14 +3594,15 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !no_xp
+    if (!testbits(mon->flags, MF_PACIFIED) // Don't allow repeatedly pacifying.
+        && !no_xp
         && !mon->is_summoned()
         && !testbits(mon->flags, MF_NO_REWARD))
     {
         // Give the player half of the monster's XP.
         gain_exp((exper_value(mon) + 1) / 2);
-        mon->flags |= MF_GOT_HALF_XP;
     }
+    mon->flags |= MF_PACIFIED;
 
     if (mon->type == MONS_GERYON)
     {
@@ -3544,7 +3753,6 @@ static bool _ms_los_spell(spell_type monspell)
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
         || monspell == SPELL_SUMMON_SPECTRAL_ORCS
-        || monspell == SPELL_CHAOTIC_MIRROR
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return true;
@@ -3561,8 +3769,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     if (attack_only
         && (monspell == SPELL_SMITING
             || monspell == SPELL_AIRSTRIKE
-            || monspell == SPELL_PORTAL_PROJECTILE
-            || monspell == SPELL_CHAOTIC_MIRROR))
+            || monspell == SPELL_PORTAL_PROJECTILE))
     {
         return true;
     }
@@ -3646,7 +3853,7 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 //
 // Note that this only current checks for inherent obvious immunity (ie: sleep
 // immunity from being undead) and not immunity that might be granted by gear
-// (such as an amulet of clarity or stasis)
+// (such as clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
     for (const mon_spell_slot &slot : mon->spells)
@@ -3831,7 +4038,6 @@ static const spell_type smitey_spells[] = {
     SPELL_SHATTER,
     SPELL_TORNADO,          // dubious
     SPELL_GLACIATE,         // dubious
-    SPELL_CHAOTIC_MIRROR,
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,
     SPELL_ENTROPIC_WEAVE,
@@ -3946,14 +4152,13 @@ bool monster_shover(const monster* m)
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // or spectral zombified undead can push past non-spectral zombified
     // undead).
-    if (m1->holiness() == m2->holiness() && mons_class_can_use_stairs(m1->type)
+    if (m1->holiness() & m2->holiness() && mons_class_can_use_stairs(m1->type)
         && !mons_class_can_use_stairs(m2->type))
     {
         return true;
     }
     const bool related = mons_genus(m1->type) == mons_genus(m2->type)
-                         || m1->holiness() == MH_DEMONIC
-                            && m2->holiness() == MH_DEMONIC;
+                         || (m1->holiness() & m2->holiness() & MH_DEMONIC);
 
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
@@ -4047,7 +4252,7 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
     if (!mon->is_habitable(p))
         return false;
 
-    const trap_def* ptrap = find_trap(p);
+    const trap_def* ptrap = trap_at(p);
     if (checktraps && ptrap)
     {
         const trap_type tt = ptrap->type;
@@ -4196,7 +4401,7 @@ static string _replace_speech_tag(string msg, string from, const string &to)
     {
         // beginning of tag
         const size_t at_pos = msg.find('@', pos);
-        // begining of alternative
+        // beginning of alternative
         const size_t alt_pos = pos + from.size();
         // end of tag (one-past-the-end of alternative)
         const size_t alt_end = msg.find('@', alt_pos);
@@ -4617,23 +4822,6 @@ bool player_or_mon_in_sanct(const monster* mons)
     return is_sanctuary(you.pos()) || is_sanctuary(mons->pos());
 }
 
-bool mons_landlubbers_in_reach(const monster* mons)
-{
-    if (mons_has_ranged_attack(mons))
-        return true;
-
-    actor *act;
-    for (radius_iterator ai(mons->pos(),
-                            mons->reach_range(),
-                            C_SQUARE,
-                            true);
-                         ai; ++ai)
-        if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
-            return true;
-
-    return false;
-}
-
 int get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
@@ -4792,7 +4980,7 @@ void debug_mondata()
 
         int MR = md->resist_magic;
         if (MR < 0)
-            MR = md->hpdice[0] * -MR * 4 / 3;
+            MR = md->HD * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
         if (get_resist(md->resists, MR_RES_POISON) == 2)
@@ -4804,8 +4992,10 @@ void debug_mondata()
         if (md->bitfields & M_CANT_SPAWN)
             continue;
 
-        if (!md->hpdice[0] && md->basechar != 'Z') // derived undead...
-            fails += make_stringf("%s has 0 HD: %d\n", name, md->hpdice[0]);
+        if (!md->HD && md->basechar != 'Z') // derived undead...
+            fails += make_stringf("%s has 0 HD: %d\n", name, md->HD);
+        if (md->avg_hp_10x <= 0 && md->basechar != 'Z')
+            fails += make_stringf("%s has <= 0 HP: %d", name, md->avg_hp_10x);
 
         if (md->basechar == ' ')
             fails += make_stringf("%s has an empty glyph\n", name);
@@ -5072,8 +5262,7 @@ bool mons_stores_tracking_data(const monster* mons)
 
 bool mons_is_beast(monster_type mc)
 {
-    if (mons_class_holiness(mc) != MH_NATURAL
-          && mc != MONS_APIS
+    if (!(mons_class_holiness(mc) & MH_NATURAL)
         || mons_class_intel(mc) != I_ANIMAL)
     {
         return false;
@@ -5275,7 +5464,7 @@ void print_wounds(const monster* mons)
 bool wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    return holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT;
+    return bool(holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT));
 }
 
 bool mons_class_can_display_wounds(monster_type mc)
@@ -5319,7 +5508,7 @@ bool mons_is_notable(const monster& mons)
         return false;
     if (mons_threat_level(&mons) == MTHRT_NASTY)
         return true;
-    const auto nm = Options.note_monsters;
+    const auto &nm = Options.note_monsters;
     // Don't waste time on moname() if user isn't using this option
     if (!nm.empty())
     {
@@ -5398,5 +5587,26 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
             default:
                 break;
         }
+    }
+}
+
+/**
+ * If a monster needs to charge up to cast a spell (by 'casting' the spell
+ * repeatedly), how many charges does it need until it can actually set the
+ * spell off?
+ *
+ * @param m     The type of monster in question.
+ * @return      The required number of charges.
+ */
+int max_mons_charge(monster_type m)
+{
+    switch (m)
+    {
+        case MONS_ORB_SPIDER:
+            return 1;
+        case MONS_SALAMANDER_STORMCALLER:
+            return 2;
+        default:
+            return 0;
     }
 }

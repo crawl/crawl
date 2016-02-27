@@ -24,6 +24,7 @@ bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
 bool is_unknown_god(god_type god);
+bool god_has_name(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
@@ -44,7 +45,7 @@ bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD, bool immediate = false);
+void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
@@ -56,7 +57,7 @@ int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
 bool player_can_join_god(god_type which_god);
-void join_religion(god_type which_god, bool immediate = true);
+void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
 
@@ -95,11 +96,11 @@ bool god_hates_killing(god_type god, const monster* mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
+bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god,
                      bool rod_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-bool god_can_protect_from_harm(god_type god);
 int elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
@@ -146,6 +147,21 @@ bool do_god_gift(bool forced = false);
 
 vector<god_type> temple_god_list();
 vector<god_type> nontemple_god_list();
+
+class god_iterator
+{
+public:
+    god_iterator();
+
+    operator bool() const;
+    const god_type operator*() const;
+    const god_type operator->() const;
+    god_iterator& operator++();
+    god_iterator operator++(int);
+
+protected:
+    int i;
+};
 
 struct god_power
 {

@@ -10,11 +10,13 @@
 #include <cstdio>
 #include <cstring>
 
+#include "cloud.h"
 #include "food.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
@@ -282,7 +284,7 @@ public:
         if (you.stasis(false))
         {
             if (reason)
-                *reason = "This potion cannot work under stasis.";
+                *reason = NO_HASTE_MSG;
             return false;
         }
         return true;
@@ -295,7 +297,7 @@ public:
 
     bool quaff(bool was_known) const override
     {
-        if (!check_known_quaff())
+        if (was_known && !check_known_quaff())
             return false;
 
         if (effect())
@@ -409,6 +411,7 @@ public:
     }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class PotionPoison : public PotionEffect
 {
 private:
@@ -435,6 +438,7 @@ public:
         return true;
     }
 };
+#endif
 
 class PotionCancellation : public PotionEffect
 {
@@ -466,30 +470,10 @@ public:
         static PotionAmbrosia inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        if (you.duration[DUR_DIVINE_STAMINA])
-        {
-            if (reason)
-            {
-                *reason = "Your divine stamina would prevent the potion's "
-                    "effects.";
-            }
-            return false;
-        }
-        else if (you.clarity())
-        {
-            if (reason)
-                *reason = "Your clarity would prevent the potion's effects.";
-            return false;
-        }
-        return true;
-    }
-
     bool effect(bool=true, int=40, bool=true) const override
     {
         const int ambrosia_turns = 3 + random2(8);
-        if (confuse_player(ambrosia_turns))
+        if (confuse_player(ambrosia_turns, false, true))
         {
             mprf("You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
@@ -590,8 +574,8 @@ public:
         }
         else
             mpr("A flood of memories washes over you.");
-        more();
-        skill_menu(SKMF_EXPERIENCE_POTION, 750 * you.experience_level);
+        // these are included in default force_more_message
+        skill_menu(SKMF_EXPERIENCE, 750 * you.experience_level);
         return true;
     }
 };
@@ -632,7 +616,7 @@ public:
             return PotionHealWounds::instance().effect(pow);
         }
 #endif
-        inc_mp(10 + random2avg(28, 3));
+        inc_mp(POT_MAGIC_MP);
         mpr("Magic courses through your body.");
         return true;
     }
@@ -659,7 +643,6 @@ public:
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
             mpr("You feel slightly irritated.");
-            make_hungry(100, false);
             return false;
         }
 
@@ -693,8 +676,11 @@ static bool _disallow_mutate(string *reason)
     if (!undead_mutation_rot())
         return false;
 
-    *reason = make_stringf("You cannot mutate%s.",
-                           !you.undead_state(false) ? " at present" : "");
+    if (reason)
+    {
+        *reason = make_stringf("You cannot mutate%s.",
+                               !you.undead_state(false) ? " at present" : "");
+    }
     return true;
 }
 
@@ -870,31 +856,6 @@ public:
     }
 };
 
-class PotionDegeneration : public PotionEffect
-{
-private:
-    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
-public:
-    static const PotionDegeneration &instance()
-    {
-        static PotionDegeneration inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (effect())
-            xom_is_stimulated( 50 / _xom_factor(was_known));
-        return true;
-    }
-};
-
 class PotionLignify : public PotionEffect
 {
 private:
@@ -918,10 +879,23 @@ public:
 
     bool quaff(bool was_known) const override
     {
-        if (was_known
-            && (!check_known_quaff() || !check_form_stat_safety(TRAN_TREE)))
+        if (was_known)
         {
-            return false;
+            if (!check_known_quaff() || !check_form_stat_safety(TRAN_TREE))
+                return false;
+
+            const cloud_type cloud = cloud_type_at(you.pos());
+            if (is_damaging_cloud(cloud, false)
+                // Tree form is immune to these two.
+                && cloud != CLOUD_MEPHITIC && cloud != CLOUD_POISON
+                && !yesno(make_stringf("Really become a tree while standing in "
+                                       "a cloud of %s?",
+                                       cloud_type_name(cloud).c_str()).c_str(),
+                          false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
         }
 
         if (effect(was_known))
@@ -1202,6 +1176,35 @@ public:
 };
 #endif
 
+class PotionDegeneration : public PotionEffect
+{
+private:
+    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
+public:
+    static const PotionDegeneration &instance()
+    {
+        static PotionDegeneration inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        mpr("There was something very wrong with that liquid.");
+        bool success = false;
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
+                success = true;
+        return success;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (effect())
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
+    }
+};
+
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
 {
@@ -1234,8 +1237,8 @@ static const PotionEffect* potion_effects[] =
     &PotionGainIntelligence::instance(),
 #endif
     &PotionFlight::instance(),
-    &PotionPoison::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &PotionPoison::instance(),
     &PotionSlowing::instance(),
 #endif
     &PotionCancellation::instance(),

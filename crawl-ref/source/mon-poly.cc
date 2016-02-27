@@ -74,6 +74,8 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
+                mitm[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
                 if (mitm[item].props.exists("autoinscribe"))
                 {
                     add_inscription(mitm[item],
@@ -100,7 +102,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
-    monster_type old_mclass = mons_base_type(mons);
+    monster_type old_mclass = mons->type;
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
@@ -122,7 +124,10 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
+    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
+        // normally holiness just needs to overlap, but we don't want
+        // shapeshifters to become demons
+        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
@@ -137,10 +142,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
-        || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
-        // Currently unused (no zombie shapeshifters, no polymorph).
-        || mons->type == MONS_SKELETON && !mons_skeleton(new_mclass)
-        || mons->type == MONS_ZOMBIE && !mons_zombifiable(new_mclass)
 
         // These require manual setting of the ghost demon struct to
         // indicate their characteristics, which we currently aren't
@@ -332,7 +333,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
-    if (mons_is_zombified(mons))
+    if (!slimified && mons_is_zombified(mons))
         define_zombie(mons, targetc, mons->type);
     else
     {
@@ -496,7 +497,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data(mc);
-            int delta = (int) me->hpdice[0] - mons->get_hit_dice();
+            const int delta = me->HD - mons->get_hit_dice();
             if (delta != 1)
                 continue;
             if (!_valid_morph(mons, mc))
@@ -521,10 +522,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (could_see)
     {
         string verb = "";
-        string obj = "";
-
-        obj = can_see ? mons_type_name(targetc, DESC_A)
-                      : "something you cannot see";
+        string obj = can_see ? mons_type_name(targetc, DESC_A)
+                             : "something you cannot see";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {
@@ -574,14 +573,13 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     return player_messaged;
 }
 
-bool mon_can_be_slimified(monster* mons)
+bool mon_can_be_slimified(const monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && (holi == MH_UNDEAD
-                || holi == MH_NATURAL && !mons_is_slime(mons));
+           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -607,7 +605,7 @@ void slimify_monster(monster* mon, bool hostile)
     if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
-    if (mon->holiness() == MH_UNDEAD)
+    if (mon->holiness() & MH_UNDEAD)
         target = MONS_DEATH_OOZE;
 
     // Bail out if jellies can't live here.

@@ -18,6 +18,7 @@
 #include "exercise.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -45,6 +46,17 @@
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
+
+bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
+                           const item_def& projectile)
+{
+    return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
+            && projectile.base_type == OBJ_MISSILES
+            && get_ammo_brand(projectile) == SPMSL_PENETRATION
+           || weapon
+              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
+              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+}
 
 bool item_is_quivered(const item_def &item)
 {
@@ -240,6 +252,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     {
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
             descs.emplace_back("chaotic");
+        if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
+            && (mi.body_size() >= SIZE_GIANT
+                || mons_class_is_stationary(mi.type)
+                || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
+        {
+            descs.emplace_back("immune to nets");
+        }
     }
     return descs;
 }
@@ -496,24 +515,9 @@ void throw_item_no_quiver()
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
-    dungeon_char_type zapsym = NUM_DCHAR_TYPES;
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
-    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
-    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
-    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
-    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
-    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
-    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
-    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
-    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
-    case OBJ_RODS:
-    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
-    default: break;
-    }
-
-    beam.glyph = dchar_glyph(zapsym);
+    const auto cglyph = get_item_glyph(item);
+    beam.glyph  = cglyph.ch;
+    beam.colour = cglyph.col;
     beam.was_missile = true;
 
     item_def *launcher  = agent->weapon(0);
@@ -538,16 +542,15 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = get_item_glyph(&item).col;
     beam.flavour      = BEAM_MISSILE;
-    beam.pierce       = false;
+    beam.pierce       = is_penetrating_attack(*agent, launcher, item);
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
     ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
-        ? get_unrand_entry(launcher->special) : nullptr;
+        ? get_unrand_entry(launcher->unrand_idx) : nullptr;
 
     if (entry && entry->launch)
     {
@@ -631,11 +634,11 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 3;
         msg   = "You hear a loud whirring sound.";
         break;
-     case WPN_SHORTBOW:
+    case WPN_SHORTBOW:
         level = 5;
         msg   = "You hear a twanging sound.";
         break;
-     case WPN_LONGBOW:
+    case WPN_LONGBOW:
         level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
@@ -643,7 +646,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 2;
         msg   = "You hear a quiet thunk.";
         break;
-     case WPN_ARBALEST:
+    case WPN_ARBALEST:
         level = 7;
         msg   = "You hear a thunk.";
         break;
@@ -825,9 +828,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         ASSERT(launcher);
         practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
         if (is_unrandom_artefact(*launcher)
-            && get_unrand_entry(launcher->special)->type_name)
+            && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
-            count_action(CACT_FIRE, launcher->special);
+            count_action(CACT_FIRE, launcher->unrand_idx);
         }
         else
             count_action(CACT_FIRE, launcher->sub_type);
@@ -960,7 +963,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     if (!teleport
         && projected
-        && you_worship(GOD_DITHMENOS)
+        && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
     {

@@ -179,6 +179,11 @@ enum tag_minor_version
     TAG_MINOR_ZIGFIGS,             // let characters from before ziggurat changes continue zigging
     TAG_MINOR_RU_PIETY_CONSISTENCY,// make Ru piety constant once determined.
     TAG_MINOR_SAC_PIETY_LEN,       // marshall length with sacrifice piety
+    TAG_MINOR_MULTI_HOLI,          // Turn monster holiness into a bitfield.
+    TAG_MINOR_SHOPINFO,            // ShopInfo has a real shop
+    TAG_MINOR_UNSHOPINFO,          // Fixup after revert of previous
+    TAG_MINOR_UNUNSHOPINFO,        // Restoration of the tag two before
+    TAG_MINOR_MESSAGE_REPEATS,     // Rewrite the way message repeats work
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

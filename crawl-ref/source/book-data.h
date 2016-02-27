@@ -1,3 +1,4 @@
+// This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
 
@@ -35,16 +36,15 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
-    SPELL_CONDENSATION_SHIELD,
 },
 
 {   // Book of Summonings
     SPELL_RECALL,
     SPELL_AURA_OF_ABJURATION,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Fire
@@ -125,7 +125,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transfigurations
-    SPELL_STONESKIN,
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -205,15 +204,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
-    SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
 },
 
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
-    SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
 
@@ -244,7 +242,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
-    SPELL_STONESKIN,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,
@@ -329,19 +326,17 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_PHASE_SHIFT,
-    SPELL_SHADOW_CREATURES,
     SPELL_SILENCE,
     SPELL_DARKNESS,
     SPELL_MASS_CONFUSION,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
-    SPELL_INTOXICATE,
-    SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
+    SPELL_INTOXICATE,
     SPELL_IRRADIATE,
 },
 
@@ -376,3 +371,5 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 };
+
+COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

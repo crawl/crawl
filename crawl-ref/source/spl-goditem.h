@@ -3,10 +3,8 @@
 
 #include "spl-cast.h"
 
-spret_type cast_healing(int pow, int max_pow, bool divine_ability = false,
-                        const coord_def& where = coord_def(0, 0),
-                        bool not_self = false,
-                        targ_mode_type mode = TARG_NUM_MODES);
+spret_type cast_healing(int pow, int max_pow, bool fail);
+bool heal_monster(monster& patient, int amount);
 
 /// List of monster enchantments which can be dispelled.
 const enchant_type dispellable_enchantments[] =
@@ -38,7 +36,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_SAP_MAGIC,
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
-    ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
     ENCH_HEXED,
 };
@@ -52,7 +49,9 @@ int detect_traps(int pow);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 bool remove_curse(bool alreadyknown = true, const string &pre_msg = "");
+#if TAG_MAJOR_VERSION == 34
 bool curse_item(bool armour, const string &pre_msg = "");
+#endif
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);

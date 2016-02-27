@@ -76,8 +76,8 @@ TAGS:   no_rotate
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater / smoke demon
 ITEM:   good_item demon blade / good_item demon whip / \
-        good_item demon trident / wand of draining ident:type
-ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        good_item demon trident
+ITEM:   ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
@@ -112,8 +112,8 @@ TAGS:   no_monster_gen transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
 ITEM:   good_item demon blade / good_item demon whip /\
-        good_item demon trident / wand of draining ident:type
-ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        good_item demon trident
+ITEM:   ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
@@ -148,10 +148,10 @@ ENDMAP
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
 ORIENT: float
-TAGS:   transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater / smoke demon
 ITEM:   demon blade / demon whip / demon trident / nothing
+KMASK:  12Ad = opaque
 SUBST:  ? : . l ?:40, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")

@@ -391,7 +391,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.msg.c_str());
+            end(1, false, "%s", fe.what());
         }
         catch (short_read_exception &E)
         {
@@ -1899,11 +1899,9 @@ static void _do_rest()
 
     if (i_feel_safe())
     {
-        if ((you.hp == you.hp_max
-                || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-                || (you.species == SP_VAMPIRE
-                    && you.hunger_state <= HS_STARVING))
-            && you.magic_points == you.max_magic_points)
+        if ((you.hp == you.hp_max || !player_regenerates_hp())
+            && (you.magic_points == you.max_magic_points
+                || !player_regenerates_mp()))
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
@@ -2350,7 +2348,7 @@ static void _prep_input()
 
     textcolour(LIGHTGREY);
 
-    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_status_lights = true;
     if (!player_stair_delay())
         print_stats();
 
@@ -2361,7 +2359,7 @@ static void _prep_input()
 
     if (you.seen_portals)
     {
-        ASSERT(you_worship(GOD_ASHENZARI));
+        ASSERT(have_passive(passive_t::detect_portals));
         if (you.seen_portals == 1)
             mprf(MSGCH_GOD, "You have a vision of a gate.");
         else
@@ -2383,23 +2381,21 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
-        more();
+        // these are included in default force_more_message
         banished(you.banished_by, you.banished_power);
     }
 }
 
 static void _check_shafts()
 {
-    for (int i = 0; i < MAX_TRAPS; ++i)
+    for (auto& entry : env.trap)
     {
-        trap_def &trap = env.trap[i];
-
-        if (trap.type != TRAP_SHAFT)
+        if (entry.second.type != TRAP_SHAFT)
             continue;
 
-        ASSERT_IN_BOUNDS(trap.pos);
+        ASSERT_IN_BOUNDS(entry.first);
 
-        handle_items_on_shaft(trap.pos, true);
+        handle_items_on_shaft(entry.first, true);
     }
 }
 
@@ -2463,7 +2459,7 @@ static void _update_golubria_traps()
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
@@ -2757,9 +2753,9 @@ static bool _cancel_confused_move(bool stationary)
         else
         {
             string name = bad_mons->name(DESC_PLAIN);
-            if (name.find("the ") == 0)
+            if (starts_with(name, "the "))
                name.erase(0, 4);
-            if (bad_adj.find("your") != 0)
+            if (!starts_with(bad_adj, "your"))
                bad_adj = "the " + bad_adj;
             prompt += bad_adj + name + bad_suff;
         }
@@ -3174,7 +3170,7 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    int additional_time_taken = 0; // Extra time independant of movement speed
+    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);

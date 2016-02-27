@@ -81,11 +81,13 @@ phase_bat MONS_PHASE_BAT
 jackal MONS_JACKAL
 %rim 1
 hound MONS_HOUND
+howler MONS_HOWLER_MONKEY
 warg MONS_WARG
 wolf MONS_WOLF
 raiju MONS_RAIJU
 hell_hound MONS_HELL_HOUND
 %rim 0
+doom_hound MONS_DOOM_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
 holy_swine MONS_HOLY_SWINE
@@ -131,7 +133,6 @@ spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
-trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
 %sdir mon/demons
@@ -158,10 +159,12 @@ ghost_crab MONS_GHOST_CRAB
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
+swamp_worm_water MONS_SWAMP_WORM_WATER
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
 giant_leech MONS_GIANT_LEECH
+dart_slug MONS_DART_SLUG
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
 %rim 1
@@ -416,7 +419,6 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
-octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
 %rim 0
@@ -467,15 +469,6 @@ overlay_whip MONS_STATUE_WHIP
 %back none
 
 %rim 0
-guardian-eyeopen-flame1 MONS_STATUE_GUARDIAN
-guardian-eyeopen-flame2
-guardian-eyeopen-flame3
-guardian-eyeopen-flame4
-guardian-eyeclosed-flame1
-guardian-eyeclosed-flame2
-guardian-eyeclosed-flame3
-guardian-eyeclosed-flame4
-
 firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
 lightning_spire MONS_LIGHTNING_SPIRE
@@ -603,7 +596,7 @@ iron_giant MONS_IRON_GIANT
 ## Drakes (also 'l')
 %sdir mon/dragons
 swamp_drake MONS_SWAMP_DRAKE
-fire_drake MONS_FIRE_DRAKE
+rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
@@ -866,23 +859,21 @@ fannar MONS_FANNAR
 %rim 1
 %sdir mon
 elf MONS_ELF
-deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
+%rim 0
+deep_elf_archer MONS_DEEP_ELF_ARCHER
+%rim 1
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
-deep_elf_conjurer MONS_DEEP_ELF_CONJURER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
 deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST
-deep_elf_summoner MONS_DEEP_ELF_SUMMONER
 deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR
-deep_elf_priest MONS_DEEP_ELF_PRIEST
 deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 ## From the Cigotuvi wizlab
 vault/deformed_elf MONS_DEFORMED_ELF
-## From a floating vault (mu_elemental_laboratory)
-vault/deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
+deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
 
 ## Fungi ('f')
 %sdir mon/fungi_plants
@@ -1018,8 +1009,8 @@ ancient_champion MONS_ANCIENT_CHAMPION
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
-%rim 1
 flying_skull MONS_FLYING_SKULL
+%rim 1
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique

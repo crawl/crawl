@@ -183,11 +183,17 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
     // See _daction_hog_to_human for an example.
     switch (act)
     {
+        case DACT_ALLY_YRED_SLAVE:
+            if (mon->type == MONS_ZOMBIE)
+            {
+                simple_monster_message(mon, " crumbles into dust!");
+                monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+                break;
+            }
         case DACT_ALLY_HOLY:
         case DACT_ALLY_UNHOLY_EVIL:
         case DACT_ALLY_UNCLEAN_CHAOTIC:
         case DACT_ALLY_SPELLCASTER:
-        case DACT_ALLY_YRED_SLAVE:
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
@@ -316,7 +322,7 @@ static void _apply_daction(daction_type act)
     case DACT_ROT_CORPSES:
         for (auto &item : mitm)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
-                item.special = 1; // thoroughly rotten
+                item.freshness = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
     {
@@ -328,7 +334,6 @@ static void _apply_daction(daction_type act)
                 {
                     bool detected = false;
                     int dummy = j->index();
-                    j->special = 0;
                     unlink_item(dummy);
                     move_item_to_grid(&dummy, *ri, true);
                     if (!env.map_knowledge(*ri).item()
@@ -350,10 +355,10 @@ static void _apply_daction(daction_type act)
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
-        for (unsigned int i = 0; i < markers.size(); i++)
+        for (const auto marker : markers)
         {
             map_feature_marker *feat =
-                dynamic_cast<map_feature_marker *>(markers[i]);
+                dynamic_cast<map_feature_marker *>(marker);
             ASSERT(feat);
             if (feat->feat == DNGN_ABANDONED_SHOP)
             {

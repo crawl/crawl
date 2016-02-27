@@ -120,7 +120,7 @@ static tileidx_t _tileidx_trap(trap_type type)
 
 static tileidx_t _tileidx_shop(coord_def where)
 {
-    const shop_struct *shop = get_shop(where);
+    const shop_struct *shop = shop_at(where);
 
     if (!shop)
         return TILE_DNGN_ERROR;
@@ -437,6 +437,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_QAZLAL;
     case DNGN_ALTAR_RU:
         return TILE_DNGN_ALTAR_RU;
+    case DNGN_ALTAR_PAKELLAS:
+        return TILE_DNGN_ALTAR_PAKELLAS;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_FOUNTAIN_BLUE:
@@ -597,6 +599,261 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 }
 
+static tileidx_t _mon_random(tileidx_t tile)
+{
+    int count = tile_player_count(tile);
+    return tile + ui_random(count);
+}
+
+static bool _mons_is_kraken_tentacle(const int mtype)
+{
+    return mtype == MONS_KRAKEN_TENTACLE
+           || mtype == MONS_KRAKEN_TENTACLE_SEGMENT;
+}
+
+tileidx_t tileidx_tentacle(const monster_info& mon)
+{
+    ASSERT(mons_is_tentacle_or_tentacle_segment(mon.type));
+
+    // If the tentacle is submerged, we shouldn't even get here.
+    ASSERT(!mon.is(MB_SUBMERGED));
+
+    // Get tentacle position.
+    const coord_def t_pos = mon.pos;
+    // No parent tentacle, or the connection to the head is unknown.
+    bool no_head_connect  = !mon.props.exists("inwards");
+    coord_def h_pos       = coord_def(); // head position
+    if (!no_head_connect)
+    {
+        // Get the parent tentacle's location.
+        h_pos = t_pos + mon.props["inwards"].get_coord();
+    }
+    if (no_head_connect && (mon.type == MONS_SNAPLASHER_VINE
+                            || mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
+    {
+        // Find an adjacent tree to pretend we're connected to.
+        for (adjacent_iterator ai(t_pos); ai; ++ai)
+        {
+            if (feat_is_tree(grd(*ai)))
+            {
+                h_pos = *ai;
+                no_head_connect = false;
+                break;
+            }
+        }
+    }
+
+    // Is there a connection to the given direction?
+    // (either through head or next)
+    bool north = false, east = false,
+        south = false, west = false,
+        north_east = false, south_east = false,
+        south_west = false, north_west = false;
+
+    if (!no_head_connect)
+    {
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
+    // Tentacle only requires checking of head position.
+    if (mons_is_tentacle(mon.type))
+    {
+        if (no_head_connect)
+        {
+            if (_mons_is_kraken_tentacle(mon.type))
+                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
+            else return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+        }
+
+        // Different handling according to relative positions.
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SE;
+        die("impossible kraken direction");
+    }
+    // Only tentacle segments from now on.
+    ASSERT(mons_is_tentacle_segment(mon.type));
+
+    // For segments, we also need the next segment (or end piece).
+    coord_def n_pos;
+    bool no_next_connect = !mon.props.exists("outwards");
+    if (!no_next_connect)
+        n_pos = t_pos + mon.props["outwards"].get_coord();
+
+    if (no_head_connect && no_next_connect)
+    {
+        // Both head and next are submerged.
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
+    }
+
+    if (!no_next_connect)
+    {
+        if (n_pos.x == t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (n_pos.y == t_pos.y)
+        {
+            if (n_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (n_pos.x < t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (n_pos.x > t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
+    if (no_head_connect || no_next_connect)
+    {
+        // One segment end goes into water, the other
+        // into the direction of head or next.
+
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
+        die("impossible kraken direction");
+    }
+
+    // Okay, neither head nor next are submerged.
+    // Compare all three positions.
+
+    // Straight lines first: Vertical.
+    if (north && south)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
+    // Horizontal.
+    if (east && west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
+    // Diagonals.
+    if (north_west && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
+    if (north_east && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
+
+    // Curved segments.
+    if (east && north)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
+    if (east && south)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
+    if (south && west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
+    if (north && west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
+    if (north_east && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW;
+    if (south_east && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW;
+    if (north_west && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW;
+    if (north_east && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE;
+
+    // Connect corners and edges.
+    if (north && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
+    if (north && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
+    if (south && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
+    if (south && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
+    if (west && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
+    if (west && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
+    if (east && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
+    if (east && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
+
+    // Connections at acute angles; can currently only happen for vines.
+    if (north && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NW;
+    if (north && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NE;
+    if (east && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NE;
+    if (east && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SE;
+    if (south && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SE;
+    if (south && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SW;
+    if (west && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SW;
+    if (west && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW;
+
+    return TILEP_MONS_PROGRAM_BUG;
+}
+
 #ifdef USE_TILE
 tileidx_t tileidx_out_of_bounds(int branch)
 {
@@ -625,7 +882,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
     // Don't draw rays out of los.
-    *bg &= ~(TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
+    *bg &= ~(TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY | TILE_FLAG_LANDING);
 
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
@@ -890,6 +1147,16 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             z_tile = TILEP_MONS_ZOMBIE_DRAKE;
             break;
         }
+        else if (subtype == MONS_LERNAEAN_HYDRA && z_type == MONS_ZOMBIE)
+        {
+            // Step down the number of heads to get the appropriate tile:
+            // For the last five heads, use tiles 1-5, for greater amounts
+            // use the next tile for every 5 more heads.
+            z_tile = tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE,
+                                       mon.number <= 5 ?
+                                       mon.number - 1 : 4 + (mon.number - 1)/5);
+            break;
+        }
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
@@ -1014,12 +1281,6 @@ tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
     return tile + min(max(offset, 0), count - 1);
 }
 
-static tileidx_t _mon_random(tileidx_t tile)
-{
-    int count = tile_player_count(tile);
-    return tile + ui_random(count);
-}
-
 // actually, a triangle wave, but it's up to the actual tiles
 static tileidx_t _mon_sinus(tileidx_t tile)
 {
@@ -1115,18 +1376,12 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // elves ('e')
     case MONS_ELF:
         return TILEP_MONS_ELF;
-    case MONS_DEEP_ELF_FIGHTER:
-        return TILEP_MONS_DEEP_ELF_FIGHTER;
     case MONS_DEEP_ELF_KNIGHT:
         return TILEP_MONS_DEEP_ELF_KNIGHT;
+    case MONS_DEEP_ELF_ARCHER:
+        return TILEP_MONS_DEEP_ELF_ARCHER;
     case MONS_DEEP_ELF_MAGE:
         return TILEP_MONS_DEEP_ELF_MAGE;
-    case MONS_DEEP_ELF_SUMMONER:
-        return TILEP_MONS_DEEP_ELF_SUMMONER;
-    case MONS_DEEP_ELF_CONJURER:
-        return TILEP_MONS_DEEP_ELF_CONJURER;
-    case MONS_DEEP_ELF_PRIEST:
-        return TILEP_MONS_DEEP_ELF_PRIEST;
     case MONS_DEEP_ELF_HIGH_PRIEST:
         return TILEP_MONS_DEEP_ELF_HIGH_PRIEST;
     case MONS_DEEP_ELF_DEMONOLOGIST:
@@ -1137,6 +1392,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_DEEP_ELF_SORCERER;
     case MONS_DEEP_ELF_DEATH_MAGE:
         return TILEP_MONS_DEEP_ELF_DEATH_MAGE;
+    case MONS_DEEP_ELF_ELEMENTALIST:
+        return TILEP_MONS_DEEP_ELF_ELEMENTALIST;
     case MONS_DEEP_ELF_BLADEMASTER:
         return TILEP_MONS_DEEP_ELF_BLADEMASTER;
     case MONS_DEEP_ELF_MASTER_ARCHER:
@@ -1173,6 +1430,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_JACKAL;
     case MONS_HOUND:
         return TILEP_MONS_HOUND;
+    case MONS_HOWLER_MONKEY:
+        return TILEP_MONS_HOWLER_MONKEY;
     case MONS_WARG:
         return TILEP_MONS_WARG;
     case MONS_WOLF:
@@ -1181,6 +1440,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_HOG;
     case MONS_HELL_HOUND:
         return TILEP_MONS_HELL_HOUND;
+    case MONS_DOOM_HOUND:
+        return TILEP_MONS_DOOM_HOUND;
     case MONS_RAIJU:
         return TILEP_MONS_RAIJU;
     case MONS_HELL_HOG:
@@ -1213,8 +1474,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // drakes (also 'l', but dragon type)
     case MONS_SWAMP_DRAKE:
         return TILEP_MONS_SWAMP_DRAKE;
-    case MONS_FIRE_DRAKE:
-        return TILEP_MONS_FIRE_DRAKE;
+    case MONS_RIME_DRAKE:
+        return TILEP_MONS_RIME_DRAKE;
     case MONS_LINDWURM:
         return TILEP_MONS_LINDWURM;
     case MONS_DEATH_DRAKE:
@@ -1330,8 +1591,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILEP_MONS_WOLF_SPIDER;
-    case MONS_TRAPDOOR_SPIDER:
-        return TILEP_MONS_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
     case MONS_DEMONIC_CRAWLER:
@@ -1387,9 +1646,14 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     case MONS_WORM:
         return TILEP_MONS_WORM;
     case MONS_SWAMP_WORM:
-        return TILEP_MONS_SWAMP_WORM;
+        if (in_water)
+            return TILEP_MONS_SWAMP_WORM_WATER;
+        else
+            return TILEP_MONS_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILEP_MONS_GIANT_LEECH;
+    case MONS_DART_SLUG:
+        return TILEP_MONS_DART_SLUG;
     case MONS_TORPOR_SNAIL:
         return TILEP_MONS_TORPOR_SNAIL;
 
@@ -1404,8 +1668,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_MACABRE_MASS;
     case MONS_OCTOPODE:
         return TILEP_MONS_OCTOPODE;
-    case MONS_OCTOPODE_CRUSHER:
-        return TILEP_MONS_OCTOPODE_CRUSHER;
 
     // abyssal monsters
     case MONS_LURKING_HORROR:
@@ -1670,6 +1932,10 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // plants ('P')
     case MONS_PLANT:
         return _mon_mod(TILEP_MONS_PLANT, tile_num_prop);
+    case MONS_DEMONIC_PLANT:
+        return TILEP_MONS_DEMONIC_PLANT;
+    case MONS_WITHERED_PLANT:
+        return TILEP_MONS_WITHERED_PLANT;
     case MONS_BUSH:
         return _mon_mod(TILEP_MONS_BUSH, tile_num_prop);
     case MONS_BURNING_BUSH:
@@ -2388,12 +2654,6 @@ static void _handle_tentacle_overlay(const coord_def pos,
     }
 }
 
-static bool _mons_is_kraken_tentacle(const int mtype)
-{
-    return mtype == MONS_KRAKEN_TENTACLE
-           || mtype == MONS_KRAKEN_TENTACLE_SEGMENT;
-}
-
 static tentacle_type _get_tentacle_type(const int mtype)
 {
     switch (mtype)
@@ -2417,249 +2677,6 @@ static tentacle_type _get_tentacle_type(const int mtype)
     }
 }
 
-static tileidx_t _tileidx_tentacle(const monster_info& mon)
-{
-    ASSERT(mons_is_tentacle_or_tentacle_segment(mon.type));
-
-    // If the tentacle is submerged, we shouldn't even get here.
-    ASSERT(!mon.is(MB_SUBMERGED));
-
-    // Get tentacle position.
-    const coord_def t_pos = mon.pos;
-    // No parent tentacle, or the connection to the head is unknown.
-    bool no_head_connect  = !mon.props.exists("inwards");
-    coord_def h_pos       = coord_def(); // head position
-    if (!no_head_connect)
-    {
-        // Get the parent tentacle's location.
-        h_pos = t_pos + mon.props["inwards"].get_coord();
-    }
-    if (no_head_connect && (mon.type == MONS_SNAPLASHER_VINE
-                            || mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
-    {
-        // Find an adjacent tree to pretend we're connected to.
-        for (adjacent_iterator ai(t_pos); ai; ++ai)
-        {
-            if (feat_is_tree(grd(*ai)))
-            {
-                h_pos = *ai;
-                no_head_connect = false;
-                break;
-            }
-        }
-    }
-
-    // Is there a connection to the given direction?
-    // (either through head or next)
-    bool north = false, east = false,
-        south = false, west = false,
-        north_east = false, south_east = false,
-        south_west = false, north_west = false;
-
-    if (!no_head_connect)
-    {
-        if (h_pos.x == t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                north = true;
-            else
-                south = true;
-        }
-        else if (h_pos.y == t_pos.y)
-        {
-            if (h_pos.x < t_pos.x)
-                west = true;
-            else
-                east = true;
-        }
-        else if (h_pos.x < t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                north_west = true;
-            else
-                south_west = true;
-        }
-        else if (h_pos.x > t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                north_east = true;
-            else
-                south_east = true;
-        }
-    }
-
-    // Tentacle only requires checking of head position.
-    if (mons_is_tentacle(mon.type))
-    {
-        if (no_head_connect)
-        {
-            if (_mons_is_kraken_tentacle(mon.type))
-                return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-            else return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
-        }
-
-        // Different handling according to relative positions.
-        if (north)
-            return TILEP_MONS_KRAKEN_TENTACLE_N;
-        if (south)
-            return TILEP_MONS_KRAKEN_TENTACLE_S;
-        if (west)
-            return TILEP_MONS_KRAKEN_TENTACLE_W;
-        if (east)
-            return TILEP_MONS_KRAKEN_TENTACLE_E;
-        if (north_west)
-            return TILEP_MONS_KRAKEN_TENTACLE_NW;
-        if (south_west)
-            return TILEP_MONS_KRAKEN_TENTACLE_SW;
-        if (north_east)
-            return TILEP_MONS_KRAKEN_TENTACLE_NE;
-        if (south_east)
-            return TILEP_MONS_KRAKEN_TENTACLE_SE;
-        die("impossible kraken direction");
-    }
-    // Only tentacle segments from now on.
-    ASSERT(mons_is_tentacle_segment(mon.type));
-
-    // For segments, we also need the next segment (or end piece).
-    coord_def n_pos;
-    bool no_next_connect = !mon.props.exists("outwards");
-    if (!no_next_connect)
-        n_pos = t_pos + mon.props["outwards"].get_coord();
-
-    if (no_head_connect && no_next_connect)
-    {
-        // Both head and next are submerged.
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
-    }
-
-    if (!no_next_connect)
-    {
-        if (n_pos.x == t_pos.x)
-        {
-            if (n_pos.y < t_pos.y)
-                north = true;
-            else
-                south = true;
-        }
-        else if (n_pos.y == t_pos.y)
-        {
-            if (n_pos.x < t_pos.x)
-                west = true;
-            else
-                east = true;
-        }
-        else if (n_pos.x < t_pos.x)
-        {
-            if (n_pos.y < t_pos.y)
-                north_west = true;
-            else
-                south_west = true;
-        }
-        else if (n_pos.x > t_pos.x)
-        {
-            if (n_pos.y < t_pos.y)
-                north_east = true;
-            else
-                south_east = true;
-        }
-    }
-
-    if (no_head_connect || no_next_connect)
-    {
-        // One segment end goes into water, the other
-        // into the direction of head or next.
-
-        if (north)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
-        if (south)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
-        if (west)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
-        if (east)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
-        if (north_west)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
-        if (south_west)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
-        if (north_east)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
-        if (south_east)
-            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
-        die("impossible kraken direction");
-    }
-
-    // Okay, neither head nor next are submerged.
-    // Compare all three positions.
-
-    // Straight lines first: Vertical.
-    if (north && south)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
-    // Horizontal.
-    if (east && west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
-    // Diagonals.
-    if (north_west && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
-    if (north_east && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
-
-    // Curved segments.
-    if (east && north)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
-    if (east && south)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
-    if (south && west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
-    if (north && west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
-    if (north_east && north_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW;
-    if (south_east && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW;
-    if (north_west && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW;
-    if (north_east && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE;
-
-    // Connect corners and edges.
-    if (north && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
-    if (north && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
-    if (south && north_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
-    if (south && north_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
-    if (west && north_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
-    if (west && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
-    if (east && north_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
-    if (east && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
-
-    // Connections at acute angles; can currently only happen for vines.
-    if (north && north_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NW;
-    if (north && north_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NE;
-    if (east && north_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NE;
-    if (east && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SE;
-    if (south && south_east)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SE;
-    if (south && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SW;
-    if (west && south_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SW;
-    if (west && north_west)
-        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW;
-
-    return TILEP_MONS_PROGRAM_BUG;
-}
-
 static bool _tentacle_tile_not_flying(tileidx_t tile)
 {
     // All tiles between these two enums feature tentacles
@@ -2678,9 +2695,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     else if (mon.props.exists("monster_tile"))
     {
         tileidx_t t = mon.props["monster_tile"].get_short();
-        if (t == TILEP_MONS_STATUE_GUARDIAN)
-            return _mon_random(t);
-        else if (t == TILEP_MONS_HELL_WIZARD)
+        if (t == TILEP_MONS_HELL_WIZARD)
             return _mon_sinus(t);
         else
             return t;
@@ -2775,7 +2790,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
         {
-            tileidx_t tile = _tileidx_tentacle(mon);
+            tileidx_t tile = tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
 
             if (!_mons_is_kraken_tentacle(mon.type)
@@ -3147,7 +3162,7 @@ static tileidx_t _tileidx_weapon(const item_def &item)
 
 static tileidx_t _tileidx_missile_base(const item_def &item)
 {
-    int brand = item.special;
+    int brand = item.brand;
     // 0 indicates no ego at all
 
     switch (item.sub_type)
@@ -3500,19 +3515,17 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
     // elves ('e')
     case MONS_ELF:
-    case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
+    case MONS_DEEP_ELF_ARCHER:
     case MONS_DEEP_ELF_BLADEMASTER:
     case MONS_DEEP_ELF_MASTER_ARCHER:
     case MONS_DEEP_ELF_MAGE:
-    case MONS_DEEP_ELF_SUMMONER:
-    case MONS_DEEP_ELF_CONJURER:
-    case MONS_DEEP_ELF_PRIEST:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
+    case MONS_DEEP_ELF_ELEMENTALIST:
         return TILE_CORPSE_ELF;
 
     // goblins ('g')
@@ -3530,6 +3543,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_JACKAL;
     case MONS_HOUND:
         return TILE_CORPSE_HOUND;
+    case MONS_HOWLER_MONKEY:
+        return TILE_CORPSE_HOWLER_MONKEY;
     case MONS_WARG:
         return TILE_CORPSE_WARG;
     case MONS_WOLF:
@@ -3538,6 +3553,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HOG;
     case MONS_HELL_HOUND:
         return TILE_CORPSE_HELL_HOUND;
+    case MONS_DOOM_HOUND:
+        return TILE_CORPSE_DOOM_HOUND;
     case MONS_RAIJU:
         return TILE_CORPSE_RAIJU;
     case MONS_HELL_HOG:
@@ -3576,8 +3593,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // drakes (also 'l')
     case MONS_SWAMP_DRAKE:
         return TILE_CORPSE_SWAMP_DRAKE;
-    case MONS_FIRE_DRAKE:
-        return TILE_CORPSE_FIRE_DRAKE;
+    case MONS_RIME_DRAKE:
+        return TILE_CORPSE_RIME_DRAKE;
     case MONS_LINDWURM:
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:
@@ -3668,8 +3685,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_JUMPING_SPIDER;
     case MONS_WOLF_SPIDER:
         return TILE_CORPSE_WOLF_SPIDER;
-    case MONS_TRAPDOOR_SPIDER:
-        return TILE_CORPSE_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
     case MONS_DEMONIC_CRAWLER:
@@ -3714,6 +3729,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILE_CORPSE_GIANT_LEECH;
+    case MONS_DART_SLUG:
+        return TILE_CORPSE_DART_SLUG;
     case MONS_TORPOR_SNAIL:
         return TILE_CORPSE_TORPOR_SNAIL;
 
@@ -3979,7 +3996,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     if (is_deck(item, true))
     {
         tileidx_t ch = TILE_ERROR;
-        switch (item.special)
+        switch (item.deck_rarity)
         {
             case DECK_RARITY_LEGENDARY:
                 ch = TILE_MISC_DECK_LEGENDARY;
@@ -4028,9 +4045,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_PHIAL_OF_FLOODS:
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
-
-    case MISC_XOMS_CHESSBOARD:
-        return TILE_MISC_XOMS_CHESSBOARD;
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
@@ -4287,7 +4301,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 ch = TILE_MI_STONE0;
                 break;
             case MI_SLING_BULLET:
-                switch (item.special)
+                switch (item.brand)
                 {
                 default:
                     ch = TILE_MI_SLING_BULLET0;
@@ -4600,6 +4614,11 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_SEARING_RAY_I;
         break;
 
+    case CYAN:
+        if (bolt.name == "slug dart")
+            return TILE_BOLT_STONE_ARROW;
+        break;
+
     case ETC_MUTAGENIC:
         if (bolt.name == "irradiate" || bolt.name == "unravelling")
             return TILE_BOLT_IRRADIATE;
@@ -4673,7 +4692,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Earth
     case SPELL_SANDBLAST:                return TILEG_SANDBLAST;
-    case SPELL_STONESKIN:                return TILEG_STONESKIN;
     case SPELL_PASSWALL:                 return TILEG_PASSWALL;
     case SPELL_STONE_ARROW:              return TILEG_STONE_ARROW;
     case SPELL_DIG:                      return TILEG_DIG;
@@ -4703,7 +4721,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_HIBERNATION:              return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
     case SPELL_THROW_ICICLE:             return TILEG_THROW_ICICLE;
-    case SPELL_CONDENSATION_SHIELD:      return TILEG_CONDENSATION_SHIELD;
     case SPELL_OZOCUBUS_REFRIGERATION:   return TILEG_OZOCUBUS_REFRIGERATION;
     case SPELL_BOLT_OF_COLD:             return TILEG_BOLT_OF_COLD;
     case SPELL_FREEZING_CLOUD:           return TILEG_FREEZING_CLOUD;
@@ -4745,7 +4762,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_PORTAL_PROJECTILE:        return TILEG_PORTAL_PROJECTILE;
     case SPELL_BLINK:                    return TILEG_BLINK;
     case SPELL_TELEPORT_OTHER:           return TILEG_TELEPORT_OTHER;
-    case SPELL_PHASE_SHIFT:              return TILEG_PHASE_SHIFT;
     case SPELL_CONTROLLED_BLINK:         return TILEG_CONTROLLED_BLINK;
     case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISJUNCTION:              return TILEG_DISJUNCTION;
@@ -4823,15 +4839,14 @@ tileidx_t tileidx_spell(spell_type spell)
     // Rod-only spells
     case SPELL_PARALYSE:                 return TILEG_PARALYSE;
     case SPELL_BOLT_OF_INACCURACY:       return TILEG_BOLT_OF_INACCURACY;
-    case SPELL_SUMMON_SWARM:             return TILEG_SUMMON_SWARM;
     case SPELL_THUNDERBOLT:              return TILEG_THUNDERBOLT;
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_MELEE:                    return TILEG_MELEE;
-#endif
     case SPELL_EXPLOSIVE_BOLT:           return TILEG_EXPLOSIVE_BOLT;
     case SPELL_WEAVE_SHADOWS:            return TILEG_WEAVE_SHADOWS;
     case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;
     case SPELL_RANDOM_BOLT:              return TILEG_RANDOM_BOLT;
+    case SPELL_SCATTERSHOT:              return TILEG_SCATTERSHOT;
+    case SPELL_CORROSIVE_BOLT:           return TILEG_CORROSIVE_BOLT;
+    case SPELL_ICEBLAST:                 return TILEG_ICEBLAST;
 
     // --------------------------------------------
     // Monster spells
@@ -4872,11 +4887,11 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BLINK_RANGE:              return TILEG_BLINK_RANGE;
     case SPELL_BRAIN_FEED:               return TILEG_BRAIN_FEED;
     case SPELL_CALL_LOST_SOUL:           return TILEG_CALL_LOST_SOUL;
+    case SPELL_CALL_OF_CHAOS:            return TILEG_CALL_OF_CHAOS;
     case SPELL_CALL_TIDE:                return TILEG_CALL_TIDE;
     case SPELL_CANTRIP:                  return TILEG_CANTRIP;
     case SPELL_CHAIN_OF_CHAOS:           return TILEG_CHAIN_OF_CHAOS;
     case SPELL_CHAOS_BREATH:             return TILEG_CHAOS_BREATH;
-    case SPELL_CHAOTIC_MIRROR:           return TILEG_CHAOTIC_MIRROR;
     case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
@@ -4985,20 +5000,28 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_ARMOUR:         ch = TILEG_ARMOUR_ON; break;
     case SK_DODGING:        ch = TILEG_DODGING_ON; break;
     case SK_STEALTH:        ch = TILEG_STEALTH_ON; break;
-#if TAG_MAJOR_VERSION == 34
-    case SK_STABBING:       ch = TILEG_STABBING_ON; break;
-#endif
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
-#if TAG_MAJOR_VERSION == 34
-    case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
-#endif
-    case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
+    case SK_UNARMED_COMBAT:
+        {
+            const string hand = you.hand_name(false).c_str();
+            if (hand == "hand")
+                ch = TILEG_UNARMED_COMBAT_ON;
+            else if (hand == "paw")
+                ch = TILEG_UNARMED_COMBAT_PAW_ON;
+            else if (hand == "tentacle")
+                ch = TILEG_UNARMED_COMBAT_TENTACLE_ON;
+            else
+                ch = TILEG_UNARMED_COMBAT_CLAW_ON;
+        }
+        break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
     case SK_CHARMS:         ch = TILEG_CHARMS_ON; break;
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
-    case SK_NECROMANCY:     ch = TILEG_NECROMANCY_ON; break;
+    case SK_NECROMANCY:
+        ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
+                                               : TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
     case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_FIRE_MAGIC:     ch = TILEG_FIRE_MAGIC_ON; break;
@@ -5006,8 +5029,55 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
-    case SK_INVOCATIONS:    ch = TILEG_INVOCATIONS_ON; break;
-    case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+    case SK_EVOCATIONS:
+        {
+            switch (you.religion)
+            {
+            case GOD_NEMELEX_XOBEH:
+                ch = TILEG_EVOCATIONS_N_ON; break;
+            case GOD_PAKELLAS:
+                ch = TILEG_EVOCATIONS_P_ON; break;
+            default:
+                ch = TILEG_EVOCATIONS_ON;
+            }
+        }
+        break;
+    case SK_INVOCATIONS:
+        {
+            switch (you.religion)
+            {
+            // Gods who use invo get a unique tile.
+            case GOD_SHINING_ONE:
+                ch = TILEG_INVOCATIONS_1_ON; break;
+            case GOD_BEOGH:
+                ch = TILEG_INVOCATIONS_B_ON; break;
+            case GOD_CHEIBRIADOS:
+                ch = TILEG_INVOCATIONS_C_ON; break;
+            case GOD_DITHMENOS:
+                ch = TILEG_INVOCATIONS_D_ON; break;
+            case GOD_ELYVILON:
+                ch = TILEG_INVOCATIONS_E_ON; break;
+            case GOD_FEDHAS:
+                ch = TILEG_INVOCATIONS_F_ON; break;
+            case GOD_LUGONU:
+                ch = TILEG_INVOCATIONS_L_ON; break;
+            case GOD_MAKHLEB:
+                ch = TILEG_INVOCATIONS_M_ON; break;
+            case GOD_OKAWARU:
+                ch = TILEG_INVOCATIONS_O_ON; break;
+            case GOD_QAZLAL:
+                ch = TILEG_INVOCATIONS_Q_ON; break;
+            case GOD_SIF_MUNA:
+                ch = TILEG_INVOCATIONS_S_ON; break;
+            case GOD_YREDELEMNUL:
+                ch = TILEG_INVOCATIONS_Y_ON; break;
+            case GOD_ZIN:
+                ch = TILEG_INVOCATIONS_Z_ON; break;
+            default:
+                ch = TILEG_INVOCATIONS_ON;
+            }
+        }
+        break;
     default:                return TILEG_TODO;
     }
 
@@ -5218,8 +5288,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Evoking items.
     case ABIL_EVOKE_BERSERK:
         return TILEG_ABILITY_EVOKE_BERSERK;
-    case ABIL_EVOKE_TELEPORTATION:
-        return TILEG_ABILITY_EVOKE_TELEPORT;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:
@@ -5379,6 +5447,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_CHEIBRIADOS_DISTORTION:
         return TILEG_ABILITY_CHEIBRIADOS_TEMPORAL_DISTORTION;
     // Ashenzari
+    case ABIL_ASHENZARI_CURSE:
+        return TILEG_ABILITY_ASHENZARI_CURSE;
     case ABIL_ASHENZARI_SCRYING:
         return TILEG_ABILITY_ASHENZARI_SCRY;
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
@@ -5448,6 +5518,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
+    // Pakellas
+    case ABIL_PAKELLAS_DEVICE_SURGE:
+        return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+        return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
+    case ABIL_PAKELLAS_SUPERCHARGE:
+        return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
@@ -5501,9 +5578,9 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_CONFUSION;
         case SPMSL_PARALYSIS:
             return TILE_BRAND_PARALYSIS;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SLOW:
             return TILE_BRAND_SLOWING;
-#if TAG_MAJOR_VERSION == 34
         case SPMSL_SICKNESS:
             return TILE_BRAND_SICKNESS;
 #endif

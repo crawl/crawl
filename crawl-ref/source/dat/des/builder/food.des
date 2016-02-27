@@ -125,8 +125,8 @@ WEIGHT: 15
 TAGS:     uniq_second_food extra chance_second_food
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p =  potion of poison w:5 / potion of ambrosia w:1 / nothing
-MONS:     big kobold ; wand of magic darts ident:type . short sword
+KITEM:    p =  potion of degeneration w:5 / potion of ambrosia w:1 / nothing
+MONS:     big kobold ; wand of flame ident:type . short sword
 MAP
 XXXXX..WWWWW
 XXXXX..WWWWW
@@ -267,10 +267,10 @@ TAGS:   uniq_second_food extra chance_second_food
 TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
-KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
-ITEM:  fruit q:1
-ITEM:  royal jelly q:2
-ITEM:  bread ration q:3
+KMONS:  A = unseen horror w:16 / nothing w:4
+ITEM:   fruit q:1
+ITEM:   royal jelly q:2
+ITEM:   bread ration q:3
 SUBST:  D : DDDDE
 NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP
@@ -293,7 +293,7 @@ TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirr
 # D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
 KMONS:   A = kobold
 KMONS:   B = orc
-KMONS:   C = deep elf fighter
+KMONS:   C = deep elf mage
 KMONS:   D = spriggan
 KMONS:   E = merfolk
 KMONS:   F = human
@@ -391,8 +391,7 @@ DEPTH:  D:8-14
 WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   deep elf fighter ; rapier | falchion / \
-        human ; short sword | rapier / \
+MONS:   human ; short sword | rapier / \
         orc warrior ; dagger / \
         spriggan ; dagger
 ITEM:   slice of pizza q:8, bread ration q:2

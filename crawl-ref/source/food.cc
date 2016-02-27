@@ -9,6 +9,7 @@
 
 #include <cctype>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <sstream>
 
@@ -27,6 +28,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "output.h"
 #include "religion.h"
@@ -35,6 +37,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "travel.h"
+#include "transform.h"
 #include "xom.h"
 
 static void _eat_chunk(item_def& food);
@@ -70,10 +73,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
     if (hunger_amount == 0 && !suppress_msg)
         return;
-
-#ifdef DEBUG_DIAGNOSTICS
-    set_redraw_status(REDRAW_HUNGER);
-#endif
 
     you.hunger -= hunger_amount;
 
@@ -290,43 +289,47 @@ bool food_change(bool initial)
             less_hungry = true;
 
         you.hunger_state = newstate;
-        set_redraw_status(REDRAW_HUNGER);
+        you.redraw_status_lights = true;
 
         if (newstate < HS_SATIATED)
             interrupt_activity(AI_HUNGRY);
 
         if (you.species == SP_VAMPIRE)
         {
-            if (newstate <= HS_SATIATED)
+            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
             {
-                if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
-                {
-                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                         "your rage any longer.");
-                    you.duration[DUR_BERSERK] = 1;
-                }
-                if (you.form != TRAN_NONE && you.form != TRAN_BAT
-                    && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
+                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
+                                     "your rage any longer.");
+                you.duration[DUR_BERSERK] = 1;
+            }
+
+            switch (lifeless_prevents_form())
+            {
+            case UFR_TOO_DEAD:
+                if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
                                          "your transformation much longer.");
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
-            }
-            else if (you.form == TRAN_BAT
-                     && you.duration[DUR_TRANSFORMATION] > 5)
-            {
-                print_stats();
-                mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
-                                 "transformation much longer.");
+                break;
+            case UFR_TOO_ALIVE:
+                if (you.duration[DUR_TRANSFORMATION] > 5 * BASELINE_DELAY)
+                {
+                    print_stats();
+                    mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
+                                     "transformation much longer.");
 
-                // Give more time because suddenly stopping flying can be fatal.
-                you.set_duration(DUR_TRANSFORMATION, 5);
-            }
-            else if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
-            {
-                print_stats();
-                mpr("You can't stomach any more blood right now.");
+                    // Give more time because suddenly stopping flying can be fatal.
+                    you.set_duration(DUR_TRANSFORMATION, 5);
+                }
+                break;
+            case UFR_GOOD:
+                if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
+                {
+                    print_stats();
+                    mpr("You can't stomach any more blood right now.");
+                }
             }
         }
 
@@ -388,7 +391,7 @@ bool food_change(bool initial)
 // food_increment is positive for eating, negative for hungering
 static void _describe_food_change(int food_increment)
 {
-    int magnitude = (food_increment > 0)?food_increment:(-food_increment);
+    const int magnitude = abs(food_increment);
     string msg;
 
     if (magnitude == 0)
@@ -487,7 +490,7 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
     if (is_bad_food(*food2) && !is_bad_food(*food1))
         return true;
 
-    return food1->special < food2->special;
+    return food1->freshness < food2->freshness;
 }
 
 #ifdef TOUCH_UI
@@ -807,13 +810,13 @@ int prompt_eat_chunks(bool only_auto)
 
             // Allow undead to use easy_eat, but not auto_eat, since the player
             // might not want to drink blood as a vampire and might want to save
-            // chunks as a ghoul.
-            if (easy_eat && !bad && i_feel_safe() && !(only_auto &&
-                                                       you.undead_state()))
-            {
-                // If this chunk is safe to eat, just do so without prompting.
+            // chunks as a ghoul. Ghouls can auto_eat if they have rotted hp.
+            const bool no_auto = you.undead_state()
+                && !(you.species == SP_GHOUL && player_rotted());
+
+            // If this chunk is safe to eat, just do so without prompting.
+            if (easy_eat && !bad && i_feel_safe() && !(only_auto && no_auto))
                 autoeat = true;
-            }
             else if (only_auto)
                 return 0;
             else
@@ -848,10 +851,7 @@ int prompt_eat_chunks(bool only_auto)
                              item_name.c_str());
                     }
 
-                    if (eat_item(*item))
-                        return 1;
-                    else
-                        return 0;
+                    return eat_item(*item) ? 1 : 0;
                 }
                 break;
             default:
@@ -1003,7 +1003,6 @@ static void _eat_chunk(item_def& food)
     if (do_eat)
     {
         dprf("nutrition: %d", nutrition);
-        zin_recite_interrupt();
         start_delay(DELAY_EAT, food_turns(food) - 1,
                     (suppress_msg) ? 0 : nutrition, -1);
         lessen_hunger(nutrition, true);
@@ -1018,7 +1017,6 @@ static void _eating(item_def& food)
     int duration = food_turns(food) - 1;
 
     // use delay.parm3 to figure out whether to output "finish eating"
-    zin_recite_interrupt();
     start_delay(DELAY_EAT, duration, 0, food.sub_type, duration);
 
     lessen_hunger(food_value, true);
@@ -1485,7 +1483,10 @@ void handle_starvation()
             mprf(MSGCH_FOOD, "You lose consciousness!");
             stop_running();
 
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
+            int turns = 5 + random2(8);
+            if (!you.duration[DUR_PARALYSIS])
+                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "fainting"));
+            you.increase_duration(DUR_PARALYSIS, turns, 13);
             if (you_worship(GOD_XOM))
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }

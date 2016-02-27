@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::umbra
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -400,7 +401,7 @@ void create_sanctuary(const coord_def& center, int time)
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
-        if (trap_def* ptrap = find_trap(pos))
+        if (trap_def* ptrap = trap_at(pos))
         {
             if (!ptrap->is_known())
             {
@@ -463,7 +464,7 @@ void create_sanctuary(const coord_def& center, int time)
 
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
-            delete_cloud(env.cgrid(pos));
+            delete_cloud(pos);
             if (you.see_cell(pos))
                 cloud_count++;
         }
@@ -558,11 +559,11 @@ int player::halo_radius() const
 {
     int size = -1;
 
-    if (religion == GOD_SHINING_ONE && piety >= piety_breakpoint(0)
-        && !penance[GOD_SHINING_ONE])
+    if (have_passive(passive_t::halo))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+                                                    / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_BRILLIANCE))
@@ -571,16 +572,8 @@ int player::halo_radius() const
     return size;
 }
 
-int monster::halo_radius() const
+static int _mons_class_halo_radius(monster_type type)
 {
-    item_def* weap = mslot_item(MSLOT_WEAPON);
-    int size = -1;
-
-    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
-        size = 3;
-
-    if (holiness() != MH_HOLY)
-        return size;
     // The values here depend on 1. power, 2. sentience. Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // little or none.
@@ -603,6 +596,20 @@ int monster::halo_radius() const
     default:
         return -1;
     }
+}
+
+int monster::halo_radius() const
+{
+    item_def* weap = mslot_item(MSLOT_WEAPON);
+    int size = -1;
+
+    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
+        size = 3;
+
+    if (!(holiness() & MH_HOLY))
+        return size;
+
+    return _mons_class_halo_radius(type);
 }
 
 //////////////////////
@@ -710,11 +717,11 @@ int player::umbra_radius() const
 {
     int size = -1;
 
-    if (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
-        && !penance[GOD_DITHMENOS])
+    if (have_passive(passive_t::umbra))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS / piety_breakpoint(5);
+        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+                                                    / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))
@@ -729,8 +736,12 @@ int monster::umbra_radius() const
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 3;
 
-    if (holiness() != MH_UNDEAD)
+    if (!(holiness() & MH_UNDEAD))
         return -1;
+
+    // Enslaved holies get an umbra.
+    if (mons_enslaved_soul(this))
+        return _mons_class_halo_radius(base_monster);
 
     switch (type)
     {

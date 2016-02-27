@@ -43,7 +43,6 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 struct bolt;
 class stack_iterator;
-class dist;
 
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
@@ -52,7 +51,6 @@ string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
-void zin_recite_interrupt();
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
@@ -75,7 +73,6 @@ void trog_remove_trogs_hand();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
-bool beogh_water_walk();
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 
@@ -121,16 +118,12 @@ bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();
 bool ashenzari_end_transfer(bool finished = false, bool force = false);
+bool ashenzari_curse_item(int num_rc);
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
-monster* shadow_monster(bool equip = true);
-void shadow_monster_reset(monster *mon);
-void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(const dist &d, const item_def &item);
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
@@ -162,4 +155,8 @@ void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
 bool ru_apocalypse();
+
+bool pakellas_check_quick_charge(bool quiet);
+int pakellas_effective_hex_power(int pow);
+bool pakellas_device_surge();
 #endif

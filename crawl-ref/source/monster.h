@@ -16,6 +16,11 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define FAKE_BLINK_KEY "fake_blink"
 
+/// has a given hound already used up its howl?
+#define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
+
+#define DROPPER_MID_KEY "dropper_mid"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -69,7 +74,6 @@ public:
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
         int swift_cooldown;    ///< When alligator last casted Swift
-        monster_type orc_type; ///< Orc type of Nergalle's spectral orc.
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
@@ -277,7 +281,8 @@ public:
     item_def *missiles() const;
     item_def *shield() const override;
 
-    hands_reqd_type hands_reqd(const item_def &item) const override;
+    hands_reqd_type hands_reqd(const item_def &item,
+                               bool base = false) const override;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -339,7 +344,8 @@ public:
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
     bool polymorph(int pow) override;
-    void banish(actor *agent, const string &who = "", const int power = 0) override;
+    void banish(actor *agent, const string &who = "", const int power = 0,
+                bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;
 
@@ -373,7 +379,7 @@ public:
     bool res_wind() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
-    int res_magic() const override;
+    int res_magic(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
@@ -386,7 +392,7 @@ public:
     bool is_banished() const override;
     bool is_web_immune() const override;
     bool invisible() const override;
-    bool can_see_invisible() const override;
+    bool can_see_invisible(bool calc_unid = true) const override;
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
     reach_type reach_range() const override;
@@ -474,7 +480,7 @@ public:
              string aux = "",
              bool cleanup_dead = true,
              bool attacker_effects = true) override;
-    bool heal(int amount, bool max_too = false) override;
+    bool heal(int amount) override;
     void blame_damage(const actor *attacker, int amount);
     void blink() override;
     void teleport(bool right_now = false,
@@ -601,7 +607,7 @@ private:
                               coord_def &chosen,
                               int &nvalid) const;
     bool search_spells(function<bool (spell_type)> func) const;
-    bool is_cloud_safe(const coord_def &place);
+    bool is_cloud_safe(const coord_def &place) const;
 };
 
 #endif

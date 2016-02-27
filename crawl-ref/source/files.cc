@@ -52,7 +52,6 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -90,7 +89,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -100,15 +99,13 @@ const int GHOST_LIMIT = 27; // max number of ghost files per level
 
 static void _redraw_all()
 {
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    you.redraw_hit_points    = true;
+    you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.redraw_status_lights = true;
 }
 
 static bool is_save_file_name(const string &name)
@@ -318,7 +315,7 @@ static bool _create_dirs(const string &dir)
 {
     string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    vector<string> segments = split_string(sep.c_str(), dir, false, false);
+    vector<string> segments = split_string(sep, dir, false, false);
 
     string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
@@ -341,23 +338,23 @@ static bool _create_dirs(const string &dir)
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const string &path) throw (string)
+void assert_read_safe_path(const string &path)
 {
     // Check for rank tomfoolery first:
     if (path.empty())
-        throw "Empty file name.";
+        throw unsafe_path("Empty file name.");
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-        throw make_stringf("\"%s\" contains bad characters.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains bad characters.", path.c_str());
 #endif
 
 #ifdef DATA_DIR_PATH
     if (is_absolute_path(path))
-        throw make_stringf("\"%s\" is an absolute path.", path.c_str());
+        throw unsafe_path_f("\"%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != string::npos)
-        throw make_stringf("\"%s\" contains \"..\" sequences.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains \"..\" sequences.", path.c_str());
 #endif
 
     // Path is okay.
@@ -641,9 +638,6 @@ static vector<player_save_info> _find_saved_characters()
 
     for (const string &filename : get_dir_files(searchpath))
     {
-        string::size_type point_pos = filename.find_first_of('.');
-        string basename = filename.substr(0, point_pos);
-
         if (is_save_file_name(filename))
         {
             try
@@ -662,7 +656,7 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
-                dprf("%s: %s", filename.c_str(), E.msg.c_str());
+                dprf("%s: %s", filename.c_str(), E.what());
             }
         }
 
@@ -809,7 +803,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_exit(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->exit_stairs == stair_taken)
                 return it->entry_stairs;
         die("entrance corresponding to exit %d not found", stair_taken);
@@ -817,7 +811,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_entrance(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
@@ -855,13 +849,6 @@ static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
-}
-
-static void _clear_clouds()
-{
-    for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-        delete_cloud(clouty);
-    env.cgrid.init(EMPTY_CLOUD);
 }
 
 static bool _grab_follower_at(const coord_def &pos)
@@ -1247,7 +1234,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // We clear twice - on save and on load.
     // Once would be enough...
     if (make_changes)
-        _clear_clouds();
+        delete_all_clouds();
 
     // Lose all listeners.
     dungeon_events.clear();
@@ -1329,7 +1316,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
-        _clear_clouds();
+        delete_all_clouds();
 
         _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
     }
@@ -1954,7 +1941,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)
@@ -2161,7 +2148,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);

@@ -265,7 +265,7 @@ void update_monsters_in_view()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
         {
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
@@ -320,8 +320,8 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        string warning_msg = you_worship(GOD_ZIN) ? "Zin warns you:"
-                                                  : "Ashenzari warns you:";
+        string warning_msg = uppercase_first(god_name(you.religion))
+                             + " warns you:";
         warning_msg += " ";
         for (const monster* mon : monsters)
         {
@@ -387,7 +387,8 @@ void update_monsters_in_view()
             vector<monster *> mons;
             for (monster *mon : monsters)
             {
-                if (mon->wont_attack()
+                if (!mon->see_cell(you.pos()) // xray_vision
+                    || mon->wont_attack()
                     || mon->is_stationary()
                     || mons_is_object(mon->type)
                     || mons_is_tentacle_or_tentacle_segment(mon->type))
@@ -677,15 +678,6 @@ void fully_map_level()
     }
 }
 
-// Is the given monster near (in LOS of) the player?
-bool mons_near(const monster* mons)
-{
-    ASSERT(mons);
-    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return true;
-    return you.see_cell(mons->pos());
-}
-
 bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
@@ -702,12 +694,12 @@ bool mon_enemies_around(const monster* mons)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return mons_near(mons) && there_are_monsters_nearby(true);
+        return you.can_see(*mons) && there_are_monsters_nearby(true);
     }
     else
     {
         // For hostile monster* you* are the main enemy.
-        return mons_near(mons);
+        return mons->can_see(you);
     }
 }
 
@@ -913,23 +905,20 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
-    const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD && !crawl_state.game_is_arena())
+    const cloud_struct* cloud = cloud_at(gc);
+    if (cloud && !crawl_state.game_is_arena())
     {
-        cloud_struct &cl   = env.cloud[cloudidx];
-        cloud_type   ctype = cl.type;
+        const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
         if (!cl.temporary() && is_damaging_cloud(cl.type, false))
         {
-            int size;
+            int size = cl.exclusion_radius();
 
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
-            if (ctype == CLOUD_STEAM && cl.exclusion_radius() == 1)
+            if (cl.type == CLOUD_STEAM && size == 1)
                 size = 0;
-            else
-                size = cl.exclusion_radius();
 
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
@@ -1507,9 +1496,13 @@ static void _config_layers_menu()
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>|"
+                           "<%s>(c)louds</%s>"
+#ifndef USE_TILE_LOCAL
+                           "|"
                            "<%s>monster (w)eapons</%s>|"
-                           "<%s>monster (h)ealth</%s>",
+                           "<%s>monster (h)ealth</%s>"
+#endif
+                           ,
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
@@ -1517,11 +1510,14 @@ static void _config_layers_menu()
            _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
            _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
            _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey"
+#ifndef USE_TILE_LOCAL
+           ,
            _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
+#endif
         );
         mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
@@ -1533,8 +1529,16 @@ static void _config_layers_menu()
         case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
         case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
         case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
-        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS; break;
-        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;  break;
+#ifndef USE_TILE_LOCAL
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS;
+                  if (_layers & LAYER_MONSTER_WEAPONS)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;
+                  if (_layers & LAYER_MONSTER_HEALTH)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
+#endif
 
         // Remaining cases fall through to exit.
         case '|':

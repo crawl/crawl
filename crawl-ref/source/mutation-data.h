@@ -102,7 +102,7 @@ static const mutation_def mut_data[] =
 
   {"You digest meat inefficiently.",
    "You digest meat very inefficiently.",
-   "You are a herbivore."},
+   "You are an herbivore."},
 
   {"You hunger for vegetation.",
    "You hunger for vegetation.",
@@ -152,7 +152,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HEAT_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::CORRUPT | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL, true,
   "heat vulnerability",
 
   {"You are vulnerable to heat.",
@@ -171,7 +171,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_COLD_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::CORRUPT | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL, true,
 
   "cold vulnerability",
 
@@ -246,7 +246,7 @@ static const mutation_def mut_data[] =
    "regeneration",
 },
 
-{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD | mutflag::CORRUPT, false,
+{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD, false,
   "slow regeneration",
 
   {"You regenerate slowly when monsters are visible.",
@@ -345,9 +345,9 @@ static const mutation_def mut_data[] =
 { MUT_TELEPORT, 3, 3, mutflag::BAD, false,
   "teleportitis",
 
-  {"You are occasionally teleported to nearby monsters.",
-   "You are sometimes teleported to nearby monsters.",
-   "You are often teleported to nearby monsters."},
+  {"You are occasionally teleported next to monsters.",
+   "You are sometimes teleported next to monsters.",
+   "You are often teleported next to monsters."},
 
   {"You feel weirdly uncertain.",
    "You feel even more weirdly uncertain.",
@@ -431,7 +431,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DEFORMED, 8, 1,
-  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT,
+  mutflag::BAD | mutflag::XOM,
   true,
   "deformed body",
 
@@ -460,7 +460,8 @@ static const mutation_def mut_data[] =
    "poisonous spittle",
 },
 
-{ MUT_BREATHE_FLAMES, 4, 3, mutflag::GOOD, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_BREATHE_FLAMES, 0, 3, mutflag::GOOD, false,
   "breathe flames",
 
   {"You can breathe flames.",
@@ -477,7 +478,7 @@ static const mutation_def mut_data[] =
 
    "fiery breath",
 },
-#if TAG_MAJOR_VERSION == 34
+
 { MUT_JUMP, 0, 3, mutflag::GOOD, false,
   "jump",
 
@@ -590,7 +591,7 @@ static const mutation_def mut_data[] =
    "berserk rage",
 },
 
-{ MUT_DETERIORATION, 10, 2, mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+{ MUT_DETERIORATION, 10, 2, mutflag::BAD | mutflag::XOM, false,
   "deterioration",
 
   {"Your body sometimes deteriorates upon taking damage.",
@@ -608,7 +609,7 @@ static const mutation_def mut_data[] =
    "deteriorating body",
 },
 
-{ MUT_BLURRY_VISION, 10, 3, mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+{ MUT_BLURRY_VISION, 10, 3, mutflag::BAD | mutflag::XOM, false,
   "blurry vision",
 
   {"Scrolls take you a little longer to read.",
@@ -663,7 +664,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FRAIL, 10, 3,
-  mutflag::BAD | mutflag::XOM | mutflag::CORRUPT, false,
+  mutflag::BAD | mutflag::XOM, false,
   "frail",
 
   {"You are frail (-10% HP).",
@@ -1058,7 +1059,7 @@ static const mutation_def mut_data[] =
    "increased magical capacity (+10% MP)",
 },
 
-{ MUT_LOW_MAGIC, 9, 3, mutflag::BAD | mutflag::CORRUPT, false,
+{ MUT_LOW_MAGIC, 9, 3, mutflag::BAD, false,
   "low mp",
 
   {"Your magical capacity is low (-10% MP).",
@@ -2044,11 +2045,11 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::BAD, false,
-  "vulnerability to harm",
+  "reduced AC",
 
-  {"You take slightly more damage. (-3 AC)",
-    "You take more damage. (-6 AC)",
-    "You take considerably more damage. (-9 AC)"},
+  {"You take slightly more damage. (AC -3)",
+    "You take more damage. (AC -6)",
+    "You take considerably more damage. (AC -9)"},
   {"You feel more vulnerable to harm.",
     "You feel more vulnerable to harm.",
     "You feel more vulnerable to harm."},
@@ -2060,11 +2061,11 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_SLOW_REFLEXES, 0, 3, mutflag::BAD, false,
-  "slow reflexes",
+  "reduced EV",
 
-  {"You have somewhat slow reflexes. (-3 EV)",
-    "You have slow reflexes. (-6 EV)",
-    "You have very slow reflexes. (-9 EV)"},
+  {"You have somewhat slow reflexes. (EV -3)",
+    "You have slow reflexes. (EV -6)",
+    "You have very slow reflexes. (EV -9)"},
   {"Your reflexes slow.",
     "Your reflexes slow further.",
     "Your reflexes slow further."},

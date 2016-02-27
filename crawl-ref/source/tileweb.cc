@@ -128,6 +128,7 @@ bool TilesFramework::initialise()
     _send_version();
     send_exit_reason("unknown");
     _send_options();
+    _send_layout();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
     m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
@@ -464,6 +465,18 @@ void TilesFramework::_send_options()
     finish_message();
 }
 
+void TilesFramework::_send_layout()
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+    tiles.json_open_object("message_pane");
+    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_bool("small_more", Options.small_more);
+    tiles.json_close_object();
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+
 void TilesFramework::push_menu(Menu* m)
 {
     MenuInfo mi;
@@ -510,6 +523,19 @@ void TilesFramework::close_all_menus()
 {
     while (m_menu_stack.size())
         pop_menu();
+}
+
+static void _send_text_cursor(bool enabled)
+{
+    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
+                       enabled ? "true" : "false");
+}
+
+void TilesFramework::set_text_cursor(bool enabled)
+{
+    if (m_text_cursor == enabled) return;
+
+    m_text_cursor = enabled;
 }
 
 static void _send_ui_state(WebtilesUIState state)
@@ -577,7 +603,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
+        if (status == DUR_DIVINE_SHIELD)
         {
             if (!you.duration[status])
                 continue;
@@ -1564,6 +1590,9 @@ void TilesFramework::_send_everything()
 {
     _send_version();
     _send_options();
+    _send_layout();
+
+    _send_text_cursor(m_text_cursor);
 
     // UI State
     _send_ui_state(m_ui_state);
@@ -1620,6 +1649,11 @@ void TilesFramework::clrscr()
     set_need_redraw();
 }
 
+void TilesFramework::layout_reset()
+{
+    m_layout_reset = true;
+}
+
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
@@ -1663,6 +1697,18 @@ void TilesFramework::redraw()
             m_mcache_ref_done = false;
         }
         return;
+    }
+
+    if (m_layout_reset)
+    {
+        _send_layout();
+        m_layout_reset = false;
+    }
+
+    if (m_last_text_cursor != m_text_cursor)
+    {
+        _send_text_cursor(m_text_cursor);
+        m_last_text_cursor = m_text_cursor;
     }
 
     if (m_last_ui_state != m_ui_state)

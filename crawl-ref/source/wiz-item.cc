@@ -260,7 +260,7 @@ static void _tweak_randart(item_def &item)
 #endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            *(prompt.rend()) = '\n'; // Replace the space
+            prompt.back() = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -319,7 +319,7 @@ static void _tweak_randart(item_def &item)
         break;
 
     case ARTP_VAL_POS:
-     {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
@@ -332,15 +332,15 @@ static void _tweak_randart(item_def &item)
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     case ARTP_VAL_ANY:
-      {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     }
 }
 
@@ -580,7 +580,7 @@ void wizard_make_object_randart()
             return;
         }
 
-        item.special = 0;
+        item.unrand_idx = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
     }
@@ -614,7 +614,7 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);
@@ -686,17 +686,8 @@ void wizard_unidentify_pack()
     // (For use with the "give monster an item" wizard targeting
     // command.)
     for (monster_near_iterator mon(&you); mon; ++mon)
-    {
-        for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
-        {
-            if (mon->inv[j] == NON_ITEM)
-                continue;
-
-            item_def &item = mitm[mon->inv[j]];
-            if (item.defined())
-                _forget_item(item);
-        }
-    }
+        for (mon_inv_iterator ii(**mon); ii; ++ii)
+            _forget_item(*ii);
 }
 
 void wizard_list_items()
@@ -1018,6 +1009,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
+            "shielding",
 #endif
             "debug randart",
         };
@@ -1218,7 +1210,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     // Start off with a non-artefact item.
     item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-    item.special = 0;
+    item.unrand_idx = 0;
     item.props.clear();
 
     if (!make_item_randart(item))
@@ -1260,7 +1252,7 @@ static void _debug_rap_stats(FILE *ostat)
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
         item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-        item.special = 0;
+        item.unrand_idx = 0;
         item.props.clear();
         make_item_randart(item);
         artefact_properties(item, proprt);
@@ -1409,6 +1401,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CORRODE",
         "ARTP_DRAIN",
         "ARTP_CONFUSE",
+        "ARTP_FRAGILE",
+        "ARTP_SHIELDING",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

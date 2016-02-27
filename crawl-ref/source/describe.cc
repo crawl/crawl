@@ -72,8 +72,6 @@ int count_desc_lines(const string &_desc, const int width)
     return count(begin(desc), end(desc), '\n');
 }
 
-static void _adjust_item(item_def &item);
-
 void print_description(const string &body)
 {
     describe_info inf;
@@ -125,22 +123,22 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_WIZARDRY:           return "Wiz";
     case RING_FIRE:               return "Fire";
     case RING_ICE:                return "Ice";
-    case RING_TELEPORTATION:      return "+/*Tele";
+    case RING_TELEPORTATION:      return "*Tele";
+    case RING_RESIST_CORROSION:   return "rCorr";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
-    case AMU_CLARITY:             return "Clar";
-    case AMU_WARDING:             return "Ward";
-    case AMU_RESIST_CORROSION:    return "rCorr";
+    case AMU_HARM:                return "Harm *Drain";
+    case AMU_DISMISSAL:           return "Dismiss";
+    case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
-    case AMU_RESIST_MUTATION:     return "rMut";
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
-    case AMU_STASIS:              return "Stasis";
+    case AMU_REFLECTION:          return "Reflect";
     case AMU_INACCURACY:          return "Inacc";
     }
     return "";
@@ -188,6 +186,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CORRODE,               PROPN_PLAIN },
         { ARTP_DRAIN,                 PROPN_PLAIN },
         { ARTP_CONFUSE,               PROPN_PLAIN },
+        { ARTP_FRAGILE,               PROPN_PLAIN },
 
         // Evokable abilities come second
         { ARTP_BLINK,                 PROPN_PLAIN },
@@ -216,6 +215,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
         { ARTP_DEXTERITY,             PROPN_NUMERAL },
         { ARTP_SLAYING,               PROPN_NUMERAL },
+        { ARTP_SHIELDING,             PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
         { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
@@ -228,7 +228,7 @@ static vector<string> _randart_propnames(const item_def& item,
 
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
-        entry = get_unrand_entry(item.special);
+        entry = get_unrand_entry(item.unrand_idx);
 
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
@@ -371,34 +371,30 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_ICE:
         return "It enhances your ice magic, and weakens your fire magic.";
     case RING_TELEPORTATION:
-        return "It may teleport you to nearby monsters, and can be evoked to "
-               "randomly teleport.";
+        return "It may teleport you next to monsters.";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
         return "It can be evoked for teleport control.";
 #endif
-    case AMU_CLARITY:
-        return "It provides mental clarity.";
-    case AMU_WARDING:
-        return "It may prevent the melee attacks of summoned creatures.";
-    case AMU_RESIST_CORROSION:
-        return "It protects you from acid and corrosion.";
+    case AMU_HARM:
+        return "It increases damage dealt and taken.";
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
+    case AMU_MANA_REGENERATION:
+        return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
-    case AMU_RESIST_MUTATION:
-        return "It protects you from mutation.";
     case AMU_GUARDIAN_SPIRIT:
         return "It causes incoming damage to be split between your health and "
                "magic.";
     case AMU_FAITH:
         return "It allows you to gain divine favour quickly.";
-    case AMU_STASIS:
-        return "It prevents you from being teleported, slowed, hasted or "
-               "paralysed.";
+    case AMU_REFLECTION:
+        return "It shields you and reflects attacks.";
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
     }
@@ -446,7 +442,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It may teleport you to nearby monsters.", false},
+        { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
@@ -461,6 +457,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
+        { ARTP_SHIELDING, "It affects your SH (%d).", false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -715,7 +713,7 @@ static string _describe_demon(const string& name, bool flying)
     if (flying)
     {
         description << HRANDOM_ELEMENT(wing_names, 3);
-        if (head_desc.find(" with") == 0)
+        if (starts_with(head_desc, " with"))
             description << " and";
     }
 
@@ -1155,7 +1153,7 @@ static string _describe_ammo(const item_def &item)
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
 
-    if (item.special && item_type_known(item))
+    if (item.brand && item_type_known(item))
     {
         description += "\n\n";
 
@@ -1169,7 +1167,7 @@ static string _describe_ammo(const item_def &item)
         if (can_launch)
             threw_or_fired += "fired";
 
-        switch (item.special)
+        switch (item.brand)
         {
         case SPMSL_FLAME:
             description += "It burns those it strikes, causing extra injury "
@@ -1209,9 +1207,6 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";
             break;
-        case SPMSL_SLOW:
-            description += "It is coated with a substance that causes slowness of the body.";
-            break;
         case SPMSL_SLEEP:
             description += "It is coated with a fast-acting tranquilizer.";
             break;
@@ -1227,7 +1222,7 @@ static string _describe_ammo(const item_def &item)
             description += "It is tipped with a substance that causes a mindless "
                 "rage, making people attack friend and foe alike.";
             break;
-       case SPMSL_RETURNING:
+        case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
@@ -1286,24 +1281,38 @@ static string _describe_armour(const item_def &item, bool verbose)
             const float skill = you.get_shield_skill_to_offset_penalty(item);
             description += "\n";
             description += "\nBase shield rating: "
-                        + to_string(property(item, PARM_AC))
-                        + "       Skill to remove penalty: "
-                        + make_stringf("%.1f", skill);
-
-            if (crawl_state.need_save)
+                        + to_string(property(item, PARM_AC));
+            if (!is_useless_item(item))
             {
-                description += "\n                            "
-                            + make_stringf("(Your skill: %.1f)",
-                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                description += "       Skill to remove penalty: "
+                            + make_stringf("%.1f", skill);
+                if (crawl_state.need_save)
+                {
+                    description += "\n                            "
+                                + make_stringf("(Your skill: %.1f)",
+                                               (float) you.skill(SK_SHIELDS, 10) / 10);
+                }
+                else
+                    description += "\n";
             }
         }
         else
         {
             const int evp = property(item, PARM_EVASION);
             description += "\n\nBase armour rating: "
-                        + to_string(property(item, PARM_AC))
-                        + "       Encumbrance rating: "
-                        + to_string(-evp / 10);
+                        + to_string(property(item, PARM_AC));
+            if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            {
+                description += "       Encumbrance rating: "
+                            + to_string(-evp / 10);
+            }
+            // Bardings reduce evasion by a fixed amount, and don't have any of
+            // the other effects of encumbrance.
+            else if (evp)
+            {
+                description += "       Evasion: "
+                            + to_string(evp / 30);
+            }
 
             // only display player-relevant info if the player exists
             if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
@@ -1316,7 +1325,10 @@ static string _describe_armour(const item_def &item, bool verbose)
     }
 
     const int ego = get_armour_ego_type(item);
-    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
+    const bool enchanted = get_equip_desc(item) && ego == SPARM_NORMAL
+                           && !item_ident(item, ISFLAG_KNOW_PLUSES);
+
+    if ((ego != SPARM_NORMAL || enchanted) && item_type_known(item) && verbose)
     {
         description += "\n\n";
 
@@ -1398,6 +1410,14 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_SPIRIT_SHIELD:
             description += "It shields its wearer from harm at the cost "
                 "of magical power.";
+            break;
+
+        case SPARM_NORMAL:
+            ASSERT(enchanted);
+            description += "It has no special ego (it is not resistant to "
+                           "fire, etc), but is still enchanted in some way - "
+                           "positive or negative.";
+
             break;
 
         // This is only for gloves.
@@ -1483,6 +1503,11 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                 description += make_stringf("\nIt affects your accuracy and"
                       " damage with ranged weapons and melee attacks (%+d).",
                       item.plus);
+                break;
+
+            case AMU_REFLECTION:
+                description += make_stringf("\nIt affects your shielding (%+d).",
+                                            item.plus);
                 break;
 
             default:
@@ -1787,17 +1812,10 @@ string get_item_description(const item_def &item, bool verbose,
         }
 
 
-        if (item_type_known(item))
+        if (item_type_known(item) && !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            const int max_charges = wand_max_charges(item.sub_type);
-            if (item.charges < max_charges
-                || !item_ident(item, ISFLAG_KNOW_PLUSES))
-            {
-                description << "\nIt can have at most " << max_charges
-                            << " charges.";
-            }
-            else
-                description << "\nIt is fully charged.";
+            description << "\nIt can have at most " << wand_max_charges(item)
+                        << " charges.";
         }
 
         if (known_empty)
@@ -1883,7 +1901,7 @@ string get_item_description(const item_def &item, bool verbose,
                 else
                     description << "\nIts capacity can be increased no further.";
 
-                const int recharge_rate = item.special;
+                const int recharge_rate = item.rod_plus;
                 if (recharge_rate < max_recharge_rate)
                 {
                     description << "\nIts current recharge rate is "
@@ -2018,9 +2036,8 @@ string get_item_description(const item_def &item, bool verbose,
         description << "\n" << origin_desc(item) << ".";
 
     // This information is obscure and differs per-item, so looking it up in
-    // a docs file you don't know to exist is tedious. On the other hand,
-    // it breaks the screen for people on very small terminals.
-    if (verbose && get_number_of_lines() >= 28)
+    // a docs file you don't know to exist is tedious.
+    if (verbose)
     {
         description << "\n\n" << "Stash search prefixes: "
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
@@ -2157,103 +2174,8 @@ void get_item_desc(const item_def &item, describe_info &inf)
     inf.body << get_item_description(item, verbose);
 }
 
-static void _show_item_description(const item_def &item)
+static vector<command_type> _allowed_actions(const item_def& item)
 {
-    const unsigned int lineWidth = get_number_of_cols() - 1;
-    const          int height    = get_number_of_lines();
-
-    string desc = get_item_description(item, true, false);
-
-    string quote;
-    if (is_unrandom_artefact(item) && item_type_known(item))
-        quote = getQuoteString(get_artefact_name(item));
-    else
-        quote = getQuoteString(item.name(DESC_DBNAME, true, false, false));
-
-    if (!(crawl_state.game_is_hints_tutorial()
-          || item_type_known(item) && is_random_artefact(item)
-          // XXX: hack: Leave room for "Inscribe item?" and the blank line above
-          // it by not adding item quote. This should really be taken care of
-          // by putting the quotes onto a separate screen, as is done for spells
-          // and monsters.
-          || count_desc_lines(desc, lineWidth)
-             + count_desc_lines(quote, lineWidth) >= height - 2
-          || quote.empty()))
-    {
-        desc += "\n\n" + quote;
-    }
-
-    print_description(desc);
-    if (crawl_state.game_is_hints())
-        hints_describe_item(item);
-
-    if (item.has_spells())
-    {
-        formatted_string fdesc;
-        fdesc.cprintf("%s", desc.c_str());
-        list_spellset(item_spellset(item), nullptr, &item, fdesc);
-    }
-}
-
-// it takes a key and a list of commands and it returns
-// the command from the list which corresponds to the key
-static command_type _get_action(int key, vector<command_type> actions)
-{
-    static bool act_key_init = true; // Does act_key needs to be initialise?
-    static map<command_type, int> act_key;
-    if (act_key_init)
-    {
-        act_key[CMD_WIELD_WEAPON]       = 'w';
-        act_key[CMD_UNWIELD_WEAPON]     = 'u';
-        act_key[CMD_QUIVER_ITEM]        = 'q';
-        act_key[CMD_WEAR_ARMOUR]        = 'w';
-        act_key[CMD_REMOVE_ARMOUR]      = 't';
-        act_key[CMD_EVOKE]              = 'v';
-        act_key[CMD_EAT]                = 'e';
-        act_key[CMD_READ]               = 'r';
-        act_key[CMD_WEAR_JEWELLERY]     = 'p';
-        act_key[CMD_REMOVE_JEWELLERY]   = 'r';
-        act_key[CMD_QUAFF]              = 'q';
-        act_key[CMD_DROP]               = 'd';
-        act_key[CMD_INSCRIBE_ITEM]      = 'i';
-        act_key[CMD_ADJUST_INVENTORY]   = '=';
-        act_key_init = false;
-    }
-
-    for (auto cmd : actions)
-        if (key == act_key[cmd])
-            return cmd;
-
-    return CMD_NO_CMD;
-}
-
-/**
- * Print a list of actions to be performed on the item
- *
- * @param item the item to have actions done on
- * @param allow_inscribe whether to include inscribing in the list
- * @param do_prompt whether to actually print the prompt
- * @return whether to stay in the inventory menu afterwards
- */
-static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
-{
-#ifdef USE_TILE_LOCAL
-    PrecisionMenu menu;
-    TextItem* tmp = nullptr;
-    MenuFreeform* freeform = new MenuFreeform();
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-    freeform->init(coord_def(1, 1),
-                   coord_def(get_number_of_cols(), get_number_of_lines()),
-                   "freeform");
-    menu.attach_object(freeform);
-    menu.set_active_object(freeform);
-
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-    highlighter->init(coord_def(0, 0), coord_def(0, 0), "highlighter");
-    menu.attach_object(highlighter);
-#endif
-    string prompt = "You can ";
-    int keyin;
     vector<command_type> actions;
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (item_equip_slot(item) == EQ_WEAPON)
@@ -2287,9 +2209,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
             actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
-    case OBJ_BOOKS: // only unknown ones
-        if (item.sub_type != BOOK_MANUAL)
-            actions.push_back(CMD_READ);
+    //case OBJ_BOOKS: these are handled differently
+        actions.push_back(CMD_READ);
         break;
     case OBJ_JEWELLERY:
         if (item_is_equipped(item))
@@ -2298,7 +2219,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (you.undead_state() != US_UNDEAD) // mummies and lich form forbidden
+        if (!you_foodless(true)) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:
@@ -2314,171 +2235,120 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 
     actions.push_back(CMD_DROP);
 
-    if (allow_inscribe)
+    if (!crawl_state.game_is_tutorial())
         actions.push_back(CMD_INSCRIBE_ITEM);
 
-    static bool act_str_init = true; // Does act_str needs to be initialised?
-    static map<command_type, string> act_str;
-    if (act_str_init)
+    return actions;
+}
+
+static string _actions_desc(const vector<command_type>& actions, const item_def& item)
+{
+    static const map<command_type, string> act_str =
     {
-        act_str[CMD_WIELD_WEAPON]       = "(w)ield";
-        act_str[CMD_UNWIELD_WEAPON]     = "(u)nwield";
-        act_str[CMD_QUIVER_ITEM]        = "(q)uiver";
-        act_str[CMD_WEAR_ARMOUR]        = "(w)ear";
-        act_str[CMD_REMOVE_ARMOUR]      = "(t)ake off";
-        act_str[CMD_EVOKE]              = "e(v)oke";
-        act_str[CMD_EAT]                = "(e)at";
-        act_str[CMD_READ]               = "(r)ead";
-        act_str[CMD_WEAR_JEWELLERY]     = "(p)ut on";
-        act_str[CMD_REMOVE_JEWELLERY]   = "(r)emove";
-        act_str[CMD_QUAFF]              = "(q)uaff";
-        act_str[CMD_DROP]               = "(d)rop";
-        act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
-        act_str[CMD_ADJUST_INVENTORY]   = "(=)adjust";
-        act_str_init = false;
-    }
+        { CMD_WIELD_WEAPON, "(w)ield" },
+        { CMD_UNWIELD_WEAPON, "(u)nwield" },
+        { CMD_QUIVER_ITEM, "(q)uiver" },
+        { CMD_WEAR_ARMOUR, "(w)ear" },
+        { CMD_REMOVE_ARMOUR, "(t)ake off" },
+        { CMD_EVOKE, "e(v)oke" },
+        { CMD_EAT, "(e)at" },
+        { CMD_READ, "(r)ead" },
+        { CMD_WEAR_JEWELLERY, "(p)ut on" },
+        { CMD_REMOVE_JEWELLERY, "(r)emove" },
+        { CMD_QUAFF, "(q)uaff" },
+        { CMD_DROP, "(d)rop" },
+        { CMD_INSCRIBE_ITEM, "(i)nscribe" },
+        { CMD_ADJUST_INVENTORY, "(=)adjust" },
+    };
+    return "You can "
+           + comma_separated_fn(begin(actions), end(actions),
+                                [] (command_type cmd)
+                                {
+                                    return act_str.at(cmd);
+                                },
+                                ", or ")
+           + " the " + item.name(DESC_BASENAME) + ".";
+}
 
-    for (auto at = actions.begin(); at < actions.end(); ++at)
+// Take a key and a list of commands and return the command from the list
+// that corresponds to the key. Note that some keys are overloaded (but with
+// mutually-exclusive actions), so it's not just a simple lookup.
+static command_type _get_action(int key, vector<command_type> actions)
+{
+    static const map<command_type, int> act_key =
     {
-#ifdef USE_TILE_LOCAL
-        tmp = new TextItem();
-        tmp->set_id(*at);
-        tmp->set_text(act_str[*at]);
-        tmp->set_fg_colour(CYAN);
-        tmp->set_bg_colour(BLACK);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text(act_str[*at]);
-        tmp->set_bounds(coord_def(prompt.size() + 1, wherey()),
-                        coord_def(prompt.size() + act_str[*at].size() + 1,
-                                  wherey() + 1));
-        freeform->attach_item(tmp);
-        tmp->set_visible(true);
-#endif
-        prompt += act_str[*at];
-        if (at < actions.end() - 2)
-            prompt += ", ";
-        else if (at == actions.end() - 2)
-            prompt += " or ";
-    }
-    prompt += " the " + item.name(DESC_BASENAME) + ".";
+        { CMD_WIELD_WEAPON,     'w' },
+        { CMD_UNWIELD_WEAPON,   'u' },
+        { CMD_QUIVER_ITEM,      'q' },
+        { CMD_WEAR_ARMOUR,      'w' },
+        { CMD_REMOVE_ARMOUR,    't' },
+        { CMD_EVOKE,            'v' },
+        { CMD_EAT,              'e' },
+        { CMD_READ,             'r' },
+        { CMD_WEAR_JEWELLERY,   'p' },
+        { CMD_REMOVE_JEWELLERY, 'r' },
+        { CMD_QUAFF,            'q' },
+        { CMD_DROP,             'd' },
+        { CMD_INSCRIBE_ITEM,    'i' },
+        { CMD_ADJUST_INVENTORY, '=' },
+    };
 
-    prompt = "<cyan>" + prompt + "</cyan>";
-    if (do_prompt)
-        formatted_string::parse_string(prompt).display();
+    for (auto cmd : actions)
+        if (key == act_key.at(cmd))
+            return cmd;
 
-#ifdef TOUCH_UI
+    return CMD_NO_CMD;
+}
 
-    //draw menu over the top of the prompt text
-    tiles.get_crt()->attach_menu(&menu);
-    freeform->set_visible(true);
-    highlighter->set_visible(true);
-    menu.draw_menu();
-#endif
-
-    keyin = toalower(getch_ck());
-#ifdef USE_TILE_LOCAL
-    while (keyin == CK_REDRAW)
-    {
-        menu.draw_menu();
-        keyin = toalower(getch_ck());
-    }
-#endif
-    command_type action = _get_action(keyin, actions);
-
-#ifdef TOUCH_UI
-    if (menu.process_key(keyin))
-    {
-        vector<MenuItem*> selection = menu.get_selected_items();
-        if (selection.size() == 1)
-            action = (command_type) selection.at(0)->get_id();
-    }
-#endif
+/**
+ * Do the specified action on the specified item.
+ *
+ * @param item    the item to have actions done on
+ * @param actions the list of actions to search in
+ * @param keyin   the key that was pressed
+ * @return whether to stay in the inventory menu afterwards
+ */
+static bool _do_action(item_def &item, const vector<command_type>& actions, int keyin)
+{
+    const command_type action = _get_action(keyin, actions);
+    if (action == CMD_NO_CMD)
+        return true;
 
     const int slot = item.link;
     ASSERT_RANGE(slot, 0, ENDOFPACK);
 
+    redraw_screen();
     switch (action)
     {
-    case CMD_WIELD_WEAPON:
-        redraw_screen();
-        wield_weapon(true, slot);
-        return false;
-    case CMD_UNWIELD_WEAPON:
-        redraw_screen();
-        wield_weapon(true, SLOT_BARE_HANDS);
-        return false;
-    case CMD_QUIVER_ITEM:
-        redraw_screen();
-        quiver_item(slot);
-        return false;
-    case CMD_WEAR_ARMOUR:
-        redraw_screen();
-        wear_armour(slot);
-        return false;
-    case CMD_REMOVE_ARMOUR:
-        redraw_screen();
-        takeoff_armour(slot);
-        return false;
-    case CMD_EVOKE:
-        redraw_screen();
-        evoke_item(slot);
-        return false;
-    case CMD_EAT:
-        redraw_screen();
-        eat_food(slot);
-        return false;
-    case CMD_READ:
-    {
-        const bool spellbook =
-#if TAG_MAJOR_VERSION == 34
-            item.sub_type != BOOK_BUGGY_DESTRUCTION &&
-#endif
-            item.base_type == OBJ_BOOKS;
-
-        if (!spellbook)
-            redraw_screen();
-        read(slot);
-        // In case of a book, stay in the inventory to see the content.
-        return spellbook;
-    }
-    case CMD_WEAR_JEWELLERY:
-        redraw_screen();
-        puton_ring(slot);
-        return false;
-    case CMD_REMOVE_JEWELLERY:
-        redraw_screen();
-        remove_ring(slot, true);
-        return false;
-    case CMD_QUAFF:
-        redraw_screen();
-        drink(slot);
-        return false;
-    case CMD_DROP:
-        redraw_screen();
-        drop_item(slot, you.inv[slot].quantity);
-        return false;
-    case CMD_INSCRIBE_ITEM:
-        inscribe_item(item, false);
-        break;
-    case CMD_ADJUST_INVENTORY:
-        _adjust_item(item);
-        return false;
-    case CMD_NO_CMD:
+    case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
+    case CMD_UNWIELD_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS); break;
+    case CMD_QUIVER_ITEM:      quiver_item(slot);                   break;
+    case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
+    case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
+    case CMD_EVOKE:            evoke_item(slot);                    break;
+    case CMD_EAT:              eat_food(slot);                      break;
+    case CMD_READ:             read(slot);                          break;
+    case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
+    case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
+    case CMD_QUAFF:            drink(slot);                         break;
+    case CMD_DROP:             drop_item(slot, item.quantity);      break;
+    case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
+    case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
     default:
-        return true;
+        die("illegal inventory cmd %d", action);
     }
-    return true;
+    return false;
 }
 
 /**
  *  Describe any item in the game.
  *
- *  @param item the item to be described.
- *  @param allow_inscribe whether to include inscribing in the menu of actions.
- *         XXX: why wouldn't you want to allow inscribing?
+ *  @param item       the item to be described.
+ *  @param fixup_desc a function (possibly null) to modify the
+ *                    description before it's displayed.
  *  @return whether to stay in the inventory menu afterwards.
  */
-bool describe_item(item_def &item, bool allow_inscribe)
+bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
     if (!item.defined())
         return true;
@@ -2487,87 +2357,72 @@ bool describe_item(item_def &item, bool allow_inscribe)
     tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
 #endif
 
-    // we might destroy the item, so save this first.
-    const bool item_had_spells = item.has_spells();
-    _show_item_description(item);
+    string desc = get_item_description(item, true, false);
 
+    string quote;
+    if (is_unrandom_artefact(item) && item_type_known(item))
+        quote = getQuoteString(get_artefact_name(item));
+    else
+        quote = getQuoteString(item.name(DESC_DBNAME, true, false, false));
+
+    if (!(crawl_state.game_is_hints_tutorial()
+          || quote.empty()))
+    {
+        desc += "\n\n" + quote;
+    }
+
+    if (crawl_state.game_is_hints())
+        desc += hints_describe_item(item);
+
+    if (fixup_desc)
+        fixup_desc(desc);
     // spellbooks & rods have their own UIs, so we don't currently support the
     // inscribe/drop/etc prompt UI for them.
     // ...it would be nice if we did, though.
-    if (item_had_spells)
+    if (item.has_spells())
     {
+        formatted_string fdesc(formatted_string::parse_string(desc));
+        list_spellset(item_spellset(item), nullptr, &item, fdesc);
         // only continue the inventory loop if we didn't start memorizing a
         // spell & didn't destroy the item for amnesia.
         return !already_learning_spell() && item.is_valid();
     }
-
-    if (allow_inscribe && crawl_state.game_is_tutorial())
-        allow_inscribe = false;
-
-    // Don't ask if we're dead.
-    if (in_inventory(item) && crawl_state.prev_cmd != CMD_RESISTS_SCREEN
-        && !(you.dead || crawl_state.updating_scores))
-    {
-        // Don't draw the prompt if there aren't enough rows left.
-        const bool do_prompt = wherey() <= get_number_of_lines() - 2;
-        if (do_prompt)
-            cgotoxy(1, wherey() + 2);
-        return _actions_prompt(item, allow_inscribe, do_prompt);
-    }
     else
-        getchm();
-
-    return true;
+    {
+        const bool do_actions = in_inventory(item)
+                                // Dead men use no items.
+                                && !(you.dead || crawl_state.updating_scores);
+        vector<command_type> actions;
+        formatted_scroller menu;
+        menu.add_text(desc, false, get_number_of_cols());
+        if (do_actions)
+        {
+            actions = _allowed_actions(item);
+            menu.set_flags(menu.get_flags() | MF_ALWAYS_SHOW_MORE);
+            menu.set_more(formatted_string(_actions_desc(actions, item), CYAN));
+        }
+        menu.show();
+        if (do_actions)
+            return _do_action(item, actions, menu.getkey());
+        else
+            return true;
+    }
 }
 
-static void _safe_newline()
+void inscribe_item(item_def &item)
 {
-    if (wherey() == get_number_of_lines())
-    {
-        cgotoxy(1, wherey());
-        formatted_string::parse_string(string(80, ' ')).display();
-        cgotoxy(1, wherey());
-    }
-    else
-        formatted_string::parse_string("\n").display();
-}
-
-// There are currently two ways to inscribe an item:
-// * using the inscribe command ('{') -> msgwin = true
-// * from the inventory when viewing an item -> msgwin = false
-//
-// msgwin also controls whether a hints mode explanation can be
-// shown, or whether the pre- and post-inscription item names need to be
-// printed.
-void inscribe_item(item_def &item, bool msgwin)
-{
-    if (msgwin)
-        mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
 
     const bool is_inscribed = !item.inscription.empty();
     string prompt = is_inscribed ? "Replace inscription with what? "
                                  : "Inscribe with what? ";
 
     char buf[79];
-    int ret;
-    if (msgwin)
-    {
-        ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,
+    int ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,
                               item.inscription);
-    }
-    else
-    {
-        _safe_newline();
-        prompt = "<cyan>" + prompt + "</cyan>";
-        formatted_string::parse_string(prompt).display();
-        ret = cancellable_get_line(buf, sizeof buf, nullptr, nullptr,
-                                  item.inscription);
-    }
-
     if (ret)
     {
-        if (msgwin)
-            canned_msg(MSG_OK);
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -2582,35 +2437,15 @@ void inscribe_item(item_def &item, bool msgwin)
 
     if (item.inscription == buf)
     {
-        if (msgwin)
-            canned_msg(MSG_OK);
+        canned_msg(MSG_OK);
         return;
     }
 
     item.inscription = buf;
 
-    if (msgwin)
-    {
-        mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
-        you.wield_change  = true;
-        you.redraw_quiver = true;
-    }
-}
-
-static void _adjust_item(item_def &item)
-{
-    _safe_newline();
-    string prompt = "<cyan>Adjust to which letter? </cyan>";
-    formatted_string::parse_string(prompt).display();
-    const int keyin = getch_ck();
-    // TODO: CK_RESIZE?
-
-    if (isaalpha(keyin))
-    {
-        const int a = letter_to_index(item.slot);
-        const int b = letter_to_index(keyin);
-        swap_inv_slots(a,b,true);
-    }
+    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    you.wield_change  = true;
+    you.redraw_quiver = true;
 }
 
 /**
@@ -3121,9 +2956,9 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_FIRE:            return "deal extra fire damage";
     case AF_HUNGER:          return "cause hungering";
     case AF_MUTATE:          return "cause mutations";
-    case AF_PARALYSE:        return "cause paralysis";
+    case AF_PARALYSE:        return "poison and cause paralysis or slowing";
     case AF_POISON:          return "cause poisoning";
-    case AF_POISON_STRONG:   return "cause strong poisoning through resistance";
+    case AF_POISON_STRONG:   return "cause strong poisoning";
     case AF_ROT:             return "cause rotting";
     case AF_VAMPIRIC:        return "drain health";
     case AF_KLOWN:           return "cause random powerful effects";
@@ -3865,6 +3700,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     else if (mons.has_ench(ENCH_INSANE))
         inf.body << "; frenzied and insane";
 
+    inf.body << "\n\nHas holiness: ";
+    inf.body << holiness_description(mi.holi);
+    inf.body << ".";
+
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
 
@@ -3897,18 +3736,15 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     bool has_item = false;
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    for (mon_inv_iterator ii(mons); ii; ++ii)
     {
-        if (mons.inv[i] != NON_ITEM)
+        if (!has_item)
         {
-            if (!has_item)
-            {
-                inf.body << "\n\nMonster Inventory:\n";
-                has_item = true;
-            }
-            inf.body << "    " << i << ": "
-                     << mitm[mons.inv[i]].name(DESC_A, false, true);
+            inf.body << "\n\nMonster Inventory:\n";
+            has_item = true;
         }
+        inf.body << "    " << ii.slot() << ": "
+                 << ii->name(DESC_A, false, true);
     }
 
     if (mons.props.exists("blame"))

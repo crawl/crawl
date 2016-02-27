@@ -295,7 +295,7 @@ int numcmp(const char *a, const char *b, int limit)
 }
 
 // make STL sort happy
-bool numcmpstr(const string a, const string b)
+bool numcmpstr(const string& a, const string& b)
 {
     return numcmp(a.c_str(), b.c_str()) == -1;
 }
@@ -313,8 +313,8 @@ bool version_is_stable(const char *v)
     }
 }
 
-static void inline _untag(string &s, const string pre,
-                          const string post, bool onoff)
+static void inline _untag(string &s, const string &pre,
+                          const string &post, bool onoff)
 {
     size_t p = 0;
     while ((p = s.find(pre, p)) != string::npos)

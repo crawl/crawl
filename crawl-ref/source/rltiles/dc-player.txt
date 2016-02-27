@@ -817,6 +817,7 @@ lshield_spiral LARGE_SHIELD_SPIRAL LSHIELD_LAST_NORM
 
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
+buckler_warlock BUCKLER_WARLOCK
 
 shield_donald SHIELD_DONALD
 shield_bullseye SHIELD_BULLSEYE

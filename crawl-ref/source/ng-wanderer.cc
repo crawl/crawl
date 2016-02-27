@@ -213,10 +213,9 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
 
 static void _wanderer_role_skill(stat_type role, int levels)
 {
-    skill_type weapon_type = NUM_SKILLS;
+    skill_type weapon_type = _wanderer_role_weapon_select(role);
     skill_type spell2 = NUM_SKILLS;
 
-    weapon_type = _wanderer_role_weapon_select(role);
     if (role == STAT_INT)
        spell2 = _wanderer_role_weapon_select(role);
 
@@ -402,7 +401,7 @@ static void _wanderer_random_evokable()
         int selected_evoker =
               random_choose(MISC_BOX_OF_BEASTS, MISC_LAMP_OF_FIRE,
                             MISC_STONE_OF_TREMORS, MISC_FAN_OF_GALES,
-                            MISC_PHIAL_OF_FLOODS, MISC_XOMS_CHESSBOARD);
+                            MISC_PHIAL_OF_FLOODS);
         int charges = 0;
         if (selected_evoker == MISC_BOX_OF_BEASTS)
             charges = random_range(10, 15, 2);
@@ -412,8 +411,7 @@ static void _wanderer_random_evokable()
     else
     {
         wand_type selected_wand =
-              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION, WAND_MAGIC_DARTS,
-                            WAND_FROST, WAND_FLAME);
+              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION, WAND_FLAME);
         newgame_make_item(OBJ_WANDS, selected_wand, 1, 15);
     }
 }
@@ -679,11 +677,11 @@ void create_wanderer()
     // The first of these goes through the whole role/aptitude weighting
     // thing again. It's quite possible that this will give something
     // we have no skill in.
-    stat_type selected_role = one_chance_in(3) ? secondary_role : primary_role;
-    skill_type sk_1 = SK_NONE;
+    const stat_type selected_role = one_chance_in(3) ? secondary_role
+                                                     : primary_role;
+    const skill_type sk_1 = _wanderer_role_weapon_select(selected_role);
     skill_type sk_2 = SK_NONE;
 
-    sk_1 = _wanderer_role_weapon_select(selected_role);
     if (selected_role == STAT_INT)
         sk_2 = _wanderer_role_weapon_select(selected_role);
 

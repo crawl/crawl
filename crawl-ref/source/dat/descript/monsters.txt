@@ -811,6 +811,12 @@ dancing weapon
 
 A weapon enchanted to dance through the air and attack under its own power.
 %%%%
+dart slug
+
+A small invertebrate. It hunts prey considerably larger than itself by firing
+chitinous darts, using a concealed air bladder to launch them with remarkable
+range & power.
+%%%%
 deathcap
 
 A noxious and deadly fungus suffused with negative energy. While parasitic in
@@ -851,15 +857,15 @@ deep elf annihilator
 A deep elf who exults in conjured mayhem and destruction. It is widely hated
 and feared, both for the power and for the precision of its destructive magics.
 %%%%
+deep elf archer
+
+An experienced deep elf fighter with a penchant for ranged combat.
+%%%%
 deep elf blademaster
 
 A champion of the deep elves, who scorns magic and is devoted to the study of
 the sword. A blademaster wields two weapons with astonishing dexterity and
 speed.
-%%%%
-deep elf conjurer
-
-A deep elf well-versed in a variety of destructive magics.
 %%%%
 deep elf death mage
 
@@ -874,10 +880,8 @@ demonic forces and the creatures of the Abyss.
 deep elf elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
-%%%%
-deep elf fighter
-
-A strong deep elf soldier who wields weapons and battle magic.
+They are renowned for the ability to dig out and pin down even the most
+elusive foes with powerful, unavoidable magic.
 %%%%
 deep elf high priest
 
@@ -898,19 +902,10 @@ deep elf master archer
 A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
-deep elf priest
-
-This deep elf is a servant of the ancient dark god of the deep elves, and has
-been granted command of torturous energies by its enigmatic lord.
-%%%%
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal
-arcane abilities of destruction, summoning and banishment.
-%%%%
-deep elf summoner
-
-A deep elf skilled at summoning plagues of insidious vermin.
+arcane abilities.
 %%%%
 deep dwarf
 
@@ -935,7 +930,7 @@ demigod
 
 The aura of power around this human-like figure immediately betrays its divine
 ancestry. And with the good gods (at least officially) decrying fornication,
-betting on the good nature of this individual may be unwise...
+betting on the good nature of this individual may be unwise.
 %%%%
 demonic crawler
 
@@ -955,6 +950,13 @@ dire elephant
 
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
+%%%%
+doom hound
+
+A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
+may appear alone, it's unlikely to remain so for long - it has the terrible
+power to set creatures of nightmare on its victim's trails, though it can
+only ever use this power exactly once.
 %%%%
 draconian
 
@@ -1081,9 +1083,7 @@ dangerous, this freakish relative puts it to shame.
 entropy weaver
 
 A gaunt humanoid creature covered in a flaking, pale chitin. Its spindly limbs
-are capable of startlingly quick movement and end in razor-sharp talons. These
-creatures know a slow and ancient chant that temporarily accelerates the aging
-process of a foe's weapon and armour, corroding them badly.
+are capable of startlingly quick movement and end in razor-sharp talons.
 %%%%
 ettin
 
@@ -1129,10 +1129,6 @@ fire dragon
 A great reptilian beast with powerful claws on its limbs, covered in thick
 red scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
-%%%%
-fire drake
-
-A small but dangerous dragon, puffing clouds of smoke.
 %%%%
 fire elemental
 
@@ -1424,6 +1420,11 @@ hound
 A fearsome hunting dog, lithe and alert. Its master must be long gone, for it
 looks dishevelled, and has a lean and hungry look.
 %%%%
+howler monkey
+
+An aggressively territorial primate, known for the astonishing variety &
+volume of noise it can produce.
+%%%%
 # Stolen from http://rustyandco.com/frequently-asked-questions/monster-guide/
 human
 
@@ -1535,8 +1536,8 @@ searching for carrion to devour.
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost anything, and
-grows a little each time...
+A pulsating mass of acidic protoplasm. It can and will eat almost anything,
+growing and splitting as it does so.
 %%%%
 jiangshi
 
@@ -2021,12 +2022,16 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+rime drake
+
+A small but dangerous dragon. Its breath is visible even on the warmest days.
+%%%%
 river rat
 
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
 %%%%
-the royal jelly
+the Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
@@ -2190,7 +2195,7 @@ surely appreciate being freed.
 slime creature
 
 An icky glob of slime, which slithers along the ground, occasionally merging
-with other nearby globs...
+with other nearby globs.
 %%%%
 small abomination
 
@@ -2456,11 +2461,6 @@ torturous demonspawn
 training dummy
 
 A mannequin used for battle practice.
-%%%%
-trapdoor spider
-
-A fast-moving arachnid that both surprises its prey and evades its enemies by
-concealing itself in crannies in the dungeon floor.
 %%%%
 troll
 
@@ -2839,7 +2839,7 @@ Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
 dimme
 
-A terrible demon, or perhaps a demigodess, with powers over death, disease,
+A terrible demon, or perhaps a demigoddess, with powers over death, disease,
 and suffering. Its presence is horrifying, but supernaturally compelling.
 %%%%
 drunken dwarf

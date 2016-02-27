@@ -274,7 +274,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
+        const bool was_holy = bool(mons_class_holiness(item.mon_type) & MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
         if (item.defined() && item.is_type(OBJ_CORPSES, CORPSE_BODY)
@@ -845,7 +845,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
+        const bool was_holy = bool(mons_class_holiness(item.mon_type) & MH_HOLY);
 
         vampire_nutrition_per_turn(item, 1);
 
@@ -890,7 +890,7 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
-        more();  // or the above message won't be seen
+        // included in default force_more_message
 
         const coord_def pass(delay.parm1, delay.parm2);
 
@@ -1035,11 +1035,6 @@ static void _armour_wear_effects(const int item_slot)
         {
             remove_ice_armour();
         }
-    }
-    else if (eq_slot == EQ_SHIELD)
-    {
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
     }
 
     equip_item(eq_slot, item_slot);
@@ -1325,10 +1320,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
-        int max_hp = (Options.rest_wait_percent * you.hp_max) / 100;
-        int max_mp = (Options.rest_wait_percent * you.max_magic_points) / 100;
         if (Options.rest_wait_both && curr == DELAY_REST
-            && (you.magic_points < max_mp || you.hp < max_hp))
+            && !you.is_sufficiently_rested())
         {
             return false;
         }
@@ -1441,17 +1434,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " appears from thin air!";
         else if (at.context == SC_LEAP_IN)
             text += " leaps into view!";
-        // The monster surfaced and submerged in the same turn without
-        // doing anything else.
-        else if (at.context == SC_SURFACES_BRIEFLY)
-            text += "surfaces briefly.";
-        else if (at.context == SC_SURFACES)
-            if (mon->type == MONS_TRAPDOOR_SPIDER)
-                text += " leaps out from its hiding place under the floor!";
-            else
-                text += " surfaces.";
-        else if (at.context == SC_FISH_SURFACES_SHOUT
-              || at.context == SC_FISH_SURFACES)
+        else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
             if (mons_primary_habitat(mon) == HT_LAVA)
@@ -1481,7 +1464,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         bool zin_id = false;
         string god_warning;
 
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::warn_shapeshifter)
             && mon->is_shapeshifter()
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
@@ -1489,7 +1472,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             zin_id = true;
             mon->props["zin_id"] = true;
             discover_shifter(mon);
-            god_warning = "Zin warns you: "
+            god_warning = uppercase_first(god_name(you.religion))
+                          + " warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
                           + " is a foul ";
             if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1507,7 +1491,10 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         if (!mweap.empty())
         {
             if (ash_id)
-                god_warning = "Ashenzari warns you:";
+            {
+                god_warning = uppercase_first(god_name(you.religion))
+                              + " warns you:";
+            }
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"

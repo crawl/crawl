@@ -3348,7 +3348,7 @@ local altar_count = get_altar_count(_G, 6)
 nsubst("O = " .. altar_count .. ":B / *:O")
 }}
 KFEAT:    O = altar_lugonu
-MONS:     plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:     demonic plant
 SUBST:    . = . x:1 w:1 l:1
 SUBST:    x = xxxcv
 SUBST:    ' = .

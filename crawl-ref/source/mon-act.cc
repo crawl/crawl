@@ -434,7 +434,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
            && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
-           && mitm[mons->inv[MSLOT_WAND]].plus > 0;
+           && mitm[mons->inv[MSLOT_WAND]].charges > 0;
 }
 
 static void _set_mons_move_dir(const monster* mons,
@@ -529,7 +529,7 @@ static void _handle_movement(monster* mons)
         // Nonliving and berserking monsters always stop immediately,
         // since they're only being forced out rather than actually
         // scared.
-        if (mons->holiness() == MH_NONLIVING
+        if (mons->holiness() & MH_NONLIVING
             || mons->berserk()
             || mons->has_ench(ENCH_INSANE)
             || x_chance_in_y(2, 5))
@@ -989,7 +989,7 @@ static bool _handle_scroll(monster& mons)
 
     case SCR_BLINKING:
         if ((mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
-            && mons_near(&mons) && !mons.no_tele(true, false))
+            && mons.can_see(you) && !mons.no_tele(true, false))
         {
             simple_monster_message(&mons, " reads a scroll.");
             read = true;
@@ -1001,7 +1001,7 @@ static bool _handle_scroll(monster& mons)
         break;
 
     case SCR_SUMMONING:
-        if (mons_near(&mons))
+        if (mons.can_see(you))
         {
             simple_monster_message(&mons, " reads a scroll.");
             mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
@@ -1011,8 +1011,7 @@ static bool _handle_scroll(monster& mons)
             {
                 create_monster(
                     mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)), &mons,
-                              3, MON_SUMM_SCROLL, mons.pos(), mons.foe,
-                              0, GOD_NO_GOD));
+                              3, MON_SUMM_SCROLL, mons.pos(), mons.foe));
             }
         }
         break;
@@ -1053,8 +1052,11 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
 
 static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 {
-    //XXX: Why aren't these allowed?
-    if (wand.sub_type == WAND_FIREBALL
+    if (item_type_removed(wand.base_type, wand.sub_type))
+        return false;
+
+    //XXX: implement these for monsters... (:
+    if (wand.sub_type == WAND_ICEBLAST
         || wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         return false;
@@ -1083,7 +1085,7 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
     }
 
     // charge expenditure {dlb}
-    wand.plus--;
+    wand.charges--;
     beem.is_tracer = false;
     beem.fire();
 
@@ -1122,7 +1124,7 @@ static void _rod_fired_pre(monster& mons)
 static bool _rod_fired_post(monster& mons, item_def &rod, bolt &beem,
                             int rate, bool was_visible)
 {
-    rod.plus -= rate;
+    rod.charges -= rate;
     dprf("rod charge: %d, %d", rod.charges, rod.charge_cap);
 
     if (was_visible)
@@ -1181,7 +1183,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     item_def* rod = mons.mslot_item(MSLOT_WEAPON);
     // FIXME: monsters should be able to use rods
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
@@ -1192,13 +1194,13 @@ static bool _handle_rod(monster &mons, bolt &beem)
         return false;
     }
 
-    // was the player visible when we started?
+    // was the monster visible when we started?
     bool was_visible = you.can_see(mons);
 
     spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
     int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
-    if (rod->plus < rate)
+    if (rod->charges < rate)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
@@ -1216,12 +1218,11 @@ static bool _handle_rod(monster &mons, bolt &beem)
         if (mons.props.exists("thunderbolt_last")
             && mons.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
         {
-            rate = min(5 * ROD_CHARGE_MULT, (int)rod->plus);
+            rate = min(5 * ROD_CHARGE_MULT, (int)rod->charges);
             mons.props["thunderbolt_mana"].get_int() = rate;
         }
         break;
 
-    case SPELL_SUMMON_SWARM:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
@@ -1300,11 +1301,11 @@ static bool _handle_wand(monster& mons, bolt &beem)
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip()
+        || x_chance_in_y(3, 4)
         || !wand
         || wand->base_type != OBJ_WANDS)
     {
@@ -1359,18 +1360,6 @@ static bool _handle_wand(monster& mons, bolt &beem)
 
     case WAND_HEAL_WOUNDS:
         if (mons.hit_points <= mons.max_hit_points / 2)
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_INVISIBILITY:
-        if (!mons.has_ench(ENCH_INVIS)
-            && !mons.has_ench(ENCH_SUBMERGED)
-            && !mons.glows_naturally()
-            && (!mons.friendly() || you.can_see_invisible(false)))
         {
             beem.target = mons.pos();
             niceWand = true;
@@ -1448,7 +1437,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     const bool liquefied = mons->liquefied_ground();
 
     // Don't allow offscreen throwing for now.
-    if (mons->foe == MHITYOU && !mons_near(mons))
+    if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
         return false;
 
     // Monsters won't shoot in melee range, largely for balance reasons.
@@ -1780,26 +1769,6 @@ static void _pre_monster_move(monster& mons)
     mons.check_speed();
 }
 
-static void _maybe_submerge(monster* mons)
-{
-    if (mons->asleep() || mons->submerged())
-        return;
-
-    if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()         // No submerging while caught.
-        && !mons->asleep()         // No submerging when asleep.
-        && !you.beheld_by(mons)    // No submerging if player entranced.
-        && !mons_is_lurking(mons)  // Handled elsewhere.
-        && mons->wants_submerge())
-    {
-        const monsterentry* entry = get_monster_data(mons->type);
-
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-}
-
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1935,8 +1904,12 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->has_ench(ENCH_BRILLIANCE_AURA))
+        aura_of_brilliance(mons);
+
     if (you.duration[DUR_GOZAG_GOLD_AURA]
-        && in_good_standing(GOD_GOZAG)
+        && have_passive(passive_t::gold_aura)
+        && you.see_cell(mons->pos())
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
@@ -1989,32 +1962,15 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (igrd(mons->pos()) != NON_ITEM
-        && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
-            || mons_eats_items(mons)))
+    if (_handle_pickup(mons))
     {
-        // Keep neutral, charmed, summoned, and friendly monsters from
-        // picking up stuff.
-        if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-             && !mons->has_ench(ENCH_HEXED)
-             || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
-            && !mons->is_summoned() && !mons->is_perm_summoned()
-            && !mons->friendly())
-        {
-            if (_handle_pickup(mons))
-            {
-                DEBUG_ENERGY_USE("handle_pickup()");
-                return;
-            }
-        }
+        DEBUG_ENERGY_USE("handle_pickup()");
+        return;
     }
 
     // Lurking monsters only stop lurking if their target is right
     // next to them, otherwise they just sit there.
-    // However, if the monster is involuntarily submerged but
-    // still alive (e.g., nonbreathing which had water poured
-    // on top of it), this doesn't apply.
-    if (mons_is_lurking(mons) || mons->has_ench(ENCH_SUBMERGED))
+    if (mons->has_ench(ENCH_SUBMERGED))
     {
         if (mons->foe != MHITNOT
             && grid_distance(mons->target, mons->pos()) <= 1)
@@ -2075,7 +2031,6 @@ void handle_monster_move(monster* mons)
             }
         }
     }
-    _maybe_submerge(mons);
     if (!mons->asleep() && !mons->submerged())
         maybe_mons_speaks(mons);
 
@@ -2123,7 +2078,10 @@ void handle_monster_move(monster* mons)
             // Lost souls can flicker away at any time they're isolated
             || mons->type == MONS_LOST_SOUL
             // Let monsters who have Dig use it off-screen.
-            || mons->has_spell(SPELL_DIG))
+            || mons->has_spell(SPELL_DIG)
+            // Let monsters who have Awaken Earth use it off-screen.
+            || mons->has_spell(SPELL_AWAKEN_EARTH)
+            )
         {
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both. This aims
@@ -2379,17 +2337,18 @@ void monster::struggle_against_net()
 
     if (net == NON_ITEM)
     {
-        trap_def *trap = find_trap(pos());
+        trap_def *trap = trap_at(pos());
         if (trap && trap->type == TRAP_WEB)
         {
 
             if (coinflip())
             {
-                if (mons_near(this) && !visible_to(&you))
-                    mpr("Something you can't see is thrashing in a web.");
-                else
+                if (you.see_cell(pos()))
                 {
-                    simple_monster_message(this,
+                    if (!visible_to(&you))
+                        mpr("Something you can't see is thrashing in a web.");
+                    else
+                        simple_monster_message(this,
                                            " struggles to get unstuck from the web.");
                 }
                 return;
@@ -2400,23 +2359,21 @@ void monster::struggle_against_net()
         return;
     }
 
-    // Handled in handle_pickup().
-    if (mons_eats_items(this))
-        return;
-
-    // The enchantment doubles as the durability of a net
-    // the more corroded it gets, the more easily it will break.
-    const int hold = mitm[net].plus; // This will usually be negative.
+    // The more corroded the net gets, the more easily it will break.
+    const int hold = mitm[net].net_durability; // This will usually be negative.
     const int mon_size = body_size(PSIZE_BODY);
 
     // Smaller monsters can escape more quickly.
     if (mon_size < random2(SIZE_BIG)  // BIG = 5
         && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
     {
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles to escape the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles to escape the net.");
+        }
 
         // Confused monsters have trouble finding the exit.
         if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
@@ -2431,10 +2388,13 @@ void monster::struggle_against_net()
     else // Large (and above) monsters always thrash the net and destroy it
     {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
 
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles against the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles against the net.");
+        }
 
         // Confused monsters more likely to struggle without result.
         if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
@@ -2482,11 +2442,11 @@ void monster::struggle_against_net()
         if (speed != 0)
             damage = div_rand_round(damage * speed, 10);
 
-        mitm[net].plus -= damage;
+        mitm[net].net_durability -= damage;
 
-        if (mitm[net].plus < -7)
+        if (mitm[net].net_durability < -7)
         {
-            if (mons_near(this))
+            if (you.see_cell(pos()))
             {
                 if (visible_to(&you))
                 {
@@ -2612,8 +2572,8 @@ static void _post_monster_move(monster* mons)
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
             if (!cell_is_solid(*ai)
-                && (env.cgrid(*ai) == EMPTY_CLOUD
-                    || env.cloud[env.cgrid(*ai)].type == ctype))
+                && (!cloud_at(*ai)
+                    || cloud_at(*ai)->type == ctype))
             {
                 place_cloud(ctype, *ai, 2 + random2(6), mons);
             }
@@ -2815,7 +2775,7 @@ static bool _jelly_divide(monster& parent)
 }
 
 // XXX: This function assumes that only jellies eat items.
-static bool _monster_eat_item(monster* mons, bool nearby)
+static bool _monster_eat_item(monster* mons)
 {
     if (!mons_eats_items(mons))
         return false;
@@ -2831,7 +2791,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     int hps_changed = 0;
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
-    bool eaten_net = false;
     bool shown_msg = false;
     piety_gain_t gain = PIETY_NONE;
     int js = JS_NONE;
@@ -2840,7 +2799,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     for (stack_iterator si(mons->pos());
          si && eaten < max_eat && hps_changed < 50; ++si)
     {
-        if (!is_item_jelly_edible(*si))
+        if (!item_is_jelly_edible(*si))
             continue;
 
         dprf("%s eating %s", mons->name(DESC_PLAIN, true).c_str(),
@@ -2854,13 +2813,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
             hps_changed += quant * 3;
             eaten += quant;
-
-            if (mons->caught() && item_is_stationary_net(*si))
-            {
-                // We don't want to mulch the net just yet.
-                mons->del_ench(ENCH_HELD, true, false);
-                eaten_net = true;
-            }
         }
         else
         {
@@ -2875,7 +2827,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 nearby ? "" : " distant");
+                 you.see_cell(mons->pos()) ? "" : " distant");
             shown_msg = true;
         }
 
@@ -2909,10 +2861,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                min(avg_hp * 4, mons->hit_points));
         mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
 
-        if (eaten_net)
-            simple_monster_message(mons, " devours the net!");
-        else
-            _jelly_divide(*mons);
+        _jelly_divide(*mons);
     }
 
     return eaten > 0;
@@ -2921,8 +2870,13 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
 static bool _handle_pickup(monster* mons)
 {
-    if (mons->asleep() || mons->submerged())
+    if (igrd(mons->pos()) == NON_ITEM
+        // Summoned monsters never pick anything up.
+        || mons->is_summoned() || mons->is_perm_summoned()
+        || mons->asleep() || mons->submerged())
+    {
         return false;
+    }
 
     // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
@@ -2932,33 +2886,32 @@ static bool _handle_pickup(monster* mons)
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->airborne())
         return false;
 
-    const bool nearby = mons_near(mons);
     int count_pickup = 0;
 
-    if (mons_eats_items(mons) && _monster_eat_item(mons, nearby))
+    if (mons_eats_items(mons) && _monster_eat_item(mons))
         return false;
 
-    if (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR)
+    if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
+        return false;
+
+    // Note: Monsters only look at stuff near the top of stacks.
+    //
+    // XXX: Need to put in something so that monster picks up
+    // multiple items (e.g. ammunition) identical to those it's
+    // carrying.
+    //
+    // Monsters may now pick up up to two items in the same turn.
+    // (jpeg)
+    for (stack_iterator si(mons->pos()); si; ++si)
     {
-        // Note: Monsters only look at stuff near the top of stacks.
-        //
-        // XXX: Need to put in something so that monster picks up
-        // multiple items (e.g. ammunition) identical to those it's
-        // carrying.
-        //
-        // Monsters may now pick up up to two items in the same turn.
-        // (jpeg)
-        for (stack_iterator si(mons->pos()); si; ++si)
-        {
-            if (si->flags & ISFLAG_NO_PICKUP)
-                continue;
+        if (si->flags & ISFLAG_NO_PICKUP)
+            continue;
 
-            if (mons->pickup_item(*si, nearby, false))
-                count_pickup++;
+        if (mons->pickup_item(*si, you.see_cell(mons->pos()), false))
+            count_pickup++;
 
-            if (count_pickup > 1 || coinflip())
-                break;
-        }
+        if (count_pickup > 1 || coinflip())
+            break;
     }
 
     return count_pickup > 0;
@@ -3088,8 +3041,7 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
         return false;
 
-    // Anyone can displace a submerged monster (otherwise monsters can
-    // get stuck behind a trapdoor spider, giving away its presence).
+    // Anyone can displace a submerged monster.
     if (mpushee->submerged())
         return true;
 
@@ -3172,13 +3124,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
         return false;
 
-    // The kraken is so large it cannot enter shallow water.
-    // Its tentacles can, and will, though.
-    if (target_grid == DNGN_SHALLOW_WATER && mons_base_type(mons) == MONS_KRAKEN)
-        return false;
-
-    const int targ_cloud_num = env.cgrid(targ);
-    if (mons_avoids_cloud(mons, targ_cloud_num))
+    if (mons_avoids_cloud(mons, targ))
         return false;
 
     if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
@@ -3452,7 +3398,7 @@ static void _jelly_grows(monster& mons)
     if (player_can_hear(mons.pos()))
     {
         mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-             mons_near(&mons) ? "" : " distant");
+             you.see_cell(mons.pos()) ? "" : " distant");
     }
 
     const int avg_hp = mons_avg_hp(mons.type);
@@ -3718,30 +3664,6 @@ static bool _monster_move(monster* mons)
     const habitat_type habitat = mons_primary_habitat(mons);
     bool deep_water_available = false;
 
-    if (mons->type == MONS_TRAPDOOR_SPIDER)
-    {
-        if (mons->submerged())
-            return false;
-
-        // Trapdoor spiders sometime hide if they can't see their foe.
-        // (but friendly trapdoor spiders won't hide at all, for sanity's
-        // sake.)
-        const actor *foe = mons->get_foe();
-        const bool can_see = foe && mons->can_see(*foe);
-
-        if (monster_can_submerge(mons, grd(mons->pos()))
-            && !can_see && !mons_is_confused(mons)
-            && !mons->friendly()
-            && !mons->caught()
-            && !mons->berserk_or_insane()
-            && one_chance_in(5))
-        {
-            mons->add_ench(ENCH_SUBMERGED);
-            mons->behaviour = BEH_LURK;
-            return false;
-        }
-    }
-
     // Berserking monsters make a lot of racket.
     if (mons->berserk_or_insane())
     {
@@ -3904,7 +3826,7 @@ static bool _monster_move(monster* mons)
                     mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), mons,
                           2, MON_SUMM_ANIMATE,
                           target, MHITNOT,
-                          0, GOD_LUGONU));
+                          MG_NONE, GOD_LUGONU));
             destroy_wall(target);
         }
     }

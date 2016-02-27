@@ -157,7 +157,7 @@ static void _run_test(const string &name, void (*func)())
     }
     catch (const ext_fail_exception &E)
     {
-        failures.emplace_back(name, E.msg);
+        failures.emplace_back(name, E.what());
     }
 }
 

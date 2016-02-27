@@ -1042,9 +1042,7 @@ ENDMAP
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
 MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
-KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
-           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-           name_adjective tile:mons_withered_plant
+KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
    oo.oooo
@@ -1216,8 +1214,7 @@ MONS: hydra
 NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
-KITEM: K = potion of poison / potion of degeneration / \
-           potion of mutation
+KITEM: K = potion of degeneration w:20 / potion of mutation
 KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
@@ -1495,9 +1492,7 @@ MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
 KMONS:   6 = bog body / spriggan zombie w:4 / troll zombie w:4
 KMONS:   7 = large abomination w:2 / swamp worm zombie / giant leech zombie / \
              alligator zombie w:6 / spiny frog zombie w:6
-KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
-              tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-              name_adjective tile:mons_withered_plant
+KMONS:   q = withered plant
 KFEAT:   67 = W
 KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W
@@ -1912,7 +1907,7 @@ TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
 PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  float
-MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
+MONS:    swamp dragon, swamp drake, hydra, rime drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
@@ -2001,7 +1996,7 @@ TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
 MONS:    fire dragon, lindwurm / fire crab w:8, swamp dragon / hydra w:12
-MONS:    fire drake / mottled dragon w:6 / swamp drake / steam dragon w:4
+MONS:    mottled dragon w:6 / swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \

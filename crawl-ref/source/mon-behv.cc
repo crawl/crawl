@@ -479,13 +479,6 @@ void handle_behaviour(monster* mon)
             new_foe = MHITNOT;
             break;
 
-        case BEH_LURK:
-            // Make sure trapdoor spiders are not hiding in plain sight
-            if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
-                mon->add_ench(ENCH_SUBMERGED);
-
-            // Fall through to get a target, but don't change to wandering.
-
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -497,8 +490,7 @@ void handle_behaviour(monster* mon)
                     || mon->type == MONS_GIANT_SPORE
                     || mon->type == MONS_BALL_LIGHTNING)
                 {
-                    if (mon->behaviour != BEH_LURK)
-                        new_beh = BEH_WANDER;
+                    new_beh = BEH_WANDER;
                 }
                 else
                 {
@@ -1051,7 +1043,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_WANDER;
 
-            if (mons_near(mon))
+            if (you.can_see(*mon))
                 remove_auto_exclude(mon, true);
         }
 
@@ -1098,7 +1090,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         mon->foe = src_idx;
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
@@ -1179,7 +1171,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
@@ -1219,8 +1211,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
 
         // Neither do plants or nonliving beings.
-        if (mon->holiness() == MH_PLANT
-            || mon->holiness() == MH_NONLIVING)
+        if (mon->holiness() & (MH_PLANT | MH_NONLIVING))
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
@@ -1322,28 +1313,20 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it was unaware of you and you're its new foe, it might shout.
-    if (was_unaware && !mon->asleep() && allow_shout
+    if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
         handle_monster_shouts(mon);
     }
 
-    const bool wasLurking =
-        (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
     const bool isPacified = mon->pacified();
 
-    if ((wasLurking || isPacified)
+    if (isPacified
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
     {
-        // Lurking monsters or pacified monsters leaving the level won't
-        // stop doing so just because they noticed something.
+        // Pacified monsters leaving the level won't stop doing so just because
+        // they noticed something.
         mon->behaviour = old_behaviour;
-    }
-    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
-    {
-        // The same goes for submerged monsters, if they can't
-        // unsubmerge.
-        mon->behaviour = BEH_LURK;
     }
 
     // mons_speaks_msg already handles the LOS check.

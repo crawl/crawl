@@ -96,7 +96,7 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
-    MB_STONESKIN,
+    MB_MAGIC_ARMOUR,
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
@@ -136,8 +136,8 @@ enum monster_info_flags
     MB_REPEL_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
-#endif
     MB_CONDENSATION_SHIELD,
+#endif
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
@@ -146,6 +146,11 @@ enum monster_info_flags
     MB_CHANT_WORD_OF_ENTROPY,
 #endif
     MB_AIRBORNE,
+    MB_BRILLIANCE_AURA,
+    MB_EMPOWERED_SPELLS,
+    MB_READY_TO_HOWL,
+    MB_PARTIALLY_CHARGED,
+    MB_FULLY_CHARGED,
     NUM_MB_FLAGS
 };
 
@@ -179,7 +184,9 @@ struct monster_info_base
     int ac;
     int ev;
     int base_ev;
+    int mr;
     resists_t mresists;
+    bool can_see_invis;
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
@@ -212,9 +219,8 @@ struct monster_info : public monster_info_base
                           monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
-    : monster_info_base(mi)
+    : monster_info_base(mi), i_ghost(mi.i_ghost)
     {
-        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())

@@ -2772,7 +2772,7 @@ TILE:   D = dngn_disco_ball
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
-MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
+MONS:   demonic plant
 MONS:   red devil ; demon trident good_item ego:distortion ident:type
 MONS:   red devil ; lajatang good_item ego:distortion ident:type
 MONS:   red devil ; demon blade good_item ego:distortion ident:type
