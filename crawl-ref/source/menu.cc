@@ -1868,7 +1868,7 @@ void formatted_scroller::add_raw_text(const string& s, bool new_line,
             if (line.empty())
                 lines.emplace_back(" ");
             while (!line.empty())
-                lines.push_back(wordwrap_line(line, wrap_col, true, true));
+                lines.push_back(wordwrap_line(line, wrap_col, false, true));
         }
     }
 
