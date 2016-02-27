@@ -23,6 +23,7 @@
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godabil.h" // GOZAG_GOLD_AURA_KEY
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -1916,7 +1917,7 @@ void handle_monster_move(monster* mons)
         && !mons_is_firewood(mons)
         && !mons->wont_attack())
     {
-        const int gold = you.props["gozag_gold_aura_amount"].get_int();
+        const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
             if (gozag_gold_in_los(mons))
