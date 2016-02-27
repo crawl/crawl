@@ -937,7 +937,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(3, 7 + (power / 12));
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
-        beam.hit      = AUTOMATIC_HIT;
+        beam.hit      = 20 + power / 6;
         break;
 
     case SPELL_SAP_MAGIC:
