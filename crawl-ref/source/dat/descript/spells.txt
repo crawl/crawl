@@ -560,7 +560,7 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement.
+target's movement. It has no effect on targets that are already frozen.
 %%%%
 Force Lance spell
 
