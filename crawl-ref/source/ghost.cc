@@ -185,7 +185,8 @@ static int _panlord_random_resist_level()
     return random_choose_weighted(1, -1,
                                   3,  0,
                                   3,  1,
-                                  3,  2,
+                                  2,  2,
+                                  1,  3,
                                   0);
 }
 
