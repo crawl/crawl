@@ -198,7 +198,10 @@ void ghost_demon::init_pandemonium_lord()
     }
     while (!getLongDescription(name).empty());
 
-    // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
+    // Is demon a spellcaster?
+    // Non-spellcasters always have branded melee and faster/tougher.
+    const bool spellcaster = x_chance_in_y(3,4);
+
     max_hp = 100 + roll_dice(3, 50);
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
@@ -226,9 +229,15 @@ void ghost_demon::init_pandemonium_lord()
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
-    // Is demon a spellcaster?
-    // Non-spellcasters always have branded melee and are faster instead.
-    const bool spellcaster = x_chance_in_y(3,4);
+    // Non-spellcasters get upgrades to HD, HP, AC, EV and damage
+    if (!spellcaster)
+    {
+        max_hp = max_hp * 3 / 2;
+        ac += 5;
+        ev += 5;
+        damage += 10;
+        xl += 5;
+    }
 
     if (one_chance_in(3) || !spellcaster)
         brand = _random_special_pan_lord_brand();
