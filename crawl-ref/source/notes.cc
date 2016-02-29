@@ -88,6 +88,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_GOD_GIFT
         || note.type == NOTE_GET_MUTATION
         || note.type == NOTE_LOSE_MUTATION
+        || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
         || note.type == NOTE_BUY_ITEM
