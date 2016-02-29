@@ -4139,7 +4139,11 @@ int monster::res_magic(bool calc_unid) const
     if (mons_immune_magic(this))
         return MAG_IMMUNE;
 
-    int u = mons_class_res_magic(type, base_monster);
+    const int type_mr = (get_monster_data(type))->resist_magic;
+    // Negative values get multiplied with monster hit dice.
+    int u = type_mr < 0 ?
+                get_hit_dice() * -type_mr * 4 / 3 :
+                mons_class_res_magic(type, base_monster);
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
