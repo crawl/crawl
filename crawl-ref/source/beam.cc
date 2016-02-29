@@ -4802,7 +4802,8 @@ void bolt::affect_monster(monster* mon)
         {
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
                 mpr("Your demonic guardian avoids your attack.");
-            else
+            else if ((mon->type != MONS_BUSH && mon->type != MONS_BRIAR_PATCH)
+                     || target == mon->pos())
             {
                 simple_god_message(
                     make_stringf(" protects %s plant from harm.",
