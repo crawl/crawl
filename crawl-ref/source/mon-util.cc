@@ -1783,6 +1783,9 @@ void name_zombie(monster* mon, const monster* orig)
         name = mons_type_name(orig->type, DESC_PLAIN);
 
     name_zombie(mon, orig->type, name);
+    mon->flags |= orig->flags & (MF_NAME_SUFFIX
+                                 | MF_NAME_ADJECTIVE
+                                 | MF_NAME_DESCRIPTOR);
 }
 
 // Derived undead deal 80% of the damage of the base form.
