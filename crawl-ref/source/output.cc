@@ -2645,6 +2645,8 @@ static string _status_mut_abilities(int sw)
 
     if (you.species == SP_OCTOPODE)
     {
+        mutations.push_back(_annotate_form_based("amphibious",
+                                                 !form_likes_water()));
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));
