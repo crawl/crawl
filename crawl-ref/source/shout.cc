@@ -99,7 +99,7 @@ void handle_monster_shouts(monster* mons, bool force)
     if (!force && one_chance_in(5))
         return;
 
-    if (mons->cannot_move() || mons->asleep())
+    if (mons->cannot_move() || mons->asleep() || mons->has_ench(ENCH_DUMB))
         return;
 
     // Friendly or neutral monsters don't shout.
