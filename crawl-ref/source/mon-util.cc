@@ -1718,7 +1718,8 @@ bool mons_can_use_stairs(const monster* mon, dungeon_feature_type stair)
         return false;
 
     if (mon->has_ench(ENCH_FRIENDLY_BRIBED)
-        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
+        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)
+            || stair == DNGN_ENTER_HELL || stair == DNGN_EXIT_HELL))
     {
         return false;
     }
