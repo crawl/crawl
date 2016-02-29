@@ -3330,7 +3330,7 @@ static const map<monster_type, monster_conversion> conversions =
 
 bool mons_is_evolvable(const monster* mon)
 {
-    return conversions.count(mon->type);
+    return conversions.count(mon->type) && !mon->has_ench(ENCH_PETRIFIED);
 }
 
 bool fedhas_check_evolve_flora(bool quiet)
@@ -3346,7 +3346,8 @@ bool fedhas_check_evolve_flora(bool quiet)
 
 static vector<string> _evolution_name(const monster_info& mon)
 {
-    if (auto conv = map_find(conversions, mon.type))
+    auto conv = map_find(conversions, mon.type);
+    if (conv && !mon.has_trivial_ench(ENCH_PETRIFIED))
         return { "can evolve into " + mons_type_name(conv->new_type, DESC_A) };
     else
         return { "cannot be evolved" };
@@ -3391,13 +3392,15 @@ spret_type fedhas_evolve_flora(bool fail)
     {
         if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else if (mons_is_plant(plant))
+        else if (!mons_is_plant(plant))
+            mpr("Only plants or fungi may be evolved.");
+        else if (plant->has_ench(ENCH_PETRIFIED))
+            mpr("Stone cannot grow or evolve.");
+        else
         {
             simple_monster_message(plant, " has already reached the pinnacle"
                                    " of evolution.");
         }
-        else
-            mpr("Only plants or fungi may be evolved.");
 
         return SPRET_ABORT;
     }
