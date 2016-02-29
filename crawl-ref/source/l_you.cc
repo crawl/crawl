@@ -87,6 +87,11 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Has the [player's] current god's one-time ability been used? (if any)
+function one_time_ability_used() */
+LUARET1(you_one_time_ability_used, boolean,
+        you.one_time_ability_used[you.religion])
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
@@ -534,6 +539,7 @@ static const struct luaL_reg you_clib[] =
     { "gold"        , you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
+    { "one_time_ability_used" , you_one_time_ability_used },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
