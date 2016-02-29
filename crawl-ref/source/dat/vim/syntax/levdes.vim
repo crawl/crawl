@@ -74,18 +74,18 @@ syn keyword desOrientation north south east west northwest northeast southwest s
 syn keyword desOrientation Depths Temple Orc Elf Lair Swamp Shoals Snake Spider Slime Vaults Blade Crypt Tomb
 "Note: `Zot` totally highlights in e.g. the items `rune of Zot` and `Orb of Zot`. Not worth fixing.
 syn keyword desOrientation Hell Dis Geh Coc Tar Zot Forest Abyss Pan Zig Lab Bazaar Trove Sewer Ossuary
-syn keyword desOrientation Bailey IceCv Volcano WizLab
+syn keyword desOrientation Bailey IceCv Volcano WizLab Gauntlet
 
 "Note: This is the list above, but lower-cased
 syn match desBranch contained /d\|temple\|orc\|elf\|lair\|swamp\|shoals\|snake\|spider\|slime\|vaults\|blade\|crypt\|tomb/
 syn match desBranch contained /hell\|dis\|geh\|coc\|tar\|zot\|forest\|abyss\|pan\|zig\|lab\|bazaar\|trove\|sewer\|ossuary/
-syn match desBranch contained /bailey\|icecv\|volcano\|wizlab/
+syn match desBranch contained /bailey\|icecv\|volcano\|wizlab\|gauntlet/
 
 syn match desBranchname contained /dungeon\|depths\|temple\|orcish_mines\|elven_halls\|lair\|swamp\|shoals/
 syn match desBranchname contained /snake_pit\|spider_nest\|slime_pits\|vaults\|hall_of_blades\|crypt\|tomb/
 syn match desBranchname contained /hell\|dis\|gehenna\|cocytus\|tartarus\|zot\|forest\|abyss\|pandemonium/
 syn match desBranchname contained /ziggurat\|labyrinth\|bazaar\|trove\|sewer\|ossuary/
-syn match desBranchname contained /bailey\|ice_cave\|volcano\|wizlab/
+syn match desBranchname contained /bailey\|ice_cave\|volcano\|wizlab\|gauntlet/
 
 " TAGS
 " in abyss.cc

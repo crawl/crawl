@@ -292,6 +292,16 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREY, BROWN, // set per-map
       '8', {}, 0 },
 
+#if TAG_MAJOR_VERSION > 34
+    { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 24,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET,
+      "Oubliette", "the Gauntlet", "Gauntlet",
+      "Welcome to the Gauntlet! Best of luck.",
+      WHITE, LIGHTMAGENTA,
+      '9', {}, 0 },
+#endif
+
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
       BFLAG_NONE,
       DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS,
@@ -299,4 +309,13 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, 0 },
+#if TAG_MAJOR_VERSION == 34
+    { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 24,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET,
+      "Gauntlet", "the Gauntlet", "Gauntlet",
+      "Welcome to the Gauntlet! Best of luck.",
+      WHITE, LIGHTMAGENTA,
+      '9', {}, 0 },
+#endif
 };

@@ -382,6 +382,8 @@ PORTAL_EXIT(DNGN_EXIT_BAILEY, "gate leading back out of this place", "exit_baile
 PORTAL_EXIT(DNGN_EXIT_ICE_CAVE, "ice covered gate leading back out of this place", "exit_ice_cave", WHITE),
 PORTAL_EXIT(DNGN_EXIT_VOLCANO, "rocky tunnel leading out of this place", "exit_volcano", RED),
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),
+PORTAL_ENTRANCE(DNGN_ENTER_GAUNTLET, "gilded inferno", "enter_gauntlet", ETC_FLASH),
+PORTAL_EXIT(DNGN_EXIT_GAUNTLET, "portal leading out of this place", "exit_gauntlet", ETC_FLASH),
 #if TAG_MAJOR_VERSION == 34
 PORTAL_EXIT(DNGN_UNUSED_EXIT_PORTAL_1, "", "exit_unused", ETC_SHIMMER_BLUE),
 #endif

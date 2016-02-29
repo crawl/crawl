@@ -55,6 +55,8 @@ msc += $warning:falling.*rocks
 msc += $warning:rumble.*avalanche of rocks
 msc += $warning:crackle.*arcane power
 msc += $warning:crackle.*magical portal
+msc += $warning:whispers.*audience
+msc += $warning:impatience.*overwhelming
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
@@ -105,6 +107,7 @@ force_more_message += hiss of flowing sand
 force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
+force_more_message += whispers of an unnatural audience
 
 # Religion
 force_more_message += press .* to convert to Beogh

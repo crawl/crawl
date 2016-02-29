@@ -331,6 +331,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PORTAL_VOLCANO;
     case DNGN_ENTER_WIZLAB:
         return TILE_DNGN_PORTAL_WIZARD_LAB;
+    case DNGN_ENTER_GAUNTLET:
+        return TILE_DNGN_PORTAL;
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
@@ -381,6 +383,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_VOLCANO;
     case DNGN_EXIT_WIZLAB:
         return TILE_DNGN_PORTAL_WIZARD_LAB;
+    case DNGN_EXIT_GAUNTLET:
+        return TILE_DNGN_PORTAL;
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:

@@ -246,6 +246,15 @@ with the results of their experiments. Those willing to explore these
 laboratories may find powerful magical treasures, but be warned: any wizard
 capable of constructing such a realm deserved their reputation.
 %%%%
+Gauntlet
+
+While nearly all demons and devils directly encountered in the Dungeon and its
+connected planes are too violent and soul-draining to practice the renown
+traditions of pacts and temptation, the conceit lives on in horrible tomes of
+otherworldly summoning, many an accursed artifact- and the Gauntlet. The
+blood sports in this oppressive, decadent locale attracts a very wide range
+of varied champions, precise riches, and a large demonic audience.
+%%%%
 Depths
 
 The Depths are the deepest part of the dungeon proper, subject to the

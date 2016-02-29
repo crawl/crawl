@@ -898,6 +898,11 @@ A magical portal
 
 A portal leading to a wizard's laboratory. It seems to be fading away.
 %%%%
+A gilded inferno
+
+An excessive portal leading to the Gauntlet. The spirits on the other side,
+audible through the glimmering blossom, seem to be growing restless.
+%%%%
 ###########
 ### Sprint
 ###########

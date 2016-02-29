@@ -1070,6 +1070,22 @@ static const pop_entry pop_depths[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_gauntlet[] =
+{ // Gauntlet
+  { 1, 1,  300, FLAT, MONS_ENTROPY_WEAVER },
+  { 1, 1,  300, FLAT, MONS_THORN_HUNTER },
+  { 1, 1,  300, FLAT, MONS_SATYR },
+  { 1, 1,  300, FLAT, MONS_GREATER_NAGA },
+  { 1, 1,  400, FLAT, MONS_PHANTASMAL_WARRIOR },
+  { 1, 1,  500, FLAT, MONS_RAKSHASA },
+  { 1, 1,  300, FLAT, MONS_SHADOW_DEMON },
+  { 1, 1,  500, FLAT, MONS_WORLDBINDER },
+  { 1, 1,  400, FLAT, MONS_VERY_UGLY_THING },
+  { 1, 1,  300, FLAT, MONS_SPHINX },
+  { 1, 1,  300, FLAT, MONS_WAR_GARGOYLE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
 // standalone symbols first. Thus this fugly list.
@@ -1121,8 +1137,12 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(icecv),
     POP(volcano),
     POP(wizlab),
+#if TAG_MAJOR_VERSION > 34
+    POP(gauntlet),
+#endif
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
+    POP(gauntlet),
 #endif
 };
 
@@ -1229,8 +1249,12 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
     POP(icecv),
     POP(volcano),
     POP(wizlab),
+#if TAG_MAJOR_VERSION > 34
+    POP(gauntlet),
+#endif
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
+    POP(gauntlet),
 #endif
 };
 
@@ -1334,6 +1358,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_generic),
 #if TAG_MAJOR_VERSION == 34
     POP(water_depths),
+    POP(water_generic),
 #endif
 };
 
@@ -1436,7 +1461,11 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
+#if TAG_MAJOR_VERSION > 34
+    POP(lava_generic),
+#endif
 #if TAG_MAJOR_VERSION == 34
     POP(lava_depths),
+    POP(lava_generic),
 #endif
 };

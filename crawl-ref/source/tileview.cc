@@ -271,6 +271,11 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_GAUNTLET:
+        flv.wall  = TILE_WALL_ABYSS;
+        flv.floor = TILE_FLOOR_ETCHED;
+        return;
+
     case NUM_BRANCHES:
         break;
     }

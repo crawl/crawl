@@ -64,7 +64,8 @@ const Branch* branch_iterator::operator*() const
         BRANCH_BAILEY,
         BRANCH_ICE_CAVE,
         BRANCH_VOLCANO,
-        BRANCH_WIZLAB
+        BRANCH_WIZLAB,
+        BRANCH_GAUNTLET
     };
     COMPILE_CHECK(ARRAYSZ(branch_order) == NUM_BRANCHES);
 

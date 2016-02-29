@@ -1,0 +1,305 @@
+################################################################################
+#
+# Gauntlet! (regret-index)
+# A brief, brutal, late portal: a demonic temptation of a gameshow,
+# focused on mixing together a very wide set of distinct monsters
+# and pairing it with enclosed choices for encounters.
+#
+# Layouts should emphasize visible one-time choices of encounters:
+# here, this most easily means varied teleporter and perma-glass set-ups.
+# They should also suggest levels larger than accessible or normally visible,
+# and feel free to keep around a non-threatening large demonic audience.
+# Threats should be individually notable, hold few limits and keep a wide range.
+#
+# == TODO == 
+# -- general --
+# * long explicit list of (no weapons!) rewards
+# * monster set balance
+# * portal messages, feature descriptions, branch text, etc
+# * no teleport level status (avoid cheating)
+# * unique portal tiles
+# -- maps --
+# * more entrances
+# * additional layouts
+# (crashes when wizmode regenerating due to only having one, even)
+# -- concept map --
+# * cleaner teleporter arrangements
+#   (can indexing be done with subvault calls?)
+# * much higher randomization
+# * interior decoration
+# * exterior decoration
+#
+################################################################################
+
+{{
+function gauntlet_portal(e, ptype)
+  local timeout_turns = crawl.random_range(600, 800)
+
+  local messager =
+    timed_msg {
+      initmsg = { "You hear the whispers of an unnatural audience.",
+                  "There is an entrance to a demonic gauntlet on this level. "
+                  .. "Hurry and find it before they move on!" },
+      finalmsg = "$F{The}'s impatience is almost overwhelming!",
+
+      verb = 'restlessness',
+      noisemaker = 'crowd',
+        ranges = {
+          { 5000, 'growing ' },  { 4000, 'spreading ' },
+          { 2500, 'anxious ' }, { 1500, 'fierce ' },
+          { 0, 'frothing ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The demonic chitterings cease.",
+        entity = 'crowd',
+        bailey_type = ptype,
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "stone_arch",
+        feat_tile = "dngn_portal_expired",
+        msg = messager })
+  e.tags("uniq_gauntlet chance_gauntlet")
+  e.chance(500)
+
+  e.kfeat("O = enter_gauntlet")
+end
+
+function audience_members(e)
+   a = "generate_awake"
+   audience_members = a .. " lesser demon w:25 / " .. a .. " common demon w:15 / " ..
+                      a .. " greater demon w:2 / " .. a .. " corrupter w:2 / " ..
+                      a .. " boggart w:2 / " .. a .. " worldbinder w:2"
+end
+
+-- Deliberately excluded from the below groupings:
+-- * Common Vaults/Depths threats: yaktaur captains, mid-tier dragons / giants
+-- * Vaults branch-specific set relies on more traditional layouts
+-- * Non-draconian Zot enemies
+-- Hesitations: deep elf sorcerer / demonologist (banishment),
+-- other demonspawn (fixes needed), Fiends, pearl dragon.
+
+function gauntlet_tier_one(e)
+   tier_one = "emperor scorpion / spark wasp / torpor snail w:5 / " ..
+              "entropy weaver / ghost moth / moth of wrath w:5 / satyr / " ..
+              "greater naga / shambling mangrove / thorn hunter / " ..
+              "spriggan berserker / spriggan air mage / deep elf death mage / " ..
+              "dancing weapon ; glaive good_item / flayed ghost / eidolon / " ..
+              "vampire knight / jiangshi / phantasmal warrior / rakshasa / " .. 
+              "green death w:5 / giant eyeball w:5 / very ugly thing / " ..
+              "tentacled starspawn / apocalypse crab w:5"
+end
+
+function gauntlet_tier_two(e)
+  tier_two = "caustic shrike / shard shrike / sphinx / storm dragon /  " ..
+             "shadow dragon / tengu reaver / spriggan defender / " ..
+             "deep elf annihilator / deep elf high priest / " ..
+             "war gargoyle / crystal guardian / revenant / ancient champion / " ..
+             "hellion w:5 / balrug / blizzard demon / shadow demon w:5 /  " ..
+             "reaper / doom hound / tentacled monstrosity / acid blob / " ..
+             "glowing shapeshifter hd:18 / starcursed mass w:5"
+end
+
+function gauntlet_tier_three(e)
+   tier_three = "golden dragon / quicksilver dragon /  " ..
+                "iron dragon / titan / juggernaut w:5 / iron giant w:5 / " ..
+                "deep elf blademaster / deep elf master archer / " ..
+                "black draconian knight / yellow draconian scorcher / " ..
+                "purple draconian zealot / white draconian annihilator / " ..
+                "ancient lich / curse skull w:5 / executioner w:5 / " ..
+                "hellephant / warmonger / corrupter / daeva"
+end
+
+function teleporter_gauntlet_switch_fn(data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
+end
+
+function gauntlet_teleporters(e, teleporter_glyphs, teleport_spot_glyphs)
+  e.kfeat(teleporter_glyphs .. " = teleporter")
+  e.kfeat(teleport_spot_glyphs .. " = floor")
+  e.ftile(teleporter_glyphs .. " = floor_marble")
+  e.ftile(teleport_spot_glyphs .. " = floor_marble")
+  e.colour(teleport_spot_glyphs .. " = lightmagenta")
+
+  local teleporters = teleporter_glyphs
+  local teleport_spots = teleport_spot_glyphs
+  local tele_marker = {}
+
+  for i = 1, #teleporters do
+      tele_marker[i] = TriggerableFunction:new {
+                       func="teleporter_gauntlet_switch_fn",
+                       data = {teleport_spot=i},
+                       repeated=true }
+      tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
+      e.lua_marker(teleporters:sub(i,i), tele_marker[i])
+      e.lua_marker(teleport_spots:sub(i,i), portal_desc { teleport_spot=i})
+  end
+end
+
+function gauntlet_setup(e)
+  e.tile("X = wall_permarock_red")
+  e.tile("o = wall_permarock_clear_yellow")
+  e.orient("encompass")
+  e.kfeat("< = exit_gauntlet")
+end
+
+}}
+
+###############################################################################
+# Entries.
+default-depth: Vaults, Crypt, Depths
+
+NAME:   gauntlet_entry_basic
+TAGS:   mini_float
+: gauntlet_portal(_G)
+MAP
+ ..b.b
+bb..bb.
+.bb+b..
+b.+O+.b
+..b+bb.
+.bb..bb
+ b.b..
+ENDMAP
+
+###############################################################################
+# Contents.
+default-depth: Gauntlet
+
+NAME:     gauntlet_concept
+TAGS:     allow_dup
+SUBVAULT: h : gauntlet_concept_round_one
+SUBVAULT: H : gauntlet_concept_round_one
+SUBVAULT: i : gauntlet_concept_round_two
+SUBVAULT: I : gauntlet_concept_round_two
+SUBVAULT: j : gauntlet_concept_round_three
+SUBVAULT: J : gauntlet_concept_round_three
+SUBST:    hijHIJ = .
+FTILE:    ' = floor_w_marble
+COLOUR:   ' = red
+: audience_members(_G)
+: kmons("0 = " .. audience_members)
+: gauntlet_teleporters(_G, 'qrs([{!@~', 'QRS)]}?&^')
+: gauntlet_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X......oooo......oooo......X......oooo......oooo......X
+X......o0.o......o..o....ooXoo....o..o......o..o......X
+XXXXXXXo..oXXXXXXo.0oXXXXo...oXXXXo..oXXXXXXo..oXXXXXXX
+X......oooo...'..ooooHH)Ho0.0o....oooo......oooo......X
+X........X...'...'XHHHHHHooXoo......X........X........X
+X........X..A...'.oHHHHHHHHX........X........X........X
+X........X.'...'.(XHHHHHHHHX........X........X........X
+X........X'...<...oHHHHHHHHX........X........X........X
+X........X...'....XHHHHHHHHX........X........X........X
+X........X..'...ooooHHHHHooXoo.....oooo......X........X
+X......oooo'.[..o0.oHHqHHo0..o.....o..o.....oooo......X
+XXXXXXXo..oXoXoXo.0oXXoXXo..0oXXXXXo0.oXXXXXo..oXXXXXXX
+X......o.0ohhhhhoooo..$'$ooXooII}IIoooo.....o..o......X
+X......oooohhhhhhhX...'...'XIIIIIIIIX.......oooo......X
+X........XhhhhhhhhX..Q...'$oIIIIIIIIX........X........X
+X........Xhhhhhhhqo$'...'.{XIIIIIIIIX........X........X
+X........X]hhhhhhhX'...<...oIIIIIIIIX........X........X
+X........XhhhhhhhhX$..'....XIIIIIIIIX........X........X
+X.......oooohhhhoooo.'...oooooIIIIIoooo....oooo.......X
+X.......o0.ohhhho0.o'$!..o0..oIIrIIo0.o....o0.o.......X
+XXXXXXXXX..XXXXXX..XXoXoXo.0.oXXoXXX..XXXXXo..oXXXXXXXX
+X.......o.0o....o.0oiiiiio..0o$..$'o.0oJJ&Jo.0o.......X
+X.......oooo....ooooiiiiiooooo...'$ooooJJJJoooo.......X
+X........X........XiiiiiiiiX$...'..$XJJJJJJJJX........X
+X........X........XiiiiiiiiX...R%..'oJJJJJJJJX........X
+X........X........X?iiiiiiro..'%%%'@XJJJJJJJJX........X
+X........X........XiiiiiiiiX$'..%<..oJJJJJJJJX........X
+X......oooo.......XiiiiiiiiX'$..'..$XJJJJJJJoooo......X
+X......o..o.....ooooiiiiiooXoo$'~.$ooooJJsJJo0.o......X
+XXXXXXXo..oXXXXXo.0oXXXXXo0..oXoXoXo0.oXXoXXo..oXXXXXXX
+X......oooo.....o..o.....o..0ojjjjjo.0o$$$$'oooo......X
+X........X......oooo.....ooXoojjjjjoooo...'.$X........X
+X........X........X........XjjjjjjjjX$.||'..$X........X
+X........X........X........XjjjjjjjjX$.|S%..'X........X
+X........X........X........X^jjjjjjso$.'%%%'$X........X
+X........X........X........XjjjjjjjjX$'..%<|$X........X
+X........X........X......ooXoojjjjjjX'...'||$X........X
+X......oooo......oooo....o0.0ojjjjoooo$$'$$$oooo......X
+XXXXXXXo..oXXXXXXo..oXXXXo...oXXXXo0.oXXXXXXo..oXXXXXXX
+X......o..o......o..o....ooXoo....o..o......o.0o......X
+X......oooo......oooo......X......oooo......oooo......X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+X........X........X........X........X........X........X
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:   gauntlet_concept_round_one
+TAGS:   gauntlet_concept_round_one allow_dup unrand
+: gauntlet_tier_one(_G)
+: gauntlet_tier_two(_G)
+: kmons("1 = " .. tier_one)
+: kmons("2 = " .. tier_two)
+MAP
+  .. .
+..1.x.
+.....2..
+.x......
+......x.
+.2...1..
+ ..x..
+ .. ..
+ENDMAP
+
+NAME:   gauntlet_concept_round_two
+TAGS:   gauntlet_concept_round_two allow_dup unrand
+: gauntlet_tier_one(_G)
+: gauntlet_tier_two(_G)
+: gauntlet_tier_three(_G)
+: kmons("1 = " .. tier_one)
+: kmons("2 = " .. tier_two)
+: kmons("3 = " .. tier_three)
+MAP
+  .. ..
+..1.x.2.
+........
+.x..3.x.
+........
+..2...1.
+  ..x..
+  .. ..
+ENDMAP
+
+NAME:   gauntlet_concept_round_three
+TAGS:   gauntlet_concept_round_three allow_dup unrand
+: gauntlet_tier_one(_G)
+: gauntlet_tier_two(_G)
+: gauntlet_tier_three(_G)
+: kmons("1 = " .. tier_one)
+: kmons("2 = " .. tier_two)
+: kmons("3 = " .. tier_three)
+MAP
+  .. .
+  ..x.
+..3..2..
+......x.
+.x..1...
+......2.
+..3.x..
+  .. ..
+ENDMAP
