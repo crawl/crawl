@@ -418,6 +418,9 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
+        result += _annotate_form_based("You are amphibious.",
+                                       !form_likes_water());
+
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
