@@ -190,6 +190,14 @@ static int _panlord_random_resist_level()
                                   0);
 }
 
+static int _panlord_random_elec_resist_level()
+{
+    return random_choose_weighted(3, 0,
+                                  6, 1,
+                                  1, 3,
+                                  0);
+}
+
 void ghost_demon::init_pandemonium_lord()
 {
     do
@@ -214,11 +222,8 @@ void ghost_demon::init_pandemonium_lord()
     resists = 0;
     resists |= mrd(MR_RES_FIRE, _panlord_random_resist_level());
     resists |= mrd(MR_RES_COLD, _panlord_random_resist_level());
+    resists |= mrd(MR_RES_ELEC, _panlord_random_elec_resist_level());
     // Demons, like ghosts, automatically get poison res. and life prot.
-
-    // resist electricity:
-    if (one_chance_in(3))
-        resists |= MR_RES_ELEC; // no rElec++ for Pan lords, because of witches
 
     // HTH damage:
     damage = 20 + roll_dice(2, 20);
