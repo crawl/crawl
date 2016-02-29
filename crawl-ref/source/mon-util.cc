@@ -1738,7 +1738,7 @@ bool mons_enslaved_soul(const monster* mon)
     return testbits(mon->flags, MF_ENSLAVED_SOUL);
 }
 
-bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
+void name_zombie(monster* mon, monster_type mc, const string &mon_name)
 {
     mon->mname = mon_name;
 
@@ -1768,14 +1768,12 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     // we still want to allow it if overridden.
     if (!mon->props.exists("dbname"))
         mon->props["dbname"] = mons_class_name(mon->type);
-
-    return true;
 }
 
-bool name_zombie(monster* mon, const monster* orig)
+void name_zombie(monster* mon, const monster* orig)
 {
     if (!mons_is_unique(orig->type) && orig->mname.empty())
-        return false;
+        return;
 
     string name;
 
@@ -1784,7 +1782,7 @@ bool name_zombie(monster* mon, const monster* orig)
     else
         name = mons_type_name(orig->type, DESC_PLAIN);
 
-    return name_zombie(mon, orig->type, name);
+    name_zombie(mon, orig->type, name);
 }
 
 // Derived undead deal 80% of the damage of the base form.
