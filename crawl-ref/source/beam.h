@@ -226,6 +226,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool pierces_shields() const;
+    bool bush_immune(const monster &mons) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
