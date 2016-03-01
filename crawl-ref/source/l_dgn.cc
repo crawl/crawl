@@ -862,16 +862,13 @@ static int dgn_terrain_changed(lua_State *ls)
         type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
-    const bool affect_player =
-    lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_features =
-    lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
+        lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_items =
-    lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
+        lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
     dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
                                        luaL_checkint(ls, 2)),
-                            type, affect_player,
-                            preserve_features, preserve_items);
+                            type, preserve_features, preserve_items);
     return 0;
 }
 

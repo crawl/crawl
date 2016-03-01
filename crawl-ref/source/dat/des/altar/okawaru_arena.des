@@ -6,14 +6,14 @@
 function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
   -- Open the cages.
   for slave in iter.slave_iterator("cage_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
   end
   crawl.mpr("The portcullises are lifted away, releasing the combatants.",
             "warning")
   crawl.mpr("The doors seal shut behind you!", "warning")
   -- Close the door.
   for slave in iter.slave_iterator("iron_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false, false, false)
+    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false, false)
   end
 end
 
@@ -29,11 +29,11 @@ function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
                      "Okawaru booms, \"Excellent! You may choose a reward.\"")
     -- Open exit.
     for slave in iter.slave_iterator("iron_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
     end
     -- Open loot doors.
     for slave in iter.slave_iterator("loot_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
     end
     crawl.mpr("The gates behind the altar rise, and the entry reopens.")
   end
@@ -44,7 +44,7 @@ function callback.oka_loot_burn (data, triggerable, triggerer, marker, ev)
   for slave in iter.slave_iterator("lava_spout", 1) do
     local you_x, you_y = you.pos()
     if you_x ~= (slave.x+2) or you_y ~= slave.y then
-      dgn.terrain_changed(slave.x+2, slave.y, "lava", false, false, false)
+      dgn.terrain_changed(slave.x+2, slave.y, "lava", false, false)
     end
   end
 end

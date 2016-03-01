@@ -68,7 +68,7 @@ function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
   crawl.god_speaks("Kikubaaqudgha", "As you approach the altar, the fountains"
                                  .. " begin to flow with blood!")
   for i, slave in ipairs(slaves) do
-    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false, false)
+    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false)
   end
 end
 }}

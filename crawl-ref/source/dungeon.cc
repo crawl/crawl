@@ -4555,7 +4555,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
         if (in_bounds(where) && !monster_habitable_grid(montype, grd(where)))
-            dungeon_terrain_changed(where, habitat2grid(habitat), !crawl_state.generating_level);
+            dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 
     if (type == RANDOM_MONSTER)
@@ -6563,7 +6563,7 @@ void vault_placement::apply_grid()
                 tile_init_flavour(*ri);
                 const dungeon_feature_type newgrid = grd(*ri);
                 grd(*ri) = oldgrid;
-                dungeon_terrain_changed(*ri, newgrid, true, true);
+                dungeon_terrain_changed(*ri, newgrid, true);
                 remove_markers_and_listeners_at(*ri);
             }
         }

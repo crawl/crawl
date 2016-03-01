@@ -1105,6 +1105,9 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
 
 static void _dgn_check_terrain_player(const coord_def pos)
 {
+    if (crawl_state.generating_level || !crawl_state.need_save)
+        return; // don't reference player if they don't currently exist
+
     if (pos != you.pos())
         return;
 
@@ -1116,10 +1119,8 @@ static void _dgn_check_terrain_player(const coord_def pos)
 
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
-                             bool affect_player,
                              bool preserve_features,
-                             bool preserve_items,
-                             int colour)
+                             bool preserve_items)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1134,7 +1135,6 @@ void dungeon_terrain_changed(const coord_def &pos,
         unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
-        env.grid_colours(pos) = colour;
         // Reset feature tile
         env.tile_flv(pos).feat = 0;
         env.tile_flv(pos).feat_idx = 0;
@@ -1149,9 +1149,7 @@ void dungeon_terrain_changed(const coord_def &pos,
 
     _dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
-
-    if (affect_player)
-        _dgn_check_terrain_player(pos);
+    _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
 
@@ -1966,7 +1964,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, true, false, true);
+    dungeon_terrain_changed(pos, newfeat, false, true);
 }
 
 /// What terrain type do destroyed feats become, in the current branch?
@@ -2059,7 +2057,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
     if (newfeat != DNGN_UNSEEN)
     {
-        dungeon_terrain_changed(pos, newfeat, true, false, true, colour);
+        dungeon_terrain_changed(pos, newfeat, false, true);
+        env.grid_colours(pos) = colour;
         return true;
     }
     else
