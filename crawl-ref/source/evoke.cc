@@ -1988,7 +1988,7 @@ static bool _stone_of_tremors()
 // Used for phials and water nymphs.
 bool can_flood_feature(dungeon_feature_type feat)
 {
-    return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
+    return feat_has_solid_floor(feat);
 }
 
 static bool _phial_of_floods()
