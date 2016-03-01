@@ -1120,7 +1120,8 @@ static void _dgn_check_terrain_player(const coord_def pos)
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
                              bool preserve_features,
-                             bool preserve_items)
+                             bool preserve_items,
+                             bool temporary)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1132,7 +1133,8 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (preserve_features)
             _dgn_shift_feature(pos);
 
-        unnotice_feature(level_pos(level_id::current(), pos));
+        if (!temporary)
+            unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
         // Reset feature tile
@@ -1964,7 +1966,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, false, true);
+    dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
 /// What terrain type do destroyed feats become, in the current branch?
