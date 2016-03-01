@@ -1768,17 +1768,22 @@ bool beogh_gift_item()
 bool beogh_resurrect()
 {
     item_def* corpse = nullptr;
+    bool found_any = false;
     for (stack_iterator si(you.pos()); si; ++si)
-        if (si->props.exists(ORC_CORPSE_KEY)
-            && yesno(("Resurrect "
-                      + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
-                      + "?").c_str(), true, 'n'))
+        if (si->props.exists(ORC_CORPSE_KEY))
         {
-            corpse = &*si;
+            found_any = true;
+            if (yesno(("Resurrect "
+                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
+                       + "?").c_str(), true, 'n'))
+            {
+                corpse = &*si;
+            }
         }
     if (!corpse)
     {
-        mpr("There's nobody here you can resurrect.");
+        mprf("There's nobody %shere you can resurrect.",
+             found_any ? "else " : "");
         return false;
     }
 
