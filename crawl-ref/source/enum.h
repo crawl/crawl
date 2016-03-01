@@ -432,7 +432,6 @@ enum activity_interrupt_type
     AI_KEYPRESS,
     AI_FULL_HP,                     // Player is fully healed
     AI_FULL_MP,                     // Player has recovered all mp
-    AI_STATUE,                      // Bad statue has come into view
     AI_HUNGRY,                      // Hunger increased
     AI_MESSAGE,                     // Message was displayed
     AI_HP_LOSS,
