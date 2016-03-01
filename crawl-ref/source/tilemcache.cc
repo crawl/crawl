@@ -1088,7 +1088,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_ABOMINATION_LARGE_2:
-    case TILEP_MONS_ETTIN: // second weapon
         *ofs_x = 2;
         *ofs_y = 0;
         break;
@@ -1135,6 +1134,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_ORB_GUARDIAN:
+    case TILEP_MONS_ETTIN: // second weapon
         *ofs_x = 1;
         *ofs_y = 0;
         break;
