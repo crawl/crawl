@@ -3237,6 +3237,19 @@ void bolt::reflect()
     choose_ray();
 }
 
+/**
+ * Veto paralyzing already-paralysed players.
+ * Could plausibly be extended to other effects, depending on how smart we
+ * want monsters to be. (E.g. banning using para/slow on formicids - but
+ * what's the fun as a player if monsters don't even try?)
+ */
+bool bolt::beam_might_affect_player() const
+{
+    if (flavour == BEAM_PARALYSIS && you.paralysed())
+        return false;
+    return true;
+}
+
 void bolt::tracer_affect_player()
 {
     if (flavour == BEAM_UNRAVELLING && player_is_debuffable())
@@ -3265,7 +3278,8 @@ void bolt::tracer_affect_player()
             }
         }
     }
-    else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
+    else if ((can_see_invis || !you.invisible() || fuzz_invis_tracer())
+             && beam_might_affect_player())
     {
         if (mons_att_wont_attack(attitude))
         {
