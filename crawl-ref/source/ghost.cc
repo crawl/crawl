@@ -30,94 +30,86 @@
 
 vector<ghost_demon> ghosts;
 
+// Pan lord AOE conjuration spell list.
+static spell_type search_order_aoe_conj[] =
+{
+    SPELL_SYMBOL_OF_TORMENT,
+    SPELL_FIRE_STORM,
+    SPELL_GLACIATE,
+    SPELL_CHAIN_LIGHTNING,
+    SPELL_SHATTER,
+    SPELL_FREEZING_CLOUD,
+    SPELL_STEAM_BALL,
+    SPELL_DAZZLING_SPRAY,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_POISONOUS_CLOUD,
+    SPELL_MEPHITIC_CLOUD,
+    SPELL_METAL_SPLINTERS,
+    SPELL_ENERGY_BOLT,
+    SPELL_ORB_OF_ELECTRICITY,
+    SPELL_NO_SPELL, // end of list
+};
+
 // Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
-    SPELL_FIRE_STORM,
-    SPELL_GLACIATE,
+    SPELL_HELLFIRE_BURST,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-    SPELL_CHAIN_LIGHTNING,
-    SPELL_IOOD,
     SPELL_CORROSIVE_BOLT,
+    SPELL_QUICKSILVER_BOLT,
+    SPELL_IOOD,
+    SPELL_ENERGY_BOLT,
     SPELL_DISINTEGRATE,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_QUICKSILVER_BOLT,
-    SPELL_FORCE_LANCE,
-    SPELL_FIREBALL,
-    SPELL_BOLT_OF_MAGMA,
     SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_BLINKBOLT,
-    SPELL_VENOM_BOLT,
-    SPELL_AGONY,
-    SPELL_DRAIN_MAGIC,
-    SPELL_SLEEP,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_STICKY_FLAME_RANGE,
-    SPELL_STEAM_BALL,
-    SPELL_THROW_ICICLE,
-    SPELL_AIRSTRIKE,
-    SPELL_SMITING,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_STONE_ARROW,
-    SPELL_DISCHARGE,
-    SPELL_VAMPIRIC_DRAINING,
-    SPELL_THROW_FLAME,
-    SPELL_THROW_FROST,
-    SPELL_NO_SPELL,                        // end search
+    SPELL_NO_SPELL, // end of list
 };
 
-// Pan lord self-enchantment / summoning spell list.
+// Pan lord self-enchantment spell list.
 static spell_type search_order_selfench[] =
 {
+    SPELL_HASTE,
+    SPELL_SILENCE,
+    SPELL_BATTLESPHERE,
+    SPELL_SPELLFORGED_SERVITOR,
+    SPELL_INVISIBILITY,
+    SPELL_BLINK,
+    SPELL_BLINKBOLT,
+    SPELL_NO_SPELL, // end of list
+};
+
+// Pan lord summoning spell list.
+static spell_type search_order_summon[] =
+{
+    SPELL_HAUNT,
+    SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_DRAGON,
     SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_SUMMON_GREATER_DEMON,
-    SPELL_HAUNT,
-    SPELL_SUMMON_HYDRA,
-    SPELL_MALIGN_GATEWAY,
-    SPELL_HASTE,
-    SPELL_INVISIBILITY,
-    SPELL_SYMBOL_OF_TORMENT,
-    SPELL_MONSTROUS_MENAGERIE,
-    SPELL_SILENCE,
     SPELL_SHADOW_CREATURES,
-    SPELL_SUMMON_DEMON,
-    SPELL_SUMMON_VERMIN,
-    SPELL_BATTLESPHERE,
-    SPELL_FULMINANT_PRISM,
-    SPELL_SUMMON_ICE_BEAST,
-    SPELL_SWIFTNESS,
-    SPELL_BLINK,
-    SPELL_SUMMON_BUTTERFLIES,
-    SPELL_NO_SPELL,                        // end search
+    SPELL_SUMMON_EYEBALLS,
+    SPELL_SUMMON_VERMIN, // funny
+    SPELL_SUMMON_BUTTERFLIES, // funny
+    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord misc spell list.
 static spell_type search_order_misc[] =
 {
-    SPELL_SHATTER,
-    SPELL_SYMBOL_OF_TORMENT,
-    SPELL_BANISHMENT,
-    SPELL_FREEZING_CLOUD,
-    SPELL_POISONOUS_CLOUD,
-    SPELL_MASS_CONFUSION,
-    SPELL_ENGLACIATION,
     SPELL_DISPEL_UNDEAD,
-    SPELL_DIG,
-    SPELL_PETRIFY,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_PARALYSE,
+    SPELL_SLEEP,
+    SPELL_MASS_CONFUSION,
+    SPELL_DRAIN_MAGIC,
+    SPELL_PETRIFY,
     SPELL_POLYMORPH,
-    SPELL_MEPHITIC_CLOUD,
-    SPELL_CONFUSE,
-    SPELL_TELEPORT_OTHER,
+    SPELL_FORCE_LANCE,
     SPELL_SLOW,
-    SPELL_NO_SPELL,                        // end search
+    SPELL_NO_SPELL, // end of list
 };
 
 // Last slot (emergency) can only be Teleport Self or Blink.
@@ -185,7 +177,16 @@ static int _panlord_random_resist_level()
     return random_choose_weighted(1, -1,
                                   3,  0,
                                   3,  1,
-                                  3,  2,
+                                  2,  2,
+                                  1,  3,
+                                  0);
+}
+
+static int _panlord_random_elec_resist_level()
+{
+    return random_choose_weighted(3, 0,
+                                  6, 1,
+                                  1, 3,
                                   0);
 }
 
@@ -197,22 +198,27 @@ void ghost_demon::init_pandemonium_lord()
     }
     while (!getLongDescription(name).empty());
 
-    // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
+    // Is demon a spellcaster?
+    // Non-spellcasters always have branded melee and faster/tougher.
+    const bool spellcaster = x_chance_in_y(3,4);
+
     max_hp = 100 + roll_dice(3, 50);
 
-    ev = 5 + random2(20);
-    ac = 5 + random2(20);
+    // Panlord AC/EV should tend to be weighted towards one or the other.
+    int total_def = 10 + random2avg(40, 3);
+    int split = biased_random2(5, 2);
+    ac = div_rand_round(total_def * split, 10);
+    ev = total_def - ev;
+    if (coinflip())
+        swap(ac, ev);
 
     see_invis = true;
 
     resists = 0;
     resists |= mrd(MR_RES_FIRE, _panlord_random_resist_level());
     resists |= mrd(MR_RES_COLD, _panlord_random_resist_level());
+    resists |= mrd(MR_RES_ELEC, _panlord_random_elec_resist_level());
     // Demons, like ghosts, automatically get poison res. and life prot.
-
-    // resist electricity:
-    if (one_chance_in(3))
-        resists |= MR_RES_ELEC; // no rElec++ for Pan lords, because of witches
 
     // HTH damage:
     damage = 20 + roll_dice(2, 20);
@@ -223,9 +229,15 @@ void ghost_demon::init_pandemonium_lord()
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
-    // Is demon a spellcaster?
-    // Non-spellcasters always have branded melee and are faster instead.
-    const bool spellcaster = x_chance_in_y(3,4);
+    // Non-spellcasters get upgrades to HD, HP, AC, EV and damage
+    if (!spellcaster)
+    {
+        max_hp = max_hp * 3 / 2;
+        ac += 5;
+        ev += 5;
+        damage += 10;
+        xl += 5;
+    }
 
     if (one_chance_in(3) || !spellcaster)
         brand = _random_special_pan_lord_brand();
@@ -248,61 +260,22 @@ void ghost_demon::init_pandemonium_lord()
         // spells for the demon, then converts those spells to the monster
         // spell indices. Some special monster-only spells are at the end.
 
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
-
-        // Might duplicate the first spell, but that isn't a problem.
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
-
-        ADD_SPELL(one_chance_in(4) ? SPELL_SUMMON_DEMON
-                                   : RANDOM_ELEMENT(search_order_selfench));
+        ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
         if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
+            ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+        else
+            ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+
+        if (coinflip())
+            ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
 
-        // Give demon a chance for some nasty spells.
         // Demon-summoning should be fairly common.
-        if (one_chance_in(4))
-        {
-            ADD_SPELL(random_choose(SPELL_HELLFIRE_BURST,
-                                    SPELL_FIRE_STORM,
-                                    SPELL_GLACIATE,
-                                    SPELL_METAL_SPLINTERS,
-           /* eye of devastation */ SPELL_ENERGY_BOLT,
-                                    SPELL_ORB_OF_ELECTRICITY));
-        }
-
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_HELLFIRE);
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_HELLFIRE_BURST);
-        if (one_chance_in(25))
-            ADD_SPELL(SPELL_IOOD);
-
-        if (one_chance_in(22))
-            ADD_SPELL(SPELL_SUMMON_HYDRA);
-        if (one_chance_in(20))
-            ADD_SPELL(SPELL_SUMMON_DRAGON);
-        if (one_chance_in(12))
-            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
-        if (one_chance_in(12))
-            ADD_SPELL(SPELL_SUMMON_DEMON);
-        if (one_chance_in(10))
-            ADD_SPELL(SPELL_SUMMON_EYEBALLS);
-
-        if (one_chance_in(20))
-            ADD_SPELL(SPELL_SUMMON_GREATER_DEMON);
-        if (one_chance_in(20))
-            ADD_SPELL(SPELL_SUMMON_DEMON);
-        if (one_chance_in(20))
-            ADD_SPELL(SPELL_MALIGN_GATEWAY);
-
-        if (one_chance_in(15))
-            ADD_SPELL(SPELL_DIG);
+        if (coinflip())
+            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
 
         normalize_spell_freq(spells, xl);
     }
