@@ -349,7 +349,7 @@ function volcano_caves_collapse_doorways(data, triggerable, triggerer,
     crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
               "warning")
   end
-  dgn.terrain_changed(x, y, "stone_wall", false, false, false)
+  dgn.terrain_changed(x, y, "stone_wall", false, false)
   dgn.colour_at(x, y, "lightred")
   dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
 
@@ -374,9 +374,9 @@ function volcano_overflow_convert_lava(data, triggerable,
     for _, pos in ipairs(mslaves) do
       if pos ~= yp then
         if opposite then
-          dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+          dgn.terrain_changed(pos.x, pos.y, "floor", false, false)
         else
-          dgn.terrain_changed(pos.x, pos.y, "lava", false, false, false)
+          dgn.terrain_changed(pos.x, pos.y, "lava", false, false)
         end
       end
     end

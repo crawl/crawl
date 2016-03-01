@@ -1881,7 +1881,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
             feat = DNGN_FLOOR;
     }
 
-    dungeon_terrain_changed(c, feat, true, preserve_features, true);
+    dungeon_terrain_changed(c, feat, preserve_features, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = cenv.rock_colour;
     else if (feat == DNGN_FLOOR)

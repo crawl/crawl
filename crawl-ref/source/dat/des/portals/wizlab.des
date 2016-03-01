@@ -141,7 +141,7 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
     data.phase = data.phase + 1
     crawl.mpr("The walls fall away. The entombed are set free!", "warning")
     for _, i in ipairs(dgn.find_marker_positions_by_prop("wall_drop", 1)) do
-      dgn.terrain_changed(i.x, i.y, "floor", false, false, false)
+      dgn.terrain_changed(i.x, i.y, "floor", false, false)
       dgn.place_cloud(i.x, i.y, "black smoke", 2)
     end
     return
@@ -151,7 +151,7 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
 end
 
 local function spawn_zombie (x, y, spec)
-    dgn.terrain_changed(x, y, "floor", false, false, false)
+    dgn.terrain_changed(x, y, "floor", false, false)
     local mons = dgn.create_monster(x, y, spec)
     mons.set_prop("zonguldrok", 1)
     return mons
@@ -218,7 +218,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
        and #dgn.find_markers_by_prop("grave", 1) < 10 then
         local x, y = marker:pos()
         dgn.tile_feat_changed(x, y, nil)
-        dgn.terrain_changed(x, y, "closed_door", false, false, false)
+        dgn.terrain_changed(x, y, "closed_door", false, false)
         data.door_appeared = true
         if you.see_cell(x, y) then
             crawl.mpr("A door appears!")

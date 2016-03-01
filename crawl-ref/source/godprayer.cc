@@ -96,7 +96,7 @@ static god_type _altar_identify_ecumenical_altar()
         god = random_god();
     }
     while (!player_can_join_god(god));
-    dungeon_terrain_changed(you.pos(), altar_for_god(god), false);
+    dungeon_terrain_changed(you.pos(), altar_for_god(god));
     return god;
 }
 

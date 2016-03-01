@@ -850,7 +850,7 @@ static void _shoals_apply_tide_feature_at(
     if (crawl_state.generating_level)
         grd(c) = feat;
     else
-        dungeon_terrain_changed(c, feat, true, false, true);
+        dungeon_terrain_changed(c, feat, false, true);
 }
 
 // Determines if the tide is rising or falling based on before and
