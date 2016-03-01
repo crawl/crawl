@@ -601,74 +601,74 @@ static string _describe_demon(const string& name, bool flying)
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
-    const char* body_descs[] =
+    static const char* body_types[] =
     {
-        "armoured ",
-        "vast, spindly ",
-        "fat ",
-        "obese ",
-        "muscular ",
-        "spiked ",
-        "splotchy ",
-        "slender ",
-        "tentacled ",
-        "emaciated ",
-        "bug-like ",
-        "skeletal ",
-        "mantis ",
+        "armoured",
+        "vast, spindly",
+        "fat",
+        "obese",
+        "muscular",
+        "spiked",
+        "splotchy",
+        "slender",
+        "tentacled",
+        "emaciated",
+        "bug-like",
+        "skeletal",
+        "mantis",
     };
 
-    const char* wing_names[] =
+    static const char* wing_names[] =
     {
-        " with small, bat-like wings",
-        " with bony wings",
-        " with sharp, metallic wings",
-        " with the wings of a moth",
-        " with thin, membranous wings",
-        " with dragonfly wings",
-        " with large, powerful wings",
-        " with fluttering wings",
-        " with great, sinister wings",
-        " with hideous, tattered wings",
-        " with sparrow-like wings",
-        " with hooked wings",
-        " with strange knobs attached",
-        " which hovers in mid-air",
-        " with sacs of gas hanging from its back",
+        "with small, bat-like wings",
+        "with bony wings",
+        "with sharp, metallic wings",
+        "with the wings of a moth",
+        "with thin, membranous wings",
+        "with dragonfly wings",
+        "with large, powerful wings",
+        "with fluttering wings",
+        "with great, sinister wings",
+        "with hideous, tattered wings",
+        "with sparrow-like wings",
+        "with hooked wings",
+        "with strange knobs attached",
+        "which hovers in mid-air",
+        "with sacs of gas hanging from its back",
     };
 
     const char* head_names[] =
     {
-        " and a cubic structure in place of a head",
-        " and a brain for a head",
-        " and a hideous tangle of tentacles for a mouth",
-        " and the head of an elephant",
-        " and an eyeball for a head",
-        " and wears a helmet over its head",
-        " and a horn in place of a head",
-        " and a thick, horned head",
-        " and the head of a horse",
-        " and a vicious glare",
-        " and snakes for hair",
-        " and the face of a baboon",
-        " and the head of a mouse",
-        " and a ram's head",
-        " and the head of a rhino",
-        " and eerily human features",
-        " and a gigantic mouth",
-        " and a mass of tentacles growing from its neck",
-        " and a thin, worm-like head",
-        " and huge, compound eyes",
-        " and the head of a frog",
-        " and an insectoid head",
-        " and a great mass of hair",
-        " and a skull for a head",
-        " and a cow's skull for a head",
-        " and the head of a bird",
-        " and a large fungus growing from its neck",
+        "a cubic structure in place of a head",
+        "a brain for a head",
+        "a hideous tangle of tentacles for a mouth",
+        "the head of an elephant",
+        "an eyeball for a head",
+        "wears a helmet over its head",
+        "a horn in place of a head",
+        "a thick, horned head",
+        "the head of a horse",
+        "a vicious glare",
+        "snakes for hair",
+        "the face of a baboon",
+        "the head of a mouse",
+        "a ram's head",
+        "the head of a rhino",
+        "eerily human features",
+        "a gigantic mouth",
+        "a mass of tentacles growing from its neck",
+        "a thin, worm-like head",
+        "huge, compound eyes",
+        "the head of a frog",
+        "an insectoid head",
+        "a great mass of hair",
+        "a skull for a head",
+        "a cow's skull for a head",
+        "the head of a bird",
+        "a large fungus growing from its neck",
     };
 
-    const char* misc_descs[] =
+    static const char* misc_descs[] =
     {
         " It seethes with hatred of the living.",
         " Tiny orange flames dance around it.",
@@ -679,11 +679,12 @@ static string _describe_demon(const string& name, bool flying)
         " It oozes with slime.",
         " It dribbles constantly.",
         " Mould grows all over it.",
+        " Its body is covered in fungus.",
+        " It is covered with lank hair.",
         " It looks diseased.",
         " It looks as frightened of you as you are of it.",
         " It moves in a series of hideous convulsions.",
         " It moves with an unearthly grace.",
-        " It hungers for your soul!",
         " It leaves a glistening oily trail.",
         " It shimmers before your eyes.",
         " It is surrounded by a brilliant glow.",
@@ -694,56 +695,51 @@ static string _describe_demon(const string& name, bool flying)
         " Blue sparks crawl across its body.",
         " It seems uncertain.",
         " A cloud of flies swarms around it.",
-        " The air ripples with heat as it passes.",
+        " The air around it ripples with heat.",
+        " Crystalline structures grow on everything near it.",
         " It appears supremely confident.",
         " Its skin is covered in a network of cracks.",
         " Its skin has a disgusting oily sheen.",
-        " It seems completely insane!",
-        " It seems somehow familiar."
+        " It seems somehow familiar.",
+        " It is somehow always in shadow.",
+        " It is difficult to look away.",
+        " It is constantly speaking in tongues.",
+        " It babbles unendingly.",
+        " Its body is scorched from hellfire.",
+        " Its body is extensively scarred.",
+        " You find it difficult to look away.",
+    };
+
+    static const char* smell_descs[] =
+    {
+        " It smells of brimstone.",
+        " It is surrounded by a sickening stench.",
+        " It smells of rotting flesh.",
+        " It stinks of death.",
+        " It stinks of decay.",
+        " It smells delicious!",
     };
 
     ostringstream description;
     description << "One of the many lords of Pandemonium, " << name << " has ";
 
-    const string a_body = HRANDOM_ELEMENT(body_descs, 2);
-    description << article_a(a_body) << "body";
-
-    string head_desc = HRANDOM_ELEMENT(head_names, 1);
+    description << article_a(HRANDOM_ELEMENT(body_types, 2));
+    description << " body ";
 
     if (flying)
     {
         description << HRANDOM_ELEMENT(wing_names, 3);
-        if (starts_with(head_desc, " with"))
-            description << " and";
+        description << " ";
     }
 
-    description << head_desc << ".";
+    description << "and ";
+    description << HRANDOM_ELEMENT(head_names, 1) << ".";
 
-    if (hash_rand(40, seed, 4) < 3)
-    {
-        if (you.can_smell())
-        {
-            switch (hash_rand(4, seed, 5))
-            {
-            case 0:
-                description << " It stinks of brimstone.";
-                break;
-            case 1:
-                description << " It is surrounded by a sickening stench.";
-                break;
-            case 2:
-                description << " It smells delicious!";
-                break;
-            case 3:
-                description << " It smells like rotting flesh"
-                            << (you.species == SP_GHOUL ? " - yum!"
-                                                       : ".");
-                break;
-            }
-        }
-    }
-    else if (hash_rand(2, seed, 6))
-        description << HRANDOM_ELEMENT(misc_descs, 5);
+    if (!hash_rand(5, seed, 4) && you.can_smell()) // 20%
+        description << HRANDOM_ELEMENT(smell_descs, 5);
+
+    if (hash_rand(2, seed, 6)) // 50%
+        description << HRANDOM_ELEMENT(misc_descs, 6);
 
     return description.str();
 }
