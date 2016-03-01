@@ -121,7 +121,8 @@ bool bolt::is_blockable() const
 /// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
 bool bolt::is_omnireflectable() const
 {
-    return !is_explosion && flavour != BEAM_VISUAL;
+    return !is_explosion && flavour != BEAM_VISUAL
+            && origin_spell != SPELL_GLACIATE;
 }
 
 void bolt::emit_message(const char* m)
