@@ -284,7 +284,6 @@ private:
 
     // tracers
     void tracer_affect_player();
-    bool beam_might_affect_player() const;
     void tracer_affect_monster(monster* mon);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
