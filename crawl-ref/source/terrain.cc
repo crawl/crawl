@@ -1117,11 +1117,27 @@ static void _dgn_check_terrain_player(const coord_def pos)
         you_teleport_now();
 }
 
+/**
+ * Change a given feature to a new type, cleaning up associated issues
+ * (monsters/items in walls, blood on water, etc) in the process.
+ *
+ * @param pos               The location to be changed.
+ * @param nfeat             The feature to be changed to.
+ * @param preserve_features Whether to shunt the old feature to a nearby loc.
+ * @param preserve_items    Whether to shunt items to a nearby loc, if they
+ *                          can't stay in this one.
+ * @param temporary         Whether the terrain change is only temporary & so
+ *                          shouldn't affect branch/travel knowledge.
+ * @param wizmode           Whether this is a wizmode terrain change,
+ *                          & shouldn't check whether the player can actually
+ *                          exist in the new feature.
+ */
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
                              bool preserve_features,
                              bool preserve_items,
-                             bool temporary)
+                             bool temporary,
+                             bool wizmode)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1151,7 +1167,8 @@ void dungeon_terrain_changed(const coord_def &pos,
 
     _dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
-    _dgn_check_terrain_player(pos);
+    if (!wizmode)
+        _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
 
