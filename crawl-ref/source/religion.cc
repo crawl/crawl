@@ -3879,6 +3879,17 @@ void god_pitch(god_type which_god)
         return;
     }
 
+    const string abandon = make_stringf("Are you sure you want to abandon %s?",
+                                        god_name(you.religion).c_str());
+    if (!you_worship(GOD_NO_GOD) && !yesno(abandon.c_str(), false, 'n', true,
+                                           true, false, nullptr, GOTO_CRT))
+    {
+        you.turn_is_over = false;
+        canned_msg(MSG_OK);
+        redraw_screen();
+        return;
+    }
+
     // OK, so join the new religion.
     join_religion(which_god);
 }
