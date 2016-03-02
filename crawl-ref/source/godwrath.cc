@@ -2024,37 +2024,21 @@ void gozag_incite(monster *mon)
     behaviour_event(mon, ME_ALERT, &you);
 
     bool success = false;
-    const mon_attack_def attk = mons_attack_spec(mon, 0);
 
-    int tries = 3;
-    do
+    if (mon->needs_berserk(true, true))
     {
-        switch (random2(3))
-        {
-            case 0:
-                if (attk.type == AT_NONE || attk.damage == 0)
-                    break;
-                if (mon->has_ench(ENCH_MIGHT))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
-                success = true;
-                break;
-            case 1:
-                if (mon->has_ench(ENCH_HASTE))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
-                success = true;
-                break;
-            case 2:
-                if (!mon->can_go_berserk())
-                    break;
-                mon->go_berserk(true);
-                success = true;
-                break;
-        }
+        mon->go_berserk(true);
+        success = true;
     }
-    while (!success && --tries > 0);
+    else if (!mon->has_ench(ENCH_HASTE))
+    {
+        enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+        success = true;
+    }
 
     if (success)
+    {
+        mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
+    }
 }
