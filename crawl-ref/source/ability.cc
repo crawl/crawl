@@ -2904,8 +2904,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         return qazlal_upheaval(coord_def(), false, fail);
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        fail_check();
-        return qazlal_elemental_force();
+        return qazlal_elemental_force(fail);
 
     case ABIL_QAZLAL_DISASTER_AREA:
         fail_check();

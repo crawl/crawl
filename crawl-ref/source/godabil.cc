@@ -4953,7 +4953,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type qazlal_elemental_force()
+spret_type qazlal_elemental_force(bool fail)
 {
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
@@ -4986,6 +4986,8 @@ spret_type qazlal_elemental_force()
         mpr("You can't see any clouds you can empower.");
         return SPRET_ABORT;
     }
+
+    fail_check();
 
     surge_power(you.spec_invoc(), "divine");
 
