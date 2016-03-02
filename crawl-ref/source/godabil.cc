@@ -4809,6 +4809,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
         args.self = CONFIRM_CANCEL;
+        args.hitfunc = &tgt;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
         bolt tempbeam;
