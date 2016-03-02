@@ -4953,7 +4953,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     return SPRET_SUCCESS;
 }
 
-void qazlal_elemental_force()
+spret_type qazlal_elemental_force()
 {
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
@@ -4984,7 +4984,7 @@ void qazlal_elemental_force()
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
-        return;
+        return SPRET_ABORT;
     }
 
     surge_power(you.spec_invoc(), "divine");
@@ -5042,6 +5042,8 @@ void qazlal_elemental_force()
         mprf(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
     else
         canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
+
+    return SPRET_SUCCESS;
 }
 
 bool qazlal_disaster_area()

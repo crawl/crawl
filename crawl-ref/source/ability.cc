@@ -2905,8 +2905,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         fail_check();
-        qazlal_elemental_force();
-        break;
+        return qazlal_elemental_force();
 
     case ABIL_QAZLAL_DISASTER_AREA:
         fail_check();

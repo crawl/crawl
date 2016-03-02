@@ -142,7 +142,7 @@ bool gozag_bribe_branch();
 
 spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);
-void qazlal_elemental_force();
+spret_type qazlal_elemental_force();
 bool qazlal_disaster_area();
 
 void init_sac_index();
