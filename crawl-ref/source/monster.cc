@@ -5231,7 +5231,7 @@ bool monster::berserk_or_insane() const
     return berserk() || has_ench(ENCH_INSANE);
 }
 
-bool monster::needs_berserk(bool check_spells) const
+bool monster::needs_berserk(bool check_spells, bool ignore_distance) const
 {
     if (!can_go_berserk())
         return false;
@@ -5239,7 +5239,7 @@ bool monster::needs_berserk(bool check_spells) const
     if (has_ench(ENCH_HASTE) || has_ench(ENCH_TP))
         return false;
 
-    if (foe_distance() > 3)
+    if (!ignore_distance && foe_distance() > 3)
         return false;
 
     if (check_spells)
