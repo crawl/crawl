@@ -346,6 +346,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         return mi_calc_smiting_damage(monster);
     if (sp == SPELL_AIRSTRIKE)
         return mi_calc_airstrike_damage(monster);
+    if (sp == SPELL_WATERSTRIKE)
+        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
     if (sp == SPELL_GLACIATE)
         return mi_calc_glaciate_damage(monster);
     if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)

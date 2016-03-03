@@ -5015,7 +5015,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         pbolt.flavour    = BEAM_WATER;
 
-        int damage_taken = roll_dice(3, 7 + mons->get_hit_dice());
+        int damage_taken = roll_dice(3, 7 + mons->spell_hd(spell_cast));
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
         damage_taken = foe->apply_ac(damage_taken);
 
