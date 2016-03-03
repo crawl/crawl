@@ -497,14 +497,14 @@ void doom_howl(int time)
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
     if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
-    // 1 nasty beast every 3-5 turns
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
         const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
