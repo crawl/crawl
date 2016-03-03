@@ -2105,25 +2105,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
         {
             return false;
         }
-        // Keep neutral, charmed, and friendly monsters from
-        // picking up stuff.
-        if ((neutral()
-             || you_worship(GOD_JIYVA) && mons_is_slime(this)
-             || has_ench(ENCH_CHARM) || has_ench(ENCH_HEXED)
-             || friendly()
-        // Monsters being able to pick up items you've seen encourages
-        // tediously moving everything away from a place where they could use
-        // them. Maurice being able to pick up such items encourages killing
-        // Maurice, since there's just one of him.
-             || (testbits(item.flags, ISFLAG_SEEN)
-                 && !has_attack_flavour(AF_STEAL)))
-        // ...but it's ok if it dropped the item itself.
-            && !(item.props.exists(DROPPER_MID_KEY)
-                 && item.props[DROPPER_MID_KEY].get_int() == (int)mid))
-        {
-            return false;
-        }
-
         if (!wandering && !wont_attack())
         {
             // These are not important enough for pickup when
