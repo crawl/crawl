@@ -2909,6 +2909,9 @@ int gozag_service_fee()
     if (you.char_class == JOB_MONK && had_gods() == 0)
         return 0;
 
+    if (crawl_state.game_is_sprint())
+        return 0;
+
     const int gold = you.attribute[ATTR_GOLD_GENERATED];
     int fee = (int)(gold - gold / log10(gold + 10.0))/2;
 
