@@ -2887,6 +2887,14 @@ static bool _handle_pickup(monster* mons)
     if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
         return false;
 
+    // Keep neutral, charmed, and friendly monsters from
+    // picking up stuff.
+    const bool never_pickup
+        = mons->neutral() || mons->friendly()
+          || you_worship(GOD_JIYVA) && mons_is_slime(mons)
+          || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
+
+
     // Note: Monsters only look at stuff near the top of stacks.
     //
     // XXX: Need to put in something so that monster picks up
@@ -2897,6 +2905,23 @@ static bool _handle_pickup(monster* mons)
     // (jpeg)
     for (stack_iterator si(mons->pos()); si; ++si)
     {
+        if ((never_pickup
+             // Monsters being able to pick up items you've seen encourages
+             // tediously moving everything away from a place where they could
+             // use them. Maurice being able to pick up such items encourages
+             // killing Maurice, since there's just one of him. Usually.
+             || (testbits(si->flags, ISFLAG_SEEN)
+                 && !mons->has_attack_flavour(AF_STEAL)))
+            // ...but it's ok if it dropped the item itself.
+            && !(si->props.exists(DROPPER_MID_KEY)
+                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
+        {
+            // don't pick up any items beneath one that the player's seen,
+            // to prevent seemingly-buggy behavior (monsters picking up items
+            // from the middle of a stack while the player is watching)
+            return false;
+        }
+
         if (si->flags & ISFLAG_NO_PICKUP)
             continue;
 
