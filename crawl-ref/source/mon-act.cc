@@ -18,7 +18,9 @@
 #include "coordit.h"
 #include "dbg-scan.h"
 #include "delay.h"
+#include "directn.h" // feature_description_at
 #include "dungeon.h"
+#include "english.h" // apostrophise
 #include "evoke.h"
 #include "fight.h"
 #include "fineff.h"
@@ -2586,6 +2588,13 @@ static void _post_monster_move(monster* mons)
             if (can_flood_feature(grd(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
+                if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
+                    && you.see_cell(*ai))
+                {
+                    mprf("%s watery aura covers %s",
+                         apostrophise(mons->name(DESC_THE)).c_str(),
+                         feature_description_at(*ai, false, DESC_THE).c_str());
+                }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD);
             }
