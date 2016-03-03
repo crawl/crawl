@@ -3348,7 +3348,7 @@ bool bolt::misses_player()
                                player_shield_class() + 40);
 
         dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
-        if (testhit < block || omnireflected)
+        if ((testhit < block && hit != AUTOMATIC_HIT) || omnireflected)
         {
             bool penet = false;
 
