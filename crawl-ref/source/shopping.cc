@@ -1383,11 +1383,14 @@ void ShopMenu::purchase_selected()
         ASSERT(cost == 0);
         buying_from_list = true;
         for (auto item : items)
-            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item, &pos))
+        {
+            auto it = *dynamic_cast<ShopEntry*>(item)->item;
+            if (shopping_list.is_on_list(it, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+                cost += item_price(it, shop);
             }
+        }
     }
     if (selected.empty())
         return;
