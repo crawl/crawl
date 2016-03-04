@@ -1734,10 +1734,8 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
         return "";
     }
 
-    const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-    const int temp = (where.x + where.y) % 4;
-
-    return string(suffixnames[temp]);
+    static const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
+    return string(suffixnames[(where.x + where.y) % 4]);
 }
 
 string shop_name(const shop_struct& shop)
