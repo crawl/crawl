@@ -1384,7 +1384,7 @@ void ShopMenu::purchase_selected()
         buying_from_list = true;
         for (auto item : items)
         {
-            auto it = *dynamic_cast<ShopEntry*>(item)->item;
+            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
             if (shopping_list.is_on_list(it, &pos))
             {
                 selected.push_back(item);
