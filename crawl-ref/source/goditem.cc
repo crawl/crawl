@@ -655,32 +655,20 @@ bool god_hates_item(const item_def &item)
     return god_hates_item_handling(item) != DID_NOTHING;
 }
 
+// whether Xom finds a spell too uninteresting to put in a book gift
+static bool _spell_is_boring(spell_type spell)
+{
+    // Ideally, Xom would only like spells which have a random
+    // effect, are risky to use, or would otherwise amuse him, but
+    // that would be a really small number of spells.
+    return spell != SPELL_INNER_FLAME // Neutral, but in an amusing way.
+        || get_spell_flags(spell) & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL
+                                     | SPFLAG_ESCAPE | SPFLAG_RECOVERY);
+}
+
 bool god_dislikes_spell_type(spell_type spell, god_type god)
 {
-    if (god_hates_spell(spell, god))
-        return true;
-
-    unsigned int flags       = get_spell_flags(spell);
-
-    if (god == GOD_XOM)
-    {
-        // Ideally, Xom would only like spells which have a random
-        // effect, are risky to use, or would otherwise amuse him, but
-        // that would be a really small number of spells.
-
-        // Neutral, but in an amusing way.
-        if (spell == SPELL_INNER_FLAME)
-            return false;
-
-        // Xom would probably find these extra boring.
-        if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
-                     | SPFLAG_RECOVERY))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return god_hates_spell(spell, god) || god == GOD_XOM && _spell_is_boring(spell);
 }
 
 bool god_dislikes_spell_discipline(spschools_type discipline, god_type god)
