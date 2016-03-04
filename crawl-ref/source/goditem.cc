@@ -661,22 +661,9 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         return true;
 
     unsigned int flags       = get_spell_flags(spell);
-    spschools_type disciplines = get_spell_disciplines(spell);
 
-    switch (god)
+    if (god == GOD_XOM)
     {
-    case GOD_SHINING_ONE:
-        // TSO probably wouldn't like spells which would put enemies
-        // into a state where attacking them would be unchivalrous.
-        if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
-            || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
-            || spell == SPELL_HIBERNATION)
-        {
-            return true;
-        }
-        break;
-
-    case GOD_XOM:
         // Ideally, Xom would only like spells which have a random
         // effect, are risky to use, or would otherwise amuse him, but
         // that would be a really small number of spells.
@@ -691,25 +678,6 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         {
             return true;
         }
-
-        // Things are more fun for Xom the less the player knows in
-        // advance.
-        if (disciplines & SPTYP_DIVINATION)
-            return true;
-        break;
-
-    case GOD_ELYVILON:
-        // A peaceful god of healing wouldn't like combat spells.
-        if (disciplines & SPTYP_CONJURATION)
-            return true;
-
-        // Also doesn't like battle spells of the non-conjuration type.
-        if (flags & SPFLAG_BATTLE)
-            return true;
-        break;
-
-    default:
-        break;
     }
 
     return false;
