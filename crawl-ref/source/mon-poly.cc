@@ -103,6 +103,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     const dungeon_feature_type current_tile = grd(mons->pos());
 
     monster_type old_mclass = mons->type;
+    if (mons_class_is_zombified(old_mclass))
+        old_mclass = mons->base_monster;
+    // don't force spectral shapeshifters to become natural|undead mons only
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
