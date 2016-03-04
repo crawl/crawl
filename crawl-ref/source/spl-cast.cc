@@ -1769,9 +1769,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);
 
-    case SPELL_MASS_CONFUSION:
-        return mass_enchantment(ENCH_CONFUSION, powc, fail);
-
     case SPELL_DISCORD:
         return mass_enchantment(ENCH_INSANE, powc, fail);
 
@@ -1954,6 +1951,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STONESKIN:
     case SPELL_SUMMON_SWARM:
     case SPELL_PHASE_SHIFT:
+    case SPELL_MASS_CONFUSION:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

@@ -1796,14 +1796,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return true;
         }
     }
-    else if (wh_enchant == ENCH_CONFUSION
-             && mons->check_clarity(false))
-    {
-        *did_msg = true;
-        return true;
-    }
-    else if (wh_enchant == ENCH_CONFUSION
-             || wh_enchant == ENCH_INSANE
+    else if (wh_enchant == ENCH_INSANE
              || mons->holiness() & MH_NATURAL)
     {
         if (wh_enchant == ENCH_FEAR
@@ -1884,7 +1877,6 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             switch (wh_enchant)
             {
             case ENCH_FEAR:      msg = " looks frightened!";      break;
-            case ENCH_CONFUSION: msg = " looks rather confused."; break;
             case ENCH_CHARM:     msg = " submits to your will.";  break;
             default:             msg = nullptr;                   break;
             }

@@ -228,7 +228,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_CONTROL_UNDEAD,
     SPELL_ENGLACIATION,
-    SPELL_MASS_CONFUSION,
 },
 
 {   // Book of Battle (replacing Morphology)
@@ -328,7 +327,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HIBERNATION,
     SPELL_SILENCE,
     SPELL_DARKNESS,
-    SPELL_MASS_CONFUSION,
     SPELL_SHADOW_CREATURES,
 },
 
