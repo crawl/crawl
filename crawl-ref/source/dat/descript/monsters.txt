@@ -2111,7 +2111,7 @@ A shadowy minor demon, with an affinity for the necromantic arts.
 shadow wraith
 
 A mist-wreathed skeletal shadow, hanging in mid-air. It drains away the
-lifeforce of living beings.
+life force of living beings.
 %%%%
 shambling mangrove
 
