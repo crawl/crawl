@@ -1107,7 +1107,7 @@ static void _remove_amulet_of_faith(item_def &item)
 static void _remove_amulet_of_harm()
 {
     if (you.undead_state() == US_ALIVE)
-        mpr("The amulet rips away your lifeforce as you remove it!");
+        mpr("The amulet rips away your life force as you remove it!");
     else
         mpr("The amulet rips away your animating force as you remove it!");
 
