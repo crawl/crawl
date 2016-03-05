@@ -164,6 +164,9 @@ enum fail_basis
  * XXX: deduplicate this with the similar code for divine titles, etc
  * (skills.cc:skill_title_by_rank, describe-god.cc:_get_god_misc_invo)
  *
+ * IMPORTANT NOTE: functions that depend on this will be wrong if you aren't
+ * currently worshipping a god that grants the given ability (e.g. in ?/A)!
+ *
  * @return      The appropriate skill type; e.g. SK_INVOCATIONS.
  */
 static skill_type _invo_skill()
@@ -218,6 +221,21 @@ struct failure_info
         }
         default:
             die("unknown failure basis %d!", basis);
+        }
+    }
+
+    /// What skill governs the use of this ability, if any?
+    skill_type skill() const
+    {
+        switch (basis)
+        {
+        case FAIL_EVO:
+            return SK_EVOCATIONS;
+        case FAIL_INVO:
+            return _invo_skill();
+        case FAIL_XL:
+        default:
+            return SK_NONE;
         }
     }
 };
@@ -3585,6 +3603,18 @@ void swap_ability_slots(int index1, int index2, bool silent)
                    ability_name(you.ability_letter_table[index2]));
     }
 
+}
+
+/**
+ * What skill affects the success chance/power of a given skill, if any?
+ *
+ * @param ability       The ability in question.
+ * @return              The skill that governs the ability, or SK_NONE.
+ */
+skill_type abil_skill(ability_type ability)
+{
+    ASSERT(ability != ABIL_NON_ABILITY);
+    return get_ability_def(ability).failure.skill();
 }
 
 
