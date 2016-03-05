@@ -267,7 +267,7 @@ void jiyva_stat_action()
         {
             if (gain != lose && cur_stat[lose] > 1
                 && target_stat[gain] - cur_stat[gain] > target_stat[lose] - cur_stat[lose]
-                && cur_stat[gain] < MAX_STAT_VALUE)
+                && cur_stat[gain] < MAX_STAT_VALUE && you.base_stats[lose] > 1)
             {
                 choices++;
                 if (one_chance_in(choices))
