@@ -466,6 +466,12 @@ static void _setup_generic(const newgame_def& ng)
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;
+    if (you.char_class == JOB_FARMER)
+    {
+        you.num_turns = 200000;
+        you.elapsed_time = you.num_turns * BASELINE_DELAY;
+        you.elapsed_time_at_last_input = you.elapsed_time;
+    }
 
     you.chr_class_name = get_job_name(you.char_class);
 
