@@ -3617,6 +3617,22 @@ skill_type abil_skill(ability_type ability)
     return get_ability_def(ability).failure.skill();
 }
 
+/**
+ * How valuable is it to train the skill that governs this ability? (What
+ * 'magnitude' does the ability have?)
+ *
+ * @param ability       The ability in question.
+ * @return              A 'magnitude' for the ability, probably < 10.
+ */
+int abil_skill_weight(ability_type ability)
+{
+    ASSERT(ability != ABIL_NON_ABILITY);
+    // This is very loosely modelled on a legacy model; fairly arbitrary.
+    const int base_fail = get_ability_def(ability).failure.base_chance;
+    const int floor = base_fail ? 1 : 0;
+    return max(floor, div_rand_round(base_fail, 8) - 3);
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // generic_cost

@@ -29,6 +29,7 @@ string get_ability_desc(const ability_type ability);
 int choose_ability_menu(const vector<talent>& talents);
 string describe_talent(const talent& tal);
 skill_type abil_skill(ability_type abil);
+int abil_skill_weight(ability_type abil);
 
 void no_ability_msg();
 bool activate_ability();
