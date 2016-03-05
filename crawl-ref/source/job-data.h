@@ -131,6 +131,16 @@ static const map<job_type, job_def> job_data =
       { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },
 } },
 
+{ JOB_FARMER, {
+    "Fr", "Farmer",
+    4, 4, 4,
+    { SP_MERFOLK, SP_HILL_ORC, SP_MINOTAUR, SP_FORMICID, SP_DEMONSPAWN,
+      SP_DEEP_DWARF },
+    { "robe", "scythe" },
+    WCHOICE_NONE,
+    { { SK_POLEARMS, 3 }, { SK_DODGING, 3 }, { SK_INVOCATIONS, 3 } },
+} },
+
 { JOB_FIGHTER, {
     "Fi", "Fighter",
     8, 0, 4,

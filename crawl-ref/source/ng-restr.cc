@@ -25,10 +25,13 @@ static bool _banned_combination(job_type job, species_type species)
            || species == SP_DEMIGOD
                && (job == JOB_BERSERKER
                    || job == JOB_CHAOS_KNIGHT
-                   || job == JOB_ABYSSAL_KNIGHT)
+                   || job == JOB_ABYSSAL_KNIGHT
+                   || job == JOB_FARMER)
            || job == JOB_TRANSMUTER
               && (species_undead_type(species) == US_UNDEAD
-                  || species_undead_type(species) == US_HUNGRY_DEAD);
+                  || species_undead_type(species) == US_HUNGRY_DEAD)
+           || job == JOB_FARMER
+              && (species_undead_type(species) != US_ALIVE);
 }
 
 char_choice_restriction species_allowed(job_type job, species_type speci)

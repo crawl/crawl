@@ -273,6 +273,12 @@ static void _give_items_skills(const newgame_def& ng)
 
         break;
 
+    case JOB_FARMER:
+        you.religion = GOD_FEDHAS;
+        you.piety = 35;
+
+        break;
+
     case JOB_WANDERER:
         create_wanderer();
         break;
@@ -318,7 +324,7 @@ static void _give_items_skills(const newgame_def& ng)
 static void _give_starting_food()
 {
     // No food for those who don't need it.
-    if (you_foodless())
+    if (you_foodless() && you.char_class != JOB_FARMER)
         return;
 
     object_class_type base_type = OBJ_FOOD;
@@ -331,10 +337,15 @@ static void _give_starting_food()
     }
     else if (player_mutation_level(MUT_CARNIVOROUS))
         sub_type = FOOD_MEAT_RATION;
+    else if (you.char_class == JOB_FARMER)
+    {
+        sub_type = FOOD_FRUIT;
+        quantity = 5; // roughly the same nutrition
+    }
 
     // Give another one for hungry species.
     if (player_mutation_level(MUT_FAST_METABOLISM))
-        quantity = 2;
+        quantity *= 2;
 
     newgame_make_item(base_type, sub_type, quantity);
 }

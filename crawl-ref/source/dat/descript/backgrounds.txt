@@ -48,6 +48,10 @@ Enchanter
 Enchanters use spells from the book of Maledictions to incapacitate their foes,
 and are equipped with an enchanted dagger.
 %%%%
+Farmer
+
+Farmers are devout followers of Fedhas Madash, equipped with a scythe.
+%%%%
 Fighter
 
 Fighters are equipped with armour and shield, as well as a weapon of their
