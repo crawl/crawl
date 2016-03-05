@@ -409,7 +409,7 @@ static const ability_def Ability_List[] =
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
       0, 0, 100, 0, {FAIL_INVO, 40, 2, 20}, abflag::NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
-      5, 0, 0, 8, {FAIL_INVO, 40, 5, 20}, abflag::NONE },
+      5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
 
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
