@@ -10,7 +10,8 @@
 #include "itemprop-enum.h" // brand_type
 #include "spl-cast.h"
 
-#define BEOGH_WPN_GIFT_KEY "given beogh weapon"
+#define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
+#define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
