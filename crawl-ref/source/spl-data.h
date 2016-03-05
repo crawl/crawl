@@ -3720,6 +3720,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CORROSION, "Spontaneous Corrosion",
+    SPTYP_EARTH | SPTYP_TRANSMUTATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+    2,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

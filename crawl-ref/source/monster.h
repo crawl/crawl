@@ -471,7 +471,7 @@ public:
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr) override;
-    void corrode_equipment(const char* corrosion_source = "the acid",
+    bool corrode_equipment(const char* corrosion_source = "the acid",
                             int degree = 1) override;
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,

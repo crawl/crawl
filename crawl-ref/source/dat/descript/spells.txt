@@ -1197,6 +1197,13 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Spontaneous Corrosion spell
+
+Causes dramatic (though temporary) decay in whatever the victim has for
+protection: metal rusts, leather splits, fur falls away in clumps.
+# XXX: will be difficult to describe if player can be affected, since player
+# corrosion also affects weapons (but monster corrosion doesn't)
+%%%%
 Static Discharge spell
 
 Releases electrical charges against those next to the caster. These may arc to

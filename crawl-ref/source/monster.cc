@@ -4400,11 +4400,11 @@ bool monster::rot(actor *agent, int amount, bool quiet, bool no_cleanup)
     return true;
 }
 
-void monster::corrode_equipment(const char* corrosion_source, int degree)
+bool monster::corrode_equipment(const char* corrosion_source, int degree)
 {
     // Don't corrode spectral weapons or temporary items.
     if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW)
-        return;
+        return false;
 
     // rCorr protects against 50% of corrosion.
     // As long as degree is at least 1, we'll apply the status once, because
@@ -4416,11 +4416,11 @@ void monster::corrode_equipment(const char* corrosion_source, int degree)
         if (!degree)
         {
             dprf("rCorr protects.");
-            return;
+            return false;
         }
     }
 
-    if (you.see_cell(pos()))
+    if (you.see_cell(pos()) && corrosion_source)
     {
         mprf("%s corrodes %s!",
              corrosion_source,
@@ -4428,6 +4428,7 @@ void monster::corrode_equipment(const char* corrosion_source, int degree)
     }
 
     add_ench(mon_enchant(ENCH_CORROSION, 0));
+    return true;
 }
 
 /**

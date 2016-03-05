@@ -1414,4 +1414,22 @@ static const zap_info zap_data[] =
     false,
     1
 },
+
+{
+    ZAP_CORROSION,
+    "",
+    100,
+    nullptr,
+    new tohit_calculator<0, 2, 1>,
+    nullptr,
+    new tohit_calculator<0, 1, 3>,
+    BLACK,
+    true,
+    BEAM_CORROSION,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
 };

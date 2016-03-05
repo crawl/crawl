@@ -1541,7 +1541,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_SHROUD))
         v.emplace_back("shrouded");
     if (is(MB_CORROSION))
-        v.emplace_back("covered in acid");
+        v.emplace_back("corroded");
     if (is(MB_SLOW_MOVEMENT))
         v.emplace_back("covering ground slowly");
     if (is(MB_LIGHTLY_DRAINED))

@@ -3794,6 +3794,14 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_CORROSION:
+    {
+        if (you.corrode_equipment(nullptr))
+            mpr("Your equipment suddenly corrodes!");
+        obvious_effect = true;
+        break;
+    }
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5802,6 +5810,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         _unravelling_explode(*this);
         return MON_AFFECTED;
 
+    case BEAM_CORROSION:
+    {
+        if (mon->corrode_equipment(nullptr))
+            simple_monster_message(mon, " is corroded.");
+        else
+            simple_monster_message(mon, " seems unaffected.");
+        obvious_effect = true;
+        return MON_AFFECTED;
+    }
+
     default:
         break;
     }
@@ -6567,6 +6585,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_RESISTANCE:            return "resistance";
     case BEAM_UNRAVELLING:           return "unravelling";
     case BEAM_UNRAVELLED_MAGIC:      return "unravelled magic";
+    case BEAM_CORROSION:             return "corrosion";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
