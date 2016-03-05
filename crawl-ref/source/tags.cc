@@ -5933,6 +5933,12 @@ void unmarshallMonster(reader &th, monster& m)
         m.props[ORIGINAL_TYPE_KEY].get_int() =
             get_monster_by_name(m.props["original_name"].get_string());
     }
+
+    if (m.props.exists("given beogh weapon"))
+    {
+        m.props.erase("given beogh weapon");
+        m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

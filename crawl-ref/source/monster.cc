@@ -1604,6 +1604,12 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
+    // Don't pick up a new weapon if we've been gifted one by the player.
+    if (is_range_weapon(weap) && props.exists(BEOGH_RANGE_WPN_GIFT_KEY))
+        return false;
+    else if (props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
+        return false;
+
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
@@ -1631,6 +1637,12 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
+
+    // Don't pick up new armour if we've been gifted something by the player.
+    if (is_shield(item) && props.exists(BEOGH_SH_GIFT_KEY))
+        return false;
+    else if (props.exists(BEOGH_ARM_GIFT_KEY))
+        return false;
 
     // Spellcasters won't pick up restricting armour, although they can
     // start with one. Applies to arcane spells only, of course.
