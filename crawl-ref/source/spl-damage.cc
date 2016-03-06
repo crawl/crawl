@@ -3030,6 +3030,65 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_baleful_arc(actor *caster, int pow, coord_def aim, bool fail)
+{
+    const int range = spell_range(SPELL_BALEFUL_ARC, pow);
+    targetter_cone hitfunc(caster, range);
+    hitfunc.set_aim(aim);
+
+    if (caster->is_player() && stop_attack_prompt(hitfunc, "baleful arc"))
+        return SPRET_ABORT;
+
+    fail_check();
+
+    bolt beam;
+    beam.name              = "baleful arc";
+    beam.aux_source        = "baleful arc";
+    beam.flavour           = BEAM_MMISSILE;
+    beam.glyph             = dchar_glyph(DCHAR_EXPLOSION);
+    beam.colour            = MAGENTA; // ???
+    beam.range             = 1;
+    beam.hit               = AUTOMATIC_HIT;
+    beam.source_id         = caster->mid;
+    beam.hit_verb          = "engulfs";
+    beam.origin_spell      = SPELL_BALEFUL_ARC;
+    beam.damage            = calc_dice(3, 10 + pow/2); // fireball damage
+    beam.ench_power        = min(200, pow * 3 / 2); // mass enchant mult
+    beam.set_agent(caster);
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
+    beam.draw_delay = 0;
+
+    for (int i = 1; i <= range; i++)
+        for (const auto &entry : hitfunc.sweep[i])
+            if (entry.second > 0)
+                beam.draw(entry.first);
+
+    scaled_delay(100); // ?
+
+    beam.glyph = 0;
+
+    for (int i = 1; i <= range; i++)
+    {
+        for (const auto &entry : hitfunc.sweep[i])
+        {
+            if (entry.second <= 0)
+                continue;
+
+            if (actor_at(entry.first))
+            {
+                beam.source = beam.target = entry.first;
+                beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+                beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+                beam.fire();
+            }
+        }
+    }
+
+    return SPRET_SUCCESS;
+}
+
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 {
     // Need to use a 'generic' tracer regardless of the actual beam type,

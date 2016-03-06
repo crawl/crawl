@@ -3720,6 +3720,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BALEFUL_ARC, "Baleful Arc",
+    SPTYP_CONJURATION | SPTYP_HEXES | SPTYP_TRANSMUTATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
+    6,
+    200,
+    4, 4,
+    5, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

@@ -64,6 +64,7 @@ void end_searing_ray();
 
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
+spret_type cast_baleful_arc(actor *caster, int pow, coord_def aim, bool fail);
 
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail = false);
 

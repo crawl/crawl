@@ -4466,6 +4466,22 @@ static bool _dazzle_monster(monster* mons, actor* act)
     return false;
 }
 
+/// Attempt to apply Baleful Arc's status effects.
+static void _baleful_afflict_monster(monster* mon, actor* act, int pow)
+{
+    if (mons_immune_magic(mon) || mon->check_res_magic(pow) > 0)
+        return;
+
+    const enchant_type affliction = random_choose(
+        ENCH_SLOW, ENCH_CONFUSION, ENCH_CORONA, ENCH_WRETCHED,
+        ENCH_PARALYSIS, ENCH_DAZED, ENCH_MUTE, ENCH_BLIND, ENCH_WEAK,
+        ENCH_LOWERED_MR
+    );
+
+    simple_monster_message(mon, " is afflicted.");
+    mon->add_ench(mon_enchant(affliction, 1, act));
+}
+
 static void _glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex)
 {
@@ -4584,6 +4600,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (origin_spell == SPELL_DAZZLING_SPRAY)
         _dazzle_monster(mon, agent());
+    else if (origin_spell == SPELL_BALEFUL_ARC)
+        _baleful_afflict_monster(mon, agent(), ench_power);
     else if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
              || origin_spell == SPELL_GLACIATE && !is_explosion)

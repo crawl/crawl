@@ -1131,6 +1131,7 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
     case SPELL_EXPLOSIVE_BOLT:
         return make_unique<targetter_explosive_bolt>(&you, pow, range);
     case SPELL_GLACIATE:
+    case SPELL_BALEFUL_ARC:
         return make_unique<targetter_cone>(&you, range);
     case SPELL_CLOUD_CONE:
         return make_unique<targetter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT, range);
@@ -1917,6 +1918,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
+
+    case SPELL_BALEFUL_ARC:
+        return cast_baleful_arc(&you, powc, target, fail);
 
     case SPELL_RANDOM_BOLT:
         return cast_random_bolt(powc, beam, fail);

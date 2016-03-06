@@ -76,6 +76,11 @@ Awaken Vines spell
 Causes vines to grow from the ground. The vines will reach out and grab
 interlopers, dragging them towards any nearby trees.
 %%%%
+Baleful Arc spell
+
+Conjures a spray of malignant energy, injuring and inflicting a variety of
+maladies on anything caught within.
+%%%%
 Banishment spell
 
 Banishes a creature into the Abyss.
