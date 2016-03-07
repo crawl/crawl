@@ -59,6 +59,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed_effects.h"
@@ -4781,7 +4782,7 @@ mon_body_shape get_mon_shape(const monster* mon)
 
 /**
  * Get the monster body shape of the given monster type.
- * @param mon  The monster type in question.
+ * @param mc  The monster type in question.
  * @return     The mon_body_shape type of this monster type.
  */
 mon_body_shape get_mon_shape(const monster_type mc)
@@ -4794,6 +4795,19 @@ mon_body_shape get_mon_shape(const monster_type mc)
 
     ASSERT_smc();
     return smc->shape;
+}
+
+/**
+ * What's the normal tile for a given monster type?
+ *
+ * @param mc    The monster type in question.
+ * @return      The tile for that monster, or TILEP_MONS_PROGRAM_BUG for mons
+ *              with variable tiles (e.g. merfolk, hydras, slime creatures).
+ */
+tileidx_t get_mon_base_tile(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->tile;
 }
 
 /**
