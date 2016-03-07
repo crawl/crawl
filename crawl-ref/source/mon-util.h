@@ -106,14 +106,6 @@ private:
     }
 };
 
-/// Should weapons/shields be displayed on the monster's tile, and if so, where?
-struct equipment_display
-{
-    int x;
-    int y;
-    bool disable;
-};
-
 struct monsterentry
 {
     short mc;            // monster number
@@ -156,8 +148,6 @@ struct monsterentry
     size_type size;
     mon_body_shape shape;
     tileidx_t tile;
-    equipment_display weapon_display;
-    equipment_display shield_display;
 };
 
 enum mon_threat_level_type
@@ -444,8 +434,6 @@ mon_body_shape get_mon_shape(const monster_type mc);
 string get_mon_shape_str(const mon_body_shape shape);
 
 tileidx_t get_mon_base_tile(monster_type mc);
-equipment_display* mon_weapon_display(monster_type mc);
-equipment_display* mon_shield_display(monster_type mc);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);
