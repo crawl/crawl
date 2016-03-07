@@ -106,6 +106,23 @@ private:
     }
 };
 
+/// in what ways do a monster's tiles vary?
+enum mon_type_tile_variation
+{
+    TVARY_NONE,   ///< fixed tile (or special case)
+    TVARY_MOD,    ///< monster instances have fixed but random tiles
+    TVARY_CYCLE,  ///< cycle through tileset with every redraw
+    TVARY_RANDOM, ///< choose a random tile in set with every redraw
+    TVARY_WATER,  ///< if in water, incr tile enum by 1 (merfolk &c)
+};
+
+/// Tiles display information for a monster type.
+struct mon_type_tile_info
+{
+    tileidx_t base; ///< The base tile for the monster type.
+    mon_type_tile_variation variation; ///< How (and if) the tile should vary.
+};
+
 struct monsterentry
 {
     short mc;            // monster number
@@ -147,7 +164,7 @@ struct monsterentry
     mon_itemuse_type gmon_use;
     size_type size;
     mon_body_shape shape;
-    tileidx_t tile;
+    mon_type_tile_info tile;
 };
 
 enum mon_threat_level_type
@@ -434,6 +451,7 @@ mon_body_shape get_mon_shape(const monster_type mc);
 string get_mon_shape_str(const mon_body_shape shape);
 
 tileidx_t get_mon_base_tile(monster_type mc);
+mon_type_tile_variation get_mon_tile_variation(monster_type mc);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);
