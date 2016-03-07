@@ -147,6 +147,7 @@ struct monsterentry
     mon_itemuse_type gmon_use;
     size_type size;
     mon_body_shape shape;
+    tileidx_t tile;
 };
 
 enum mon_threat_level_type
@@ -430,8 +431,9 @@ string do_mon_str_replacements(const string &msg, const monster* mons,
 
 mon_body_shape get_mon_shape(const monster* mon);
 mon_body_shape get_mon_shape(const monster_type mc);
-
 string get_mon_shape_str(const mon_body_shape shape);
+
+tileidx_t get_mon_base_tile(monster_type mc);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);
