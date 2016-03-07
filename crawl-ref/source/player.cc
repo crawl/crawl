@@ -411,6 +411,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (is_feat_dangerous(new_grid))
         fall_into_a_pool(new_grid);
 
+    // called after fall_into_a_pool, in case of emergency untransform
+    if (you.species == SP_MERFOLK)
+        merfolk_check_swimming(stepped);
+
     if (you.ground_level())
     {
         if (player_likes_lava(false))
@@ -440,20 +444,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 mpr("You slowly pull yourself out of the lava.");
                 you.time_taken *= 2;
             }
-        }
-
-        if (you.species == SP_MERFOLK)
-        {
-            if (feat_is_water(new_grid) // We're entering water
-                // We're not transformed, or with a form compatible with tail
-                && (you.form == TRAN_NONE
-                    || you.form == TRAN_APPENDAGE
-                    || you.form == TRAN_BLADE_HANDS))
-            {
-                merfolk_start_swimming(stepped);
-            }
-            else if (!feat_is_water(new_grid) && !is_feat_dangerous(new_grid))
-                merfolk_stop_swimming();
         }
 
         if (feat_is_water(new_grid) && !stepped)
