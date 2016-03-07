@@ -92,7 +92,6 @@ public:
     bool          explore;           // true if player has entered explore mode.
     time_t        birth_time;        // start time of game
 
-
     // ----------------
     // Long-term state:
     // ----------------

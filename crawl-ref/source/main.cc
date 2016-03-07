@@ -2047,6 +2047,9 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
+        if (Options.autofight_warning > 0 && time(NULL) - you.last_keypress_time <= Options.autofight_warning)
+            mprf("--- Last autofight was %d ms ago ---", time(NULL) - you.last_keypress_time);
+        
         if (!clua.callfn("hit_closest", 0, 0))
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
@@ -2338,6 +2341,7 @@ void process_command(command_type cmd)
 
         break;
     }
+
 }
 
 static void _prep_input()

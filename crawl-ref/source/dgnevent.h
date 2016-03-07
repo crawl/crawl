@@ -13,31 +13,33 @@
 // Keep event names in l_dgnevt.cc in sync.
 enum dgn_event_type
 {
-    DET_NONE            = 0x0000,
+    DET_NONE              = 0x0000,
 
-    DET_TURN_ELAPSED    = 0x0001,
-    DET_MONSTER_MOVED   = 0x0002,
-    DET_PLAYER_MOVED    = 0x0004,
-    DET_LEAVING_LEVEL   = 0x0008,
-    DET_ENTERING_LEVEL  = 0x0010,
-    DET_ENTERED_LEVEL   = 0x0020,
-    DET_PLAYER_IN_LOS   = 0x0040,   // Player just entered LOS.
-    DET_PLAYER_CLIMBS   = 0x0080,   // Player climbing stairs.
-    DET_MONSTER_DIED    = 0x0100,
-    DET_ITEM_PICKUP     = 0x0200,
-    DET_ITEM_MOVED      = 0x0400,
-    DET_FEAT_CHANGE     = 0x0800,
-    DET_UNUSED          = 0x1000,   // open for grabs
-    DET_DOOR_OPENED     = 0x2000,
-    DET_DOOR_CLOSED     = 0x4000,
-    DET_HP_WARNING      = 0x8000,
-    DET_PRESSURE_PLATE  = 0x10000,
+    DET_TURN_ELAPSED      = 0x0001,
+    DET_MONSTER_MOVED     = 0x0002,
+    DET_PLAYER_MOVED      = 0x0004,
+    DET_LEAVING_LEVEL     = 0x0008,
+    DET_ENTERING_LEVEL    = 0x0010,
+    DET_ENTERED_LEVEL     = 0x0020,
+    DET_PLAYER_IN_LOS     = 0x0040,   // Player just entered LOS.
+    DET_PLAYER_CLIMBS     = 0x0080,   // Player climbing stairs.
+    DET_MONSTER_DIED      = 0x0100,
+    DET_ITEM_PICKUP       = 0x0200,
+    DET_ITEM_MOVED        = 0x0400,
+    DET_FEAT_CHANGE       = 0x0800,
+    DET_UNUSED            = 0x1000,   // open for grabs
+    DET_DOOR_OPENED       = 0x2000,
+    DET_DOOR_CLOSED       = 0x4000,
+    DET_HP_WARNING        = 0x8000,
+    DET_PRESSURE_PLATE    = 0x10000,
+    DET_AUTOFIGHT_WARNING = 0x11000,
 
-    DET_GLOBAL_MASK     = DET_TURN_ELAPSED | DET_LEAVING_LEVEL
+    DET_GLOBAL_MASK       = DET_TURN_ELAPSED | DET_LEAVING_LEVEL
                         | DET_ENTERING_LEVEL | DET_ENTERED_LEVEL
-                        | DET_MONSTER_DIED | DET_HP_WARNING,
+                        | DET_MONSTER_DIED | DET_HP_WARNING
+                        | DET_AUTOFIGHT_WARNING,
 
-    DET_POSITION_MASK   = DET_MONSTER_MOVED | DET_PLAYER_MOVED
+    DET_POSITION_MASK     = DET_MONSTER_MOVED | DET_PLAYER_MOVED
                         | DET_PLAYER_IN_LOS | DET_ITEM_PICKUP
                         | DET_ITEM_MOVED | DET_FEAT_CHANGE
                         | DET_DOOR_OPENED | DET_DOOR_CLOSED
