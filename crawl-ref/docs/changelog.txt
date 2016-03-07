@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-1418-ga86aa8f)
+Stone Soup 0.18 (up to 0.18-a0-1521-g59d19af)
 --------------------------------------------
 
 Highlights
@@ -44,6 +44,8 @@ Gods
     capacity to 50% above normal for that wand type.
 * Ashenzari now allows followers to curse items with an ability that consumes
   a scroll of remove curse, instead of using prayer to create curse scrolls.
+* Beogh no longer allows corpse sacrifice.
+* New Beogh 6* ability: Resurrection, reviving & converting dead orcs.
 * Followers of Elyvilon can pacify insects (again).
 * Jiyva altars in Dungeon no longer appear as early.
 * Okawaru's abilities now cost less piety, but don't last as long at low
@@ -104,6 +106,7 @@ Items
   - Rods of destruction and of the swarm.
   - Ring of invisibility.
   - Potions of poison.
+  - Needles of slowing.
 
 Monsters
 --------
@@ -128,6 +131,7 @@ Monsters
   applies one level of corrosion.
 * Ice devils are now tier 4 demons, and are weakened slightly.
 * Hellwings now have the swoop attack formerly possessed by blue devils.
+* Shock serpents' discharge now only strikes whatever hit it.
 * Salamander mystics lose Localised Ignite Poison.
 * Deep elf high priests & sorcerers can no longer cast Summon Demon.
 * Natasha, deep elf knights, and salamander stormcallers can no longer cast
@@ -154,7 +158,7 @@ Monsters
 * Death cobs now drain speed, rather than causing hunger.
 * Monsters that drain speed can now do so even to creatures with rN.
 * Corroding monsters now reduces their AC by 8, rather than halving it.
-* Monsters can now shout after being hit by needles.
+* Needles no longer strike unaware monsters more powerfully.
 * Removed monsters:
   - Octopode crushers.
   - (Plain) spiders.
@@ -184,7 +188,8 @@ Spells
 * Shadow creatures is now level 6 (was 5).
 * Passwall is now level 2 (was 3).
 * Ozocubu's Armour now slows movement slightly while active.
-* Removed spells: Stoneskin, Condensation Shield, and Phase Shift.
+* Removed spells: Stoneskin, Condensation Shield, Mass Confusion, and
+  Phase Shift.
 
 Interface
 ---------
