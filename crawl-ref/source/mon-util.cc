@@ -4807,7 +4807,21 @@ mon_body_shape get_mon_shape(const monster_type mc)
 tileidx_t get_mon_base_tile(monster_type mc)
 {
     ASSERT_smc();
-    return smc->tile;
+    return smc->tile.base;
+}
+
+/**
+ * How should a given monster type's tile vary?
+ *
+ * @param mc    The monster type in question.
+ * @return      An enum describing how display of the monster should vary
+ *              (by individual monster instance, or whether they're in water,
+ *              etc)
+ */
+mon_type_tile_variation get_mon_tile_variation(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->tile.variation;
 }
 
 /**

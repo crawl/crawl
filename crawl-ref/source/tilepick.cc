@@ -1314,67 +1314,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
 {
     switch (type)
     {
-    case MONS_BUTTERFLY:
-        return _mon_mod(TILEP_MONS_BUTTERFLY, tile_num_prop);
-    case MONS_TOADSTOOL:
-        return _mon_mod(TILEP_MONS_TOADSTOOL, tile_num_prop);
-    case MONS_FUNGUS:
-        return _mon_mod(TILEP_MONS_FUNGUS, tile_num_prop);
-    case MONS_PLANT:
-        return _mon_mod(TILEP_MONS_PLANT, tile_num_prop);
-    case MONS_BUSH:
-        return _mon_mod(TILEP_MONS_BUSH, tile_num_prop);
-    case MONS_ABOMINATION_SMALL:
-        return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, tile_num_prop);
-    case MONS_ABOMINATION_LARGE:
-        return _mon_mod(TILEP_MONS_ABOMINATION_LARGE, tile_num_prop);
-    case MONS_BLOCK_OF_ICE:
-        return _mon_mod(TILEP_MONS_BLOCK_OF_ICE, tile_num_prop);
-
-    // merfolk ('m') and a swamp worm
-    case MONS_MERFOLK:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_WATER;
-        else
-            return TILEP_MONS_MERFOLK;
-    case MONS_MERFOLK_IMPALER:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_IMPALER_WATER;
-        else
-            return TILEP_MONS_MERFOLK_IMPALER;
-    case MONS_MERFOLK_AQUAMANCER:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_AQUAMANCER_WATER;
-        else
-            return TILEP_MONS_MERFOLK_AQUAMANCER;
-    case MONS_MERFOLK_JAVELINEER:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_JAVELINEER_WATER;
-        else
-            return TILEP_MONS_MERFOLK_JAVELINEER;
-    case MONS_SIREN:
-        if (in_water)
-            return TILEP_MONS_SIREN_WATER;
-        else
-            return TILEP_MONS_SIREN;
-    case MONS_MERFOLK_AVATAR:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_AVATAR_WATER;
-        else
-            return TILEP_MONS_MERFOLK_AVATAR;
-    case MONS_ILSUIW:
-        if (in_water)
-            return TILEP_MONS_ILSUIW_WATER;
-        else
-            return TILEP_MONS_ILSUIW;
-
-    case MONS_SWAMP_WORM:
-        if (in_water)
-            return TILEP_MONS_SWAMP_WORM_WATER;
-        else
-            return TILEP_MONS_SWAMP_WORM;
-
-    // ugly things ('u')
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
     {
@@ -1383,16 +1322,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         int colour_offset = ugly_thing_colour_offset(colour);
         return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
-
-    // vortices ('v')
-    case MONS_FIRE_VORTEX:
-        return _mon_cycle(TILEP_MONS_FIRE_VORTEX, tile_num_prop);
-    case MONS_SPATIAL_VORTEX:
-        return _mon_cycle(TILEP_MONS_SPATIAL_VORTEX, tile_num_prop);
-    case MONS_SPATIAL_MAELSTROM:
-        return _mon_cycle(TILEP_MONS_SPATIAL_MAELSTROM, tile_num_prop);
-    case MONS_TWISTER:
-        return _mon_cycle(TILEP_MONS_TWISTER, tile_num_prop);
 
     case MONS_HYDRA:
         // Number of heads
@@ -1407,15 +1336,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
                                  number <= 5 ?
                                  number - 1 : 4 + (number - 1)/5);
-
-    case MONS_KILLER_KLOWN:
-        return _mon_random(TILEP_MONS_KILLER_KLOWN);
-    case MONS_CHAOS_SPAWN:
-        return _mon_random(TILEP_MONS_CHAOS_SPAWN);
-    case MONS_ORB_OF_DESTRUCTION:
-        return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
-    case MONS_FULMINANT_PRISM:
-        return _mon_random(TILEP_MONS_FULMINANT_PRISM);
 
     // draconian ('d')
     case MONS_TIAMAT:
@@ -1438,7 +1358,24 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     }
     }
 
-    return get_mon_base_tile(static_cast<monster_type>(type));
+    const monster_type mtype = static_cast<monster_type>(type);
+    const tileidx_t base_tile = get_mon_base_tile(mtype);
+    const mon_type_tile_variation vary_type = get_mon_tile_variation(mtype);
+    switch (vary_type)
+    {
+    case TVARY_NONE:
+        return base_tile;
+    case TVARY_MOD:
+        return _mon_mod(base_tile, tile_num_prop);
+    case TVARY_CYCLE:
+        return _mon_cycle(base_tile, tile_num_prop);
+    case TVARY_RANDOM:
+        return _mon_random(base_tile);
+    case TVARY_WATER:
+        return base_tile + (in_water ? 1 : 0);
+    default:
+        die("Unknown tile variation type %d for mon %d!", vary_type, mtype);
+    }
 }
 
 enum main_dir

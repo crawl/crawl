@@ -158,6 +158,7 @@ ghost_crab MONS_GHOST_CRAB
 ## Worms ('w')
 %sdir mon/aquatic
 %rim 0
+# note: water tiles must be immediately after base tiles
 swamp_worm MONS_SWAMP_WORM
 swamp_worm_water MONS_SWAMP_WORM_WATER
 %rim 1
@@ -926,6 +927,7 @@ mon/unique/enchantress MONS_THE_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
+# note: water tiles must be immediately after base tiles
 %rim 0
 %sdir mon/unique
 ilsuiw MONS_ILSUIW
