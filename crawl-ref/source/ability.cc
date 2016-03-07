@@ -2910,6 +2910,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         item_def& wand(you.inv[item_slot]);
 
+        if (!item_is_rechargeable(wand))
+        {
+            mpr("You cannot supercharge that!");
+            return SPRET_ABORT;
+        }
+
         string prompt = "Do you wish to have " + wand.name(DESC_YOUR)
                            + " supercharged?";
 
