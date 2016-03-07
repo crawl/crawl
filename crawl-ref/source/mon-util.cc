@@ -4811,30 +4811,6 @@ tileidx_t get_mon_base_tile(monster_type mc)
 }
 
 /**
- * Does a monster display its weapon on its tile? If so, where?
- *
- * @param mc    The monster type in question.
- * @return      The weapon offset/display data for that monster.
- */
-equipment_display* mon_weapon_display(monster_type mc)
-{
-    ASSERT_smc();
-    return &smc->weapon_display;
-}
-
-/**
- * Does a monster display its shield on its tile? If so, where?
- *
- * @param mc    The monster type in question.
- * @return      The shield offset/display data for that monster.
- */
-equipment_display* mon_shield_display(monster_type mc)
-{
-    ASSERT_smc();
-    return &smc->shield_display;
-}
-
-/**
  * Get a DB lookup string for the given monster body shape.
  * @param mon  The monster body shape type in question.
  * @return     A DB lookup string for the monster body shape.
