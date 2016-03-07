@@ -3406,7 +3406,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case POT_MUTATION:
         case POT_LIGNIFY:
-        case POT_AMBROSIA:
             return true;
         default:
             return false;

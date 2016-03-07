@@ -11,6 +11,10 @@ ae = <rune of Zot
 # inedible food or armour you can't wear).
 ae += useless_item
 
+# Exclude potentially useful items of high risk, like ?torment or
+# !mutation.
+ae += dangerous_item
+
 # Exclude items which your god disapproves of.
 ae += forbidden
 
