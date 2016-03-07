@@ -307,7 +307,9 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.last_keypress_time = time(nullptr);
+    you.last_keypress_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+        );
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
