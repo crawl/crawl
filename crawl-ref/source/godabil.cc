@@ -1790,6 +1790,7 @@ bool beogh_resurrect()
                        + "?").c_str(), true, 'n'))
             {
                 corpse = &*si;
+                break;
             }
         }
     if (!corpse)
