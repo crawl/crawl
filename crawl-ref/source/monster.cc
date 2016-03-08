@@ -2503,6 +2503,8 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 }
                 break;
         }
+        break;
+
     case MON_SHAPE_BUGGY:
         str = "handbug";
         break;
