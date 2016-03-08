@@ -27,6 +27,7 @@
 #include <csignal>
 #endif
 
+#include "abyss.h" // abyss_maybe_spawn_xp_exit
 #include "act-iter.h"
 #include "areas.h"
 #include "beam.h"
@@ -938,6 +939,8 @@ void player_reacts()
         else if (you.form == TRAN_WISP && !you.stasis())
             uncontrolled_blink();
     }
+
+    abyss_maybe_spawn_xp_exit();
 
     actor_apply_cloud(&you);
 

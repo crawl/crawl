@@ -40,7 +40,9 @@
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "notes.h"
+#include "output.h" // redraw_screens
 #include "religion.h"
+#include "spl-clouds.h" // big_cloud
 #include "stash.h"
 #include "state.h"
 #include "stairs.h"
@@ -1992,4 +1994,33 @@ bool lugonu_corrupt_level(int power)
 #endif
 
     return true;
+}
+
+/// If the player has earned enough XP, spawn an exit or stairs down.
+void abyss_maybe_spawn_xp_exit()
+{
+    if (!player_in_branch(BRANCH_ABYSS)
+        || !you.props.exists(ABYSS_STAIR_XP_KEY)
+        || you.props[ABYSS_STAIR_XP_KEY].get_int() > 0
+        || !in_bounds(you.pos()))
+    {
+        return;
+    }
+    const bool stairs = you.props.exists(ABYSS_SPAWNED_XP_EXIT_KEY)
+                        && you.props[ABYSS_SPAWNED_XP_EXIT_KEY].get_bool();
+    if (stairs && at_branch_bottom())
+        return; // can't go deeper!
+
+    destroy_wall(you.pos()); // fires listeners etc even if it wasn't a wall
+    grd(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
+    big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
+    redraw_screen(); // before the force-more
+    mprf(MSGCH_BANISHMENT,
+         "The substance of the Abyss twists in disgust,"
+         " and a gateway leading %s appears!", stairs ? "down" : "out");
+
+    // stairs cost twice as much as an exit - if you're looking to go down,
+    // you're more capable and can handle fighting a little longer
+    you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST * 2;
+    you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;
 }
