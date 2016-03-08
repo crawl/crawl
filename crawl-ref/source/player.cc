@@ -5339,6 +5339,7 @@ player::player()
     current_vision   = LOS_RADIUS;
 
     real_time        = 0;
+    real_time_ms     = std::chrono::milliseconds::zero();
     real_time_delta  = std::chrono::milliseconds::zero();
     num_turns        = 0;
     exploration      = 0;

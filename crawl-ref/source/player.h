@@ -253,6 +253,7 @@ public:
     uint8_t current_vision;       // current sight radius (cells)
 
     int                       real_time;            // real time played (in seconds)
+    std::chrono::milliseconds real_time_ms;         // real time played (in milliseconds)
     std::chrono::milliseconds real_time_delta;      // real time played since last command (in milliseconds)
     int                       num_turns;            // number of turns taken
     int                       exploration;          // levels explored (16.16 bit real number)

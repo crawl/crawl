@@ -793,10 +793,8 @@ int apply_chunked_AC(int dam, int ac)
 void handle_real_time(std::chrono::milliseconds ms)
 {
     you.real_time_delta = ms - you.last_keypress_time;
-    you.real_time += min<time_t>(
-        (time_t)std::chrono::duration_cast<std::chrono::seconds>(you.real_time_delta).count(),
-        IDLE_TIME_CLAMP
-        );
+    you.real_time_ms += you.real_time_delta;
+    you.real_time = floor(you.real_time_ms.count()/1000);
     you.last_keypress_time = ms;
 }
 
