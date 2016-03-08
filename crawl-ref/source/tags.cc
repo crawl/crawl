@@ -4136,6 +4136,14 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.props[FORCED_ITEM_COLOUR_KEY] = LIGHTRED;
     }
+
+    // If we lost the monster held in an orc corpse because we marshalled
+    // it as a dead monster, clear out the prop.
+    if (item.props.exists(ORC_CORPSE_KEY)
+        && item.props[ORC_CORPSE_KEY].get_monster().type == MONS_NO_MONSTER)
+    {
+        item.props.erase(ORC_CORPSE_KEY);
+    }
 #endif
     // Fixup artefact props to handle reloading items when the new version
     // of Crawl has more artefact props.
