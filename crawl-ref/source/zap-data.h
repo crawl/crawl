@@ -248,7 +248,7 @@ static const zap_info zap_data[] =
     "",
     100,
     nullptr,
-    new tohit_calculator<0, 3, 1>,
+    new tohit_calculator<0, 3, 2>,
     nullptr,
     nullptr,
     BLACK,
