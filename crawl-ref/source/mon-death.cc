@@ -155,6 +155,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     {
         auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
         saved_mon = mons;
+
+        // Ensure that saved_mon is alive, lest it be cleared on marshall.
         if (saved_mon.max_hit_points <= 0)
             saved_mon.max_hit_points = 1;
         saved_mon.hit_points = saved_mon.max_hit_points;
