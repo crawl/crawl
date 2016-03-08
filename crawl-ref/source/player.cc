@@ -16,6 +16,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -2628,6 +2629,26 @@ static void _recharge_xp_evokers(int exp)
     }
 }
 
+/// Make progress toward the abyss spawning an exit/stairs.
+static void _reduce_abyss_xp_timer(int exp)
+{
+    if (!player_in_branch(BRANCH_ABYSS))
+        return;
+
+    const int xp_factor =
+        max(min((int)exp_needed(you.experience_level+1, 0) / 7,
+                you.experience_level * 210),
+            you.experience_level*2 + 15) / 5;
+
+    if (!you.props.exists(ABYSS_STAIR_XP_KEY))
+        you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
+    const int reqd_xp = you.props[ABYSS_STAIR_XP_KEY].get_int();
+    const int new_req = reqd_xp - div_rand_round(exp, xp_factor);
+    dprf("reducing xp timer from %d to %d (factor = %d)",
+         reqd_xp, new_req, xp_factor);
+    you.props[ABYSS_STAIR_XP_KEY].get_int() = new_req;
+}
+
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
@@ -2730,6 +2751,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 
     _recharge_xp_evokers(exp_gained);
+    _reduce_abyss_xp_timer(exp_gained);
 
     if (you.attribute[ATTR_XP_DRAIN])
     {
