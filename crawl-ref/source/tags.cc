@@ -3162,6 +3162,7 @@ static void tag_read_you(reader &th)
     you.birth_time = unmarshallInt(th);
 
     you.real_time  = unmarshallInt(th);
+    you.real_time_ms = std::chrono::milliseconds(you.real_time * 1000);
     you.num_turns  = unmarshallInt(th);
     you.exploration = unmarshallInt(th);
 
