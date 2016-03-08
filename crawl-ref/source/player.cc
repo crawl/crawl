@@ -5390,8 +5390,7 @@ player::player()
 
     delay_queue.clear();
 
-    last_keypress_time = time(0);
-    last_keypress_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+    last_keypress_time = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
         );
 

@@ -2010,7 +2010,6 @@ static string _overview_screen_title(int sw)
                                       get_job_name(you.char_class));
 
     handle_real_time();
-    handle_real_time_delta();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
                       + make_time_string(you.real_time, true);
 

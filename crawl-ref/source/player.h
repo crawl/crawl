@@ -341,8 +341,7 @@ public:
 
     delay_queue_type delay_queue;       // pending actions
 
-    time_t last_keypress_time;
-    std::chrono::milliseconds last_keypress_time_ms;
+    std::chrono::milliseconds last_keypress_time;
     bool xray_vision;
     int8_t bondage_level;  // how much an Ash worshipper is into bondage
     int8_t bondage[NUM_ET];
