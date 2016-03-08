@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <chrono>
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -1843,6 +1844,7 @@ static void _experience_check()
     }
 
     handle_real_time();
+    handle_real_time_delta();
     msg::stream << "Play time: " << make_time_string(you.real_time)
                 << " (" << you.num_turns << " turns)"
                 << endl;
@@ -2047,11 +2049,14 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        if (Options.autofight_warning > 0 && time(NULL) - you.last_keypress_time <= Options.autofight_warning)
-            mprf("--- Last autofight was %d ms ago ---", time(NULL) - you.last_keypress_time);
-        
-        if (!clua.callfn("hit_closest", 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        if (Options.autofight_warning > 0
+            && you.real_time_delta <= std::chrono::milliseconds(Options.autofight_warning)
+            && crawl_state.prev_cmd == CMD_AUTOFIGHT)
+            mprf(MSGCH_DANGER, "I need to give more thoughts to this attack");
+        else {
+            if (!clua.callfn("hit_closest", 0, 0))
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
         break;
     case CMD_AUTOFIGHT_NOMOVE:
         if (!clua.callfn("hit_closest_nomove", 0, 0))
@@ -2620,6 +2625,7 @@ static command_type _get_next_cmd()
     keycode_type keyin = _get_next_keycode();
 
     handle_real_time();
+    handle_real_time_delta();
 
     if (is_userfunction(keyin))
     {

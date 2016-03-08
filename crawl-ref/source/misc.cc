@@ -796,6 +796,12 @@ void handle_real_time(time_t t)
     you.last_keypress_time = t;
 }
 
+void handle_real_time_delta(std::chrono::milliseconds ms)
+{
+    you.real_time_delta = ms - you.last_keypress_time_ms;
+    you.last_keypress_time_ms = ms;
+}
+
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints)
 {

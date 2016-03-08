@@ -68,6 +68,11 @@ void swap_with_monster(monster *mon_to_swap);
 int apply_chunked_AC(int dam, int ac);
 
 void handle_real_time(time_t t = time(0));
+void handle_real_time_delta(
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+        )
+    );
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
