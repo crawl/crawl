@@ -2637,7 +2637,7 @@ static void _reduce_abyss_xp_timer(int exp)
 
     const int xp_factor =
         max(min((int)exp_needed(you.experience_level+1, 0) / 7,
-                you.experience_level * 210),
+                you.experience_level * 425),
             you.experience_level*2 + 15) / 5;
 
     if (!you.props.exists(ABYSS_STAIR_XP_KEY))
