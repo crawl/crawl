@@ -1254,7 +1254,7 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf("<%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
                             need_cursor ? '[' : ' ',
