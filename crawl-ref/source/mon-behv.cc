@@ -95,8 +95,8 @@ static bool _mon_tries_regain_los(monster* mon)
         return false;
     }
 
-    // Randomize it a bit to make it less predictable.
-    return !one_chance_in(10);
+    // Randomize it to make it less predictable, and reduce flip-flopping.
+    return !one_chance_in(3);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -620,6 +620,8 @@ void handle_behaviour(monster* mon)
                 {
                     _set_firing_pos(mon, you.pos());
                 }
+                else //
+                    mon->firing_pos.reset();
 
                 if (!isFriendly)
                     break;
