@@ -78,7 +78,7 @@
       elseif s == "D" then i = "book of death | book of debilitation | " ..
        "book of dreams | book of the dragon | dagger | deck of defence | " ..
        "deck of destruction | demon blade | demon trident | demon whip | " ..
-       "dire flail | disc of storms | double sword | " ..
+       "dire flail | disc of storms | amulet of dismissal | double sword | " ..
        "potion of degeneration | ring of dexterity | manual of dodging | " ..
        "staff of death | wand of digging | wand of disintegration"
 
@@ -174,7 +174,7 @@
       elseif s == "V" then i = "scroll of vulnerability"
 
       elseif s == "W" then i = "ring of wizardry | book of the warp | " ..
-       "deck of war | deck of wonders | whip | amulet of dismissal | " ..
+       "deck of war | deck of wonders | whip | " ..
        "staff of wizardry | war axe"
 
       elseif s == "X" then i = "any"
