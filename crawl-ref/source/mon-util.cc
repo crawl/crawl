@@ -3797,6 +3797,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_BLINK_AWAY:
     case SPELL_BERSERKER_RAGE:
     case SPELL_SWIFTNESS:
+    case SPELL_BATTLECRY:
         return false;
 
     // The animation spells don't work through transparent walls and
@@ -3820,7 +3821,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_TELEPORT_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
     case SPELL_BLINK_OTHER:
-        return ench_too;
+        return !attack_only && ench_too;
 
     default:
         // All conjurations count as ranged spells.
