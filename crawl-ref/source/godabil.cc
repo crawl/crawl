@@ -32,6 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -2119,7 +2120,7 @@ bool kiku_gift_necronomicon()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return you_worship(GOD_FEDHAS)
+    return have_passive(passive_t::pass_through_plants)
            && mons_class_is_plant(mc)
            && mons_class_is_stationary(mc)
            && mc != MONS_SNAPLASHER_VINE
