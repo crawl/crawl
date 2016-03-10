@@ -32,6 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
