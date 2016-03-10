@@ -177,7 +177,11 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Fedhas
-    { },
+    {
+        { -1, passive_t::friendly_plants, "Plants are friendly towards you" },
+        { -1, passive_t::passthrough_plants, "can walk through plants" },
+        { -1, passive::shootthrough_plants, "can safely fire through allied plant-like creatures" },
+    },
 
     // Cheibriados
     {

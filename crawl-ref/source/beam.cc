@@ -6640,7 +6640,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     mon_attitude_type origin_attitude;
     if (originator->is_player())
     {
-        origin_worships_fedhas = you_worship(GOD_FEDHAS);
+        origin_worships_fedhas = have_passive(passive_t::shoothrough_plants);
         origin_attitude = ATT_FRIENDLY;
     }
     else
