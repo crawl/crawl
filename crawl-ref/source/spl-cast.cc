@@ -290,7 +290,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int fail_reduce = 100;
 
-    if (in_good_standing(GOD_VEHUMET, 2) && vehumet_supports_spell(spell))
+    if (have_passive(passive_t::spells_success) && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
         // back to 67%.

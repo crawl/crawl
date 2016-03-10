@@ -855,7 +855,7 @@ static void _abyss_speed(int /*time_delta*/)
 
 static void _jiyva_effects(int /*time_delta*/)
 {
-    if (!you_worship(GOD_JIYVA))
+    if (!have_passive(passive_t::jellies_army))
         return;
 
     if (one_chance_in(10))

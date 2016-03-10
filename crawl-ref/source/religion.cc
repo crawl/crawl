@@ -2257,7 +2257,8 @@ static void _gain_piety_point()
         if (rank >= rank_for_passive(passive_t::identify_items))
             auto_id_inventory();
 
-        if (you_worship(GOD_JIYVA) && can_do_capstone_ability(you.religion))
+        // TODO: add one-time ability check in have_passive
+        if (have_passive(passive_t::unlock_slime_vaults) && can_do_capstone_ability(you.religion))
         {
             simple_god_message(" will now unseal the treasures of the "
                                "Slime Pits.");
