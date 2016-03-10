@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "godpassive.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "message.h"
@@ -1003,7 +1004,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && in_good_standing(GOD_VEHUMET, 3)
+        && have_passive(passive_t::spells_range)
         && maxrange > 1
         && spell != SPELL_GLACIATE)
     {
