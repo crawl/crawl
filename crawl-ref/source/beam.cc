@@ -6199,8 +6199,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     }
 
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
-        && !(delta.origin() && can_affect_wall(dngn_feat))
-        && stop_at_statues)
+        && !can_affect_wall(dngn_feat) && stop_at_statues)
     {
         return;
     }
