@@ -6049,10 +6049,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         // Wind blast is stopped by FFT_SOLID features.
         if (foe && cell_see_cell(mons->pos(), foe->pos(), LOS_SOLID))
-        {
-            simple_monster_message(mons, " summons a great blast of wind!");
             wind_blast(mons, splpow, foe->pos());
-        }
         return;
     }
 
