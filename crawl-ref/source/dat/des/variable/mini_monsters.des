@@ -57,10 +57,13 @@ function random_stair(e, symbol)
   if you.depth() > 1 then
     valid = "([{"
   else
-    valid = "{"
+    valid = "" -- should always coincide with depth_fraction() < 1
   end
   if you.depth_fraction() < 1 then
     valid = valid .. ")]}"
+  end
+  if valid == "" then
+    valid = "." -- shouldn't happen outside validation/caching
   end
   e.subst(symbol .. " = " .. valid)
 end
