@@ -196,6 +196,10 @@ Call of Chaos cast
 unseen Call of Chaos cast
 
 @The_something@ calls on the powers of chaos!
+%%%%
+Wind Blast cast
+
+@The_monster@ summons a fierce blast of wind!
 #################################################
 # These have special hard-coded messaging.
 #################################################
