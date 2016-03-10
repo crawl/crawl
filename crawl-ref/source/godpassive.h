@@ -167,6 +167,15 @@ enum class passive_t
 
     /// You detect the presence of gold. Gold is moved on top in stacks.
     detect_gold,
+
+    /// Allied plants are friendly towards you
+    friendly_plants,
+
+    /// You can walk through plants
+    pass_through_plants,
+
+    /// You can fire through allied plants
+    shoot_through_plants,
 };
 
 enum ru_interference

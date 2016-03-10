@@ -117,7 +117,7 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (in_good_standing(GOD_FEDHAS)
+    if (have_passive(passive_t::friendly_plants)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
