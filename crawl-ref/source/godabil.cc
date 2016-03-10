@@ -2107,7 +2107,7 @@ bool kiku_gift_necronomicon()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return have_passive(passive_t::passthrough_plants)
+    return have_passive(passive_t::pass_through_plants)
            && mons_class_is_plant(mc)
            && mons_class_is_stationary(mc)
            && mc != MONS_SNAPLASHER_VINE
