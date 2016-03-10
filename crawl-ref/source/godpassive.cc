@@ -174,7 +174,15 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
 
     // Jiyva
-    { },
+    {
+        { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
+        {  1, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
+        {  2, passive_t::resist_corrosion, "GOD protects your from corrosion" },
+        {  3, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
+        {  4, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
+        {  5, passive_t::jellies_army, "GOD summons jellies to protect you" },
+        {  5, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
+    },
 
     // Fedhas
     {
@@ -300,7 +308,9 @@ int chei_stat_boost(int piety)
 void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
-    if (!you_worship(GOD_JIYVA))
+    if (!have_passive(passive_t::slime_feed)
+        && !have_passive(passive_t::slime_mp)
+        && !have_passive(passive_t::slime_hp))
         return;
 
     if (crawl_state.game_is_sprint())

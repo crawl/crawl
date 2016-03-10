@@ -176,6 +176,29 @@ enum class passive_t
 
     /// You can fire through allied plants
     shoot_through_plants,
+    /// You can fire through allied plants creatures
+    shootthrough_plants,
+
+    /// Slimes and eye monsters are neutral towards you
+    neutral_slimes,
+
+    /// Items consumed by your fellow slimes feed you
+    slime_feed,
+
+    /// Jiyva protects you from corrosion
+    resist_corrosion,
+
+    /// Items consumed by your fellow slimes restores your mana reserve
+    slime_mp,
+
+    /// Items consumed by your fellow slimes restores your health
+    slime_hp,
+
+    /// Jiyva summons jellies to protect you
+    jellies_army,
+
+    /// Jiyva grants you access to the hidden treasures of the Slime Pits
+    unlock_slime_vaults,
 };
 
 enum ru_interference
