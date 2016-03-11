@@ -2051,7 +2051,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CREATE_TENTACLES, "Spawn Tentacles",
-    SPTYP_SUMMONING,
+    SPTYP_NONE,
     SPFLAG_MONSTER | SPFLAG_SELFENCH,
     5,
     0,
@@ -2280,7 +2280,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_AWAKEN_FOREST, "Awaken Forest",
-    SPTYP_HEXES,
+    SPTYP_HEXES | SPTYP_SUMMONING,
     SPFLAG_AREA,
     6,
     200,
@@ -2324,7 +2324,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
-    SPTYP_NECROMANCY,
+    SPTYP_NECROMANCY | SPTYP_SUMMONING,
     SPFLAG_MONSTER | SPFLAG_TARGET,
     4,
     0,
@@ -2734,7 +2734,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_AWAKEN_VINES, "Awaken Vines",
-    SPTYP_HEXES,
+    SPTYP_HEXES | SPTYP_SUMMONING,
     SPFLAG_AREA | SPFLAG_MONSTER,
     6,
     200,
