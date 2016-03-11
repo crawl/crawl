@@ -3334,7 +3334,7 @@ int check_stealth()
     }
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
-    if (in_good_standing(GOD_QAZLAL, 0))
+    if (have_passive(passive_t::storm_shield))
     {
         stealth = stealth
                   * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
@@ -5792,7 +5792,7 @@ int player::missile_deflection() const
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true)
-        || in_good_standing(GOD_QAZLAL, 3))
+        || have_passive(passive_t::upgraded_storm_shield))
     {
         return 1;
     }
