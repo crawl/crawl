@@ -129,7 +129,6 @@ quokka MONS_QUOKKA
 ## Spiders and insects ('s')
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
-spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
