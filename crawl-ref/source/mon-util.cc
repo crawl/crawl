@@ -4794,6 +4794,20 @@ mon_type_tile_variation get_mon_tile_variation(monster_type mc)
 }
 
 /**
+ * What's the normal tile for corpses of a given monster type?
+ *
+ * @param mc    The monster type in question.
+ * @return      The tile for that monster's corpse; may be varied slightly
+ *              further in some special cases (ugly things, klowns).
+ */
+tileidx_t get_mon_base_corpse_tile(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->corpse_tile;
+}
+
+
+/**
  * Get a DB lookup string for the given monster body shape.
  * @param mon  The monster body shape type in question.
  * @return     A DB lookup string for the monster body shape.
@@ -5021,6 +5035,27 @@ void debug_mondata()
 
         if (md->shape == MON_SHAPE_BUGGY)
             fails += make_stringf("%s has no defined shape\n", name);
+
+        const bool has_corpse_tile = md->corpse_tile
+                                     && md->corpse_tile != TILE_ERROR;
+        if (md->species != mc)
+        {
+            if (has_corpse_tile)
+            {
+                fails +=
+                    make_stringf("%s isn't a species but has a corpse tile\n",
+                                 name);
+            }
+        }
+        else if (md->corpse_thingy == CE_NOCORPSE)
+        {
+            if (has_corpse_tile)
+            {
+                fails += make_stringf("%s has a corpse tile & no corpse\n",
+                                      name);
+            }
+        } else if (!has_corpse_tile)
+            fails += make_stringf("%s has a corpse but no corpse tile\n", name);
     }
 
     if (!fails.empty())
