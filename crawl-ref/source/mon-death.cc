@@ -2080,7 +2080,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             if (gives_player_xp
                 && (have_passive(passive_t::restore_hp)
                     || you_worship(GOD_PAKELLAS)
-                    || you_worship(GOD_VEHUMET)
+                    || have_passive(passive_t::mp_on_kill)
                     || have_passive(passive_t::restore_hp_mp_vs_unholy)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
@@ -2104,7 +2104,8 @@ item_def* monster_die(monster* mons, killer_type killer,
                 switch (you.religion)
                 {
                 case GOD_VEHUMET:
-                    mp_heal = 1 + random2(mons->get_experience_level() / 2);
+                    if (have_passive(passive_t::mp_on_kill))
+                        mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;
                 case GOD_PAKELLAS:
                     mp_heal = random2(2 + mons->get_experience_level() / 6);

@@ -115,7 +115,11 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Vehumet
-    { },
+    {
+        { 0, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+        { 2, passive_t::spells_success, "are less likely to miscat destructive spells" },
+        { 3, passive_t::spells_range, "can cast destructive spells farther" },
+    },
 
     // Okawaru
     {

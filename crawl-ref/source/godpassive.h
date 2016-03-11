@@ -199,6 +199,15 @@ enum class passive_t
 
     /// Jiyva grants you access to the hidden treasures of the Slime Pits
     unlock_slime_vaults,
+
+    /// You have a chance to gain mana when you kill
+    mp_on_kill,
+
+    /// You are less likely to miscat destructive spells
+    spells_success,
+
+    /// You can cast destructive spells farther
+    spells_range,
 };
 
 enum ru_interference
