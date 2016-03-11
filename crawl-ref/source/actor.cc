@@ -402,7 +402,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         if (body_armour)
             count_action(CACT_ARMOUR, body_armour->sub_type);
         else
-            count_action(CACT_ARMOUR, 0, 0); // unarmoured auxtype
+            count_action(CACT_ARMOUR, -1); // unarmoured subtype
     }
 
     return max(damage - saved, 0);

@@ -3209,7 +3209,7 @@ void bolt::reflect()
     if (pos() == you.pos())
     {
         reflector = MID_PLAYER;
-        count_action(CACT_BLOCK, 0, 1); // auxtype Reflected
+        count_action(CACT_BLOCK, -1, 1); // auxtype Reflected
     }
     else if (monster* m = monster_at(pos()))
         reflector = m->mid;

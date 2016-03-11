@@ -5772,7 +5772,7 @@ void player::shield_block_succeeded(actor *foe)
     if (shield)
         count_action(CACT_BLOCK, shield->sub_type);
     else
-        count_action(CACT_BLOCK, 0, 0); // auxtype Other
+        count_action(CACT_BLOCK, -1, 0); // auxtype Other
 }
 
 int player::missile_deflection() const
@@ -7848,8 +7848,9 @@ void count_action(caction_type type, int subtype)
 **/
 void count_action(caction_type type, int subtype, int auxtype)
 {
-    subtype = ((1 + auxtype) << 16) | subtype;
-    count_action(type, subtype);
+    int compound_subtype;
+    compound_subtype = (auxtype << 16) | (short)subtype;
+    count_action(type, compound_subtype);
 }
 
 /**
@@ -7858,7 +7859,7 @@ void count_action(caction_type type, int subtype, int auxtype)
 void count_action_get_types(int *subtype, int *auxtype, int compound_subtype)
 {
     *subtype = (short)(compound_subtype & 0xFFFF);
-    *auxtype = (compound_subtype >> 16) - 1;
+    *auxtype = (short)((compound_subtype >> 16) & 0xFFFF);
 }
 
 /**

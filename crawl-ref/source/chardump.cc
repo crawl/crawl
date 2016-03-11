@@ -1048,12 +1048,15 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     }
     case CACT_MELEE:
     case CACT_FIRE:
-        if (auxtype == 0)
-            return "Unarmed";
-        else if (auxtype > 0)
+        if (subtype == -1)
         {
-            ASSERT_RANGE(auxtype - 1, 0, 1 + UNAT_LAST_ATTACK);
-            return _aux_attack_names[auxtype - 1];
+            if (auxtype == -1)
+                return "Unarmed";
+            else
+            {
+                ASSERT_RANGE(auxtype, 0, UNAT_LAST_ATTACK);
+                return _aux_attack_names[auxtype];
+            }
         }
         else if (subtype >= UNRAND_START)
         {
@@ -1065,14 +1068,14 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         }
         return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
     case CACT_ARMOUR:
-        return (auxtype > -1) ? "Skin"
+        return (subtype == -1) ? "Skin"
                : uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
     case CACT_BLOCK:
     {
+        if (subtype > -1)
+            return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
         switch (auxtype)
         {
-        case -1:
-            return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
         case 0:
             return "Other";
         case 1:
@@ -1137,8 +1140,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         ASSERT_RANGE(subtype, 1, NUM_STAB);
         return _stab_names[subtype];
     case CACT_EAT:
-        return (auxtype > -1) ? "Corpse"
-                            : uppercase_first(food_type_name(subtype));
+        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
+                            : "Corpse";
     default:
         return "Error";
     }

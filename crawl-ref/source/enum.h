@@ -799,10 +799,10 @@ enum dodge_type    // subtype for counted actions
 
 enum caction_type    // Primary categorization of counted actions.
 {                    // A subtype and auxtype will also be given in each case:
-                     // if an auxillary type is used it will be > -1
     CACT_MELEE,      // weapon subtype or unrand index
-                     //   auxtype = 0 for unarmed
-                     //   auxtype = (unarmed_attack_type + 1) for aux attacks
+                     //   subtype = -1 for unarmed or aux attacks
+                     //   auxtype = -1 for unarmed
+                     //   auxtype = unarmed_attack_type for aux attacks
     CACT_FIRE,       // weapon subtype or unrand index
     CACT_THROW,      // auxtype = item basetype, subtype = item subtype
     CACT_CAST,       // spell_type
@@ -812,10 +812,10 @@ enum caction_type    // Primary categorization of counted actions.
                      //   auxtype = item basetype, subtype = item subtype
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
-    CACT_EAT,        // food_type, or auxtype = 0 for corpse
-    CACT_ARMOUR,     // armour subtype or auxtype = 0 for unarmoured
+    CACT_EAT,        // food_type, or subtype = -1 for corpse
+    CACT_ARMOUR,     // armour subtype or subtype = -1 for unarmoured
     CACT_DODGE,      // dodge_type
-    CACT_BLOCK,      // armour subtype or
+    CACT_BLOCK,      // armour subtype or subtype = -1 and
                      //   auxtype = 0 for other blocks (god ability, spell, etc)
                      //   auxtype = 1 for reflection
     NUM_CACTIONS,
