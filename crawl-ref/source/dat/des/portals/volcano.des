@@ -1454,3 +1454,83 @@ xxxxxxlllcc..+.._..+..ccllllxx
               xx<xx
                xxx
 ENDMAP
+
+###############################################################################
+# Venture into the center of the Earth! Or a volcano. The dinosaurs await...
+NAME:   pf_volcano_lost_world
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen
+: volcano_setup(_G)
+SHUFFLE: JKM
+MARKER:  J = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 3, delay = 20, start_clouds = 1, \
+             size = 2, walk_dist = 0, spread_rate= 0 }
+MARKER:  K = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 4, delay = 39, start_clouds = 1, \
+             size = 2, walk_dist = 0, spread_rate= 0 }
+MARKER:  M = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
+             size = 2, walk_dist = 0, spread_rate= 0 }
+SUBST:   JKM = l
+SUBST:   g = def
+# fixed loot types for the cave, but shuffle it a little
+SHUFFLE: def
+KMONS:   p = plant
+# groups of lesser enemies led by a few nastier ones
+NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3
+MONS: patrolling fire dragon
+MONS: salamander / mottled dragon
+MONS: ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / crocodile /\
+      fire bat
+MONS: patrolling fire bat band
+: dgn.delayed_decay(_G, 'C', 'human skeleton')
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxllllllllxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxllllllllllllxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxlllll.g.t.<.tllxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxllllll..t.$..$.g.llxxxxxxxxxxxxxx
+xxxxxxxxxxxxxlllMlll.t$.gp.t.p.t.lxxxxxxxxxxxxxx
+xxxxxxxxxxxxlllllllt.g.$..g$.g..tllxxxxxxxxxxxxx
+xxxxxxxxxxxllllllllt.gt.3.1.p.t..lllxxxxxxxxxxxx
+xxxxxxxxxxlllllJllltp..p.....$...lllxxxxxxxxxxxx
+xxxxxxxxxlllKllllllt.......3...t.llxxxxxdCexxxxx
+xxxxxxxxlllllllllllttp...tttttt.llxxxxxxxf4xxxxx
+xxxxxxxxllllllllMlllttt..tt.ptttlxxxxxxxxx.xxxxx
+xxxxxxxlllMllllllllllltt....ttlllxxxxxxxx..xxxxx
+xxxxxxlllllllllllllJllltttp..llllxxxxxxx...xxxxx
+xxxxxxllllllllllllllllllltt..plllxxxx..p..xxxxxx
+xxxxxxlJllllpt.p.tlllllKlll...pllt.p.p...xxxxxxx
+xxxxxllllll..p.....lllllllllt.ptlp...xxxxxxxxxxx
+xxxxxlllllp.p...p.p.pllllll..p..l..pxxxxxxxxxxxx
+xxxxlKlllt..tt.pt....tllll.tp..pllptxxxxxxxxxxxx
+xxxxlllll...t...plp..p33pt....plllllllxxxxxxxxxx
+xxxlllll..p.tt.lllltp..t3.p..tllllllllllxxxxxxxx
+xxxlMlllp.....p.lllttp..3...ttlllJllMllllxxxxxxx
+xxlllllp..It....tllltttpt.pttllKllllllllllxxxxxx
+xxllllltpgpIII..plllllttttttllllllllllllJllxxxxx
+xxlJlllttppgttI..pllKlllllllllltttttttllllllxxxx
+xllllllttttttt.I.tllllllMllllltt.ptttttlllMllxxx
+xlllllltptttt..t.tlllJllllltl..p...tgp.tlllllxxx
+xllKlllp........ptllllllllttpt...tp.....plllKlxx
+xllllll..t...ptttttlllltp.t...p......t.p.tllllxx
+xllllllp.p..ttttp.ttt.p..p..tp..ttt.p.p.pplllllx
+xllMlll.p..tttt...p..t.....ptlllllpp..tG..pllJlx
+xlllllllt..tt.p.t....t..pp.llllllllpG.pG.ppllllx
+xxllllllttH.pH.pp..p...t.llllllKlll.pGG.p.pllllx
+xxlllJlllt.H.t.H.....pllllllttttllllp..t.plllMlx
+xxxllllllttH.H....t.lllllttttp.ttllltt..ptlllllx
+xxxxxllKlltt.p.tpllllltttt33..p.ttttttt..tlllllx
+xxxxxxlllllllllllllllltpt3.tp....ppt....ttllKlxx
+xxxxxxxlllMlllllllJllttp.tttttpp....p..ttllllxxx
+xxxxxxxxlllllllMllllttp..tllltttttptttttllllxxxx
+xxxxxxxxllllJllllllttpt.ttllllllltttlllllJlxxxxx
+xxxxxxxxxxllllllKlltt..ptlllJllllllllMlllxxxxxxx
+xxxxxxxxxxxxxxlllllt..pttllllllllKllllxxxxxxxxxx
+xxxxxxxxxxxxxxxxllttpt..txxxxlllllxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..A..xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..<..xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
