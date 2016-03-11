@@ -174,7 +174,7 @@ enum class passive_t
     /// You can walk through plants
     pass_through_plants,
 
-    /// You can fire through allied plants creatures
+    /// You can fire through allied plants
     shoot_through_plants,
 };
 
