@@ -270,7 +270,10 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
 
     // Pakellas
-    { },
+    {
+        { -1, passive_t::no_mp_regen, "GOD prevents you from regenerating your mana reserve" },
+        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+    },
 };
 
 bool have_passive(passive_t passive)
@@ -1006,7 +1009,7 @@ void qazlal_storm_clouds()
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
-        || !have_attribute(passive_t::elemental_adaptation)
+        || !have_passive(passive_t::elemental_adaptation)
         || !x_chance_in_y(strength, 11 - piety_rank()))
     {
         return;

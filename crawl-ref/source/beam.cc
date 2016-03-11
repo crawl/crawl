@@ -3113,7 +3113,7 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (have_passive(passive_t::resist_own_clouds && is_big_cloud())
+    if (have_passive(passive_t::resist_own_clouds) && is_big_cloud())
         return true;
 
     switch (flavour)

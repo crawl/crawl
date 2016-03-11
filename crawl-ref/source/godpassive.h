@@ -176,8 +176,6 @@ enum class passive_t
 
     /// You can fire through allied plants
     shoot_through_plants,
-    /// You can fire through allied plants creatures
-    shootthrough_plants,
 
     /// Slimes and eye monsters are neutral towards you
     neutral_slimes,
@@ -229,6 +227,9 @@ enum class passive_t
 
     /// Enemies that inflict damage upon you will sometime receive a detrimental status effect
     upgraded_aura_of_power,
+
+    // Pakellas prevents you from regenerating your mana reserve
+    no_mp_regen,
 };
 
 enum ru_interference
