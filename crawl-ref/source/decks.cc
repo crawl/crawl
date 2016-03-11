@@ -1356,7 +1356,7 @@ static int _get_power_level(int power, deck_rarity_type rarity)
     case DECK_RARITY_COMMON:
 //give nemelex worshipers a small chance for an upgrade
 //approx 1/2 ORNATE chance (plain decks don't get the +150 power boost)
-        if (in_good_standing(GOD_NEMELEX_XOBEH) && (x_chance_in_y(power, 1000)))
+        if (have_passive(passive_t::cards_power) && (x_chance_in_y(power, 1000)))
             ++power_level;
         break;
     case DECK_RARITY_LEGENDARY:
@@ -2942,7 +2942,7 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
         surge_power(you.spec_evoke());
         if (player_under_penance(GOD_NEMELEX_XOBEH))
             result -= you.penance[GOD_NEMELEX_XOBEH];
-        else if (you_worship(GOD_NEMELEX_XOBEH))
+        else if (have_passive(passive_t::cards_power))
         {
             result = you.piety;
             result *= player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 100))

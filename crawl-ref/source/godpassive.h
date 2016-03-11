@@ -208,6 +208,9 @@ enum class passive_t
 
     /// You can cast destructive spells farther
     spells_range,
+
+    /// Your cards are more powerful
+    cards_power,
 };
 
 enum ru_interference

@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "godpassive.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "message.h"
