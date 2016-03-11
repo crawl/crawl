@@ -223,6 +223,12 @@ enum class passive_t
 
     /// Elemental attacks leaves you somewhat more resistant to them
     elemental_adaptation,
+
+    /// Your enemies will sometime fail their attack or even hit themselves
+    aura_of_power,
+
+    /// Enemies that inflict damage upon you will sometime receive a detrimental status effect
+    upgraded_aura_of_power,
 };
 
 enum ru_interference

@@ -264,7 +264,10 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
 
     // Ru
-    { },
+    {
+        {  0, passive_t::aura_of_power, "your enemies will sometime fail their attack or even hit themselves" },
+        {  1, passive_t::upgraded_aura_of_power, "enemies that inflict damage upon you will sometime receive a detrimental status effect" },
+    },
 
     // Pakellas
     { },
@@ -1085,8 +1088,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
  */
 bool does_ru_wanna_redirect(monster* mon)
 {
-    return you_worship(GOD_RU)
-            && you.piety >= piety_breakpoint(0)
+    return have_passive(passive_t::aura_of_power)
             && !mon->friendly()
             && you.see_cell(mon->pos())
             && !mons_is_firewood(mon)
