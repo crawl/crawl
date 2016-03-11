@@ -923,11 +923,11 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
                 work = true;
             }
 
-            if (num == 0 && den == 0 && wand.rod_plus < MAX_WPN_ENCHANT)
+            if (num == 0 && den == 0 && wand.rod_plus < MAX_ROD_RECHARGE)
             {
                 wand.rod_plus += random_range(1, 2);
-                if (wand.rod_plus > MAX_WPN_ENCHANT)
-                    wand.rod_plus = MAX_WPN_ENCHANT;
+                if (wand.rod_plus > MAX_ROD_RECHARGE)
+                    wand.rod_plus = MAX_ROD_RECHARGE;
 
                 work = true;
             }

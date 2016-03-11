@@ -1886,7 +1886,7 @@ string get_item_description(const item_def &item, bool verbose,
                 "rate.";
 
             const int max_charges = MAX_ROD_CHARGE;
-            const int max_recharge_rate = MAX_WPN_ENCHANT;
+            const int max_recharge_rate = MAX_ROD_RECHARGE;
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
                 const int num_charges = item.charge_cap / ROD_CHARGE_MULT;

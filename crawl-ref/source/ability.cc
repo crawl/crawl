@@ -3003,7 +3003,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             wand.charge_cap = wand.charges =
                 (MAX_ROD_CHARGE + 1) * ROD_CHARGE_MULT;
-            wand.rod_plus = MAX_WPN_ENCHANT + 1;
+            wand.rod_plus = MAX_ROD_RECHARGE + 1;
         }
         else
         {

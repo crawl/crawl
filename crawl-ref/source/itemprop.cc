@@ -1547,7 +1547,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
         {
             return it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
                    || it.charges < it.charge_cap
-                   || it.rod_plus < MAX_WPN_ENCHANT;
+                   || it.rod_plus < MAX_ROD_RECHARGE;
         }
         return true;
     }

@@ -135,6 +135,7 @@ const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
 // Maximum charge level for rods
 const int MAX_ROD_CHARGE  = 17;
+const int MAX_ROD_RECHARGE  = 9;
 const int ROD_CHARGE_MULT = 100;
 
 // evoker_debt for evoking one XP evoker
@@ -157,7 +158,7 @@ const int INSTANT_DEATH = -9999;
 
 // Maximum enchantment on weapons/secondary armours
 // Note: use armour_max_enchant(item) to get the correct limit for item
-const int MAX_WPN_ENCHANT = 9;
+const int MAX_WPN_ENCHANT = 5;
 const int MAX_SEC_ENCHANT = 2;
 
 const int MAX_KNOWN_SPELLS = 21;
