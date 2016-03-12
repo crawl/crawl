@@ -29,7 +29,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -40,7 +39,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -51,7 +49,6 @@ static const struct spell_desc spelldata[] =
     25,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    nullptr,
 },
 
 {
@@ -62,7 +59,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -73,7 +69,6 @@ static const struct spell_desc spelldata[] =
     1000,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    "Apport",
 },
 
 {
@@ -84,7 +79,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     7, 0,
-    nullptr,
 },
 
 {
@@ -95,7 +89,6 @@ static const struct spell_desc spelldata[] =
     100,
     3, 3,
     3, 2,
-    nullptr,
 },
 
 {
@@ -106,7 +99,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -117,7 +109,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     6, 0,
-    nullptr,
 },
 
 {
@@ -128,7 +119,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -139,7 +129,6 @@ static const struct spell_desc spelldata[] =
     200,
     4, 11, // capped at LOS, yet this 11 matters since range increases linearly
     5, 25,
-    nullptr,
 },
 
 {
@@ -150,7 +139,6 @@ static const struct spell_desc spelldata[] =
     200,
     4, 11,
     3, 0,
-    nullptr,
 },
 
 {
@@ -161,7 +149,6 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     5, 0,
-    nullptr,
 },
 
 {
@@ -172,7 +159,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -183,7 +169,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 {
@@ -195,7 +180,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -206,7 +190,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -217,7 +200,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -229,7 +211,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    nullptr,
 },
 
 {
@@ -240,7 +221,6 @@ static const struct spell_desc spelldata[] =
     50,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 {
@@ -251,7 +231,6 @@ static const struct spell_desc spelldata[] =
     50,
     6, 6,
     2, 0,
-    nullptr,
 },
 
 {
@@ -263,7 +242,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     2, 0, // Not noisier than Blink, to keep this spell relevant
           // for stabbers. [rob]
-    nullptr,
 },
 
 {
@@ -274,7 +252,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -286,7 +263,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 2,
-    nullptr,
 },
 
 {
@@ -298,7 +274,6 @@ static const struct spell_desc spelldata[] =
     100,
     4, 4,
     3, 0,
-    nullptr,
 },
 
 {
@@ -309,7 +284,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -320,7 +294,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -331,7 +304,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -343,7 +315,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -354,7 +325,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -365,7 +335,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -376,7 +345,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    "Smite",
 },
 
 {
@@ -387,7 +355,6 @@ static const struct spell_desc spelldata[] =
     25,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 // Used indirectly, by monsters abjuring via other summon spells.
@@ -399,7 +366,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -410,7 +376,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -422,7 +387,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -434,7 +398,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     2, 0, //the beam is silent
-    nullptr,
 },
 
 {
@@ -445,7 +408,6 @@ static const struct spell_desc spelldata[] =
     200,
     3, 3,
     8, 0,
-    nullptr,
 },
 
 {
@@ -456,7 +418,6 @@ static const struct spell_desc spelldata[] =
     1000,
     6, 6,
     3, 0,
-    nullptr,
 },
 
 {
@@ -467,7 +428,6 @@ static const struct spell_desc spelldata[] =
     200,
     TORNADO_RADIUS, TORNADO_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -479,7 +439,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 2,
-    nullptr,
 },
 
 {
@@ -490,7 +449,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     9, 0,
-    nullptr,
 },
 
 {
@@ -501,7 +459,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     9, 0,
-    nullptr,
 },
 
 {
@@ -512,7 +469,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -523,7 +479,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -534,7 +489,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -545,7 +499,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 // The following name was found in the hack.exe file of an early version
@@ -558,7 +511,6 @@ static const struct spell_desc spelldata[] =
     100,
     6, 6,
     4, 10,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -570,7 +522,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -582,7 +533,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -593,7 +543,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -605,7 +554,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -616,7 +564,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -627,7 +574,6 @@ static const struct spell_desc spelldata[] =
     25,
     5, 5,
     1, 0,
-    nullptr,
 },
 
 {
@@ -638,7 +584,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -649,7 +594,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 {
@@ -661,7 +605,6 @@ static const struct spell_desc spelldata[] =
     200,
     1, 1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -672,7 +615,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -683,7 +625,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -694,7 +635,6 @@ static const struct spell_desc spelldata[] =
     25,
     1, 1,
     1, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -706,7 +646,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -718,7 +657,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -729,7 +667,6 @@ static const struct spell_desc spelldata[] =
     100,
     1, 1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -740,7 +677,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -751,7 +687,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -762,7 +697,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -773,7 +707,6 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 {
@@ -784,7 +717,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -796,7 +728,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -808,7 +739,6 @@ static const struct spell_desc spelldata[] =
     100,
     4, 4,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -820,7 +750,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    nullptr,
 },
 #endif
 
@@ -832,7 +761,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     6, 0,
-    nullptr,
 },
 
 {
@@ -843,7 +771,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -854,7 +781,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 // Monster-only, players can use Lugonu's ability
@@ -867,7 +793,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -879,7 +804,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -891,7 +815,6 @@ static const struct spell_desc spelldata[] =
     25,
     6, 6,
     1, 0,
-    nullptr,
 },
 
 {
@@ -902,7 +825,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -914,7 +836,6 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -925,7 +846,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -937,7 +857,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 #endif
 
@@ -949,7 +868,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -960,7 +878,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -972,7 +889,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -983,7 +899,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -994,7 +909,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 #endif
@@ -1006,7 +920,6 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1017,7 +930,6 @@ static const struct spell_desc spelldata[] =
     50,
     4, 4,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1028,7 +940,6 @@ static const struct spell_desc spelldata[] =
     25,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    nullptr,
 },
 
 {
@@ -1039,7 +950,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1051,7 +961,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1062,7 +971,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -1074,7 +982,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1086,7 +993,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1097,7 +1003,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 #endif
@@ -1109,7 +1014,6 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     7, 0,
-    nullptr,
 },
 
 {
@@ -1120,7 +1024,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1131,7 +1034,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1142,7 +1044,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1153,7 +1054,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1164,7 +1064,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1175,7 +1074,6 @@ static const struct spell_desc spelldata[] =
     150,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1186,7 +1084,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1197,7 +1094,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1208,7 +1104,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1219,7 +1114,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1230,7 +1124,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 // Monster-only, players can use Kiku's ability
@@ -1242,7 +1135,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1253,7 +1145,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1264,7 +1155,6 @@ static const struct spell_desc spelldata[] =
     100,
     5, 5,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1275,7 +1165,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     2, 4,
-    nullptr,
 },
 
 {
@@ -1286,7 +1175,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1297,7 +1185,6 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1309,7 +1196,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 #endif
 {
@@ -1320,7 +1206,6 @@ static const struct spell_desc spelldata[] =
     40, // cap for range; damage cap is at 25
     2, 5,
     1, 0,
-    nullptr,
 },
 
 {
@@ -1331,7 +1216,6 @@ static const struct spell_desc spelldata[] =
     200,
     1, 9,
     0, 0, // make silent to keep passwall a viable stabbing spell [rob]
-    nullptr,
 },
 
 {
@@ -1342,7 +1226,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1353,7 +1236,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1364,7 +1246,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1375,7 +1256,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     7, 0,
-    nullptr,
 },
 
 {
@@ -1386,7 +1266,6 @@ static const struct spell_desc spelldata[] =
     56,
     LOS_RADIUS, LOS_RADIUS,
     0, 0, //putting a monster to sleep should be silent
-    nullptr,
 },
 
 {
@@ -1397,7 +1276,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1409,7 +1287,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1420,7 +1297,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -1432,7 +1308,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 {
@@ -1443,7 +1318,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1454,7 +1328,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1465,7 +1338,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     7, 30,
-    nullptr,
 },
 
 {
@@ -1476,7 +1348,6 @@ static const struct spell_desc spelldata[] =
     200,
     1, 4,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1487,7 +1358,6 @@ static const struct spell_desc spelldata[] =
     100,
     1, 1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1498,7 +1368,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    nullptr,
 },
 
 {
@@ -1509,7 +1378,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1521,7 +1389,6 @@ static const struct spell_desc spelldata[] =
     50,
     5, 5,
     2, 0,
-    nullptr,
 },
 #endif
 
@@ -1533,7 +1400,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    "Fragment what (e.g. wall or brittle monster)?",
 },
 
 {
@@ -1544,7 +1410,6 @@ static const struct spell_desc spelldata[] =
     50,
     2, 2, // more with wielded stones
     1, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1556,7 +1421,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1567,7 +1431,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    nullptr,
 },
 #endif
 
@@ -1579,7 +1442,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1590,7 +1452,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1601,7 +1462,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     8, 25,
-    nullptr,
 },
 
 {
@@ -1612,7 +1472,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 15,
-    nullptr,
 },
 
 {
@@ -1623,7 +1482,6 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1634,7 +1492,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1645,7 +1502,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     3, 8, // when it closes
-    nullptr,
 },
 
 {
@@ -1656,7 +1512,6 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1668,7 +1523,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     20, 0,
-    nullptr,
 },
 #endif
 
@@ -1680,7 +1534,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1692,7 +1545,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1704,7 +1556,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1716,7 +1567,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     9, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1728,7 +1578,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -1740,7 +1589,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1752,7 +1600,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -1765,7 +1612,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1776,7 +1622,6 @@ static const struct spell_desc spelldata[] =
     0,
     6, 6,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1787,7 +1632,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1798,7 +1642,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1809,7 +1652,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1820,7 +1662,6 @@ static const struct spell_desc spelldata[] =
     0,
     6, 6,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1831,7 +1672,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1842,7 +1682,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1853,7 +1692,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1864,7 +1702,6 @@ static const struct spell_desc spelldata[] =
     0,
     4, 4,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1876,7 +1713,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -1887,7 +1723,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1899,7 +1734,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1910,7 +1744,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 {
@@ -1921,7 +1754,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -1932,7 +1764,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 // Monster version of the spell (with full range)
@@ -1944,7 +1775,6 @@ static const struct spell_desc spelldata[] =
     100,
     4, 4,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1955,7 +1785,6 @@ static const struct spell_desc spelldata[] =
     100,
     4, 4,
     4, 0,
-    nullptr,
 },
 
 {
@@ -1966,7 +1795,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1977,7 +1805,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -1989,7 +1816,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2000,7 +1826,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2011,7 +1836,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2023,7 +1847,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     8, 0,
-    nullptr,
 },
 
 #endif
@@ -2035,7 +1858,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2046,7 +1868,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2057,7 +1878,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2068,7 +1888,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2079,7 +1898,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2091,7 +1909,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2102,7 +1919,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2113,7 +1929,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2124,7 +1939,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2136,7 +1950,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -2148,7 +1961,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2159,7 +1971,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2171,7 +1982,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2182,7 +1992,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -2194,7 +2003,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2205,7 +2013,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     6, 25,
-    nullptr,
 },
 
 {
@@ -2216,7 +2023,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2227,7 +2033,6 @@ static const struct spell_desc spelldata[] =
     200,
     8, 8,
     7, 0,
-    nullptr,
 },
 
 {
@@ -2238,7 +2043,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     7, 0,
-    nullptr,
 },
 
 {
@@ -2250,7 +2054,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2262,7 +2065,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2274,7 +2076,6 @@ static const struct spell_desc spelldata[] =
     200,
     8, 8,
     -9, 0,
-    nullptr,
 },
 #endif
 
@@ -2286,7 +2087,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2297,7 +2097,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2308,7 +2107,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2319,7 +2117,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2330,7 +2127,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2342,7 +2138,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 #endif
 
@@ -2354,7 +2149,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2366,7 +2160,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2377,7 +2170,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2389,7 +2181,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 2,
-    nullptr,
 },
 
 {
@@ -2401,7 +2192,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2412,7 +2202,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2423,7 +2212,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2434,7 +2222,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2445,7 +2232,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2456,7 +2242,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2468,7 +2253,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    nullptr,
 },
 #endif
 
@@ -2480,7 +2264,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2491,7 +2274,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2502,7 +2284,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -2513,7 +2294,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2524,7 +2304,6 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2536,7 +2315,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0, 0,
-    nullptr,
 },
 #endif
 
@@ -2548,7 +2326,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2559,7 +2336,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     2, 0,
-    nullptr,
 },
 
 {
@@ -2570,7 +2346,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2581,7 +2356,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     2, 0,
-    nullptr,
 },
 
 {
@@ -2592,7 +2366,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2604,7 +2377,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0, 0,
-    nullptr,
 },
 #endif
 
@@ -2616,7 +2388,6 @@ static const struct spell_desc spelldata[] =
     100,
     5, 5,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2627,7 +2398,6 @@ static const struct spell_desc spelldata[] =
     100,
     3, 3,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2638,7 +2408,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 // Ironbrand Convoker version (delayed activation, recalls only humanoids)
@@ -2650,7 +2419,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2661,7 +2429,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2672,7 +2439,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2683,7 +2449,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2694,7 +2459,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2705,7 +2469,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2716,7 +2479,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2728,7 +2490,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     100, 0,
-    nullptr,
 },
 #endif
 
@@ -2740,7 +2501,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2751,7 +2511,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2762,7 +2521,6 @@ static const struct spell_desc spelldata[] =
     100,
     5, 5,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2773,7 +2531,6 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2784,7 +2541,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2796,7 +2552,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 #endif
 
@@ -2808,7 +2563,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2819,7 +2573,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2830,7 +2583,6 @@ static const struct spell_desc spelldata[] =
     25,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 {
@@ -2841,7 +2593,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 8,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2853,7 +2604,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0, 0,
-    nullptr,
 },
 #endif
 
@@ -2865,7 +2615,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -2876,7 +2625,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -2887,7 +2635,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 10,
-    nullptr,
 },
 
 {
@@ -2898,7 +2645,6 @@ static const struct spell_desc spelldata[] =
     50,
     4, 4,
     2, 0,
-    nullptr,
 },
 
 {
@@ -2909,7 +2655,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2920,7 +2665,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -2931,7 +2675,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2943,7 +2686,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 #endif
 
@@ -2955,7 +2697,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     7, 0,
-    nullptr,
 },
 
 {
@@ -2966,7 +2707,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -2977,7 +2717,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     7, 0,
-    nullptr,
 },
 
 {
@@ -2988,7 +2727,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     8, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3000,7 +2738,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 #endif
 
@@ -3012,7 +2749,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -3023,7 +2759,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3034,7 +2769,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     8, 0,
-    nullptr,
 },
 
 {
@@ -3045,7 +2779,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3056,7 +2789,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3068,7 +2800,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     4, 0,
-    nullptr,
 },
 #endif
 
@@ -3080,7 +2811,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3091,7 +2821,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3103,7 +2832,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0, 0,
-    nullptr,
 },
 #endif
 
@@ -3115,7 +2843,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     7, 0,
-    nullptr,
 },
 
 {
@@ -3126,7 +2853,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3137,7 +2863,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 10,
-    nullptr,
 },
 
 {
@@ -3148,7 +2873,6 @@ static const struct spell_desc spelldata[] =
     100,
     2, 2,
     2, 0,
-    nullptr,
 },
 
 {
@@ -3159,7 +2883,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -3170,7 +2893,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3181,7 +2903,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3192,7 +2913,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3203,7 +2923,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3214,7 +2933,6 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     9, 25,
-    nullptr,
 },
 
 {
@@ -3225,7 +2943,6 @@ static const struct spell_desc spelldata[] =
     100,
     3, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3236,7 +2953,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3247,7 +2963,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     7, 15,
-    nullptr,
 },
 
 {
@@ -3258,7 +2973,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3270,7 +2984,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 #endif
 
@@ -3282,7 +2995,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3293,7 +3005,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3304,7 +3015,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3315,7 +3025,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3326,7 +3035,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3337,7 +3045,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3348,7 +3055,6 @@ static const struct spell_desc spelldata[] =
     200,
     1, 1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3359,7 +3065,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3370,7 +3075,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3382,7 +3086,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3393,7 +3096,6 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3404,7 +3106,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3415,7 +3116,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     25, 0,
-    nullptr,
 },
 
 {
@@ -3426,7 +3126,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3437,7 +3136,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3448,7 +3146,6 @@ static const struct spell_desc spelldata[] =
     0,
     3, 3,
     3, 0,
-    nullptr,
 },
 
 {
@@ -3459,7 +3156,6 @@ static const struct spell_desc spelldata[] =
     200,
     1, 1,
     0, 5,
-    nullptr,
 },
 
 {
@@ -3470,7 +3166,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    nullptr,
 },
 
 {
@@ -3481,7 +3176,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3492,7 +3186,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3503,7 +3196,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    nullptr,
 },
 
 {
@@ -3514,7 +3206,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    nullptr,
 },
 
 {
@@ -3525,7 +3216,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
-    nullptr,
 },
 
 {
@@ -3536,7 +3226,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3547,7 +3236,6 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3558,7 +3246,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3569,7 +3256,6 @@ static const struct spell_desc spelldata[] =
     50,
     LOS_RADIUS, LOS_RADIUS,
     3, 5,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3581,7 +3267,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     25, 0,
-    nullptr,
 },
 #endif
 
@@ -3593,7 +3278,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     20, 0,
-    nullptr,
 },
 
 {
@@ -3604,7 +3288,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3615,7 +3298,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    nullptr,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -3627,7 +3309,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 #endif
 
@@ -3639,7 +3320,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3650,7 +3330,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    nullptr,
 },
 
 {
@@ -3661,7 +3340,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    nullptr,
 },
 
 {
@@ -3672,7 +3350,6 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     15, 0,
-    nullptr,
 },
 
 {
@@ -3683,7 +3360,6 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    nullptr,
 },
 
 {
@@ -3694,7 +3370,6 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3705,7 +3380,6 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 0,
-    nullptr,
 },
 
 {
@@ -3716,7 +3390,6 @@ static const struct spell_desc spelldata[] =
     25,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
-    nullptr,
 },
 
 {
@@ -3727,7 +3400,6 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    nullptr,
 },
 
 };
