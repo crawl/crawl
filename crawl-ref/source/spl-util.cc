@@ -34,6 +34,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "tiledef-gui.h"    // spell tiles
 #include "transform.h"
 
 struct spell_desc
@@ -65,6 +66,9 @@ struct spell_desc
     // to at the place of casting. effect_noise handles that, and is also
     // used even if the spell is not casted directly (by Xom, for instance).
     int effect_noise;
+
+    /// Icon for the spell in e.g. spellbooks, casting menus, etc.
+    tileidx_t tile;
 };
 
 #include "spl-data.h"
@@ -470,6 +474,12 @@ const char *get_spell_target_prompt(spell_type which_spell)
     default:
         return nullptr;
     }
+}
+
+/// What's the icon for the given spell?
+tileidx_t get_spell_tile(spell_type which_spell)
+{
+    return _seekspell(which_spell)->tile;
 }
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc)
