@@ -1256,19 +1256,19 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 
 // Special case for *taurs which have a different tile
 // for when they have a bow.
-static int _bow_offset(const monster_info& mon)
+static bool _bow_offset(const monster_info& mon)
 {
     if (!mon.inv[MSLOT_WEAPON].get())
-        return 1;
+        return true;
 
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_SHORTBOW:
     case WPN_LONGBOW:
     case WPN_ARBALEST:
-        return 0;
+        return false;
     default:
-        return 1;
+        return true;
     }
 }
 
@@ -1538,62 +1538,76 @@ static bool _tentacle_tile_not_flying(tileidx_t tile)
 
 static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 {
-    bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
+    const bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
 
     // Show only base class for detected monsters.
     if (mons_class_is_zombified(mon.type))
         return _tileidx_monster_zombified(mon);
-    else if (mon.props.exists("monster_tile"))
+
+    if (mon.props.exists("monster_tile"))
     {
         tileidx_t t = mon.props["monster_tile"].get_short();
         if (t == TILEP_MONS_HELL_WIZARD)
             return _mon_sinus(t);
-        else
-            return t;
+        return t;
     }
-    else
-    {
-        int tile_num = 0;
-        if (mon.props.exists(TILE_NUM_KEY))
-            tile_num = mon.props[TILE_NUM_KEY].get_short();
 
-        switch (mon.type)
-        {
+    int tile_num = 0;
+    if (mon.props.exists(TILE_NUM_KEY))
+        tile_num = mon.props[TILE_NUM_KEY].get_short();
+
+    const tileidx_t base = tileidx_monster_base(mon.type, in_water,
+                                                mon.colour(true),
+                                                mon.number, tile_num);
+
+    switch (mon.type)
+    {
+        // use a different tile not using a standard ranged weapon.
         case MONS_CENTAUR:
-            return TILEP_MONS_CENTAUR + _bow_offset(mon);
         case MONS_CENTAUR_WARRIOR:
-            return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
         case MONS_YAKTAUR:
-            return TILEP_MONS_YAKTAUR + _bow_offset(mon);
         case MONS_YAKTAUR_CAPTAIN:
-            return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+            return base + (_bow_offset(mon) ? 1 : 0);
+
         case MONS_SLAVE:
-            return TILEP_MONS_SLAVE + (mon.mname == "freed slave" ? 1 : 0);
+            return base + (mon.mname == "freed slave" ? 1 : 0);
+
+        case MONS_BALLISTOMYCETE:
+            return base + (mon.is_active ? 1 : 0);
+
+        case MONS_SNAPPING_TURTLE:
+        case MONS_ALLIGATOR_SNAPPING_TURTLE:
+            return base + (mon.is(MB_WITHDRAWN) ? 1 : 0);
+
+        case MONS_DUVESSA:
+        case MONS_DOWAN:
+            return mon.props.exists(ELVEN_IS_ENERGIZED_KEY) ? base + 1 : base;
+
+        case MONS_ARACHNE:
+        {
+            // Arachne normally is drawn with her staff wielded two-handed,
+            // but will use a regular stance if she picks up a shield
+            // (enhancer staves are compatible with those).
+            const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
+            if (!mon.inv[MSLOT_SHIELD].get() && weapon
+                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
+                    || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
+            {
+                return base;
+            }
+            else
+                return base + 1;
+        }
+
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;
-            else
-                return _mon_mod(TILEP_MONS_BUSH, tile_num);
-        case MONS_BALLISTOMYCETE:
-            if (mon.is_active)
-                return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
-            else
-                return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
-            break;
-        case MONS_HYPERACTIVE_BALLISTOMYCETE:
-            return TILEP_MONS_HYPERACTIVE_BALLISTOMYCETE;
-
-        case MONS_SNAPPING_TURTLE:
-            return TILEP_MONS_SNAPPING_TURTLE
-                    + (mon.is(MB_WITHDRAWN) ? 1 : 0);
-        case MONS_ALLIGATOR_SNAPPING_TURTLE:
-            return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE
-                    + (mon.is(MB_WITHDRAWN) ? 1 : 0);
+            return base;
 
         case MONS_BOULDER_BEETLE:
             return mon.is(MB_ROLLING)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
-                   : TILEP_MONS_BOULDER_BEETLE;
+                   : base;
 
         case MONS_DANCING_WEAPON:
         {
@@ -1670,48 +1684,16 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tile;
         }
 
-        case MONS_ARACHNE:
-        {
-            // Arachne normally is drawn with her staff wielded two-handed,
-            // but will use a regular stance if she picks up a shield
-            // (enhancer staves are compatible with those) or Xom does his
-            // weapon swap trick.
-            const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
-            if (!mon.inv[MSLOT_SHIELD].get() && weapon
-                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
-                    || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
-            {
-                return TILEP_MONS_ARACHNE;
-            }
-            else
-                return TILEP_MONS_ARACHNE_STAVELESS;
-        }
-
-        case MONS_DUVESSA:
-        case MONS_DOWAN:
-        {
-            const tileidx_t t = tileidx_monster_base(mon.type, in_water,
-                                                     mon.colour(true),
-                                                     mon.number, tile_num);
-            return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
-                                                                 : t;
-        }
-
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...
-            const tileidx_t t = tileidx_monster_base(mon.type, in_water,
-                                                     mon.colour(true),
-                                                     mon.number, tile_num);
-            if (t == TILEP_MONS_PROGRAM_BUG)
+            if (base == TILEP_MONS_PROGRAM_BUG)
                 return TILE_UNSEEN_MONSTER;
-            return t;
+            return base;
         }
 
         default:
-            return tileidx_monster_base(mon.type, in_water, mon.colour(true),
-                                        mon.number, tile_num);
-        }
+            return base;
     }
 }
 
