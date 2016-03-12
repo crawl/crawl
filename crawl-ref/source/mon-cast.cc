@@ -1126,8 +1126,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
     case SPELL_TROGS_HAND:
-    case SPELL_SWIFTNESS:
+    case SPELL_SPRINT:
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_SWIFTNESS:
     case SPELL_STONESKIN:
 #endif
     case SPELL_WATER_ELEMENTALS:
@@ -3450,9 +3451,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-            // Alligators shouldn't spam swiftness.
+            // Alligators shouldn't spam sprint.
             // (not in _ms_waste_of_time since it is not deterministic)
-            if (spell_cast == SPELL_SWIFTNESS
+            if (spell_cast == SPELL_SPRINT
                 && mons->type == MONS_ALLIGATOR
                 && (mons->swift_cooldown + random2avg(170, 5) >=
                     you.num_turns))
@@ -5134,7 +5135,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // Replaced with monster-specific version.
     case SPELL_SWIFTNESS:
+#endif
+    case SPELL_SPRINT:
         mons->add_ench(ENCH_SWIFT);
         if (mons->type == MONS_ALLIGATOR)
         {
@@ -7506,7 +7511,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_MIGHT:
         return mon->has_ench(ENCH_MIGHT);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SWIFTNESS:
+#endif
+    case SPELL_SPRINT:
         return mon->has_ench(ENCH_SWIFT);
 
     case SPELL_REGENERATION:
