@@ -65,8 +65,6 @@ struct spell_desc
     // to at the place of casting. effect_noise handles that, and is also
     // used even if the spell is not casted directly (by Xom, for instance).
     int effect_noise;
-
-    const char  *target_prompt;
 };
 
 #include "spl-data.h"
@@ -461,7 +459,17 @@ unsigned int get_spell_flags(spell_type which_spell)
 
 const char *get_spell_target_prompt(spell_type which_spell)
 {
-    return _seekspell(which_spell)->target_prompt;
+    switch (which_spell)
+    {
+    case SPELL_APPORTATION:
+        return "Apport";
+    case SPELL_SMITING:
+        return "Smite";
+    case SPELL_LRD:
+        return "Fragment what (e.g. wall or brittle monster)?";
+    default:
+        return nullptr;
+    }
 }
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc)
