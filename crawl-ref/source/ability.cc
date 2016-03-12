@@ -178,6 +178,12 @@ static skill_type _invo_skill()
         case GOD_NEMELEX_XOBEH:
         case GOD_PAKELLAS:
             return SK_EVOCATIONS;
+        case GOD_ASHENZARI:
+        case GOD_JIYVA:
+        case GOD_GOZAG:
+        case GOD_RU:
+        case GOD_TROG:
+            return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
     }
@@ -214,10 +220,11 @@ struct failure_info
             return base_chance - you.skill(SK_EVOCATIONS, variable_fail_mult);
         case FAIL_INVO:
         {
+            const int sk_mod = _invo_skill() == SK_NONE ? 0 :
+                                 you.skill(_invo_skill(), variable_fail_mult);
             const int piety_mod
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
-            return base_chance - you.skill(_invo_skill(), variable_fail_mult)
-                               - piety_mod;
+            return base_chance - sk_mod - piety_mod;
         }
         default:
             die("unknown failure basis %d!", basis);
