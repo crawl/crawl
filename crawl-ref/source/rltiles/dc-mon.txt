@@ -1040,16 +1040,17 @@ tiamat_purple
 tiamat_red
 tiamat_white
 %sdir mon/draco
+# must match monster_type enum order.
 draco-base-brown DRACO_BASE
 draco-base-black
+draco-base-mottle
 draco-base-yellow
 draco-base-green
-draco-base-grey
-draco-base-mottle
-draco-base-pale
 draco-base-purple
 draco-base-red
 draco-base-white
+draco-base-grey
+draco-base-pale
 %rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
 draco-job-caller DRACO_CALLER

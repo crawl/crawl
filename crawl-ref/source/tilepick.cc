@@ -1822,20 +1822,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
 static tileidx_t tileidx_draco_base(monster_type draco)
 {
-    switch (draco)
-    {
-    default:
-    case MONS_DRACONIAN:        return TILEP_DRACO_BASE;
-    case MONS_BLACK_DRACONIAN:  return TILEP_DRACO_BASE + 1;
-    case MONS_YELLOW_DRACONIAN: return TILEP_DRACO_BASE + 2;
-    case MONS_GREEN_DRACONIAN:  return TILEP_DRACO_BASE + 3;
-    case MONS_GREY_DRACONIAN:   return TILEP_DRACO_BASE + 4;
-    case MONS_MOTTLED_DRACONIAN:return TILEP_DRACO_BASE + 5;
-    case MONS_PALE_DRACONIAN:   return TILEP_DRACO_BASE + 6;
-    case MONS_PURPLE_DRACONIAN: return TILEP_DRACO_BASE + 7;
-    case MONS_RED_DRACONIAN:    return TILEP_DRACO_BASE + 8;
-    case MONS_WHITE_DRACONIAN:  return TILEP_DRACO_BASE + 9;
-    }
+    return TILEP_DRACO_BASE + (draco - MONS_DRACONIAN);
 }
 
 tileidx_t tileidx_draco_base(const monster_info& mon)
@@ -1845,46 +1832,21 @@ tileidx_t tileidx_draco_base(const monster_info& mon)
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
 {
-    switch (mon.type)
-    {
-        case MONS_DRACONIAN_CALLER:      return TILEP_DRACO_CALLER;
-        case MONS_DRACONIAN_MONK:        return TILEP_DRACO_MONK;
-        case MONS_DRACONIAN_ZEALOT:      return TILEP_DRACO_ZEALOT;
-        case MONS_DRACONIAN_SHIFTER:     return TILEP_DRACO_SHIFTER;
-        case MONS_DRACONIAN_ANNIHILATOR: return TILEP_DRACO_ANNIHILATOR;
-        case MONS_DRACONIAN_KNIGHT:      return TILEP_DRACO_KNIGHT;
-        case MONS_DRACONIAN_SCORCHER:    return TILEP_DRACO_SCORCHER;
-        default:                         return 0;
-    }
+    if (mons_is_draconian_job(mon.type))
+        return get_mon_base_tile(mon.type);
+    return 0;
 }
 
 tileidx_t tileidx_demonspawn_base(const monster_info& mon)
 {
-    int demonspawn = mon.draco_or_demonspawn_subspecies();
-
-    switch (demonspawn)
-    {
-        case MONS_DEMONSPAWN:            return TILEP_MONS_DEMONSPAWN;
-        case MONS_MONSTROUS_DEMONSPAWN:  return TILEP_MONS_MONSTROUS_DEMONSPAWN;
-        case MONS_GELID_DEMONSPAWN:      return TILEP_MONS_GELID_DEMONSPAWN;
-        case MONS_INFERNAL_DEMONSPAWN:   return TILEP_MONS_INFERNAL_DEMONSPAWN;
-        case MONS_PUTRID_DEMONSPAWN:     return TILEP_MONS_PUTRID_DEMONSPAWN;
-        case MONS_TORTUROUS_DEMONSPAWN:  return TILEP_MONS_TORTUROUS_DEMONSPAWN;
-        default:                         return 0;
-    }
+    return get_mon_base_tile(mon.draco_or_demonspawn_subspecies());
 }
 
 tileidx_t tileidx_demonspawn_job(const monster_info& mon)
 {
-    switch (mon.type)
-    {
-        case MONS_BLOOD_SAINT:           return TILEP_MONS_BLOOD_SAINT;
-        case MONS_CHAOS_CHAMPION:        return TILEP_MONS_CHAOS_CHAMPION;
-        case MONS_WARMONGER:             return TILEP_MONS_WARMONGER;
-        case MONS_CORRUPTER:             return TILEP_MONS_CORRUPTER;
-        case MONS_BLACK_SUN:             return TILEP_MONS_BLACK_SUN;
-        default:                         return 0;
-    }
+    if (mons_is_demonspawn_job(mon.type))
+        return get_mon_base_tile(mon.type);
+    return 0;
 }
 
 /**
