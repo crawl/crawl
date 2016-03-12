@@ -235,6 +235,7 @@ frost_giant CORPSE_FROST_GIANT
 stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 juggernaut CORPSE_JUGGERNAUT
+iron_giant CORPSE_IRON_GIANT
 
 ## Dragons ('D')
 %sdir mon/dragons
