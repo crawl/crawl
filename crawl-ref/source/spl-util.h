@@ -71,6 +71,7 @@ int spell_noise(spell_type spell);
 int spell_effect_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);
+tileidx_t get_spell_tile(spell_type which_spell);
 
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
