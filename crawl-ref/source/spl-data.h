@@ -3720,6 +3720,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPRINT, "Sprint",
+    SPTYP_CHARMS,
+    SPFLAG_HASTY | SPFLAG_SELFENCH | SPFLAG_UTILITY,
+    2,
+    100,
+    -1, -1,
+    2, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

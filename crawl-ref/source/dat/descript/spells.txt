@@ -1204,6 +1204,10 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Sprint spell
+
+Causes the caster to cover ground more rapidly for a short duration.
+%%%%
 Static Discharge spell
 
 Releases electrical charges against those next to the caster. These may arc to
