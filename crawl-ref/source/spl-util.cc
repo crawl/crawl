@@ -326,6 +326,45 @@ bool add_spell_to_memory(spell_type spell)
     return true;
 }
 
+static void _remove_spell_attributes(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_DEFLECT_MISSILES:
+        if (you.attribute[ATTR_DEFLECT_MISSILES])
+        {
+            const int orig_defl = you.missile_deflection();
+            you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "You feel %s from missiles.",
+                                 you.missile_deflection() < orig_defl
+                                 ? "less protected"
+                                 : "your spell is no longer protecting you");
+        }
+        break;
+    case SPELL_REPEL_MISSILES:
+        if (you.attribute[ATTR_REPEL_MISSILES])
+        {
+            const int orig_defl = you.missile_deflection();
+            you.attribute[ATTR_REPEL_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "You feel %s from missiles.",
+                                 you.missile_deflection() < orig_defl
+                                 ? "less protected"
+                                 : "your spell is no longer protecting you");
+        }
+        break;
+    case SPELL_DELAYED_FIREBALL:
+        if (you.attribute[ATTR_DELAYED_FIREBALL])
+        {
+            you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        }
+        break;
+    default:
+        break;
+    }
+    return;
+}
+
 bool del_spell_from_memory_by_slot(int slot)
 {
     ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
@@ -336,6 +375,8 @@ bool del_spell_from_memory_by_slot(int slot)
     spell_skills(you.spells[slot], you.stop_train);
 
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
+    _remove_spell_attributes(you.spells[slot]);
+
     you.spells[slot] = SPELL_NO_SPELL;
 
     for (int j = 0; j < 52; j++)
