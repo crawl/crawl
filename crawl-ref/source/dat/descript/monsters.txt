@@ -787,9 +787,8 @@ bolts of fire and cold that are reflected by any surface.
 %%%%
 curse skull
 
-A charred skull floating in the air and rotating slowly. Mystic symbols carved
-into its blackened surface indicate its resistance to almost any form of
-attack.
+A charred skull floating in the air and rotating slowly. Mystic symbols are
+carved into its blackened surface.
 %%%%
 curse toe
 
@@ -1630,8 +1629,10 @@ being in the memories of another's life.
 %%%%
 lurking horror
 
-A formless mass of negative energy. It seems to stop moving when you look at
-it.
+A formless mass of negative energy, bound to bring terrible torment once the
+forces holding it together dissolve. The alien presence of intruders to the
+Abyss is sure to unravel it, yet it seems perversely drawn toward them; still,
+it seems somehow reluctant to move while being observed.
 %%%%
 macabre mass
 
@@ -1691,8 +1692,9 @@ monstrous demonspawn
 %%%%
 moth of wrath
 
-A rare species of moth, eradicated from the surface centuries ago due to its
-ability to drive those who look upon it insane with rage.
+A moth known for its ability to inspire insane rages by touching its foes, or
+merely gazing at its friends. For some inexplicable reason, it was eradicated
+from the surface centuries ago.
 %%%%
 mottled draconian
 
@@ -2412,8 +2414,8 @@ A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
 tentacled starspawn
 
-A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again,
-one slithers out to drag unfortunate prey back into its waiting gullet.
+A lumbering maw shrouded in a mass of sinuous tentacles. On spotting prey, its
+tentacles lunge outward, dragging victims directly to its waiting gullet.
 %%%%
 thrashing horror
 
