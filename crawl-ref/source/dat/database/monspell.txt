@@ -684,7 +684,7 @@ curse skull cast
 %%%%
 silent curse skull cast
 
-@The_monster@ casts a spell.
+@The_monster@ rattles @possessive@ jaw silently.
 %%%%
 unseen curse skull cast
 
