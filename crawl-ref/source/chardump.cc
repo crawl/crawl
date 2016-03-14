@@ -1543,15 +1543,26 @@ static string _dgl_timestamp_filename()
 }
 
 // Returns true if the given file exists and is not a timestamp file
-// of a known version.
+// of a known version or truncated timestamp file.
 static bool _dgl_unknown_timestamp_file(const string &filename)
 {
     if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
-        const uint32_t file_version = unmarshallInt(r);
-        fclose(inh);
-        return file_version != DGL_TIMESTAMP_VERSION;
+        r.set_safe_read(true);
+        try
+        {
+            const uint32_t file_version = unmarshallInt(r);
+            fclose(inh);
+            return file_version != DGL_TIMESTAMP_VERSION;
+        }
+        catch (short_read_exception &e)
+        {
+            // Empty file, or <4 bytes: remove file and use it.
+            fclose(inh);
+            // True (don't use) if we couldn't remove it, false if we could.
+            return unlink_u(filename.c_str()) != 0;
+        }
     }
     return false;
 }
@@ -1560,7 +1571,7 @@ static bool _dgl_unknown_timestamp_file(const string &filename)
 // timestamps should not be written.
 static FILE *_dgl_timestamp_filehandle()
 {
-    static FILE *timestamp_file;
+    static FILE *timestamp_file = nullptr;
     static bool opened_file = false;
     if (!opened_file)
     {
