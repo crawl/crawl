@@ -117,7 +117,7 @@ void player::fearmongers_check_noise(int loudness, bool axe)
 
     if (loudness >= 20 && afraid())
     {
-        mpr("For a moment, your terror fades away!");
+        mpr("Jolted by the loud noise, you snap out of your terror!");
         clear_fearmongers();
         _removed_fearmonger();
     }
