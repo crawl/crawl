@@ -391,6 +391,9 @@ abomination_large3
 abomination_large4
 abomination_large5
 abomination_large6
+abomination_large7
+abomination_large8
+abomination_large9
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 %sdir mon/vault
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
