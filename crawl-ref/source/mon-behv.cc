@@ -447,7 +447,7 @@ void handle_behaviour(monster* mon)
 
     while (changed)
     {
-        actor* afoe = mon->get_foe();
+        const actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
@@ -564,8 +564,13 @@ void handle_behaviour(monster* mon)
                     // If the player can see the target location, do not reset
                     // our target, even if this monster cannot (we'll assume
                     // the player passes along this information to allies)
-                    else if (!foepos.origin() && you.see_cell(foepos))
+                    // EXCEPTION: invisible enemies for allies without sinv
+                    // (otherwise your allies get stuck doing nothing)
+                    else if (!foepos.origin() && you.see_cell(foepos)
+                             && afoe->visible_to(mon))
+                    {
                         try_pathfind(mon);
+                    }
                     else
                     {
                         new_foe = MHITYOU;
