@@ -56,7 +56,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 
     if (ends_with(name, "us"))
     {
-        if (ends_with(name, "lotus"))
+        if (ends_with(name, "lotus") || ends_with(name, "status"))
             return name + "es";
         else
             // Fungus, ufetubus, for instance.

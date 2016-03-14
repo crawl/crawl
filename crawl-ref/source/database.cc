@@ -85,6 +85,7 @@ static TextDB AllDBs[] =
             "cards.txt",
             "commands.txt",
             "clouds.txt",
+            "status.txt",
             nullptr),
 
     TextDB("gamestart", "descript/",

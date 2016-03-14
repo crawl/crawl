@@ -1,0 +1,271 @@
+%%%%
+Full status
+
+You have eaten a lot.
+%%%%
+Very Full status
+
+You have eaten almost all you can for now.
+%%%%
+Engorged status
+
+You can't eat any more for now.
+%%%%
+Fast status
+
+All of your actions are 50% faster. This causes magical contamination
+over time, and may cause dangerous levels of contamination if you were
+already contaminated before gaining this status.
+%%%%
+Invis status
+
+You are invisible. Most enemies will be unable to see you and will
+suffer penalties to hit, though they may be able to guess at your
+general location. Invis causes magical contamination over time, and
+may cause dangerous levels of contamination if you were already
+contaminated before gaining this status. If this effect is greyed out,
+it is active (and causing contamination) but ineffective for some
+reason (e.g. you are glowing, lit an angel's halo, etc).
+%%%%
+Tele status
+
+You are about to teleport, i.e. feeling "unstable". If you are about to
+teleport, another effect that applies Tele (a scroll, wand, etc) will
+cancel it.
+%%%%
+Fly status
+
+You fly above the ground, and are able to cross water and lava or fight
+above shallow water without penalties. Most types of flight will time out
+- be sure you're not above deadly liquids when that happens!
+%%%%
+Agi status
+
+You are unnaturally agile. This provides bonuses to your dexterity, evasion,
+and stealth.
+%%%%
+Brill status
+
+You are unnaturally smart. This provides bonuses to your intelligence,
+spellcasting success, and spellpower.
+%%%%
+Might status
+
+You are unnaturally strong. This provides bonuses to your strength and damage
+in physical combat.
+%%%%
+Regen status
+
+You regenerate hit points at an unnaturally fast rate. This is only shown for
+temporary regeneration.
+%%%%
+RMsl status
+
+You repel missiles, i.e. there's a good chance to evade them. This effect, if
+provided by a spell, has a chance to expire with every projectile it repels;
+it otherwise lasts indefinitely.
+%%%%
+DMsl status
+
+You deflect missiles, i.e. there's a great chance to evade them. This effect,
+if provided by a spell, has a chance to expire with every projectile it
+deflects; it otherwise lasts indefinitely.
+%%%%
+Touch status
+
+Your unarmed attacks no longer deal damage, but have a chance of confusing
+monsters that they hit.
+%%%%
+MR status
+
+You are more resistant to hostile enchantments.
+%%%%
+Berserk status
+
+You are stronger, faster, tougher! Beware, though, that if you do not kill
+monsters this status will wear off even faster, and when it does, you will
+be slowed and exhausted, possibly passing out temporarily as well.
+%%%%
+Hungry status
+
+Most species can eat chunks of corpses only if hungry.
+%%%%
+Very Hungry status
+
+You are even hungrier than usual.
+%%%%
+Near Starving status
+
+You are in desperate need of food.
+%%%%
+Starving status
+
+You should really eat something; death is not far away. While starving, your
+combat abilities are impaired and you are unable to cast spells or use many
+evoked or divine abilities.
+%%%%
+Fainting status
+
+You are beyond starving, and are likely to lose consciousness and die at any
+moment.
+%%%%
+Pois status
+
+You are poisoned and continually lose hit points. While poisoned, your current
+health will be partially recoloured to display the eventual poison damage that
+will be dealt. Cure with potions of curing or by waiting it out.
+%%%%
+Conf status
+
+You are confused. Actions may not work properly, or may be targeted in a
+random direction. Spellcasting and scroll use are completely impossible.
+Wait it out, or drink a potion of curing for immediate relief.
+%%%%
+Contam status
+
+You glow with mutagenic radiation. This can mutate you over time, usually with
+a bad outcome. The colour indicates the severity: the first level (darkgrey)
+is only a warning, and no mutation or loss of stealth will occur from it.
+%%%%
+Drain status
+
+Your skills have been drained by negative energy, and are less effective.
+This status will not wear off by waiting, but will expire as you gain
+experience. This status has multiple levels, and you can see just how much you
+have been drained by looking at the skills screen.
+%%%%
+Breath status
+
+Some abilities (like breath weapons or Zin's recite invocation) require you to
+catch your breath in between uses. These abilities cannot be re-used until the
+Breath status disappears.
+%%%%
+Exh status
+
+You are too exhausted to use certain tiring abilities; notably, Berserk.
+%%%%
+Slow status
+
+All your actions take 50% longer.
+%%%%
+Para status
+
+You are paralysed, and completely unable to act.
+%%%%
+Sleep status
+
+You are asleep, and completely unable to act. Attacks will wake you.
+%%%%
+Held status
+
+You are held in a net or a spider web. You cannot move freely and will instead
+try to struggle free.
+%%%%
+Constr status
+
+You are being constricted by an enemy and will take an increasing amount of
+damage every turn. Also, movement (including blinking) away from the enemy is
+restricted, although you can struggle to escape and will become increasingly
+more likely to succeed when doing so multiple times.
+%%%%
+Mesm status
+
+You are mesmerised and cannot move away from the monster(s) mesmerising you.
+The effect can be broken by killing or confusing the responsible monster(s),
+breaking line of sight with them, or by hearing an extremely loud noise,
+such as those created by lightning or scrolls of noise.
+%%%%
+Fear status
+
+You are overcome with fear and cannot move towards the monster(s) causing
+fear in you. The effect can be broken by killing or confusing the responsible
+monster(s), breaking line of sight with them, or by hearing an extremely loud
+noise, such as those created by lightning or scrolls of noise.
+%%%%
+-Tele status
+
+Some effect is preventing you from teleporting or blinking.
+%%%%
+Mark status
+
+Due to the effects of a trap or a spell, monsters will now hunt you down more
+precisely, and will be able to detect you even if you are not in their vision.
+%%%%
+Fire status
+
+You are covered with sticky fire, which causes damage over the next few turns.
+Entering water will extinguish the flames.
+%%%%
+Corona status
+
+You are surrounded by light; this ruins your stealth and makes you easier to
+hit.
+%%%%
+Barbs status
+
+There are dangerous barbs embedded in your skin, and moving around will cause
+you to take damage. They will go away after standing in place for a few turns
+or moving around.
+%%%%
+Sick status
+
+You have been sickened by some hostile effect. Hit points don't regenerate
+until cured (wait it out or quaff a potion of curing). Occasionally a primary
+attribute might drop.
+%%%%
+Vertigo status
+
+Translocational magic is disorienting you and making you dizzy. It should
+pass soon, but until then you will have difficulty attacking, dodging, and
+casting spells.
+%%%%
+Corr status
+
+Your equipment is covered with noxious acid! Both your effectiveness in
+physical combat and defenses (AC) are reduced; the displayed number indicates
+the former. After some time passes, the effect will disappear.
+%%%%
+Flay status
+
+You are covered in illusionary - but nonetheless deadly! - wounds. Destroying
+the source of the illusion will restore the health that was 'flayed' away.
+%%%%
+Weak status
+
+Your physical attacks do less damage.
+%%%%
+Roots status
+
+You are held to the ground by animated roots. Your movement speed is slower,
+your evasion is reduced, and you are unable to fly.
+%%%%
+Frozen status
+
+You are covered in ice, and your movement speed is reduced.
+%%%%
+Sap status
+
+Some demonic force is inhibiting your spellcasting; every spell that you cast
+while this status is in effect will reduce your chances of casting more spells
+successfuly. Casting stronger spells will reduce your success chances more than
+casting weak spells will.
+%%%%
+Brainless status
+
+Your Intelligence attribute has fallen to 0. You are slowed, cannot cast spells,
+and are very unlikely to be able to read even a scroll - spellbooks are entirely
+beyond you. Increasing your Intelligence above 0 will cause the status to go away
+in a few turns.
+%%%%
+Clumsy status
+
+Your Dexterity attribute has fallen to 0. You are slowed, cannot sneak or use
+shields, and are almost entirely unable to dodge. Increasing your Dexterity
+above 0 will cause the status to go away in a few turns.
+%%%%
+Collapse status
+
+Your Strength attribute has fallen to 0. You are slowed, and your regeneration
+is crippled. Increasing your Strength above 0 will cause the status to go away
+in a few turns.
+%%%%

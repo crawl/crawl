@@ -421,6 +421,11 @@ static bool _ability_filter(string key, string body)
     return !string_matches_ability_name(key);
 }
 
+static bool _status_filter(string key, string body)
+{
+    return !strip_suffix(lowercase(key), " status");
+}
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -1286,6 +1291,10 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+    LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic,
+               lookup_type::DB_SUFFIX),
 };
 
 /**
