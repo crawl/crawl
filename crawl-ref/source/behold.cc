@@ -126,7 +126,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
     if (loudness >= 20 && beheld())
     {
-        mpr("For a moment, your mind becomes perfectly clear!");
+        mpr("Jolted by the loud noise, you snap out of your trance!");
         clear_beholders();
         _removed_beholder();
     }
