@@ -6023,7 +6023,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // currently ever matters)
     hit_count.clear();
 
-    if (is_sanctuary(pos()))
+    if (is_sanctuary(pos()) && flavour != BEAM_VISUAL)
     {
         if (!is_tracer && you.see_cell(pos()) && !name.empty())
         {
@@ -6176,7 +6176,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         || delta.rdist() > r
         || count > 10*r
         || !map_bounds(loc)
-        || is_sanctuary(loc))
+        || is_sanctuary(loc) && flavour != BEAM_VISUAL)
     {
         return;
     }
