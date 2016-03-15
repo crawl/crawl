@@ -1057,7 +1057,7 @@ void game_options::reset_options()
 
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
-    tile_show_demon_tier     = true;
+    tile_show_demon_tier     = false;
 #ifdef USE_TILE_WEB
     // disabled by default due to performance issues
     tile_water_anim          = false;
