@@ -1464,7 +1464,13 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
+    {
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+
+        // Why are you casting this spell at all while worshipping Zin?
+        if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
+            remove_sanctuary(true);
+    }
     else
         mons->hurt(agent, dam, BEAM_MMISSILE);
 
