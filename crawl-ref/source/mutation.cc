@@ -2443,3 +2443,9 @@ int augmentation_amount()
 
     return amount;
 }
+
+void reset_powered_by_death_duration()
+{
+    const int pbd_dur = random_range(2, 5);
+    you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+}
