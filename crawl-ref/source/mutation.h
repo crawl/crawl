@@ -69,6 +69,7 @@ void check_monster_detect();
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
+void reset_powered_by_death_duration();
 
 bool delete_temp_mutation();
 
