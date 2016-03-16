@@ -590,7 +590,7 @@ A fine mesh cage designed to capture magical energy. Experimental notes suggest
 that research was abandoned when the cage began to capture magical
 contamination almost as effectively. Anyone reckless enough to place it on
 their head would find their magic regeneration dramatically increased, at the
-cost of occasional low-level contamination.
+cost of multiplying any magical contamination received.
 %%%%
 # TAG_MAJOR_VERSION == 34
 crown of Eternal Torment

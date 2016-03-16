@@ -1337,17 +1337,6 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
     // coinflip() chance of 1 MP per turn.
     if (player_regenerates_mp())
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
-    // It's more interesting to get a lump of contamination then to just add a
-    // small amount every turn, plus there's a small chance of rapid buildup.
-    if (one_chance_in(100))
-    {
-        // On average the player recovers 25 contam per turn, this should keep
-        // them in the gray a fair amount of time; be nicer if they're already
-        // in the yellow.
-        int contam = get_contamination_level() > 1 ? 300 : 1000;
-        contam = div_rand_round(contam * delay, BASELINE_DELAY);
-        contaminate_player(random_range(contam, contam * 2));
-    }
 }
 
 ///////////////////////////////////////////////////
