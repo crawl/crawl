@@ -1981,10 +1981,10 @@ tile_show_minimagicbar  = true
         Will show health and magic bars on top of the player tile when the
         player gets hurt or spends magic.
 
-tile_show_demon_tier = true
+tile_show_demon_tier = false
         Will overlay demon tiles with an icon intended to represent their
-        tier (or difficulty rank) among demons, as is the case for non-Tiles
-        builds.
+        tier (or difficulty rank) among demons, reflecting the glyph
+        (&, 1, 2, 3, 4, 5) used in non-Tiles builds.
 
 tile_water_anim = true
         If disabled, animation of liquids will be suppressed.
