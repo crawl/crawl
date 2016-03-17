@@ -1172,9 +1172,12 @@ autofight_stop = 30
             autofight_stop = 0
 
 autofight_warning = 0
-        autofight_warning gives "You should not fight recklessly!" on the danger
-        channel when the player already used autofight that amount of
-        milliseconds ago (use 0 to turn off these messages).
+        Enforce a minimum time (in milliseconds) between autofight commands.
+        If you issue two consecutive autofight commands within this amount
+        of time (for example, by holding down the tab key), the subsequent
+        commands will be ignored, and the message "You should not fight
+        recklessly!" printed to the danger channel. Any value less than
+        or equal to zero disables this check.
 
 autofight_hunger_stop = 0
         Autofight will not act if your nutrition level is at or lower than
