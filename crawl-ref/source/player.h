@@ -7,6 +7,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <chrono>
 #include <list>
 #include <memory>
 #include <vector>
@@ -252,11 +253,11 @@ public:
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
 
-    int                       real_time;            // real time played (in seconds)
-    std::chrono::milliseconds real_time_ms;         // real time played (in milliseconds)
-    std::chrono::milliseconds real_time_delta;      // real time played since last command (in milliseconds)
-    int                       num_turns;            // number of turns taken
-    int                       exploration;          // levels explored (16.16 bit real number)
+    int                  real_time;          // real time played (in seconds)
+    chrono::milliseconds real_time_ms;       // real time played
+    chrono::milliseconds real_time_delta;    // real time since last command
+    int num_turns;            // number of turns taken
+    int exploration;          // levels explored (16.16 bit real number)
 
     int                       last_view_update;     // what turn was the view last updated?
 
@@ -342,7 +343,8 @@ public:
 
     delay_queue_type delay_queue;       // pending actions
 
-    std::chrono::milliseconds last_keypress_time;
+    chrono::time_point<chrono::system_clock> last_keypress_time;
+
     bool xray_vision;
     int8_t bondage_level;  // how much an Ash worshipper is into bondage
     int8_t bondage[NUM_ET];
