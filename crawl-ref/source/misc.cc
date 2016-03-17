@@ -790,10 +790,12 @@ int apply_chunked_AC(int dam, int ac)
     return hurt;
 }
 
-void handle_real_time(time_t t)
+void handle_real_time(std::chrono::milliseconds ms)
 {
-    you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);
-    you.last_keypress_time = t;
+    you.real_time_delta = ms - you.last_keypress_time;
+    you.real_time_ms += you.real_time_delta;
+    you.real_time = floor(you.real_time_ms.count()/1000);
+    you.last_keypress_time = ms;
 }
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],

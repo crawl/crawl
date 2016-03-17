@@ -802,6 +802,7 @@ void game_options::reset_options()
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
+    autofight_warning      = 0;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = !is_tiles();
@@ -2875,6 +2876,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
+    else INT_OPTION(autofight_warning, 0, 1000);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else LIST_OPTION(note_monsters);
     else LIST_OPTION(note_messages);

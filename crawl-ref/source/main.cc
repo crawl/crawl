@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <chrono>
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -2047,8 +2048,15 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        if (!clua.callfn("hit_closest", 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        if (Options.autofight_warning > 0
+            && !is_processing_macro()
+            && you.real_time_delta <= std::chrono::milliseconds(Options.autofight_warning)
+            && crawl_state.prev_cmd == CMD_AUTOFIGHT)
+            mprf(MSGCH_DANGER, "You should not fight recklessly!");
+        else {
+            if (!clua.callfn("hit_closest", 0, 0))
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
         break;
     case CMD_AUTOFIGHT_NOMOVE:
         if (!clua.callfn("hit_closest_nomove", 0, 0))
@@ -2338,6 +2346,7 @@ void process_command(command_type cmd)
 
         break;
     }
+
 }
 
 static void _prep_input()

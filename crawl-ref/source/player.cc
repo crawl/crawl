@@ -5355,6 +5355,8 @@ player::player()
     current_vision   = LOS_RADIUS;
 
     real_time        = 0;
+    real_time_ms     = std::chrono::milliseconds::zero();
+    real_time_delta  = std::chrono::milliseconds::zero();
     num_turns        = 0;
     exploration      = 0;
 
@@ -5405,7 +5407,9 @@ player::player()
 
     delay_queue.clear();
 
-    last_keypress_time = time(0);
+    last_keypress_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+        );
 
     action_count.clear();
 
