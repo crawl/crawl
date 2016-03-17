@@ -1528,7 +1528,8 @@ static void tag_construct_you(writer &th)
 
     handle_real_time();
 
-    marshallInt(th, you.real_time);
+    // TODO: maybe switch to marshalling real_time_ms.
+    marshallInt(th, you.real_time());
     marshallInt(th, you.num_turns);
     marshallInt(th, you.exploration);
 
@@ -3161,8 +3162,8 @@ static void tag_read_you(reader &th)
     // time of character creation
     you.birth_time = unmarshallInt(th);
 
-    you.real_time  = unmarshallInt(th);
-    you.real_time_ms = chrono::milliseconds(you.real_time * 1000);
+    const int real_time  = unmarshallInt(th);
+    you.real_time_ms = chrono::milliseconds(real_time * 1000);
     you.num_turns  = unmarshallInt(th);
     you.exploration = unmarshallInt(th);
 

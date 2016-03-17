@@ -2011,7 +2011,7 @@ static string _overview_screen_title(int sw)
 
     handle_real_time();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
-                      + make_time_string(you.real_time, true);
+                      + make_time_string(you.real_time(), true);
 
     const int char_width = strwidth(species_job);
     const int title_width = strwidth(title);

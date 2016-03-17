@@ -253,9 +253,10 @@ public:
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
 
-    int                  real_time;          // real time played (in seconds)
+    int real_time() { return real_time_ms.count() / 1000; }
     chrono::milliseconds real_time_ms;       // real time played
     chrono::milliseconds real_time_delta;    // real time since last command
+
     int num_turns;            // number of turns taken
     int exploration;          // levels explored (16.16 bit real number)
 

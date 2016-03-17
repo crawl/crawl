@@ -5354,7 +5354,6 @@ player::player()
     normal_vision    = LOS_RADIUS;
     current_vision   = LOS_RADIUS;
 
-    real_time        = 0;
     real_time_ms     = chrono::milliseconds::zero();
     real_time_delta  = chrono::milliseconds::zero();
     num_turns        = 0;
