@@ -795,8 +795,6 @@ void handle_real_time(chrono::time_point<chrono::system_clock> now)
     you.real_time_delta = chrono::duration_cast<chrono::milliseconds>(
             now - you.last_keypress_time);
     you.real_time_ms += you.real_time_delta;
-    // Not ms_to_time_t because this is not relative to the epoch.
-    you.real_time = you.real_time_ms.count() / 1000;
     you.last_keypress_time = now;
 }
 

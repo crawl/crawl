@@ -1691,7 +1691,7 @@ void scorefile_entry::init(time_t dt)
     death_time = (dt != 0 ? dt : time(nullptr)); // end time of game
 
     handle_real_time(chrono::system_clock::from_time_t(death_time));
-    real_time = you.real_time;
+    real_time = you.real_time();
 
     num_turns = you.num_turns;
     num_aut = you.elapsed_time;
