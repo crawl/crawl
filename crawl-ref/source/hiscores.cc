@@ -1690,7 +1690,7 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(nullptr)); // end time of game
 
-    handle_real_time(std::chrono::milliseconds(death_time * 1000));
+    handle_real_time(chrono::system_clock::from_time_t(death_time));
     real_time = you.real_time;
 
     num_turns = you.num_turns;

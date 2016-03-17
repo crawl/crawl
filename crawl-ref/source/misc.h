@@ -10,6 +10,7 @@
 #include "target.h"
 
 #include <algorithm>
+#include <chrono>
 #include <numeric> // iota
 #include <queue>
 
@@ -67,11 +68,9 @@ void swap_with_monster(monster *mon_to_swap);
 
 int apply_chunked_AC(int dam, int ac);
 
-void handle_real_time(
-    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-        )
-    );
+void handle_real_time(chrono::time_point<chrono::system_clock> when
+                      = chrono::system_clock::now());
+
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
