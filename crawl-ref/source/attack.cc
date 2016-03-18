@@ -204,10 +204,6 @@ int attack::calc_to_hit(bool random)
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
 
-        // horror penalty
-        if (you.duration[DUR_HORROR])
-            mhit -= you.props[HORROR_PENALTY_KEY].get_int();
-
         // hunger penalty
         if (you.hunger_state <= HS_STARVING)
             mhit -= 3;
