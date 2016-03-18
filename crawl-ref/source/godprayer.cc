@@ -308,7 +308,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         return gain;
 
     int item_value = div_rand_round(stepped, 50);
-    if (you.piety >= piety_breakpoint(1)
+    if (have_passive(passive_t::slime_feed)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && !you_foodless())
     {
@@ -317,7 +317,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         gain.jiyva_bonus |= JS_FOOD;
     }
 
-    if (you.piety >= piety_breakpoint(3)
+    if (have_passive(passive_t::slime_mp)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
@@ -325,7 +325,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         gain.jiyva_bonus |= JS_MP;
     }
 
-    if (you.piety >= piety_breakpoint(4)
+    if (have_passive(passive_t::slime_hp)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.hp < you.hp_max
         && !you.duration[DUR_DEATHS_DOOR])
@@ -353,10 +353,10 @@ void jiyva_slurp_item_stack(const item_def& item, int quantity)
 
     if (gain.piety_gain > PIETY_NONE)
         simple_god_message(" appreciates your sacrifice.");
-    if (have_passive(passive_t::slime_feed) && (gain.jiyva_bonus & JS_FOOD))
+    if (gain.jiyva_bonus & JS_FOOD)
         mpr("You feel a little less hungry.");
-    if (have_passive(passive_t::slime_mp) && (gain.jiyva_bonus & JS_MP))
+    if (gain.jiyva_bonus & JS_MP)
         canned_msg(MSG_GAIN_MAGIC);
-    if (have_passive(passive_t::slime_hp) && (gain.jiyva_bonus & JS_HP))
+    if (gain.jiyva_bonus & JS_HP)
         canned_msg(MSG_GAIN_HEALTH);
 }
