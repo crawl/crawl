@@ -7755,10 +7755,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SMITING:
     case SPELL_HOLY_FLAMES:
-    case SPELL_AIRSTRIKE:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
         return !foe;
+
+    case SPELL_AIRSTRIKE:
+        return !foe || foe->res_wind();
 
     case SPELL_FREEZE:
         return !foe || !adjacent(mon->pos(), foe->pos());
