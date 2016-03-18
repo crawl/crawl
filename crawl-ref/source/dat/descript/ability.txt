@@ -91,7 +91,7 @@ Stops singing your Song of Slaying.
 %%%%
 Self-Restoration ability
 
-Restores your Strength, Dexterity and Intelligence and heals any rotted health,
+Restores your strength, dexterity and intelligence and heals any rotted health,
 at the permanent cost of one magic point.
 %%%%
 Device Recharging ability
@@ -161,8 +161,8 @@ than Zin being punished much more strongly.
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your Strength, Intelligence and
-Dexterity.
+and sickness, and increases and sustains your strength, intelligence and
+dexterity.
 %%%%
 Imprison ability
 
@@ -346,8 +346,8 @@ Heals a small amount of health, depending on Invocations skill.
 Purification ability
 
 Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost Strength,
-Dexterity or Intelligence.
+petrification, rotting, and sickness, and fully restores any lost strength,
+dexterity or intelligence.
 %%%%
 Heal Other ability
 

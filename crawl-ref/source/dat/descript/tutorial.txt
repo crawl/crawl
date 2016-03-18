@@ -573,7 +573,7 @@ single cloud in order to be more efficient with your magic.
 tutorial4 spell_hunger
 
 Spellcasting can make you really hungry. Spell hunger is higher for more
-difficult spells and can be reduced by high Intelligence and by training the
+difficult spells and can be reduced by high intelligence and by training the
 Spellcasting skill.
 %%%%
 tutorial4 forget_spell
