@@ -1835,7 +1835,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Intelligence, or Dexterity. "
+                "Strength, intelligence, or dexterity. "
                 "<w>Strength</w> affects your effectiveness in combat "
                 "and makes it easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "

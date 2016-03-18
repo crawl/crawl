@@ -516,7 +516,7 @@ target will be unable to be put to sleep again for some time.
 %%%%
 Entropic Weave spell
 
-Corrodes away the target's equipment.
+Corrodes the target, with no direct line of fire required.
 %%%%
 Excruciating Wounds spell
 

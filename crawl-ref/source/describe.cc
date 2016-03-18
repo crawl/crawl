@@ -454,7 +454,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
+        { ARTP_CORRODE, "It may corrode you when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
