@@ -1118,7 +1118,10 @@ void bolt::affect_cell()
     bool hit_player = found_player();
     if (hit_player && can_affect_actor(&you))
     {
+        const int prev_reflections = reflections;
         affect_player();
+        if (reflections != prev_reflections)
+            return;
         if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
     }
