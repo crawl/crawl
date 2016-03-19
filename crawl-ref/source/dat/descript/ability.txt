@@ -600,14 +600,14 @@ indifferent if they have not become your allies.
 # Pakellas
 Device Surge ability
 
-Ready a device surge, which - on the next use of a magical device - triggers
-to convert some of your magical power to strengthen the effect of the device.
-The amount of magical power that can be used for a surge varies, but
-correlates with how devoted a follower is to Pakellas.
+Readies a device surge, which triggers on your next usage of a magical device
+to strengthen its power at the cost of some magic. The amount of magical power
+that can be used for a surge varies, but correlates with how devoted a follower
+is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spend two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand or rod. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
@@ -780,4 +780,4 @@ overall increase is determined by the size of your donation.
 %%%%
 Curse Item ability
 
-In exchange for a scroll of remove curse, Ashenzari will curse one of your items.
+Curses a chosen item, at the cost of a scroll of remove curse.
