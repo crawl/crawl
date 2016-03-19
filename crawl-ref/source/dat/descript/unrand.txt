@@ -151,9 +151,9 @@ A glaive commissioned several years ago by a wealthy queen fearful for the
 safety of her vast treasury. No foe, the smith promised, could defeat a guard
 wielding such a weapon!
 
-The glaive was stolen a few months later, along with the rest of the queen's
-treasury; the guard, it transpired, had been caught napping. Still, it should
-serve more than adequately in the hands of a waking user.
+It was stolen a few months later, along with the rest of the queen's treasury;
+the guard, it transpired, had been caught napping. Still, it should serve more
+than adequately in the hands of a waking user.
 %%%%
 sword of Jihad
 
@@ -259,10 +259,8 @@ captain's cutlass
 
 An infamous weapon, once used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
-cutlass was thought to be lost with him.
-
-This blade has the capability to suddenly relieve opponents of their weapons,
-dealing extra damage in the process.
+cutlass was thought to be lost with him. It has the capability to suddenly
+relieve opponents of their weapons, dealing extra damage in the process.
 %%%%
 storm bow
 
@@ -606,7 +604,7 @@ being healed by potions and wands.
 %%%%
 Kryia's mail coat
 
-This armour is said to have been forged for Queen Kryia in her old age. She
+A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
 draughts that kept her alive.
@@ -621,7 +619,7 @@ draughts that kept her alive.
 %%%%
 frozen axe "Frostbite"
 
-This massive axe looks like it was carved from a glacier, or possibly calved
+A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air.
 %%%%
 armour of Talos

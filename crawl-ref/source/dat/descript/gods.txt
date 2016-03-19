@@ -413,7 +413,7 @@ Ashenzari wrath
 
 Ashenzari's wrath is not like other gods'; it is constant and unrelenting for
 its duration. Victims find their skills impaired, and their enemies divinely
-guided - never losing track of them, never ending the hunt.
+guided – never losing track of them, never ending the hunt.
 %%%%
 Beogh wrath
 
@@ -421,7 +421,7 @@ Blasphemers against the word of Beogh find themselves confronted with direct
 and physical opposition. Those who still worship Beogh find their followers
 regularly deserting them; they, and others, are further assaulted by waves of
 orcish warriors. When working through intermediaries fails, Beogh hurls
-dancing electric weapons at offenders, or simply smites them - and when smiting
+dancing electric weapons at offenders, or simply smites them – and when smiting
 true sinners, Beogh has a heavy hand indeed!
 %%%%
 Cheibriados wrath
@@ -523,7 +523,7 @@ power, their magic reserves emptied, and even their very life force fed
 into the ever-hungry engine that is progress on Pakellas' behalf. Those who
 abandon Pakellas altogether will further find themselves unable to regenerate
 their magical power so long as Pakellas' attention remains on them, and that
-their devices fail to work as intended - though they still have their
+their devices fail to work as intended – though they still have their
 intended effects, they will also harm the user in their use.
 %%%%
 Qazlal wrath
@@ -541,7 +541,7 @@ Sif Muna wrath
 
 Those in Sif Muna's ill graces find the very forces of magic rebelling against
 them. They are confused and stupefied, their magical reserves drained, their
-enchantments unravelled. Casting spells, too, becomes unreliable - and even
+enchantments unravelled. Casting spells, too, becomes unreliable – and even
 dangerous.
 %%%%
 the Shining One wrath
@@ -553,8 +553,8 @@ shouted at and silenced.
 Trog wrath
 
 Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
-by berserkers - from packs of bears to, for the most powerful, mobs of giants
-and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
+by berserkers – from packs of bears to, for the most powerful, mobs of giants
+and trolls. Their bodies decay, slow, and collapse – and sometimes, they're
 just blasted by Trog's fiery rage directly.
 %%%%
 Vehumet wrath

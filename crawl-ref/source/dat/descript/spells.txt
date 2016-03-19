@@ -64,8 +64,8 @@ caster's line of sight.
 %%%%
 Awaken Earth spell
 
-Animates some rock walls adjacent to a target - including the target itself if
-it is a rock wall - to create some earth elementals.
+Animates some rock walls adjacent to a target – including the target itself if
+it is a rock wall – to create some earth elementals.
 %%%%
 Awaken Forest spell
 
