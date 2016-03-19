@@ -175,8 +175,7 @@ Frederick
 
 A svelte fighter-mage with a gold-rimmed monocle, a keen sense of tradition,
 and the blood of the gods running through his veins. He's here looking for a
-worthy opponent, but he's yet to find one - and he's been looking for quite a
-long time.
+worthy opponent, but he's yet to find one.
 %%%%
 Gastronok
 
@@ -410,7 +409,7 @@ Robin
 A mountain hobgoblin, recently come in search of the legendary Orb. Not
 foolhardy or reckless enough to delve into the depths of the Dungeon alone,
 Robin has built a small army of minions. Potential competitors will quickly
-find a stream of screaming goblins flying toward them - watch out!
+find a stream of screaming goblins flying toward them!
 %%%%
 Roxanne
 
@@ -953,7 +952,7 @@ hide, powerful legs, and a memory to die for.
 doom hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
-may appear alone, it's unlikely to remain so for long - it has the terrible
+may appear alone, it's unlikely to remain so for long — it has the terrible
 power to set creatures of nightmare on its victim's trails, though it can
 only ever use this power exactly once.
 %%%%
