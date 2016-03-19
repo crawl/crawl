@@ -18,8 +18,6 @@ int recharge_wand(bool known = true, const string &pre_msg = "",
 
 void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 
-bool can_flood_feature(dungeon_feature_type feat);
-
 void expend_xp_evoker(item_def &item);
 
 bool evoke_check(int slot, bool quiet = false);
