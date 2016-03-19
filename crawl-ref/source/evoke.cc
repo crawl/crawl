@@ -1985,12 +1985,6 @@ static bool _stone_of_tremors()
     return true;
 }
 
-// Used for phials and water nymphs.
-bool can_flood_feature(dungeon_feature_type feat)
-{
-    return feat_has_solid_floor(feat);
-}
-
 static bool _phial_of_floods()
 {
     dist target;
@@ -2032,7 +2026,8 @@ static bool _phial_of_floods()
                       40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3));
         for (distance_iterator di(center, true, false, 2); di && num > 0; ++di)
         {
-            if (can_flood_feature(grd(*di))
+            const dungeon_feature_type feat = grd(*di);
+            if ((feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER)
                 && cell_see_cell(center, *di, LOS_NO_TRANS))
             {
                 num--;
