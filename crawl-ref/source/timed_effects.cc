@@ -855,10 +855,7 @@ static void _abyss_speed(int /*time_delta*/)
 
 static void _jiyva_effects(int /*time_delta*/)
 {
-    if (!have_passive(passive_t::jellies_army))
-        return;
-
-    if (one_chance_in(10))
+    if (have_passive(passive_t::jellies_army) && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -903,13 +900,14 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    if (x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (have_passive(passive_t::fluid_stats)
+        && x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (one_chance_in(25))
+    if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 }
 

@@ -183,6 +183,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     {
         { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
         { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
+        { -1, passive_t::jelly_eating, "GOD allows jellies to devour more items" },
+        { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
         {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
         {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
         {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
@@ -325,9 +327,7 @@ int chei_stat_boost(int piety)
 void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
-    if (!have_passive(passive_t::slime_feed)
-        && !have_passive(passive_t::slime_mp)
-        && !have_passive(passive_t::slime_hp))
+    if (!have_passive(passive_t::jelly_eating))
         return;
 
     if (crawl_state.game_is_sprint())
