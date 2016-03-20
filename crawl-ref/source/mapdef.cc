@@ -4519,7 +4519,7 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-    const int m_index = name.find(" mutant beast");
+    const auto m_index = name.find(" mutant beast");
     if (m_index != string::npos)
     {
         mons_spec spec = MONS_MUTANT_BEAST;
