@@ -3539,7 +3539,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_MUTANT_BEAST:
-        inf.body << _describe_mutant_beast(mi) << "\n";
+        // vault renames get their own descriptions
+        if (mi.mname.empty() || !mi.is(MB_NAME_REPLACE))
+            inf.body << _describe_mutant_beast(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:
