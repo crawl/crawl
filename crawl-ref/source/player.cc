@@ -1535,7 +1535,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
 bool player::res_corr(bool calc_unid, bool items) const
 {
-    if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
+    if (have_passive(passive_t::resist_corrosion))
         return true;
 
     if (get_form()->res_acid())
@@ -3334,7 +3334,7 @@ int check_stealth()
     }
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
-    if (in_good_standing(GOD_QAZLAL, 0))
+    if (have_passive(passive_t::storm_shield))
     {
         stealth = stealth
                   * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
@@ -4275,7 +4275,7 @@ bool player_regenerates_mp()
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return false;
     // Pakellas blocks MP regeneration.
-    if (you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
+    if (have_passive(passive_t::no_mp_regen) || player_under_penance(GOD_PAKELLAS))
         return false;
     return true;
 }
@@ -5797,7 +5797,7 @@ int player::missile_deflection() const
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true)
-        || in_good_standing(GOD_QAZLAL, 3))
+        || have_passive(passive_t::upgraded_storm_shield))
     {
         return 1;
     }
