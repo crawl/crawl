@@ -722,9 +722,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         return false;
     }
 
-    // Did we know the ammo's brand before throwing it?
-    const bool ammo_brand_known = item_type_known(thrown);
-
     // Get the ammo/weapon type. Convenience.
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
@@ -912,16 +909,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
-    {
-        did_god_conduct(DID_CHAOS, 2 + random2(3),
-                        bow_brand == SPWPN_CHAOS || ammo_brand_known);
-    }
+        did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
 
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
     if (ammo_brand == SPMSL_FRENZY)
-        did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
+        did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
     if (did_return)
     {
