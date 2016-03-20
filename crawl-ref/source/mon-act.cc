@@ -2792,7 +2792,7 @@ static bool _monster_eat_item(monster* mons)
         return false;
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons->friendly() && !you_worship(GOD_JIYVA))
+    if (mons->friendly() && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Off-limit squares are off-limit.

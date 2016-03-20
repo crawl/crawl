@@ -2859,7 +2859,7 @@ bool item_is_jelly_edible(const item_def &item)
         return false;
 
     // Don't eat items that the player has seen.
-    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+    if (item.flags & ISFLAG_SEEN && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Don't eat artefacts or the horn of Geryon.

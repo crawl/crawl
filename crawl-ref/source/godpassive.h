@@ -195,6 +195,12 @@ enum class passive_t
     /// Jiyva summons jellies to protect you
     jellies_army,
 
+    /// Jiyva allows jellies to eats off-level and seen items.
+    jelly_eating,
+
+    /// Jiyva adjusts your stats as needed.
+    fluid_stats,
+
     /// Jiyva grants you access to the hidden treasures of the Slime Pits
     unlock_slime_vaults,
 
