@@ -691,10 +691,9 @@ MONS:     (list of monsters)
           an "n-headed hydra" (with a maximum of 20 heads):
               MONS: four-headed hydra
 
-          A mutant beast can be created by naming an 'mbeast', optionally
-          prefaced by a maturity level and/or hyphen-separated set of traits,
-          as follows:
-              MONS: mature shock-weird mbeast
+          A mutant beast can be customize by prefacing it with a maturity level
+          and/or hyphen-separated set of traits, as follows:
+              MONS: mature shock-weird mutant beast
 
           A slime creature's size can be set to other than normal using
           the prefixes "large", "very large", "enormous" or "titanic":
