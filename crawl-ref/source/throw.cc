@@ -791,6 +791,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
             return false;
 
+        if (!thrown.quantity)
+            return false; // destroyed when unequipped (fragile)
+
         unwielded = true;
     }
 
