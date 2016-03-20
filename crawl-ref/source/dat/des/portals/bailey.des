@@ -1070,8 +1070,6 @@ KMONS:  3 = orc sorcerer ; war axe | broad axe w:2 | battleaxe w:1 . \
         kobold demonologist w:20 ; war axe | broad axe w:2 | battleaxe w:1 . \
             ring mail | scale mail
 KMONS:  4 = electric eel
-KMONS:  defgDEF = mottled dragon / swamp dragon w:2 / wind drake /\
-            lindwurm w:5 / hydra w:1 / nothing w:328
 KITEM:  d = any weapon
 KITEM:  D = any weapon good_item
 KITEM:  e = any armour

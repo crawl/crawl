@@ -543,6 +543,7 @@ SUBST:  1 = %1
 SUBST:  a = .a
 SUBST:  A = a
 COLOUR: a = brown
+TILE:   a = wall_wax
 SUBST:  a = x
 MAP
   ......
@@ -564,6 +565,7 @@ WEIGHT: 1
 SUBST:  1=1 .:15
 SUBST:  ?=a.
 COLOUR: a = brown
+TILE:   a = wall_wax
 SUBST:  a = x
 MAP
      a?@?a

@@ -2595,7 +2595,7 @@ NAME:    hangedman_lair_caniforms_friends
 PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
 ORIENT:  southwest
-MONS:    jackal, hound, warg, wolf, hell hound, raiju
+MONS:    jackal, hound, wolf, warg, hell hound, raiju
 KMONS:   7 = black bear
 KMONS:   8 = polar bear
 KMONS:   P = plant
@@ -2604,9 +2604,9 @@ KMONS:   P = plant
 KITEM:   $ = any, any w:1 / nothing w:5, beef jerky q:3
 KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
-NSUBST:  4 = 1:6 / 1 : 4:4 5:3 6:1 / *:4
+NSUBST:  4 = 1:5 / 1:6 / 2 : 4:4 5:3 6:1 / *:4
 SHUFFLE: %'*" / '$"|
-SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:3 6:1, p = PP.
+SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:2 6:1, p = PP.
 CLEAR:   `
 : lair_small_ending(_G)
 MAP
@@ -2615,26 +2615,26 @@ xxxxxxxxxxxxxxxxxxxxxxxxxp..p..
 xxxxxxxxxxxxxxxxxxxxxxxxxxp..p.
 xxxxxxXxxxxxxxxxxxxxxxxxxxx....
 xx%'78xxxxXXxxxxxxxxxxxxxxxP..p@
-xx8..78xXx77xxxxxxxxxxxx...xP..
+xx8..78xXx77xPxxxxxxxxxx...xP..
 xxx...xxx%...xPxx2x.x2x.11..xP.
 xxXx4..xxx...Px7x.......111..xp@
 xxxxxx.......Px........x...xxxx
 xxxxX0.xx...7xP7..x2..x2xxxxxxx
-xxxxxx3.xx.%XXxx..xxxxxxxxxxxxxz
+xxxxxx30xx.%XXxx..xxxxxxxxxxxxxz
 xxxxx"x.8..xxxxx..xx3x2xx.xxxxxz
 xxxxXx....7Xxxxx....x.x....x2xxz
 xxxxx%....xxxxxxx.............xz
 xxxxx7....7xXxxxxx............xz
-xxxxXx7....8xxxxxxxx4x...x4x..xx
-xxxxxxx8.%8xXxxxxxxxxxx.xxxxx..x
-xxxxxxxPxPxxxxxxxxxxxxxxxxxxx.2x
+xxxxXx7....8xxxxxxxx3x...x4x..xx
+xxxxxxP8.%8xXxxxxxxxxxx.xxxxx..x
+xxxxxPxPxPxxxxxxxxxxxxxxxxxxx.2x
 xxxxxx8x7xxxxx3'xxxxxx..x.x...xx
-xxxxx...xxxxxx..x.x3x...44....xz
-xx*x3.....'xx222...x....4....xxz
+xxxxx..7xxxxxx..x.x3x...44....xz
+xx*x3.....'xx222...x....3....xxz
 xxx4.......2x..2..........4..xxx
-xx0.5...xx....xx.....xx....xxxxx
-xxx0..'xxxx..xxx....x.xx3x3xxxxx
-xxx.4.xxxxxx4xxxx'.xxxxxxxxxxxxx
+xx0.5.3.xx....xx.....xx....xxxxx
+xxx6.4'xxxx..xxx....x.xx3x3xxxxx
+xxx.0.xxxxxx4xxxx'.xxxxxxxxxxxxx
 xxx'.%xxxxxxxxxxxx4xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2966,7 +2966,7 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / wasp w:6, wasp / wyvern w:6
+MONS:    water moccasin / wyvern, wasp
 MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus
