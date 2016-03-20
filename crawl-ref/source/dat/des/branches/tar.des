@@ -673,7 +673,7 @@ xxxx......ccx..G........G..xxc..x.........x.......x..........x....xxxx
 xxxx......ccx..............xcc......??............xx........xx....xxxx
 xxxx.......cxx............xxc......2222............xx......xx.....xxxx
 xxxx.......ccx.G........G.xcc.......??..............xxxxxxxx......xxxx
-xxxx........cx............xc......................................xxxx
+xxxx........cx7..........7xc......................................xxxx
 xxxx........cxx....17....xxc....x.........x.......................xxxx
 xxxx........ccxxx......xxxcc......................................xxxx
 xxxx........cccc+xxxxxx+cccc.................................3....xxxx
@@ -683,9 +683,9 @@ xxxx..........cccccccccccc......x.........x............V..........xxxx
 xxxx..............................................................xxxx
 xxxx...........................................cccccccccccccccc...xxxx
 xxxx...........................................cccccccccccccccc...xxxx
-xxxx...........................................cc$$$$$xx|||||cc...xxxx
-xxxx.......3........V...........x....6....x....cc$$$$$xx|||||cc...xxxx
-xxxx...........................................ccxxcccccccccccc...xxxx
+xxxx..................................6........cc$$$$$xx|||||cc...xxxx
+xxxx.......3........V...........x.........x....cc$$$$$xx|||||cc...xxxx
+xxxx................................7..........ccxxcccccccccccc...xxxx
 xxxx...........................................ccxxcccccccccccc...xxxx
 xxxx...........................................cc44744xx00000cc...xxxx
 xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
@@ -787,7 +787,7 @@ xxxx..ccccccccccccc===============c.........xxxxxx.xxx2.2xxx.xxxAAAAxx
 xxxx..cc..........+===============c........xxxxxxx.xxxxxxxxx.xxxAAAAxx
 xxxx..cc..........c===============c........xxxxxxx..xxxxxxx..xxxAAAAxx
 xxxx..cc..........c===============c........xxxxxxxx.........xxxxAAAAxx
-xxxx..cc..........c===============c.......xxxxxxxxxx.......xxxxxxxxxxx
+xxxx..cc....2.....c===============c.......xxxxxxxxxx.......xxxxxxxxxxx
 xxxx..cc.s...2..s.c===============c.......xxxxxxxxxxx.....xxAAAAAAAAxx
 xxxx..cc.7..1...7.c===============c......xxBBBBBBBxxxx...xxxAAAAAAAAxx
 xxxx..cc..........c===============c......xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
@@ -806,10 +806,10 @@ NAME:     tar_mu_maze
 ORIENT:   encompass
 TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
 : tar_dig_maze(_G, 0, 0)
-NSUBST:   L = 5:M / 5:N / 5:P / 5:V / 1:L / *:.
+NSUBST:   L = 2:M / 3 = M. / 5:N / 5:P / 5:V / 1:L / *:.
 NSUBST:   . = 5:Q / *:.
 KFEAT:    L = permanent teleport trap
-KMONS:    M = shadow fiend / nothing
+KMONS:    M = shadow fiend
 KFEAT:    N = floor
 KITEM:    N = superb_item
 KMONS:    N = patrolling shadow fiend / patrolling soul eater
@@ -903,7 +903,7 @@ ccc$$cc...cccc....cccc...cc$$c+c........c+c$$cc...cccc....cccc...cc$$ccc
 ccc$cc..ccc....cc....ccc..cc+cc....14....cc+cc..ccc....cc....ccc..cc$ccc
 ccc$c..cc...cccccccc...cc...2c............c2...cc...cccccccc...cc..c$ccc
 ccc+c.cc..ccc......ccc..cc..cc............cc..cc..ccc......ccc..cc.c+ccc
-ccc2..c..cc...cccc...cc..c..c..............c..c..cc...cccc...cc..c..2ccc
+ccc2..c..cc...cccc...cc..c..c4............4c..c..cc...cccc...cc..c..2ccc
 cccc.cc.cc..ccc..ccc..cc.cc.c..............c.cc.cc..ccc..ccc..cc.cc.cccc
 cccc.c..c..cc......cc..c..c.c....cc++cc....c.c..c..cc......cc..c..c.cccc
 ccc..c.cc.cc..cccc..cc.cc.c.c...cc....cc...c.c.cc.cc..cccc..cc.cc.c..ccc
@@ -1011,7 +1011,7 @@ KITEM:   O = bone rune of Zot
 : serpent_of_hell_setup(_G)
 : tar_dig_maze(_G, 9, 21)
 KFEAT:   - = floor
-NSUBST:  L = 1:2 / 3:4 / 8:3 / *:.
+NSUBST:  L = 2:2 / 3:4 / 8:3 / *:.
 MAP
 ccccccccccccccccccccc
 ccccccc$$$O$$$ccccccc
@@ -1049,7 +1049,7 @@ ccccccccc+++ccccccccc
         .....
         x...x
         .....
-        x...x
+        x.2.x
 ENDMAP
 
 NAME: tar_grunt_big_loot

@@ -836,7 +836,7 @@ NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
-MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
+MONS:   flayed ghost w:5 / phantasmal warrior w:5 / wraith / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
 NSUBST: A = 3:v / *:+, B = 3:v / *:+

@@ -958,15 +958,15 @@ ENDMAP
 NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
-MONS:    iron troll, iron dragon / iron giant w:5, cacodemon
-SUBST:   5=5.,6=6.,7=7.,8=4:15 67...,0=09988...
-SHUFFLE: 67
+MONS:    iron troll, iron dragon / iron giant w:4, cacodemon
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 # four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
+NSUBST:  5 = 1:5 / 1:. / * = 5., 6 = 1:6 / 1:. / * = 6., 7 = 1:7 / 1:. / * = 7.
+NSUBST:  8 = 2:4 / 1:6 / 1:7 / 4 = 4.. / 4 = 67. / *:.
+SUBST:   0 = 09988...
+SHUFFLE: 67
 KMASK:   W = no_monster_gen
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
@@ -983,12 +983,12 @@ v....v__v__v$$$$$v__v__v....v.........vvvvvv....v.....G.6..G....+....v
 v....v__v__v$|||$v__v__v....vvvvvv..7..v0..A..0.v.....G....G....v.0..v
 v....v__v__v$|O|$v__v__v....v....v.....v...v....v..6..........vvvvvvvv
 v..8.v__v__v$|||$v__v__v.8..B..0.v.....v+vvvv+vvv.............v......v
-v....v__v__v$$$$$v__v__v....v....+.7.......v..........G....G..v......v
-v....v__v__vvv+vvv__v__v....v.0..v...vvvvvvv..........G....G..v..0...v
-v....v__v____3_2____v__v....vvvvvv...v.....vvv+v..6......6....v......v
-v..8.v__v___________v__v.8..v......7.v..0..v...v..............v+vvvvvv
-v....v__vvvv__1__vvvv__v....vv+vvv...+.....A0..v......G....G......+..v
-v....v_____v_____v_____v....v....v...v..0..vvvvvvv....G....G......v0.v
+v....v__v..v$$$$$v..v__v....v....+.7.......v..........G....G..v......v
+v....v__v..vvv+vvv..v__v....v.0..v...vvvvvvv..........G....G..v..0...v
+v....v__v....3.2....v__v....vvvvvv...v.....vvv+v..6......6....v......v
+v..8.v__v...........v__v.8..v......7.v..0..v...v..............v+vvvvvv
+v....v__vvvv..1..vvvv__v....vv+vvv...+.....A0..v......G....G......+..v
+v....v_____v.....v_____v....v....v...v..0..vvvvvvv....G....G......v0.v
 v....v_____vvvvvvv_____v....B..0.v...v.....v.....v.......6....6.v+vvvv
 v....vvvv___________vvvv....v....v.7.vvvvvvv.....v..............v....v
 v.......v___________v.......vvvvvv.........v..0..v....G....G....v.0..v

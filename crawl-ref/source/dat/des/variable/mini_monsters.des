@@ -261,16 +261,16 @@ ENDMAP
 
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen
-DEPTH: D:8-13, Lair, Spider
+DEPTH: D:8-, Lair, Spider
 KMONS: 1 = worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
 KITEM: | = |, *, %
 KFEAT: 12P| = W
 : if you.absdepth() > 13 then
-SUBST: 1 = 11222
-: else
 SUBST: 1 = 112
+: else
+SUBST: 1 = 1112
 : end
 SUBST: W = W:20 w
 MAP
@@ -278,7 +278,7 @@ MAP
  WWWWW1WWWWW
 WWWxxxxxxxWWW
 WWxx11111xPWW
-W1x|11111PPWW
+W1x|21111PPWW
 WWxx11111xPWW
 WWWxxxxxxxWWW
  WWWWW1WWWWW
@@ -1184,12 +1184,12 @@ ENDMAP
 
 # Elven Outpost
 #   50-50 chance of spiral arms, 50-50 chance of a moat
-#   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
 DEPTH:   D:11-, Orc, Elf
 MONS:    deep elf mage
 SHUFFLE: ?_/bb, _'/ww
 SUBST:   ?_' = .
+NSUBST:  1 = 2:% / 2 = 1% / *:1
 MAP
 .?.....???..
 ?.'''__'''?.
