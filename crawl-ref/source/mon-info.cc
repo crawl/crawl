@@ -958,7 +958,7 @@ string monster_info::common_name(description_level_type desc) const
     const bool nocore = mons_class_is_zombified(type)
                           && mons_is_unique(base_type)
                           && base_type == mons_species(base_type)
-                        || type == MONS_MUTANT_BEAST;
+                        || type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE);
 
     ostringstream ss;
 
@@ -994,7 +994,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << "-headed ";
     }
 
-    if (type == MONS_MUTANT_BEAST)
+    if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
     {
         const int xl = props[MUTANT_BEAST_TIER].get_short();
         const int tier = mutant_beast_tier(xl);

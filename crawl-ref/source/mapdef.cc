@@ -4519,24 +4519,24 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-
-
-    // this is intended for debugging only
-    if (ends_with(name, " mbeast"))
+    const int m_index = name.find(" mutant beast");
+    if (m_index != string::npos)
     {
         mons_spec spec = MONS_MUTANT_BEAST;
 
-        const vector<string> segments = split_string(" ", name);
-        if (segments.size() > 3)
+        const string trimmed = name.substr(0, m_index);
+        const vector<string> segments = split_string(" ", trimmed);
+        if (segments.size() > 2)
             return MONS_PROGRAM_BUG; // too many words
 
+        const bool fully_specified = segments.size() == 2;
         spec.hd = _mutant_beast_xl(segments[0]);
-        if (spec.hd == 0 && segments.size() == 3)
+        if (spec.hd == 0 && fully_specified)
             return MONS_PROGRAM_BUG; // gave invalid tier spec
 
-        if (spec.hd == 0 || segments.size() == 3)
+        if (spec.hd == 0 || fully_specified)
         {
-            const int seg = segments.size() == 3 ? 1 : 0;
+            const int seg = segments.size() - 1;
             const vector<string> facet_names
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
