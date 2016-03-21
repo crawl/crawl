@@ -896,17 +896,9 @@ int main(int argc, char* argv[])
                 else
                     monsterattacks += ", ";
 
-                int frenzy_degree = -1;
                 short int dam = attk.damage;
                 if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
-                else if (mon.has_ench(ENCH_BATTLE_FRENZY))
-                    frenzy_degree = mon.get_ench(ENCH_BATTLE_FRENZY).degree;
-                else if (mon.has_ench(ENCH_ROUSED))
-                    frenzy_degree = mon.get_ench(ENCH_ROUSED).degree;
-
-                if (frenzy_degree != -1)
-                    dam = dam * (115 + frenzy_degree * 15) / 100;
 
                 if (mon.has_ench(ENCH_WEAK))
                     dam = dam * 2 / 3;
