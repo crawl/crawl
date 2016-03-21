@@ -960,7 +960,7 @@ int main(int argc, char* argv[])
                 case AF_DRAIN_XP:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
                     break;
-                case AF_CHAOS:
+                case AF_CHAOTIC:
                     monsterattacks += colour(LIGHTGREEN, "(chaos)");
                     break;
                 case AF_ELEC:
