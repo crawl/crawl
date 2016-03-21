@@ -1778,14 +1778,11 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     default:
-        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_HELLFIRE))
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
         {
-            calc_elemental_brand_damage(BEAM_HELLFIRE,
-                                        defender->is_icy() ? "melt" : "burn",
-                                        what);
-            defender->expose_to_element(BEAM_HELLFIRE);
+            calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
+            defender->expose_to_element(BEAM_DAMNATION);
             attacker->god_conduct(DID_UNHOLY, 2 + random2(3));
-            attacker->god_conduct(DID_FIRE, 10 + random2(5));
         }
         break;
     }

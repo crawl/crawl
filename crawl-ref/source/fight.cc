@@ -435,8 +435,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_FIRE:
         case BEAM_LAVA:
             return defender->res_fire();
-        case BEAM_HELLFIRE:
-            return defender->res_hellfire();
+        case BEAM_DAMNATION:
+            return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:

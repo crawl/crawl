@@ -62,7 +62,7 @@ enum card_type
 
     CARD_TOMB,                // a ring of rock walls
     CARD_BANSHEE,             // cause fear and drain
-    CARD_DAMNATION,           // banish others, maybe self
+    CARD_EXILE,               // banish others, maybe self
     CARD_SOLITUDE,            // dispersal
     CARD_WARPWRIGHT,          // create teleport trap
     CARD_SHAFT,               // under the user, maybe others

@@ -305,7 +305,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, {FAIL_XL, 42, 3}, abflag::NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, {}, abflag::NONE },
-    { ABIL_HELLFIRE, "Hellfire",
+    { ABIL_DAMNATION, "Damnation",
         0, 150, 200, 0, {FAIL_XL, 50, 1}, abflag::NONE },
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
@@ -1942,9 +1942,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     // DEMONIC POWERS:
-    case ABIL_HELLFIRE:
+    case ABIL_DAMNATION:
         fail_check();
-        if (your_spells(SPELL_HELLFIRE,
+        if (your_spells(SPELL_HURL_DAMNATION,
                         you.experience_level * 10,
                         false, false, true) == SPRET_ABORT)
         {
@@ -3284,8 +3284,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
 
     // Mutations
-    if (player_mutation_level(MUT_HURL_HELLFIRE))
-        _add_talent(talents, ABIL_HELLFIRE, check_confused);
+    if (player_mutation_level(MUT_HURL_DAMNATION))
+        _add_talent(talents, ABIL_DAMNATION, check_confused);
 
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);

@@ -2877,8 +2877,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case LIGHTRED:
-        if (bolt.name.find("hellfire") != string::npos)
-            return TILE_BOLT_HELLFIRE;
+        if (bolt.name.find("damnation") != string::npos)
+            return TILE_BOLT_DAMNATION;
         break;
 
     case LIGHTMAGENTA:
@@ -3260,8 +3260,8 @@ tileidx_t tileidx_ability(const ability_type ability)
 
     // Species-specific abilities.
     // Demonspawn-only
-    case ABIL_HELLFIRE:
-        return TILEG_ABILITY_HELLFIRE;
+    case ABIL_DAMNATION:
+        return TILEG_ABILITY_HURL_DAMNATION;
     // Tengu, Draconians
     case ABIL_FLY:
         return TILEG_ABILITY_FLIGHT;

@@ -586,8 +586,8 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_HELLFIRE,
-    "hellfire",
+    ZAP_DAMNATION,
+    "damnation",
     200,
     new calcdice_calculator<3, 8, 3, 5>,
     new tohit_calculator<20, 1, 10>,
@@ -595,7 +595,7 @@ static const zap_info zap_data[] =
     nullptr,
     LIGHTRED,
     false,
-    BEAM_HELLFIRE,
+    BEAM_DAMNATION,
     DCHAR_FIRED_ZAP,
     true,
     false,

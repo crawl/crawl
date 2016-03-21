@@ -1104,8 +1104,8 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
     {
     case SPELL_FIREBALL:
         return make_unique<targetter_beam>(&you, range, ZAP_FIREBALL, pow, 1, 1);
-    case SPELL_HELLFIRE:
-        return make_unique<targetter_beam>(&you, range, ZAP_HELLFIRE, pow, 1, 1);
+    case SPELL_HURL_DAMNATION:
+        return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC, pow,
                                            pow >= 100 ? 1 : 0, 1);
@@ -1610,8 +1610,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_fire_storm(powc, beam, fail);
 
     // Demonspawn ability, no failure.
-    case SPELL_HELLFIRE_BURST:
-        return cast_hellfire_burst(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
+    case SPELL_CALL_DOWN_DAMNATION:
+        return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);

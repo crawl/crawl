@@ -363,7 +363,7 @@ public:
     bool is_artificial(bool temp = true) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
-    bool res_hellfire() const override;
+    bool res_damnation() const override;
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;

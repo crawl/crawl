@@ -2696,7 +2696,7 @@ MONS: patrolling iron giant, flying skull
 ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
-ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:hellfire w:1
+ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:damnation w:1
 : if you.in_branch("Dis") then
 SUBST: defg = .
 : end

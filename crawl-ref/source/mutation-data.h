@@ -784,14 +784,14 @@ static const mutation_def mut_data[] =
   "demonic bird flight magic",
 },
 
-{ MUT_HURL_HELLFIRE, 0, 1, mutflag::GOOD, false,
-  "hurl hellfire",
+{ MUT_HURL_DAMNATION, 0, 1, mutflag::GOOD, false,
+  "hurl damnation",
 
-  {"You can hurl blasts of hellfire.", "", ""},
-  {"You smell fire and brimstone.", "", ""},
+  {"You can hurl damnation.", "", ""},
+  {"You smell a hint of brimstone.", "", ""},
   {"", "", ""},
 
-  "the ability to hurl hellfire",
+  "the ability to hurl damnation",
 },
 
 // body-slot facets

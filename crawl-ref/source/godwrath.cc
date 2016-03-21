@@ -1241,9 +1241,9 @@ static spell_type _vehumet_wrath_type()
             return random_choose(SPELL_ORB_OF_ELECTRICITY,
                                  SPELL_FLASH_FREEZE);
         case 8:
-            return random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR);
+            return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
         case 9:
-            return random_choose(SPELL_FIRE_STORM, SPELL_HELLFIRE);
+            return SPELL_FIRE_STORM;
         default:
             return SPELL_NO_SPELL;
     }

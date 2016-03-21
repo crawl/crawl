@@ -549,7 +549,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
             10, BEAM_POISON,
             10, BEAM_NEG,
             10, BEAM_ACID,
-            10, BEAM_HELLFIRE,
+            10, BEAM_DAMNATION,
             10, BEAM_STICKY_FLAME,
             10, BEAM_SLOW,
             10, BEAM_HASTE,
@@ -698,9 +698,8 @@ void bolt::apply_beam_conducts()
     {
         switch (flavour)
         {
-        case BEAM_HELLFIRE:
+        case BEAM_DAMNATION:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
-            did_god_conduct(DID_FIRE, 10 + random2(5), god_cares());
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
@@ -1695,8 +1694,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
-    case BEAM_HELLFIRE:
-        if (mons->res_hellfire())
+    case BEAM_DAMNATION:
+        if (mons->res_damnation())
         {
             if (doFlavouredEffects)
             {
@@ -2770,9 +2769,7 @@ void bolt::affect_ground()
 
 bool bolt::is_fiery() const
 {
-    return flavour == BEAM_FIRE
-           || flavour == BEAM_HELLFIRE
-           || flavour == BEAM_LAVA;
+    return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
 }
 
 /// Can this bolt burn trees it hits?
@@ -2783,8 +2780,7 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_BOLT_OF_FIRE
            || origin_spell == SPELL_BOLT_OF_MAGMA
            || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_EXPLOSIVE_BOLT
-           || flavour == BEAM_HELLFIRE;
+           || origin_spell == SPELL_EXPLOSIVE_BOLT;
 }
 
 bool bolt::can_affect_wall(dungeon_feature_type wall) const
@@ -3165,7 +3161,6 @@ bool bolt::harmless_to_player() const
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
-    case BEAM_HELLFIRE:
     case BEAM_HOLY_FLAME:
     case BEAM_STICKY_FLAME:
         return you.species == SP_DJINNI;
@@ -4107,7 +4102,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
 {
     switch (flavour)
     {
-    case BEAM_HELLFIRE:
+    case BEAM_DAMNATION:
         ac_rule = AC_NONE; break;
     case BEAM_ELECTRICITY:
         ac_rule = AC_HALF; break;
@@ -5821,8 +5816,8 @@ int bolt::range_used_on_hit() const
         used = BEAM_STOP;
     else if (is_enchantment())
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
-    // Hellfire stops for nobody!
-    else if (flavour == BEAM_HELLFIRE)
+    // Damnation stops for nobody!
+    else if (flavour == BEAM_DAMNATION)
         used = 0;
     // Generic explosion.
     else if (is_explosion || is_big_cloud())
@@ -5857,13 +5852,13 @@ struct explosion_sfx
 
 // A map from origin_spells to special explosion info for each.
 const map<spell_type, explosion_sfx> spell_explosions = {
-    { SPELL_HELLFIRE, {
-        "The hellfire explodes!",
-        "a strangely unpleasant explosion",
+    { SPELL_HURL_DAMNATION, {
+        "The damnation unfurls!",
+        "the wailing of the damned",
     } },
-    { SPELL_HELLFIRE_BURST, {
-        "The hellfire explodes!",
-        "a strangely unpleasant explosion",
+    { SPELL_CALL_DOWN_DAMNATION, {
+        "The damnation unfurls!",
+        "the wailing of the damned",
     } },
     { SPELL_FIREBALL, {
         "The fireball explodes!",
@@ -6507,7 +6502,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_MIASMA:                return "miasma";
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
-    case BEAM_HELLFIRE:              return "hellfire";
+    case BEAM_DAMNATION:             return "damnation";
     case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";

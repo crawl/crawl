@@ -446,12 +446,12 @@ ANGRY:    3
 STEALTH:  -1
 LIFE:     1
 
-NAME:    arbalest "Hellfire"
-INSCRIP: hellfire,
+NAME:    arbalest "Damnation"
+INSCRIP: damnation,
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 PLUS:    +6
 COLOUR:  ETC_FIRE
-TILE:    urand_hellfire
+TILE:    urand_damnation
 TILE_EQ: crossbow_fire
 FIRE:    2
 COLD:    -1
