@@ -851,26 +851,29 @@ ENDMAP
 # "Cigotuvi's Monster".
 #
 # TODO:     * door tile is *really* ugly, fix this?
+#           * use a lua loop to automagically write out the adjectives and
+#             vault redefinition status for the decorative deformed humanoids
+#             instead of the super long list here in the header.
 #
 NAME:       wizlab_cigotuvi
 TAGS:       no_rotate
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-MONS:       human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human /\
+MONS:       human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human     /\
             human name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  /\
             human name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human   /\
             human name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    /\
             human name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  /\
             human name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    /\
             human name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_human
-MONS:       elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf     /\
+MONS:       elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf         /\
             elf name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      /\
             elf name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf       /\
             elf name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        /\
             elf name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      /\
             elf name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        /\
             elf name:febrile dbname:deformed_humanoid n_adj n_spe n_noc tile:mons_deformed_elf
-MONS:       orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc     /\
+MONS:       orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc         /\
             orc name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      /\
             orc name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc       /\
             orc name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        /\
@@ -883,9 +886,9 @@ MONS:       small abomination
 KMONS:      8 = large abomination
 KMONS:      9 = generate_awake giant eyeball
 KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
-            tile:mons_flesh_golem name_descriptor
-KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
-            name_replace hp:200 tile:mons_cigotuvis_monster
+                tile:mons_flesh_golem name_descriptor
+KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \
+                name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
 ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
             potion of cure mutation
 ITEM:       potion of beneficial mutation q:1, potion of cure mutation
@@ -944,8 +947,8 @@ MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccjjjcccc|cccccccccccAccccccccccccWWWW~5hcccc
 c|...|c....|ccc...ccc+cccccccccccWh~~~.45hccc
-c|8........|cc.4...m...m..ccccccW~......45hcc
-c.&........cc...2..m.7.m.1.cccccW~........hcc
+c|8........|cc.4...m...m..ccccccW~.....845hcc
+c.&5.......cc...2..m.7.m.1.cccccW~........hcc
 c.8........cc...3..m...m.4..ccccW~.......~Wcc
 c|.........cc.cccccm...mc...ccccc.......~Wccc
 c|...|ccc+ccccc..cccc+cccccccccccc.....hWcccc
@@ -967,8 +970,8 @@ c..ccc'''''''''cccccc+cccccccccccccccccccc""c
 c..cc''''''''''ccccc...ccccccc""""""""""""""c
 c..cc''''''''''ccc.......cccc""""""""""""""cc
 c..c'''''''''''cc.........ccc""cccccccccccccc
-c..c+c+c+c+c+ccc...........cc""""""""""""""cc
-c..c8c8c8c8c8ccc...........ccc""""""""""""""c
+c..c'c'c'c'c'ccc...........cc""""""""""""""cc
+c..c8c8c'c8c8ccc...........ccc""""""""""""""c
 c..cccccccccccc.....c.c.....cccccccccccccc""c
 c...76........+......?......+"""""ccc"""""""c
 c...76........c.....c.c.....c""""""c"""""""cc
@@ -1180,7 +1183,6 @@ ENDMAP
 #       of the monks were cut they don't work consistently; currently,
 #       retiles apply to the level spawns but not the OCS spawns.
 #       dbname use may or may not be warranted to preserve old flavour.
-#       (also, OCS boss sucks while disint is still binary.)
 #
 #       A prefix as well as suffix but no regular modifier
 #       (so, "faint draconian monk") would be the best, if it's done.
@@ -1188,11 +1190,7 @@ NAME:       wizlab_wucad
 TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
-                hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:brain_feed.24.magical;\
-                       draining_gaze.24.magical;\
-                       mass_confusion.24.magical;\
-                       shadow_creatures.48.magical
+                hd:15 tile:mons_wucad_mu_statue
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
@@ -1513,17 +1511,15 @@ ENDMAP
 # TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
 NAME:       wizlab_cloud
 TAGS:       no_rotate
-MONS:       wind drake, air elemental, insubstantial wisp
-KMONS:      4 = twister
+MONS:       wind drake, air elemental, insubstantial wisp, spriggan air mage
+KMONS:      5 = twister
 {{
 wizname = crawl.make_name()
 
-kmons ("    5 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
+kmons ("    6 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
          .. " ; robe unrand:robe_of_clouds . quick blade ego:electrocution |"
-         .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
-         .. " | dagger ego:freezing")
+         .. " quick blade ego:freezing | dagger ego:electrocution | dagger ego:freezing")
 }}
-NSUBST:     . = 3:1 / * = .:120 1:1 2:8 3:2
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 4, \
@@ -1537,9 +1533,11 @@ ITEM:       wand of lightning / staff of air / ring of flight / \
             ring of see invisible / book of clouds / any book w:15 / \
             any good_item / any w:20
 ITEM:       randbook disc:air
-KFEAT:      #4 = deep_water
-KPROP:      #4 = no_tele_into
-NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
+KFEAT:      #5 = deep_water
+KPROP:      #5 = no_tele_into
+NSUBST:     . = 3:1 / 2:4 / 1:43 / * = .:120 1:1 2:8 3:2
+NSUBST:     ' = 2:1 / 4:2 / 4:3 / 120:. / * = . 1:1 2:9 3:2
+NSUBST:     e = 2:f / * = de, # = 5:5 / 4 = 5## / *:#
 COLOUR:     +<b = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
@@ -1573,15 +1571,15 @@ MAP
 #################ooo...wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
 ################oo...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...oo#############
 ################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
-###############oo.wwwwwwbbbbbbbb..b..b..b..b..bbwwwwww.oo############
-###############o..wwwwwbb.....b.!............!.bwwwwww..o############
-##############oo.wwwwwwbb.eee.b................bwwwwwww.oo###########
-##############o..wwwwwbbb.eee.b................bWWWWWWW..o###########
-##############o..wwwwwbbb.eee.+...5............+.........o###########
-##############o..wwwwwbbb.eee.b................bWWWWWWW..o###########
-##############oo.wwwwwwbb.eee.b................bwwwwwww.oo###########
-###############o..wwwwwbb.....b.!............!.bwwwwww..o############
-###############oo.wwwwwwbbbbbbbb..b..b..b..b..bbwwwwww.oo############
+###############oo.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.oo############
+###############o..wwwwwbb.....b'!''''''''''''!'bwwwwww..o############
+##############oo.wwwwwwbb.eee.b''''''''''''''''bwwwwwww.oo###########
+##############o..wwwwwbbb.eee.b''''''''''''''''bWWWWWWW..o###########
+##############o..wwwwwbbb.eee.+'''6''''''''''''+.........o###########
+##############o..wwwwwbbb.eee.b''''''''''''''''bWWWWWWW..o###########
+##############oo.wwwwwwbb.eee.b''''''''''''''''bwwwwwww.oo###########
+###############o..wwwwwbb.....b'!''''''''''''!'bwwwwww..o############
+###############oo.wwwwwwbbbbbbbb''b''b''b''b''bbwwwwww.oo############
 ################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
 ################oo...wwwwwwwbbbbbbbbbbbbbbbbbbbbwww...oo#############
 #################oo....wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
