@@ -1060,7 +1060,7 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(BROWN, "(trample)");
                     break;
                 case AF_WEAKNESS:
-                    monsterattacks += colour(LIGHTRED, "(weakness");
+                    monsterattacks += colour(LIGHTRED, "(weakness)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
