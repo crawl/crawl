@@ -407,7 +407,7 @@ SUBST: G : YlG
 :   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
 :   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
 :   centaur barding unrand:black_knights_horse_barding w:1 | \
-:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:hellfire w:1 | \
+:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:damnation w:1 | \
 :   double sword unrand:sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1

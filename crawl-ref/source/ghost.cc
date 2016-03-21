@@ -53,7 +53,7 @@ static spell_type search_order_aoe_conj[] =
 // Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
-    SPELL_HELLFIRE_BURST,
+    SPELL_CALL_DOWN_DAMNATION,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_CORROSIVE_BOLT,
     SPELL_QUICKSILVER_BOLT,

@@ -97,7 +97,7 @@ deck_archetype deck_of_emergency =
 {
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
-    { CARD_DAMNATION,  {0, 1, 2} },
+    { CARD_EXILE,      {0, 1, 2} },
     { CARD_SHAFT,      {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
     { CARD_ELIXIR,     {5, 5, 5} },
@@ -177,7 +177,7 @@ deck_archetype deck_of_punishment =
     { CARD_XOM,        {5, 5, 5} },
     { CARD_FAMINE,     {5, 5, 5} },
     { CARD_CURSE,      {5, 5, 5} },
-    { CARD_DAMNATION,  {3, 3, 3} },
+    { CARD_EXILE,      {3, 3, 3} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
 };
@@ -336,7 +336,7 @@ const char* card_name(card_type card)
     case CARD_WATER:           return "Water";
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
-    case CARD_DAMNATION:       return "Damnation";
+    case CARD_EXILE:           return "Exile";
     case CARD_SOLITUDE:        return "Solitude";
     case CARD_ELIXIR:          return "the Elixir";
     case CARD_HELM:            return "the Helm";
@@ -1262,7 +1262,7 @@ static int _xom_check_card(item_def &deck, card_type card,
         amusement = 0;
         break;
 
-    case CARD_DAMNATION:
+    case CARD_EXILE:
         // Nothing happened, boring.
         if (player_in_branch(BRANCH_ABYSS))
             amusement = 0;
@@ -1553,7 +1553,7 @@ static void _banshee_card(int power, deck_rarity_type rarity)
     mass_enchantment(ENCH_FEAR, power);
 }
 
-static void _damnation_card(int power, deck_rarity_type rarity)
+static void _exile_card(int power, deck_rarity_type rarity)
 {
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -3003,7 +3003,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
     case CARD_SWAP:             _swap_monster_card(power, rarity); break;
     case CARD_VELOCITY:         _velocity_card(power, rarity); break;
-    case CARD_DAMNATION:        _damnation_card(power, rarity); break;
+    case CARD_EXILE:            _exile_card(power, rarity); break;
     case CARD_SOLITUDE:         _solitude_card(power, rarity); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
     case CARD_HELM:             _helm_card(power, rarity); break;

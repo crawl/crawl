@@ -488,7 +488,7 @@ An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
-A huge red glowing three-headed dragon, burning with hellfire. It seems to be
+A huge, red-glowing, three-headed dragon, shrouded in damnation. It seems to be
 possessed by the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
@@ -696,7 +696,7 @@ through, walking through it looks like a painful prospect.
 %%%%
 Brimstone Fiend
 
-A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
+A huge and powerful demon wreathed in damnation, with great scaly wings. One of
 the most fearsome denizens of any of the Hells.
 %%%%
 burning bush
@@ -1378,7 +1378,7 @@ fires of Hell.
 %%%%
 hellion
 
-A frightful demon, covered in roaring hellfire.
+A hateful demon, desirous to see all life destroyed by its damnation.
 %%%%
 hellwing
 
@@ -3145,7 +3145,7 @@ reassembling itself in eternal unrest.
 %%%%
 dread
 
-An affront to existence, a void in which there is only torment and hellfire.
+An affront to existence, a void in which there is only torment and damnation.
 Its unearthly form is torn and twisted, black and hollow. It is bereft of
 rational thought, knowing only hatred and the desire to desecrate your soul.
 %%%%
@@ -3172,8 +3172,8 @@ malevolence.
 %%%%
 vile
 
-An emaciated figure brimming with hellfire and plague. Its appearance signifies
-the end of days.
+An emaciated figure brimming with damnation and plague. Its appearance
+signifies the end of days.
 %%%%
 The Servant
 

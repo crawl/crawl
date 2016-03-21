@@ -35,8 +35,8 @@
     "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe " ..
     "never_corpse generate_awake " ..
     "col:lightred spells:symbol_of_torment.34.natural;" ..
-                        "hellfire.33.natural;" ..
-                        "hellfire_burst.33.natural"
+                        "hurl_damnation.33.natural;" ..
+                        "call_down_damnation.33.natural"
 
   local large_bag =
     "hill giant hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
@@ -102,7 +102,7 @@
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse " ..
     "col:lightred generate_awake perm_ench:haste " ..
     "spells:dig.26.natural;confuse.52.natural;" ..
-           "miasma_breath.26.natural;hellfire_burst.26.natural"
+           "miasma_breath.26.natural;call_down_damnation.26.natural"
 
   -- Uniques --
   local servant =

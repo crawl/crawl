@@ -705,7 +705,7 @@ static string _describe_demon(const string& name, bool flying)
         " It is difficult to look away.",
         " It is constantly speaking in tongues.",
         " It babbles unendingly.",
-        " Its body is scorched from hellfire.",
+        " Its body is scourged by damnation.",
         " Its body is extensively scarred.",
         " You find it difficult to look away.",
     };

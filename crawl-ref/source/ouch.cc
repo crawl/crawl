@@ -78,8 +78,7 @@
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
-        || flavour == BEAM_STEAM)
+        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -100,7 +99,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     }
 }
 
-// NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
@@ -153,16 +151,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
-    case BEAM_HELLFIRE:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            hurted = 0;
-            if (doEffects)
-                mpr("You resist completely.");
-        }
-#endif
-        break;
+    case BEAM_DAMNATION:
+        break; // sucks to be you (:
 
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour, hurted);

@@ -546,7 +546,7 @@ short-lived fire vortices.
 %%%%
 Fire Summon spell
 
-Summons demons of flame and hellfire.
+Summons demons of flame and damnation.
 %%%%
 Fireball spell
 
@@ -634,17 +634,17 @@ Heal Other spell
 
 Heals a nearby ally.
 %%%%
-Hellfire Burst spell
+Call Down Damnation spell
 
-Blasts a targeted enemy with hellfire, with no direct line of fire required.
-This ball of unholy flames explodes on impact, and is not affected by any means
-of protection such as armour or resistances. However, certain creatures,
-usually those able to create hellfire themselves, are immune to hellfire
-entirely.
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
 %%%%
-Hellfire spell
+Hurl Damnation spell
 
-<Hellfire ability>
+<Damnation ability>
 %%%%
 Holy Breath spell
 

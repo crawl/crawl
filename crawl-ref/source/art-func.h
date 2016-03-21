@@ -141,7 +141,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
         }
         if (defender->is_monster()
             && !mondied
-            && !defender->as_monster()->res_hellfire()
+            && !defender->as_monster()->res_damnation() // XXX: ???
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
@@ -216,7 +216,8 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, false, true)
+        == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -921,30 +922,30 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
+static void _DAMNATION_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
 }
 
-static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
+static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
                                            string* ammo_name, bool* returning)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
     beam->item->special = SPMSL_EXPLODING; // so that it mulches
-    beam->item->props[HELLFIRE_BOLT_KEY].get_bool() = true;
+    beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
-    beam->name    = "hellfire bolt";
-    *ammo_name    = "a hellfire bolt";
+    beam->name    = "damnation bolt";
+    *ammo_name    = "a damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
     bolt *expl   = new bolt(*beam);
-    expl->flavour = BEAM_HELLFIRE;
+    expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
     expl->damage = dice_def(3, 8);
-    expl->name   = "hellfire";
+    expl->name   = "damnation";
 
     beam->special_explosion = expl;
     return SM_FINISHED;

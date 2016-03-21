@@ -161,11 +161,10 @@ A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
 both the wielder and all of his or her mortal followers.
 %%%%
-arbalest "Hellfire"
+arbalest "Damnation"
 
-A flaming crossbow, forged in the fires of Gehenna. It imbues the bolts it
-fires with the raw power of its namesake, irresistible by any mortal armour or
-fireproofing.
+An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
+fires with the raw power of its namesake, irresistible by any mortal armour.
 %%%%
 sword of the Doom Knight
 
