@@ -1501,7 +1501,7 @@ attack_flavour attack::random_chaos_attack_flavour()
                                          10, AF_COLD,
                                          10, AF_ELEC,
                                          10, AF_POISON,
-                                         10, AF_CHAOS,
+                                         10, AF_CHAOTIC,
                                           5, AF_DRAIN_XP,
                                           5, AF_VAMPIRIC,
                                           5, AF_HOLY,
