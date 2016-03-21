@@ -3560,30 +3560,9 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();
 
-    int frenzy_degree = -1;
-
     // Berserk/mighted monsters get bonus damage.
-    if (as_mon->has_ench(ENCH_MIGHT)
-        || as_mon->has_ench(ENCH_BERSERK))
-    {
+    if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
-    }
-    else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
-        frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
-    else if (as_mon->has_ench(ENCH_ROUSED))
-        frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-
-    if (frenzy_degree != -1)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        const int orig_damage = damage;
-#endif
-
-        damage = damage * (115 + frenzy_degree * 15) / 100;
-
-        dprf(DIAG_COMBAT, "%s frenzy damage: %d->%d",
-             attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
-    }
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;

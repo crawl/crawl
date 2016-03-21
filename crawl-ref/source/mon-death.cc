@@ -1499,8 +1499,8 @@ static void _druid_final_boon(const monster* mons)
     for (int i = 0; i < num; ++i)
     {
         simple_monster_message(beasts[i], " seems to grow more fierce.");
-        beasts[i]->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, mons,
-                                        random_range(120, 200)));
+        beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
+                                        random_range(100, 160)));
     }
 }
 

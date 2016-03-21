@@ -1310,16 +1310,14 @@ void monster::timeout_enchantments(int levels)
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
-        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
-        case ENCH_SILENCE: case ENCH_LOWERED_MR:
-        case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
+        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
         case ENCH_MIRROR_DAMAGE: case ENCH_MAGIC_ARMOUR: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
-        case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_WRETCHED: case ENCH_SCREAMED:
-        case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_BARBS:
+        case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR: case ENCH_WRETCHED:
+        case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
+        case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:

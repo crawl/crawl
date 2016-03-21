@@ -1725,7 +1725,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PAIN_MIRROR;
     if (mons.is(MB_HASTED))
         ch |= TILE_FLAG_HASTED;
-    if (mons.is(MB_STRONG) || mons.is(MB_FRENZIED) || mons.is(MB_ROUSED))
+    if (mons.is(MB_STRONG))
         ch |= TILE_FLAG_MIGHT;
     if (mons.is(MB_PETRIFYING))
         ch |= TILE_FLAG_PETRIFYING;

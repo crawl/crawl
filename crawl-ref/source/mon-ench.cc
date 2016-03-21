@@ -1441,8 +1441,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         invalidate_agrid();
         break;
 
-    case ENCH_BATTLE_FRENZY:
-    case ENCH_ROUSED:
     case ENCH_DRAINED:
         decay_enchantment(en, false);
         break;

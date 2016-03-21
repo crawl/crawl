@@ -1859,6 +1859,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ORC_KNIGHT,
+      {
+       { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
+                              | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
+      }
+    },
+
     {  MST_ROBIN,
       {
         { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
