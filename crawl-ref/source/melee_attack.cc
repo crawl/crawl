@@ -2612,7 +2612,7 @@ void melee_attack::mons_apply_attack_flavour()
     int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
-    if (flavour == AF_CHAOS)
+    if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
 
     // Note that if damage_done == 0 then this code won't be reached
@@ -2873,7 +2873,7 @@ void melee_attack::mons_apply_attack_flavour()
         mons_do_napalm();
         break;
 
-    case AF_CHAOS:
+    case AF_CHAOTIC:
         chaos_affects_defender();
         break;
 
