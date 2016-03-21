@@ -1480,29 +1480,6 @@ static battlecry_type _get_cry_type(const monster& crier)
 }
 
 /**
- * What enchantment is granted by a given battlecry?
- *
- * @param type   The type of battlecry.
- * @return       The corresponding enchantment type; either 'battle frenzy' or
- *               'roused'.
- *               XXX: these enchantments are almost exactly identical, and
- *               should be merged.
- */
-static enchant_type _enchant_from_cry(battlecry_type type)
-{
-    switch (type)
-    {
-        case BATTLECRY_GOBLIN:
-        case BATTLECRY_ORC:
-            return ENCH_BATTLE_FRENZY;
-        case BATTLECRY_HOLY:
-        case BATTLECRY_NATURAL:
-        default:
-            return ENCH_ROUSED;
-    }
-}
-
-/**
  * Print the message that the player sees after a battlecry goes off.
  *
  * @param chief             The monster letting out the battlecry.
@@ -1593,9 +1570,6 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         return false;
 
     const battlecry_type type = _get_cry_type(chief);
-    const enchant_type battlecry = _enchant_from_cry(type);
-    // magnitude of the buff (either 30% or 45% dam increase)
-    const int level = chief.get_hit_dice() > 12? 2 : 1;
 
     int affected = 0;
 
@@ -1619,7 +1593,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
             continue;
         }
 
-        // already has a very similar buff (XXX: does this work in reverse?)
+        // already buffed
         if (mons->has_ench(ENCH_MIGHT))
             continue;
 
@@ -1631,23 +1605,12 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
             continue;
         }
 
-        mon_enchant ench = mi->get_ench(battlecry);
-        if (ench.ench != ENCH_NONE && ench.degree >= level)
-            continue; // already buffed as high as we would
-
         if (check_only)
             return true; // just need to check
 
         const int dur = random_range(12, 20) * speed_to_duration(mi->speed);
 
-        if (ench.ench != ENCH_NONE)
-        {
-            ench.degree   = level;
-            ench.duration = max(ench.duration, dur);
-            mi->update_ench(ench);
-        }
-        else
-            mi->add_ench(mon_enchant(battlecry, level, &chief, dur));
+        mi->add_ench(mon_enchant(ENCH_MIGHT, 1, &chief, dur));
 
         affected++;
         if (you.can_see(**mi))

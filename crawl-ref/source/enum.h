@@ -1959,8 +1959,8 @@ enum enchant_type
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
 #endif
     ENCH_HELD,           //   Caught in a net.
-    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy.
 #if TAG_MAJOR_VERSION == 34
+    ENCH_OLD_BATTLE_FRENZY,
     ENCH_TEMP_PACIF,
 #endif
     ENCH_PETRIFYING,
@@ -2013,8 +2013,10 @@ enum enchant_type
     ENCH_SILVER_CORONA,  // Zin's silver light.
     ENCH_RECITE_TIMER,   // Was recited against.
     ENCH_INNER_FLAME,
-    ENCH_ROUSED,         // Monster has been roused to greatness
-    ENCH_BREATH_WEAPON,  // just a simple timer for dragon breathweapon spam
+#if TAG_MAJOR_VERSION == 34
+    ENCH_OLD_ROUSED,
+#endif
+    ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
     ENCH_DEATHS_DOOR,
     ENCH_ROLLING,        // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,

@@ -50,8 +50,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOW,            MB_SLOWED },
     { ENCH_SICK,            MB_SICK },
     { ENCH_INSANE,          MB_INSANE },
-    { ENCH_BATTLE_FRENZY,   MB_FRENZIED },
-    { ENCH_ROUSED,          MB_ROUSED },
     { ENCH_HASTE,           MB_HASTED },
     { ENCH_MIGHT,           MB_STRONG },
     { ENCH_CONFUSION,       MB_CONFUSED },
@@ -1215,10 +1213,6 @@ static string _verbose_info0(const monster_info& mi)
         return "berserk";
     if (mi.is(MB_INSANE))
         return "insane";
-    if (mi.is(MB_FRENZIED))
-        return "frenzied";
-    if (mi.is(MB_ROUSED))
-        return "roused";
     if (mi.is(MB_INNER_FLAME))
         return "inner flame";
     if (mi.is(MB_DUMB))
@@ -1428,10 +1422,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("softly glowing");
     if (is(MB_INSANE))
         v.emplace_back("frenzied and insane");
-    if (is(MB_FRENZIED))
-        v.emplace_back("consumed by blood-lust");
-    if (is(MB_ROUSED))
-        v.emplace_back("inspired to greatness");
     if (is(MB_CONFUSED))
         v.emplace_back("confused");
     if (is(MB_INVISIBLE))
