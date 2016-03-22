@@ -4094,7 +4094,7 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
             return random_choose(
                 MONS_BRIMSTONE_FIEND,
                 MONS_ICE_FIEND,
-                MONS_SHADOW_FIEND,
+                MONS_TZITZIMITL,
                 MONS_HELL_SENTINEL,
                 MONS_EXECUTIONER);
         }

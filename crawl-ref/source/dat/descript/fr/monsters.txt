@@ -1700,12 +1700,6 @@ Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle s
 déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant
 infailliblement depuis l'angle mort de ceux qui ne peuvent la voir.
 %%%%
-Shadow Fiend
-
-Un être horrible qui apparaît sous forme d'une grosse masse d'ombres distordues
-et qui révèlent parfois un énorme squelette cornu. C'est l'un des plus terrible
-habitants des Enfers.
-%%%%
 shapeshifter
 
 Une créature dérangeante qui à le pouvoir de changer de forme. Elle est très

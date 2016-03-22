@@ -2099,12 +2099,6 @@ shadow dragon
 
 A great umbral dragon, radiating evil and death. Its breath reeks of the grave.
 %%%%
-Shadow Fiend
-
-A horrible being that appears as a great mass of writhing shadows which
-occasionally reveals a huge, horned skeleton. It is one of the most terrible
-denizens of the many Hells.
-%%%%
 shadow imp
 
 A shadowy minor demon, with an affinity for the necromantic arts.
@@ -2477,6 +2471,13 @@ two-headed ogre
 
 A huge ogre with two heads on top of a bloated ogre body. It is capable of
 holding a weapon in each giant hand.
+%%%%
+Tzitzimitl
+
+A terrible liminal demon, a horrific fallen divinity, a mane of grasping claws
+and jaws of gnashing stone in a necklace of starry organs and a skirt of wiry
+bones. Formed waiting for the auspicious days when they will devour the sun,
+the astral skeletons tzitzimitl spread disease and incite despair.
 %%%%
 ufetubus
 

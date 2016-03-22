@@ -297,7 +297,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_SHADOWSTAB
            || flavour == AF_DROWN
            || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
+           || flavour == AF_HUNGER
+           || flavour == AF_MIASMATA;
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -3070,6 +3071,35 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_WEAKNESS:
         if (coinflip())
             defender->weaken(attacker, 12);
+        break;
+
+    case AF_MIASMATA:
+        if (coinflip())
+            break;
+
+        if (needs_message)
+        {
+            mprf("The air around %s putrefies into miasma!",
+                 defender_name(false).c_str());
+        }
+
+        // Check for valid terrain, allow renewing miasma-only spots,
+        // don't allow clouds over allies unless they're resistant.
+        for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+        {
+            if (cell_is_solid(*ai) ||
+                cloud_at(*ai) && cloud_at(*ai)->type == CLOUD_MIASMA)
+            {
+                continue;
+            }
+
+            const actor* act = actor_at(*ai);
+            if (act && mons_aligned(attacker, act) && act->res_rotting() < 1)
+                continue;
+
+            place_cloud(CLOUD_MIASMA, *ai, 6 + random2(5), attacker);
+        }
+
         break;
     }
 }

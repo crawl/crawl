@@ -151,6 +151,11 @@ string pluralise(const string &name, const char * const qualifiers[],
         // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)
         return name + "u";
     }
+    else if (name == "Tzitzimitl")
+    {
+        // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
+        return name.substr(0, name.length() - 2) + "meh";
+    }
 
     return name + "s";
 }
