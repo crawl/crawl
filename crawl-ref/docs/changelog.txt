@@ -123,6 +123,8 @@ Monsters
   - Dart slugs, slow-moving, squishy gastropods with a ranged dart attack.
   - Howler monkeys, fast and extremely loud creatures, often found in packs.
   - Rime drakes, small flying lizards which breathe Flash Freeze.
+* Shadow Fiends are now Tzitzimimeh, made somewhat stronger and given attacks
+  that surround their targets in a ring of miasma clouds.
 * Hellfire has been renamed to Damnation, and no longer melts ice.
 * Chaos champions lose Chaotic Mirror and instead gain Call of Chaos, an
   ability which applies (usually) positive status effects to nearby allies.

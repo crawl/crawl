@@ -521,7 +521,7 @@ void doom_howl(int time)
     {
         const monster_type howlcalled = random_choose(
                 MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
-                MONS_REAPER, MONS_TORMENTOR, MONS_SHADOW_FIEND
+                MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL
         );
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
