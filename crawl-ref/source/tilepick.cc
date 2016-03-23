@@ -3273,8 +3273,10 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Vampires
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
+#if TAG_MAJOR_VERSION == 34
     case ABIL_BOTTLE_BLOOD:
         return TILEG_ABILITY_BOTTLE_BLOOD;
+#endif
     // Deep Dwarves
     case ABIL_RECHARGING:
         return TILEG_ABILITY_RECHARGE;

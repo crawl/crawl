@@ -3315,7 +3315,9 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },
     { SPELL_EARTH_ELEMENTALS,           { 3, 2 } },
     { SPELL_AIR_ELEMENTALS,             { 3, 2 } },
+#if TAG_MAJOR_VERSION == 34
     { SPELL_IRON_ELEMENTALS,            { 3, 2 } },
+#endif
     { SPELL_SUMMON_SPECTRAL_ORCS,       { 3, 2 } },
     { SPELL_FIRE_SUMMON,                { 4, 2 } },
     { SPELL_SUMMON_MINOR_DEMON,         { 3, 3 } },

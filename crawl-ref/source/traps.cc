@@ -1583,10 +1583,12 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
+#if TAG_MAJOR_VERSION == 34
     case TRAP_SHADOW:
         return DNGN_TRAP_SHADOW;
     case TRAP_SHADOW_DORMANT:
         return DNGN_TRAP_SHADOW_DORMANT;
+#endif
 
     case TRAP_ARROW:
     case TRAP_SPEAR:

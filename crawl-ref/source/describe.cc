@@ -542,8 +542,8 @@ static const char *trap_names[] =
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
+    "shadow", "dormant shadow",
 #endif
-     "shadow", "dormant shadow",
 };
 
 string trap_name(trap_type trap)

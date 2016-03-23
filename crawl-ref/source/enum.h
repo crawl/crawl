@@ -1890,7 +1890,9 @@ enum duration_type
     DUR_POISON_VULN,
     DUR_FROZEN,
     DUR_SAP_MAGIC,
+#if TAG_MAJOR_VERSION == 34
     DUR_MAGIC_SAPPED,
+#endif
     DUR_PORTAL_PROJECTILE,
     DUR_FORESTED,
     DUR_DRAGON_CALL,
@@ -2860,7 +2862,7 @@ enum monster_type                      // menv[].type
 #endif
     MONS_DEEP_ELF_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
-    MONS_DEEP_ELF_ARCHER
+    MONS_DEEP_ELF_ARCHER,
 #endif
     MONS_DEEP_ELF_MAGE,
 #if TAG_MAJOR_VERSION == 34
@@ -4828,8 +4830,7 @@ enum daction_type
     DACT_OLD_ENSLAVED_SOULS_POOF = 16,
 #if TAG_MAJOR_VERSION == 34
     DACT_HOLY_NEW_ATTEMPT,
-#endif
-#if TAG_MAJOR_VERSION > 34
+#else
     DACT_SLIME_NEW_ATTEMPT,
 #endif
     DACT_HOLY_PETS_GO_NEUTRAL,

@@ -1989,7 +1989,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         else
         {
             if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-                pakellas_evoke_backfire(SPELL_FLY);
+            {
+                pakellas_evoke_backfire(SPELL_REPEL_MISSILES);
+                // we'd use SPELL_FLY, but that was removed...
+            }
             else if (!pakellas_device_surge())
                 return SPRET_FAIL;
             surge_power(you.spec_evoke());

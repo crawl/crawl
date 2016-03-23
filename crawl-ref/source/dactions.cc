@@ -42,8 +42,7 @@ static const char *daction_names[] =
     "old enslaved souls go poof",
 #if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
-#endif
-#if TAG_MAJOR_VERSION > 34
+#else
     "slimes allow another conversion attempt",
 #endif
     "holy beings go neutral",
@@ -53,8 +52,8 @@ static const char *daction_names[] =
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
     "corpses rot",
-    "Tomb loses -cTele",
 #if TAG_MAJOR_VERSION == 34
+    "Tomb loses -cTele",
     "slimes allow another conversion attempt",
 #endif
     "hogs to humans",
@@ -66,7 +65,9 @@ static const char *daction_names[] =
     "remove Gozag shops",
     "apply Gozag bribes",
     "Makhleb's servants go hostile",
+#if TAG_MAJOR_VERSION == 34
     "make all monsters hate you",
+#endif
 };
 #endif
 
