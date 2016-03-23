@@ -358,7 +358,6 @@ mon_attitude_type mons_attitude(const monster* m);
 
 bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch = you.where_are_you);
-bool mons_is_poisoner(const monster* mon);
 
 // Whether the monster is temporarily confused (class_too = false)
 // or confused at all (class_too = true; temporarily or by class).

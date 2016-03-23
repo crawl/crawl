@@ -1002,32 +1002,6 @@ bool mons_is_abyssal_only(monster_type mc)
     }
 }
 
-bool mons_is_poisoner(const monster* mon)
-{
-    if (mon->search_slots([] (const mon_spell_slot& slot)
-                             { return slot.flags & MON_SPELL_NATURAL
-                                      && spell_typematch(slot.spell,
-                                                         SPTYP_POISON); } ))
-    {
-        return true;
-    }
-
-    if (mon->has_attack_flavour(AF_POISON)
-        || mon->has_attack_flavour(AF_POISON_STRONG))
-    {
-        return true;
-    }
-
-    if (mon->type == MONS_DANCING_WEAPON
-        && mon->primary_weapon()
-        && get_weapon_brand(*mon->primary_weapon()) == SPWPN_VENOM)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 // Monsters considered as "slime" for Jiyva.
 bool mons_class_is_slime(monster_type mc)
 {
