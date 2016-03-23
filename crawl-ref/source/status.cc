@@ -1033,8 +1033,8 @@ const char *duration_mid_message(duration_type dur)
 }
 
 /**
- * How much should the duration be decreased by when it hits 50% (to fuzz the
- * remaining time), if at all?
+ * How much should the duration be decreased by when it hits the midpoint (to
+ * fuzz the remaining time), if at all?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      A random value to reduce the remaining duration by; may be 0.
@@ -1042,6 +1042,19 @@ const char *duration_mid_message(duration_type dur)
 int duration_mid_offset(duration_type dur)
 {
     return _lookup_duration(dur)->decr.mid_msg.offset();
+}
+
+/**
+ * At what number of turns remaining is the given duration considered to be
+ * 'expiring', for purposes of messaging & status light colouring?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The maximum number of remaining turns at which the duration
+ *              is considered 'expiring'; may be 0.
+ */
+int duration_expire_point(duration_type dur)
+{
+    return _lookup_duration(dur)->expire_threshold * BASELINE_DELAY;
 }
 
 /**

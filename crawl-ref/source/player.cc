@@ -3350,63 +3350,6 @@ int check_stealth()
     return stealth;
 }
 
-// Returns the medium duration value which is usually announced by a special
-// message ("XY is about to time out") or a change of colour in the
-// status display.
-// Note that these values cannot be relied on when playing since there are
-// random decrements precisely to avoid this.
-int get_expiration_threshold(duration_type dur)
-{
-    switch (dur)
-    {
-    case DUR_PETRIFYING:
-        return 1 * BASELINE_DELAY;
-
-    case DUR_QUAD_DAMAGE:
-        return 3 * BASELINE_DELAY; // per client.qc
-
-    case DUR_FIRE_SHIELD:
-    case DUR_SILENCE: // no message
-        return 5 * BASELINE_DELAY;
-
-    case DUR_REGENERATION:
-    case DUR_RESISTANCE:
-    case DUR_SWIFTNESS:
-    case DUR_INVIS:
-    case DUR_HASTE:
-    case DUR_BERSERK:
-    case DUR_ICY_ARMOUR:
-    case DUR_DEATH_CHANNEL:
-    case DUR_SHROUD_OF_GOLUBRIA:
-    case DUR_INFUSION:
-    case DUR_SONG_OF_SLAYING:
-    case DUR_TROGS_HAND:
-    case DUR_QAZLAL_FIRE_RES:
-    case DUR_QAZLAL_COLD_RES:
-    case DUR_QAZLAL_ELEC_RES:
-    case DUR_QAZLAL_AC:
-    case DUR_DARKNESS:
-        return 6 * BASELINE_DELAY;
-
-    case DUR_FLIGHT:
-    case DUR_TRANSFORMATION: // not on status
-    case DUR_DEATHS_DOOR:    // not on status
-    case DUR_SLIMIFY:
-    case DUR_DEVICE_SURGE:
-        return 10 * BASELINE_DELAY;
-
-    // These get no messages when they "flicker".
-    case DUR_CONFUSING_TOUCH:
-        return 20 * BASELINE_DELAY;
-
-    case DUR_ANTIMAGIC:
-        return you.hp_max; // not so severe anymore
-
-    default:
-        return 0;
-    }
-}
-
 // Is a given duration about to expire?
 bool dur_expiring(duration_type dur)
 {
@@ -3414,7 +3357,7 @@ bool dur_expiring(duration_type dur)
     if (value <= 0)
         return false;
 
-    return value <= get_expiration_threshold(dur);
+    return value <= duration_expire_point(dur);
 }
 
 static void _output_expiring_message(duration_type dur, const char* msg)

@@ -984,7 +984,6 @@ int slaying_bonus(bool ranged = false);
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
 
-int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status();
 
