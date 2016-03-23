@@ -988,8 +988,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             "draining",
             "speed",
             "vorpal",
+#if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",
+#endif
             "vampirism",
             "pain",
             "antimagic",
@@ -1009,7 +1011,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
-            "shielding",
 #endif
             "debug randart",
         };

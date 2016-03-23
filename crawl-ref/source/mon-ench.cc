@@ -2060,9 +2060,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "sleepy",
 #endif
-    "held", "battle_frenzy",
+    "held",
 #if TAG_MAJOR_VERSION == 34
-    "temp_pacif",
+     "battle_frenzy", "temp_pacif",
 #endif
     "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
@@ -2081,10 +2081,17 @@ static const char *enchant_names[] =
 #endif
     "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "flight",
-    "liquefying", "tornado", "fake_abjuration",
+    "withdrawn",
+#if TAG_MAJOR_VERSION == 34
+    "attached",
+#endif
+    "guardian_timer", "flight", "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
+    "inner_flame",
+#if TAG_MAJOR_VERSION == 34
+    "roused",
+#endif
+    "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34

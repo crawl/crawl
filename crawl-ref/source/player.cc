@@ -7109,7 +7109,6 @@ bool player::sicken(int amount)
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    learned_something_new(HINT_YOU_SICK);
     return true;
 }
 

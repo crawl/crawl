@@ -2174,8 +2174,12 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     // readable, but should not be used for new games
 #if TAG_CHR_FORMAT == 0
     if (major == 34
+#if TAG_MAJOR_VERSION == 34
         && (minor >= TAG_MINOR_EXPLORE_MODE
             && minor < TAG_MINOR_FIX_EXPLORE_MODE))
+#else
+        && (minor >= 118 && minor < 127))
+#endif
     {
         you.explore = unmarshallBoolean(th);
     }
@@ -5184,6 +5188,8 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
              || mi.type == MONS_SPELLFORGED_SERVITOR)
             && th.getMinorVersion() < TAG_MINOR_EXORCISE)
         && th.getMinorVersion() >= TAG_MINOR_GHOST_SINV
+#else
+        )
 #endif
         )
     {

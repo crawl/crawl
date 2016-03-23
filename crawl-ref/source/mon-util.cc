@@ -1121,7 +1121,9 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
  */
 static void _destroy_mimic_feature(const coord_def &pos)
 {
+#if TAG_MAJOR_VERSION == 34
     const dungeon_feature_type feat = grd(pos);
+#endif
 
     unnotice_feature(level_pos(level_id::current(), pos));
     grd(pos) = DNGN_FLOOR;
@@ -4707,7 +4709,9 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "growls",
         "hisses",
         "sneers",       // S_DEMON_TAUNT
+#if TAG_MAJOR_VERSION == 34
         "caws",
+#endif
         "says",         // S_CHERUB -- they just speak normally.
         "rumbles",
         "buggily says", // NUM_SHOUTS
