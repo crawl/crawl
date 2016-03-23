@@ -160,7 +160,9 @@ LUARET1(you_contaminated, number, get_contamination_level())
 LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
+#if TAG_MAJOR_VERSION == 34
 LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
+#endif
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
@@ -607,7 +609,9 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
+#if TAG_MAJOR_VERSION == 34
     { "antimagic",    you_antimagic },
+#endif
     { "status",       you_status },
 
     { "can_consume_corpses",      you_can_consume_corpses },

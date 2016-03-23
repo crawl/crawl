@@ -1866,8 +1866,8 @@ enum duration_type
 #endif
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
-    DUR_ANTIMAGIC,
 #if TAG_MAJOR_VERSION == 34
+    DUR_ANTIMAGIC,
     DUR_SPIRIT_HOWL,
 #endif
     DUR_INFUSION,

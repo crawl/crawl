@@ -132,11 +132,6 @@ static const duration_def duration_data[] =
       {{ "You feel a little less agile now.", []() {
           notify_stat_change(STAT_DEX, -5, true);
       }}}},
-    { DUR_ANTIMAGIC,
-      RED, "-Mag",
-      "antimagic", "",
-      "You have trouble accessing your magic.", D_DISPELLABLE | D_EXPIRES,
-      {{ "You regain control over your magic." }}, 27},
     { DUR_BERSERK,
       BLUE, "Berserk",
       "berserking", "berserker",
@@ -631,5 +626,10 @@ static const duration_def duration_data[] =
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
     { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
+    { DUR_ANTIMAGIC,
+        RED, "-Mag",
+        "antimagic", "",
+        "You have trouble accessing your magic.", D_DISPELLABLE | D_EXPIRES,
+        {{ "You regain control over your magic." }}, 27},
 #endif
 };
