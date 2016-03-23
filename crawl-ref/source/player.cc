@@ -3385,6 +3385,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_QAZLAL_COLD_RES:
     case DUR_QAZLAL_ELEC_RES:
     case DUR_QAZLAL_AC:
+    case DUR_DARKNESS:
         return 6 * BASELINE_DELAY;
 
     case DUR_FLIGHT:
