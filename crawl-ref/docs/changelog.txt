@@ -183,6 +183,7 @@ Spells
   damage bonus as before.
 * Song of Slaying now increases its slaying bonus with every kill, but caps at
   +9 total.
+* Tukima's Dance's power multiplier has been reduced.
 * Spectral Weapon now bases the strength of the summoned weapon on spell power
   instead of weapon skill.
 * Alistair's Intoxication is now level 5 and gives Vertigo status instead of
@@ -200,6 +201,7 @@ Interface
 * Earth elementalists now have their stones start on b.
 * Characters starting with a primary ranged weapon now have their melee weapon
   on b by default.
+* New autofight_warning option, to combat accidentally holding down tab.
 * An option is added to the butchering prompt to allow butchering only
   (e)dible corpses.
 * Auto-eat now triggers for ghouls if they are rotted.
