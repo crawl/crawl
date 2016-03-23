@@ -2169,20 +2169,14 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
+
     // this was mistakenly inserted in the middle for a few tag versions - this
     // just makes sure that games generated in that time period are still
     // readable, but should not be used for new games
 #if TAG_CHR_FORMAT == 0
-    if (major == 34
-#if TAG_MAJOR_VERSION == 34
-        && (minor >= TAG_MINOR_EXPLORE_MODE
-            && minor < TAG_MINOR_FIX_EXPLORE_MODE))
-#else
-        && (minor >= 118 && minor < 127))
-#endif
-    {
+    // TAG_MINOR_EXPLORE_MODE and TAG_MINOR_FIX_EXPLORE_MODE
+    if (major == 34 && (minor >= 121 && minor < 130))
         you.explore = unmarshallBoolean(th);
-    }
 #endif
 
     crawl_state.type = (game_type) unmarshallUByte(th);
@@ -2211,9 +2205,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     if (major > 34 || major == 34 && minor >= 29)
         crawl_state.map = unmarshallString2(th);
 
-#if TAG_MAJOR_VERSION == 34
-    if (minor >= TAG_MINOR_FIX_EXPLORE_MODE)
-#endif
+    if (major > 34 || major == 34 && minor >= 130)
         you.explore = unmarshallBoolean(th);
 }
 
