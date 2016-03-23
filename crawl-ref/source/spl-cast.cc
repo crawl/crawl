@@ -1384,13 +1384,16 @@ spret_type your_spells(spell_type spell, int powc,
     int fail = 0;
     bool antimagic = false; // lost time but no other penalty
 
+#if TAG_MAJOR_VERSION == 34
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
         && x_chance_in_y(you.duration[DUR_ANTIMAGIC] / 3, you.hp_max))
     {
         mpr("You fail to access your magic.");
         fail = antimagic = true;
     }
-    else if (allow_fail)
+    else
+#endif
+    if (allow_fail)
     {
         int spfl = random2avg(100, 3);
 
