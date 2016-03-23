@@ -1382,9 +1382,9 @@ spret_type your_spells(spell_type spell, int powc,
                                       : GOD_NO_GOD;
 
     int fail = 0;
+#if TAG_MAJOR_VERSION == 34
     bool antimagic = false; // lost time but no other penalty
 
-#if TAG_MAJOR_VERSION == 34
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
         && x_chance_in_y(you.duration[DUR_ANTIMAGIC] / 3, you.hp_max))
     {
@@ -1482,8 +1482,10 @@ spret_type your_spells(spell_type spell, int powc,
     }
     case SPRET_FAIL:
     {
+#if TAG_MAJOR_VERSION == 34
         if (antimagic)
             return SPRET_FAIL;
+#endif
 
         mprf("You miscast %s.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);
