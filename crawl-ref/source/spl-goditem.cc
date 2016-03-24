@@ -769,6 +769,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     monster *mon;
     string targname;
 
+    vector<coord_def> veto_spots(8);
+    for (adjacent_iterator ai(where); ai; ++ai)
+        veto_spots.push_back(*ai);
+    const vector<coord_def> adj_spots = veto_spots;
+
     if (zin)
     {
         // We need to get this now because we won't be able to see
@@ -777,11 +782,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
-
-        vector<coord_def> veto_spots(8);
-        for (adjacent_iterator ai(where); ai; ++ai)
-            veto_spots.push_back(*ai);
-        vector<coord_def> adj_spots = veto_spots;
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -834,6 +834,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         }
     }
 
+    veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
@@ -846,9 +847,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor* act = actor_at(*ai))
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, act, true);
+                get_push_space(*ai, newpos, act, true, &veto_spots);
                 ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
+                veto_spots.push_back(newpos);
             }
         }
 
