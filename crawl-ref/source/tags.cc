@@ -1329,6 +1329,13 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.explore);
 }
 
+/// is a custom scoring mechanism being stored?
+static bool _calc_score_exists() {
+    lua_stack_cleaner clean(dlua);
+    dlua.pushglobal("dgn.persist.calc_score");
+    return !lua_isnil(dlua, -1);
+}
+
 static void tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
@@ -1620,6 +1627,10 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.game_seeds[i]);
 
     CANARY;
+
+    // don't let vault caching errors leave a normal game with sprint scoring
+    if (!crawl_state.game_is_sprint())
+        ASSERT(!_calc_score_exists());
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
