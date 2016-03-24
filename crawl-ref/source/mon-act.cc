@@ -792,6 +792,7 @@ static bool _handle_evoke_equipment(monster& mons)
     // TODO: check non-ring, non-amulet equipment
     item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
     if (mons.asleep()
+        || mons_is_confused(&mons)
         || !jewel
         || !one_chance_in(3)
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
@@ -1189,6 +1190,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_confused(&mons)
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || coinflip()
@@ -1260,14 +1262,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     beem.aux_source =
         rod->name(DESC_QUALNAME, false, true, false, false);
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (mzap == SPELL_THUNDERBOLT)
+    if (mzap == SPELL_THUNDERBOLT)
         zap = _thunderbolt_tracer(mons, power, beem.target);
     else if (mzap == SPELL_CLOUD_CONE)
         zap = mons_should_cloud_cone(&mons, power, beem.target);
