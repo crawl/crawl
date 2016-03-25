@@ -895,9 +895,10 @@ void do_curse_item(item_def &item, bool quiet)
  */
 void do_uncurse_item(item_def &item, bool no_ash, bool check_bondage)
 {
+    const bool in_inv = in_inventory(item);
     if (!item.cursed())
     {
-        if (in_inventory(item))
+        if (in_inv)
             item.flags |= ISFLAG_KNOW_CURSE;
         return;
     }
@@ -908,7 +909,7 @@ void do_uncurse_item(item_def &item, bool no_ash, bool check_bondage)
         return;
     }
 
-    if (in_inventory(item))
+    if (in_inv)
     {
         if (you.equip[EQ_WEAPON] == item.link)
         {
@@ -919,7 +920,7 @@ void do_uncurse_item(item_def &item, bool no_ash, bool check_bondage)
     }
     item.flags &= (~ISFLAG_CURSED);
 
-    if (check_bondage)
+    if (check_bondage && in_inv)
         ash_check_bondage();
 }
 
