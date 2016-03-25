@@ -755,7 +755,7 @@ IDEF(damage)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
+    if (is_weapon(*item)
         || item->base_type == OBJ_MISSILES)
     {
         lua_pushnumber(ls, property(*item, PWPN_DAMAGE));
@@ -771,7 +771,7 @@ IDEF(accuracy)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES)
+    if (is_weapon(*item))
         lua_pushnumber(ls, property(*item, PWPN_HIT));
     else
         lua_pushnil(ls);
@@ -784,7 +784,7 @@ IDEF(delay)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES)
+    if (is_weapon(*item))
         lua_pushnumber(ls, property(*item, PWPN_SPEED));
     else
         lua_pushnil(ls);
