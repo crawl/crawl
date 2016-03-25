@@ -4518,6 +4518,9 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.used_count = 0;
     }
+
+    if (item.base_type == OBJ_RODS && item.cursed())
+        do_uncurse_item(item); // rods can't be cursed anymore
 #endif
 
     if (is_unrandom_artefact(item))
