@@ -238,7 +238,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
     if (equipped && item.cursed())
     {
-        // Misc. items/rods can always be evoked, cursed or not.
+        // Evocable items (e.g. dispater staff) are still evocable when cursed.
         if (item_is_evokable(item))
             return true;
 
