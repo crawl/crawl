@@ -205,7 +205,7 @@ static string _beogh_bless_melee_weapon(monster* mon)
     {
         if (wpn.cursed())
         {
-            do_uncurse_item(wpn, true, true);
+            do_uncurse_item(wpn, true);
             return "uncursed armament";
         }
 

@@ -883,8 +883,17 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
-                     bool check_bondage)
+/**
+ * Attempt to un-curse the given item.
+ *
+ * @param item      The item in question.
+ * @param no_ash    Whether Ashenzari should attempt to intercept the curse
+ *                  removal. (I.e.: it's something removing curses from your
+ *                  items that's not a scroll of remove curse.)
+ * @param check_bondage     Whether to update the player's Ash bondage status.
+ *                          (Ash ?rc delays this until later.)
+ */
+void do_uncurse_item(item_def &item, bool no_ash, bool check_bondage)
 {
     if (!item.cursed())
     {
