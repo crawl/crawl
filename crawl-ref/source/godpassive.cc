@@ -1174,9 +1174,7 @@ monster* shadow_monster(bool equip)
     item_def* wpn = you.weapon();
     if (equip
         && wpn
-        && (wpn->base_type == OBJ_WEAPONS
-            || wpn->base_type == OBJ_STAVES
-            || wpn->base_type == OBJ_RODS))
+        && (wpn->base_type == OBJ_WEAPONS || wpn->base_type == OBJ_STAVES))
     {
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
@@ -1186,11 +1184,6 @@ monster* shadow_monster(bool equip)
         {
             new_item.base_type = OBJ_WEAPONS;
             new_item.sub_type  = WPN_STAFF;
-        }
-        else if (wpn->base_type == OBJ_RODS)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_ROD;
         }
         else
         {

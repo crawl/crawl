@@ -192,11 +192,6 @@ int attack::calc_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
-            else if (weapon->base_type == OBJ_RODS)
-            {
-                mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->rod_plus;
-            }
         }
 
         // slaying bonus
@@ -235,9 +230,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        if (using_weapon() && weapon->base_type == OBJ_RODS)
-            mhit += weapon->rod_plus;
     }
 
     // Penalties for both players and monsters:
@@ -1244,10 +1236,12 @@ int attack::player_apply_misc_modifiers(int damage)
  */
 int attack::get_weapon_plus()
 {
-    if (weapon->base_type == OBJ_RODS)
-        return weapon->rod_plus;
-    if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
+    if (weapon->base_type == OBJ_STAVES
+        || weapon->sub_type == WPN_BLOWGUN
+        || weapon->base_type == OBJ_RODS)
+    {
         return 0;
+    }
     return weapon->plus;
 }
 

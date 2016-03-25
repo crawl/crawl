@@ -244,9 +244,7 @@ void seen_item(const item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {
-    return item.base_type == OBJ_WEAPONS
-           || item.base_type == OBJ_STAVES
-           || item.base_type == OBJ_RODS;
+    return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
 }
 
 void remove_whitespace(string &str);

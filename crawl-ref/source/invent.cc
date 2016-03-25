@@ -1547,11 +1547,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // Rods are special-cased here, since I'm worried about the effects on
-    // monster behaviour of no longer counting them as melee weapons.
-    if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
-        return true;
-
     // The consequences of evokables are generally known unless it's a deck
     // and you don't know what kind of a deck it is.
     if (item.base_type == OBJ_MISCELLANY && !is_deck(item)
@@ -1964,7 +1959,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    if (is_weapon(item))
+    if (is_weapon(item) || item.base_type == OBJ_RODS)
         return you.species != SP_FELID;
 
     // The lantern needs to be wielded to be used.

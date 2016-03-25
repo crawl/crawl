@@ -4221,8 +4221,8 @@ void unmarshallItem(reader &th, item_def &item)
         item.plus = 1;
     }
 
-    // was spiked flail; rods can't spawn
-    if (item.is_type(OBJ_WEAPONS, WPN_ROD)
+    // was spiked flail
+    if (item.is_type(OBJ_WEAPONS, WPN_SPIKED_FLAIL)
         && th.getMinorVersion() <= TAG_MINOR_FORGOTTEN_MAP)
     {
         item.sub_type = WPN_FLAIL;

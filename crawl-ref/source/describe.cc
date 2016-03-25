@@ -1925,12 +1925,6 @@ string get_item_description(const item_def &item, bool verbose,
                 description << desc;
         }
 
-        {
-            string stats = "\n";
-            _append_weapon_stats(stats, item);
-            description << stats;
-        }
-        description << "\n\nIt falls into the 'Maces & Flails' category.";
         break;
 
     case OBJ_STAVES:

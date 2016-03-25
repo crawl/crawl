@@ -393,7 +393,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
     // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item))
+    if (!is_weapon(item) && item.base_type != OBJ_RODS)
     {
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
@@ -407,7 +407,10 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-            mpr("You can't use weapons.");
+        {
+            mprf("You can't use %s.",
+                 item.base_type == OBJ_RODS ? "rods" : "weapons");
+        }
         return false;
     }
 
