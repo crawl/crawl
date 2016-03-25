@@ -1174,7 +1174,7 @@ monster* shadow_monster(bool equip)
     item_def* wpn = you.weapon();
     if (equip
         && wpn
-        && (wpn->base_type == OBJ_WEAPONS || wpn->base_type == OBJ_STAVES))
+        && is_weapon(*wpn))
     {
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
