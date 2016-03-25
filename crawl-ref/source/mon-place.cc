@@ -2280,48 +2280,35 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     switch (mon_type)
     {
     case MONS_TORPOR_SNAIL:
+    {
         natural_leader = true; // snails are natural-born leaders. fact.
 
-        // would be nice to support more branches, generically...
-        switch (you.where_are_you)
+        struct band_choice { band_type band; int min; int max; };
+        typedef vector<pair<band_choice, int>> band_weights;
+        const static map<branch_type, band_weights> band_pick =
         {
-            case BRANCH_LAIR:
-                band = random_choose_weighted(5, BAND_YAKS,
-                                              2, BAND_DEATH_YAKS,
-                                              1, BAND_SHEEP,
-                                              0);
-                break;
-            case BRANCH_SPIDER:
-                band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
-                break;
-            case BRANCH_DEPTHS:
-                band = BAND_RANDOM_SINGLE;
-                break;
-            default:
-                break;
-        }
+            // branch              band             #min #max weight
+            { BRANCH_LAIR,   { { { BAND_YAKS,          2, 5 },  5 },
+                               { { BAND_DEATH_YAKS,    1, 2 },  2 },
+                               { { BAND_SHEEP,         5, 8 },  1 },
+                             } },
+            { BRANCH_SPIDER, { { { BAND_REDBACK,       2, 4 },  1 },
+                               { { BAND_RANDOM_SINGLE, 1, 1 },  1 },
+                             } },
+            { BRANCH_DEPTHS, { { { BAND_RANDOM_SINGLE, 1, 1 },  1 },
+                             } },
+        };
 
-        switch (band)
+        if (const auto *weights = map_find(band_pick, you.where_are_you))
         {
-            case BAND_YAKS:
-                band_size = 2 + random2(4); // 2-5
-                break;
-            case BAND_DEATH_YAKS:
-                band_size = 1 + random2(2); // 1-2
-                break;
-            case BAND_SHEEP:
-                band_size = 5 + random2(4); // 5-8
-                break;
-            case BAND_REDBACK:
-                band_size = 2 + random2(3); // 2-4
-                break;
-            case BAND_RANDOM_SINGLE:
-                band_size = 1;
-                break;
-            default:
-                break;
+            if (const auto *chosen = random_choose_weighted(*weights))
+            {
+                band = chosen->band;
+                band_size = random_range(chosen->min, chosen->max);
+            }
         }
         break;
+    }
 
     case MONS_SATYR:
         if (!one_chance_in(3))
