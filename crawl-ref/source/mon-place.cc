@@ -2026,6 +2026,235 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     return true;
 }
 
+/// Under what conditions should a band spawn with a monster?
+struct band_conditions {
+    int chance_denom; ///< A 1/x chance for the band to appear.
+    int min_depth; ///< The minimum absdepth for the band.
+    function<bool()> custom_condition; ///< Additional conditions.
+
+    /// Are the conditions met?
+    bool met() const
+    {
+        return (!chance_denom || one_chance_in(chance_denom))
+               && (!min_depth || env.absdepth0 >= min_depth)
+               && (!custom_condition || custom_condition());
+    }
+};
+
+/// Information about a band of followers that may spawn with some monster.
+struct band_info {
+    /// The type of the band; used to determine the type of followers.
+    band_type type;
+    /// The min & max # of followers; doesn't count the leader.
+    random_var range;
+    /// Should the band followers try very hard to stick to the leader?
+    bool natural_leader;
+};
+
+/// One or more band_infos, with conditions.
+struct band_set {
+    /// When should the band actually be generated?
+    band_conditions conditions;
+    /// The bands to be selected between, with equal weight.
+    vector<band_info> bands;
+};
+
+static const band_conditions centaur_band_condition
+    = { 3, 10, []() { return !player_in_branch(BRANCH_SHOALS); }};
+
+// warrior & mage spawn alone more frequently at shallow depths of Snake
+static const band_conditions naga_band_condition
+    = { 0, 0, []() { return !player_in_branch(BRANCH_SNAKE)
+                            || x_chance_in_y(you.depth, 5); }};
+
+/// can we spawn dracs in the current branch?
+static const function<bool()> drac_branch
+    = []() { return player_in_connected_branch(); };
+
+/// non-classed draconian band description
+static const band_set basic_drac_set = { {3, 19, drac_branch},
+                                         {{BAND_DRACONIAN, {2, 5} }}};
+
+/// classed draconian band description
+static const band_set classy_drac_set = { {0, 21, drac_branch},
+                                          {{BAND_DRACONIAN, {3, 7} }}};
+
+// javelineer & impaler
+static const band_conditions mf_band_condition = { 0, 0, []() {
+    return !player_in_branch(BRANCH_DEPTHS) &&
+          (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5));
+}};
+
+/// For each monster, what band or bands may follow them?
+static const map<monster_type, band_set> bands_by_leader = {
+    { MONS_ORC,             { {2}, {{ BAND_ORCS, {2, 5} }}}},
+    { MONS_ORC_WIZARD,      { {}, {{ BAND_ORCS, {2, 5} }}}},
+    { MONS_ORC_PRIEST,      { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
+    { MONS_ORC_WARRIOR,     { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
+    { MONS_ORC_WARLORD,     { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
+    { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_HIGH_PRIEST, {4, 8}, true }}}},
+    { MONS_BIG_KOBOLD,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
+    { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
+    { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
+    { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
+    { MONS_FLYING_SKULL,    { {}, {{ BAND_FLYING_SKULLS, {2, 6} }}}},
+    { MONS_SLIME_CREATURE,  { {}, {{ BAND_SLIME_CREATURES, {2, 6} }}}},
+    { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
+    { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
+    { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
+    { MONS_HELL_HOUND,      { {}, {{ BAND_HELL_HOUNDS, {2, 5} }}}},
+    { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
+    { MONS_MARGERY,         { {}, {{ BAND_HELL_KNIGHTS, {4, 8}, true }}}},
+    { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
+    { MONS_JOSEPHINE,       { {}, {{ BAND_JOSEPHINE, {3, 6}, true }}}},
+    { MONS_NECROMANCER,     { {}, {{ BAND_NECROMANCER, {3, 6}, true }}}},
+    { MONS_VAMPIRE_MAGE,    { {3}, {{ BAND_JIANGSHI, {2, 4}, true }}}},
+    { MONS_JIANGSHI,        { {}, {{ BAND_JIANGSHI, {0, 2} }}}},
+    { MONS_GNOLL,           { {0, 1}, {{ BAND_GNOLLS, {2, 4} }}}},
+    { MONS_GNOLL_SHAMAN,    { {}, {{ BAND_GNOLLS, {3, 6} }}}},
+    { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6} }}}},
+    { MONS_DEATH_KNIGHT,    { {0, 0, []() { return x_chance_in_y(2, 3); }},
+                                  {{ BAND_DEATH_KNIGHT, {3, 5}, true }}}},
+    { MONS_GRUM,            { {}, {{ BAND_WOLVES, {2, 5}, true }}}},
+    { MONS_WOLF,            { {}, {{ BAND_WOLVES, {2, 6} }}}},
+    { MONS_CENTAUR_WARRIOR, { centaur_band_condition,
+                                  {{ BAND_CENTAURS, {2, 6}, true }}}},
+    { MONS_CENTAUR, { centaur_band_condition, {{ BAND_CENTAURS, {2, 6} }}}},
+    { MONS_YAKTAUR_CAPTAIN, { {2}, {{ BAND_YAKTAURS, {2, 5}, true }}}},
+    { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
+    { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
+    { MONS_INSUBSTANTIAL_WISP, { {}, {{ BAND_INSUBSTANTIAL_WISPS, {2, 6} }}}},
+    { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
+    { MONS_BALRUG,          { {}, {{ BAND_BALRUG, {2, 5}, true }}}},
+    { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},
+    { MONS_EXECUTIONER,     { {2}, {{ BAND_EXECUTIONER, {1, 4}, true }}}},
+    { MONS_PANDEMONIUM_LORD, { {}, {{ BAND_PANDEMONIUM_LORD, {1, 4}, true }}}},
+    { MONS_HELLWING,        { {2}, {{ BAND_HELLWING, {1, 5} }}}},
+    { MONS_DEEP_ELF_KNIGHT, { {2}, {{ BAND_DEEP_ELF_KNIGHT, {3, 5} }}}},
+    { MONS_DEEP_ELF_ARCHER, { {2}, {{ BAND_DEEP_ELF_KNIGHT, {3, 5} }}}},
+    { MONS_DEEP_ELF_HIGH_PRIEST, { {2}, {{ BAND_DEEP_ELF_HIGH_PRIEST, {3, 7},
+                                           true }}}},
+    { MONS_KOBOLD_DEMONOLOGIST, { {2}, {{ BAND_KOBOLD_DEMONOLOGIST, {3, 9} }}}},
+    { MONS_GUARDIAN_SERPENT, { {}, {{ BAND_GUARDIAN_SERPENT, {2, 6} }}}},
+    { MONS_NAGA_MAGE,       { naga_band_condition, {{ BAND_NAGAS, {2, 5} }}}},
+    { MONS_NAGA_WARRIOR,    { naga_band_condition, {{ BAND_NAGAS, {2, 5} }}}},
+    { MONS_NAGA_SHARPSHOOTER, { {2}, {{ BAND_NAGA_SHARPSHOOTER, {1, 4} }}}},
+    { MONS_NAGA_RITUALIST,  { {}, {{ BAND_NAGA_RITUALIST, {3, 6} }}}},
+    { MONS_RIVER_RAT,       { {}, {{ BAND_GREEN_RATS, {4, 10} }}}},
+    { MONS_HELL_RAT,        { {}, {{ BAND_HELL_RATS, {3, 7} }}}},
+    { MONS_SHEEP,           { {}, {{ BAND_SHEEP, {3, 8} }}}},
+    { MONS_GHOUL,           { {}, {{ BAND_GHOULS, {2, 5} }}}},
+    { MONS_KIRKE,           { {}, {{ BAND_HOGS, {3, 8}, true }}}},
+    { MONS_HOG,             { {}, {{ BAND_HOGS, {1, 4} }}}},
+    { MONS_VAMPIRE_MOSQUITO, { {}, {{ BAND_VAMPIRE_MOSQUITOES, {1, 4} }}}},
+    { MONS_FIRE_BAT,        { {}, {{ BAND_FIRE_BATS, {1, 4} }}}},
+    { MONS_DEEP_TROLL_EARTH_MAGE, { {}, {{ BAND_DEEP_TROLLS, {3, 6} }}}},
+    { MONS_DEEP_TROLL_SHAMAN, { {}, {{ BAND_DEEP_TROLL_SHAMAN, {3, 6} }}}},
+    { MONS_HELL_HOG,        { {}, {{ BAND_HELL_HOGS, {1, 4} }}}},
+    { MONS_BOGGART,         { {}, {{ BAND_BOGGARTS, {2, 5} }}}},
+    { MONS_PRINCE_RIBBIT,   { {}, {{ BAND_BLINK_FROGS, {2, 5}, true }}}},
+    { MONS_BLINK_FROG,      { {}, {{ BAND_BLINK_FROGS, {2, 5} }}}},
+    { MONS_WIGHT,           { {}, {{ BAND_WIGHTS, {2, 5} }}}},
+    { MONS_ANCIENT_CHAMPION, { {2}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
+    { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
+    { MONS_CYCLOPS,          { { 0, 0, []() {
+        return one_chance_in(5) || player_in_branch(BRANCH_SHOALS); }},
+                                  {{ BAND_SHEEP, {2, 5}, true }}}},
+    { MONS_ALLIGATOR,       { {5}, {{ BAND_ALLIGATOR, {1, 2}, true }}}},
+    { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
+    { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
+    // Journey -- Added Draconian Packs
+    { MONS_WHITE_DRACONIAN, basic_drac_set },
+    { MONS_RED_DRACONIAN,   basic_drac_set },
+    { MONS_PURPLE_DRACONIAN, basic_drac_set },
+    { MONS_MOTTLED_DRACONIAN, basic_drac_set },
+    { MONS_YELLOW_DRACONIAN, basic_drac_set },
+    { MONS_BLACK_DRACONIAN, basic_drac_set },
+    { MONS_GREEN_DRACONIAN, basic_drac_set },
+    { MONS_GREY_DRACONIAN, basic_drac_set },
+    { MONS_PALE_DRACONIAN, basic_drac_set },
+    { MONS_DRACONIAN_CALLER, classy_drac_set },
+    { MONS_DRACONIAN_MONK, classy_drac_set },
+    { MONS_DRACONIAN_SCORCHER, classy_drac_set },
+    { MONS_DRACONIAN_KNIGHT, classy_drac_set },
+    { MONS_DRACONIAN_ANNIHILATOR, classy_drac_set },
+    { MONS_DRACONIAN_ZEALOT, classy_drac_set },
+    { MONS_DRACONIAN_SHIFTER, classy_drac_set },
+    // yup, scary
+    { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
+    { MONS_ILSUIW,          { {}, {{ BAND_ILSUIW, {3, 6} }}}},
+    { MONS_AZRAEL,          { {}, {{ BAND_AZRAEL, {4, 9}, true }}}},
+    { MONS_DUVESSA,         { {}, {{ BAND_DUVESSA, {1, 2} }}}},
+    { MONS_KHUFU,           { {}, {{ BAND_KHUFU, {3, 4}, true }}}},
+    { MONS_GOLDEN_EYE,      { {}, {{ BAND_GOLDEN_EYE, {1, 6} }}}},
+    { MONS_PIKEL,           { {}, {{ BAND_PIKEL, {4, 5}, true }}}},
+    { MONS_MERFOLK_AQUAMANCER, { {}, {{ BAND_MERFOLK_AQUAMANCER, {3, 5} }}}},
+    { MONS_MERFOLK_JAVELINEER, { mf_band_condition,
+                                  {{ BAND_MERFOLK_JAVELINEER, {2, 5} }}}},
+    { MONS_MERFOLK_IMPALER, { mf_band_condition,
+                                  {{ BAND_MERFOLK_IMPALER, {2, 5} }}}},
+    { MONS_ELEPHANT,        { {}, {{ BAND_ELEPHANT, {2, 6} }}}},
+    { MONS_REDBACK,         { {}, {{ BAND_REDBACK, {1, 6} }}}},
+    { MONS_ENTROPY_WEAVER,  { {}, {{ BAND_REDBACK, {1, 5} }}}},
+    { MONS_JUMPING_SPIDER,  { {2}, {{ BAND_JUMPING_SPIDER, {1, 6} }}}},
+    { MONS_TARANTELLA,      { {2}, {{ BAND_TARANTELLA, {1, 5} }}}},
+    { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
+                                   { BAND_VAULT_WARDEN, {2, 5}, true }}}},
+    { MONS_IRONHEART_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true },
+                                    { BAND_DEEP_ELF_HIGH_PRIEST, {3, 7}, true },
+                                    { BAND_OGRE_MAGE_EXTERN, {4, 8}, true }}}},
+    { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
+    { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
+    { MONS_SOJOBO,          { {}, {{ BAND_SOJOBO, {2, 3}, true }}}},
+    { MONS_SPRIGGAN_AIR_MAGE, { {}, {{ BAND_AIR_ELEMENTALS, {2, 4}, true }}}},
+    { MONS_SPRIGGAN_RIDER,  { {3}, {{ BAND_SPRIGGAN_RIDERS, {1, 3} }}}},
+    { MONS_SPRIGGAN_BERSERKER, { {2}, {{ BAND_SPRIGGANS, {2, 4} }}}},
+    { MONS_SPRIGGAN_DEFENDER, { {}, {{ BAND_SPRIGGAN_ELITES, {2, 5}, true }}}},
+    { MONS_THE_ENCHANTRESS, { {}, {{ BAND_ENCHANTRESS, {6, 11}, true }}}},
+    { MONS_SHAMBLING_MANGROVE, { {4}, {{ BAND_SPRIGGAN_RIDERS, {1, 2} }}}},
+    { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3} }}}},
+    { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
+    { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
+    { MONS_SALAMANDER_STORMCALLER, { {2}, {{ BAND_SALAMANDER_ELITES, {3, 5}}}}},
+    { MONS_MONSTROUS_DEMONSPAWN, { {2, 0, []() {
+        return !player_in_branch(BRANCH_WIZLAB); // hack for wizlab_wucad_mu
+    }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
+    { MONS_GELID_DEMONSPAWN, { {2}, {{ BAND_GELID_DEMONSPAWN, {1, 3} }}}},
+    { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
+    { MONS_PUTRID_DEMONSPAWN, { {2}, {{ BAND_PUTRID_DEMONSPAWN, {1, 3} }}}},
+    { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
+    { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 5} }}}},
+    { MONS_CHAOS_CHAMPION,  { {}, {{ BAND_CHAOS_CHAMPION, {1, 4} }}}},
+    { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 5} }}}},
+    { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 5} }}}},
+    { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 5} }}}},
+    { MONS_VASHNIA,         { {}, {{ BAND_VASHNIA, {3, 6}, true }}}},
+    { MONS_ROBIN,           { {}, {{ BAND_ROBIN, {10, 13}, true }}}},
+    { MONS_RAKSHASA,        { {2, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
+    { MONS_CEREBOV,         { {}, {{ BAND_CEREBOV, {5, 8}, true }}}},
+    { MONS_GLOORX_VLOQ,     { {}, {{ BAND_GLOORX_VLOQ, {5, 8}, true }}}},
+    { MONS_MNOLEG,          { {}, {{ BAND_MNOLEG, {5, 8}, true }}}},
+    { MONS_LOM_LOBON,       { {}, {{ BAND_LOM_LOBON, {5, 8}, true }}}},
+    { MONS_DEATH_SCARAB,    { {}, {{ BAND_DEATH_SCARABS, {3, 6} }}}},
+    { MONS_ANUBIS_GUARD,    { {2}, {{ BAND_ANUBIS_GUARD, {1, 2} }}}},
+    { MONS_SERAPH,          { {}, {{ BAND_HOLIES, {1, 4}, true }}}},
+    { MONS_IRON_GIANT,      { {}, {{ BAND_IRON_GIANT, {2, 5}, true }}}},
+    { MONS_SPARK_WASP,      { {0, 0, []() {
+        return you.where_are_you == BRANCH_DEPTHS;
+    }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
+    { MONS_HOWLER_MONKEY,   { {2, 6}, {{ BAND_HOWLER_MONKEY, {1, 4} }}}},
+
+
+    // special-cased band-sizes
+    { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
+    { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
+};
+
 static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool &natural_leader)
 {
@@ -2038,756 +2267,18 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     natural_leader = false;
     band_type band = BAND_NO_BAND;
 
+    const band_set* bands = map_find(bands_by_leader, mon_type);
+    if (bands && bands->conditions.met())
+    {
+        const band_info& band_desc = *random_iterator(bands->bands);
+        band = band_desc.type;
+        band_size = band_desc.range.roll();
+        natural_leader = band_desc.natural_leader;
+    }
+
+    // special cases...
     switch (mon_type)
     {
-    case MONS_ORC:
-        if (coinflip())
-            break;
-        // intentional fall-through {dlb}
-    case MONS_ORC_WIZARD:
-        band = BAND_ORCS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_ORC_PRIEST:
-    case MONS_ORC_WARRIOR:
-        band = BAND_ORC_WARRIOR;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_ORC_WARLORD:
-    case MONS_SAINT_ROKA:
-        band_size = 5 + random2(5);   // warlords have large bands
-        // intentional fall through
-    case MONS_ORC_KNIGHT:
-        band = BAND_ORC_KNIGHT;       // orcs + knight
-        band_size += 3 + random2(4);
-        natural_leader = true;
-        break;
-
-    case MONS_ORC_HIGH_PRIEST:
-        band = BAND_ORC_HIGH_PRIEST;
-        band_size = 4 + random2(4);
-        natural_leader = true;
-        break;
-
-    case MONS_BIG_KOBOLD:
-        if (env.absdepth0 > 3)
-        {
-            band = BAND_KOBOLDS;
-            band_size = 2 + random2(6);
-        }
-        break;
-
-    case MONS_KILLER_BEE:
-        band = BAND_KILLER_BEES;
-        band_size = 2 + random2(4);
-        break;
-
-    case MONS_CAUSTIC_SHRIKE:
-        band = BAND_CAUSTIC_SHRIKE;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_SHARD_SHRIKE:
-        band = BAND_SHARD_SHRIKE;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_FLYING_SKULL:
-        band = BAND_FLYING_SKULLS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_SLIME_CREATURE:
-        band = BAND_SLIME_CREATURES;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_YAK:
-        band = BAND_YAKS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_VERY_UGLY_THING:
-        if (env.absdepth0 < 19)
-            break;
-        band = BAND_VERY_UGLY_THINGS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_UGLY_THING:
-        if (env.absdepth0 < 13)
-            break;
-        band = BAND_UGLY_THINGS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_HELL_HOUND:
-        band = BAND_HELL_HOUNDS;
-        band_size = 2 + random2(3);
-        break;
-    case MONS_JACKAL:
-        band = BAND_JACKALS;
-        band_size = 1 + random2(3);
-        break;
-    case MONS_MARGERY:
-        natural_leader = true;
-    case MONS_HELL_KNIGHT:
-        band = BAND_HELL_KNIGHTS;
-        band_size = 4 + random2(4);
-        break;
-    case MONS_JOSEPHINE:
-        natural_leader = true;
-        band = BAND_JOSEPHINE;
-        band_size = 3 + random2(3);
-        break;
-    case MONS_NECROMANCER:
-        natural_leader = true;
-        band = BAND_NECROMANCER;
-        band_size = 3 + random2(3);
-        break;
-    case MONS_VAMPIRE_MAGE:
-        if (one_chance_in(3))
-        {
-            natural_leader = true;
-            band = BAND_JIANGSHI;
-            band_size = 2 + random2(2);
-        }
-        break;
-    case MONS_JIANGSHI:
-            band = BAND_JIANGSHI;
-            band_size = random2(3);
-        break;
-    case MONS_GNOLL:
-        if (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
-        {
-            band = BAND_GNOLLS;
-            band_size = (coinflip() ? 3 : 2);
-        }
-        break;
-    case MONS_GNOLL_SHAMAN:
-    case MONS_GNOLL_SERGEANT:
-        band = BAND_GNOLLS;
-        band_size = 3 + random2(4);
-        break;
-    case MONS_DEATH_KNIGHT:
-        if (x_chance_in_y(2, 3))
-        {
-            natural_leader = true;
-            band = BAND_DEATH_KNIGHT;
-            band_size = 3 + random2(2);
-        }
-        break;
-    case MONS_GRUM:
-        natural_leader = true;
-        band = BAND_WOLVES;
-        band_size = 2 + random2(3);
-        break;
-    case MONS_CENTAUR_WARRIOR:
-        natural_leader = true;
-    case MONS_CENTAUR:
-        if (env.absdepth0 > 9 && one_chance_in(3) && !player_in_branch(BRANCH_SHOALS))
-        {
-            band = BAND_CENTAURS;
-            band_size = 2 + random2(4);
-        }
-        break;
-
-    case MONS_YAKTAUR_CAPTAIN:
-        natural_leader = true;
-    case MONS_YAKTAUR:
-        if (coinflip())
-        {
-            band = BAND_YAKTAURS;
-            band_size = 2 + random2(3);
-        }
-        break;
-
-    case MONS_DEATH_YAK:
-        band = BAND_DEATH_YAKS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_INSUBSTANTIAL_WISP:
-        band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 2 + random2(4);
-        break;
-    case MONS_OGRE_MAGE:
-        natural_leader = true;
-        band = BAND_OGRE_MAGE;
-        band_size = 4 + random2(4);
-        break;
-    case MONS_BALRUG:
-        natural_leader = true;
-        band = BAND_BALRUG;
-        band_size = 2 + random2(3);
-        break;
-    case MONS_CACODEMON:
-        natural_leader = true;
-        band = BAND_CACODEMON;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_EXECUTIONER:
-        if (coinflip())
-        {
-            natural_leader = true;
-            band = BAND_EXECUTIONER;
-            band_size = 1 + random2(3);
-        }
-        break;
-
-    case MONS_PANDEMONIUM_LORD:
-        natural_leader = true;
-        band = BAND_PANDEMONIUM_LORD;
-        band_size = random_range(1, 3);
-        break;
-
-    case MONS_HELLWING:
-        if (coinflip())
-        {
-            band = BAND_HELLWING;
-            band_size = 1 + random2(4);
-        }
-        break;
-
-    case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_ELF_ARCHER:
-        if (coinflip())
-        {
-            band = BAND_DEEP_ELF_KNIGHT;
-            band_size = 3 + random2(2);
-        }
-        break;
-
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-        if (coinflip())
-        {
-            natural_leader = true;
-            band = BAND_DEEP_ELF_HIGH_PRIEST;
-            band_size = 3 + random2(4);
-        }
-        break;
-
-    case MONS_KOBOLD_DEMONOLOGIST:
-        if (coinflip())
-        {
-            band = BAND_KOBOLD_DEMONOLOGIST;
-            band_size = 3 + random2(6);
-        }
-        break;
-
-    case MONS_GUARDIAN_SERPENT:
-        band = BAND_GUARDIAN_SERPENT;
-        band_size = 2 + random2(4);
-        break;
-
-    case MONS_NAGA_MAGE:
-    case MONS_NAGA_WARRIOR:
-        // Spawn alone more frequently at shallow depths
-        if (player_in_branch(BRANCH_SNAKE) && !x_chance_in_y(you.depth, 5))
-            break;
-
-        band = BAND_NAGAS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_NAGA_SHARPSHOOTER:
-        if (coinflip())
-        {
-            band = BAND_NAGA_SHARPSHOOTER;
-            band_size = 1 + random2(3);
-        }
-        break;
-
-    case MONS_NAGA_RITUALIST:
-        band = BAND_NAGA_RITUALIST;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_WOLF:
-        band = BAND_WOLVES;
-        band_size = 2 + random2(4);
-        break;
-
-    case MONS_RIVER_RAT:
-        band = BAND_GREEN_RATS;
-        band_size = 4 + random2(6);
-        break;
-
-    case MONS_HELL_RAT:
-        band = BAND_HELL_RATS;
-        band_size = 3 + random2(4);
-        break;
-
-    case MONS_SHEEP:
-        band = BAND_SHEEP;
-        band_size = 3 + random2(5);
-        break;
-
-    case MONS_GHOUL:
-        band = BAND_GHOULS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_KIRKE:
-        band_size = 2 + random2(3);
-        natural_leader = true;
-    case MONS_HOG:
-        band = BAND_HOGS;
-        band_size += 1 + random2(3);
-        break;
-
-    case MONS_VAMPIRE_MOSQUITO:
-        band = BAND_VAMPIRE_MOSQUITOES;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_FIRE_BAT:
-        band = BAND_FIRE_BATS;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_DEEP_TROLL_EARTH_MAGE:
-        band = BAND_DEEP_TROLLS;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_DEEP_TROLL_SHAMAN:
-        band = BAND_DEEP_TROLL_SHAMAN;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_HELL_HOG:
-        band = BAND_HELL_HOGS;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_BOGGART:
-        band = BAND_BOGGARTS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_PRINCE_RIBBIT:
-        natural_leader = true;
-        // Intentional fallthrough
-    case MONS_BLINK_FROG:
-        band = BAND_BLINK_FROGS;
-        band_size += 2 + random2(3);
-        break;
-
-    case MONS_WIGHT:
-        band = BAND_WIGHTS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_ANCIENT_CHAMPION:
-        if (coinflip())
-            break;
-
-        natural_leader = true;
-        // Intentional fallthrough
-    case MONS_SKELETAL_WARRIOR:
-        band = BAND_SKELETAL_WARRIORS;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_CYCLOPS:
-        if (one_chance_in(5) || player_in_branch(BRANCH_SHOALS))
-        {
-            natural_leader = true;
-            band = BAND_SHEEP;  // Odyssey reference
-            band_size = 2 + random2(3);
-        }
-        break;
-
-    case MONS_ALLIGATOR:
-        if (one_chance_in(5))
-        {
-            natural_leader = true;
-            band = BAND_ALLIGATOR;
-            band_size = 1;
-        }
-        break;
-
-    case MONS_POLYPHEMUS:
-        natural_leader = true;
-        band = BAND_POLYPHEMUS;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_HARPY:
-        band = BAND_HARPIES;
-        band_size = 2 + random2(3);
-        break;
-
-    // Journey -- Added Draconian Packs
-    case MONS_WHITE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_GREY_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-        if (env.absdepth0 > 18 && one_chance_in(3) && player_in_connected_branch())
-        {
-            band = BAND_DRACONIAN;
-            band_size = random_range(2, 4);
-        }
-        break;
-
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_KNIGHT:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
-        if (env.absdepth0 > 20 && player_in_connected_branch())
-        {
-            band = BAND_DRACONIAN;
-            band_size = random_range(3, 6);
-        }
-        break;
-
-    case MONS_TIAMAT:
-        natural_leader = true;
-        band = BAND_DRACONIAN;
-        // yup, scary
-        band_size = random_range(3,6) + random_range(3,6) + 2;
-        break;
-
-    case MONS_ILSUIW:
-        band = BAND_ILSUIW;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_AZRAEL:
-        natural_leader = true;
-        band = BAND_AZRAEL;
-        band_size = 4 + random2(5);
-        break;
-
-    case MONS_DUVESSA:
-        // no natural_leader since this band is supposed to be symmetric
-        band = BAND_DUVESSA;
-        band_size = 1;
-        break;
-
-    case MONS_KHUFU:
-        natural_leader = true;
-        band = BAND_KHUFU;
-        band_size = 3;
-        break;
-
-    case MONS_GOLDEN_EYE:
-        band = BAND_GOLDEN_EYE;
-        band_size = 1 + random2(5);
-        break;
-
-    case MONS_PIKEL:
-        natural_leader = true;
-        band = BAND_PIKEL;
-        band_size = 4;
-        break;
-
-    case MONS_MERFOLK_AQUAMANCER:
-        band = BAND_MERFOLK_AQUAMANCER;
-        band_size = random_range(3, 4);
-        break;
-
-    case MONS_MERFOLK_JAVELINEER:
-        if (player_in_branch(BRANCH_DEPTHS))
-            break;
-        if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
-        {
-            band = BAND_MERFOLK_JAVELINEER;
-            band_size = random_range(2, 4);
-        }
-        break;
-
-    case MONS_MERFOLK_IMPALER:
-        if (player_in_branch(BRANCH_DEPTHS))
-            break;
-        if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
-        {
-            band = BAND_MERFOLK_IMPALER;
-            band_size = random_range(2, 4);
-        }
-        break;
-
-    case MONS_ELEPHANT:
-        band = BAND_ELEPHANT;
-        band_size = 2 + random2(4);
-        break;
-
-    case MONS_REDBACK:
-        band = BAND_REDBACK;
-        band_size = 1 + random2(5);
-        break;
-
-    case MONS_JUMPING_SPIDER:
-        if (coinflip())
-        {
-            band = BAND_JUMPING_SPIDER;
-            band_size = 1 + random2(5);
-        }
-        break;
-
-    case MONS_TARANTELLA:
-        if (coinflip())
-        {
-            band = BAND_TARANTELLA;
-            band_size = 1 + random2(4);
-        }
-        break;
-
-    case MONS_ENTROPY_WEAVER:
-        band = BAND_REDBACK;
-        band_size = 1 + random2(4);
-        break;
-
-    case MONS_VAULT_WARDEN:
-        natural_leader = true;
-        if (coinflip())
-        {
-            band = BAND_YAKTAURS;
-            band_size = 2 + random2(4);
-        }
-        else
-        {
-            band = BAND_VAULT_WARDEN;
-            band_size = 2 + random2(3);
-        }
-        break;
-
-    case MONS_IRONHEART_PRESERVER:
-        natural_leader = true;
-        switch (random2(3))
-        {
-            case 0:
-                band = BAND_DEEP_ELF_HIGH_PRIEST;
-                band_size = 3 + random2(4);
-                break;
-            case 1:
-                band = BAND_DEEP_TROLLS;
-                band_size = 3 + random2(3);
-                break;
-            case 2:
-                band = BAND_OGRE_MAGE_EXTERN;
-                band_size = 4 + random2(4);
-                break;
-        }
-        break;
-
-    case MONS_SATYR:
-        if (!one_chance_in(3))
-        {
-            natural_leader = true;
-            band = one_chance_in(5) ? BAND_FAUN_PARTY : BAND_FAUNS;
-            band_size = 3 + random2(2);
-        }
-        break;
-
-    case MONS_FAUN:
-        if (!one_chance_in(3))
-        {
-            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
-            band_size = 2 + random2(2);
-        }
-        break;
-
-    case MONS_TENGU_CONJURER:
-    case MONS_TENGU_WARRIOR:
-        if (coinflip())
-        {
-            natural_leader = true;
-            band = BAND_TENGU;
-            band_size = 1;
-        }
-        break;
-
-    case MONS_SOJOBO:
-        natural_leader = true;
-        band = BAND_SOJOBO;
-        band_size = 2;
-        break;
-
-    case MONS_SPRIGGAN_AIR_MAGE:
-        natural_leader = true;
-        band = BAND_AIR_ELEMENTALS;
-        band_size = random_range(2, 3);
-        break;
-
-    case MONS_SPRIGGAN_RIDER:
-        if (!one_chance_in(3))
-            break;
-        band = BAND_SPRIGGAN_RIDERS;
-        band_size = random_range(1, 2);
-        break;
-
-    case MONS_SPRIGGAN_DRUID:
-        if (one_chance_in(3))
-        {
-            band = BAND_SPRIGGAN_DRUID;
-            natural_leader = true;
-            band_size = (one_chance_in(4) ? 3 : 2);
-        }
-        break;
-
-    case MONS_SPRIGGAN_BERSERKER:
-        if (coinflip())
-        {
-            natural_leader = true;
-            band = BAND_SPRIGGANS;
-            band_size = 2 + random2(2);
-        }
-        break;
-
-    case MONS_SPRIGGAN_DEFENDER:
-        natural_leader = true;
-        band = BAND_SPRIGGAN_ELITES;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_THE_ENCHANTRESS:
-        natural_leader = true;
-        band = BAND_ENCHANTRESS;
-        band_size = 6 + random2avg(5, 2);
-        break;
-
-    case MONS_SHAMBLING_MANGROVE:
-        if (one_chance_in(4))
-        {
-            band = BAND_SPRIGGAN_RIDERS;
-            band_size = 1;
-        }
-        break;
-
-    case MONS_VAMPIRE_KNIGHT:
-        if (one_chance_in(4))
-        {
-            band = BAND_PHANTASMAL_WARRIORS;
-            band_size = 2;
-        }
-        break;
-
-    case MONS_THRASHING_HORROR:
-    {
-        int depth = min(brdepth[BRANCH_ABYSS], you.depth);
-        band = BAND_THRASHING_HORRORS;
-        band_size = random2(depth);
-        break;
-    }
-
-    case MONS_RAIJU:
-    {
-        band = BAND_RAIJU;
-        band_size = random_range(2, 3);
-        break;
-    }
-
-    case MONS_SALAMANDER_MYSTIC:
-        band = BAND_SALAMANDERS;
-        band_size = random_range(2, 3);
-        break;
-
-    case MONS_SALAMANDER_STORMCALLER:
-        if (coinflip())
-        {
-            band = BAND_SALAMANDER_ELITES;
-            band_size = random_range(3, 4);
-            break;
-        }
-        break;
-
-    case MONS_MONSTROUS_DEMONSPAWN:
-        // Horrible hack for wizlab_wucad_mu.
-        if (player_in_branch(BRANCH_WIZLAB))
-            break;
-        if (coinflip())
-        {
-            band = BAND_MONSTROUS_DEMONSPAWN;
-            band_size = random_range(1, 2);
-        }
-        break;
-
-    case MONS_GELID_DEMONSPAWN:
-        if (coinflip())
-        {
-            band = BAND_GELID_DEMONSPAWN;
-            band_size = random_range(1, 2);
-        }
-        break;
-
-    case MONS_INFERNAL_DEMONSPAWN:
-        if (coinflip())
-        {
-            band = BAND_INFERNAL_DEMONSPAWN;
-            band_size = random_range(1, 2);
-        }
-        break;
-
-    case MONS_PUTRID_DEMONSPAWN:
-        if (coinflip())
-        {
-            band = BAND_PUTRID_DEMONSPAWN;
-            band_size = random_range(1, 2);
-        }
-        break;
-
-    case MONS_TORTUROUS_DEMONSPAWN:
-        if (coinflip())
-        {
-            band = BAND_TORTUROUS_DEMONSPAWN;
-            band_size = random_range(1, 2);
-        }
-        break;
-
-    case MONS_BLOOD_SAINT:
-        band = BAND_BLOOD_SAINT;
-        band_size = 1 + random2(4);
-        break;
-
-    case MONS_CHAOS_CHAMPION:
-        band = BAND_CHAOS_CHAMPION;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_WARMONGER:
-        band = BAND_WARMONGER;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_CORRUPTER:
-        band = BAND_CORRUPTER;
-        band_size = 1 + random2(4);
-        break;
-
-    case MONS_BLACK_SUN:
-        band = BAND_BLACK_SUN;
-        band_size = 2 + random2(3);
-        break;
-
-    case MONS_VASHNIA:
-        natural_leader = true;
-        band = BAND_VASHNIA;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_ROBIN:
-        natural_leader = true;
-        band = BAND_ROBIN;
-        band_size = 10 + random2(3);
-        break;
-
-    case MONS_RAKSHASA:
-        if ((branch_has_monsters(you.where_are_you)
-             || !vault_mon_types.empty())
-            && coinflip())
-        {
-            band = BAND_RANDOM_SINGLE;
-            band_size = 1;
-        }
-        break;
-
     case MONS_TORPOR_SNAIL:
         natural_leader = true; // snails are natural-born leaders. fact.
 
@@ -2832,67 +2323,31 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
-    case MONS_CEREBOV:
-        natural_leader = true;
-        band = BAND_CEREBOV;
-        band_size = 5 + random2(3);
-        break;
-
-    case MONS_GLOORX_VLOQ:
-        natural_leader = true;
-        band = BAND_GLOORX_VLOQ;
-        band_size = 5 + random2(3);
-        break;
-
-    case MONS_MNOLEG:
-        natural_leader = true;
-        band = BAND_MNOLEG;
-        band_size = 5 + random2(3);
-        break;
-
-    case MONS_LOM_LOBON:
-        natural_leader = true;
-        band = BAND_LOM_LOBON;
-        band_size = 5 + random2(3);
-        break;
-
-    case MONS_DEATH_SCARAB:
-        band = BAND_DEATH_SCARABS;
-        band_size = 3 + random2(3);
-        break;
-
-    case MONS_ANUBIS_GUARD:
-        if (coinflip())
+    case MONS_SATYR:
+        if (!one_chance_in(3))
         {
-            band = BAND_ANUBIS_GUARD;
-            band_size = 1;
+            natural_leader = true;
+            band = one_chance_in(5) ? BAND_FAUN_PARTY : BAND_FAUNS;
+            band_size = 3 + random2(2);
         }
         break;
 
-    case MONS_SERAPH:
-        natural_leader = true;
-        band = BAND_HOLIES;
-        band_size = random_range(1, 3); // same as panlords
+    case MONS_FAUN:
+        if (!one_chance_in(3))
+        {
+            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
+            band_size = 2 + random2(2);
+        }
         break;
 
-    case MONS_IRON_GIANT:
-        natural_leader = true;
-        band = BAND_IRON_GIANT;
-        band_size = random_range(2, 4);
+    case MONS_SPRIGGAN_DRUID:
+        if (band != BAND_NO_BAND)
+            band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
-    case MONS_SPARK_WASP:
-        if (you.where_are_you != BRANCH_DEPTHS)
-            break;
-        band = BAND_SPARK_WASPS;
-        band_size = 1 + random2(3);
-        break;
-
-    case MONS_HOWLER_MONKEY:
-        if (coinflip() || env.absdepth0 < 6) //d:7, probably
-            break;
-        band = BAND_HOWLER_MONKEY;
-        band_size = random_range(1, 3);
+    case MONS_THRASHING_HORROR:
+        // XXX: rewrite this - wrong & bad if horrors aren't in abyss
+        band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
     default: ;
