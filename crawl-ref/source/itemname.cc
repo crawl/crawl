@@ -251,11 +251,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 switch (eq)
                 {
                 case EQ_WEAPON:
-                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES
-                        || base_type == OBJ_RODS)
-                    {
+                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES)
                         buff << " (weapon)";
-                    }
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
                     else
@@ -3929,7 +3926,6 @@ string item_prefix(const item_def &item, bool temp)
         break;
 
     case OBJ_STAVES:
-    case OBJ_RODS:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))
             prefixes.push_back("ranged");

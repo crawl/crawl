@@ -513,7 +513,9 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
-    WPN_ROD, // base item for magical rods only
+#if TAG_MAJOR_VERSION == 34
+    WPN_SPIKED_FLAIL,
+#endif
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
