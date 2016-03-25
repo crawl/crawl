@@ -413,6 +413,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         }
         return false;
     }
+    else if (item.base_type == OBJ_RODS)
+        return true;
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
