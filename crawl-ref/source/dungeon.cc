@@ -4234,7 +4234,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (props.exists("cursed"))
         do_curse_item(item);
     else if (props.exists("uncursed"))
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
     if (props.exists("useful") && is_useless_item(item, false)
         && !allow_useless)
     {

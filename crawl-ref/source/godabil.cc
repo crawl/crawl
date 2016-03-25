@@ -170,7 +170,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
     if (is_cursed)
-        do_uncurse_item(wpn, false);
+        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {

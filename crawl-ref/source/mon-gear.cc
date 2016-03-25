@@ -1513,7 +1513,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item_set_appearance(i);
 
     if (force_uncursed)
-        do_uncurse_item(i, false);
+        do_uncurse_item(i);
 
     if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
     {
