@@ -3226,15 +3226,16 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        // old wand types
+        // choose from all existing wands, except:
+        // (1) don't allow /hw, because it encourages stuff like curing rot
+        // (2) allow /invis even though that was removed, because it's fun
         return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
                              ZAP_PARALYSE, ZAP_CONFUSE,
-                             ZAP_FIREBALL, ZAP_TELEPORT_OTHER,
+                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
                              ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
                              ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
-                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_THROW_FROST,
-                             ZAP_MAGIC_DART, ZAP_INVISIBILITY,
-                             ZAP_BOLT_OF_COLD, ZAP_BOLT_OF_FIRE);
+                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
