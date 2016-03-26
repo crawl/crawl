@@ -653,11 +653,9 @@ lamp of fire
 A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
 the spirits free to dance about in a blaze upon the bearer's enemies.
 %%%%
-lantern of shadows
+removed lantern of shadows
 
-An unholy device which calls forth flickering shadows to assist its wielder. It
-shrouds the wielder in unnatural darkness, making them unstealthy and
-significantly reducing the power of their spells.
+No longer exists.
 %%%%
 large rock
 

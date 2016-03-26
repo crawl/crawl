@@ -115,7 +115,7 @@
 
       elseif s == "K" then i = "any"
 
-      elseif s == "L" then i = "lamp of fire | lantern of shadows | " ..
+      elseif s == "L" then i = "lamp of fire | " ..
        "large rock | large shield | leather armour | lightning rod | " ..
        "long sword | potion of lignification | ring of loudness | " ..
        "wand of lightning | manual of long blades | lajatang | longbow "

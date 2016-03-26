@@ -663,7 +663,7 @@ NAME:   minmay_shadows
 ORIENT: northwest
 DEPTH:  Crypt, Tar
 MONS:   shadow, soul eater
-ITEM:   lantern of shadows
+ITEM:   any misc
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........xxx2.2xxx.........x
@@ -1082,7 +1082,7 @@ KMONS:   C = mummy priest
 KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
 ITEM:    scroll of torment ident:type, randbook disc:necromancy numspells:3
-ITEM:    lantern of shadows, staff of death ident:type
+ITEM:    staff of death ident:type
 ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul

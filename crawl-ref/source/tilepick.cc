@@ -2354,8 +2354,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
                                        : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
-    case MISC_LANTERN_OF_SHADOWS:
+#if TAG_MAJOR_VERSION == 34
+    case MISC_BUGGY_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
+#endif
 
     case MISC_HORN_OF_GERYON:
         return TILE_MISC_HORN_OF_GERYON;

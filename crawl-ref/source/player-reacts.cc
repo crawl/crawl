@@ -889,9 +889,6 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.attribute[ATTR_SHADOWS])
-        shadow_lantern_effect();
-
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         temperature_check();

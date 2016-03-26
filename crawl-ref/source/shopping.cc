@@ -2030,7 +2030,6 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         // ... and a few of these.
         switch (item.sub_type)
         {
-            case MISC_LANTERN_OF_SHADOWS:
             case MISC_CRYSTAL_BALL_OF_ENERGY:
             case MISC_DISC_OF_STORMS:
                 break;
