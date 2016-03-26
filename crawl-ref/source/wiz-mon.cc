@@ -865,7 +865,7 @@ void wizard_make_monster_summoned(monster* mon)
     }
 
     mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
-    mprf(MSGCH_PROMPT, "[f] wrath [g] lantern  [h] aid   [m] misc    [s] spell");
+    mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
 
     mprf(MSGCH_PROMPT, "Which summon type? ");
 
@@ -887,7 +887,6 @@ void wizard_make_monster_summoned(monster* mon)
         case 'd': type = MON_SUMM_MISCAST; break;
         case 'e': type = MON_SUMM_ZOT; break;
         case 'f': type = MON_SUMM_WRATH; break;
-        case 'g': type = MON_SUMM_LANTERN; break;
         case 'h': type = MON_SUMM_AID; break;
         case 'm': type = 0; break;
 

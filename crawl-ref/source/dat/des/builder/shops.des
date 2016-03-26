@@ -402,7 +402,7 @@ SUBST: G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
 :   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
 :   demon whip w:5 | scroll of torment | staff of death | \
-:   lantern of shadows w:5 | book of necromancy | book of death | \
+:   book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
 :   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \

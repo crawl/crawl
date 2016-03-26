@@ -687,9 +687,7 @@ static int _acquirement_misc_subtype(bool divine, int & /*quantity*/)
         {MISC_FAN_OF_GALES,
             (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 15)},
         {MISC_STONE_OF_TREMORS,
-            (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)},
-        {MISC_LANTERN_OF_SHADOWS,
-            (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7)}
+            (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)}
     };
 
     int result = *random_choose_weighted(choices);

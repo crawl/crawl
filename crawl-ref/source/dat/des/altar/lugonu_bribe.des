@@ -33,7 +33,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               good_item quick blade",
          Dithmenos="lamp of fire w:5 / rod of ignition w:5 /\
               good_item " .. weapon .. " ego:flaming ident:type",
-         Elyvilon="lantern of shadows / book of Necromancy w:5 /\
+         Elyvilon="book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
               randbook owner:Lugonu spells:simulacrum&cigotuvi's_embrace \

@@ -293,8 +293,6 @@ int str_to_summon_type(const string &str)
         return MON_SUMM_WRATH;
     if (str == "aid")
         return MON_SUMM_AID;
-    if (str == "lantern")
-        return MON_SUMM_LANTERN;
 
     return spell_by_name(str);
 }

@@ -1627,7 +1627,7 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
 ITEM:    staff of summoning w:20 / rod of shadows
 ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
 ITEM:    fan of gales / lamp of fire / \
-         stone of tremors / phial of floods / lantern of shadows
+         stone of tremors / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna

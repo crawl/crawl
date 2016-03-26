@@ -150,7 +150,9 @@ enum mon_summon_type
     MON_SUMM_AID,     // Divine aid
     MON_SUMM_SCROLL,  // Scroll of summoning
     MON_SUMM_SHADOW,  // Shadow trap
+#if TAG_MAJOR_VERSION == 34
     MON_SUMM_LANTERN, // Lantern of shadows
+#endif
 };
 
 #include "mon-flags.h"
