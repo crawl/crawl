@@ -580,7 +580,8 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
 int ranged_attack::blowgun_duration_roll(special_missile_type type)
 {
-    if (type == SPMSL_POISONED)
+    // Leaving monster poison the same by separating it from player poison
+    if (type == SPMSL_POISONED && attacker->is_monster())
         return 6 + random2(8);
 
     if (type == SPMSL_CURARE)
@@ -610,6 +611,8 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                 return 5 + random2(5);
         }
     }
+    else if (type == SPMSL_POISONED) // Player poison needles
+        return random2(3 + base_power * 2 + plus);
     else
         return 5 + random2(base_power + plus);
 }
