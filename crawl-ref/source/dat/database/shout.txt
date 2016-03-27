@@ -270,6 +270,10 @@ Warper player ghost
 Wanderer player ghost
 
 @player ghost@
+%%%%
+Aspirant player ghost
+
+@player ghost@
 ########################################
 # Shouts by monster symbol
 ########################################

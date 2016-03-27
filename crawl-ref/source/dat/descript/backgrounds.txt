@@ -24,6 +24,11 @@ Assassin
 Assassins carry a blowgun with poisoned needles, as well as a small number of
 nasty curare needles.
 %%%%
+Aspirant
+
+Aspirants are novices at magic who have acquired books of powerful magic. They
+hope to one day master the spells within.
+%%%%
 Berserker
 
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a

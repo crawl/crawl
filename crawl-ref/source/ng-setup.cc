@@ -231,6 +231,107 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
+// Give an extremely powerful book to aspirants. Since this is definitely a
+// permanent feature of crawl, this is programmed in the most effective way
+// possible.
+static void _give_aspirant_book()
+{
+    skill_type skill = SK_SPELLCASTING;
+
+    while (skill == SK_SPELLCASTING || skill == SK_POISON_MAGIC)
+    {
+        int value = SK_LAST_MAGIC - SK_FIRST_MAGIC_SCHOOL + 1;
+        skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
+    }
+
+    spschool_flag_type school = skill2spell_type(skill);
+
+    item_def* item = newgame_make_item(OBJ_BOOKS, BOOK_MINOR_MAGIC);
+    if (!item)
+        return;
+
+    vector<spell_type> incl_spells;
+
+    switch (skill)
+    {
+        case SK_CONJURATIONS:
+            incl_spells.push_back(SPELL_ISKENDERUNS_MYSTIC_BLAST);
+            incl_spells.push_back(SPELL_IOOD);
+            incl_spells.push_back(coinflip() ? SPELL_GLACIATE : SPELL_FIRE_STORM);
+            break;
+
+        case SK_EARTH_MAGIC:
+            incl_spells.push_back(coinflip() ? SPELL_PETRIFY : SPELL_LEDAS_LIQUEFACTION);
+            incl_spells.push_back(coinflip() ? SPELL_IRON_SHOT : SPELL_LEHUDIBS_CRYSTAL_SPEAR);
+            incl_spells.push_back(SPELL_SHATTER);
+            break;
+
+        case SK_AIR_MAGIC:
+            incl_spells.push_back(coinflip() ? SPELL_SUMMON_LIGHTNING_SPIRE : SPELL_AIRSTRIKE);
+            incl_spells.push_back(coinflip() ? SPELL_CONJURE_BALL_LIGHTNING : SPELL_CHAIN_LIGHTNING);
+            incl_spells.push_back(SPELL_TORNADO);
+            break;
+
+        case SK_ICE_MAGIC:
+            incl_spells.push_back(coinflip() ? SPELL_THROW_ICICLE : SPELL_SUMMON_ICE_BEAST);
+            incl_spells.push_back(coinflip() ? SPELL_BOLT_OF_COLD : SPELL_OZOCUBUS_REFRIGERATION);
+            incl_spells.push_back(SPELL_GLACIATE);
+            break;
+
+        case SK_FIRE_MAGIC:
+            incl_spells.push_back(SPELL_STICKY_FLAME);
+            incl_spells.push_back(coinflip() ? SPELL_BOLT_OF_FIRE : SPELL_RING_OF_FLAMES);
+            incl_spells.push_back(SPELL_FIRE_STORM);
+            break;
+
+        case SK_TRANSMUTATIONS:
+            incl_spells.push_back(SPELL_ICE_FORM);
+            incl_spells.push_back(coinflip() ? SPELL_STATUE_FORM : SPELL_HYDRA_FORM);
+            incl_spells.push_back(SPELL_NECROMUTATION);
+            break;
+
+        case SK_TRANSLOCATIONS:
+            incl_spells.push_back(SPELL_GOLUBRIAS_PASSAGE);
+            incl_spells.push_back(SPELL_DISJUNCTION);
+            incl_spells.push_back(SPELL_CONTROLLED_BLINK);
+            break;
+
+        case SK_NECROMANCY:
+            incl_spells.push_back(SPELL_ANIMATE_DEAD);
+            incl_spells.push_back(coinflip() ? SPELL_SIMULACRUM : SPELL_AGONY);
+            incl_spells.push_back(SPELL_BORGNJORS_REVIVIFICATION);
+            break;
+
+        case SK_SUMMONINGS:
+            incl_spells.push_back(coinflip() ? SPELL_SUMMON_ICE_BEAST : SPELL_SUMMON_LIGHTNING_SPIRE);
+            incl_spells.push_back(coinflip() ? SPELL_SUMMON_GREATER_DEMON : SPELL_MONSTROUS_MENAGERIE);
+            incl_spells.push_back(coinflip() ? SPELL_SUMMON_HORRIBLE_THINGS : SPELL_DRAGON_CALL);
+            break;
+
+        case SK_CHARMS:
+            incl_spells.push_back(coinflip() ? SPELL_EXCRUCIATING_WOUNDS : SPELL_WARP_BRAND);
+            incl_spells.push_back(coinflip() ? SPELL_DEFLECT_MISSILES : SPELL_HASTE);
+            incl_spells.push_back(SPELL_DEATHS_DOOR);
+            break;
+
+        case SK_HEXES:
+            incl_spells.push_back(coinflip() ? SPELL_CAUSE_FEAR : SPELL_FULMINANT_PRISM);
+            incl_spells.push_back(coinflip() ? SPELL_DARKNESS : SPELL_INVISIBILITY);
+            incl_spells.push_back(SPELL_DISCORD);
+            break;
+
+        default:
+            break;
+    }
+
+    make_book_theme_randart(*item, incl_spells, school, SPTYP_NONE, 3, 255,
+                            "", "", false);
+
+    //make_book_theme_randart(*item, school, SPTYP_NONE, 2, 4, SPELL_NO_SPELL,
+    //                        "", "", true);
+    you.skills[skill] += 4;
+}
+
 static void _give_items_skills(const newgame_def& ng)
 {
     switch (you.char_class)
@@ -275,6 +376,10 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_WANDERER:
         create_wanderer();
+        break;
+
+    case JOB_ASPIRANT:
+        _give_aspirant_book();
         break;
 
     default:

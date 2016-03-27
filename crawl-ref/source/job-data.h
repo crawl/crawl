@@ -285,6 +285,15 @@ static const map<job_type, job_def> job_data =
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
       { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
+
+{ JOB_ASPIRANT, {
+    "Ap", "Aspirant",
+    0, 8, 4,
+    { SP_HIGH_ELF, SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_SPRIGGAN, SP_OCTOPODE },
+    { "robe", "dagger" },
+    WCHOICE_NONE,
+    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 2 } },
+} },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
     "DK", "Death Knight",
