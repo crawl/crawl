@@ -261,11 +261,22 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN
-        || !weap)
+    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN)
+    {
+        // Thrown weapons use 10 + projectile damage to determine base delay.
+        const skill_type wpn_skill = SK_THROWING;
+        const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
+        attk_delay = random_var(projectile_delay);
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+                                     DELAY_SCALE);
+
+        // apply minimum to weapon skill modification
+        attk_delay = rv::max(attk_delay,
+                random_var(FASTEST_PLAYER_THROWING_SPEED));
+    }
+    else if (!weap)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
-                 projectile     ? skill(SK_THROWING, 10) :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
 
