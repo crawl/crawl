@@ -278,15 +278,15 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                          : is_melee_weapon(*weap)))
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
-        attk_delay = random_var(property(*weap, PWPN_SPEED));
-        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
-                                     DELAY_SCALE);
+        // Cap skill contribution to mindelay skill, so that rounding
+        // doesn't make speed brand benefit from higher skill.
+        const int wpn_sklev = min(you.skill(wpn_skill, 10),
+                                  10 * weapon_min_delay_skill(*weap));
 
+        attk_delay = random_var(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
-
-        // apply minimum to weapon skill modification
-        attk_delay = rv::max(attk_delay, random_var(weapon_min_delay(*weap)));
     }
 
     // At the moment it never gets this low anyway.
