@@ -2393,7 +2393,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_FIRE_BATS,           {{{MONS_FIRE_BAT, 1}}}},
     { BAND_HELL_HOGS,           {{{MONS_HELL_HOG, 1}}}},
     { BAND_HELL_RATS,           {{{MONS_HELL_RAT, 1}}}},
-    { BAND_JIANGSHI,            {{{BAND_JIANGSHI, 1}}}},
+    { BAND_JIANGSHI,            {{{MONS_JIANGSHI, 1}}}},
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
@@ -2528,7 +2528,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                  {MONS_IRONHEART_PRESERVER, 5},
                                  {MONS_VAULT_GUARD, 15}},
 
-                                 {MONS_VAULT_GUARD, 1}}},
+                                {{MONS_VAULT_GUARD, 1}}}},
 
     { BAND_FAUN_PARTY,          {{{MONS_SIREN, 1}},
 
@@ -2566,8 +2566,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_SPRIGGAN_DRUID,      {{{MONS_SPRIGGAN, 2},
                                   {MONS_SPRIGGAN_RIDER, 1}}}},
 
-    { BAND_SALAMANDER_ELITES,   {{{MONS_SALAMANDER_MYSTIC, 1,
-                                   MONS_SALAMANDER, 1}},
+    { BAND_SALAMANDER_ELITES,   {{{MONS_SALAMANDER_MYSTIC, 1},
+                                  {MONS_SALAMANDER, 1}},
 
                                  {{MONS_SALAMANDER, 1}}}},
     { BAND_ROBIN,               {{{MONS_GOBLIN, 3},
