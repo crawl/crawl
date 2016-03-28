@@ -2454,6 +2454,9 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_ORCS,                {{{MONS_ORC_PRIEST, 6},
                                   {MONS_ORC_WIZARD, 7},
                                   {MONS_ORC, 35}}}},
+    { BAND_ORC_WARRIOR,         {{{MONS_ORC_PRIEST, 5},
+                                  {MONS_ORC_WIZARD, 7},
+                                  {MONS_ORC,       22}}}},
     // XXX: For Beogh punishment, ogres and trolls look out of place...
     // (For normal generation, they're okay, of course.)
     { BAND_ORC_KNIGHT,          {{{MONS_ORC, 12},
