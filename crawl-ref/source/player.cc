@@ -2798,16 +2798,13 @@ static void _felid_extra_life()
 
 static void _gain_and_note_hp_mp()
 {
-    const int old_hp = you.hp;
-    const int old_maxhp = you.hp_max;
     const int old_mp = you.magic_points;
     const int old_maxmp = you.max_magic_points;
 
     // recalculate for game
-    calc_hp();
+    recalc_and_scale_hp();
     calc_mp();
 
-    set_hp(old_hp * you.hp_max / old_maxhp);
     set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
            : you.max_magic_points);
 
@@ -2829,6 +2826,24 @@ static void _gain_and_note_hp_mp()
                 min(you.hp, note_maxhp), note_maxhp,
                 min(you.magic_points, note_maxmp), note_maxmp);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+}
+
+/**
+ * Calculate max HP changes and scale current HP accordingly.
+ */
+void recalc_and_scale_hp()
+{
+    // Rounding must be down or Deep Dwarves would abuse certain values.
+    // We can reduce errors by a factor of 100 by using partial hp we have.
+    int old_max = you.hp_max;
+    int hp = you.hp * 100 + you.hit_points_regeneration;
+    calc_hp();
+    int new_max = you.hp_max;
+    hp = hp * new_max / old_max;
+    if (hp < 100)
+        hp = 100;
+    set_hp(min(hp / 100, you.hp_max));
+    you.hit_points_regeneration = hp % 100;
 }
 
 /**

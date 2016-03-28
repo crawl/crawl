@@ -550,7 +550,7 @@ void wizard_set_all_skills()
 
         // We're not updating skill cost here since XP hasn't changed.
 
-        calc_hp();
+        recalc_and_scale_hp();
         calc_mp();
 
         you.redraw_armour_class = true;

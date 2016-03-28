@@ -1013,6 +1013,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp();
 void calc_mp();
+void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
