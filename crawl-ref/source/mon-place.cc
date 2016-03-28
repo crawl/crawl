@@ -2270,6 +2270,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     const band_set* bands = map_find(bands_by_leader, mon_type);
     if (bands && bands->conditions.met())
     {
+        ASSERT(bands->bands.size() > 0);
         const band_info& band_desc = *random_iterator(bands->bands);
         band = band_desc.type;
         band_size = band_desc.range.roll();
@@ -2631,16 +2632,15 @@ static monster_type _band_member(band_type band, int which,
 {
     if (band == BAND_NO_BAND)
         return MONS_PROGRAM_BUG;
+    ASSERT(which > 0);
 
-    const vector<member_possibilites> *membership
-        = map_find(band_membership, band);
-    if (membership)
+    if (const auto *membership = map_find(band_membership, band))
     {
-        const member_possibilites &possibles
-            = (which - 1 < (int)membership->size() - 1) ?
-                (*membership)[which - 1] :
-                (*membership)[membership->size() - 1];
-        return *random_choose_weighted(possibles);
+        ASSERT(membership->size() > 0);
+        const size_t idx = min<size_t>(which, membership->size()) - 1;
+        const auto *choice = random_choose_weighted((*membership)[idx]);
+        ASSERT(choice); /* empty weights vector */
+        return *choice;
     }
 
     switch (band)
