@@ -2094,7 +2094,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ORC_WARLORD,     { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
-    { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_HIGH_PRIEST, {4, 8}, true }}}},
+    { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
     { MONS_BIG_KOBOLD,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
     { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
@@ -2349,6 +2349,273 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     return band;
 }
 
+/// a weighted list of possible monsters for a given band slot.
+typedef vector<pair<monster_type, int>> member_possibilites;
+
+/**
+ * For each band type, a list of weighted lists of monsters that can appear
+ * in that band.
+ *
+ * Each element in the list, other than the last, is a list of candidates for
+ * that slot in the band. The final element lists candidates for all further
+ * slots.
+ *
+ * An example: Let's say we have {BAND_FOO,
+ *                                  {{{MONS_A, 1}},
+ *                                   {{MONS_B, 1}},
+ *                                   {{MONS_C, 1}, {MONS_D, 1}}}}.
+ * This indicates that the first member of these bands (not the leader, but
+ * their first follower) will be a MONS_A, the second will be a MONS_B, and
+ * the third, fourth, etc monsters will either be MONS_C or MONS_D with equal
+ * likelihood.
+ */
+static const map<band_type, vector<member_possibilites>> band_membership = {
+    { BAND_HOGS,                {{{MONS_HOG, 1}}}},
+    { BAND_YAKS,                {{{MONS_YAK, 1}}}},
+    { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
+    { BAND_WOLVES,              {{{MONS_WOLF, 1}}}},
+    { BAND_DUVESSA,             {{{MONS_DOWAN, 1}}}},
+    { BAND_GNOLLS,              {{{MONS_GNOLL, 1}}}},
+    { BAND_HARPIES,             {{{MONS_HARPY, 1}}}},
+    { BAND_RAIJU,               {{{MONS_RAIJU, 1}}}},
+    { BAND_SHEEP,               {{{MONS_SHEEP, 1}}}},
+    { BAND_PIKEL,               {{{MONS_SLAVE, 1}}}},
+    { BAND_WIGHTS,              {{{MONS_WIGHT, 1}}}},
+    { BAND_JACKALS,             {{{MONS_JACKAL, 1}}}},
+    { BAND_KOBOLDS,             {{{MONS_KOBOLD, 1}}}},
+    { BAND_JOSEPHINE,           {{{MONS_WRAITH, 1}}}},
+    { BAND_BOGGARTS,            {{{MONS_BOGGART, 1}}}},
+    { BAND_CENTAURS,            {{{MONS_CENTAUR, 1}}}},
+    { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
+    { BAND_MERFOLK_IMPALER,     {{{MONS_MERFOLK, 1}}}},
+    { BAND_MERFOLK_JAVELINEER,  {{{MONS_MERFOLK, 1}}}},
+    { BAND_ELEPHANT,            {{{MONS_ELEPHANT, 1}}}},
+    { BAND_FIRE_BATS,           {{{MONS_FIRE_BAT, 1}}}},
+    { BAND_HELL_HOGS,           {{{MONS_HELL_HOG, 1}}}},
+    { BAND_HELL_RATS,           {{{MONS_HELL_RAT, 1}}}},
+    { BAND_JIANGSHI,            {{{BAND_JIANGSHI, 1}}}},
+    { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
+    { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
+    { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
+    { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},
+    { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
+    { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},
+    { BAND_KILLER_BEES,         {{{MONS_KILLER_BEE, 1}}}},
+    { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
+    { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
+    { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
+    { BAND_ANUBIS_GUARD,        {{{MONS_ANUBIS_GUARD, 1}}}},
+    { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
+    { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
+    { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
+    { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
+    { BAND_AIR_ELEMENTALS,      {{{MONS_AIR_ELEMENTAL, 1}}}},
+    { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
+    { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
+    { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
+    { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
+    { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
+    { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
+    { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
+    { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
+    { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
+    { BAND_INSUBSTANTIAL_WISPS, {{{MONS_INSUBSTANTIAL_WISP, 1}}}},
+    { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
+    { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_MAGE, 92},
+                                  {MONS_DEEP_ELF_KNIGHT, 24},
+                                  {MONS_DEEP_ELF_ARCHER, 24},
+                                  {MONS_DEEP_ELF_DEATH_MAGE, 3},
+                                  {MONS_DEEP_ELF_DEMONOLOGIST, 2},
+                                  {MONS_DEEP_ELF_ANNIHILATOR, 2},
+                                  {MONS_DEEP_ELF_SORCERER, 2}}}},
+    { BAND_DEEP_ELF_HIGH_PRIEST, {{{MONS_DEEP_ELF_MAGE, 5},
+                                   {MONS_DEEP_ELF_KNIGHT, 2},
+                                   {MONS_DEEP_ELF_ARCHER, 2},
+                                   {MONS_DEEP_ELF_DEMONOLOGIST, 1},
+                                   {MONS_DEEP_ELF_ANNIHILATOR, 1},
+                                   {MONS_DEEP_ELF_SORCERER, 1},
+                                   {MONS_DEEP_ELF_DEATH_MAGE, 1}}}},
+    { BAND_BALRUG,              {{{MONS_SUN_DEMON, 1},
+                                  {MONS_RED_DEVIL, 1}}}},
+    { BAND_HELLWING,            {{{MONS_HELLWING, 1},
+                                  {MONS_SMOKE_DEMON, 1}}}},
+    { BAND_CACODEMON,           {{{MONS_SIXFIRHY, 1},
+                                  {MONS_ORANGE_DEMON, 1}}}},
+    { BAND_NECROMANCER,         {{{MONS_ZOMBIE, 2},
+                                  {MONS_SKELETON, 2},
+                                  {MONS_SIMULACRUM, 1}}}},
+    { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
+                                  {MONS_NECROMANCER, 1}}}},
+    { BAND_POLYPHEMUS,          {{{MONS_CATOBLEPAS, 1}},
+
+                                 {{MONS_DEATH_YAK, 1}}}},
+    { BAND_VERY_UGLY_THINGS,    {{{MONS_UGLY_THING, 3},
+                                  {MONS_VERY_UGLY_THING, 4}}}},
+    { BAND_ORCS,                {{{MONS_ORC_PRIEST, 6},
+                                  {MONS_ORC_WIZARD, 7},
+                                  {MONS_ORC, 35}}}},
+    // XXX: For Beogh punishment, ogres and trolls look out of place...
+    // (For normal generation, they're okay, of course.)
+    { BAND_ORC_KNIGHT,          {{{MONS_ORC, 12},
+                                  {MONS_ORC_WARRIOR, 9},
+                                  {MONS_WARG, 2},
+                                  {MONS_ORC_WIZARD, 2},
+                                  {MONS_ORC_PRIEST, 2},
+                                  {MONS_OGRE, 1},
+                                  {MONS_TROLL, 1},
+                                  {MONS_ORC_SORCERER, 1}}}},
+    { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 1},
+                                  {MONS_OGRE, 2}}}},
+    { BAND_OGRE_MAGE_EXTERN,    {{{MONS_OGRE_MAGE, 1}},
+
+                                 {{MONS_TWO_HEADED_OGRE, 1},
+                                  {MONS_OGRE, 2}}}},
+    { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
+                                  {MONS_BIG_KOBOLD, 2},
+                                  {MONS_KOBOLD_DEMONOLOGIST, 1}}}},
+    // Favor tougher naga suited to melee, compared to normal naga bands
+    { BAND_GUARDIAN_SERPENT,    {{{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10}},
+
+                                 {{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10},
+                                  {MONS_SALAMANDER, 3}, {MONS_NAGA, 12}},
+
+                                 {{MONS_SALAMANDER, 3}, {MONS_NAGA, 12}}}},
+    { BAND_NAGA_RITUALIST,      {{{MONS_BLACK_MAMBA, 15},
+                                  {MONS_MANA_VIPER, 7},
+                                  {MONS_ANACONDA, 4}}}},
+    { BAND_NAGA_SHARPSHOOTER,   {{{MONS_NAGA_SHARPSHOOTER, 1},
+                                  {MONS_NAGA, 2}}}},
+    { BAND_GHOULS,              {{{MONS_GHOUL, 4},
+                                  {MONS_NECROPHAGE, 3},
+                                  {MONS_BOG_BODY, 2}}}},
+    { BAND_ILSUIW,              {{{MONS_SIREN, 6},
+                                  {MONS_MERFOLK, 3},
+                                  {MONS_MERFOLK_JAVELINEER, 2},
+                                  {MONS_MERFOLK_IMPALER, 2}}}},
+    { BAND_AZRAEL,              {{{MONS_FIRE_ELEMENTAL, 1},
+                                  {MONS_HELL_HOUND, 1}}}},
+    { BAND_KHUFU,               {{{MONS_GREATER_MUMMY, 1},
+                                  {MONS_MUMMY, 1}}}},
+    { BAND_MERFOLK_AQUAMANCER,  {{{MONS_MERFOLK, 4},
+                                  {MONS_WATER_ELEMENTAL, 11}}}},
+    { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 18},
+                                  {MONS_DEEP_TROLL_EARTH_MAGE, 3},
+                                  {MONS_DEEP_TROLL_SHAMAN, 3}}}},
+    { BAND_DEEP_TROLL_SHAMAN,   {{{MONS_DEEP_TROLL, 18},
+                                  {MONS_IRON_TROLL, 8},
+                                  {MONS_DEEP_TROLL_EARTH_MAGE, 3},
+                                  {MONS_DEEP_TROLL_SHAMAN, 3}}}},
+    { BAND_REDBACK,             {{{MONS_REDBACK, 6},
+                                  {MONS_TARANTELLA, 1},
+                                  {MONS_JUMPING_SPIDER, 1}}}},
+    { BAND_JUMPING_SPIDER,      {{{MONS_JUMPING_SPIDER, 12},
+                                  {MONS_WOLF_SPIDER, 8},
+                                  {MONS_ORB_SPIDER, 7},
+                                  {MONS_REDBACK, 5},
+                                  {MONS_DEMONIC_CRAWLER, 2}}}},
+    { BAND_TARANTELLA,          {{{MONS_TARANTELLA, 10},
+                                  {MONS_REDBACK, 8},
+                                  {MONS_WOLF_SPIDER, 7},
+                                  {MONS_ORB_SPIDER, 3},
+                                  {MONS_DEMONIC_CRAWLER, 2}}}},
+
+    { BAND_VAULT_WARDEN,        {{{MONS_VAULT_SENTINEL, 4},
+                                  {MONS_IRONBRAND_CONVOKER, 6},
+                                  {MONS_IRONHEART_PRESERVER, 5}},
+        // one fancy pal, and a 50% chance of another
+                                {{MONS_VAULT_SENTINEL, 4},
+                                 {MONS_IRONBRAND_CONVOKER, 6},
+                                 {MONS_IRONHEART_PRESERVER, 5},
+                                 {MONS_VAULT_GUARD, 15}},
+
+                                 {MONS_VAULT_GUARD, 1}}},
+
+    { BAND_FAUN_PARTY,          {{{MONS_SIREN, 1}},
+
+                                 {{MONS_FAUN, 1}}}},
+
+    { BAND_TENGU,               {{{MONS_TENGU_WARRIOR, 1},
+                                  {MONS_TENGU_CONJURER, 1}}}},
+
+    { BAND_SPRIGGANS,           {{{MONS_SPRIGGAN_RIDER, 11},
+                                  {MONS_SPRIGGAN_AIR_MAGE, 4},
+                                  {MONS_SPRIGGAN_BERSERKER, 3}}}},
+
+    { BAND_SPRIGGAN_ELITES,     {{{MONS_SPRIGGAN_DEFENDER, 18},
+                                  {MONS_SPRIGGAN_RIDER, 11},
+                                  {MONS_SPRIGGAN_AIR_MAGE, 4},
+                                  {MONS_SPRIGGAN_BERSERKER, 3}},
+
+                                 {{MONS_SPRIGGAN_RIDER, 11},
+                                  {MONS_SPRIGGAN_AIR_MAGE, 4},
+                                  {MONS_SPRIGGAN_BERSERKER, 3}}}},
+
+    { BAND_ENCHANTRESS,         {{{MONS_SPRIGGAN_DEFENDER, 1}},
+
+                                 {{MONS_SPRIGGAN_DEFENDER, 1}},
+
+                                 {{MONS_SPRIGGAN_DEFENDER, 1}},
+
+                                 {{MONS_SPRIGGAN_AIR_MAGE, 1}},
+
+                                 {{MONS_SPRIGGAN_AIR_MAGE, 1},
+                                  {MONS_SPRIGGAN_BERSERKER, 1},
+                                  {MONS_SPRIGGAN_RIDER, 1},
+                                  {MONS_SPRIGGAN, 3}}}},
+
+    { BAND_SPRIGGAN_DRUID,      {{{MONS_SPRIGGAN, 2},
+                                  {MONS_SPRIGGAN_RIDER, 1}}}},
+
+    { BAND_SALAMANDER_ELITES,   {{{MONS_SALAMANDER_MYSTIC, 1,
+                                   MONS_SALAMANDER, 1}},
+
+                                 {{MONS_SALAMANDER, 1}}}},
+    { BAND_ROBIN,               {{{MONS_GOBLIN, 3},
+                                  {MONS_HOBGOBLIN, 1}}}},
+
+    { BAND_CEREBOV,             {{{MONS_BRIMSTONE_FIEND, 1}},
+
+                                 {{MONS_BALRUG, 1},
+                                  {MONS_SUN_DEMON, 3},
+                                  {MONS_EFREET, 3}}}},
+
+    { BAND_GLOORX_VLOQ,         {{{MONS_CURSE_SKULL, 1}},
+
+                                 {{MONS_EXECUTIONER, 1}},
+
+                                 {{MONS_SHADOW_DEMON, 1},
+                                  {MONS_DEMONIC_CRAWLER, 3},
+                                  {MONS_SHADOW_WRAITH, 3}}}},
+
+    { BAND_MNOLEG,              {{{MONS_TENTACLED_MONSTROSITY, 1}},
+
+                                 {{MONS_TENTACLED_MONSTROSITY, 1},
+                                  {MONS_CACODEMON, 2},
+                                  {MONS_ABOMINATION_LARGE, 3},
+                                  {MONS_VERY_UGLY_THING, 3},
+                                  {MONS_NEQOXEC, 3}}}},
+
+    { BAND_LOM_LOBON,           {{{MONS_SPRIGGAN_AIR_MAGE, 1},
+                                  {MONS_TITAN, 1},
+                                  {MONS_LICH, 1},
+                                  {MONS_DRACONIAN_ANNIHILATOR, 2},
+                                  {MONS_DEEP_ELF_ANNIHILATOR, 2},
+                                  {MONS_GIANT_ORANGE_BRAIN, 2},
+                                  {MONS_BLIZZARD_DEMON, 2},
+                                  {MONS_GREEN_DEATH, 2},
+                                  {MONS_RAKSHASA, 4},
+                                  {MONS_WIZARD, 4}}}},
+
+    { BAND_HOLIES,              {{{MONS_ANGEL, 100},
+                                  {MONS_CHERUB, 80},
+                                  {MONS_DAEVA, 50},
+                                  {MONS_OPHAN, 1}}}}, // !?
+
+    { BAND_IRON_GIANT,          {{{MONS_STONE_GIANT, 10},
+                                  {MONS_FIRE_GIANT, 1},
+                                  {MONS_FROST_GIANT, 1}}}},
+};
+
 /**
  * Return the type of the nth monster in a band.
  *
@@ -2362,109 +2629,19 @@ static monster_type _band_member(band_type band, int which,
     if (band == BAND_NO_BAND)
         return MONS_PROGRAM_BUG;
 
+    const vector<member_possibilites> *membership
+        = map_find(band_membership, band);
+    if (membership)
+    {
+        const member_possibilites &possibles
+            = (which - 1 < (int)membership->size() - 1) ?
+                (*membership)[which - 1] :
+                (*membership)[membership->size() - 1];
+        return *random_choose_weighted(possibles);
+    }
+
     switch (band)
     {
-    case BAND_KOBOLDS:
-        return MONS_KOBOLD;
-
-    case BAND_ORCS:
-        if (one_chance_in(8)) // 12.50%
-            return MONS_ORC_PRIEST;
-        if (one_chance_in(6)) // 14.58%
-            return MONS_ORC_WIZARD;
-        return MONS_ORC;
-
-    case BAND_ORC_WARRIOR:
-        if (one_chance_in(7)) // 14.29%
-            return MONS_ORC_PRIEST;
-        if (one_chance_in(5)) // 17.14%
-            return MONS_ORC_WIZARD;
-        return MONS_ORC;
-
-    case BAND_ORC_KNIGHT:
-    case BAND_ORC_HIGH_PRIEST:
-        // XXX: For Beogh punishment, ogres and trolls look out of place...
-        // (For normal generation, they're okay, of course.)
-        return random_choose_weighted(12, MONS_ORC,
-                                       9, MONS_ORC_WARRIOR,
-                                       2, MONS_WARG,
-                                       2, MONS_ORC_WIZARD,
-                                       2, MONS_ORC_PRIEST,
-                                       1, MONS_OGRE,
-                                       1, MONS_TROLL,
-                                       1, MONS_ORC_SORCERER,
-                                       0);
-
-    case BAND_KILLER_BEES:
-        return MONS_KILLER_BEE;
-
-    case BAND_CAUSTIC_SHRIKE:
-        return MONS_CAUSTIC_SHRIKE;
-
-    case BAND_SHARD_SHRIKE:
-        return MONS_SHARD_SHRIKE;
-
-    case BAND_FLYING_SKULLS:
-        return MONS_FLYING_SKULL;
-
-    case BAND_SLIME_CREATURES:
-        return MONS_SLIME_CREATURE;
-
-    case BAND_YAKS:
-        return MONS_YAK;
-
-    case BAND_HARPIES:
-        return MONS_HARPY;
-
-    case BAND_UGLY_THINGS:
-        return MONS_UGLY_THING;
-
-    case BAND_VERY_UGLY_THINGS:
-        return one_chance_in(4) ? MONS_VERY_UGLY_THING : MONS_UGLY_THING;
-
-    case BAND_HELL_HOUNDS:
-        return MONS_HELL_HOUND;
-
-    case BAND_JACKALS:
-        return MONS_JACKAL;
-
-    case BAND_GNOLLS:
-        return MONS_GNOLL;
-
-    case BAND_CENTAURS:
-        return MONS_CENTAUR;
-
-    case BAND_YAKTAURS:
-        return MONS_YAKTAUR;
-
-    case BAND_INSUBSTANTIAL_WISPS:
-        return MONS_INSUBSTANTIAL_WISP;
-
-    case BAND_POLYPHEMUS:
-        if (which == 1)
-            return MONS_CATOBLEPAS;
-    case BAND_DEATH_YAKS:
-        return MONS_DEATH_YAK;
-
-    case BAND_JOSEPHINE:
-        return MONS_WRAITH;
-
-    case BAND_NECROMANCER:
-        return random_choose_weighted(6, MONS_ZOMBIE,
-                                      6, MONS_SKELETON,
-                                      3, MONS_SIMULACRUM,
-                                      0);
-
-    case BAND_BALRUG:
-        return coinflip() ? MONS_SUN_DEMON : MONS_RED_DEVIL;
-
-    case BAND_CACODEMON:
-        return coinflip() ? MONS_SIXFIRHY : MONS_ORANGE_DEMON;
-        break;
-
-    case BAND_EXECUTIONER:
-        return MONS_ABOMINATION_LARGE;
-        break;
 
     case BAND_PANDEMONIUM_LORD:
         if (one_chance_in(7))
@@ -2491,57 +2668,6 @@ static monster_type _band_member(band_type band, int which,
         }
         break;
 
-    case BAND_HELLWING:
-        return coinflip() ? MONS_HELLWING : MONS_SMOKE_DEMON;
-
-    case BAND_DEEP_ELF_KNIGHT:
-        return random_choose_weighted(92, MONS_DEEP_ELF_MAGE,
-                                      24, MONS_DEEP_ELF_KNIGHT,
-                                      24, MONS_DEEP_ELF_ARCHER,
-                                       3, MONS_DEEP_ELF_DEATH_MAGE,
-                                       2, MONS_DEEP_ELF_DEMONOLOGIST,
-                                       2, MONS_DEEP_ELF_ANNIHILATOR,
-                                       2, MONS_DEEP_ELF_SORCERER,
-                                       0);
-
-    case BAND_DEEP_ELF_HIGH_PRIEST:
-        return random_choose_weighted(5, MONS_DEEP_ELF_MAGE,
-                                      2, MONS_DEEP_ELF_KNIGHT,
-                                      2, MONS_DEEP_ELF_ARCHER,
-                                      1, MONS_DEEP_ELF_DEMONOLOGIST,
-                                      1, MONS_DEEP_ELF_ANNIHILATOR,
-                                      1, MONS_DEEP_ELF_SORCERER,
-                                      1, MONS_DEEP_ELF_DEATH_MAGE,
-                                      0);
-
-    case BAND_HELL_KNIGHTS:
-        if (one_chance_in(4))
-            return MONS_NECROMANCER;
-        return MONS_HELL_KNIGHT;
-
-    case BAND_OGRE_MAGE_EXTERN:
-        if (which == 1)
-            return MONS_OGRE_MAGE;
-        // Deliberate fallthrough
-    case BAND_OGRE_MAGE:
-        if (one_chance_in(3))
-            return MONS_TWO_HEADED_OGRE;
-        return MONS_OGRE;
-
-    case BAND_KOBOLD_DEMONOLOGIST:
-        return random_choose_weighted(8, MONS_KOBOLD,
-                                      4, MONS_BIG_KOBOLD,
-                                      2, MONS_KOBOLD_DEMONOLOGIST,
-                                      0);
-        break;
-
-    case BAND_GUARDIAN_SERPENT:
-        // Favor tougher naga suited to melee, compared to normal naga bands
-        if (which == 1 || which == 2 && coinflip())
-            return one_chance_in(3) ? MONS_NAGA_MAGE : MONS_NAGA_WARRIOR;
-        else
-            return one_chance_in(5) ? MONS_SALAMANDER : MONS_NAGA;
-
     case BAND_NAGAS:
         if (which == 1 && coinflip() || which == 2 && one_chance_in(4))
         {
@@ -2555,55 +2681,6 @@ static monster_type _band_member(band_type band, int which,
         else
             return one_chance_in(7) ? MONS_SALAMANDER : MONS_NAGA;
 
-    case BAND_NAGA_RITUALIST:
-        return random_choose_weighted(15, MONS_BLACK_MAMBA,
-                                       7, MONS_MANA_VIPER,
-                                       4, MONS_ANACONDA,
-                                       0);
-
-    case BAND_NAGA_SHARPSHOOTER:
-        return one_chance_in(3) ? MONS_NAGA_SHARPSHOOTER : MONS_NAGA;
-
-    case BAND_WOLVES:
-        return MONS_WOLF;
-    case BAND_GREEN_RATS:
-        return MONS_RIVER_RAT;
-    case BAND_HELL_RATS:
-        return MONS_HELL_RAT;
-    case BAND_SHEEP:
-        return MONS_SHEEP;
-    case BAND_GHOULS:
-        return random_choose_weighted(4, MONS_GHOUL,
-                                      3, MONS_NECROPHAGE,
-                                      2, MONS_BOG_BODY,
-                                      0);
-    case BAND_DEEP_TROLL_SHAMAN:
-        if (one_chance_in(4))
-            return MONS_IRON_TROLL;
-        // intentional fallthrough
-    case BAND_DEEP_TROLLS:
-        if (one_chance_in(4))
-        {
-            return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
-                                 MONS_DEEP_TROLL_SHAMAN);
-        }
-        return MONS_DEEP_TROLL;
-    case BAND_HOGS:
-        return MONS_HOG;
-    case BAND_HELL_HOGS:
-        return MONS_HELL_HOG;
-    case BAND_VAMPIRE_MOSQUITOES:
-        return MONS_VAMPIRE_MOSQUITO;
-    case BAND_FIRE_BATS:
-        return MONS_FIRE_BAT;
-    case BAND_BOGGARTS:
-        return MONS_BOGGART;
-    case BAND_BLINK_FROGS:
-        return MONS_BLINK_FROG;
-    case BAND_WIGHTS:
-        return MONS_WIGHT;
-    case BAND_SKELETAL_WARRIORS:
-        return MONS_SKELETAL_WARRIOR;
 
     case BAND_DRACONIAN:
         if (env.absdepth0 >= 24 && x_chance_in_y(13, 40))
@@ -2622,76 +2699,6 @@ static monster_type _band_member(band_type band, int which,
 
         return random_draconian_monster_species();
 
-    case BAND_ILSUIW:
-        return random_choose_weighted(30, MONS_SIREN,
-                                      15, MONS_MERFOLK,
-                                      10, MONS_MERFOLK_JAVELINEER,
-                                      10, MONS_MERFOLK_IMPALER,
-                                       0);
-
-    case BAND_AZRAEL:
-        return coinflip() ? MONS_FIRE_ELEMENTAL : MONS_HELL_HOUND;
-
-    case BAND_DUVESSA:
-        return MONS_DOWAN;
-
-    case BAND_ALLIGATOR:
-        return MONS_ALLIGATOR;
-
-    case BAND_KHUFU:
-        return coinflip() ? MONS_GREATER_MUMMY : MONS_MUMMY;
-
-    case BAND_GOLDEN_EYE:
-        return MONS_GOLDEN_EYE;
-
-    case BAND_PIKEL:
-        return MONS_SLAVE;
-
-    case BAND_MERFOLK_AQUAMANCER:
-        return random_choose_weighted( 4, MONS_MERFOLK,
-                                      11, MONS_WATER_ELEMENTAL,
-                                       0);
-
-    case BAND_MERFOLK_IMPALER:
-    case BAND_MERFOLK_JAVELINEER:
-        return MONS_MERFOLK;
-
-    case BAND_ELEPHANT:
-        return MONS_ELEPHANT;
-
-    case BAND_REDBACK:
-        return random_choose_weighted(30, MONS_REDBACK,
-                                       5, MONS_TARANTELLA,
-                                       5, MONS_JUMPING_SPIDER,
-                                       0);
-
-    case BAND_JUMPING_SPIDER:
-        return random_choose_weighted(12, MONS_JUMPING_SPIDER,
-                                       8, MONS_WOLF_SPIDER,
-                                       7, MONS_ORB_SPIDER,
-                                       5, MONS_REDBACK,
-                                       2, MONS_DEMONIC_CRAWLER,
-                                       0);
-
-    case BAND_TARANTELLA:
-        return random_choose_weighted(10, MONS_TARANTELLA,
-                                       7, MONS_WOLF_SPIDER,
-                                       3, MONS_ORB_SPIDER,
-                                       8, MONS_REDBACK,
-                                       2, MONS_DEMONIC_CRAWLER,
-                                       0);
-
-    case BAND_VAULT_WARDEN:
-        if (which == 1 || which == 2 && coinflip())
-        {
-            return random_choose_weighted( 8, MONS_VAULT_SENTINEL,
-                                          12, MONS_IRONBRAND_CONVOKER,
-                                          10, MONS_IRONHEART_PRESERVER,
-                                           0);
-        }
-        else
-            return MONS_VAULT_GUARD;
-
     case BAND_DEATH_KNIGHT:
         if (!player_in_branch(BRANCH_DUNGEON)
             && which == 1 && x_chance_in_y(2, 3))
@@ -2704,72 +2711,6 @@ static monster_type _band_member(band_type band, int which,
                                           3, MONS_PHANTASMAL_WARRIOR,
                                           3, MONS_SKELETAL_WARRIOR,
                                           0);
-
-    case BAND_JIANGSHI:
-        return MONS_JIANGSHI;
-
-    case BAND_FAUNS:
-        return MONS_FAUN;
-
-    case BAND_FAUN_PARTY:
-        if (which == 1)
-            return MONS_SIREN;
-        else
-            return MONS_FAUN;
-
-    case BAND_TENGU:
-        return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
-
-    case BAND_SOJOBO:
-        return MONS_TENGU_REAVER;
-
-    case BAND_ENCHANTRESS:
-        if (which <= 3)
-            return MONS_SPRIGGAN_DEFENDER;
-        else if (which <= 4)
-            return MONS_SPRIGGAN_AIR_MAGE;
-        if (coinflip())
-        {
-            return random_choose(MONS_SPRIGGAN_AIR_MAGE,
-                                 MONS_SPRIGGAN_BERSERKER,
-                                 MONS_SPRIGGAN_RIDER);
-        }
-        return MONS_SPRIGGAN;
-    case BAND_SPRIGGAN_ELITES:
-        if (which == 1 && coinflip())
-            return MONS_SPRIGGAN_DEFENDER;
-    case BAND_SPRIGGANS:
-        return random_choose_weighted( 4, MONS_SPRIGGAN_AIR_MAGE,
-                                       3, MONS_SPRIGGAN_BERSERKER,
-                                      11, MONS_SPRIGGAN_RIDER,
-                                       0);
-
-    case BAND_AIR_ELEMENTALS:
-        return MONS_AIR_ELEMENTAL;
-
-    case BAND_SPRIGGAN_DRUID:
-        return one_chance_in(3) ? MONS_SPRIGGAN_RIDER : MONS_SPRIGGAN;
-
-    case BAND_SPRIGGAN_RIDERS:
-        return MONS_SPRIGGAN_RIDER;
-
-    case BAND_PHANTASMAL_WARRIORS:
-        return MONS_PHANTASMAL_WARRIOR;
-
-    case BAND_THRASHING_HORRORS:
-        return MONS_THRASHING_HORROR;
-
-    case BAND_RAIJU:
-        return MONS_RAIJU;
-
-    case BAND_SALAMANDERS:
-        return MONS_SALAMANDER;
-
-    case BAND_SALAMANDER_ELITES:
-        if (which == 1 && coinflip())
-            return MONS_SALAMANDER_MYSTIC;
-        else
-            return MONS_SALAMANDER;
 
     case BAND_MONSTROUS_DEMONSPAWN:
         if (which == 1 || one_chance_in(5))
@@ -2887,84 +2828,6 @@ static monster_type _band_member(band_type band, int which,
             }
         }
         return random_demonspawn_monster_species();
-
-    case BAND_VASHNIA:
-        return MONS_NAGA_SHARPSHOOTER;
-
-    case BAND_ROBIN:
-        return random_choose_weighted(3, MONS_GOBLIN,
-                                      1, MONS_HOBGOBLIN,
-                                      0);
-
-    case BAND_CEREBOV:
-        if (which == 1)
-            return MONS_BRIMSTONE_FIEND;
-
-        return random_choose_weighted(1, MONS_BALRUG,
-                                      3, MONS_SUN_DEMON,
-                                      3, MONS_EFREET,
-                                      0);
-
-    case BAND_GLOORX_VLOQ:
-        if (which == 1)
-            return MONS_CURSE_SKULL;
-        if (which == 2)
-            return MONS_EXECUTIONER;
-
-        return random_choose_weighted(1, MONS_SHADOW_DEMON,
-                                      3, MONS_DEMONIC_CRAWLER,
-                                      3, MONS_SHADOW_WRAITH,
-                                      0);
-
-    case BAND_MNOLEG:
-        if (which == 1)
-            return MONS_TENTACLED_MONSTROSITY;
-
-        return random_choose_weighted(2, MONS_CACODEMON,
-                                      3, MONS_ABOMINATION_LARGE,
-                                      3, MONS_NEQOXEC,
-                                      1, MONS_TENTACLED_MONSTROSITY,
-                                      3, MONS_VERY_UGLY_THING,
-                                      0);
-
-    case BAND_LOM_LOBON:
-        return random_choose_weighted(2, MONS_DRACONIAN_ANNIHILATOR,
-                                      2, MONS_DEEP_ELF_ANNIHILATOR,
-                                      4, MONS_WIZARD,
-                                      4, MONS_RAKSHASA,
-                                      2, MONS_GIANT_ORANGE_BRAIN,
-                                      2, MONS_BLIZZARD_DEMON,
-                                      2, MONS_GREEN_DEATH,
-                                      1, MONS_TITAN,
-                                      1, MONS_SPRIGGAN_AIR_MAGE,
-                                      1, MONS_LICH,
-                                      0);
-
-    case BAND_DEATH_SCARABS:
-        return MONS_DEATH_SCARAB;
-
-    case BAND_ANUBIS_GUARD:
-        return MONS_ANUBIS_GUARD;
-
-    case BAND_HOLIES:
-        // same as Summon Holies right now
-        return random_choose_weighted(100, MONS_ANGEL,
-                                       80, MONS_CHERUB,
-                                       50, MONS_DAEVA,
-                                        1, MONS_OPHAN,
-                                        0);
-
-    case BAND_IRON_GIANT:
-        return random_choose_weighted(10, MONS_STONE_GIANT,
-                                       1, MONS_FIRE_GIANT,
-                                       1, MONS_FROST_GIANT,
-                                       0);
-
-    case BAND_SPARK_WASPS:
-        return MONS_SPARK_WASP;
-
-    case BAND_HOWLER_MONKEY:
-        return MONS_HOWLER_MONKEY;
 
     case BAND_RANDOM_SINGLE:
     {
