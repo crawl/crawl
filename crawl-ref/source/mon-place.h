@@ -117,6 +117,8 @@ monster* get_free_monster();
 bool can_place_on_trap(monster_type mon_type, trap_type trap);
 void mons_add_blame(monster* mon, const string &blame_string);
 
+void debug_bands();
+
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;
 

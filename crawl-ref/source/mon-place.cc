@@ -21,6 +21,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "errors.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -43,6 +44,7 @@
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
@@ -907,6 +909,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         for (int i = 1; i < band_size; ++i)
         {
             band_monsters[i] = _band_member(band, i, place, allow_ood);
+            if (band_monsters[i] == NUM_MONSTERS)
+                die("Unhandled band type %d", band);
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
@@ -2843,7 +2847,32 @@ static monster_type _band_member(band_type band, int which,
     }
 
     default:
-        die("unhandled band type %d", band);
+        return NUM_MONSTERS;
+    }
+}
+
+/// Check to make sure that all band types are handled.
+void debug_bands()
+{
+    vector<int> unhandled_bands;
+    for (int i = 0; i < NUM_BANDS; ++i)
+        if (_band_member((band_type)i, 1, BRANCH_DUNGEON, true) == NUM_MONSTERS)
+            unhandled_bands.push_back(i);
+
+    if (!unhandled_bands.empty())
+    {
+        const string fails = "Unhandled bands: "
+           + comma_separated_fn(unhandled_bands.begin(), unhandled_bands.end(),
+                                [](int i){ return make_stringf("%d", i); });
+
+        fprintf(stderr, "%s", fails.c_str());
+
+        FILE *f = fopen("mon-bands.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-bands errors (dumped to mon-bands.out)");
     }
 }
 

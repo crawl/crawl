@@ -33,6 +33,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-pick.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "ng-init.h"
 #include "state.h"
@@ -182,6 +183,7 @@ void run_tests()
     _run_test("coordit", coordit_tests);
     _run_test("makename", make_name_tests);
     _run_test("job-data", debug_jobdata);
+    _run_test("mon-bands", debug_bands);
 
     // Get a list of Lua files in test.
     {
