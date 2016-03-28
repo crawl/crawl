@@ -44,17 +44,7 @@ static void _mark_unseen_monsters();
  */
 static void _calc_hp_artefact()
 {
-    // Rounding must be down or Deep Dwarves would abuse certain values.
-    // We can reduce errors by a factor of 100 by using partial hp we have.
-    int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    set_hp(min(hp / 100, you.hp_max));
-    you.hit_points_regeneration = hp % 100;
+    recalc_and_scale_hp();
     if (you.hp_max <= 0) // Borgnjor's abusers...
         ouch(0, KILLED_BY_DRAINING);
 }
