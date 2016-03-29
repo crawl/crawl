@@ -1686,12 +1686,10 @@ static string _gen_randbook_name(string subject, string owner,
  * @param disc1         A spellschool (discipline) associated with the book.
  * @param disc2         A spellschool (discipline) associated with the book.
  * @param highlevel     Whether the book contains "high-level" spells.
- * @param all_spells_disc1      Are all spells in the book of the same school?
  * @return              The name of the book's 'owner', or the empty string.
  */
 static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
-                                  spschool_flag_type disc2, bool highlevel,
-                                  bool all_spells_disc1)
+                                  spschool_flag_type disc2, bool highlevel)
 {
     // If the owner hasn't been set already use
     // a) the god's name for god gifts (only applies to Sif Muna and Xom),
@@ -1718,8 +1716,7 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
                 lookups.push_back("highlevel " + lookup + " owner");
             lookups.push_back(lookup + " owner");
         }
-
-        if (all_spells_disc1)
+        else
         {
             if (highlevel)
                 lookups.push_back("highlevel " + d1_name + " owner");
@@ -1744,11 +1741,11 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
         switch (disc1)
         {
             case SPTYP_NECROMANCY:
-                if (all_spells_disc1 && !one_chance_in(6))
+                if (disc1 == disc2 && !one_chance_in(6))
                     return god_name(GOD_KIKUBAAQUDGHA, false);
                 break;
             case SPTYP_CONJURATION:
-                if (all_spells_disc1 && !one_chance_in(4))
+                if (disc1 == disc2 && !one_chance_in(4))
                     return god_name(GOD_VEHUMET, false);
                 break;
             default:
@@ -1822,7 +1819,7 @@ bool make_book_theme_randart(item_def &book,
     ASSERT(count_bits(disc2) == 1);
 
     book.sub_type = BOOK_RANDART_THEME;
-    _make_book_randart(book);   // NOTE: have any spells been set here?
+    _make_book_randart(book);
 
     int god_discard        = 0;
     int uncastable_discard = 0;
@@ -1957,8 +1954,7 @@ bool make_book_theme_randart(item_def &book,
         const bool highlevel = (highest_level >= 7 + random2(3)
                                 && (lowest_level > 1 || coinflip()));
 
-        owner = _gen_randbook_owner(god, disc1, disc2, highlevel,
-                                    all_spells_disc1);
+        owner = _gen_randbook_owner(god, disc1, disc2, highlevel);
     }
 
     book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
