@@ -1035,6 +1035,233 @@ static bool _acquire_manual(item_def &book)
     return true;
 }
 
+/// Does the given acq source generate books totally randomly?
+static bool _completely_random_books(int agent)
+{
+    // only acq & god gifts from sane gods weight spells/disciplines
+    // for player utility.
+    return agent == GOD_XOM || agent == GOD_NO_GOD;
+}
+
+/// How desireable is the given spell for inclusion in an acquired randbook?
+static int _randbook_spell_weight(spell_type spell, int agent)
+{
+    if (_completely_random_books(agent))
+        return 1;
+
+    // prefer unseen spells
+    const int seen_weight = you.seen_spell[spell] ? 1 : 4;
+
+    // prefer spells roughly approximating the player's overall spellcasting
+    // ability (?????)
+    const int Spc = you.skills[SK_SPELLCASTING];
+    const int difficult_weight = 5 - abs(3 * spell_difficulty(spell) - Spc) / 7;
+
+    // prefer spells in disciplines the player is skilled with
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    int total_skill = 0;
+    int num_skills  = 0;
+    for (const auto disc : spschools_type::range())
+    {
+        if (disciplines & disc)
+        {
+            total_skill += you.skills[spell_type2skill(disc)];
+            num_skills++;
+        }
+    }
+    int skill_weight = 1;
+    if (num_skills > 0)
+        skill_weight = (2 + (total_skill / num_skills)) / 3;
+    skill_weight = max(1, skill_weight);
+
+    const int weight = seen_weight * skill_weight * difficult_weight;
+    ASSERT(weight > 0);
+    return weight;
+    /// XXX: I'm not sure how much impact all this actually has.
+}
+
+typedef map<spell_type, int> weighted_spells;
+
+/**
+ * Populate a list of possible spells to be included in acquired books,
+ * weighted by desireability.
+ *
+ * @param possible_spells[out]  The list to be populated.
+ * @param agent         The entity creating the item; possibly a god.
+ */
+static void _get_weighted_randbook_spells(weighted_spells &possible_spells,
+                                          int agent)
+{
+    // For randarts handed out by Sif Muna, spells contained in the
+    // special books are fair game.
+    // We store them in an extra vector that (once sorted) can later
+    // be checked for each spell with a rarity -1 (i.e. not normally
+    // appearing randomly).
+    vector<spell_type> special_spells;
+    if (agent == GOD_SIF_MUNA)
+    {
+        for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+        {
+            const book_type book = static_cast<book_type>(i);
+            if (is_rare_book(book))
+            {
+                for (spell_type spell : spellbook_template(book))
+                {
+                    if (spell_rarity(spell) != -1)
+                        continue;
+
+                    special_spells.push_back(spell);
+                }
+            }
+        }
+
+        sort(special_spells.begin(), special_spells.end());
+    }
+
+    const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
+
+    int specnum = 0;
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_valid_spell(spell))
+            continue;
+
+        // Only use spells available in books you might find lying about
+        // the dungeon, unless Sif is involved.
+        if (spell_rarity(spell) == -1)
+        {
+            // this is a very silly optimization
+            bool skip_spell = true;
+            while ((unsigned int) specnum < special_spells.size()
+                   && spell == special_spells[specnum])
+            {
+                specnum++;
+                skip_spell = false;
+            }
+
+            if (skip_spell)
+                continue;
+        }
+
+        if (!you_can_memorise(spell))
+            continue;
+
+        if (god_dislikes_spell_type(spell, god))
+            continue;
+
+        // Passed all tests.
+        const int weight = _randbook_spell_weight(spell, agent);
+        possible_spells[spell] = weight;
+    }
+}
+
+/**
+ * Choose a spell discipline for a randbook, weighted by the the value of all
+ * possible spells in that discipline.
+ *
+ * @param possibles     A weighted list of all possible spells to include in
+ *                      the book.
+ * @param agent         The entity creating the item; possibly a god.
+ * @return              An appropriate spell school; e.g. SPTYP_FIRE.
+ */
+static spschool_flag_type _choose_randbook_discipline(weighted_spells
+                                                      &possible_spells,
+                                                      int agent)
+{
+    map<spschool_flag_type, int> discipline_weights;
+    for (auto weighted_spell : possible_spells)
+    {
+        const spell_type spell = weighted_spell.first;
+        const int weight = weighted_spell.second;
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        for (const auto disc : spschools_type::range())
+        {
+            if (disciplines & disc)
+            {
+                if (_completely_random_books(agent))
+                    discipline_weights[disc] = 1;
+                else
+                    discipline_weights[disc] += weight;
+            }
+        }
+    }
+
+    const spschool_flag_type *discipline
+        = random_choose_weighted(discipline_weights);
+    ASSERT(discipline);
+    return *discipline;
+}
+
+/**
+ * From a given weighted list of possible spells, choose a set to include in
+ * a randbook, filtered by discipline.
+ *
+ * @param[in,out] possible_spells   All possible spells, weighted by value.
+                                    Modified in-place for efficiency.
+ * @param discipline_1              The first spellschool.
+ * @param discipline_2              The second spellschool.
+ * @param size                      The number of spells to include.
+ * @param[out] spells               The chosen spells.
+ */
+static void _choose_themed_randbook_spells(weighted_spells &possible_spells,
+                                           spschool_flag_type discipline_1,
+                                           spschool_flag_type discipline_2,
+                                           int size, vector<spell_type> &spells)
+{
+    for (auto weighted_spell : possible_spells)
+    {
+        const spell_type spell = weighted_spell.first;
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        if (!(disciplines & discipline_1) && !(disciplines & discipline_2))
+            weighted_spell.second = 0; // filter it out
+    }
+
+    for (int i = 0; i < size; ++i)
+    {
+        const spell_type *spell = random_choose_weighted(possible_spells);
+        ASSERT(spell);
+        spells.push_back(*spell);
+        possible_spells[*spell] = 0; // don't choose the same one twice!
+    }
+}
+
+/**
+ * Turn a given book into an acquirement-quality themed spellbook.
+ *
+ * @param book[out]     The book to be turned into a randbook.
+ * @param agent         The entity creating the item; possibly a god.
+ */
+static void _acquire_themed_randbook(item_def &book, int agent)
+{
+    weighted_spells possible_spells;
+    _get_weighted_randbook_spells(possible_spells, agent);
+
+    // include 2-8 spells in the book, leaning heavily toward 5
+    const int size = min(2 + random2avg(7, 3),
+                         (int)possible_spells.size());
+    ASSERT(size);
+
+    // XXX: we could cache this...
+    const spschool_flag_type discipline_1
+        = _choose_randbook_discipline(possible_spells, agent);
+    const spschool_flag_type discipline_2
+        = _choose_randbook_discipline(possible_spells, agent);
+
+    vector<spell_type> spells;
+    _choose_themed_randbook_spells(possible_spells, discipline_1, discipline_2,
+                                   size, spells);
+
+    // Acquired randart books have a chance of being named after the player.
+    const string owner = agent == AQ_SCROLL && one_chance_in(12) ?
+                            you.your_name :
+                            "";
+
+    init_book_theme_randart(book, spells);
+    name_book_theme_randart(book, discipline_1, discipline_2, owner);
+}
+
 static bool _do_book_acquirement(item_def &book, int agent)
 {
     // items() shouldn't make book a randart for acquirement items.
@@ -1078,20 +1305,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         // else intentional fall-through
     }
     case BOOK_RANDART_THEME:
-    {
-        // Acquired randart books have a chance of being named after the player.
-        const string owner = agent == AQ_SCROLL && one_chance_in(12) ?
-                                you.your_name :
-                                "";
-
-        book.sub_type = BOOK_RANDART_THEME;
-        if (!make_book_theme_randart(book, SPTYP_NONE, SPTYP_NONE,
-                                     5 + coinflip(), 20, SPELL_NO_SPELL, owner))
-        {
-            return false;
-        }
+        _acquire_themed_randbook(book, agent);
         break;
-    }
 
     case BOOK_RANDART_LEVEL:
     {
