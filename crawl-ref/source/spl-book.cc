@@ -1051,12 +1051,8 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         {
             // themed randart: only include spells of the given disciplines
             const spschools_type disciplines = get_spell_disciplines(spell);
-            if ((!(disciplines & disc1) && !(disciplines & disc2))
-                 || disciplines_conflict(disc1, disciplines)
-                 || disciplines_conflict(disc2, disciplines))
-            {
+            if (!(disciplines & disc1) && !(disciplines & disc2))
                 continue;
-            }
         }
 
         if (avoid_uncastable && !you_can_memorise(spell))
@@ -1408,15 +1404,8 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
             skill_weights[i] = 1;
     }
 
-    do
-    {
-        disc1 = ok_discs[choose_random_weighted(skill_weights,
-                                                end(skill_weights))];
-        disc2 = ok_discs[choose_random_weighted(skill_weights,
-                                                end(skill_weights))];
-    }
-    while (disciplines_conflict(disc1, disc2));
-
+    disc1 = ok_discs[choose_random_weighted(skill_weights, end(skill_weights))];
+    disc2 = ok_discs[choose_random_weighted(skill_weights, end(skill_weights))];
     return true;
 }
 
