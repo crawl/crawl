@@ -54,6 +54,10 @@
 /// Should the book's name NOT use articles? (Foo's Bar of Baz, not the Foo's)
 #define BOOK_TITLED_KEY "is_named"
 
+static string _gen_randbook_name(string subject, string owner,
+                                 spschool_flag_type disc1,
+                                 spschool_flag_type disc2);
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -1335,6 +1339,51 @@ bool make_book_level_randart(item_def &book, int level)
     return true;
 }
 
+/**
+ * Initialize a themed randbook, & fill it with the given spells.
+ *
+ * @param book[in,out]      The book to be initialized.
+ * @param spells            The spells to fill the book with.
+ *                          Not passed by reference since we want to sort it.
+ */
+void init_book_theme_randart(item_def &book, vector<spell_type> spells)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spells.resize(RANDBOOK_SIZE, SPELL_NO_SPELL);
+    sort(spells.begin(), spells.end(), _compare_spells);
+    ASSERT(spells[0] != SPELL_NO_SPELL);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = spells[i];
+}
+
+/**
+ * Generate and apply a name for a themed randbook.
+ *
+ * @param book[in,out]      The book to be named.
+ * @param discipline_1      The first spellschool.
+ * @param discipline_2      The second spellschool.
+ * @param owner             The book's owner; e.g. "Xom". May be empty.
+ * @param subject           The subject of the book. May be empty.
+ */
+void name_book_theme_randart(item_def &book, spschool_flag_type discipline_1,
+                             spschool_flag_type discipline_2,
+                             string owner, string subject)
+{
+    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
+    const string name = _gen_randbook_name(subject, owner,
+                                           discipline_1, discipline_2);
+    set_artefact_name(book, replace_name_parts(name, book));
+}
+
 static bool _get_weighted_discs(bool completely_random, god_type god,
                                 spschool_flag_type &disc1,
                                 spschool_flag_type &disc2)
@@ -1944,11 +1993,7 @@ bool make_book_theme_randart(item_def &book,
                                     all_spells_disc1);
     }
 
-    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
-    set_artefact_name(book,
-                      replace_name_parts(_gen_randbook_name(title, owner,
-                                                            disc1, disc2),
-                                         book));
+    name_book_theme_randart(book, disc1, disc2, owner, title);
 
     return true;
 }

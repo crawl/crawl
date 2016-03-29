@@ -40,6 +40,10 @@ bool has_spells_to_memorise(bool silent = true,
                             spell_type current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
 
+void init_book_theme_randart(item_def &book, vector<spell_type> spells);
+void name_book_theme_randart(item_def &book, spschool_flag_type discipline_1,
+                             spschool_flag_type discipline_2,
+                             string owner = "", string subject = "");
 bool make_book_level_randart(item_def &book, int level = -1);
 bool make_book_theme_randart(item_def &book,
                              spschool_flag_type disc1 = SPTYP_NONE,
