@@ -547,16 +547,6 @@ int count_bits(uint64_t bits)
     return c;
 }
 
-// NOTE: Assumes that any single spell won't belong to conflicting
-// disciplines.
-bool disciplines_conflict(spschools_type disc1, spschools_type disc2)
-{
-    const spschools_type combined = disc1 | disc2;
-
-    return (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
-           || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE);
-}
-
 const char *spell_title(spell_type spell)
 {
     return _seekspell(spell)->title;

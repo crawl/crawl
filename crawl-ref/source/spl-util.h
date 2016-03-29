@@ -82,7 +82,6 @@ unsigned int get_spell_flags(spell_type which_spell);
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc);
 spschools_type get_spell_disciplines(spell_type which_spell);
-bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
 int count_bits(uint64_t bits);
 
 template <class E, int Exp>

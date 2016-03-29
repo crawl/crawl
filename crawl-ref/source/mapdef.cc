@@ -5292,16 +5292,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             }
         }
 
-        if (disc1 != 0 && disc2 != 0)
-        {
-            if (disciplines_conflict(disc1, disc2))
-            {
-                error = make_stringf("Bad combination of spell schools: %s & %s.",
-                                    st_disc1.c_str(), st_disc2.c_str());
-                return false;
-            }
-        }
-
         if (disc1 == SPTYP_NONE && disc2 != 0)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
