@@ -1512,34 +1512,20 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
     return book_pos > 0;
 }
 
+/// Remove all spells from the given list that do not include either of
+/// the given disciplines.
 static void _remove_nondiscipline_spells(spell_type chosen_spells[],
                                          spschool_flag_type d1,
-                                         spschool_flag_type d2,
-                                         spell_type exclude = SPELL_NO_SPELL)
+                                         spschool_flag_type d2)
 {
-    int replace = -1;
     for (int i = 0; i < RANDBOOK_SIZE; i++)
     {
-        if (chosen_spells[i] == SPELL_NO_SPELL)
-            break;
-
-        if (chosen_spells[i] == exclude)
-            continue;
-
-        // If a spell matches neither the first nor the second type
-        // (that may be the same) remove it.
-        if (!spell_typematch(chosen_spells[i], d1)
-            && !spell_typematch(chosen_spells[i], d2))
+        const spell_type spell = chosen_spells[i];
+        if (spell != SPELL_NO_SPELL
+            && !spell_typematch(spell, d1)
+            && !spell_typematch(spell, d2))
         {
             chosen_spells[i] = SPELL_NO_SPELL;
-            if (replace == -1)
-                replace = i;
-        }
-        else if (replace != -1)
-        {
-            chosen_spells[replace] = chosen_spells[i];
-            chosen_spells[i] = SPELL_NO_SPELL;
-            replace++;
         }
     }
 }
@@ -1917,8 +1903,7 @@ bool make_book_theme_randart(item_def &book,
     _add_included_spells(chosen_spells, incl_spells);
 
     // Resort spells.
-    if (!incl_spells.empty())
-        sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
+    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     int highest_level = 0;
