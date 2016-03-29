@@ -1447,8 +1447,6 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
             int c = 1;
             if (!you.seen_spell[spell])
                 c = 4;
-            else if (!you.has_spell(spell))
-                c = 2;
 
             int total_skill = 0;
             int num_skills  = 0;
