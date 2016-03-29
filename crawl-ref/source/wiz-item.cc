@@ -765,6 +765,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
+    int randbook_spells = 0;
 
     int subtype_quants[256];
     int ego_quants[NUM_SPECIAL_WEAPONS];
@@ -805,6 +806,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             num_arts++;
             if (type == OBJ_BOOKS)
             {
+                randbook_spells += spells_in_book(item).size();
                 if (item.sub_type == BOOK_RANDART_THEME)
                 {
                     const int disc1 = item.plus & 0xFF;
@@ -1119,6 +1121,9 @@ static void _debug_acquirement_stats(FILE *ostat)
                             100.0 * (float) ego_quants[i] / (float) num_arts);
                 }
             }
+
+            fprintf(ostat, "Avg. spells per randbook: %4.3f",
+                    (float)randbook_spells / num_arts);
         }
 
         // Also list skills for manuals.
