@@ -238,8 +238,12 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_WOE))
+    if (using_weapon()
+        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
+            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
+    {
         return AUTOMATIC_HIT;
+    }
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
