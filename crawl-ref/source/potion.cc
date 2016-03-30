@@ -713,6 +713,23 @@ public:
         return true;
     }
 
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (was_known
+            && how_mutated(false, true) > how_mutated(false, true, false)
+            && !yesno("Your transient mutations will not be cured; Quaff anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        effect();
+        return true;
+    }
+
     bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("It has a very clean taste.");
