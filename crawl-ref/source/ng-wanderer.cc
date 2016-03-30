@@ -330,8 +330,8 @@ static void _give_wanderer_minor_book(skill_type skill)
     if (!item)
         return;
 
-    make_book_theme_randart(*item, school, SPTYP_NONE, 2, 4, SPELL_NO_SPELL,
-                            "", "", true);
+    build_themed_book(*item, capped_spell_filter(4),
+                      forced_book_theme(school), 2);
 }
 
 // Players can get some consumables as a "good item".

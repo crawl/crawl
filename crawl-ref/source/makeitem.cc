@@ -1581,10 +1581,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-    {
-        make_book_theme_randart(item, SPTYP_NONE, SPTYP_NONE,
-                                5 + coinflip(), 20);
-    }
+        build_themed_book(item, capped_spell_filter(20));
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level  = min(9, max(1, item_level / 3));
