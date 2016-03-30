@@ -4216,20 +4216,17 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         if (num_spells < 1)
             num_spells = theme_book_size();
         const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
-        dprf("%d spells, %d levels, %s disc1, %s disc2",
-             num_spells, max_levels, spelltype_long_name(disc1),
-             spelltype_long_name(disc2));
 
         vector<spell_type> chosen_spells;
         theme_book_spells(disc1, disc2,
                           forced_spell_filter(spells,
                                                capped_spell_filter(max_levels)),
                           origin_as_god_gift(item), num_spells, chosen_spells);
-        dprf("chose %s",
-             comma_separated_fn(chosen_spells.begin(), chosen_spells.end(),
-                                spell_title).c_str());
         init_book_theme_randart(item, chosen_spells);
         name_book_theme_randart(item, disc1, disc2, owner, title);
+        // XXX: changing the signature of build_themed_book()'s get_discipline
+        // would allow us to roll much of this ^ into that. possibly clever
+        // lambdas could let us do it without even changing the signature?
     }
 
     // Wipe item origin to remove "this is a god gift!" from there,
