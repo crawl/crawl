@@ -15,7 +15,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "mon-place.h"
-#include "spl-book.h"
+#include "randbook.h" // roxanne, roxanne...
 #include "state.h"
 #include "tilepick.h"
 #include "unwind.h"

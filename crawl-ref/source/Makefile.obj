@@ -188,6 +188,7 @@ player.o \
 potion.o \
 prompt.o \
 quiver.o \
+randbook.o \
 random.o \
 random-var.o \
 ranged_attack.o \

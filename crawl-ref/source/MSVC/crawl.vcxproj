@@ -449,6 +449,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\playable.cc" />
     <ClCompile Include="..\player.cc" />
     <ClCompile Include="..\quiver.cc" />
+    <ClCompile Include="..\randbook.cc" />
     <ClCompile Include="..\random-var.cc" />
     <ClCompile Include="..\random.cc" />
     <ClCompile Include="..\ranged_attack.cc" />
@@ -816,6 +817,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
+    <ClInclude Include="..\randbook.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\random-var.h" />
     <ClInclude Include="..\random.h" />
