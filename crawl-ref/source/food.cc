@@ -1493,6 +1493,22 @@ void handle_starvation()
 
         if (you.hunger <= 0)
         {
+            auto it = min_element(begin(you.inv), end(you.inv),
+                [](const item_def& a, const item_def& b) -> bool
+                {
+                    return (a.base_type == OBJ_FOOD && can_eat(a, true)
+                                ? food_turns(a) : INT_MAX)
+                        < (b.base_type == OBJ_FOOD && can_eat(b, true)
+                                ? food_turns(b) : INT_MAX);
+                });
+            if (it != end(you.inv)
+                && it->base_type == OBJ_FOOD && can_eat(*it, true))
+            {
+                mpr("As you are about to starve, you manage to eat something.");
+                eat_item(*it);
+                return;
+            }
+
             mprf(MSGCH_FOOD, "You have starved to death.");
             ouch(INSTANT_DEATH, KILLED_BY_STARVATION);
             if (!you.dead) // if we're still here...
