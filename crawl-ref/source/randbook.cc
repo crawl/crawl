@@ -107,6 +107,33 @@ static bool _is_rare_spell(spell_type spell)
     return false;
 }
 
+
+/**
+ * Can we include the given spell in our spellbook?
+ *
+ * @param agent             The entity creating the book; possibly a god.
+ * @param spell             The spell to be filtered.
+ * @return                  Whether the spell can be included.
+ */
+bool _agent_spell_filter(int agent, spell_type spell)
+{
+    // Only use spells available in books you might find lying about
+    // the dungeon; rarebook spells are restricted to Sif-made books.
+    if (spell_rarity(spell) == -1
+        && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
+    {
+        return false;
+    }
+
+    // Don't include spells a god dislikes, if this is an acquirement
+    // or a god gift.
+    const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
+    if (god_dislikes_spell_type(spell, god))
+        return false;
+
+    return true;
+}
+
 /**
  * Can we include the given spell in our themed spellbook?
  *
@@ -135,18 +162,7 @@ bool basic_themed_spell_filter(spschool_flag_type discipline_1,
     if (count(prev.begin(), prev.end(), spell))
         return false;
 
-    // Only use spells available in books you might find lying about
-    // the dungeon; rarebook spells are restricted to Sif-made books.
-    if (spell_rarity(spell) == -1
-        && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
-    {
-        return false;
-    }
-
-    // Don't include spells a god dislikes, if this is an acquirement
-    // or a god gift.
-    const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
-    if (god_dislikes_spell_type(spell, god))
+    if (!_agent_spell_filter(agent, spell))
         return false;
 
     return true;
@@ -1048,64 +1064,16 @@ typedef map<spell_type, int> weighted_spells;
 static void _get_weighted_randbook_spells(weighted_spells &possible_spells,
                                           int agent)
 {
-    // For randarts handed out by Sif Muna, spells contained in the
-    // special books are fair game.
-    // We store them in an extra vector that (once sorted) can later
-    // be checked for each spell with a rarity -1 (i.e. not normally
-    // appearing randomly).
-    vector<spell_type> special_spells;
-    if (agent == GOD_SIF_MUNA)
-    {
-        for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        {
-            const book_type book = static_cast<book_type>(i);
-            if (is_rare_book(book))
-            {
-                for (spell_type spell : spellbook_template(book))
-                {
-                    if (spell_rarity(spell) != -1)
-                        continue;
-
-                    special_spells.push_back(spell);
-                }
-            }
-        }
-
-        sort(special_spells.begin(), special_spells.end());
-    }
-
-    const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
-
-    int specnum = 0;
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
         const spell_type spell = (spell_type) i;
 
-        if (!is_valid_spell(spell))
-            continue;
-
-        // Only use spells available in books you might find lying about
-        // the dungeon, unless Sif is involved.
-        if (spell_rarity(spell) == -1)
+        if (!is_valid_spell(spell)
+            || !_agent_spell_filter(agent, spell)
+            || !you_can_memorise(spell))
         {
-            // this is a very silly optimization
-            bool skip_spell = true;
-            while ((unsigned int) specnum < special_spells.size()
-                   && spell == special_spells[specnum])
-            {
-                specnum++;
-                skip_spell = false;
-            }
-
-            if (skip_spell)
-                continue;
+            continue;
         }
-
-        if (!you_can_memorise(spell))
-            continue;
-
-        if (god_dislikes_spell_type(spell, god))
-            continue;
 
         // Passed all tests.
         const int weight = _randbook_spell_weight(spell, agent);
