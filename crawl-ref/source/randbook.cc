@@ -20,6 +20,263 @@
 static string _gen_randbook_name(string subject, string owner,
                                  spschool_flag_type disc1,
                                  spschool_flag_type disc2);
+static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
+                                  spschool_flag_type disc2,
+                                  const vector<spell_type> &spells);
+
+/// How many spells should be in a random theme book?
+int theme_book_size() { return random2avg(7, 3) + 2; }
+
+/// A discipline chooser that only ever returns the given discipline.
+function<spschool_flag_type()> forced_book_theme(spschool_flag_type theme)
+{
+    return [theme]() { return theme; };
+}
+
+/// Choose a random valid discipline for a themed randbook.
+spschool_flag_type random_book_theme()
+{
+    vector<spschool_flag_type> disciplines;
+    for (auto discipline : spschools_type::range())
+        if (!(discipline & SPTYP_DIVINATION))
+            disciplines.push_back(discipline);
+    return disciplines[random2(disciplines.size())];
+}
+
+/**
+ * Attempt to choose a valid discipline for a themed randbook which contains
+ * at least the given spells.
+ *
+ * XXX: really we should be trying to create a pair that covers the set,
+ * rather than trying to do it all with one...
+ *
+ * @param forced_spells     A set of spells guaranteed to be in the book.
+ * @return                  A discipline which will match as many of those
+ *                          spells as possible.
+ */
+spschool_flag_type matching_book_theme(const vector<spell_type> &forced_spells)
+{
+    map<spschool_flag_type, int> seen_disciplines;
+    for (auto spell : forced_spells)
+    {
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        for (auto discipline : spschools_type::range())
+            if (disciplines & discipline)
+                ++seen_disciplines[discipline];
+    }
+
+    bool matched = false;
+    for (auto seen : seen_disciplines)
+    {
+        if (seen.second == (int)forced_spells.size())
+        {
+            matched = true;
+            break;
+        }
+    }
+
+    if (!matched)
+    {
+        const spschool_flag_type *discipline
+            = random_choose_weighted(seen_disciplines);
+        if (discipline)
+            return *discipline;
+        return random_book_theme();
+    }
+
+    for (auto seen : seen_disciplines)
+        seen.second = seen.second == (int)forced_spells.size() ? 1 : 0;
+    const spschool_flag_type *discipline
+        = random_choose_weighted(seen_disciplines);
+    ASSERT(discipline);
+    return *discipline;
+}
+
+/// Is the given spell found in rarebooks?
+static bool _is_rare_spell(spell_type spell)
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        const book_type book = static_cast<book_type>(i);
+        if (is_rare_book(book))
+            for (spell_type rare_spell : spellbook_template(book))
+                if (rare_spell == spell)
+                    return true;
+    }
+
+    return false;
+}
+
+/**
+ * Can we include the given spell in our themed spellbook?
+ *
+ * @param discipline_1      The first spellschool of the book.
+ * @param discipline_2      The second spellschool of the book.
+ * @param agent             The entity creating the book; possibly a god.
+ * @param prev              A list of spells already chosen for the book.
+ * @param spell             The spell to be filtered.
+ * @return                  Whether the spell can be included.
+ */
+bool basic_themed_spell_filter(spschool_flag_type discipline_1,
+                               spschool_flag_type discipline_2,
+                               int agent,
+                               const vector<spell_type> &prev,
+                               spell_type spell)
+{
+    if (!is_valid_spell(spell))
+        return false;
+
+    // Only include spells matching at least one of the book's disciplines.
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    if (!(disciplines & discipline_1) && !(disciplines & discipline_2))
+        return false;
+
+    // Only include spells we haven't already.
+    if (count(prev.begin(), prev.end(), spell))
+        return false;
+
+    // Only use spells available in books you might find lying about
+    // the dungeon; rarebook spells are restricted to Sif-made books.
+    if (spell_rarity(spell) == -1
+        && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
+    {
+        return false;
+    }
+
+    // Don't include spells a god dislikes, if this is an acquirement
+    // or a god gift.
+    const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
+    if (god_dislikes_spell_type(spell, god))
+        return false;
+
+    return true;
+}
+
+/**
+ * Build and return a spell filter that excludes spells that would push us over
+ * the maximum total spell levels allowed in the book.
+ *
+ * @param max_levels    The max total spell levels allowed.
+ * @param subfilter     A filter to check further.
+ */
+themed_spell_filter capped_spell_filter(int max_levels,
+                                        themed_spell_filter subfilter)
+{
+    if (max_levels < 1)
+        return subfilter; // don't even bother.
+
+    return [max_levels, subfilter](spschool_flag_type discipline_1,
+                                   spschool_flag_type discipline_2,
+                                   int agent,
+                                   const vector<spell_type> &prev,
+                                   spell_type spell)
+    {
+        if (!subfilter(discipline_1, discipline_2, agent, prev, spell))
+            return false;
+
+        int prev_levels = 0;
+        for (auto prev_spell : prev)
+            prev_levels += spell_difficulty(prev_spell);
+        if (spell_difficulty(spell) + prev_levels > max_levels)
+            return false;
+
+        return true;
+    };
+}
+
+/**
+ * Build and return a spell filter that forces the first several spells to
+ * be from the given list, disregarding other constraints
+ *
+ * @param forced_spells     Spells to force.
+ * @param subfilter         A filter to check after all forced spells are in.
+ */
+themed_spell_filter forced_spell_filter(const vector<spell_type> &forced_spells,
+                                        themed_spell_filter subfilter)
+{
+    return [&forced_spells, subfilter](spschool_flag_type discipline_1,
+                                       spschool_flag_type discipline_2,
+                                       int agent,
+                                       const vector<spell_type> &prev,
+                                       spell_type spell)
+    {
+        if (prev.size() < forced_spells.size())
+            return spell == forced_spells[prev.size()];
+        return subfilter(discipline_1, discipline_2, agent, prev, spell);
+    };
+}
+
+/**
+ * Generate a list of spells for a themebook.
+ *
+ * @param discipline_1      The first spellschool of the book.
+ * @param discipline_2      The second spellschool of the book.
+ * @param filter            A filter specifying which spells can be included.
+ * @param agent             The entity creating the book; possibly a god.
+ * @param num_spells        How many spells should be included.
+ * @param spells[out]       The list to be populated.
+ */
+void theme_book_spells(spschool_flag_type discipline_1,
+                       spschool_flag_type discipline_2,
+                       themed_spell_filter filter,
+                       int agent,
+                       int num_spells,
+                       vector<spell_type> &spells)
+{
+    ASSERT(num_spells >= 1);
+    for (int i = 0; i < num_spells; ++i)
+    {
+        vector<spell_type> possible_spells;
+        for (int s = 0; s < NUM_SPELLS; ++s)
+        {
+            const spell_type spell = static_cast<spell_type>(s);
+            if (filter(discipline_1, discipline_2, agent, spells, spell))
+                possible_spells.push_back(spell);
+        }
+
+        if (!possible_spells.size())
+        {
+            dprf("Couldn't find any valid spell for slot %d!", i);
+            return;
+        }
+
+        spells.push_back(possible_spells[random2(possible_spells.size())]);
+    }
+
+    ASSERT(spells.size());
+}
+
+/**
+ * Turn a given book into a themed spellbook.
+ *
+ * @param book[in,out]      The book in question.
+ * @param filter            A filter specifying which spells can be included.
+ * @param get_discipline    A function to choose themes for the book.
+ * @param num_spells        The number of spells the book should include.
+ *                          Not guaranteed, but should be fairly reliable.
+ * @param owner             The name of the book's owner, if any. Cosmetic.
+ * @param subject           The subject of the book, if any. Cosmetic.
+ */
+void build_themed_book(item_def &book, themed_spell_filter filter,
+                       function<spschool_flag_type()> get_discipline,
+                       int num_spells, string owner, string subject)
+{
+    if (num_spells < 1)
+        num_spells = theme_book_size();
+
+    const spschool_flag_type discipline_1 = get_discipline();
+    const spschool_flag_type discipline_2 = get_discipline();
+
+    item_source_type agent;
+    if (!origin_is_acquirement(book, &agent))
+        agent = (item_source_type)origin_as_god_gift(book);
+
+    vector<spell_type> spells;
+    theme_book_spells(discipline_1, discipline_2, filter, agent, num_spells,
+                      spells);
+    init_book_theme_randart(book, spells);
+    name_book_theme_randart(book, discipline_1, discipline_2, owner, subject);
+}
 
 static bool _compare_spells(spell_type a, spell_type b)
 {
@@ -62,7 +319,6 @@ static bool _compare_spells(spell_type a, spell_type b)
 }
 
 static void _get_spell_list(vector<spell_type> &spells, int level,
-                            spschool_flag_type disc1, spschool_flag_type disc2,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
@@ -120,19 +376,9 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         if (avoid_known && you.seen_spell[spell])
             continue;
 
-        if (level != -1)
-        {
-            // fixed level randart: only include spells of the given level
-            if (spell_difficulty(spell) != level)
-                continue;
-        }
-        else
-        {
-            // themed randart: only include spells of the given disciplines
-            const spschools_type disciplines = get_spell_disciplines(spell);
-            if (!(disciplines & disc1) && !(disciplines & disc2))
-                continue;
-        }
+        // fixed level randart: only include spells of the given level
+        if (level != -1 && spell_difficulty(spell) != level)
+            continue;
 
         if (avoid_uncastable && !you_can_memorise(spell))
         {
@@ -149,27 +395,6 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         // Passed all tests.
         spells.push_back(spell);
     }
-}
-
-static void _get_spell_list(vector<spell_type> &spells,
-                            spschool_flag_type disc1, spschool_flag_type disc2,
-                            god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard,
-                            bool avoid_known = false)
-{
-    _get_spell_list(spells, -1, disc1, disc2,
-                    god, avoid_uncastable, god_discard, uncastable_discard,
-                    avoid_known);
-}
-
-static void _get_spell_list(vector<spell_type> &spells, int level,
-                            god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard,
-                            bool avoid_known = false)
-{
-    _get_spell_list(spells, level, SPTYP_NONE, SPTYP_NONE,
-                    god, avoid_uncastable, god_discard, uncastable_discard,
-                    avoid_known);
 }
 
 static void _make_book_randart(item_def &book)
@@ -453,229 +678,17 @@ void name_book_theme_randart(item_def &book, spschool_flag_type discipline_1,
                              spschool_flag_type discipline_2,
                              string owner, string subject)
 {
+    if (owner.empty())
+    {
+        const vector<spell_type> spells = spells_in_book(book);
+        owner = _gen_randbook_owner(origin_as_god_gift(book), discipline_1,
+                                    discipline_2, spells);
+    }
+
     book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
     const string name = _gen_randbook_name(subject, owner,
                                            discipline_1, discipline_2);
     set_artefact_name(book, replace_name_parts(name, book));
-}
-
-static bool _get_weighted_discs(bool completely_random, god_type god,
-                                spschool_flag_type &disc1,
-                                spschool_flag_type &disc2)
-{
-    // Eliminate disciplines that the god dislikes or from which all
-    // spells are discarded.
-    vector<spschool_flag_type> ok_discs;
-    vector<skill_type> skills;
-    vector<int> spellcount;
-    for (const auto disc : spschools_type::range())
-    {
-        if (disc & SPTYP_DIVINATION)
-            continue;
-
-        if (god_dislikes_spell_discipline(disc, god))
-            continue;
-
-        int junk1 = 0, junk2 = 0;
-        vector<spell_type> spells;
-        _get_spell_list(spells, disc, disc, god, !completely_random,
-                        junk1, junk2, !completely_random);
-
-        if (spells.empty())
-            continue;
-
-        ok_discs.push_back(disc);
-        skills.push_back(spell_type2skill(disc));
-        spellcount.push_back(spells.size());
-    }
-
-    int num_discs = ok_discs.size();
-
-    if (num_discs == 0)
-    {
-        dprf("No valid disciplines with which to make a themed randart "
-             "spellbook.");
-        // Should only happen if !completely_random and the player already knows
-        // all available spells. make_book_theme_randart may attempt to retry
-        // with completely_random == true next.
-        return false;
-    }
-
-    int skill_weights[SPTYP_LAST_EXPONENT + 1] = { 0 };
-
-    if (!completely_random)
-    {
-        int total_skills = 0;
-        for (int i = 0; i < num_discs; i++)
-        {
-            skill_type skill  = skills[i];
-            int weight = 2 * you.skills[skill] + 1;
-
-            if (spellcount[i] < 3)
-                weight *= spellcount[i]/3;
-
-            skill_weights[i] = max(0, weight);
-            total_skills += skill_weights[i];
-        }
-
-        if (total_skills == 0)
-            completely_random = true;
-    }
-
-    if (completely_random)
-    {
-        for (int i = 0; i < num_discs; i++)
-            skill_weights[i] = 1;
-    }
-
-    disc1 = ok_discs[choose_random_weighted(skill_weights, end(skill_weights))];
-    disc2 = ok_discs[choose_random_weighted(skill_weights, end(skill_weights))];
-    return true;
-}
-
-static bool _get_weighted_spells(bool completely_random, god_type god,
-                                 spschool_flag_type disc1,
-                                 spschool_flag_type disc2,
-                                 int num_spells, int max_levels,
-                                 const vector<spell_type> &spells,
-                                 spell_type chosen_spells[], bool exact_level)
-{
-    ASSERT(num_spells <= (int) spells.size());
-    ASSERT(num_spells <= RANDBOOK_SIZE);
-    ASSERT(num_spells > 0);
-    ASSERT(max_levels > 0);
-
-    int spell_weights[NUM_SPELLS] = { 0 };
-
-    if (completely_random)
-    {
-        for (spell_type spl : spells)
-        {
-            if (god == GOD_XOM)
-                spell_weights[spl] = count_bits(get_spell_disciplines(spl));
-            else
-                spell_weights[spl] = 1;
-        }
-    }
-    else
-    {
-        const int Spc = you.skills[SK_SPELLCASTING];
-        for (spell_type spell : spells)
-        {
-            const spschools_type disciplines = get_spell_disciplines(spell);
-
-            int d = 1;
-            if ((disciplines & disc1) && (disciplines & disc2))
-                d = 2;
-
-            int c = 1;
-            if (!you.seen_spell[spell])
-                c = 4;
-
-            int total_skill = 0;
-            int num_skills  = 0;
-            for (const auto disc : spschools_type::range())
-            {
-                if (disciplines & disc)
-                {
-                    total_skill += you.skills[spell_type2skill(disc)];
-                    num_skills++;
-                }
-            }
-            int w = 1;
-            if (num_skills > 0)
-                w = (2 + (total_skill / num_skills)) / 3;
-            w = max(1, w);
-
-            int l = 5 - abs(3 * spell_difficulty(spell) - Spc) / 7;
-
-            int weight = d * c * w * l;
-
-            ASSERT(weight > 0);
-            spell_weights[spell] = weight;
-        }
-    }
-
-    int spells_needed = num_spells;
-    int book_pos      = 0;
-    int spells_left   = spells.size();
-    while (book_pos < num_spells && max_levels > 0 && spells_left > 0)
-    {
-        if (chosen_spells[book_pos] != SPELL_NO_SPELL)
-        {
-            spell_type spell = chosen_spells[book_pos];
-            spell_weights[spell]  = 0;
-            max_levels           -= spell_difficulty(spell);
-            spells_left--;
-            book_pos++;
-            continue;
-        }
-
-        spell_type spell =
-        (spell_type) choose_random_weighted(spell_weights,
-                                            end(spell_weights));
-        ASSERT(is_valid_spell(spell));
-        ASSERT(spell_weights[spell] > 0);
-
-        int levels = spell_difficulty(spell);
-
-        if (levels > max_levels - (exact_level ? spells_needed - 1 : 0))
-        {
-            spell_weights[spell] = 0;
-            spells_left--;
-            continue;
-        }
-        chosen_spells[book_pos++] = spell;
-        spell_weights[spell]      = 0;
-        max_levels               -= levels;
-        spells_left--;
-        spells_needed--;
-    }
-    ASSERT(max_levels >= 0);
-
-    return book_pos > 0;
-}
-
-/// Remove all spells from the given list that do not include either of
-/// the given disciplines.
-static void _remove_nondiscipline_spells(spell_type chosen_spells[],
-                                         spschool_flag_type d1,
-                                         spschool_flag_type d2)
-{
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-    {
-        const spell_type spell = chosen_spells[i];
-        if (spell != SPELL_NO_SPELL
-            && !spell_typematch(spell, d1)
-            && !spell_typematch(spell, d2))
-        {
-            chosen_spells[i] = SPELL_NO_SPELL;
-        }
-    }
-}
-
-static void _add_included_spells(spell_type (&chosen_spells)[RANDBOOK_SIZE],
-                                 vector<spell_type> incl_spells)
-{
-    for (spell_type incl_spell : incl_spells)
-    {
-        if (incl_spell == SPELL_NO_SPELL)
-            continue;
-
-        for (spell_type &chosen : chosen_spells)
-        {
-            // Already included.
-            if (chosen == incl_spell)
-                break;
-
-            if (chosen == SPELL_NO_SPELL)
-            {
-                // Add to spells.
-                chosen = incl_spell;
-                break;
-            }
-        }
-    }
 }
 
 /**
@@ -713,12 +726,12 @@ static string _gen_randbook_name(string subject, string owner,
                                  spschool_flag_type disc2)
 {
     const string apostrophised_owner = owner.empty() ?
-    "" :
-    apostrophise(owner) + " ";
+        "" :
+        apostrophise(owner) + " ";
 
     const string real_subject = subject.empty() ?
-    _maybe_gen_book_subject(owner) :
-    subject;
+        _maybe_gen_book_subject(owner) :
+        subject;
 
     if (!real_subject.empty())
     {
@@ -793,13 +806,12 @@ static string _gen_randbook_name(string subject, string owner,
  * @param god           The god responsible for gifting the book, if any.
  * @param disc1         A spellschool (discipline) associated with the book.
  * @param disc2         A spellschool (discipline) associated with the book.
- * @param highlevel     Whether the book contains "high-level" spells.
- * @param all_spells_disc1      Are all spells in the book of the same school?
+ * @param spells        The spells in the book.
  * @return              The name of the book's 'owner', or the empty string.
  */
 static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
-                                  spschool_flag_type disc2, bool highlevel,
-                                  bool all_spells_disc1)
+                                  spschool_flag_type disc2,
+                                  const vector<spell_type> &spells)
 {
     // If the owner hasn't been set already use
     // a) the god's name for god gifts (only applies to Sif Muna and Xom),
@@ -807,6 +819,24 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
     // c) a random name (all god gifts not named earlier)
     // d) an applicable god's name
     // ... else leave it unnamed (around 57% chance for non-god gifts)
+
+    int highest_level = 0;
+    int lowest_level = 27;
+    bool all_spells_disc1 = true;
+    for (auto spell : spells)
+    {
+        const int level = spell_difficulty(spell);
+        highest_level = max(level, highest_level);
+        lowest_level = min(level, lowest_level);
+
+        if (!(get_spell_disciplines(spell) & disc1))
+            all_spells_disc1 = false;
+    }
+
+    // this logic is very odd...
+    const bool highlevel = highest_level >= 7 + random2(3)
+                           && (lowest_level > 1 || coinflip());
+
 
     // name of gifting god?
     const bool god_gift = god != GOD_NO_GOD;
@@ -868,218 +898,16 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
     return "";
 }
 
-// Takes a book of any type, a spell discipline or two, the number of spells
-// (up to 8), the total spell levels of all spells, a spell that absolutely
-// has to be included, and the name of whomever the book should be named after.
-// With all that information the book is turned into a random artefact
-// containing random spells of the given disciplines (random if none set).
-bool make_book_theme_randart(item_def &book,
-                             spschool_flag_type disc1, spschool_flag_type disc2,
-                             int num_spells, int max_levels,
-                             spell_type incl_spell, string owner,
-                             string title, bool exact_level)
-{
-    vector<spell_type> spells;
-    if (incl_spell != SPELL_NO_SPELL)
-        spells.push_back(incl_spell);
-    return make_book_theme_randart(book, spells, disc1, disc2,
-                                   num_spells, max_levels, owner, title,
-                                   exact_level);
-}
-
-bool make_book_theme_randart(item_def &book,
-                             vector<spell_type> incl_spells,
-                             spschool_flag_type disc1, spschool_flag_type disc2,
-                             int num_spells, int max_levels,
-                             string owner, string title, bool exact_level)
-{
-    ASSERT(book.base_type == OBJ_BOOKS);
-
-    const god_type god = origin_as_god_gift(book);
-
-    const bool completely_random =
-    god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
-
-    if (num_spells == -1)
-        num_spells = RANDBOOK_SIZE;
-    ASSERT_RANGE(num_spells, 0 + 1, RANDBOOK_SIZE + 1);
-
-    if (max_levels == -1)
-        max_levels = 255;
-
-    if (disc1 == SPTYP_NONE && disc2 == SPTYP_NONE)
-    {
-        if (!_get_weighted_discs(completely_random, god, disc1, disc2))
-        {
-            if (completely_random)
-                return false;
-
-            // Rather than give up at this point, choose schools randomly.
-            // This way, an acquirement won't fail once the player has
-            // seen all spells.
-            if (!_get_weighted_discs(true, god, disc1, disc2))
-                return false;
-        }
-    }
-    else if (disc2 == 0)
-        disc2 = disc1;
-
-    ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-    ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-    ASSERT(count_bits(disc1) == 1);
-    ASSERT(count_bits(disc2) == 1);
-
-    book.sub_type = BOOK_RANDART_THEME;
-    _make_book_randart(book);
-
-    int god_discard        = 0;
-    int uncastable_discard = 0;
-
-    vector<spell_type> spells;
-    _get_spell_list(spells, disc1, disc2, god, !completely_random,
-                    god_discard, uncastable_discard); // NOTE: what's in this spell list?
-
-    if (num_spells > (int) spells.size())
-        num_spells = spells.size();
-
-    spell_type chosen_spells[RANDBOOK_SIZE];
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        chosen_spells[i] = SPELL_NO_SPELL;
-
-    _add_included_spells(chosen_spells, incl_spells);
-
-    // If max_levels is 1, there might not be any suitable spells (for
-    // example, in Charms). Try one more time with max_levels = 2.
-    while (!_get_weighted_spells(completely_random, god, disc1, disc2,
-                                 num_spells, max_levels, spells,
-                                 chosen_spells, exact_level))
-    {
-        if (max_levels != 1)
-            die("_get_weighted_spells() failed");
-
-        ++max_levels;
-    }
-
-    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
-    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
-
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-
-    // Count how often each spell school appears in the book.
-    int count[SPTYP_LAST_EXPONENT+1];
-    for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
-        count[k] = 0;
-
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-    {
-        if (chosen_spells[i] == SPELL_NO_SPELL)
-            continue;
-
-        for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
-            if (spell_typematch(chosen_spells[i], spschools_type::exponent(k)))
-                count[k]++;
-    }
-
-    // Remember the two dominant spell schools ...
-    int max1 = 0;
-    int max2 = 0;
-    int num1 = 1;
-    int num2 = 0;
-    for (int k = 1; k <= SPTYP_LAST_EXPONENT; k++)
-    {
-        if (count[k] > count[max1])
-        {
-            max2 = max1;
-            num2 = num1;
-            max1 = k;
-            num1 = 1;
-        }
-        else
-        {
-            if (count[k] == count[max1])
-                num1++;
-
-            if (max2 == max1 || count[k] > count[max2])
-            {
-                max2 = k;
-                if (count[k] == count[max1])
-                    num2 = num1;
-                else
-                    num2 = 1;
-            }
-            else if (count[k] == count[max2])
-                num2++;
-        }
-    }
-
-    // If there are several "secondary" disciplines with the same count
-    // ignore all of them. Same, if the secondary discipline appears only once.
-    if (num2 > 1 && count[max1] > count[max2] || count[max2] < 2)
-        max2 = max1;
-
-    // Remove spells that don't fit either discipline.
-    // ... and change disc1 and disc2 accordingly.
-    disc1 = spschools_type::exponent(max1);
-    disc2 = spschools_type::exponent(max2);
-    _remove_nondiscipline_spells(chosen_spells, disc1, disc2);
-    _add_included_spells(chosen_spells, incl_spells);
-
-    // Resort spells.
-    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
-    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
-
-    int highest_level = 0;
-    int lowest_level  = 10;
-    bool all_spells_disc1 = true;
-
-    // Finally fill the spell vector.
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-    {
-        spell_vec[i].get_int() = chosen_spells[i];
-        int diff = spell_difficulty(chosen_spells[i]);
-        if (diff > highest_level)
-            highest_level = diff;
-        else if (diff < lowest_level)
-            lowest_level = diff;
-
-        if (all_spells_disc1 && is_valid_spell(chosen_spells[i])
-            && !spell_typematch(chosen_spells[i], disc1))
-        {
-            all_spells_disc1 = false;
-        }
-    }
-
-    // Every spell in the book is of school disc1.
-    if (disc1 == disc2)
-        all_spells_disc1 = true;
-
-    if (owner.empty())
-    {
-        // WTF
-        const bool highlevel = (highest_level >= 7 + random2(3)
-                                && (lowest_level > 1 || coinflip()));
-
-        owner = _gen_randbook_owner(god, disc1, disc2, highlevel,
-                                    all_spells_disc1);
-    }
-
-    name_book_theme_randart(book, disc1, disc2, owner, title);
-
-    return true;
-}
-
 // Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
 // that includes Statue Form and is named after her.
 void make_book_roxanne_special(item_def *book)
 {
     spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
-    make_book_theme_randart(*book, disc, SPTYP_NONE, 5, 19,
-                            SPELL_STATUE_FORM, "Roxanne");
+    vector<spell_type> forced_spell = {SPELL_STATUE_FORM};
+    build_themed_book(*book,
+                      forced_spell_filter(forced_spell,
+                                           capped_spell_filter(19)),
+                      forced_book_theme(disc), 5, "Roxanne");
 }
 
 void make_book_kiku_gift(item_def &book, bool first)
@@ -1094,10 +922,10 @@ void make_book_kiku_gift(item_def &book, bool first)
     if (first)
     {
         bool can_bleed = you.species != SP_GARGOYLE
-        && you.species != SP_GHOUL
-        && you.species != SP_MUMMY;
+            && you.species != SP_GHOUL
+            && you.species != SP_MUMMY;
         bool can_regen = you.species != SP_DEEP_DWARF
-        && you.species != SP_MUMMY;
+            && you.species != SP_MUMMY;
         bool pain = coinflip();
 
         chosen_spells[0] = pain ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
@@ -1106,16 +934,16 @@ void make_book_kiku_gift(item_def &book, bool first)
                             : pain ? SPELL_ANIMATE_SKELETON
                             : SPELL_PAIN);
         chosen_spells[3] = (!can_regen || coinflip())
-        ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
+            ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
         chosen_spells[4] = SPELL_CONTROL_UNDEAD;
 
     }
     else
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD
-        : SPELL_CIGOTUVIS_EMBRACE;
+            : SPELL_CIGOTUVIS_EMBRACE;
         chosen_spells[1] = (you.species == SP_FELID || coinflip())
-        ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
+            ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_SIMULACRUM,
                                          SPELL_DEATH_CHANNEL);
@@ -1317,7 +1145,7 @@ static spschool_flag_type _choose_randbook_discipline(weighted_spells
     }
 
     const spschool_flag_type *discipline
-    = random_choose_weighted(discipline_weights);
+        = random_choose_weighted(discipline_weights);
     ASSERT(discipline);
     return *discipline;
 }
@@ -1373,9 +1201,9 @@ void acquire_themed_randbook(item_def &book, int agent)
 
     // XXX: we could cache this...
     const spschool_flag_type discipline_1
-    = _choose_randbook_discipline(possible_spells, agent);
+        = _choose_randbook_discipline(possible_spells, agent);
     const spschool_flag_type discipline_2
-    = _choose_randbook_discipline(possible_spells, agent);
+        = _choose_randbook_discipline(possible_spells, agent);
 
     vector<spell_type> spells;
     _choose_themed_randbook_spells(possible_spells, discipline_1, discipline_2,
@@ -1383,8 +1211,8 @@ void acquire_themed_randbook(item_def &book, int agent)
 
     // Acquired randart books have a chance of being named after the player.
     const string owner = agent == AQ_SCROLL && one_chance_in(12) ?
-    you.your_name :
-    "";
+        you.your_name :
+        "";
 
     init_book_theme_randart(book, spells);
     name_book_theme_randart(book, discipline_1, discipline_2, owner);

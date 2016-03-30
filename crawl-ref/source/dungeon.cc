@@ -4189,20 +4189,47 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         string owner = props[RANDBK_OWNER_KEY].get_string();
         if (owner == "player")
             owner = you.your_name;
+        const string title = props[RANDBK_TITLE_KEY].get_string();
 
         vector<spell_type> spells;
         CrawlVector spell_list = props[RANDBK_SPELLS_KEY].get_vector();
         for (unsigned int i = 0; i < spell_list.size(); ++i)
             spells.push_back((spell_type) spell_list[i].get_int());
 
-        make_book_theme_randart(item,
-            spells,
-            static_cast<spschool_flag_type>(props[RANDBK_DISC1_KEY].get_short()),
-            static_cast<spschool_flag_type>(props[RANDBK_DISC2_KEY].get_short()),
-            props[RANDBK_NSPELLS_KEY].get_short(),
-            props[RANDBK_SLVLS_KEY].get_short(),
-            owner,
-            props[RANDBK_TITLE_KEY].get_string());
+        spschool_flag_type disc1
+            = (spschool_flag_type)props[RANDBK_DISC1_KEY].get_short();
+        spschool_flag_type disc2
+            = (spschool_flag_type)props[RANDBK_DISC2_KEY].get_short();
+        if (disc1 == SPTYP_NONE && disc2 == SPTYP_NONE)
+        {
+            if (spells.size())
+                disc1 = matching_book_theme(spells);
+            else
+                disc1 = random_book_theme();
+            disc2 = random_book_theme();
+        } else if (disc2 == SPTYP_NONE)
+            disc2 = disc1;
+        else
+            ASSERT(disc1 != SPTYP_NONE); // mapdef should've handled this
+
+        int num_spells = props[RANDBK_NSPELLS_KEY].get_short();
+        if (num_spells < 1)
+            num_spells = theme_book_size();
+        const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
+        dprf("%d spells, %d levels, %s disc1, %s disc2",
+             num_spells, max_levels, spelltype_long_name(disc1),
+             spelltype_long_name(disc2));
+
+        vector<spell_type> chosen_spells;
+        theme_book_spells(disc1, disc2,
+                          forced_spell_filter(spells,
+                                               capped_spell_filter(max_levels)),
+                          origin_as_god_gift(item), num_spells, chosen_spells);
+        dprf("chose %s",
+             comma_separated_fn(spells.begin(), spells.end(),
+                                spell_title).c_str());
+        init_book_theme_randart(item, chosen_spells);
+        name_book_theme_randart(item, disc1, disc2, owner, title);
     }
 
     // Wipe item origin to remove "this is a god gift!" from there,

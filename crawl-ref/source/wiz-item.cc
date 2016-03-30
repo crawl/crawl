@@ -34,7 +34,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
-#include "randbook.h."
+#include "randbook.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -472,8 +472,8 @@ static bool _make_book_randart(item_def &book)
 
     if (type == 'l')
         return make_book_level_randart(book);
-    else
-        return make_book_theme_randart(book);
+    build_themed_book(book);
+    return true;
 }
 
 void wizard_value_artefact()
