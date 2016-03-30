@@ -64,6 +64,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "quiver.h"
+#include "randbook.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"

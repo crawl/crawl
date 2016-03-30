@@ -4,9 +4,9 @@
 
 #include "itemprop.h"
 #include "ng-setup.h"
+#include "randbook.h"
 #include "random.h"
 #include "skills.h"
-#include "spl-book.h"
 #include "spl-util.h"
 
 static void _give_wanderer_weapon(skill_type wpn_skill, int plus)

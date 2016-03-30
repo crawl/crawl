@@ -56,6 +56,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "randbook.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"

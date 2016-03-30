@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "randbook.h"
 #include "spl-book.h"
 #include "state.h"
 #include "stepdown.h"

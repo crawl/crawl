@@ -34,6 +34,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
+#include "randbook.h."
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
