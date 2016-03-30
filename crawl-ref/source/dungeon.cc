@@ -4226,7 +4226,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
                                                capped_spell_filter(max_levels)),
                           origin_as_god_gift(item), num_spells, chosen_spells);
         dprf("chose %s",
-             comma_separated_fn(spells.begin(), spells.end(),
+             comma_separated_fn(chosen_spells.begin(), chosen_spells.end(),
                                 spell_title).c_str());
         init_book_theme_randart(item, chosen_spells);
         name_book_theme_randart(item, disc1, disc2, owner, title);
