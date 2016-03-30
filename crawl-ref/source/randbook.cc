@@ -526,13 +526,13 @@ bool make_book_level_randart(item_def &book, int level)
     const god_type god = origin_as_god_gift(book);
 
     const bool completely_random =
-    god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
+        god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
 
     if (level == -1)
     {
         int max_level =
-        (completely_random ? 9
-         : min(9, you.get_experience_level()));
+            (completely_random ? 9
+             : min(9, you.get_experience_level()));
 
         level = random_range(1, max_level);
     }
