@@ -147,7 +147,7 @@ function choose_mset_1(e)
     e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:3")
 -- Fire
   elseif rnd < 83 then
-    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental")
+    e.kmons("1 = fire vortex / hell hound / fire elemental w:15")
 -- Ice
   elseif rnd < 85 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum")

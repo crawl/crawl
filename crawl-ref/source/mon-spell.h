@@ -566,7 +566,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELL_HOG,
       {
-       { SPELL_STICKY_FLAME, 61, MON_SPELL_NATURAL },
+       { SPELL_FIREBALL, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
 
