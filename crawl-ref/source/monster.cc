@@ -2139,7 +2139,7 @@ static string _invalid_monster_str(monster_type type)
 }
 
 static string _mon_special_name(const monster& mon, description_level_type desc,
-                                bool force_seen)
+                                bool force_seen, bool force_real = false)
 {
     if (desc == DESC_NONE)
         return "";
@@ -2170,7 +2170,7 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
 
     if (desc == DESC_DBNAME)
     {
-        monster_info mi(&mon, MILEV_NAME);
+        monster_info mi(&mon, MILEV_NAME, force_real);
         return mi.db_name();
     }
 
@@ -2178,13 +2178,13 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
 }
 
 string monster::name(description_level_type desc, bool force_vis,
-                     bool force_article) const
+                     bool force_article, bool force_real) const
 {
-    string s = _mon_special_name(*this, desc, force_vis);
+    string s = _mon_special_name(*this, desc, force_vis, force_real);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
-    monster_info mi(this, MILEV_NAME);
+    monster_info mi(this, MILEV_NAME, force_real);
     // i.e. to produce "the Maras" instead of just "Maras"
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
@@ -2199,13 +2199,14 @@ string monster::name(description_level_type desc, bool force_vis,
     ;
 }
 
-string monster::base_name(description_level_type desc, bool force_vis) const
+string monster::base_name(description_level_type desc, bool force_vis,
+                          bool force_real) const
 {
-    string s = _mon_special_name(*this, desc, force_vis);
+    string s = _mon_special_name(*this, desc, force_vis, force_real);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
-    monster_info mi(this, MILEV_NAME);
+    monster_info mi(this, MILEV_NAME, force_real);
     return mi.common_name(desc);
 }
 
@@ -2221,22 +2222,18 @@ string monster::full_name(description_level_type desc) const
 
 string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    const bool seen = force_visible || you.can_see(*this);
-    if (seen && props.exists(MON_GENDER_KEY))
-    {
-        return decline_pronoun((gender_type)props[MON_GENDER_KEY].get_int(),
-                               pro);
-    }
-    return mons_pronoun(type, pro, seen);
+    if (!force_visible && !you.can_see(*this))
+        return decline_pronoun(GENDER_NEUTRAL, pro);
+    monster_info mi(this, MILEV_NAME);
+    return mi.pronoun(pro);
 }
 
 bool monster::pronoun_plurality(bool force_visible) const
 {
-    const bool seen = force_visible || you.can_see(*this);
-    if (seen && props.exists(MON_GENDER_KEY))
-        return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;
-
-    return seen && mons_class_gender(type) == GENDER_NEUTRAL;
+    if (!force_visible && !you.can_see(*this))
+        return false;
+    monster_info mi(this, MILEV_NAME);
+    return mi.pronoun_plurality();
 }
 
 string monster::conj_verb(const string &verb) const

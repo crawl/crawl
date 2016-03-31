@@ -54,6 +54,9 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 // Check whether a given monster is listed in the auto_exclude option.
 static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 {
+#ifdef CHAOS_CRAWL
+    return false;
+#endif
     // This only works if the name is lowercased.
     string name = mon->name(DESC_BASENAME, mon->is_stationary()
                                            && testbits(mon->flags, MF_SEEN));

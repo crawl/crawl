@@ -327,13 +327,13 @@ public:
     bool      likes_wand(const item_def &item) const;
 
     string name(description_level_type type, bool force_visible = false,
-                bool force_article = false) const override;
+                bool force_article = false, bool force_real = false) const override;
 
     // Base name of the monster, bypassing any mname setting. For an orc priest
     // named Arbolt, name() will return "Arbolt", but base_name() will return
     // "orc priest".
     string base_name(description_level_type type,
-                     bool force_visible = false) const;
+                     bool force_visible = false, bool force_real = false) const;
     // Full name of the monster. For an orc priest named Arbolt, full_name()
     // will return "Arbolt the orc priest".
     string full_name(description_level_type type) const;

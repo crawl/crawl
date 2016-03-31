@@ -23,6 +23,8 @@
 #define MIN_COLS  79
 #define MIN_LINES 24
 
+#define CHAOS_CRAWL
+
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...

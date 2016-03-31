@@ -135,7 +135,8 @@ public:
 
     virtual string name(description_level_type type,
                         bool force_visible = false,
-                        bool force_article = false) const = 0;
+                        bool force_article = false,
+                        bool force_real = false) const = 0;
     virtual string pronoun(pronoun_type which_pronoun,
                            bool force_visible = false) const = 0;
     virtual string conj_verb(const string &verb) const = 0;

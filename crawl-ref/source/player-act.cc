@@ -512,7 +512,7 @@ item_def *player::shield() const
     return slot_item(EQ_SHIELD, false);
 }
 
-string player::name(description_level_type dt, bool, bool) const
+string player::name(description_level_type dt, bool, bool, bool) const
 {
     switch (dt)
     {

@@ -681,7 +681,7 @@ public:
     bool wear_barding() const;
 
     string name(description_level_type type, bool force_visible = false,
-                bool force_article = false) const override;
+                bool force_article = false, bool /*force_real*/ = false) const override;
     string pronoun(pronoun_type pro, bool force_visible = false) const override;
     string conj_verb(const string &verb) const override;
     string base_hand_name(bool plural, bool temp, bool *can_plural=nullptr) const;

@@ -1404,6 +1404,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 antimagic_affects_defender(damage_done * 32);
 
+                monster_info mi(defender->as_monster(), MILEV_NAME);
                 mprf("You drain %s %s.",
                      defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      spell_user ? "magic" : "power");
