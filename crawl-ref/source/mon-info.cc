@@ -847,6 +847,11 @@ string monster_info::_core_name() const
                                                "enormous ", "titanic "};
         s = get_monster_data(nametype)->name;
 
+        if (mons_is_draconian_job(type) && base_type != MONS_NO_MONSTER)
+            s = draconian_colour_name(base_type) + " " + s;
+        else if (mons_is_demonspawn_job(type) && base_type != MONS_NO_MONSTER)
+            s = demonspawn_base_name(base_type) + " " + s;
+
         switch (type)
         {
         case MONS_SLIME_CREATURE:
@@ -856,26 +861,6 @@ string monster_info::_core_name() const
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
             s = ugly_thing_colour_name(_colour) + " " + s;
-            break;
-
-        case MONS_DRACONIAN_CALLER:
-        case MONS_DRACONIAN_MONK:
-        case MONS_DRACONIAN_ZEALOT:
-        case MONS_DRACONIAN_SHIFTER:
-        case MONS_DRACONIAN_ANNIHILATOR:
-        case MONS_DRACONIAN_KNIGHT:
-        case MONS_DRACONIAN_SCORCHER:
-            if (base_type != MONS_NO_MONSTER)
-                s = draconian_colour_name(base_type) + " " + s;
-            break;
-
-        case MONS_BLOOD_SAINT:
-        case MONS_CHAOS_CHAMPION:
-        case MONS_WARMONGER:
-        case MONS_CORRUPTER:
-        case MONS_BLACK_SUN:
-            if (base_type != MONS_NO_MONSTER)
-                s = demonspawn_base_name(base_type) + " " + s;
             break;
 
         case MONS_DANCING_WEAPON:
