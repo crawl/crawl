@@ -3069,7 +3069,7 @@ static void _place_traps()
         }
 
         const trap_type type = random_trap_for_place();
-        if (ts.type == NUM_TRAPS)
+        if (type == NUM_TRAPS)
         {
             dprf("failed to find a trap type to place");
             continue;
