@@ -669,9 +669,6 @@ monster_info::monster_info(const monster* m, int milev)
             props[SPECIAL_WEAPON_KEY] = ghost_brand_name(ghost.brand);
     }
 
-    if (mons_is_ghost_demon(type))
-        i_ghost.can_sinv = m->ghost->see_invis;
-
     // book loading for player ghost and vault monsters
     spells.clear();
     if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type))
