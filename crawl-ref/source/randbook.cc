@@ -115,7 +115,7 @@ static bool _is_rare_spell(spell_type spell)
  * @param spell             The spell to be filtered.
  * @return                  Whether the spell can be included.
  */
-bool _agent_spell_filter(int agent, spell_type spell)
+static bool _agent_spell_filter(int agent, spell_type spell)
 {
     // Only use spells available in books you might find lying about
     // the dungeon; rarebook spells are restricted to Sif-made books.
