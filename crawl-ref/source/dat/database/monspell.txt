@@ -650,6 +650,10 @@ Warning Cry vault sentinel cast
 
 @The_monster@ blows a loud note on a signal horn!
 %%%%
+Fireball hell hog cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

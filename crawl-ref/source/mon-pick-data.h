@@ -563,8 +563,8 @@ static const pop_entry pop_dis[] =
 
 static const pop_entry pop_geh[] =
 { // Gehenna
-  {  1,  7, 2000, FLAT, MONS_SKELETON },
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
+  {  1,  7, 1950, FLAT, MONS_SKELETON },
+  {  1,  7, 1950, FLAT, MONS_ZOMBIE },
   {  1,  7,  215, FALL, MONS_PHANTOM },
   {  1,  7,  515, FALL, MONS_NECROPHAGE },
   {  1,  7,  690, FALL, MONS_WIGHT },
@@ -579,7 +579,7 @@ static const pop_entry pop_geh[] =
   {  2,  6,  215, FLAT, MONS_EFREET },
   { -1,  7,  515, PEAK, MONS_HELL_KNIGHT },
   {  1,  7,  350, FLAT, MONS_HELL_HOUND },
-  {  1,  7,  192, FLAT, MONS_HELL_HOG },
+  {  1,  7,  300, FLAT, MONS_HELL_HOG },
   {  1,  7,  192, FALL, MONS_CRIMSON_IMP },
   {  1, 12,  690, FALL, MONS_RED_DEVIL },
   { -1,  7,   89, PEAK, MONS_RUST_DEVIL },
@@ -782,8 +782,8 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   63, FLAT, MONS_EFREET },
   {  1,  5,   66, FLAT, MONS_RAKSHASA },
   {  1,  5,   25, FLAT, MONS_DEMONIC_CRAWLER },
-  {  1,  5,   30, FLAT, MONS_HELL_HOUND },
-  {  1,  5,   30, FLAT, MONS_HELL_HOG },
+  {  1,  8,   30, FALL, MONS_HELL_HOUND },
+  {  1, 10,   40, SEMI, MONS_HELL_HOG },
   {  1, 10,   16, SEMI, MONS_HELLEPHANT },
   // Misc Undead
   {  1,  5,  110, FALL, MONS_SKELETON },
@@ -995,7 +995,6 @@ static const pop_entry pop_volcano[] =
 { // Volcano
   {  1,  1,  515, FLAT, MONS_SALAMANDER },
   {  1,  1,  515, FLAT, MONS_HELL_HOUND },
-  {  1,  1,  385, FLAT, MONS_HELL_HOG },
   {  1,  1,  385, FLAT, MONS_RED_DEVIL },
   {  1,  1,  515, FLAT, MONS_EFREET },
   {  1,  1,  515, FLAT, MONS_MANTICORE },
@@ -1003,6 +1002,7 @@ static const pop_entry pop_volcano[] =
   {  1,  1,  385, FLAT, MONS_TOENAIL_GOLEM },
   {  1,  1,  515, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  1,  385, FLAT, MONS_GARGOYLE },
+  {  1,  1,  385, FLAT, MONS_MOLTEN_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
