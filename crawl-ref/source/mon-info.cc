@@ -274,10 +274,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && other->type != MONS_KRAKEN
-            && other->type != MONS_ZOMBIE
-            && other->type != MONS_SPECTRAL_THING
-            && other->type != MONS_SIMULACRUM
+            && !mons_is_zombified(other)
             && !_tentacle_pos_unknown(other, m->pos()))
         {
             mi.props[key] = h_pos - m->pos();
@@ -826,28 +823,13 @@ string monster_info::_core_name() const
 {
     monster_type nametype = type;
 
-    switch (type)
-    {
-    case MONS_ZOMBIE:
-    case MONS_SKELETON:
-    case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-#endif
-    case MONS_SPECTRAL_THING:
+    if (mons_class_is_zombified(type))
         nametype = mons_species(base_type);
-        break;
-
-    case MONS_PILLAR_OF_SALT:
-    case MONS_BLOCK_OF_ICE:
-    case MONS_SENSED:
+    else if (type == MONS_PILLAR_OF_SALT
+             || type == MONS_BLOCK_OF_ICE
+             || type == MONS_SENSED)
+    {
         nametype = base_type;
-        break;
-
-    default:
-        break;
     }
 
     string s;
