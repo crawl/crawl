@@ -529,13 +529,14 @@ BOOL:     elec
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +10
+PLUS:     +9
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
+INSCRIP:  nevermiss
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
