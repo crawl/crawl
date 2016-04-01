@@ -136,7 +136,7 @@ static const map<job_type, job_def> job_data =
     4, 4, 4,
     { SP_MERFOLK, SP_HILL_ORC, SP_MINOTAUR, SP_FORMICID, SP_DEMONSPAWN,
       SP_DEEP_DWARF },
-    { "robe", "scythe" },
+    { "robe", "scythe cursed" },
     WCHOICE_NONE,
     { { SK_POLEARMS, 3 }, { SK_DODGING, 3 }, { SK_INVOCATIONS, 3 } },
 } },

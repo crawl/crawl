@@ -115,12 +115,15 @@ void give_job_equipment(job_type job)
     {
         const item_spec spec = items.get_item(i);
         int plus = 0;
+        bool cursed = false;
         if (spec.props.exists("charges"))
             plus = spec.props["charges"];
         if (spec.props.exists("plus"))
             plus = spec.props["plus"];
+        if (spec.props.exists("cursed"))
+            cursed = spec.props["cursed"];
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
-                          plus, spec.ego);
+                          plus, spec.ego, false, cursed);
     }
 }
 

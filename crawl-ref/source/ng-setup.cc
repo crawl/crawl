@@ -93,7 +93,8 @@ static void _autopickup_ammo(missile_type missile)
  */
 item_def* newgame_make_item(object_class_type base,
                             int sub_type, int qty, int plus,
-                            int force_ego, bool force_tutorial)
+                            int force_ego, bool force_tutorial,
+                            bool cursed)
 {
     // Don't set normal equipment in the tutorial.
     if (!force_tutorial && crawl_state.game_is_tutorial())
@@ -127,6 +128,8 @@ item_def* newgame_make_item(object_class_type base,
     item.quantity  = qty;
     item.plus      = plus;
     item.brand     = force_ego;
+    if (cursed)
+        do_curse_item(item);
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
