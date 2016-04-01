@@ -529,7 +529,7 @@ BOOL:     elec
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +15
+PLUS:     +10
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
