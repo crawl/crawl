@@ -289,11 +289,13 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     pos = coord_def(0, 0);
 
     type = p_type;
-    base_type = p_base_type;
 
-    draco_type = mons_genus(type) == MONS_DRACONIAN  ? MONS_DRACONIAN :
-                 mons_genus(type) == MONS_DEMONSPAWN ? MONS_DEMONSPAWN
-                                                     : type;
+    // give 'job' monsters a default race.
+    const bool classy_drac = mons_is_draconian_job(type) || type == MONS_TIAMAT;
+    base_type = p_base_type != MONS_NO_MONSTER ? p_base_type
+                : classy_drac ? MONS_DRACONIAN
+                : mons_is_demonspawn_job(type) ? MONS_DEMONSPAWN
+                : type;
 
     if (mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
         num_heads = 1;
@@ -353,16 +355,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.damage = 5;
     }
 
-    // Don't put a bad base type on ?/mdraconian annihilator etc.
-    if (base_type == MONS_NO_MONSTER && !mons_is_job(type))
-        base_type = type;
-
     if (mons_is_job(type))
     {
-        const monster_type race = (base_type == MONS_NO_MONSTER) ? draco_type
-                                                                 : base_type;
-        ac += get_mons_class_ac(race);
-        ev += get_mons_class_ev(race);
+        ac += get_mons_class_ac(base_type);
+        ev += get_mons_class_ev(base_type);
     }
 
     if (mons_is_unique(type))
@@ -433,12 +429,6 @@ monster_info::monster_info(const monster* m, int milev)
         _translate_tentacle_ref(*this, m, "inwards");
         _translate_tentacle_ref(*this, m, "outwards");
     }
-
-    draco_type =
-        (mons_genus(type) == MONS_DRACONIAN
-        || mons_genus(type) == MONS_DEMONSPAWN)
-            ? ::draco_or_demonspawn_subspecies(m)
-            : type;
 
     if (!mons_can_display_wounds(m)
         || !mons_class_can_display_wounds(type))

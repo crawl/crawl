@@ -185,6 +185,7 @@ enum tag_minor_version
     TAG_MINOR_UNUNSHOPINFO,        // Restoration of the tag two before
     TAG_MINOR_MESSAGE_REPEATS,     // Rewrite the way message repeats work
     TAG_MINOR_GHOST_NOSINV,        // don't marshall ghost_demon sinv
+    TAG_MINOR_NO_DRACO_TYPE,       // don't marshall mon-info draco_type
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
