@@ -165,7 +165,6 @@ struct monster_info_base
     string mname;
     monster_type type;
     monster_type base_type;
-    monster_type draco_type;
     union
     {
         // These must all be the same size!
@@ -297,7 +296,7 @@ struct monster_info : public monster_info_base
 
     monster_type draco_or_demonspawn_subspecies() const
     {
-        return draco_type;
+        return ::draco_or_demonspawn_subspecies(type, base_type);
     }
 
     mon_intel_type intel() const

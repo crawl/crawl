@@ -1287,8 +1287,8 @@ monster_type mons_species(monster_type mc)
     return me ? me->species : MONS_PROGRAM_BUG;
 }
 
-static monster_type _draco_or_demonspawn_subspecies(monster_type type,
-                                                    monster_type base)
+monster_type draco_or_demonspawn_subspecies(monster_type type,
+                                            monster_type base)
 {
     const monster_type species = mons_species(type);
 
@@ -1312,7 +1312,7 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
         return player_species_to_mons_species(mon->ghost->species);
     }
 
-    return _draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
+    return draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -2053,7 +2053,7 @@ int mons_class_res_magic(monster_type type, monster_type base)
     const monster_type base_type =
         base != MONS_NO_MONSTER &&
         (mons_is_draconian(type) || mons_is_demonspawn(type))
-            ? _draco_or_demonspawn_subspecies(type, base)
+            ? draco_or_demonspawn_subspecies(type, base)
             : type;
 
     const int type_mr = (get_monster_data(base_type))->resist_magic;
@@ -2078,7 +2078,7 @@ bool mons_class_sees_invis(monster_type type, monster_type base)
         return true;
 
     if (base != MONS_NO_MONSTER && mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
-        && mons_class_flag(_draco_or_demonspawn_subspecies(type, base),
+        && mons_class_flag(draco_or_demonspawn_subspecies(type, base),
                            M_SEE_INVIS))
     {
         return true;

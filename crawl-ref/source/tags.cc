@@ -4851,19 +4851,9 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        marshallUnsigned(th, mi.draco_type);
-    }
 #else
     marshallShort(th, mi.type);
     marshallShort(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        marshallShort(th, mi.draco_type);
-    }
 #endif
     marshallUnsigned(th, mi.number);
     marshallInt(th, mi._colour);
@@ -4924,31 +4914,18 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
-    // Default value.
-    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType_Info(th);
-    if (mons_genus(mi.type) == MONS_DEMONSPAWN
-        && th.getMinorVersion() < TAG_MINOR_DEMONSPAWN)
-    {
-        mi.draco_type = mi.base_type;
-    }
-    else if (mons_genus(mi.type) == MONS_DRACONIAN
+    if ((mons_genus(mi.type) == MONS_DRACONIAN
         || (mons_genus(mi.type) == MONS_DEMONSPAWN
             && th.getMinorVersion() >= TAG_MINOR_DEMONSPAWN))
+        && th.getMinorVersion() < TAG_MINOR_NO_DRACO_TYPE)
     {
-        mi.draco_type = unmarshallMonType_Info(th);
+        unmarshallMonType_Info(th); // was draco_type
     }
 #else
     mi.type = unmarshallMonType(th);
     ASSERT(!invalid_monster_type(mi.type));
-    // Default value.
-    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType(th);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        mi.draco_type = unmarshallMonType(th);
-    }
 #endif
     unmarshallUnsigned(th, mi.number);
 #if TAG_MAJOR_VERSION == 34
