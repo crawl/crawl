@@ -282,6 +282,13 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
     }
 }
 
+/// is the given monster_info a hydra, zombie hydra, lerny, etc?
+static bool _is_hydra(const monster_info &mi)
+{
+    return mons_genus(mi.type) == MONS_HYDRA
+           || mons_genus(mi.base_type) == MONS_HYDRA;
+}
+
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb.reset();
@@ -297,7 +304,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : mons_is_demonspawn_job(type) ? MONS_DEMONSPAWN
                 : type;
 
-    if (mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+    if (_is_hydra(*this))
         num_heads = 1;
     else
         number = 0;
@@ -444,11 +451,8 @@ monster_info::monster_info(const monster* m, int milev)
         slime_size = m->blob_size;
     else if (type == MONS_BALLISTOMYCETE)
         is_active = !!m->ballisto_activity;
-    else if (mons_genus(type) == MONS_HYDRA
-             || mons_genus(base_type) == MONS_HYDRA)
-    {
+    else if (_is_hydra(*this))
         num_heads = m->num_heads;
-    }
     // others use number for internal information
     else
         number = 0;
@@ -932,7 +936,7 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+    if (_is_hydra(*this)
         && type != MONS_SENSED
         && type != MONS_BLOCK_OF_ICE
         && type != MONS_PILLAR_OF_SALT)
@@ -1138,7 +1142,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
+        if (_is_hydra(m1))
         {
             if (m1.num_heads > m2.num_heads)
                 return true;
