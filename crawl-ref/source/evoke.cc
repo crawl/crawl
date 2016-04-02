@@ -77,7 +77,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 {
     if (you.confused())
     {
-        mpr("You're too confused to attack without stumbling around!");
+        canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
