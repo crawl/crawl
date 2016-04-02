@@ -595,7 +595,7 @@ static bool _makhleb_call_down_destruction()
 
     if (avatar == nullptr)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false; // not a very dazzling divine experience...
     }
 
@@ -1263,14 +1263,14 @@ static bool _vehumet_retribution()
     monster* avatar = get_avatar(god);
     if (!avatar)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false;
     }
 
     const spell_type spell = _vehumet_wrath_type();
     if (spell == SPELL_NO_SPELL)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         shadow_monster_reset(avatar);
         return false;
     }
