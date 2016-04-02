@@ -536,7 +536,7 @@ TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
-INSCRIP:  nevermiss
+INSCRIP:  nevermiss,
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
