@@ -4018,6 +4018,14 @@ void bolt::affect_player()
         }
     }
 
+    // need to trigger qaz resists after reducing damage from ac/resists.
+    //    for some reason, strength 2 is the standard.  This leads to qaz's resists triggering 2 in 5 times at max piety.
+    //    perhaps this should scale with damage?
+    // what to do for hybrid damage?  E.g. bolt of magma, icicle, poison arrow?  Right now just ignore the physical component.
+    // what about acid?
+    you.expose_to_element(flavour, 2, false);
+
+
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && hurted > 0)
     {

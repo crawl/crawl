@@ -328,16 +328,36 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
 /**
  * Handle side-effects for exposure to element other than damage.
+ * Historically this handled item destruction, and melting meltable enchantments.  Now it takes care of 3 things:
+ *   - triggering qazlal's elemental adaptations
+ *   - slowing cold-blooded players (draconians, hydra form)
+ *   - putting out fires
+ * This function should be called exactly once any time a player is exposed to the 
+ * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG.  For the sake of Qazlal's
+ * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when 
+ * receiving physical damage.  Hybrid damage (brands) should call it twice with appropriate
+ * flavours.  
+ * 
+ * Notes:
+ *  - qazlal_element_adapt will not necessarily react to all relevant beam_types so you should check.
+ *  - if it is double-called, this will potentially make cold-blooded creatures slow longer, and boost
+ *    the chances of elemental adaptation triggering.
+ *  - strength is currently used in extremely varied ways (including for monsters, handled elsewhere).
+ *  - if called with strength 0 (which is the default strength), the only thing this function will do is
+ *    put out fires.
+ *  - this used to call maybe_melt_player_enchantments, which seems to be vestigial and wrong --
+ *    maybe_melt_player_enchantments needs an actual damage value, rather than "strength".
  *
  * @param flavour The beam type.
- * @param strength The strength, which is interpreted as a number of player turns.
+ * @param strength The strength of the attack.  Used in different ways for different side-effects.
+ *     For qazlal_elemental_adapt: (i) it is used for the probability of triggering, and (ii) the resulting length of the effect.
  * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
  *                          is cold-blooded and not cold-resistant, slow the
  *                          player 50% of the time.
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
