@@ -186,6 +186,7 @@ electric_eel MONS_ELECTRIC_EEL
 
 ## Beetles ('B')
 %sdir mon/animals
+water_beetle MONS_WATER_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1

@@ -111,6 +111,7 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 
 ## Beetles ('B')
 %sdir mon/animals
+water_beetle CORPSE_WATER_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
