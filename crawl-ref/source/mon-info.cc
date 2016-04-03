@@ -1787,3 +1787,10 @@ void get_monster_info(vector<monster_info>& mons)
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
 }
+
+monster_type monster_info::draco_or_demonspawn_subspecies() const
+{
+    if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
+        return player_species_to_mons_species(i_ghost.species);
+    return ::draco_or_demonspawn_subspecies(type, base_type);
+}
