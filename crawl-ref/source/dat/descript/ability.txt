@@ -156,13 +156,14 @@ The recitation will have different effects depending on the target: the chaotic
 and unclean will be affected by powerful and damaging effects, undead and
 demons will be affected by weaker rebukes, and any other intelligent creatures
 will have confusion sown amongst them, with heretics and priests of gods other
-than Zin being punished much more strongly.
+than Zin being punished much more strongly. The effectiveness of the recitation
+is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, rotting
 and sickness, and increases and sustains your strength, intelligence and
-dexterity.
+dexterity. The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -190,12 +191,14 @@ Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
 undead and demons and dealing damage to all other hostile creatures. The user's
-allies are never affected.
+allies are never affected. The power of the blast is increased by Invocations
+skill.
 %%%%
 Summon Divine Warrior ability
 
-Summons a powerful warrior against evil, either an angel or a daeva. It may be
-blessed by the Shining One to stay longer in this world.
+Summons a powerful warrior against evil, either an angel or a daeva. The
+duration of their assistance is increased by Invocations skill, and glory in
+battle may lead the Shining One to bless them with an even longer stay.
 %%%%
 Brand Weapon With Holy Wrath ability
 
@@ -252,7 +255,8 @@ skeletons cannot leave the level they were created on.
 Drain Life ability
 
 Drains the life force of any nearby creatures, healing the user depending on
-the damage dealt.
+the damage dealt. The amount of life force drained is increased by Invocations
+skill.
 %%%%
 Enslave Soul ability
 
@@ -269,15 +273,18 @@ at a time.
 Heroism ability
 
 Temporarily increases all of your combat skills, both offensive and defensive.
+The duration is increased by Invocations skill.
 %%%%
 Finesse ability
 
-Greatly increases your combat speed.
+Greatly increases your combat speed. The duration is increased by Invocations
+skill.
 %%%%
 # Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature.
+Shoots a random harmful blast at the targeted creature. Damage and accuracy
+are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -286,7 +293,8 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-Shoots a random harmful beam or explosion at the targeted creature.
+Shoots a random harmful beam or explosion at the targeted creature. Damage and
+accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 
@@ -386,19 +394,22 @@ Bend Space ability
 Bends the fabric of space, instantly translocating the user a short distance,
 and possibly also translocating and damaging other adjacent creatures. In
 warping the fabric of space, this ability ignores effects that would usually
-prevent translocations.
+prevent translocations. Invocations skill increases the chance of affecting
+nearby creatures and the damage dealt to those affected.
 %%%%
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and half the creature's experience value.
+some piety and half the creature's experience value. Invocations skill makes it
+harder to resist.
 %%%%
 Corrupt ability
 
 Corrupts the current level by unleashing Abyssal energies on it. This will
 cause the area nearby to change appearance, and will gate in demons from the
 Abyss bent on causing destruction. This will not work on levels already
-corrupted or in the Abyss itself.
+corrupted or in the Abyss itself. The size of the effect is increased by
+Invocations skill.
 %%%%
 Enter the Abyss ability
 
@@ -433,6 +444,7 @@ draw these cards in the order you chose.
 Smiting ability
 
 Smites any targeted enemy within sight, with no direct line of fire required.
+The strength of the smiting is increased by Invocations skill.
 %%%%
 Recall Orcish Followers ability
 
@@ -472,7 +484,8 @@ Rain ability
 
 Causes rain to fall around you, turning the dungeon floor into shallow water
 and shallow water into deep water. This may also allow plants and mushrooms to
-grow in areas that are not directly drenched.
+grow in areas that are not directly drenched. Invocations skill increases the
+number of rain-clouds created.
 %%%%
 Reproduction ability
 
@@ -507,7 +520,8 @@ Step From Time ability
 Removes you completely from the flow of time. Things around you will happen at
 their usual busy pace, and monsters will wander and may even forget about you.
 After some time has passed, you will return in the same state as the very
-second you departed.
+second you departed. Invocations skill increases the amount of time that passes
+while you're gone.
 %%%%
 # Jiyva
 Request Jelly ability
@@ -556,7 +570,8 @@ are permanently invisible and are immune to poison, draining, torment, and
 hostile enchantments. All incoming damage will be halved, and you will bleed
 smoke on any incoming attack. However, your ability to deal damage in melee
 will be halved, your spellcasting power will be greatly hampered, and your
-skills will be further drained when taking damage.
+skills will be further drained when taking damage. Invocations skill increases
+the duration of the transformation.
 %%%%
 # Gozag
 Potion Petition ability
@@ -622,17 +637,19 @@ charged to this new capacity. This ability may only be used once.
 Upheaval ability
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,
-or rubble.
+or rubble. Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
 Causes elemental clouds around you to coalesce into elementals. Your own
 clouds create friendly elementals; hostile clouds create hostile elementals;
-natural clouds create neutral elementals.
+natural clouds create neutral elementals. Invocations skill increases the
+maximum number of elementals that can be created with one use of the ability.
 %%%%
 Disaster Area ability
 
-Blasts the entire area around you with powerful natural forces.
+Blasts the entire area around you with powerful natural forces. Invocations
+skill increases both damage and area affected.
 %%%%
 # Ru
 Draw Out Power ability
