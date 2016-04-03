@@ -294,10 +294,7 @@ struct monster_info : public monster_info_base
 
     string constriction_description() const;
 
-    monster_type draco_or_demonspawn_subspecies() const
-    {
-        return ::draco_or_demonspawn_subspecies(type, base_type);
-    }
+    monster_type draco_or_demonspawn_subspecies() const;
 
     mon_intel_type intel() const
     {
