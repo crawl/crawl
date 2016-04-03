@@ -656,8 +656,8 @@ static bool _spell_is_boring(spell_type spell)
     // effect, are risky to use, or would otherwise amuse him, but
     // that would be a really small number of spells.
     return spell != SPELL_INNER_FLAME // Neutral, but in an amusing way.
-        || get_spell_flags(spell) & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL
-                                     | SPFLAG_ESCAPE | SPFLAG_RECOVERY);
+        && (get_spell_flags(spell) & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL
+                                     | SPFLAG_ESCAPE | SPFLAG_RECOVERY));
 }
 
 bool god_dislikes_spell_type(spell_type spell, god_type god)
