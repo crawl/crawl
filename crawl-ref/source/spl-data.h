@@ -558,7 +558,7 @@ static const struct spell_desc spelldata[] =
     100,
     6, 6,
     4, 10,
-    TILEG_ERROR,
+    TILEG_ISKENDERUNS_MYSTIC_BLAST,
 },
 
 #if TAG_MAJOR_VERSION == 34
