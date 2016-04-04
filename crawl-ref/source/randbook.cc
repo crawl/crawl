@@ -128,7 +128,7 @@ static bool _agent_spell_filter(int agent, spell_type spell)
     // Don't include spells a god dislikes, if this is an acquirement
     // or a god gift.
     const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
-    if (god_dislikes_spell_type(spell, god))
+    if (god_hates_spell(spell, god))
         return false;
 
     return true;
@@ -402,7 +402,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
             continue;
         }
 
-        if (god_dislikes_spell_type(spell, god))
+        if (god_hates_spell(spell, god))
         {
             god_discard++;
             continue;
