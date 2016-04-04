@@ -1134,7 +1134,7 @@ static void _choose_themed_randbook_spells(weighted_spells &possible_spells,
                                            spschool_flag_type discipline_2,
                                            int size, vector<spell_type> &spells)
 {
-    for (auto weighted_spell : possible_spells)
+    for (auto &weighted_spell : possible_spells)
     {
         const spell_type spell = weighted_spell.first;
         const spschools_type disciplines = get_spell_disciplines(spell);
