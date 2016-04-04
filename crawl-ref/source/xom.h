@@ -22,11 +22,12 @@ enum xom_event_type
     XOM_DID_NOTHING = 0,
 
     // good acts
-    XOM_GOOD_NOTHING, // good act suppressed
     XOM_GOOD_POTION,
+    XOM_GOOD_MAGIC_MAPPING,
+    XOM_GOOD_DETECT_CREATURES,
+    XOM_GOOD_DETECT_ITEMS,
     XOM_GOOD_SPELL_TENSION,
     XOM_GOOD_SPELL_CALM,
-    XOM_GOOD_DIVINATION,
     XOM_GOOD_CONFUSION,
     XOM_GOOD_SINGLE_ALLY,
     XOM_GOOD_ANIMATE_MON_WPN,
@@ -42,23 +43,25 @@ enum xom_event_type
     XOM_GOOD_SCENERY,
     XOM_GOOD_SNAKES,
     XOM_GOOD_DESTRUCTION,
+    XOM_GOOD_FAKE_DESTRUCTION,
     XOM_GOOD_ENCHANT_MONSTER,
     XOM_GOOD_FOG,
     XOM_LAST_GOOD_ACT = XOM_GOOD_FOG,
 
     // bad acts
-    XOM_BAD_NOTHING,  // bad act suppressed
     XOM_BAD_COLOUR_SMOKE_TRAIL,
     XOM_BAD_MISCAST_PSEUDO,
+    XOM_BAD_MISCAST_HARMLESS,
     XOM_BAD_MISCAST_MINOR,
     XOM_BAD_MISCAST_MAJOR,
-    XOM_BAD_MISCAST_NASTY,
+    XOM_BAD_MISCAST_CRITICAL,
     XOM_BAD_STATLOSS,
     XOM_BAD_TELEPORT,
     XOM_BAD_CHAOS_UPGRADE,
     XOM_BAD_MUTATION,
     XOM_BAD_POLYMORPH,
-    XOM_BAD_STAIRS,
+    XOM_BAD_MOVING_STAIRS,
+    XOM_BAD_CLIMB_STAIRS,
     XOM_BAD_CONFUSION,
     XOM_BAD_DRAINING,
     XOM_BAD_TORMENT,
@@ -82,16 +85,21 @@ void xom_is_stimulated(int maxinterestingness,
 void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
-int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
+xom_event_type xom_acts(bool niceness, int sever, int tension = -1,
+                        bool debug = false);
 const string describe_xom_favour();
 int xom_favour_rank();
 
-static inline int xom_acts(int sever, int tension = -1)
+static inline xom_event_type xom_acts(int sever, int tension = -1)
 {
     return xom_acts(xom_is_nice(tension), sever, tension);
 }
 
-int xom_maybe_reverts_banishment(bool xom_banished = true, bool debug = false);
+xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
+void xom_take_action(xom_event_type action, bool nasty);
+
+xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
+                                            bool debug = false);
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
