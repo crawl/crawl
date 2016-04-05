@@ -102,7 +102,7 @@ species_type find_species_from_string(const string &species)
     return sp;
 }
 
-xom_event_type find_xom_event_from_string(const string &event_name)
+static xom_event_type _find_xom_event_from_string(const string &event_name)
 {
     string spec = lowercase_string(event_name);
 
@@ -1143,10 +1143,13 @@ void wizard_xom_acts()
         else
             result = xom_acts(coinflip(), severity);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
+#ifndef DEBUG_DIAGNOSTICS
+        UNUSED(result);
+#endif
         return;
     }
 
-    xom_event_type event = find_xom_event_from_string(specs);
+    xom_event_type event = _find_xom_event_from_string(specs);
     if (event == XOM_DID_NOTHING)
     {
         dprf("That action doesn't seem to exist!");
