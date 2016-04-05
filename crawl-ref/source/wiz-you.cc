@@ -102,6 +102,34 @@ species_type find_species_from_string(const string &species)
     return sp;
 }
 
+xom_event_type find_xom_event_from_string(const string &event_name)
+{
+    string spec = lowercase_string(event_name);
+
+    xom_event_type x = XOM_DID_NOTHING;
+
+    for (int i = 0; i < XOM_LAST_REAL_ACT; ++i)
+    {
+        const xom_event_type xi = static_cast<xom_event_type>(i);
+        const string x_name = lowercase_string(xom_effect_to_name(xi));
+
+        string::size_type pos = x_name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                x = xi;
+                break;
+            }
+            else
+                x = xi;
+        }
+    }
+
+    return x;
+}
+
 void wizard_change_species_to(species_type sp)
 {
     // Means find_species_from_string couldn't interpret right.
@@ -1095,4 +1123,36 @@ void wizard_join_religion()
             you.gold = max(you.gold, gozag_service_fee());
         join_religion(god);
     }
+}
+
+void wizard_xom_acts()
+{
+    char specs[80];
+
+    msgwin_get_line("What action should Xom take? (Blank = any) " ,
+                    specs, sizeof(specs));
+
+    const int severity = you_worship(GOD_XOM) ? abs(you.piety - HALF_MAX_PIETY)
+                                              : random_range(0, HALF_MAX_PIETY);
+
+    if (specs[0] == '\0')
+    {
+        xom_event_type result;
+        if (you_worship(GOD_XOM))
+            result = xom_acts(severity);
+        else
+            result = xom_acts(coinflip(), severity);
+        dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
+        return;
+    }
+
+    xom_event_type event = find_xom_event_from_string(specs);
+    if (event == XOM_DID_NOTHING)
+    {
+        dprf("That action doesn't seem to exist!");
+        return;
+    }
+
+    dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
+    xom_take_action(event, severity);
 }
