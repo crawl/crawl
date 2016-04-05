@@ -313,7 +313,7 @@ static const ability_def Ability_List[] =
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
-      1, 0, 0, 0, {}, abflag::PERMANENT_MP },
+      1, 0, 0, 0, {}, abflag::PERMANENT_MP | abflag::CONF_OK },
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
@@ -1303,7 +1303,8 @@ static bool _check_ability_possible(const ability_def& abil,
         if (you.strength(false) == you.max_strength()
             && you.intel(false) == you.max_intel()
             && you.dex(false) == you.max_dex()
-            && !player_rotted())
+            && !player_rotted()
+            && !you.confused())
         {
             if (!quiet)
                 mpr("You don't need to restore your attributes or health!");
@@ -1653,6 +1654,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         mpr("You infuse your body with magical energy.");
         bool did_restore = restore_stat(STAT_ALL, 0, false);
+        
+        // Now cures confusion too!
+        if (you.confused()) {
+            you.duration[DUR_CONF] = 0;
+            did_restore = true; 
+        }
 
         const int oldhpmax = you.hp_max;
         unrot_hp(9999);
