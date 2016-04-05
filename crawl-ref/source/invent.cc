@@ -435,9 +435,9 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
         if (_has_hand_evokable())
-            return "You aren't carrying any items that can be evoked without being wielded.";
+            return "You aren't carrying any items that you can evoke without wielding.";
         else
-            return "You aren't carrying any items that can be evoked.";
+            return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -1991,12 +1991,22 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
 
+    const bool no_evocables = player_mutation_level(MUT_NO_ARTIFICE);
+    const char* const no_evocable_error = "You cannot evoke magical items.";
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->evoke_func && item_type_known(item))
         {
+            if (no_evocables)
+            {
+                if (msg)
+                    mpr(no_evocable_error);
+                return false;
+            }
+
             if (item_is_equipped(item) && !item_is_melded(item) || !equip)
                 return true;
 
@@ -2006,6 +2016,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             return false;
         }
         // Unrandart might still be evokable (e.g., reaching)
+    }
+
+    if (no_evocables
+        && item.base_type != OBJ_WEAPONS // reaching is ok.
+        && !(item.base_type == OBJ_MISCELLANY
+             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+    {
+        // the rest are forbidden under sac evocables.
+        if (msg)
+            mpr(no_evocable_error);
+        return false;
     }
 
     const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
@@ -2079,7 +2100,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             return true;
         }
 #endif
-        // else fall through
+        // removed items fallthrough to failure
+
     default:
         if (msg)
             mpr("That item cannot be evoked!");

@@ -2213,12 +2213,6 @@ bool evoke_check(int slot, bool quiet)
             canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-    else if (player_mutation_level(MUT_NO_ARTIFICE) && !reaching)
-    {
-        if (!quiet)
-            mpr("You cannot evoke magical items.");
-        return false;
-    }
     return true;
 }
 
@@ -2366,8 +2360,11 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (player_mutation_level(MUT_NO_ARTIFICE))
+        if (player_mutation_level(MUT_NO_ARTIFICE)
+            && item.sub_type != MISC_ZIGGURAT)
+        {
             return mpr("You cannot evoke magical items."), false;
+        }
 
         if (is_deck(item))
         {
