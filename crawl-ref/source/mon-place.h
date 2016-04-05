@@ -89,8 +89,6 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
-monster_type summon_any_dragon(dragon_class_type dct);
-
 bool drac_colour_incompatible(int drac, int colour);
 
 bool monster_habitable_grid(const monster* mon,

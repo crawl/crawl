@@ -657,7 +657,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DRAC_CALLER,
       {
-       { SPELL_SUMMON_DRAKES, 66, MON_SPELL_WIZARD },
+       { SPELL_SUMMON_DRAKES, 55, MON_SPELL_WIZARD },
+       { SPELL_SUMMON_DRAGON, 10, MON_SPELL_WIZARD },
       }
     },
 

@@ -969,7 +969,7 @@ conjurations to destroy anyone who dares to stand in its way.
 draconian caller
 
 While formidable in combat, this draconian specializes in summoning hordes of
-drakes.
+drakes and dragons.
 %%%%
 draconian knight
 
