@@ -430,6 +430,10 @@ static void _dispellable_monster_buffs(const monster &mon,
         if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
+        // Gozag-incited haste is permanent.
+        if (ench == ENCH_HASTE && mon.has_ench(ENCH_GOZAG_INCITE))
+            continue;
+
         if (mon.has_ench(ench))
             buffs.push_back(ench);
     }
