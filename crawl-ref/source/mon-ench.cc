@@ -1015,6 +1015,13 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     if (me.duration >= INFINITE_DURATION)
         return false;
 
+    if (has_ench(ENCH_GOZAG_INCITE)
+        && (en == ENCH_HASTE || en == ENCH_BERSERK))
+    {
+        dprf("Not decrementing haste/berserk because the monster is incited.");
+        return false;
+    }
+
     // Faster monsters can wiggle out of the net more quickly.
     const int spd = (me.ench == ENCH_HELD) ? speed :
                                              10;
@@ -2127,7 +2134,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
-    "aura_of_brilliance", "empowered_spells",
+    "aura_of_brilliance", "empowered_spells", "gozag_incite",
     "buggy",
 };
 
@@ -2398,6 +2405,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 2 * BASELINE_DELAY;
         break;
+    case ENCH_GOZAG_INCITE:
+        cturn = 100; // is never decremented
     default:
         break;
     }
