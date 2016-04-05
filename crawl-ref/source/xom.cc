@@ -391,7 +391,7 @@ void xom_tick()
         // If Xom is bored, the chances for Xom acting are sort of reversed.
         if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -418,7 +418,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance*chance, 100))
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
     }
 }
 
@@ -3403,14 +3403,17 @@ void xom_take_action(xom_event_type action, int sever)
 /**
  * Let Xom take an action, probably.
  *
- * @param niceness      Whether the action should be 'good' for the player.
- *                      May be overridden.
  * @param sever         The intended magnitude of the action.
+ * @param nice          Whether the action should be 'good' for the player.
+ *                      If MB_MAYBE, determined by xom's whim.
+ *                      May be overridden.
  * @param tension       How much danger we think the player's currently in.
  * @return              Whichever action Xom took, or XOM_DID_NOTHING.
  */
-xom_event_type xom_acts(bool niceness, int sever, int tension, bool debug)
+xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 {
+    bool niceness = tobool(nice, xom_is_nice(tension));
+
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
     if (!debug)
     {
@@ -3929,8 +3932,7 @@ void debug_xom_effects()
         // Repeat N times.
         for (int i = 0; i < N; ++i)
         {
-            const bool niceness = xom_is_nice(tension);
-            const xom_event_type result = xom_acts(niceness, sever, tension,
+            const xom_event_type result = xom_acts(sever, MB_MAYBE, tension,
                                                    true);
 
             mood_effects.push_back(result);

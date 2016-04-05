@@ -20,6 +20,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "misc.h" // frombool
 #include "mutation.h"
 #include "ng-setup.h"
 #include "output.h"
@@ -1137,11 +1138,9 @@ void wizard_xom_acts()
 
     if (specs[0] == '\0')
     {
-        xom_event_type result;
-        if (you_worship(GOD_XOM))
-            result = xom_acts(severity);
-        else
-            result = xom_acts(coinflip(), severity);
+        const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
+                                frombool(coinflip());
+        const xom_event_type result = xom_acts(severity, nice);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS
         UNUSED(result);

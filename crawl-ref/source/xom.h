@@ -86,16 +86,11 @@ void xom_is_stimulated(int maxinterestingness,
 void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
-xom_event_type xom_acts(bool niceness, int sever, int tension = -1,
-                        bool debug = false);
 const string describe_xom_favour();
 int xom_favour_rank();
 
-static inline xom_event_type xom_acts(int sever, int tension = -1)
-{
-    return xom_acts(xom_is_nice(tension), sever, tension);
-}
-
+xom_event_type xom_acts(int sever, maybe_bool niceness = MB_MAYBE,
+                        int tension = -1, bool debug = false);
 xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
 void xom_take_action(xom_event_type action, int sever);
 
