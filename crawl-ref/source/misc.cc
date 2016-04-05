@@ -892,3 +892,8 @@ bool tobool(maybe_bool mb, bool def)
         return def;
     }
 }
+
+maybe_bool frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
+}
