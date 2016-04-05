@@ -3830,33 +3830,11 @@ static int _xom_event_badness(xom_event_type event_type)
     return 0;
 }
 
-static const string _xom_effect_to_name(int effect)
+static const string _xom_effect_to_name(xom_event_type effect)
 {
-    ASSERT(effect < XOM_PLAYER_DEAD);
+    const xom_event *event = map_find(xom_events, effect);
+    string result = event ? event->name : "bugginess";
 
-    // See xom.h
-    static const char* _xom_effect_names[] =
-    {
-        "bugginess",
-        // good acts
-        "nothing", "potion", "magic mapping", "detect creatures",
-        "detect items", "spell (tension)", "spell (calm)", "confuse monsters",
-        "single ally", "animate monster weapon", "random item gift",
-        "acquirement", "summon allies", "polymorph", "swap monsters",
-        "teleportation", "vitrification", "mutation", "lightning",
-        "change scenery", "snakes to sticks", "mass fireball", "fake fireball",
-        "good enchant monster", "fog",
-        // bad acts
-        "nothing", "coloured smoke trail", "miscast (pseudo)",
-        "miscast (harmless)", "miscast (minor)", "miscast (major)", "miscast (nasty)",
-        "stat loss", "teleportation", "swap weapons", "chaos upgrade",
-        "mutation", "polymorph", "moving stairs", "unclimbable stairs",
-        "confusion", "draining", "torment", "summon hostiles",
-        "banishment (pseudo)", "banishment", "bad noise",
-        "bad enchant monster", "blink monsters", "chaos cloud",
-    };
-
-    string result = "";
     if (effect > XOM_DID_NOTHING && effect < XOM_PLAYER_DEAD)
     {
         if (effect <= XOM_LAST_GOOD_ACT)
@@ -3864,9 +3842,7 @@ static const string _xom_effect_to_name(int effect)
         else
             result = "BAD:  ";
     }
-    result += _xom_effect_names[effect];
-
-    return result;
+    return result + (event ? event->name : "bugginess");
 }
 
 static string _list_exploration_estimate()
@@ -3926,10 +3902,10 @@ void debug_xom_effects()
     fprintf(ostat, "\nRunning %d times through entire mood cycle.\n", N);
     fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");
 
-    vector<int>          mood_effects;
-    vector<vector<int> > all_effects;
-    vector<string>       moods;
-    vector<int>          mood_good_acts;
+    vector<xom_event_type>          mood_effects;
+    vector<vector<xom_event_type>>  all_effects;
+    vector<string>                  moods;
+    vector<int>                     mood_good_acts;
 
     string old_mood = "";
     string     mood = "";
@@ -3963,7 +3939,8 @@ void debug_xom_effects()
         for (int i = 0; i < N; ++i)
         {
             const bool niceness = xom_is_nice(tension);
-            const int  result   = xom_acts(niceness, sever, tension, true);
+            const xom_event_type result = xom_acts(niceness, sever, tension,
+                                                   true);
 
             mood_effects.push_back(result);
             all_effects[0].push_back(result);
@@ -3997,7 +3974,7 @@ void debug_xom_effects()
         sort(mood_effects.begin(), mood_effects.end());
 
         xom_ec_pairs.clear();
-        int old_effect = XOM_DID_NOTHING;
+        xom_event_type old_effect = XOM_DID_NOTHING;
         int count      = 0;
         for (int k = 0; k < total; ++k)
         {
