@@ -281,6 +281,7 @@ struct counted_monster_list
 bool today_is_halloween();
 
 bool tobool(maybe_bool mb, bool def);
+maybe_bool frombool(bool b);
 
 /** Remove from a container all elements matching a predicate.
  *
