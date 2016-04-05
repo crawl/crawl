@@ -3754,6 +3754,17 @@ static monster_type _pick_vermin()
                                   0);
 }
 
+static monster_type _pick_drake()
+{
+    return random_choose_weighted(5, MONS_SWAMP_DRAKE,
+                                  5, MONS_KOMODO_DRAGON,
+                                  5, MONS_WIND_DRAKE,
+                                  6, MONS_RIME_DRAKE,
+                                  6, MONS_DEATH_DRAKE,
+                                  3, MONS_LINDWURM,
+                                  0);
+}
+
 static void _do_high_level_summon(monster* mons, spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
                                   god_type god, const coord_def *target = nullptr,
@@ -5529,7 +5540,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                       mons->pos(), mons->foe, MG_NONE, god));
         return;
 
-    // Journey -- Added in Summon Lizards and Draconians
+    // Journey -- Added in Summon Lizards
     case SPELL_SUMMON_DRAKES:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
@@ -5540,19 +5551,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
             for (sumcount = 0; sumcount < sumcount2; ++sumcount)
             {
-                bool drag = false;
-                monster_type mon = summon_any_dragon(DRAGON_LIZARD);
-
-                if (mon == MONS_DRAGON)
-                {
-                    drag = true;
-                    mon = summon_any_dragon(DRAGON_DRAGON);
-                }
-
+                monster_type mon = _pick_drake();
                 monsters.push_back(mon);
-
-                if (drag)
-                    break;
             }
 
             for (monster_type type : monsters)
