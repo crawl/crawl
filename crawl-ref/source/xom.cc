@@ -3830,19 +3830,10 @@ static int _xom_event_badness(xom_event_type event_type)
     return 0;
 }
 
-static const string _xom_effect_to_name(xom_event_type effect)
+string xom_effect_to_name(xom_event_type effect)
 {
     const xom_event *event = map_find(xom_events, effect);
-    string result = event ? event->name : "bugginess";
-
-    if (effect > XOM_DID_NOTHING && effect < XOM_PLAYER_DEAD)
-    {
-        if (effect <= XOM_LAST_GOOD_ACT)
-            result = "GOOD: ";
-        else
-            result = "BAD:  ";
-    }
-    return result + (event ? event->name : "bugginess");
+    return event ? event->name : "bugginess";
 }
 
 static string _list_exploration_estimate()
@@ -3982,7 +3973,7 @@ void debug_xom_effects()
             {
                 if (count > 0)
                 {
-                    xom_ec_pairs.emplace_back(_xom_effect_to_name(old_effect),
+                    xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect),
                                               count);
                 }
                 old_effect = mood_effects[k];
@@ -3993,7 +3984,7 @@ void debug_xom_effects()
         }
 
         if (count > 0)
-            xom_ec_pairs.emplace_back(_xom_effect_to_name(old_effect), count);
+            xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect), count);
 
         sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
         for (const xom_effect_count &xec : xom_ec_pairs)

@@ -164,7 +164,7 @@
 #include "wiz-item.h"
 #include "wiz-mon.h"
 #include "wiz-you.h"
-#include "xom.h"
+#include "xom.h" // debug_xom_effects()
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -837,19 +837,7 @@ static void _do_wizard_command(int wiz_command)
         you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change();
         break;
-    case 'X':
-    {
-        int result = 0;
-        do
-        {
-            if (you_worship(GOD_XOM))
-                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
-            else
-                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
-        }
-        while (result == 0);
-        break;
-    }
+    case 'X': wizard_xom_acts(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
     case 'y': wizard_identify_all_items(); break;

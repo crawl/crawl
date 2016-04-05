@@ -73,6 +73,7 @@ enum xom_event_type
     XOM_BAD_BLINK_MONSTERS,
     XOM_BAD_CHAOS_CLOUD,
     XOM_LAST_BAD_ACT = XOM_BAD_CHAOS_CLOUD,
+    XOM_LAST_REAL_ACT = XOM_LAST_BAD_ACT,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
@@ -96,7 +97,7 @@ static inline xom_event_type xom_acts(int sever, int tension = -1)
 }
 
 xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
-void xom_take_action(xom_event_type action, bool nasty);
+void xom_take_action(xom_event_type action, int sever);
 
 xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
                                             bool debug = false);
@@ -105,6 +106,8 @@ void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
 bool xom_saves_your_life(const kill_method_type death_type, const char *aux);
 void xom_new_level_noise_or_stealth();
+
+string xom_effect_to_name(xom_event_type effect);
 
 #ifdef WIZARD
 void debug_xom_effects();
