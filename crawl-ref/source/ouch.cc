@@ -337,16 +337,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
  * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when 
  * receiving physical damage.  Hybrid damage (brands) should call it twice with appropriate
  * flavours.  
- * 
- * Notes:
- *  - qazlal_element_adapt will not necessarily react to all relevant beam_types so you should check.
- *  - if it is double-called, this will potentially make cold-blooded creatures slow longer, and boost
- *    the chances of elemental adaptation triggering.
- *  - strength is currently used in extremely varied ways (including for monsters, handled elsewhere).
- *  - if called with strength 0 (which is the default strength), the only thing this function will do is
- *    put out fires.
- *  - this used to call maybe_melt_player_enchantments, which seems to be vestigial and wrong --
- *    maybe_melt_player_enchantments needs an actual damage value, rather than "strength".
  *
  * @param flavour The beam type.
  * @param strength The strength of the attack.  Used in different ways for different side-effects.
