@@ -4820,6 +4820,17 @@ string get_mon_shape_str(const mon_body_shape shape)
     return shape_names[shape];
 }
 
+/** Is this body shape partially humanoid (i.e. does it at least have a
+ *  humanoid upper body)?
+ *  @param shape  The body shape in question.
+ *  @returns      Whether this body shape is partially humanoid.
+ */
+bool mon_shape_is_humanoid(mon_body_shape shape)
+{
+    return shape >= MON_SHAPE_FIRST_HUMANOID
+           && shape <= MON_SHAPE_LAST_HUMANOID;
+}
+
 bool player_or_mon_in_sanct(const monster* mons)
 {
     return is_sanctuary(you.pos()) || is_sanctuary(mons->pos());

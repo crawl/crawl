@@ -681,8 +681,7 @@ bool monster::can_speak()
     }
 
     // Does it have the proper vocal equipment?
-    const mon_body_shape shape = get_mon_shape(this);
-    return shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA;
+    return mon_shape_is_humanoid(get_mon_shape(this));
 }
 
 bool monster::is_silenced() const
