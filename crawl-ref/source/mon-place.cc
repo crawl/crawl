@@ -2865,14 +2865,7 @@ void debug_bands()
            + comma_separated_fn(unhandled_bands.begin(), unhandled_bands.end(),
                                 [](int i){ return make_stringf("%d", i); });
 
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("mon-bands.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-bands errors (dumped to mon-bands.out)");
+        dump_test_fails(fails, "mon-bands");
     }
 }
 

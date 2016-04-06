@@ -6,6 +6,7 @@
 NORETURN void fail(PRINTF(0, ));
 NORETURN void sysfail(PRINTF(0, ));
 NORETURN void corrupted(PRINTF(0, ));
+void dump_test_fails(string fails, string name);
 
 struct ext_fail_exception : public runtime_error
 {
