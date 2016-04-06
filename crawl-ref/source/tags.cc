@@ -6318,6 +6318,14 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         spells[j].freq = unmarshallByte(th);
         spells[j].flags.flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+            if (th.getMinorVersion() < TAG_MINOR_DEMONIC_SPELLS)
+            {
+                if (spells[j].flags & MON_SPELL_DEMONIC)
+                {
+                    spells[j].flags &= ~MON_SPELL_DEMONIC;
+                    spells[j].flags |= MON_SPELL_MAGICAL;
+                }
+            }
         }
 #endif
     }

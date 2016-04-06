@@ -169,7 +169,7 @@ static brand_type _random_special_pan_lord_brand()
     do { \
         const auto spell = (which_spell); \
         if (spell != SPELL_NO_SPELL) \
-            spells.emplace_back(spell, 0, MON_SPELL_DEMONIC); \
+            spells.emplace_back(spell, 0, MON_SPELL_MAGICAL); \
     } while (0)
 
 static int _panlord_random_resist_level()
