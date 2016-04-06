@@ -3723,7 +3723,6 @@ static void _xom_chaos_cloud(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
-#ifdef WIZARD
 struct xom_effect_count
 {
     string effect;
@@ -3839,6 +3838,7 @@ string xom_effect_to_name(xom_event_type effect)
     return event ? event->name : "bugginess";
 }
 
+#ifdef WIZARD
 static string _list_exploration_estimate()
 {
     int explored = 0;
