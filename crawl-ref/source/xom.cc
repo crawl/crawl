@@ -24,6 +24,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "errors.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -78,6 +79,11 @@
 
 static void _do_xom_event(xom_event_type event_type, int sever);
 static int _xom_event_badness(xom_event_type event_type);
+
+static bool _action_is_bad(xom_event_type action)
+{
+    return action > XOM_LAST_GOOD_ACT && action <= XOM_LAST_BAD_ACT;
+}
 
 // Spells to be cast at tension 0 (no or only low-level monsters around),
 // mostly flavour.
@@ -3345,8 +3351,7 @@ void xom_take_action(xom_event_type action, int sever)
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation = you.mutation;
     const bool was_bored = _xom_is_bored();
 
-    const bool bad_effect = action > XOM_LAST_GOOD_ACT
-                            && action <= XOM_LAST_BAD_ACT;
+    const bool bad_effect = _action_is_bad(action);
 
     if (was_bored && bad_effect && Options.note_xom_effects)
         take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
@@ -3836,6 +3841,57 @@ string xom_effect_to_name(xom_event_type effect)
 {
     const xom_event *event = map_find(xom_events, effect);
     return event ? event->name : "bugginess";
+}
+
+/// Basic sanity checks on xom_events.
+void validate_xom_events()
+{
+    string fails;
+    set<string> action_names;
+
+    for (int i = 0; i < XOM_LAST_REAL_ACT; ++i)
+    {
+        const xom_event_type event_type = static_cast<xom_event_type>(i);
+        const xom_event *event = map_find(xom_events, event_type);
+        if (!event)
+        {
+            fails += make_stringf("Xom event %d has no associated data!\n", i);
+            continue;
+        }
+
+        if (action_names.count(event->name))
+            fails += make_stringf("Duplicate name '%s'!\n", event->name);
+        action_names.insert(event->name);
+
+        if (_action_is_bad(event_type))
+        {
+            if ((event->badness_10x < 10 || event->badness_10x > 50)
+                && event->badness_10x != -1) // implies it's special-cased
+            {
+                fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
+                                      event->name, event->badness_10x);
+            }
+        } else if (event->badness_10x)
+        {
+            fails += make_stringf("'%s' is not bad, but has badness!\n",
+                                  event->name);
+        }
+
+        if (event_type != XOM_DID_NOTHING && !event->action)
+            fails += make_stringf("No action for '%s'!\n", event->name);
+    }
+
+    if (!fails.empty())
+    {
+        fprintf(stderr, "%s", fails.c_str());
+
+        FILE *f = fopen("xom-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("xom event errors (dumped to xom-data.out)");
+    }
 }
 
 #ifdef WIZARD
