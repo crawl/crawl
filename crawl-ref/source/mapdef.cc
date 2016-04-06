@@ -3633,8 +3633,6 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_NATURAL;
                     if (slot_vals[j] == "magical")
                         cur_spells[i].flags |= MON_SPELL_MAGICAL;
-                    if (slot_vals[j] == "demonic")
-                        cur_spells[i].flags |= MON_SPELL_DEMONIC;
                     if (slot_vals[j] == "wizard")
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")

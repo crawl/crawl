@@ -1198,8 +1198,7 @@ spells, invoking divine abilities, or shouting impossible in the caster's
 vicinity. The scroll's oppressive, unnatural effect will greatly hamper
 stealth.
 
-Certain monsters have demonic or angelic abilities which can be activated
-without speaking, and innate magical or special abilities will also still be
+Certain monsters have innate magical or special abilities which will still be
 usable while silenced.
 
 The effect starts out with a large radius, which will then shrink, eventually

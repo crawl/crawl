@@ -556,7 +556,6 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_EMERGENCY,  "E" },
                 { MON_SPELL_NATURAL,    "N" },
                 { MON_SPELL_MAGICAL,    "M" },
-                { MON_SPELL_DEMONIC,    "D" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
                 { MON_SPELL_BREATH,     "br" },

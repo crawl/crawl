@@ -6436,18 +6436,18 @@ static void _speech_keys(vector<string>& key_list,
 
     // Can't use copy-initialization 'wizard = slot_flags & ...' here,
     // because the bitfield-to-bool conversion is not implicit.
-    const bool wizard {slot_flags & MON_SPELL_WIZARD};
-    const bool priest {slot_flags & MON_SPELL_PRIEST};
-    const bool innate {slot_flags & MON_SPELL_INNATE_MASK};
-    const bool demon  {slot_flags & MON_SPELL_DEMONIC};
+    const bool wizard  {slot_flags & MON_SPELL_WIZARD};
+    const bool priest  {slot_flags & MON_SPELL_PRIEST};
+    const bool natural {slot_flags & MON_SPELL_NATURAL};
+    const bool magical {slot_flags & MON_SPELL_MAGICAL};
 
     const mon_body_shape shape = get_mon_shape(mons);
     const string    spell_name = spell_title(spell);
-    const bool      real_spell = !innate && (priest || wizard);
+    const bool      real_spell = priest || wizard;
 
     // Before just using generic per-spell and per-monster casts, try
     // per-monster, per-spell, with the monster type name, then the
-    // species name, then the genus name, then wizard/priest/demon.
+    // species name, then the genus name, then wizard/priest/magical/natural.
     // We don't include "real" or "gestures" here since that can be
     // be determined from the monster type; or "targeted" since that
     // can be determined from the spell.
@@ -6468,10 +6468,10 @@ static void _speech_keys(vector<string>& key_list,
     }
     else if (priest)
         key_list.push_back(spell_name + " priest" + cast_str);
-    else if (demon)
-        key_list.push_back(spell_name + " demon" + cast_str);
-    else if (innate)
-        key_list.push_back(spell_name + " innate" + cast_str);
+    else if (magical)
+        key_list.push_back(spell_name + " magical" + cast_str);
+    else if (natural)
+        key_list.push_back(spell_name + " natural" + cast_str);
 
 
     // Now try just the spell's name.
@@ -6495,7 +6495,7 @@ static void _speech_keys(vector<string>& key_list,
     key_list.push_back(mons_type_name(mons_genus(mons->type), DESC_PLAIN)
                        + cast_str);
 
-    // Last, generic wizard, priest or demon.
+    // Last, generic wizard, priest or magical.
     if (wizard)
     {
         key_list.push_back(make_stringf("%swizard%s",
@@ -6504,8 +6504,8 @@ static void _speech_keys(vector<string>& key_list,
     }
     else if (priest)
         key_list.push_back("priest" + cast_str);
-    else if (demon)
-        key_list.push_back("demon" + cast_str);
+    else if (magical)
+        key_list.push_back("magical" + cast_str);
 
     if (targeted)
     {

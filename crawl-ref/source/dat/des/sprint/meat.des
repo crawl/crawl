@@ -134,7 +134,7 @@
   local meatlord =
     "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta " ..
     "generate_awake never_corpse " ..
-    "spells:shadow_creatures.44.demonic;airstrike.44.demonic;conjure_ball_lightning.22.demonic " ..
+    "spells:shadow_creatures.44.magical;airstrike.44.magical;conjure_ball_lightning.22.magical " ..
     "; ring of slaying plus:27000 not_cursed ident:all " ..
     "no_pickup . mace unrand:sceptre_of_torment not_cursed " ..
     "ident:all no_pickup"

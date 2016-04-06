@@ -4,7 +4,7 @@
 #
 # 1) The name of the spell being cast:
 #   a) First try with the type, then the species, the the genus.
-#   b) If a wizard, "wizard"; similarly for priest, demon, and innate.
+#   b) If a wizard, "wizard"; similarly for priest, magical, and natural.
 #   c) If being cast by a wizard or priest monster with arms, first try
 #      with the suffix "real".
 #   d) If being cast by a monster of normal or higher intelligence with arms,
@@ -12,7 +12,7 @@
 #   e) Next, try without any suffix.
 # 2) The name of the monster's type, then species, then genus.
 # 3) "priest" if the spell is an invocation, "wizard" if it's a wizard spell,
-#    or "demon" if it's demonic.
+#    or "magical" if it's magical.
 # 4) If the spell uses a targeted, visible beam:
 #   a) "<beam_short_name> beam".
 #   b) "beam catchall".
@@ -41,7 +41,7 @@
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
-# * Spit Poison innate cast
+# * Spit Poison natural cast
 # * Spit Poison cast gestures
 # * Spit Poison cast
 # * greater naga cast targeted
@@ -216,7 +216,7 @@ Seal Doors cast
 
 __NONE
 #####################################################
-# Individual innate spells (breathing and spitting).
+# Individual natural spells (breathing and spitting).
 #####################################################
 %%%%
 Spit Acid cast
@@ -244,23 +244,23 @@ Chilling Breath cast
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 # Drac ghost breath
-Bolt of Draining innate cast
+Bolt of Draining natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Lightning Bolt innate cast
+Lightning Bolt natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Steam Ball innate cast
+Steam Ball natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Quicksilver Bolt innate cast
+Quicksilver Bolt natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Poisonous Cloud innate cast
+Poisonous Cloud natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
@@ -758,7 +758,7 @@ polymorphed unseen wizard cast
 
 You hear some strange, mumbled words.
 ######################################################
-# Generic priest, wizard and demonic casting messages.
+# Generic priest, wizard and magical casting messages.
 ######################################################
 %%%%
 Haste Other priest cast
@@ -841,11 +841,11 @@ unseen wizard cast
 
 You hear some strange, mumbled words.
 %%%%
-demon cast targeted
+magical cast targeted
 
 @The_monster@ gestures @at@ @target@.
 %%%%
-demon cast
+magical cast
 
 @The_monster@ gestures.
 %%%%
