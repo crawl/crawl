@@ -510,10 +510,10 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    "<w>Right-click</w> or press '<w>!</w>'"
 #else
-    "<w>Right-click</w>"
+    "Press '<w>!</w>'"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
