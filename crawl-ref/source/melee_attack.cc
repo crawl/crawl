@@ -2110,7 +2110,7 @@ void melee_attack::apply_staff_damage()
     if (!weapon)
         return;
 
-    if (player_mutation_level(MUT_NO_ARTIFICE))
+    if (attacker->is_player() && player_mutation_level(MUT_NO_ARTIFICE))
         return;
 
     if (weapon->base_type != OBJ_STAVES)
@@ -2184,6 +2184,8 @@ void melee_attack::apply_staff_damage()
                     defender->name(DESC_THE).c_str());
             special_damage_flavour = BEAM_FIRE;
         }
+        if (attacker->is_player())
+            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         break;
 
     case STAFF_POISON:
