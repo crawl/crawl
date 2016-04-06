@@ -1475,8 +1475,7 @@ void handle_starvation()
     if (current_delay_action() == DELAY_EAT)
         return;
 
-    if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR]
-        && you.hunger <= HUNGER_FAINTING)
+    if (!you_foodless() && you.hunger <= HUNGER_FAINTING)
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
@@ -1491,7 +1490,7 @@ void handle_starvation()
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
-        if (you.hunger <= 0)
+        if (you.hunger <= 0 && !you.duration[DUR_DEATHS_DOOR])
         {
             auto it = min_element(begin(you.inv), end(you.inv),
                 [](const item_def& a, const item_def& b) -> bool
