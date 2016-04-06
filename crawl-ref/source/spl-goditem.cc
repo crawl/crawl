@@ -249,8 +249,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
                 string key;
 
                 // Quadrupeds can't salute, etc.
-                mon_body_shape shape = get_mon_shape(mons);
-                if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                if (mon_shape_is_humanoid(get_mon_shape(mons)))
                     key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,

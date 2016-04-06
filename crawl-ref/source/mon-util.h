@@ -451,6 +451,7 @@ string do_mon_str_replacements(const string &msg, const monster* mons,
 mon_body_shape get_mon_shape(const monster* mon);
 mon_body_shape get_mon_shape(const monster_type mc);
 string get_mon_shape_str(const mon_body_shape shape);
+bool mon_shape_is_humanoid(mon_body_shape shape);
 
 tileidx_t get_mon_base_tile(monster_type mc);
 mon_type_tile_variation get_mon_tile_variation(monster_type mc);

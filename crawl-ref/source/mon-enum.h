@@ -282,12 +282,14 @@ enum mon_body_shape
 {
     MON_SHAPE_BUGGY,
     MON_SHAPE_HUMANOID,
+    MON_SHAPE_FIRST_HUMANOID = MON_SHAPE_HUMANOID,
     MON_SHAPE_HUMANOID_WINGED,
     MON_SHAPE_HUMANOID_TAILED,
     MON_SHAPE_HUMANOID_WINGED_TAILED,
     MON_SHAPE_CENTAUR,
     MON_SHAPE_NAGA,
-    // Everything before this should have arms
+    MON_SHAPE_LAST_HUMANOID = MON_SHAPE_NAGA,
+    // Everything before this should have at least a humanoid upper body
     MON_SHAPE_QUADRUPED,
     MON_SHAPE_QUADRUPED_TAILLESS,
     MON_SHAPE_QUADRUPED_WINGED,

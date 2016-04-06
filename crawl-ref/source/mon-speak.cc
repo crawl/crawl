@@ -710,10 +710,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // If we failed to get a message with a winged or tailed humanoid,
-    // or a naga or centaur, try moving closer to plain humanoid.
-    if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
-        && shape <= MON_SHAPE_NAGA)
+    // If we failed to get a message with a partial/hybrid humanoid, try moving
+    // closer to plain humanoid.
+    if ((msg.empty() || msg == "__NEXT") && mon_shape_is_humanoid(shape)
+        && shape != MON_SHAPE_HUMANOID)
     {
         // If a humanoid monster has both wings and a tail, try removing
         // one and then the other to see if we get any results.
