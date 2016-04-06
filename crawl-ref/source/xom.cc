@@ -3881,17 +3881,7 @@ void validate_xom_events()
             fails += make_stringf("No action for '%s'!\n", event->name);
     }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("xom-data.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("xom event errors (dumped to xom-data.out)");
-    }
+    dump_test_fails(fails, "xom-data");
 }
 
 #ifdef WIZARD

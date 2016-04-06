@@ -5048,17 +5048,7 @@ void debug_mondata()
             fails += make_stringf("%s has a corpse but no corpse tile\n", name);
     }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("mon-data.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-data errors (dumped to mon-data.out)");
-    }
+    dump_test_fails(fails, "mon-data");
 }
 
 /**
@@ -5191,17 +5181,7 @@ void debug_monspells()
         }
     }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("mon-spell.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-spell errors (dumped to mon-spell.out)");
-    }
+    dump_test_fails(fails, "mon-spell");
 }
 
 // Used when clearing level data, to ensure any additional reset quirks

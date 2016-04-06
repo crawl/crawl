@@ -187,7 +187,7 @@ void run_tests()
     _run_test("makename", make_name_tests);
     _run_test("job-data", debug_jobdata);
     _run_test("mon-bands", debug_bands);
-    _run_test("xom", validate_xom_events);
+    _run_test("xom-data", validate_xom_events);
 
     // Get a list of Lua files in test.
     {
