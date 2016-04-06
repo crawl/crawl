@@ -1117,8 +1117,6 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
 static void _rod_fired_pre(monster& mons)
 {
-    make_mons_stop_fleeing(&mons);
-
     if (!simple_monster_message(&mons, " zaps a rod.")
         && !silenced(you.pos()))
     {
@@ -1191,6 +1189,8 @@ static bool _handle_rod(monster &mons, bolt &beem)
     if (!you.see_cell(mons.pos())
         || mons.asleep()
         || mons_is_confused(&mons)
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || coinflip()
@@ -1302,6 +1302,8 @@ static bool _handle_wand(monster& mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
@@ -1404,11 +1406,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
 
     if (niceWand || zap)
     {
-        if (!niceWand)
-            make_mons_stop_fleeing(&mons);
-
         _mons_fire_wand(mons, *wand, beem, was_visible, niceWand);
-
         return true;
     }
 
