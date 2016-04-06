@@ -114,7 +114,7 @@ Items
   - Ring of invisibility.
   - Potions of poison.
   - Needles of slowing.
-  _ Lanterns of shadows.
+  - Lanterns of shadows.
 
 Monsters
 --------
