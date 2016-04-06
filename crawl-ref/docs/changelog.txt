@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-1619-gee06bbb)
+Stone Soup 0.18 (up to 0.18-a0-1702-gd20c6a5)
 --------------------------------------------
 
 Highlights
@@ -25,6 +25,7 @@ Character
   two floors.
 * Breath abilities are no longer mutations and are now unique to draconians
   and nagas.
+* Throwing speed now works like weapons do, making it somewhat slower.
 * Weapon types no longer have distinct strength weights. Strength now only
   gives a bonus to damage, and dexterity only gives a bonus to accuracy.
 * Formicids can no longer dig while in most non-Formicid forms.
@@ -48,6 +49,7 @@ Gods
 * Beogh no longer allows corpse sacrifice.
 * New Beogh 6* ability: Resurrection, reviving & converting dead orcs.
 * Followers of Elyvilon can pacify insects (again).
+* Monsters buffed by Gozag's wrath now remain buffed as long as they live.
 * Jiyva altars in Dungeon no longer appear as early.
 * Okawaru's abilities now cost less piety, but don't last as long at low
   Invocations skill.
@@ -85,6 +87,7 @@ Items
   - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
     reflection of piercing effects and enchantments, among other things.
 * The Etheric Cage now multiplies gained contam, instead of generating it.
+* Sniper can no longer miss, and is now +9 (formerly +15).
 * The robe of vines now grants slightly less regeneration.
 * The Majin-Bo now speaks occasionally.
 * The captain's cutlass now causes bonus damage when disarming.
@@ -102,6 +105,7 @@ Items
 * Potions of cure mutation are slightly more common.
 * Potions of degeneration now cause 1-3 damage to every stat.
 * The Damnation card has been renamed to Exile.
+* Poison needles' effects now scale with Throwing skill.
 * Removed items:
   - Amulets of resist mutation, stasis, warding, and corrosion.
   - Wands of cold, fire, frost, magic darts, invisibility, draining, and
@@ -110,6 +114,7 @@ Items
   - Ring of invisibility.
   - Potions of poison.
   - Needles of slowing.
+  _ Lanterns of shadows.
 
 Monsters
 --------
@@ -159,6 +164,7 @@ Monsters
 * Deep elf high priests now have an Aura of Brilliance spell that affects all
   allies in their view, making them cast spells more frequently and with more
   spell power.
+* Hell hogs now have Fireball, replacing Sticky Flame.
 * Maurice can now steal from the floor as well as your inventory.
 * Natasha no longer becomes weaker upon revival.
 * Death cobs now drain speed, rather than causing hunger.
