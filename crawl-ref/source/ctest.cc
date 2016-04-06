@@ -152,9 +152,11 @@ static void _run_test(const string &name, void (*func)())
     if (!_has_test(name))
         return;
 
+    ++ntests;
     try
     {
         (*func)();
+        ++nsuccess;
     }
     catch (const ext_fail_exception &E)
     {
