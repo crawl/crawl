@@ -817,7 +817,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
                                      int &quantity, bool divine,
-                                     int agent = -1)
+                                     int agent)
 {
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
@@ -848,8 +848,12 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
 
-        if (!is_useless_item(dummy, false) && !god_hates_item(dummy))
+        if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
+            && (agent >= NUM_GODS || god_likes_item_type(dummy,
+                                                         (god_type)agent)))
+        {
             break;
+        }
     }
     while (useless_count++ < 200);
 

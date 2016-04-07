@@ -648,3 +648,82 @@ bool god_hates_item(const item_def &item)
 {
     return god_hates_item_handling(item) != DID_NOTHING;
 }
+
+/**
+ * Does the given god like items of the given kind enough to make artefacts
+ * from them? (Thematically.)
+ *
+ * @param item          The item which may be the basis for an artefact.
+ * @param which_god     The god in question.
+ * @return              Whether it makes sense for the given god to make an
+ *                      artefact out of the given item. Thematically.
+ *                      (E.g., Ely shouldn't be forging swords.)
+ */
+bool god_likes_item_type(const item_def &item, god_type which_god)
+{
+    switch (which_god)
+    {
+        case GOD_ELYVILON:
+            // Peaceful healer god: no weapons, no berserking.
+            if (item.base_type == OBJ_WEAPONS)
+                return false;
+
+            if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
+                return false;
+            break;
+
+        case GOD_SHINING_ONE:
+            // Crusader god: holiness, honourable combat.
+            if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
+                return false;
+            break;
+
+        case GOD_OKAWARU:
+            // Precision fighter god: no inaccuracy.
+            if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY))
+                return false;
+            break;
+
+        case GOD_SIF_MUNA:
+        case GOD_VEHUMET:
+            // The magic gods: no weapons, no preventing spellcasting.
+            if (item.base_type == OBJ_WEAPONS)
+                return false;
+            break;
+
+        case GOD_TROG:
+            // Anti-magic god: no spell use, no enhancing magic.
+            if (item.base_type == OBJ_BOOKS)
+                return false;
+
+            if (item.base_type == OBJ_JEWELLERY
+                && (item.sub_type == RING_WIZARDRY
+                    || item.sub_type == RING_FIRE
+                    || item.sub_type == RING_ICE
+                    || item.sub_type == RING_MAGICAL_POWER))
+            {
+                return false;
+            }
+            break;
+
+        case GOD_CHEIBRIADOS:
+            // Slow god: no quick blades, no berserking.
+            if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
+                return false;
+
+            if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
+                return false;
+            break;
+
+        case GOD_DITHMENOS:
+            // Shadow god: no reducing stealth.
+            if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
+                return false;
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
