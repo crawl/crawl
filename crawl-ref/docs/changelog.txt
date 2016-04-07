@@ -135,6 +135,8 @@ Monsters
   ability which applies (usually) positive status effects to nearby allies.
 * Mnoleg gains Call of Chaos (as above), Random Bolt, and Dig.
 * Gloorx Vloq gains Summon Executioners and Black Mark.
+* Liches and Ancient Liches no longer have a long list of random spells,
+  and return to a new set of fixed spellbooks.
 * Salamander stormcallers' chant does not need to be continuous; they now
   only need to try to cast Fire Storm at their target three times for it to
   trigger.
