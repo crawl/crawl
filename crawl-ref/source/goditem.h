@@ -25,4 +25,5 @@ bool is_hasty_spell(spell_type spell);
 bool is_fiery_spell(spell_type spell);
 conduct_type god_hates_item_handling(const item_def &item);
 bool god_hates_item(const item_def &item);
+bool god_likes_item_type(const item_def &item, god_type which_god);
 #endif
