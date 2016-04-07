@@ -661,6 +661,7 @@ bool god_hates_item(const item_def &item)
  */
 bool god_likes_item_type(const item_def &item, god_type which_god)
 {
+    // XXX: also check god_hates_item()?
     switch (which_god)
     {
         case GOD_ELYVILON:
@@ -678,12 +679,6 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
                 return false;
             break;
 
-        case GOD_OKAWARU:
-            // Precision fighter god: no inaccuracy.
-            if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY))
-                return false;
-            break;
-
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
             // The magic gods: no weapons, no preventing spellcasting.
@@ -698,7 +693,6 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
 
             if (item.base_type == OBJ_JEWELLERY
                 && (item.sub_type == RING_WIZARDRY
-                    || item.sub_type == RING_FIRE
                     || item.sub_type == RING_ICE
                     || item.sub_type == RING_MAGICAL_POWER))
             {
