@@ -2118,7 +2118,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LIGHTNING_BOLT, 18, MON_SPELL_WIZARD },
        { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-       { SPELL_PARALYZE, 18, MON_SPELL_WIZARD },
+       { SPELL_PARALYSE, 18, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
       }
     },
