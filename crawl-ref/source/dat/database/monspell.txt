@@ -327,6 +327,10 @@ You hear a loud warning cry!
 Slug Dart cast
 
 @The_monster@ launches a dart @at@ @target@.
+%%%%
+Paralysis Gaze cast
+
+@The_monster@ gazes piercingly through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################

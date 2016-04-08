@@ -167,6 +167,10 @@ Monsters
   allies in their view, making them cast spells more frequently and with more
   spell power.
 * Hell hogs now have Fireball, replacing Sticky Flame.
+* Giant eyeballs are now normal speed, but must stare thrice to paralyze
+  their targets.
+* Giant eyeballs and eyes of draining now generate with a single random
+  floor monster when spawning normally.
 * Maurice can now steal from the floor as well as your inventory.
 * Natasha no longer becomes weaker upon revival.
 * Death cobs now drain speed, rather than causing hunger.

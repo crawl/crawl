@@ -1214,8 +1214,9 @@ they are in fact quite susceptible to mutagenic energies.
 %%%%
 giant eyeball
 
-A giant floating eyeball, with a gaze that can paralyse even the most
-strong-willed of adventurers. Some say giant eyeballs are servitors of Jiyva.
+A giant floating eyeball, with a gaze that can eventually paralyse even the
+most strong-willed of adventurers. Some say giant eyeballs are servitors of
+Jiyva.
 %%%%
 giant frog
 

@@ -896,22 +896,6 @@ default confused centipede
 VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
 
 VISUAL:@The_monster@ wildly waves @possessive@ antennae.
-%%%%
-orb spider charge
-
-@The_monster@ spins a strand of pure energy.
-
-@The_monster@ pulsates with a strange energy.
-
-@The_monster@ begins to weave its threads into a brightly glowing ball.
-%%%%
-salamander stormcaller charge
-
-@The_monster@ gathers magical energy.
-
-@The_monster@ heats up noticeably.
-
-@The_monster@ prepares to call down a storm.
 #########################################
 # Speech strings by monster symbol
 #########################################
@@ -6360,6 +6344,32 @@ _Xtahua_rare_
 ##########################################
 # Specific non-unique monsters
 ##########################################
+################## Spell-charging ##########################
+%%%%
+orb spider charge
+
+@The_monster@ spins a strand of pure energy.
+
+@The_monster@ pulsates with a strange energy.
+
+@The_monster@ begins to weave its threads into a brightly glowing ball.
+%%%%
+salamander stormcaller charge
+
+@The_monster@ gathers magical energy.
+
+@The_monster@ heats up noticeably.
+
+@The_monster@ prepares to call down a storm.
+%%%%
+giant eyeball charge
+
+@The_monster@ view fixates on @foe@.
+
+@The_monster@'s stare focuses on @foe@.
+
+@The_monster@ seems to glare at @foe@.
+%%%%
 ################## Bennu ###################################
 %%%%
 bennu

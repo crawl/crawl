@@ -927,8 +927,8 @@ Prevents a creature from taking any action for a short time.
 %%%%
 Paralysis Gaze spell
 
-Prevents a creature from taking any action for a short time, with no direct
-line of fire required.
+Irresistably prevents a creature from taking any action for a short time,
+requiring multiple charges but not line of fire.
 %%%%
 Passage of Golubria spell
 

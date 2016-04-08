@@ -2252,6 +2252,14 @@ static const map<monster_type, band_set> bands_by_leader = {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
     { MONS_HOWLER_MONKEY,   { {2, 6}, {{ BAND_HOWLER_MONKEY, {1, 4} }}}},
+    { MONS_GIANT_EYEBALL,   { {0, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
+    { MONS_EYE_OF_DRAINING, { {0, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
 
 
     // special-cased band-sizes

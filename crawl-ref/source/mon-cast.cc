@@ -4850,7 +4850,7 @@ static bool _spell_charged(monster *mons)
                            .c_str());
         if (!msg.empty())
         {
-            msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+            msg = do_mon_str_replacements(msg, mons);
             mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
                  : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
         }
@@ -4948,7 +4948,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         || spell_cast == SPELL_PORTAL_PROJECTILE
         || spell_cast == SPELL_FORCEFUL_INVITATION
         || spell_cast == SPELL_PLANEREND
-        || spell_cast == SPELL_FIRE_STORM)
+        || spell_cast == SPELL_FIRE_STORM
+        || spell_cast == SPELL_PARALYSIS_GAZE)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -5093,6 +5094,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_PARALYSIS_GAZE:
+        if (mons->type == MONS_GIANT_EYEBALL && !_spell_charged(mons))
+            return;
+        if (orig_noise)
+            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         foe->paralyse(mons, 2 + random2(3));
         return;
 
@@ -7946,6 +7951,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->has_ench(ENCH_DEFLECT_MISSILES);
 
     case SPELL_PARALYSIS_GAZE:
+        return !foe || foe->paralysed() || !mon->can_see(*foe);
+
     case SPELL_CONFUSION_GAZE:
     case SPELL_DRAINING_GAZE:
         return !foe || !mon->can_see(*foe);
