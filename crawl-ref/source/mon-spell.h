@@ -1952,7 +1952,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GIANT_EYEBALL,
       {
-       { SPELL_PARALYSIS_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_PARALYSIS_GAZE, 80, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
