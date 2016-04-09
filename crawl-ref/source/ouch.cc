@@ -328,18 +328,18 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
 /**
  * Handle side-effects for exposure to element other than damage.
- * Historically this handled item destruction, and melting meltable enchantments.  Now it takes care of 3 things:
+ * Historically this handled item destruction, and melting meltable enchantments. Now it takes care of 3 things:
  *   - triggering qazlal's elemental adaptations
  *   - slowing cold-blooded players (draconians, hydra form)
  *   - putting out fires
- * This function should be called exactly once any time a player is exposed to the 
- * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG.  For the sake of Qazlal's
- * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when 
- * receiving physical damage.  Hybrid damage (brands) should call it twice with appropriate
- * flavours.  
+ * This function should be called exactly once any time a player is exposed to the
+ * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG. For the sake of Qazlal's
+ * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when
+ * receiving physical damage. Hybrid damage (brands) should call it twice with appropriate
+ * flavours.
  *
  * @param flavour The beam type.
- * @param strength The strength of the attack.  Used in different ways for different side-effects.
+ * @param strength The strength of the attack. Used in different ways for different side-effects.
  *     For qazlal_elemental_adapt: (i) it is used for the probability of triggering, and (ii) the resulting length of the effect.
  * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
  *                          is cold-blooded and not cold-resistant, slow the
