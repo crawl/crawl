@@ -74,11 +74,9 @@ struct mon_display
 {
     ucs_t        glyph;
     colour_t     colour;
-    monster_type detected; // What a monster of type "type" is detected as.
 
-    mon_display(unsigned gly = 0, unsigned col = 0,
-                monster_type d = MONS_NO_MONSTER)
-       : glyph(gly), colour(col), detected(d) { }
+    mon_display(unsigned gly = 0, unsigned col = 0)
+       : glyph(gly), colour(col) { }
 };
 
 static mon_display monster_symbols[NUM_MONSTERS];
@@ -270,7 +268,6 @@ void init_monster_symbols()
             auto it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = mc;
-            md.detected = base_mons[md.glyph];
         }
     }
 
@@ -1317,7 +1314,7 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
 
 monster_type mons_detected_base(monster_type mc)
 {
-    return monster_symbols[mc].detected;
+    return mons_genus(mc);
 }
 
 /** Does a monster of this type behold opponents like a siren?
