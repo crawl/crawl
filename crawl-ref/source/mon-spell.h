@@ -2027,8 +2027,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SALAMANDER_STORMCALLER,
       {
-       { SPELL_STICKY_FLAME_RANGE, 45, MON_SPELL_WIZARD },
-       { SPELL_FIRE_STORM, 30, MON_SPELL_WIZARD },
+       { SPELL_FIRE_STORM, 35, MON_SPELL_WIZARD },
       }
     },
 
