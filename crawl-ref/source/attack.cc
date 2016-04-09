@@ -1588,11 +1588,17 @@ bool attack::apply_damage_brand(const char *what)
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
+        defender->expose_to_element(BEAM_FIRE, 2);
+        if (defender->is_player())
+        {
+            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
+        }
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1621,6 +1627,7 @@ bool attack::apply_damage_brand(const char *what)
                 :  "There is a sudden explosion of sparks!";
             special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
+            defender->expose_to_element(BEAM_ELECTRICITY, 2);
         }
 
         break;
@@ -1815,22 +1822,6 @@ bool attack::apply_damage_brand(const char *what)
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
-
-    if (defender->alive())
-    {
-        switch (brand)
-        {
-        case SPWPN_FLAMING:
-            defender->expose_to_element(BEAM_FIRE);
-            break;
-
-        case SPWPN_FREEZING:
-            defender->expose_to_element(BEAM_COLD, 2);
-            break;
-        default:
-            break;
-        }
-    }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {

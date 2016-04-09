@@ -946,7 +946,7 @@ void player_reacts()
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
+        maybe_melt_player_enchantments(BEAM_FIRE, 10);
 
     // Handle starvation before subtracting hunger for this turn (including
     // hunger from the berserk duration) and before monsters react, so you
