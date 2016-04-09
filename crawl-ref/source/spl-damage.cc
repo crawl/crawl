@@ -447,7 +447,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
             ouch(hurted, KILLED_BY_BEAM, agent->mid,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
-            expose_player_to_element(BEAM_COLD, 5, added_effects);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
 
             // Note: this used to be 12!... and it was also applied even if
             // the player didn't take damage from the cold, so we're being
@@ -456,6 +456,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
         else
         {
             ouch(hurted, KILLED_BY_FREEZING);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
         }
     }
@@ -1632,6 +1633,8 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
+    mon->expose_to_element(BEAM_FIRE, damage);
+
     if (tracer)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
 
@@ -1706,6 +1709,8 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     ouch(damage, KILLED_BY_BEAM, agent->mid,
          "by burning poison", you.can_see(*agent),
          agent->as_monster()->name(DESC_A, true).c_str());
+    if (damage > 0)
+        agent->expose_to_element(BEAM_FIRE, 2);
 
     mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     you.duration[DUR_POISONING] = 0;
@@ -1881,6 +1886,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
                                     "static discharge");
         ouch(damage, KILLED_BY_BEAM, agent->mid, "by static electricity", true,
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
     }
     else if (victim->res_elec() > 0)
         return 0;
@@ -1892,6 +1899,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
 
         if (damage)
         {

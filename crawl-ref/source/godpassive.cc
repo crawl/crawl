@@ -1006,6 +1006,14 @@ void qazlal_storm_clouds()
     }
 }
 
+/**
+ * Handle Qazlal's elemental adaptation.
+ * This should be called (exactly once) for physical, fire, cold, and electrical damage.
+ * Right now, it is called only from expose_player_to_element.  This may merit refactoring.
+ *
+ * @param flavour the beam type.
+ * @param strength The adaptations will trigger strength in (11 - piety_rank()) times.  In practice, this is mostly called with a value of 2.
+ */
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
@@ -1039,6 +1047,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
             break;
+        case BEAM_MMISSILE: // for LCS, iron shot
         case BEAM_MISSILE:
         case BEAM_FRAG:
             what = BEAM_MISSILE;
@@ -1077,7 +1086,9 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     mprf(MSGCH_GOD, "You feel %sprotected from %s.",
          you.duration[dur] > 0 ? "more " : "", descript.c_str());
 
-    you.increase_duration(dur, 10 * strength, 80);
+    // was scaled by 10 * strength.  But the strength parameter is used so inconsistently that
+    // it seems like a constant would be better, based on the typical value of 2.
+    you.increase_duration(dur, 20, 80);
 
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
