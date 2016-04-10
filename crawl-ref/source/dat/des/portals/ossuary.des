@@ -1225,3 +1225,60 @@ c`````````````````````````````c
 c<```````````````````````````Ac
 ccccccccccccccccccccccccccccccc
 ENDMAP
+
+NAME:   ossuary_kennysheep_city_of_the_dead
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen
+KMONS:	1W = wraith
+KMONS:	2 = mummy
+KMONS:	3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
+        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1 /\
+		nothing w:36
+KITEM:  12d = any potion / any scroll / any jewellery w:1
+KFEAT:	. = needle trap / arrow trap / spear trap w:5 / floor w:600
+NSUBST:	d = 1:1 / 3:2 / 4:. / *:d
+: ossuary_setup_features(_G)
+MAP
+ccccccccccccccccccccccccccccc
+c...........................c
+c...........................c
+c..xxx..xxx..xxx..xxx..xxx..c
+c..xdx..xdx..xdx..xdx..xdx..c
+c..x+x..x+x..x+x..x+x..x+x..c
+c..x.x..x.x..x.x..x.x..x.x..c
+c...........................c
+c...........................c
+c..xxxx..3...xxx...3..xxxx..c
+c..xd+..3G3..xdx..3G3..+dx..c
+c..xxxx..3...x+x...3..xxxx..c
+c............x.x............c
+c...........................c
+c..xxxx.xxxx..3..xxxx.xxxx..c
+c..xd+..xd+..3G3..+dx..+dx..c
+c..xxxx.xxxx..3..xxxx.xxxx..c
+c...........................c
+c............x.x............c
+c..xxxx..3...x+x...3..xxxx..c
+c..xd+..3G3..xdx..3G3..+dx..c
+c..xxxx..3...xxx...3..xxxx..c
+c...........................c
+c...........................c
+c..x.x..x.x..x.x..x.x..x.x..c
+c..x+x..x+x..x+x..x+x..x+x..c
+c..xdx..xdx..xdx..xdx..xdx..c
+c..xxx..xxx..xxx..xxx..xxx..c
+c...........................c
+c...........................c
+ccccccccccccc+++ccccccccccccc
+           cc...cc
+          cc.....cc
+       cccc.......cccc
+       cWn...<.A...nWc
+       cccc.......cccc
+          cc.....cc
+           cc...cc
+            ccncc
+             cWc
+             ccc
+ENDMAP

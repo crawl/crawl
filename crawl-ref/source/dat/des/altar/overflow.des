@@ -324,6 +324,20 @@ MAP
 ......@......
 ENDMAP
 
+NAME: 	kennysheep_slug_shrine
+TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+TAGS:	no_pool_fixup no_monster_gen
+DEPTH:  D:2-6
+MONS:	patrolling dart slug
+KFEAT:  _ = altar_cheibriados
+MAP
+  .WWW
+ .WwwwWbb
+@.Ww1WW_b
+ .WwwwWbb
+  .WWW
+ENDMAP
+
 ### Dithmenos overflow altars ################################################
 
 NAME:   grunt_dithmenos_smoke

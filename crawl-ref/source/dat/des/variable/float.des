@@ -3074,6 +3074,37 @@ xxl.lll...xx...lllxx..llxxxx..xxlllxx
                         xxxxx
 ENDMAP
 
+NAME:	kennysheep_slugbush
+DEPTH:	D:3-7
+ORIENT: float
+MONS:	dart slug
+NSUBST:	w = 15:xxc
+NSUBST:	. = 1:[GG.. / 1:(GG.. / 1:G. / 5:%
+SUBST:	G:GtT
+SUBST:	1 = 11111..
+KPROP:	w = no_tele_into
+MAP
+         @
+    @  WW1WW  @
+     1wWwwwww1
+    wwwWwwwwwww
+ @ wwwwWWWwwwwww @
+  1wwwwwwWWwwwww1
+  wwwwwwwwWwwwwww
+ wwww.wwwWWwwwwwww
+ www.www...w...www
+@1ww.....{.....ww1@
+ www..ww...ww.wwww
+ wwwwwwwWWwwwwwwww
+  wwwwwwWwwwwwwww
+  1wwwwwWwwwwwww1
+ @ wwwwwWWwwwwww @
+    wwwwwWWwwww
+     1wwwwwWw1
+    @  WW1WW  @
+         @
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
