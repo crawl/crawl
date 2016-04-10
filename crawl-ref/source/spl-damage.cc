@@ -1710,7 +1710,7 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
          "by burning poison", you.can_see(*agent),
          agent->as_monster()->name(DESC_A, true).c_str());
     if (damage > 0)
-        agent->expose_to_element(BEAM_FIRE, 2);
+        you.expose_to_element(BEAM_FIRE, 2);
 
     mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     you.duration[DUR_POISONING] = 0;
