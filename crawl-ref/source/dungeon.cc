@@ -2358,32 +2358,20 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
 // shallow. Checks each water space.
 static void _prepare_water()
 {
-    dungeon_feature_type which_grid;   // code compaction {dlb}
-    int absdepth0 = env.absdepth0;
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (map_masked(*ri, MMT_NO_POOL))
+        if (map_masked(*ri, MMT_NO_POOL) || grd(*ri) != DNGN_DEEP_WATER)
             continue;
 
-        if (grd(*ri) == DNGN_DEEP_WATER)
+        for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            for (adjacent_iterator ai(*ri); ai; ++ai)
-            {
-                which_grid = grd(*ai);
+            const dungeon_feature_type which_grid = grd(*ai);
 
-                // must come first {dlb}
-                if (which_grid == DNGN_SHALLOW_WATER
-                    && one_chance_in(8 + absdepth0))
-                {
-                    grd(*ri) = DNGN_SHALLOW_WATER;
-                }
-                else if (feat_has_dry_floor(which_grid)
-                         && x_chance_in_y(80 - absdepth0 * 4,
-                                          100))
-                {
-                    _set_grd(*ri, DNGN_SHALLOW_WATER);
-                }
+            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(20)
+                || feat_has_dry_floor(which_grid) && x_chance_in_y(2, 5))
+            {
+                _set_grd(*ri, DNGN_SHALLOW_WATER);
+                break;
             }
         }
     }
