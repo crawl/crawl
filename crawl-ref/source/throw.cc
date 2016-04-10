@@ -738,6 +738,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
+            // FIXME: this does not handle exploding ammo!
             monster *m = monster_at(thr.target);
             if (m)
                 cancelled = stop_attack_prompt(m, false, thr.target);
