@@ -2183,9 +2183,10 @@ void melee_attack::apply_staff_damage()
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
             special_damage_flavour = BEAM_FIRE;
+
+            if (defender->is_player())
+                maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         }
-        if (attacker->is_player())
-            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         break;
 
     case STAFF_POISON:
