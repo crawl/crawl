@@ -2207,8 +2207,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (species_is_unbreathing(static_cast<species_type>(race)))
+        else if (race >= 0 && // not a removed race
+                 species_is_unbreathing(static_cast<species_type>(race)))
+        {
             desc += "Forgot to exist";
+        }
         else
             desc += "Forgot to breathe";
         break;
