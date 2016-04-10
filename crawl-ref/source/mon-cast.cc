@@ -2133,10 +2133,10 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     if (_ms_waste_of_time(mon, slot))
         return false;
 
-    bool targ_adj      = false;
-    bool targ_sanct    = false;
-    bool targ_friendly = false;
-    bool targ_undead   = false;
+    bool targ_adj       = false;
+    bool targ_sanct     = false;
+    bool targ_friendly  = false;
+    bool targ_living    = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
@@ -2144,8 +2144,8 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
             targ_adj = true;
         if (is_sanctuary(you.pos()))
             targ_sanct = true;
-        if (you.undead_or_demonic())
-            targ_undead = true;
+        if (you.holiness() & MH_NATURAL)
+            targ_living = true;
     }
     else
     {
@@ -2153,8 +2153,8 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
             targ_adj = true;
         if (is_sanctuary(menv[mon->foe].pos()))
             targ_sanct = true;
-        if (menv[mon->foe].undead_or_demonic())
-            targ_undead = true;
+        if (menv[mon->foe].holiness() & MH_NATURAL)
+            targ_living = true;
     }
 
     targ_friendly = (mon->foe == MHITYOU
@@ -2178,7 +2178,7 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     case SPELL_WIND_BLAST:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
-        return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
+        return !targ_sanct && targ_adj && !targ_friendly && targ_living;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
     case SPELL_INJURY_MIRROR:
@@ -7477,6 +7477,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_VAMPIRIC_DRAINING:
         if (!foe
             || !adjacent(mon->pos(), foe->pos())
+            || !(foe->holiness() & MH_NATURAL) // dumb enough to cast on rN,
+                                              // but not undead/demons/etc
             || x_chance_in_y(mon->hit_points - (mon->max_hit_points / 3),
                              mon->max_hit_points * 2 / 3))
         {
