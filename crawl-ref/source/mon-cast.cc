@@ -3921,7 +3921,13 @@ static bool _mons_vampiric_drain(monster *mons)
         monster* mtarget = target->as_monster();
         const string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
-        if (mons->heal(hp_cost * 2 / 3))
+        if (mtarget->is_summoned())
+        {
+            simple_monster_message(mons,
+                                   make_stringf(" draws life force from %s!",
+                                                targname.c_str()).c_str());
+        }
+        else if (mons->heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
                 make_stringf(" draws life force from %s and is healed!",
