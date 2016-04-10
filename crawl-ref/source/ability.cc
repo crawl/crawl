@@ -1006,6 +1006,34 @@ vector<const char*> get_ability_names()
     return result;
 }
 
+static string _desc_sac_mut(const CrawlStoreValue &mut_store)
+{
+    const mutation_type mut = static_cast<mutation_type>(mut_store.get_int());
+    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
+    strip_suffix(lowercase(mut_desc), ".");
+    return make_stringf("%s (%s)", mutation_name(mut), mut_desc.c_str());
+}
+
+static string _sacrifice_desc(const ability_type ability)
+{
+    const string boilerplate =
+        "\nIf you make this sacrifice, your powers granted by Ru "
+        "will become stronger in proportion to the value of the "
+        "sacrifice, and you may gain new powers as well.\n\n"
+        "Sacrifices cannot be taken back.\n";
+
+    const string sac_vec_key = ru_sacrifice_vector(ability);
+    if (sac_vec_key.empty())
+        return boilerplate;
+
+    ASSERT(you.props.exists(sac_vec_key));
+    const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
+    return "\nThis sacrifice will inflict you with: "
+            + comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
+                                 _desc_sac_mut)
+            + ".\n" + boilerplate;
+}
+
 // XXX: should this be in describe.cc?
 string get_ability_desc(const ability_type ability)
 {
@@ -1017,12 +1045,7 @@ string get_ability_desc(const ability_type ability)
         lookup = "No description found.\n";
 
     if (testbits(get_ability_def(ability).flags, abflag::SACRIFICE))
-    {
-        lookup += "\nIf you make this sacrifice, your powers granted by Ru "
-                  "will become stronger in proportion to the value of the "
-                  "sacrifice, and you may gain new powers as well.\n\n"
-                  "Sacrifices cannot be taken back.\n";
-    }
+        lookup += _sacrifice_desc(ability);
 
     if (god_hates_ability(ability, you.religion))
     {

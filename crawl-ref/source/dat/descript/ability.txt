@@ -679,9 +679,7 @@ Using this ability exhausts and severely drains you.
 %%%%
 Sacrifice Purity ability
 
-Sacrifices purity of body or mind, causing a single mutation. The mutation will
-be one of deterioration, deformed body, uncontrolled shouting, worse device
-healing, clumsiness, weakness or dopiness.
+Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
@@ -693,13 +691,11 @@ Sacrifices the ability to drink potions while threatened.
 %%%%
 Sacrifice Essence ability
 
-Sacrifices magical essence, causing a single mutation. The mutation will be one
-of reduced magic pool, MR-, or increased spellcasting difficulty.
+Sacrifices magical essence, causing a single mutation.
 %%%%
 Sacrifice Health ability
 
-Sacrifices physical health, causing a single mutation. The mutation will be one
-of reduced health, reduced Evasion, or reduced AC.
+Sacrifices physical health, causing a single mutation.
 %%%%
 Sacrifice Stealth ability
 
