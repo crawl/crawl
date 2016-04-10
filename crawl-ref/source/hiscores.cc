@@ -1859,7 +1859,8 @@ string scorefile_entry::single_cdesc() const
     scname = chop_string(name, 10);
 
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
+                        race_class_name.c_str(), lvl,
+                        (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
 }
 
 static string _append_sentence_delimiter(const string &sentence,
