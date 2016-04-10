@@ -1008,10 +1008,7 @@ vector<const char*> get_ability_names()
 
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 {
-    const mutation_type mut = static_cast<mutation_type>(mut_store.get_int());
-    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
-    strip_suffix(lowercase(mut_desc), ".");
-    return make_stringf("%s (%s)", mutation_name(mut), mut_desc.c_str());
+    return mut_upgrade_summary(static_cast<mutation_type>(mut_store.get_int()));
 }
 
 static string _sacrifice_desc(const ability_type ability)
@@ -1028,7 +1025,7 @@ static string _sacrifice_desc(const ability_type ability)
 
     ASSERT(you.props.exists(sac_vec_key));
     const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
-    return "\nThis sacrifice will inflict you with: "
+    return "\nAfter this sacrifice, you will find that "
             + comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
                                  _desc_sac_mut)
             + ".\n" + boilerplate;
