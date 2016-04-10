@@ -540,7 +540,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.range        = you.current_vision;
     beam.source_id    = agent->mid;
     beam.item         = &item;
-    beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = is_penetrating_attack(*agent, launcher, item);
@@ -726,12 +725,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
 
-    // Save the special explosion (exploding missiles) for later.
-    // Need to clear this if unknown to avoid giving away the explosion.
-    bolt* expl = pbolt.special_explosion;
-    if (!pbolt.effect_known)
-        pbolt.special_explosion = nullptr;
-
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
     // Portaled Projectile, but obviously don't trace a path.
@@ -775,15 +768,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (cancelled)
     {
         you.turn_is_over = false;
-        if (expl != nullptr)
-            delete expl;
         return false;
     }
 
     pbolt.is_tracer = false;
-
-    // Reset values.
-    pbolt.special_explosion = expl;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
