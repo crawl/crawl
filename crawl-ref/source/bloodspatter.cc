@@ -16,11 +16,24 @@
 #include "shout.h"
 #include "terrain.h"
 
-static bool _allow_bleeding_on_square(const coord_def& where)
+/**
+ * Is it okay to bleed onto the given square?
+ *
+ * @param where      The square in question.
+ * @param to_ignite  Whether the blood will be ignited right
+ *                   after.
+ * @return           Whether blood is permitted.
+ */
+static bool _allow_bleeding_on_square(const coord_def& where,
+                                      bool to_ignite = false)
 {
     // No bleeding onto sanctuary ground, please.
-    // Also not necessary if already covered in blood.
-    if (is_bloodcovered(where) || is_sanctuary(where))
+    if (is_sanctuary(where))
+        return false;
+
+    // Also not necessary if already covered in blood
+    // Unless we're going to set it on fire right after.
+    if (is_bloodcovered(where) && !to_ignite)
         return false;
 
     // No spattering into lava or water.
@@ -114,10 +127,10 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    bool may_bleed = _allow_bleeding_on_square(where);
-
     bool ignite_blood = player_mutation_level(MUT_IGNITE_BLOOD)
                         && you.see_cell(where);
+
+    bool may_bleed = _allow_bleeding_on_square(where, ignite_blood);
 
     if (ignite_blood)
         amount *= 2;
