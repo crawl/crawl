@@ -813,7 +813,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     if (coinflip())
                     {
                         dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                             mi->name(DESC_PLAIN).c_str(),
+                             mi->name(DESC_A, true).c_str(),
                              mi->pos().x, mi->pos().y);
                         behaviour_event(*mi, ME_DISTURB, 0, where);
                     }
@@ -821,7 +821,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 }
             }
             dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                            mi->name(DESC_PLAIN).c_str(),
+                            mi->name(DESC_A, true).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
             break;
@@ -835,14 +835,14 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 if (coinflip())
                 {
                     dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                         mi->name(DESC_PLAIN).c_str(),
+                         mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_DISTURB, 0, where);
                 }
                 else
                 {
                     dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                         mi->name(DESC_PLAIN).c_str(),
+                         mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_ALERT, 0, where);
                 }
