@@ -1787,12 +1787,21 @@ const char* mutation_name(mutation_type mut)
     return _get_mutation_def(mut).short_desc;
 }
 
-const char* mutation_desc_for_text(mutation_type mut)
+/**
+ * A summary of what the next level of a mutation does.
+ *
+ * @param mut   The mutation_type in question; e.g. MUT_FRAIL.
+ * @return      The mutation's description, helpfully trimmed.
+ *              e.g. "you are frail (-10% HP)".
+ */
+string mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return _get_mutation_def(mut).desc;
+    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
+    strip_suffix(lowercase(mut_desc), ".");
+    return mut_desc;
 }
 
 int mutation_max_levels(mutation_type mut)

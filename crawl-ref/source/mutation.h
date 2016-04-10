@@ -52,7 +52,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 bool delete_all_mutations(const string &reason);
 
 const char* mutation_name(mutation_type mut);
-const char* mutation_desc_for_text(mutation_type mut);
+string mut_upgrade_summary(mutation_type mut);
 int mutation_max_levels(mutation_type mut);
 string mutation_desc(mutation_type which_mutat, int level = -1,
                           bool colour = false, bool is_sacrifice = false);

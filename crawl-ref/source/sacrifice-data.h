@@ -26,7 +26,7 @@ static const sacrifice_def sac_data[] =
 {
 
 { ABIL_RU_SACRIFICE_PURITY, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed purity",
 
   0,
@@ -56,7 +56,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed essence",
 
   0,
@@ -66,7 +66,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_HEALTH, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed health",
 
   20,
