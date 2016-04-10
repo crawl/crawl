@@ -1249,6 +1249,51 @@ Gx+xG
 .....
 ENDMAP
 
+# deep troll shamans will buff undead trolls too!
+NAME:    skrybe_necro_troll_1
+DEPTH:   Crypt, !Crypt:$
+TAGS:    no_monster_gen uniq_necro_troll
+KMONS:   S = deep troll shaman
+KFEAT:   S = ] / } / )
+# either all spectrals, or regular necromancer band
+MONS:    spectral deep troll w:30 / spectral iron troll
+MONS:    deep troll skeleton w:18 / deep troll zombie w:18 / \
+         deep troll simulacrum w:9 / iron troll skeleton w:6 / \
+         iron troll zombie w:6 / iron troll simulacrum w:3
+NSUBST:  T = 3:1 / 2 = 1. / *:.
+SHUFFLE: 12
+MAP
+ccccccccccc
+cGT..S..TGc
+cc.......cc
+cGT.....TGc
+cc.......cc
+cGT.....TGc
+cc.......cc
+cccc+++cccc
+ENDMAP
+
+NAME:    skrybe_necro_troll_2
+DEPTH:   Crypt
+TAGS:    uniq_necro_troll
+KMONS:   1 = deep troll shaman
+# just spectral trolls, since they aren't affected by the water
+KMONS:   2 = spectral deep troll w:30 / spectral iron troll
+KITEM:   * = *
+KFEAT:   *12 = W
+NSUBST:  T = 3:2 / 2=2W / *:W
+MAP
+  ccc
+ ccGcc
+cc***cc
+cWT1TWc
+cTWTWTc
+cWWWWWc
+cWWWWWc
+c.....c
+cc+++cc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################
