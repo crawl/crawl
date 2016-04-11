@@ -1098,7 +1098,7 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 void count_action(caction_type type, int subtype, int auxtype);
-void count_action_get_types(int *subtype, int *auxtype, int compound_subtype);
+pair<int, int> caction_extract_types(int compound_subtype);
 
 bool player_has_orb();
 bool player_on_orb_run();
