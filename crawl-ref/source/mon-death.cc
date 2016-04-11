@@ -151,7 +151,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
-    if (mons_genus(mons.type) == MONS_ORC)
+    // 0 mid indicates this is a dummy monster, such as for kiku corpse drop
+    if (mons_genus(mons.type) == MONS_ORC && mons.mid != 0)
     {
         auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
         saved_mon = mons;
