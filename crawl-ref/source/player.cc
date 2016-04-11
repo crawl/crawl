@@ -5746,9 +5746,8 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
-    const item_def *shield = slot_item(EQ_SHIELD);
-    if (shield)
-        count_action(CACT_BLOCK, shield->sub_type);
+    if (shield())
+        count_action(CACT_BLOCK, shield()->sub_type);
     else
         count_action(CACT_BLOCK, -1, 0); // auxtype Other
 }
@@ -7819,22 +7818,24 @@ void count_action(caction_type type, int subtype)
 }
 
 /**
- *   The alternate type is stored in the higher bytes.
+ * The alternate type is stored in the higher bytes.
 **/
 void count_action(caction_type type, int subtype, int auxtype)
 {
+    ASSERT_RANGE(subtype, -32768, 32768);
+    ASSERT_RANGE(auxtype, -32768, 32768);
     int compound_subtype;
-    compound_subtype = (auxtype << 16) | (short)subtype;
+    compound_subtype = (auxtype << 16) | (subtype & 0xFFFF);
     count_action(type, compound_subtype);
 }
 
 /**
- *   If there was no original auxtype it will be returned as -1
+ * .first is the subtype; .second is the auxtype (-1 if none).
 **/
-void count_action_get_types(int *subtype, int *auxtype, int compound_subtype)
+pair<int, int> caction_extract_types(int compound_subtype)
 {
-    *subtype = (short)(compound_subtype & 0xFFFF);
-    *auxtype = (short)((compound_subtype >> 16) & 0xFFFF);
+    return make_pair(int16_t(compound_subtype),
+                     int16_t(compound_subtype >> 16));
 }
 
 /**

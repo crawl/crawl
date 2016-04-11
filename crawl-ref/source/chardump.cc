@@ -1044,9 +1044,9 @@ static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
 
 static string _describe_action_subtype(caction_type type, int compound_subtype)
 {
-    int subtype;
-    int auxtype;
-    count_action_get_types(&subtype, &auxtype, compound_subtype);
+    pair<int, int> types = caction_extract_types(compound_subtype);
+    int subtype = types.first;
+    int auxtype = types.second;
 
     switch (type)
     {
