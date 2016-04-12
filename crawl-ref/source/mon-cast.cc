@@ -3451,17 +3451,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-            // Alligators shouldn't spam sprint.
-            // (not in _ms_waste_of_time since it is not deterministic)
-            if (spell_cast == SPELL_SPRINT
-                && mons->type == MONS_ALLIGATOR
-                && (mons->swift_cooldown + random2avg(170, 5) >=
-                    you.num_turns))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
             // Don't knockback something we're trying to constrict.
             const actor *victim = actor_at(beem.target);
             if (victim &&
@@ -5152,13 +5141,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 #endif
     case SPELL_SPRINT:
         mons->add_ench(ENCH_SWIFT);
-        if (mons->type == MONS_ALLIGATOR)
-        {
-            mons->swift_cooldown = you.num_turns;
-            simple_monster_message(mons, " puts on a burst of speed!");
-        }
-        else
-            simple_monster_message(mons, " seems to move somewhat quicker.");
+        simple_monster_message(mons, " puts on a burst of speed!");
         return;
 
     case SPELL_SILENCE:
