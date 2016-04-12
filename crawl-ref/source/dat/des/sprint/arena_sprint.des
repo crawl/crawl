@@ -320,7 +320,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "neqoxec", "deep elf mage always_corpse",
+                "neqoxec",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
                 "hungry ghost"
@@ -367,7 +367,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "necrophage / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
-                "neqoxec", "deep elf mage always_corpse",
+                "neqoxec",
                 "moth of wrath / w:20 hill giant", "ball lightning",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye"
@@ -749,20 +749,17 @@ function arena_sprint_init_boss_table()
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
-    -- Pan sets are taken directly from pan.des
-    bs[10] = {"small abomination / small abomination / large abomination / " ..
-              "large abomination / neqoxec / neqoxec / cacodemon / " ..
-              "cacodemon / chaos spawn / chaos spawn", "mnoleg", "glowing rune of zot"}
-    bs[11] = {"hellwing / smoke demon / smoke demon / sixfirhy / " ..
-              "Green Death / blizzard demon / smoke demon / hellwing / " ..
-              "Green Death / hellwing", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / efreet / orange demon / orange demon / " ..
-              "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
+    -- Pan sets are based on those in pan.des
+    bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
+              "giant eyeball / golden eye / eye of devastation / " ..
+              "eye of draining / shining eye", "mnoleg", "glowing rune of zot"}
+    bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
+              "giant orange brain / titan / lich / draconian annihilator / " ..
+              "deep elf annihilator", "lom lobon", "magical rune of zot"}
+    bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"skeleton / skeleton / skeleton / " ..
-              "skeleton / soul eater / soul eater / lorocyproca / " ..
-              "executioner / executioner / executioner", "gloorx vloq",
-              "dark rune of zot"}
+    bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
+              "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
                "khufu hp:500", "golden rune of zot"}
     -- Shuffle the above 9. We only wind up using 6 through 9
