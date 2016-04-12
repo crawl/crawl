@@ -1379,43 +1379,61 @@ static bool _give_nemelex_gift(bool forced = false)
     return false;
 }
 
+/**
+ * From the given list of items, return a random unseen item, if there are any.
+ * Otherwise, just return any of them at random.
+ *
+ * If we cared, we could make this a template function to return more specific
+ * types than 'int'. (That's probably not important, though.)
+ *
+ * @param item_types        A list of item types to choose from.
+ * @param seen_func         How to tell whether the item was seen.
+ * @return                  A random item type; e.g. WAND_ACID.
+ */
+static int _preferably_unseen_item(const vector<int> &item_types,
+                                   function<bool(int)> seen_func)
+{
+    ASSERT(item_types.size());
+    vector<int> unseen;
+    for (auto item : item_types)
+        if (!seen_func(item))
+            unseen.emplace_back(item);
+
+    if (unseen.size())
+        return unseen[random2(unseen.size())];
+    return item_types[random2(item_types.size())];
+}
+
+/// Has the player ID'd the given type of wand?
+static bool _seen_wand(int wand)
+{
+    return get_ident_type(OBJ_WANDS, wand);
+}
+
 static int _pakellas_low_wand()
 {
-    // Try to get a new wand type.
-    int result;
-    int tries = 40;
-    do
-    {
-        result = random_choose(WAND_FLAME,
-                               WAND_SLOWING,
-                               WAND_CONFUSION,
-                               WAND_POLYMORPH,
-                               WAND_RANDOM_EFFECTS);
-    }
-    while (get_ident_type(OBJ_WANDS, result)
-           && --tries > 0);
+    static const vector<int> low_wands = {
+        WAND_FLAME,
+        WAND_SLOWING,
+        WAND_CONFUSION,
+        WAND_POLYMORPH,
+        WAND_RANDOM_EFFECTS,
+    };
 
-    return result;
+    return _preferably_unseen_item(low_wands, _seen_wand);
 }
 
 static int _pakellas_high_wand()
 {
-    // Try to get a new wand type.
-    int result;
-    int tries = 40;
-    do
-    {
-        result = random_choose(WAND_PARALYSIS,
-                               WAND_ICEBLAST,
-                               WAND_ENSLAVEMENT,
-                               WAND_ACID);
-    }
-    while (get_ident_type(OBJ_WANDS, result)
-           && !(player_mutation_level(MUT_NO_LOVE)
-                && result == WAND_ENSLAVEMENT)
-           && --tries > 0);
+    vector<int> high_wands = {
+        WAND_PARALYSIS,
+        WAND_ICEBLAST,
+        WAND_ACID,
+    };
+    if (!player_mutation_level(MUT_NO_LOVE))
+        high_wands.emplace_back(WAND_ENSLAVEMENT);
 
-    return result;
+    return _preferably_unseen_item(high_wands, _seen_wand);
 }
 
 static int _pakellas_low_misc()
@@ -1428,21 +1446,17 @@ static int _pakellas_low_misc()
 
 static int _pakellas_high_misc()
 {
-    // Try to get a new evoker type.
-    int result;
-    int tries = 40;
-    do
-    {
-        result = random_choose(MISC_FAN_OF_GALES,
-                               MISC_LAMP_OF_FIRE,
-                               MISC_STONE_OF_TREMORS,
-                               MISC_PHIAL_OF_FLOODS,
-                               MISC_DISC_OF_STORMS);
-    }
-    while (you.seen_misc[result]
-           && --tries > 0);
+    static const vector<int> high_miscs = {
+        MISC_FAN_OF_GALES,
+        MISC_LAMP_OF_FIRE,
+        MISC_STONE_OF_TREMORS,
+        MISC_PHIAL_OF_FLOODS,
+        MISC_DISC_OF_STORMS,
+    };
 
-    return result;
+    return _preferably_unseen_item(high_miscs, [](int misc) {
+        return you.seen_misc[misc];
+    });
 }
 
 static bool _give_pakellas_gift()
