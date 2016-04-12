@@ -3074,15 +3074,15 @@ xxl.lll...xx...lllxx..llxxxx..xxlllxx
                         xxxxx
 ENDMAP
 
-NAME:	kennysheep_slugbush
-DEPTH:	D:3-7
+NAME:   kennysheep_slugbush
+DEPTH:  D:3-7
 ORIENT: float
-MONS:	dart slug
-NSUBST:	w = 15:xxc
-NSUBST:	. = 1:[GG.. / 1:(GG.. / 1:G. / 5:%
-SUBST:	G:GtT
-SUBST:	1 = 11111..
-KPROP:	w = no_tele_into
+MONS:   dart slug
+NSUBST: w = 15:xxc
+NSUBST: . = 1:[GG.. / 1:(GG.. / 1:G. / 5:%
+SUBST:  G:GtT
+SUBST:  1 = 11111..
+KPROP:  w = no_tele_into
 MAP
          @
     @  WW1WW  @

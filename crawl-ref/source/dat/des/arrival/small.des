@@ -3189,11 +3189,11 @@ ccc...ccc
    ccc
 ENDMAP
 
-NAME:	kennysheep_arrival_forest
-TAGS:	arrival no_monster_gen no_trap_gen
+NAME:   kennysheep_arrival_forest
+TAGS:   arrival no_monster_gen no_trap_gen
 ORIENT: south
-FTILE:	t'G = floor_grass
-COLOUR:	' = green
+FTILE:  t'G = floor_grass
+COLOUR: ' = green
 MAP
         xx+++xx
        xxG...Gxx
