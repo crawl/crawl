@@ -199,7 +199,7 @@ unseen Call of Chaos cast
 %%%%
 Wind Blast cast
 
-@The_monster@ summons a fierce blast of wind!
+@The_monster@ conjures a fierce blast of wind!
 #################################################
 # These have special hard-coded messaging.
 #################################################
