@@ -2015,7 +2015,7 @@ void abyss_maybe_spawn_xp_exit()
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
     mprf(MSGCH_BANISHMENT,
-         "The substance of the Abyss twists in disgust,"
+         "The substance of the Abyss twists violently,"
          " and a gateway leading %s appears!", stairs ? "down" : "out");
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
