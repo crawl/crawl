@@ -6457,7 +6457,8 @@ static void _speech_keys(vector<string>& key_list,
     {
         key_list.push_back(make_stringf("%s %swizard%s",
                                spell_name.c_str(),
-                               shape <= MON_SHAPE_NAGA ? "" : "non-humanoid ",
+                               mon_shape_is_humanoid(shape) ? ""
+                                                            : "non-humanoid ",
                                cast_str.c_str()));
     }
     else if (priest)
@@ -6469,7 +6470,7 @@ static void _speech_keys(vector<string>& key_list,
 
 
     // Now try just the spell's name.
-    if (shape <= MON_SHAPE_NAGA)
+    if (mon_shape_is_humanoid(shape))
     {
         if (real_spell)
             key_list.push_back(spell_name + cast_str + " real");
@@ -6493,7 +6494,8 @@ static void _speech_keys(vector<string>& key_list,
     if (wizard)
     {
         key_list.push_back(make_stringf("%swizard%s",
-                               shape <= MON_SHAPE_NAGA ? "" : "non-humanoid ",
+                               mon_shape_is_humanoid(shape) ? ""
+                                                            : "non-humanoid ",
                                cast_str.c_str()));
     }
     else if (priest)
