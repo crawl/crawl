@@ -1230,14 +1230,14 @@ NAME:   ossuary_kennysheep_city_of_the_dead
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen
-KMONS:	1W = wraith
-KMONS:	2 = mummy
-KMONS:	3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
+KMONS:  1W = wraith
+KMONS:  2 = mummy
+KMONS:  3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1 /\
-		nothing w:36
+                nothing w:36
 KITEM:  12d = any potion / any scroll / any jewellery w:1
-KFEAT:	. = needle trap / arrow trap / spear trap w:5 / floor w:600
-NSUBST:	d = 1:1 / 3:2 / 4:. / *:d
+KFEAT:  . = needle trap / arrow trap / spear trap w:5 / floor w:600
+NSUBST: d = 1:1 / 3:2 / 4:. / *:d
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccccccc
