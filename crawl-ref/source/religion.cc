@@ -1379,6 +1379,72 @@ static bool _give_nemelex_gift(bool forced = false)
     return false;
 }
 
+static int _pakellas_low_wand()
+{
+    // Try to get a new wand type.
+    int result;
+    int tries = 40;
+    do
+    {
+        result = random_choose(WAND_FLAME,
+                               WAND_SLOWING,
+                               WAND_CONFUSION,
+                               WAND_POLYMORPH,
+                               WAND_RANDOM_EFFECTS);
+    }
+    while (get_ident_type(OBJ_WANDS, result)
+           && --tries > 0);
+
+    return result;
+}
+
+static int _pakellas_high_wand()
+{
+    // Try to get a new wand type.
+    int result;
+    int tries = 40;
+    do
+    {
+        result = random_choose(WAND_PARALYSIS,
+                               WAND_ICEBLAST,
+                               WAND_ENSLAVEMENT,
+                               WAND_ACID);
+    }
+    while (get_ident_type(OBJ_WANDS, result)
+           && !(player_mutation_level(MUT_NO_LOVE)
+                && result == WAND_ENSLAVEMENT)
+           && --tries > 0);
+
+    return result;
+}
+
+static int _pakellas_low_misc()
+{
+    // Limited uses, so any of these are fine even if they've been seen before.
+    return random_choose(MISC_BOX_OF_BEASTS,
+                         MISC_SACK_OF_SPIDERS,
+                         MISC_PHANTOM_MIRROR);
+}
+
+static int _pakellas_high_misc()
+{
+    // Try to get a new evoker type.
+    int result;
+    int tries = 40;
+    do
+    {
+        result = random_choose(MISC_FAN_OF_GALES,
+                               MISC_LAMP_OF_FIRE,
+                               MISC_STONE_OF_TREMORS,
+                               MISC_PHIAL_OF_FLOODS,
+                               MISC_DISC_OF_STORMS);
+    }
+    while (you.seen_misc[result]
+           && --tries > 0);
+
+    return result;
+}
+
 static bool _give_pakellas_gift()
 {
     // Break early if giving a gift now means it would be lost.
@@ -1388,29 +1454,81 @@ static bool _give_pakellas_gift()
         return false;
     }
 
-    object_class_type gift_type = OBJ_UNASSIGNED;
+    bool success = false;
+    object_class_type basetype = OBJ_UNASSIGNED;
+    int subtype;
 
-    if (you.num_total_gifts[GOD_PAKELLAS] == 0)
-        gift_type = OBJ_WANDS;
-    else if (you.species == SP_FELID)
-        gift_type = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
-    else if (you.num_total_gifts[GOD_PAKELLAS] == 1)
-        gift_type = OBJ_RODS;
-    else
+    if (you.piety >= piety_breakpoint(0)
+        && you.num_total_gifts[GOD_PAKELLAS] == 0)
     {
-        gift_type = random_choose_weighted(5, OBJ_WANDS,
-                                           5, OBJ_MISCELLANY,
-                                           3, OBJ_RODS,
-                                           0);
+        basetype = OBJ_WANDS;
+        subtype = _pakellas_low_wand();
+    }
+    else if (you.piety >= piety_breakpoint(1)
+             && you.num_total_gifts[GOD_PAKELLAS] == 1)
+    {
+        // All the evoker options here are summon-based, so give another
+        // low-level wand instead under Sacrifice Love.
+        if (player_mutation_level(MUT_NO_LOVE))
+        {
+            basetype = OBJ_WANDS;
+            subtype = _pakellas_low_wand();
+        }
+        else
+        {
+            basetype = OBJ_MISCELLANY;
+            subtype = _pakellas_low_misc();
+        }
+    }
+    else if (you.piety >= piety_breakpoint(2)
+             && you.num_total_gifts[GOD_PAKELLAS] == 2)
+    {
+        basetype = OBJ_WANDS;
+        subtype = _pakellas_high_wand();
+    }
+    else if (you.piety >= piety_breakpoint(3)
+             && you.num_total_gifts[GOD_PAKELLAS] == 3)
+    {
+        basetype = OBJ_MISCELLANY;
+        subtype = _pakellas_high_misc();
+    }
+    else if (you.piety >= piety_breakpoint(4)
+             && you.num_total_gifts[GOD_PAKELLAS] == 4)
+    {
+        // Felids get another high-level wand or evoker instead of a rod.
+        if (you.species == SP_FELID)
+        {
+            basetype = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+            subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
+                                              : _pakellas_high_misc();
+        }
+        else
+            basetype = OBJ_RODS;
     }
 
-    if (acquirement(gift_type, you.religion))
+    if (basetype == OBJ_UNASSIGNED)
+        return false;
+    else if (basetype == OBJ_RODS)
+        success = acquirement(basetype, you.religion);
+    else
+    {
+        int thing_created = items(true, basetype, subtype, 1, 0,
+                                  you.religion);
+
+        if (thing_created == NON_ITEM)
+            return false;
+
+        move_item_to_grid(&thing_created, you.pos(), true);
+
+        if (thing_created != NON_ITEM)
+            success = true;
+    }
+
+    if (success)
     {
         simple_god_message(" grants you a gift!");
         // included in default force_more_message
 
-        if (you.num_total_gifts[GOD_PAKELLAS] > 0)
-            _inc_gift_timeout(150 + random2avg(29, 2));
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -1682,16 +1800,7 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_PAKELLAS:
-            if (forced && coinflip()
-                || you.piety >= piety_breakpoint(1)
-                   && you.num_total_gifts[you.religion] == 0
-                || you.piety >= piety_breakpoint(3)
-                   && you.num_total_gifts[you.religion] == 1
-                || !forced && random2(you.piety) > piety_breakpoint(3)
-                   && one_chance_in(4))
-            {
-                success = _give_pakellas_gift();
-            }
+            success = _give_pakellas_gift();
             break;
 
         case GOD_OKAWARU:
