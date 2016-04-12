@@ -542,9 +542,9 @@ A piece of metal headgear.
 %%%%
 horn of Geryon
 
-The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
-it has the power to call forth the aid of demonic beasts. It is also said,
-however, that the alliances of these monsters are not certain.
+The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the
+power to call forth demonic beasts. With high Evocations skill, it will call
+greater numbers of beasts, with lower chances of those beasts being hostile.
 %%%%
 hunting sling
 
@@ -771,8 +771,7 @@ A noxious concotion which reduces strength, intelligence and dexterity.
 %%%%
 potion of experience
 
-A truly wonderful and very rare drink, which grants increased experience when
-consumed.
+A truly wonderful and very rare drink, which grants experience when consumed.
 %%%%
 potion of flight
 
