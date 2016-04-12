@@ -1065,7 +1065,7 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
                 return "Unarmed";
             else
             {
-                ASSERT_RANGE(auxtype, 0, UNAT_LAST_ATTACK);
+                ASSERT_RANGE(auxtype, 0, NUM_UNARMED_ATTACKS);
                 return _aux_attack_names[auxtype];
             }
         }
