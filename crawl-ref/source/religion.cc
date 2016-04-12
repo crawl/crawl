@@ -2961,7 +2961,8 @@ bool player_can_join_god(god_type which_god)
     }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
-        && which_god == GOD_NEMELEX_XOBEH)
+        && (which_god == GOD_NEMELEX_XOBEH
+            || which_god == GOD_PAKELLAS))
     {
       return false;
     }
@@ -3533,8 +3534,8 @@ void god_pitch(god_type which_god)
         }
         else if (player_mutation_level(MUT_NO_LOVE)
                  && (which_god == GOD_BEOGH
-                 || which_god == GOD_ELYVILON
-                 || which_god == GOD_JIYVA))
+                     || which_god == GOD_ELYVILON
+                     || which_god == GOD_JIYVA))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
@@ -3542,8 +3543,14 @@ void god_pitch(god_type which_god)
         else if (player_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_NEMELEX_XOBEH)
         {
-            simple_god_message(" does not accept worship for those who cannot "
+            simple_god_message(" does not accept worship from those who cannot "
                               "deal a hand of cards!", which_god);
+        }
+        else if (player_mutation_level(MUT_NO_ARTIFICE)
+                 && which_god == GOD_PAKELLAS)
+        {
+            simple_god_message(" does not accept worship from those who are "
+                               "unable to use magical devices!", which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
