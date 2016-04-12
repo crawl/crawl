@@ -386,7 +386,7 @@ function choose_mset_3(e)
     e.kmons("1 = common demon / place:Pan / pandemonium lord w:5")
 -- Tomb
   elseif rnd < 93 then
-    e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
 -- Elf
   elseif rnd < 98 then
     e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
