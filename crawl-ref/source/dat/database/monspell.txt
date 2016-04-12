@@ -582,10 +582,6 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
-Blink golden eye cast
-
-__NONE
-%%%%
 ushabti cast
 
 @The_monster@ shakes and rattles.
@@ -780,6 +776,10 @@ Might Other priest cast
 Malign Offering priest cast
 
 @The_monster@ utters a dark prayer and points @at@ @target@.
+%%%%
+Blink magical cast
+
+__NONE
 %%%%
 priest cast targeted
 
