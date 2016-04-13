@@ -791,13 +791,6 @@ enum branch_type                // you.where_are_you
     NUM_BRANCHES
 };
 
-enum dodge_type    // subtype for counted actions
-{
-    DODGE_EVASION,
-    DODGE_DEFLECT,
-    NUM_DODGES
-};
-
 enum caction_type    // Primary categorization of counted actions.
 {                    // A subtype and auxtype will also be given in each case:
     CACT_MELEE,      // weapon subtype or unrand index
@@ -1387,17 +1380,6 @@ enum description_level_type
                                        // description in the db.
 
     DESC_NONE
-};
-
-enum evoc_type
-{
-    EVOC_WAND,
-    EVOC_ROD,
-    EVOC_DECK,
-#if TAG_MAJOR_VERSION == 34
-    EVOC_MISC,
-    EVOC_BUGGY_TOME,
-#endif
 };
 
 enum game_chapter
