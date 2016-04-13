@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "butcher.h"
+#include "chardump.h"
 #include "database.h"
 #include "delay.h"
 #include "env.h"

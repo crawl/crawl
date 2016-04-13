@@ -8,6 +8,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "attack.h"
+#include "chardump.h"
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"

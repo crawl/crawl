@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"

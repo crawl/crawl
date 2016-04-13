@@ -15,6 +15,7 @@
 #include <cstring>
 
 #include "art-enum.h"
+#include "chardump.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"

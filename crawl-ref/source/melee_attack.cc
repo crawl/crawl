@@ -17,6 +17,7 @@
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"

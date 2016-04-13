@@ -22,9 +22,7 @@
 #include "art-enum.h"
 #include "bloodspatter.h"
 #include "branch.h"
-#ifdef DGL_WHEREIS
- #include "chardump.h"
-#endif
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -7807,35 +7805,6 @@ static string _constriction_description()
     }
 
     return cinfo;
-}
-
-void count_action(caction_type type, int subtype)
-{
-    pair<caction_type, int> pair(type, subtype);
-    if (!you.action_count.count(pair))
-        you.action_count[pair].init(0);
-    you.action_count[pair][you.experience_level - 1]++;
-}
-
-/**
- * The alternate type is stored in the higher bytes.
-**/
-void count_action(caction_type type, int subtype, int auxtype)
-{
-    ASSERT_RANGE(subtype, -32768, 32768);
-    ASSERT_RANGE(auxtype, -32768, 32768);
-    int compound_subtype;
-    compound_subtype = (auxtype << 16) | (subtype & 0xFFFF);
-    count_action(type, compound_subtype);
-}
-
-/**
- * .first is the subtype; .second is the auxtype (-1 if none).
-**/
-pair<int, int> caction_extract_types(int compound_subtype)
-{
-    return make_pair(int16_t(compound_subtype),
-                     int16_t(compound_subtype >> 16));
 }
 
 /**

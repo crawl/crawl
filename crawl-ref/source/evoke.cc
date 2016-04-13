@@ -16,6 +16,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"

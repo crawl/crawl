@@ -14,6 +14,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "database.h"
