@@ -88,7 +88,6 @@ int piety_rank(int piety = you.piety);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
-bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monster* mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
