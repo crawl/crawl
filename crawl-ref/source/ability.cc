@@ -19,6 +19,7 @@
 #include "areas.h"
 #include "branch.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"

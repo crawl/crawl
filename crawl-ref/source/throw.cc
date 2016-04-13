@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include "artefact.h"
+#include "chardump.h"
 #include "command.h"
 #include "directn.h"
 #include "english.h"

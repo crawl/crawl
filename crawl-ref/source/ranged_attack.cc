@@ -8,6 +8,7 @@
 #include "ranged_attack.h"
 
 #include "areas.h"
+#include "chardump.h"
 #include "coord.h"
 #include "english.h"
 #include "env.h"
