@@ -485,6 +485,10 @@ static void _dithmenos_kill(int &piety, int &denom, const monster* /*victim*/)
 /// A definition of the way in which a god likes a conduct being taken.
 struct like_response
 {
+    /// How to describe this conduct on the god description screen.
+    const char* desc;
+    /// Whether the god should be described as "especially" liking it.
+    bool really_like;
     /** Gain in piety for triggering this conduct; added to calculated denom.
      *
      * This number is usually negative. In that case, the maximum piety gain
@@ -566,10 +570,14 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
  * @param special       A special-case function.
  * @return              An appropropriate like_response.
  */
-static like_response _on_kill(mon_holy_type holiness, bool god_is_good = false,
-                              special_piety_t special = nullptr)
+static like_response _on_kill(const char* desc, mon_holy_type holiness,
+                              bool god_is_good = false,
+                              special_piety_t special = nullptr,
+                              bool really_like = false)
 {
     like_response response = {
+        desc,
+        really_like,
         _piety_bonus_for_holiness(holiness),
         18,
         god_is_good ? 0 : 2,
@@ -580,39 +588,46 @@ static like_response _on_kill(mon_holy_type holiness, bool god_is_good = false,
 }
 
 /// Response for gods that like killing the living.
-static const like_response KILL_LIVING_RESPONSE = _on_kill(MH_NATURAL);
+static const like_response KILL_LIVING_RESPONSE =
+    _on_kill("you kill living beings", MH_NATURAL);
 
 /// Response for non-good gods that like killing (?) undead.
-static const like_response KILL_UNDEAD_RESPONSE = _on_kill(MH_UNDEAD);
+static const like_response KILL_UNDEAD_RESPONSE =
+    _on_kill("you kill the undead", MH_UNDEAD);
 
 /// Response for non-good gods that like killing (?) demons.
-static const like_response KILL_DEMON_RESPONSE = _on_kill(MH_DEMONIC);
+static const like_response KILL_DEMON_RESPONSE =
+    _on_kill("you kill demons", MH_DEMONIC);
 
 /// Response for non-good gods that like killing (?) holies.
-static const like_response KILL_HOLY_RESPONSE =  _on_kill(MH_HOLY);
+static const like_response KILL_HOLY_RESPONSE =
+    _on_kill("you kill holy beings", MH_HOLY);
 
-/// Response for TSO/Zin when you kill (most) things they hate.
-static const like_response GOOD_KILL_RESPONSE = _on_kill(MH_DEMONIC, true);
 // Note that holy deaths are special - they're always noticed...
 // If you or any friendly kills one, you'll get the credit/blame.
 
-static const like_response OKAWARU_KILL = {
-    0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
+static like_response okawaru_kill(const char* desc)
+{
+    return
     {
-        piety = get_fuzzied_monster_difficulty(victim);
-        dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
-        denom = 550;
-
-        if (piety > 3200)
+        desc, false,
+        0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
         {
-            mprf(MSGCH_GOD, you.religion,
-                 "<white>%s is honoured by your kill.</white>",
-                 uppercase_first(god_name(you.religion)).c_str());
+            piety = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
+            denom = 550;
+
+            if (piety > 3200)
+            {
+                mprf(MSGCH_GOD, you.religion,
+                     "<white>%s is honoured by your kill.</white>",
+                     uppercase_first(god_name(you.religion)).c_str());
+            }
+            else if (piety > 9) // might still be miniscule
+                simple_god_message(" accepts your kill.");
         }
-        else if (piety > 9) // might still be miniscule
-            simple_god_message(" accepts your kill.");
-    }
-};
+    };
+}
 
 
 typedef map<conduct_type, like_response> like_map;
@@ -624,16 +639,18 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_ZIN,
     {
-        { DID_KILL_UNCLEAN, GOOD_KILL_RESPONSE },
-        { DID_KILL_CHAOTIC, GOOD_KILL_RESPONSE },
+        { DID_KILL_UNCLEAN, _on_kill("you kill unclean or chaotic beings", MH_DEMONIC, true) },
+        { DID_KILL_CHAOTIC, _on_kill(nullptr, MH_DEMONIC, true) },
     },
     // GOD_SHINING_ONE,
     {
-        { DID_KILL_UNDEAD, _on_kill(MH_UNDEAD, true) },
-        { DID_KILL_DEMON, GOOD_KILL_RESPONSE },
-        { DID_KILL_NATURAL_UNHOLY, GOOD_KILL_RESPONSE },
-        { DID_KILL_NATURAL_EVIL, GOOD_KILL_RESPONSE },
+        { DID_KILL_UNDEAD, _on_kill("you kill the undead", MH_UNDEAD, true) },
+        { DID_KILL_DEMON, _on_kill("you kill demons", MH_DEMONIC, true) },
+        { DID_KILL_NATURAL_UNHOLY, _on_kill("you kill unholy or evil beings", MH_DEMONIC, true) },
+        { DID_KILL_NATURAL_EVIL, _on_kill(nullptr, MH_DEMONIC, true) },
         { DID_SEE_MONSTER, {
+            "you meet creatures to determine whether they need to be "
+            "eradicated", false,
             0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
             {
                 // don't give piety for seeing things we get piety for killing.
@@ -655,15 +672,17 @@ static like_map divine_likes[] =
     // GOD_YREDELEMNUL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_HOLY, _on_kill(MH_HOLY, false,
+        { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
                 piety *= 2;
                 simple_god_message(" appreciates your killing of a holy being.");
-            }
+            },
+            true
         ) },
-        { DID_KILL_ARTIFICIAL, _on_kill(MH_NONLIVING, false) },
+        { DID_KILL_ARTIFICIAL, _on_kill("you kill artificial beings",
+                                        MH_NONLIVING, false) },
     },
     // GOD_XOM,
     like_map(),
@@ -676,14 +695,14 @@ static like_map divine_likes[] =
     },
     // GOD_OKAWARU,
     {
-        { DID_KILL_LIVING, OKAWARU_KILL },
-        { DID_KILL_UNDEAD, OKAWARU_KILL },
-        { DID_KILL_DEMON, OKAWARU_KILL },
-        { DID_KILL_HOLY, OKAWARU_KILL },
+        { DID_KILL_LIVING, okawaru_kill("you kill living beings") },
+        { DID_KILL_UNDEAD, okawaru_kill("you kill the undead") },
+        { DID_KILL_DEMON, okawaru_kill("you kill demons") },
+        { DID_KILL_HOLY, okawaru_kill("you kill holy beings") },
     },
     // GOD_MAKHLEB,
     {
-        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
@@ -698,6 +717,7 @@ static like_map divine_likes[] =
     // GOD_SIF_MUNA,
     {
         { DID_SPELL_PRACTISE, {
+            "you train your various spell casting skills", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
@@ -708,7 +728,7 @@ static like_map divine_likes[] =
     },
     // GOD_TROG,
     {
-        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
@@ -719,12 +739,14 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_WIZARD, {
+            "you kill wizards and other users of magic", true,
             -6, 10, 0, " appreciates your killing of a magic user."
         } },
     },
     // GOD_NEMELEX_XOBEH,
     {
         { DID_EXPLORATION, {
+            "you explore the world", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
@@ -736,6 +758,7 @@ static like_map divine_likes[] =
     // GOD_ELYVILON,
     {
         { DID_EXPLORATION, {
+            "you explore the world", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
@@ -746,7 +769,7 @@ static like_map divine_likes[] =
     },
     // GOD_LUGONU,
     {
-        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
@@ -758,6 +781,7 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_BANISH, {
+            "you banish creatures to the Abyss", false,
             -6, 18, 2, " claims a new guest."
         } },
     },
@@ -768,6 +792,7 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_PRIEST, {
+            "you kill the priests of other religions", true,
             -6, 18, 0, " appreciates your killing of a heretic priest."
         } },
     },
@@ -778,6 +803,7 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
+            nullptr, false,
             -6, 18, 2, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
@@ -800,6 +826,7 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
+            "you explore the world (preferably while bound by curses)", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
@@ -813,11 +840,16 @@ static like_map divine_likes[] =
     },
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false, _dithmenos_kill) },
-        { DID_KILL_UNDEAD, _on_kill(MH_UNDEAD, false, _dithmenos_kill) },
-        { DID_KILL_DEMON, _on_kill(MH_DEMONIC, false, _dithmenos_kill) },
-        { DID_KILL_HOLY, _on_kill(MH_HOLY, false, _dithmenos_kill) },
+        { DID_KILL_LIVING, _on_kill("you kill living beings",
+                                    MH_NATURAL, false, _dithmenos_kill) },
+        { DID_KILL_UNDEAD, _on_kill("you kill the undead",
+                                    MH_UNDEAD, false, _dithmenos_kill) },
+        { DID_KILL_DEMON, _on_kill("you kill demons",
+                                   MH_DEMONIC, false, _dithmenos_kill) },
+        { DID_KILL_HOLY, _on_kill("you kill holy beings",
+                                  MH_HOLY, false, _dithmenos_kill) },
         { DID_KILL_FIERY, {
+            "you kill beings that bring fire to the dungeon", true,
             -6, 10, 0, " appreciates your extinguishing a source of fire."
         } },
     },
@@ -833,7 +865,7 @@ static like_map divine_likes[] =
     // GOD_RU,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, nullptr,
+            nullptr, false, 0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 piety = 0;
@@ -848,7 +880,7 @@ static like_map divine_likes[] =
     },
     // GOD_PAKELLAS,
     {
-        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
             {
@@ -985,6 +1017,99 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
     for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
 }
+
+string get_god_likes(god_type which_god, bool verbose)
+{
+    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+        return "";
+
+    string text = uppercase_first(god_name(which_god));
+    vector<string> likes;
+    vector<string> really_likes;
+
+    // Unique/unusual piety gain methods first.
+    switch (which_god)
+    {
+    case GOD_FEDHAS:
+    {
+        string like = "you promote the decay of nearby corpses";
+        if (verbose)
+           like += " by <w>p</w>raying";
+        likes.push_back(like);
+        break;
+    }
+    case GOD_TROG:
+    {
+        string like = "you destroy spellbooks";
+        if (verbose)
+           like += " via the <w>a</w> command";
+        likes.push_back(like);
+        break;
+    }
+    case GOD_JIYVA:
+    {
+        string like = "you sacrifice items";
+        if (verbose)
+            like += " by allowing slimes to consume them";
+        likes.push_back(like);
+        break;
+    }
+    case GOD_GOZAG:
+        likes.emplace_back("you collect gold");
+        break;
+    case GOD_RU:
+        likes.emplace_back("you make personal sacrifices");
+        break;
+    case GOD_ZIN:
+        likes.emplace_back("you donate money");
+        break;
+    case GOD_CHEIBRIADOS:
+    {
+        string like = "you kill fast things";
+        if (verbose)
+            like += ", relative to your speed";
+        likes.push_back(like);
+        break;
+    }
+    default:
+        break;
+    }
+
+
+    for (const auto& entry : divine_likes[which_god])
+    {
+        if (entry.second.desc)
+        {
+            if (entry.second.really_like)
+                really_likes.emplace_back(entry.second.desc);
+            else
+                likes.emplace_back(entry.second.desc);
+        }
+    }
+
+    if (likes.empty() && really_likes.empty())
+        text += " doesn't like anything? This is a bug; please report it.";
+    else
+    {
+        text += " likes it when ";
+        text += comma_separated_line(likes.begin(), likes.end());
+        text += ".";
+
+        if (!really_likes.empty())
+        {
+            text += " ";
+            text += uppercase_first(god_name(which_god));
+
+            text += " especially likes it when ";
+            text += comma_separated_line(really_likes.begin(),
+                                         really_likes.end());
+            text += ".";
+        }
+    }
+
+    return text;
+}
+
 
 /**
  * Will this god definitely be upset if you cast this spell?

@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "libutil.h"
