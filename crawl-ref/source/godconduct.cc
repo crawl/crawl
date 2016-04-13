@@ -141,6 +141,10 @@ typedef function<void (int &piety, int &denom, const monster* victim)>
 /// A definition of the way in which a god dislikes a conduct being taken.
 struct dislike_response
 {
+    /// Description on god desc screen.
+    const char* desc;
+    /// Whether the god "strongly" dislikes doing this.
+    bool really_dislike;
     /// Loss in piety for triggering this conduct; multiplied by 'level'.
     int piety_factor;
     /// Penance for triggering this conduct; multiplied by 'level'.
@@ -212,76 +216,96 @@ struct dislike_response
 
 /// Good gods' reaction to drinking blood.
 static const dislike_response GOOD_BLOOD_RESPONSE = {
+    "you drink blood", false,
     2, 1, " forgives your inadvertent blood-drinking, just this once."
 };
 
 /// Good gods', and Beogh's, response to cannibalism.
 static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
+    "you perform cannibalism", true,
     5, 3, nullptr, " expects more respect for your departed relatives."
 };
 
 /// Zin and Ely's responses to desecrating holy remains.
 static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
+    "you desecrate holy remains", true,
     1, 1, nullptr, " expects more respect for holy creatures!"
 };
 
-/// Zin and Ely's responses to unholy actions & necromancy.
+/// Zin and Ely's responses to unholy actions.
 static const dislike_response GOOD_UNHOLY_RESPONSE = {
+    "you use unholy magic or items", true,
     1, 1, " forgives your inadvertent unholy act, just this once."
+};
+
+/// Zin and Ely's responses to necromancy.
+static const dislike_response GOOD_EVIL_RESPONSE = {
+    "you use necromancy", true,
+    1, 1, " forgives your inadvertent evil act, just this once."
 };
 
 /// Zin and Ely's responses to the player attacking holy creatures.
 static const dislike_response GOOD_ATTACK_HOLY_RESPONSE = {
+    "you attack non-hostile holy beings", true,
     1, 1, nullptr, nullptr, _attacking_holy_matters
 };
 
 /// Good gods' response to the player killing holy creatures.
 static const dislike_response GOOD_KILL_HOLY_RESPONSE = {
+    "you kill non-hostile holy beings", true,
     3, 3, nullptr, nullptr, _attacking_holy_matters
-};
-
-/// TSO's response to the player stabbing or poisoning monsters.
-static const dislike_response TSO_UNCHIVALRIC_RESPONSE = {
-    1, 2, " forgives your inadvertent dishonourable attack, just"
-              " this once.", nullptr, [] (const monster* victim) -> bool {
-        return !victim || !tso_unchivalric_attack_safe_monster(victim);
-    }
 };
 
 /// TSO and Ely's response to the player attacking neutral monsters.
 static const dislike_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
+    "you attack neutral beings", true,
     1, 1, " forgives your inadvertent attack on a neutral, just this once."
 };
 
 /// Various gods' response to attacking a pal.
-static const dislike_response ATTACK_FRIEND_RESPONSE = {
-    1, 3, " forgives your inadvertent attack on an ally, just this once.",
-    nullptr, [] (const monster* victim) -> bool {
-        dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
-        return god_hates_attacking_friend(you.religion, victim);
-    }
-};
+static dislike_response _on_attack_friend(const char* desc)
+{
+    return
+    {
+        desc, true,
+        1, 3, " forgives your inadvertent attack on an ally, just this once.",
+        nullptr, [] (const monster* victim) -> bool {
+            dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
+            return god_hates_attacking_friend(you.religion, victim);
+        }
+    };
+}
 
 /// Ely response to a friend dying.
-static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
-    1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
-        // For everyone but Fedhas, plants are items not creatures,
-        // and animated items are, well, items as well.
-        return victim && !mons_is_object(victim->type)
-                      && !(victim->holiness() & MH_PLANT)
-        // Converted allies (marked as TSOites) can be martyrs.
-                      && victim->god == GOD_SHINING_ONE;
-    }
-};
+static dislike_response _on_ely_friend_death(const char* desc)
+{
+    return
+    {
+        desc, false,
+        1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
+            // For everyone but Fedhas, plants are items not creatures,
+            // and animated items are, well, items as well.
+            return victim && !mons_is_object(victim->type)
+                          && !(victim->holiness() & MH_PLANT)
+            // Converted allies (marked as TSOites) can be martyrs.
+                          && victim->god == GOD_SHINING_ONE;
+            }
+    };
+}
 
 /// Fedhas's response to a friend(ly plant) dying.
-static const dislike_response FEDHAS_FRIEND_DEATH_RESPONSE = {
-    1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
-        // ballistomycetes are penalized separately.
-        return victim && fedhas_protects(victim)
-        && victim->mons_species() != MONS_BALLISTOMYCETE;
-    }
-};
+static dislike_response _on_fedhas_friend_death(const char* desc)
+{
+    return
+    {
+        desc, false,
+        1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
+            // ballistomycetes are penalized separately.
+            return victim && fedhas_protects(victim)
+            && victim->mons_species() != MONS_BALLISTOMYCETE;
+        }
+    };
+}
 
 typedef map<conduct_type, dislike_response> peeve_map;
 
@@ -297,57 +321,80 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
-        { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
+        { DID_NECROMANCY, GOOD_EVIL_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_ATTACK_NEUTRAL, {
+            "you attack neutral beings", false,
             1, 0,
             " forgives your inadvertent attack on a neutral, just this once."
         } },
         { DID_ATTACK_IN_SANCTUARY, {
+            "you attack monters in a sanctuary", false,
             1, 1
         } },
         { DID_UNCLEAN, {
+            "you use unclean or chatoic magic or items", true,
             1, 1, " forgives your inadvertent unclean act, just this once."
         } },
         { DID_CHAOS, {
+            "you polymorph monsters", true,
             1, 1, " forgives your inadvertent chaotic act, just this once."
         } },
         { DID_DELIBERATE_MUTATING, {
+            "you deliberately mutate or transform yourself", true,
             1, 0, " forgives your inadvertent chaotic act, just this once."
         } },
         { DID_DESECRATE_SOULED_BEING, {
+            "you butcher sentient beings", true,
             5, 3
         } },
-        { DID_CAUSE_GLOWING, { 1 } },
+        { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
     },
     // GOD_SHINING_ONE,
     {
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
+            "you attack non-hostile holy beings", true,
             1, 2, nullptr, nullptr, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, {
+            "you desecrate holy remains", true,
             1, 2, nullptr, " expects more respect for holy creatures!"
         } },
         { DID_NECROMANCY, {
-            1, 2, " forgives your inadvertent unholy act, just this once."
+            "you use necromancy", true,
+            1, 2, " forgives your inadvertent evil act, just this once."
         } },
         { DID_UNHOLY, {
+            "you use unholy magic or items", true,
             1, 2, " forgives your inadvertent unholy act, just this once."
         } },
-        { DID_UNCHIVALRIC_ATTACK, TSO_UNCHIVALRIC_RESPONSE },
-        { DID_POISON, TSO_UNCHIVALRIC_RESPONSE },
+        { DID_UNCHIVALRIC_ATTACK, {
+            "you attack intelligent monsters in an unchivalric manner", true,
+            1, 2, " forgives your inadvertent dishonourable attack, just"
+                      " this once.", nullptr, [] (const monster* victim) -> bool {
+                return !victim || !tso_unchivalric_attack_safe_monster(victim);
+            }
+        } },
+        { DID_POISON, {
+            "you poison monsters", true,
+            1, 2, " forgives your inadvertent dishonourable attack, just"
+                      " this once.", nullptr, [] (const monster* victim) -> bool {
+                return !victim || !tso_unchivalric_attack_safe_monster(victim);
+            }
+        } },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
     },
     // GOD_KIKUBAAQUDGHA,
     peeve_map(),
     // GOD_YREDELEMNUL,
     {
         { DID_HOLY, {
+            "you use holy magic or items", true,
             1, 2, " forgives your inadvertent holy act, just this once."
         } },
     },
@@ -357,23 +404,26 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_OKAWARU,
     {
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
     },
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
     {
-        { DID_DESTROY_SPELLBOOK, { 1, 2 } },
+        { DID_DESTROY_SPELLBOOK, { "you destroy spellbooks", true, 1, 2 } },
     },
     // GOD_TROG,
     {
         { DID_SPELL_MEMORISE, {
+            "you memorise spells", true,
             10, 10
         } },
         { DID_SPELL_CASTING, {
+            "you attempt to cast spells", true,
             1, 5,
         } },
         { DID_SPELL_PRACTISE, {
+            "you train magic skills", true,
             1, 0, nullptr, " doesn't appreciate your training magic!"
         } },
     },
@@ -386,13 +436,15 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
-        { DID_NECROMANCY, GOOD_UNHOLY_RESPONSE },
+        { DID_NECROMANCY, GOOD_EVIL_RESPONSE },
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
-        { DID_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
-        { DID_SOULED_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
+        { DID_FRIEND_DIED, _on_ely_friend_death("you allow allies to die") },
+        { DID_SOULED_FRIEND_DIED, _on_ely_friend_death(nullptr) },
         { DID_KILL_LIVING, {
+            "you kill living things while asking for your life to be spared",
+            true,
             1, 2, nullptr, " does not appreciate your shedding blood"
                             " when asking for salvation!",
             [] (const monster*) -> bool {
@@ -406,40 +458,46 @@ static peeve_map divine_peeves[] =
     // GOD_BEOGH,
     {
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
-        { DID_DESECRATE_ORCISH_REMAINS, { 1 } },
-        { DID_DESTROY_ORCISH_IDOL, { 1, 3 } },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
+        { DID_DESTROY_ORCISH_IDOL, { "you destroy orcish idols", true, 1, 3 } },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
     },
     // GOD_JIYVA,
     {
         { DID_KILL_SLIME, {
+            "you kill slimes", true,
             1, 2, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim && !victim->is_shapeshifter();
             }
         } },
         { DID_ATTACK_NEUTRAL, {
+            nullptr, true,
             1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim
                     && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
         } },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
     },
     // GOD_FEDHAS,
     {
         { DID_CORPSE_VIOLATION, {
+            "you use necromancy on corpses, chunks or skeletons", true,
             1, 1, " forgives your inadvertent necromancy, just this once."
         } },
         { DID_KILL_PLANT, {
+            "you destroy plants", false,
             1, 0
         } },
-        { DID_ATTACK_FRIEND, ATTACK_FRIEND_RESPONSE },
-        { DID_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
-        { DID_SOULED_FRIEND_DIED, FEDHAS_FRIEND_DEATH_RESPONSE },
+        { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
+
+        { DID_FRIEND_DIED, _on_fedhas_friend_death("allied flora die") },
+        { DID_SOULED_FRIEND_DIED, _on_fedhas_friend_death(nullptr) },
     },
     // GOD_CHEIBRIADOS,
     {
         { DID_HASTY, {
+            "you hasten yourself or others", true,
             1, 1, " forgives your accidental hurry, just this once.",
             " thinks you should slow down.", nullptr, -5
         } },
@@ -449,6 +507,7 @@ static peeve_map divine_peeves[] =
     // GOD_DITHMENOS,
     {
         { DID_FIRE, {
+            "you use fiery magic or items", false,
             1, 1, " forgives your accidental fire-starting, just this once.",
             " does not appreciate your starting fires!", nullptr, -5
         } },
@@ -462,10 +521,63 @@ static peeve_map divine_peeves[] =
     // GOD_PAKELLAS
     {
         { DID_CHANNEL, {
+            "you channel magical energy", true,
             1, 1,
         } },
     },
 };
+
+string get_god_dislikes(god_type which_god, bool /*verbose*/)
+{
+    // Return early for the special cases.
+    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+        return "";
+
+    string text;
+    vector<string> dislikes;        // Piety loss
+    vector<string> really_dislikes; // Penance
+
+    for (const auto& entry : divine_peeves[which_god])
+    {
+        if (entry.second.desc)
+        {
+            if (entry.second.really_dislike)
+                really_dislikes.emplace_back(entry.second.desc);
+            else
+                dislikes.emplace_back(entry.second.desc);
+        }
+    }
+
+    if (which_god == GOD_CHEIBRIADOS)
+        really_dislikes.emplace_back("use unnaturally quick items");
+
+    if (dislikes.empty() && really_dislikes.empty())
+        return "";
+
+    if (!dislikes.empty())
+    {
+        text += uppercase_first(god_name(which_god));
+        text += " dislikes it when ";
+        text += comma_separated_line(dislikes.begin(), dislikes.end(),
+                                     " or ", ", ");
+        text += ".";
+
+        if (!really_dislikes.empty())
+            text += " ";
+    }
+
+    if (!really_dislikes.empty())
+    {
+        text += uppercase_first(god_name(which_god));
+        text += " strongly dislikes it when ";
+        text += comma_separated_line(really_dislikes.begin(),
+                                     really_dislikes.end(),
+                                     " or ", ", ");
+        text += ".";
+    }
+
+    return text;
+}
 
 
 /**
