@@ -1116,10 +1116,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
             return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
         switch (auxtype)
         {
-        case 0:
-            return "Other";
-        case 1:
-            return "Reflected";
+        case BLOCK_OTHER:
+            return "Other"; // non-shield block
+        case BLOCK_REFLECT:
+            return "Reflection";
         default:
             return "Error";
         }
