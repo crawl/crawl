@@ -497,7 +497,7 @@ static void _god_wrath_description(god_type which_god)
 
     _print_top_line(which_god, width);
 
-    _print_string_wrapped(get_god_dislikes(which_god, true), width);
+    _print_string_wrapped(get_god_dislikes(which_god), width);
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
@@ -578,7 +578,7 @@ static void _detailed_god_description(god_type which_god)
     _print_string_wrapped(getLongDescription(god_name(which_god) + " powers"),
                           width);
 
-    _print_string_wrapped(get_god_likes(which_god, true), width);
+    _print_string_wrapped(get_god_likes(which_god), width);
     _print_string_wrapped(_get_god_misc_info(which_god), width);
 }
 

@@ -527,7 +527,7 @@ static peeve_map divine_peeves[] =
     },
 };
 
-string get_god_dislikes(god_type which_god, bool /*verbose*/)
+string get_god_dislikes(god_type which_god)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
@@ -915,7 +915,7 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            nullptr, false,
+            "you kill fast things, relative to your speed", false,
             -6, 18, 2, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
@@ -1130,7 +1130,7 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
-string get_god_likes(god_type which_god, bool verbose)
+string get_god_likes(god_type which_god)
 {
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return "";
@@ -1143,29 +1143,16 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_FEDHAS:
-    {
-        string like = "you promote the decay of nearby corpses";
-        if (verbose)
-           like += " by <w>p</w>raying";
-        likes.push_back(like);
+        likes.emplace_back("you promote the decay of nearby corpses by "
+                           "<w>p</w>raying");
         break;
-    }
     case GOD_TROG:
-    {
-        string like = "you destroy spellbooks";
-        if (verbose)
-           like += " via the <w>a</w> command";
-        likes.push_back(like);
+        likes.emplace_back("you destroy spellbooks via the <w>a</w> command");
         break;
-    }
     case GOD_JIYVA:
-    {
-        string like = "you sacrifice items";
-        if (verbose)
-            like += " by allowing slimes to consume them";
-        likes.push_back(like);
+        likes.emplace_back("you sacrifice items by allowing slimes to consume "
+                           "them");
         break;
-    }
     case GOD_GOZAG:
         likes.emplace_back("you collect gold");
         break;
@@ -1175,14 +1162,6 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
-    case GOD_CHEIBRIADOS:
-    {
-        string like = "you kill fast things";
-        if (verbose)
-            like += ", relative to your speed";
-        likes.push_back(like);
-        break;
-    }
     default:
         break;
     }
