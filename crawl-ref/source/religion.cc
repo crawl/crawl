@@ -3360,11 +3360,6 @@ bool god_hates_your_god(god_type god, god_type your_god)
     return is_evil_god(your_god);
 }
 
-bool god_hates_cannibalism(god_type god)
-{
-    return is_good_god(god) || god == GOD_BEOGH;
-}
-
 bool god_hates_killing(god_type god, const monster* mon)
 {
     // Must be at least a creature of sorts. Smacking down an enchanted

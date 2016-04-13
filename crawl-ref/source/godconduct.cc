@@ -1201,6 +1201,10 @@ string get_god_likes(god_type which_god)
     return text;
 }
 
+bool god_hates_cannibalism(god_type god)
+{
+    return divine_peeves[god].count(DID_CANNIBALISM);
+}
 
 /**
  * Will this god definitely be upset if you cast this spell?
