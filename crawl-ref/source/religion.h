@@ -37,8 +37,6 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
-string get_god_dislikes(god_type which_god, bool verbose = false);
-
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
