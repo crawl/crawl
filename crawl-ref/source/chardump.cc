@@ -978,7 +978,7 @@ static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,
     return false;
 }
 
-void count_action(caction_type type, int subtype)
+static void _count_action(caction_type type, int subtype)
 {
     pair<caction_type, int> pair(type, subtype);
     if (!you.action_count.count(pair))
@@ -995,7 +995,7 @@ void count_action(caction_type type, int subtype, int auxtype)
     ASSERT_RANGE(auxtype, -32768, 32768);
     int compound_subtype;
     compound_subtype = (auxtype << 16) | (subtype & 0xFFFF);
-    count_action(type, compound_subtype);
+    _count_action(type, compound_subtype);
 }
 
 /**
