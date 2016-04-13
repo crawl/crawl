@@ -1819,6 +1819,9 @@ ENDMAP
 # Ru overflow altar vaults ####################################################
 
 # A few unlucky monsters permanently afflicted with Ru's various status effects.
+# the monsters in group B should all be non-intelligent, so that TSO won't get upset
+# about attacking them while blind. it's a pain for a monster you're not allowed
+# to attack to chase you throughout the level
 NAME: nicolae_ru_great_annihilating_truth
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent
 TAGS: no_monster_gen no_item_gen
@@ -1834,8 +1837,8 @@ KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
   kobold perm_ench:corona / goblin perm_ench:corona / hobgoblin perm_ench:corona
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
-KMONS: B = kobold perm_ench:blind / goblin perm_ench:blind / \
-  hobgoblin perm_ench:blind / bat perm_ench:blind
+KMONS: B = ball python perm_ench:blind / giant newt perm_ench:blind / \
+  giant cockroach perm_ench:blind / bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
 @...   ...@
