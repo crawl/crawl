@@ -40,8 +40,8 @@ void whereis_record(const char *status = "active");
 
 void record_turn_timestamp();
 
-void count_action(caction_type type, int subtype = 0);
-void count_action(caction_type type, int subtype, int auxtype);
+void count_action(caction_type type, int subtype = -32768,
+                  int auxtype = -32768);
 pair<int, int> caction_extract_types(int compound_subtype);
 
 #endif
