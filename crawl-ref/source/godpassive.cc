@@ -1032,17 +1032,23 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         case BEAM_LAVA:
         case BEAM_STICKY_FLAME:
         case BEAM_STEAM:
+            if (you.res_fire() >= 3)
+                return;
             what = BEAM_FIRE;
             dur = DUR_QAZLAL_FIRE_RES;
             descript = "fire";
             break;
         case BEAM_COLD:
         case BEAM_ICE:
+            if (you.res_cold() >= 3)
+                return;
             what = BEAM_COLD;
             dur = DUR_QAZLAL_COLD_RES;
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
+            if (you.res_elec() >= 2) // max is 2 for this way of accessing it
+                return;
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
