@@ -644,7 +644,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
         if (!used && !pre_msg.empty())
             mpr(pre_msg);
 
-        do_uncurse_item(item, false, false);
+        do_uncurse_item(item, false);
         used = true;
     }
 }
