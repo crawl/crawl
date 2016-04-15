@@ -1681,7 +1681,7 @@ bool is_offensive_wand(const item_def& item)
 
 // Returns whether a piece of armour can be enchanted further.
 // If unknown is true, unidentified armour will return true.
-bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
+bool is_enchantable_armour(const item_def &arm, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
         return false;
@@ -1690,16 +1690,9 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
 
-    // Artefacts or highly enchanted armour cannot be enchanted, only
-    // uncursed.
+    // Artefacts or highly enchanted armour cannot be enchanted.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-    {
-        if (!uncurse || have_passive(passive_t::want_curses))
-            return false;
-        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
-            return true;
-        return arm.cursed();
-    }
+        return false;
 
     return true;
 }
