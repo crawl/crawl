@@ -166,10 +166,9 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-    const bool is_cursed = wpn.cursed();
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
-    if (is_cursed)
+    if (wpn.cursed())
         do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)

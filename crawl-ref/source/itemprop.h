@@ -114,8 +114,7 @@ int wand_charge_value(int type) PURE;
 int wand_max_charges(const item_def &item) PURE;
 bool is_known_empty_wand(const item_def &item) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
-bool is_enchantable_armour(const item_def &arm, bool uncurse,
-                           bool unknown = false) PURE;
+bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,

@@ -1034,7 +1034,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_evokable(i, true, true, true);
 
     case OSEL_ENCH_ARM:
-        return is_enchantable_armour(i, true, true);
+        return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
         return itype == OBJ_FOOD && !is_inedible(i);
@@ -1056,24 +1056,10 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-    {
-        if (!is_weapon(i))
-            return false;
-        if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
-            // Ashenzari would just preserve the curse.
-            && !have_passive(passive_t::want_curses))
-        {
-            return true;
-        }
-        if (itype != OBJ_WEAPONS || is_artefact(i))
-            return false;
-        if (!item_ident(i, ISFLAG_KNOW_PLUSES))
-            return true;
-
-        if (i.plus < MAX_WPN_ENCHANT)
-            return true;
-        return false;
-    }
+        return itype == OBJ_WEAPONS
+               && !is_artefact(i)
+               && (!item_ident(i, ISFLAG_KNOW_PLUSES)
+                   || i.plus < MAX_WPN_ENCHANT);
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);

@@ -1987,30 +1987,19 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     // Get item name now before changing enchantment.
     string iname = wpn.name(DESC_YOUR);
 
-    if (is_weapon(wpn))
+    if (is_weapon(wpn)
+        && !is_artefact(wpn)
+        && wpn.base_type == OBJ_WEAPONS
+        && wpn.plus < MAX_WPN_ENCHANT)
     {
-        if (!is_artefact(wpn)
-            && wpn.base_type == OBJ_WEAPONS
-            && wpn.plus < MAX_WPN_ENCHANT)
-        {
-            wpn.plus++;
-            success = true;
-            if (!quiet)
-                mprf("%s glows red for a moment.", iname.c_str());
-        }
-
-        if (wpn.cursed())
-        {
-            if (!success)
-                mprf("%s glows silver for a moment.", iname.c_str());
-            success = true;
-        }
-        // Mark the item as uncursed, whether or not it was cursed initially.
-        do_uncurse_item(wpn, true);
+        wpn.plus++;
+        success = true;
+        if (!quiet)
+            mprf("%s glows red for a moment.", iname.c_str());
     }
 
     if (!success && !quiet)
-        mprf("%s very briefly gains a red sheen.", iname.c_str());
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     if (success)
         you.wield_change = true;
@@ -2105,20 +2094,13 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     ac_change = 0;
 
-    // Cannot be enchanted nor uncursed.
-    if (!is_enchantable_armour(arm, true))
+    // Cannot be enchanted.
+    if (!is_enchantable_armour(arm))
     {
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
-
-        // That proved that it was uncursed.
-        if (!have_passive(passive_t::want_curses))
-            arm.flags |= ISFLAG_KNOW_CURSE;
-
         return false;
     }
-
-    const bool is_cursed = arm.cursed();
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -2135,27 +2117,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        do_uncurse_item(arm, true);
-
         // No additional enchantment.
         return true;
-    }
-
-    // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false))
-    {
-        if (!quiet)
-        {
-            if (is_cursed)
-            {
-                mprf("%s glows silver for a moment.",
-                     arm.name(DESC_YOUR).c_str());
-            }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
-        }
-        do_uncurse_item(arm, true);
-        return is_cursed; // was_cursed, really
     }
 
     // Output message before changing enchantment and curse status.
@@ -2167,7 +2130,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-    do_uncurse_item(arm, true);
 
     return true;
 }
@@ -2204,7 +2166,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 
         item_def& arm(you.inv[item_slot]);
 
-        if (!is_enchantable_armour(arm, true, true))
+        if (!is_enchantable_armour(arm, true))
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
             more();
