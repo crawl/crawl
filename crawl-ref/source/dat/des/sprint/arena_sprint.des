@@ -259,7 +259,7 @@ function arena_sprint_get_monster_set(round, boss)
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
-                "w:20 fire bat / fire elemental w:5 mottled dragon",
+                "w:20 fire bat / fire elemental / w:5 mottled dragon",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
