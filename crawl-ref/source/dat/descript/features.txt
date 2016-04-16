@@ -692,7 +692,7 @@ A strange membrane, thin enough to see through.
 %%%%
 The pulsating floor
 
-The floor. It seems to pulse to an unknown beat.
+The floor. It pulses to an unknown beat.
 %%%%
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
@@ -896,7 +896,7 @@ sides of the tunnel, filling the entry.
 %%%%
 A magical portal
 
-A portal leading to a wizard's laboratory. It seems to be fading away.
+A portal leading to a wizard's laboratory. It is fading away.
 %%%%
 ###########
 ### Sprint
