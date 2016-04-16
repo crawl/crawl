@@ -37,15 +37,13 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
               randbook owner:Lugonu spells:simulacrum&cigotuvi's_embrace \
-                       numspells:2 /\
-              randbook owner:Lugonu spells:animate_dead&sublimation_of_blood \
                        numspells:2",
          Gozag="amulet of the gourmand ident:type /\
               randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
          Jiyva="stone q:10-20 / large rock q:2-4",
          Kikubaaqudgha="randbook owner:Lugonu spells:control_undead&dispel_undead \
                        numspells:2 /\
-              rat corpse w:5 / kobold corpse w:5 / ugly thing corpse",
+              rat corpse w:5 / kobold corpse w:5",
          Lugonu="no",
          Makhleb="no",
          ["Nemelex Xobeh"]="no",
