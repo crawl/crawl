@@ -64,8 +64,8 @@ A powerful, belligerent efreet. (Is there any other kind?)
 %%%%
 Blork the orc
 
-A particularly fat and ugly orc. He seems to have scavenged a pair of
-rainbow-coloured suspenders from somewhere. They're not helping.
+A particularly fat and ugly orc. He's scavenged a pair of rainbow-coloured
+suspenders from somewhere. They're not helping.
 %%%%
 Boris
 
@@ -488,7 +488,7 @@ An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
-A huge, red-glowing, three-headed dragon, shrouded in damnation. It seems to be
+A huge, red-glowing, three-headed dragon, shrouded in damnation. It is
 possessed by the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
@@ -2162,7 +2162,7 @@ A beguiling merfolk whose voice can mesmerize listeners.
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with
-lightning speed. It seems to throw sparks all around.
+lightning speed. It sprays sparks as it goes.
 
 It can heal from electrical damage, although being hit by more than it can
 handle will have rather violent results.
@@ -2822,13 +2822,13 @@ every monstrous creature imaginable, and sprouts some writhing tentacles.
 %%%%
 conjurer statue
 
-This statue seems to harness the mightiest pure conjurations ever devised by
+This statue harnesses the mightiest pure conjurations ever devised by
 Iskenderun.
 %%%%
 decayed bog body
 
-An undead figure preserved by the brackish waters of a bog. This one seems to
-have decayed quite a bit, and looks weak.
+An undead figure preserved by the brackish waters of a bog. This one has
+decayed quite a bit, and looks weak.
 %%%%
 deformed humanoid
 
@@ -2857,7 +2857,7 @@ A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
 fire elementalist statue
 
 An ornately worked statue of an orc holding a torch aloft, hewn from black
-basalt. The air around it seems to shimmer.
+basalt. The air around it shimmers.
 %%%%
 firespitter statue
 
@@ -2983,7 +2983,7 @@ Something has turned this ordinary plant into stone.
 %%%%
 phase bat
 
-A strange, glowing bat that seems to flutter through more dimensions than the
+A strange, glowing bat that flutters through more dimensions than the
 average bat.
 %%%%
 phase spider
