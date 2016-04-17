@@ -1547,6 +1547,34 @@ attack_flavour attack::random_chaos_attack_flavour()
     return flavour;
 }
 
+bool attack::apply_poison_damage_brand()
+{
+    if (!one_chance_in(4))
+    {
+        int old_poison;
+
+        if (defender->is_player())
+            old_poison = you.duration[DUR_POISONING];
+        else
+        {
+            old_poison =
+                (defender->as_monster()->get_ench(ENCH_POISON)).degree;
+        }
+
+        defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
+
+        if (defender->is_player()
+               && old_poison < you.duration[DUR_POISONING]
+            || !defender->is_player()
+               && old_poison <
+                  (defender->as_monster()->get_ench(ENCH_POISON)).degree)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool attack::apply_damage_brand(const char *what)
 {
     bool brand_was_known = false;
@@ -1632,30 +1660,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_VENOM:
-        if (!one_chance_in(4))
-        {
-            int old_poison;
-
-            if (defender->is_player())
-                old_poison = you.duration[DUR_POISONING];
-            else
-            {
-                old_poison =
-                    (defender->as_monster()->get_ench(ENCH_POISON)).degree;
-            }
-
-            defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
-
-            if (defender->is_player()
-                   && old_poison < you.duration[DUR_POISONING]
-                || !defender->is_player()
-                   && old_poison <
-                      (defender->as_monster()->get_ench(ENCH_POISON)).degree)
-            {
-                obvious_effect = true;
-            }
-
-        }
+        obvious_effect = apply_poison_damage_brand();
         break;
 
     case SPWPN_DRAINING:
@@ -1818,6 +1823,11 @@ bool attack::apply_damage_brand(const char *what)
         if (miscast_level == 0)
             miscast_level = -1;
     }
+
+    // Preserve Nessos's brand stacking in a hacky way -- but to be fair, it
+    // was always a bit of a hack.
+    if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
+        apply_poison_damage_brand();
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);

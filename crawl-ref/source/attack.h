@@ -184,6 +184,7 @@ protected:
     string defender_name(bool allow_reflexive);
 
     attack_flavour random_chaos_attack_flavour();
+    bool apply_poison_damage_brand();
 
     virtual int  player_stat_modify_damage(int damage);
     virtual int  player_apply_weapon_skill(int damage);

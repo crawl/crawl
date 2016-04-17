@@ -1603,10 +1603,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 mitm[thing_created].quantity *= 2;
                 break;
 
-            case MONS_NESSOS:
-                mitm[thing_created].brand = SPMSL_POISONED;
-                break;
-
             case MONS_JOSEPH:
                 mitm[thing_created].quantity += 2 + random2(7);
                 break;
