@@ -239,7 +239,7 @@ function fiery_guardians (e, intelligent, village)
                           .. " | whip " .. flame
                           .. " . robe " .. res
         local ogrestuff = "great mace " .. flame .. " | giant club " .. flame
-        local centaur = "centaur ; shortbow ego:none . arrow ego:flame"
+        local centaur = "centaur ; shortbow ego:flaming ident:type"
         local centaurstuff = "robe " .. res
                              .. " . shortbow ego:flaming ident:type . arrow"
         local elfstuff = "long sword " .. flame
@@ -274,7 +274,7 @@ function fiery_guardians (e, intelligent, village)
                     .. ", ogre mage ; " .. magestuff)
         elseif set_weight < 9 then
             e.mons(centaur
-                   .. " / yaktaur w:5 ; arbalest . bolt ego:flame ident:type")
+                   .. " / yaktaur w:5 ; arbalest ego:flaming ident:type . bolt")
             e.kmons("2 = Nessos / centaur warrior w:40 ; " .. centaurstuff
                     .. ", centaur warrior ; " .. centaurstuff)
         elseif set_weight < 10 then

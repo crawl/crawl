@@ -407,9 +407,8 @@ bool ranged_attack::apply_damage_brand(const char *what)
 
     const brand_type brand = get_weapon_brand(*weapon);
 
-    // No stacking elemental brands, unless you're Nessos.
-    if (attacker->type != MONS_NESSOS
-        && projectile->base_type == OBJ_MISSILES
+    // No stacking elemental brands.
+    if (projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) != SPMSL_NORMAL
         && get_ammo_brand(*projectile) != SPMSL_PENETRATION
         && (brand == SPWPN_FLAMING

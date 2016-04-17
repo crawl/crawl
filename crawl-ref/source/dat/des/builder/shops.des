@@ -295,7 +295,7 @@ DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
-         w:14 arrow ego:poisoned | w:14 tomahawk ego:poisoned | \
+         w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
@@ -322,7 +322,7 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
-         w:8 sling bullet | w:4 sling bullet ego:steel | \
+         w:8 sling bullet | \
          w:14 stone of tremors | w:7 crystal ball of energy | \
          w:4 wand of digging | w:5 randbook disc:earth | \
          w:2 book of the earth | w:2 book of geomancy | w:4 staff of earth | \
@@ -371,11 +371,7 @@ WEIGHT: 1
 TAGS:  no_hmirror no_vmirror
 KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
        tomahawk ego:flame | tomahawk ego:frost | tomahawk ego:chaos | \
-       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos | \
-       arrow ego:silver | arrow ego:steel | arrow ego:exploding | \
-       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
-       bolt ego:dispersal | bolt ego:chaos | \
-       sling bullet ego:dispersal | sling bullet ego:chaos
+       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos
 MAP
 .......
 .lllll.
@@ -426,9 +422,9 @@ TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | wand of heal wounds | \
-   tomahawk ego:silver w:2 | javelin ego:silver w:2 | bolt ego:silver w:2 |\
+   tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
-   sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
+   amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 KPROP: 1 = no_tele_into
@@ -479,12 +475,11 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of lightning | staff of conjuration | lightning rod | \
-   rod of inaccuracy | iron rod | \
-   large rock ego:exploding | arrow ego:exploding | bolt ego:exploding | \
+   rod of inaccuracy | iron rod | large rock ego:exploding | \
    javelin ego:exploding | wand of acid | \
    tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
    lamp of fire | phial of floods | stone of tremors | rod of clouds | \
-   sling bullet ego:exploding | scroll of immolation | book of flames | \
+   scroll of immolation | book of flames | \
    book of fire | book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red

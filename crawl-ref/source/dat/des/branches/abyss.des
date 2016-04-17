@@ -2091,23 +2091,6 @@ cc..2..........cc
        ccc
 ENDMAP
 
-NAME:  evilmike_abyss_exit_disperse
-TAGS:  abyss_exit
-SUBST: . = .:100 2
-MONS:  centaur; shortbow . arrow ego:dispersal, plant
-: init_abyss_exit(_G, "O")
-MAP
-     xxx xxx xxx
-   xxx1xxx1xxx1x
- xxx....x...x..xxx
-xx...............x
-x1.Ox............+@
-xx...............x
- xxx....x...x..xxx
-   xxx1xxx1xxx1x
-     xxx xxx xxx
-ENDMAP
-
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
 MONS:    hell hound, raiju, great orb of eyes
