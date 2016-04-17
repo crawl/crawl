@@ -552,7 +552,7 @@ static const zap_info zap_data[] =
 {
     ZAP_BANISHMENT,
     "",
-    100,
+    150,
     nullptr,
     nullptr,
     nullptr,

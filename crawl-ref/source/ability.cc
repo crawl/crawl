@@ -449,7 +449,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BEND_SPACE, "Bend Space",
       1, 0, 50, 0, {FAIL_INVO, 40, 5, 20}, abflag::PAIN },
     { ABIL_LUGONU_BANISH, "Banish", 4, 0, 200, generic_cost::range(3, 4),
-      {FAIL_INVO, 60, 5, 20}, abflag::NONE },
+      {FAIL_INVO, 85, 7, 20}, abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 500, 10,
       {FAIL_INVO, 70, 4, 25}, abflag::NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 500,
@@ -2511,7 +2511,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     {
         beam.range = LOS_RADIUS;
         const int pow =
-            player_adjust_invoc_power(16 + you.skill(SK_INVOCATIONS, 8));
+            player_adjust_invoc_power(68 + you.skill(SK_INVOCATIONS, 3));
 
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
