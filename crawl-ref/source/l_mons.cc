@@ -549,8 +549,8 @@ static const char *_monster_behaviour_names[] =
     "cornered",
 #if TAG_MAJOR_VERSION == 34
     "panic",
-#endif
     "lurk",
+#endif
     "retreat",
     "withdraw",
 };

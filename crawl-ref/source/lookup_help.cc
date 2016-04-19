@@ -371,9 +371,8 @@ static bool _monster_filter(string key, string body)
 
 static bool _spell_filter(string key, string body)
 {
-    if (!ends_with(key, " spell"))
+    if (!strip_suffix(key, "spell"))
         return true;
-    key.erase(key.length() - 6);
 
     spell_type spell = spell_by_name(key);
 
@@ -401,9 +400,8 @@ static bool _card_filter(string key, string body)
     lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (!ends_with(key, " card"))
+    if (!strip_suffix(key, "card"))
         return true;
-    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
@@ -416,16 +414,17 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
-    if (!ends_with(key, " ability"))
+
+    if (!strip_suffix(key, "ability"))
         return true;
-    key.erase(key.length() - 8);
 
-    if (string_matches_ability_name(key))
-        return false;
-
-    return true;
+    return !string_matches_ability_name(key);
 }
 
+static bool _status_filter(string key, string body)
+{
+    return !strip_suffix(lowercase(key), " status");
+}
 
 
 static void _recap_mon_keys(vector<string> &keys)
@@ -451,6 +450,21 @@ static void _recap_spell_keys(vector<string> &keys)
         // then get the real name
         keys[i] = make_stringf("%s spell",
                                spell_title(spell_by_name(key_name)));
+    }
+}
+
+/**
+ * Fixup ability names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of ability names.
+ */
+static void _recap_ability_keys(vector<string> &keys)
+{
+    for (auto &key : keys)
+    {
+        strip_suffix(key, "ability");
+        // get the real name
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
     }
 }
 
@@ -874,10 +888,8 @@ MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
 string LookupType::key_to_menu_str(const string &key) const
 {
     string str = uppercase_first(key);
-
-    if (ends_with(str, suffix())) // perhaps we should assert this?
-        str.erase(str.length() - suffix().length());
-
+    // perhaps we should assert this?
+    strip_suffix(str, suffix());
     return str;
 }
 
@@ -915,8 +927,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.body << desc << extra_info;
 
     string title = key;
-    if (ends_with(title, suffix))
-        title.erase(title.length() - suffix.length());
+    strip_suffix(title, suffix);
     title = uppercase_first(title);
     linebreak_string(footer, width - 1);
 
@@ -1252,7 +1263,7 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
                lookup_type::SUPPORT_TILES),
-    LookupType('A', "ability", nullptr, _ability_filter,
+    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
@@ -1280,6 +1291,10 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+    LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic,
+               lookup_type::DB_SUFFIX),
 };
 
 /**

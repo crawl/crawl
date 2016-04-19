@@ -249,8 +249,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
                 string key;
 
                 // Quadrupeds can't salute, etc.
-                mon_body_shape shape = get_mon_shape(mons);
-                if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                if (mon_shape_is_humanoid(get_mon_shape(mons)))
                     key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,
@@ -430,6 +429,10 @@ static void _dispellable_monster_buffs(const monster &mon,
         if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
+        // Gozag-incited haste is permanent.
+        if (ench == ENCH_HASTE && mon.has_ench(ENCH_GOZAG_INCITE))
+            continue;
+
         if (mon.has_ench(ench))
             buffs.push_back(ench);
     }
@@ -488,7 +491,7 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
     else
     {
-        if (you_worship(GOD_ASHENZARI))
+        if (have_passive(passive_t::detect_items))
         {
             map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
             if (map_radius <= 0)
@@ -599,7 +602,7 @@ int detect_creatures(int pow, bool telepathic)
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
-            if (!mons_near(mon) || !mon->visible_to(&you))
+            if (!you.can_see(*mon))
             {
                 creatures_found++;
                 _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
@@ -641,14 +644,14 @@ static bool _selectively_remove_curse(const string &pre_msg)
         if (!used && !pre_msg.empty())
             mpr(pre_msg);
 
-        do_uncurse_item(item, true, false, false);
+        do_uncurse_item(item, false);
         used = true;
     }
 }
 
 bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
-    if (you_worship(GOD_ASHENZARI) && alreadyknown)
+    if (have_passive(passive_t::want_curses) && alreadyknown)
     {
         if (_selectively_remove_curse(pre_msg))
         {
@@ -663,7 +666,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
 
     // Players can no longer wield armour and jewellery as weapons, so we do
     // not need to check whether the EQ_WEAPON slot actually contains a weapon:
-    // only weapons (and rods and staves) are both wieldable and cursable.
+    // only weapons (and staves) are both wieldable and cursable.
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
@@ -694,6 +697,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     return success;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
@@ -749,6 +753,7 @@ bool curse_item(bool armour, const string &pre_msg)
 
     return _selectively_curse_item(armour, pre_msg);
 }
+#endif
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
@@ -767,6 +772,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     monster *mon;
     string targname;
 
+    vector<coord_def> veto_spots(8);
+    for (adjacent_iterator ai(where); ai; ++ai)
+        veto_spots.push_back(*ai);
+    const vector<coord_def> adj_spots = veto_spots;
+
     if (zin)
     {
         // We need to get this now because we won't be able to see
@@ -775,10 +785,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
-
-        vector<coord_def> veto_spots(8);
-        for (adjacent_iterator ai(where); ai; ++ai)
-            veto_spots.push_back(*ai);
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -800,6 +806,18 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                     veto_spots.push_back(newpos);
             }
 
+            // don't try to shove the orb of zot into lava and/or crash
+            if (igrd(*ai) != NON_ITEM)
+            {
+                coord_def newpos;
+                if (!get_push_space(*ai, newpos, nullptr, true, &adj_spots))
+                {
+                    success = false;
+                    none_vis = false;
+                    break;
+                }
+            }
+
             // Make sure we have a legitimate tile.
             proceed = false;
             if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
@@ -819,6 +837,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         }
     }
 
+    veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
@@ -831,8 +850,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor* act = actor_at(*ai))
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, act, true);
+                get_push_space(*ai, newpos, act, true, &veto_spots);
+                ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
+                veto_spots.push_back(newpos);
             }
         }
 
@@ -856,11 +877,12 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             {
                 coord_def newpos;
                 get_push_space(*ai, newpos, nullptr, true);
+                if (zin) // zin should've checked for this earlier
+                    ASSERT(!newpos.origin());
+                else if (newpos.origin())  // tomb just skips the tile
+                    continue;
                 move_items(*ai, newpos);
             }
-
-            // All clouds are destroyed.
-            delete_cloud(*ai);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))

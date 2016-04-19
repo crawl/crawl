@@ -4,7 +4,7 @@
 #
 # 1) The name of the spell being cast:
 #   a) First try with the type, then the species, the the genus.
-#   b) If a wizard, "wizard"; similarly for priest, demon, and innate.
+#   b) If a wizard, "wizard"; similarly for priest, magical, and natural.
 #   c) If being cast by a wizard or priest monster with arms, first try
 #      with the suffix "real".
 #   d) If being cast by a monster of normal or higher intelligence with arms,
@@ -12,7 +12,7 @@
 #   e) Next, try without any suffix.
 # 2) The name of the monster's type, then species, then genus.
 # 3) "priest" if the spell is an invocation, "wizard" if it's a wizard spell,
-#    or "demon" if it's demonic.
+#    or "magical" if it's magical.
 # 4) If the spell uses a targeted, visible beam:
 #   a) "<beam_short_name> beam".
 #   b) "beam catchall".
@@ -41,7 +41,7 @@
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
-# * Spit Poison innate cast
+# * Spit Poison natural cast
 # * Spit Poison cast gestures
 # * Spit Poison cast
 # * greater naga cast targeted
@@ -196,6 +196,10 @@ Call of Chaos cast
 unseen Call of Chaos cast
 
 @The_something@ calls on the powers of chaos!
+%%%%
+Wind Blast cast
+
+@The_monster@ conjures a fierce blast of wind!
 #################################################
 # These have special hard-coded messaging.
 #################################################
@@ -212,16 +216,8 @@ Seal Doors cast
 
 __NONE
 #####################################################
-# Individual innate spells (breathing and spitting).
+# Individual natural spells (breathing and spitting).
 #####################################################
-%%%%
-unseen Signal Horn cast
-
-You hear a note loudly blown on a horn!
-%%%%
-Signal Horn cast
-
-@The_monster@ blows a loud note on a signal horn!
 %%%%
 Spit Acid cast
 
@@ -248,23 +244,23 @@ Chilling Breath cast
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 # Drac ghost breath
-Bolt of Draining innate cast
+Bolt of Draining natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Lightning Bolt innate cast
+Lightning Bolt natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Steam Ball innate cast
+Steam Ball natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Quicksilver Bolt innate cast
+Quicksilver Bolt natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
-Poisonous Cloud innate cast
+Poisonous Cloud natural cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
@@ -320,9 +316,21 @@ Volley of Thorns cast
 
 @The_monster@ fires a volley of thorns @at@ @target@.
 %%%%
-Hunting Cry cast
+Warning Cry cast
 
-@The_monster@ howls a hunting cry!
+@The_monster@ howls a warning cry!
+%%%%
+unseen Warning Cry cast
+
+You hear a loud warning cry!
+%%%%
+Slug Dart cast
+
+@The_monster@ launches a dart @at@ @target@.
+%%%%
+Paralysis Gaze cast
+
+@The_monster@ gazes piercingly through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -574,10 +582,6 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
-Blink golden eye cast
-
-__NONE
-%%%%
 ushabti cast
 
 @The_monster@ shakes and rattles.
@@ -602,9 +606,13 @@ Blink Away revenant cast
 
 __NONE
 %%%%
-Hunting Cry seraph cast
+Warning Cry seraph cast
 
 @The_monster@ shouts a warning to @possessive@ allies!
+%%%%
+unseen Warning Cry seraph cast
+
+You hear a loud warning shout!
 %%%%
 Battlecry seraph cast
 
@@ -625,6 +633,27 @@ insubstantial wisp cast
 Blink insubstantial wisp cast
 
 __NONE
+%%%%
+unseen Warning Cry howler monkey cast
+
+You hear a tremendous hooting and howling!
+%%%%
+Warning Cry howler monkey cast
+
+@The_monster@ hoots and howls with incredible vigour!
+%%%%
+unseen Warning Cry vault sentinel cast
+
+You hear a note loudly blown on a horn!
+%%%%
+Warning Cry vault sentinel cast
+
+@The_monster@ blows a loud note on a signal horn!
+%%%%
+Fireball hell hog cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -659,7 +688,7 @@ curse skull cast
 %%%%
 silent curse skull cast
 
-@The_monster@ casts a spell.
+@The_monster@ rattles @possessive@ jaw silently.
 %%%%
 unseen curse skull cast
 
@@ -729,7 +758,7 @@ polymorphed unseen wizard cast
 
 You hear some strange, mumbled words.
 ######################################################
-# Generic priest, wizard and demonic casting messages.
+# Generic priest, wizard and magical casting messages.
 ######################################################
 %%%%
 Haste Other priest cast
@@ -747,6 +776,10 @@ Might Other priest cast
 Malign Offering priest cast
 
 @The_monster@ utters a dark prayer and points @at@ @target@.
+%%%%
+Blink magical cast
+
+__NONE
 %%%%
 priest cast targeted
 
@@ -812,11 +845,11 @@ unseen wizard cast
 
 You hear some strange, mumbled words.
 %%%%
-demon cast targeted
+magical cast targeted
 
 @The_monster@ gestures @at@ @target@.
 %%%%
-demon cast
+magical cast
 
 @The_monster@ gestures.
 %%%%

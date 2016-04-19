@@ -190,9 +190,6 @@ enum explore_stop_type
     ES_RUNE                      = 0x2000,
     ES_BRANCH                    = 0x4000,
     ES_RUNED_DOOR                = 0x8000,
-
-    // Explored into view of an item which can be sacrificed
-    ES_GREEDY_SACRIFICEABLE      = 0x10000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -227,7 +224,6 @@ private:
     };
 
     bool can_autopickup;
-    bool sacrifice;
     int es_flags;
     const LevelStashes *current_level;
     vector< named_thing<item_def> > items;
@@ -545,9 +541,6 @@ protected:
 
     // Can we autopickup?
     bool autopickup;
-
-    // Does god wants sacrifices?
-    bool sacrifice;
 
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;

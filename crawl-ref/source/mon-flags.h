@@ -107,8 +107,7 @@ enum monclass_flag_type : uint64_t
     /// can do damage when attacked in melee
     M_SPINY             = BIT(32),
 
-    /// phase shift (EV bonus not included)
-    M_PHASE_SHIFT       = BIT(33),
+                        //BIT(33),
 
     /// not a valid polymorph target (but can be polymorphed)
     M_NO_POLY_TO        = BIT(34),
@@ -221,7 +220,6 @@ enum monster_flag_type : uint64_t
     MF_NAME_ADJECTIVE     = BIT(16),
     /// mname entirely replaces normal monster name.
     MF_NAME_REPLACE       = MF_NAME_SUFFIX|MF_NAME_ADJECTIVE,
-    MF_NAME_MASK          = MF_NAME_REPLACE,
     /// Is a god gift.
     MF_GOD_GIFT           = BIT(17),
     /// Is running away from player sanctuary
@@ -238,7 +236,6 @@ enum monster_flag_type : uint64_t
     MF_TWO_WEAPONS        = BIT(21),
     /// Monster gets various archery boosts.
     MF_ARCHER             = BIT(22),
-    MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER,
 
                           //BIT(23),
                           //BIT(24),
@@ -276,4 +273,8 @@ enum monster_flag_type : uint64_t
     MF_TSO_SEEN           = BIT(38),
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
+
+constexpr monster_flags_t MF_NAME_MASK = MF_NAME_REPLACE;
+constexpr monster_flags_t MF_MELEE_MASK = MF_FIGHTER | MF_TWO_WEAPONS
+                                        | MF_ARCHER;
 #endif

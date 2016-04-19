@@ -276,24 +276,24 @@ level_range::operator raw_range () const
     return r;
 }
 
-void level_range::set(const string &br, int s, int d) throw (string)
+void level_range::set(const string &br, int s, int d)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
     else if ((branch = branch_by_abbrevname(br)) == NUM_BRANCHES)
-        throw make_stringf("Unknown branch: '%s'", br.c_str());
+        throw bad_level_id_f("Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
     deepest    = d;
 
     if (deepest < shallowest || deepest <= 0)
     {
-        throw make_stringf("Level-range %s:%d-%d is malformed",
-                           br.c_str(), s, d);
+        throw bad_level_id_f("Level-range %s:%d-%d is malformed",
+                             br.c_str(), s, d);
     }
 }
 
-level_range level_range::parse(string s) throw (string)
+level_range level_range::parse(string s)
 {
     level_range lr;
     trim_string(s);
@@ -325,7 +325,7 @@ level_range level_range::parse(string s) throw (string)
     return lr;
 }
 
-void level_range::parse_partial(level_range &lr, const string &s) throw (string)
+void level_range::parse_partial(level_range &lr, const string &s)
 {
     if (isadigit(s[0]))
     {
@@ -337,7 +337,6 @@ void level_range::parse_partial(level_range &lr, const string &s) throw (string)
 }
 
 void level_range::parse_depth_range(const string &s, int *l, int *h)
-    throw (string)
 {
     if (s == "*")
     {
@@ -358,7 +357,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
     {
         *l = *h = strict_aton<int>(s.c_str());
         if (!*l)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
     else
     {
@@ -371,7 +370,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
             *h = strict_aton<int>(tail.c_str());
 
         if (!*l || !*h || *l > *h)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
 }
 
@@ -384,7 +383,7 @@ void level_range::set(int s, int d)
         deepest = shallowest;
 
     if (deepest < shallowest)
-        throw make_stringf("Bad depth range: %d-%d", shallowest, deepest);
+        throw bad_level_id_f("Bad depth range: %d-%d", shallowest, deepest);
 }
 
 void level_range::reset()
@@ -3634,8 +3633,6 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_NATURAL;
                     if (slot_vals[j] == "magical")
                         cur_spells[i].flags |= MON_SPELL_MAGICAL;
-                    if (slot_vals[j] == "demonic")
-                        cur_spells[i].flags |= MON_SPELL_DEMONIC;
                     if (slot_vals[j] == "wizard")
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
@@ -3820,9 +3817,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             {
                 mspec.place = level_id::parse_level_id(place);
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                error = err;
+                error = err.what();
                 return slot;
             }
         }
@@ -4520,24 +4517,24 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-
-
-    // this is intended for debugging only
-    if (ends_with(name, " mbeast"))
+    const auto m_index = name.find(" mutant beast");
+    if (m_index != string::npos)
     {
         mons_spec spec = MONS_MUTANT_BEAST;
 
-        const vector<string> segments = split_string(" ", name);
-        if (segments.size() > 3)
+        const string trimmed = name.substr(0, m_index);
+        const vector<string> segments = split_string(" ", trimmed);
+        if (segments.size() > 2)
             return MONS_PROGRAM_BUG; // too many words
 
+        const bool fully_specified = segments.size() == 2;
         spec.hd = _mutant_beast_xl(segments[0]);
-        if (spec.hd == 0 && segments.size() == 3)
+        if (spec.hd == 0 && fully_specified)
             return MONS_PROGRAM_BUG; // gave invalid tier spec
 
-        if (spec.hd == 0 || segments.size() == 3)
+        if (spec.hd == 0 || fully_specified)
         {
-            const int seg = segments.size() == 3 ? 1 : 0;
+            const int seg = segments.size() - 1;
             const vector<string> facet_names
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
@@ -4867,7 +4864,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "steel",
         "silver",
         "paralysis",
+#if TAG_MAJOR_VERSION == 34
         "slow",
+#endif
         "sleep",
         "confusion",
 #if TAG_MAJOR_VERSION == 34
@@ -5122,9 +5121,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         {
             result.place = level_id::parse_level_id(place);
         }
-        catch (const string &err)
+        catch (const bad_level_id &err)
         {
-            error = err;
+            error = err.what();
             return false;
         }
     }
@@ -5259,8 +5258,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["make_book_theme_randart"] = true;
-        // make_book_theme_randart requires the following properties:
+        result.props["build_themed_book"] = true;
+        // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
         // spell: <include this spell>, owner:<name of owner>
@@ -5287,16 +5286,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             if (disc2 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
-                return false;
-            }
-        }
-
-        if (disc1 != 0 && disc2 != 0)
-        {
-            if (disciplines_conflict(disc1, disc2))
-            {
-                error = make_stringf("Bad combination of spell schools: %s & %s.",
-                                    st_disc1.c_str(), st_disc2.c_str());
                 return false;
             }
         }
@@ -5359,7 +5348,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[RANDBK_OWNER_KEY] = owner;
 
         result.base_type = OBJ_BOOKS;
-        // This is changed in make_book_theme_randart.
+        // This is changed in build_themed_book().
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
@@ -5751,9 +5740,9 @@ string map_marker_spec::apply_transform(map_lines &map)
             mark->pos = p;
             map.add_marker(mark);
         }
-        catch (const string &err)
+        catch (const bad_map_marker &err)
         {
-            return err;
+            return err.what();
         }
     }
     return "";
@@ -5789,11 +5778,9 @@ map_flags &map_flags::operator |= (const map_flags &o)
 
     return *this;
 }
-
 typedef map<string, unsigned long> flag_map;
 
-map_flags map_flags::parse(const string flag_list[],
-                           const string &s) throw(string)
+map_flags map_flags::parse(const string flag_list[], const string &s)
 {
     map_flags mf;
 
@@ -5821,7 +5808,7 @@ map_flags map_flags::parse(const string flag_list[],
                 mf.flags_set |= *val;
         }
         else
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
+            throw bad_map_flag(flag);
     }
 
     return mf;
@@ -6041,10 +6028,9 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask |= map_flags::parse(flag_list, s);
     }
-    catch (const string &error)
+    catch (const bad_map_flag &error)
     {
-        err = error;
-        return err;
+        err = make_stringf("Unknown flag: '%s'", error.what());
     }
 
     return err;

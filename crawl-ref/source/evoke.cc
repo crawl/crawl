@@ -16,6 +16,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
@@ -73,46 +74,11 @@
 #include "view.h"
 #include "xom.h"
 
-void shadow_lantern_effect()
-{
-    int n = div_rand_round(you.time_taken, 10);
-    for (int i = 0; i < n; ++i)
-    {
-        if (you.magic_points > 0)
-        {
-            dec_mp(1);
-
-            if (x_chance_in_y(
-                    player_adjust_evoc_power(
-                        you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1),
-                    14))
-            {
-                create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2,
-                               MON_SUMM_LANTERN, you.pos()));
-
-                did_god_conduct(DID_NECROMANCY, 1);
-            }
-        }
-        else
-            expire_lantern_shadows();
-    }
-}
-
-void expire_lantern_shadows()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        int stype = 0;
-        if (mi->is_summoned(0, &stype) && stype == MON_SUMM_LANTERN)
-            mi->del_ench(ENCH_ABJ);
-    }
-}
-
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
     if (you.confused())
     {
-        mpr("You're too confused to attack without stumbling around!");
+        canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
@@ -461,18 +427,12 @@ static targetter *_wand_targetter(const item_def *wand)
 
     switch (wand->sub_type)
     {
-    case WAND_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, power, 1, 1);
+    case WAND_ICEBLAST:
+        return new targetter_beam(&you, range, ZAP_ICEBLAST, power, 1, 1);
     case WAND_LIGHTNING:
         return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:
         return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
-    case WAND_FIRE:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, 0, 0);
-    case WAND_FROST:
-        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
-    case WAND_COLD:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
     case WAND_DIGGING:
         return new targetter_beam(&you, range, ZAP_DIG, power, 0, 0);
     default:
@@ -550,7 +510,11 @@ void zap_wand(int slot)
         mpr("You can't zap that!");
         return;
     }
-
+    if (item_type_removed(wand.base_type, wand.sub_type))
+    {
+        mpr("Sorry, this wand was removed!");
+        return;
+    }
     // If you happen to be wielding the wand, its display might change.
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
@@ -588,7 +552,6 @@ void zap_wand(int slot)
 
         case WAND_HEAL_WOUNDS:
         case WAND_HASTING:
-        case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
             break;
 
@@ -619,8 +582,8 @@ void zap_wand(int slot)
                              SPFLAG_MR_CHECK))
     {
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(type_zapped, power), true,
-                                  hitfunc);
+                                  zap_ench_power(type_zapped, power, false),
+                                  true, hitfunc);
     }
     direction(zap_wand, args);
 
@@ -642,8 +605,6 @@ void zap_wand(int slot)
             return;
         }
         else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
-            return;
-        else if (wand.sub_type == WAND_INVISIBILITY && !invis_allowed())
             return;
     }
 
@@ -1131,7 +1092,7 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 static bool _sack_of_spiders(item_def &sack)
 {
     if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_SUMMON_SWARM); // approx
+        pakellas_evoke_backfire(SPELL_SUMMON_VERMIN); // approx
     else if (!pakellas_device_surge())
         return false;
     surge_power(you.spec_evoke());
@@ -1990,12 +1951,6 @@ static bool _stone_of_tremors()
     return true;
 }
 
-// Used for phials and water nymphs.
-bool can_flood_feature(dungeon_feature_type feat)
-{
-    return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
-}
-
 static bool _phial_of_floods()
 {
     dist target;
@@ -2003,7 +1958,7 @@ static bool _phial_of_floods()
 
     const int power =
         player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6));
-    zappy(ZAP_PRIMAL_WAVE, power, beam);
+    zappy(ZAP_PRIMAL_WAVE, power, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
@@ -2037,7 +1992,8 @@ static bool _phial_of_floods()
                       40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3));
         for (distance_iterator di(center, true, false, 2); di && num > 0; ++di)
         {
-            if (can_flood_feature(grd(*di))
+            const dungeon_feature_type feat = grd(*di);
+            if ((feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER)
                 && cell_see_cell(center, *di, LOS_NO_TRANS))
             {
                 num--;
@@ -2075,48 +2031,6 @@ static bool _phial_of_floods()
     }
 
     return false;
-}
-
-static bool _xoms_chessboard(item_def &board)
-{
-    if (get_nearby_monsters(false, true).empty())
-    {
-        mpr("You can't see any nearby monsters.");
-        return false;
-    }
-
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_DISJUNCTION); // approx
-    else if (!pakellas_device_surge())
-    {
-        you.turn_is_over = true;
-        return false;
-    }
-    surge_power(you.spec_evoke());
-    mpr("You make a move on Xom's chessboard...");
-
-    if (one_chance_in(100))
-    {
-        god_speaks(GOD_XOM, "Xom booms, \"MINE!\"");
-        mpr("...but Xom just steals the piece!");
-        ASSERT(in_inventory(board));
-        dec_inv_item_quantity(board.link, 1);
-        return true;
-    }
-
-    // Chance of a bad Xom action instead.
-    int fail_rate = 30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
-    if (x_chance_in_y(fail_rate, 100))
-    {
-        god_speaks(GOD_XOM, "Xom laughs nastily.");
-        xom_acts(false, random_range(0, 100));
-        return true;
-    }
-
-    xom_rearrange_pieces(
-        player_adjust_evoc_power(you.skill_rdiv(SK_EVOCATIONS, 100, 27)));
-    xom_is_stimulated(10);
-    return true;
 }
 
 void expend_xp_evoker(item_def &item)
@@ -2300,12 +2214,6 @@ bool evoke_check(int slot, bool quiet)
             canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-    else if (player_mutation_level(MUT_NO_ARTIFICE) && !reaching)
-    {
-        if (!quiet)
-            mpr("You cannot evoke magical items.");
-        return false;
-    }
     return true;
 }
 
@@ -2444,7 +2352,7 @@ bool evoke_item(int slot, bool check_range)
             make_hungry(50, false, true);
             pract = 1;
             did_work = true;
-            count_action(CACT_EVOKE, OBJ_STAVES << 16 | STAFF_ENERGY);
+            count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);
 
             did_god_conduct(DID_CHANNEL, 1, true);
         }
@@ -2453,8 +2361,11 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (player_mutation_level(MUT_NO_ARTIFICE))
+        if (player_mutation_level(MUT_NO_ARTIFICE)
+            && item.sub_type != MISC_ZIGGURAT)
+        {
             return mpr("You cannot evoke magical items."), false;
+        }
 
         if (is_deck(item))
         {
@@ -2555,13 +2466,6 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             break;
 
-        case MISC_XOMS_CHESSBOARD:
-            if (_xoms_chessboard(item))
-                pract = 1;
-            else
-                return false;
-            break;
-
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
                 pract = 1;
@@ -2620,7 +2524,7 @@ bool evoke_item(int slot, bool check_range)
             break;
         }
         if (did_work && !unevokable)
-            count_action(CACT_EVOKE, OBJ_MISCELLANY << 16 | item.sub_type);
+            count_action(CACT_EVOKE, item.sub_type, OBJ_MISCELLANY);
         break;
 
     default:

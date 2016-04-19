@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
+#include "godpassive.h" // passive_t::search_traps
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
@@ -324,10 +325,13 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
-        if (mons_near(mon) && !mon->visible_to(&you))
-            mpr("The net bounces off something gigantic!");
-        else
-            simple_monster_message(mon, " is too large for the net to hold!");
+        if (you.see_cell(mon->pos()))
+        {
+            if (!mon->visible_to(&you))
+                mpr("The net bounces off something gigantic!");
+            else
+                simple_monster_message(mon, " is too large for the net to hold!");
+        }
         return false;
     }
 
@@ -358,10 +362,13 @@ bool monster_caught_in_net(monster* mon, actor* agent)
 
     if (!mon->caught() && mon->add_ench(ENCH_HELD))
     {
-        if (mons_near(mon) && !mon->visible_to(&you))
-            mpr("Something gets caught in the net!");
-        else
-            simple_monster_message(mon, " is caught in the net!");
+        if (you.see_cell(mon->pos()))
+        {
+            if (!mon->visible_to(&you))
+                mpr("Something gets caught in the net!");
+            else
+                simple_monster_message(mon, " is caught in the net!");
+        }
         return true;
     }
 
@@ -1080,7 +1087,7 @@ void search_around()
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
     + (base_skill/200.0) + 15;
 
-    if (in_good_standing(GOD_ASHENZARI))
+    if (have_passive(passive_t::search_traps))
         skill += you.piety * 2;
 
     int max_dist = div_rand_round(skill, 32);
@@ -1576,10 +1583,12 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
+#if TAG_MAJOR_VERSION == 34
     case TRAP_SHADOW:
         return DNGN_TRAP_SHADOW;
     case TRAP_SHADOW_DORMANT:
         return DNGN_TRAP_SHADOW_DORMANT;
+#endif
 
     case TRAP_ARROW:
     case TRAP_SPEAR:

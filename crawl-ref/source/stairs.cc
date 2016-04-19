@@ -19,6 +19,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -631,8 +632,11 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // Fixup exits from the Hell branches.
-    if (player_in_branch(BRANCH_VESTIBULE) && is_hell_subbranch(old_level.branch))
+    if (player_in_branch(BRANCH_VESTIBULE)
+        && is_hell_subbranch(old_level.branch))
+    {
         how = branches[old_level.branch].entry_stairs;
+    }
 
     // Special messages on returning from portal vaults, Abyss, Pan, etc.
     if (!is_connected_branch(old_level.branch)
@@ -672,11 +676,16 @@ void floor_transition(dungeon_feature_type how,
             mpr("You enter the Abyss!");
 
         mpr("To return, you must find a gate leading back.");
-        if (you_worship(GOD_CHEIBRIADOS))
+        mpr("Killing monsters will force the Abyss to allow you passage.");
+        if (have_passive(passive_t::slow_abyss))
         {
-            mprf(MSGCH_GOD, GOD_CHEIBRIADOS,
-                 "You feel Cheibriados slowing down the madness of this place.");
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel %s slowing down the madness of this place.",
+                 god_name(you.religion).c_str());
         }
+
+        you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
+        you.props.erase(ABYSS_SPAWNED_XP_EXIT_KEY);
 
         // Re-entering the Abyss halves accumulated speed.
         you.abyss_speed /= 2;
@@ -728,7 +737,7 @@ void floor_transition(dungeon_feature_type how,
             {
                 if (branches[branch].entry_message)
                     mpr(branches[branch].entry_message);
-                else
+                else if (branch != BRANCH_ABYSS) // too many messages...
                     mprf("Welcome to %s!", branches[branch].longname);
 
                 const string rune_msg = branch_rune_desc(branch, true);
@@ -927,7 +936,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             else
                 return level_id();
         }
-        return level_id::parse_level_id(dst);
+        try
+        {
+            return level_id::parse_level_id(dst);
+        }
+        catch (const bad_level_id &err)
+        {
+            die("Invalid destination for portal: %s", err.what());
+        }
 #endif
 
     case DNGN_ENTER_HELL:

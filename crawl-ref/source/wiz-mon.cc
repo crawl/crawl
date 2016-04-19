@@ -138,26 +138,10 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.type == MONS_KRAKEN)
+    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
     {
-        unsigned short idx = mgrd(place);
-
-        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_KRAKEN)
-        {
-            for (auto &mons : menv)
-            {
-                if (mons.type == MONS_KRAKEN && mons.alive())
-                {
-                    mons.colour = element_colour(ETC_KRAKEN);
-                    return;
-                }
-            }
-        }
-        if (idx >= MAX_MONSTERS)
-        {
-            mpr("Couldn't find player kraken!");
-            return;
-        }
+        mpr("Couldn't find player kraken!");
+        return;
     }
 
     // FIXME: This is a bit useless, seeing how you cannot set the
@@ -507,7 +491,6 @@ void debug_stethoscope(int mon)
          : mons_is_fleeing(&mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
          : mons_is_cornered(&mons)        ? "cornered"
-         : mons_is_lurking(&mons)         ? "lurk"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,
@@ -573,7 +556,6 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_EMERGENCY,  "E" },
                 { MON_SPELL_NATURAL,    "N" },
                 { MON_SPELL_MAGICAL,    "M" },
-                { MON_SPELL_DEMONIC,    "D" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
                 { MON_SPELL_BREATH,     "br" },
@@ -591,24 +573,18 @@ void debug_stethoscope(int mon)
 
     ostringstream inv;
     bool found_item = false;
-    for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+    for (mon_inv_iterator ii(mons); ii; ++ii)
     {
-        if (mons.inv[k] != NON_ITEM)
-        {
-            if (found_item)
-                inv << ", ";
+        if (found_item)
+            inv << ", ";
 
-            found_item = true;
+        found_item = true;
 
-            inv << k << ": ";
+        inv << ii.slot() << ": ";
 
-            if (mons.inv[k] >= MAX_ITEMS)
-                inv << " buggy item";
-            else
-                inv << item_base_name(mitm[mons.inv[k]]);
+        inv << item_base_name(*ii);
 
-            inv << " (" << static_cast<int>(mons.inv[k]) << ")";
-        }
+        inv << " (" << static_cast<int>(ii->index()) << ")";
     }
     if (found_item)
         mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
@@ -813,6 +789,7 @@ static void _move_monster(const coord_def& where, int idx1)
     direction_chooser_args args;
     args.needs_path = false;
     args.top_prompt = "Move monster to where?";
+    args.default_place = where;
     direction(moves, args);
 
     if (!moves.isValid || !in_bounds(moves.target))
@@ -887,7 +864,7 @@ void wizard_make_monster_summoned(monster* mon)
     }
 
     mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
-    mprf(MSGCH_PROMPT, "[f] wrath [g] lantern  [h] aid   [m] misc    [s] spell");
+    mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
 
     mprf(MSGCH_PROMPT, "Which summon type? ");
 
@@ -909,7 +886,6 @@ void wizard_make_monster_summoned(monster* mon)
         case 'd': type = MON_SUMM_MISCAST; break;
         case 'e': type = MON_SUMM_ZOT; break;
         case 'f': type = MON_SUMM_WRATH; break;
-        case 'g': type = MON_SUMM_LANTERN; break;
         case 'h': type = MON_SUMM_AID; break;
         case 'm': type = 0; break;
 

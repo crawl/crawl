@@ -24,6 +24,7 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
+#include "godpassive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"
@@ -39,7 +40,9 @@
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "notes.h"
+#include "output.h" // redraw_screens
 #include "religion.h"
+#include "spl-clouds.h" // big_cloud
 #include "stash.h"
 #include "state.h"
 #include "stairs.h"
@@ -167,9 +170,9 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool lugonu_favoured = in_good_standing(GOD_LUGONU, 4);
+    const bool god_favoured = have_passive(passive_t::attract_abyssal_rune);
 
-    const double depth = you.depth + lugonu_favoured;
+    const double depth = you.depth + god_favoured;
 
     return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
@@ -380,9 +383,9 @@ static int _banished_depth(const int power)
     // always
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
-    const int maxdepth = min(5, max(div_rand_round((power + 5), 6), 1));
-    const int mindepth = max(1, (4 * power + 7) / 23);
-    return random_range(mindepth, maxdepth);
+    const int maxdepth = div_rand_round((power + 5), 6);
+    const int mindepth = (4 * power + 7) / 23;
+    return min(5, max(1, random_range(mindepth, maxdepth)));
 }
 
 void banished(const string &who, const int power)
@@ -1585,7 +1588,7 @@ retry:
 static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
+    if (!have_passive(passive_t::slow_abyss))
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
         delta *= 5;
@@ -1880,7 +1883,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
             feat = DNGN_FLOOR;
     }
 
-    dungeon_terrain_changed(c, feat, true, preserve_features, true);
+    dungeon_terrain_changed(c, feat, preserve_features, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = cenv.rock_colour;
     else if (feat == DNGN_FLOOR)
@@ -1991,4 +1994,30 @@ bool lugonu_corrupt_level(int power)
 #endif
 
     return true;
+}
+
+/// If the player has earned enough XP, spawn an exit or stairs down.
+void abyss_maybe_spawn_xp_exit()
+{
+    if (!player_in_branch(BRANCH_ABYSS)
+        || !you.props.exists(ABYSS_STAIR_XP_KEY)
+        || you.props[ABYSS_STAIR_XP_KEY].get_int() > 0
+        || !in_bounds(you.pos()))
+    {
+        return;
+    }
+    const bool stairs = !at_branch_bottom()
+                        && you.props.exists(ABYSS_SPAWNED_XP_EXIT_KEY)
+                        && you.props[ABYSS_SPAWNED_XP_EXIT_KEY].get_bool();
+
+    destroy_wall(you.pos()); // fires listeners etc even if it wasn't a wall
+    grd(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
+    big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
+    redraw_screen(); // before the force-more
+    mprf(MSGCH_BANISHMENT,
+         "The substance of the Abyss twists violently,"
+         " and a gateway leading %s appears!", stairs ? "down" : "out");
+
+    you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
+    you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;
 }

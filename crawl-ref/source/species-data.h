@@ -609,9 +609,8 @@ static const map<species_type, species_def> species_data =
     7, 10, 7, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
-    { "You cannot wear most types of armour.",
-      "You are amphibious." },
-    { "almost no armour", "amphibious" },
+    { "You cannot wear most types of armour." },
+    { "almost no armour" },
     { JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, JOB_ASSASSIN,
       JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },

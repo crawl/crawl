@@ -421,8 +421,8 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_EXPLODING:
             case SPMSL_POISONED:
             case SPMSL_RETURNING:
-            case SPMSL_SLOW:
 #if TAG_MAJOR_VERSION == 34
+            case SPMSL_SLOW:
             case SPMSL_SICKNESS:
 #endif
             case SPMSL_FRENZY:
@@ -614,16 +614,13 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_COLD:
-            case WAND_FIRE:
-            case WAND_FIREBALL:
+            case WAND_ACID:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;
                 break;
 
-            case WAND_INVISIBILITY:
-            case WAND_DRAINING:
+            case WAND_ICEBLAST:
             case WAND_LIGHTNING:
             case WAND_DISINTEGRATION:
                 valued += 40;
@@ -642,12 +639,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_FROST:
             case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
-            case WAND_MAGIC_DARTS:
             default:
                 valued += 6;
                 break;
@@ -722,14 +717,14 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
 #if TAG_MAJOR_VERSION == 34
-            case POT_DEGENERATION:
+            case POT_POISON:
             case POT_STRONG_POISON:
             case POT_PORRIDGE:
             case POT_SLOWING:
             case POT_DECAY:
 #endif
             case POT_BLOOD:
-            case POT_POISON:
+            case POT_DEGENERATION:
                 valued += 10;
                 break;
 
@@ -813,9 +808,11 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_FOG:
             case SCR_IDENTIFY:
+#if TAG_MAJOR_VERSION == 34
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
             case SCR_CURSE_JEWELLERY:
+#endif
                 valued += 20;
                 break;
 
@@ -1067,9 +1064,9 @@ bool is_worthless_consumable(const item_def &item)
         case POT_BLOOD_COAGULATED:
         case POT_SLOWING:
         case POT_DECAY:
-        case POT_DEGENERATION:
-#endif
         case POT_POISON:
+#endif
+        case POT_DEGENERATION:
             return true;
         default:
             return false;
@@ -1077,9 +1074,11 @@ bool is_worthless_consumable(const item_def &item)
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
         case SCR_CURSE_WEAPON:
         case SCR_CURSE_JEWELLERY:
+#endif
         case SCR_NOISE:
         case SCR_RANDOM_USELESSNESS:
             return true;
@@ -1255,7 +1254,7 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf("<%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
                             need_cursor ? '[' : ' ',
@@ -1329,8 +1328,8 @@ void ShopMenu::draw_menu()
     tiles.json_write_int("total_items", items.size());
     tiles.json_close_object();
     tiles.finish_message();
-    for (unsigned int i = 0; i < items.size(); ++i)
-        webtiles_update_item(i);
+    if (items.size() > 0)
+        webtiles_update_items(0, items.size() - 1);
 #endif
 
     InvMenu::draw_menu();
@@ -1384,11 +1383,14 @@ void ShopMenu::purchase_selected()
         ASSERT(cost == 0);
         buying_from_list = true;
         for (auto item : items)
-            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item, &pos))
+        {
+            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
+            if (shopping_list.is_on_list(it, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+                cost += item_price(it, shop);
             }
+        }
     }
     if (selected.empty())
         return;
@@ -1723,7 +1725,7 @@ string shop_type_name(shop_type type)
     }
 }
 
-static string _shop_type_suffix(shop_type type, const coord_def &where)
+static const char *_shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
@@ -1732,10 +1734,11 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
         return "";
     }
 
-    const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-    const int temp = (where.x + where.y) % 4;
-
-    return string(suffixnames[temp]);
+    static const char * const suffixnames[] =
+    {
+        "Shoppe", "Boutique", "Emporium", "Shop"
+    };
+    return suffixnames[(where.x + where.y) % ARRAYSZ(suffixnames)];
 }
 
 string shop_name(const shop_struct& shop)
@@ -2027,7 +2030,6 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         // ... and a few of these.
         switch (item.sub_type)
         {
-            case MISC_LANTERN_OF_SHADOWS:
             case MISC_CRYSTAL_BALL_OF_ENERGY:
             case MISC_DISC_OF_STORMS:
                 break;

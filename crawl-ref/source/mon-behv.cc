@@ -95,8 +95,8 @@ static bool _mon_tries_regain_los(monster* mon)
         return false;
     }
 
-    // Randomize it a bit to make it less predictable.
-    return !one_chance_in(10);
+    // Randomize it to make it less predictable, and reduce flip-flopping.
+    return !one_chance_in(3);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -447,7 +447,7 @@ void handle_behaviour(monster* mon)
 
     while (changed)
     {
-        actor* afoe = mon->get_foe();
+        const actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
@@ -479,8 +479,6 @@ void handle_behaviour(monster* mon)
             new_foe = MHITNOT;
             break;
 
-        case BEH_LURK:
-            // Get a target, but don't change to wandering.
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -492,8 +490,7 @@ void handle_behaviour(monster* mon)
                     || mon->type == MONS_GIANT_SPORE
                     || mon->type == MONS_BALL_LIGHTNING)
                 {
-                    if (mon->behaviour != BEH_LURK)
-                        new_beh = BEH_WANDER;
+                    new_beh = BEH_WANDER;
                 }
                 else
                 {
@@ -567,8 +564,13 @@ void handle_behaviour(monster* mon)
                     // If the player can see the target location, do not reset
                     // our target, even if this monster cannot (we'll assume
                     // the player passes along this information to allies)
-                    else if (!foepos.origin() && you.see_cell(foepos))
+                    // EXCEPTION: invisible enemies for allies without sinv
+                    // (otherwise your allies get stuck doing nothing)
+                    else if (!foepos.origin() && you.see_cell(foepos)
+                             && afoe->visible_to(mon))
+                    {
                         try_pathfind(mon);
+                    }
                     else
                     {
                         new_foe = MHITYOU;
@@ -623,6 +625,8 @@ void handle_behaviour(monster* mon)
                 {
                     _set_firing_pos(mon, you.pos());
                 }
+                else //
+                    mon->firing_pos.reset();
 
                 if (!isFriendly)
                     break;
@@ -1046,7 +1050,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_WANDER;
 
-            if (mons_near(mon))
+            if (you.can_see(*mon))
                 remove_auto_exclude(mon, true);
         }
 
@@ -1093,7 +1097,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         mon->foe = src_idx;
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
@@ -1174,7 +1178,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
@@ -1316,28 +1320,20 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it was unaware of you and you're its new foe, it might shout.
-    if (was_unaware && !mon->asleep() && allow_shout
+    if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
         handle_monster_shouts(mon);
     }
 
-    const bool wasLurking =
-        (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
     const bool isPacified = mon->pacified();
 
-    if ((wasLurking || isPacified)
+    if (isPacified
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
     {
-        // Lurking monsters or pacified monsters leaving the level won't
-        // stop doing so just because they noticed something.
+        // Pacified monsters leaving the level won't stop doing so just because
+        // they noticed something.
         mon->behaviour = old_behaviour;
-    }
-    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
-    {
-        // The same goes for submerged monsters, if they can't
-        // unsubmerge.
-        mon->behaviour = BEH_LURK;
     }
 
     // mons_speaks_msg already handles the LOS check.

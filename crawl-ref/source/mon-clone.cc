@@ -258,16 +258,9 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     }
 
     // Is the monster carrying an artefact?
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int index = mon->inv[i];
-
-        if (index == NON_ITEM)
-            continue;
-
-        if (is_artefact(mitm[index]))
+    for (mon_inv_iterator ii(const_cast<monster &>(*mon)); ii; ++ii)
+        if (is_artefact(*ii))
             return false;
-    }
 
     return true;
 }
@@ -312,22 +305,19 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         mons->props.erase(MONSTER_DIES_LUA_KEY);
 
     // Duplicate objects, or unequip them if they can't be duplicated.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        const int old_index = orig->inv[i];
-
-        if (old_index == NON_ITEM)
-            continue;
+        const int old_index = ii->index();
 
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
             mons->unequip(mitm[old_index], false, true);
-            mons->inv[i] = NON_ITEM;
+            mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 
-        mons->inv[i]      = new_index;
+        mons->inv[ii.slot()] = new_index;
         mitm[new_index] = mitm[old_index];
         mitm[new_index].set_holding_monster(*mons);
     }

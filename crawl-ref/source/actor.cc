@@ -8,6 +8,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "attack.h"
+#include "chardump.h"
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
@@ -61,9 +62,9 @@ bool actor::stand_on_solid_ground() const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type actor::hands_reqd(const item_def &item) const
+hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {
-    return basic_hands_reqd(item, body_size());
+    return basic_hands_reqd(item, body_size(PSIZE_TORSO, base));
 }
 
 /**
@@ -361,7 +362,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
-                    int stab_bypass) const
+                    int stab_bypass, bool for_real) const
 {
     int ac = max(armour_class() - stab_bypass, 0);
     int gdr = gdr_perc();
@@ -396,6 +397,15 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     }
 
     saved = max(saved, min(gdr * max_damage / 100, ac / 2));
+    if (for_real && (damage > 0) && (saved >= damage) && is_player())
+    {
+        const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            count_action(CACT_ARMOUR, body_armour->sub_type);
+        else
+            count_action(CACT_ARMOUR, -1); // unarmoured subtype
+    }
+
     return max(damage - saved, 0);
 }
 

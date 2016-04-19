@@ -140,15 +140,14 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     return SPRET_SUCCESS;
 }
 
-// No setup/cast split here as monster hellfire is completely different.
-// Sad, but needed to maintain balance - monster hellfirers get asymmetric
-// torment too.
-bool cast_hellfire_burst(int pow, bolt &beam)
+// No setup/cast split here as monster damnation is completely different.
+// XXX make this not true
+bool cast_smitey_damnation(int pow, bolt &beam)
 {
-    beam.name              = "burst of hellfire";
-    beam.aux_source        = "burst of hellfire";
+    beam.name              = "damnation";
+    beam.aux_source        = "damnation";
     beam.ex_size           = 1;
-    beam.flavour           = BEAM_HELLFIRE;
+    beam.flavour           = BEAM_DAMNATION;
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTRED;
@@ -172,7 +171,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
         return false;
     }
 
-    mpr("You call forth a pillar of hellfire!");
+    mpr("You call forth a pillar of damnation!");
 
     beam.is_tracer = false;
     beam.in_explosion_phase = false;
@@ -448,7 +447,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
             ouch(hurted, KILLED_BY_BEAM, agent->mid,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
-            expose_player_to_element(BEAM_COLD, 5, added_effects);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
 
             // Note: this used to be 12!... and it was also applied even if
             // the player didn't take damage from the cold, so we're being
@@ -457,6 +456,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
         else
         {
             ouch(hurted, KILLED_BY_FREEZING);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
         }
     }
@@ -482,10 +482,16 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
     if (actual)
     {
-        behaviour_event(target, ME_ANNOY, agent,
-                        agent ? agent->pos() : coord_def(0, 0));
-
         target->hurt(agent, hurted, BEAM_COLD);
+
+        if (target->alive())
+        {
+            behaviour_event(target, ME_ANNOY, agent, // ME_WHACK?
+                            agent ? agent->pos() : coord_def(0, 0));
+        }
+
+        if (target->alive() && you.can_see(*target))
+            print_wounds(target);
 
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
@@ -826,6 +832,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
+    // TODO: check known rN instead of holiness
     if (mons->observable() && !(mons->holiness() & MH_NATURAL))
     {
         mpr("You can't drain life from that!");
@@ -860,7 +867,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (!(mons->holiness() & MH_NATURAL) || mons->res_negative_energy())
+    if (mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -1458,7 +1465,13 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
+    {
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+
+        // Why are you casting this spell at all while worshipping Zin?
+        if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
+            remove_sanctuary(true);
+    }
     else
         mons->hurt(agent, dam, BEAM_MMISSILE);
 
@@ -1621,6 +1634,8 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
+    mon->expose_to_element(BEAM_FIRE, damage);
+
     if (tracer)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
 
@@ -1695,6 +1710,8 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     ouch(damage, KILLED_BY_BEAM, agent->mid,
          "by burning poison", you.can_see(*agent),
          agent->as_monster()->name(DESC_A, true).c_str());
+    if (damage > 0)
+        you.expose_to_element(BEAM_FIRE, 2);
 
     mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     you.duration[DUR_POISONING] = 0;
@@ -1870,6 +1887,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
                                     "static discharge");
         ouch(damage, KILLED_BY_BEAM, agent->mid, "by static electricity", true,
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
     }
     else if (victim->res_elec() > 0)
         return 0;
@@ -1881,6 +1900,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
 
         if (damage)
         {
@@ -2533,24 +2554,15 @@ void forest_damage(const actor *mon)
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
-                int evnp = foe->evasion(EV_IGNORE_PHASESHIFT, mon);
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, evnp))
+                if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch.",
                             "A tree reaches out but misses @foe@.",
                             "A root lunges up near @foe@.");
-                }
-                else if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)
-                                              - evnp))
-                {
-                    msg = random_choose(
-                            "A branch passes through @foe@!",
-                            "A tree reaches out and and passes through @foe@!",
-                            "A root lunges and passes through @foe@ from below.");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                AC_PROPORTIONAL)))
@@ -2617,7 +2629,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     center_beam.dont_stop_player = false;
     center_beam.foe_info.dont_stop = false;
     center_beam.friend_info.dont_stop = false;
-    beams.push_back(center_beam);
+    // Prevent self-hits, specifically when you aim at an adjacent wall.
+    if (center_beam.path_taken.back() != caster->pos())
+        beams.push_back(center_beam);
 
     for (distance_iterator di(aim, false, false, max_spacing); di; ++di)
     {
@@ -2684,7 +2698,7 @@ static bool _dazzle_can_hit(const actor *act)
         const monster* mons = act->as_monster();
         bolt testbeam;
         testbeam.thrower = KILL_YOU;
-        zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
+        zappy(ZAP_DAZZLING_SPRAY, 100, false, testbeam);
 
         return !testbeam.ignores_monster(mons);
     }
@@ -2711,7 +2725,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 
     for (bolt &beam : hitfunc.beams)
     {
-        zappy(ZAP_DAZZLING_SPRAY, pow, beam);
+        zappy(ZAP_DAZZLING_SPRAY, pow, false, beam);
         beam.fire();
     }
 
@@ -2833,10 +2847,14 @@ void toxic_radiance_effect(actor* agent, int mult)
         }
         else
         {
-            behaviour_event(ai->as_monster(), ME_ANNOY, agent, agent->pos());
             ai->hurt(agent, dam, BEAM_POISON);
-            if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
-                poison_monster(ai->as_monster(), agent, 1);
+            if (ai->alive())
+            {
+                behaviour_event(ai->as_monster(), ME_ANNOY, agent,
+                                agent->pos());
+                if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
+                    poison_monster(ai->as_monster(), agent, 1);
+            }
 
             if (agent->is_player() && is_sanctuary(ai->pos()))
                 break_sanctuary = true;
@@ -2900,7 +2918,7 @@ void handle_searing_ray()
         return;
     }
 
-    zappy(zap, pow, beam);
+    zappy(zap, pow, false, beam);
 
     aim_battlesphere(&you, SPELL_SEARING_RAY, pow, beam);
     beam.fire();
@@ -3030,7 +3048,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 {
     // Need to use a 'generic' tracer regardless of the actual beam type,
-    // to account for the possibility of both bouncing and irresistable damage
+    // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
     bolt tracer = beam;
     if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
@@ -3082,7 +3100,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     beam.source      = caster->pos();
     beam.source_id   = caster->mid;
     beam.source_name = caster->name(DESC_PLAIN, true);
-    zappy(ZAP_SCATTERSHOT, pow, beam);
+    zappy(ZAP_SCATTERSHOT, pow, false, beam);
     beam.aux_source  = beam.name;
 
     if (!caster->is_player())

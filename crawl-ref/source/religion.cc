@@ -56,6 +56,7 @@
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
+#include "randbook.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -75,160 +76,6 @@
 #endif
 
 #define PIETY_HYSTERESIS_LIMIT 1
-
-// Item offering messages for the gods:
-// & is replaced by "is" or "are" as appropriate for the item.
-// % is replaced by "s" or "" as appropriate.
-// Text between [] only appears if the item already glows.
-// First message is if there's no piety gain; second is if piety gain is
-// one; third is if piety gain is more than one.
-static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
-{
-    // No god
-    {
-        " & eaten by a bored swarm of bugs.",
-        " & eaten by a swarm of bugs.",
-        " & eaten by a ravening swarm of bugs."
-    },
-    // Zin
-    {
-        " barely glow% and disappear%.",
-        " glow% silver and disappear%.",
-        " glow% blindingly silver and disappear%.",
-    },
-    // TSO
-    {
-        " glow% a dingy golden colour and disappear%.",
-        " glow% a golden colour and disappear%.",
-        " glow% a brilliant golden colour and disappear%.",
-    },
-    // Kikubaaqudgha
-    {
-        " convulse% and rot% away.",
-        " convulse% madly and rot% away.",
-        " convulse% furiously and rot% away.",
-    },
-    // Yredelemnul
-    {
-        " slowly crumble% to dust.",
-        " crumble% to dust.",
-        " turn% to dust in an instant.",
-    },
-    // Xom (no sacrifices)
-    {
-        " & eaten by a bored bug.",
-        " & eaten by a bug.",
-        " & eaten by a greedy bug.",
-    },
-    // Vehumet
-    {
-        " fade% into nothingness.",
-        " burn% into nothingness.",
-        " explode% into nothingness.",
-    },
-    // Okawaru
-    {
-        " slowly burn% to ash.",
-        " & consumed by flame.",
-        " & consumed in a burst of flame.",
-    },
-    // Makhleb
-    {
-        " disappear% without a sign.",
-        " flare% red and disappear%.",
-        " flare% blood-red and disappear%.",
-    },
-    // Sif Muna
-    {
-        " & gone without a[dditional] glow.",
-        " glow% slightly [brighter ]for a moment, and & gone.",
-        " glow% [brighter ]for a moment, and & gone.",
-    },
-    // Trog
-    {
-        " & slowly consumed by flames.",
-        " & consumed in a column of flame.",
-        " & consumed in a roaring column of flame.",
-    },
-    // Nemelex (no sacrifices)
-    {
-        " & eaten by a bored swarm of bugs.",
-        " & eaten by a swarm of bugs.",
-        " & eaten by a ravening swarm of bugs."
-    },
-    // Elyvilon
-    {
-        " barely shimmer% and break% into pieces.",
-        " shimmer% and break% into pieces.",
-        " shimmer% wildly and break% into pieces.",
-    },
-    // Lugonu
-    {
-        " disappear% into the void.",
-        " & consumed by the void.",
-        " & voraciously consumed by the void.",
-    },
-    // Beogh
-    {
-        " slowly crumble% into the ground.",
-        " crumble% into the ground.",
-        " disintegrate% into the ground.",
-    },
-    // Jiyva
-    {
-        " slowly dissolve% into ooze.",
-        " dissolve% into ooze.",
-        " disappear% with a satisfied slurp.",
-    },
-    // Fedhas
-    {
-        " & slowly absorbed by the ecosystem.",
-        " & absorbed by the ecosystem.",
-        " & instantly absorbed by the ecosystem.",
-    },
-    // Cheibriados (slow god, so better sacrifices are slower)
-    {
-        " freeze% in place and instantly disappear%.",
-        " freeze% in place and disappear%.",
-        " freeze% in place and slowly fade%.",
-    },
-    // Ashenzari
-    {
-        " flicker% black.",
-        " pulsate% black.",          // unused
-        " strongly pulsate% black.", // unused
-    },
-    // Dithmenos
-    {
-        " slowly dissolves into the shadows.",
-        " dissolves into the shadows.",
-        " rapidly dissolves into the shadows.",
-    },
-    // Gozag
-    {
-        " softly glitters and disappears.",
-        " glitters and disappears.",
-        " brightly glitters and disappears.",
-    },
-    // Qazlal
-    {
-        " slowly dissolves into the earth.",
-        " is consumed by the earth.",
-        " is consumed by a violent tear in the earth.",
-    },
-    // Ru
-    {
-        " disappears in a small burst of power.",
-        " disappears in a burst of power",
-        " disappears in an immense burst of power",
-    },
-    // Pakellas
-    {
-        " slowly breaks apart.",
-        " falls apart.",
-        " is torn apart in a burst of bright light.",
-    },
-};
 
 const vector<god_power> god_powers[NUM_GODS] =
 {
@@ -277,7 +124,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
       { 2, ABIL_YRED_INJURY_MIRROR, "mirror injuries on your foes" },
       { 3, ABIL_YRED_ANIMATE_DEAD, "animate legions of the dead" },
-      { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient lifeforce" },
+      { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
       { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
     },
 
@@ -306,10 +153,10 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Sif Muna
     { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "tap ambient magical fields" },
-      { 2, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
-                                       "forget spells at will" },
-      { 4, "Sif Muna is protecting you from the effects of miscast magic.",
+      { 2, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
+      { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
+          "forget spells at will" },
     },
 
     // Trog
@@ -355,6 +202,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
       { 5, "walk on water" },
       { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
+      { 6, ABIL_BEOGH_RESURRECTION, "revive fallen orcs" },
     },
 
     // Jiyva
@@ -384,7 +232,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    { { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
+    { { 0, ABIL_ASHENZARI_CURSE, "curse your items" },
+      { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
       { 2, "The more cursed you are, the more Ashenzari supports your skills.",
            "Ashenzari no longer supports your skills." },
       { 3, "Ashenzari reveals the unseen.",
@@ -437,6 +286,9 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 1, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
+      { 2, "Pakellas will collect and distill excess magic from your kills.",
+           "Pakellas no longer collects and distills excess magic from your "
+           "kills." },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
@@ -522,6 +374,11 @@ bool is_unavailable_god(god_type god)
     return god == GOD_JIYVA && jiyva_is_dead();
 }
 
+bool god_has_name(god_type god)
+{
+    return god != GOD_NO_GOD && god != GOD_NAMELESS;
+}
+
 god_type random_god()
 {
     god_type god;
@@ -533,466 +390,6 @@ god_type random_god()
     while (is_unavailable_god(god));
 
     return god;
-}
-
-string get_god_likes(god_type which_god, bool verbose)
-{
-    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return "";
-
-    string text = uppercase_first(god_name(which_god));
-    vector<string> likes;
-    vector<string> really_likes;
-
-    // Unique/unusual piety gain methods first.
-    switch (which_god)
-    {
-    case GOD_SIF_MUNA:
-        likes.emplace_back("you train your various spell casting skills");
-        break;
-
-    case GOD_FEDHAS:
-    {
-        string like = "you promote the decay of nearby corpses";
-        if (verbose)
-           like += " by <w>p</w>raying";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_TROG:
-    {
-        string like = "you destroy spellbooks";
-        if (verbose)
-           like += " via the <w>a</w> command";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_ELYVILON:
-        likes.emplace_back("you explore the world");
-        break;
-
-    case GOD_JIYVA:
-    {
-        string like = "you sacrifice items";
-        if (verbose)
-            like += " by allowing slimes to consume them";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_CHEIBRIADOS:
-    {
-        string like = "you kill fast things";
-        if (verbose)
-            like += ", relative to your speed";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_ASHENZARI:
-        likes.emplace_back("you explore the world (preferably while bound by "
-                           "curses)");
-        break;
-
-    case GOD_SHINING_ONE:
-        likes.emplace_back("you meet creatures to determine whether they need "
-                           "to be eradicated");
-        break;
-
-    case GOD_LUGONU:
-        likes.emplace_back("you banish creatures to the Abyss");
-        break;
-
-    case GOD_GOZAG:
-        likes.emplace_back("you collect gold");
-        break;
-
-    case GOD_RU:
-      likes.emplace_back("you make personal sacrifices");
-      break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_ZIN:
-    {
-        string like = "you donate money";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_BEOGH:
-    {
-        string like = "you bless dead orcs";
-        if (verbose)
-            like += " (by standing over their remains and <w>p</w>raying)";
-        likes.push_back(like);
-        break;
-    }
-
-    case GOD_NEMELEX_XOBEH:
-        likes.emplace_back("you explore the world");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_MAKHLEB:
-    case GOD_LUGONU:
-    case GOD_QAZLAL:
-    case GOD_PAKELLAS:
-        likes.emplace_back("you or your allies kill living beings");
-        break;
-
-    case GOD_TROG:
-        likes.emplace_back("you or your god-given allies kill living beings");
-        break;
-
-    case GOD_YREDELEMNUL:
-    case GOD_KIKUBAAQUDGHA:
-        likes.emplace_back("you or your undead slaves kill living beings");
-        break;
-
-    case GOD_BEOGH:
-        likes.emplace_back("you or your allied orcs kill living beings");
-        break;
-
-    case GOD_OKAWARU:
-    case GOD_VEHUMET:
-    case GOD_DITHMENOS:
-        likes.emplace_back("you kill living beings");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_ZIN:
-        likes.emplace_back("you or your allies kill unclean or chaotic beings");
-        break;
-
-    case GOD_SHINING_ONE:
-        likes.emplace_back("you or your allies kill living unholy or evil beings");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_SHINING_ONE:
-    case GOD_MAKHLEB:
-    case GOD_LUGONU:
-    case GOD_QAZLAL:
-    case GOD_PAKELLAS:
-        likes.emplace_back("you or your allies kill the undead");
-        break;
-
-    case GOD_BEOGH:
-        likes.emplace_back("you or your allied orcs kill the undead");
-        break;
-
-    case GOD_OKAWARU:
-    case GOD_VEHUMET:
-    case GOD_DITHMENOS:
-        likes.emplace_back("you kill the undead");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_SHINING_ONE:
-    case GOD_MAKHLEB:
-    case GOD_LUGONU:
-    case GOD_QAZLAL:
-    case GOD_PAKELLAS:
-        likes.emplace_back("you or your allies kill demons");
-        break;
-
-    case GOD_TROG:
-        likes.emplace_back("you or your god-given allies kill demons");
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-        likes.emplace_back("you or your undead slaves kill demons");
-        break;
-
-    case GOD_BEOGH:
-        likes.emplace_back("you or your allied orcs kill demons");
-        break;
-
-    case GOD_OKAWARU:
-    case GOD_VEHUMET:
-    case GOD_DITHMENOS:
-        likes.emplace_back("you kill demons");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_YREDELEMNUL:
-        likes.emplace_back("you or your undead slaves kill artificial beings");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_MAKHLEB:
-    case GOD_LUGONU:
-    case GOD_QAZLAL:
-    case GOD_PAKELLAS:
-        likes.emplace_back("you or your allies kill holy beings");
-        break;
-
-    case GOD_TROG:
-        likes.emplace_back("you or your god-given allies kill holy beings");
-        break;
-
-    case GOD_YREDELEMNUL:
-        likes.emplace_back("your undead slaves kill holy beings");
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-        likes.emplace_back("you or your undead slaves kill holy beings");
-        break;
-
-    case GOD_BEOGH:
-        likes.emplace_back("you or your allied orcs kill holy beings");
-        break;
-
-    case GOD_OKAWARU:
-    case GOD_VEHUMET:
-    case GOD_DITHMENOS:
-        likes.emplace_back("you kill holy beings");
-        break;
-
-    default:
-        break;
-    }
-
-    // Especially appreciated kills.
-    switch (which_god)
-    {
-    case GOD_YREDELEMNUL:
-        really_likes.emplace_back("you kill holy beings");
-        break;
-
-    case GOD_BEOGH:
-        really_likes.emplace_back("you kill the priests of other religions");
-        break;
-
-    case GOD_TROG:
-        really_likes.emplace_back("you kill wizards and other users of magic");
-        break;
-
-    case GOD_DITHMENOS:
-        really_likes.emplace_back("you kill beings that bring fire to the "
-                                  "dungeon");
-        break;
-    default:
-        break;
-    }
-
-    if (likes.empty() && really_likes.empty())
-        text += " doesn't like anything? This is a bug; please report it.";
-    else
-    {
-        text += " likes it when ";
-        text += comma_separated_line(likes.begin(), likes.end());
-        text += ".";
-
-        if (!really_likes.empty())
-        {
-            text += " ";
-            text += uppercase_first(god_name(which_god));
-
-            text += " especially likes it when ";
-            text += comma_separated_line(really_likes.begin(),
-                                         really_likes.end());
-            text += ".";
-        }
-    }
-
-    return text;
-}
-
-string get_god_dislikes(god_type which_god, bool /*verbose*/)
-{
-    // Return early for the special cases.
-    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return "";
-
-    string text;
-    vector<string> dislikes;        // Piety loss
-    vector<string> really_dislikes; // Penance
-
-    if (god_hates_cannibalism(which_god))
-        really_dislikes.emplace_back("you perform cannibalism");
-
-    if (is_good_god(which_god))
-    {
-        really_dislikes.emplace_back("you desecrate holy remains");
-
-        if (which_god == GOD_SHINING_ONE)
-            really_dislikes.emplace_back("you drink blood");
-        else
-            dislikes.emplace_back("you drink blood");
-
-        really_dislikes.emplace_back("you use necromancy");
-        really_dislikes.emplace_back("you use unholy magic or items");
-        really_dislikes.emplace_back("you attack non-hostile holy beings");
-        really_dislikes.emplace_back("you or your allies kill non-hostile holy beings");
-
-        if (which_god == GOD_ZIN)
-            dislikes.emplace_back("you attack neutral beings");
-        else
-            really_dislikes.emplace_back("you attack neutral beings");
-    }
-
-    switch (which_god)
-    {
-    case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
-    case GOD_OKAWARU:
-        really_dislikes.emplace_back("you attack allies");
-        break;
-
-    case GOD_BEOGH:
-        really_dislikes.emplace_back("you attack allied orcs");
-        break;
-
-    case GOD_JIYVA:
-        really_dislikes.emplace_back("you attack fellow slimes");
-        break;
-
-    case GOD_FEDHAS:
-        dislikes.emplace_back("you or your allies destroy plants");
-        dislikes.emplace_back("allied flora die");
-        really_dislikes.emplace_back("you use necromancy on corpses, chunks or skeletons");
-        break;
-
-    case GOD_SIF_MUNA:
-        really_dislikes.emplace_back("you destroy spellbooks");
-        break;
-
-    case GOD_DITHMENOS:
-        dislikes.emplace_back("you use fiery magic or items");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_ELYVILON:
-        dislikes.emplace_back("you allow allies to die");
-        break;
-
-    default:
-        break;
-    }
-
-    switch (which_god)
-    {
-    case GOD_ZIN:
-        dislikes.emplace_back("you deliberately mutate yourself");
-        really_dislikes.emplace_back("you transform yourself");
-        really_dislikes.emplace_back("you polymorph monsters");
-        really_dislikes.emplace_back("you use unclean or chaotic magic or items");
-        really_dislikes.emplace_back("you butcher sentient beings");
-        dislikes.emplace_back("you or your allies attack monsters in a "
-                              "sanctuary");
-        break;
-
-    case GOD_SHINING_ONE:
-        really_dislikes.emplace_back("you poison monsters");
-        really_dislikes.emplace_back("you attack intelligent monsters in an "
-                                     "unchivalric manner");
-        break;
-
-    case GOD_ELYVILON:
-        really_dislikes.emplace_back("you kill living things while asking for "
-                                     "your life to be spared");
-        break;
-
-    case GOD_YREDELEMNUL:
-        really_dislikes.emplace_back("you use holy magic or items");
-        break;
-
-    case GOD_PAKELLAS:
-        really_dislikes.emplace_back("you channel magical energy");
-        break;
-
-    case GOD_TROG:
-        really_dislikes.emplace_back("you memorise spells");
-        really_dislikes.emplace_back("you attempt to cast spells");
-        really_dislikes.emplace_back("you train magic skills");
-        break;
-
-    case GOD_BEOGH:
-        really_dislikes.emplace_back("you desecrate orcish remains");
-        really_dislikes.emplace_back("you destroy orcish idols");
-        break;
-
-    case GOD_JIYVA:
-        really_dislikes.emplace_back("you kill slimes");
-        break;
-
-    case GOD_CHEIBRIADOS:
-        really_dislikes.emplace_back("you hasten yourself or others");
-        really_dislikes.emplace_back("use unnaturally quick items");
-        break;
-
-    default:
-        break;
-    }
-
-    if (dislikes.empty() && really_dislikes.empty())
-        return "";
-
-    if (!dislikes.empty())
-    {
-        text += uppercase_first(god_name(which_god));
-        text += " dislikes it when ";
-        text += comma_separated_line(dislikes.begin(), dislikes.end(),
-                                     " or ", ", ");
-        text += ".";
-
-        if (!really_dislikes.empty())
-            text += " ";
-    }
-
-    if (!really_dislikes.empty())
-    {
-        text += uppercase_first(god_name(which_god));
-        text += " strongly dislikes it when ";
-        text += comma_separated_line(really_dislikes.begin(),
-                                     really_dislikes.end(),
-                                     " or ", ", ");
-        text += ".";
-    }
-
-    return text;
 }
 
 
@@ -1065,6 +462,9 @@ void dec_penance(god_type god, int val)
 #endif
     if (you.penance[god] <= val)
     {
+        const bool had_halo = have_passive(passive_t::halo);
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] = 0;
 
         mark_milestone("god.mollify",
@@ -1087,41 +487,40 @@ void dec_penance(god_type god, int val)
             // Redraw piety display and, in case the best skill is Invocations,
             // redraw the god title.
             you.redraw_title = true;
-        }
 
-        if (you_worship(god))
-        {
-            // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH)
-                 you.redraw_armour_class = true;
-            // TSO's halo is once more available.
-            else if (god == GOD_SHINING_ONE
-                     && you.piety >= piety_breakpoint(0))
+            if (!had_halo && have_passive(passive_t::halo))
             {
                 mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_ASHENZARI
-                     && you.piety >= piety_breakpoint(2))
+            if (!had_umbra && have_passive(passive_t::umbra))
+            {
+                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                invalidate_agrid(true);
+            }
+            // Orcish bonuses are now once more effective.
+            if (have_passive(passive_t::bonus_ac))
+                 you.redraw_armour_class = true;
+            if (have_passive(passive_t::sinv))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS)
+            if (have_passive(passive_t::stat_boost))
             {
                 simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
                 notify_stat_change();
             }
-            // Likewise Dithmenos's umbra.
-            else if (god == GOD_DITHMENOS
+
+            // TSO's halo is once more available.
+            if (god == GOD_SHINING_ONE
                      && you.piety >= piety_breakpoint(0))
             {
-                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL
-                     && you.piety >= piety_breakpoint(0))
+            else if (god == GOD_QAZLAL && you.piety >= piety_breakpoint(0))
             {
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
                 you.redraw_armour_class = true; // also handles shields
@@ -1213,19 +612,41 @@ static void _inc_penance(god_type god, int val)
 
         take_note(Note(NOTE_PENANCE, god));
 
+        const bool had_halo = have_passive(passive_t::halo);
+        const bool had_umbra = have_passive(passive_t::umbra);
+
         you.penance[god] += val;
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
 
-        // Orcish bonuses don't apply under penance.
-        if (god == GOD_BEOGH)
+        if (had_halo && !have_passive(passive_t::halo))
         {
+            mprf(MSGCH_GOD, god, "Your divine halo fades away.");
+            invalidate_agrid();
+        }
+        if (had_umbra && !have_passive(passive_t::umbra))
+        {
+            mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
+            invalidate_agrid();
+        }
+
+        // Orcish bonuses don't apply under penance.
+        if (will_have_passive(passive_t::bonus_ac))
             you.redraw_armour_class = true;
 
-            if (_need_water_walking() && !beogh_water_walk())
-                fall_into_a_pool(grd(you.pos()));
+        if (will_have_passive(passive_t::water_walk)
+            && _need_water_walking() && !have_passive(passive_t::water_walk))
+        {
+            fall_into_a_pool(grd(you.pos()));
         }
+
+        if (will_have_passive(passive_t::stat_boost))
+        {
+            redraw_screen();
+            notify_stat_change();
+        }
+
         // Neither does Trog's regeneration or magic resistance.
-        else if (god == GOD_TROG)
+        if (god == GOD_TROG)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
@@ -1241,14 +662,10 @@ static void _inc_penance(god_type god, int val)
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
-            if (you.haloed())
-                mprf(MSGCH_GOD, god, "Your divine halo fades away.");
-
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
-            invalidate_agrid();
         }
         // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
@@ -1260,17 +677,6 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
-        }
-        else if (god == GOD_CHEIBRIADOS)
-        {
-            redraw_screen();
-            notify_stat_change();
-        }
-        else if (god == GOD_DITHMENOS)
-        {
-            if (you.umbraed())
-                mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
-            invalidate_agrid();
         }
         else if (god == GOD_QAZLAL)
         {
@@ -1522,6 +928,86 @@ static bool _give_nemelex_gift(bool forced = false)
     return false;
 }
 
+/**
+ * From the given list of items, return a random unseen item, if there are any.
+ * Otherwise, just return any of them at random.
+ *
+ * If we cared, we could make this a template function to return more specific
+ * types than 'int'. (That's probably not important, though.)
+ *
+ * @param item_types        A list of item types to choose from.
+ * @param seen_func         How to tell whether the item was seen.
+ * @return                  A random item type; e.g. WAND_ACID.
+ */
+static int _preferably_unseen_item(const vector<int> &item_types,
+                                   function<bool(int)> seen_func)
+{
+    ASSERT(item_types.size());
+    vector<int> unseen;
+    for (auto item : item_types)
+        if (!seen_func(item))
+            unseen.emplace_back(item);
+
+    if (unseen.size())
+        return unseen[random2(unseen.size())];
+    return item_types[random2(item_types.size())];
+}
+
+/// Has the player ID'd the given type of wand?
+static bool _seen_wand(int wand)
+{
+    return get_ident_type(OBJ_WANDS, wand);
+}
+
+static int _pakellas_low_wand()
+{
+    static const vector<int> low_wands = {
+        WAND_FLAME,
+        WAND_SLOWING,
+        WAND_CONFUSION,
+        WAND_POLYMORPH,
+        WAND_RANDOM_EFFECTS,
+    };
+
+    return _preferably_unseen_item(low_wands, _seen_wand);
+}
+
+static int _pakellas_high_wand()
+{
+    vector<int> high_wands = {
+        WAND_PARALYSIS,
+        WAND_ICEBLAST,
+        WAND_ACID,
+    };
+    if (!player_mutation_level(MUT_NO_LOVE))
+        high_wands.emplace_back(WAND_ENSLAVEMENT);
+
+    return _preferably_unseen_item(high_wands, _seen_wand);
+}
+
+static int _pakellas_low_misc()
+{
+    // Limited uses, so any of these are fine even if they've been seen before.
+    return random_choose(MISC_BOX_OF_BEASTS,
+                         MISC_SACK_OF_SPIDERS,
+                         MISC_PHANTOM_MIRROR);
+}
+
+static int _pakellas_high_misc()
+{
+    static const vector<int> high_miscs = {
+        MISC_FAN_OF_GALES,
+        MISC_LAMP_OF_FIRE,
+        MISC_STONE_OF_TREMORS,
+        MISC_PHIAL_OF_FLOODS,
+        MISC_DISC_OF_STORMS,
+    };
+
+    return _preferably_unseen_item(high_miscs, [](int misc) {
+        return you.seen_misc[misc];
+    });
+}
+
 static bool _give_pakellas_gift()
 {
     // Break early if giving a gift now means it would be lost.
@@ -1531,29 +1017,81 @@ static bool _give_pakellas_gift()
         return false;
     }
 
-    object_class_type gift_type = OBJ_UNASSIGNED;
+    bool success = false;
+    object_class_type basetype = OBJ_UNASSIGNED;
+    int subtype;
 
-    if (you.num_total_gifts[GOD_PAKELLAS] == 0)
-        gift_type = OBJ_WANDS;
-    else if (you.species == SP_FELID)
-        gift_type = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
-    else if (you.num_total_gifts[GOD_PAKELLAS] == 1)
-        gift_type = OBJ_RODS;
-    else
+    if (you.piety >= piety_breakpoint(0)
+        && you.num_total_gifts[GOD_PAKELLAS] == 0)
     {
-        gift_type = random_choose_weighted(5, OBJ_WANDS,
-                                           5, OBJ_MISCELLANY,
-                                           3, OBJ_RODS,
-                                           0);
+        basetype = OBJ_WANDS;
+        subtype = _pakellas_low_wand();
+    }
+    else if (you.piety >= piety_breakpoint(1)
+             && you.num_total_gifts[GOD_PAKELLAS] == 1)
+    {
+        // All the evoker options here are summon-based, so give another
+        // low-level wand instead under Sacrifice Love.
+        if (player_mutation_level(MUT_NO_LOVE))
+        {
+            basetype = OBJ_WANDS;
+            subtype = _pakellas_low_wand();
+        }
+        else
+        {
+            basetype = OBJ_MISCELLANY;
+            subtype = _pakellas_low_misc();
+        }
+    }
+    else if (you.piety >= piety_breakpoint(2)
+             && you.num_total_gifts[GOD_PAKELLAS] == 2)
+    {
+        basetype = OBJ_WANDS;
+        subtype = _pakellas_high_wand();
+    }
+    else if (you.piety >= piety_breakpoint(3)
+             && you.num_total_gifts[GOD_PAKELLAS] == 3)
+    {
+        basetype = OBJ_MISCELLANY;
+        subtype = _pakellas_high_misc();
+    }
+    else if (you.piety >= piety_breakpoint(4)
+             && you.num_total_gifts[GOD_PAKELLAS] == 4)
+    {
+        // Felids get another high-level wand or evoker instead of a rod.
+        if (you.species == SP_FELID)
+        {
+            basetype = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+            subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
+                                              : _pakellas_high_misc();
+        }
+        else
+            basetype = OBJ_RODS;
     }
 
-    if (acquirement(gift_type, you.religion))
+    if (basetype == OBJ_UNASSIGNED)
+        return false;
+    else if (basetype == OBJ_RODS)
+        success = acquirement(basetype, you.religion);
+    else
+    {
+        int thing_created = items(true, basetype, subtype, 1, 0,
+                                  you.religion);
+
+        if (thing_created == NON_ITEM)
+            return false;
+
+        move_item_to_grid(&thing_created, you.pos(), true);
+
+        if (thing_created != NON_ITEM)
+            success = true;
+    }
+
+    if (success)
     {
         simple_god_message(" grants you a gift!");
         // included in default force_more_message
 
-        if (you.num_total_gifts[GOD_PAKELLAS] > 0)
-            _inc_gift_timeout(150 + random2avg(29, 2));
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -1634,7 +1172,7 @@ bool is_follower(const monster* mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
         return is_yred_undead_slave(mon);
-    else if (you_worship(GOD_BEOGH))
+    else if (will_have_passive(passive_t::convert_orcs))
         return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
         return is_fellow_slime(mon);
@@ -1825,16 +1363,7 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_PAKELLAS:
-            if (forced && coinflip()
-                || you.piety >= piety_breakpoint(1)
-                   && you.num_total_gifts[you.religion] == 0
-                || you.piety >= piety_breakpoint(3)
-                   && you.num_total_gifts[you.religion] == 1
-                || !forced && random2(you.piety) > piety_breakpoint(3)
-                   && one_chance_in(4))
-            {
-                success = _give_pakellas_gift();
-            }
+            success = _give_pakellas_gift();
             break;
 
         case GOD_OKAWARU:
@@ -1972,7 +1501,7 @@ bool do_god_gift(bool forced)
                 // Replace a Kiku gift by a custom-random book.
                 if (you_worship(GOD_KIKUBAAQUDGHA))
                 {
-                    make_book_Kiku_gift(mitm[thing_created],
+                    make_book_kiku_gift(mitm[thing_created],
                                         gift == BOOK_NECROMANCY);
                 }
                 if (thing_created == NON_ITEM)
@@ -2386,23 +1915,23 @@ static void _gain_piety_point()
                 }
             }
         }
-        if (you_worship(GOD_SHINING_ONE) && rank == 1)
+        if (rank == rank_for_passive(passive_t::halo))
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
-        if (you_worship(GOD_DITHMENOS) && rank == 1)
+        if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
-        if (you_worship(GOD_ASHENZARI))
+        if (rank == rank_for_passive(passive_t::sinv))
+            autotoggle_autopickup(false);
+        if (rank == rank_for_passive(passive_t::clarity))
         {
-            if (rank == 3)
-                autotoggle_autopickup(false);
-            if (rank == 4)
-            {
-                // Inconsistent with donning amulets, but matches the
-                // message better and is not abusable.
-                you.duration[DUR_CONF] = 0;
-            }
-            auto_id_inventory();
+            // Inconsistent with donning amulets, but matches the
+            // message better and is not abusable.
+            you.duration[DUR_CONF] = 0;
         }
-        if (you_worship(GOD_JIYVA) && can_do_capstone_ability(you.religion))
+        if (rank >= rank_for_passive(passive_t::identify_items))
+            auto_id_inventory();
+
+        // TODO: add one-time ability check in have_passive
+        if (have_passive(passive_t::unlock_slime_vaults) && can_do_capstone_ability(you.religion))
         {
             simple_god_message(" will now unseal the treasures of the "
                                "Slime Pits.");
@@ -2417,18 +1946,22 @@ static void _gain_piety_point()
         }
     }
 
-    if (you_worship(GOD_BEOGH))
-    {
-        // Every piety level change also affects AC.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-        // The player's symbol depends on Beogh piety.
-        update_player_symbol();
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    // The player's symbol depends on Beogh piety.
+    if (you_worship(GOD_BEOGH))
+        update_player_symbol();
+
+    if (have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) < chei_stat_boost())
     {
-        simple_god_message(" raises the support of your attributes as your movement slows.");
+        string msg = " raises the support of your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2438,7 +1971,7 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2560,18 +2093,23 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
-    if (you_worship(GOD_BEOGH))
-    {
-        if (_need_water_walking() && !beogh_water_walk())
-            fall_into_a_pool(grd(you.pos()));
-        // Every piety level change also affects AC from orcish gear.
+    // Every piety level change also affects AC.
+    if (will_have_passive(passive_t::bonus_ac))
         you.redraw_armour_class = true;
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS)
+    if (will_have_passive(passive_t::water_walk) && _need_water_walking()
+        && !have_passive(passive_t::water_walk))
+    {
+        fall_into_a_pool(grd(you.pos()));
+    }
+    if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
-        simple_god_message(" lowers the support of your attributes as your movement quickens.");
+        string msg = " lowers the support of your attributes";
+        if (will_have_passive(passive_t::slowed))
+            msg += " as your movement quickens";
+        msg += ".";
+        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -2581,7 +2119,8 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
+    if (will_have_passive(passive_t::halo)
+        || will_have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
@@ -2641,9 +2180,11 @@ void excommunication(bool voluntary, god_type new_god)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed  = you.haloed();
-    const bool was_umbraed = you.umbraed();
-    const int  old_piety   = you.piety;
+    const bool had_halo       = have_passive(passive_t::halo);
+    const bool had_umbra      = have_passive(passive_t::umbra);
+    const bool had_water_walk = have_passive(passive_t::water_walk);
+    const bool had_stat_boost = have_passive(passive_t::stat_boost);
+    const int  old_piety      = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -2702,6 +2243,25 @@ void excommunication(bool voluntary, god_type new_god)
             old_god);
     }
 
+    if (had_halo)
+    {
+        mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
+        invalidate_agrid(true);
+    }
+    if (had_umbra)
+    {
+        mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
+        invalidate_agrid(true);
+    }
+    // You might have lost water walking at a bad time...
+    if (had_water_walk && _need_water_walking())
+        fall_into_a_pool(grd(you.pos()));
+    if (had_stat_boost)
+    {
+        redraw_screen();
+        notify_stat_change();
+    }
+
     switch (old_god)
     {
     case GOD_XOM:
@@ -2747,10 +2307,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_BEOGH:
-        // You might have lost water walking at a bad time...
-        if (_need_water_walking())
-            fall_into_a_pool(grd(you.pos()));
-
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
@@ -2779,12 +2335,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_SHINING_ONE:
-        if (was_haloed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
-            invalidate_agrid(true);
-        }
-
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
@@ -2860,11 +2410,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_DITHMENOS:
-        if (was_umbraed)
-        {
-            mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
-            invalidate_agrid(true);
-        }
         if (you.form == TRAN_SHADOW)
             untransform();
         _set_penance(old_god, 25);
@@ -2932,8 +2477,6 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25);
-        redraw_screen();
-        notify_stat_change();
         break;
 
     default:
@@ -2969,95 +2512,25 @@ void excommunication(bool voluntary, god_type new_god)
     check_selected_skills();
 }
 
-static void _erase_between(string& s, const string &left, const string &right)
-{
-    string::size_type left_pos;
-    string::size_type right_pos;
-
-    while ((left_pos = s.find(left)) != string::npos
-           && (right_pos = s.find(right, left_pos + left.size())) != string::npos)
-    {
-        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
-    }
-}
-
-static string _sacrifice_message(string msg, const string& itname, bool glowing,
-                                 bool plural, piety_gain_t piety_gain)
-{
-    if (glowing)
-    {
-        msg = replace_all(msg, "[", "");
-        msg = replace_all(msg, "]", "");
-    }
-    else
-        _erase_between(msg, "[", "]");
-    msg = replace_all(msg, "%", (plural ? "" : "s"));
-    msg = replace_all(msg, "&", conjugate_verb("be", plural));
-
-    const char *tag_start, *tag_end;
-    switch (piety_gain)
-    {
-    case PIETY_NONE:
-        tag_start = "<lightgrey>";
-        tag_end = "</lightgrey>";
-        break;
-    default:
-    case PIETY_SOME:
-        tag_start = tag_end = "";
-        break;
-    case PIETY_LOTS:
-        tag_start = "<white>";
-        tag_end = "</white>";
-        break;
-    }
-
-    msg.insert(0, itname);
-    msg = tag_start + msg + tag_end;
-
-    return msg;
-}
-
-void print_sacrifice_message(god_type god, const item_def &item,
-                             piety_gain_t piety_gain, bool your)
-{
-    if (god == GOD_ELYVILON && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-    {
-        // Weapons blessed by TSO don't get destroyed but are instead
-        // returned whence they came. (jpeg)
-        simple_god_message(
-            make_stringf(" %sreclaims %s.",
-                         piety_gain ? "gladly " : "",
-                         item.name(DESC_THE).c_str()).c_str(),
-            GOD_SHINING_ONE);
-        return;
-    }
-    const string itname = item.name(your ? DESC_YOUR : DESC_THE);
-    mprf(MSGCH_GOD, god, "%s",
-         _sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
-                           itname.find("glowing") != string::npos,
-                           item.quantity > 1,
-                           piety_gain).c_str());
-}
-
-static string nemelex_death_glow_message(int piety_gain)
-{
-    static const char *messages[NUM_PIETY_GAIN] =
-    {
-        " disappear% without a[dditional] glow.",
-        " glow% slightly [brighter ]and disappear%.",
-        " glow% with a rainbow of weird colours and disappear%.",
-    };
-
-    return messages[piety_gain];
-}
-
 void nemelex_death_message()
 {
-    const piety_gain_t piety_gain = static_cast<piety_gain_t>
-            (min(random2(you.piety) / 30, (int)PIETY_LOTS));
+    const int rank = min(random2(you.piety) / 30, 2);
 
-    mpr(_sacrifice_message(nemelex_death_glow_message(piety_gain),
-                           "Your body", you.backlit(), false, piety_gain));
+    static const char *messages[NUM_PIETY_GAIN] =
+    {
+        "<lightgrey>Your body disappears without a glow.</lightgrey>",
+        "Your body glows slightly and disappears.",
+        "<white>Your body glows with a rainbow of weird colours and disappears.</white>",
+    };
+
+    static const char *glowing_messages[NUM_PIETY_GAIN] =
+    {
+        "<lightgrey>Your body disappears without additional glow.</lightgrey>",
+        "Your body glows slightly brighter and disappears.",
+        "<white>Your body glows with a rainbow of weird colours and disappears.</white>",
+    };
+
+    mpr((you.backlit() ? glowing_messages : messages)[rank]);
 }
 
 bool god_hates_attacking_friend(god_type god, const monster *fr)
@@ -3087,91 +2560,30 @@ bool god_hates_attacking_friend(god_type god, const monster *fr)
     }
 }
 
-/**
- * Does this god accept items for sacrifice?
- *
- * @param god The god.
- * @param greedy_explore If true, the return value is based on whether
- *                       we should make explore greedy for items under
- *                       this god.
- * @return  True if the god accepts items for sacrifice, false otherwise.
-*/
-bool god_likes_items(god_type god, bool greedy_explore)
-{
-    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
-                           || you_worship(GOD_ASHENZARI)))
-        // Ash's sacrifice isn't trading items for piety so it shouldn't make
-        // explore greedy for ?RC
-    {
-        return false;
-    }
-
-    switch (god)
-    {
-    case GOD_BEOGH:
-    case GOD_ASHENZARI:
-        return true;
-
-    case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
-        die("Bad god for item sacrifice check: %d", static_cast<int>(god));
-
-    default:
-        return false;
-    }
-}
-
-/**
- * Does a god like a particular item for sacrifice?
- *
- * @param god The god.
- * @param item The item.
- * @return  True if the god likes the item, false otherwise.
-*/
-bool god_likes_item(god_type god, const item_def& item)
-{
-    if (!god_likes_items(god))
-        return false;
-
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return item.base_type == OBJ_CORPSES
-               && mons_genus(item.mon_type) == MONS_ORC;
-
-    case GOD_ASHENZARI:
-        return item.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-
-    default:
-        return false;
-    }
-}
-
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
-        && you.form == TRAN_LICH)
-    {
-        return false;
-    }
-
-    if (is_good_god(which_god) && you.form == TRAN_SHADOW)
-        return false;
-
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
-        return false;
-
-    if (which_god == GOD_YREDELEMNUL
-        && (you.form == TRAN_STATUE || you.petrified()))
-    {   // it's rather hard to pray while petrified, though
-        return false;
+        return false; // zin hates everything
+    // all these clauses are written with a ! in front of them, so that
+    // the stuff to the right of that is uniformly "gods that hate this form"
+    switch (you.form) {
+    case TRAN_LICH:
+        return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
+    case TRAN_SHADOW:
+        return !is_good_god(which_god);
+    case TRAN_STATUE:
+        return !(which_god == GOD_YREDELEMNUL);
+    default:
+        return true;
     }
-
-    return true;
 }
 
 int gozag_service_fee()
 {
     if (you.char_class == JOB_MONK && had_gods() == 0)
+        return 0;
+
+    if (crawl_state.game_is_sprint())
         return 0;
 
     const int gold = you.attribute[ATTR_GOLD_GENERATED];
@@ -3221,7 +2633,8 @@ bool player_can_join_god(god_type which_god)
     }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
-        && which_god == GOD_NEMELEX_XOBEH)
+        && (which_god == GOD_NEMELEX_XOBEH
+            || which_god == GOD_PAKELLAS))
     {
       return false;
     }
@@ -3242,21 +2655,26 @@ static void _god_welcome_handle_gear()
 
     if (you_worship(GOD_ASHENZARI))
     {
+        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
+        {
+            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
+            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
+        }
+    }
+
+    if (have_passive(passive_t::identify_items))
+    {
         // Seemingly redundant with auto_id_inventory(), but we don't want to
         // announce items where the only new information is their cursedness.
         for (auto &item : you.inv)
             if (item.defined())
                 item.flags |= ISFLAG_KNOW_CURSE;
 
-        if (!item_type_known(OBJ_SCROLLS, SCR_REMOVE_CURSE))
-        {
-            set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, true);
-            pack_item_identify_message(OBJ_SCROLLS, SCR_REMOVE_CURSE);
-        }
-
         auto_id_inventory();
-        ash_detect_portals(true);
     }
+
+    if (have_passive(passive_t::detect_portals))
+        ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
@@ -3613,6 +3031,15 @@ static void _join_zin()
     }
 }
 
+// Setup when becoming an overworked assistant to Pakellas.
+static void _join_pakellas()
+{
+    mprf(MSGCH_GOD, "You stop regenerating magic.");
+    mprf(MSGCH_GOD, "You can now gain magical power from killing.");
+    pakellas_id_device_charges();
+    you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3635,11 +3062,7 @@ static const map<god_type, function<void ()>> on_join = {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
-    { GOD_PAKELLAS, []() {
-        mprf(MSGCH_GOD, "You stop regenerating magic.");
-        mprf(MSGCH_GOD, "You can now gain magical power from killing.");
-        pakellas_id_device_charges();
-    }},
+    { GOD_PAKELLAS, _join_pakellas },
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },
@@ -3693,6 +3116,21 @@ void join_religion(god_type which_god)
         add_daction(DACT_ALLY_UNHOLY_EVIL);
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
+
+    // Chei worshippers start their stat gain immediately.
+    if (have_passive(passive_t::stat_boost))
+    {
+        string msg = " begins to support your attributes";
+        if (have_passive(passive_t::slowed))
+            msg += " as your movement slows";
+        msg += ".";
+        simple_god_message(msg.c_str());
+        notify_stat_change();
+    }
+
+    // Move gold to top of piles with Gozag.
+    if (have_passive(passive_t::detect_gold))
+        add_daction(DACT_GOLD_ON_TOP);
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
@@ -3768,8 +3206,8 @@ void god_pitch(god_type which_god)
         }
         else if (player_mutation_level(MUT_NO_LOVE)
                  && (which_god == GOD_BEOGH
-                 || which_god == GOD_ELYVILON
-                 || which_god == GOD_JIYVA))
+                     || which_god == GOD_ELYVILON
+                     || which_god == GOD_JIYVA))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
@@ -3777,8 +3215,14 @@ void god_pitch(god_type which_god)
         else if (player_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_NEMELEX_XOBEH)
         {
-            simple_god_message(" does not accept worship for those who cannot "
+            simple_god_message(" does not accept worship from those who cannot "
                               "deal a hand of cards!", which_god);
+        }
+        else if (player_mutation_level(MUT_NO_ARTIFICE)
+                 && which_god == GOD_PAKELLAS)
+        {
+            simple_god_message(" does not accept worship from those who are "
+                               "unable to use magical devices!", which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
@@ -3833,6 +3277,17 @@ void god_pitch(god_type which_god)
     if (!yesno(prompt.c_str(), false, 'n', true, true, false, nullptr, GOTO_CRT))
     {
         you.turn_is_over = false; // Okay, opt out.
+        redraw_screen();
+        return;
+    }
+
+    const string abandon = make_stringf("Are you sure you want to abandon %s?",
+                                        god_name(you.religion).c_str());
+    if (!you_worship(GOD_NO_GOD) && !yesno(abandon.c_str(), false, 'n', true,
+                                           true, false, nullptr, GOTO_CRT))
+    {
+        you.turn_is_over = false;
+        canned_msg(MSG_OK);
         redraw_screen();
         return;
     }
@@ -3903,11 +3358,6 @@ bool god_hates_your_god(god_type god, god_type your_god)
         return true;
 
     return is_evil_god(your_god);
-}
-
-bool god_hates_cannibalism(god_type god)
-{
-    return is_good_god(god) || god == GOD_BEOGH;
 }
 
 bool god_hates_killing(god_type god, const monster* mon)
@@ -4029,7 +3479,6 @@ bool god_hates_ability(ability_type ability, god_type god)
         case ABIL_BREATHE_FIRE:
         case ABIL_BREATHE_STICKY_FLAME:
         case ABIL_DELAYED_FIREBALL:
-        case ABIL_HELLFIRE:
             return god == GOD_DITHMENOS;
         case ABIL_EVOKE_BERSERK:
             return god == GOD_CHEIBRIADOS;
@@ -4037,21 +3486,6 @@ bool god_hates_ability(ability_type ability, god_type god)
             break;
     }
     return false;
-}
-
-bool god_can_protect_from_harm(god_type god)
-{
-    switch (god)
-    {
-    case GOD_BEOGH:
-        return !you.penance[god];
-    case GOD_ZIN:
-    case GOD_SHINING_ONE:
-    case GOD_ELYVILON:
-        return true;
-    default:
-        return false;
-    }
 }
 
 int elyvilon_lifesaving()
@@ -4082,7 +3516,7 @@ bool god_protects_from_harm()
         }
     }
 
-    if (god_can_protect_from_harm(you.religion)
+    if (have_passive(passive_t::protect_from_harm)
         && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
         return true;
@@ -4613,8 +4047,11 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_BEOGH))
+            if (you_worship(GOD_YREDELEMNUL)
+                || have_passive(passive_t::convert_orcs))
+            {
                 add_companion(mon);
+            }
             placed++;
         }
 

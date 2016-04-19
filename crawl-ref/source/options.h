@@ -123,7 +123,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = nullptr) throw (string);
+                            const vector<string> *rcdirs = nullptr);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -196,6 +196,7 @@ public:
     int         autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_turns; // Show game turns instead of player turns.
@@ -241,6 +242,8 @@ public:
     bool        no_dark_brand;    // Attribute for branding friendly monsters
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
+    int         autofight_warning;      // Amount of real time required between
+                                        // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
 
     int         fire_items_start; // index of first item for fire command
@@ -355,7 +358,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    autosac_type auto_sacrifice;
+    bool        auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;

@@ -151,9 +151,9 @@ A glaive commissioned several years ago by a wealthy queen fearful for the
 safety of her vast treasury. No foe, the smith promised, could defeat a guard
 wielding such a weapon!
 
-The glaive was stolen a few months later, along with the rest of the queen's
-treasury; the guard, it transpired, had been caught napping. Still, it should
-serve more than adequately in the hands of a waking user.
+It was stolen a few months later, along with the rest of the queen's treasury;
+the guard, it transpired, had been caught napping. Still, it should serve more
+than adequately in the hands of a waking user.
 %%%%
 sword of Jihad
 
@@ -161,11 +161,10 @@ A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
 both the wielder and all of his or her mortal followers.
 %%%%
-arbalest "Hellfire"
+arbalest "Damnation"
 
-A flaming crossbow, forged in the fires of Gehenna. It imbues the bolts it
-fires with the raw power of its namesake, irresistible by any mortal armour or
-fireproofing.
+An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
+fires with the raw power of its namesake, irresistible by any mortal armour.
 %%%%
 sword of the Doom Knight
 
@@ -203,7 +202,7 @@ it.
 heavy crossbow "Sniper"
 
 A huge crossbow made of some black material. It is highly damaging, but
-extremely cumbersome to load.
+extremely cumbersome to load. It is enchanted to never miss its target.
 %%%%
 longbow "Piercer"
 
@@ -260,10 +259,8 @@ captain's cutlass
 
 An infamous weapon, once used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
-cutlass was thought to be lost with him.
-
-This weapon is perfectly suited for relieving opponents of their weapons, just
-before it relieves them of their lives.
+cutlass was thought to be lost with him. It has the capability to suddenly
+relieve opponents of their weapons, dealing extra damage in the process.
 %%%%
 storm bow
 
@@ -370,9 +367,9 @@ visage.
 %%%%
 robe of Night
 
-A long black robe made of strange glossy material. It seems to shroud its
-wearer in darkness. According to legend, it was the gift of Ratri the Goddess
-of the Night to one of her followers.
+A long black robe made of strange glossy material. It shrouds its wearer in
+darkness, reducing the range of vision. According to legend, it was the gift
+of Ratri the Goddess of the Night to one of her followers.
 %%%%
 armour of the Dragon King
 
@@ -588,7 +585,9 @@ Maxwell's etheric cage
 
 A fine mesh cage designed to capture magical energy. Experimental notes suggest
 that research was abandoned when the cage began to capture magical
-contamination almost as effectively. Perhaps you could wear it on your head?
+contamination almost as effectively. Anyone reckless enough to place it on
+their head would find their magic regeneration dramatically increased, at the
+cost of multiplying any magical contamination received.
 %%%%
 # TAG_MAJOR_VERSION == 34
 crown of Eternal Torment
@@ -605,7 +604,7 @@ being healed by potions and wands.
 %%%%
 Kryia's mail coat
 
-This armour is said to have been forged for Queen Kryia in her old age. She
+A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
 draughts that kept her alive.
@@ -620,7 +619,7 @@ draughts that kept her alive.
 %%%%
 frozen axe "Frostbite"
 
-This massive axe looks like it was carved from a glacier, or possibly calved
+A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air.
 %%%%
 armour of Talos

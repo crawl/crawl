@@ -86,10 +86,11 @@ void init_skill_order();
 
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
-bool all_skills_maxed(bool inc_harmful = false);
+bool all_skills_maxed(bool really_all = false);
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
+float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
 

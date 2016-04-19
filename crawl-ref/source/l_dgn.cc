@@ -47,9 +47,9 @@ string dgn_set_default_depth(const string &s)
     {
         lc_default_depths = depth_ranges::parse_depth_ranges(s);
     }
-    catch (const string &error)
+    catch (const bad_level_id &err)
     {
-        return error;
+        return err.what();
     }
     return "";
 }
@@ -63,9 +63,9 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             drs.add_depths(depth_ranges::parse_depth_ranges(depth));
         }
-        catch (const string &error)
+        catch (const bad_level_id &err)
         {
-            luaL_error(ls, error.c_str());
+            luaL_error(ls, err.what());
         }
     }
 }
@@ -110,9 +110,9 @@ static int dgn_place(lua_State *ls)
             {
                 map->place = depth_ranges::parse_depth_ranges(luaL_checkstring(ls, 2));
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                luaL_error(ls, err.c_str());
+                luaL_error(ls, err.what());
             }
         }
     }
@@ -214,9 +214,9 @@ static int dgn_depth_chance(lua_State *ls)
     {
         map->_chance.add_range(depth, map_chance(chance_priority, chance));
     }
-    catch (const string &error)
+    catch (const bad_level_id &error)
     {
-        luaL_error(ls, error.c_str());
+        luaL_error(ls, error.what());
     }
     return 0;
 }
@@ -862,16 +862,13 @@ static int dgn_terrain_changed(lua_State *ls)
         type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
-    const bool affect_player =
-    lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_features =
-    lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
+        lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_items =
-    lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
+        lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
     dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
                                        luaL_checkint(ls, 2)),
-                            type, affect_player,
-                            preserve_features, preserve_items);
+                            type, preserve_features, preserve_items);
     return 0;
 }
 

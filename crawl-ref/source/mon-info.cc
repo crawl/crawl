@@ -50,8 +50,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOW,            MB_SLOWED },
     { ENCH_SICK,            MB_SICK },
     { ENCH_INSANE,          MB_INSANE },
-    { ENCH_BATTLE_FRENZY,   MB_FRENZIED },
-    { ENCH_ROUSED,          MB_ROUSED },
     { ENCH_HASTE,           MB_HASTED },
     { ENCH_MIGHT,           MB_STRONG },
     { ENCH_CONFUSION,       MB_CONFUSED },
@@ -79,7 +77,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
     { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
     { ENCH_ROLLING,         MB_ROLLING },
-    { ENCH_STONESKIN,       MB_STONESKIN },
+    { ENCH_MAGIC_ARMOUR,    MB_MAGIC_ARMOUR },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -105,10 +103,12 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
-    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BONE_ARMOUR,     MB_BONE_ARMOUR },
+    { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
+    { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
+    { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -150,10 +150,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                                          >= mons.get_experience_level() / 2;
             return heavily_drained ? MB_HEAVILY_DRAINED : MB_LIGHTLY_DRAINED;
         }
-    case ENCH_BRILLIANCE_AURA:
-        return MB_BRILLIANCE_AURA;
-    case ENCH_EMPOWERED_SPELLS:
-        return MB_EMPOWERED_SPELLS;
+    case ENCH_SPELL_CHARGED:
+        if (mons.get_ench(ench).degree < max_mons_charge(mons.type))
+            return MB_PARTIALLY_CHARGED;
+        return MB_FULLY_CHARGED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -275,15 +275,19 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && other->type != MONS_KRAKEN
-            && other->type != MONS_ZOMBIE
-            && other->type != MONS_SPECTRAL_THING
-            && other->type != MONS_SIMULACRUM
+            && !mons_is_zombified(other)
             && !_tentacle_pos_unknown(other, m->pos()))
         {
             mi.props[key] = h_pos - m->pos();
         }
     }
+}
+
+/// is the given monster_info a hydra, zombie hydra, lerny, etc?
+static bool _is_hydra(const monster_info &mi)
+{
+    return mons_genus(mi.type) == MONS_HYDRA
+           || mons_genus(mi.base_type) == MONS_HYDRA;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -293,13 +297,15 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     pos = coord_def(0, 0);
 
     type = p_type;
-    base_type = p_base_type;
 
-    draco_type = mons_genus(type) == MONS_DRACONIAN  ? MONS_DRACONIAN :
-                 mons_genus(type) == MONS_DEMONSPAWN ? MONS_DEMONSPAWN
-                                                     : type;
+    // give 'job' monsters a default race.
+    const bool classy_drac = mons_is_draconian_job(type) || type == MONS_TIAMAT;
+    base_type = p_base_type != MONS_NO_MONSTER ? p_base_type
+                : classy_drac ? MONS_DRACONIAN
+                : mons_is_demonspawn_job(type) ? MONS_DEMONSPAWN
+                : type;
 
-    if (mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+    if (_is_hydra(*this))
         num_heads = 1;
     else
         number = 0;
@@ -314,6 +320,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
+    mr = mons_class_res_magic(type, base_type);
+    can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
 
@@ -355,16 +363,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.damage = 5;
     }
 
-    // Don't put a bad base type on ?/mdraconian annihilator etc.
-    if (base_type == MONS_NO_MONSTER && !mons_is_job(type))
-        base_type = type;
-
     if (mons_is_job(type))
     {
-        const monster_type race = (base_type == MONS_NO_MONSTER) ? draco_type
-                                                                 : base_type;
-        ac += get_mons_class_ac(race);
-        ev += get_mons_class_ev(race);
+        ac += get_mons_class_ac(base_type);
+        ev += get_mons_class_ev(base_type);
     }
 
     if (mons_is_unique(type))
@@ -436,12 +438,6 @@ monster_info::monster_info(const monster* m, int milev)
         _translate_tentacle_ref(*this, m, "outwards");
     }
 
-    draco_type =
-        (mons_genus(type) == MONS_DRACONIAN
-        || mons_genus(type) == MONS_DEMONSPAWN)
-            ? ::draco_or_demonspawn_subspecies(m)
-            : type;
-
     if (!mons_can_display_wounds(m)
         || !mons_class_can_display_wounds(type))
     {
@@ -456,11 +452,8 @@ monster_info::monster_info(const monster* m, int milev)
         slime_size = m->blob_size;
     else if (type == MONS_BALLISTOMYCETE)
         is_active = !!m->ballisto_activity;
-    else if (mons_genus(type) == MONS_HYDRA
-             || mons_genus(base_type) == MONS_HYDRA)
-    {
+    else if (_is_hydra(*this))
         num_heads = m->num_heads;
-    }
     // others use number for internal information
     else
         number = 0;
@@ -545,6 +538,8 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
+    mr = m->res_magic(false);
+    can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m, true);
@@ -668,9 +663,6 @@ monster_info::monster_info(const monster* m, int milev)
         if (ghost.brand != SPWPN_NORMAL)
             props[SPECIAL_WEAPON_KEY] = ghost_brand_name(ghost.brand);
     }
-
-    if (mons_is_ghost_demon(type))
-        i_ghost.can_sinv = m->ghost->see_invis;
 
     // book loading for player ghost and vault monsters
     spells.clear();
@@ -823,28 +815,13 @@ string monster_info::_core_name() const
 {
     monster_type nametype = type;
 
-    switch (type)
-    {
-    case MONS_ZOMBIE:
-    case MONS_SKELETON:
-    case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-#endif
-    case MONS_SPECTRAL_THING:
+    if (mons_class_is_zombified(type))
         nametype = mons_species(base_type);
-        break;
-
-    case MONS_PILLAR_OF_SALT:
-    case MONS_BLOCK_OF_ICE:
-    case MONS_SENSED:
+    else if (type == MONS_PILLAR_OF_SALT
+             || type == MONS_BLOCK_OF_ICE
+             || type == MONS_SENSED)
+    {
         nametype = base_type;
-        break;
-
-    default:
-        break;
     }
 
     string s;
@@ -865,6 +842,11 @@ string monster_info::_core_name() const
                                                "enormous ", "titanic "};
         s = get_monster_data(nametype)->name;
 
+        if (mons_is_draconian_job(type) && base_type != MONS_NO_MONSTER)
+            s = draconian_colour_name(base_type) + " " + s;
+        else if (mons_is_demonspawn_job(type) && base_type != MONS_NO_MONSTER)
+            s = demonspawn_base_name(base_type) + " " + s;
+
         switch (type)
         {
         case MONS_SLIME_CREATURE:
@@ -874,26 +856,6 @@ string monster_info::_core_name() const
         case MONS_UGLY_THING:
         case MONS_VERY_UGLY_THING:
             s = ugly_thing_colour_name(_colour) + " " + s;
-            break;
-
-        case MONS_DRACONIAN_CALLER:
-        case MONS_DRACONIAN_MONK:
-        case MONS_DRACONIAN_ZEALOT:
-        case MONS_DRACONIAN_SHIFTER:
-        case MONS_DRACONIAN_ANNIHILATOR:
-        case MONS_DRACONIAN_KNIGHT:
-        case MONS_DRACONIAN_SCORCHER:
-            if (base_type != MONS_NO_MONSTER)
-                s = draconian_colour_name(base_type) + " " + s;
-            break;
-
-        case MONS_BLOOD_SAINT:
-        case MONS_CHAOS_CHAMPION:
-        case MONS_WARMONGER:
-        case MONS_CORRUPTER:
-        case MONS_BLACK_SUN:
-            if (base_type != MONS_NO_MONSTER)
-                s = demonspawn_base_name(base_type) + " " + s;
             break;
 
         case MONS_DANCING_WEAPON:
@@ -953,7 +915,7 @@ string monster_info::common_name(description_level_type desc) const
     const bool nocore = mons_class_is_zombified(type)
                           && mons_is_unique(base_type)
                           && base_type == mons_species(base_type)
-                        || type == MONS_MUTANT_BEAST;
+                        || type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE);
 
     ostringstream ss;
 
@@ -975,7 +937,7 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if ((mons_genus(type) == MONS_HYDRA || mons_genus(base_type) == MONS_HYDRA)
+    if (_is_hydra(*this)
         && type != MONS_SENSED
         && type != MONS_BLOCK_OF_ICE
         && type != MONS_PILLAR_OF_SALT)
@@ -989,7 +951,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << "-headed ";
     }
 
-    if (type == MONS_MUTANT_BEAST)
+    if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
     {
         const int xl = props[MUTANT_BEAST_TIER].get_short();
         const int tier = mutant_beast_tier(xl);
@@ -1181,7 +1143,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
+        if (_is_hydra(m1))
         {
             if (m1.num_heads > m2.num_heads)
                 return true;
@@ -1210,10 +1172,6 @@ static string _verbose_info0(const monster_info& mi)
         return "berserk";
     if (mi.is(MB_INSANE))
         return "insane";
-    if (mi.is(MB_FRENZIED))
-        return "frenzied";
-    if (mi.is(MB_ROUSED))
-        return "roused";
     if (mi.is(MB_INNER_FLAME))
         return "inner flame";
     if (mi.is(MB_DUMB))
@@ -1280,8 +1238,8 @@ string monster_info::pluralised_name(bool fullname) const
     else if (mons_genus(type) == MONS_DEMONSPAWN)
         return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-             || type == MONS_DANCING_WEAPON || type == MONS_MUTANT_BEAST
-             || !fullname)
+             || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
+             || type == MONS_MUTANT_BEAST || !fullname)
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
@@ -1423,10 +1381,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("softly glowing");
     if (is(MB_INSANE))
         v.emplace_back("frenzied and insane");
-    if (is(MB_FRENZIED))
-        v.emplace_back("consumed by blood-lust");
-    if (is(MB_ROUSED))
-        v.emplace_back("inspired to greatness");
     if (is(MB_CONFUSED))
         v.emplace_back("confused");
     if (is(MB_INVISIBLE))
@@ -1484,8 +1438,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("regenerating");
     if (is(MB_ROLLING))
         v.emplace_back("rolling");
-    if (is(MB_STONESKIN))
-        v.emplace_back("stone skin");
+    if (is(MB_MAGIC_ARMOUR))
+        v.emplace_back("magically armoured");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.emplace_back("covered in an icy film");
     if (is(MB_WRETCHED))
@@ -1543,8 +1497,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.emplace_back("heavily drained");
-    if (is(MB_CONDENSATION_SHIELD))
-        v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
@@ -1557,6 +1509,12 @@ vector<string> monster_info::attributes() const
         v.emplace_back("spells empowered");
     if (is(MB_READY_TO_HOWL))
         v.emplace_back("ready to howl");
+    if (is(MB_PARTIALLY_CHARGED))
+        v.emplace_back("partially charged");
+    if (is(MB_FULLY_CHARGED))
+        v.emplace_back("fully charged");
+    if (is(MB_GOZAG_INCITED))
+        v.emplace_back("incited by Gozag");
     return v;
 }
 
@@ -1639,67 +1597,14 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 
 /**
  * Can the monster described by this monster_info see invisible creatures?
- *
- * This should match the logic in monster::can_see_invisible().
- *
- * XXX: This is an abomination and should be destroyed, probably by adding a
- * sees_invisible field that's initialized by monster::can_see_invisible();
- * just need to avoid leaking info from e.g. jewellery.
- *
- * @return
  */
 bool monster_info::can_see_invisible() const
 {
-    if (mons_is_ghost_demon(type))
-        return i_ghost.can_sinv;
-
-    if (props.exists(MUTANT_BEAST_FACETS))
-        for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
-            if (facet.get_int() == BF_WEIRD)
-                return true;
-
-    return mons_class_flag(type, M_SEE_INVIS)
-           || mons_is_demonspawn(type)
-              && mons_class_flag(draco_or_demonspawn_subspecies(), M_SEE_INVIS);
+    return can_see_invis;
 }
 
 int monster_info::res_magic() const
 {
-    int mr = (get_monster_data(type))->resist_magic;
-    if (mr == MAG_IMMUNE)
-        return MAG_IMMUNE;
-
-    // Negative values get multiplied with monster hit dice.
-    if (mr < 0)
-        mr = hd * (-mr) * 4 / 3;
-
-    // Randarts
-    mr += 40 * randarts(ARTP_MAGIC_RESISTANCE);
-
-    // ego armour resistance
-    if (inv[MSLOT_ARMOUR].get()
-        && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    if (inv[MSLOT_SHIELD].get()
-        && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
-    {
-        mr += 40;
-    }
-
-    item_def *jewellery = inv[MSLOT_JEWELLERY].get();
-
-    if (jewellery
-        && jewellery->is_type(OBJ_JEWELLERY, RING_PROTECTION_FROM_MAGIC))
-    {
-        mr += 40;
-    }
-
-    if (is(MB_VULN_MAGIC))
-        mr /= 2;
-
     return mr;
 }
 
@@ -1749,25 +1654,22 @@ reach_type monster_info::reach_range() const
 
 size_type monster_info::body_size() const
 {
-    // Using base_type to get the right size for zombies, skeletons and such.
-    // For normal monsters, base_type is set to type in the constructor.
-    const monsterentry *e = get_monster_data(base_type);
-    size_type ret = (e ? e->size : SIZE_MEDIUM);
+    const size_type class_size = mons_class_body_size(base_type);
 
     // Slime creature size is increased by the number merged.
     if (type == MONS_SLIME_CREATURE)
     {
         if (slime_size == 2)
-            ret = SIZE_MEDIUM;
+            return SIZE_MEDIUM;
         else if (slime_size == 3)
-            ret = SIZE_LARGE;
+            return SIZE_LARGE;
         else if (slime_size == 4)
-            ret = SIZE_BIG;
+            return SIZE_BIG;
         else if (slime_size == 5)
-            ret = SIZE_GIANT;
+            return SIZE_GIANT;
     }
 
-    return ret;
+    return class_size;
 }
 
 bool monster_info::cannot_move() const
@@ -1887,4 +1789,11 @@ void get_monster_info(vector<monster_info>& mons)
         }
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
+}
+
+monster_type monster_info::draco_or_demonspawn_subspecies() const
+{
+    if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
+        return player_species_to_mons_species(i_ghost.species);
+    return ::draco_or_demonspawn_subspecies(type, base_type);
 }

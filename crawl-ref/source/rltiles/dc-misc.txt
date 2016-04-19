@@ -93,7 +93,7 @@ searing_ray3
 searing_ray4 BOLT_SEARING_RAY_III
 searing_ray5
 
-hellfire BOLT_HELLFIRE
+damnation BOLT_DAMNATION
 
 irradiate0 BOLT_IRRADIATE
 irradiate1

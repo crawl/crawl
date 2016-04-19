@@ -26,6 +26,7 @@ private:
     bool handle_phase_blocked() override;
     bool handle_phase_dodged() override;
     bool handle_phase_hit() override;
+    bool ignores_shield(bool verbose) override;
 
     /* Combat Calculations */
     bool using_weapon() override;
@@ -33,7 +34,6 @@ private:
     int calc_base_unarmed_damage() override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage, int damage_max) override;
-    bool attack_ignores_shield(bool verbose) override;
     bool apply_damage_brand(const char *what = nullptr) override;
     special_missile_type random_chaos_missile_brand();
     bool blowgun_check(special_missile_type type);

@@ -38,5 +38,6 @@ species_type find_species_from_string(const string &species_str);
 void wizard_change_species_to(species_type sp);
 job_type find_job_from_string(const string &job_str);
 void wizard_change_job_to(job_type job);
+void wizard_xom_acts();
 
 #endif

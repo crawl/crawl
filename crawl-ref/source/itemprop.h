@@ -49,10 +49,15 @@ bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;
+bool item_is_cursable(const item_def &item, bool ignore_holy_wrath = false);
 bool curse_an_item(bool ignore_holy_wrath = false);
 void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
-                     bool check_bondage = true);
+void do_uncurse_item(item_def &item, bool check_bondage = true);
+inline constexpr bool item_type_has_curses(object_class_type base_type)
+{
+        return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
+}
 
 // stationary:
 void set_net_stationary(item_def &item);
@@ -108,8 +113,7 @@ int wand_charge_value(int type) PURE;
 int wand_max_charges(const item_def &item) PURE;
 bool is_known_empty_wand(const item_def &item) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
-bool is_enchantable_armour(const item_def &arm, bool uncurse,
-                           bool unknown = false) PURE;
+bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
@@ -186,6 +190,9 @@ bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
 // food functions:
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food) PURE;
+#endif
 bool is_blood_potion(const item_def &item) PURE;
 bool food_is_meaty(int food_type) PURE;
 bool food_is_meaty(const item_def &item) PURE;
@@ -234,9 +241,7 @@ void seen_item(const item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {
-    return item.base_type == OBJ_WEAPONS
-           || item.base_type == OBJ_STAVES
-           || item.base_type == OBJ_RODS;
+    return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
 }
 
 void remove_whitespace(string &str);

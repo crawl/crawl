@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include "artefact.h"
+#include "chardump.h"
 #include "command.h"
 #include "directn.h"
 #include "english.h"
@@ -18,6 +19,7 @@
 #include "exercise.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -45,6 +47,17 @@
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
+
+bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
+                           const item_def& projectile)
+{
+    return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
+            && projectile.base_type == OBJ_MISSILES
+            && get_ammo_brand(projectile) == SPMSL_PENETRATION
+           || weapon
+              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
+              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+}
 
 bool item_is_quivered(const item_def &item)
 {
@@ -528,10 +541,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.range        = you.current_vision;
     beam.source_id    = agent->mid;
     beam.item         = &item;
-    beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
     beam.flavour      = BEAM_MISSILE;
-    beam.pierce       = false;
+    beam.pierce       = is_penetrating_attack(*agent, launcher, item);
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
@@ -710,18 +722,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         return false;
     }
 
-    // Did we know the ammo's brand before throwing it?
-    const bool ammo_brand_known = item_type_known(thrown);
-
     // Get the ammo/weapon type. Convenience.
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
-
-    // Save the special explosion (exploding missiles) for later.
-    // Need to clear this if unknown to avoid giving away the explosion.
-    bolt* expl = pbolt.special_explosion;
-    if (!pbolt.effect_known)
-        pbolt.special_explosion = nullptr;
 
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
@@ -736,6 +739,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
+            // FIXME: this does not handle exploding ammo!
             monster *m = monster_at(thr.target);
             if (m)
                 cancelled = stop_attack_prompt(m, false, thr.target);
@@ -766,21 +770,19 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (cancelled)
     {
         you.turn_is_over = false;
-        if (expl != nullptr)
-            delete expl;
         return false;
     }
 
     pbolt.is_tracer = false;
-
-    // Reset values.
-    pbolt.special_explosion = expl;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
             return false;
+
+        if (!thrown.quantity)
+            return false; // destroyed when unequipped (fragile)
 
         unwielded = true;
     }
@@ -826,7 +828,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
     case LRET_THROWN:
         practise(EX_WILL_THROW_MSL, wepType);
-        count_action(CACT_THROW, wepType | (OBJ_MISSILES << 16));
+        count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
         practise(EX_WILL_THROW_OTHER);
@@ -900,16 +902,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
-    {
-        did_god_conduct(DID_CHAOS, 2 + random2(3),
-                        bow_brand == SPWPN_CHAOS || ammo_brand_known);
-    }
+        did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
 
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
     if (ammo_brand == SPMSL_FRENZY)
-        did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
+        did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
     if (did_return)
     {
@@ -951,7 +950,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     if (!teleport
         && projected
-        && you_worship(GOD_DITHMENOS)
+        && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
     {

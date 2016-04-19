@@ -10,6 +10,7 @@
 #include "database.h"
 #include "english.h"
 #include "env.h"
+#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -32,33 +33,6 @@
 #include "terrain.h"
 #include "unwind.h"
 #include "view.h"
-
-static bool _offer_items();
-
-static bool _confirm_pray_sacrifice(god_type god)
-{
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        bool penance = false;
-        if (god_likes_item(god, *si)
-            && needs_handle_warning(*si, OPER_PRAY, penance))
-        {
-            string prompt = "Really sacrifice stack with ";
-            prompt += si->name(DESC_A);
-            prompt += " in it?";
-            if (penance)
-                prompt += " This could place you under penance!";
-
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
 
 string god_prayer_reaction()
 {
@@ -96,7 +70,7 @@ static god_type _altar_identify_ecumenical_altar()
         god = random_god();
     }
     while (!player_can_join_god(god));
-    dungeon_terrain_changed(you.pos(), altar_for_god(god), false);
+    dungeon_terrain_changed(you.pos(), altar_for_god(god));
     return god;
 }
 
@@ -212,8 +186,8 @@ void pray(bool allow_conversion)
          you.cannot_speak() ? "silent " : "",
          god_name(you.religion).c_str());
 
-    you.turn_is_over = _offer_items()
-                      || (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom());
+    if (you_worship(GOD_FEDHAS))
+        you.turn_is_over = fedhas_fungal_bloom();
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
@@ -287,76 +261,28 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
     return taken;
 }
 
-/**
- * Sacrifice a scroll to Ashenzari, transforming it into three new curse
- * scrolls.
- *
- * The types of scrolls generated are random, weighted by the number of slots
- * of the appropriate type available to the player.
- *
- * @param item         The scroll to be sacrificed.
- *                     Is not destroyed by this function (obviously!)
- */
-static void _ashenzari_sac_scroll(const item_def& item)
+enum jiyva_slurp_results
 {
-    mprf("%s flickers black.",
-         get_desc_quantity(1, item.quantity,
-                           item.name(DESC_THE)).c_str());
+    JS_NONE = 0,
+    JS_FOOD = 1 << 0,
+    JS_HP   = 1 << 1,
+    JS_MP   = 1 << 2,
+};
 
-    const int wpn_weight = 3;
-    const int jwl_weight = (you.species != SP_OCTOPODE) ? 3 : 9;
-    int arm_weight = 0;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
-        if (you_can_wear(static_cast<equipment_type>(i)))
-            arm_weight++;
+struct slurp_gain
+{
+    int jiyva_bonus;
+    piety_gain_t piety_gain;
 
-    map<int, int> generated_scrolls = {
-        { SCR_CURSE_WEAPON, 0 },
-        { SCR_CURSE_ARMOUR, 0 },
-        { SCR_CURSE_JEWELLERY, 0 },
-    };
-    for (int i = 0; i < 3; i++)
+    slurp_gain(int bonus, piety_gain_t gain)
+        : jiyva_bonus(bonus), piety_gain(gain)
     {
-        const int scroll_type = you.species == SP_FELID ?
-                        SCR_CURSE_JEWELLERY :
-                        random_choose_weighted(wpn_weight, SCR_CURSE_WEAPON,
-                                               arm_weight, SCR_CURSE_ARMOUR,
-                                               jwl_weight, SCR_CURSE_JEWELLERY,
-                                               0);
-        generated_scrolls[scroll_type]++;
-        dprf("%d: %d", scroll_type, generated_scrolls[scroll_type]);
     }
-
-    vector<string> scroll_names;
-    for (auto gen_scroll : generated_scrolls)
-    {
-        const int scroll_type = gen_scroll.first;
-        const int num_generated = gen_scroll.second;
-        if (!num_generated)
-            continue;
-
-        int it = items(false, OBJ_SCROLLS, scroll_type, 0);
-        if (it == NON_ITEM)
-        {
-            mpr("You feel the world is against you.");
-            return;
-        }
-
-        mitm[it].quantity = num_generated;
-        scroll_names.push_back(mitm[it].name(DESC_A));
-
-        if (!move_item_to_grid(&it, you.pos(), true))
-            destroy_item(it, true); // can't happen
-    }
-
-    mprf("%s appear.", comma_separated_line(scroll_names.begin(),
-                                            scroll_names.end()).c_str());
-}
+};
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.). Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
-       int *js, bool first)
+static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
 {
     // item_value() multiplies by quantity.
     const int shop_value = item_value(item, true) / item.quantity;
@@ -371,153 +297,66 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
 
-    piety_gain_t relative_piety_gain = PIETY_NONE;
-    switch (you.religion)
+    slurp_gain gain(JS_NONE, PIETY_NONE);
+
+    // compress into range 0..250
+    const int stepped = stepdown_value(value, 50, 50, 200, 250);
+    gain_piety(stepped, 50);
+    gain.piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
+
+    if (player_under_penance(GOD_JIYVA))
+        return gain;
+
+    int item_value = div_rand_round(stepped, 50);
+    if (have_passive(passive_t::slime_feed)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && !you_foodless())
     {
-    case GOD_BEOGH:
-    {
-        const int item_orig = item.orig_monnum;
-
-        int chance = 4;
-
-        if (item_orig == MONS_SAINT_ROKA)
-            chance += 12;
-        else if (item_orig == MONS_ORC_HIGH_PRIEST)
-            chance += 8;
-        else if (item_orig == MONS_ORC_PRIEST)
-            chance += 4;
-
-        if (item.sub_type == CORPSE_SKELETON)
-            chance -= 2;
-
-        gain_piety(chance, 20);
-        if (x_chance_in_y(chance, 20))
-            relative_piety_gain = PIETY_SOME;
-        break;
+        //same as a sultana
+        lessen_hunger(70, true);
+        gain.jiyva_bonus |= JS_FOOD;
     }
 
-    case GOD_JIYVA:
+    if (have_passive(passive_t::slime_mp)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.magic_points < you.max_magic_points)
     {
-        // compress into range 0..250
-        const int stepped = stepdown_value(value, 50, 50, 200, 250);
-        gain_piety(stepped, 50);
-        relative_piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
-        jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
-        break;
+        inc_mp(max(random2(item_value), 1));
+        gain.jiyva_bonus |= JS_MP;
     }
 
-    default:
-        break;
+    if (have_passive(passive_t::slime_hp)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR])
+    {
+        inc_hp(max(random2(item_value), 1));
+        gain.jiyva_bonus |= JS_HP;
     }
 
-    return relative_piety_gain;
+    return gain;
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
+void jiyva_slurp_item_stack(const item_def& item, int quantity)
 {
+    ASSERT(you_worship(GOD_JIYVA));
     if (quantity <= 0)
         quantity = item.quantity;
-    piety_gain_t relative_gain = PIETY_NONE;
+    slurp_gain gain(JS_NONE, PIETY_NONE);
     for (int j = 0; j < quantity; ++j)
     {
-        const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
+        const slurp_gain new_gain = _sacrifice_one_item_noncount(item);
 
-        // Update piety gain if necessary.
-        if (gain != PIETY_NONE)
-        {
-            if (relative_gain == PIETY_NONE)
-                relative_gain = gain;
-            else            // some + some = lots
-                relative_gain = PIETY_LOTS;
-        }
-    }
-    return relative_gain;
-}
-
-/**
- * Sacrifice the items at the player's location to the player's god.
- *
- * @return  True if an item was sacrificed, false otherwise.
-*/
-static bool _offer_items()
-{
-    if (!god_likes_items(you.religion))
-        return false;
-
-    if (!_confirm_pray_sacrifice(you.religion))
-        return false;
-
-    int i = you.visible_igrd(you.pos());
-
-    god_acting gdact;
-
-    int num_sacced = 0;
-    int num_disliked = 0;
-
-    while (i != NON_ITEM)
-    {
-        item_def &item(mitm[i]);
-        const int next = item.link;  // in case we can't get it later.
-        const bool disliked = !god_likes_item(you.religion, item);
-
-        if (item_is_stationary_net(item) || disliked)
-        {
-            if (disliked)
-                num_disliked++;
-            i = next;
-            continue;
-        }
-
-        // Ignore {!D} inscribed items.
-        if (!check_warning_inscriptions(item, OPER_DESTROY))
-        {
-            mpr("Won't sacrifice {!D} inscribed item.");
-            i = next;
-            continue;
-        }
-
-        if (god_likes_item(you.religion, item)
-            && ((item.inscription.find("=p") != string::npos)
-                || item_needs_autopickup(item)
-                    && GOD_ASHENZARI != you.religion))
-        {
-            const string msg = "Really sacrifice " + item.name(DESC_A) + "?";
-
-            if (!yesno(msg.c_str(), false, 'n'))
-            {
-                i = next;
-                continue;
-            }
-        }
-
-        if (GOD_ASHENZARI == you.religion)
-            _ashenzari_sac_scroll(item);
-        else
-        {
-            const piety_gain_t relative_gain = sacrifice_item_stack(item);
-            print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        }
-
-        if (GOD_ASHENZARI == you.religion && item.quantity > 1)
-            item.quantity -= 1;
-        else
-        {
-            item_was_destroyed(mitm[i]);
-            destroy_item(i);
-        }
-
-        i = next;
-        num_sacced++;
+        gain.piety_gain = max(gain.piety_gain, new_gain.piety_gain);
+        gain.jiyva_bonus |= new_gain.jiyva_bonus;
     }
 
-    // Explanatory messages if nothing the god likes is sacrificed.
-    if (num_sacced == 0 && num_disliked > 0)
-    {
-        if (you_worship(GOD_BEOGH))
-            simple_god_message(" only cares about orcish remains!");
-        else if (you_worship(GOD_ASHENZARI))
-            simple_god_message(" can corrupt only scrolls of remove curse.");
-    }
-
-    return num_sacced > 0;
+    if (gain.piety_gain > PIETY_NONE)
+        simple_god_message(" appreciates your sacrifice.");
+    if (gain.jiyva_bonus & JS_FOOD)
+        mpr("You feel a little less hungry.");
+    if (gain.jiyva_bonus & JS_MP)
+        canned_msg(MSG_GAIN_MAGIC);
+    if (gain.jiyva_bonus & JS_HP)
+        canned_msg(MSG_GAIN_HEALTH);
 }

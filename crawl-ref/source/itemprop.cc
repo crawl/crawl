@@ -311,9 +311,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_CLUB,              "club",                5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10, 0, {} },
-    { WPN_ROD,               "rod",                 5,  3, 13,
+#if TAG_MAJOR_VERSION == 34
+    { WPN_SPIKED_FLAIL,      "spiked flail",        5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, {} },
+#endif
     { WPN_WHIP,              "whip",                6,  2, 11,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 4, 0, {
@@ -638,6 +640,8 @@ static const food_def Food_prop[] =
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  1 },
 
 #if TAG_MAJOR_VERSION == 34
+    // is_real_food assumes we list FOOD_UNUSED as the first removed
+    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy",           0,     0,     0,  1 },
     { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  1 },
     { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  1 },
@@ -699,15 +703,25 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_PORRIDGE },
     { OBJ_POTIONS,   POT_SLOWING },
     { OBJ_POTIONS,   POT_DECAY },
-    { OBJ_POTIONS,   POT_DEGENERATION },
+    { OBJ_POTIONS,   POT_POISON },
     { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
+    { OBJ_RODS,      ROD_DESTRUCTION },
+    { OBJ_RODS,      ROD_SWARM },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
+    { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
+    { OBJ_WANDS,     WAND_FROST_REMOVED },
+    { OBJ_WANDS,     WAND_FIRE_REMOVED },
+    { OBJ_WANDS,     WAND_COLD_REMOVED },
+    { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
+    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
+    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
+    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },
@@ -733,14 +747,37 @@ bool item_known_cursed(const item_def &item)
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
+/**
+ * Is the provided item cursable? Note: this function would leak
+ * information about unidentified holy wrath weapons, which is alright
+ * because only Ashenzari worshippers can deliberately curse items and
+ * they see all weapon egos anyway.
+ *
+ * @param item  The item under consideration.
+ * @return      Whether the given item is a blessed weapon.
+ */
+bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
+{
+    if (!item_type_has_curses(item.base_type))
+        return false;
+    if (item_known_cursed(item))
+        return false;
+    if (!ignore_holy_wrath && item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    {
+        return false;
+    }
+    return true;
+}
+
 // Curses a random player inventory item.
 bool curse_an_item(bool ignore_holy_wrath)
 {
     // allowing these would enable mummy scumming
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
     {
         mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(GOD_ASHENZARI).c_str());
+             god_name(you.religion).c_str());
         return false;
     }
 
@@ -752,24 +789,13 @@ bool curse_an_item(bool ignore_holy_wrath)
         if (!item.defined())
             continue;
 
-        if (is_weapon(item)
-            || item.base_type == OBJ_ARMOUR
-            || item.base_type == OBJ_JEWELLERY)
-        {
-            if (item.cursed())
-                continue;
+        if (!item_is_cursable(item, ignore_holy_wrath))
+            continue;
 
-            if (ignore_holy_wrath && item.base_type == OBJ_WEAPONS
-                && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-            {
-                continue;
-            }
-
-            // Item is valid for cursing, so we'll give it a chance.
-            count++;
-            if (one_chance_in(count))
-                found = &item;
-        }
+        // Item is valid for cursing, so we'll give it a chance.
+        count++;
+        if (one_chance_in(count))
+            found = &item;
     }
 
     // Any item to curse?
@@ -857,23 +883,24 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
-                     bool check_bondage)
+/**
+ * Attempt to un-curse the given item.
+ *
+ * @param item      The item in question.
+ * @param check_bondage     Whether to update the player's Ash bondage status.
+ *                          (Ash ?rc delays this until later.)
+ */
+void do_uncurse_item(item_def &item, bool check_bondage)
 {
+    const bool in_inv = in_inventory(item);
     if (!item.cursed())
     {
-        if (in_inventory(item))
+        if (in_inv)
             item.flags |= ISFLAG_KNOW_CURSE;
         return;
     }
 
-    if (no_ash && you_worship(GOD_ASHENZARI))
-    {
-        simple_god_message(" preserves the curse.");
-        return;
-    }
-
-    if (in_inventory(item))
+    if (in_inv)
     {
         if (you.equip[EQ_WEAPON] == item.link)
         {
@@ -884,7 +911,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
     item.flags &= (~ISFLAG_CURSED);
 
-    if (check_bondage)
+    if (check_bondage && in_inv)
         ash_check_bondage();
 }
 
@@ -1554,25 +1581,20 @@ int wand_charge_value(int type)
 {
     switch (type)
     {
-    case WAND_INVISIBILITY:
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         return 3;
 
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_LIGHTNING:
-    case WAND_DRAINING:
-    case WAND_FIRE:
-    case WAND_COLD:
+    case WAND_ACID:
         return 5;
 
     default:
         return 8;
 
     case WAND_FLAME:
-    case WAND_FROST:
-    case WAND_MAGIC_DARTS:
     case WAND_SLOWING:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
@@ -1611,6 +1633,14 @@ bool is_known_empty_wand(const item_def &item)
     return item_ident(item, ISFLAG_KNOW_PLUSES) && item.charges <= 0;
 }
 
+/**
+ * For purpose of Ashenzari's monster equipment identification & warning
+ * passive, what wands are a potential threat to the player in monsters'
+ * hands?
+ *
+ * @param item      The wand to be examined.
+ * @return          Whether the player should be warned about the given wand.
+ */
 bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
@@ -1623,22 +1653,17 @@ bool is_offensive_wand(const item_def& item)
     // Monsters will use them on themselves.
     case WAND_HASTING:
     case WAND_HEAL_WOUNDS:
-    case WAND_INVISIBILITY:
         return false;
 
     case WAND_FLAME:
-    case WAND_FROST:
     case WAND_SLOWING:
-    case WAND_MAGIC_DARTS:
     case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
     case WAND_CONFUSION:
-    case WAND_FIREBALL:
+    case WAND_ICEBLAST:
     case WAND_TELEPORTATION:
     case WAND_LIGHTNING:
     case WAND_POLYMORPH:
-    case WAND_DRAINING:
+    case WAND_ACID:
     case WAND_DISINTEGRATION:
         return true;
     }
@@ -1647,7 +1672,7 @@ bool is_offensive_wand(const item_def& item)
 
 // Returns whether a piece of armour can be enchanted further.
 // If unknown is true, unidentified armour will return true.
-bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
+bool is_enchantable_armour(const item_def &arm, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
         return false;
@@ -1656,16 +1681,9 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
 
-    // Artefacts or highly enchanted armour cannot be enchanted, only
-    // uncursed.
+    // Artefacts or highly enchanted armour cannot be enchanted.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-    {
-        if (!uncurse || you_worship(GOD_ASHENZARI))
-            return false;
-        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
-            return true;
-        return arm.cursed();
-    }
+        return false;
 
     return true;
 }
@@ -1694,14 +1712,10 @@ int get_vorpal_type(const item_def &item)
 
 int get_damage_type(const item_def &item)
 {
-    int ret = DAM_BASH;
-
-    if (item.base_type == OBJ_RODS)
-        ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
-        ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
+        return Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK;
 
-    return ret;
+    return DAM_BASH;
 }
 
 static bool _does_damage_type(const item_def &item, int dam_type)
@@ -1735,7 +1749,6 @@ int single_damage_type(const item_def &item)
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
     const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type :
-                         OBJ_RODS == item.base_type    ? WPN_ROD :
                          OBJ_STAVES == item.base_type  ? WPN_STAFF :
                                                          WPN_UNKNOWN;
 
@@ -1753,7 +1766,9 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
     item_def item;
     item.base_type = base_type;
     item.sub_type  = sub_type;
-    return ac->hands_reqd(item);
+    // This function is used for item generation only, so use the actor's
+    // (player's) base size, not its current form.
+    return ac->hands_reqd(item, true);
 }
 
 /**
@@ -1807,14 +1822,14 @@ bool is_blessed_weapon_type(int wpn_type)
 
 /**
  * Is the weapon type provided magical (& can't be generated in a usual way)?
- * (I.e., magic staffs & rods.)
+ * (I.e., magic staves.)
  *
  * @param wpn_type  The weapon_type under consideration.
- * @return          Whether it's a magic staff or rod.
+ * @return          Whether it's a magic staff.
  */
 bool is_magic_weapon_type(int wpn_type)
 {
-    return wpn_type == WPN_STAFF || wpn_type == WPN_ROD;
+    return wpn_type == WPN_STAFF;
 }
 
 
@@ -1919,8 +1934,6 @@ skill_type item_attack_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
-    else if (item.base_type == OBJ_RODS)
-        return SK_MACES_FLAILS; // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
     else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
@@ -2032,12 +2045,9 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
-    // Staves and rods are currently wieldable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
-        || item_attack_skill(item) == SK_STAVES)
-    {
+    // Staves are currently wieldable for everyone just to be nice.
+    if (item.base_type == OBJ_STAVES || item_attack_skill(item) == SK_STAVES)
         return true;
-    }
 
     return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
 }
@@ -2280,6 +2290,13 @@ bool ring_has_stackable_effect(const item_def &item)
 //
 // Food functions:
 //
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food)
+{
+    return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
+}
+
+#endif
 bool is_blood_potion(const item_def &item)
 {
     if (item.base_type != OBJ_POTIONS)
@@ -2660,8 +2677,7 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
-    case OBJ_RODS:
-        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_ROD : WPN_STAFF;
+        weapon_sub = WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
@@ -2828,7 +2844,7 @@ bool item_is_jelly_edible(const item_def &item)
         return false;
 
     // Don't eat items that the player has seen.
-    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+    if (item.flags & ISFLAG_SEEN && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Don't eat artefacts or the horn of Geryon.
@@ -2995,7 +3011,7 @@ void seen_item(const item_def &item)
 
     // major hack. Deconstify should be safe here, but it's still repulsive.
     const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::identify_items))
         const_cast<item_def &>(item).flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         const_cast<item_def &>(item).plus = (you_worship(GOD_ZIN)) ? 2 : 1;

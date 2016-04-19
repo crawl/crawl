@@ -24,11 +24,11 @@ function callback.grunt_gauntlet_trap_activate(data,triggerable,trigger,marker,e
     end
         dgn.persist.grunt_gauntlet_trap_triggered = true
     for slave in iter.slave_iterator("trap_wall", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
         dgn.place_cloud(slave.x, slave.y, "foul pestilence", crawl.random2(5) + 5)
     end
     for slave in iter.slave_iterator("trap_wall2", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "stone_wall", false, false, false)
+        dgn.terrain_changed(slave.x, slave.y, "stone_wall", false, false)
         dgn.colour_at(slave.x, slave.y, "lightmagenta")
     end
     crawl.mpr("You hear an unearthly scream, and the grinding of stone!",
@@ -133,7 +133,7 @@ ENDMAP
 NAME: grunt_tartarus_stairs_gauntlet_trap
 DEPTH: Tar, !Tar:$
 TAGS: generate_awake patrolling no_trap_gen
-MONS: Shadow Fiend, shadow demon / reaper, soul eater, necrophage, shadow imp
+MONS: Tzitzimitl, shadow demon / reaper, soul eater, necrophage, shadow imp
 {{
     dgn.persist.grunt_gauntlet_trap_triggered = false
     local trap_marker = TriggerableFunction:new {
@@ -568,7 +568,7 @@ KMONS:   56 = flayed ghost
 KMONS:   78 = eidolon
 KMONS:   90 = phantasmal warrior
 KMONS:   AB : spectral titan / spectral ettin
-KMONS:   C = patrolling revenant w:19 / patrolling shadow fiend w:1
+KMONS:   C = patrolling revenant w:19 / patrolling tzitzimitl w:1
 KFEAT:   C = } / ) / ] / > w:30 / floor w:5
 SHUFFLE: 4C / 56 / 78 / 90 / AB, 567890AB, yz / yz / zy, YZ / YZ / ZY
 SUBST:   X : x., y : xxx., z = ., { = {..
@@ -613,7 +613,7 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
 MONS:    soul eater, tormentor w:3 / shadow demon w:1, silent spectre
 KMONS:   9 = reaper / lorocyproca w:6
-KMONS:   J = Jory w:9 / shadow fiend w:1, shadow fiend
+KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., ] = ]>
 MAP
@@ -643,7 +643,7 @@ ENDMAP
 NAME:    tar_old
 ORIENT:  encompass
 MONS:    patrolling Ereshkigal, reaper, shadow demon, shadow
-MONS:    lich / ancient lich, shadow dragon / death drake w:1, shadow fiend
+MONS:    lich / ancient lich, shadow dragon / death drake w:1, tzitzimitl
 KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
@@ -673,7 +673,7 @@ xxxx......ccx..G........G..xxc..x.........x.......x..........x....xxxx
 xxxx......ccx..............xcc......??............xx........xx....xxxx
 xxxx.......cxx............xxc......2222............xx......xx.....xxxx
 xxxx.......ccx.G........G.xcc.......??..............xxxxxxxx......xxxx
-xxxx........cx............xc......................................xxxx
+xxxx........cx7..........7xc......................................xxxx
 xxxx........cxx....17....xxc....x.........x.......................xxxx
 xxxx........ccxxx......xxxcc......................................xxxx
 xxxx........cccc+xxxxxx+cccc.................................3....xxxx
@@ -683,9 +683,9 @@ xxxx..........cccccccccccc......x.........x............V..........xxxx
 xxxx..............................................................xxxx
 xxxx...........................................cccccccccccccccc...xxxx
 xxxx...........................................cccccccccccccccc...xxxx
-xxxx...........................................cc$$$$$xx|||||cc...xxxx
-xxxx.......3........V...........x....6....x....cc$$$$$xx|||||cc...xxxx
-xxxx...........................................ccxxcccccccccccc...xxxx
+xxxx..................................6........cc$$$$$xx|||||cc...xxxx
+xxxx.......3........V...........x.........x....cc$$$$$xx|||||cc...xxxx
+xxxx................................7..........ccxxcccccccccccc...xxxx
 xxxx...........................................ccxxcccccccccccc...xxxx
 xxxx...........................................cc44744xx00000cc...xxxx
 xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
@@ -721,7 +721,7 @@ ENDMAP
 ##############################################################################
 NAME:     tar_mu
 ORIENT:   encompass
-MONS:     patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
+MONS:     patrolling Ereshkigal, tzitzimitl, reaper, soul eater, shadow demon
 MONS:     shadow dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
@@ -787,7 +787,7 @@ xxxx..ccccccccccccc===============c.........xxxxxx.xxx2.2xxx.xxxAAAAxx
 xxxx..cc..........+===============c........xxxxxxx.xxxxxxxxx.xxxAAAAxx
 xxxx..cc..........c===============c........xxxxxxx..xxxxxxx..xxxAAAAxx
 xxxx..cc..........c===============c........xxxxxxxx.........xxxxAAAAxx
-xxxx..cc..........c===============c.......xxxxxxxxxx.......xxxxxxxxxxx
+xxxx..cc....2.....c===============c.......xxxxxxxxxx.......xxxxxxxxxxx
 xxxx..cc.s...2..s.c===============c.......xxxxxxxxxxx.....xxAAAAAAAAxx
 xxxx..cc.7..1...7.c===============c......xxBBBBBBBxxxx...xxxAAAAAAAAxx
 xxxx..cc..........c===============c......xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
@@ -806,13 +806,13 @@ NAME:     tar_mu_maze
 ORIENT:   encompass
 TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
 : tar_dig_maze(_G, 0, 0)
-NSUBST:   L = 5:M / 5:N / 5:P / 5:V / 1:L / *:.
+NSUBST:   L = 2:M / 3 = M. / 5:N / 5:P / 5:V / 1:L / *:.
 NSUBST:   . = 5:Q / *:.
 KFEAT:    L = permanent teleport trap
-KMONS:    M = shadow fiend / nothing
+KMONS:    M = tzitzimitl
 KFEAT:    N = floor
 KITEM:    N = superb_item
-KMONS:    N = patrolling shadow fiend / patrolling soul eater
+KMONS:    N = patrolling tzitzimitl / patrolling soul eater
 KFEAT:    P = floor
 KITEM:    P = star_item
 KMONS:    P = patrolling reaper / nothing
@@ -878,7 +878,7 @@ ENDMAP
 
 NAME:   tar_minmay_river
 ORIENT: encompass
-MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater
+MONS:   patrolling Ereshkigal, reaper, shadow demon, tzitzimitl, soul eater
 FTILE:  "5!?^ = floor_green_bones
 SUBST:  5 = 5:10 3:1
 NSUBST: " = 2:4 / 4:3
@@ -903,7 +903,7 @@ ccc$$cc...cccc....cccc...cc$$c+c........c+c$$cc...cccc....cccc...cc$$ccc
 ccc$cc..ccc....cc....ccc..cc+cc....14....cc+cc..ccc....cc....ccc..cc$ccc
 ccc$c..cc...cccccccc...cc...2c............c2...cc...cccccccc...cc..c$ccc
 ccc+c.cc..ccc......ccc..cc..cc............cc..cc..ccc......ccc..cc.c+ccc
-ccc2..c..cc...cccc...cc..c..c..............c..c..cc...cccc...cc..c..2ccc
+ccc2..c..cc...cccc...cc..c..c4............4c..c..cc...cccc...cc..c..2ccc
 cccc.cc.cc..ccc..ccc..cc.cc.c..............c.cc.cc..ccc..ccc..cc.cc.cccc
 cccc.c..c..cc......cc..c..c.c....cc++cc....c.c..c..cc......cc..c..c.cccc
 ccc..c.cc.cc..cccc..cc.cc.c.c...cc....cc...c.c.cc.cc..cccc..cc.cc.c..ccc
@@ -1004,14 +1004,14 @@ ORIENT: encompass
 
 NAME:    tar_grunt_ereshkigal
 TAGS:    tar_grunt_ereshkigal unrand
-MONS:    patrolling Ereshkigal, Shadow Fiend, shadow demon / reaper
+MONS:    patrolling Ereshkigal, Tzitzimitl, shadow demon / reaper
 MONS:    lich / ancient lich w:5
 KMASK:   O = no_item_gen
 KITEM:   O = bone rune of Zot
 : serpent_of_hell_setup(_G)
 : tar_dig_maze(_G, 9, 21)
 KFEAT:   - = floor
-NSUBST:  L = 1:2 / 3:4 / 8:3 / *:.
+NSUBST:  L = 2:2 / 3:4 / 8:3 / *:.
 MAP
 ccccccccccccccccccccc
 ccccccc$$$O$$$ccccccc
@@ -1049,12 +1049,12 @@ ccccccccc+++ccccccccc
         .....
         x...x
         .....
-        x...x
+        x.2.x
 ENDMAP
 
 NAME: tar_grunt_big_loot
 TAGS: tar_grunt_big_loot unrand
-MONS: Shadow Fiend / shadow dragon, shadow demon / reaper
+MONS: Tzitzimitl / shadow dragon, shadow demon / reaper
 MONS: lich / w:5 ancient lich
 MAP
 ..................
@@ -1251,7 +1251,7 @@ ENDMAP
 
 NAME:     tar_grunt_cathedral
 ORIENT:   encompass
-MONS:     patrolling Ereshkigal, patrolling shadow fiend, reaper, shadow demon
+MONS:     patrolling Ereshkigal, patrolling tzitzimitl, reaper, shadow demon
 MONS:     lich / ancient lich w:5, shadow dragon, shadow wraith / soul eater
 NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)

@@ -790,10 +790,12 @@ int apply_chunked_AC(int dam, int ac)
     return hurt;
 }
 
-void handle_real_time(time_t t)
+void handle_real_time(chrono::time_point<chrono::system_clock> now)
 {
-    you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);
-    you.last_keypress_time = t;
+    you.real_time_delta = chrono::duration_cast<chrono::milliseconds>(
+            now - you.last_keypress_time);
+    you.real_time_ms += you.real_time_delta;
+    you.last_keypress_time = now;
 }
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],
@@ -889,4 +891,9 @@ bool tobool(maybe_bool mb, bool def)
     default:
         return def;
     }
+}
+
+maybe_bool frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
 }

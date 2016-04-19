@@ -426,21 +426,9 @@ potion of mutation
 
 Una poción que te provoca cosas muy extrañas.
 %%%%
-potion of poison
-
-Un desagradable líquido venenoso.
-%%%%
-potion of porridge
-
-Una rica y espesa poción con mucha fibra cereal.
-%%%%
 potion of resistance
 
 Una poción que te da temporalmente resistencia a los elementos y al veneno.
-%%%%
-potion of slowing
-
-Una poción que vuelve más lentas tus acciones.
 %%%%
 quad damage
 

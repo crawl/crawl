@@ -140,7 +140,7 @@ static void _init_feature_index()
     {
         const dungeon_feature_type feat = feat_defs[i].feat;
         ASSERT_RANGE(feat, 0, NUM_FEATURES);
-        ASSERT(feat_index[feat] == -1);
+        ASSERT(feat_index[feat] == -1); // enum repeated in feature-data!
         feat_index[feat] = i;
     }
 }

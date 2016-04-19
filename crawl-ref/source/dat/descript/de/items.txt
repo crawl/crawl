@@ -509,21 +509,9 @@ potion of mutation
 
 Ein Trank, der sehr fremde Dinge zu Ihnen macht.
 %%%%
-potion of poison
-
-Eine böse giftige Flüssigkeit.
-%%%%
-potion of porridge
-
-Ein sättigender Trank von Schlamm, hoher Getreidefasergehalt.
-%%%%
 potion of resistance
 
 Ein Trank, der Ihnen temporäre Widerstand zu den Elementen und Gift gewährt.
-%%%%
-potion of slowing
-
-Ein Trank, der Ihre Taten verlangsamt.
 %%%%
 quad damage
 
@@ -605,10 +593,6 @@ rod of inaccuracy
 
 Dieser Stab erlaubt seinem Benutzer, einen kräftigen aber äußerst ungenauen
 Energieblitz abzuschießen.
-%%%%
-rod of the swarm
-
-Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
 %%%%
 royal jelly
 

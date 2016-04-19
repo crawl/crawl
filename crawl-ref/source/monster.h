@@ -73,7 +73,6 @@ public:
         int prism_charge;      ///< Turns this prism has existed
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
-        int swift_cooldown;    ///< When alligator last casted Swift
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
@@ -145,7 +144,7 @@ public:
     kill_category kill_alignment() const override;
 
     int  foe_distance() const;
-    bool needs_berserk(bool check_spells = true) const;
+    bool needs_berserk(bool check_spells = true, bool ignore_distance = false) const;
 
     // Has a hydra-like variable number of attacks based on num_heads.
     bool has_hydra_multi_attack() const;
@@ -281,7 +280,8 @@ public:
     item_def *missiles() const;
     item_def *shield() const override;
 
-    hands_reqd_type hands_reqd(const item_def &item) const override;
+    hands_reqd_type hands_reqd(const item_def &item,
+                               bool base = false) const override;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -343,7 +343,8 @@ public:
     bool malmutate(const string &/*reason*/) override;
     void corrupt();
     bool polymorph(int pow) override;
-    void banish(actor *agent, const string &who = "", const int power = 0) override;
+    void banish(actor *agent, const string &who = "", const int power = 0,
+                bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;
 
@@ -361,7 +362,7 @@ public:
     bool is_artificial(bool temp = true) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
-    bool res_hellfire() const override;
+    bool res_damnation() const override;
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;
@@ -377,7 +378,7 @@ public:
     bool res_wind() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
-    int res_magic() const override;
+    int res_magic(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
@@ -390,7 +391,7 @@ public:
     bool is_banished() const override;
     bool is_web_immune() const override;
     bool invisible() const override;
-    bool can_see_invisible() const override;
+    bool can_see_invisible(bool calc_unid = true) const override;
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
     reach_type reach_range() const override;
@@ -573,6 +574,7 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
+    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);

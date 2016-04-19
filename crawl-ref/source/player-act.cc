@@ -21,6 +21,7 @@
 #include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -144,9 +145,7 @@ bool player::extra_balanced() const
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && (form == TRAN_LICH || form == TRAN_STATUE
-                      || form == TRAN_SHADOW
-                      || !form_changed_physiology());
+                  && form_keeps_mutations();
 }
 
 int player::get_hit_dice() const
@@ -262,11 +261,22 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN
-        || !weap)
+    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN)
+    {
+        // Thrown weapons use 10 + projectile damage to determine base delay.
+        const skill_type wpn_skill = SK_THROWING;
+        const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
+        attk_delay = random_var(projectile_delay);
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+                                     DELAY_SCALE);
+
+        // apply minimum to weapon skill modification
+        attk_delay = rv::max(attk_delay,
+                random_var(FASTEST_PLAYER_THROWING_SPEED));
+    }
+    else if (!weap)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
-                 projectile     ? skill(SK_THROWING, 10) :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
 
@@ -279,15 +289,15 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                          : is_melee_weapon(*weap)))
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
-        attk_delay = random_var(property(*weap, PWPN_SPEED));
-        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
-                                     DELAY_SCALE);
+        // Cap skill contribution to mindelay skill, so that rounding
+        // doesn't make speed brand benefit from higher skill.
+        const int wpn_sklev = min(you.skill(wpn_skill, 10),
+                                  10 * weapon_min_delay_skill(*weap));
 
+        attk_delay = random_var(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
-
-        // apply minimum to weapon skill modification
-        attk_delay = rv::max(attk_delay, random_var(weapon_min_delay(*weap)));
     }
 
     // At the moment it never gets this low anyway.
@@ -340,12 +350,12 @@ item_def *player::weapon(int /* which_attack */) const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type player::hands_reqd(const item_def &item) const
+hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
     if (species == SP_FORMICID)
         return HANDS_ONE;
     else
-        return actor::hands_reqd(item);
+        return actor::hands_reqd(item, base);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -394,7 +404,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
     // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item))
+    if (!is_weapon(item) && item.base_type != OBJ_RODS)
     {
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
@@ -408,9 +418,14 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-            mpr("You can't use weapons.");
+        {
+            mprf("You can't use %s.",
+                 item.base_type == OBJ_RODS ? "rods" : "weapons");
+        }
         return false;
     }
+    else if (item.base_type == OBJ_RODS)
+        return true;
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
@@ -691,9 +706,11 @@ void player::attacking(actor *other, bool ranged)
  *                    messages can be printed if we can't berserk.
  * @return            True if Chei will slow the player, false otherwise.
  */
-static bool _chei_prevents_berserk_haste(bool intentional)
+static bool _god_prevents_berserk_haste(bool intentional)
 {
-    if (!you_worship(GOD_CHEIBRIADOS))
+    const god_type old_religion = you.religion;
+
+    if (!have_passive(passive_t::no_haste))
         return false;
 
     // Chei makes berserk not speed you up.
@@ -709,7 +726,7 @@ static bool _chei_prevents_berserk_haste(bool intentional)
 
     did_god_conduct(DID_HASTY, 8);
     // Let's see if you've lost your religion...
-    if (!you_worship(GOD_CHEIBRIADOS))
+    if (!you_worship(old_religion))
         return false;
 
     simple_god_message(" forces you to slow down.");
@@ -746,7 +763,7 @@ bool player::go_berserk(bool intentional, bool potion)
         mpr("Your finesse ends abruptly.");
     }
 
-    if (!_chei_prevents_berserk_haste(intentional))
+    if (!_god_prevents_berserk_haste(intentional))
         mpr("You feel yourself moving faster!");
 
     mpr("You feel mighty!");
@@ -803,7 +820,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
     else if (duration[DUR_EXHAUSTED])
          msg = "You're too exhausted to go berserk.";
     else if (duration[DUR_DEATHS_DOOR])
-        msg = "Your body is effectively dead and in no shape for a blood rage.";
+        msg = "You can't enter a blood rage from death's door.";
     else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
         msg = "You are too mesmerised to rage.";
     else if (afraid())

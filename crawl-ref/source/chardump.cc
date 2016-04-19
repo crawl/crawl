@@ -34,6 +34,7 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
@@ -80,12 +81,13 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
+static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool _write_dump(const string &fname, dump_params &,
+static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
 struct dump_section_handler
@@ -96,15 +98,17 @@ struct dump_section_handler
 
 struct dump_params
 {
-    string &text;
+    string text;
     string section;
     bool full_id;
     const scorefile_entry *se;
 
-    dump_params(string &_text, const string &sec = "",
-                bool id = false, const scorefile_entry *s = nullptr)
-        : text(_text), section(sec), full_id(id), se(s)
+    dump_params(const string &sec = "", bool id = false,
+                const scorefile_entry *s = nullptr)
+        : section(sec), full_id(id), se(s)
     {
+        // Start with enough room for 100 80 character lines.
+        text.reserve(100 * 80);
     }
 };
 
@@ -135,6 +139,7 @@ static dump_section_handler dump_handlers[] =
     { "vaults",         _sdump_vault_list    },
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
+    { "skill_gains",    _sdump_skill_gains   },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -160,14 +165,10 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const string &fname, bool quiet, bool full_id,
-               const scorefile_entry *se)
+static dump_params _get_dump(bool full_id = false,
+                             const scorefile_entry *se = nullptr)
 {
-    // Start with enough room for 100 80 character lines.
-    string text;
-    text.reserve(100 * 80);
-
-    dump_params par(text, "", full_id, se);
+    dump_params par("", full_id, se);
 
     for (const string &section : Options.dump_order)
     {
@@ -175,7 +176,14 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
         dump_section(par);
     }
 
-    return _write_dump(fname, par, quiet);
+    // Hopefully we get RVO so we don't have to copy the text.
+    return par;
+}
+
+bool dump_char(const string &fname, bool quiet, bool full_id,
+               const scorefile_entry *se)
+{
+    return _write_dump(fname, _get_dump(full_id, se), quiet);
 }
 
 static void _sdump_header(dump_params &par)
@@ -537,10 +545,12 @@ static void _sdump_notes(dump_params &par)
     if (note_list.empty())
         return;
 
-    text += "\nNotes\nTurn   | Place    | Note\n";
+    text += "Notes\nTurn   | Place    | Note\n";
     text += "--------------------------------------------------------------\n";
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         text += note.describe();
         text += "\n";
     }
@@ -827,6 +837,7 @@ static void _sdump_spells(dump_params &par)
 static void _sdump_kills(dump_params &par)
 {
     par.text += you.kills.kill_info();
+    par.text += "\n";
 }
 
 static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
@@ -950,6 +961,7 @@ static void _sdump_vault_list(dump_params &par)
     {
         par.text += "Vault maps used:\n";
         par.text += dump_vault_maps();
+        par.text += "\n";
     }
 }
 
@@ -966,6 +978,35 @@ static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,
     return false;
 }
 
+static void _count_action(caction_type type, int subtype)
+{
+    pair<caction_type, int> pair(type, subtype);
+    if (!you.action_count.count(pair))
+        you.action_count[pair].init(0);
+    you.action_count[pair][you.experience_level - 1]++;
+}
+
+/**
+ * The alternate type is stored in the higher bytes.
+ **/
+void count_action(caction_type type, int subtype, int auxtype)
+{
+    ASSERT_RANGE(subtype, -32768, 32768);
+    ASSERT_RANGE(auxtype, -32768, 32768);
+    int compound_subtype;
+    compound_subtype = (auxtype << 16) | (subtype & 0xFFFF);
+    _count_action(type, compound_subtype);
+}
+
+/**
+ * .first is the subtype; .second is the auxtype (-1 if none).
+ **/
+pair<int, int> caction_extract_types(int compound_subtype)
+{
+    return make_pair(int16_t(compound_subtype),
+                     int16_t(compound_subtype >> 16));
+}
+
 static string _describe_action(caction_type type)
 {
     switch (type)
@@ -976,6 +1017,12 @@ static string _describe_action(caction_type type)
         return " Fire";
     case CACT_THROW:
         return "Throw";
+    case CACT_ARMOUR:
+        return "Armor"; // "Armour" is too long
+    case CACT_BLOCK:
+        return "Block";
+    case CACT_DODGE:
+        return "Dodge";
     case CACT_CAST:
         return " Cast";
     case CACT_INVOKE:
@@ -1010,25 +1057,48 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static string _describe_action_subtype(caction_type type, int subtype)
+static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
 {
+    "No attack",
+    "Constrict",
+    "Kick",
+    "Headbutt",
+    "Peck",
+    "Tailslap",
+    "Punch",
+    "Bite",
+    "Pseudopods",
+    "Tentacles",
+};
+
+static string _describe_action_subtype(caction_type type, int compound_subtype)
+{
+    pair<int, int> types = caction_extract_types(compound_subtype);
+    int subtype = types.first;
+    int auxtype = types.second;
+
     switch (type)
     {
     case CACT_THROW:
     {
-        int basetype = subtype >> 16;
-        subtype = (short)(subtype & 0xFFFF);
-
-        if (basetype == OBJ_MISSILES)
+        if (auxtype == OBJ_MISSILES)
             return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
-        else if (basetype == OBJ_WEAPONS)
-            ; // fallthrough
         else
-            return "other";
+            return "Other";
     }
     case CACT_MELEE:
     case CACT_FIRE:
-        if (subtype >= UNRAND_START)
+        if (subtype == -1)
+        {
+            if (auxtype == -1)
+                return "Unarmed";
+            else
+            {
+                ASSERT_RANGE(auxtype, 0, NUM_UNARMED_ATTACKS);
+                return _aux_attack_names[auxtype];
+            }
+        }
+        else if (subtype >= UNRAND_START)
         {
             // Paranoia: an artefact may lose its specialness.
             const char *tn = get_unrand_entry(subtype)->type_name;
@@ -1036,8 +1106,36 @@ static string _describe_action_subtype(caction_type type, int subtype)
                 return uppercase_first(tn);
             subtype = get_unrand_entry(subtype)->sub_type;
         }
-        return (subtype == -1) ? "Unarmed"
-               : uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+        return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+    case CACT_ARMOUR:
+        return (subtype == -1) ? "Skin"
+               : uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+    case CACT_BLOCK:
+    {
+        if (subtype > -1)
+            return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+        switch (auxtype)
+        {
+        case BLOCK_OTHER:
+            return "Other"; // non-shield block
+        case BLOCK_REFLECT:
+            return "Reflection";
+        default:
+            return "Error";
+        }
+    }
+    case CACT_DODGE:
+    {
+        switch ((dodge_type)subtype)
+        {
+        case DODGE_EVASION:
+            return "Dodged";
+        case DODGE_DEFLECT:
+            return "Deflected";
+        default:
+            return "Error";
+        }
+    }
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
@@ -1047,11 +1145,11 @@ static string _describe_action_subtype(caction_type type, int subtype)
         if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
             return uppercase_first(get_unrand_entry(subtype)->name);
 
-        if (subtype >= 1 << 16)
+        if (auxtype > -1)
         {
             item_def dummy;
-            dummy.base_type = (object_class_type)(subtype >> 16);
-            dummy.sub_type  = subtype & 0xffff;
+            dummy.base_type = (object_class_type)(auxtype);
+            dummy.sub_type  = subtype;
             dummy.quantity  = 1;
             return uppercase_first(dummy.name(DESC_DBNAME, true));
         }
@@ -1097,7 +1195,7 @@ static void _sdump_action_counts(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("\n%-24s", "Action");
+    par.text += make_stringf("%-24s", "Action");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
     par.text += make_stringf(" || %5s", "total");
@@ -1147,6 +1245,68 @@ static void _sdump_action_counts(dump_params &par)
             par.text += make_stringf(" ||%6d", ac->second[27]);
             par.text += "\n";
         }
+    }
+    par.text += "\n";
+}
+
+static void _sdump_skill_gains(dump_params &par)
+{
+    typedef map<int, int> XlToSkillLevelMap;
+    map<skill_type, XlToSkillLevelMap> skill_gains;
+    vector<skill_type> skill_order;
+    int xl = 0;
+    int max_xl = 0;
+    for (const Note &note : note_list)
+    {
+        if (note.type == NOTE_XP_LEVEL_CHANGE)
+            xl = note.first;
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        {
+            skill_type skill = static_cast<skill_type>(note.first);
+            int skill_level = note.second;
+            if (skill_gains.find(skill) == skill_gains.end())
+                skill_order.push_back(skill);
+            skill_gains[skill][xl] = skill_level;
+            max_xl = max(max_xl, xl);
+        }
+    }
+
+    if (skill_order.empty())
+        return;
+
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (you.skill(skill, 10, true) > 0
+            && skill_gains.find(skill) == skill_gains.end())
+        {
+            skill_order.push_back(skill);
+        }
+    }
+
+    par.text += "Skill      XL: |";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += make_stringf(" %2d", xl);
+    par.text += " |\n";
+    par.text += "---------------+";
+    for (xl = 1; xl <= max_xl; xl++)
+        par.text += "---";
+    par.text += "-+-----\n";
+
+    for (skill_type skill : skill_order)
+    {
+        par.text += make_stringf("%-14s |", skill_name(skill));
+        const XlToSkillLevelMap &gains = skill_gains[skill];
+        for (xl = 1; xl <= max_xl; xl++)
+        {
+            auto it = gains.find(xl);
+            if (it != gains.end())
+                par.text += make_stringf(" %2d", it->second);
+            else
+                par.text += "   ";
+        }
+        par.text += make_stringf(" | %4.1f\n",
+                                 you.skill(skill, 10, true) * 0.1);
     }
     par.text += "\n";
 }
@@ -1325,7 +1485,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const string &fname, dump_params &par, bool quiet)
+static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 {
     bool succeeded = false;
 
@@ -1376,6 +1536,8 @@ void display_notes()
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));
     for (const Note &note : note_list)
     {
+        if (note.hidden())
+            continue;
         string prefix = note.describe(true, true, false);
         string suffix = note.describe(false, false, true);
         if (suffix.empty())
@@ -1397,6 +1559,17 @@ void display_notes()
                                         string("| ") + parts[j]));
         }
     }
+    scr.show();
+    redraw_screen();
+}
+
+void display_char_dump()
+{
+    formatted_scroller scr;
+    scr.set_flags(MF_ALWAYS_SHOW_MORE);
+    scr.add_raw_text(_get_dump().text, false, get_number_of_cols());
+    scr.set_more();
+    scr.set_tag("dump");
     scr.show();
     redraw_screen();
 }
@@ -1457,15 +1630,26 @@ static string _dgl_timestamp_filename()
 }
 
 // Returns true if the given file exists and is not a timestamp file
-// of a known version.
+// of a known version or truncated timestamp file.
 static bool _dgl_unknown_timestamp_file(const string &filename)
 {
     if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
-        const uint32_t file_version = unmarshallInt(r);
-        fclose(inh);
-        return file_version != DGL_TIMESTAMP_VERSION;
+        r.set_safe_read(true);
+        try
+        {
+            const uint32_t file_version = unmarshallInt(r);
+            fclose(inh);
+            return file_version != DGL_TIMESTAMP_VERSION;
+        }
+        catch (short_read_exception &e)
+        {
+            // Empty file, or <4 bytes: remove file and use it.
+            fclose(inh);
+            // True (don't use) if we couldn't remove it, false if we could.
+            return unlink_u(filename.c_str()) != 0;
+        }
     }
     return false;
 }
@@ -1474,7 +1658,7 @@ static bool _dgl_unknown_timestamp_file(const string &filename)
 // timestamps should not be written.
 static FILE *_dgl_timestamp_filehandle()
 {
-    static FILE *timestamp_file;
+    static FILE *timestamp_file = nullptr;
     static bool opened_file = false;
     if (!opened_file)
     {

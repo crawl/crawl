@@ -30,6 +30,7 @@ bool dump_char(const string &fname, bool quiet = false, bool full_id = false,
 void dump_map(const char* fname, bool debug = false, bool dist = false);
 void dump_map(FILE *fp, bool debug = false, bool dist = false);
 void display_notes();
+void display_char_dump();
 string chardump_desc(const item_def& item);
 const char *hunger_level();
 
@@ -38,5 +39,34 @@ void whereis_record(const char *status = "active");
 #endif
 
 void record_turn_timestamp();
+
+enum evoc_type
+{
+    EVOC_WAND,
+    EVOC_ROD,
+    EVOC_DECK,
+#if TAG_MAJOR_VERSION == 34
+    EVOC_MISC,
+    EVOC_BUGGY_TOME,
+#endif
+};
+
+enum dodge_type    // subtype for counted actions
+{
+    DODGE_EVASION,
+    DODGE_DEFLECT,
+    NUM_DODGES
+};
+
+enum block_type    // auxtype for counted actions
+{
+    BLOCK_OTHER,
+    BLOCK_REFLECT,
+    NUM_BLOCKS
+};
+
+void count_action(caction_type type, int subtype = -32768,
+                  int auxtype = -32768);
+pair<int, int> caction_extract_types(int compound_subtype);
 
 #endif

@@ -24,6 +24,7 @@
 #include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -48,7 +49,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
+static bool _revert_terrain_to_floor(coord_def pos);
 
 actor* actor_at(const coord_def& c)
 {
@@ -119,9 +120,28 @@ bool feat_is_staircase(dungeon_feature_type feat)
            || feat == DNGN_ABYSSAL_STAIR;
 }
 
+/**
+ * Define a memoized function from dungeon_feature_type to bool.
+ * This macro should be followed by the non-memoized version of the
+ * function body: see feat_is_branch_entrance below for an example.
+ *
+ * @param funcname The name of the function to define.
+ * @param paramname The name under which the function's single parameter,
+ *        of type dungeon_feature_type, is visible in the function body.
+ */
+#define FEATFN_MEMOIZED(funcname, paramname) \
+    static bool _raw_ ## funcname (dungeon_feature_type); \
+    bool funcname (dungeon_feature_type feat) \
+    { \
+        static int cached[NUM_FEATURES+1] = { 0 }; \
+        if (!cached[feat]) cached[feat] = _raw_ ## funcname (feat) ? 1 : -1; \
+        return cached[feat] > 0; \
+    } \
+    static bool _raw_ ## funcname (dungeon_feature_type paramname)
+
 /** Is this feature a branch entrance that should show up on ^O?
  */
-bool feat_is_branch_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
 {
     if (feat == DNGN_ENTER_HELL)
         return false;
@@ -140,7 +160,7 @@ bool feat_is_branch_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_branch_entrance.
  */
-bool feat_is_branch_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_exit, feat)
 {
     if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
         return false;
@@ -159,7 +179,7 @@ bool feat_is_branch_exit(dungeon_feature_type feat)
 
 /** Is this feature an entrance to a portal branch?
  */
-bool feat_is_portal_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_entrance, feat)
 {
     // These are have different rules from normal connected branches, but they
     // also have different rules from "portal vaults," and are more similar to
@@ -185,7 +205,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_portal_entrance.
  */
-bool feat_is_portal_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_exit, feat)
 {
     if (feat == DNGN_EXIT_ABYSS || feat == DNGN_EXIT_PANDEMONIUM)
         return false;
@@ -1085,6 +1105,9 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
 
 static void _dgn_check_terrain_player(const coord_def pos)
 {
+    if (crawl_state.generating_level || !crawl_state.need_save)
+        return; // don't reference player if they don't currently exist
+
     if (pos != you.pos())
         return;
 
@@ -1094,12 +1117,27 @@ static void _dgn_check_terrain_player(const coord_def pos)
         you_teleport_now();
 }
 
+/**
+ * Change a given feature to a new type, cleaning up associated issues
+ * (monsters/items in walls, blood on water, etc) in the process.
+ *
+ * @param pos               The location to be changed.
+ * @param nfeat             The feature to be changed to.
+ * @param preserve_features Whether to shunt the old feature to a nearby loc.
+ * @param preserve_items    Whether to shunt items to a nearby loc, if they
+ *                          can't stay in this one.
+ * @param temporary         Whether the terrain change is only temporary & so
+ *                          shouldn't affect branch/travel knowledge.
+ * @param wizmode           Whether this is a wizmode terrain change,
+ *                          & shouldn't check whether the player can actually
+ *                          exist in the new feature.
+ */
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
-                             bool affect_player,
                              bool preserve_features,
                              bool preserve_items,
-                             int colour)
+                             bool temporary,
+                             bool wizmode)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1111,10 +1149,10 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (preserve_features)
             _dgn_shift_feature(pos);
 
-        unnotice_feature(level_pos(level_id::current(), pos));
+        if (!temporary)
+            unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
-        env.grid_colours(pos) = colour;
         // Reset feature tile
         env.tile_flv(pos).feat = 0;
         env.tile_flv(pos).feat_idx = 0;
@@ -1123,14 +1161,13 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (feat_is_trap(nfeat))
+        if (!feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 
     _dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
-
-    if (affect_player)
+    if (!wizmode)
         _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
@@ -1494,7 +1531,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk() || form_likes_water())
+        if (have_passive(passive_t::water_walk) || form_likes_water())
             return;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)
@@ -1724,8 +1761,7 @@ void destroy_wall(const coord_def& p)
 
     remove_mold(p);
 
-    _revert_terrain_to(p, (player_in_branch(BRANCH_SWAMP) ? DNGN_SHALLOW_WATER
-                                                          : DNGN_FLOOR));
+    _revert_terrain_to_floor(p);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -1947,11 +1983,20 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, true, false, true);
+    dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+/// What terrain type do destroyed feats become, in the current branch?
+static dungeon_feature_type _destroyed_feat_type()
 {
+    return player_in_branch(BRANCH_SWAMP) ?
+        DNGN_SHALLOW_WATER :
+        DNGN_FLOOR;
+}
+
+static bool _revert_terrain_to_floor(coord_def pos)
+{
+    dungeon_feature_type newfeat = _destroyed_feat_type();
     bool found_marker = false;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -1966,7 +2011,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == DNGN_FLOOR)
+                && newfeat == _destroyed_feat_type())
             {
                 env.markers.remove(tmarker);
             }
@@ -2031,7 +2076,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
     if (newfeat != DNGN_UNSEEN)
     {
-        dungeon_terrain_changed(pos, newfeat, true, false, true, colour);
+        dungeon_terrain_changed(pos, newfeat, false, true);
+        env.grid_colours(pos) = colour;
         return true;
     }
     else

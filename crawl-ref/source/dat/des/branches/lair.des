@@ -23,15 +23,18 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
        e.mons("spriggan")
        e.mons("wolf / black bear w:4 / yak w:2")
     else
-        if you.absdepth() >= 14 then
+        if you.absdepth() >= 13 then
             e.mons("centaur warrior / hill giant")
             e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")
             e.mons("porcupine")
-        else
+        elseif you.absdepth() >= 5 then
             e.mons("gnoll / ogre w:1")
             e.mons("river rat")
+        else
+            e.mons("gnoll")
+            e.mons("quokka")
         end
     end
 
@@ -297,7 +300,7 @@ ENDMAP
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = fire drake
+KMONS:  1 = hell hound
 SUBST:  L = l.
 KFEAT:  O = enter_lair
 MAP
@@ -305,7 +308,7 @@ MAP
 ...lLll..
 ..lllllL.
 ..ll1Lll.
-.LlLOLll.
+.LlLO1ll.
 .ll.Llll.
 .l.llll..
 ..lllL...
@@ -672,10 +675,10 @@ DEPTH:  Lair:2-
 TAGS:   no_monster_gen
 : if you.depth() >= 7 then
 MONS:   fire dragon w:9 / lindwurm w:1
-MONS:   fire drake / w:2 mottled dragon / w:4 nothing
+MONS:   rime drake / w:2 mottled dragon / w:4 nothing
 : else
 MONS:   mottled dragon / steam dragon
-MONS:   fire drake / w:15 nothing
+MONS:   rime drake / w:15 nothing
 : end
 ITEM:   any good_item
 SUBST:  ! = $:3 d:2
@@ -709,7 +712,7 @@ ENDMAP
 #
 NAME:   minmay_lair_drake_nest
 DEPTH:  Lair:4-
-MONS:   fire drake, plant w:20 / fungus w:1 / bush w:1
+MONS:   rime drake, plant w:20 / fungus w:1 / bush w:1
 NSUBST: 1 = 1:1 / * = 1.., . = 1:2 / * = ...2, . = 1:% / * = ...%
 MAP
    ...
@@ -949,7 +952,7 @@ NAME:   guppyfry_lair_drakes
 DEPTH:  Lair
 WEIGHT: 15
 : if you.depth() > 3 and crawl.coinflip() then
-MONS:   fire drake / swamp drake / mottled dragon
+MONS:   rime drake / swamp drake / mottled dragon
 MONS:   steam dragon
 MONS:   plant
 SUBST:  -_ = wwWW..%
@@ -2495,7 +2498,7 @@ NAME:    evil_forest
 PLACE:   Lair:$
 TAGS:    no_pool_fixup no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
-MONS:    hydra / fire drake / dire elephant
+MONS:    hydra / rime drake / dire elephant
 MONS:    red devil / ice devil w:15 / orange demon w:15 / hell hound w:5
 MONS:    hellwing, sun demon, sixfirhy, smoke demon, hell beast
 KMONS:   8 = wizard
@@ -2592,7 +2595,7 @@ NAME:    hangedman_lair_caniforms_friends
 PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
 ORIENT:  southwest
-MONS:    jackal, hound, warg, wolf, hell hound, raiju
+MONS:    jackal, hound, wolf, warg, hell hound, raiju
 KMONS:   7 = black bear
 KMONS:   8 = polar bear
 KMONS:   P = plant
@@ -2601,9 +2604,9 @@ KMONS:   P = plant
 KITEM:   $ = any, any w:1 / nothing w:5, beef jerky q:3
 KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
-NSUBST:  4 = 1:6 / 1 : 4:4 5:3 6:1 / *:4
+NSUBST:  4 = 1:5 / 1:6 / 2 : 4:4 5:3 6:1 / *:4
 SHUFFLE: %'*" / '$"|
-SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:3 6:1, p = PP.
+SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:2 6:1, p = PP.
 CLEAR:   `
 : lair_small_ending(_G)
 MAP
@@ -2612,26 +2615,26 @@ xxxxxxxxxxxxxxxxxxxxxxxxxp..p..
 xxxxxxxxxxxxxxxxxxxxxxxxxxp..p.
 xxxxxxXxxxxxxxxxxxxxxxxxxxx....
 xx%'78xxxxXXxxxxxxxxxxxxxxxP..p@
-xx8..78xXx77xxxxxxxxxxxx...xP..
+xx8..78xXx77xPxxxxxxxxxx...xP..
 xxx...xxx%...xPxx2x.x2x.11..xP.
 xxXx4..xxx...Px7x.......111..xp@
 xxxxxx.......Px........x...xxxx
 xxxxX0.xx...7xP7..x2..x2xxxxxxx
-xxxxxx3.xx.%XXxx..xxxxxxxxxxxxxz
+xxxxxx30xx.%XXxx..xxxxxxxxxxxxxz
 xxxxx"x.8..xxxxx..xx3x2xx.xxxxxz
 xxxxXx....7Xxxxx....x.x....x2xxz
 xxxxx%....xxxxxxx.............xz
 xxxxx7....7xXxxxxx............xz
-xxxxXx7....8xxxxxxxx4x...x4x..xx
-xxxxxxx8.%8xXxxxxxxxxxx.xxxxx..x
-xxxxxxxPxPxxxxxxxxxxxxxxxxxxx.2x
+xxxxXx7....8xxxxxxxx3x...x4x..xx
+xxxxxxP8.%8xXxxxxxxxxxx.xxxxx..x
+xxxxxPxPxPxxxxxxxxxxxxxxxxxxx.2x
 xxxxxx8x7xxxxx3'xxxxxx..x.x...xx
-xxxxx...xxxxxx..x.x3x...44....xz
-xx*x3.....'xx222...x....4....xxz
+xxxxx..7xxxxxx..x.x3x...44....xz
+xx*x3.....'xx222...x....3....xxz
 xxx4.......2x..2..........4..xxx
-xx0.5...xx....xx.....xx....xxxxx
-xxx0..'xxxx..xxx....x.xx3x3xxxxx
-xxx.4.xxxxxx4xxxx'.xxxxxxxxxxxxx
+xx0.5.3.xx....xx.....xx....xxxxx
+xxx6.4'xxxx..xxx....x.xx3x3xxxxx
+xxx.0.xxxxxx4xxxx'.xxxxxxxxxxxxx
 xxx'.%xxxxxxxxxxxx4xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2791,7 +2794,7 @@ NAME:   guppyfry_lair_end_dragon
 PLACE:  Lair:$
 TAGS:   patrolling no_monster_gen
 ORIENT: southeast
-KMONS:  1 = fire drake / swamp drake / mottled dragon / steam dragon
+KMONS:  1 = rime drake / swamp drake / mottled dragon / steam dragon
 KMONS:  2 = fire dragon
 KMONS:  3 = plant
 KMONS:  4 = basilisk / komodo dragon
@@ -2837,7 +2840,7 @@ ORIENT:  float
 PLACE:   Lair:$
 # mons are in groups of four, each ordered from least to most dangerous.
 # mythological or dragon-y reptiles
-MONS:    basilisk, fire drake, komodo dragon, hydra
+MONS:    basilisk, rime drake, komodo dragon, hydra
 # mythological non-reptiles
 MONS:    hippogriff, griffon, manticore
 KMONS:   8 = catoblepas
@@ -2963,7 +2966,7 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / wasp w:6, wasp / wyvern w:6
+MONS:    water moccasin / wyvern, wasp
 MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus

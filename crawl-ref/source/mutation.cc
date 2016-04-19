@@ -140,6 +140,7 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_SUSTAIN_ATTRIBUTES,  MUT_DETERIORATION,         -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -317,6 +318,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
         return MUTACT_INACTIVE;
 
+    if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
+         && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
+    {
+        return MUTACT_INACTIVE;
+    }
+
     return MUTACT_FULL;
 }
 
@@ -412,6 +419,9 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
+        result += _annotate_form_based("You are amphibious.",
+                                       !form_likes_water());
+
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
@@ -464,7 +474,7 @@ string describe_mutations(bool center_title)
         }
     }
 
-    if (beogh_water_walk())
+    if (have_passive(passive_t::water_walk))
         result += "<green>You can walk on water.</green>\n";
 
     if (you.duration[DUR_FIRE_SHIELD])
@@ -500,10 +510,10 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    "<w>Right-click</w> or press '<w>!</w>'"
 #else
-    "<w>Right-click</w>"
+    "Press '<w>!</w>'"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
@@ -1199,10 +1209,9 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
         return true;
     }
 
-    const int item_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
     // To be nice, beneficial mutations go through removable sources of rMut.
     if (you.rmut_from_item() && !beneficial
-        && !one_chance_in(item_resist_chance))
+        && !one_chance_in(mut_resist_chance))
     {
         return true;
     }
@@ -1247,7 +1256,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::resist_mutation)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -1778,12 +1787,21 @@ const char* mutation_name(mutation_type mut)
     return _get_mutation_def(mut).short_desc;
 }
 
-const char* mutation_desc_for_text(mutation_type mut)
+/**
+ * A summary of what the next level of a mutation does.
+ *
+ * @param mut   The mutation_type in question; e.g. MUT_FRAIL.
+ * @return      The mutation's description, helpfully trimmed.
+ *              e.g. "you are frail (-10% HP)".
+ */
+string mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return _get_mutation_def(mut).desc;
+    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
+    strip_suffix(lowercase(mut_desc), ".");
+    return mut_desc;
 }
 
 int mutation_max_levels(mutation_type mut)
@@ -1968,7 +1986,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
     // Tier 3 facets
-    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_HELLFIRE },
+    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_DAMNATION },
       { 50, 50, 50 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_FREEZING_CLOUD_IMMUNITY, MUT_PASSIVE_FREEZE },
       { 50, 50, 50 } },
@@ -2395,7 +2413,8 @@ void check_monster_detect()
             if (remembered_monster != mon->type)
             {
                 const monster_type mc = mon->friendly() ? MONS_SENSED_FRIENDLY
-                      : in_good_standing(GOD_ASHENZARI) ? ash_monster_tier(mon)
+                                      : have_passive(passive_t::detect_montier)
+                                                        ? ash_monster_tier(mon)
                                                         : MONS_SENSED;
 
                 env.map_knowledge(*ri).set_detected_monster(mc);

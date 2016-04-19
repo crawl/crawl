@@ -496,7 +496,7 @@ bool Menu::process_key(int keyin)
     case CK_END:
     {
         nav = true;
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
         {
             first_entry = breakpoint;
@@ -1542,30 +1542,43 @@ void Menu::webtiles_set_suffix(const formatted_string suffix)
     }
 }
 
-void Menu::webtiles_update_item(int index) const
+void Menu::webtiles_update_items(int start, int end) const
 {
+    ASSERT_RANGE(start, 0, (int) items.size());
+    ASSERT_RANGE(end, start, (int) items.size());
+
     tiles.json_open_object();
 
     tiles.json_write_string("msg", "update_menu_items");
-    tiles.json_write_int("chunk_start", index);
+    tiles.json_write_int("chunk_start", start);
 
     tiles.json_open_array("items");
-    tiles.json_open_object();
 
-    const MenuEntry* me = items[index];
-    if (me->selected_qty)
-        tiles.json_write_int("sq", me->selected_qty);
-    tiles.json_write_string("text", me->get_text());
-    int col = item_colour(index, me);
-    if (col != MENU_ITEM_STOCK_COLOUR)
-        tiles.json_write_int("colour", col);
-    webtiles_write_tiles(*me);
+    for (int i = start; i <= end; ++i)
+    {
+        tiles.json_open_object();
+        const MenuEntry* me = items[i];
+        if (me->selected_qty)
+            tiles.json_write_int("sq", me->selected_qty);
+        tiles.json_write_string("text", me->get_text());
+        int col = item_colour(i, me);
+        // previous colour field is deleted by client if new one not sent
+        if (col != MENU_ITEM_STOCK_COLOUR)
+            tiles.json_write_int("colour", col);
+        webtiles_write_tiles(*me);
+        tiles.json_close_object();
+    }
 
-    tiles.json_close_object();
     tiles.json_close_array();
 
     tiles.json_close_object();
     tiles.finish_message();
+}
+
+
+void Menu::webtiles_update_item(int index) const
+{
+    webtiles_update_items(index, index);
 }
 
 void Menu::webtiles_update_title() const
@@ -1841,6 +1854,31 @@ void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
         add_item_formatted_string(formatted_string::parse_string("\n"));
 }
 
+void formatted_scroller::add_raw_text(const string& s, bool new_line,
+                                      int wrap_col)
+{
+    vector<formatted_string> parts;
+
+    vector<string> lines = split_string("\n", s, false, true);
+    if (wrap_col > 0)
+    {
+        vector<string> pre_split = move(lines);
+        for (string &line : pre_split)
+        {
+            if (line.empty())
+                lines.emplace_back(" ");
+            while (!line.empty())
+                lines.push_back(wordwrap_line(line, wrap_col, false, true));
+        }
+    }
+
+    for (const string &line : lines)
+        add_item_formatted_string(formatted_string(line));
+
+    if (new_line)
+        add_item_formatted_string(formatted_string::parse_string("\n"));
+}
+
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
                                                    int hotkey)
 {
@@ -2081,7 +2119,7 @@ bool formatted_scroller::process_key(int keyin)
         break;
     case CK_END:
     {
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
             repaint = jump_to(breakpoint);
         break;
@@ -2131,8 +2169,7 @@ int ToggleableMenu::pre_process(int key)
         draw_menu();
 
 #ifdef USE_TILE_WEB
-        for (unsigned int i = 0; i < items.size(); ++i)
-            webtiles_update_item(i);
+        webtiles_update_items(0, items.size() - 1);
 #endif
 
         if (flags & MF_TOGGLE_ACTION)

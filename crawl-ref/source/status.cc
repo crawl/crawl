@@ -498,7 +498,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_MAGIC_SAPPED:
-        if (you.duration[DUR_MAGIC_SAPPED] > 50 * BASELINE_DELAY)
+        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
         {
             inf->light_colour = RED;
             inf->light_text   = "-Wiz";
@@ -506,7 +506,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been greatly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED] > 20 * BASELINE_DELAY)
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
         {
             inf->light_colour = LIGHTRED;
             inf->light_text   = "-Wiz";
@@ -514,7 +514,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been significantly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED])
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
         {
             inf->light_colour = YELLOW;
             inf->light_text   = "-Wiz";
@@ -1033,8 +1033,8 @@ const char *duration_mid_message(duration_type dur)
 }
 
 /**
- * How much should the duration be decreased by when it hits 50% (to fuzz the
- * remaining time), if at all?
+ * How much should the duration be decreased by when it hits the midpoint (to
+ * fuzz the remaining time), if at all?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      A random value to reduce the remaining duration by; may be 0.
@@ -1042,6 +1042,19 @@ const char *duration_mid_message(duration_type dur)
 int duration_mid_offset(duration_type dur)
 {
     return _lookup_duration(dur)->decr.mid_msg.offset();
+}
+
+/**
+ * At what number of turns remaining is the given duration considered to be
+ * 'expiring', for purposes of messaging & status light colouring?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The maximum number of remaining turns at which the duration
+ *              is considered 'expiring'; may be 0.
+ */
+int duration_expire_point(duration_type dur)
+{
+    return _lookup_duration(dur)->expire_threshold * BASELINE_DELAY;
 }
 
 /**

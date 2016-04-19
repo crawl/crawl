@@ -972,3 +972,44 @@ MAP
 .........xxx+xxx.........
 @.......................@
 ENDMAP
+
+#       arrival/large
+
+NAME:   kennysheep_arrival_seaside
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: southeast
+KMONS:  p = plant
+KFEAT:  W = open_sea
+FTILE:  ' = floor_sand
+FTILE:  .pt = floor_dirt
+COLOUR: .p = brown
+COLOUR: ' = yellow
+MAP
+             xxxxxxxxxxx
+             xptp''wwwwW
+             xx..''wwwwW
+             xx...''wwwW
+             +...t''wwwW
+             +....''wwwW
+             +...''wwwwW
+             xxp..'wwwwW
+             xx..'''wwwW
+             x...'''wwwW
+             xt..''wwwwW
+             xt..''wwwwW
+             xp..'''wwwW
+             x....'''wwW
+             xp...'wwwwW
+xxxxxxxxxxxxxxt...''wwwW
+xtttttttt.p.pt....''wwwW
+xtttttttt........''wwwwW
+xttttt{t.....t.p..''wwwW
+xtttttp..........''wwwwW
+xttttt.....''..'''wwwwwW
+xttttt..'''''''''wwwwwwW
+xttttttt''ww''wwwwwwwwwW
+xttttwwwwwwwwwwwwwwwwwwW
+xttttwwwwwwwwwwwwwwwwwwW
+xtwwwwwwwwwwwwwwwwwwwwwW
+xWWWWWWWWWWWWWWWWWWWWWWW
+ENDMAP

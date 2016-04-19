@@ -1411,17 +1411,17 @@ giga bat
 glaive
 
 “To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lenghts, you
+Partiſan or Gleue, or ſuch like weapons of vantage and perfect lengths, you
 ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
 left hãd, reaching with your right hand your ſtaffe as high as you can, and
 then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thrust and ward, & that is the iuſt
+fight, wherein you may conueniently ſtrike, thruſt and ward, & that is the iuſt
 length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foor long, and will fit, although not
+commonly fall out to be eight or nine foot long, and will fit, although not
 iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
 fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
 to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmost hand doth no harme.”
+ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
 %%%%
 gnoll
@@ -2148,15 +2148,6 @@ potion of blood
 and thou mayest not eat the life with the flesh.”
     -KJV Bible, Deuteronomy 12:23
 %%%%
-potion of poison
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of curing
 
 “But if when you say ‘whiskey’ you mean the oil of conversation,
@@ -2164,6 +2155,15 @@ potion of curing
  get together, that puts a song in their hearts and laughter on
  their lips, and the warm glow of contentment in their eyes...
  then certainly I am for it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
+%%%%
+potion of degeneration
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 profane servitor
@@ -3208,7 +3208,7 @@ summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.
 %%%%
-wand of cold
+wand of acid
 
 <wand>
 %%%%
@@ -3224,27 +3224,11 @@ wand of disintegration
 
 <wand>
 %%%%
-wand of draining
-
-<wand>
-%%%%
 wand of enslavement
 
 <Enslavement spell>
 %%%%
-wand of fire
-
-<wand>
-%%%%
-wand of fireball
-
-<wand>
-%%%%
 wand of flame
-
-<wand>
-%%%%
-wand of frost
 
 <wand>
 %%%%
@@ -3252,15 +3236,11 @@ wand of hasting
 
 <wand>
 %%%%
-wand of invisibility
+wand of iceblast
 
 <wand>
 %%%%
 wand of lightning
-
-<wand>
-%%%%
-wand of magic darts
 
 <wand>
 %%%%

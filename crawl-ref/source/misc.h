@@ -10,6 +10,7 @@
 #include "target.h"
 
 #include <algorithm>
+#include <chrono>
 #include <numeric> // iota
 #include <queue>
 
@@ -67,7 +68,9 @@ void swap_with_monster(monster *mon_to_swap);
 
 int apply_chunked_AC(int dam, int ac);
 
-void handle_real_time(time_t t = time(0));
+void handle_real_time(chrono::time_point<chrono::system_clock> when
+                      = chrono::system_clock::now());
+
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
@@ -278,6 +281,7 @@ struct counted_monster_list
 bool today_is_halloween();
 
 bool tobool(maybe_bool mb, bool def);
+maybe_bool frombool(bool b);
 
 /** Remove from a container all elements matching a predicate.
  *

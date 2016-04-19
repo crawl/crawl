@@ -57,10 +57,13 @@ function random_stair(e, symbol)
   if you.depth() > 1 then
     valid = "([{"
   else
-    valid = "{"
+    valid = "" -- should always coincide with depth_fraction() < 1
   end
   if you.depth_fraction() < 1 then
     valid = valid .. ")]}"
+  end
+  if valid == "" then
+    valid = "." -- shouldn't happen outside validation/caching
   end
   e.subst(symbol .. " = " .. valid)
 end
@@ -258,16 +261,16 @@ ENDMAP
 
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen
-DEPTH: D:8-13, Lair, Spider
+DEPTH: D:8-, Lair, Spider
 KMONS: 1 = worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
 KITEM: | = |, *, %
 KFEAT: 12P| = W
 : if you.absdepth() > 13 then
-SUBST: 1 = 11222
-: else
 SUBST: 1 = 112
+: else
+SUBST: 1 = 1112
 : end
 SUBST: W = W:20 w
 MAP
@@ -275,7 +278,7 @@ MAP
  WWWWW1WWWWW
 WWWxxxxxxxWWW
 WWxx11111xPWW
-W1x|11111PPWW
+W1x|21111PPWW
 WWxx11111xPWW
 WWWxxxxxxxWWW
  WWWWW1WWWWW
@@ -824,7 +827,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
+KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -879,7 +882,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
+KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -1181,12 +1184,12 @@ ENDMAP
 
 # Elven Outpost
 #   50-50 chance of spiral arms, 50-50 chance of a moat
-#   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
 DEPTH:   D:11-, Orc, Elf
 MONS:    deep elf mage
 SHUFFLE: ?_/bb, _'/ww
 SUBST:   ?_' = .
+NSUBST:  1 = 2:% / 2 = 1% / *:1
 MAP
 .?.....???..
 ?.'''__'''?.
@@ -1621,10 +1624,10 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
-ITEM:    staff of summoning w:20 / rod of shadows w:5 / rod of the swarm w:5
+ITEM:    staff of summoning w:20 / rod of shadows
 ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
 ITEM:    fan of gales / lamp of fire / \
-         stone of tremors / phial of floods / lantern of shadows
+         stone of tremors / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
@@ -1659,7 +1662,7 @@ DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
 KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
-                   wand of magic darts w:35 | wand of flame | wand of frost . \
+                   wand of flame w:55 . \
                    potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf mage
 KITEM:   8d = robe, hat w:40 / hat good_item, \
@@ -1697,12 +1700,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   Depths
-MONS:    necromancer ; wand of cold | wand of frost w:5 . \
+MONS:    necromancer ; wand of iceblast . \
          staff of fire ident:type w:15 | quarterstaff ego:flaming ident:type w:14 | \
          rod of ignition w:1 ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
-MONS:    necromancer ; wand of fire | wand of flame w:5 . \
+MONS:    necromancer ; wand of lightning | wand of flame w:5 . \
          staff of cold ident:type | quarterstaff ego:freezing ident:type | \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
@@ -1731,26 +1734,6 @@ MAP
                              ..bb14bb.
                               ..bbbb..
                                ......
-ENDMAP
-
-NAME:  lightli_swarmer
-DEPTH: D:10-
-: if you.absdepth() < 12 then
-MONS:  two-headed ogre ; rod of the swarm ident:type . giant club
-: elseif you.absdepth () < 16 then
-MONS:  hill giant ; rod of the swarm ident:type
-: else
-MONS:  ettin ; rod of the swarm ident:type . great mace
-: end
-MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
-MONS:  worker ant w:3 / vampire mosquito w:1 / wasp w:1
-ITEM: royal jelly
-MAP
-xxxxxx
-x32*dx
-x213*x
-x3232x
-xx+xxx
 ENDMAP
 
 NAME:  guppyfry_early_elven_hall
@@ -5565,7 +5548,7 @@ COLOUR:  F = lightblue
 : elseif you.in_branch("Tar") then
 KMONS:   9 = soul eater / shadow demon / vampire mage / flayed ghost
 KMONS:   8 = tormentor / revenant / mummy priest
-KMONS:   7 = shadow fiend
+KMONS:   7 = tzitzimitl
 MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -5846,8 +5829,7 @@ KMONS:   M = Wiglaf / ancient champion, ancient champion / nothing
 KMONS:   N = Frederick / draconian knight, draconian knight / nothing
 KMONS:   O = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   W = gnoll sergeant ; trident . scale mail | chain mail . shield
-KMONS:   X = deep elf knight ; rapier | long sword . robe | leather armour . buckler | nothing
-KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
+KMONS:   X = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item triple sword / good_item double sword
 KFEAT:   S = known permanent teleport trap
@@ -5861,7 +5843,7 @@ KMONS:   k = orc warrior / orc knight w:5 / orc w:1
 NSUBST:  k = 2 = EFIJ / *:k
 KMONS:   k = deep elf knight
 : elseif you.absdepth() < 10 then
-SUBST:   k = ABWXY
+SUBST:   k = ABWX
 : elseif you.absdepth() < 13 then
 SUBST:   k = ABCDEF
 : elseif you.absdepth() < 16 then
@@ -6053,13 +6035,13 @@ KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer
 KMONS:  8 = bone dragon / lich / ancient lich / vampire knight / w:5 revenant / \
             ancient champion / w:5 eidolon / w:20 reaper / soul eater / w:30 place:Crypt:$
 : elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
+KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
             iron dragon / tormentor / iron golem / place:Dis
 : elseif you.in_branch("Geh") then
 KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / salamander stormcaller / place:Geh
 : elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
+KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / lich / \
             ancient lich / w:5 revenant / w:15 place:Tar
 : elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \

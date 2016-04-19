@@ -27,12 +27,13 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
+#include "godpassive.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -48,7 +49,6 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
-#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -78,7 +78,6 @@
 #include "target.h"
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
-#include "throw.h"
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
@@ -131,8 +130,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true,
                                        false);
+
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     item_def& wpn(you.inv[item_slot]);
     // Only TSO allows blessing ranged weapons.
@@ -163,11 +166,10 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-    const bool is_cursed = wpn.cursed();
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
-    if (is_cursed)
-        do_uncurse_item(wpn, false);
+    if (wpn.cursed())
+        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -653,7 +655,7 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @param quiet[in]     Whether to suppress messenging.
+ * @param quiet[in]     Whether to suppress messaging.
  * @return  -1 if the monster is already affected. The eligibility vector
  *          is unchanged.
  * @return  0 if the monster is otherwise ineligible for recite. The
@@ -1229,8 +1231,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (affected
         && one_chance_in(3)
         && mon->alive()
-        && !mon->asleep()
-        && !mon->cannot_move()
         && mons_shouts(mon->type, false) != S_SILENT)
     {
         handle_monster_shouts(mon, true);
@@ -1361,8 +1361,7 @@ void tso_divine_shield()
     surge_power(you.spec_invoc(), "divine");
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
-        if (you.shield()
-            || you.duration[DUR_CONDENSATION_SHIELD])
+        if (you.shield())
         {
             mprf("Your shield is strengthened by %s divine power.",
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());
@@ -1607,11 +1606,6 @@ void trog_remove_trogs_hand()
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
-bool beogh_water_walk()
-{
-    return in_good_standing(GOD_BEOGH, 4);
-}
-
 /**
  * Has the monster been given a Beogh gift?
  *
@@ -1620,7 +1614,8 @@ bool beogh_water_walk()
  */
 static bool _given_gift(const monster* mon)
 {
-    return mon->props.exists(BEOGH_WPN_GIFT_KEY)
+    return mon->props.exists(BEOGH_RANGE_WPN_GIFT_KEY)
+            || mon->props.exists(BEOGH_MELEE_WPN_GIFT_KEY)
             || mon->props.exists(BEOGH_ARM_GIFT_KEY)
             || mon->props.exists(BEOGH_SH_GIFT_KEY);
 }
@@ -1731,14 +1726,23 @@ bool beogh_gift_item()
     const bool weapon = gift.base_type == OBJ_WEAPONS;
     const bool range_weapon = weapon && is_range_weapon(gift);
     const item_def* mons_weapon = mons->weapon();
+    const item_def* mons_alt_weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
 
     if (weapon && !mons->could_wield(gift)
         || body_armour && !check_armour_size(gift, mons->body_size())
-        || shield && mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
         || !item_is_selected(gift, OSEL_BEOGH_GIFT))
     {
         mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
 
+        return false;
+    }
+    else if (shield
+             && (mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
+                 || mons_alt_weapon
+                    && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
+    {
+        mprf("%s can't equip that with a two-handed weapon.",
+             mons->name(DESC_THE, false).c_str());
         return false;
     }
 
@@ -1765,8 +1769,72 @@ bool beogh_gift_item()
         mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
         mons->props[BEOGH_ARM_GIFT_KEY] = true;
+    else if (range_weapon)
+        mons->props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
     else
-        mons->props[BEOGH_WPN_GIFT_KEY] = true;
+        mons->props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+
+    return true;
+}
+
+bool beogh_resurrect()
+{
+    item_def* corpse = nullptr;
+    bool found_any = false;
+    for (stack_iterator si(you.pos()); si; ++si)
+        if (si->props.exists(ORC_CORPSE_KEY))
+        {
+            found_any = true;
+            if (yesno(("Resurrect "
+                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
+                       + "?").c_str(), true, 'n'))
+            {
+                corpse = &*si;
+                break;
+            }
+        }
+    if (!corpse)
+    {
+        mprf("There's nobody %shere you can resurrect.",
+             found_any ? "else " : "");
+        return false;
+    }
+
+    coord_def pos;
+    ASSERT(corpse->props.exists(ORC_CORPSE_KEY));
+    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (!actor_at(*ai)
+            && corpse->props[ORC_CORPSE_KEY].get_monster().is_location_safe(*ai))
+        {
+            pos = *ai;
+        }
+    }
+    if (pos.origin())
+    {
+        mpr("There's no room!");
+        return false;
+    }
+
+    monster* mon = get_free_monster();
+    *mon = corpse->props[ORC_CORPSE_KEY];
+    destroy_item(corpse->index());
+    env.mid_cache[mon->mid] = mon->mindex();
+    mon->hit_points = mon->max_hit_points;
+    mon->inv.init(NON_ITEM);
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (!si->props.exists(DROPPER_MID_KEY)
+            || si->props[DROPPER_MID_KEY].get_int() != int(mon->mid))
+        {
+            continue;
+        }
+        unwind_var<int> save_speedinc(mon->speed_increment);
+        mon->pickup_item(*si, false, true);
+    }
+    mon->move_to_pos(pos);
+    mon->timeout_enchantments(100);
+    beogh_convert_orc(mon, conv_t::RESURRECTION);
 
     return true;
 }
@@ -1849,8 +1917,14 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    // Drop the monster's holy equipment, and keep wielding the rest. Also
-    // remove any of its active avatars.
+    // Rebrand or drop any holy equipment, and keep wielding the rest. Also
+    // remove any active avatars.
+    item_def *wpn = mon->mslot_item(MSLOT_WEAPON);
+    if (wpn && get_weapon_brand(*wpn) == SPWPN_HOLY_WRATH)
+    {
+        set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_DRAINING);
+        convert2bad(*wpn);
+    }
     monster_drop_things(mon, false, is_holy_item);
     mon->remove_avatars();
 
@@ -1876,7 +1950,10 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.
     mon->flags |= orig.flags & MF_MELEE_MASK;
-    mon->spells = orig.spells;
+    monster_spells spl = orig.spells;
+    for (const mon_spell_slot &slot : spl)
+        if (!(get_spell_flags(slot.spell) & SPFLAG_HOLY))
+            mon->spells.push_back(slot);
 
     name_zombie(mon, &orig);
 
@@ -1888,6 +1965,13 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     mon->stop_constricting_all(false);
     mon->stop_being_constricted();
+
+    if (orig.halo_radius()
+        || orig.umbra_radius()
+        || orig.silence_radius())
+    {
+        invalidate_agrid();
+    }
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
@@ -2035,7 +2119,7 @@ bool kiku_gift_necronomicon()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return you_worship(GOD_FEDHAS)
+    return have_passive(passive_t::pass_through_plants)
            && mons_class_is_plant(mc)
            && mons_class_is_stationary(mc)
            && mc != MONS_SNAPLASHER_VINE
@@ -3320,7 +3404,7 @@ static const map<monster_type, monster_conversion> conversions =
 
 bool mons_is_evolvable(const monster* mon)
 {
-    return conversions.count(mon->type);
+    return conversions.count(mon->type) && !mon->has_ench(ENCH_PETRIFIED);
 }
 
 bool fedhas_check_evolve_flora(bool quiet)
@@ -3336,7 +3420,8 @@ bool fedhas_check_evolve_flora(bool quiet)
 
 static vector<string> _evolution_name(const monster_info& mon)
 {
-    if (auto conv = map_find(conversions, mon.type))
+    auto conv = map_find(conversions, mon.type);
+    if (conv && !mon.has_trivial_ench(ENCH_PETRIFIED))
         return { "can evolve into " + mons_type_name(conv->new_type, DESC_A) };
     else
         return { "cannot be evolved" };
@@ -3381,13 +3466,15 @@ spret_type fedhas_evolve_flora(bool fail)
     {
         if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else if (mons_is_plant(plant))
+        else if (!mons_is_plant(plant))
+            mpr("Only plants or fungi may be evolved.");
+        else if (plant->has_ench(ENCH_PETRIFIED))
+            mpr("Stone cannot grow or evolve.");
+        else
         {
             simple_monster_message(plant, " has already reached the pinnacle"
                                    " of evolution.");
         }
-        else
-            mpr("Only plants or fungi may be evolved.");
 
         return SPRET_ABORT;
     }
@@ -3792,6 +3879,42 @@ bool ashenzari_end_transfer(bool finished, bool force)
     return true;
 }
 
+/**
+ * Give a prompt to curse an item.
+ *
+ * This is the core logic behind Ash's Curse Item ability.
+ * Player can abort without penalty.
+ * Player can curse any cursable item (not just worn ones).
+ *
+ * @param num_rc Number of remove curse scrolls available.
+ * @return       Whether the player cursed anything.
+ */
+bool ashenzari_curse_item(int num_rc)
+{
+    ASSERT(num_rc > 0);
+    const string prompt_msg = make_stringf(
+            "Curse which item? (%d remove curse scroll%s left)"
+            " (Esc to abort)",
+            num_rc, num_rc == 1 ? "" : "s");
+    const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
+                                             OSEL_CURSABLE,
+                                             true, true, false);
+    if (prompt_failed(item_slot))
+        return false;
+
+    item_def& item(you.inv[item_slot]);
+
+    if (!item_is_cursable(item))
+    {
+        mpr("You can't curse that!");
+        return false;
+    }
+
+    do_curse_item(item, false);
+    learned_something_new(HINT_YOU_CURSED);
+    return true;
+}
+
 bool can_convert_to_beogh()
 {
     if (silenced(you.pos()))
@@ -3959,218 +4082,6 @@ bool dithmenos_shadow_step()
          apostrophise(victim->name(DESC_THE)).c_str());
 
     return true;
-}
-
-static bool _dithmenos_shadow_acts()
-{
-    if (!in_good_standing(GOD_DITHMENOS, 3))
-        return false;
-
-    // 10% chance at 4* piety; 50% chance at 200 piety.
-    const int range = MAX_PIETY - piety_breakpoint(3);
-    const int min   = range / 5;
-    return x_chance_in_y(min + ((range - min)
-                                * (you.piety - piety_breakpoint(3))
-                                / (MAX_PIETY - piety_breakpoint(3))),
-                         2 * range);
-}
-
-monster* shadow_monster(bool equip)
-{
-    if (monster_at(you.pos()))
-        return nullptr;
-
-    int wpn_index  = NON_ITEM;
-
-    // Do a basic clone of the weapon.
-    item_def* wpn = you.weapon();
-    if (equip
-        && wpn
-        && (wpn->base_type == OBJ_WEAPONS
-            || wpn->base_type == OBJ_STAVES
-            || wpn->base_type == OBJ_RODS))
-    {
-        wpn_index = get_mitm_slot(10);
-        if (wpn_index == NON_ITEM)
-            return nullptr;
-        item_def& new_item = mitm[wpn_index];
-        if (wpn->base_type == OBJ_STAVES)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_STAFF;
-        }
-        else if (wpn->base_type == OBJ_RODS)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_ROD;
-        }
-        else
-        {
-            new_item.base_type = wpn->base_type;
-            new_item.sub_type  = wpn->sub_type;
-        }
-        new_item.quantity = 1;
-        new_item.rnd = 1;
-        new_item.flags   |= ISFLAG_SUMMONED;
-    }
-
-    monster* mon = get_free_monster();
-    if (!mon)
-    {
-        if (wpn_index)
-            destroy_item(wpn_index);
-        return nullptr;
-    }
-
-    mon->type       = MONS_PLAYER_SHADOW;
-    mon->behaviour  = BEH_SEEK;
-    mon->attitude   = ATT_FRIENDLY;
-    mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                    | MF_WAS_IN_VIEW | MF_HARD_RESET;
-    mon->hit_points = you.hp;
-    mon->set_hit_dice(min(27, max(1,
-                                  you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? item_attack_skill(mitm[wpn_index])
-                                                 : SK_UNARMED_COMBAT, 10, 20)
-                                  + you.skill_rdiv(SK_FIGHTING, 10, 20))));
-    mon->set_position(you.pos());
-    mon->mid        = MID_PLAYER;
-    mon->inv[MSLOT_WEAPON]  = wpn_index;
-    mon->inv[MSLOT_MISSILE] = NON_ITEM;
-
-    mgrd(you.pos()) = mon->mindex();
-
-    return mon;
-}
-
-void shadow_monster_reset(monster *mon)
-{
-    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_WEAPON]);
-    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_MISSILE]);
-
-    mon->reset();
-}
-
-/**
- * Check if the player is in melee range of the target.
- *
- * Certain effects, e.g. distortion blink, can cause monsters to leave melee
- * range between the initial hit & the shadow mimic.
- *
- * XXX: refactor this with attack/fight code!
- *
- * @param target    The creature to be struck.
- * @return          Whether the player is melee range of the target, using
- *                  their current weapon.
- */
-static bool _in_melee_range(actor* target)
-{
-    const int dist = (you.pos() - target->pos()).abs();
-    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
-}
-
-void dithmenos_shadow_melee(actor* target)
-{
-    if (!target
-        || !target->alive()
-        || !_in_melee_range(target)
-        || !_dithmenos_shadow_acts())
-    {
-        return;
-    }
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    mon->target     = target->pos();
-    mon->foe        = target->mindex();
-
-    fight_melee(mon, target);
-
-    shadow_monster_reset(mon);
-}
-
-void dithmenos_shadow_throw(const dist &d, const item_def &item)
-{
-    ASSERT(d.isValid);
-    if (!_dithmenos_shadow_acts())
-        return;
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    int ammo_index = get_mitm_slot(10);
-    if (ammo_index != NON_ITEM)
-    {
-        item_def& new_item = mitm[ammo_index];
-        new_item.base_type = item.base_type;
-        new_item.sub_type  = item.sub_type;
-        new_item.quantity  = 1;
-        new_item.rnd = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-        mon->inv[MSLOT_MISSILE] = ammo_index;
-
-        mon->target = clamp_in_bounds(d.target);
-
-        bolt beem;
-        beem.set_target(d);
-        setup_monster_throw_beam(mon, beem);
-        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
-        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
-    }
-
-    shadow_monster_reset(mon);
-}
-
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
-{
-    if (!orig_beam)
-        return;
-
-    const coord_def target = orig_beam->target;
-
-    if (orig_beam->target.origin()
-        || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
-        || orig_beam->flavour == BEAM_ENSLAVE
-           && monster_at(target) && monster_at(target)->friendly()
-        || !_dithmenos_shadow_acts())
-    {
-        return;
-    }
-
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
-
-    // Don't let shadow spells get too powerful.
-    mon->set_hit_dice(max(1,
-                          min(3 * spell_difficulty(spell),
-                              you.experience_level) / 2));
-
-    mon->target = clamp_in_bounds(target);
-    if (actor_at(target))
-        mon->foe = actor_at(target)->mindex();
-
-    spell_type shadow_spell = spell;
-    if (!orig_beam->is_enchantment())
-    {
-        shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
-                                           : SPELL_SHADOW_SHARD;
-    }
-
-    bolt beem;
-    beem.target = target;
-    beem.aimed_at_spot = orig_beam->aimed_at_spot;
-
-    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
-         mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
-
-    shadow_monster_reset(mon);
 }
 
 static potion_type _gozag_potion_list[][4] =
@@ -4911,6 +4822,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
         args.self = CONFIRM_CANCEL;
+        args.hitfunc = &tgt;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
         bolt tempbeam;
@@ -5054,7 +4966,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     return SPRET_SUCCESS;
 }
 
-void qazlal_elemental_force()
+spret_type qazlal_elemental_force(bool fail)
 {
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
@@ -5085,8 +4997,10 @@ void qazlal_elemental_force()
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
-        return;
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     surge_power(you.spec_invoc(), "divine");
 
@@ -5143,6 +5057,8 @@ void qazlal_elemental_force()
         mprf(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
     else
         canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
+
+    return SPRET_SUCCESS;
 }
 
 bool qazlal_disaster_area()
@@ -5824,7 +5740,7 @@ void ru_offer_new_sacrifices()
         }
 
         // add it to the list of chosen sacrifices to offer, and remove it from
-        // the list of possiblities for the later sacrifices
+        // the list of possibilities for the later sacrifices
         available_sacrifices.push_back(chosen_sacrifice);
         you.sacrifice_piety[chosen_sacrifice] =
                                 get_sacrifice_piety(chosen_sacrifice, false);
@@ -5836,6 +5752,13 @@ void ru_offer_new_sacrifices()
 
     simple_god_message(" believes you are ready to make a new sacrifice.");
     // included in default force_more_message
+}
+
+/// What key corresponds to the potential/chosen mut(s) for this sacrifice?
+string ru_sacrifice_vector(ability_type sac)
+{
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
+    return sac_def.sacrifice_vector ? sac_def.sacrifice_vector : "";
 }
 
 static const char* _describe_sacrifice_piety_gain(int piety_gain)
@@ -6062,7 +5985,7 @@ bool ru_do_sacrifice(ability_type sac)
                 }
             }
             else
-                sac_text = static_cast<string>(mutation_desc_for_text(mut));
+                sac_text = mut_upgrade_summary(mut);
         }
         offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
             sac_text.c_str());

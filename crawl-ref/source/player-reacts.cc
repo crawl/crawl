@@ -27,6 +27,7 @@
 #include <csignal>
 #endif
 
+#include "abyss.h" // abyss_maybe_spawn_xp_exit
 #include "act-iter.h"
 #include "areas.h"
 #include "beam.h"
@@ -163,12 +164,12 @@ static bool _decrement_a_duration(duration_type dur, int delay,
         return false;
 
     ASSERT(!midloss || midmsg != nullptr);
-    const int midpoint = get_expiration_threshold(dur);
+    const int midpoint = duration_expire_point(dur);
     ASSERTM(!midloss || midloss * BASELINE_DELAY < midpoint,
             "midpoint delay loss %d not less than duration midpoint %d",
             midloss * BASELINE_DELAY, midpoint);
 
-    int old_dur = you.duration[dur];
+    const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
     // If we cross the midpoint, handle midloss and print the midpoint message.
@@ -255,31 +256,19 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
- * Check whether the player's ice (ozocubu's) armour and/or condensation shield
- * were melted this turn; if so, print the appropriate message.
+ * Check whether the player's ice (Ozocubu's) armour was melted this turn.
+ * If so, print the appropriate message and clear the flag.
  */
 static void _maybe_melt_armour()
 {
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
-    string what;
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
-        what = "armour";
         you.props.erase(MELT_ARMOUR_KEY);
+        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
     }
-
-    if (you.props.exists(MELT_SHIELD_KEY))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase(MELT_SHIELD_KEY);
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
 }
 
 /**
@@ -402,7 +391,7 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
+    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
 
     if (you.duration[DUR_TELEPATHY])
@@ -710,12 +699,6 @@ static void _decrement_durations()
         update_vision_range();
     }
 
-    if (!you.duration[DUR_SAP_MAGIC])
-    {
-        _decrement_a_duration(DUR_MAGIC_SAPPED, delay,
-                              "You feel more in control of your magic.");
-    }
-
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 
@@ -815,7 +798,10 @@ static void _rot_ghoul_players()
     if (you.species != SP_GHOUL)
         return;
 
-    int resilience = in_good_standing(GOD_CHEIBRIADOS, 0) ? 600 : 400;
+    int resilience = 400;
+    if (have_passive(passive_t::slow_metabolism))
+        resilience = resilience * 3 / 2;
+
 
     // Faster rotting when hungry.
     if (you.hunger_state < HS_SATIATED)
@@ -850,7 +836,7 @@ static void _regenerate_hp_and_mp(int delay)
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
-        if (you.mutation[MUT_MANA_LINK]
+        if (player_mutation_level(MUT_MANA_LINK)
             && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
@@ -872,7 +858,7 @@ static void _regenerate_hp_and_mp(int delay)
         const int base_val = 7 + you.max_magic_points / 2;
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
 
-        if (you.mutation[MUT_MANA_REGENERATION])
+        if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
         if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
             mp_regen_countup += 20;
@@ -902,9 +888,6 @@ void player_reacts()
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
-
-    if (you.attribute[ATTR_SHADOWS])
-        shadow_lantern_effect();
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
@@ -954,6 +937,8 @@ void player_reacts()
             uncontrolled_blink();
     }
 
+    abyss_maybe_spawn_xp_exit();
+
     actor_apply_cloud(&you);
 
     if (env.level_state & LSTATE_SLIMY_WALL)
@@ -961,7 +946,7 @@ void player_reacts()
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
+        maybe_melt_player_enchantments(BEAM_FIRE, 10);
 
     // Handle starvation before subtracting hunger for this turn (including
     // hunger from the berserk duration) and before monsters react, so you

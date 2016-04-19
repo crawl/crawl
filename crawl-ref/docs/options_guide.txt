@@ -54,14 +54,13 @@ The contents of this text are:
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
                 easy_exit_menu, ability_menu, sort_menus, spell_slot,
-                item_slot, ability_slot, autofight_stop, autofight_hunger_stop,
-                autofight_hunger_stop_undead, autofight_throw,
-                autofight_throw_nomove, autofight_fire_stop, autofight_caught,
-                autofight_wait, autofight_prompt_range,
+                item_slot, ability_slot, autofight_stop, autofight_warning,
+                autofight_hunger_stop, autofight_hunger_stop_undead,
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
+                autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
                 automagic_stop, fail_severity_to_confirm, easy_door,
-                warn_hatches, enable_recast_spell, confirm_action,
-                regex_search
+                warn_hatches, enable_recast_spell, confirm_action, regex_search
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -736,7 +735,6 @@ explore_greedy = true
 
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
-explore_stop += greedy_sacrificeable
         (List option)
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
@@ -781,9 +779,6 @@ explore_stop += greedy_sacrificeable
             previously unknown to the player, even if the stack contains
             nothing eligible for autopickup.
 
-        greedy_sacrificeable: Visit and stop at stacks containing items which
-            can be sacrificed to your god.
-
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
 
@@ -813,19 +808,8 @@ explore_improved = false
         pathological cases causing a 13% increase.
 
 auto_sacrifice = false
-       If set to true, eligible items will be automatically sacrificed during
-       auto-explore.
-       When set to "before_explore", if you are standing on items which can be
-       sacrificed when you start auto-explore, they will be automatically
-       sacrificed.
-       When set to "prompt", you will have a confirmation prompt before the
-       items are sacrificed.
-       When set to "prompt_ignore", items will not be automatically sacrificed,
-       but you will be reminded and asked whether to ignore them if you attempt
-       to continue exploring without sacrificing.
-
-       This option has no effect when explore_stop doesn't include
-       greedy_sacrificeable.
+       If set to true, the player is worshipping Fedhas, and there are corpses
+       around when autoexplore is initiated, they will be sacrificed.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -1187,6 +1171,14 @@ autofight_stop = 30
         you would want:
             autofight_stop = 0
 
+autofight_warning = 0
+        Enforce a minimum time (in milliseconds) between autofight commands.
+        If you issue two consecutive autofight commands within this amount
+        of time (for example, by holding down the tab key), the subsequent
+        commands will be ignored, and the message "You should not fight
+        recklessly!" printed to the danger channel. Any value less than
+        or equal to zero disables this check.
+
 autofight_hunger_stop = 0
         Autofight will not act if your nutrition level is at or lower than
         this value:
@@ -1450,6 +1442,11 @@ skill_focus = true
         the skill screen. When set to false, they only toggle between enabled
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
+
+default_show_all_skills = false
+        When set to true, the skill (m) menu defaults to showing all skills,
+        even untrained and untrainable ones. As usual, '*' toggles back to
+        trainable mode. This option does not affect hints and tutorial games.
 
 monster_list_colour += <key>:<colour>, <key>:<colour>
 monster_list_colour -= <key>
@@ -1991,10 +1988,10 @@ tile_show_minimagicbar  = true
         Will show health and magic bars on top of the player tile when the
         player gets hurt or spends magic.
 
-tile_show_demon_tier = true
+tile_show_demon_tier = false
         Will overlay demon tiles with an icon intended to represent their
-        tier (or difficulty rank) among demons, as is the case for non-Tiles
-        builds.
+        tier (or difficulty rank) among demons, reflecting the glyph
+        (&, 1, 2, 3, 4, 5) used in non-Tiles builds.
 
 tile_water_anim = true
         If disabled, animation of liquids will be suppressed.
@@ -2134,9 +2131,9 @@ dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
-dump_order  = header,hiscore,stats,misc,notes,inventory,
+dump_order  = header,hiscore,stats,misc,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
-dump_order += monlist,kills,action_counts
+dump_order += monlist,kills,notes,skill_gains,action_counts
         (Ordered list option)
         Controls the order of sections in the dump.
 
@@ -2152,7 +2149,7 @@ dump_order += monlist,kills,action_counts
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode). The "vaults" section is enabled by default
         in trunk builds of Crawl (not releases or pre-release betas),
-        appearing between "kills" and "action_counts".
+        appearing between "notes" and "skill_gains".
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their

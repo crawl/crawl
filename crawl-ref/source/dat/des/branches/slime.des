@@ -9,7 +9,7 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
   end
 
   local to_feat
-  if you.god() == "Jiyva" and you.piety_rank() >= 6 then
+  if you.god() == "Jiyva" and you.one_time_ability_used() then
     to_feat = "floor"
   else
     to_feat = "clear_rock_wall"

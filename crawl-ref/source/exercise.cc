@@ -10,173 +10,10 @@
 
 #include <algorithm>
 
+#include "ability.h"
 #include "itemprop.h"
 #include "skills.h"
 #include "spl-util.h"
-
-skill_type abil_skill(ability_type abil)
-{
-    switch (abil)
-    {
-    case ABIL_EVOKE_BLINK:
-    case ABIL_EVOKE_BERSERK:
-    case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_FLIGHT:
-    case ABIL_EVOKE_FOG:
-        return SK_EVOCATIONS;
-
-    case ABIL_NEMELEX_TRIPLE_DRAW:
-    case ABIL_NEMELEX_DEAL_FOUR:
-    case ABIL_NEMELEX_STACK_FIVE:
-    case ABIL_PAKELLAS_DEVICE_SURGE:
-        return SK_EVOCATIONS;
-
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-    case ABIL_ZIN_RECITE:
-    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_HEROISM:
-    case ABIL_ZIN_VITALISATION:
-    case ABIL_TSO_DIVINE_SHIELD:
-    case ABIL_BEOGH_SMITING:
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_PURIFICATION:
-    case ABIL_LUGONU_BEND_SPACE:
-    case ABIL_FEDHAS_SUNLIGHT:
-    case ABIL_FEDHAS_PLANT_RING:
-    case ABIL_FEDHAS_RAIN:
-    case ABIL_FEDHAS_SPAWN_SPORES:
-    case ABIL_FEDHAS_EVOLUTION:
-    case ABIL_CHEIBRIADOS_TIME_BEND:
-    case ABIL_YRED_ANIMATE_REMAINS:
-    case ABIL_YRED_ANIMATE_DEAD:
-    case ABIL_YRED_DRAIN_LIFE:
-    case ABIL_ZIN_IMPRISON:
-    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_ELYVILON_GREATER_HEALING:
-    case ABIL_ELYVILON_HEAL_OTHER:
-    case ABIL_LUGONU_BANISH:
-    case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_OKAWARU_FINESSE:
-    case ABIL_CHEIBRIADOS_SLOUCH:
-    case ABIL_LUGONU_CORRUPT:
-    case ABIL_CHEIBRIADOS_TIME_STEP:
-    case ABIL_ZIN_SANCTUARY:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
-    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_YRED_ENSLAVE_SOUL:
-    case ABIL_LUGONU_ABYSS_EXIT:
-    case ABIL_CHEIBRIADOS_DISTORTION:
-    case ABIL_DITHMENOS_SHADOW_STEP:
-    case ABIL_DITHMENOS_SHADOW_FORM:
-    case ABIL_QAZLAL_UPHEAVAL:
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
-    case ABIL_QAZLAL_DISASTER_AREA:
-        return SK_INVOCATIONS;
-
-    case ABIL_KIKU_RECEIVE_CORPSES:
-    case ABIL_KIKU_TORMENT:
-        return SK_NECROMANCY;
-
-    default:
-        return SK_NONE;
-    }
-}
-
-static int _abil_degree(ability_type abil)
-{
-    switch (abil)
-    {
-    case ABIL_EVOKE_BLINK:
-    case ABIL_EVOKE_BERSERK:
-    case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_FLIGHT:
-    case ABIL_EVOKE_FOG:
-        return 1;
-
-    case ABIL_NEMELEX_TRIPLE_DRAW:
-        return 3 + random2(3);
-    case ABIL_NEMELEX_DEAL_FOUR:
-        return 4 + random2(4);
-    case ABIL_NEMELEX_STACK_FIVE:
-        return 5 + random2(5);
-
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        return 1;
-    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_HEROISM:
-    case ABIL_DITHMENOS_SHADOW_STEP:
-        return 1 + random2(3);
-
-    case ABIL_ZIN_RECITE:
-        return 2;
-    case ABIL_ZIN_VITALISATION:
-    case ABIL_TSO_DIVINE_SHIELD:
-    case ABIL_KIKU_RECEIVE_CORPSES:
-    case ABIL_BEOGH_SMITING:
-        return 2 + random2(2);
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_LUGONU_BEND_SPACE:
-    case ABIL_FEDHAS_SUNLIGHT:
-    case ABIL_FEDHAS_PLANT_RING:
-    case ABIL_FEDHAS_RAIN:
-    case ABIL_FEDHAS_SPAWN_SPORES:
-    case ABIL_FEDHAS_EVOLUTION:
-    case ABIL_CHEIBRIADOS_TIME_BEND:
-    case ABIL_QAZLAL_UPHEAVAL:
-        return 2 + random2(3);
-    case ABIL_YRED_ANIMATE_REMAINS:
-    case ABIL_YRED_ANIMATE_DEAD:
-    case ABIL_YRED_DRAIN_LIFE:
-        return 2 + random2(4);
-
-    case ABIL_ZIN_IMPRISON:
-    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_ELYVILON_GREATER_HEALING:
-    case ABIL_ELYVILON_HEAL_OTHER:
-    case ABIL_LUGONU_BANISH:
-    case ABIL_CHEIBRIADOS_DISTORTION:
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        return 3 + random2(5);
-    case ABIL_TSO_CLEANSING_FLAME:
-        return 3 + random2(6);
-    case ABIL_OKAWARU_FINESSE:
-        return 3 + random2(7);
-
-    case ABIL_CHEIBRIADOS_SLOUCH:
-        return 4 + random2(4);
-    case ABIL_ELYVILON_PURIFICATION:
-        return 4 + random2(6);
-
-    case ABIL_LUGONU_CORRUPT:
-    case ABIL_CHEIBRIADOS_TIME_STEP:
-    case ABIL_KIKU_TORMENT:
-    case ABIL_QAZLAL_DISASTER_AREA:
-        return 5 + random2(5);
-    case ABIL_ZIN_SANCTUARY:
-        return 5 + random2(8);
-
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-    case ABIL_DITHMENOS_SHADOW_FORM:
-        return 6 + random2(6);
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
-        return 6 + random2(10);
-
-    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_YRED_ENSLAVE_SOUL:
-    case ABIL_LUGONU_ABYSS_EXIT:
-        return 8 + random2(10);
-
-    default:
-        return 0;
-    }
-}
 
 static void _exercise_spell(spell_type spell, bool success)
 {
@@ -378,7 +215,7 @@ void practise(exer_type ex, int param1)
     {
         ability_type abil = static_cast<ability_type>(param1);
         sk = abil_skill(abil);
-        deg = _abil_degree(abil);
+        deg = abil_skill_weight(abil);
         if (sk != SK_NONE)
             exercise(sk, deg);
         break;

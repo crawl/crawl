@@ -68,7 +68,7 @@ function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
   crawl.god_speaks("Kikubaaqudgha", "As you approach the altar, the fountains"
                                  .. " begin to flow with blood!")
   for i, slave in ipairs(slaves) do
-    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false, false)
+    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false)
   end
 end
 }}
@@ -261,7 +261,7 @@ ENDMAP
 NAME:   cheibriados_altar_wand_db
 TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:   patrolling
-DEPTH:  D:2-9
+DEPTH:  D:3-9
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
 MONS:   goblin; wand of slowing ident:type / \
@@ -322,6 +322,20 @@ MAP
 .xTWWx+xWWTx.
 .xxxxx.xxxxx.
 ......@......
+ENDMAP
+
+NAME:   kennysheep_slug_shrine
+TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  D:2-6
+MONS:   patrolling dart slug
+KFEAT:  _ = altar_cheibriados
+MAP
+  .WWW
+ .WwwwWbb
+@.Ww1WW_b
+ .WwwwWbb
+  .WWW
 ENDMAP
 
 ### Dithmenos overflow altars ################################################
@@ -739,18 +753,19 @@ ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
 TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
-TAGS:  transparent
-DEPTH: D:4-15
+DEPTH: D:4-
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 : interest_check(_G)
 MAP
-......
-.2222..
-.21222.
-.22_22.
-...22..
-.222..
+    x
+ .......
+ .2222..
+ .21222.
+x.22_22.x
+ ...22..
+ .222...
+    x
 ENDMAP
 
 NAME:   fedhas_altar_decomposition
@@ -1581,11 +1596,11 @@ SHUFFLE: cvb
   })
   local corpse = mon .. ' corpse'
   local wands   = 'wand of flame charges:0 ident:pluses / ' ..
-                  'wand of frost charges:0 ident:pluses / ' ..
-                  'wand of magic darts charges:0 ident:pluses '
+                  'wand of confusion charges:0 ident:pluses / ' ..
+                  'wand of slowing charges:0 ident:pluses '
 
   if (mon == 'kobold' and crawl.coinflip()) then
-    kmons("G = kobold; wand of flame | wand of frost | wand of magic darts")
+    kmons("G = kobold; wand of flame | wand of confusion | wand of slowing")
     dgn.delayed_decay_extra(_G, 'h', 'troll corpse / ogre corpse' )
   else
     dgn.delayed_decay_extra(_G, 'G', corpse, wands )
@@ -1628,7 +1643,7 @@ MAP
 ENDMAP
 
 # P altar with gadget shop
-# 90% basic wands (frost, flame, darts). ~150 to 250 gold
+# 90% basic wands (frost, confusion, slowing). ~150 to 250 gold
 # 10% any wand and will be expensive
 NAME:    johnstein_pakellas_shop
 DEPTH:   D:2-
@@ -1637,8 +1652,8 @@ KFEAT:   _ = altar_pakellas
 KFEAT:   S = gadget shop name:Pakellas type:Prime suffix:Provisions \
              greed:30 count:3 ;\
              wand of flame charges:15 w:30 |\
-             wand of frost charges:15 w:30 |\
-             wand of magic darts charges:15 w:30 |\
+             wand of confusion charges:15 w:30 |\
+             wand of slowing charges:15 w:30 |\
              any wand
 : interest_check(_G)
 MAP
@@ -1804,6 +1819,9 @@ ENDMAP
 # Ru overflow altar vaults ####################################################
 
 # A few unlucky monsters permanently afflicted with Ru's various status effects.
+# the monsters in group B should all be non-intelligent, so that TSO won't get upset
+# about attacking them while blind. it's a pain for a monster you're not allowed
+# to attack to chase you throughout the level
 NAME: nicolae_ru_great_annihilating_truth
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent
 TAGS: no_monster_gen no_item_gen
@@ -1819,8 +1837,8 @@ KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
   kobold perm_ench:corona / goblin perm_ench:corona / hobgoblin perm_ench:corona
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
-KMONS: B = kobold perm_ench:blind / goblin perm_ench:blind / \
-  hobgoblin perm_ench:blind / bat perm_ench:blind
+KMONS: B = ball python perm_ench:blind / giant newt perm_ench:blind / \
+  giant cockroach perm_ench:blind / bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
 @...   ...@
@@ -2281,11 +2299,11 @@ ENDMAP
 NAME:  vehumet_altar_wand_db
 TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
-DEPTH: D:3-9
+DEPTH: D:4-9
 KFEAT: _ = altar_vehumet
-MONS:  goblin; wand of flame | wand of frost | wand of magic darts /\
-       hobgoblin; wand of flame | wand of frost | wand of magic darts /\
-       kobold; wand of flame | wand of frost | wand of magic darts
+MONS:  goblin; wand of flame /\
+       hobgoblin; wand of flame /\
+       kobold; wand of flame
 MAP
 .......
 ...x...
@@ -2303,19 +2321,26 @@ DEPTH:  D:2-, Depths
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
-MONS:   orc; club ego:chaos ident:type / orc; dagger ego:chaos ident:type
-MONS:   orc; spear ego:chaos ident:type / gnoll; club ego:chaos ident:type
-MONS:   gnoll; dagger ego:chaos ident:type / gnoll; spear ego:chaos ident:type
-MONS:   place:D:1-8
-NSUBST: ' = 1:_ / *:.
-SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
-:   if you.depth() == dgn.br_depth(you.branch()) then
+MONS:   place:D:1
+MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
+MONS:   gnoll ; club ego:chaos | dagger ego:chaos | spear ego:chaos
+MONS:   boggart ; flail ego:chaos | long sword ego:chaos | trident ego:chaos
+MONS:   rakshasa ; flail ego:chaos | long sword ego:chaos | trident ego:chaos
+:  if you.depth() == dgn.br_depth(you.branch()) then
 KFEAT:  ~ = teleport trap w:20 / alarm trap w:3
-:   else
+:  else
 KFEAT:  ~ = known shaft trap / teleport trap / alarm trap w:3
-:   end
-NSUBST: Z = 1:* / *:%
-SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
+:  end
+# Previously on raw average 5.17 M glyphs.
+NSUBST: ' = 1:_ / *:.
+NSUBST: . = 8:M / * = .:220 W:60 w:50 x:80 n:80 v b l % T U ~
+NSUBST: % = 1:*% / *:%
+SUBST:  M : .111123M
+NSUBST: 1 = 1:0 / 1:1 / * = 01., 2 = 1:2 / 2 = 2. /  * = 2...
+NSUBST: 3 = 1:3 / 2 = 3. / * = 3..., M = 1:1 / * = 123.
+:  if you.in_branch("Depths") then
+SUBST:  2 = 4, 3 = 5
+:  end
 COLOUR: . = random
 MAP
    xxxxxx@xxxxxx
@@ -2490,7 +2515,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_yredelemnul
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 14 then
+: if not you.in_branch("D") or you.absdepth() > 13 then
 TAGS:   extra
 : end
 MAP
@@ -2970,9 +2995,7 @@ TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_vehumet
 DEPTH: D:3-9
 KFEAT: A = altar_makhleb
 KFEAT: B = altar_vehumet
-MONS:  crimson imp ; wand of magic darts charges:1 | \
-                     wand of flame charges:1 | \
-                     wand of frost charges:1
+MONS:  crimson imp ; wand of flame charges:1
 MAP
  xxxxx
 xxA.Bxx
@@ -3089,16 +3112,16 @@ ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
 ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
-SHUFFLE: Ad / Be / Cf
+SHUFFLE: AdB"C` / A'BeC` / A'B"Cf
 MAP
      xxxxx
     xx.B.xx
-  xxxG.e.Gxxx
+  xxxG.".Gxxx
  xxGxx...xxGxx
  x...xx.xx...x
- xAd.......fCx
+ xAd.......`Cx
  x...x.U.x...x
- xxGxx...xxGxx
+ xGxx...xxGxx
   xxx  @  xxx
 ENDMAP
 
@@ -3248,46 +3271,24 @@ MAP
 ENDMAP
 
 NAME:    palyth_temple_overflow_mages
-DEPTH:   D:5-9
-TAGS:    template_overflow_3 temple_overflow_sif_muna
+DEPTH:   D:6-9
+TAGS:    temple_overflow_3 temple_overflow_sif_muna
 TAGS:    temple_overflow_kikubaaqudgha temple_overflow_vehumet
-TAGS:    no_item_gen no_monster_gen
-SHUFFLE: ABC
-: local result = crawl.random2(3)
-: local spawn_mage = crawl.random2(5)
-: if result == 0 then
-KFEAT:   A = altar_sif_muna
-KFEAT:   B = altar_kikubaaqudgha
-KFEAT:   C = altar_vehumet
-: if spawn_mage then
-KITEM:   B = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:3
-: end
-: elseif result == 1 then
-KFEAT:   A = altar_kikubaaqudgha
-KFEAT:   B = altar_sif_muna
-KFEAT:   C = altar_vehumet
-: if spawn_mage then
-KITEM:   B = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:3
-: end
-: else
-KFEAT:   A = altar_sif_muna
-KFEAT:   B = altar_vehumet
-KFEAT:   C = altar_kikubaaqudgha
-: if spawn_mage then
-KITEM:   B = randbook owner:Vehumet disc:conjuration numspells:1 slevels:3
-: end
-: end
-KMONS:   A = orc wizard
-KMONS:   C = orc wizard
-: if spawn_mage then
-KMONS:   B = deep elf mage
-: else
-KMONS:   B = orc wizard
-: end
+TAGS:    no_item_gen no_monster_gen patrolling
+# 3/5 chance for one altar to have a low-level randbook and extra orc wizards.
+KMONS:   xyzXYZ~ = orc wizard
+KFEAT:   xX = altar_sif_muna
+KFEAT:   yY = altar_kikubaaqudgha
+KFEAT:   zZ = altar_vehumet
+KITEM:   X = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1
+KITEM:   Y = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
+KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
+SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~
+SUBST:   '"` = ., ~ = ~.
 MAP
 ccccccccccccc
-c.A.c.B.c.C.c
-c...c...c...c
+c'x'c"y"c`z`c
+c'''c"""c```c
 cc+ccc+ccc+cc
 c...........c
 c....T.T....c

@@ -80,7 +80,7 @@ targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
     beam.set_agent(act);
     origin = aim = act->pos();
     beam.attitude = ATT_FRIENDLY;
-    zappy(zap, pow, beam);
+    zappy(zap, pow, false, beam);
     beam.is_tracer = true;
     beam.is_targeting = true;
     beam.range = range;
@@ -1315,7 +1315,7 @@ bool targetter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
 
-    // confused monster targetting might be fuzzed across a wall, so
+    // confused monster targeting might be fuzzed across a wall, so
     // skip the validation in the parent function and set aim directly.
     // N.B. We assume this targetter can actually handle an invalid aim
     // (not all targetters can).

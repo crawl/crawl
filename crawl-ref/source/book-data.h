@@ -36,7 +36,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
-    SPELL_CONDENSATION_SHIELD,
 },
 
 {   // Book of Summonings
@@ -126,7 +125,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transfigurations
-    SPELL_STONESKIN,
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -206,7 +204,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
-    SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
 },
@@ -231,7 +228,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_CONTROL_UNDEAD,
     SPELL_ENGLACIATION,
-    SPELL_MASS_CONFUSION,
 },
 
 {   // Book of Battle (replacing Morphology)
@@ -245,7 +241,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
-    SPELL_STONESKIN,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,
@@ -330,17 +325,14 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_PHASE_SHIFT,
     SPELL_SILENCE,
     SPELL_DARKNESS,
-    SPELL_MASS_CONFUSION,
     SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
-    SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
     SPELL_INTOXICATE,
     SPELL_IRRADIATE,

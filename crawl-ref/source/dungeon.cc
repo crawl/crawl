@@ -41,6 +41,7 @@
 #include "flood_find.h"
 #include "food.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -55,11 +56,11 @@
 #include "mon-poly.h"
 #include "notes.h"
 #include "place.h"
+#include "randbook.h"
 #include "random.h"
 #include "religion.h"
 #include "rot.h"
 #include "show.h"
-#include "spl-book.h"
 #include "spl-transloc.h"
 #include "stairs.h"
 #include "state.h"
@@ -250,7 +251,7 @@ static void _count_gold()
 
     you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
@@ -2357,32 +2358,20 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
 // shallow. Checks each water space.
 static void _prepare_water()
 {
-    dungeon_feature_type which_grid;   // code compaction {dlb}
-    int absdepth0 = env.absdepth0;
-
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (map_masked(*ri, MMT_NO_POOL))
+        if (map_masked(*ri, MMT_NO_POOL) || grd(*ri) != DNGN_DEEP_WATER)
             continue;
 
-        if (grd(*ri) == DNGN_DEEP_WATER)
+        for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            for (adjacent_iterator ai(*ri); ai; ++ai)
-            {
-                which_grid = grd(*ai);
+            const dungeon_feature_type which_grid = grd(*ai);
 
-                // must come first {dlb}
-                if (which_grid == DNGN_SHALLOW_WATER
-                    && one_chance_in(8 + absdepth0))
-                {
-                    grd(*ri) = DNGN_SHALLOW_WATER;
-                }
-                else if (feat_has_dry_floor(which_grid)
-                         && x_chance_in_y(80 - absdepth0 * 4,
-                                          100))
-                {
-                    _set_grd(*ri, DNGN_SHALLOW_WATER);
-                }
+            if (which_grid == DNGN_SHALLOW_WATER && one_chance_in(20)
+                || feat_has_dry_floor(which_grid) && x_chance_in_y(2, 5))
+            {
+                _set_grd(*ri, DNGN_SHALLOW_WATER);
+                break;
             }
         }
     }
@@ -3068,7 +3057,7 @@ static void _place_traps()
         }
 
         const trap_type type = random_trap_for_place();
-        if (ts.type == NUM_TRAPS)
+        if (type == NUM_TRAPS)
         {
             dprf("failed to find a trap type to place");
             continue;
@@ -3543,7 +3532,7 @@ static vector<monster_type> _zombifiables()
         if (mons_species(mcls) != mcls
             || !mons_zombie_size(mcls)
             || mons_is_unique(mcls)
-            || mons_class_holiness(mcls) != MH_NATURAL
+            || !(mons_class_holiness(mcls) & MH_NATURAL)
             || mons_class_flag(mcls, M_NO_GEN_DERIVED))
         {
             continue;
@@ -4183,25 +4172,50 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 {
     const CrawlHashTable props = spec.props;
 
-    if (props.exists("make_book_theme_randart"))
+    if (props.exists("build_themed_book"))
     {
         string owner = props[RANDBK_OWNER_KEY].get_string();
         if (owner == "player")
             owner = you.your_name;
+        const string title = props[RANDBK_TITLE_KEY].get_string();
 
         vector<spell_type> spells;
         CrawlVector spell_list = props[RANDBK_SPELLS_KEY].get_vector();
         for (unsigned int i = 0; i < spell_list.size(); ++i)
             spells.push_back((spell_type) spell_list[i].get_int());
 
-        make_book_theme_randart(item,
-            spells,
-            static_cast<spschool_flag_type>(props[RANDBK_DISC1_KEY].get_short()),
-            static_cast<spschool_flag_type>(props[RANDBK_DISC2_KEY].get_short()),
-            props[RANDBK_NSPELLS_KEY].get_short(),
-            props[RANDBK_SLVLS_KEY].get_short(),
-            owner,
-            props[RANDBK_TITLE_KEY].get_string());
+        spschool_flag_type disc1
+            = (spschool_flag_type)props[RANDBK_DISC1_KEY].get_short();
+        spschool_flag_type disc2
+            = (spschool_flag_type)props[RANDBK_DISC2_KEY].get_short();
+        if (disc1 == SPTYP_NONE && disc2 == SPTYP_NONE)
+        {
+            if (spells.size())
+                disc1 = matching_book_theme(spells);
+            else
+                disc1 = random_book_theme();
+            disc2 = random_book_theme();
+        } else if (disc2 == SPTYP_NONE)
+            disc2 = disc1;
+        else
+            ASSERT(disc1 != SPTYP_NONE); // mapdef should've handled this
+
+        int num_spells = props[RANDBK_NSPELLS_KEY].get_short();
+        if (num_spells < 1)
+            num_spells = theme_book_size();
+        const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
+
+        vector<spell_type> chosen_spells;
+        theme_book_spells(disc1, disc2,
+                          forced_spell_filter(spells,
+                                               capped_spell_filter(max_levels)),
+                          origin_as_god_gift(item), num_spells, chosen_spells);
+        fixup_randbook_disciplines(disc1, disc2, chosen_spells);
+        init_book_theme_randart(item, chosen_spells);
+        name_book_theme_randart(item, disc1, disc2, owner, title);
+        // XXX: changing the signature of build_themed_book()'s get_discipline
+        // would allow us to roll much of this ^ into that. possibly clever
+        // lambdas could let us do it without even changing the signature?
     }
 
     // Wipe item origin to remove "this is a god gift!" from there,
@@ -4233,7 +4247,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (props.exists("cursed"))
         do_curse_item(item);
     else if (props.exists("uncursed"))
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
     if (props.exists("useful") && is_useless_item(item, false)
         && !allow_useless)
     {
@@ -4416,14 +4430,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (mon->inv[i] != NON_ITEM)
-        {
-            item_def &item(mitm[mon->inv[i]]);
-            mon->unequip(item, false, true);
-            destroy_item(mon->inv[i], true);
-            mon->inv[i] = NON_ITEM;
-        }
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+    {
+        mon->unequip(*ii, false, true);
+        destroy_item(ii->index(), true);
+    }
 
     item_list &list = mspec.items;
 
@@ -4557,7 +4568,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
         if (in_bounds(where) && !monster_habitable_grid(montype, grd(where)))
-            dungeon_terrain_changed(where, habitat2grid(habitat), !crawl_state.generating_level);
+            dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 
     if (type == RANDOM_MONSTER)
@@ -6565,7 +6576,7 @@ void vault_placement::apply_grid()
                 tile_init_flavour(*ri);
                 const dungeon_feature_type newgrid = grd(*ri);
                 grd(*ri) = oldgrid;
-                dungeon_terrain_changed(*ri, newgrid, true, true);
+                dungeon_terrain_changed(*ri, newgrid, true);
                 remove_markers_and_listeners_at(*ri);
             }
         }

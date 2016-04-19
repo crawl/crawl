@@ -46,23 +46,16 @@ spellset item_spellset(const item_def &item)
  * What's the appropriate descriptor for a given type of "spell" that's not
  * really a spell?
  *
- * @param type              The type of spell-ability; e.g. MON_SPELL_DEMONIC.
- * @param caster_holiness   The holiness of the caster; e.g. MH_NATURAL.
- * @return                  A descriptor of the spell type; e.g. "natural",
- *                          "angelic", "demonic", etc.
+ * @param type              The type of spell-ability; e.g. MON_SPELL_MAGICAL.
+ * @return                  A descriptor of the spell type; e.g. "divine",
+ *                          "magical", etc.
  */
-static string _ability_type_descriptor(mon_spell_slot_flag type,
-                                       mon_holy_type caster_holiness)
+static string _ability_type_descriptor(mon_spell_slot_flag type)
 {
-    // special case (:
-    if (type == MON_SPELL_DEMONIC && caster_holiness & MH_HOLY)
-        return "angelic";
-
     static const map<mon_spell_slot_flag, string> descriptors =
     {
         { MON_SPELL_NATURAL, "special" },
         { MON_SPELL_MAGICAL, "magical" },
-        { MON_SPELL_DEMONIC, "demonic" },
         { MON_SPELL_PRIEST,  "divine" },
     };
 
@@ -73,7 +66,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type,
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
- * @param type              The type of book(s); e.g. MON_SPELL_DEMONIC.
+ * @param type              The type of book(s); e.g. MON_SPELL_MAGICAL.
  * @param num_books         The number of books in the set.
  * @param mi                The player's information about the caster.
  * @return                  A header string for the bookset; e.g.,
@@ -92,7 +85,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
                                           : "the following spells");
     }
 
-    const string descriptor = _ability_type_descriptor(type, mi.holi);
+    const string descriptor = _ability_type_descriptor(type);
 
     if (num_books > 1)
     {
@@ -110,7 +103,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
  *
  * @param mi                The player's knowledge of a monster.
  * @param type              The type of spells to select.
- *                          (E.g. MON_SPELL_DEMONIC, MON_SPELL_WIZARD...)
+ *                          (E.g. MON_SPELL_MAGICAL, MON_SPELL_WIZARD...)
  * @param[out] all_books    An output vector of "spellbooks".
  */
 static void _monster_spellbooks(const monster_info &mi,
@@ -195,7 +188,6 @@ spellset monster_spellset(const monster_info &mi)
     {
         MON_SPELL_NATURAL,
         MON_SPELL_MAGICAL,
-        MON_SPELL_DEMONIC,
         MON_SPELL_PRIEST,
         MON_SPELL_WIZARD,
     };

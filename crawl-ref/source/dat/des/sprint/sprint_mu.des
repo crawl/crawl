@@ -488,7 +488,7 @@ KMONS: p = plant
 KMONS: 1 = patrolling wandering mushroom
 KMONS: 2 = komodo dragon
 KMONS: 3 = spiny frog
-KMONS: 4 = fire drake
+KMONS: 4 = rime drake
 KMONS: 5 = swamp drake
 KMONS: v = blink frog
 KFEAT: v = shallow_water
@@ -516,7 +516,7 @@ KMONS: q = electric eel
 KFEAT: q = deep_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
-KITEM: r = any, any, any, any, any, superb_item / w:1 wand of fire /\
+KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
  w:1 wand of disintegration
 KITEM: % = fruit q:6
 KFEAT: _ = altar_fedhas
@@ -749,7 +749,7 @@ MARKER:  ! = lua:fog_machine { \
                  size_buildup_time = 5, cloud_type = "freezing vapour" \
              }
 : else
-MONS: fire drake, fire dragon, hydra, Xtahua
+MONS: hell hound, fire dragon, hydra, Xtahua
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
                  size = 2, size_buildup_amnt = 3, \
@@ -947,8 +947,8 @@ NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
- scroll of acquirement q:1 ident:all, wand of disintegration / wand of fire, \
- acquire gold, ring of protection from fire ident:all
+ scroll of acquirement q:1 ident:all, wand of disintegration / \
+ wand of iceblast, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
 KFEAT: # = closed_door

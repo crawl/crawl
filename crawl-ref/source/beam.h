@@ -87,7 +87,6 @@ struct bolt
     string aux_source = "";       // source of KILL_MISC beams
 
     bool   affects_nothing = false; // should not hit monsters or features
-    bool   affects_items = true;    // hits items on ground/inventory
 
     bool   effect_known = true;   // did we _know_ this would happen?
     bool   effect_wanton = false; // could we have guessed it would happen?
@@ -217,7 +216,7 @@ private:
     bool is_blockable() const;
     bool is_omnireflectable() const;
     bool is_fiery() const;
-    bool is_superhot() const;
+    bool can_burn_trees() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool harmless_to_player() const;
@@ -227,6 +226,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool pierces_shields() const;
+    bool bush_immune(const monster &mons) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -334,8 +334,8 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
-int zap_ench_power(zap_type z_type, int pow);
-void zappy(zap_type z_type, int power, bolt &pbolt);
+int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);

@@ -20,6 +20,7 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godpassive.h" // shadow_monster
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"
@@ -184,7 +185,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 {
     monster_type mon_type = MONS_SHADOW;
     if (tier >= 2 && count == 0 && coinflip())
-        mon_type = MONS_SHADOW_FIEND;
+        mon_type = MONS_TZITZIMITL;
     else if (tier >= 1 && count < 3 && coinflip())
         mon_type = MONS_SHADOW_DEMON;
 
@@ -594,7 +595,7 @@ static bool _makhleb_call_down_destruction()
 
     if (avatar == nullptr)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false; // not a very dazzling divine experience...
     }
 
@@ -1240,9 +1241,9 @@ static spell_type _vehumet_wrath_type()
             return random_choose(SPELL_ORB_OF_ELECTRICITY,
                                  SPELL_FLASH_FREEZE);
         case 8:
-            return random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR);
+            return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
         case 9:
-            return random_choose(SPELL_FIRE_STORM, SPELL_HELLFIRE);
+            return SPELL_FIRE_STORM;
         default:
             return SPELL_NO_SPELL;
     }
@@ -1262,14 +1263,14 @@ static bool _vehumet_retribution()
     monster* avatar = get_avatar(god);
     if (!avatar)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false;
     }
 
     const spell_type spell = _vehumet_wrath_type();
     if (spell == SPELL_NO_SPELL)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         shadow_monster_reset(avatar);
         return false;
     }
@@ -1302,33 +1303,27 @@ static void _jiyva_mutate_player()
         mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
 }
 
+static bool _choose_slimify_target(const monster* mon)
+{
+    return mon_can_be_slimified(mon) && mon->attitude == ATT_HOSTILE;
+}
+
 /**
- * Make Jiyva slmify a nearby enemy.
+ * Make Jiyva slimify a nearby enemy.
  */
-static void _jiyva_slimify()
+static bool _jiyva_slimify()
 {
     monster* mon = nullptr;
+    mon = choose_random_nearby_monster(0, _choose_slimify_target);
 
-    const int max_tries = 10;
-    bool success = false;
-    for (int i = 0; i < max_tries; i++)
-    {
-        mon = choose_random_nearby_monster(0);
-
-        if (mon && mon_can_be_slimified(mon) && mon->attitude == ATT_HOSTILE)
-        {
-            success = true;
-            break;
-        }
-    }
-
-    if (success)
-        return;
+    if (!mon)
+        return false;
 
     simple_god_message(make_stringf("'s putrescence saturates %s!",
                                     mon->name(DESC_THE).c_str()).c_str(),
                        GOD_JIYVA);
     slimify_monster(mon, true);
+    return true;
 }
 
 /**
@@ -1407,8 +1402,12 @@ static bool _jiyva_retribution()
     if (you.can_safely_mutate() && one_chance_in(7))
         _jiyva_mutate_player();
     // Don't create hostile slimes while under penance.
-    else if (!you_worship(god) && there_are_monsters_nearby() && coinflip())
-        _jiyva_slimify();
+    else if (!you_worship(god)
+             && coinflip()
+             && _jiyva_slimify())
+    {
+        return true;
+    }
     else if (!one_chance_in(3) || you_worship(god))
         _jiyva_tmut();
     else
@@ -1625,30 +1624,52 @@ static bool _dithmenos_retribution()
     return true;
 }
 
+static const pop_entry pop_qazlal_wrath[] =
+{
+  {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
+  {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
+  { 10, 22, 50, SEMI, MONS_SPARK_WASP },
+  { 18, 27, 50, RISE, MONS_STORM_DRAGON },
+
+  {  0, 12, 25, SEMI, MONS_FIRE_ELEMENTAL },
+  {  4, 12, 50, FLAT, MONS_FIRE_CRAB },
+  {  8, 16, 30, FLAT, MONS_LINDWURM },
+  { 12, 27, 50, SEMI, MONS_FIRE_DRAGON },
+
+  {  0, 12, 25, SEMI, MONS_WATER_ELEMENTAL },
+  {  2, 10, 50, FLAT, MONS_RIME_DRAKE },
+  { 12, 27, 50, SEMI, MONS_ICE_DRAGON },
+  { 20, 27, 30, RISE, MONS_SHARD_SHRIKE },
+
+  {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
+  {  2, 10, 50, FLAT, MONS_BASILISK },
+  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
+  { 18, 27, 50, RISE, MONS_IRON_DRAGON },
+
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 /**
- * Summon Qazlal's elemental minions to destroy the player!
+ * Summon elemental creatures to destroy the player!
  */
 static void _qazlal_summon_elementals()
 {
     const god_type god = GOD_QAZLAL;
 
-    mgen_data temp =
-        mgen_data::hostile_at(MONS_NO_MONSTER,
-                              _god_wrath_name(god),
-                              true, 0, 0, you.pos(), MG_NONE, god);
-
-    temp.hd = you.experience_level;
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    const int how_many = 1 + (you.experience_level / 5);
+    const int how_many = 1 + div_rand_round(you.experience_level, 7);
     bool success = false;
 
     for (int i = 0; i < how_many; i++)
     {
-        temp.cls = random_choose(MONS_FIRE_ELEMENTAL,
-                                 MONS_WATER_ELEMENTAL,
-                                 MONS_AIR_ELEMENTAL,
-                                 MONS_EARTH_ELEMENTAL);
+        monster_type mon = pick_monster_from(pop_qazlal_wrath,
+                                             you.experience_level);
+
+        mgen_data temp =
+            mgen_data::hostile_at(mon, _god_wrath_name(god),
+                                  true, 0, 0, you.pos(), MG_NONE, god);
+
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
         if (create_monster(temp, false))
             success = true;
     }
@@ -1850,7 +1871,8 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
     // One in ten chance that Xom might do something good...
     case GOD_XOM:
-        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        xom_acts(abs(you.piety - HALF_MAX_PIETY),
+                 frombool(one_chance_in(10)));
         break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
@@ -2025,37 +2047,21 @@ void gozag_incite(monster *mon)
     behaviour_event(mon, ME_ALERT, &you);
 
     bool success = false;
-    const mon_attack_def attk = mons_attack_spec(mon, 0);
 
-    int tries = 3;
-    do
+    if (mon->needs_berserk(true, true))
     {
-        switch (random2(3))
-        {
-            case 0:
-                if (attk.type == AT_NONE || attk.damage == 0)
-                    break;
-                if (mon->has_ench(ENCH_MIGHT))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
-                success = true;
-                break;
-            case 1:
-                if (mon->has_ench(ENCH_HASTE))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
-                success = true;
-                break;
-            case 2:
-                if (!mon->can_go_berserk())
-                    break;
-                mon->go_berserk(true);
-                success = true;
-                break;
-        }
+        mon->go_berserk(true);
+        success = true;
     }
-    while (!success && --tries > 0);
+    else if (!mon->has_ench(ENCH_HASTE))
+    {
+        enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+        success = true;
+    }
 
     if (success)
+    {
+        mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
+    }
 }

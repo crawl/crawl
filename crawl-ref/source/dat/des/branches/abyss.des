@@ -723,11 +723,10 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         wand of lightning / wand of draining / wand of slowing w:5 / \
-         wand of confusion w:5 / wand of fire w:1 / wand of cold w:1 / \
-         ring mail good_item / chain mail good_item w:12 / shield / \
-         spear good_item / trident good_item / any weapon w:12 / \
-         any w:2
+         wand of lightning / wand of acid / wand of slowing w:5 / \
+         wand of confusion w:5 / ring mail good_item / \
+         chain mail good_item w:12 / shield / spear good_item / \
+         trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1426,9 +1425,8 @@ KMONS:   e = crystal guardian
 KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
          club w:5 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
-         wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
-         whip not_cursed w:2 / hat not_cursed mundane w:5
+KITEM:   13e = wand of slowing / wand of confusion / wand of flame w:5 / \
+         plain deck w:5 / whip not_cursed w:2 / hat not_cursed mundane w:5
 KITEM:   f = abyssal rune of zot mimic
 KITEM:   g = abyssal rune of zot
 SHUFFLE: 14 / 23
@@ -2091,23 +2089,6 @@ cc..2..........cc
    ccc.....ccc
      ccc1ccc
        ccc
-ENDMAP
-
-NAME:  evilmike_abyss_exit_disperse
-TAGS:  abyss_exit
-SUBST: . = .:100 2
-MONS:  centaur; shortbow . arrow ego:dispersal, plant
-: init_abyss_exit(_G, "O")
-MAP
-     xxx xxx xxx
-   xxx1xxx1xxx1x
- xxx....x...x..xxx
-xx...............x
-x1.Ox............+@
-xx...............x
- xxx....x...x..xxx
-   xxx1xxx1xxx1x
-     xxx xxx xxx
 ENDMAP
 
 NAME:    hangedman_abyss_exit_choices

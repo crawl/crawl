@@ -33,7 +33,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE
@@ -70,7 +69,6 @@ inner_flame INNER_FLAME
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
-condensation_shield CONDENSATION_SHIELD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
 freezing_cloud FREEZING_CLOUD
@@ -146,7 +144,6 @@ controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
-phase_shift PHASE_SHIFT
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
@@ -160,20 +157,20 @@ irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 
-# rod spells
-%sdir misc
-error PARALYSE
-error BOLT_OF_INACCURACY
-error SUMMON_SWARM
-error THUNDERBOLT
-error MELEE
-error EXPLOSIVE_BOLT
-%sdir gui/spells/air
+# item-based spells
+%sdir gui/spells/misc
+paralyse PARALYSE
+bolt_inacc BOLT_OF_INACCURACY
+bolt_thunder THUNDERBOLT
+bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
+bolt_random RANDOM_BOLT
+scattershot SCATTERSHOT
+bolt_corrosive CORROSIVE_BOLT
+iceblast ICEBLAST
 %sdir gui/spells/summoning
 summon_shadow_creatures WEAVE_SHADOWS
-%sdir misc
-error RANDOM_BOLT
+
 
 # spells normally only used by monsters
 %sdir gui/spells/monster
@@ -232,7 +229,7 @@ error GHOSTLY_FIREBALL
 error SPECTRAL_CLOUD
 %sdir gui/spells/monster
 haste_other HASTE_OTHER
-hellfire_burst HELLFIRE_BURST
+call_down_damnation CALL_DOWN_DAMNATION
 %sdir misc
 error HOLY_BREATH
 error HOLY_FLAMES
@@ -310,7 +307,7 @@ error WORD_OF_RECALL
 
 # spells mimicking natural abilities
 %sdir gui/abilities
-hellfire HELLFIRE
+hurl_damnation HURL_DAMNATION
 
 # spells mimicking divine abilities
 %sdir gui/invocations

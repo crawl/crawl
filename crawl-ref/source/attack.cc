@@ -15,6 +15,7 @@
 #include <cstring>
 
 #include "art-enum.h"
+#include "chardump.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"
@@ -22,6 +23,7 @@
 #include "fight.h"
 #include "fineff.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "itemname.h"
 #include "itemprop.h"
 #include "message.h"
@@ -191,21 +193,12 @@ int attack::calc_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
-            else if (weapon->base_type == OBJ_RODS)
-            {
-                mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->rod_plus;
-            }
         }
 
         // slaying bonus
         mhit += slaying_bonus(wpn_skill == SK_THROWING
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
-
-        // horror penalty
-        if (you.duration[DUR_HORROR])
-            mhit -= you.props[HORROR_PENALTY_KEY].get_int();
 
         // hunger penalty
         if (you.hunger_state <= HS_STARVING)
@@ -238,9 +231,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        if (using_weapon() && weapon->base_type == OBJ_RODS)
-            mhit += weapon->rod_plus;
     }
 
     // Penalties for both players and monsters:
@@ -249,8 +239,12 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_WOE))
+    if (using_weapon()
+        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
+            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
+    {
         return AUTOMATIC_HIT;
+    }
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -320,7 +314,7 @@ string attack::anon_name(description_level_type desc)
         return "";
     case DESC_YOUR:
     case DESC_ITS:
-        return "its";
+        return "something's";
     case DESC_THE:
     case DESC_A:
     case DESC_PLAIN:
@@ -511,13 +505,10 @@ bool attack::distortion_affects_defender()
             blink_fineff::schedule(defender);
         break;
     case BANISH:
-        if (!player_in_branch(BRANCH_ABYSS))
-        {
-            if (defender_visible)
-                    obvious_effect = true;
-            defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                             attacker->get_experience_level());
-        }
+        if (defender_visible)
+            obvious_effect = true;
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
+                         attacker->get_experience_level());
         return true;
     case TELE_INSTANT:
     case TELE_DELAYED:
@@ -532,7 +523,7 @@ bool attack::distortion_affects_defender()
         }
 
         if (choice == TELE_INSTANT)
-            distortion_tele_fineff::schedule(defender);
+            teleport_fineff::schedule(defender);
         else
             defender->teleport();
         break;
@@ -613,7 +604,7 @@ void attack::chaos_affects_defender()
     int petrify_chance  = can_slow && can_petrify       ? 10 : 0;
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
-    int probs[NUM_CHAOS_TYPES] =
+    int probs[] =
     {
         clone_chance,   // CHAOS_CLONE
         poly_chance,    // CHAOS_POLY
@@ -630,11 +621,12 @@ void attack::chaos_affects_defender()
         para_chance,    // CHAOS_PARALYSIS
         petrify_chance, // CHAOS_PETRIFY
     };
+    COMPILE_CHECK(ARRAYSZ(probs) == NUM_CHAOS_TYPES);
 
     bolt beam;
     beam.flavour = BEAM_NONE;
 
-    int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+    int choice = choose_random_weighted(probs, end(probs));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
     string chaos_effect = "CHAOS effect: ";
     switch (choice)
@@ -753,7 +745,7 @@ void attack::chaos_affects_defender()
         beam.flavour = BEAM_HEALING;
         break;
     case CHAOS_HASTE:
-        if (defender->is_player() && you_worship(GOD_CHEIBRIADOS))
+        if (defender->is_player() && have_passive(passive_t::no_haste))
         {
             simple_god_message(" protects you from inadvertent hurry.");
             obvious_effect = true;
@@ -1019,19 +1011,14 @@ void attack::drain_defender()
 
 void attack::drain_defender_speed()
 {
-    if (!defender->res_negative_energy())
+    if (needs_message)
     {
-        if (needs_message)
-        {
-            mprf("%s %s %s vigour!",
-                 atk_name(DESC_THE).c_str(),
-                 attacker->conj_verb("drain").c_str(),
-                 def_name(DESC_ITS).c_str());
-        }
-
-        special_damage = 1 + random2(damage_done) / 2;
-        defender->slow_down(attacker, 5 + random2(7));
+        mprf("%s %s %s vigour!",
+             atk_name(DESC_THE).c_str(),
+             attacker->conj_verb("drain").c_str(),
+             def_name(DESC_ITS).c_str());
     }
+    defender->slow_down(attacker, 5 + random2(7));
 }
 
 int attack::inflict_damage(int dam, beam_type flavour, bool clean)
@@ -1254,10 +1241,12 @@ int attack::player_apply_misc_modifiers(int damage)
  */
 int attack::get_weapon_plus()
 {
-    if (weapon->base_type == OBJ_RODS)
-        return weapon->rod_plus;
-    if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
+    if (weapon->base_type == OBJ_STAVES
+        || weapon->sub_type == WPN_BLOWGUN
+        || weapon->base_type == OBJ_RODS)
+    {
         return 0;
+    }
     return weapon->plus;
 }
 
@@ -1481,7 +1470,7 @@ bool attack::attack_shield_blocked(bool verbose)
     {
         perceived_attack = true;
 
-        if (attack_ignores_shield(verbose))
+        if (ignores_shield(verbose))
             return false;
 
         if (needs_message && verbose)
@@ -1511,7 +1500,7 @@ attack_flavour attack::random_chaos_attack_flavour()
                                          10, AF_COLD,
                                          10, AF_ELEC,
                                          10, AF_POISON,
-                                         10, AF_CHAOS,
+                                         10, AF_CHAOTIC,
                                           5, AF_DRAIN_XP,
                                           5, AF_VAMPIRIC,
                                           5, AF_HOLY,
@@ -1535,12 +1524,12 @@ attack_flavour attack::random_chaos_attack_flavour()
                 susceptible = false;
             break;
         case AF_POISON:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case AF_VAMPIRIC:
         case AF_DRAIN_XP:
-            if (defender->holiness() != MH_NATURAL)
+            if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case AF_HOLY:
@@ -1556,6 +1545,34 @@ attack_flavour attack::random_chaos_attack_flavour()
     }
 
     return flavour;
+}
+
+bool attack::apply_poison_damage_brand()
+{
+    if (!one_chance_in(4))
+    {
+        int old_poison;
+
+        if (defender->is_player())
+            old_poison = you.duration[DUR_POISONING];
+        else
+        {
+            old_poison =
+                (defender->as_monster()->get_ench(ENCH_POISON)).degree;
+        }
+
+        defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
+
+        if (defender->is_player()
+               && old_poison < you.duration[DUR_POISONING]
+            || !defender->is_player()
+               && old_poison <
+                  (defender->as_monster()->get_ench(ENCH_POISON)).degree)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool attack::apply_damage_brand(const char *what)
@@ -1600,11 +1617,15 @@ bool attack::apply_damage_brand(const char *what)
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
+        defender->expose_to_element(BEAM_FIRE, 2);
+        if (defender->is_player())
+            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1633,35 +1654,13 @@ bool attack::apply_damage_brand(const char *what)
                 :  "There is a sudden explosion of sparks!";
             special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
+            defender->expose_to_element(BEAM_ELECTRICITY, 2);
         }
 
         break;
 
     case SPWPN_VENOM:
-        if (!one_chance_in(4))
-        {
-            int old_poison;
-
-            if (defender->is_player())
-                old_poison = you.duration[DUR_POISONING];
-            else
-            {
-                old_poison =
-                    (defender->as_monster()->get_ench(ENCH_POISON)).degree;
-            }
-
-            defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
-
-            if (defender->is_player()
-                   && old_poison < you.duration[DUR_POISONING]
-                || !defender->is_player()
-                   && old_poison <
-                      (defender->as_monster()->get_ench(ENCH_POISON)).degree)
-            {
-                obvious_effect = true;
-            }
-
-        }
+        obvious_effect = apply_poison_damage_brand();
         break;
 
     case SPWPN_DRAINING:
@@ -1735,8 +1734,7 @@ bool attack::apply_damage_brand(const char *what)
         // AF_CONFUSE.
         if (defender->is_player())
         {
-            if (one_chance_in(10)
-                || (damage_done > 2 && one_chance_in(3)))
+            if (one_chance_in(3))
             {
                 defender->confuse(attacker,
                                   1 + random2(3+attacker->get_hit_dice()));
@@ -1789,14 +1787,11 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     default:
-        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_HELLFIRE))
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
         {
-            calc_elemental_brand_damage(BEAM_HELLFIRE,
-                                        defender->is_icy() ? "melt" : "burn",
-                                        what);
-            defender->expose_to_element(BEAM_HELLFIRE);
+            calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
+            defender->expose_to_element(BEAM_DAMNATION);
             attacker->god_conduct(DID_UNHOLY, 2 + random2(3));
-            attacker->god_conduct(DID_FIRE, 10 + random2(5));
         }
         break;
     }
@@ -1829,24 +1824,13 @@ bool attack::apply_damage_brand(const char *what)
             miscast_level = -1;
     }
 
+    // Preserve Nessos's brand stacking in a hacky way -- but to be fair, it
+    // was always a bit of a hack.
+    if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
+        apply_poison_damage_brand();
+
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
-
-    if (defender->alive())
-    {
-        switch (brand)
-        {
-        case SPWPN_FLAMING:
-            defender->expose_to_element(BEAM_FIRE);
-            break;
-
-        case SPWPN_FREEZING:
-            defender->expose_to_element(BEAM_COLD, 2);
-            break;
-        default:
-            break;
-        }
-    }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {

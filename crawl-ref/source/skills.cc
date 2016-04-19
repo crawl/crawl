@@ -302,14 +302,14 @@ static void _change_skill_level(skill_type exsk, int n)
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
     if (exsk == SK_FIGHTING)
-        calc_hp();
+        recalc_and_scale_hp();
 }
 
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill)
 {
     if (exsk == SK_FIGHTING)
-        calc_hp();
+        recalc_and_scale_hp();
 
     if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
         calc_mp();
@@ -1439,13 +1439,18 @@ bool is_harmful_skill(skill_type skill)
     return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
-bool all_skills_maxed(bool inc_harmful)
+/**
+ * Has the player maxed out all skills?
+ *
+ * @param really_all If true, also consider skills that are harmful and/or
+ *        currently untrainable. Useless skills are never considered.
+ */
+bool all_skills_maxed(bool really_all)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] < MAX_SKILL_LEVEL && you.can_train[i]
-            && !is_useless_skill((skill_type) i)
-            && (inc_harmful || !is_harmful_skill((skill_type) i)))
+        if (you.skills[i] < MAX_SKILL_LEVEL && !is_useless_skill(i)
+            && (really_all || you.can_train[i] && !is_harmful_skill(i)))
         {
             return false;
         }
@@ -1464,7 +1469,7 @@ int skill_bump(skill_type skill, int scale)
 // (i.e., old-style aptitude 50).
 #define APT_DOUBLE 4
 
-static float _apt_to_factor(int apt)
+float apt_to_factor(int apt)
 {
     return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
@@ -1506,7 +1511,7 @@ int species_apt(skill_type skill, species_type species)
 
 float species_apt_factor(skill_type sk, species_type sp)
 {
-    return _apt_to_factor(species_apt(sk, sp));
+    return apt_to_factor(species_apt(sk, sp));
 }
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)

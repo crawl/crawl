@@ -56,7 +56,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 
     if (ends_with(name, "us"))
     {
-        if (ends_with(name, "lotus"))
+        if (ends_with(name, "lotus") || ends_with(name, "status"))
             return name + "es";
         else
             // Fungus, ufetubus, for instance.
@@ -150,6 +150,11 @@ string pluralise(const string &name, const char * const qualifiers[],
     {
         // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)
         return name + "u";
+    }
+    else if (name == "Tzitzimitl")
+    {
+        // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
+        return name.substr(0, name.length() - 2) + "meh";
     }
 
     return name + "s";

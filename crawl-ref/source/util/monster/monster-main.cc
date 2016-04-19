@@ -253,6 +253,7 @@ static void initialize_crawl()
     init_properties();
     init_item_name_cache();
 
+    init_zap_index();
     init_spell_descs();
     init_monster_symbols();
     init_mon_name_cache();
@@ -345,6 +346,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         return mi_calc_smiting_damage(monster);
     if (sp == SPELL_AIRSTRIKE)
         return mi_calc_airstrike_damage(monster);
+    if (sp == SPELL_WATERSTRIKE)
+        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
     if (sp == SPELL_GLACIATE)
         return mi_calc_glaciate_damage(monster);
     if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)
@@ -893,17 +896,9 @@ int main(int argc, char* argv[])
                 else
                     monsterattacks += ", ";
 
-                int frenzy_degree = -1;
                 short int dam = attk.damage;
                 if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
-                else if (mon.has_ench(ENCH_BATTLE_FRENZY))
-                    frenzy_degree = mon.get_ench(ENCH_BATTLE_FRENZY).degree;
-                else if (mon.has_ench(ENCH_ROUSED))
-                    frenzy_degree = mon.get_ench(ENCH_ROUSED).degree;
-
-                if (frenzy_degree != -1)
-                    dam = dam * (115 + frenzy_degree * 15) / 100;
 
                 if (mon.has_ench(ENCH_WEAK))
                     dam = dam * 2 / 3;
@@ -957,7 +952,7 @@ int main(int argc, char* argv[])
                 case AF_DRAIN_XP:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
                     break;
-                case AF_CHAOS:
+                case AF_CHAOTIC:
                     monsterattacks += colour(LIGHTGREEN, "(chaos)");
                     break;
                 case AF_ELEC:
@@ -998,6 +993,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_ROT:
                     monsterattacks += colour(LIGHTRED, "(rot)");
+                    break;
+                case AF_MIASMATA:
+                    monsterattacks += colour(LIGHTRED, "(miasmata)");
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1057,7 +1055,7 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(BROWN, "(trample)");
                     break;
                 case AF_WEAKNESS:
-                    monsterattacks += colour(LIGHTRED, "(weakness");
+                    monsterattacks += colour(LIGHTRED, "(weakness)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
@@ -1158,11 +1156,8 @@ int main(int argc, char* argv[])
 
         string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
-            || mon.type == MONS_LICH || mon.type == MONS_ANCIENT_LICH
             || mon.type == MONS_CHIMERA
-                   && (mon.base_monster == MONS_PANDEMONIUM_LORD
-                       || mon.base_monster == MONS_LICH
-                       || mon.base_monster == MONS_ANCIENT_LICH))
+                   && (mon.base_monster == MONS_PANDEMONIUM_LORD))
         {
             spell_string = "(random)";
         }
@@ -1215,12 +1210,12 @@ int main(int argc, char* argv[])
         record_resist(c, #x, monsterresistances, monstervulnerabilities, y);   \
     } while (false)
 
-        // Don't record regular rF as hellfire vulnerability.
+        // Don't record regular rF as damnation vulnerability.
         int rfire = get_resist(res, MR_RES_FIRE);
-        bool rhellfire = rfire >= 4;
+        bool rdamnation = rfire >= 4;
         if (rfire > 3)
             rfire = 3;
-        res2(RED, hellfire, (int)rhellfire);
+        res2(RED, damnation, (int)rdamnation);
         res2(RED, fire, rfire);
         res(BLUE, COLD);
         res(CYAN, ELEC);

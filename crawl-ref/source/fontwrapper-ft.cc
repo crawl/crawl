@@ -207,14 +207,14 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 
     // Was int prior to freetype 2.5.4, then became unsigned.
     typedef decltype(bmp->width) ftint;
-    ftint bmp_width  = bmp->width;
+    ftint bmp_width = bmp->width;
     if (outl)
-        bmp_width  += 2;
+        bmp_width += 2;
 
-    m_glyphs[c].offset  = face->glyph->bitmap_left;
+    m_glyphs[c].offset = face->glyph->bitmap_left;
     m_glyphs[c].advance = advance;
     m_glyphs[c].ascender = face->glyph->bitmap_top;
-    m_glyphs[c].width   = bmp_width;
+    m_glyphs[c].width = bmp_width;
 
     // Some glyphs (e.g. ' ') don't get a buffer.
     if (bmp->buffer)

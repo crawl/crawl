@@ -555,7 +555,7 @@ function iter.invent_iterator:iter ()
   return function() return self:next() end, nil, nil
 end
 
--- An easier and more posh way of interfacing with find_marker_positions_by_prop.
+-- An easier and more posh way of interfacing with inventory.
 function iter.inventory_iterator ()
   return iter.invent_iterator:new(items.inventory())
 end

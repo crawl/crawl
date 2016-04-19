@@ -293,8 +293,6 @@ int str_to_summon_type(const string &str)
         return MON_SUMM_WRATH;
     if (str == "aid")
         return MON_SUMM_AID;
-    if (str == "lantern")
-        return MON_SUMM_LANTERN;
 
     return spell_by_name(str);
 }
@@ -555,7 +553,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_vampire_feed = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, statue, hungry, hit_monster, "
+        "interrupt_travel = interrupt_butcher, hungry, hit_monster, "
                             "sense_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
@@ -763,6 +761,7 @@ void game_options::reset_options()
     autopickup_on    = 1;
     autopickup_starting_ammo = true;
     default_manual_training = false;
+    default_show_all_skills = false;
 
     show_newturn_mark = true;
     show_game_turns = true;
@@ -801,6 +800,7 @@ void game_options::reset_options()
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
+    autofight_warning      = 0;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = !is_tiles();
@@ -883,8 +883,7 @@ void game_options::reset_options()
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK
-                              | ES_GREEDY_SACRIFICEABLE);
+                              | ES_GREEDY_VISITED_ITEM_STACK);
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -899,7 +898,7 @@ void game_options::reset_options()
     explore_auto_rest      = false;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = AS_NO;
+    auto_sacrifice         = false;
 
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
@@ -1057,7 +1056,7 @@ void game_options::reset_options()
 
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
-    tile_show_demon_tier     = true;
+    tile_show_demon_tier     = false;
 #ifdef USE_TILE_WEB
     // disabled by default due to performance issues
     tile_water_anim          = false;
@@ -1095,7 +1094,7 @@ void game_options::reset_options()
                     "screenshot,monlist,kills,notes");
     if (Version::ReleaseType == VER_ALPHA)
         new_dump_fields("vaults");
-    new_dump_fields("action_counts");
+    new_dump_fields("skill_gains,action_counts");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -2087,12 +2086,6 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
-        else if (c == "greedy_sacrificeable" || c == "greedy_sacrificeables"
-                 || c == "greedy_sacrificable" || c == "greedy_sacrificables"
-                 || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
-        {
-            conditions |= ES_GREEDY_SACRIFICEABLE;
-        }
     }
     return conditions;
 }
@@ -2621,6 +2614,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             default_manual_training = false;
     }
+    else BOOL_OPTION(default_show_all_skills);
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
     else BOOL_OPTION(restart_after_save);
@@ -2880,6 +2874,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
+    else INT_OPTION(autofight_warning, 0, 1000);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else LIST_OPTION(note_monsters);
     else LIST_OPTION(note_messages);
@@ -3493,17 +3488,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(explore_auto_rest);
     else BOOL_OPTION(travel_key_stop);
-    else if (key == "auto_sacrifice")
-    {
-        if (field == "prompt_ignore")
-            auto_sacrifice = AS_PROMPT_IGNORE;
-        else if (field == "prompt" || field == "ask")
-            auto_sacrifice = AS_PROMPT;
-        else if (field == "before_explore")
-            auto_sacrifice = AS_BEFORE_EXPLORE;
-        else
-            auto_sacrifice = _read_bool(field, false) ? AS_YES : AS_NO;
-    }
+    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
         if (plain)
@@ -4022,12 +4007,11 @@ void game_options::set_fake_langs(const string &input)
 }
 
 // Checks an include file name for safety and resolves it to a readable path.
-// If safety check fails, throws a string with the reason for failure.
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
+/// @throws unsafe_path if included_file fails the safety check.
 string game_options::resolve_include(string parent_file, string included_file,
                                      const vector<string> *rcdirs)
-    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.
@@ -4082,9 +4066,9 @@ string game_options::resolve_include(const string &file, const char *type)
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
         return resolved;
     }
-    catch (const string &err)
+    catch (const unsafe_path &err)
     {
-        report_error("Cannot include %sfile: %s", type, err.c_str());
+        report_error("Cannot include %sfile: %s", type, err.what());
         return "";
     }
 }
@@ -4317,7 +4301,7 @@ static void _print_save_version(char *name)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 
@@ -4510,7 +4494,7 @@ static void _edit_save(int argc, char **argv)
     }
     catch (ext_fail_exception &fe)
     {
-        fprintf(stderr, "Error: %s\n", fe.msg.c_str());
+        fprintf(stderr, "Error: %s\n", fe.what());
     }
 }
 #undef FAIL
@@ -4820,8 +4804,16 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
             {
                 SysEnv.map_gen_range.reset(new depth_ranges);
-                *SysEnv.map_gen_range =
-                    depth_ranges::parse_depth_ranges(next_arg);
+                try
+                {
+                    *SysEnv.map_gen_range =
+                        depth_ranges::parse_depth_ranges(next_arg);
+                }
+                catch (const bad_level_id &err)
+                {
+                    fprintf(stderr, "Error parsing depths: %s\n", err.what());
+                    end(1);
+                }
                 nextUsed = true;
             }
             break;

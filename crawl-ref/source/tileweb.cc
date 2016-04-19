@@ -603,7 +603,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
+        if (status == DUR_DIVINE_SHIELD)
         {
             if (!you.duration[status])
                 continue;

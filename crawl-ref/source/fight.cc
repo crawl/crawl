@@ -20,6 +20,7 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -174,7 +175,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
 
-        if (!simu && you_worship(GOD_DITHMENOS))
+        if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
         return true;
@@ -434,8 +435,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_FIRE:
         case BEAM_LAVA:
             return defender->res_fire();
-        case BEAM_HELLFIRE:
-            return defender->res_hellfire();
+        case BEAM_DAMNATION:
+            return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:

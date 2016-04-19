@@ -219,63 +219,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-monster_type pick_swarmer()
-{
-    return random_choose_weighted(4, MONS_KILLER_BEE,
-                                  3, MONS_SCORPION,
-                                  2, MONS_RIVER_RAT,
-                                  1, MONS_WASP,
-                                  1, MONS_VAMPIRE_MOSQUITO,
-                                  1, MONS_BUTTERFLY,
-                                  0);
-}
-
-// Creates a mixed swarm of typical swarming animals.
-// Number and duration depend on spell power.
-spret_type cast_summon_swarm(int pow, god_type god, bool fail)
-{
-    fail_check();
-    bool success = false;
-    const int dur = min(2 + (random2(pow) / 4), 6);
-    const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
-                                        2, 2, 6, 8);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-
-        monster_type mon = MONS_NO_MONSTER;
-
-        // If you worship a good god, don't summon an evil/unclean
-        // swarmer (in this case, the vampire mosquito).
-        const int MAX_TRIES = 100;
-        int tries = 0;
-        do
-        {
-            mon = pick_swarmer();
-        }
-        while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
-
-        // If a hundred tries wasn't enough, it's never going to work.
-        if (tries >= MAX_TRIES)
-            break;
-
-        if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY, &you,
-                          dur, SPELL_SUMMON_SWARM,
-                          you.pos(),
-                          MHITYOU,
-                          MG_AUTOFOE, god)))
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -543,7 +486,7 @@ void do_dragon_call(int time)
 }
 
 /**
- * Handle the Doom Howl status effect, possibly summoning hostile doom hounds
+ * Handle the Doom Howl status effect, possibly summoning hostile nasties
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
@@ -554,14 +497,14 @@ void doom_howl(int time)
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
     if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
-    // 1 nasty beast every 3-5 turns
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
         const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
@@ -578,7 +521,7 @@ void doom_howl(int time)
     {
         const monster_type howlcalled = random_choose(
                 MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
-                MONS_REAPER, MONS_TORMENTOR, MONS_SHADOW_FIEND
+                MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL
         );
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
@@ -603,6 +546,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
+            mons_add_blame(mons, "called by a doom hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
@@ -1496,7 +1440,7 @@ static bool _water_adjacent(coord_def p)
  * @param fail   Did this spell miscast? If true, abort the cast.
  * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
- *               SPRET_SUCCESS if the spell was succesfully cast.
+ *               SPRET_SUCCESS if the spell was successfully cast.
 */
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
@@ -1695,7 +1639,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
-    uint64_t name_type = 0;
+    monster_flags_t name_type;
     string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
@@ -1766,7 +1710,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     if (!name.empty()
-        && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
+        && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
         name_zombie(mons, monnum, name);
     }
@@ -2801,7 +2745,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 
         // This is so that reflection and pathing rules for the parent beam
         // will be obeyed when figuring out what is being aimed at
-        zappy(ztype, powc, testbeam);
+        zappy(ztype, powc, false, testbeam);
 
         battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
@@ -2961,7 +2905,7 @@ bool fire_battlesphere(monster* mons)
         else
             beam.target = mons->props["firing_target"].get_coord();
 
-        // Sanity check: if we have somehow ended up targetting ourselves, bail
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
@@ -3260,7 +3204,7 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
     monster *spectral_weapon = find_spectral_weapon(agent);
 
-    // Don't try to attack with a nonexistant spectral weapon
+    // Don't try to attack with a nonexistent spectral weapon
     if (!spectral_weapon || !spectral_weapon->alive())
     {
         agent->props.erase("spectral_weapon");
@@ -3371,7 +3315,9 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },
     { SPELL_EARTH_ELEMENTALS,           { 3, 2 } },
     { SPELL_AIR_ELEMENTALS,             { 3, 2 } },
+#if TAG_MAJOR_VERSION == 34
     { SPELL_IRON_ELEMENTALS,            { 3, 2 } },
+#endif
     { SPELL_SUMMON_SPECTRAL_ORCS,       { 3, 2 } },
     { SPELL_FIRE_SUMMON,                { 4, 2 } },
     { SPELL_SUMMON_MINOR_DEMON,         { 3, 3 } },
@@ -3388,7 +3334,6 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     // Rod specials
-    { SPELL_SUMMON_SWARM,              { 12, 2 } },
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };
 

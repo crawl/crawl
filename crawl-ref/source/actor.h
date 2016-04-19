@@ -11,8 +11,7 @@ enum ev_ignore_bit
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1<<0,
-    EV_IGNORE_PHASESHIFT = 1<<1,
-    EV_IGNORE_UNIDED     = 1<<2,
+    EV_IGNORE_UNIDED     = 1<<1,
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore_bit);
 
@@ -111,7 +110,8 @@ public:
                                bool calc_unid = true,
                                vector<item_def> *matches = nullptr) const = 0;
 
-    virtual hands_reqd_type hands_reqd(const item_def &item) const;
+    virtual hands_reqd_type hands_reqd(const item_def &item,
+                                       bool base = false) const;
 
             bool can_wield(const item_def* item,
                            bool ignore_curse = false,
@@ -162,7 +162,7 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
-    virtual bool can_see_invisible() const = 0;
+    virtual bool can_see_invisible(bool calc_unid = true) const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
@@ -202,7 +202,8 @@ public:
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount) = 0;
-    virtual void banish(actor *agent, const string &who = "", const int power = 0) = 0;
+    virtual void banish(actor *agent, const string &who = "",
+                        const int power = 0, bool force = false) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
@@ -251,7 +252,7 @@ public:
     virtual int armour_class(bool calc_unid = true) const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
-                 int stab_bypass = 0) const;
+                 int stab_bypass = 0, bool for_real = true) const;
     virtual int evasion(ev_ignore_type ign = EV_IGNORE_NONE,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
@@ -282,7 +283,7 @@ public:
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
-    virtual bool res_hellfire() const = 0;
+    virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
@@ -297,7 +298,7 @@ public:
     virtual bool res_wind() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int res_magic() const = 0;
+    virtual int res_magic(bool calc_unid = true) const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;

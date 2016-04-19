@@ -15,6 +15,7 @@
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -246,22 +247,6 @@ bool monster::swimming() const
 {
     const dungeon_feature_type grid = grd(pos());
     return feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER;
-}
-
-bool monster::wants_submerge() const
-{
-    // Swamp worms don't re-submerge randomly.
-    if (type == MONS_SWAMP_WORM)
-        return false;
-
-    // Don't submerge if we just unsubmerged to shout.
-    if (seen_context == SC_FISH_SURFACES_SHOUT)
-        return false;
-
-    if (!mons_is_retreating(this) && mons_can_move_towards_target(this))
-        return false;
-
-    return !mons_landlubbers_in_reach(this);
 }
 
 bool monster::submerged() const
@@ -501,11 +486,11 @@ item_def *monster::melee_weapon() const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type monster::hands_reqd(const item_def &item) const
+hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
 {
     if (mons_genus(type) == MONS_FORMICID)
         return HANDS_ONE;
-    return actor::hands_reqd(item);
+    return actor::hands_reqd(item, base);
 }
 
 bool monster::can_wield(const item_def& item, bool ignore_curse,
@@ -585,11 +570,11 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 }
 
 /**
- * Checks whether the monster could ever wield the given weapon, regardless of
+ * Checks whether the monster could ever wield the given item, regardless of
  * what they're currently wielding or any other state.
  *
  * @param item              The item to wield.
- * @param ignore_brand      Whether to disregard the weapon's brand.
+ * @param ignore_brand      Whether to disregard the item's brand.
  * @return                  Whether the monster could potentially wield the
  *                          item.
  */
@@ -607,7 +592,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         return false;
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
-    if (!is_weapon_wieldable(item, body_size()))
+    if (is_weapon(item) && !is_weapon_wieldable(item, body_size()))
         return false;
 
     if (!ignore_brand)
@@ -696,8 +681,7 @@ bool monster::can_speak()
     }
 
     // Does it have the proper vocal equipment?
-    const mon_body_shape shape = get_mon_shape(this);
-    return shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA;
+    return mon_shape_is_humanoid(get_mon_shape(this));
 }
 
 bool monster::is_silenced() const
@@ -810,7 +794,6 @@ bool monster::likes_wand(const item_def &item) const
     ASSERT(item.base_type == OBJ_WANDS);
     switch (item.sub_type)
     {
-        case WAND_INVISIBILITY:
         case WAND_TELEPORTATION:
         case WAND_HEAL_WOUNDS:
         case WAND_HASTING:
@@ -820,7 +803,7 @@ bool monster::likes_wand(const item_def &item) const
             // assumptions:
             // bad wands are value 16, so won't be used past hd 4
             // mediocre wands are value 8; won't be used past hd 8
-            // fire and cold and so on are value 5, won't be used past hd 10
+            // other good wands are value 5, won't be used past hd 10
             // better implementations welcome
             return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
     }
@@ -932,9 +915,6 @@ void monster::equip_armour(item_def &item, bool msg)
                            item.name(DESC_A) + ".";
         simple_monster_message(this, str.c_str());
     }
-
-    if (is_shield(item) && has_ench(ENCH_CONDENSATION_SHIELD))
-        del_ench(ENCH_CONDENSATION_SHIELD);
 }
 
 void monster::equip_jewellery(item_def &item, bool msg)
@@ -1555,7 +1535,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
             const int old_wpn_dam = mons_weapon_damage_rating(*weap)
                                     + _ego_damage_bonus(*weap);
 
-            bool new_wpn_better = (new_wpn_dam > old_wpn_dam);
+            bool new_wpn_better = new_wpn_dam > old_wpn_dam;
             if (new_wpn_dam == old_wpn_dam)
             {
                 // Use shopping value as a crude estimate of resistances etc.
@@ -1570,7 +1550,11 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (new_wpn_better && !weap->cursed())
+            if (item.base_type == OBJ_RODS)
+                new_wpn_better = true; // rods are good.
+
+            if (new_wpn_better && !weap->cursed()
+                && weap->base_type != OBJ_RODS) // rods are good
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1623,6 +1607,12 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
+    // Don't pick up a new weapon if we've been gifted one by the player.
+    if (is_range_weapon(weap) && props.exists(BEOGH_RANGE_WPN_GIFT_KEY))
+        return false;
+    else if (props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
+        return false;
+
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
@@ -1650,6 +1640,12 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
+
+    // Don't pick up new armour if we've been gifted something by the player.
+    if (is_shield(item) && props.exists(BEOGH_SH_GIFT_KEY))
+        return false;
+    else if (props.exists(BEOGH_ARM_GIFT_KEY))
+        return false;
 
     // Spellcasters won't pick up restricting armour, although they can
     // start with one. Applies to arcane spells only, of course.
@@ -1953,6 +1949,22 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
     return false;
 }
 
+bool monster::pickup_rod(item_def &item, bool msg, bool force)
+{
+    // duplicating some relevant melee weapon pickup checks
+    if (!force &&
+            (!could_wield(item)
+            || type == MONS_DEEP_ELF_BLADEMASTER
+            || type == MONS_DEEP_ELF_MASTER_ARCHER)
+            || props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
+    {
+        // XXX: check to see whether this type of rod is evocable by monsters!
+        return false;
+    }
+
+    return pickup_melee_weapon(item, msg);
+}
+
 /**
  * Have a monster pick up a missile item.
  *
@@ -2124,23 +2136,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
         {
             return false;
         }
-        // Keep neutral, charmed, and friendly monsters from
-        // picking up stuff.
-        if ((neutral()
-             || you_worship(GOD_JIYVA) && mons_is_slime(this)
-             || has_ench(ENCH_CHARM) || has_ench(ENCH_HEXED)
-             || friendly()
-        // Monsters being able to pick up items you've seen encourages
-        // tediously moving everything away from a place where they could use
-        // them.
-             || testbits(item.flags, ISFLAG_SEEN))
-        // ...but it's ok if it dropped the item itself.
-            && !(item.props.exists(DROPPER_MID_KEY)
-                 && item.props[DROPPER_MID_KEY].get_int() == (int)mid))
-        {
-            return false;
-        }
-
         if (!wandering && !wont_attack())
         {
             // These are not important enough for pickup when
@@ -2183,8 +2178,9 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_STAVES:
     case OBJ_WEAPONS:
-    case OBJ_RODS:
         return pickup_weapon(item, msg, force);
+    case OBJ_RODS:
+        return pickup_rod(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
     // Other types can always be picked up
@@ -2527,6 +2523,8 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 }
                 break;
         }
+        break;
+
     case MON_SHAPE_BUGGY:
         str = "handbug";
         break;
@@ -2671,7 +2669,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
 {
     mon_body_shape shape = get_mon_shape(this);
 
-    if (shape > MON_SHAPE_NAGA)
+    if (!mon_shape_is_humanoid(shape))
         return hand_name(plural, can_plural);
 
     if (can_plural != nullptr)
@@ -2883,7 +2881,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
         break;
     case BEAM_FIRE:
     case BEAM_LAVA:
-    case BEAM_HELLFIRE:
     case BEAM_STICKY_FLAME:
     case BEAM_STEAM:
         if (has_ench(ENCH_OZOCUBUS_ARMOUR))
@@ -2906,12 +2903,20 @@ void monster::expose_to_element(beam_type flavour, int strength,
     }
 }
 
-void monster::banish(actor *agent, const string &, const int)
+void monster::banish(actor *agent, const string &, const int, bool force)
 {
     coord_def old_pos = pos();
 
     if (mons_is_projectile(type))
         return;
+
+    if (!force && player_in_branch(BRANCH_ABYSS)
+        && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    {
+        simple_monster_message(this, " wobbles for a moment.");
+        return;
+    }
+
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(this, agent))
@@ -3166,9 +3171,9 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
-                    || has_ench(ENCH_BONE_ARMOUR)
-                    || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
+    return shield()
+           || has_ench(ENCH_BONE_ARMOUR)
+           || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
 int monster::shield_bonus() const
@@ -3186,17 +3191,11 @@ int monster::shield_bonus() const
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
     }
-    if (has_ench(ENCH_CONDENSATION_SHIELD))
-    {
-        const int condensation_shield = get_hit_dice() / 2;
-        sh = max(sh + condensation_shield, condensation_shield);
-    }
     if (has_ench(ENCH_BONE_ARMOUR))
     {
         const int bone_armour = 6 + get_hit_dice() / 3;
         sh = max(sh + bone_armour, bone_armour);
     }
-
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
@@ -3415,7 +3414,7 @@ int monster::armour_class(bool calc_unid) const
         ac += 10;
 
     // various enchantments
-    if (has_ench(ENCH_STONESKIN))
+    if (has_ench(ENCH_MAGIC_ARMOUR))
         ac += get_hit_dice() / 2;
     if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         ac += 4 + get_hit_dice() / 3;
@@ -3430,7 +3429,7 @@ int monster::armour_class(bool calc_unid) const
 
     // corrosion hurts.
     if (has_ench(ENCH_CORROSION))
-        ac /= 2;
+        ac -= 8;
 
     return max(ac, 0);
 }
@@ -3535,14 +3534,6 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
         ev += jewellery_plus;
     }
 
-    // ignore phase shift if dimension-anchored (or if told to)
-    if (mons_class_flag(type, M_PHASE_SHIFT)
-        && !((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
-    {
-        ev += 8;
-    }
-
-
     if (has_ench(ENCH_AGILE))
         ev += 5;
 
@@ -3631,7 +3622,8 @@ mon_holy_type monster::holiness(bool /*temp*/) const
         holi |= MH_EVIL;
 
     if (has_attack_flavour(AF_DRAIN_XP)
-        || has_attack_flavour(AF_VAMPIRIC))
+        || has_attack_flavour(AF_VAMPIRIC)
+        || has_attack_flavour(AF_MIASMATA))
     {
         holi |= MH_EVIL;
     }
@@ -3764,7 +3756,7 @@ int monster::known_chaos(bool check_spells_god) const
     }
 
     if (has_attack_flavour(AF_MUTATE)
-        || has_attack_flavour(AF_CHAOS))
+        || has_attack_flavour(AF_CHAOTIC))
     {
         chaotic++;
     }
@@ -3816,9 +3808,9 @@ bool monster::is_insubstantial() const
     return mons_class_flag(type, M_INSUBSTANTIAL);
 }
 
-bool monster::res_hellfire() const
+bool monster::res_damnation() const
 {
-    return get_mons_resist(this, MR_RES_FIRE) >= 4;
+    return get_mons_resist(this, MR_RES_FIRE) >= 4; // XXX: ???
 }
 
 int monster::res_fire() const
@@ -4150,21 +4142,23 @@ int monster::res_acid(bool calc_unid) const
     return u;
 }
 
-int monster::res_magic() const
+/**
+ * What MR (resistance to hexes, etc) does this monster have?
+ *
+ * @param calc_unid     Whether to include items & effects the player may not
+ *                      know about.
+ * @return              The monster's magic resistance value.
+ */
+int monster::res_magic(bool calc_unid) const
 {
     if (mons_immune_magic(this))
         return MAG_IMMUNE;
 
-    const monster_type base_type =
-        (mons_is_draconian(type) || mons_is_demonspawn(type))
-        ? draco_or_demonspawn_subspecies(this)
-        : type;
-
-    int u = (get_monster_data(base_type))->resist_magic;
-
+    const int type_mr = (get_monster_data(type))->resist_magic;
     // Negative values get multiplied with monster hit dice.
-    if (u < 0)
-        u = get_hit_dice() * -u * 4 / 3;
+    int u = type_mr < 0 ?
+                get_hit_dice() * -type_mr * 4 / 3 :
+                mons_class_res_magic(type, base_monster);
 
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
@@ -4174,14 +4168,26 @@ int monster::res_magic() const
     const int shld      = inv[MSLOT_SHIELD];
     const int jewellery = inv[MSLOT_JEWELLERY];
 
-    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+    // XXX: should also include artefacts mr props
+    // (remove ", false" and add appropriate flag checks for calc_unid)
+
+    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
+        && (calc_unid || mitm[armour].flags | ISFLAG_KNOW_TYPE))
+    {
         u += get_armour_res_magic(mitm[armour], false);
+    }
 
-    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
+    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
+        && (calc_unid || mitm[shld].flags | ISFLAG_KNOW_TYPE))
+    {
         u += get_armour_res_magic(mitm[shld], false);
+    }
 
-    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
+    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+        && calc_unid) // XXX: can you ever see monster jewellery?
+    {
         u += get_jewellery_res_magic(mitm[jewellery], false);
+    }
 
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
         u += 80;
@@ -4746,6 +4752,10 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (intel == I_BRAINLESS)
         return true;
 
+    // Ditto, berserkers & frenzied creatures.
+    if (berserk_or_insane())
+        return true;
+
     // Hostile monsters are not afraid of non-mechanical traps.
     // Allies will try to avoid teleportation and zot traps.
     const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
@@ -4790,7 +4800,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     // Friendlies will try not to be parted from you.
     if (intelligent_ally(this) && (trap.type == TRAP_TELEPORT
                                    || trap.type == TRAP_TELEPORT_PERMANENT)
-        && player_knows_trap && mons_near(this))
+        && player_knows_trap && can_see(you))
     {
         return false;
     }
@@ -4970,14 +4980,8 @@ bool monster::find_place_to_live(bool near_player)
 
 void monster::destroy_inventory()
 {
-    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-    {
-        if (inv[j] != NON_ITEM)
-        {
-            destroy_item(inv[j]);
-            inv[j] = NON_ITEM;
-        }
-    }
+    for (mon_inv_iterator ii(*this); ii; ++ii)
+        destroy_item(ii->index());
 }
 
 bool monster::is_travelling() const
@@ -5193,7 +5197,7 @@ bool monster::can_go_frenzy() const
 
     // Brainless natural monsters can still be berserked/frenzied.
     // This could maybe all be replaced by mons_is_object()?
-    if (mons_intel(this) == I_BRAINLESS && holiness() != MH_NATURAL)
+    if (mons_intel(this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
     if (paralysed() || petrified() || petrifying() || asleep())
@@ -5226,7 +5230,7 @@ bool monster::berserk_or_insane() const
     return berserk() || has_ench(ENCH_INSANE);
 }
 
-bool monster::needs_berserk(bool check_spells) const
+bool monster::needs_berserk(bool check_spells, bool ignore_distance) const
 {
     if (!can_go_berserk())
         return false;
@@ -5234,7 +5238,7 @@ bool monster::needs_berserk(bool check_spells) const
     if (has_ench(ENCH_HASTE) || has_ench(ENCH_TP))
         return false;
 
-    if (foe_distance() > 3)
+    if (!ignore_distance && foe_distance() > 3)
         return false;
 
     if (check_spells)
@@ -5254,27 +5258,32 @@ bool monster::needs_berserk(bool check_spells) const
     return true;
 }
 
-bool monster::can_see_invisible() const
+/**
+ * Can this monster see invisible creatures?
+ *
+ * @param calc_unid     Should effects the player doesn't know about be
+ *                      considered?
+ * @return              Whether the monster can see invisible things.
+ */
+bool monster::can_see_invisible(bool calc_unid) const
 {
-    // If you change the non-item parts of this method, be sure to update
-    // monster_info::can_see_invisible() to match!
     if (mons_is_ghost_demon(type))
         return ghost->see_invis;
-    else if (mons_class_flag(type, M_SEE_INVIS)
-             || (mons_is_demonspawn(type)
-                 && mons_class_flag(draco_or_demonspawn_subspecies(this),
-                                    M_SEE_INVIS)))
-    {
+    else if (mons_class_sees_invis(type, base_monster))
         return true;
-    }
-    else if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
+    else if (has_facet(BF_WEIRD))
+        return true;
+
+    if (!calc_unid)
+        return false;
+
+    if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
         return true;
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
-    else if (has_facet(BF_WEIRD))
-        return true;
+
     return false;
 }
 
@@ -6111,11 +6120,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
-    if (type == MONS_SHOCK_SERPENT && damage > 4)
+    // XXX: this might not be necessary anymore?
+    if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor)
     {
-        int pow = div_rand_round(min(damage, hit_points + damage), 9);
+        const int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
-            shock_serpent_discharge_fineff::schedule(this, pos(), pow);
+        {
+            shock_serpent_discharge_fineff::schedule(this, *oppressor, pos(),
+                                                     pow);
+        }
     }
 
     // The (real) royal jelly objects to taking damage and will SULK. :-)
@@ -6654,7 +6667,7 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     if (!stasis())
         return false;
 
-    if (!silent && you.can_see(*this) && !mons_is_lurking(this))
+    if (!silent && you.can_see(*this))
         simple_monster_message(this, " looks uneasy for a moment.");
 
     return true;

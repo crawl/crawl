@@ -109,7 +109,7 @@ protected:
     }
 };
 
-class distortion_tele_fineff : public final_effect
+class teleport_fineff : public final_effect
 {
 public:
     bool mergeable(const final_effect &a) const override;
@@ -117,10 +117,10 @@ public:
 
     static void schedule(const actor *defend)
     {
-        final_effect::schedule(new distortion_tele_fineff(defend));
+        final_effect::schedule(new teleport_fineff(defend));
     }
 protected:
-    distortion_tele_fineff(const actor *defend)
+    teleport_fineff(const actor *defend)
         : final_effect(0, defend, coord_def())
     {
     }
@@ -218,17 +218,22 @@ public:
     void merge(const final_effect &a) override;
     void fire() override;
 
-    static void schedule(const actor *serpent, coord_def pos, int pow)
+    static void schedule(const actor *serpent, const actor &oppressor,
+                         coord_def pos, int pow)
     {
         final_effect::schedule(new shock_serpent_discharge_fineff(serpent,
+                                                                  oppressor,
                                                                   pos, pow));
     }
 protected:
-    shock_serpent_discharge_fineff(const actor *serpent, coord_def pos, int pow)
-        : final_effect(0, serpent, coord_def()), position(pos), power(pow),
-          attitude(mons_attitude(serpent->as_monster()))
+    shock_serpent_discharge_fineff(const actor *serpent, const actor &rudedude,
+                                   coord_def pos, int pow)
+        : final_effect(0, serpent, coord_def()), oppressor(rudedude),
+          position(pos), power(pow),
+        attitude(mons_attitude(serpent->as_monster()))
     {
     }
+    const actor &oppressor;
     coord_def position;
     int power;
     mon_attitude_type attitude;

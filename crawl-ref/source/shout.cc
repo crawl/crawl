@@ -99,6 +99,9 @@ void handle_monster_shouts(monster* mons, bool force)
     if (!force && one_chance_in(5))
         return;
 
+    if (mons->cannot_move() || mons->asleep() || mons->has_ench(ENCH_DUMB))
+        return;
+
     // Friendly or neutral monsters don't shout.
     if (!force && (mons->friendly() || mons->neutral()))
         return;
@@ -193,6 +196,7 @@ void handle_monster_shouts(monster* mons, bool force)
         strip_channel_prefix(message, channel);
 
         // Monster must come up from being submerged if it wants to shout.
+        // XXX: this code is probably unreachable now?
         if (mons->submerged())
         {
             if (!mons->del_ench(ENCH_SUBMERGED))
@@ -203,10 +207,7 @@ void handle_monster_shouts(monster* mons, bool force)
 
             if (you.can_see(*mons))
             {
-                if (!monster_habitable_grid(mons, DNGN_FLOOR))
-                    mons->seen_context = SC_FISH_SURFACES_SHOUT;
-                else
-                    mons->seen_context = SC_SURFACES;
+                mons->seen_context = SC_FISH_SURFACES;
 
                 // Give interrupt message before shout message.
                 handle_seen_interrupt(mons);
@@ -812,7 +813,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     if (coinflip())
                     {
                         dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                             mi->name(DESC_PLAIN).c_str(),
+                             mi->name(DESC_A, true).c_str(),
                              mi->pos().x, mi->pos().y);
                         behaviour_event(*mi, ME_DISTURB, 0, where);
                     }
@@ -820,7 +821,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 }
             }
             dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                            mi->name(DESC_PLAIN).c_str(),
+                            mi->name(DESC_A, true).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
             break;
@@ -834,14 +835,14 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 if (coinflip())
                 {
                     dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                         mi->name(DESC_PLAIN).c_str(),
+                         mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_DISTURB, 0, where);
                 }
                 else
                 {
                     dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                         mi->name(DESC_PLAIN).c_str(),
+                         mi->name(DESC_A, true).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_ALERT, 0, where);
                 }
@@ -1308,7 +1309,6 @@ static void _actor_apply_noise(actor *act,
     else
     {
         monster *mons = act->as_monster();
-        actor *source = actor_by_mid(noise.noise_producer_mid);
         // If the noise came from the character, any nearby monster
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)
@@ -1318,16 +1318,6 @@ static void _actor_apply_noise(actor *act,
                  && !mons->friendly())
         {
             // Sirens/merfolk avatar call (hostile) aquatic monsters.
-            behaviour_event(mons, ME_ALERT, 0, apparent_source);
-        }
-        else if ((noise.noise_flags & NF_HUNTING_CRY)
-                 && source
-                 && (mons_genus(mons->type) == mons_genus(source->type)
-                     || mons->holiness() & MH_HOLY
-                        && source->holiness() & MH_HOLY))
-        {
-            // Hunting cries alert monsters of the same genus, or other
-            // holy creatures if the source is holy.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else

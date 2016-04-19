@@ -1268,7 +1268,7 @@ void direction_chooser::feature_cycle_forward(int feature)
                                  return map_bounds(where)
                                         && (you.see_cell(where)
                                             || env.map_knowledge(where).seen())
-                                        && is_feature(mode, where);
+                                        && is_feature(feature, where);
                              },
                              hitfunc,
                              LS_FLIPVH))
@@ -1764,7 +1764,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         break;
 
     case CMD_TARGET_WIZARD_BANISH_MONSTER:
-        m->banish(&you);
+        m->banish(&you, "", 0, true);
         break;
 
     case CMD_TARGET_WIZARD_KILL_MONSTER:
@@ -2382,7 +2382,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         break;
     // intentionally no default
     }
-    die("Unknown targetting mode!");
+    die("Unknown targeting mode!");
 }
 
 #ifdef CLUA_BINDINGS

@@ -71,6 +71,7 @@ int spell_noise(spell_type spell);
 int spell_effect_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);
+tileidx_t get_spell_tile(spell_type which_spell);
 
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
@@ -81,7 +82,6 @@ unsigned int get_spell_flags(spell_type which_spell);
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc);
 spschools_type get_spell_disciplines(spell_type which_spell);
-bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
 int count_bits(uint64_t bits);
 
 template <class E, int Exp>

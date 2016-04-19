@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "godwrath.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -352,7 +353,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 {
     ASSERT(!did_msg);
 
-    if (target->is_monster() && !mons_near(target->as_monster()))
+    if (!you.see_cell(target->pos()))
         return;
 
     did_msg = true;
@@ -547,12 +548,16 @@ bool MiscastEffect::_sleep(int dur)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    if ((player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+    // The Abyss depth check is duplicated here (and the banishment forced if
+    // successful), in order to degrade to Malign Gateway in the Abyss instead
+    // of doing nothing.
+    if ((player_in_branch(BRANCH_ABYSS)
+         && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
         || special_source == HELL_EFFECT_MISCAST)
     {
-        return _malign_gateway(); // attempt to degrade to malign gateway
+        return _malign_gateway();
     }
-    target->banish(act_source, cause, target->get_experience_level());
+    target->banish(act_source, cause, target->get_experience_level(), true);
     return true;
 }
 
@@ -1721,7 +1726,8 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && in_good_standing(GOD_KIKUBAAQUDGHA, 1))
+    if (target->is_player()
+        && have_passive(passive_t::miscast_protection_necromancy))
     {
         if (spell != SPELL_NO_SPELL)
         {
@@ -1835,8 +1841,8 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (!target->res_rotting())
             {
-                you_msg      = "You begin to rot!";
-                mon_msg_seen = "@The_monster@ begins to rot!";
+                you_msg      = "Your flesh rots away!";
+                mon_msg_seen = "@The_monster@ rots away!";
 
                 // Must produce the message before rotting, because that
                 // might kill a target monster, and do_msg does not like

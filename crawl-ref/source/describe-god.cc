@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "libutil.h"
@@ -496,7 +497,7 @@ static void _god_wrath_description(god_type which_god)
 
     _print_top_line(which_god, width);
 
-    _print_string_wrapped(get_god_dislikes(which_god, true), width);
+    _print_string_wrapped(get_god_dislikes(which_god), width);
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
@@ -577,7 +578,7 @@ static void _detailed_god_description(god_type which_god)
     _print_string_wrapped(getLongDescription(god_name(which_god) + " powers"),
                           width);
 
-    _print_string_wrapped(get_god_likes(which_god, true), width);
+    _print_string_wrapped(get_god_likes(which_god), width);
     _print_string_wrapped(_get_god_misc_info(which_god), width);
 }
 
@@ -648,7 +649,7 @@ static void _describe_god_powers(god_type which_god)
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // his life.
-    if (god_can_protect_from_harm(which_god))
+    if (have_passive(passive_t::protect_from_harm))
     {
         have_any = true;
 
@@ -725,12 +726,6 @@ static void _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_BEOGH:
-        have_any = true;
-        cprintf("You can pray to sacrifice all orcish remains on your "
-                "square.\n");
-        break;
-
     case GOD_JIYVA:
         have_any = true;
         if (piety < piety_breakpoint(2))
@@ -758,7 +753,6 @@ static void _describe_god_powers(god_type which_god)
     case GOD_ASHENZARI:
         have_any = true;
         cprintf("You are provided with a bounty of information.\n");
-        cprintf("You can pray to corrupt scrolls of remove curse on your square.\n");
         break;
 
     case GOD_CHEIBRIADOS:
@@ -849,18 +843,15 @@ static void _describe_god_powers(god_type which_god)
         string buf = power.gain;
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
+        const int desc_len = buf.size();
 
-        const string abil_cost = "(" + make_cost_description(power.abil) + ")";
+        string abil_cost = "(" + make_cost_description(power.abil) + ")";
+        if (abil_cost == "(None)")
+            abil_cost = "";
 
-        if (abil_cost != "(None)")
-        {
-            // XXX: Handle the display better when the description and cost
-            // are too long for the screen.
-            buf = chop_string(buf, get_number_of_cols() - 1 - strwidth(abil_cost));
-            buf += abil_cost;
-        }
-
-        cprintf("%s\n", buf.c_str());
+        cprintf("%s%*s%s\n", buf.c_str(),
+                min(80, get_number_of_cols()) - 1 - desc_len - abil_cost.size(),
+                "", abil_cost.c_str());
         textcolour(god_colour(which_god));
     }
 

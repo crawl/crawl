@@ -164,7 +164,7 @@
 #include "wiz-item.h"
 #include "wiz-mon.h"
 #include "wiz-you.h"
-#include "xom.h"
+#include "xom.h" // debug_xom_effects()
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -391,7 +391,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.msg.c_str());
+            end(1, false, "%s", fe.what());
         }
         catch (short_read_exception &E)
         {
@@ -837,19 +837,7 @@ static void _do_wizard_command(int wiz_command)
         you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change();
         break;
-    case 'X':
-    {
-        int result = 0;
-        do
-        {
-            if (you_worship(GOD_XOM))
-                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
-            else
-                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
-        }
-        while (result == 0);
-        break;
-    }
+    case 'X': wizard_xom_acts(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
     case 'y': wizard_identify_all_items(); break;
@@ -1843,7 +1831,7 @@ static void _experience_check()
     }
 
     handle_real_time();
-    msg::stream << "Play time: " << make_time_string(you.real_time)
+    msg::stream << "Play time: " << make_time_string(you.real_time())
                 << " (" << you.num_turns << " turns)"
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
@@ -2047,13 +2035,23 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        if (!clua.callfn("hit_closest", 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-        break;
     case CMD_AUTOFIGHT_NOMOVE:
-        if (!clua.callfn("hit_closest_nomove", 0, 0))
+    {
+        const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
+                                                         : "hit_closest_nomove";
+        if (Options.autofight_warning > 0
+            && !is_processing_macro()
+            && you.real_time_delta
+               <= chrono::milliseconds(Options.autofight_warning)
+            && (crawl_state.prev_cmd == CMD_AUTOFIGHT
+                || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        {
+            mprf(MSGCH_DANGER, "You should not fight recklessly!");
+        }
+        else if (!clua.callfn(fnname, 0, 0))
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
+    }
 #endif
     case CMD_REST:            _do_rest(); break;
 
@@ -2338,6 +2336,7 @@ void process_command(command_type cmd)
 
         break;
     }
+
 }
 
 static void _prep_input()
@@ -2359,7 +2358,7 @@ static void _prep_input()
 
     if (you.seen_portals)
     {
-        ASSERT(you_worship(GOD_ASHENZARI));
+        ASSERT(have_passive(passive_t::detect_portals));
         if (you.seen_portals == 1)
             mprf(MSGCH_GOD, "You have a vision of a gate.");
         else
@@ -3170,7 +3169,7 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    int additional_time_taken = 0; // Extra time independant of movement speed
+    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);

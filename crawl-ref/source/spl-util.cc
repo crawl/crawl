@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "godpassive.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "message.h"
@@ -34,6 +35,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "tiledef-gui.h"    // spell tiles
 #include "transform.h"
 
 struct spell_desc
@@ -66,7 +68,8 @@ struct spell_desc
     // used even if the spell is not casted directly (by Xom, for instance).
     int effect_noise;
 
-    const char  *target_prompt;
+    /// Icon for the spell in e.g. spellbooks, casting menus, etc.
+    tileidx_t tile;
 };
 
 #include "spl-data.h"
@@ -324,6 +327,45 @@ bool add_spell_to_memory(spell_type spell)
     return true;
 }
 
+static void _remove_spell_attributes(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_DEFLECT_MISSILES:
+        if (you.attribute[ATTR_DEFLECT_MISSILES])
+        {
+            const int orig_defl = you.missile_deflection();
+            you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "You feel %s from missiles.",
+                                 you.missile_deflection() < orig_defl
+                                 ? "less protected"
+                                 : "your spell is no longer protecting you");
+        }
+        break;
+    case SPELL_REPEL_MISSILES:
+        if (you.attribute[ATTR_REPEL_MISSILES])
+        {
+            const int orig_defl = you.missile_deflection();
+            you.attribute[ATTR_REPEL_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "You feel %s from missiles.",
+                                 you.missile_deflection() < orig_defl
+                                 ? "less protected"
+                                 : "your spell is no longer protecting you");
+        }
+        break;
+    case SPELL_DELAYED_FIREBALL:
+        if (you.attribute[ATTR_DELAYED_FIREBALL])
+        {
+            you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+        }
+        break;
+    default:
+        break;
+    }
+    return;
+}
+
 bool del_spell_from_memory_by_slot(int slot)
 {
     ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
@@ -334,6 +376,8 @@ bool del_spell_from_memory_by_slot(int slot)
     spell_skills(you.spells[slot], you.stop_train);
 
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
+    _remove_spell_attributes(you.spells[slot]);
+
     you.spells[slot] = SPELL_NO_SPELL;
 
     for (int j = 0; j < 52; j++)
@@ -393,7 +437,7 @@ int spell_hunger(spell_type which_spell, bool rod)
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
 {
-    return spell == SPELL_FIRE_STORM || spell == SPELL_HELLFIRE_BURST;
+    return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -461,7 +505,23 @@ unsigned int get_spell_flags(spell_type which_spell)
 
 const char *get_spell_target_prompt(spell_type which_spell)
 {
-    return _seekspell(which_spell)->target_prompt;
+    switch (which_spell)
+    {
+    case SPELL_APPORTATION:
+        return "Apport";
+    case SPELL_SMITING:
+        return "Smite";
+    case SPELL_LRD:
+        return "Fragment what (e.g. wall or brittle monster)?";
+    default:
+        return nullptr;
+    }
+}
+
+/// What's the icon for the given spell?
+tileidx_t get_spell_tile(spell_type which_spell)
+{
+    return _seekspell(which_spell)->tile;
 }
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc)
@@ -485,16 +545,6 @@ int count_bits(uint64_t bits)
             c++;
 
     return c;
-}
-
-// NOTE: Assumes that any single spell won't belong to conflicting
-// disciplines.
-bool disciplines_conflict(spschools_type disc1, spschools_type disc2)
-{
-    const spschools_type combined = disc1 | disc2;
-
-    return (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
-           || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE);
 }
 
 const char *spell_title(spell_type spell)
@@ -944,7 +994,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && in_good_standing(GOD_VEHUMET, 3)
+        && have_passive(passive_t::spells_range)
         && maxrange > 1
         && spell != SPELL_GLACIATE)
     {
@@ -1116,8 +1166,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
             return "your stony body would shatter the ice.";
-        if (spell == SPELL_STONESKIN)
-            return "your skin is already made of stone.";
 
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
@@ -1125,7 +1173,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             {
                 case SPELL_STATUE_FORM:
                 case SPELL_ICE_FORM:
-                case SPELL_CONDENSATION_SHIELD:
                     return "you're too hot.";
                 default:
                     break;
@@ -1185,7 +1232,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're already a statue.";
         // fallthrough to other forms
 
-    case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
@@ -1279,15 +1325,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
             return "you can only summon one forest at a time.";
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
         break;
 
     case SPELL_ANIMATE_DEAD:
@@ -1300,29 +1342,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot coerce anything to obey you.";
         break;
 
-    case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_HAUNT:
-    case SPELL_SUMMON_ICE_BEAST:
-    case SPELL_CALL_IMP:
-    case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_SHADOW_CREATURES:
-    case SPELL_CALL_CANINE_FAMILIAR:
-    case SPELL_SUMMON_DRAGON:
-    case SPELL_SUMMON_BUTTERFLIES:
-    case SPELL_MONSTROUS_MENAGERIE:
-    case SPELL_SUMMON_HYDRA:
-    case SPELL_SUMMON_MINOR_DEMON:
-    case SPELL_SUMMON_LIGHTNING_SPIRE:
-    case SPELL_SUMMON_GUARDIAN_GOLEM:
-    case SPELL_DRAGON_CALL:
-    case SPELL_SUMMON_MANA_VIPER:
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to answer your summons.";
-        break;
-
     default:
         break;
+    }
+
+    if (get_spell_disciplines(spell) & SPTYP_SUMMONING
+        && spell != SPELL_AURA_OF_ABJURATION
+        && spell != SPELL_RECALL
+        && player_mutation_level(MUT_NO_LOVE))
+    {
+        return "you cannot coerce anything to answer your summons.";
     }
 
     return "";
@@ -1387,7 +1416,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     {
         targetter_cloud tgt(&you, range);
         // Accept monsters that are in clouds for the hostiles-in-range check
-        // (not for actual targetting).
+        // (not for actual targeting).
         tgt.avoid_clouds = false;
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
@@ -1433,7 +1462,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true, false, true, rod), beam);
+        zappy(zap, calc_spell_power(spell, true, false, true, rod), false,
+              beam);
         if (spell == SPELL_MEPHITIC_CLOUD)
             beam.damage = dice_def(1, 1); // so that foe_info is populated
     }

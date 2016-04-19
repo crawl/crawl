@@ -19,6 +19,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
+#include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -44,70 +45,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     // First check the item's base_type and sub_type, then check the
     // item's brand and other randart properties.
-    bool type_bad = false;
-    switch (which_god)
-    {
-    case GOD_ELYVILON:
-        // Peaceful healer god: no weapons, no berserking.
-        if (item.base_type == OBJ_WEAPONS)
-            type_bad = true;
 
-        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
-            type_bad = true;
-        break;
-
-    case GOD_SHINING_ONE:
-        // Crusader god: holiness, honourable combat.
-        if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
-            type_bad = true;
-        break;
-
-    case GOD_OKAWARU:
-        // Precision fighter god: no inaccuracy.
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY))
-            type_bad = true;
-        break;
-
-    case GOD_SIF_MUNA:
-    case GOD_VEHUMET:
-        // The magic gods: no weapons, no preventing spellcasting.
-        if (item.base_type == OBJ_WEAPONS)
-            type_bad = true;
-        break;
-
-    case GOD_TROG:
-        // Anti-magic god: no spell use, no enhancing magic.
-        if (item.base_type == OBJ_BOOKS)
-            type_bad = true;
-
-        if (item.base_type == OBJ_JEWELLERY
-            && (item.sub_type == RING_WIZARDRY
-             || item.sub_type == RING_FIRE
-             || item.sub_type == RING_ICE
-             || item.sub_type == RING_MAGICAL_POWER))
-        {
-            type_bad = true;
-        }
-        break;
-
-    case GOD_CHEIBRIADOS:
-        // Slow god: no quick blades, no berserking.
-        if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
-            type_bad = true;
-
-        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
-            type_bad = true;
-        break;
-
-    case GOD_DITHMENOS:
-        // Shadow god: no reducing stealth.
-        if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
-            type_bad = true;
-        break;
-
-    default:
-        break;
-    }
+    const bool type_bad = !god_likes_item_type(item, which_god);
 
     if (type_bad && !name_check_only)
     {

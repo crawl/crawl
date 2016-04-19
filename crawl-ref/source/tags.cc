@@ -970,12 +970,11 @@ static spell_type unmarshallSpellType(reader &th
     return x;
 }
 
-static dungeon_feature_type unmarshallFeatureType(reader &th)
+static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
+                                            int minor_version)
 {
-    dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
-
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() == TAG_MINOR_0_11)
+    if (minor_version == TAG_MINOR_0_11)
     {
         // turn old trees into...trees
         if (x == DNGN_OPEN_SEA)
@@ -984,9 +983,9 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
             x = (dungeon_feature_type)(x - 1);
     }
     // turn mangroves into trees
-    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
+    else if (minor_version < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
         x = DNGN_TREE;
-    else if (th.getMinorVersion() < TAG_MINOR_FIX_FEAT_SHIFT
+    else if (minor_version < TAG_MINOR_FIX_FEAT_SHIFT
              && x > DNGN_OPEN_SEA && x < DNGN_LAVA)
     {
         x = static_cast<dungeon_feature_type>(x - 1);
@@ -994,9 +993,27 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 
     if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
         x = DNGN_DRY_FOUNTAIN;
+
+    if (x == DNGN_SEALED_DOOR && minor_version < TAG_MINOR_0_12)
+        x = DNGN_CLOSED_DOOR;
+    if (x == DNGN_BADLY_SEALED_DOOR)
+        x = DNGN_SEALED_DOOR;
+    if (x == DNGN_ESCAPE_HATCH_UP && player_in_branch(BRANCH_LABYRINTH))
+        x = DNGN_EXIT_LABYRINTH;
+    if (x == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
+        && minor_version < TAG_MINOR_SHOALS_LITE)
+    {
+        x = DNGN_SHALLOW_WATER;
+    }
 #endif
 
     return x;
+}
+
+static dungeon_feature_type unmarshallFeatureType(reader &th)
+{
+    dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+    return rewrite_feature(x, th.getMinorVersion());
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1004,18 +1021,14 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 {
     dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUnsigned(th));
+    x = rewrite_feature(x, th.getMinorVersion());
 
-    if (th.getMinorVersion() == TAG_MINOR_0_11)
-    {
-        if (x == DNGN_OPEN_SEA)
-            x = DNGN_TREE;
-        else if (x >= DNGN_LAVA_SEA && x < 30)
-            x = (dungeon_feature_type)(x - 1);
-    }
-    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
-        x = DNGN_TREE;
-
-    return x;
+    // There was a period of time when this function (only this one, not
+    // unmarshallFeatureType) lacked some of the conversions now done by
+    // rewrite_feature. In case any saves were transferred through those
+    // versions, replace bad features with DNGN_UNSEEN. Questionable, but
+    // this is just map_knowledge so the impact should be low.
+    return is_valid_feature_type(x) ? x : DNGN_UNSEEN;
 }
 #endif
 
@@ -1316,6 +1329,13 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.explore);
 }
 
+/// is a custom scoring mechanism being stored?
+static bool _calc_score_exists() {
+    lua_stack_cleaner clean(dlua);
+    dlua.pushglobal("dgn.persist.calc_score");
+    return !lua_isnil(dlua, -1);
+}
+
 static void tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
@@ -1515,7 +1535,8 @@ static void tag_construct_you(writer &th)
 
     handle_real_time();
 
-    marshallInt(th, you.real_time);
+    // TODO: maybe switch to marshalling real_time_ms.
+    marshallInt(th, you.real_time());
     marshallInt(th, you.num_turns);
     marshallInt(th, you.exploration);
 
@@ -1606,6 +1627,10 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.game_seeds[i]);
 
     CANARY;
+
+    // don't let vault caching errors leave a normal game with sprint scoring
+    if (!crawl_state.game_is_sprint())
+        ASSERT(!_calc_score_exists());
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
@@ -2155,16 +2180,14 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
+
     // this was mistakenly inserted in the middle for a few tag versions - this
     // just makes sure that games generated in that time period are still
     // readable, but should not be used for new games
 #if TAG_CHR_FORMAT == 0
-    if (major == 34
-        && (minor >= TAG_MINOR_EXPLORE_MODE
-            && minor < TAG_MINOR_FIX_EXPLORE_MODE))
-    {
+    // TAG_MINOR_EXPLORE_MODE and TAG_MINOR_FIX_EXPLORE_MODE
+    if (major == 34 && (minor >= 121 && minor < 130))
         you.explore = unmarshallBoolean(th);
-    }
 #endif
 
     crawl_state.type = (game_type) unmarshallUByte(th);
@@ -2193,9 +2216,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     if (major > 34 || major == 34 && minor >= 29)
         crawl_state.map = unmarshallString2(th);
 
-#if TAG_MAJOR_VERSION == 34
-    if (minor >= TAG_MINOR_FIX_EXPLORE_MODE)
-#endif
+    if (major > 34 || major == 34 && minor >= 130)
         you.explore = unmarshallBoolean(th);
 }
 
@@ -2551,7 +2572,7 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
-        you.duration[DUR_STONESKIN] = 0;
+        you.duration[DUR_MAGIC_ARMOUR] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
         you.duration[DUR_CONFUSING_TOUCH] = 0;
@@ -2579,6 +2600,10 @@ static void tag_read_you(reader &th)
 #endif
         you.attribute[j] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 34
+    if (count == ATTR_PAKELLAS_EXTRA_MP && you_worship(GOD_PAKELLAS))
+        you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
+#endif
     for (int j = count; j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = 0;
     for (int j = NUM_ATTRIBUTES; j < count; ++j)
@@ -3144,7 +3169,8 @@ static void tag_read_you(reader &th)
     // time of character creation
     you.birth_time = unmarshallInt(th);
 
-    you.real_time  = unmarshallInt(th);
+    const int real_time  = unmarshallInt(th);
+    you.real_time_ms = chrono::milliseconds(real_time * 1000);
     you.num_turns  = unmarshallInt(th);
     you.exploration = unmarshallInt(th);
 
@@ -4119,6 +4145,14 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.props[FORCED_ITEM_COLOUR_KEY] = LIGHTRED;
     }
+
+    // If we lost the monster held in an orc corpse because we marshalled
+    // it as a dead monster, clear out the prop.
+    if (item.props.exists(ORC_CORPSE_KEY)
+        && item.props[ORC_CORPSE_KEY].get_monster().type == MONS_NO_MONSTER)
+    {
+        item.props.erase(ORC_CORPSE_KEY);
+    }
 #endif
     // Fixup artefact props to handle reloading items when the new version
     // of Crawl has more artefact props.
@@ -4152,8 +4186,11 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
-    if (item.is_type(OBJ_POTIONS, POT_WATER))
-        item.sub_type = POT_POISON;
+    if (item.is_type(OBJ_POTIONS, POT_WATER)
+        || item.is_type(OBJ_POTIONS, POT_POISON))
+    {
+        item.sub_type = POT_DEGENERATION;
+    }
     if (item.is_type(OBJ_STAVES, STAFF_CHANNELING))
         item.sub_type = STAFF_ENERGY;
 
@@ -4184,8 +4221,8 @@ void unmarshallItem(reader &th, item_def &item)
         item.plus = 1;
     }
 
-    // was spiked flail; rods can't spawn
-    if (item.is_type(OBJ_WEAPONS, WPN_ROD)
+    // was spiked flail
+    if (item.is_type(OBJ_WEAPONS, WPN_SPIKED_FLAIL)
         && th.getMinorVersion() <= TAG_MINOR_FORGOTTEN_MAP)
     {
         item.sub_type = WPN_FLAIL;
@@ -4481,6 +4518,9 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.used_count = 0;
     }
+
+    if (item.base_type == OBJ_RODS && item.cursed())
+        do_uncurse_item(item); // rods can't be cursed anymore
 #endif
 
     if (is_unrandom_artefact(item))
@@ -4598,20 +4638,6 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE)
 #if TAG_MAJOR_VERSION == 34
         feature = unmarshallFeatureType_Info(th);
-    if (feature == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
-        feature = DNGN_CLOSED_DOOR;
-    if (feature == DNGN_BADLY_SEALED_DOOR)
-        feature = DNGN_SEALED_DOOR;
-    if (feature == DNGN_ESCAPE_HATCH_UP
-        && player_in_branch(BRANCH_LABYRINTH))
-    {
-        feature = DNGN_EXIT_LABYRINTH;
-    }
-    if (feature == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
-        && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
-    {
-        feature = DNGN_SHALLOW_WATER;
-    }
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -4825,19 +4851,9 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        marshallUnsigned(th, mi.draco_type);
-    }
 #else
     marshallShort(th, mi.type);
     marshallShort(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        marshallShort(th, mi.draco_type);
-    }
 #endif
     marshallUnsigned(th, mi.number);
     marshallInt(th, mi._colour);
@@ -4888,9 +4904,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.ac);
     }
 
-    if (mons_is_ghost_demon(mi.type))
-        marshallBoolean(th, mi.i_ghost.can_sinv);
-
     mi.props.write(th);
 }
 
@@ -4901,31 +4914,18 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
-    // Default value.
-    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType_Info(th);
-    if (mons_genus(mi.type) == MONS_DEMONSPAWN
-        && th.getMinorVersion() < TAG_MINOR_DEMONSPAWN)
-    {
-        mi.draco_type = mi.base_type;
-    }
-    else if (mons_genus(mi.type) == MONS_DRACONIAN
+    if ((mons_genus(mi.type) == MONS_DRACONIAN
         || (mons_genus(mi.type) == MONS_DEMONSPAWN
             && th.getMinorVersion() >= TAG_MINOR_DEMONSPAWN))
+        && th.getMinorVersion() < TAG_MINOR_NO_DRACO_TYPE)
     {
-        mi.draco_type = unmarshallMonType_Info(th);
+        unmarshallMonType_Info(th); // was draco_type
     }
 #else
     mi.type = unmarshallMonType(th);
     ASSERT(!invalid_monster_type(mi.type));
-    // Default value.
-    mi.draco_type = mi.type;
     mi.base_type = unmarshallMonType(th);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
-        || mons_genus(mi.type) == MONS_DEMONSPAWN)
-    {
-        mi.draco_type = unmarshallMonType(th);
-    }
 #endif
     unmarshallUnsigned(th, mi.number);
 #if TAG_MAJOR_VERSION == 34
@@ -4940,6 +4940,31 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.fire_blocker);
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
+
+    uint64_t holi_flags = unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MULTI_HOLI)
+    {
+#endif
+        mi.holi.flags = holi_flags;
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+        mi.holi.flags = 1<<holi_flags;
+#endif
+
+#if TAG_MAJOR_VERSION == 34
+    // XXX: special case MH_UNDEAD becoming MH_UNDEAD | MH_NATURAL
+    // to save MF_FAKE_UNDEAD. Beware if you add a NATURAL bit
+    // to an undead monster.
+    if (mons_class_holiness(mi.type) & ~mi.holi
+        && !(mi.holi & MH_UNDEAD) && !(mons_class_holiness(mi.type) & MH_NATURAL))
+    {
+        mi.holi |= mons_class_holiness(mi.type);
+    }
+#endif
+
+    unmarshallUnsigned(th, mi.mintel);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_MON_HD_INFO)
@@ -4966,30 +4991,9 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
-    uint64_t holi_flags = unmarshallUnsigned(th);
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_MULTI_HOLI)
-    {
-#endif
-        mi.holi.flags = holi_flags;
-#if TAG_MAJOR_VERSION == 34
-    }
-    else
-        mi.holi.flags = 1<<holi_flags;
-#endif
+    mi.mr = mons_class_res_magic(mi.type, mi.base_type);
+    mi.can_see_invis = mons_class_sees_invis(mi.type, mi.base_type);
 
-#if TAG_MAJOR_VERSION == 34
-    // XXX: special case MH_UNDEAD becoming MH_UNDEAD | MH_NATURAL
-    // to save MF_FAKE_UNDEAD. Beware if you add a NATURAL bit
-    // to an undead monster.
-    if (mons_class_holiness(mi.type) & ~mi.holi
-        && !(mi.holi & MH_UNDEAD) && !(mons_class_holiness(mi.type) & MH_NATURAL))
-    {
-        mi.holi |= mons_class_holiness(mi.type);
-    }
-#endif
-
-    unmarshallUnsigned(th, mi.mintel);
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (mi.mresists & MR_OLD_RES_ACID)
@@ -5158,17 +5162,17 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
     }
-    if ((mons_is_ghost_demon(mi.type)
 #if TAG_MAJOR_VERSION == 34
+    if ((mons_is_ghost_demon(mi.type)
          || (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH
              || mi.type == MONS_SPELLFORGED_SERVITOR)
             && th.getMinorVersion() < TAG_MINOR_EXORCISE)
         && th.getMinorVersion() >= TAG_MINOR_GHOST_SINV
-#endif
-        )
+        && th.getMinorVersion() < TAG_MINOR_GHOST_NOSINV)
     {
-        mi.i_ghost.can_sinv = unmarshallBoolean(th);
+        unmarshallBoolean(th); // was can_sinv
     }
+#endif
 
     mi.props.clear();
     mi.props.read(th);
@@ -5309,22 +5313,6 @@ static void tag_read_level(reader &th)
             dungeon_feature_type feat = unmarshallFeatureType(th);
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
-#if TAG_MAJOR_VERSION == 34
-            if (feat == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
-                grd[i][j] = DNGN_CLOSED_DOOR;
-            if (feat == DNGN_BADLY_SEALED_DOOR)
-                grd[i][j] = DNGN_SEALED_DOOR;
-            if (feat == DNGN_ESCAPE_HATCH_UP
-                && player_in_branch(BRANCH_LABYRINTH))
-            {
-                grd[i][j] = DNGN_EXIT_LABYRINTH;
-            }
-            if (feat == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
-                && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
-            {
-                grd[i][j] = DNGN_SHALLOW_WATER;
-            }
-#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
@@ -5939,6 +5927,12 @@ void unmarshallMonster(reader &th, monster& m)
         m.props[ORIGINAL_TYPE_KEY].get_int() =
             get_monster_by_name(m.props["original_name"].get_string());
     }
+
+    if (m.props.exists("given beogh weapon"))
+    {
+        m.props.erase("given beogh weapon");
+        m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -6324,6 +6318,14 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         spells[j].freq = unmarshallByte(th);
         spells[j].flags.flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+            if (th.getMinorVersion() < TAG_MINOR_DEMONIC_SPELLS)
+            {
+                if (spells[j].flags & MON_SPELL_DEMONIC)
+                {
+                    spells[j].flags &= ~MON_SPELL_DEMONIC;
+                    spells[j].flags |= MON_SPELL_MAGICAL;
+                }
+            }
         }
 #endif
     }

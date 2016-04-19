@@ -446,12 +446,12 @@ ANGRY:    3
 STEALTH:  -1
 LIFE:     1
 
-NAME:    arbalest "Hellfire"
-INSCRIP: hellfire,
+NAME:    arbalest "Damnation"
+INSCRIP: damnation,
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 PLUS:    +6
 COLOUR:  ETC_FIRE
-TILE:    urand_hellfire
+TILE:    urand_damnation
 TILE_EQ: crossbow_fire
 FIRE:    2
 COLD:    -1
@@ -529,13 +529,14 @@ BOOL:     elec
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +15
+PLUS:     +9
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
+INSCRIP:  nevermiss,
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -637,7 +638,7 @@ ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
 INSCRIP:  disarm
-PLUS:     +5
+PLUS:     +7
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass
@@ -1213,7 +1214,7 @@ OBJ:     OBJ_ARMOUR/ARM_HELMET
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_etheric_cage
 TILE_EQ: etheric_cage
-INSCRIP: RegenMP
+INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
@@ -1276,7 +1277,7 @@ FIRE:     1
 ENUM:     WARLOCK_MIRROR
 NAME:     warlock's mirror
 OBJ:      OBJ_ARMOUR/ARM_BUCKLER
-PLUS:     +6
+PLUS:     +3
 TILE:     urand_warlock
 TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER

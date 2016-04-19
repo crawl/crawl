@@ -18,11 +18,14 @@
 #include "coordit.h"
 #include "dbg-scan.h"
 #include "delay.h"
+#include "directn.h" // feature_description_at
 #include "dungeon.h"
+#include "english.h" // apostrophise
 #include "evoke.h"
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godabil.h" // GOZAG_GOLD_AURA_KEY
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -789,6 +792,7 @@ static bool _handle_evoke_equipment(monster& mons)
     // TODO: check non-ring, non-amulet equipment
     item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
     if (mons.asleep()
+        || mons_is_confused(&mons)
         || !jewel
         || !one_chance_in(3)
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
@@ -989,7 +993,7 @@ static bool _handle_scroll(monster& mons)
 
     case SCR_BLINKING:
         if ((mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
-            && mons_near(&mons) && !mons.no_tele(true, false))
+            && mons.can_see(you) && !mons.no_tele(true, false))
         {
             simple_monster_message(&mons, " reads a scroll.");
             read = true;
@@ -1001,7 +1005,7 @@ static bool _handle_scroll(monster& mons)
         break;
 
     case SCR_SUMMONING:
-        if (mons_near(&mons))
+        if (mons.can_see(you))
         {
             simple_monster_message(&mons, " reads a scroll.");
             mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
@@ -1046,14 +1050,18 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
     beem.thrower      = from.thrower;
     beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
+    beem.origin_spell = from.origin_spell;
     beem.evoked       = true;
     return beem;
 }
 
 static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 {
-    //XXX: Why aren't these allowed?
-    if (wand.sub_type == WAND_FIREBALL
+    if (item_type_removed(wand.base_type, wand.sub_type))
+        return false;
+
+    //XXX: implement these for monsters... (:
+    if (wand.sub_type == WAND_ICEBLAST
         || wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         return false;
@@ -1109,8 +1117,6 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
 static void _rod_fired_pre(monster& mons)
 {
-    make_mons_stop_fleeing(&mons);
-
     if (!simple_monster_message(&mons, " zaps a rod.")
         && !silenced(you.pos()))
     {
@@ -1180,8 +1186,11 @@ static bool _handle_rod(monster &mons, bolt &beem)
     item_def* rod = mons.mslot_item(MSLOT_WEAPON);
     // FIXME: monsters should be able to use rods
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_confused(&mons)
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || coinflip()
@@ -1191,7 +1200,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
         return false;
     }
 
-    // was the player visible when we started?
+    // was the monster visible when we started?
     bool was_visible = you.can_see(mons);
 
     spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
@@ -1220,7 +1229,6 @@ static bool _handle_rod(monster &mons, bolt &beem)
         }
         break;
 
-    case SPELL_SUMMON_SWARM:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
@@ -1254,14 +1262,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     beem.aux_source =
         rod->name(DESC_QUALNAME, false, true, false, false);
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (mzap == SPELL_THUNDERBOLT)
+    if (mzap == SPELL_THUNDERBOLT)
         zap = _thunderbolt_tracer(mons, power, beem.target);
     else if (mzap == SPELL_CLOUD_CONE)
         zap = mons_should_cloud_cone(&mons, power, beem.target);
@@ -1299,11 +1300,13 @@ static bool _handle_wand(monster& mons, bolt &beem)
     // Yes, there is a logic to this ordering {dlb}:
     // FIXME: monsters should be able to use wands
     //        out of sight of the player [rob]
-    if (!mons_near(&mons)
+    if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip()
+        || x_chance_in_y(3, 4)
         || !wand
         || wand->base_type != OBJ_WANDS)
     {
@@ -1365,18 +1368,6 @@ static bool _handle_wand(monster& mons, bolt &beem)
         }
         return false;
 
-    case WAND_INVISIBILITY:
-        if (!mons.has_ench(ENCH_INVIS)
-            && !mons.has_ench(ENCH_SUBMERGED)
-            && !mons.glows_naturally()
-            && (!mons.friendly() || you.can_see_invisible(false)))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
     case WAND_TELEPORTATION:
         if (mons.hit_points <= mons.max_hit_points / 2
             || mons.caught())
@@ -1415,11 +1406,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
 
     if (niceWand || zap)
     {
-        if (!niceWand)
-            make_mons_stop_fleeing(&mons);
-
         _mons_fire_wand(mons, *wand, beem, was_visible, niceWand);
-
         return true;
     }
 
@@ -1447,7 +1434,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     const bool liquefied = mons->liquefied_ground();
 
     // Don't allow offscreen throwing for now.
-    if (mons->foe == MHITYOU && !mons_near(mons))
+    if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
         return false;
 
     // Monsters won't shoot in melee range, largely for balance reasons.
@@ -1779,26 +1766,6 @@ static void _pre_monster_move(monster& mons)
     mons.check_speed();
 }
 
-static void _maybe_submerge(monster* mons)
-{
-    if (mons->asleep() || mons->submerged())
-        return;
-
-    if (monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()         // No submerging while caught.
-        && !mons->asleep()         // No submerging when asleep.
-        && !you.beheld_by(mons)    // No submerging if player entranced.
-        && !mons_is_lurking(mons)  // Handled elsewhere.
-        && mons->wants_submerge())
-    {
-        const monsterentry* entry = get_monster_data(mons->type);
-
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-}
-
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1938,15 +1905,15 @@ void handle_monster_move(monster* mons)
         aura_of_brilliance(mons);
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
-        && in_good_standing(GOD_GOZAG)
-        && mons_near(mons)
+        && have_passive(passive_t::gold_aura)
+        && you.see_cell(mons->pos())
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
         && !mons_is_firewood(mons)
         && !mons->wont_attack())
     {
-        const int gold = you.props["gozag_gold_aura_amount"].get_int();
+        const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
             if (gozag_gold_in_los(mons))
@@ -2000,10 +1967,7 @@ void handle_monster_move(monster* mons)
 
     // Lurking monsters only stop lurking if their target is right
     // next to them, otherwise they just sit there.
-    // However, if the monster is involuntarily submerged but
-    // still alive (e.g., nonbreathing which had water poured
-    // on top of it), this doesn't apply.
-    if (mons_is_lurking(mons) || mons->has_ench(ENCH_SUBMERGED))
+    if (mons->has_ench(ENCH_SUBMERGED))
     {
         if (mons->foe != MHITNOT
             && grid_distance(mons->target, mons->pos()) <= 1)
@@ -2064,7 +2028,6 @@ void handle_monster_move(monster* mons)
             }
         }
     }
-    _maybe_submerge(mons);
     if (!mons->asleep() && !mons->submerged())
         maybe_mons_speaks(mons);
 
@@ -2377,11 +2340,12 @@ void monster::struggle_against_net()
 
             if (coinflip())
             {
-                if (mons_near(this) && !visible_to(&you))
-                    mpr("Something you can't see is thrashing in a web.");
-                else
+                if (you.see_cell(pos()))
                 {
-                    simple_monster_message(this,
+                    if (!visible_to(&you))
+                        mpr("Something you can't see is thrashing in a web.");
+                    else
+                        simple_monster_message(this,
                                            " struggles to get unstuck from the web.");
                 }
                 return;
@@ -2400,10 +2364,13 @@ void monster::struggle_against_net()
     if (mon_size < random2(SIZE_BIG)  // BIG = 5
         && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
     {
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles to escape the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles to escape the net.");
+        }
 
         // Confused monsters have trouble finding the exit.
         if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
@@ -2418,10 +2385,13 @@ void monster::struggle_against_net()
     else // Large (and above) monsters always thrash the net and destroy it
     {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
 
-        if (mons_near(this) && !visible_to(&you))
-            mpr("Something wriggles in the net.");
-        else
-            simple_monster_message(this, " struggles against the net.");
+        if (you.see_cell(pos()))
+        {
+            if (!visible_to(&you))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles against the net.");
+        }
 
         // Confused monsters more likely to struggle without result.
         if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
@@ -2473,7 +2443,7 @@ void monster::struggle_against_net()
 
         if (mitm[net].net_durability < -7)
         {
-            if (mons_near(this))
+            if (you.see_cell(pos()))
             {
                 if (visible_to(&you))
                 {
@@ -2609,9 +2579,16 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_WATER_NYMPH)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (can_flood_feature(grd(*ai))
+            if (feat_has_solid_floor(grd(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
+                if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
+                    && you.see_cell(*ai))
+                {
+                    mprf("%s watery aura covers %s",
+                         apostrophise(mons->name(DESC_THE)).c_str(),
+                         feature_description_at(*ai, false, DESC_THE).c_str());
+                }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD);
             }
@@ -2802,13 +2779,13 @@ static bool _jelly_divide(monster& parent)
 }
 
 // XXX: This function assumes that only jellies eat items.
-static bool _monster_eat_item(monster* mons, bool nearby)
+static bool _monster_eat_item(monster* mons)
 {
     if (!mons_eats_items(mons))
         return false;
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons->friendly() && !you_worship(GOD_JIYVA))
+    if (mons->friendly() && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Off-limit squares are off-limit.
@@ -2819,8 +2796,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
     bool shown_msg = false;
-    piety_gain_t gain = PIETY_NONE;
-    int js = JS_NONE;
 
     // Jellies can swim, so don't check water
     for (stack_iterator si(mons->pos());
@@ -2854,18 +2829,12 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 nearby ? "" : " distant");
+                 you.see_cell(mons->pos()) ? "" : " distant");
             shown_msg = true;
         }
 
         if (you_worship(GOD_JIYVA))
-        {
-            gain = sacrifice_item_stack(*si, &js, quant);
-            if (gain > PIETY_NONE)
-                simple_god_message(" appreciates your sacrifice.");
-
-            jiyva_slurp_message(js);
-        }
+            jiyva_slurp_item_stack(*si, quant);
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
@@ -2913,14 +2882,21 @@ static bool _handle_pickup(monster* mons)
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->airborne())
         return false;
 
-    const bool nearby = mons_near(mons);
     int count_pickup = 0;
 
-    if (mons_eats_items(mons) && _monster_eat_item(mons, nearby))
+    if (mons_eats_items(mons) && _monster_eat_item(mons))
         return false;
 
     if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
         return false;
+
+    // Keep neutral, charmed, and friendly monsters from
+    // picking up stuff.
+    const bool never_pickup
+        = mons->neutral() || mons->friendly()
+          || you_worship(GOD_JIYVA) && mons_is_slime(mons)
+          || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
+
 
     // Note: Monsters only look at stuff near the top of stacks.
     //
@@ -2932,10 +2908,27 @@ static bool _handle_pickup(monster* mons)
     // (jpeg)
     for (stack_iterator si(mons->pos()); si; ++si)
     {
+        if ((never_pickup
+             // Monsters being able to pick up items you've seen encourages
+             // tediously moving everything away from a place where they could
+             // use them. Maurice being able to pick up such items encourages
+             // killing Maurice, since there's just one of him. Usually.
+             || (testbits(si->flags, ISFLAG_SEEN)
+                 && !mons->has_attack_flavour(AF_STEAL)))
+            // ...but it's ok if it dropped the item itself.
+            && !(si->props.exists(DROPPER_MID_KEY)
+                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
+        {
+            // don't pick up any items beneath one that the player's seen,
+            // to prevent seemingly-buggy behavior (monsters picking up items
+            // from the middle of a stack while the player is watching)
+            return false;
+        }
+
         if (si->flags & ISFLAG_NO_PICKUP)
             continue;
 
-        if (mons->pickup_item(*si, nearby, false))
+        if (mons->pickup_item(*si, you.see_cell(mons->pos()), false))
             count_pickup++;
 
         if (count_pickup > 1 || coinflip())
@@ -3426,7 +3419,7 @@ static void _jelly_grows(monster& mons)
     if (player_can_hear(mons.pos()))
     {
         mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-             mons_near(&mons) ? "" : " distant");
+             you.see_cell(mons.pos()) ? "" : " distant");
     }
 
     const int avg_hp = mons_avg_hp(mons.type);
@@ -3469,26 +3462,18 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
     if (!one_chance_in(4))
         return;
 
-    // try to make a ballistomycete.
-    const beh_type attitude = attitude_creation_behavior(mons.attitude);
+    // Try to make a ballistomycete.
+    beh_type attitude = attitude_creation_behavior(mons.attitude);
+    // Make Fedhas ballistos neutral, so as not to inflict extra piety loss.
+    if (mons_is_god_gift(&mons, GOD_FEDHAS))
+        attitude = BEH_GOOD_NEUTRAL;
+
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
                                               nullptr, 0, 0, position, MHITNOT,
                                               MG_FORCE_PLACE));
 
     if (!plant)
         return;
-
-    if (mons_is_god_gift(&mons, GOD_FEDHAS))
-    {
-        plant->flags |= MF_NO_REWARD; // XXX: is this needed?
-
-        if (attitude == BEH_FRIENDLY)
-        {
-            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-            mons_make_god_gift(plant, GOD_FEDHAS);
-        }
-    }
 
     // Don't leave mold on squares we place ballistos on
     remove_mold(position);

@@ -197,7 +197,7 @@ WEIGHT: 5
 KMONS:  123 = water moccasin / black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of poison w:30 ident:type / nothing w:20
+KITEM:  1235 = potion of degeneration w:30 ident:type / nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2
 KFEAT:  1234 = shallow_water

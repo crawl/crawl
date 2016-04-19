@@ -14,6 +14,7 @@
 #include "butcher.h" // butcher_corpse
 #include "coordit.h" // radius_iterator
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
@@ -33,7 +34,7 @@ int allowed_deaths_door_hp()
 {
     int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
-    if (in_good_standing(GOD_KIKUBAAQUDGHA))
+    if (have_passive(passive_t::deaths_door_hp_boost))
         hp += you.piety / 15;
 
     return max(hp, 1);
@@ -82,7 +83,7 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
         mpr("The film of ice won't work on stone.");
         return SPRET_ABORT;
@@ -109,8 +110,7 @@ spret_type ice_armour(int pow, bool fail)
         mpr("Your corpse armour falls away.");
     }
 
-    you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
-                          nullptr);
+    you.increase_duration(DUR_ICY_ARMOUR, random_range(40, 50), 50);
     you.props[ICY_ARMOUR_KEY] = pow;
     you.redraw_armour_class = true;
 
@@ -179,7 +179,7 @@ int harvest_corpses(const actor &harvester, bool dry_run)
  */
 spret_type corpse_armour(int pow, bool fail)
 {
-    if (you.duration[DUR_STONESKIN] || you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
         mpr("The corpses won't embrace your stony flesh.");
         return SPRET_ABORT;

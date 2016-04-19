@@ -248,30 +248,15 @@ public:
 template<typename Iterator>
 int choose_random_weighted(Iterator beg, const Iterator end)
 {
-    ASSERT(beg < end);
-
-#ifdef DEBUG
-    int times_set = 0;
-#endif
-
     int totalweight = 0;
-    int count = 0, result = 0;
-    while (beg != end)
+    int result = -1;
+    for (int count = 0; beg != end; ++count, ++beg)
     {
         totalweight += *beg;
         if (random2(totalweight) < *beg)
-        {
             result = count;
-#ifdef DEBUG
-            times_set++;
-#endif
-        }
-        ++count;
-        ++beg;
     }
-#ifdef DEBUG
-    ASSERT(times_set > 0);
-#endif
+    ASSERT(result >= 0);
     return result;
 }
 

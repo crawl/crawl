@@ -16,6 +16,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -72,7 +73,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
-    if (you_worship(GOD_BEOGH)
+    if (will_have_passive(passive_t::convert_orcs)
         && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
@@ -86,11 +87,12 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
         const int hd = mons->get_experience_level();
 
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
-            beogh_convert_orc(mons, orc_hit);
+            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::DEATHBED
+                                                              : conv_t::SIGHT);
             stop_running();
         }
     }
@@ -98,7 +100,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
 void slime_convert(monster* mons)
 {
-    if (you_worship(GOD_JIYVA) && mons_is_slime(mons)
+    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
@@ -115,7 +117,7 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (in_good_standing(GOD_FEDHAS)
+    if (have_passive(passive_t::friendly_plants)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -290,38 +292,35 @@ static void _print_converted_orc_speech(const string& key,
 
 // Orcs may turn friendly when encountering followers of Beogh, and be
 // made gifts of Beogh.
-void beogh_convert_orc(monster* orc, bool emergency,
-                       bool converted_by_follower)
+void beogh_convert_orc(monster* orc, conv_t conv)
 {
     ASSERT(orc); // XXX: change to monster &orc
     ASSERT(mons_genus(orc->type) == MONS_ORC);
 
-    if (you.can_see(*orc)) // show reaction
+    switch (conv)
     {
-        if (emergency || !orc->alive())
-        {
-            if (converted_by_follower)
-            {
-                _print_converted_orc_speech("reaction_battle_follower", orc,
-                                            MSGCH_FRIEND_ENCHANT);
-                _print_converted_orc_speech("speech_battle_follower", orc,
-                                            MSGCH_TALK);
-            }
-            else
-            {
-                _print_converted_orc_speech("reaction_battle", orc,
-                                            MSGCH_FRIEND_ENCHANT);
-                _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
-            }
-        }
-        else
-        {
-            _print_converted_orc_speech("reaction_sight", orc,
-                                        MSGCH_FRIEND_ENCHANT);
+    case conv_t::DEATHBED_FOLLOWER:
+        _print_converted_orc_speech("reaction_battle_follower", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_battle_follower", orc,
+                                    MSGCH_TALK);
+        break;
+    case conv_t::DEATHBED:
+        _print_converted_orc_speech("reaction_battle", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
+        break;
+    case conv_t::SIGHT:
+        _print_converted_orc_speech("reaction_sight", orc,
+                                    MSGCH_FRIEND_ENCHANT);
 
-            if (!one_chance_in(3))
-                _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
-        }
+        if (!one_chance_in(3))
+            _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
+        break;
+    case conv_t::RESURRECTION:
+        _print_converted_orc_speech("resurrection", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        break;
     }
 
     orc->attitude = ATT_FRIENDLY;

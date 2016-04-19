@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -28,6 +29,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -1985,30 +1987,19 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     // Get item name now before changing enchantment.
     string iname = wpn.name(DESC_YOUR);
 
-    if (is_weapon(wpn))
+    if (is_weapon(wpn)
+        && !is_artefact(wpn)
+        && wpn.base_type == OBJ_WEAPONS
+        && wpn.plus < MAX_WPN_ENCHANT)
     {
-        if (!is_artefact(wpn)
-            && wpn.base_type == OBJ_WEAPONS
-            && wpn.plus < MAX_WPN_ENCHANT)
-        {
-            wpn.plus++;
-            success = true;
-            if (!quiet)
-                mprf("%s glows red for a moment.", iname.c_str());
-        }
-
-        if (wpn.cursed())
-        {
-            if (!success)
-                mprf("%s glows silver for a moment.", iname.c_str());
-            success = true;
-        }
-        // Mark the item as uncursed, whether or not it was cursed initially.
-        do_uncurse_item(wpn, true, true);
+        wpn.plus++;
+        success = true;
+        if (!quiet)
+            mprf("%s glows red for a moment.", iname.c_str());
     }
 
     if (!success && !quiet)
-        mprf("%s very briefly gains a red sheen.", iname.c_str());
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     if (success)
         you.wield_change = true;
@@ -2103,20 +2094,13 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     ac_change = 0;
 
-    // Cannot be enchanted nor uncursed.
-    if (!is_enchantable_armour(arm, true))
+    // Cannot be enchanted.
+    if (!is_enchantable_armour(arm))
     {
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
-
-        // That proved that it was uncursed.
-        if (!you_worship(GOD_ASHENZARI))
-            arm.flags |= ISFLAG_KNOW_CURSE;
-
         return false;
     }
-
-    const bool is_cursed = arm.cursed();
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -2133,27 +2117,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        do_uncurse_item(arm, true, true);
-
         // No additional enchantment.
         return true;
-    }
-
-    // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false))
-    {
-        if (!quiet)
-        {
-            if (is_cursed)
-            {
-                mprf("%s glows silver for a moment.",
-                     arm.name(DESC_YOUR).c_str());
-            }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
-        }
-        do_uncurse_item(arm, true, true);
-        return is_cursed; // was_cursed, really
     }
 
     // Output message before changing enchantment and curse status.
@@ -2165,7 +2130,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-    do_uncurse_item(arm, true, true);
 
     return true;
 }
@@ -2202,7 +2166,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 
         item_def& arm(you.inv[item_slot]);
 
-        if (!is_enchantable_armour(arm, true, true))
+        if (!is_enchantable_armour(arm, true))
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
             more();
@@ -2344,8 +2308,10 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
            || scroll == SCR_REMOVE_CURSE
+#if TAG_MAJOR_VERSION == 34
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
+#endif
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING;
@@ -2449,6 +2415,7 @@ string cannot_read_item_reason(const item_def &item)
                 return "You have no spells to forget!";
             return "";
 
+#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
             if (!you.weapon())
                 return "This scroll only affects a wielded weapon!";
@@ -2460,6 +2427,7 @@ string cannot_read_item_reason(const item_def &item)
             if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
                 return "Holy weapons cannot be cursed!";
             return "";
+#endif
 
         case SCR_ENCHANT_ARMOUR:
             return _no_items_reason(OSEL_ENCH_ARM);
@@ -2476,11 +2444,13 @@ string cannot_read_item_reason(const item_def &item)
         case SCR_REMOVE_CURSE:
             return _no_items_reason(OSEL_CURSED_WORN);
 
+#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
             return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
 
         case SCR_CURSE_JEWELLERY:
             return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
+#endif
 
         default:
             return "";
@@ -2719,6 +2689,7 @@ void read_scroll(int item_slot)
         break;
     }
 
+#if TAG_MAJOR_VERSION == 34
     case SCR_CURSE_WEAPON:
     {
         // Not you.weapon() because we want to handle melded weapons too.
@@ -2741,6 +2712,7 @@ void read_scroll(int item_slot)
         }
         break;
     }
+#endif
 
     case SCR_ENCHANT_WEAPON:
         if (!alreadyknown)
@@ -2797,6 +2769,7 @@ void read_scroll(int item_slot)
             (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     // Should always be identified by Ashenzari.
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
@@ -2805,6 +2778,7 @@ void read_scroll(int item_slot)
         cancel_scroll = !curse_item(armour, pre_succ_msg);
         break;
     }
+#endif
 
     case SCR_HOLY_WORD:
     {

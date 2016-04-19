@@ -103,6 +103,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     const dungeon_feature_type current_tile = grd(mons->pos());
 
     monster_type old_mclass = mons->type;
+    if (mons_class_is_zombified(old_mclass))
+        old_mclass = mons->base_monster;
+    // don't force spectral shapeshifters to become natural|undead mons only
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
@@ -573,7 +576,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     return player_messaged;
 }
 
-bool mon_can_be_slimified(monster* mons)
+bool mon_can_be_slimified(const monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 

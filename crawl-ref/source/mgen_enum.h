@@ -19,7 +19,6 @@ enum band_type
     BAND_HELL_HOUNDS,
     BAND_JACKALS,
     BAND_HELL_KNIGHTS,
-    BAND_ORC_HIGH_PRIEST,
     BAND_GNOLLS,
     BAND_WIGHTS,
     BAND_CENTAURS,
@@ -86,7 +85,6 @@ enum band_type
     BAND_THRASHING_HORRORS,
     BAND_RAIJU,
     BAND_FAUN_PARTY,
-    BAND_NAGA_ELITES,
     BAND_NAGA_RITUALIST,
     BAND_NAGA_SHARPSHOOTER,
     BAND_SALAMANDERS,
@@ -114,6 +112,7 @@ enum band_type
     BAND_RANDOM_SINGLE,
     BAND_JOSEPHINE,
     BAND_IRON_GIANT,
+    BAND_HOWLER_MONKEY,
     NUM_BANDS                   // always last
 };
 

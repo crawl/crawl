@@ -97,10 +97,13 @@ public:
 
 public:
     level_range(const raw_range &range);
+    /// @throws bad_level_id if d < s and d != -1.
     level_range(branch_type br = BRANCH_DUNGEON, int s = -1, int d = -1);
 
+    /// @throws bad_level_id if d < s and d != -1.
     void set(int s, int d = -1);
-    void set(const string &branch, int s, int d) throw (string);
+    /// @throws bad_level_id if d < s, d < 0, or branch could not be parsed.
+    void set(const string &branch, int s, int d);
 
     void reset();
     bool matches(const level_id &) const;
@@ -111,7 +114,8 @@ public:
 
     bool valid() const;
 
-    static level_range parse(string lr) throw (string);
+    /// @throws bad_level_id if lr does not specify a valid level range.
+    static level_range parse(string lr);
 
     string describe() const;
     string str_depth_range() const;
@@ -125,10 +129,10 @@ public:
     }
 
 private:
-    static void parse_partial(level_range &lr, const string &s)
-        throw (string);
-    static void parse_depth_range(const string &s, int *low, int *high)
-        throw (string);
+    /// @throws bad_level_id if s does not specify a valid level range.
+    static void parse_partial(level_range &lr, const string &s);
+    /// @throws bad_level_id if s does not specify a valid level range.
+    static void parse_depth_range(const string &s, int *low, int *high);
 };
 
 typedef pair<int,int> glyph_weighted_replacement_t;
@@ -844,6 +848,12 @@ struct feature_slot
     feature_spec get_feat(int default_glyph);
 };
 
+struct bad_map_flag : public runtime_error
+{
+    explicit bad_map_flag(const string &flag) : runtime_error(flag) {}
+    explicit bad_map_flag(const char *flag) : runtime_error(flag) {}
+};
+
 struct map_flags
 {
     unsigned long flags_set, flags_unset;
@@ -852,8 +862,8 @@ struct map_flags
     void clear();
     map_flags &operator |= (const map_flags &o);
 
-    static map_flags parse(const string flag_list[],
-                           const string &s) throw(string);
+    /// @throws bad_map_flag if one of the flags was invalid.
+    static map_flags parse(const string flag_list[], const string &s);
 };
 
 struct keyed_mapspec
@@ -965,6 +975,7 @@ class depth_ranges
 private:
     depth_ranges_v depths;
 public:
+    // @throws bad_level_id if one if the comma-separated ranges is invalid.
     static depth_ranges parse_depth_ranges(const string &depth_ranges_string);
     void read(reader &);
     void write(writer &) const;
@@ -982,6 +993,7 @@ struct depth_range_X
     depth_ranges depths;
     X depth_thing;
     depth_range_X() : depths(), depth_thing() { }
+    /// @throws bad_level_id if depth_range_string is invalid.
     depth_range_X(const string &depth_range_string, const X &thing)
         : depths(depth_ranges::parse_depth_ranges(depth_range_string)),
           depth_thing(thing)
@@ -1029,6 +1041,7 @@ public:
         default_thing = _default_X;
     }
     X get_default() const { return default_thing; }
+    /// @throws bad_level_id if depth_range_string is invalid.
     void add_range(const string &depth_range_string, const X &thing)
     {
         depth_range_Xs.push_back(depth_range_X<X>(depth_range_string, thing));

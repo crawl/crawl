@@ -64,6 +64,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "quiver.h"
+#include "randbook.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
@@ -320,6 +321,49 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+mon_inv_iterator::mon_inv_iterator(monster& _mon)
+    : mon(_mon)
+{
+    type = static_cast<mon_inv_type>(0);
+    if (mon.inv[type] == NON_ITEM)
+        ++*this;
+}
+
+mon_inv_iterator::operator bool() const
+{
+    return type < NUM_MONSTER_SLOTS;
+}
+
+item_def& mon_inv_iterator::operator*() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return mitm[mon.inv[type]];
+}
+
+item_def* mon_inv_iterator::operator->() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return &mitm[mon.inv[type]];
+}
+
+mon_inv_iterator& mon_inv_iterator::operator ++ ()
+{
+    do
+    {
+        type = static_cast<mon_inv_type>(type + 1);
+    }
+    while (*this && mon.inv[type] == NON_ITEM);
+
+    return *this;
+}
+
+mon_inv_iterator mon_inv_iterator::operator++(int)
+{
+    const mon_inv_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
 /**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
  * @return  True if stack of items no longer exists, false otherwise.
@@ -465,14 +509,15 @@ void unlink_item(int dest)
 
     if (mons != nullptr)
     {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
         {
-            if (mons->inv[i] == dest)
+            if (ii->index() == dest)
             {
-                mons->inv[i] = NON_ITEM;
+                item_def& item = *ii;
+                mons->inv[ii.slot()] = NON_ITEM;
 
-                mitm[dest].pos.reset();
-                mitm[dest].link = NON_ITEM;
+                item.pos.reset();
+                item.link = NON_ITEM;
                 return;
             }
         }
@@ -2004,17 +2049,6 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-void mark_items_non_visit_at(const coord_def &pos)
-{
-    int item = igrd(pos);
-    while (item != NON_ITEM)
-    {
-        if (god_likes_item(you.religion, mitm[item]))
-            mitm[item].flags |= ISFLAG_DROPPED;
-        item = mitm[item].link;
-    }
-}
-
 void clear_item_pickup_flags(item_def &item)
 {
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
@@ -2023,7 +2057,7 @@ void clear_item_pickup_flags(item_def &item)
 // Move gold to the the top of a pile if following Gozag.
 static void _gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (int gold = igrd(p); gold != NON_ITEM;
              gold = mitm[gold].link)
@@ -3193,36 +3227,44 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        while (wand_sub_type == WAND_RANDOM_EFFECTS
-               || wand_sub_type == WAND_HEAL_WOUNDS)
-        {
-            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
-        }
+        // choose from all existing wands, except:
+        // (1) don't allow /hw, because it encourages stuff like curing rot
+        // (2) allow /invis even though that was removed, because it's fun
+        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
+                             ZAP_PARALYSE, ZAP_CONFUSE,
+                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
+                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
+                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
+                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
     case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
-    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
-    case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
+    case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
+    case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS: break;
+    case NUM_WANDS:
+#if TAG_MAJOR_VERSION == 34
+    case WAND_INVISIBILITY_REMOVED:
+    case WAND_MAGIC_DARTS_REMOVED:
+    case WAND_FIRE_REMOVED:
+    case WAND_COLD_REMOVED:
+    case WAND_FROST_REMOVED:
+#endif
+        break;
     }
     return result;
 }
@@ -3707,7 +3749,7 @@ colour_t item_def::rune_colour() const
             static const element_type types[] =
             {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
              ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
-             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH};
 
             return types[rnd % ARRAYSZ(types)];
         }
@@ -3744,8 +3786,6 @@ colour_t item_def::miscellany_colour() const
 
     switch (sub_type)
     {
-        case MISC_LANTERN_OF_SHADOWS:
-            return BLUE;
         case MISC_FAN_OF_GALES:
             return CYAN;
 #if TAG_MAJOR_VERSION == 34
@@ -3771,11 +3811,11 @@ colour_t item_def::miscellany_colour() const
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
 #if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
+        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
-        case MISC_XOMS_CHESSBOARD:
-            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
@@ -3972,27 +4012,6 @@ bool item_def::is_mundane() const
     }
 
     return false;
-}
-
-// Does the item cause autoexplore to visit it?
-// Excludes visited items (dropped flag) and ?RC for Ash.
-bool item_def::is_greedy_sacrificeable() const
-{
-    if (!god_likes_items(you.religion, true))
-        return false;
-
-    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
-        || item_needs_autopickup(*this)
-        || item_is_stationary_net(*this)
-        || inscription.find("!p") != string::npos
-        || inscription.find("=p") != string::npos
-        || inscription.find("!*") != string::npos
-        || inscription.find("!D") != string::npos)
-    {
-        return false;
-    }
-
-    return god_likes_item(you.religion, *this);
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)
@@ -4403,10 +4422,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             item->skill_points = random_range(2000, 3000);
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-        {
-            make_book_theme_randart(*item, SPTYP_NONE, SPTYP_NONE,
-                                    5 + coinflip(), 20);
-        }
+            build_themed_book(*item, capped_spell_filter(20));
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);

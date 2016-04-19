@@ -27,6 +27,7 @@
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
+#include "godpassive.h"    // passive_t::want_curses
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
@@ -140,7 +141,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
         }
         if (defender->is_monster()
             && !mondied
-            && !defender->as_monster()->res_hellfire()
+            && !defender->as_monster()->res_damnation() // XXX: ???
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
@@ -170,7 +171,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _CURSES_world_reacts(item_def *item)
 {
     // don't spam messages for ash worshippers
-    if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
+    if (one_chance_in(30) && !have_passive(passive_t::want_curses))
         curse_an_item(true);
 }
 
@@ -215,7 +216,8 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, false, true)
+        == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -920,30 +922,30 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
+static void _DAMNATION_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
 }
 
-static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
+static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
                                            string* ammo_name, bool* returning)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
     beam->item->special = SPMSL_EXPLODING; // so that it mulches
-    beam->item->props[HELLFIRE_BOLT_KEY].get_bool() = true;
+    beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
-    beam->name    = "hellfire bolt";
-    *ammo_name    = "a hellfire bolt";
+    beam->name    = "damnation bolt";
+    *ammo_name    = "a damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
     bolt *expl   = new bolt(*beam);
-    expl->flavour = BEAM_HELLFIRE;
+    expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
     expl->damage = dice_def(3, 8);
-    expl->name   = "hellfire";
+    expl->name   = "damnation";
 
     beam->special_explosion = expl;
     return SM_FINISHED;
@@ -1274,25 +1276,44 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
+static void _CAPTAIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you_worship(GOD_SHINING_ONE))
+    {
+        _equip_mpr(show_msgs,
+                   "You feel dishonourable wielding this.");
+    }
+    else
+    {
+        _equip_mpr(show_msgs,
+                   "You feel a cutthroat vibe.");
+    }
+}
+
 static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                actor* defender, bool mondied, int dam)
 {
     // Player disarming sounds like a bad idea; monster-on-monster might
     // work but would be complicated.
-    if (!attacker->is_player() || !defender->is_monster() || mondied)
-        return;
-
-    if (x_chance_in_y(dam, 75))
+    if (coinflip()
+        && dam >= (3 + random2(defender->get_hit_dice()))
+        && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam*4)
+        && attacker->is_player()
+        && defender->is_monster()
+        && !mondied)
     {
         item_def *wpn = defender->as_monster()->disarm();
         if (wpn)
         {
-            mprf("You knock %s %s to the ground with your cutlass!",
-                 apostrophise(defender->name(DESC_THE)).c_str(),
-                 wpn->name(DESC_PLAIN).c_str());
+            mprf("The captain's cutlass flashes! You lacerate %s!!",
+                defender->name(DESC_THE).c_str());
+            mprf("%s %s falls to the floor!",
+                apostrophise(defender->name(DESC_THE)).c_str(),
+                wpn->name(DESC_PLAIN).c_str());
+            defender->hurt(attacker, 18 + random2(18));
+            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 3);
         }
     }
-
 }
 
 ///////////////////////////////////////////////////
@@ -1317,17 +1338,6 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
     // coinflip() chance of 1 MP per turn.
     if (player_regenerates_mp())
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
-    // It's more interesting to get a lump of contamination then to just add a
-    // small amount every turn, plus there's a small chance of rapid buildup.
-    if (one_chance_in(100))
-    {
-        // On average the player recovers 25 contam per turn, this should keep
-        // them in the gray a fair amount of time; be nicer if they're already
-        // in the yellow.
-        int contam = get_contamination_level() > 1 ? 300 : 1000;
-        contam = div_rand_round(contam * delay, BASELINE_DELAY);
-        contaminate_player(random_range(contam, contam * 2));
-    }
 }
 
 ///////////////////////////////////////////////////

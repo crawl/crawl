@@ -124,7 +124,7 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BLIZZARD_DEMON, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_TARTARUS, { {MONS_SHADOW_FIEND}, SPTYP_NECROMANCY, {
+    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, SPTYP_NECROMANCY, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
 };
@@ -199,8 +199,8 @@ static void _hell_effects(int /*time_delta*/)
         return;
 
     // 50% chance at max piety
-    if (you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY * 2)
-        || is_sanctuary(you.pos()))
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
         return;
@@ -819,9 +819,7 @@ static void _handle_sickness(int /*time_delta*/)
     // If Cheibriados has slowed your biology, disease might
     // not actually do anything.
     if (you.disease && one_chance_in(30)
-        && !(you_worship(GOD_CHEIBRIADOS)
-             && you.piety >= piety_breakpoint(0)
-             && coinflip()))
+        && !(have_passive(passive_t::slow_metabolism) && coinflip()))
     {
         mprf(MSGCH_WARN, "Your disease is taking its toll.");
         lose_stat(STAT_RANDOM, 1);
@@ -847,7 +845,7 @@ static void _abyss_speed(int /*time_delta*/)
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
-    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+    if (have_passive(passive_t::slow_abyss) && coinflip())
         ; // Speed change less often for Chei.
     else if (coinflip() && you.abyss_speed < 100)
         ++you.abyss_speed;
@@ -857,10 +855,7 @@ static void _abyss_speed(int /*time_delta*/)
 
 static void _jiyva_effects(int /*time_delta*/)
 {
-    if (!you_worship(GOD_JIYVA))
-        return;
-
-    if (one_chance_in(10))
+    if (have_passive(passive_t::jellies_army) && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -905,13 +900,14 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    if (x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (have_passive(passive_t::fluid_stats)
+        && x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (one_chance_in(25))
+    if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 }
 
@@ -1314,16 +1310,14 @@ void monster::timeout_enchantments(int levels)
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
-        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
-        case ENCH_SILENCE: case ENCH_LOWERED_MR:
-        case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
+        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
-        case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_MIRROR_DAMAGE: case ENCH_MAGIC_ARMOUR: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
-        case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_WRETCHED: case ENCH_SCREAMED:
-        case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_BARBS:
+        case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR: case ENCH_WRETCHED:
+        case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
+        case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:

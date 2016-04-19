@@ -18,6 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1460,10 +1461,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 
     if (feat == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk())
-            return false;
-
-        return !form_likes_water(which_trans);
+        return !have_passive(passive_t::water_walk)
+            && !form_likes_water(which_trans);
     }
 
     return false;
@@ -1518,8 +1517,8 @@ static mutation_type _beastly_appendage()
 }
 
 static bool _transformation_is_safe(transformation_type which_trans,
-                                    dungeon_feature_type feat, bool quiet,
-                                    string *fail_reason = nullptr)
+                                    dungeon_feature_type feat,
+                                    string *fail_reason)
 {
 #if TAG_MAJOR_VERSION == 34
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
@@ -1528,12 +1527,12 @@ static bool _transformation_is_safe(transformation_type which_trans,
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
-    const string msg = make_stringf("You would %s in your new form.",
-                                    feat == DNGN_DEEP_WATER ? "drown" : "burn");
     if (fail_reason)
-        *fail_reason = msg;
-    if (!quiet)
-        mpr(msg);
+    {
+        *fail_reason = make_stringf("You would %s in your new form.",
+                                    feat == DNGN_DEEP_WATER ? "drown" : "burn");
+    }
+
     return false;
 }
 
@@ -1677,7 +1676,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     string msg;
 
     // Zin's protection.
-    if (!just_check && you_worship(GOD_ZIN)
+    if (!just_check && have_passive(passive_t::resist_polymorph)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -1692,11 +1691,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg = "You are stuck in your current form!";
         success = false;
     }
-    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-                                      involuntary || fail_reason, &msg))
-    {
-        success =  false;
-    }
+    else if (!_transformation_is_safe(which_trans, env.grid(you.pos()), &msg))
+        success = false;
 
     if (!success)
     {
@@ -1812,16 +1808,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
 
-    // Most transformations conflict with stone skin.
-    if (form_changed_physiology(which_trans)
-        && which_trans != TRAN_STATUE
-        && you.duration[DUR_STONESKIN])
-    {
-        mprf("Your stony body turns to %s.",
-             get_form(which_trans)->flesh_equivalent.c_str());
-        you.duration[DUR_STONESKIN] = 0;
-    }
-
     // Update your status.
     you.form = which_trans;
     you.set_duration(DUR_TRANSFORMATION, _transform_duration(which_trans, pow));
@@ -1842,7 +1828,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     _extra_hp(form_hp_mod());
 
-    if (you.digging && which_trans == TRAN_TREE)
+    if (you.digging && !form_keeps_mutations(which_trans))
     {
         mpr("Your mandibles meld away.");
         you.digging = false;
@@ -1974,15 +1960,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
 
-    // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.airborne()
-                   || feat_is_water(grd(you.pos()))
-                      && (which_trans == TRAN_BLADE_HANDS
-                          || which_trans == TRAN_APPENDAGE)
-                      && you.species == SP_MERFOLK)
-    {
+    // Land the player if we stopped flying.
+    if (was_flying && !you.airborne())
         move_player_to_grid(you.pos(), false);
-    }
+
+    // Update merfolk swimming for the form change.
+    if (you.species == SP_MERFOLK)
+        merfolk_check_swimming(false);
 
     if (you.hp <= 0)
     {
@@ -2064,13 +2048,15 @@ void untransform(bool skip_move)
 
     _unmeld_equipment(melded);
 
-    // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (was_flying && !you.airborne()
-                       || (feat_is_water(grd(you.pos()))
-                           && (old_form == TRAN_ICE_BEAST
-                               || you.species == SP_MERFOLK))))
+    if (!skip_move)
     {
-        move_player_to_grid(you.pos(), false);
+        // Land the player if we stopped flying.
+        if (was_flying && !you.airborne())
+            move_player_to_grid(you.pos(), false);
+
+        // Update merfolk swimming for the form change.
+        if (you.species == SP_MERFOLK)
+            merfolk_check_swimming(false);
     }
 
 #ifdef USE_TILE
@@ -2152,6 +2138,27 @@ void emergency_untransform()
 
     if (you.species == SP_MERFOLK)
         merfolk_start_swimming(false);
+}
+
+/**
+ * Update whether a merfolk should be swimming.
+ *
+ * Idempotent, so can be called after position/transformation change without
+ * redundantly checking conditions.
+ *
+ * @param stepped Whether the player is performing a normal walking move.
+ */
+void merfolk_check_swimming(bool stepped)
+{
+    const dungeon_feature_type grid = env.grid(you.pos());
+    if (you.ground_level()
+        && feat_is_water(grid)
+        && !form_changed_physiology(you.form))
+    {
+        merfolk_start_swimming(stepped);
+    }
+    else if (!is_feat_dangerous(grid)) // don't bother, the player is dying
+        merfolk_stop_swimming();
 }
 
 void merfolk_start_swimming(bool stepped)

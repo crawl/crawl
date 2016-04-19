@@ -22,10 +22,12 @@
 #include "env.h"
 #include "food.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -433,9 +435,9 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
         if (_has_hand_evokable())
-            return "You aren't carrying any items that can be evoked without being wielded.";
+            return "You aren't carrying any items that you can evoke without wielding.";
         else
-            return "You aren't carrying any items that can be evoked.";
+            return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -448,6 +450,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be enchanted.";
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
+    case OSEL_CURSABLE:
+        return "You don't have any cursable items.";
     }
 
     return "You aren't carrying any such object.";
@@ -975,7 +979,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 
 bool item_is_selected(const item_def &i, int selector)
 {
-    const int itype = i.base_type;
+    const object_class_type itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
                                 && itype != OBJ_FOOD && itype != OBJ_ARMOUR)
     {
@@ -1001,10 +1005,10 @@ bool item_is_selected(const item_def &i, int selector)
         if (you_worship(GOD_TROG) && item_is_spellbook(i))
             return true;
 
-        if (you.has_spell(SPELL_CORPSE_ROT) && i.base_type == OBJ_CORPSES)
+        if (you.has_spell(SPELL_CORPSE_ROT) && itype == OBJ_CORPSES)
             return true;
 
-        if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
+        if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
             return false;
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
@@ -1030,7 +1034,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_evokable(i, true, true, true);
 
     case OSEL_ENCH_ARM:
-        return is_enchantable_armour(i, true, true);
+        return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
         return itype == OBJ_FOOD && !is_inedible(i);
@@ -1052,34 +1056,23 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-    {
-        if (!is_weapon(i))
-            return false;
-        if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
-            // Ashenzari would just preserve the curse.
-            && !you_worship(GOD_ASHENZARI))
-        {
-            return true;
-        }
-        if (itype != OBJ_WEAPONS || is_artefact(i))
-            return false;
-        if (!item_ident(i, ISFLAG_KNOW_PLUSES))
-            return true;
-
-        if (i.plus < MAX_WPN_ENCHANT)
-            return true;
-        return false;
-    }
+        return itype == OBJ_WEAPONS
+               && !is_artefact(i)
+               && (!item_ident(i, ISFLAG_KNOW_PLUSES)
+                   || i.plus < MAX_WPN_ENCHANT);
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
 
     case OSEL_BEOGH_GIFT:
-        return (i.base_type == OBJ_WEAPONS
+        return (itype == OBJ_WEAPONS
                 || is_shield(i)
-                || i.base_type == OBJ_ARMOUR
+                || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
-                && !item_is_selected(i, OSEL_CURSED_WORN);
+                && !item_is_equipped(i);
+
+    case OSEL_CURSABLE:
+        return item_is_cursable(i);
 
     default:
         return false;
@@ -1495,7 +1488,6 @@ static string _operation_verb(operation_types oper)
     case OPER_MEMORISE:       return "memorise from";
     case OPER_ZAP:            return "zap";
     case OPER_FIRE:           return "fire";
-    case OPER_PRAY:           return "sacrifice";
     case OPER_EVOKE:          return "evoke";
     case OPER_DESTROY:        return "destroy";
     case OPER_QUIVER:         return "quiver";
@@ -1541,11 +1533,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // Rods are special-cased here, since I'm worried about the effects on
-    // monster behaviour of no longer counting them as melee weapons.
-    if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
-        return true;
-
     // The consequences of evokables are generally known unless it's a deck
     // and you don't know what kind of a deck it is.
     if (item.base_type == OBJ_MISCELLANY && !is_deck(item)
@@ -1586,7 +1573,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !you_worship(GOD_LUGONU)
+            && !have_passive(passive_t::safe_distortion)
             && !you.duration[DUR_WEAPON_BRAND])
         {
             return true;
@@ -1958,12 +1945,8 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    if (is_weapon(item))
+    if (is_weapon(item) || item.base_type == OBJ_RODS)
         return you.species != SP_FELID;
-
-    // The lantern needs to be wielded to be used.
-    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
-        return true;
 
     if (item.base_type == OBJ_MISSILES
         && (item.sub_type == MI_STONE
@@ -1994,12 +1977,22 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
 
+    const bool no_evocables = player_mutation_level(MUT_NO_ARTIFICE);
+    const char* const no_evocable_error = "You cannot evoke magical items.";
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->evoke_func && item_type_known(item))
         {
+            if (no_evocables)
+            {
+                if (msg)
+                    mpr(no_evocable_error);
+                return false;
+            }
+
             if (item_is_equipped(item) && !item_is_melded(item) || !equip)
                 return true;
 
@@ -2009,6 +2002,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             return false;
         }
         // Unrandart might still be evokable (e.g., reaching)
+    }
+
+    if (no_evocables
+        && item.base_type != OBJ_WEAPONS // reaching is ok.
+        && !(item.base_type == OBJ_MISCELLANY
+             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+    {
+        // the rest are forbidden under sac evocables.
+        if (msg)
+            mpr(no_evocable_error);
+        return false;
     }
 
     const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
@@ -2073,16 +2077,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-    case OBJ_MISCELLANY:
-        if (item.sub_type != MISC_LANTERN_OF_SHADOWS
 #if TAG_MAJOR_VERSION == 34
+    case OBJ_MISCELLANY:
+        if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
-#endif
             )
         {
             return true;
         }
-        // else fall through
+#endif
+        // removed items fallthrough to failure
+
     default:
         if (msg)
             mpr("That item cannot be evoked!");

@@ -100,10 +100,10 @@ bool feat_eliminates_items(dungeon_feature_type feat);
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
-                             bool affect_player = true,
                              bool preserve_features = false,
                              bool preserve_items = false,
-                             int colour = BLACK);
+                             bool temporary = false,
+                             bool wizmode = false);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,

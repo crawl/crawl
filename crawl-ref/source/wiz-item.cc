@@ -34,6 +34,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
+#include "randbook.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -260,7 +261,7 @@ static void _tweak_randart(item_def &item)
 #endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            *(prompt.rend()) = '\n'; // Replace the space
+            prompt.back() = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -471,8 +472,8 @@ static bool _make_book_randart(item_def &book)
 
     if (type == 'l')
         return make_book_level_randart(book);
-    else
-        return make_book_theme_randart(book);
+    build_themed_book(book);
+    return true;
 }
 
 void wizard_value_artefact()
@@ -614,10 +615,10 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
@@ -686,17 +687,8 @@ void wizard_unidentify_pack()
     // (For use with the "give monster an item" wizard targeting
     // command.)
     for (monster_near_iterator mon(&you); mon; ++mon)
-    {
-        for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
-        {
-            if (mon->inv[j] == NON_ITEM)
-                continue;
-
-            item_def &item = mitm[mon->inv[j]];
-            if (item.defined())
-                _forget_item(item);
-        }
-    }
+        for (mon_inv_iterator ii(**mon); ii; ++ii)
+            _forget_item(*ii);
 }
 
 void wizard_list_items()
@@ -774,6 +766,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
+    int randbook_spells = 0;
 
     int subtype_quants[256];
     int ego_quants[NUM_SPECIAL_WEAPONS];
@@ -814,6 +807,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             num_arts++;
             if (type == OBJ_BOOKS)
             {
+                randbook_spells += spells_in_book(item).size();
                 if (item.sub_type == BOOK_RANDART_THEME)
                 {
                     const int disc1 = item.plus & 0xFF;
@@ -997,8 +991,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             "draining",
             "speed",
             "vorpal",
+#if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",
+#endif
             "vampirism",
             "pain",
             "antimagic",
@@ -1018,7 +1014,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
-            "shielding",
 #endif
             "debug randart",
         };
@@ -1127,6 +1122,9 @@ static void _debug_acquirement_stats(FILE *ostat)
                             100.0 * (float) ego_quants[i] / (float) num_arts);
                 }
             }
+
+            fprintf(ostat, "Avg. spells per randbook: %4.3f",
+                    (float)randbook_spells / num_arts);
         }
 
         // Also list skills for manuals.

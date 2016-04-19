@@ -208,6 +208,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/potion.cc \
     $(CRAWL_PATH)/prompt.cc \
     $(CRAWL_PATH)/quiver.cc \
+    $(CRAWL_PATH)/randbook.cc \
     $(CRAWL_PATH)/random.cc \
     $(CRAWL_PATH)/random-var.cc \
     $(CRAWL_PATH)/ranged_attack.cc \

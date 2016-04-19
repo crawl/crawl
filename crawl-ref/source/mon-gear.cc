@@ -15,7 +15,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "mon-place.h"
-#include "spl-book.h"
+#include "randbook.h" // roxanne, roxanne...
 #include "state.h"
 #include "tilepick.h"
 #include "unwind.h"
@@ -116,7 +116,7 @@ static void _give_book(monster* mon, int level)
 
         // Maybe give Roxanne a random book containing Statue Form instead.
         if (coinflip())
-            make_book_Roxanne_special(&mitm[thing_created]);
+            make_book_roxanne_special(&mitm[thing_created]);
 
         _give_monster_item(mon, thing_created, true);
     }
@@ -136,8 +136,8 @@ static void _give_wand(monster* mon, int level)
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
     const bool no_high_tier =
             (mon->get_experience_level() < 5
-            || mons_class_flag(mon->type, M_NO_HT_WAND))
-                && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
+                || mons_class_flag(mon->type, M_NO_HT_WAND))
+            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
     const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
 
@@ -1513,7 +1513,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item_set_appearance(i);
 
     if (force_uncursed)
-        do_uncurse_item(i, false);
+        do_uncurse_item(i);
 
     if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
     {
@@ -1603,10 +1603,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 mitm[thing_created].quantity *= 2;
                 break;
 
-            case MONS_NESSOS:
-                mitm[thing_created].brand = SPMSL_POISONED;
-                break;
-
             case MONS_JOSEPH:
                 mitm[thing_created].quantity += 2 + random2(7);
                 break;
@@ -1693,9 +1689,9 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
         case MONS_HILL_GIANT:
-            if (!one_chance_in(20))
+            if (!level || !one_chance_in(20))
                 break;
-            // deliberate fall-through
+            // deliberate fall-through to harold
 
         case MONS_HAROLD: // bounty hunter, up to 5 nets
             if (mons_summoned)
@@ -1782,12 +1778,8 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_CHERUB:
-        if ((!main_weap || mon->hands_reqd(*main_weap) == HANDS_ONE)
-            && (!alt_weap || mon->hands_reqd(*alt_weap) == HANDS_ONE))
-        {
-            // Big shields interfere with ranged combat, at least theme-wise.
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
-        }
+        // Big shields interfere with ranged combat, at least theme-wise.
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
         break;
 
     case MONS_MINOTAUR:
@@ -1799,6 +1791,7 @@ static void _give_shield(monster* mon, int level)
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
+    case MONS_ORC_WARLORD:
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -1806,13 +1799,6 @@ static void _give_shield(monster* mon, int level)
                                                    : ARM_SHIELD,
                                   level);
         }
-        break;
-
-    case MONS_OCTOPODE_CRUSHER:
-        if (one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        if (coinflip())
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD, level);
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -2142,13 +2128,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
-    case MONS_OCTOPODE_CRUSHER:
-        if (one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_HAT;
-        break;
-
     case MONS_ANGEL:
     case MONS_CHERUB:
     case MONS_SIGMUND:
@@ -2459,7 +2438,7 @@ static void _give_gold(monster* mon, int level)
     _give_monster_item(mon, it);
 }
 
-void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number, bool spectral_orcs)
 {
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }

@@ -799,18 +799,14 @@ static bool _advise_use_wand()
         switch (obj.sub_type)
         {
         case WAND_FLAME:
-        case WAND_FROST:
         case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
         case WAND_PARALYSIS:
-        case WAND_FIRE:
-        case WAND_COLD:
         case WAND_CONFUSION:
-        case WAND_FIREBALL:
+        case WAND_ICEBLAST:
         case WAND_TELEPORTATION:
         case WAND_LIGHTNING:
         case WAND_ENSLAVEMENT:
-        case WAND_DRAINING:
+        case WAND_ACID:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
             return true;
@@ -1839,7 +1835,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Intelligence, or Dexterity. "
+                "Strength, intelligence, or dexterity. "
                 "<w>Strength</w> affects your effectiveness in combat "
                 "and makes it easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
@@ -3398,7 +3394,7 @@ string hints_describe_item(const item_def &item)
             {
                 ostr << "A manual can greatly help you in training a skill. "
                         "As long as you are carrying it, the skill in "
-                        "question will be trained more effeciently and will "
+                        "question will be trained more efficiently and will "
                         "level up faster.";
                 cmd.push_back(CMD_READ);
             }

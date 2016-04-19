@@ -25,6 +25,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "ghost.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "godwrath.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -96,7 +97,7 @@ deck_archetype deck_of_emergency =
 {
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
-    { CARD_DAMNATION,  {0, 1, 2} },
+    { CARD_EXILE,      {0, 1, 2} },
     { CARD_SHAFT,      {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
     { CARD_ELIXIR,     {5, 5, 5} },
@@ -176,7 +177,7 @@ deck_archetype deck_of_punishment =
     { CARD_XOM,        {5, 5, 5} },
     { CARD_FAMINE,     {5, 5, 5} },
     { CARD_CURSE,      {5, 5, 5} },
-    { CARD_DAMNATION,  {3, 3, 3} },
+    { CARD_EXILE,      {3, 3, 3} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
 };
@@ -335,7 +336,7 @@ const char* card_name(card_type card)
     case CARD_WATER:           return "Water";
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
-    case CARD_DAMNATION:       return "Damnation";
+    case CARD_EXILE:           return "Exile";
     case CARD_SOLITUDE:        return "Solitude";
     case CARD_ELIXIR:          return "the Elixir";
     case CARD_HELM:            return "the Helm";
@@ -1261,7 +1262,7 @@ static int _xom_check_card(item_def &deck, card_type card,
         amusement = 0;
         break;
 
-    case CARD_DAMNATION:
+    case CARD_EXILE:
         // Nothing happened, boring.
         if (player_in_branch(BRANCH_ABYSS))
             amusement = 0;
@@ -1355,7 +1356,7 @@ static int _get_power_level(int power, deck_rarity_type rarity)
     case DECK_RARITY_COMMON:
 //give nemelex worshipers a small chance for an upgrade
 //approx 1/2 ORNATE chance (plain decks don't get the +150 power boost)
-        if (in_good_standing(GOD_NEMELEX_XOBEH) && (x_chance_in_y(power, 1000)))
+        if (have_passive(passive_t::cards_power) && (x_chance_in_y(power, 1000)))
             ++power_level;
         break;
     case DECK_RARITY_LEGENDARY:
@@ -1425,7 +1426,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
-        if (you_worship(GOD_CHEIBRIADOS))
+        if (have_passive(passive_t::no_haste))
             simple_god_message(" protects you from inadvertent hurry.");
         else
         {
@@ -1483,7 +1484,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_hostiles == ENCH_HASTE && haste_immune))
                     {
-                        if (you_worship(GOD_CHEIBRIADOS))
+                        if (have_passive(passive_t::no_haste))
                             _suppressed_card_message(you.religion, DID_HASTY);
                         else
                         {
@@ -1508,7 +1509,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     }
                     else if (!(for_allies == ENCH_HASTE && haste_immune))
                     {
-                        if (you_worship(GOD_CHEIBRIADOS))
+                        if (have_passive(passive_t::no_haste))
                             _suppressed_card_message(you.religion, DID_HASTY);
                         else
                         {
@@ -1552,7 +1553,7 @@ static void _banshee_card(int power, deck_rarity_type rarity)
     mass_enchantment(ENCH_FEAR, power);
 }
 
-static void _damnation_card(int power, deck_rarity_type rarity)
+static void _exile_card(int power, deck_rarity_type rarity)
 {
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -1901,37 +1902,44 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 static void _helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    bool do_phaseshift = false;
-    bool do_stoneskin  = false;
+    bool do_agility    = false;
+    bool do_armour     = false;
     bool do_shield     = false;
     bool do_resistance = false;
 
     // Chances are cumulative.
     if (power_level >= 2)
     {
-        if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_stoneskin  = true;
-        if (coinflip()) do_shield     = true;
+        if (coinflip()) do_agility = true;
+        if (coinflip()) do_armour  = true;
+        if (coinflip()) do_shield  = true;
         do_resistance = true;
     }
     if (power_level >= 1)
     {
-        if (coinflip()) do_phaseshift = true;
-        if (coinflip()) do_stoneskin  = true;
-        if (coinflip()) do_shield     = true;
+        if (coinflip()) do_agility = true;
+        if (coinflip()) do_armour  = true;
+        if (coinflip()) do_shield  = true;
     }
     if (power_level >= 0)
     {
         if (coinflip())
-            do_phaseshift = true;
+            do_agility = true;
         else
-            do_stoneskin  = true;
+            do_armour = true;
     }
 
-    if (do_phaseshift)
-        cast_phase_shift(random2(power/4));
-    if (do_stoneskin)
-        cast_stoneskin(random2(power/4));
+    if (do_agility)
+        potionlike_effect(POT_AGILITY, random2(power/4));
+    if (do_armour)
+    {
+        int pow = random2(power/4);
+        if (you.duration[DUR_MAGIC_ARMOUR] == 0)
+            mpr("You gain magical protection.");
+        you.increase_duration(DUR_MAGIC_ARMOUR,
+                              10 + random2(pow) + random2(pow), 50);
+        you.props[MAGIC_ARMOUR_KEY] = pow;
+    }
     if (do_resistance)
     {
         mpr("You feel resistant.");
@@ -1949,8 +1957,20 @@ static void _helm_card(int power, deck_rarity_type rarity)
         monster* mon = monster_at(*ri);
 
         if (mon && mon->wont_attack() && x_chance_in_y(power_level, 2))
-            mon->add_ench(coinflip() ? ENCH_STONESKIN : ENCH_SHROUD);
+        {
+            bool armour = coinflip();
+            mon->add_ench(armour ? ENCH_MAGIC_ARMOUR : ENCH_SHROUD);
+            if (armour)
+                simple_monster_message(mon, " gains magical protection.");
+            else
+            {
+                mprf("Space distorts along a thin shroud covering %s %s.",
+                     apostrophise(mon->name(DESC_THE)).c_str(),
+                     mon->is_insubstantial() ? "form" : "body");
+            }
+        }
     }
+    you.redraw_armour_class = true;
 }
 
 static void _blade_card(int power, deck_rarity_type rarity)
@@ -2019,8 +2039,8 @@ static void _potion_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_HEAL_WOUNDS : POT_MAGIC);
 
-    if (you_worship(GOD_CHEIBRIADOS) && (pot == POT_HASTE
-                                         || pot == POT_BERSERK_RAGE))
+    if (have_passive(passive_t::no_haste)
+        && (pot == POT_HASTE || pot == POT_BERSERK_RAGE))
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;
@@ -2633,12 +2653,8 @@ bool recruit_mercenary(int mid)
     }
 
     simple_monster_message(mon, " joins your ranks!");
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-    {
-        const int item = mon->inv[i];
-        if (item != NON_ITEM)
-            mitm[item].flags &= ~ISFLAG_SUMMONED;
-    }
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+        ii->flags &= ~ISFLAG_SUMMONED;
     mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
@@ -2926,7 +2942,7 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
         surge_power(you.spec_evoke());
         if (player_under_penance(GOD_NEMELEX_XOBEH))
             result -= you.penance[GOD_NEMELEX_XOBEH];
-        else if (you_worship(GOD_NEMELEX_XOBEH))
+        else if (have_passive(passive_t::cards_power))
         {
             result = you.piety;
             result *= player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 100))
@@ -2987,7 +3003,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
     case CARD_SWAP:             _swap_monster_card(power, rarity); break;
     case CARD_VELOCITY:         _velocity_card(power, rarity); break;
-    case CARD_DAMNATION:        _damnation_card(power, rarity); break;
+    case CARD_EXILE:            _exile_card(power, rarity); break;
     case CARD_SOLITUDE:         _solitude_card(power, rarity); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
     case CARD_HELM:             _helm_card(power, rarity); break;

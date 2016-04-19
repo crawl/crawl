@@ -411,6 +411,7 @@ public:
     }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class PotionPoison : public PotionEffect
 {
 private:
@@ -437,6 +438,7 @@ public:
         return true;
     }
 };
+#endif
 
 class PotionCancellation : public PotionEffect
 {
@@ -614,7 +616,7 @@ public:
             return PotionHealWounds::instance().effect(pow);
         }
 #endif
-        inc_mp(10 + random2avg(28, 3));
+        inc_mp(POT_MAGIC_MP);
         mpr("Magic courses through your body.");
         return true;
     }
@@ -708,6 +710,23 @@ public:
             }
             return false;
         }
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (was_known
+            && how_mutated(false, true) > how_mutated(false, true, false)
+            && !yesno("Your transient mutations will not be cured; Quaff anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        effect();
         return true;
     }
 
@@ -1172,6 +1191,7 @@ public:
         return nothing_happens;
     }
 };
+#endif
 
 class PotionDegeneration : public PotionEffect
 {
@@ -1187,7 +1207,11 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         mpr("There was something very wrong with that liquid.");
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+        bool success = false;
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
+                success = true;
+        return success;
     }
 
     bool quaff(bool was_known) const override
@@ -1197,7 +1221,6 @@ public:
         return true;
     }
 };
-#endif
 
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
@@ -1231,8 +1254,8 @@ static const PotionEffect* potion_effects[] =
     &PotionGainIntelligence::instance(),
 #endif
     &PotionFlight::instance(),
-    &PotionPoison::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &PotionPoison::instance(),
     &PotionSlowing::instance(),
 #endif
     &PotionCancellation::instance(),

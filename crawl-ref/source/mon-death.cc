@@ -32,6 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "godconduct.h"
+#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -150,6 +151,18 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
+    // 0 mid indicates this is a dummy monster, such as for kiku corpse drop
+    if (mons_genus(mons.type) == MONS_ORC && mons.mid != 0)
+    {
+        auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
+        saved_mon = mons;
+
+        // Ensure that saved_mon is alive, lest it be cleared on marshall.
+        if (saved_mon.max_hit_points <= 0)
+            saved_mon.max_hit_points = 1;
+        saved_mon.hit_points = saved_mon.max_hit_points;
+    }
+
     return true;
 }
 
@@ -252,7 +265,7 @@ static void _give_monster_experience(int experience, int killer_index)
 
     if (mon->gain_exp(experience))
     {
-        if (!in_good_standing(GOD_BEOGH) || !one_chance_in(3))
+        if (!have_passive(passive_t::bless_followers) || !one_chance_in(3))
             return;
 
         // Randomly bless the follower who gained experience.
@@ -344,7 +357,7 @@ static void _give_player_experience(int experience, killer_type killer,
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
 
-    if (kc == KC_YOU && you_worship(GOD_BEOGH))
+    if (kc == KC_YOU && have_passive(passive_t::share_exp))
         _beogh_spread_experience(experience / 2);
 }
 
@@ -386,7 +399,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
 
-    you.props["gozag_gold_aura_amount"].get_int()++;
+    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
+    if (!x_chance_in_y(chance, chance + 9))
+        ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
 /**
@@ -411,7 +426,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Under Gozag, monsters turn into gold on death.
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
-    bool goldify = in_good_standing(GOD_GOZAG)
+    bool goldify = have_passive(passive_t::goldify_corpses)
                    && mons_gives_xp(&mons, &you)
                    && !force;
 
@@ -583,7 +598,7 @@ int exp_rate(int killer)
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
-    if (!you_worship(GOD_ELYVILON))
+    if (!have_passive(passive_t::protect_ally))
         return false;
 
     if (!MON_KILL(killer) && !YOU_KILL(killer))
@@ -625,7 +640,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         if (!mon->friendly() || !one_chance_in(3))
             return false;
 
-        if (!mons_near(mons))
+        if (!you.see_cell(mons->pos()))
             return false;
     }
     else if (!YOU_KILL(killer))
@@ -651,7 +666,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 static bool _yred_enslave_soul(monster* mons, killer_type killer)
 {
     if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(mons)
-        && mons_near(mons) && killer != KILL_RESET
+        && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
@@ -690,7 +705,8 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, true, MON_KILL(killer));
+        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::DEATHBED_FOLLOWER :
+                                                    conv_t::DEATHBED);
         return true;
     }
 
@@ -708,10 +724,10 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
                                     int killer_index)
 {
-    if (!in_good_standing(GOD_BEOGH, 2)
+    if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
-        || !mons_near(&mons) || mons_is_god_gift(&mons))
+        || !you.see_cell(mons.pos()) || mons_is_god_gift(&mons))
     {
         return false;
     }
@@ -1298,7 +1314,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (saw)
         viewwindow();
 
-    // FIXME: show_more == mons_near(mons)
+    // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
     {
         targetter_los hitfunc(mons, LOS_SOLID);
@@ -1484,8 +1500,8 @@ static void _druid_final_boon(const monster* mons)
     for (int i = 0; i < num; ++i)
     {
         simple_monster_message(beasts[i], " seems to grow more fierce.");
-        beasts[i]->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, mons,
-                                        random_range(120, 200)));
+        beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
+                                        random_range(100, 160)));
     }
 }
 
@@ -1548,9 +1564,9 @@ static bool _reaping(monster *mons)
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return in_good_standing(GOD_BEOGH)
+    return have_passive(passive_t::bless_followers)
            && random2(you.piety) >= piety_breakpoint(2)
-           || in_good_standing(GOD_SHINING_ONE)
+           || have_passive(passive_t::bless_followers_vs_unholy)
               && (victim->is_evil() || victim->is_unholy())
               && random2(you.piety) >= piety_breakpoint(0);
 }
@@ -1753,7 +1769,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     remove_unique_annotation(mons);
 
     // Clear auto exclusion now the monster is killed - if we know about it.
-    if (mons_near(mons) || wizard || mons_is_unique(mons->type))
+    if (you.see_cell(mons->pos()) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
 
           int  duration      = 0;
@@ -1815,14 +1831,16 @@ item_def* monster_die(monster* mons, killer_type killer,
     // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
-        if (in_good_standing(GOD_TROG) && you.piety > random2(1000))
+        if (have_passive(passive_t::extend_berserk)
+            && you.piety > random2(1000))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
             you.increase_duration(DUR_BERSERK, bonus);
 
-            mprf(MSGCH_GOD, GOD_TROG,
-                 "You feel the power of Trog in you as your rage grows.");
+            mprf(MSGCH_GOD, you.religion,
+                 "You feel the power of %s in you as your rage grows.",
+                 uppercase_first(god_name(you.religion)).c_str());
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
         {
@@ -1922,7 +1940,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
             if (!summoned_it
-                && (!in_good_standing(GOD_GOZAG)
+                && (!have_passive(passive_t::goldify_corpses)
                     || mons->has_ench(ENCH_ABJ)))
             {
                 simple_monster_message(mons, " falls from the air.",
@@ -1999,8 +2017,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
 
     const bool death_message = !silent && !did_death_message
-                               && mons_near(mons)
-                               && mons->visible_to(&you);
+                               && you.can_see(*mons);
     const bool exploded {mons->flags & MF_EXPLODE_KILL};
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons->holiness();
@@ -2011,17 +2028,9 @@ item_def* monster_die(monster* mons, killer_type killer,
         && killer == KILL_YOU
         && gives_player_xp)
     {
-        int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
-        mon_threat_level_type threat = mons_threat_level(mons, true);
-        // Only certain kinds of threats at different sos levels will increase
-        // the bonus
-        if (threat == MTHRT_TRIVIAL && sos_bonus < 3
-            || threat == MTHRT_EASY && sos_bonus < 5
-            || threat == MTHRT_TOUGH && sos_bonus < 7
-            || threat == MTHRT_NASTY)
-        {
+        const int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
+        if (sos_bonus <= 8) // cap at +9 slay
             you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
-        }
     }
 
     switch (killer)
@@ -2070,10 +2079,9 @@ item_def* monster_die(monster* mons, killer_type killer,
             // Divine health and mana restoration doesn't happen when
             // killing born-friendly monsters.
             if (gives_player_xp
-                && (you_worship(GOD_MAKHLEB)
-                    || you_worship(GOD_PAKELLAS)
-                    || you_worship(GOD_VEHUMET)
-                    || you_worship(GOD_SHINING_ONE)
+                && (have_passive(passive_t::restore_hp)
+                    || have_passive(passive_t::mp_on_kill)
+                    || have_passive(passive_t::restore_hp_mp_vs_unholy)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
@@ -2082,24 +2090,29 @@ item_def* monster_die(monster* mons, killer_type killer,
             {
                 int hp_heal = 0, mp_heal = 0;
 
-                switch (you.religion)
+                if (have_passive(passive_t::restore_hp))
                 {
-                case GOD_MAKHLEB:
                     hp_heal = mons->get_experience_level()
                         + random2(mons->get_experience_level());
-                    break;
-                case GOD_SHINING_ONE:
+                }
+                if (have_passive(passive_t::restore_hp_mp_vs_unholy))
+                {
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
                     mp_heal = random2(2 + mons->get_experience_level() / 3);
-                    break;
-                case GOD_VEHUMET:
-                    mp_heal = 1 + random2(mons->get_experience_level() / 2);
-                    break;
-                case GOD_PAKELLAS:
-                    mp_heal = random2(2 + mons->get_experience_level() / 4);
-                    break;
-                default:
-                    die("bad kill-on-healing god!");
+                }
+
+                if (have_passive(passive_t::mp_on_kill))
+                {
+                    switch (you.religion)
+                    {
+                    case GOD_PAKELLAS:
+                        mp_heal = random2(2 + mons->get_experience_level() / 6);
+                        break;
+                    case GOD_VEHUMET:
+                    default:
+                        mp_heal = 1 + random2(mons->get_experience_level() / 2);
+                        break;
+                    }
                 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -2115,8 +2128,39 @@ item_def* monster_die(monster* mons, killer_type killer,
 
                 if (mp_heal && you.magic_points < you.max_magic_points)
                 {
+                    int tmp = min(you.max_magic_points - you.magic_points,
+                                  mp_heal);
                     canned_msg(MSG_GAIN_MAGIC);
                     inc_mp(mp_heal);
+                    mp_heal -= tmp;
+                }
+
+                // perhaps this should go to its own function
+                if (mp_heal && in_good_standing(GOD_PAKELLAS, 2))
+                {
+                    simple_god_message(" collects the excess magic power.");
+                    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
+
+                    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
+                        && (feat_has_solid_floor(grd(you.pos()))
+                            || feat_is_watery(grd(you.pos()))
+                               && species_likes_water(you.species)))
+                    {
+                        int thing_created = items(true, OBJ_POTIONS,
+                                                  POT_MAGIC, 1, 0,
+                                                  GOD_PAKELLAS);
+                        if (thing_created != NON_ITEM)
+                        {
+                            move_item_to_grid(&thing_created, you.pos(), true);
+                            mitm[thing_created].quantity = 1;
+                            mitm[thing_created].flags |= ISFLAG_KNOW_TYPE;
+                            // not a conventional gift, but use the same
+                            // messaging
+                            simple_god_message(" grants you a gift!");
+                            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
+                                += POT_MAGIC_MP;
+                        }
+                    }
                 }
             }
 
@@ -2584,7 +2628,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     // can see the monster. There are several edge cases where a monster
     // is visible to the player but we still need to turn autopickup
     // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (mons_near(mons) && mons->has_ench(ENCH_INVIS))
+    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
     if (corpse && _reaping(mons))
@@ -2763,7 +2807,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
-    if (mons_near(mons) && (oldpos == mons->pos() || grd(oldpos) != grid))
+    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || grd(oldpos) != grid))
     {
          mprf("%s falls into the %s!",
              mons->name(DESC_THE).c_str(),
@@ -2804,25 +2848,17 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 // artefact or unrand artefact.
 static void _vanish_orig_eq(monster* mons)
 {
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (mons->inv[i] == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[mons->inv[i]]);
-
-        if (!item.defined())
-            continue;
-
-        if (origin_known(item) || item.orig_monnum != 0
-            || !item.inscription.empty()
-            || is_unrandom_artefact(item)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+        if (origin_known(*ii) || ii->orig_monnum != 0
+            || !ii->inscription.empty()
+            || is_unrandom_artefact(*ii)
+            || (ii->flags & (ISFLAG_DROPPED | ISFLAG_THROWN
                               | ISFLAG_NOTED_GET)))
         {
             continue;
         }
-        item.flags |= ISFLAG_SUMMONED;
+        ii->flags |= ISFLAG_SUMMONED;
     }
 }
 
@@ -3134,9 +3170,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     string key = mons->name(DESC_THE, true) + "_"
                  + twin->name(DESC_THE, true) + "_dies_";
 
-    if (mons_near(mons) && !mons->observable())
-        key += "invisible_";
-    else if (!mons_near(mons))
+    if (you.see_cell(mons->pos()))
+    {
+        if (!mons->visible_to(&you))
+            key += "invisible_";
+    }
+    else
         key += "distance_";
 
     bool i_killed = ((killer == KILL_MON || killer == KILL_MON_MISSILE)
@@ -3154,7 +3193,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     string death_message = getSpeakString(key);
 
     // Check if they can speak or not: they may have been polymorphed.
-    if (mons_near(mons) && !death_message.empty() && mons->can_speak())
+    if (you.see_cell(mons->pos()) && !death_message.empty() && mons->can_speak())
         mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
     else if (mons->can_speak())
         mpr(death_message);
@@ -3174,7 +3213,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons_near(mons) && !mons->has_ench(ENCH_INSANE))
+    if (mons->can_see(you) && !mons->has_ench(ENCH_INSANE))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -3214,8 +3253,7 @@ void elven_twins_pacify(monster* twin)
     if (mons->neutral())
         return;
 
-    if (mons_near(mons))
-        simple_monster_message(mons, " likewise turns neutral.");
+    simple_monster_message(mons, " likewise turns neutral.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
     mons_pacify(mons, ATT_NEUTRAL);
@@ -3293,14 +3331,11 @@ void mons_felid_revive(monster* mons)
 
     if (newmons)
     {
-        for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
-            if (mons->inv[i] != NON_ITEM)
-            {
-                int item = mons->inv[i];
-                give_specific_item(newmons, mitm[item]);
-                destroy_item(item);
-                mons->inv[i] = NON_ITEM;
-            }
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
+        {
+            give_specific_item(newmons, *ii);
+            destroy_item(ii->index());
+        }
 
         newmons->props["felid_revives"].get_byte() = revives;
     }

@@ -58,12 +58,14 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water.
+any nearby bodies of deep water. Extremely loud noises, such as those produced
+by lightning or scrolls of noise, will disrupt the effect, as will leaving the
+caster's line of sight.
 %%%%
 Awaken Earth spell
 
-Animates some rock walls adjacent to a target - including the target itself if
-it is a rock wall - to create some earth elementals.
+Animates some rock walls adjacent to a target – including the target itself if
+it is a rock wall – to create some earth elementals.
 %%%%
 Awaken Forest spell
 
@@ -228,7 +230,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster.
+Causes fear in those near to the caster. Adventurers suffering from this effect
+find that extremely loud noises, such as those produced by lightning or scrolls
+of noise, will disrupt it, as will leaving the caster's line of sight.
 %%%%
 Chain of Chaos spell
 
@@ -273,14 +277,6 @@ become available.
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
-%%%%
-Condensation Shield spell
-
-Causes a disc of dense vapour to condense out of the air surrounding the
-caster. It blocks attacks like a normal shield, but its effectiveness depends
-solely on power, and not on the Shields skill. The disc is controlled by the
-caster's mind, and thus will not conflict with the wielding of a two-handed
-weapon.
 %%%%
 Confuse spell
 
@@ -520,7 +516,7 @@ target will be unable to be put to sleep again for some time.
 %%%%
 Entropic Weave spell
 
-Corrodes away the target's equipment.
+Corrodes the target, with no direct line of fire required.
 %%%%
 Excruciating Wounds spell
 
@@ -550,7 +546,7 @@ short-lived fire vortices.
 %%%%
 Fire Summon spell
 
-Summons demons of flame and hellfire.
+Summons demons of flame and damnation.
 %%%%
 Fireball spell
 
@@ -568,7 +564,7 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement.
+target's movement. It has no effect on targets that are already frozen.
 %%%%
 Force Lance spell
 
@@ -638,27 +634,23 @@ Heal Other spell
 
 Heals a nearby ally.
 %%%%
-Hellfire Burst spell
+Call Down Damnation spell
 
-Blasts a targeted enemy with hellfire, with no direct line of fire required.
-This ball of unholy flames explodes on impact, and is not affected by any means
-of protection such as armour or resistances. However, certain creatures,
-usually those able to create hellfire themselves, are immune to hellfire
-entirely.
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
 %%%%
-Hellfire spell
+Hurl Damnation spell
 
-<Hellfire ability>
+<Damnation ability>
 %%%%
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
 gods. These flames are especially dangerous to evil creatures, and have no
 effect on holy creatures.
-%%%%
-Hunting Cry spell
-
-Alerts nearby allies of the user to their target's location.
 %%%%
 Holy Flames spell
 
@@ -673,6 +665,11 @@ instantly devoured, reinvigorating the caster in their reptilian rampage.
 
 The form's number of heads is fixed upon casting the spell, and increases with
 power.
+%%%%
+Iceblast spell
+
+Fires a large mass of ice, which explodes on impact. It affects even
+cold-resistant creatures somewhat, due to the strong impact and cutting edges.
 %%%%
 Ice Form spell
 
@@ -830,7 +827,9 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster.
+Makes a targeted creature unwilling to move away from the caster. Extremely
+loud noises, such as those produced by lightning or scrolls of noise, will
+disrupt the effect, as will leaving the caster's line of sight.
 %%%%
 Metabolic Englaciation spell
 
@@ -906,10 +905,10 @@ impact. Its damage partially bypasses armour.
 %%%%
 Ozocubu's Armour spell
 
-Envelops the caster's body in a protective layer of ice. The caster will not
-suffer cold from this layer, yet can be affected by other sources of cold
-normally. The spell will not function for casters already wearing heavy armour
-(any body armour with an encumbrance rating of 5 or more).
+Envelops the caster's body in a protective layer of thick ice. This will slow
+the caster's movement slightly, and provides no special protection against cold.
+The spell will not function for casters already wearing heavy armour (any body
+armour with an encumbrance rating of 5 or more).
 %%%%
 Ozocubu's Refrigeration spell
 
@@ -928,8 +927,8 @@ Prevents a creature from taking any action for a short time.
 %%%%
 Paralysis Gaze spell
 
-Prevents a creature from taking any action for a short time, with no direct
-line of fire required.
+Irresistably prevents a creature from taking any action for a short time,
+requiring multiple charges but not line of fire.
 %%%%
 Passage of Golubria spell
 
@@ -959,11 +958,6 @@ Phantom Mirror spell
 
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
-%%%%
-Phase Shift spell
-
-Causes the caster to phase in and out of the material plane, allowing them to
-occasionally avoid blows entirely.
 %%%%
 Plane Rend spell
 
@@ -1047,7 +1041,7 @@ by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition causes the target to lose control over their
+afflicted with this condition may cause the target to lose control over their
 magic, progressively hindering their chances of success as more spells are cast.
 %%%%
 Scattershot spell
@@ -1111,18 +1105,18 @@ redirecting their force to the air nearby. Ranged attacks cannot be diverted in
 this way. The shroud is highly unstable, and may fall apart unexpectedly under
 stress.
 %%%%
-Signal Horn spell
+Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
 %%%%
 Silence spell
 
-Eliminates all sound near the caster. This makes actions such as reading
-scrolls, casting spells or shouting impossible in the caster's vicinity. The
-spell's oppressive, unnatural effect will greatly hamper any attempt to be
-stealthy. Some creatures, such as demons, cast magic without speaking and so
-will be unaffected, and those with innate magical abilities will also still be
-able to use them.
+Eliminates all sound near the caster. This makes reading scrolls, casting
+spells, invoking divine abilities, or shouting impossible in the caster's
+vicinity. The spell's oppressive, unnatural effect will greatly hamper stealth.
+
+Certain monsters have innate magical or special abilities which will still be
+usable while silenced.
 
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
@@ -1136,7 +1130,8 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer.
+singer. Extremely loud noises, such as those produced by lightning or scrolls
+of noise, will disrupt the effect, as will leaving the caster's line of sight.
 %%%%
 Sleep spell
 
@@ -1146,6 +1141,10 @@ target, and loud sounds can potentially do so as well.
 Slow spell
 
 Slows the actions of a creature.
+%%%%
+Slug Dart spell
+
+Fires a sharp dart of hardened chitin.
 %%%%
 Smiting spell
 
@@ -1189,7 +1188,7 @@ of magics cannot be imbued in this fashion.
 Spider Form spell
 
 Transforms the caster into a venomous, spider-like creature. The caster becomes
-highly evasive and gains a poisonous bite, but gains vulnerablility to poison
+highly evasive and gains a poisonous bite, but gains vulnerability to poison
 and cannot evoke wands. It makes spellcasting slightly more difficult.
 %%%%
 Spit Acid spell
@@ -1203,6 +1202,10 @@ Spits lava at a targeted creature.
 Spit Poison spell
 
 <Spit Poison ability>
+%%%%
+Sprint spell
+
+Causes the caster to cover ground more rapidly for a short duration.
 %%%%
 Static Discharge spell
 
@@ -1430,7 +1433,7 @@ Teleports the caster to a random location.
 %%%%
 Throw spell
 
-Hurls a constricted foe a considerable distance, injuring them.
+Hurls an adjacent foe a considerable distance, injuring them.
 %%%%
 Throw Barbs spell
 
@@ -1509,6 +1512,10 @@ Wall of Brambles spell
 Causes brambles to rapidly grow nearby. They have almost no structural
 strength, but the wicked thorns they bear make their removal difficult. Such
 brambles are sparse enough that almost any missile can pass through unhindered.
+%%%%
+Warning Cry spell
+
+Generates a loud noise, alerting nearby enemies.
 %%%%
 Warp Weapon spell
 

@@ -134,7 +134,7 @@ function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
   end
 
   for i, pos in ipairs(gate_pos) do
-    dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+    dgn.terrain_changed(pos.x, pos.y, "floor", false, false)
   end
   data.triggered = true
   pakellas_experiment_message(true)

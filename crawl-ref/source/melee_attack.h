@@ -20,7 +20,8 @@ enum unarmed_attack_type
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_TENTACLES
+    UNAT_LAST_ATTACK = UNAT_TENTACLES,
+    NUM_UNARMED_ATTACKS,
 };
 
 class melee_attack : public attack
@@ -68,8 +69,6 @@ private:
     /* Attack effects */
     void check_autoberserk();
     bool check_unrand_effects() override;
-
-    bool attack_ignores_shield(bool verbose) override;
 
     void rot_defender(int amount);
     void splash_defender_with_acid(int strength);

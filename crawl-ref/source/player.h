@@ -7,6 +7,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <chrono>
 #include <list>
 #include <memory>
 #include <vector>
@@ -23,9 +24,8 @@
 #include "tiledoll.h"
 #endif
 
-#define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
-#define STONESKIN_KEY "stoneskin_pow"
+#define MAGIC_ARMOUR_KEY "magic_armour_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
@@ -34,6 +34,7 @@
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
+#define SAP_MAGIC_KEY "sap_magic_amount"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -54,6 +55,9 @@ static const int BONE_ARMOUR_HIT_RATIO = 50;
 /// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // relevant for swiftness, etc
+
+// Min delay for thrown projectiles.
+static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
 class targetter;
 
@@ -91,7 +95,6 @@ public:
     bool          wizard;            // true if player has entered wiz mode.
     bool          explore;           // true if player has entered explore mode.
     time_t        birth_time;        // start time of game
-
 
     // ----------------
     // Long-term state:
@@ -253,11 +256,14 @@ public:
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
 
-    int           real_time;            // real time played (in seconds)
-    int           num_turns;            // number of turns taken
-    int           exploration;          // levels explored (16.16 bit real number)
+    int real_time() { return real_time_ms.count() / 1000; }
+    chrono::milliseconds real_time_ms;       // real time played
+    chrono::milliseconds real_time_delta;    // real time since last command
 
-    int           last_view_update;     // what turn was the view last updated?
+    int num_turns;            // number of turns taken
+    int exploration;          // levels explored (16.16 bit real number)
+
+    int                       last_view_update;     // what turn was the view last updated?
 
     // Warning: these two are quite different.
     //
@@ -341,7 +347,8 @@ public:
 
     delay_queue_type delay_queue;       // pending actions
 
-    time_t last_keypress_time;
+    chrono::time_point<chrono::system_clock> last_keypress_time;
+
     bool xray_vision;
     int8_t bondage_level;  // how much an Ash worshipper is into bondage
     int8_t bondage[NUM_ET];
@@ -454,8 +461,8 @@ public:
     bool is_web_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
-    bool can_see_invisible() const override;
-    bool can_see_invisible(bool unid, bool items = true) const;
+    bool can_see_invisible(bool calc_unid = true) const override;
+    bool innate_sinv() const;
     bool visible_to(const actor *looker) const override;
     bool can_see(const actor& a) const override;
     undead_state_type undead_state(bool temp = true) const;
@@ -584,7 +591,8 @@ public:
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
 
-    hands_reqd_type hands_reqd(const item_def &item) const override;
+    hands_reqd_type hands_reqd(const item_def &item,
+                               bool base = false) const override;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -626,7 +634,8 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "", const int power = 0) override;
+    void banish(actor* /*agent*/, const string &who = "", const int power = 0,
+                bool force = false) override;
     void blink() override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
@@ -679,7 +688,7 @@ public:
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
     int res_acid(bool calc_unid = true) const override;
-    bool res_hellfire() const override { return false; };
+    bool res_damnation() const override { return false; };
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;
@@ -694,7 +703,7 @@ public:
     bool res_wind() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
-    int res_magic() const override;
+    int res_magic(bool /*calc_unid*/ = true) const override;
     bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
                  bool blink = false) const override;
     string no_tele_reason(bool calc_unid = true, bool blink = false) const;
@@ -978,7 +987,6 @@ int slaying_bonus(bool ranged = false);
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
 
-int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status();
 
@@ -1005,6 +1013,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp();
 void calc_mp();
+void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
@@ -1064,7 +1073,6 @@ bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
-bool prompt_contam_invis();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
@@ -1088,7 +1096,6 @@ bool need_expiration_warning(dungeon_feature_type feat);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
 
-void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
 bool player_on_orb_run();
 

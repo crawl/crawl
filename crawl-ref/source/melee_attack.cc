@@ -17,6 +17,7 @@
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -27,6 +28,7 @@
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"
@@ -154,13 +156,11 @@ bool melee_attack::handle_phase_attempted()
                 }
                 else
                     count_action(CACT_MELEE, weapon->sub_type);
-            else if (weapon->base_type == OBJ_RODS)
-                count_action(CACT_MELEE, WPN_ROD);
             else if (weapon->base_type == OBJ_STAVES)
                 count_action(CACT_MELEE, WPN_STAFF);
         }
         else
-            count_action(CACT_MELEE, -1);
+            count_action(CACT_MELEE, -1, -1); // unarmed subtype/auxtype
     }
     else
     {
@@ -249,40 +249,23 @@ bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
-    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (ev_margin + (ev - ev_nophase) > 0)
+    if (needs_message)
     {
-        if (needs_message && defender_visible)
+        // TODO: Unify these, placed player_warn_miss here so I can remove
+        // player_attack
+        if (attacker->is_player())
+            player_warn_miss();
+        else
         {
-            mprf("%s momentarily %s out as %s "
-                 "attack passes through %s%s",
-                 defender->name(DESC_THE).c_str(),
-                 defender->conj_verb("phase").c_str(),
-                 atk_name(DESC_ITS).c_str(),
-                 defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+            mprf("%s%s misses %s%s",
+                 atk_name(DESC_THE).c_str(),
+                 evasion_margin_adverb().c_str(),
+                 defender_name(true).c_str(),
                  attack_strength_punctuation(damage_done).c_str());
         }
     }
-    else
-    {
-        if (needs_message)
-        {
-            // TODO: Unify these, placed player_warn_miss here so I can remove
-            // player_attack
-            if (attacker->is_player())
-                player_warn_miss();
-            else
-            {
-                mprf("%s%s misses %s%s",
-                     atk_name(DESC_THE).c_str(),
-                     evasion_margin_adverb().c_str(),
-                     defender_name(true).c_str(),
-                     attack_strength_punctuation(damage_done).c_str());
-            }
-        }
-    }
+    if (defender->is_player())
+        count_action(CACT_DODGE, DODGE_EVASION);
 
     if (attacker != defender && adjacent(defender->pos(), attack_position))
     {
@@ -315,7 +298,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_SHADOWSTAB
            || flavour == AF_DROWN
            || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
+           || flavour == AF_HUNGER
+           || flavour == AF_MIASMATA;
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -365,11 +349,11 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
-            && mons_near(defender->as_monster()) && defender->asleep())
+            && you.see_cell(defender->pos()) && defender->asleep())
         {
             hit_woke_orc = true;
         }
@@ -580,7 +564,7 @@ static void _hydra_devour(monster &victim)
         static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
 
     // will eating this actually fill the player up?
-    const bool filling = !in_good_standing(GOD_GOZAG)
+    const bool filling = !have_passive(passive_t::goldify_corpses)
                           && player_mutation_level(MUT_HERBIVOROUS, false) < 3
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
@@ -1241,21 +1225,8 @@ bool melee_attack::player_aux_test_hit()
     if (to_hit >= evasion || auto_hit)
         return true;
 
-    const int phaseless_evasion =
-        defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
-
-    if (to_hit >= phaseless_evasion && defender_visible)
-    {
-        mprf("Your %s passes through %s as %s momentarily phases out.",
-            aux_attack.c_str(),
-            defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN_SUBJECTIVE).c_str());
-    }
-    else
-    {
-        mprf("Your %s misses %s.", aux_attack.c_str(),
-             defender->name(DESC_THE).c_str());
-    }
+    mprf("Your %s misses %s.", aux_attack.c_str(),
+         defender->name(DESC_THE).c_str());
 
     return false;
 }
@@ -1323,6 +1294,8 @@ bool melee_attack::player_aux_unarmed()
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
+
+    count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
 
@@ -1535,8 +1508,6 @@ void melee_attack::set_attack_verb(int damage)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
-    else if (weapon->base_type == OBJ_RODS)
-        weap_type = WPN_ROD;
     else if (weapon->base_type == OBJ_WEAPONS
              && !is_range_weapon(*weapon))
     {
@@ -2102,6 +2073,9 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
+    if (!adjacent(attacker->pos(), defender->pos()))
+        return;
+
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
     // Spectral weapons can't be corroded (but can take acid damage).
@@ -2141,7 +2115,7 @@ void melee_attack::apply_staff_damage()
     if (!weapon)
         return;
 
-    if (player_mutation_level(MUT_NO_ARTIFICE))
+    if (attacker->is_player() && player_mutation_level(MUT_NO_ARTIFICE))
         return;
 
     if (weapon->base_type != OBJ_STAVES)
@@ -2214,6 +2188,9 @@ void melee_attack::apply_staff_damage()
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
             special_damage_flavour = BEAM_FIRE;
+
+            if (defender->is_player())
+                maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         }
         break;
 
@@ -2298,11 +2275,6 @@ bool melee_attack::player_good_stab()
            || player_mutation_level(MUT_PAWS)
            || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
               && (!weapon || is_melee_weapon(*weapon));
-}
-
-bool melee_attack::attack_ignores_shield(bool verbose)
-{
-    return false;
 }
 
 /* Select the attack verb for attacker
@@ -2475,7 +2447,7 @@ void melee_attack::mons_do_napalm()
     if (defender->res_sticky_flame())
         return;
 
-    if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
+    if (one_chance_in(3))
     {
         if (needs_message)
         {
@@ -2645,7 +2617,7 @@ void melee_attack::mons_apply_attack_flavour()
     int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
-    if (flavour == AF_CHAOS)
+    if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
 
     // Note that if damage_done == 0 then this code won't be reached
@@ -2675,8 +2647,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ROT:
-        if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(damage_done > 5 ? 2 : 1);
+        if (one_chance_in(3))
+            rot_defender(1);
         break;
 
     case AF_FIRE:
@@ -2824,8 +2796,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
         }
 
-        if (one_chance_in(10)
-            || (damage_done > 2 && one_chance_in(3)))
+        if (one_chance_in(3))
         {
             defender->confuse(attacker,
                               1 + random2(3+attacker->get_hit_dice()));
@@ -2833,7 +2804,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_XP:
-        if (one_chance_in(30) || (damage_done > 5 && coinflip()))
+        if (coinflip())
             drain_defender();
         break;
 
@@ -2858,17 +2829,20 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_WASP)
-            paralyse_roll += 3;
+        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
 
-        const int flat_bonus  = attacker->type == MONS_HORNET ? 1 : 0;
         const bool strong_result = one_chance_in(paralyse_roll);
 
-        if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-        else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+        if (strong_result
+            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->paralyse(attacker, roll_dice(1, 3));
+        }
+        else if (strong_result
+                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        {
+            defender->slow_down(attacker, roll_dice(1, 3));
+        }
 
         break;
     }
@@ -2904,7 +2878,7 @@ void melee_attack::mons_apply_attack_flavour()
         mons_do_napalm();
         break;
 
-    case AF_CHAOS:
+    case AF_CHAOTIC:
         chaos_affects_defender();
         break;
 
@@ -3101,6 +3075,35 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_WEAKNESS:
         if (coinflip())
             defender->weaken(attacker, 12);
+        break;
+
+    case AF_MIASMATA:
+        if (coinflip())
+            break;
+
+        if (needs_message)
+        {
+            mprf("The air around %s putrefies into miasma!",
+                 defender_name(false).c_str());
+        }
+
+        // Check for valid terrain, allow renewing miasma-only spots,
+        // don't allow clouds over allies unless they're resistant.
+        for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+        {
+            if (cell_is_solid(*ai) ||
+                cloud_at(*ai) && cloud_at(*ai)->type == CLOUD_MIASMA)
+            {
+                continue;
+            }
+
+            const actor* act = actor_at(*ai);
+            if (act && mons_aligned(attacker, act) && act->res_rotting() < 1)
+                continue;
+
+            place_cloud(CLOUD_MIASMA, *ai, 6 + random2(5), attacker);
+        }
+
         break;
     }
 }
@@ -3591,30 +3594,9 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();
 
-    int frenzy_degree = -1;
-
     // Berserk/mighted monsters get bonus damage.
-    if (as_mon->has_ench(ENCH_MIGHT)
-        || as_mon->has_ench(ENCH_BERSERK))
-    {
+    if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
-    }
-    else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
-        frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
-    else if (as_mon->has_ench(ENCH_ROUSED))
-        frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
-
-    if (frenzy_degree != -1)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        const int orig_damage = damage;
-#endif
-
-        damage = damage * (115 + frenzy_degree * 15) / 100;
-
-        dprf(DIAG_COMBAT, "%s frenzy damage: %d->%d",
-             attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
-    }
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
@@ -3707,5 +3689,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     return you.species == SP_VAMPIRE
            && you.hunger_state < HS_SATIATED
            && !mon->is_summoned()
-           && mons_has_blood(mon->type);
+           && mons_has_blood(mon->type)
+           && !testbits(mon->flags, MF_SPECTRALISED);
 }

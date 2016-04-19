@@ -78,8 +78,7 @@
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
-        || flavour == BEAM_STEAM)
+        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -100,7 +99,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     }
 }
 
-// NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
@@ -153,16 +151,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
-    case BEAM_HELLFIRE:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            hurted = 0;
-            if (doEffects)
-                mpr("You resist completely.");
-        }
-#endif
-        break;
+    case BEAM_DAMNATION:
+        break; // sucks to be you (:
 
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour, hurted);
@@ -338,16 +328,26 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
 /**
  * Handle side-effects for exposure to element other than damage.
+ * Historically this handled item destruction, and melting meltable enchantments. Now it takes care of 3 things:
+ *   - triggering qazlal's elemental adaptations
+ *   - slowing cold-blooded players (draconians, hydra form)
+ *   - putting out fires
+ * This function should be called exactly once any time a player is exposed to the
+ * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG. For the sake of Qazlal's
+ * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when
+ * receiving physical damage. Hybrid damage (brands) should call it twice with appropriate
+ * flavours.
  *
  * @param flavour The beam type.
- * @param strength The strength, which is interpreted as a number of player turns.
+ * @param strength The strength of the attack. Used in different ways for different side-effects.
+ *     For qazlal_elemental_adapt: (i) it is used for the probability of triggering, and (ii) the resulting length of the effect.
  * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
  *                          is cold-blooded and not cold-resistant, slow the
  *                          player 50% of the time.
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
@@ -688,13 +688,16 @@ static void _powered_by_pain(int dam)
 
 static void _maybe_fog(int dam)
 {
+    const int minpiety = have_passive(passive_t::hit_smoke)
+        ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
+        : piety_breakpoint(2); // Xom
+
     const int upper_threshold = you.hp_max / 2;
     const int lower_threshold = upper_threshold
                                 - upper_threshold
-                                  * (you.piety - piety_breakpoint(2))
-                                  / (MAX_PIETY - piety_breakpoint(2));
-    if (you_worship(GOD_DITHMENOS)
-        && you.piety >= piety_breakpoint(2)
+                                  * (you.piety - minpiety)
+                                  / (MAX_PIETY - minpiety);
+    if (have_passive(passive_t::hit_smoke)
         && (dam > 0 && you.form == TRAN_SHADOW
             || dam >= lower_threshold
                && x_chance_in_y(dam - lower_threshold,
@@ -759,11 +762,9 @@ static void _maybe_dismiss(mid_t source)
             // 10% chance to teleport away monsters that harm you
             if (!mon->no_tele() && one_chance_in(10))
             {
-                mprf("The translocation field surrounding you"
-                     " vibrates and %s disappears!",
-                     mon->name(DESC_THE).c_str());
-                place_cloud(CLOUD_TLOC_ENERGY, mon->pos(), 1 + random2(8), 0);
-                monster_teleport(mon, true, true);
+                item_def *amulet = you.slot_item(EQ_AMULET);
+                mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
+                teleport_fineff::schedule(mon);
             }
         }
     }
