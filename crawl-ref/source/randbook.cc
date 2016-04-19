@@ -263,6 +263,40 @@ void theme_book_spells(spschool_flag_type discipline_1,
 }
 
 /**
+ * Try to remove any discipline that's not actually being used by a given
+ * randbook, setting it to the other (used) discipline.
+ *
+ * E.g., if a cj/ne randbook is generated with only cj spells, set discipline_2
+ * to cj as well.
+ *
+ * @param discipline_1[in,out]      The first book discipline.
+ * @param discipline_1[in,out]      The second book discipline.
+ * @param spells[in]                The list of spells the book should contain.
+ */
+void fixup_randbook_disciplines(spschool_flag_type &discipline_1,
+                                spschool_flag_type &discipline_2,
+                                const vector<spell_type> &spells)
+{
+    bool has_d1 = false, has_d2 = false;
+    for (auto spell : spells)
+    {
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        if (disciplines & discipline_1)
+            has_d1 = true;
+        if (disciplines & discipline_2)
+            has_d2 = true;
+    }
+
+    if (!(has_d1 ^ has_d2))
+        return; // both schools or neither used; can't do anything regardless
+
+    if (has_d1)
+        discipline_2 = discipline_1;
+    else
+        discipline_1 = discipline_2;
+}
+
+/**
  * Turn a given book into a themed spellbook.
  *
  * @param book[in,out]      The book in question.
@@ -280,8 +314,8 @@ void build_themed_book(item_def &book, themed_spell_filter filter,
     if (num_spells < 1)
         num_spells = theme_book_size();
 
-    const spschool_flag_type discipline_1 = get_discipline();
-    const spschool_flag_type discipline_2 = get_discipline();
+    spschool_flag_type discipline_1 = get_discipline();
+    spschool_flag_type discipline_2 = get_discipline();
 
     item_source_type agent;
     if (!origin_is_acquirement(book, &agent))
@@ -290,6 +324,7 @@ void build_themed_book(item_def &book, themed_spell_filter filter,
     vector<spell_type> spells;
     theme_book_spells(discipline_1, discipline_2, filter, agent, num_spells,
                       spells);
+    fixup_randbook_disciplines(discipline_1, discipline_2, spells);
     init_book_theme_randart(book, spells);
     name_book_theme_randart(book, discipline_1, discipline_2, owner, subject);
 }
