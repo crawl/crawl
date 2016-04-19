@@ -404,13 +404,11 @@ static int crawl_do_commands(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
         return 0;
-
+    
+    unwind_bool gen(crawl_state.invisible_targeting,
+                    lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
     if (lua_isboolean(ls, 2))
-    {
-        unwind_bool gen(crawl_state.invisible_targeting,
-                        lua_toboolean(ls, 2));
         lua_pop(ls, 1);
-    }
     if (!lua_istable(ls, 1))
     {
         luaL_argerror(ls, 1, "Must be an array");
@@ -429,6 +427,8 @@ static int crawl_do_commands(lua_State *ls)
         commands.push_back(lua_tostring(ls, -1));
         lua_pop(ls, 1);
     }
+
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
     bool first = true;
     command_type firstcmd = CMD_NO_CMD;
