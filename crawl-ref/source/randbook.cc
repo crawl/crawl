@@ -287,7 +287,7 @@ void fixup_randbook_disciplines(spschool_flag_type &discipline_1,
             has_d2 = true;
     }
 
-    if (!(has_d1 ^ has_d2))
+    if (has_d1 == has_d2)
         return; // both schools or neither used; can't do anything regardless
 
     if (has_d1)
