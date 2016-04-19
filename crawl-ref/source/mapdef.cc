@@ -5258,8 +5258,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["make_book_theme_randart"] = true;
-        // make_book_theme_randart requires the following properties:
+        result.props["build_themed_book"] = true;
+        // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
         // spell: <include this spell>, owner:<name of owner>
@@ -5348,7 +5348,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[RANDBK_OWNER_KEY] = owner;
 
         result.base_type = OBJ_BOOKS;
-        // This is changed in make_book_theme_randart.
+        // This is changed in build_themed_book().
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
