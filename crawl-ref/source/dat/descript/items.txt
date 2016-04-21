@@ -103,8 +103,8 @@ A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
 %%%%
 book of air
 
-A primer on the elemental magics of Air. The pages throw off brief sparks as
-they are separated.
+A primer on the elemental magics of Air. Particularly dedicated students have
+found themselves convinced of their own ability to fly, with tragic results.
 %%%%
 book of alchemy
 
@@ -122,7 +122,8 @@ A book of battle songs, containing spells to assist in combat.
 %%%%
 book of beasts
 
-A book of spells focused on the summoning of beasts.
+A book of spells focused on the summoning of beasts. Its pages nip at careless
+readers' fingers.
 %%%%
 book of burglary
 
@@ -142,16 +143,21 @@ schools.
 %%%%
 book of changes
 
-A student's primer to the magic arts of Transmutations.
+A student's primer to the magic arts of Transmutations, filled with lavish
+illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
+beaked tentacles where legs belong. The text is full of reassurances that these
+almost never happen.
 %%%%
 book of clouds
 
-A book of magic spells for creating an assortment of clouds.
+A book of magic spells for creating an assortment of clouds. It's difficult to
+read, as the text is frequently interrupted by descriptions of unusually-shaped
+clouds the author spotted while writing.
 %%%%
 book of conjurations
 
 A book containing an introduction to the destructive magical arts of
-Conjurations, shuddering with barely-contained power.
+Conjurations.
 %%%%
 book of death
 
@@ -160,12 +166,13 @@ grotesque art depicting scenes of disgusting decay.
 %%%%
 book of debilitation
 
-A spellbook containing Hexes to obstruct and impede.
+A spellbook containing Hexes that obstruct and impede, compiled by rebels
+fighting an empire long-since passed.
 %%%%
 book of dreams
 
-A record of the somniloquent utterings of an entranced mystic, describing a
-number of spells reflecting the mystic's dream state.
+The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
+and cryptic digressions to describe spells drawn from the mystic's visions.
 %%%%
 book of enchantments
 
@@ -174,11 +181,14 @@ sparkles and shimmers as the pages are flipped.
 %%%%
 book of envenomations
 
-A book of advanced Poison magic, glowing with a sickly green light.
+A book of advanced Poison magic, glowing with a sickly green light. Mages with
+a tendency to lick their fingers before turning a page will generally quit the
+habit soon after they begin reading this, one way or another.
 %%%%
 book of fire
 
-A book containing advanced spells in the elemental school of Fire.
+A book containing advanced spells in the elemental school of Fire, stolen from
+the secret college of the djinn.
 %%%%
 book of fixed level
 
