@@ -217,7 +217,7 @@ Many prominent spellcasters used this book to begin their arcane studies.
 %%%%
 book of misfortune
 
-A spellbook dedicated to the art of inflicting creative calamaties on one's
+A spellbook dedicated to the art of inflicting creative calamities on one's
 foes. Superstitious wizards claim that the book itself actually absorbs ill
 fortune, and carry it around as a talisman, but the effects of this seem
 subtle at best.
