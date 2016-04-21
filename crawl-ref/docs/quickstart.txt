@@ -109,7 +109,8 @@ There are a few other types of items, but you will discover these as you play.
 
 You will also run into monsters (most of which are represented by letters of
 the alphabet). You can attack a monster by trying to move into the square it
-is occupying.
+is occupying. Pressing Tab will automatically move toward & attack nearby
+monsters.
 
 When you are wounded you lose hit points (displayed near the top of the stats
 list); these return gradually over time through the natural process of
