@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-1702-gd20c6a5)
+Stone Soup 0.18 (up to 0.18-a0-1788-g92de1ac)
 --------------------------------------------
 
 Highlights
@@ -31,6 +31,7 @@ Character
 * Formicids can no longer dig while in most non-Formicid forms.
 * Statue Form now gives somewhat more AC.
 * Early-game attribute loss is recovered significantly more quickly.
+* rElec now reduces damage by two-thirds, rather than three-quarters.
 
 Gods
 ----
@@ -99,6 +100,7 @@ Items
 * A new property can now generate on random artefacts: Fragile, which destroys
   the item when it is removed.
 * Amulets of faith now grant a 25% bonus to piety, not a 33% bonus.
+* Scrolls of enchant armour & enchant weapon no longer remove curses.
 * Potions of ambrosia now bypass clarity.
 * The evocable teleport property +Tele is removed. Rings of teleportation now
   only have the *Tele teleportitis effect.
@@ -106,6 +108,7 @@ Items
 * Potions of degeneration now cause 1-3 damage to every stat.
 * The Damnation card has been renamed to Exile.
 * Poison needles' effects now scale with Throwing skill.
+* Arrows, bolts and sling bullets no longer have brands.
 * Removed items:
   - Amulets of resist mutation, stasis, warding, and corrosion.
   - Wands of cold, fire, frost, magic darts, invisibility, draining, and
@@ -167,10 +170,7 @@ Monsters
   allies in their view, making them cast spells more frequently and with more
   spell power.
 * Hell hogs now have Fireball, replacing Sticky Flame.
-* Giant eyeballs are now normal speed, but must stare thrice to paralyze
-  their targets.
-* Giant eyeballs and eyes of draining now generate with a single random
-  floor monster when spawning normally.
+* Giant eyeballs are now normal speed, but must stare thrice to paralyze.
 * Maurice can now steal from the floor as well as your inventory.
 * Natasha no longer becomes weaker upon revival.
 * Death cobs now drain speed, rather than causing hunger.
