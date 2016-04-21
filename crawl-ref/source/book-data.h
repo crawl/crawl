@@ -107,7 +107,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOLT_OF_DRAINING,
 },
 
-{   // Book of Hinderance
+{   // Book of Misfortune
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_GRAVITAS,
