@@ -210,64 +210,6 @@ xxxx.......xxxx
 xxxx.......xxxx
 ENDMAP
 
-############################################################
-# The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
-#
-NAME:   metal_show
-TAGS:   vaults_room vaults_orient_e
-TAGS:   no_monster_gen no_item_gen no_wall_fixup
-WEIGHT: 2
-COLOUR: M = magenta
-COLOUR: K = magenta
-FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
-MARKER: # = lua:fog_machine{\
-            pow_max = 15, delay_min = 100, delay_max = 150, \
-            size = 2, size_buildup_amnt = 10, \
-            size_buildup_time = 1000 }
-KFEAT:  # = fountain_blood
-# the talent:
-: if crawl.one_chance_in(10) then
-NSUBST: M = M / K.
-: else
-SUBST:  M = .
-: end
-KMONS:  K = patrolling hell knight
-KMONS:  M = patrolling Margery
-# the staff-- manager and bartender:
-KMONS:  S = human; robe
-# the bouncers:
-KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
-# the fans:
-SUBST:  F = 011112223334455679.........
-SUBST:  F = 011112223333344569.........
-MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
-MONS:   ghoul / necrophage / vampire
-MONS:   wizard / necromancer
-MONS:   big kobold / kobold demonologist
-MONS:   w:5 deep elf knight / w:5 deep elf archer / deep elf mage
-MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
-        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
-        Wiglaf / Norris / goblin
-KITEM:  ! = any potion / potion of mutation, \
-            any potion / potion of degeneration, any potion
-KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
-MAP
-vvvvvvvvvvvvv....
-v!+.MMMM.+S$v....
-v!v.KKKK.v$$vF...
-vvvv#MM#vvvvvFF..
-v..FFFFFFvFFvFF..
-v!mFvFFvFvFF+BF..
-v!mFFFFFFvFFvFF..
-v!mFFFFFFvFF+BF..
-v!mFvFFvFvFFvFF..
-v!mFFFFFFvFF+BF..
-vSmFFFFFFvFFvFF..
-vvvvvBBvvvFFvFF..
-vFFFFFFFFFFFvF...
-vvvvvvvvvvvvv....
-ENDMAP
-
 NAME:    v_pattern_1
 TAGS:    luniq_lattice
 : vaults_room_setup(_G, ".", "small")
