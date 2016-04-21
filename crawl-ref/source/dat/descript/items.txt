@@ -202,11 +202,6 @@ book of geomancy
 
 A book containing basic spells involving the element of Earth.
 %%%%
-book of hinderance
-
-A spellbook dedicated to the art of slowing the minds and bodies of one's
-foes.
-%%%%
 book of ice
 
 A book of advanced magical spells using the element of Ice.
@@ -219,6 +214,13 @@ book of minor magic
 
 A spellbook containing a variety of simple but useful magical incantations.
 Many prominent spellcasters used this book to begin their arcane studies.
+%%%%
+book of misfortune
+
+A spellbook dedicated to the art of inflicting creative calamaties on one's
+foes. Superstitious wizards claim that the book itself actually absorbs ill
+fortune, and carry it around as a talisman, but the effects of this seem
+subtle at best.
 %%%%
 book of necromancy
 

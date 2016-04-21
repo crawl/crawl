@@ -120,7 +120,7 @@ int book_rarity(book_type which_book)
     switch (which_book)
     {
     case BOOK_MINOR_MAGIC:
-    case BOOK_HINDERANCE:
+    case BOOK_MISFORTUNE:
     case BOOK_CANTRIPS:
         return 1;
 

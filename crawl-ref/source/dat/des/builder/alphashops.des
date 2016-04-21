@@ -100,7 +100,7 @@
        "glaive | gold dragon armour | grand grimoire | great mace | " ..
        "greatsling | great sword | pair of gloves"
 
-      elseif s == "H" then i = "amulet of harm | book of hinderance | halberd | " ..
+      elseif s == "H" then i = "amulet of harm | halberd | " ..
        "hand axe | hand crossbow | hunting sling | wand of hasting | " ..
        "potion of heal wounds | potion of haste | scroll of holy word | " ..
        "wand of heal wounds | manual of hexes | hat | helmet"
@@ -123,7 +123,7 @@
       elseif s == "M" then i = "manual of maces & flails | meat ration | " ..
        "book of minor magic | morningstar | mottled dragon armour | mace | " ..
        "potion of magic | ring of magical power | potion of mutation | " ..
-       "potion of might | scroll of magic mapping | " ..
+       "potion of might | scroll of magic mapping | book of misfortune | " ..
        "book of maledictions | amulet of magic regeneration"
 
       elseif s == "N" then i = "book of necromancy | naga barding | " ..
