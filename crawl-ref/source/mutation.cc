@@ -1717,6 +1717,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
 
+            if (you.temp_mutation[mutat] >= you.mutation[mutat])
+                continue; // don't attempt to cure transient mutations
+
             break;
         }
     }
