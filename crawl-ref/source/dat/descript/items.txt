@@ -150,7 +150,7 @@ almost never happen.
 %%%%
 book of clouds
 
-A book of magic spells for creating an assortment of clouds. It's difficult to
+A book of magic spells for creating an assortment of clouds. It is difficult to
 read, as the text is frequently interrupted by descriptions of unusually-shaped
 clouds the author spotted while writing.
 %%%%
