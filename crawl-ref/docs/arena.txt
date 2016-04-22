@@ -45,13 +45,13 @@ Additionally, you can specify the monsters by a place in the dungeon, in
 which case a random monster appropriate for that place will be chosen.
 For example:
 
-    crawl -arena "2 place:Lair:7 v 3 place:Vault:4"
+    crawl -arena "2 place:Lair:7 v 3 place:Vaults:4"
 
 will choose two random monsters from the 7th level of the Lair and pit them
 against three random monsters from the 4th level of the Vaults.
 The branches need to use the official abbreviations also used e.g. in the
-overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoal, Slime, Snake, Hive,
-Vault, Blade, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar, Zot.
+overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoals, Slime, Snake,
+Vaults, Depths, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar, Zot.
 
 To let the game pick monsters completely at random, use "random" as a
 monster name. If you use the tag random_uniques all monsters thus chosen
