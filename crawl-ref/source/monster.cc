@@ -2266,9 +2266,18 @@ item_def *monster::shield() const
     return mslot_item(MSLOT_SHIELD);
 }
 
+/**
+ * Does this monster have a proper name?
+ *
+ * @return  Whether the monster has a proper name, e.g. "Rupert" or
+ *          "Bogric the orc warlord". Should not include 'renamed' vault
+ *          monsters, e.g. "decayed bog mummy" or "bag of meat".
+ */
 bool monster::is_named() const
 {
-    return !mname.empty() || mons_is_unique(type);
+    return mons_is_unique(type)
+           || (!mname.empty() && !testbits(flags, MF_NAME_ADJECTIVE |
+                                                  MF_NAME_REPLACE));
 }
 
 bool monster::has_base_name() const
