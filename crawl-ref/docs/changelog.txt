@@ -31,9 +31,7 @@ Character
 * Formicids can no longer dig while in most non-Formicid forms.
 * Statue Form now gives somewhat more AC.
 * Early-game attribute loss is recovered significantly more quickly.
-* rElec now reduces damage by one-half, rather than two-thirds.
-* Poison needles shot from a blowgun now deliver a quantity of poison heavily
-  based on Throwing skill and weapon enchantment.
+* rElec now reduces damage by two-thirds, rather than three-quarters.
 
 Gods
 ----
@@ -109,7 +107,7 @@ Items
 * Potions of cure mutation are slightly more common.
 * Potions of degeneration now cause 1-3 damage to every stat.
 * The Damnation card has been renamed to Exile.
-* Poison needles' effects now scale with Throwing skill.
+* Poison needles' effects scale with Throwing skill and and weapon enchantment.
 * Arrows, bolts and sling bullets no longer have brands.
 * Removed items:
   - Amulets of resist mutation, stasis, warding, and corrosion.
