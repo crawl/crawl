@@ -2025,6 +2025,7 @@ NAME:   pubby_orc_utopia
 ORIENT: encompass
 TAGS:   patrolling no_item_gen no_monster_gen
 PLACE:  Orc:$
+WEIGHT: 5
 SUBST:  $ = $:1 .:4
 MONS:   orc w:8 / orc warrior w:1 / nothing w:1
 MONS:   orc priest, orc warrior, orc warrior band
