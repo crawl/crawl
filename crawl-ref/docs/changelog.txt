@@ -32,7 +32,7 @@ Character
 * Statue Form now gives somewhat more AC.
 * Early-game attribute loss is recovered significantly more quickly.
 * rElec now reduces damage by one-half, rather than two-thirds.
-* Poison needles shot from a blowgun now delivery a quantity of poison heavily
+* Poison needles shot from a blowgun now deliver a quantity of poison heavily
   based on Throwing skill and weapon enchantment.
 
 Gods
