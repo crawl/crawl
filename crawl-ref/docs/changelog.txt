@@ -31,7 +31,9 @@ Character
 * Formicids can no longer dig while in most non-Formicid forms.
 * Statue Form now gives somewhat more AC.
 * Early-game attribute loss is recovered significantly more quickly.
-* rElec now reduces damage by two-thirds, rather than three-quarters.
+* rElec now reduces damage by one-half, rather than two-thirds.
+* Poison needles shot from a blowgun now delivery a quantity of poison heavily
+  based on Throwing skill and weapon enchantment.
 
 Gods
 ----
