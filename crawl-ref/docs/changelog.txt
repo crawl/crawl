@@ -107,7 +107,7 @@ Items
 * Potions of cure mutation are slightly more common.
 * Potions of degeneration now cause 1-3 damage to every stat.
 * The Damnation card has been renamed to Exile.
-* Poison needles' effects scale with Throwing skill and and weapon enchantment.
+* Poison needles' effects scale with Throwing skill and weapon enchantment.
 * Arrows, bolts and sling bullets no longer have brands.
 * Removed items:
   - Amulets of resist mutation, stasis, warding, and corrosion.
