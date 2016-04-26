@@ -464,30 +464,37 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             // message first
             if (showMsgs)
             {
+                const string item_name = item.name(DESC_YOUR);
                 switch (special)
                 {
                 case SPWPN_FLAMING:
-                    mpr("It bursts into flame!");
+                    mprf("%s bursts into flame!", item_name.c_str());
                     break;
 
                 case SPWPN_FREEZING:
-                    mpr(is_range_weapon(item) ? "It is covered in frost."
-                                              : "It glows with a cold blue light!");
+                   mprf("%s %s.", item_name.c_str(),
+                        is_range_weapon(item) ?
+                            "is covered in frost" :
+                            "glows with a cold blue light!");
                     break;
 
                 case SPWPN_HOLY_WRATH:
-                    mpr("It softly glows with a divine radiance!");
+                    mprf("%s softly glows with a divine radiance!",
+                         item_name.c_str());
                     break;
 
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.pos()))
-                        mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
+                    {
+                        mprf(MSGCH_SOUND,
+                             "You hear the crackle of electricity.");
+                    }
                     else
                         mpr("You see sparks fly.");
                     break;
 
                 case SPWPN_VENOM:
-                    mpr("It begins to drip with poison!");
+                    mprf("%s begins to drip with poison!", item_name.c_str());
                     break;
 
                 case SPWPN_PROTECTION:
@@ -509,7 +516,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_VAMPIRISM:
                     if (you.species == SP_VAMPIRE)
                         mpr("You feel a bloodthirsty glee!");
-                    else if (you.undead_state() == US_ALIVE && !you_foodless())                        mpr("You feel a dreadful hunger.");
+                    else if (you.undead_state() == US_ALIVE && !you_foodless())
+                        mpr("You feel a dreadful hunger.");
                     else
                         mpr("You feel an empty sense of dread.");
                     break;
@@ -520,15 +528,21 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
-                        mprf("Pain shudders through your %s!", your_arm.c_str());
+                    {
+                        mprf("Pain shudders through your %s!",
+                             your_arm.c_str());
+                    }
                     else
-                        mprf("A searing pain shoots up your %s!", your_arm.c_str());
+                    {
+                        mprf("A searing pain shoots up your %s!",
+                             your_arm.c_str());
+                    }
                     break;
                 }
 
                 case SPWPN_CHAOS:
-                    mpr("It is briefly surrounded by a scintillating aura "
-                        "of random colours.");
+                    mprf("%s is briefly surrounded by a scintillating aura of "
+                         "random colours.", item_name.c_str());
                     break;
 
                 case SPWPN_PENETRATION:
@@ -545,7 +559,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 }
 
                 case SPWPN_REAPING:
-                    mpr("It is briefly surrounded by shifting shadows.");
+                    mprf("%s is briefly surrounded by shifting shadows.",
+                         item_name.c_str());
                     break;
 
                 case SPWPN_ANTIMAGIC:
