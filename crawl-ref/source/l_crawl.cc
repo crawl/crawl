@@ -404,7 +404,7 @@ static int crawl_do_commands(lua_State *ls)
 {
     if (!_check_can_do_command(ls))
         return 0;
-    
+
     unwind_bool gen(crawl_state.invisible_targeting,
                     lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
     if (lua_isboolean(ls, 2))
@@ -417,7 +417,7 @@ static int crawl_do_commands(lua_State *ls)
     vector<string> commands;
 
     lua_pushnil(ls);
-    while(lua_next(ls, 1))
+    while (lua_next(ls, 1))
     {
         if (!lua_isstring(ls, -1))
         {
