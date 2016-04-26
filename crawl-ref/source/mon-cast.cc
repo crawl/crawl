@@ -4872,18 +4872,21 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 {
     if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
-        ASSERT(mons->type >= MONS_SERPENT_OF_HELL);
-        ASSERT(mons->type <= MONS_SERPENT_OF_HELL_TARTARUS);
+        monster_type serpent_type = mons_is_zombified(mons)
+            ? mons->base_monster
+            : mons->type;
+        ASSERT(serpent_type >= MONS_SERPENT_OF_HELL);
+        ASSERT(serpent_type <= MONS_SERPENT_OF_HELL_TARTARUS);
 
 #if TAG_MAJOR_VERSION > 34
-        const int idx = mons->type - MONS_SERPENT_OF_HELL;
+        const int idx = serpent_type - MONS_SERPENT_OF_HELL;
 #else
         const int idx =
-            mons->type == MONS_SERPENT_OF_HELL          ? 0
-          : mons->type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
-          : mons->type == MONS_SERPENT_OF_HELL_DIS      ? 2
-          : mons->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
-          :                                               -1;
+            serpent_type == MONS_SERPENT_OF_HELL          ? 0
+          : serpent_type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
+          : serpent_type == MONS_SERPENT_OF_HELL_DIS      ? 2
+          : serpent_type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
+          :                                                 -1;
 #endif
         ASSERT(idx < (int)ARRAYSZ(serpent_of_hell_breaths));
         ASSERT(idx >= 0);
