@@ -5180,7 +5180,7 @@ bool bolt::has_saving_throw() const
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
-    case BEAM_ENSLAVE_SOUL:     // has a different saving throw
+    case BEAM_ENSLAVE_SOUL:
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_MALIGN_OFFERING:
