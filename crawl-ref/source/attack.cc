@@ -1301,7 +1301,6 @@ int attack::calc_base_unarmed_damage()
 
     int damage = get_form()->get_base_unarmed_damage();
 
-    // Claw damage only applies for bare hands.
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
 
