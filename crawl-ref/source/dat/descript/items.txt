@@ -292,6 +292,16 @@ A box filled with the bizarre leftovers of a depraved wizard's magical
 experimentations. Opening it might set loose a friendly mutant beast: bizarre
 creatures, each with their own combination of traits. Increased skill with
 Evocations will allow stronger beasts to be released.
+
+There are six known traits:
+ * Bat beasts fly and move very quickly, but erratically.
+ * Fire beasts resist and breathe fire.
+ * Ox beasts resist cold, are armoured with thick fur, and trample foes.
+ * Shock beasts resist and can transform into electricity to attack.
+ * Sting beasts resist poison and have a reaching poison-tail attack.
+ * Weird beasts see invisible creatures and attack with constricting tentacles.
+
+As far as anyone knows, all beasts have exactly two of these traits.
 %%%%
 bread ration
 
