@@ -260,10 +260,11 @@ skill.
 %%%%
 Enslave Soul ability
 
-Marks a monster's soul as ripe for the taking. Intelligent living, demonic and
-holy monsters can be targeted, as long as they are relatively uninjured. The
-duration of the mark is dependent on Invocations skill. If the monster dies
-while still marked, its soul will become yours.
+Marks a monster's soul as ripe for the taking. Intelligent living, holy and
+demonic monsters can be targeted (excepting most lords of Pandemonium), as
+long as they are relatively uninjured. The duration of the mark is dependent on
+Invocations skill. If the monster dies while still marked, its soul will become
+yours.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
