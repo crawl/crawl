@@ -5356,6 +5356,7 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
         {
             case BF_BAT:
                 mons.props[MON_SPEED_KEY] = mons.speed * 2;
+                mons.calc_speed();
                 break;
             case BF_FIRE:
                 mons.spells.emplace_back(SPELL_FIRE_BREATH, 60,
