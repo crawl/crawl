@@ -296,10 +296,10 @@ Evocations will allow stronger beasts to be released.
 There are six known traits:
  * Bat beasts fly and move very quickly, but erratically.
  * Fire beasts resist and breathe fire.
- * Ox beasts resist cold, are armoured with thick fur, and trample foes.
- * Shock beasts resist and can transform into electricity to attack.
+ * Ox beasts resist cold, are armoured with thick fur, and can knock back foes.
+ * Shock beasts resist electricity and can transform into living lightning.
  * Sting beasts resist poison and have a reaching poison-tail attack.
- * Weird beasts see invisible creatures and attack with constricting tentacles.
+ * Weird beasts can see invisible creatures and attack with constricting tentacles.
 
 As far as anyone knows, all beasts have exactly two of these traits.
 %%%%
