@@ -299,7 +299,7 @@ There are six known traits:
  * Ox beasts resist cold, are armoured with thick fur, and can knock back foes.
  * Shock beasts resist electricity and can transform into living lightning.
  * Sting beasts resist poison and have a reaching poison-tail attack.
- * Weird beasts can see invisible creatures and attack with constricting tentacles.
+ * Weird beasts can see invisible and attack with constricting tentacles.
 
 As far as anyone knows, all beasts have exactly two of these traits.
 %%%%
