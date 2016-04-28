@@ -531,6 +531,15 @@ void dec_penance(god_type god, int val)
                 add_daction(DACT_SLIME_NEW_ATTEMPT);
             else if (god == GOD_PAKELLAS)
                 pakellas_id_device_charges();
+
+            if (have_passive(passive_t::friendly_plants)
+                && env.forest_awoken_until)
+            {
+                // XXX: add a dact here & on-join to handle offlevel
+                // awakened forests?
+                for (monster_iterator mi; mi; ++mi)
+                     mi->del_ench(ENCH_AWAKEN_FOREST);
+            }
         }
         else if (god == GOD_PAKELLAS)
         {

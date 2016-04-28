@@ -5865,6 +5865,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_AWAKEN_FOREST:
+        if (have_passive(passive_t::friendly_plants))
+        {
+            if (you.can_see(*mons))
+            {
+                mprf("%s commands the forest to attack, but nothing happens.",
+                     mons->name(DESC_THE).c_str());
+            }
+            return;
+        }
+
         duration = 50 + random2(mons->spell_hd(spell_cast) * 20);
 
         mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
@@ -7633,8 +7643,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_AWAKEN_FOREST:
         return mon->has_ench(ENCH_AWAKEN_FOREST)
                || env.forest_awoken_until > you.elapsed_time
-               || !forest_near_enemy(mon)
-               || you_worship(GOD_FEDHAS);
+               || !forest_near_enemy(mon);
 
     case SPELL_DEATHS_DOOR:
         // The caster may be an (undead) enslaved soul.
