@@ -2822,7 +2822,11 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
             continue;
 
         if (mons_atts_aligned(castatt, victim->temp_attitude()))
+        {
+            if (victim->is_player() && !(caster->holiness() & MH_DEMONIC))
+                return false; // never glaciate the player! except demons
             friendly += victim->get_experience_level();
+        }
         else
             enemy += victim->get_experience_level();
     }
@@ -7819,6 +7823,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_WARNING_CRY:
         return friendly;
 
+    case SPELL_CONJURE_BALL_LIGHTNING:
+        return friendly
+               && (you.res_elec() <= 0 || you.hp <= 50)
+               && !(mon->holiness() & MH_DEMONIC); // rude demons
+
     case SPELL_SEAL_DOORS:
         return friendly || !_seal_doors_and_stairs(mon, true);
 
@@ -7878,7 +7887,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                   && !player_res_torment(false)
                   && !player_kiku_res_torment();
     case SPELL_CHAIN_LIGHTNING:
-        return !_trace_los(mon, _elec_vulnerable);
+        return !_trace_los(mon, _elec_vulnerable)
+                || you.visible_to(mon) && friendly; // don't zap player
     case SPELL_CHAIN_OF_CHAOS:
         return !_trace_los(mon, _dummy_vulnerable);
     case SPELL_CORRUPTING_PULSE:
@@ -7888,7 +7898,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_TORNADO:
         return mon->has_ench(ENCH_TORNADO)
                || mon->has_ench(ENCH_TORNADO_COOLDOWN)
-               || !_trace_los(mon, _tornado_vulnerable);
+               || !_trace_los(mon, _tornado_vulnerable)
+               || you.visible_to(mon) && friendly // don't cast near the player
+                  && !(mon->holiness() & MH_DEMONIC); // demons are rude
 
     case SPELL_ENGLACIATION:
         return !foe
