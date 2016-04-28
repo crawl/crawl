@@ -701,11 +701,13 @@ quest is complete.
 %%%%
 pair of boots
 
-A pair of boots.
+A pair of boots. They are worn on the feet, and cover all but the largest
+hooves and talons.
 %%%%
 pair of gloves
 
-A pair of gloves.
+A pair of gloves. They are worn on the hands, and cover all but the largest
+claws.
 %%%%
 pearl dragon armour
 
