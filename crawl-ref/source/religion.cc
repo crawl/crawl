@@ -1028,7 +1028,7 @@ static bool _give_pakellas_gift()
 
     bool success = false;
     object_class_type basetype = OBJ_UNASSIGNED;
-    int subtype;
+    int subtype = -1;
 
     if (you.piety >= piety_breakpoint(0)
         && you.num_total_gifts[GOD_PAKELLAS] == 0)
@@ -1084,6 +1084,7 @@ static bool _give_pakellas_gift()
         success = acquirement(basetype, you.religion);
     else
     {
+        ASSERT(subtype >= 0);
         int thing_created = items(true, basetype, subtype, 1, 0,
                                   you.religion);
 
