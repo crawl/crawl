@@ -150,6 +150,9 @@ public:
 // The last line above is really just to eat a semicolon; template
 // substitution of enum_bitfield would have already failed.
 
+// Work around MSVC's idiosyncratic interpretation of __VA_ARGS__ as a
+// single macro argument: http://stackoverflow.com/questions/5134523
+#define EXPANDMACRO(x) x
 /**
  * Define fieldT as a bitfield of the enum flagT, and make bitwise
  * operators on flagT yield a fieldT.
@@ -176,8 +179,8 @@ public:
  */
 #define DEF_BITFIELD(fieldT, ...) \
     typedef enum_bitfield<__VA_ARGS__> fieldT; \
-    DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, )
-// The comma suppresses "ISO C99 requires rest arguments to be used"
+    EXPANDMACRO(DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, ))
+// The trailing comma suppresses "ISO C99 requires rest arguments to be used"
 
 enum lang_t
 {
