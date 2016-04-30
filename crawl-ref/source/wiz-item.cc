@@ -178,7 +178,10 @@ void wizard_create_spec_object()
         dummy.position = you.pos();
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.num_heads = prompt_for_int("How many heads? ", false);
+        {
+            dummy.num_heads
+                =  max(1, min(27, prompt_for_int("How many heads? ", false)));
+        }
 
         if (!place_monster_corpse(dummy, false, true))
         {
