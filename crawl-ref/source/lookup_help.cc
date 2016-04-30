@@ -252,18 +252,7 @@ public:
 static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
     vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
-
-    if (key_matches.size() == 1)
-        return key_matches;
-    else if (key_matches.size() > 52)
-        return key_matches;
-
     vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
-
-    if (key_matches.empty() && body_matches.empty())
-        return key_matches;
-    else if (key_matches.empty() && body_matches.size() == 1)
-        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
     vector<string> tmp = key_matches;
