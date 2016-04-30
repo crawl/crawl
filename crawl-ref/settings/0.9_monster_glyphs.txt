@@ -5,11 +5,9 @@
 ###########################
 
 # demons
-mon_glyph += hairy devil : lightred 4
 mon_glyph += smoke demon : lightgray 3
 mon_glyph += tormentor : yellow 3
-mon_glyph += blue devil : blue 3
-mon_glyph += iron devil : cyan 3
+mon_glyph += rust devil : cyan 3
 mon_glyph += orange demon : lightred 3
 mon_glyph += shadow demon : magenta 3
 mon_glyph += soul eater : magenta 2
