@@ -1612,7 +1612,7 @@ can shoot it far, zapping anyone who comes into range.
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
-give off an eerie green glow.
+give off an eerie red glow.
 %%%%
 lorocyproca
 
