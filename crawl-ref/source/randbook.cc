@@ -1203,14 +1203,16 @@ void acquire_themed_randbook(item_def &book, int agent)
     ASSERT(size);
 
     // XXX: we could cache this...
-    const spschool_flag_type discipline_1
+    spschool_flag_type discipline_1
         = _choose_randbook_discipline(possible_spells, agent);
-    const spschool_flag_type discipline_2
+    spschool_flag_type discipline_2
         = _choose_randbook_discipline(possible_spells, agent);
 
     vector<spell_type> spells;
     _choose_themed_randbook_spells(possible_spells, discipline_1, discipline_2,
                                    size, spells);
+
+    fixup_randbook_disciplines(discipline_1, discipline_2, spells);
 
     // Acquired randart books have a chance of being named after the player.
     const string owner = agent == AQ_SCROLL && one_chance_in(12) ?
