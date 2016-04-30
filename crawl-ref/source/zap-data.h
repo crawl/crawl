@@ -1167,7 +1167,7 @@ static const zap_info zap_data[] =
     ZAP_DAZZLING_SPRAY,
     "spray of energy",
     50,
-    new calcdice_calculator<2, 8, 1, 4>,
+    new calcdice_calculator<2, 6, 1, 4>,
     new tohit_calculator<9, 1, 7>,
     new dicedef_calculator<3, 5, 1, 17>,
     new tohit_calculator<16, 1, 22>,
