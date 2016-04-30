@@ -16,7 +16,6 @@
 #include "prompt.h"
 #include "spl-util.h"
 
-static void _adjust_item();
 static void _adjust_spell();
 static void _adjust_ability();
 
@@ -27,7 +26,7 @@ void adjust()
     const int keyin = toalower(get_ch());
 
     if (keyin == 'i')
-        _adjust_item();
+        adjust_item();
     else if (keyin == 's')
         _adjust_spell();
     else if (keyin == 'a')
@@ -38,27 +37,28 @@ void adjust()
         canned_msg(MSG_HUH);
 }
 
-static void _adjust_item()
+void adjust_item(int from_slot)
 {
-    int from_slot, to_slot;
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
     }
 
-    from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
-    if (prompt_failed(from_slot))
-        return;
+    if (from_slot == -1)
+    {
+        from_slot = prompt_invent_item("Adjust which item?", MT_INVLIST, -1);
+        if (prompt_failed(from_slot))
+            return;
 
-    mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+    }
 
-    to_slot = prompt_invent_item("Adjust to which letter? ",
-                                 MT_INVLIST,
-                                 -1,
-                                 false,
-                                 false);
+    const int to_slot = prompt_invent_item("Adjust to which letter? ",
+                                           MT_INVLIST,
+                                           -1,
+                                           false,
+                                           false);
     if (to_slot == PROMPT_ABORT
         || from_slot == to_slot)
     {
@@ -179,30 +179,7 @@ static void _adjust_ability()
         return;
     }
 
-    const int index2 = letter_to_index(keyin);
-    if (index1 == index2)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    mprf_nocap("%c - %s", static_cast<char>(keyin),
-         ability_name(talents[selected].which));
-
-    for (unsigned int i = 0; i < talents.size(); ++i)
-    {
-        if (talents[i].hotkey == keyin)
-        {
-            mprf_nocap("%c - %s", old_key, ability_name(talents[i].which));
-            break;
-        }
-    }
-
-
-    // Swap references in the letter table.
-    ability_type tmp = you.ability_letter_table[index2];
-    you.ability_letter_table[index2] = you.ability_letter_table[index1];
-    you.ability_letter_table[index1] = tmp;
+    swap_ability_slots(index1, letter_to_index(keyin));
 }
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
@@ -244,7 +221,17 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     else // just to make sure
         you.redraw_quiver = true;
 
-    // Remove the moved items from last_drop if they're there.
-    you.last_pickup.erase(to_slot);
-    you.last_pickup.erase(from_slot);
+    // Swap the moved items in last_pickup if they're there.
+    if (!you.last_pickup.empty())
+    {
+        auto &last_pickup = you.last_pickup;
+        int to_count = lookup(last_pickup, to_slot, 0);
+        int from_count = lookup(last_pickup, from_slot, 0);
+        last_pickup.erase(to_slot);
+        last_pickup.erase(from_slot);
+        if (from_count > 0)
+            last_pickup[to_slot] = from_count;
+        if (to_count > 0)
+            last_pickup[from_slot] = to_count;
+    }
 }

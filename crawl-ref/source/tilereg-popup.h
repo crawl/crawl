@@ -9,10 +9,10 @@ class PopupRegion : public MenuRegion
 public:
     PopupRegion(ImageManager *im, FontWrapper *entry);
 
-    virtual int handle_mouse(MouseEvent &event);
-    virtual void render();
-    virtual void run();
-    virtual void place_entries();
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual void render() override;
+    virtual void run() override;
+    virtual void place_entries() override;
 
     // get the value returned by the popup
     int get_retval();

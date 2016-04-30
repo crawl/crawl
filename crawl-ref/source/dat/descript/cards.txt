@@ -47,7 +47,7 @@ The card depicts a figure silhouetted against the moon, wailing in despair.
 Drawing this card emits the wail of the Banshee, which instils fear and drains
 life from nearby creatures.
 %%%%
-Damnation card
+Exile card
 
 The card depicts ceaseless hands from a yawning portal overcoming a panicked
 figure.

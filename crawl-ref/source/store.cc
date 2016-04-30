@@ -394,7 +394,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     ASSERT(other.type != SV_NONE || type == SV_NONE);
 
     // NOTE: We don't bother checking SFLAG_CONST_VAL, since the
-    // asignment operator is used when swapping two elements.
+    // assignment operator is used when swapping two elements.
     if (!(flags & SFLAG_UNSET))
     {
         if (flags & SFLAG_CONST_TYPE)
@@ -1422,17 +1422,8 @@ CrawlStoreValue& CrawlHashTable::get_value(const string &key)
     init_hash_map();
 
     ACCESS(key);
-    iterator i = hash_map->find(key);
-
-    if (i == hash_map->end())
-    {
-        (*hash_map)[key]     = CrawlStoreValue();
-        CrawlStoreValue &val = (*hash_map)[key];
-
-        return val;
-    }
-
-    return i->second;
+    // Inserts CrawlStoreValue() if the key was not found.
+    return (*hash_map)[key];
 }
 
 const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
@@ -1469,7 +1460,7 @@ bool CrawlHashTable::empty() const
     return hash_map->empty();
 }
 
-void CrawlHashTable::erase(const string key)
+void CrawlHashTable::erase(const string& key)
 {
     ASSERT_VALIDITY();
     init_hash_map();

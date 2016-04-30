@@ -62,9 +62,9 @@ LUAFN(debug_goto_place)
         if (bind_entrance != -1)
             brentry[you.where_are_you].depth = bind_entrance;
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        luaL_error(ls, err.c_str());
+        luaL_error(ls, err.what());
     }
     return 0;
 }
@@ -172,19 +172,17 @@ LUAFN(debug_bouncy_beam)
 // If menv[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
-    for (int il = 0; il < MAX_MONSTERS; il++)
-    {
-        if (menv[il].type == MONS_NO_MONSTER)
-            // At least one empty space in menv
+    // At least one empty space in menv
+    for (const auto &mons : menv)
+        if (mons.type == MONS_NO_MONSTER)
             return 0;
-    }
 
     mprf(MSGCH_DIAGNOSTICS, "menv[] is full, dismissing non-near monsters");
 
     // menv[] is full
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
             continue;
 
         mi->flags |= MF_HARD_RESET;

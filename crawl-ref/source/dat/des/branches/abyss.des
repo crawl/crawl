@@ -110,7 +110,7 @@ WEIGHT:  5
 KPROP:   T = no_tele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
-MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:    demonic plant
 KFEAT:   X : stone_arch
 MAP
 nnn nnn
@@ -308,8 +308,8 @@ TAGS:   no_monster_gen patrolling
 MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
-MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
-MONS:   worker ant w:40 / spider w:20 / vampire mosquito
+MONS:   kobold demonologist, deep elf mage / orc sorcerer w:7
+MONS:   worker ant w:40 / wasp w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -723,11 +723,10 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         wand of lightning / wand of draining / wand of slowing w:5 / \
-         wand of confusion w:5 / wand of fire w:1 / wand of cold w:1 / \
-         ring mail good_item / chain mail good_item w:12 / shield / \
-         spear good_item / trident good_item / any weapon w:12 / \
-         any w:2
+         wand of lightning / wand of acid / wand of slowing w:5 / \
+         wand of confusion w:5 / ring mail good_item / \
+         chain mail good_item w:12 / shield / spear good_item / \
+         trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1053,7 +1052,7 @@ ENDMAP
 NAME:  abyss_rune_water_cross
 TAGS:  abyss_rune unrand patrolling
 MONS:  smoke demon, drowned soul
-KMONS: O = octopode crusher
+KMONS: O = merfolk impaler
 KITEM: O = abyssal rune of Zot
 KFEAT: O = shallow_water
 MAP
@@ -1424,11 +1423,10 @@ KMONS:   e = crystal guardian
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
-         club w:5 / hammer w:5 / stone q:1 / needle q:1 ego:confusion / \
+         club w:5 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
-         wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
-         whip not_cursed w:2 / hat not_cursed mundane w:5
+KITEM:   13e = wand of slowing / wand of confusion / wand of flame w:5 / \
+         plain deck w:5 / whip not_cursed w:2 / hat not_cursed mundane w:5
 KITEM:   f = abyssal rune of zot mimic
 KITEM:   g = abyssal rune of zot
 SHUFFLE: 14 / 23
@@ -1648,30 +1646,27 @@ ENDMAP
 
 NAME: nicolae_abyss_rune_containment_breach
 TAGS: abyss_rune unrand patrolling no_monster_gen no_item_gen no_trap_gen
-SUBST: N = nn., n = nnnnnc
+SUBST: n = nnnnnnc
 KITEM: O = abyssal rune of zot
 KMONS: Om = spatial maelstrom
 MAP
-       ......
-     ..........
-   ....NNNNNN....
-  ...NNnnnnnnNN...
-  ..NnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-..NnnnnnnNNnnnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnN.mm.NnnnnN..
-..NnnnnN.Om.NnnnnN..
-..NnnnnnN..NnnnnnN..
-..NnnnnnnNNnnnnnnN..
- ..NnnnnnnnnnnnnN..
- ..NnnnnnnnnnnnnN..
-  ..NnnnnnnnnnnN..
-  ...NNnnnnnnNN...
-   ....NNNNNN....
-     ..........
-       ......
+.................
+.................
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnmOmnnnnn..
+..nnnnnmmmnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+..nnnnnnnnnnnnn..
+.................
+.................
 ENDMAP
 
 ###############################################################################
@@ -1706,7 +1701,7 @@ NAME:  evilmike_abyss_exit_plants
 TAGS:  abyss_exit
 SUBST: 1 = 112.
 SUBST: . = .:100 1
-MONS:  plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:  demonic plant
 MONS:  bush
 : init_abyss_exit(_G, "O")
 MAP
@@ -1859,7 +1854,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_10
 TAGS:  abyss_exit
 SUBST: X = x.., x = xxxcv
-MONS:  brain worm / w:5 neqoxec
+MONS:  neqoxec
 : init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX
@@ -1896,8 +1891,7 @@ ENDMAP
 # Technically possible for this one to require dig, but pretty unlikely.
 NAME:  evilmike_abyss_exit_12
 TAGS:  abyss_exit
-SUBST: X = x., x = xxx++1
-MONS:  w:2 trapdoor spider / nothing
+SUBST: X = x., x = xxx++.
 : init_abyss_exit(_G, "O")
 MAP
 XXXxxxXXX
@@ -2075,7 +2069,7 @@ NAME:  evilmike_abyss_exit_smiterflies
 TAGS:  abyss_exit
 KMONS: O = generate_awake statue spells:summon_butterflies.100.magical \
            tile:mons_statue_mage col:lightblue
-MONS:  smoke demon, deep elf priest
+MONS:  smoke demon, deep elf mage
 : init_abyss_exit(_G, "O")
 MAP
        ccc
@@ -2095,23 +2089,6 @@ cc..2..........cc
    ccc.....ccc
      ccc1ccc
        ccc
-ENDMAP
-
-NAME:  evilmike_abyss_exit_disperse
-TAGS:  abyss_exit
-SUBST: . = .:100 2
-MONS:  centaur; shortbow . arrow ego:dispersal, plant
-: init_abyss_exit(_G, "O")
-MAP
-     xxx xxx xxx
-   xxx1xxx1xxx1x
- xxx....x...x..xxx
-xx...............x
-x1.Ox............+@
-xx...............x
- xxx....x...x..xxx
-   xxx1xxx1xxx1x
-     xxx xxx xxx
 ENDMAP
 
 NAME:    hangedman_abyss_exit_choices

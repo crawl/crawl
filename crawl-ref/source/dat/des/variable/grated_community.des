@@ -45,7 +45,6 @@ COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  % = hammer
 KITEM:  * = animal skin, q:2 beef jerky, any good_item
 KITEM:  ' = ident:type wand of disintegration, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
@@ -80,7 +79,7 @@ SUBVAULT: U : grated_community_mu_home5
 SUBVAULT: V : grated_community_mu_home6
 SUBVAULT: X : grated_community_mu_home
 SUBST:    QRSTUVX : .
-TILE:     c = wall_stone_brick
+TILE:     c = wall_stone_smooth
 TILE:     Z = wall_vines
 TILE:     - = wall_brick_darkgray
 SUBST:    - = c
@@ -102,7 +101,7 @@ cZ...=7=7=.efe.=7=7=.efe.=7=7=.ife.=7=7=.....==n.......eee.......ee.i...e.cc==Zc
 cZ........R.e.......S.e.......V.e.......X......~.................e........cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=.....~........ccccccccccccccccc+cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...==n........+.......c.k.......cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=9c....e...c.b.%c.dc..k......cc==Zc
+cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=9c....e...c.b..c.dc..k......cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc...eee..cc..cc.Dc.kj.C.j..cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc........cW..#c..c....k....cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=ccccccccccccccccc$c$cccccccccc==Zc
@@ -224,9 +223,7 @@ KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic /\
 :        nothing, any potion / nothing")
 KITEM: & = book of necromancy / book of death / book of unlife / w:12 nothing
-KMONS: P = col:darkgrey plant name:withered name_adjective               \
-           tile:mons_withered_plant / col:lightgrey plant name:withered  \
-           name_adjective tile:mons_withered_plant
+KMONS: P = withered plant
   : elseif occupant == 1 then
 MONS:  wizard / ogre mage / deep elf sorcerer
 KFEAT: * = altar_sif_muna / w:5 altar_ashenzari
@@ -236,14 +233,13 @@ KFEAT: 8 = granite_statue / fountain_sparkling / fountain_blue / w:1 floor
 KITEM: ? = scroll of recharging / nothing, any scroll / nothing
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic /\
 :        nothing, any potion / nothing")
-KITEM: & = book of wizardry / book of power / book of party tricks /\
-       book of alchemy / w:12 nothing
+KITEM: & = book of power / book of party tricks / book of alchemy / nothing
 KMONS: P = plant
 
   : elseif occupant == 2 then
 MONS:  deep elf annihilator / draconian annihilator / draconian scorcher
 KFEAT: * = altar_vehumet / w:2 altar_makhleb
-KITEM: " = gold, wand of draining / wand of fire / wand of cold,\
+KITEM: " = gold, wand of acid / wand of iceblast / wand of lightning,\
            potion of brilliance / nothing
 KFEAT: 8 = granite_statue / w:1 floor
 KITEM: ? = scroll of immolation / nothing, any scroll / nothing
@@ -278,7 +274,7 @@ SUBST:   _ = _8
 SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
-KITEM:   % = w:12 animal skin / hammer / hand axe /\
+KITEM:   % = w:12 animal skin / club / hand axe /\
              beef jerky / slice of pizza / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
@@ -336,13 +332,11 @@ FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
 KITEM:  ' = q:1 arrow
-KITEM:  $ = centaur barding / nothing, q:30 arrow /\
-            q:30 arrow ego:flame, any good_item
+KITEM:  $ = centaur barding / nothing, q:30 arrow / any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
 KITEM:  ' = q:1 bolt
-KITEM:  $ = centaur barding / nothing, q:30 bolt /\
-            q:30 bolt ego:flame, any good_item
+KITEM:  $ = centaur barding / nothing, q:30 bolt / any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W

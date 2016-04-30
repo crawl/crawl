@@ -4,9 +4,10 @@
 
 #include "itemprop.h"
 #include "ng-setup.h"
-#include "random-weight.h"
+#include "randbook.h"
+#include "random.h"
 #include "skills.h"
-#include "spl-book.h"
+#include "spl-book.h" // you_can_memorise
 #include "spl-util.h"
 
 static void _give_wanderer_weapon(skill_type wpn_skill, int plus)
@@ -213,10 +214,9 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
 
 static void _wanderer_role_skill(stat_type role, int levels)
 {
-    skill_type weapon_type = NUM_SKILLS;
+    skill_type weapon_type = _wanderer_role_weapon_select(role);
     skill_type spell2 = NUM_SKILLS;
 
-    weapon_type = _wanderer_role_weapon_select(role);
     if (role == STAT_INT)
        spell2 = _wanderer_role_weapon_select(role);
 
@@ -314,6 +314,61 @@ static void _give_wanderer_book(skill_type skill)
     newgame_make_item(OBJ_BOOKS, book);
 }
 
+
+/**
+ * Can we include the given spell in our themed spellbook?
+ *
+ * Guarantees exactly two spells of total spell level 4.
+ * (I.e., 2+2 or 1+3)
+ *
+ * XXX: strongly consider caching this - currently we're n^2 over all spells,
+ * which seems excessive.
+ *
+ * @param discipline_1      The first spellschool of the book.
+ * @param discipline_2      The second spellschool of the book.
+ * @param agent             The entity creating the book; possibly a god.
+ * @param prev              A list of spells already chosen for the book.
+ * @param spell             The spell to be filtered.
+ * @return                  Whether the spell can be included.
+ */
+static bool exact_level_spell_filter(spschool_flag_type discipline_1,
+                                     spschool_flag_type discipline_2,
+                                     int agent,
+                                     const vector<spell_type> &prev,
+                                     spell_type spell)
+{
+    if (!basic_themed_spell_filter(discipline_1, discipline_2, agent, prev,
+                                   spell))
+    {
+        return false;
+    }
+
+    if (!you_can_memorise(spell))
+        return false;
+
+    static const int TOTAL_LEVELS = 4;
+
+    const int spell_level = spell_difficulty(spell);
+    if (prev.size())
+        return TOTAL_LEVELS == spell_level + spell_difficulty(prev[0]);
+
+    // we need to check to see there is some possible second spell; otherwise
+    // we could be walking into a trap, if we select e.g. a level 2 spell when
+    // there's only one player-castable level 2 spell in the school.
+    const vector<spell_type> incl_spell = {spell};
+    for (int s = 0; s < NUM_SPELLS; ++s)
+    {
+        const spell_type second_spell = static_cast<spell_type>(s);
+        if (exact_level_spell_filter(discipline_1, discipline_2,
+                                     agent, incl_spell, second_spell))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Give the wanderer a randart book containing two spells of total level 4.
 // The theme of the book is the spell school of the chosen skill.
 static void _give_wanderer_minor_book(skill_type skill)
@@ -331,8 +386,8 @@ static void _give_wanderer_minor_book(skill_type skill)
     if (!item)
         return;
 
-    make_book_theme_randart(*item, school, SPTYP_NONE, 2, 4, SPELL_NO_SPELL,
-                            "", "", true);
+    build_themed_book(*item, exact_level_spell_filter,
+                      forced_book_theme(school), 2);
 }
 
 // Players can get some consumables as a "good item".
@@ -412,8 +467,7 @@ static void _wanderer_random_evokable()
     else
     {
         wand_type selected_wand =
-              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION, WAND_MAGIC_DARTS,
-                            WAND_FROST, WAND_FLAME);
+              random_choose(WAND_ENSLAVEMENT, WAND_CONFUSION, WAND_FLAME);
         newgame_make_item(OBJ_WANDS, selected_wand, 1, 15);
     }
 }
@@ -679,11 +733,11 @@ void create_wanderer()
     // The first of these goes through the whole role/aptitude weighting
     // thing again. It's quite possible that this will give something
     // we have no skill in.
-    stat_type selected_role = one_chance_in(3) ? secondary_role : primary_role;
-    skill_type sk_1 = SK_NONE;
+    const stat_type selected_role = one_chance_in(3) ? secondary_role
+                                                     : primary_role;
+    const skill_type sk_1 = _wanderer_role_weapon_select(selected_role);
     skill_type sk_2 = SK_NONE;
 
-    sk_1 = _wanderer_role_weapon_select(selected_role);
     if (selected_role == STAT_INT)
         sk_2 = _wanderer_role_weapon_select(selected_role);
 

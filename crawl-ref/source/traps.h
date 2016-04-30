@@ -31,7 +31,7 @@ dungeon_feature_type trap_category(trap_type type);
 
 int reveal_traps(const int range);
 void destroy_trap(const coord_def& pos);
-trap_def* find_trap(const coord_def& where);
+trap_def* trap_at(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
 // known is relevant only during level-gen

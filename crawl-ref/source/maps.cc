@@ -94,7 +94,7 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
 map_section_type vault_main(vault_placement &place, const map_def *vault,
                             bool check_place)
 {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
     if (crawl_state.map_stat_gen)
         mapstat_report_map_try(*vault);
 #endif
@@ -164,7 +164,7 @@ static bool _resolve_map_lua(map_def &map)
     string err = map.run_lua(true);
     if (!err.empty())
     {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
         if (crawl_state.map_stat_gen)
             mapstat_report_error(map, err);
 #endif
@@ -714,7 +714,7 @@ vector<string> find_map_matches(const string &name)
     return matches;
 }
 
-mapref_vector find_maps_for_tag(const string tag,
+mapref_vector find_maps_for_tag(const string &tag,
                                 bool check_depth,
                                 bool check_used)
 {
@@ -1171,7 +1171,6 @@ static vector<dlua_chunk> global_preludes;
 dlua_chunk lc_global_prelude("global_prelude");
 string lc_desfile;
 map_def     lc_map;
-level_range lc_range;
 depth_ranges lc_default_depths;
 bool lc_run_global_prelude = true;
 map_load_info_t lc_loaded_maps;
@@ -1183,7 +1182,6 @@ extern int yylineno;
 static void _reset_map_parser()
 {
     lc_map.init();
-    lc_range.reset();
     lc_default_depths.clear();
     lc_global_prelude.clear();
 

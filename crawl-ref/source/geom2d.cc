@@ -14,7 +14,7 @@ namespace geom
 
 static bool double_is_zero(double d)
 {
-    return abs(d) < 0.00005;
+    return abs(d) < 0.0000001;
 }
 
 // Is v parallel to the kernel of f?

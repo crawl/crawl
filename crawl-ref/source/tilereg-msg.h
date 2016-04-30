@@ -11,9 +11,9 @@ public:
 
     void set_overlay(bool is_overlay);
 
-    virtual int handle_mouse(MouseEvent &event);
-    virtual void render();
-    virtual bool update_tip_text(string &tip);
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual void render() override;
+    virtual bool update_tip_text(string &tip) override;
 
     string &alt_text() { return m_alt_text; }
 protected:

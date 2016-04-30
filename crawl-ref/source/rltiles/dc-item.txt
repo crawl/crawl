@@ -38,9 +38,6 @@ morningstar3
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-hammer1 WPN_HAMMER
-hammer2
-hammer3
 bullwhip WPN_WHIP
 bullwhip2
 bullwhip3
@@ -215,6 +212,7 @@ i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
+# Remove sickness and slowing when TAG_MAJOR_VERSION > 34
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS
@@ -525,24 +523,25 @@ gem_plastic
 
 %sdir item/wand
 #### These must be in the same order as the enum in itemprop-enum.h!
+# Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
-i-frost WAND_FROST
+i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
-i-magic_darts WAND_MAGIC_DARTS
+i-flame WAND_REMOVEME2
 i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
-i-fire WAND_FIRE
-i-cold WAND_COLD
+i-flame WAND_REMOVEME3
+i-flame WAND_REMOVEME4
 i-confusion WAND_CONFUSION
-i-invisibility WAND_INVISIBILITY
+i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
-i-fireball WAND_FIREBALL
+i-iceblast WAND_ICEBLAST
 i-teleportation WAND_TELEPORTATION
 i-lightning WAND_LIGHTNING
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
-i-draining WAND_DRAINING
+i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
@@ -621,6 +620,7 @@ i-torment SCR_TORMENT
 %back scroll-grey
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
@@ -646,6 +646,7 @@ i-silence SCR_SILENCE
 %back scroll-yellow
 i-amnesia SCR_AMNESIA
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 
@@ -709,7 +710,7 @@ snake
 %rim 0
 #### These must be in the same order as the enum in itemprop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
-i-regeneration RING_REGENERATION RING_ID_FIRST
+i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
 i-r-poison RING_POISON_RESISTANCE
@@ -717,7 +718,7 @@ i-r-cold RING_PROTECTION_FROM_COLD
 i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
-i-invisibility RING_INVISIBILITY
+i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
@@ -772,19 +773,19 @@ eye_green AMU_COL_LAST
 %rim 0
 ### ID-ed amulet
 # These must be in the same order as the enum in itemprop-enum.h!
+# remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
-i-clarity AMU_CLARITY
-i-warding AMU_WARDING
-i-r-corrosion AMU_RESIST_CORROSION
+i-harm AMU_HARM
+i-dismissal AMU_DISMISSAL
+i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
-# Remove i-c-flight & conservation when TAG_MAJOR_VERSION > 34
-i-conservation AMU_CONSERVATION
-i-c-flight AMU_CONTROLLED_FLIGHT
+i-rage AMU_REMOVEME1
+i-rage AMU_REMOVEME2
 i-inaccuracy AMU_INACCURACY
-i-r-mutation AMU_RESIST_MUTATION
-i-spirit AMU_SPIRIT_SHIELD
+i-rage AMU_NOTHING
+i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
-i-stasis AMU_STASIS
+i-reflection AMU_REFLECTION
 i-regeneration AMU_REGENERATION AMU_ID_LAST
 
 ####################OBJ_POTIONS
@@ -827,6 +828,7 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
+# please remove POT_POISON when TAG_MAJOR_VERSION is bumped
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-cancel POT_CANCELLATION
@@ -949,15 +951,17 @@ rod09
 
 # These must be in the same order as the enum in itemprop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_summoning ROD_SUMMONING
 i-rod_ignition ROD_IGNITION
 i-rod_clouds ROD_CLOUDS
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_destruction ROD_DESTRUCTION
 i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
-i-rod_striking ROD_STRIKING
+i-rod_iron ROD_IRON
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST
 %rim 1
@@ -987,6 +991,7 @@ misc_disc MISC_DISC_OF_STORMS
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_zigfig MISC_ZIGGURAT
 misc_deck MISC_DECK
 %start
 %compose misc_deck
@@ -1104,29 +1109,29 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 misc_quad MISC_QUAD_DAMAGE
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
-rune_tartarus MISC_RUNE_TARTARUS
-rune_cocytus MISC_RUNE_COCYTUS
-rune_dis MISC_RUNE_DIS
-rune_gehenna MISC_RUNE_GEHENNA
-rune_cerebov MISC_RUNE_CEREBOV
-rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
-rune_mnoleg MISC_RUNE_MNOLEG
-rune_lom_lobon MISC_RUNE_LOM_LOBON
-rune_snake MISC_RUNE_SNAKE
-rune_swamp MISC_RUNE_SWAMP
-rune_shoals MISC_RUNE_SHOALS
-rune_spider MISC_RUNE_SPIDER
-rune_slime MISC_RUNE_SLIME
-rune_vaults MISC_RUNE_VAULTS
-rune_tomb MISC_RUNE_TOMB
-rune_abyss MISC_RUNE_ABYSS
-rune_demonic_1 MISC_RUNE_DEMONIC
+rune_tartarus RUNE_TARTARUS
+rune_cocytus RUNE_COCYTUS
+rune_dis RUNE_DIS
+rune_gehenna RUNE_GEHENNA
+rune_cerebov RUNE_CEREBOV
+rune_gloorx_vloq RUNE_GLOORX_VLOQ
+rune_mnoleg RUNE_MNOLEG
+rune_lom_lobon RUNE_LOM_LOBON
+rune_snake RUNE_SNAKE
+rune_swamp RUNE_SWAMP
+rune_shoals RUNE_SHOALS
+rune_spider RUNE_SPIDER
+rune_slime RUNE_SLIME
+rune_vaults RUNE_VAULTS
+rune_tomb RUNE_TOMB
+rune_abyss RUNE_ABYSS
+rune_demonic_1 RUNE_DEMONIC
 rune_demonic_2
 rune_demonic_3
 rune_demonic_4
 rune_demonic_5
 rune_demonic_6
-rune_elven MISC_RUNE_ELVEN
+rune_elven RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt

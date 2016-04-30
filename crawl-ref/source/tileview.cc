@@ -3,7 +3,6 @@
 #include "tileview.h"
 
 #include "areas.h"
-#include "asg.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -18,6 +17,7 @@
 #include "kills.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pcg.h"
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
@@ -300,12 +300,8 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint32_t seed[] =
-        {
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-        };
-        AsgKISS rng(seed, 2);
+        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        PcgRNG rng(seed, ARRAYSZ(seed));
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -390,7 +386,7 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 
 tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 {
-    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
+    ASSERT_LESS(idx, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
     int total = _find_variants(idx, domino, choices);
     if (choices.size() == 1)
@@ -400,7 +396,7 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (const auto& elem : choices)
     {
         rand -= elem.second;
-        if (rand <= 0)
+        if (rand < 0)
             return elem.first;
     }
 
@@ -901,10 +897,12 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
+    const map_cell& cell = env.map_knowledge(gc);
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
+    // That tile is hidden by clouds though
+    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
@@ -999,18 +997,13 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    bool disturbance = false;
-
-    if (env.map_knowledge(gc).invisible_monster())
-        disturbance = true;
-
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl);
     }
     else
-        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
@@ -1047,6 +1040,8 @@ void tile_draw_rays(bool reset_count)
             flag = TILE_FLAG_RAY;
         else if (tile_ray_vec[i].in_range == AFF_LANDING)
             flag = TILE_FLAG_LANDING;
+        else if (tile_ray_vec[i].in_range == AFF_MULTIPLE)
+            flag = TILE_FLAG_RAY_MULTI;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 
@@ -1232,6 +1227,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
+        else if (orig == TILE_WALL_PERMAROCK)
+            orig = TILE_WALL_PERMAROCK_BROWN;
     }
     else if (player_in_branch(BRANCH_CRYPT))
     {
@@ -1280,7 +1277,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_WALL_STONE_BRICK;
+            orig = TILE_WALL_STONE_SMOOTH;
     }
     else if (player_in_branch(BRANCH_OSSUARY))
     {
@@ -1302,7 +1299,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if (orig == TILE_DNGN_STONE_WALL || orig == TILE_DNGN_CRYSTAL_WALL)
+    else if (orig == TILE_DNGN_STONE_WALL
+             || orig == TILE_DNGN_CRYSTAL_WALL
+             || orig == TILE_WALL_PERMAROCK
+             || orig == TILE_WALL_PERMAROCK_CLEAR)
     {
         *bg = pick_dngn_tile(tile_dngn_coloured(orig, env.grid_colours(gc)),
                              flv.special);

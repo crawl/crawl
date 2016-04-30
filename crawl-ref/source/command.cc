@@ -122,7 +122,7 @@ static string _get_version_changes()
         help = buf;
 
         // Look for version headings
-        if (help.find("Stone Soup ") == 0)
+        if (starts_with(help, "Stone Soup "))
         {
             // Stop if this is for an older major version; otherwise, highlight
             if (help.find(string("Stone Soup ")+Version::Major) == string::npos)
@@ -295,18 +295,6 @@ void list_jewellery()
     }
 }
 
-void toggle_viewport_monster_hp()
-{
-    crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
-    viewwindow();
-}
-
-void toggle_viewport_weapons()
-{
-    crawl_state.viewport_weapons = !crawl_state.viewport_weapons;
-    viewwindow();
-}
-
 static bool _cmdhelp_textfilter(const string &tag)
 {
 #ifdef WIZARD
@@ -325,7 +313,7 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward\n"
+    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
     "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
@@ -438,7 +426,6 @@ struct help_file
 static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
-    { "../README.md",      '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
@@ -541,6 +528,15 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
+    case '#':
+        // If the game has begun, show dump.
+        if (crawl_state.need_save)
+        {
+            display_char_dump();
+            return -1;
+        }
+        break;
+
     case '/':
         keyhelp_query_descriptions();
         return -1;
@@ -576,7 +572,7 @@ class help_highlighter : public MenuHighlighter
 {
 public:
     help_highlighter(string = "");
-    int entry_colour(const MenuEntry *entry) const;
+    int entry_colour(const MenuEntry *entry) const override;
 private:
     text_pattern pattern;
     string get_species_key() const;
@@ -635,9 +631,9 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "aspect of Dungeon Crawl.\n"
 
             "<w>?</w>: List of commands\n"
-            "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"
+            "<w>#</w>: Browse character dump\n"
             "<w>~</w>: Macros help\n"
             "<w>&</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
@@ -724,8 +720,9 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-static void _show_specific_help(const string &help)
+void show_specific_help(const string &key)
 {
+    const string help = getHelpString(key);
     vector<formatted_string> formatted_lines;
     for (const string &line : split_string("\n", help, false, true))
     {
@@ -738,17 +735,7 @@ static void _show_specific_help(const string &help)
 
 void show_levelmap_help()
 {
-    _show_specific_help(getHelpString("level-map"));
-}
-
-void show_pickup_menu_help()
-{
-    _show_specific_help(getHelpString("pick-up"));
-}
-
-void show_known_menu_help()
-{
-    _show_specific_help(getHelpString("known-menu"));
+    show_specific_help("level-map");
 }
 
 void show_targeting_help()
@@ -767,32 +754,32 @@ void show_targeting_help()
 }
 void show_interlevel_travel_branch_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
+    show_specific_help("interlevel-travel.branch.prompt");
 }
 
 void show_interlevel_travel_depth_help()
 {
-    _show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
+    show_specific_help("interlevel-travel.depth.prompt");
 }
 
 void show_stash_search_help()
 {
-    _show_specific_help(getHelpString("stash-search.prompt"));
+    show_specific_help("stash-search.prompt");
 }
 
 void show_butchering_help()
 {
-    _show_specific_help(getHelpString("butchering"));
+    show_specific_help("butchering");
 }
 
 void show_skill_menu_help()
 {
-    _show_specific_help(getHelpString("skill-menu"));
+    show_specific_help("skill-menu");
 }
 
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
-                         const string desc,
+                         const string &desc,
                          const unsigned int space_to_colon = 7)
 {
     string command_name = command_to_string(cmd);
@@ -1067,12 +1054,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
     cols.add_formatted(1, "         in view\n",
                        false, true, _cmdhelp_textfilter);
-    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
-    if (!is_tiles())
-    {
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
-        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_WEAPONS, "show monster weapons");
-    }
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");

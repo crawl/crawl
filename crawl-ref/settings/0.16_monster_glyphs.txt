@@ -1,4 +1,4 @@
-# Changes for 0.16 include glyph colour changes.
+# Changes for 0.17 include glyph colour changes.
 
 ###########################
 # monsters
@@ -7,3 +7,7 @@
 mon_glyph += wyvern : lightred D
 mon_glyph += fire dragon : green D
 mon_glyph += redback : red s
+mon_glyph += death cob : yellow %
+mon_glyph += curse toe : yellow z
+mon_glyph += ancient champion : lightmagenta z
+mon_glyph += curse skull : lightcyan z

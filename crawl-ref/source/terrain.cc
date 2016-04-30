@@ -24,6 +24,7 @@
 #include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::water_walk
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -48,7 +49,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
+static bool _revert_terrain_to_floor(coord_def pos);
 
 actor* actor_at(const coord_def& c)
 {
@@ -119,14 +120,33 @@ bool feat_is_staircase(dungeon_feature_type feat)
            || feat == DNGN_ABYSSAL_STAIR;
 }
 
+/**
+ * Define a memoized function from dungeon_feature_type to bool.
+ * This macro should be followed by the non-memoized version of the
+ * function body: see feat_is_branch_entrance below for an example.
+ *
+ * @param funcname The name of the function to define.
+ * @param paramname The name under which the function's single parameter,
+ *        of type dungeon_feature_type, is visible in the function body.
+ */
+#define FEATFN_MEMOIZED(funcname, paramname) \
+    static bool _raw_ ## funcname (dungeon_feature_type); \
+    bool funcname (dungeon_feature_type feat) \
+    { \
+        static int cached[NUM_FEATURES+1] = { 0 }; \
+        if (!cached[feat]) cached[feat] = _raw_ ## funcname (feat) ? 1 : -1; \
+        return cached[feat] > 0; \
+    } \
+    static bool _raw_ ## funcname (dungeon_feature_type paramname)
+
 /** Is this feature a branch entrance that should show up on ^O?
  */
-bool feat_is_branch_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
 {
     if (feat == DNGN_ENTER_HELL)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->entry_stairs == feat
             && is_connected_branch(it->id))
@@ -140,12 +160,12 @@ bool feat_is_branch_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_branch_entrance.
  */
-bool feat_is_branch_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_branch_exit, feat)
 {
     if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->exit_stairs == feat
             && is_connected_branch(it->id))
@@ -159,7 +179,7 @@ bool feat_is_branch_exit(dungeon_feature_type feat)
 
 /** Is this feature an entrance to a portal branch?
  */
-bool feat_is_portal_entrance(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_entrance, feat)
 {
     // These are have different rules from normal connected branches, but they
     // also have different rules from "portal vaults," and are more similar to
@@ -167,7 +187,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
     if (feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->entry_stairs == feat
             && !is_connected_branch(it->id))
@@ -185,12 +205,12 @@ bool feat_is_portal_entrance(dungeon_feature_type feat)
 
 /** Counterpart to feat_is_portal_entrance.
  */
-bool feat_is_portal_exit(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_portal_exit, feat)
 {
     if (feat == DNGN_EXIT_ABYSS || feat == DNGN_EXIT_PANDEMONIUM)
         return false;
 
-    for (branch_iterator it; it; it++)
+    for (branch_iterator it; it; ++it)
     {
         if (it->exit_stairs == feat
             && !is_connected_branch(it->id))
@@ -464,6 +484,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_GOZAG, DNGN_ALTAR_GOZAG },
     { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
     { GOD_RU, DNGN_ALTAR_RU },
+    { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -926,31 +947,19 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
     {
-        if (shop_struct *s = get_shop(src))
-        {
-            env.tgrid(dst)    = env.tgrid(s->pos);
-            env.tgrid(s->pos) = NON_ENTITY;
-            // Can't leave the source square as a shop now that all
-            // the bookkeeping data has moved.
-            grd(src)          = DNGN_FLOOR;
-            s->pos = dst;
-        }
-        else // Destroy invalid shops.
-            dfeat = DNGN_FLOOR;
+        ASSERT(shop_at(src));
+        env.shop[dst] = env.shop[src];
+        env.shop[dst].pos = dst;
+        env.shop.erase(src);
+        grd(src) = DNGN_FLOOR;
     }
     else if (feat_is_trap(dfeat, true))
     {
-        if (trap_def *trap = find_trap(src))
-        {
-            env.tgrid(dst) = env.tgrid(trap->pos);
-            env.tgrid(trap->pos) = NON_ENTITY;
-            // Can't leave the source square as a trap now that all
-            // the bookkeeping data has moved.
-            grd(src)          = DNGN_FLOOR;
-            trap->pos = dst;
-        }
-        else // Destroy invalid traps.
-            dfeat = DNGN_FLOOR;
+        ASSERT(trap_at(src));
+        env.trap[dst] = env.trap[src];
+        env.trap[dst].pos = dst;
+        env.trap.erase(src);
+        grd(src) = DNGN_FLOOR;
     }
 
     grd(dst) = dfeat;
@@ -986,13 +995,9 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         move_item_stack_to_grid(src, dst);
 
     if (cell_is_solid(dst))
-    {
-        int cl = env.cgrid(dst);
-        if (cl != EMPTY_CLOUD)
-            delete_cloud(cl);
-    }
+        delete_cloud(src);
     else
-        move_cloud_to(src, dst);
+        move_cloud(src, dst);
 
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
@@ -1100,6 +1105,9 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
 
 static void _dgn_check_terrain_player(const coord_def pos)
 {
+    if (crawl_state.generating_level || !crawl_state.need_save)
+        return; // don't reference player if they don't currently exist
+
     if (pos != you.pos())
         return;
 
@@ -1109,12 +1117,27 @@ static void _dgn_check_terrain_player(const coord_def pos)
         you_teleport_now();
 }
 
+/**
+ * Change a given feature to a new type, cleaning up associated issues
+ * (monsters/items in walls, blood on water, etc) in the process.
+ *
+ * @param pos               The location to be changed.
+ * @param nfeat             The feature to be changed to.
+ * @param preserve_features Whether to shunt the old feature to a nearby loc.
+ * @param preserve_items    Whether to shunt items to a nearby loc, if they
+ *                          can't stay in this one.
+ * @param temporary         Whether the terrain change is only temporary & so
+ *                          shouldn't affect branch/travel knowledge.
+ * @param wizmode           Whether this is a wizmode terrain change,
+ *                          & shouldn't check whether the player can actually
+ *                          exist in the new feature.
+ */
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
-                             bool affect_player,
                              bool preserve_features,
                              bool preserve_items,
-                             int colour)
+                             bool temporary,
+                             bool wizmode)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1126,10 +1149,10 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (preserve_features)
             _dgn_shift_feature(pos);
 
-        unnotice_feature(level_pos(level_id::current(), pos));
+        if (!temporary)
+            unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
-        env.grid_colours(pos) = colour;
         // Reset feature tile
         env.tile_flv(pos).feat = 0;
         env.tile_flv(pos).feat_idx = 0;
@@ -1138,14 +1161,13 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (feat_is_trap(nfeat))
+        if (!feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 
     _dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
-
-    if (affect_player)
+    if (!wizmode)
         _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
@@ -1269,11 +1291,11 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const terrain_property_t prop1 = env.pgrid(pos1);
     const terrain_property_t prop2 = env.pgrid(pos2);
 
-    trap_def* trap1 = find_trap(pos1);
-    trap_def* trap2 = find_trap(pos2);
+    trap_def* trap1 = trap_at(pos1);
+    trap_def* trap2 = trap_at(pos2);
 
-    shop_struct* shop1 = get_shop(pos1);
-    shop_struct* shop2 = get_shop(pos2);
+    shop_struct* shop1 = shop_at(pos1);
+    shop_struct* shop2 = shop_at(pos2);
 
     // Find a temporary holding place for pos1 stuff to be moved to
     // before pos2 is moved to pos1.
@@ -1288,7 +1310,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
             if (!env.markers.find(pos, MAT_ANY)
                 && !is_notable_terrain(grd(pos))
-                && env.cgrid(pos) == EMPTY_CLOUD)
+                && !cloud_at(pos))
             {
                 temp = pos;
                 break;
@@ -1330,16 +1352,48 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.grid_colours(pos2) = col1;
 
     // Swap traps.
-    if (trap1)
-        trap1->pos = pos2;
-    if (trap2)
-        trap2->pos = pos1;
+    if (trap1 && !trap2)
+    {
+        env.trap[pos2] = env.trap[pos1];
+        env.trap[pos2].pos = pos2;
+        env.trap.erase(pos1);
+    }
+    else if (!trap1 && trap2)
+    {
+        env.trap[pos1] = env.trap[pos2];
+        env.trap[pos1].pos = pos1;
+        env.trap.erase(pos2);
+    }
+    else if (trap1 && trap2)
+    {
+        trap_def tmp = env.trap[pos1];
+        env.trap[pos1] = env.trap[pos2];
+        env.trap[pos2] = tmp;
+        env.trap[pos1].pos = pos1;
+        env.trap[pos2].pos = pos2;
+    }
 
     // Swap shops.
-    if (shop1)
-        shop1->pos = pos2;
-    if (shop2)
-        shop2->pos = pos1;
+    if (shop1 && !shop2)
+    {
+        env.shop[pos2] = env.shop[pos1];
+        env.shop[pos2].pos = pos2;
+        env.shop.erase(pos1);
+    }
+    else if (!shop1 && shop2)
+    {
+        env.shop[pos1] = env.shop[pos2];
+        env.shop[pos1].pos = pos1;
+        env.shop.erase(pos2);
+    }
+    else if (shop1 && shop2)
+    {
+        shop_struct tmp = env.shop[pos1];
+        env.shop[pos1] = env.shop[pos2];
+        env.shop[pos2] = tmp;
+        env.shop[pos1].pos = pos1;
+        env.shop[pos2].pos = pos2;
+    }
 
     if (!swap_everything)
     {
@@ -1385,10 +1439,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         menv[mgrd(pos2)].clear_far_constrictions();
     }
 
-    // Swap clouds.
-    move_cloud(env.cgrid(pos1), temp);
-    move_cloud(env.cgrid(pos2), pos1);
-    move_cloud(env.cgrid(temp), pos2);
+    swap_clouds(pos1, pos2);
 
     if (pos1 == you.pos())
     {
@@ -1424,7 +1475,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     if (is_notable_terrain(dest_feat))
         return false;
 
-    if (find_trap(dest_pos))
+    if (trap_at(dest_pos))
         return false;
 
     actor* dest_actor = actor_at(dest_pos);
@@ -1480,7 +1531,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk() || form_likes_water())
+        if (have_passive(passive_t::water_walk) || form_likes_water())
             return;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)
@@ -1494,8 +1545,8 @@ void fall_into_a_pool(dungeon_feature_type terrain)
          (terrain == DNGN_LAVA)       ? "lava" :
          (terrain == DNGN_DEEP_WATER) ? "water"
                                       : "programming rift");
+    // included in default force_more_message
 
-    more();
     clear_messages();
     if (terrain == DNGN_LAVA)
     {
@@ -1710,8 +1761,7 @@ void destroy_wall(const coord_def& p)
 
     remove_mold(p);
 
-    _revert_terrain_to(p, (player_in_branch(BRANCH_SWAMP) ? DNGN_SHALLOW_WATER
-                                                          : DNGN_FLOOR));
+    _revert_terrain_to_floor(p);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -1815,11 +1865,7 @@ const char* feat_type_name(dungeon_feature_type feat)
 void set_terrain_changed(const coord_def p)
 {
     if (cell_is_solid(p))
-    {
-        int cl = env.cgrid(p);
-        if (cl != EMPTY_CLOUD)
-            delete_cloud(cl);
-    }
+        delete_cloud(p);
 
     if (grd(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;
@@ -1937,11 +1983,20 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, true, false, true);
+    dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
-static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+/// What terrain type do destroyed feats become, in the current branch?
+static dungeon_feature_type _destroyed_feat_type()
 {
+    return player_in_branch(BRANCH_SWAMP) ?
+        DNGN_SHALLOW_WATER :
+        DNGN_FLOOR;
+}
+
+static bool _revert_terrain_to_floor(coord_def pos)
+{
+    dungeon_feature_type newfeat = _destroyed_feat_type();
     bool found_marker = false;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
@@ -1956,7 +2011,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == DNGN_FLOOR)
+                && newfeat == _destroyed_feat_type())
             {
                 env.markers.remove(tmarker);
             }
@@ -1968,6 +2023,9 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             }
         }
     }
+
+    if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
+        opened_runed_door();
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);
@@ -2018,7 +2076,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
     if (newfeat != DNGN_UNSEEN)
     {
-        dungeon_terrain_changed(pos, newfeat, true, false, true, colour);
+        dungeon_terrain_changed(pos, newfeat, false, true);
+        env.grid_colours(pos) = colour;
         return true;
     }
     else

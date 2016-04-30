@@ -11,10 +11,10 @@ public:
     MapRegion(int pixsz);
     ~MapRegion();
 
-    virtual void render();
-    virtual void clear();
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
+    virtual void render() override;
+    virtual void clear() override;
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
 
     void init_colours();
     void set(const coord_def &gc, map_feature f);
@@ -22,7 +22,7 @@ public:
     void update_bounds();
 
 protected:
-    virtual void on_resize();
+    virtual void on_resize() override;
     void recenter();
     void pack_buffers();
 

@@ -5,10 +5,6 @@ ae := autopickup_exceptions
 # Autopickup runes by default.
 ae = <rune of Zot
 
-# curare is always dangerous on the floor, so you may wish to always pick
-# it up. Disabled by default.
-# ae = <curare-tipped
-
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as
@@ -41,7 +37,6 @@ ae += [^n]identified.*spellbook
 :  or string.find(itname, "fan of gales")
 :  or string.find(itname, "stone of tremors")
 :  or string.find(itname, "disc of storms")
-:  or string.find(itname, "lantern of shadows")
 :  or string.find(itname, "crystal ball of energy") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if itname == inv.name() then
@@ -66,7 +61,7 @@ ae += [^n]identified.*spellbook
 :   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
-:   or itsubtype == "ring of invisibility"
+:   or itsubtype == "ring of resist corrosion"
 :   or itsubtype == "ring of see invisible"
 :   or itsubtype == "ring of magical power"
 :   or itsubtype == "ring of ice"
@@ -85,13 +80,14 @@ ae += [^n]identified.*spellbook
 :   return it.stacks() or nil
 : end)
 
-# Excluding amulets as you only need one of each. (If you know the
-# subtype that means you already have one of it.) Also for some rings.
-# Some items may already be excluded as bad_item, e.g. inaccuracy.
-ae += amulet of (inaccuracy|the gourmand|warding|regeneration)
-ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
-# Rings of teleportation are not redundant -- double *Tele is pretty good in
-# the Abyss. Still, they're more in line with lanterns of shadow, so you can
-# pick up the second one by hand.
+# Excluding amulets as you only need one of each. (If you know the subtype
+# that means you already have one of it.). Some items may already be excluded
+# as bad_item, e.g. inaccuracy.
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|dismissal|harm)
+ae += amulet of (rage|guardian spirit|faith|magic regeneration)
+
+# Likewise for some rings. Rings of teleportation are not redundant: double
+# *Tele # is pretty good in the Abyss. Still, they're more in line with
+# lanterns of shadow, so you can pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|sustain attributes)
+ae += ring of (sustain attributes|resist corrosion)

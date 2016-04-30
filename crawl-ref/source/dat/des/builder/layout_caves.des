@@ -19,7 +19,7 @@
 #
 NAME:   layout_layer_cave
 DEPTH:  D:4-, Lair, Snake
-WEIGHT: 20, 15 (Snake)
+WEIGHT: 5, 15 (Snake)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
@@ -463,7 +463,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     end
   end
 
-  -- we want to fill flight-accessable areas with water and all
+  -- we want to fill flight-accessible areas with water and all
   --  closets with rock
   zonify.map_fill_zones(_G, 1, 'w')
   nsubst(". = 1:@ / *:.")

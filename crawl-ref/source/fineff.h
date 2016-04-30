@@ -40,9 +40,9 @@ protected:
 class mirror_damage_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend, int dam)
     {
@@ -59,9 +59,9 @@ protected:
 class ru_retribution_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend, int dam)
     {
@@ -78,8 +78,8 @@ protected:
 class trample_follow_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *attack, const coord_def &pos)
     {
@@ -95,8 +95,8 @@ protected:
 class blink_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *blinker)
     {
@@ -109,18 +109,18 @@ protected:
     }
 };
 
-class distortion_tele_fineff : public final_effect
+class teleport_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *defend)
     {
-        final_effect::schedule(new distortion_tele_fineff(defend));
+        final_effect::schedule(new teleport_fineff(defend));
     }
 protected:
-    distortion_tele_fineff(const actor *defend)
+    teleport_fineff(const actor *defend)
         : final_effect(0, defend, coord_def())
     {
     }
@@ -129,9 +129,9 @@ protected:
 class trj_spawn_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend,
                          const coord_def &pos, int dam)
@@ -150,9 +150,9 @@ protected:
 class blood_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
-    void merge(const final_effect &a);
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
+    void merge(const final_effect &a) override;
 
     static void schedule(const actor *defend, const coord_def &pos,
                          int blood_amount)
@@ -171,9 +171,9 @@ protected:
 class deferred_damage_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
     static void schedule(const actor *attack, const actor *defend,
                          int dam, bool attacker_effects, bool fatal = true)
@@ -197,8 +197,8 @@ protected:
 class starcursed_merge_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *merger)
     {
@@ -214,21 +214,26 @@ protected:
 class shock_serpent_discharge_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void merge(const final_effect &a);
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
 
-    static void schedule(const actor *serpent, coord_def pos, int pow)
+    static void schedule(const actor *serpent, const actor &oppressor,
+                         coord_def pos, int pow)
     {
         final_effect::schedule(new shock_serpent_discharge_fineff(serpent,
+                                                                  oppressor,
                                                                   pos, pow));
     }
 protected:
-    shock_serpent_discharge_fineff(const actor *serpent, coord_def pos, int pow)
-        : final_effect(0, serpent, coord_def()), position(pos), power(pow),
-          attitude(mons_attitude(serpent->as_monster()))
+    shock_serpent_discharge_fineff(const actor *serpent, const actor &rudedude,
+                                   coord_def pos, int pow)
+        : final_effect(0, serpent, coord_def()), oppressor(rudedude),
+          position(pos), power(pow),
+        attitude(mons_attitude(serpent->as_monster()))
     {
     }
+    const actor &oppressor;
     coord_def position;
     int power;
     mon_attitude_type attitude;
@@ -240,8 +245,8 @@ protected:
 class delayed_action_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    virtual void fire();
+    bool mergeable(const final_effect &a) const override;
+    virtual void fire() override;
 
     static void schedule(daction_type action, const string &final_msg)
     {
@@ -260,7 +265,7 @@ protected:
 class kirke_death_fineff : public delayed_action_fineff
 {
 public:
-    void fire();
+    void fire() override;
 
     static void schedule(const string &final_msg)
     {
@@ -276,8 +281,8 @@ protected:
 class rakshasa_clone_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const;
-    void fire();
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
 
     static void schedule(const actor *defend, const coord_def &pos)
     {
@@ -295,22 +300,22 @@ class bennu_revive_fineff : public final_effect
 {
 public:
     // Each trigger is from the death of a different bennu---no merging.
-    bool mergeable(const final_effect &a) const { return false; }
-    void fire();
+    bool mergeable(const final_effect &a) const override { return false; }
+    void fire() override;
 
-    static void schedule(coord_def pos, int revives, beh_type att,
+    static void schedule(coord_def pos, int revives, beh_type attitude,
                          unsigned short foe)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, att, foe));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
                         unsigned short _foe)
-        : final_effect(0, 0, pos), revives(_revives), att(_att), foe(_foe)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
     {
     }
     int revives;
-    beh_type att;
+    beh_type attitude;
     unsigned short foe;
 };
 

@@ -11,7 +11,6 @@
 #include "message.h"
 #include "output.h"
 #include "process_desc.h"
-#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -152,7 +151,8 @@ bool AbilityRegion::update_alt_text(string &alt)
 int AbilityRegion::get_max_slots()
 {
     return ABIL_MAX_INTRINSIC + (ABIL_MAX_EVOKE - ABIL_MIN_EVOKE) + 1
-           + MAX_GOD_ABILITIES + 1;
+           // for god abilities
+           + 6;
 }
 
 void AbilityRegion::pack_buffers()
@@ -160,25 +160,7 @@ void AbilityRegion::pack_buffers()
     if (m_items.size() == 0)
         return;
 
-    const int max_spells = get_max_slots();
-
-    // Pack base separately, as it comes from a different texture...
     int i = 0;
-    for (int y = 0; y < my; y++)
-    {
-        if (i >= max_spells)
-            break;
-
-        for (int x = 0; x < mx; x++)
-        {
-            if (i++ >= max_spells)
-                break;
-
-            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
-        }
-    }
-
-    i = 0;
     for (int y = 0; y < my; y++)
     {
         if (i >= (int)m_items.size())
@@ -210,7 +192,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     InventoryTile desc;
     desc.tile     = tileidx_ability(ability);
     desc.idx      = (int) ability;
-    desc.quantity = get_ability_def(ability).mp_cost;
+    desc.quantity = ability_mp_cost(ability);
 
     if (!check_ability_possible(ability, true, true))
         desc.flag |= TILEI_FLAG_INVALID;

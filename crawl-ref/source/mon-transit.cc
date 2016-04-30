@@ -14,6 +14,7 @@
 #include "dactions.h"
 #include "dungeon.h"
 #include "godcompanions.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
@@ -180,11 +181,10 @@ static void level_place_lost_monsters(m_transit_list &m)
         if (place_lost_monster(*mon))
         {
             // Now that the monster is onlevel, we can safely apply traps to it.
-            monster* new_mon = monster_by_mid(mon->mons.mid);
-            m.erase(mon);
-            // old loc isn't really meaningful
-            if (new_mon != nullptr)
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
+            m.erase(mon);
         }
     }
 }
@@ -198,12 +198,11 @@ static void level_place_followers(m_transit_list &m)
         {
             if (mon->mons.is_divine_companion())
                 move_companion_to(monster_by_mid(mon->mons.mid), level_id::current());
-            m.erase(mon);
             // Now that the monster is onlevel, we can safely apply traps to it.
-            monster* new_mon = monster_by_mid(mon->mons.mid);
-            // old loc isn't really meaningful
-            if (new_mon != nullptr)
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
+            m.erase(mon);
         }
     }
 }
@@ -353,7 +352,7 @@ void follower::restore_mons_items(monster& m)
 static bool _is_religious_follower(const monster* mon)
 {
     return (you_worship(GOD_YREDELEMNUL)
-            || you_worship(GOD_BEOGH)
+            || will_have_passive(passive_t::convert_orcs)
             || you_worship(GOD_FEDHAS))
                 && is_follower(mon);
 }
@@ -477,6 +476,6 @@ void tag_followers()
 
 void untag_followers()
 {
-    for (int m = 0; m < MAX_MONSTERS; ++m)
-        menv[m].flags &= (~MF_TAKING_STAIRS);
+    for (auto &mons : menv)
+        mons.flags &= ~MF_TAKING_STAIRS;
 }

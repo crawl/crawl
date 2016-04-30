@@ -20,6 +20,7 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -174,7 +175,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
 
-        if (!simu && you_worship(GOD_DITHMENOS))
+        if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
         return true;
@@ -434,8 +435,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_FIRE:
         case BEAM_LAVA:
             return defender->res_fire();
-        case BEAM_HELLFIRE:
-            return defender->res_hellfire();
+        case BEAM_DAMNATION:
+            return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:
@@ -678,21 +679,19 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 int weapon_min_delay_skill(const item_def &weapon)
 {
     const int speed = property(weapon, PWPN_SPEED);
-    const int mindelay = weapon_min_delay(weapon);
+    const int mindelay = weapon_min_delay(weapon, false);
     return (speed - mindelay) * 2;
 }
 
 /**
  * How fast will this weapon get from your skill training?
  *
- * Does NOT take speed brand into account, since the brand shouldn't affect how
- * long you will continue to gain benefits from training the weapon skill, just
- * how big those benefits are.
  * @param weapon the weapon to be considered.
- * @returns How many aut the fastest possible attack with a weapon of this kind
- *          would take.
+ * @param check_speed whether to take it into account if the weapon has the
+ *                    speed brand.
+ * @return How many aut the fastest possible attack with this weapon would take.
  */
-int weapon_min_delay(const item_def &weapon)
+int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
     int min_delay = base/2;
@@ -713,24 +712,17 @@ int weapon_min_delay(const item_def &weapon)
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
+    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
+    {
+        min_delay *= 2;
+        min_delay /= 3;
+    }
+
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
-}
-
-int finesse_adjust_delay(int delay)
-{
-    if (you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            delay = haste_mul(delay);
-        delay = div_rand_round(delay, 2);
-    }
-    return delay;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)

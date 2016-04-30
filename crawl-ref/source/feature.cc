@@ -140,7 +140,7 @@ static void _init_feature_index()
     {
         const dungeon_feature_type feat = feat_defs[i].feat;
         ASSERT_RANGE(feat, 0, NUM_FEATURES);
-        ASSERT(feat_index[feat] == -1);
+        ASSERT(feat_index[feat] == -1); // enum repeated in feature-data!
         feat_index[feat] = i;
     }
 }
@@ -224,7 +224,7 @@ bool is_valid_feature_type(dungeon_feature_type feat)
 const feature_def &get_feature_def(dungeon_feature_type feat)
 {
     ASSERT_RANGE(feat, 0, NUM_FEATURES);
-    ASSERT(is_valid_feature_type(feat));
+    ASSERTM(is_valid_feature_type(feat), "Invalid feature type %d", int(feat));
     return feat_defs[feat_index[feat]];
 }
 

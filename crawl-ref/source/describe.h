@@ -54,10 +54,9 @@ string get_item_description(const item_def &item, bool verbose,
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
-bool describe_item(item_def &item, bool allow_inscribe = false,
-                   bool shopping = false);
+bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
-void inscribe_item(item_def &item, bool msgwin);
+void inscribe_item(item_def &item);
 
 int describe_monsters(const monster_info &mi, bool force_seen = false,
                       const string &footer = "");
@@ -87,6 +86,7 @@ string get_command_description(const command_type cmd, bool terse);
 void print_description(const string &desc);
 void print_description(const describe_info &inf);
 
+const char* jewellery_base_ability_string(int subtype);
 string artefact_inscription(const item_def& item);
 void add_inscription(item_def &item, string inscrip);
 

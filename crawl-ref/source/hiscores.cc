@@ -681,69 +681,71 @@ scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
 
 void scorefile_entry::init_from(const scorefile_entry &se)
 {
-    version           = se.version;
-    tiles             = se.tiles;
-    points            = se.points;
-    name              = se.name;
-    race              = se.race;
-    job               = se.job;
-    race_class_name   = se.race_class_name;
-    lvl               = se.lvl;
-    best_skill        = se.best_skill;
-    best_skill_lvl    = se.best_skill_lvl;
-    title             = se.title;
-    death_type        = se.death_type;
-    death_source      = se.death_source;
-    death_source_name = se.death_source_name;
+    version            = se.version;
+    save_rcs_version   = se.save_rcs_version;
+    save_tag_version   = se.save_tag_version;
+    tiles              = se.tiles;
+    points             = se.points;
+    name               = se.name;
+    race               = se.race;
+    job                = se.job;
+    race_class_name    = se.race_class_name;
+    lvl                = se.lvl;
+    best_skill         = se.best_skill;
+    best_skill_lvl     = se.best_skill_lvl;
+    title              = se.title;
+    death_type         = se.death_type;
+    death_source       = se.death_source;
+    death_source_name  = se.death_source_name;
     death_source_flags = se.death_source_flags;
-    auxkilldata       = se.auxkilldata;
-    indirectkiller    = se.indirectkiller;
-    killerpath        = se.killerpath;
-    last_banisher     = se.last_banisher;
-    dlvl              = se.dlvl;
-    absdepth          = se.absdepth;
-    branch            = se.branch;
-    map               = se.map;
-    mapdesc           = se.mapdesc;
-    killer_map        = se.killer_map;
-    final_hp          = se.final_hp;
-    final_max_hp      = se.final_max_hp;
-    final_max_max_hp  = se.final_max_max_hp;
-    final_mp          = se.final_mp;
-    final_max_mp      = se.final_max_mp;
-    final_base_max_mp = se.final_base_max_mp;
-    damage            = se.damage;
-    source_damage     = se.source_damage;
-    turn_damage       = se.turn_damage;
-    str               = se.str;
-    intel             = se.intel;
-    dex               = se.dex;
-    ac                = se.ac;
-    ev                = se.ev;
-    sh                = se.sh;
-    god               = se.god;
-    piety             = se.piety;
-    penance           = se.penance;
-    wiz_mode          = se.wiz_mode;
-    explore_mode      = se.explore_mode;
-    birth_time        = se.birth_time;
-    death_time        = se.death_time;
-    real_time         = se.real_time;
-    num_turns         = se.num_turns;
-    num_aut           = se.num_aut;
-    num_diff_runes    = se.num_diff_runes;
-    num_runes         = se.num_runes;
-    kills             = se.kills;
-    maxed_skills      = se.maxed_skills;
-    fifteen_skills    = se.fifteen_skills;
-    status_effects    = se.status_effects;
-    gold              = se.gold;
-    gold_spent        = se.gold_spent;
-    gold_found        = se.gold_found;
-    zigs              = se.zigs;
-    zigmax            = se.zigmax;
-    scrolls_used      = se.scrolls_used;
-    potions_used      = se.potions_used;
+    auxkilldata        = se.auxkilldata;
+    indirectkiller     = se.indirectkiller;
+    killerpath         = se.killerpath;
+    last_banisher      = se.last_banisher;
+    dlvl               = se.dlvl;
+    absdepth           = se.absdepth;
+    branch             = se.branch;
+    map                = se.map;
+    mapdesc            = se.mapdesc;
+    killer_map         = se.killer_map;
+    final_hp           = se.final_hp;
+    final_max_hp       = se.final_max_hp;
+    final_max_max_hp   = se.final_max_max_hp;
+    final_mp           = se.final_mp;
+    final_max_mp       = se.final_max_mp;
+    final_base_max_mp  = se.final_base_max_mp;
+    damage             = se.damage;
+    source_damage      = se.source_damage;
+    turn_damage        = se.turn_damage;
+    str                = se.str;
+    intel              = se.intel;
+    dex                = se.dex;
+    ac                 = se.ac;
+    ev                 = se.ev;
+    sh                 = se.sh;
+    god                = se.god;
+    piety              = se.piety;
+    penance            = se.penance;
+    wiz_mode           = se.wiz_mode;
+    explore_mode       = se.explore_mode;
+    birth_time         = se.birth_time;
+    death_time         = se.death_time;
+    real_time          = se.real_time;
+    num_turns          = se.num_turns;
+    num_aut            = se.num_aut;
+    num_diff_runes     = se.num_diff_runes;
+    num_runes          = se.num_runes;
+    kills              = se.kills;
+    maxed_skills       = se.maxed_skills;
+    fifteen_skills     = se.fifteen_skills;
+    status_effects     = se.status_effects;
+    gold               = se.gold;
+    gold_spent         = se.gold_spent;
+    gold_found         = se.gold_found;
+    zigs               = se.zigs;
+    zigmax             = se.zigmax;
+    scrolls_used       = se.scrolls_used;
+    potions_used       = se.potions_used;
     fixup_char_name();
 
     // We could just reset raw_line to "" instead.
@@ -905,7 +907,7 @@ enum old_species_type
     OLD_SP_SLUDGE_ELF = -7,
     OLD_SP_DJINNI = -8,
     OLD_SP_LAVA_ORC = -9,
-    NUM_OLD_SPECIES = OLD_SP_LAVA_ORC
+    NUM_OLD_SPECIES = -OLD_SP_LAVA_ORC
 };
 
 static string _species_name(int race)
@@ -951,7 +953,7 @@ static int _species_by_name(const string& name)
     if (race != SP_UNKNOWN)
         return race;
 
-    for (race = -1; race >= -NUM_OLD_JOBS; race--)
+    for (race = -1; race >= -NUM_OLD_SPECIES; race--)
         if (name == _species_name(race))
             return race;
 
@@ -961,6 +963,9 @@ static int _species_by_name(const string& name)
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
+    save_rcs_version = fields->str_field("vsavrv");
+    save_tag_version = fields->str_field("vsav");
+
     tiles   = fields->int_field("tiles");
     points  = fields->int_field("sc");
 
@@ -1061,6 +1066,11 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("v", "%s", Version::Short);
     fields->add_field("vlong", "%s", Version::Long);
     fields->add_field("lv", "%s", score_version.c_str());
+    if (!save_rcs_version.empty())
+        fields->add_field("vsavrv", "%s", save_rcs_version.c_str());
+    if (!save_tag_version.empty())
+        fields->add_field("vsav", "%s", save_tag_version.c_str());
+
 #ifdef EXPERIMENTAL_BRANCH
     fields->add_field("explbr", EXPERIMENTAL_BRANCH);
 #endif
@@ -1202,7 +1212,7 @@ string scorefile_entry::make_oneline(const string &ml) const
     vector<string> lines = split_string("\n", ml);
     for (string &s : lines)
     {
-        if (s.find("...") == 0)
+        if (starts_with(s, "..."))
         {
             s = s.substr(3);
             trim_string(s);
@@ -1234,7 +1244,7 @@ string scorefile_entry::short_kill_message() const
  *
  * @param[in,out] str   The string to modify.
  * @param[in]     infix The infix to remove.
- * @post If \c infix occured as a substring of <tt>str</tt>, \c str is updated
+ * @post If \c infix occurred as a substring of <tt>str</tt>, \c str is updated
  *       by removing all characters up to and including the last character
  *       of the the first occurrence. Otherwise, \c str is unchanged.
  * @return \c true if \c str was modified, \c false otherwise.
@@ -1411,6 +1421,8 @@ void scorefile_entry::reset()
     // simple init
     raw_line.clear();
     version.clear();
+    save_rcs_version.clear();
+    save_tag_version.clear();
     tiles                = 0;
     points               = -1;
     name.clear();
@@ -1525,6 +1537,13 @@ void scorefile_entry::init(time_t dt)
 #endif
     name    = you.your_name;
 
+    save_rcs_version = crawl_state.save_rcs_version;
+    if (crawl_state.minor_version > 0)
+    {
+        save_tag_version = make_stringf("%d.%d", TAG_MAJOR_VERSION,
+                                        crawl_state.minor_version);
+    }
+
     /*
      *  old scoring system (0.1-0.3):
      *
@@ -1586,6 +1605,9 @@ void scorefile_entry::init(time_t dt)
 
         points = pt;
     }
+    else
+        ASSERT(crawl_state.game_is_sprint());
+        // only sprint should use custom scores
 
     race = you.species;
     job  = you.char_class;
@@ -1615,8 +1637,6 @@ void scorefile_entry::init(time_t dt)
         }
     }
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
     status_info inf;
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
@@ -1673,8 +1693,8 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(nullptr)); // end time of game
 
-    handle_real_time(death_time);
-    real_time = you.real_time;
+    handle_real_time(chrono::system_clock::from_time_t(death_time));
+    real_time = you.real_time();
 
     num_turns = you.num_turns;
     num_aut = you.elapsed_time;
@@ -1752,9 +1772,9 @@ string scorefile_entry::damage_string(bool terse) const
 
 string scorefile_entry::strip_article_a(const string &s) const
 {
-    if (s.find("a ") == 0)
+    if (starts_with(s, "a "))
         return s.substr(2);
-    else if (s.find("an ") == 0)
+    else if (starts_with(s, "an "))
         return s.substr(3);
     return s;
 }
@@ -1771,7 +1791,7 @@ string scorefile_entry::terse_missile_name() const
 
     for (const string (&affixes)[2] : pre_post)
     {
-        if (aux.find(affixes[0]) != 0)
+        if (!starts_with(aux, affixes[0]))
             continue;
 
         string::size_type end = aux.rfind(affixes[1]);
@@ -1784,17 +1804,13 @@ string scorefile_entry::terse_missile_name() const
 
         // Was this prefixed by "a" or "an"?
         // (This should only ever not be the case with Robin and Ijyb.)
-        if (missile.find("an ") == 0)
-            missile = missile.substr(3);
-        else if (missile.find("a ") == 0)
-            missile = missile.substr(2);
+        missile = strip_article_a(missile);
     }
     return missile;
 }
 
 string scorefile_entry::terse_missile_cause() const
 {
-    string cause;
     const string &aux = auxkilldata;
 
     string monster_prefix = " by ";
@@ -1817,7 +1833,7 @@ string scorefile_entry::terse_missile_cause() const
 string scorefile_entry::terse_beam_cause() const
 {
     string cause = auxkilldata;
-    if (cause.find("by ") == 0 || cause.find("By ") == 0)
+    if (starts_with(cause, "by ") || starts_with(cause, "By "))
         cause = cause.substr(3);
     return cause;
 }
@@ -1843,7 +1859,8 @@ string scorefile_entry::single_cdesc() const
     scname = chop_string(name, 10);
 
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
+                        race_class_name.c_str(), lvl,
+                        (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
 }
 
 static string _append_sentence_delimiter(const string &sentence,
@@ -2114,7 +2131,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += terse? terse_missile_cause() : auxkilldata;
             needs_damage = true;
         }
-        else if (verbose && auxkilldata.find("by ") == 0)
+        else if (verbose && starts_with(auxkilldata, "by "))
         {
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
@@ -2190,8 +2207,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (species_is_unbreathing(static_cast<species_type>(race)))
+        else if (race >= 0 && // not a removed race
+                 species_is_unbreathing(static_cast<species_type>(race)))
+        {
             desc += "Forgot to exist";
+        }
         else
             desc += "Forgot to breathe";
         break;
@@ -2468,8 +2488,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 // Lugonu's touch or "the <retribution> of <deity>";
                 // otherwise it's a beam
-                if (!isupper(auxkilldata[0]) && auxkilldata.find("the ") != 0)
+                if (!isupper(auxkilldata[0])
+                    && !starts_with(auxkilldata, "the "))
+                {
                     desc += is_vowel(auxkilldata[0]) ? "an " : "a ";
+                }
 
                 desc += auxkilldata;
             }

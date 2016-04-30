@@ -74,6 +74,8 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
+                mitm[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
                 if (mitm[item].props.exists("autoinscribe"))
                 {
                     add_inscription(mitm[item],
@@ -100,7 +102,10 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
-    monster_type old_mclass = mons_base_type(mons);
+    monster_type old_mclass = mons->type;
+    if (mons_class_is_zombified(old_mclass))
+        old_mclass = mons->base_monster;
+    // don't force spectral shapeshifters to become natural|undead mons only
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
@@ -122,13 +127,17 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
+    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
+        // normally holiness just needs to overlap, but we don't want
+        // shapeshifters to become demons
+        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
                                                       // harmless things
+        || !mons_class_is_threatening(new_mclass)
         || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
@@ -136,10 +145,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
-        || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
-        // Currently unused (no zombie shapeshifters, no polymorph).
-        || mons->type == MONS_SKELETON && !mons_skeleton(new_mclass)
-        || mons->type == MONS_ZOMBIE && !mons_zombifiable(new_mclass)
 
         // These require manual setting of the ghost demon struct to
         // indicate their characteristics, which we currently aren't
@@ -232,7 +237,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // the actual polymorphing:
     auto flags =
-        mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
+        mons->flags & ~(MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK);
     flags |= MF_POLYMORPHED;
@@ -243,19 +248,19 @@ void change_monster_type(monster* mons, monster_type targetc)
         || mons->mname == "shaped Royal Jelly")
     {
         name   = "shaped Royal Jelly";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (mons->type == MONS_LERNAEAN_HYDRA
              || mons->mname == "shaped Lernaean hydra")
     {
         name   = "shaped Lernaean hydra";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (mons->mons_species() == MONS_SERPENT_OF_HELL
              || mons->mname == "shaped Serpent of Hell")
     {
         name   = "shaped Serpent of Hell";
-        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+        flags |= MF_NAME_SUFFIX;
     }
     else if (!mons->mname.empty())
     {
@@ -271,8 +276,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
     else if (mons_is_unique(mons->type))
     {
-        flags |= MF_INTERESTING;
-
         name = mons->name(DESC_PLAIN, true);
 
         // "Blork the orc" and similar.
@@ -333,7 +336,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
-    if (mons_is_zombified(mons))
+    if (!slimified && mons_is_zombified(mons))
         define_zombie(mons, targetc, mons->type);
     else
     {
@@ -403,9 +406,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->speed_increment = 67 + random2(6);
 
     monster_drop_things(mons);
-
-    // New monster type might be interesting.
-    mark_interesting_monst(mons);
 
     // If new monster is visible to player, then we've seen it.
     if (you.can_see(*mons))
@@ -489,7 +489,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
 
     bool could_see = you.can_see(*mons);
-    bool need_note = (could_see && MONST_INTERESTING(mons));
+    bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
@@ -500,7 +500,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data(mc);
-            int delta = (int) me->hpdice[0] - mons->get_hit_dice();
+            const int delta = me->HD - mons->get_hit_dice();
             if (delta != 1)
                 continue;
             if (!_valid_morph(mons, mc))
@@ -525,10 +525,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (could_see)
     {
         string verb = "";
-        string obj = "";
-
-        obj = can_see ? mons_type_name(targetc, DESC_A)
-                      : "something you cannot see";
+        string obj = can_see ? mons_type_name(targetc, DESC_A)
+                             : "something you cannot see";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {
@@ -552,13 +550,12 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     else
         player_messaged = false;
 
-    if (need_note || could_see && can_see && MONST_INTERESTING(mons))
+    if (need_note || could_see && can_see && mons_is_notable(*mons))
     {
         string new_name = can_see ? mons->full_name(DESC_A)
                                   : "something unseen";
 
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
-                       new_name.c_str()));
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
 
         if (can_see)
             mons->flags |= MF_SEEN;
@@ -579,14 +576,13 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     return player_messaged;
 }
 
-bool mon_can_be_slimified(monster* mons)
+bool mon_can_be_slimified(const monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && (holi == MH_UNDEAD
-                || holi == MH_NATURAL && !mons_is_slime(mons));
+           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -612,7 +608,7 @@ void slimify_monster(monster* mon, bool hostile)
     if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
-    if (mon->holiness() == MH_UNDEAD)
+    if (mon->holiness() & MH_UNDEAD)
         target = MONS_DEATH_OOZE;
 
     // Bail out if jellies can't live here.
@@ -668,7 +664,7 @@ void seen_monster(monster* mons)
     if (crawl_state.game_is_hints())
         hints_monster_seen(*mons);
 
-    if (MONST_INTERESTING(mons))
+    if (mons_is_notable(*mons))
     {
         string name = mons->name(DESC_A, true);
         if (mons->type == MONS_PLAYER_GHOST)
@@ -676,7 +672,7 @@ void seen_monster(monster* mons)
             name += make_stringf(" (%s)",
                                  short_ghost_description(mons, true).c_str());
         }
-        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name.c_str()));
+        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
 
     if (!(mons->flags & MF_TSO_SEEN))

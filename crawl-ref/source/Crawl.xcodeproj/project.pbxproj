@@ -1500,7 +1500,6 @@
 		E5D6406310BD494500A99626 /* player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
 		E5D6406410BD494500A99626 /* quiver.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quiver.cc; sourceTree = "<group>"; };
 		E5D6406510BD494500A99626 /* quiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quiver.h; sourceTree = "<group>"; };
-		E5D6406610BD494500A99626 /* random-weight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "random-weight.h"; sourceTree = "<group>"; };
 		E5D6406710BD494500A99626 /* random.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = random.cc; sourceTree = "<group>"; };
 		E5D6406810BD494500A99626 /* random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random.h; sourceTree = "<group>"; };
 		7BDE8457116D24E600974D63 /* ranged_attack.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ranged_attack.cc; sourceTree = "<group>"; };
@@ -2113,7 +2112,6 @@
 				E5D6406510BD494500A99626 /* quiver.h */,
 				7B5165B711859D82005B23ED /* random-var.cc */,
 				7B5165B811859D82005B23ED /* random-var.h */,
-				E5D6406610BD494500A99626 /* random-weight.h */,
 				E5D6406710BD494500A99626 /* random.cc */,
 				E5D6406810BD494500A99626 /* random.h */,
 				7BDE8457116D24E600974D63 /* ranged_attack.cc */,

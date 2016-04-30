@@ -34,6 +34,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
+#include "randbook.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -89,11 +90,6 @@ void wizard_create_spec_object_by_name()
     }
 }
 
-//---------------------------------------------------------------
-//
-// create_spec_object
-//
-//---------------------------------------------------------------
 void wizard_create_spec_object()
 {
     char           specs[80];
@@ -182,7 +178,10 @@ void wizard_create_spec_object()
         dummy.position = you.pos();
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.num_heads = prompt_for_int("How many heads? ", false);
+        {
+            dummy.num_heads
+                =  max(1, min(27, prompt_for_int("How many heads? ", false)));
+        }
 
         if (!place_monster_corpse(dummy, false, true))
         {
@@ -265,7 +264,7 @@ static void _tweak_randart(item_def &item)
 #endif
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            *(prompt.rend()) = '\n'; // Replace the space
+            prompt.back() = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -324,7 +323,7 @@ static void _tweak_randart(item_def &item)
         break;
 
     case ARTP_VAL_POS:
-     {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
@@ -337,15 +336,15 @@ static void _tweak_randart(item_def &item)
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     case ARTP_VAL_ANY:
-      {
+    {
         mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
-      }
+    }
     }
 }
 
@@ -414,7 +413,10 @@ void wizard_tweak_object()
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         char *end;
         const bool hex = (keyin == 'e');
@@ -429,7 +431,10 @@ void wizard_tweak_object()
         }
 
         if (end == specs)
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         if (keyin == 'a')
             you.inv[item].plus = new_val;
@@ -470,8 +475,8 @@ static bool _make_book_randart(item_def &book)
 
     if (type == 'l')
         return make_book_level_randart(book);
-    else
-        return make_book_theme_randart(book);
+    build_themed_book(book);
+    return true;
 }
 
 void wizard_value_artefact()
@@ -579,7 +584,7 @@ void wizard_make_object_randart()
             return;
         }
 
-        item.special = 0;
+        item.unrand_idx = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
     }
@@ -613,10 +618,10 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
@@ -642,10 +647,16 @@ void wizard_uncurse_item()
 
         if (item.cursed())
             do_uncurse_item(item);
-        else if (_item_type_can_be_cursed(item.base_type))
-            do_curse_item(item);
         else
-            mpr("That type of item cannot be cursed.");
+        {
+            if (!_item_type_can_be_cursed(item.base_type))
+            {
+                mpr("That type of item cannot be cursed.");
+                return;
+            }
+            do_curse_item(item);
+        }
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
     }
 }
 
@@ -668,12 +679,10 @@ static void _forget_item(item_def &item)
 void wizard_unidentify_pack()
 {
     mpr("You feel a rush of antiknowledge.");
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item = you.inv[i];
+    for (auto &item : you.inv)
         if (item.defined())
             _forget_item(item);
-    }
+
     you.wield_change  = true;
     you.redraw_quiver = true;
 
@@ -681,29 +690,16 @@ void wizard_unidentify_pack()
     // (For use with the "give monster an item" wizard targeting
     // command.)
     for (monster_near_iterator mon(&you); mon; ++mon)
-    {
-        for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
-        {
-            if (mon->inv[j] == NON_ITEM)
-                continue;
-
-            item_def &item = mitm[mon->inv[j]];
-            if (item.defined())
-                _forget_item(item);
-        }
-    }
+        for (mon_inv_iterator ii(**mon); ii; ++ii)
+            _forget_item(*ii);
 }
 
 void wizard_list_items()
 {
     mpr("Item stacks (by location and top item):");
-    for (int i = 0; i < MAX_ITEMS; ++i)
+    for (const auto &item : mitm)
     {
-        item_def &item(mitm[i]);
-        if (!item.defined() || item.held_by_monster())
-            continue;
-
-        if (item.link != NON_ITEM)
+        if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
         {
             mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
                  item.name(DESC_PLAIN, false, false, false).c_str(),
@@ -727,11 +723,6 @@ void wizard_list_items()
     }
 }
 
-//---------------------------------------------------------------
-//
-// debug_item_statistics
-//
-//---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
     int p = get_mitm_slot(11);
@@ -778,6 +769,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
+    int randbook_spells = 0;
 
     int subtype_quants[256];
     int ego_quants[NUM_SPECIAL_WEAPONS];
@@ -818,6 +810,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             num_arts++;
             if (type == OBJ_BOOKS)
             {
+                randbook_spells += spells_in_book(item).size();
                 if (item.sub_type == BOOK_RANDART_THEME)
                 {
                     const int disc1 = item.plus & 0xFF;
@@ -1001,8 +994,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             "draining",
             "speed",
             "vorpal",
+#if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",
+#endif
             "vampirism",
             "pain",
             "antimagic",
@@ -1130,6 +1125,9 @@ static void _debug_acquirement_stats(FILE *ostat)
                             100.0 * (float) ego_quants[i] / (float) num_arts);
                 }
             }
+
+            fprintf(ostat, "Avg. spells per randbook: %4.3f",
+                    (float)randbook_spells / num_arts);
         }
 
         // Also list skills for manuals.
@@ -1222,7 +1220,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     // Start off with a non-artefact item.
     item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-    item.special = 0;
+    item.unrand_idx = 0;
     item.props.clear();
 
     if (!make_item_randart(item))
@@ -1264,7 +1262,7 @@ static void _debug_rap_stats(FILE *ostat)
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
         item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-        item.special = 0;
+        item.unrand_idx = 0;
         item.props.clear();
         make_item_randart(item);
         artefact_properties(item, proprt);
@@ -1413,6 +1411,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CORRODE",
         "ARTP_DRAIN",
         "ARTP_CONFUSE",
+        "ARTP_FRAGILE",
+        "ARTP_SHIELDING",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
@@ -1464,7 +1464,7 @@ void debug_item_statistics()
     switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;
-    case 'b': _debug_rap_stats(ostat);
+    case 'b': _debug_rap_stats(ostat); break;
     default:
         canned_msg(MSG_OK);
         break;
@@ -1506,12 +1506,9 @@ void wizard_draw_card()
 void wizard_identify_all_items()
 {
     wizard_identify_pack();
-    for (int i = 0; i < MAX_ITEMS; ++i)
-    {
-        item_def& item = mitm[i];
+    for (auto &item : mitm)
         if (item.defined())
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
@@ -1525,12 +1522,9 @@ void wizard_identify_all_items()
 void wizard_unidentify_all_items()
 {
     wizard_unidentify_pack();
-    for (int i = 0; i < MAX_ITEMS; ++i)
-    {
-        item_def& item = mitm[i];
+    for (auto &item : mitm)
         if (item.defined())
             _forget_item(item);
-    }
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;

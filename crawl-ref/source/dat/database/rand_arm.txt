@@ -236,6 +236,8 @@ Insecurity
 
 Vexation
 
+Disappointment
+
 # inaction
 Lifelessness
 
@@ -256,6 +258,10 @@ Oblivion
 the Doldrums
 
 Listlessness
+
+Apathy
+
+Lethargy
 %%%%
 _mental_illness_armour_
 
@@ -645,6 +651,8 @@ Gravedigger
 Pirate
 
 Buccaneer
+
+Moneychanger
 %%%%
 # something for Xom
 _game_name_
@@ -755,6 +763,8 @@ the Cast Vote
 the Burgomaster
 
 the Failed Coup
+
+Sovereignty
 %%%%
 _other_armour_name_
 

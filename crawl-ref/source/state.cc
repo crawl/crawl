@@ -51,14 +51,16 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
 #endif
-      darken_range(nullptr), unsaved_macros(false), mon_act(nullptr)
+      invisible_targeting(false),
+      darken_range(nullptr), unsaved_macros(false), disables(),
+      minor_version(-1), save_rcs_version(), mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
 #ifdef TARGET_OS_WINDOWS
     no_gdb = "Non-UNIX Platform -> not running gdb.";
 #else
-    no_gdb = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
+    no_gdb = access("/usr/bin/gdb", 1) ? "/usr/bin/gdb not executable." : 0;
 #endif
 }
 
@@ -198,7 +200,6 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     switch (ai)
     {
-    case AI_STATUE:
     case AI_HUNGRY:
     case AI_TELEPORT:
     case AI_FORCE_INTERRUPT:
@@ -277,7 +278,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         // when the only monsters around are 0xp.
         const monster* mon = at.mons_data;
 
-        if (!mons_class_gives_xp(mon->type) && mon->visible_to(&you))
+        if (!mons_is_threatening(mon) && mon->visible_to(&you))
             return false;
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");

@@ -7,10 +7,12 @@
 
 #include "items.h"
 
+#include <algorithm>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional> // mem_fn
 #include <limits>
 
 #include "adjust.h"
@@ -62,6 +64,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "quiver.h"
+#include "randbook.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
@@ -168,13 +171,15 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean food or Orbs.
-    if (mitm[item].base_type == OBJ_FOOD || item_is_orb(mitm[item]))
+    // Never clean food, zigfigs, Orbs, or runes.
+    if (mitm[item].base_type == OBJ_FOOD
+        || mitm[item].base_type == OBJ_MISCELLANY
+            && mitm[item].sub_type == MISC_ZIGGURAT
+        || item_is_orb(mitm[item])
+        || mitm[item].base_type == OBJ_RUNES)
+    {
         return false;
-
-    // Never clean runes.
-    if (item_is_rune(mitm[item]))
-        return false;
+    }
 
     return true;
 }
@@ -312,6 +317,49 @@ const stack_iterator& stack_iterator::operator ++ ()
 stack_iterator stack_iterator::operator++(int)
 {
     const stack_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+mon_inv_iterator::mon_inv_iterator(monster& _mon)
+    : mon(_mon)
+{
+    type = static_cast<mon_inv_type>(0);
+    if (mon.inv[type] == NON_ITEM)
+        ++*this;
+}
+
+mon_inv_iterator::operator bool() const
+{
+    return type < NUM_MONSTER_SLOTS;
+}
+
+item_def& mon_inv_iterator::operator*() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return mitm[mon.inv[type]];
+}
+
+item_def* mon_inv_iterator::operator->() const
+{
+    ASSERT(mon.inv[type] != NON_ITEM);
+    return &mitm[mon.inv[type]];
+}
+
+mon_inv_iterator& mon_inv_iterator::operator ++ ()
+{
+    do
+    {
+        type = static_cast<mon_inv_type>(type + 1);
+    }
+    while (*this && mon.inv[type] == NON_ITEM);
+
+    return *this;
+}
+
+mon_inv_iterator mon_inv_iterator::operator++(int)
+{
+    const mon_inv_iterator copy = *this;
     ++(*this);
     return copy;
 }
@@ -461,14 +509,15 @@ void unlink_item(int dest)
 
     if (mons != nullptr)
     {
-        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        for (mon_inv_iterator ii(*mons); ii; ++ii)
         {
-            if (mons->inv[i] == dest)
+            if (ii->index() == dest)
             {
-                mons->inv[i] = NON_ITEM;
+                item_def& item = *ii;
+                mons->inv[ii.slot()] = NON_ITEM;
 
-                mitm[dest].pos.reset();
-                mitm[dest].link = NON_ITEM;
+                item.pos.reset();
+                item.link = NON_ITEM;
                 return;
             }
         }
@@ -545,12 +594,12 @@ void unlink_item(int dest)
     mitm[dest].props.clear();
 
     // Look through all items for links to this item.
-    for (int c = 0; c < MAX_ITEMS; c++)
+    for (auto &item : mitm)
     {
-        if (mitm[c].defined() && mitm[c].link == dest)
+        if (item.defined() && item.link == dest)
         {
             // unlink item
-            mitm[c].link = old_link;
+            item.link = old_link;
 
             if (!linked)
             {
@@ -735,7 +784,7 @@ static int _item_name_specialness(const item_def& item)
     return 0;
 }
 
-static void _maybe_give_corpse_hint(const item_def item)
+static void _maybe_give_corpse_hint(const item_def& item)
 {
     if (!crawl_state.game_is_hints_tutorial())
         return;
@@ -763,7 +812,7 @@ void item_check()
 
     if (items.size() == 1)
     {
-        item_def it(*items[0]);
+        const item_def& it(*items[0]);
         string name = get_menu_colour_prefix_tags(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
         _maybe_give_corpse_hint(it);
@@ -777,7 +826,7 @@ void item_check()
         vector<unsigned int> item_chars;
         for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
-            cglyph_t g = get_item_glyph(items[i]);
+            cglyph_t g = get_item_glyph(*items[i]);
             item_chars.push_back(g.ch * 0x100 +
                                  (10 - _item_name_specialness(*(items[i]))));
         }
@@ -988,7 +1037,7 @@ static string _milestone_rune(const item_def &item)
 
 static void _milestone_check(const item_def &item)
 {
-    if (item_is_rune(item))
+    if (item.base_type == OBJ_RUNES)
         mark_milestone("rune", _milestone_rune(item));
     else if (item_is_orb(item))
         mark_milestone("orb", "found the Orb of Zot!");
@@ -999,10 +1048,10 @@ static void _check_note_item(item_def &item)
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (item_is_rune(item) || item_is_orb(item) || is_artefact(item))
+    if (item.base_type == OBJ_RUNES || item_is_orb(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A).c_str(),
-                       origin_desc(item).c_str()));
+        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+                       origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 
         // If it's already fully identified when picked up, don't take
@@ -1074,14 +1123,18 @@ static bool _origin_is_original_equip(const item_def &item)
     return _origin_is_special(item) && item.orig_monnum == -IT_SRC_START;
 }
 
-bool origin_is_god_gift(const item_def& item, god_type *god)
+/**
+ * What god gifted this item to the player?
+ *
+ * @param item      The item in question.
+ * @returns         The god that gifted this item to the player, if any;
+ *                  else GOD_NO_GOD.
+ */
+god_type origin_as_god_gift(const item_def& item)
 {
-    god_type ogod = static_cast<god_type>(-item.orig_monnum);
+    const god_type ogod = static_cast<god_type>(-item.orig_monnum);
     if (ogod <= GOD_NO_GOD || ogod >= NUM_GODS)
-        ogod = GOD_NO_GOD;
-
-    if (god)
-        *god = ogod;
+        return GOD_NO_GOD;
     return ogod;
 }
 
@@ -1355,7 +1408,7 @@ void pickup(bool partial_quantity)
         // list them.
         if (!any_selectable)
         {
-            for (stack_iterator si(you.pos(), true); si; si++)
+            for (stack_iterator si(you.pos(), true); si; ++si)
                 mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
         }
 
@@ -1380,8 +1433,11 @@ bool is_stackable_item(const item_def &item)
         return true;
     }
 
-    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR))
+    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR)
+        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
+    {
         return true;
+    }
 
     return false;
 }
@@ -1392,7 +1448,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return false;
 
-    if (item1.base_type == OBJ_GOLD || item_is_rune(item1))
+    if (item1.base_type == OBJ_GOLD || item1.base_type == OBJ_RUNES)
         return true;
 
     if (is_artefact(item1) != is_artefact(item2))
@@ -1404,7 +1460,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // Missiles with different egos shouldn't merge.
-    if (item1.base_type == OBJ_MISSILES && item1.special != item2.special)
+    if (item1.base_type == OBJ_MISSILES && item1.brand != item2.brand)
         return false;
 
     // Don't merge trapping nets with other nets.
@@ -1446,7 +1502,10 @@ bool items_stack(const item_def &item1, const item_def &item2)
         return false;
     }
 
-    return items_similar(item1, item2);
+    return items_similar(item1, item2)
+        // Don't leak information when checking if an "(unknown)" shop item
+        // matches an unidentified item in inventory.
+        && fully_identified(item1) == fully_identified(item2);
 }
 
 /**
@@ -1470,8 +1529,6 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 
     if (is_perishable_stack(source) && is_perishable_stack(dest))
         merge_perishable_stacks(source, dest, quant);
-    if (source.base_type == OBJ_GOLD) // Gozag
-        dest.special = max(source.special, dest.special);
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -1667,7 +1724,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     bool actually_went_in = false;
     const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
 
-    if ((item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
+    if ((it.base_type == OBJ_RUNES || item_is_orb(it) || in_bounds(old_item_pos))
         && actually_went_in)
     {
         dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
@@ -1696,14 +1753,14 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
  */
 static void _get_rune(const item_def& it, bool quiet)
 {
-    if (!you.runes[it.plus])
-        you.runes.set(it.plus);
+    if (!you.runes[it.sub_type])
+        you.runes.set(it.sub_type);
 
     if (!quiet)
     {
-        flash_view_delay(UA_PICKUP, rune_colour(it.plus), 300);
+        flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
         mprf("You pick up the %s rune and feel its power.",
-             rune_type_name(it.plus));
+             rune_type_name(it.sub_type));
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
@@ -1719,7 +1776,7 @@ static void _get_rune(const item_def& it, bool quiet)
         mpr("Press } to see all the runes you have collected.");
     }
 
-    if (it.plus == RUNE_ABYSSAL)
+    if (it.sub_type == RUNE_ABYSSAL)
         mpr("You feel the abyssal rune guiding you out of this place.");
 }
 
@@ -1806,20 +1863,34 @@ item_def *auto_assign_item_slot(item_def& item)
         return nullptr;
 
     int newslot = -1;
+    bool overwrite = true;
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
     {
-        if (!mapping.first.matches(item.name(DESC_QUALNAME)))
+        if (!mapping.first.matches(item.name(DESC_QUALNAME))
+            && !mapping.first.matches(item_prefix(item)
+                                      + " " + item.name(DESC_A)))
+        {
             continue;
+        }
         for (char i : mapping.second)
         {
-            if (isaalpha(i))
+            if (i == '+')
+                overwrite = true;
+            else if (i == '-')
+                overwrite = false;
+            else if (isaalpha(i))
             {
                 const int index = letter_to_index(i);
+                auto &iitem = you.inv[index];
 
-                // Don't swap with an item matched by the same rule.
-                if (!you.inv[index].defined()
-                    || !mapping.first.matches(you.inv[index].name(DESC_QUALNAME)))
+                // Slot is empty, or overwrite is on and the rule doesn't
+                // match the item already there.
+                if (!iitem.defined()
+                    || overwrite
+                       && !mapping.first.matches(iitem.name(DESC_QUALNAME))
+                       && !mapping.first.matches(item_prefix(iitem)
+                                                 + " " + iitem.name(DESC_A)))
                 {
                     newslot = index;
                     break;
@@ -1865,6 +1936,17 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
         set_ident_type(item, true);
+
+    if ((item.base_type == OBJ_WANDS || item.base_type == OBJ_RODS)
+        && you_worship(GOD_PAKELLAS)
+        && in_good_standing(GOD_PAKELLAS))
+    {
+        if (item.base_type == OBJ_RODS)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        if (!item_ident(item, ISFLAG_KNOW_PLUSES))
+            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+    }
+
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
     {
@@ -1929,7 +2011,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
 
     // Runes are also massless.
-    if (item_is_rune(it))
+    if (it.base_type == OBJ_RUNES)
     {
         _get_rune(it, quiet);
         return true;
@@ -1967,17 +2049,6 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-void mark_items_non_visit_at(const coord_def &pos)
-{
-    int item = igrd(pos);
-    while (item != NON_ITEM)
-    {
-        if (god_likes_item(you.religion, mitm[item]))
-            mitm[item].flags |= ISFLAG_DROPPED;
-        item = mitm[item].link;
-    }
-}
-
 void clear_item_pickup_flags(item_def &item)
 {
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
@@ -1986,7 +2057,7 @@ void clear_item_pickup_flags(item_def &item)
 // Move gold to the the top of a pile if following Gozag.
 static void _gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    if (have_passive(passive_t::detect_gold))
     {
         for (int gold = igrd(p); gold != NON_ITEM;
              gold = mitm[gold].link)
@@ -2034,12 +2105,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         return true;
     }
 
-    if (you.see_cell(p))
-    {
-        god_id_item(item);
-        maybe_identify_base_type(item);
-    }
-
     // If it's a stackable type or stationary item that's not a net...
     int movable_ind = -1;
     if (move_below || is_stackable_item(item))
@@ -2060,6 +2125,13 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 destroy_item(ob);
                 ob = si->index();
                 _gozag_move_gold_to_top(p);
+                if (you.see_cell(p))
+                {
+                    // XXX: Is it actually necessary to identify when the
+                    // new item merged with a stack?
+                    god_id_item(*si);
+                    maybe_identify_base_type(*si);
+                }
                 return true;
             }
             if (move_below
@@ -2099,6 +2171,12 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (item.base_type != OBJ_GOLD)
         _gozag_move_gold_to_top(p);
+
+    if (you.see_cell(p))
+    {
+        god_id_item(item);
+        maybe_identify_base_type(item);
+    }
 
     return true;
 }
@@ -2223,12 +2301,13 @@ coord_def item_pos(const item_def &item)
     return pos;
 }
 
-//---------------------------------------------------------------
-//
-// move_top_item -- moves the top item of a stack to a new
-// location.
-//
-//---------------------------------------------------------------
+/**
+ * Move the top item of a stack to a new location.
+ *
+ * @param pos the location of the stack
+ * @param dest the position to be moved to
+ * @return whether there were any items at pos to be moved.
+ */
 bool move_top_item(const coord_def &pos, const coord_def &dest)
 {
     int item = igrd(pos);
@@ -2271,8 +2350,10 @@ bool multiple_items_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
-    if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
-        quant_drop = you.inv[item_dropped].quantity;
+    item_def &item = you.inv[item_dropped];
+
+    if (quant_drop < 0 || quant_drop > item.quantity)
+        quant_drop = item.quantity;
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -2291,6 +2372,7 @@ bool drop_item(int item_dropped, int quant_drop)
             mpr("You will have to take that off first.");
         else if (remove_ring(item_dropped, true))
         {
+            // The delay handles the case where the item disappeared.
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
             // We didn't actually succeed yet, but remove_ring took time,
             // so return true anyway.
@@ -2301,10 +2383,9 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     if (item_dropped == you.equip[EQ_WEAPON]
-        && you.inv[item_dropped].base_type == OBJ_WEAPONS
-        && you.inv[item_dropped].cursed())
+        && item.base_type == OBJ_WEAPONS && item.cursed())
     {
-        mprf("%s is stuck to you!", you.inv[item_dropped].name(DESC_THE).c_str());
+        mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
         return false;
     }
 
@@ -2314,12 +2395,12 @@ bool drop_item(int item_dropped, int quant_drop)
         {
             if (!Options.easy_unequip)
                 mpr("You will have to take that off first.");
-            else if (check_warning_inscriptions(you.inv[item_dropped],
-                                                OPER_TAKEOFF))
+            else if (check_warning_inscriptions(item, OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
                 if (takeoff_armour(item_dropped))
                 {
+                    // The delay handles the case where the item disappeared.
                     start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
                     // We didn't actually succeed yet, but takeoff_armour
                     // took a turn to start up, so return true anyway.
@@ -2334,37 +2415,37 @@ bool drop_item(int item_dropped, int quant_drop)
     //
     // Unwield needs to be done before copy in order to clear things
     // like temporary brands. -- bwr
-    if (item_dropped == you.equip[EQ_WEAPON]
-        && quant_drop >= you.inv[item_dropped].quantity)
+    if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
             return false;
+        // May have been destroyed by removal. Returning true because we took
+        // time to swap away.
+        else if (!item.defined())
+            return true;
     }
 
-    if (!copy_item_to_grid(you.inv[item_dropped],
-                            you.pos(), quant_drop, true, true))
+    ASSERT(item.defined());
+
+    if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;
     }
 
-    mprf("You drop %s.",
-         quant_name(you.inv[item_dropped], quant_drop, DESC_A).c_str());
+    mprf("You drop %s.", quant_name(item, quant_drop, DESC_A).c_str());
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
     if (silenced(you.pos()) || you.swimming())
         feat_splash_noise(grd(you.pos()));
 
-    if (you.inv[item_dropped].quantity != quant_drop)
+    // XP evoker has been handled in copy_item_to_grid
+    if (item.quantity != quant_drop && is_perishable_stack(item))
     {
-        if (is_perishable_stack(you.inv[item_dropped]))
-        {
-            // Oldest potions have been dropped.
-            for (int i = 0; i < quant_drop; i++)
-                remove_oldest_perishable_item(you.inv[item_dropped]);
-        }
-        // XP evoker has been handled in copy_item_to_grid
+        // Oldest potions have been dropped.
+        for (int i = 0; i < quant_drop; i++)
+            remove_oldest_perishable_item(item);
     }
 
     dec_inv_item_quantity(item_dropped, quant_drop);
@@ -2477,13 +2558,9 @@ static bool _drop_item_order(const SelItem &first, const SelItem &second)
     return first.slot < second.slot;
 }
 
-//---------------------------------------------------------------
-//
-// drop
-//
-// Prompts the user for an item to drop
-//
-//---------------------------------------------------------------
+/**
+ * Prompts the user for an item to drop.
+ */
 void drop()
 {
     if (inv_count() < 1 && you.gold == 0)
@@ -2609,9 +2686,9 @@ static void _autoinscribe_floor_items()
 
 static void _autoinscribe_inventory()
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined())
-            _autoinscribe_item(you.inv[i]);
+    for (auto &item : you.inv)
+        if (item.defined())
+            _autoinscribe_item(item);
 }
 
 bool need_to_autoinscribe()
@@ -2663,7 +2740,7 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_MISCELLANY:
-        return item.sub_type == MISC_RUNE_OF_ZOT ? item.sub_type : max_type;
+        return max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL || item_type_known(item))
             return item.sub_type;
@@ -2671,20 +2748,21 @@ static int _autopickup_subtype(const item_def &item)
             return max_type;
     case OBJ_RODS:
     case OBJ_GOLD:
+    case OBJ_RUNES:
         return max_type;
     default:
         return item.sub_type;
     }
 }
 
-static bool _is_option_autopickup(const item_def &item)
+static bool _is_option_autopickup(const item_def &item, bool ignore_force)
 {
     string iname = _autopickup_item_name(item);
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
         const int force = you.force_autopickup[item.base_type][_autopickup_subtype(item)];
-        if (force != 0)
+        if (!ignore_force && force != 0)
             return force == 1;
     }
     else
@@ -2714,8 +2792,17 @@ static bool _is_option_autopickup(const item_def &item)
     return Options.autopickups[item.base_type];
 }
 
-bool item_needs_autopickup(const item_def &item)
+/** Is the item something that we should try to autopickup?
+ *
+ * @param ignore_force If true, ignore force_autopickup settings from the
+ *                     \ menu (default false).
+ * @return True if the object should be picked up.
+ */
+bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
+    if (in_inventory(item))
+        return false;
+
     if (item_is_stationary(item))
         return false;
 
@@ -2731,7 +2818,7 @@ bool item_needs_autopickup(const item_def &item)
     if (item.props.exists("needs_autopickup"))
         return true;
 
-    return _is_option_autopickup(item);
+    return _is_option_autopickup(item, ignore_force);
 }
 
 bool can_autopickup()
@@ -2821,18 +2908,12 @@ static bool _similar_jewellery(const item_def& pickup_item,
 static bool _item_different_than_inv(const item_def& pickup_item,
                                      item_comparer comparer)
 {
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        const item_def& inv_item(you.inv[i]);
-
-        if (!inv_item.defined())
-            continue;
-
-        if ((*comparer)(pickup_item, inv_item))
-            return false;
-    }
-
-    return true;
+    return none_of(begin(you.inv), end(you.inv),
+                   [&] (const item_def &inv_item) -> bool
+                   {
+                       return inv_item.defined()
+                           && comparer(pickup_item, inv_item);
+                   });
 }
 
 static bool _interesting_explore_pickup(const item_def& item)
@@ -2872,7 +2953,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return true;
 
     // Possbible ego items.
-    if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
+    if (!item_type_known(item) && (item.flags & ISFLAG_COSMETIC_MASK))
         return true;
 
     switch (item.base_type)
@@ -2881,7 +2962,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     case OBJ_MISSILES:
     case OBJ_ARMOUR:
         // Ego items.
-        if (item.special != 0)
+        if (item.brand != 0)
             return true;
         break;
 
@@ -2918,10 +2999,6 @@ static bool _interesting_explore_pickup(const item_def& item)
 
         // Intentional fall-through.
     case OBJ_MISCELLANY:
-        // Runes are always interesting.
-        if (item_is_rune(item))
-            return true;
-
         // Decks always start out unidentified.
         if (is_deck(item))
             return true;
@@ -2939,6 +3016,10 @@ static bool _interesting_explore_pickup(const item_def& item)
 
     case OBJ_ORBS:
         // Orb is always interesting.
+        return true;
+
+    case OBJ_RUNES:
+        // Runes are always interesting.
         return true;
 
     default:
@@ -3031,22 +3112,18 @@ void autopickup()
 
 int inv_count()
 {
-    int count = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined())
-            count++;
-
-    return count;
+    return count_if(begin(you.inv), end(you.inv), mem_fn(&item_def::defined));
 }
 
+// sub_type == -1 means look for any item of the class
 item_def *find_floor_item(object_class_type cls, int sub_type)
 {
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
             for (stack_iterator si(coord_def(x,y)); si; ++si)
                 if (si->defined()
-                    && si->is_type(cls, sub_type)
+                    && (si->is_type(cls, sub_type)
+                        || si->base_type == cls && sub_type == -1)
                     && !(si->flags & ISFLAG_MIMIC))
                 {
                     return &*si;
@@ -3084,6 +3161,7 @@ int get_max_subtype(object_class_type base_type)
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
         NUM_RODS,
+        NUM_RUNE_TYPES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3149,36 +3227,44 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        while (wand_sub_type == WAND_RANDOM_EFFECTS
-               || wand_sub_type == WAND_HEAL_WOUNDS)
-        {
-            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
-        }
+        // choose from all existing wands, except:
+        // (1) don't allow /hw, because it encourages stuff like curing rot
+        // (2) allow /invis even though that was removed, because it's fun
+        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
+                             ZAP_PARALYSE, ZAP_CONFUSE,
+                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
+                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
+                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
+                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
     case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
-    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
-    case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
+    case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
+    case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS: break;
+    case NUM_WANDS:
+#if TAG_MAJOR_VERSION == 34
+    case WAND_INVISIBILITY_REMOVED:
+    case WAND_MAGIC_DARTS_REMOVED:
+    case WAND_FIRE_REMOVED:
+    case WAND_COLD_REMOVED:
+    case WAND_FROST_REMOVED:
+#endif
+        break;
     }
     return result;
 }
@@ -3622,9 +3708,7 @@ colour_t item_def::book_colour() const
  */
 colour_t item_def::rune_colour() const
 {
-    ASSERT(item_is_rune(*this));
-
-    switch (rune_enum)
+    switch (sub_type)
     {
         case RUNE_DIS:                      // iron
             return ETC_IRON;
@@ -3665,7 +3749,7 @@ colour_t item_def::rune_colour() const
             static const element_type types[] =
             {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
              ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
-             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH};
 
             return types[rnd % ARRAYSZ(types)];
         }
@@ -3700,13 +3784,8 @@ colour_t item_def::miscellany_colour() const
     if (is_deck(*this, true))
         return deck_rarity_to_colour(deck_rarity);
 
-    if (item_is_rune(*this))
-        return rune_colour();
-
     switch (sub_type)
     {
-        case MISC_LANTERN_OF_SHADOWS:
-            return BLUE;
         case MISC_FAN_OF_GALES:
             return CYAN;
 #if TAG_MAJOR_VERSION == 34
@@ -3732,11 +3811,15 @@ colour_t item_def::miscellany_colour() const
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
 #if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
+        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
+        case MISC_ZIGGURAT:
+            return ETC_BONE;
         default:
             return LIGHTGREEN;
     }
@@ -3827,7 +3910,9 @@ colour_t item_def::get_colour() const
         case OBJ_MISCELLANY:
             return miscellany_colour();
         case OBJ_GOLD:
-            return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
+            return YELLOW;
+        case OBJ_RUNES:
+            return rune_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -3929,32 +4014,9 @@ bool item_def::is_mundane() const
     return false;
 }
 
-// Does the item cause autoexplore to visit it?
-// Excludes visited items (dropped flag) and ?RC for Ash.
-bool item_def::is_greedy_sacrificeable() const
-{
-    if (!god_likes_items(you.religion, true))
-        return false;
-
-    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
-        || item_needs_autopickup(*this)
-        || item_is_stationary_net(*this)
-        || inscription.find("!p") != string::npos
-        || inscription.find("=p") != string::npos
-        || inscription.find("!*") != string::npos
-        || inscription.find("!D") != string::npos)
-    {
-        return false;
-    }
-
-    return god_likes_item(you.religion, *this);
-}
-
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
-
-    item.sub_type = MISC_RUNE_OF_ZOT;
 
     if (strstr(_specs, "rune of zot"))
     {
@@ -3968,7 +4030,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     {
         for (int i = 0; i < NUM_RUNE_TYPES; ++i)
         {
-            item.plus = i;
+            item.sub_type = i;
 
             if (lowercase_string(item.name(DESC_PLAIN)).find(specs) != string::npos)
                 return;
@@ -4002,7 +4064,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         if (keyin < 'a' || keyin >= 'a' + NUM_RUNE_TYPES)
             continue;
 
-        item.plus = keyin - 'a';
+        item.sub_type = keyin - 'a';
 
         return;
     }
@@ -4142,7 +4204,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
 
     const deck_rarity_type rarity =
         static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
-    item.special = rarity;
+    item.deck_rarity = rarity;
 
     const int num_cards =
         create_for_real ? prompt_for_int("How many cards? ", false)
@@ -4158,15 +4220,6 @@ static void _deck_from_specs(const char* _specs, item_def &item,
     item.initial_cards = num_cards;
 
     init_deck(item);
-}
-
-static void _rune_or_deck_from_specs(const char* specs, item_def &item,
-                                     bool create_for_real)
-{
-    if (strstr(specs, "rune"))
-        _rune_from_specs(specs, item);
-    else if (strstr(specs, "deck") || strstr(specs, "card"))
-        _deck_from_specs(specs, item, create_for_real);
 }
 
 static bool _book_from_spell(const char* specs, item_def &item)
@@ -4206,16 +4259,23 @@ bool get_item_by_name(item_def *item, const char* specs,
     // Don't use set_ident_flags(), to avoid getting a spurious ID note.
     item->flags    |= ISFLAG_IDENT_MASK;
 
-    if (class_wanted == OBJ_MISCELLANY)
+    if (class_wanted == OBJ_MISCELLANY
+        && (strstr(specs, "deck") || strstr(specs, "card")))
     {
-        // Leaves object unmodified if it wasn't a rune or deck.
-        _rune_or_deck_from_specs(specs, *item, create_for_real);
+        _deck_from_specs(specs, *item, create_for_real);
 
+        // deck creation cancelled, clean up item->
         if (item->base_type == OBJ_UNASSIGNED)
-        {
-            // Rune or deck creation cancelled, clean up item->
             return false;
-        }
+    }
+
+    if (class_wanted == OBJ_RUNES && strstr(specs, "rune"))
+    {
+        _rune_from_specs(specs, *item);
+
+        // Rune creation cancelled, clean up item->
+        if (item->base_type == OBJ_UNASSIGNED)
+            return false;
     }
 
     if (!item->sub_type)
@@ -4326,7 +4386,7 @@ bool get_item_by_name(item_def *item, const char* specs,
 
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
-                item->special = i;
+                item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
                 if (pos != string::npos)
                 {
@@ -4341,7 +4401,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                 }
             }
 
-            item->special = special_wanted;
+            item->brand = special_wanted;
         }
         break;
     }
@@ -4362,10 +4422,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             item->skill_points = random_range(2000, 3000);
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-        {
-            make_book_theme_randart(*item, SPTYP_NONE, SPTYP_NONE,
-                                    5 + coinflip(), 20);
-        }
+            build_themed_book(*item, capped_spell_filter(20));
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);
@@ -4374,7 +4431,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_WANDS:
-        item->plus = wand_max_charges(item->sub_type);
+        item->plus = wand_max_charges(*item);
         break;
 
     case OBJ_RODS:
@@ -4412,7 +4469,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_JEWELLERY:
-        if (jewellery_is_amulet(*item))
+        if (jewellery_is_amulet(*item) && item->sub_type != AMU_REFLECTION)
             break;
 
         switch (item->sub_type)
@@ -4423,6 +4480,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
+        case AMU_REFLECTION:
             item->plus = 5;
         default:
             break;
@@ -4503,7 +4561,7 @@ item_info get_item_info(const item_def& item)
             // Unrandart index
             // Since the appearance of unrandarts is fixed anyway, this
             // is not an information leak.
-            ii.special = item.special;
+            ii.unrand_idx = item.unrand_idx;
         }
         else
         {
@@ -4622,9 +4680,6 @@ item_info get_item_info(const item_def& item)
                 ii.sub_type = item.sub_type;
         }
 
-        if (ii.sub_type == MISC_RUNE_OF_ZOT)
-            ii.rune_enum = item.rune_enum; // which rune
-
         if (ii.sub_type == MISC_DECK_UNKNOWN)
             ii.deck_rarity = item.deck_rarity;
 
@@ -4665,10 +4720,10 @@ item_info get_item_info(const item_def& item)
         }
         break;
     case OBJ_GOLD:
-        ii.special = item.special;
         ii.sub_type = item.sub_type;
         break;
     case OBJ_ORBS:
+    case OBJ_RUNES:
     default:
         ii.sub_type = item.sub_type;
         break;

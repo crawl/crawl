@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "libutil.h"
@@ -28,8 +29,6 @@
 #include "unicode.h"
 #include "xom.h"
 
-extern ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES];
-
 enum god_desc_type
 {
     GDESC_OVERVIEW,
@@ -37,59 +36,6 @@ enum god_desc_type
     GDESC_WRATH,
     NUM_GDESCS
 };
-
-static bool _print_final_god_abil_desc(int god, const string &final_msg,
-                                       const ability_type abil)
-{
-    // If no message then no power.
-    if (final_msg.empty())
-        return false;
-
-    string buf = final_msg;
-
-    // For ability slots that give more than one ability, display
-    // "Various" instead of the cost of the first ability.
-    const string cost =
-    "(" +
-    (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES ? "Various"
-                                            : make_cost_description(abil))
-    + ")";
-
-    if (cost != "(None)")
-    {
-        // XXX: Handle the display better when the description and cost
-        // are too long for the screen.
-        buf = chop_string(buf, get_number_of_cols() - 1 - strwidth(cost));
-        buf += cost;
-    }
-
-    cprintf("%s\n", buf.c_str());
-
-    return true;
-}
-
-static bool _print_god_abil_desc(int god, int numpower)
-{
-    const char* pmsg = god_gain_power_messages[god][numpower];
-
-    // If no message then no power.
-    if (!pmsg[0])
-        return false;
-
-    // Don't display ability upgrades here.
-    string buf = adjust_abil_message(pmsg, false);
-    if (buf.empty())
-        return false;
-
-    if (!isupper(pmsg[0])) // Complete sentence given?
-        buf = "You can " + buf + ".";
-
-    // This might be ABIL_NON_ABILITY for passive abilities.
-    const ability_type abil = god_abilities[god][numpower];
-    _print_final_god_abil_desc(god, buf, abil);
-
-    return true;
-}
 
 static int _piety_level(int piety)
 {
@@ -156,110 +102,10 @@ static string _describe_favour(god_type which_god)
     }
 }
 
-static string _religion_help(god_type god)
-{
-    string result = "";
-
-    switch (god)
-    {
-        case GOD_ZIN:
-            if (can_do_capstone_ability(god))
-                result += "You can have all your mutations cured.\n";
-            result += "You can donate money to increase your standing with "
-                "Zin.";
-            break;
-
-        case GOD_SHINING_ONE:
-        {
-            const int halo_size = you.halo_radius();
-            if (halo_size >= 0)
-            {
-                if (!result.empty())
-                    result += " ";
-
-                result += "You radiate a ";
-                if (halo_size > 5)
-                    result += "large ";
-                else if (halo_size > 3)
-                    result += "";
-                else
-                    result += "small ";
-                result += "righteous aura, and all beings within it are "
-                          "easier to hit.";
-            }
-            if (can_do_capstone_ability(god) && you.species != SP_FELID)
-            {
-                if (!result.empty())
-                    result += " ";
-                result += "You can have your weapon blessed, especially a "
-                    "demon weapon.";
-            }
-            break;
-        }
-
-        case GOD_LUGONU:
-            if (can_do_capstone_ability(god) && you.species != SP_FELID)
-                result += "You can have your weapon corrupted.";
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-            if (can_do_capstone_ability(god))
-            {
-                if (you.species == SP_FELID)
-                    result += "You can receive a Necronomicon.";
-                else
-                    result += "You can either bloody your weapon or receive a "
-                        "Necronomicon.";
-            }
-            break;
-
-        case GOD_BEOGH:
-            result += "You can pray to sacrifice all orcish remains on your "
-                      "square.";
-            break;
-
-        case GOD_FEDHAS:
-            if (you.piety >= piety_breakpoint(0))
-            {
-                result += "Evolving plants requires fruit, and evolving "
-                          "fungi requires piety.";
-            }
-            break;
-
-        case GOD_DITHMENOS:
-        {
-            const int umbra_size = you.umbra_radius();
-            if (umbra_size >= 0)
-            {
-                if (!result.empty())
-                    result += " ";
-
-                result += "You radiate ";
-
-                if (umbra_size > 5)
-                    result += "a large ";
-                else if (umbra_size > 3)
-                    result += "an ";
-                else
-                    result += "a small ";
-
-                result += "aura of darkness, enhancing your stealth "
-                          "and reducing the accuracy of your foes.";
-            }
-            break;
-        }
-
-        default:
-            break;
-    }
-
-    return result;
-}
-
 // The various titles granted by the god of your choice. Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
-static const char *divine_title[NUM_GODS][8] =
+static const char *divine_title[][8] =
 {
     // No god.
     {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
@@ -352,7 +198,12 @@ static const char *divine_title[NUM_GODS][8] =
     // Ru -- enlightenment theme
     {"Sleeper",           "Questioner",             "Initiate",                 "Seeker of Truth",
         "@Walker@ of the Path","Lifter of the Veil",     "Transcendent",     "Drop of Water"},
+
+    // Pakellas -- inventor theme
+    {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
+        "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
 };
+COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
 string god_title(god_type which_god, species_type which_species, int piety)
 {
@@ -416,7 +267,7 @@ static string _describe_ash_skill_boost()
         {
             if (it->first > SK_CONJURATIONS && it->first <= SK_LAST_MAGIC)
             {
-                boosted_skills.erase(it++);
+                boosted_skills.erase(it);
                 it = boosted_skills.begin();
             }
             else
@@ -565,32 +416,6 @@ static void _print_string_wrapped(string str, int width)
 }
 
 /**
- * Turn a list of gods into a nice, comma-separated list of their names, with
- * an 'and' at the end if appropriate.
- *
- * XXX: this can almost certainly be templatized and put somewhere else; it
- * might already exist? (the dubiously named comma_separated_line?)
- *
- * @param gods[in]  The enums of the gods in question.
- * @return          A comma-separated list of the given gods' names.
- */
-static string _comma_separate_gods(const vector<god_type> &gods)
-{
-    // ugly special case to prevent foo, and bar
-    if (gods.size() == 2)
-        return god_name(gods[0]) + " and " + god_name(gods[1]);
-
-    string names = "";
-    for (unsigned int i = 0; i < gods.size() - 1; i++)
-        names += god_name(gods[i]) + ", ";
-    if (gods.size() > 1)
-        names += "and ";
-    if (gods.size() > 0)
-        names += god_name(gods[gods.size()-1]);
-    return names;
-}
-
-/**
  * Describe the causes of the given god's wrath.
  *
  * @param which_god     The god in question.
@@ -603,9 +428,9 @@ static string _describe_god_wrath_causes(god_type which_god)
         return ""; // no wrath
     vector<god_type> evil_gods;
     vector<god_type> chaotic_gods;
-    for (int i = 0; i < NUM_GODS; i++)
+    for (god_iterator it; it; ++it)
     {
-        god_type god = (god_type)i;
+        const god_type god = *it;
         if (is_evil_god(god))
             evil_gods.push_back(god);
         else if (is_chaotic_god(god)) // intentionally not including evil!
@@ -621,15 +446,21 @@ static string _describe_god_wrath_causes(god_type which_god)
                    " forgives followers who leave " + god_name(which_god)+"'s"
                    " service; however, those who take up the worship of evil"
                    " gods will be punished. (" +
-                   _comma_separate_gods(evil_gods) + " are evil gods.)";
+                   comma_separated_fn(begin(evil_gods), end(evil_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are evil gods.)";
 
         case GOD_ZIN:
             return uppercase_first(god_name(which_god)) +
                    " does not punish followers who leave "+god_name(which_god)+
                    "'s service; however, those who take up the worship of evil"
                    " or chaotic gods will be scourged. (" +
-                   _comma_separate_gods(evil_gods) + " are evil, and " +
-                   _comma_separate_gods(chaotic_gods) + " are chaotic.)";
+                   comma_separated_fn(begin(evil_gods), end(evil_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are evil, and " +
+                   comma_separated_fn(begin(chaotic_gods), end(chaotic_gods),
+                                      bind(god_name, placeholders::_1, false)) +
+                   " are chaotic.)";
         default:
             return uppercase_first(god_name(which_god)) +
                    " does not appreciate abandonment, and will call down"
@@ -666,7 +497,7 @@ static void _god_wrath_description(god_type which_god)
 
     _print_top_line(which_god, width);
 
-    _print_string_wrapped(get_god_dislikes(which_god, true), width);
+    _print_string_wrapped(get_god_dislikes(which_god), width);
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
@@ -693,8 +524,7 @@ static string _get_god_misc_info(god_type which_god)
                                       " purely based on piety.";
 
             if (which_god == GOD_ASHENZARI
-                && which_god == you.religion
-                && piety_rank() > 2)
+                && in_good_standing(which_god, 1))
             {
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
             }
@@ -723,6 +553,10 @@ static string _get_god_misc_info(god_type which_god)
         case GOD_GOZAG:
             return _describe_branch_bribability();
 
+        case GOD_PAKELLAS:
+            return "The power of Pakellas' abilities is governed by "
+                   "Evocations skill instead of Invocations.";
+
         default:
             return "";
     }
@@ -741,9 +575,10 @@ static void _detailed_god_description(god_type which_god)
 
     _print_top_line(which_god, width);
 
-    _print_string_wrapped(get_god_powers(which_god), width);
+    _print_string_wrapped(getLongDescription(god_name(which_god) + " powers"),
+                          width);
 
-    _print_string_wrapped(get_god_likes(which_god, true), width);
+    _print_string_wrapped(get_god_likes(which_god), width);
     _print_string_wrapped(_get_god_misc_info(which_god), width);
 }
 
@@ -785,42 +620,55 @@ static string _god_penance_message(god_type which_god)
 }
 
 /**
- * Print a description of the powers & abilities currently granted to the
- * player by the given god.
+ * Print a description of the powers & abilities granted to the player by the
+ * given god. If player worships the god, the currently available powers are
+ * highlighted.
  *
  * @param which_god     The god in question.
  */
-static void _describe_god_powers(god_type which_god, int numcols)
+static void _describe_god_powers(god_type which_god)
 {
+    int piety = you_worship(which_god) ? you.piety : 0;
+
     textcolour(LIGHTGREY);
     const char *header = "Granted powers:";
     const char *cost   = "(Cost)";
     cprintf("\n\n%s%*s%s\n", header,
             min(80, get_number_of_cols()) - 1 - strwidth(header) - strwidth(cost),
             "", cost);
-    textcolour(god_colour(which_god));
+
+    bool have_any = false;
+
+    // set default color here, so we don't have to set in multiple places for
+    // always available passive abilities
+    if (!you_worship(which_god))
+        textcolour(DARKGREY);
+    else
+        textcolour(god_colour(which_god));
 
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // his life.
-    bool have_any = false;
-
-    if (god_can_protect_from_harm(which_god))
+    if (have_passive(passive_t::protect_from_harm))
     {
         have_any = true;
 
-        int prot_chance = 10 + you.piety/10; // chance * 100
+        int prot_chance = 10 + piety/10; // chance * 100
         const char *when = "";
 
-        switch (elyvilon_lifesaving())
+        if (which_god == GOD_ELYVILON)
         {
-            case 1:
-                when = ", especially when called upon";
-                prot_chance += 100 - 3000/you.piety;
-                break;
-            case 2:
-                when = ", and always does so when called upon";
-                prot_chance = 100;
+            switch (elyvilon_lifesaving())
+            {
+                case 1:
+                    when = ", especially when called upon";
+                    prot_chance += 100 - 3000/piety;
+                    break;
+                case 2:
+                    when = ", and always does so when called upon";
+                    prot_chance = 100;
+                    break;
+            }
         }
 
         const char *how = (prot_chance >= 85) ? "carefully" :
@@ -828,166 +676,183 @@ static void _describe_god_powers(god_type which_god, int numcols)
                           (prot_chance >= 25) ? "sometimes"
                                               : "occasionally";
 
-        string buf = uppercase_first(god_name(which_god));
-        buf += " ";
-        buf += how;
-        buf += " watches over you";
-        buf += when;
-        buf += ".";
-
-        _print_final_god_abil_desc(which_god, buf, ABIL_NON_ABILITY);
+        cprintf("%s %s watches over you%s.\n",
+                uppercase_first(god_name(which_god)).c_str(),
+                how,
+                when);
     }
 
-    if (which_god == GOD_ZIN)
+    switch (which_god)
+    {
+    case GOD_ZIN:
     {
         have_any = true;
         const char *how =
-        (you.piety >= piety_breakpoint(5)) ? "carefully" :
-        (you.piety >= piety_breakpoint(3)) ? "often" :
-        (you.piety >= piety_breakpoint(1)) ? "sometimes" :
+            (piety >= piety_breakpoint(5)) ? "carefully" :
+            (piety >= piety_breakpoint(3)) ? "often" :
+            (piety >= piety_breakpoint(1)) ? "sometimes" :
                                              "occasionally";
 
         cprintf("%s %s shields you from chaos.\n",
                 uppercase_first(god_name(which_god)).c_str(), how);
+        break;
     }
-    else if (which_god == GOD_SHINING_ONE)
-    {
-        if (you.piety >= piety_breakpoint(1))
-        {
-            have_any = true;
-            const char *how =
-            (you.piety >= piety_breakpoint(5)) ? "completely" :
-            (you.piety >= piety_breakpoint(3)) ? "mostly" :
-                                                 "partially";
 
-            cprintf("%s %s shields you from negative energy.\n",
-                    uppercase_first(god_name(which_god)).c_str(), how);
-        }
-    }
-    else if (which_god == GOD_TROG)
+    case GOD_SHINING_ONE:
     {
         have_any = true;
-        string buf = "You can call upon "
-        + god_name(which_god)
-        + " to burn spellbooks in your surroundings.";
-        _print_final_god_abil_desc(which_god, buf,
-                                   ABIL_TROG_BURN_SPELLBOOKS);
+        if (piety < piety_breakpoint(1))
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        const char *how =
+            (piety >= piety_breakpoint(5)) ? "completely" :
+            (piety >= piety_breakpoint(3)) ? "mostly" :
+                                             "partially";
+
+        cprintf("%s %s shields you from negative energy.\n",
+                uppercase_first(god_name(which_god)).c_str(), how);
+
+        const int halo_size = you_worship(which_god) ? you.halo_radius() : -1;
+        if (halo_size < 0)
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        cprintf("You radiate a%s righteous aura, and others within it are "
+                "easier to hit.\n",
+                halo_size > 5 ? " large" :
+                halo_size > 3 ? "" :
+                                " small");
+        break;
     }
-    else if (which_god == GOD_JIYVA)
-    {
-        if (you.piety >= piety_breakpoint(2))
-        {
-            have_any = true;
-            cprintf("%s shields you from corrosive effects.\n",
-                    uppercase_first(god_name(which_god)).c_str());
-        }
-        if (you.piety >= piety_breakpoint(1))
-        {
-            have_any = true;
-            string buf = "You gain nutrition";
-            if (you.piety >= piety_breakpoint(4))
-                buf += ", power and health";
-            else if (you.piety >= piety_breakpoint(3))
-                buf += " and power";
-            buf += " when your fellow slimes consume items.\n";
-            _print_final_god_abil_desc(which_god, buf,
-                                       ABIL_NON_ABILITY);
-        }
-    }
-    else if (which_god == GOD_FEDHAS)
-    {
+
+    case GOD_JIYVA:
         have_any = true;
-        _print_final_god_abil_desc(which_god,
-                                   "You can pray to speed up decomposition.",
-                                   ABIL_NON_ABILITY);
-        _print_final_god_abil_desc(which_god,
-                                   "You can walk through plants and "
-                                   "fire through allied plants.",
-                                   ABIL_NON_ABILITY);
-    }
-    else if (which_god == GOD_ASHENZARI)
-    {
+        if (piety < piety_breakpoint(2))
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        cprintf("%s shields you from corrosive effects.\n",
+                uppercase_first(god_name(which_god)).c_str());
+
+        if (piety < piety_breakpoint(1))
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
+                piety >= piety_breakpoint(4) ? ", power and health" :
+                piety >= piety_breakpoint(3) ? " and power" :
+                                               "");
+        break;
+
+    case GOD_FEDHAS:
         have_any = true;
-        _print_final_god_abil_desc(which_god,
-                                   "You are provided with a bounty of information.",
-                                   ABIL_NON_ABILITY);
-        _print_final_god_abil_desc(which_god,
-                                   "You can pray to corrupt scrolls of remove curse on your square.",
-                                   ABIL_NON_ABILITY);
-    }
-    else if (which_god == GOD_CHEIBRIADOS)
-    {
-        if (!player_under_penance())
-        {
-            have_any = true;
-            cprintf("%s supports your attributes (+%d).\n",
-                    uppercase_first(god_name(which_god)).c_str(),
-                    chei_stat_boost(you.piety));
-            _print_final_god_abil_desc(which_god,
-                                       "You can bend time to slow others.",
-                                       ABIL_CHEIBRIADOS_TIME_BEND);
-        }
-    }
-    else if (which_god == GOD_VEHUMET)
-    {
+        cprintf("You can walk through plants and fire through allied plants.\n");
+        break;
+
+    case GOD_ASHENZARI:
+        have_any = true;
+        cprintf("You are provided with a bounty of information.\n");
+        break;
+
+    case GOD_CHEIBRIADOS:
+        have_any = true;
+        if (!in_good_standing(which_god))
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        cprintf("%s supports your attributes (+%d).\n",
+                uppercase_first(god_name(which_god)).c_str(),
+                chei_stat_boost(piety));
+        break;
+
+    case GOD_VEHUMET:
+        have_any = true;
         if (const int numoffers = you.vehumet_gifts.size())
         {
-            have_any = true;
-
-            const string offer = numoffers == 1
+            const char* offer = numoffers == 1
                                ? spell_title(*you.vehumet_gifts.begin())
                                : "some of Vehumet's most lethal spells";
-
-            _print_final_god_abil_desc(which_god,
-                                       "You can memorise " + offer + ".",
-                                       ABIL_NON_ABILITY);
+            cprintf("You can memorise %s.\n", offer);
         }
-    }
-    else if (which_god == GOD_GOZAG)
+        else
+        {
+            textcolour(DARKGREY);
+            cprintf("You can memorise some of Vehumet's spells.\n");
+        }
+        break;
+
+    case GOD_DITHMENOS:
     {
         have_any = true;
-        _print_final_god_abil_desc(which_god,
-                                   "You passively detect gold.",
-                                   ABIL_NON_ABILITY);
-        _print_final_god_abil_desc(which_god,
-                                   uppercase_first(god_name(which_god))
-                                   + " turns your defeated foes' bodies"
-                                   + " to gold.",
-                                   ABIL_NON_ABILITY);
-        _print_final_god_abil_desc(which_god,
-                                   "Your enemies may become distracted by "
-                                   "glittering piles of gold.",
-                                   ABIL_NON_ABILITY);
-    }
-    else if (which_god == GOD_QAZLAL)
-    {
-        have_any = true;
-        _print_final_god_abil_desc(which_god,
-                                   "You are immune to your own clouds.",
-                                   ABIL_NON_ABILITY);
+        const int umbra_size = you_worship(which_god) ? you.umbra_radius() : -1;
+        if (umbra_size < 0)
+            textcolour(DARKGREY);
+        else
+            textcolour(god_colour(which_god));
+        cprintf("You radiate a%s aura of darkness, enhancing your stealth "
+                "and reducing the accuracy of your foes.\n",
+                umbra_size > 5 ? " large" :
+                umbra_size > 3 ? "n" :
+                                 " small");
+        break;
     }
 
-    // mv: No abilities (except divine protection) under penance
-    if (!player_under_penance())
-    {
-        vector<ability_type> abilities = get_god_abilities(true, true);
-        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-            if ((you_worship(GOD_GOZAG)
-                 && you.gold >= get_gold_cost(abilities[i])
-                 || !you_worship(GOD_GOZAG)
-                 && you.piety >= piety_breakpoint(i))
-                && _print_god_abil_desc(which_god, i))
-            {
-                have_any = true;
-            }
-    }
+    case GOD_GOZAG:
+        have_any = true;
+        cprintf("You passively detect gold.\n");
+        cprintf("%s turns your defeated foes' bodies to gold.\n",
+                uppercase_first(god_name(which_god)).c_str());
+        cprintf("Your enemies may become distracted by gold.\n");
+        break;
 
-    string extra = get_linebreak_string(_religion_help(which_god),
-                                        numcols).c_str();
-    if (!extra.empty())
+    case GOD_PAKELLAS:
     {
         have_any = true;
-        _print_final_god_abil_desc(which_god, extra, ABIL_NON_ABILITY);
+        cprintf("%s identifies device charges for you.\n",
+                uppercase_first(god_name(which_god)).c_str());
+    }
+
+    default:
+        break;
+    }
+
+    for (const auto& power : get_god_powers(which_god))
+    {
+        // hack: don't mention the necronomicon alone unless it
+        // wasn't already mentioned by the other description
+        if (power.abil == ABIL_KIKU_GIFT_NECRONOMICON
+            && you.species != SP_FELID)
+        {
+            continue;
+        }
+        have_any = true;
+
+        if (you_worship(which_god)
+            && (power.rank <= 0
+                || power.rank == 7 && can_do_capstone_ability(which_god)
+                || piety_rank(piety) >= power.rank)
+            && (!player_under_penance()
+                || power.rank == -1))
+        {
+            textcolour(god_colour(which_god));
+        }
+        else
+            textcolour(DARKGREY);
+
+        string buf = power.gain;
+        if (!isupper(buf[0])) // Complete sentence given?
+            buf = "You can " + buf + ".";
+        const int desc_len = buf.size();
+
+        string abil_cost = "(" + make_cost_description(power.abil) + ")";
+        if (abil_cost == "(None)")
+            abil_cost = "";
+
+        cprintf("%s%*s%s\n", buf.c_str(),
+                min(80, get_number_of_cols()) - 1 - desc_len - abil_cost.size(),
+                "", abil_cost.c_str());
+        textcolour(god_colour(which_god));
     }
 
     if (!have_any)
@@ -1010,7 +875,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s\n", get_linebreak_string(god_desc.c_str(), numcols).c_str());
+    cprintf("%s\n", get_linebreak_string(god_desc, numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))
@@ -1031,22 +896,15 @@ static void _god_overview_description(god_type which_god, bool give_title)
     cprintf("\nFavour - ");
     textcolour(god_colour(which_god));
 
-    //mv: Player is praying at altar without appropriate religion.
-    // It means player isn't checking his own religion and so we only
-    // display favour and go out.
     if (!you_worship(which_god))
-    {
-        textcolour(god_colour(which_god));
         cprintf(_god_penance_message(which_god).c_str());
-    }
     else
     {
         cprintf(_describe_favour(which_god).c_str());
         if (which_god == GOD_ASHENZARI)
             cprintf("\n%s", ash_describe_bondage(ETF_ALL, true).c_str());
-
-        _describe_god_powers(which_god, numcols);
     }
+    _describe_god_powers(which_god);
 }
 
 static god_desc_type _describe_god_by_type(god_type which_god, bool give_title,

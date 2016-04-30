@@ -42,7 +42,7 @@ public:
                                 monster_type none,
                                 mon_pick_vetoer vetoer = nullptr);
 
-    virtual bool veto(monster_type mon);
+    virtual bool veto(monster_type mon) override;
 
 private:
     mon_pick_vetoer _veto;
@@ -55,7 +55,7 @@ public:
                               mon_pick_pos_vetoer _posveto = nullptr)
         : monster_picker(), pos(_pos), posveto(_posveto) { };
 
-    virtual bool veto(monster_type mon);
+    virtual bool veto(monster_type mon) override;
 
 protected:
     const coord_def &pos;
@@ -72,7 +72,7 @@ public:
           zombie_kind(_ztype)
           { };
 
-    virtual bool veto(monster_type mon);
+    virtual bool veto(monster_type mon) override;
 
 private:
     monster_type zombie_kind;

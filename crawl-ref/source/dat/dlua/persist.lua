@@ -6,7 +6,7 @@
 -- ensure that the functions haven't been overwritten by player versions.
 
 function stringify(x)
-    t = type(x)
+    local t = type(x)
     if t == "nil" then
         return "nil"
     elseif t == "number" then
@@ -14,11 +14,7 @@ function stringify(x)
     elseif t == "string" then
         return string.format("%q", x)
     elseif t == "boolean" then
-        if t then
-            return "true"
-        else
-            return "false"
-        end
+        return x and "true" or "false"
     else
         error("Cannot stringify objects of type " .. t .. debug.traceback())
     end

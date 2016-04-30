@@ -50,7 +50,6 @@ struct body_facet_def
 {
     equipment_type eq;
     mutation_type mut;
-    int level_lost;
 };
 
 struct facet_def
@@ -70,56 +69,78 @@ struct demon_mutation_info
         : mut(m), when(w), facet(f) { }
 };
 
-enum mut_flag_type
+enum class mutflag
 {
-    MUTFLAG_GOOD    = 1 << 0, // used by benemut etc
-    MUTFLAG_BAD     = 1 << 1, // used by malmut etc
-    MUTFLAG_JIYVA   = 1 << 2, // jiyva-only muts
-    MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
-    MUTFLAG_XOM     = 1 << 4, // xom being xom
-    MUTFLAG_CORRUPT = 1 << 5, // wretched stars
+    GOOD    = 1 << 0, // used by benemut etc
+    BAD     = 1 << 1, // used by malmut etc
+    JIYVA   = 1 << 2, // jiyva-only muts
+    QAZLAL  = 1 << 3, // qazlal wrath
+    XOM     = 1 << 4, // xom being xom
 
-    MUTFLAG_LAST    = MUTFLAG_CORRUPT
+    LAST    = XOM
 };
-DEF_BITFIELD(mut_flags_type, mut_flag_type, 5);
-COMPILE_CHECK(mut_flags_type::exponent(mut_flags_type::last_exponent)
-              == MUTFLAG_LAST);
+DEF_BITFIELD(mutflags, mutflag, 4);
+COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS, 1 },
-    { EQ_HELMET, MUT_HORNS, 1 },
-    { EQ_HELMET, MUT_ANTENNAE, 1 },
-    //{ EQ_HELMET, MUT_BEAK, 1 },
-    { EQ_GLOVES, MUT_CLAWS, 3 },
-    { EQ_BOOTS, MUT_HOOVES, 3 },
-    { EQ_BOOTS, MUT_TALONS, 3 }
+    //{ EQ_NONE, MUT_FANGS },
+    { EQ_HELMET, MUT_HORNS },
+    { EQ_HELMET, MUT_ANTENNAE },
+    //{ EQ_HELMET, MUT_BEAK },
+    { EQ_GLOVES, MUT_CLAWS },
+    { EQ_BOOTS, MUT_HOOVES },
+    { EQ_BOOTS, MUT_TALONS }
 };
 
+/**
+ * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
+ * with B, B conflicts with A in the same way).
+ *
+ * The third value in each entry means:
+ *   0: If the new mutation is forced, remove all levels of the old
+ *      mutation. Either way, keep scanning for more conflicts and
+ *      do what they say (accepting the mutation if there are no
+ *      further conflicts).
+ *
+ *  -1: If the new mutation is forced, remove all levels of the old
+ *      mutation and scan for more conflicts. If it is not forced,
+ *      fail at giving the new mutation.
+ *
+ *   1: If the new mutation is temporary, just allow the conflict.
+ *      Otherwise, trade off: delete one level of the old mutation,
+ *      don't give the new mutation, and consider it a success.
+ *
+ * It makes sense to have two entries for the same pair, one with value 0
+ * and one with 1: that would replace all levels of the old mutation if
+ * forced, or a single level if not forced. However, the 0 entry must
+ * precede the 1 entry; so if you re-order this list, keep all the 0s
+ * before all the 1s.
+ */
 static const int conflict[][3] =
 {
+    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
+    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      0},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
+    { MUT_FAST,                MUT_SLOW,                   0},
 #if TAG_MAJOR_VERSION == 34
     { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
 #endif
     { MUT_STRONG,              MUT_WEAK,                   1},
     { MUT_CLEVER,              MUT_DOPEY,                  1},
     { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
+    { MUT_SLOW_REGENERATION,        MUT_NO_DEVICE_HEAL,    1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
     { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
     { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
+    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,            1},
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-    { MUT_FAST,                MUT_SLOW,                   0},
+    { MUT_SUSTAIN_ATTRIBUTES,  MUT_DETERIORATION,         -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -151,32 +172,31 @@ equipment_type beastly_slot(int mut)
     }
 }
 
-static bool _mut_has_use(const mutation_def &mut, mut_flag_type use)
+static bool _mut_has_use(const mutation_def &mut, mutflag use)
 {
     return bool(mut.uses & use);
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), MUTFLAG_BAD)
-#define MUT_GOOD(mut) _mut_has_use((mut), MUTFLAG_GOOD)
+#define MUT_BAD(mut) _mut_has_use((mut), mutflag::BAD)
+#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::GOOD)
 
-static int _mut_weight(const mutation_def &mut, mut_flag_type use)
+static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
     {
-        case MUTFLAG_JIYVA:
-        case MUTFLAG_QAZLAL:
-        case MUTFLAG_XOM:
-        case MUTFLAG_CORRUPT:
+        case mutflag::JIYVA:
+        case mutflag::QAZLAL:
+        case mutflag::XOM:
             return 1;
-        case MUTFLAG_GOOD:
-        case MUTFLAG_BAD:
+        case mutflag::GOOD:
+        case mutflag::BAD:
         default:
             return mut.weight;
     }
 }
 
 static int mut_index[NUM_MUTATIONS];
-static map<mut_flag_type, int> total_weight;
+static map<mutflag, int> total_weight;
 
 void init_mut_index()
 {
@@ -190,7 +210,7 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (const auto flag : mut_flags_type::range())
+        for (const auto flag : mutflags::range())
         {
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
@@ -249,6 +269,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
                 return MUTACT_FULL;
         }
+        // Vampire bats keep their fangs.
+        if (you.form == TRAN_BAT
+            && you.species == SP_VAMPIRE
+            && mut == MUT_FANGS)
+        {
+            return MUTACT_FULL;
+        }
         // Dex and HP changes are kept in all forms.
         if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
             return MUTACT_PARTIAL;
@@ -290,6 +317,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
         return MUTACT_INACTIVE;
+
+    if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
+         && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
+    {
+        return MUTACT_INACTIVE;
+    }
 
     return MUTACT_FULL;
 }
@@ -374,7 +407,7 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state == HS_STARVING)
+        if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
             result += "<green>Your natural rate of healing is extremely fast.</green>\n";
@@ -386,15 +419,18 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
-        const char * num_tentacles =
-               number_in_words(you.has_usable_tentacles(false)).c_str();
+        result += _annotate_form_based("You are amphibious.",
+                                       !form_likes_water());
+
+        const string num_tentacles =
+               number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             make_stringf("You can use your tentacles to constrict %s enemies at once.",
-                         num_tentacles),
+                         num_tentacles.c_str()),
             !form_keeps_mutations());
     }
 
@@ -438,7 +474,7 @@ string describe_mutations(bool center_title)
         }
     }
 
-    if (beogh_water_walk())
+    if (have_passive(passive_t::water_walk))
         result += "<green>You can walk on water.</green>\n";
 
     if (you.duration[DUR_FIRE_SHIELD])
@@ -474,10 +510,10 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    "<w>Right-click</w> or press '<w>!</w>'"
 #else
-    "<w>Right-click</w>"
+    "Press '<w>!</w>'"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
@@ -553,6 +589,7 @@ static void _display_vampire_attributes()
         current = 5;
         break;
     case HS_STARVING:
+    case HS_FAINTING:
         current = 6;
     }
 
@@ -758,7 +795,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     return x_chance_in_y(weight, 10);
 }
 
-static mutation_type _get_mut_with_use(mut_flag_type mt)
+static mutation_type _get_mut_with_use(mutflag mt)
 {
     const int tweight = lookup(total_weight, mt, 0);
     ASSERT(tweight);
@@ -781,7 +818,7 @@ static mutation_type _get_mut_with_use(mut_flag_type mt)
 
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_mut_with_use(MUTFLAG_JIYVA);
+    return _get_mut_with_use(mutflag::JIYVA);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -807,7 +844,7 @@ static mutation_type _delete_random_slime_mutation()
 
 static bool _is_slime_mutation(mutation_type m)
 {
-    return _mut_has_use(mut_data[mut_index[m]], MUTFLAG_JIYVA);
+    return _mut_has_use(mut_data[mut_index[m]], mutflag::JIYVA);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -821,39 +858,35 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_mut_with_use(MUTFLAG_XOM);
+            mutat = _get_mut_with_use(mutflag::XOM);
     }
     while (!_accept_mutation(mutat, false));
 
     return mutat;
 }
 
-static mutation_type _get_random_corrupt_mutation()
-{
-    return _get_mut_with_use(MUTFLAG_CORRUPT);
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_mut_with_use(MUTFLAG_QAZLAL);
+    return _get_mut_with_use(mutflag::QAZLAL);
 }
 
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
-    mut_flag_type mt;
+    mutflag mt;
     switch (mutclass)
     {
         case RANDOM_MUTATION:
             // maintain an arbitrary ratio of good to bad muts to allow easier
             // weight changes within categories - 60% good seems to be about
             // where things are right now
-            mt = x_chance_in_y(3, 5) ? MUTFLAG_GOOD : MUTFLAG_BAD;
+            mt = x_chance_in_y(3, 5) ? mutflag::GOOD : mutflag::BAD;
             break;
         case RANDOM_BAD_MUTATION:
-            mt = MUTFLAG_BAD;
+        case RANDOM_CORRUPT_MUTATION:
+            mt = mutflag::BAD;
             break;
         case RANDOM_GOOD_MUTATION:
-            mt = MUTFLAG_GOOD;
+            mt = mutflag::GOOD;
             break;
         default:
             die("invalid mutation class: %d", mutclass);
@@ -872,10 +905,10 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 /**
  * Does the player have a mutation that conflicts with the given mutation?
  *
- * @param mut           A mutation. (E.g. MUT_SLOW_HEALING, MUT_REGENERATION...)
+ * @param mut           A mutation. (E.g. MUT_SLOW_REGENERATION, MUT_REGENERATION...)
  * @param innate_only   Whether to only check innate mutations (from e.g. race)
  * @return              The level of the conflicting mutation.
- *                      E.g., if MUT_SLOW_HEALING is passed in and the player
+ *                      E.g., if MUT_SLOW_REGENERATION is passed in and the player
  *                      has 2 levels of MUT_REGENERATION, 2 will be returned.)
  *                      No guarantee is offered on ordering if there are
  *                      multiple conflicting mutations with different levels.
@@ -1024,13 +1057,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Draconians already get breath weapons.
-    if (species_is_draconian(you.species)
-        && (mutat == MUT_BREATHE_FLAMES
-            || mutat == MUT_SPIT_POISON))
-    {
+    // Only nagas can get upgraded poison spit.
+    if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
         return true;
-    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
@@ -1042,7 +1071,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_HEALING
+            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_REGENERATION
             || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
     {
         return true;
@@ -1095,8 +1124,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
-    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL
+        && (mutat == MUT_DEFORMED || mutat == MUT_STURDY_FRAME))
+    {
         return true;
+    }
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1177,10 +1209,9 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
         return true;
     }
 
-    const int item_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
     // To be nice, beneficial mutations go through removable sources of rMut.
     if (you.rmut_from_item() && !beneficial
-        && !one_chance_in(item_resist_chance))
+        && !one_chance_in(mut_resist_chance))
     {
         return true;
     }
@@ -1225,7 +1256,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you_worship(GOD_ZIN)
+        if (have_passive(passive_t::resist_mutation)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -1283,6 +1314,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_MUTATION:
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
         mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
@@ -1290,9 +1322,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_corrupt_mutation();
         break;
     case RANDOM_QAZLAL_MUTATION:
         mutat = _get_random_qazlal_mutation();
@@ -1440,12 +1469,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // Hooves and talons force boots off at 3.
             if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
                 remove_one_equip(EQ_BOOTS, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_CLAWS:
             // Claws force gloves off at 3.
             if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
                 remove_one_equip(EQ_GLOVES, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_HORNS:
@@ -1464,6 +1497,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             {
                 remove_one_equip(EQ_HELMET, false, true);
             }
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
             break;
 
         case MUT_ACUTE_VISION:
@@ -1559,6 +1594,16 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         lose_permafly_source();
         break;
 
+    case MUT_HORNS:
+    case MUT_ANTENNAE:
+    case MUT_BEAK:
+    case MUT_CLAWS:
+    case MUT_HOOVES:
+    case MUT_TALONS:
+        // Recheck Ashenzari bondage in case our available slots changed.
+        ash_check_bondage();
+        break;
+
     default:
         break;
     }
@@ -1581,7 +1626,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         calc_mp();
 
     if (!transient)
-        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason));
 
     if (you.hp <= 0)
     {
@@ -1672,6 +1717,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
 
+            if (you.temp_mutation[mutat] >= you.mutation[mutat])
+                continue; // don't attempt to cure transient mutations
+
             break;
         }
     }
@@ -1742,12 +1790,21 @@ const char* mutation_name(mutation_type mut)
     return _get_mutation_def(mut).short_desc;
 }
 
-const char* mutation_desc_for_text(mutation_type mut)
+/**
+ * A summary of what the next level of a mutation does.
+ *
+ * @param mut   The mutation_type in question; e.g. MUT_FRAIL.
+ * @return      The mutation's description, helpfully trimmed.
+ *              e.g. "you are frail (-10% HP)".
+ */
+string mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return _get_mutation_def(mut).desc;
+    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
+    strip_suffix(lowercase(mut_desc), ".");
+    return mut_desc;
 }
 
 int mutation_max_levels(mutation_type mut)
@@ -1910,6 +1967,8 @@ static const facet_def _demon_facets[] =
       { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
+    { 1, { MUT_STURDY_FRAME, MUT_STURDY_FRAME, MUT_STURDY_FRAME },
+      { -33, -33, 0 } },
     // Tier 2 facets
     { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },
       { -33, 0, 0 } },
@@ -1930,7 +1989,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
     // Tier 3 facets
-    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_HELLFIRE },
+    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_DAMNATION },
       { 50, 50, 50 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_FREEZING_CLOUD_IMMUNITY, MUT_PASSIVE_FREEZE },
       { 50, 50, 50 } },
@@ -2357,7 +2416,8 @@ void check_monster_detect()
             if (remembered_monster != mon->type)
             {
                 const monster_type mc = mon->friendly() ? MONS_SENSED_FRIENDLY
-                      : in_good_standing(GOD_ASHENZARI) ? ash_monster_tier(mon)
+                                      : have_passive(passive_t::detect_montier)
+                                                        ? ash_monster_tier(mon)
                                                         : MONS_SENSED;
 
                 env.map_knowledge(*ri).set_detected_monster(mc);

@@ -18,7 +18,9 @@ bool read_urandom(char *buf, int len);
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
 void alarm(unsigned int seconds);
+#  ifndef CRAWL_HAVE_MKSTEMP
 int mkstemp(char *dummy);
+#  endif
 # endif
 #endif
 

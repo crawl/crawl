@@ -11,7 +11,7 @@
 #include "player.h"
 
 // Prepositional form of branch level name. For example, "in the
-// Abyss" or "on level 3 of the Main Dungeon".
+// Vestibule of Hell" or "on level 3 of the Dungeon".
 string prep_branch_level_name(level_id id)
 {
     string place = id.describe(true, true);

@@ -34,6 +34,11 @@ enum object_selector
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
+    OSEL_SUPERCHARGE             = -19,
+    OSEL_CURSABLE                = -20, // Items that are cursable and not
+                                        // known-cursed. Unknown-cursed items
+                                        // are included, to prevent information
+                                        // leakage.
 };
 
 #define PROMPT_ABORT         -1
@@ -65,7 +70,7 @@ class InvTitle : public MenuEntry
 public:
     InvTitle(Menu *mn, const string &title, invtitle_annotator tfn);
 
-    string get_text(const bool = false) const;
+    string get_text(const bool = false) const override;
 
 private:
     Menu *m;
@@ -75,7 +80,6 @@ private:
 class InvEntry : public MenuEntry
 {
 private:
-    static bool show_prices;
     static bool show_glyph;
 
     mutable string basename;
@@ -85,13 +89,13 @@ private:
 protected:
     static bool show_cursor;
     // Should we show the floor tile, etc?
-    bool show_background;
+    bool show_background = true;
 
 public:
     const item_def *item;
 
-    InvEntry(const item_def &i, bool show_bg = false);
-    string get_text(const bool need_cursor = false) const;
+    InvEntry(const item_def &i);
+    string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
 
@@ -99,23 +103,23 @@ public:
     const string &get_qualname() const;
     const string &get_fullname() const;
     const string &get_dbname() const;
-    bool         is_item_cursed() const;
-    bool         is_item_glowing() const;
-    bool         is_item_ego() const;
-    bool         is_item_art() const;
-    bool         is_item_equipped() const;
+    bool         is_cursed() const;
+    bool         is_glowing() const;
+    bool         is_ego() const;
+    bool         is_art() const;
+    bool         is_equipped() const;
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour() const override
     {
         return menu_colour(get_text(), item_prefix(*item), tag);
     }
 
-    virtual void select(int qty = -1);
+    virtual void select(int qty = -1) override;
 
-    virtual string get_filter_text() const;
+    virtual string get_filter_text() const override;
 
 #ifdef USE_TILE
-    virtual bool get_tiles(vector<tile_def>& tiles) const;
+    virtual bool get_tiles(vector<tile_def>& tiles) const override;
 #endif
 
 private:
@@ -128,7 +132,7 @@ public:
     InvMenu(int mflags = MF_MULTISELECT);
 
 public:
-    unsigned char getkey() const;
+    int getkey() const override;
 
     void set_preselect(const vector<SelItem> *pre);
     void set_type(menu_type t);
@@ -138,6 +142,7 @@ public:
     // effect.
     void set_title_annotator(invtitle_annotator fn);
 
+    // Not an override, but an overload. Not virtual!
     void set_title(MenuEntry *title, bool first = true);
     void set_title(const string &s);
 
@@ -145,6 +150,11 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
+                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           menu_letter ckey = 'a', bool sort = true);
+
+    // Make sure this menu does not outlive items, or mayhem will ensue!
+    menu_letter load_items(const vector<item_def>& items,
                            MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
@@ -156,18 +166,13 @@ public:
 
     vector<SelItem> get_selitems() const;
 
-    // Returns vector of item_def pointers to each item_def in the given
-    // vector. Note: make sure the original vector stays around for the lifetime
-    // of the use of the item pointers, or mayhem results!
-    static vector<const item_def*> xlat_itemvect(const vector<item_def> &);
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
 protected:
-    bool process_key(int key);
     void do_preselect(InvEntry *ie);
-    virtual bool is_selectable(int index) const;
-    virtual bool allow_easy_exit() const;
+    virtual bool is_selectable(int index) const override;
+    virtual string help_key() const override;
 
 protected:
     menu_type type;
@@ -179,7 +184,7 @@ protected:
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
-bool is_item_selected(const item_def &item, int selector);
+bool item_is_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
 string no_selectables_message(int item_selector);
 

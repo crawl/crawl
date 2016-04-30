@@ -106,11 +106,15 @@ item_def* newgame_make_item(object_class_type base,
     int slot;
     for (slot = 0; slot < ENDOFPACK; ++slot)
     {
+        if (base == OBJ_FOOD && slot == letter_to_index('e'))
+            continue;
+
         item_def& item = you.inv[slot];
         if (!item.defined())
             break;
 
-        if (item.is_type(base, sub_type) && item.special == force_ego && is_stackable_item(item))
+        if (item.is_type(base, sub_type) && item.brand == force_ego
+            && is_stackable_item(item))
         {
             item.quantity += qty;
             return &item;
@@ -122,14 +126,14 @@ item_def* newgame_make_item(object_class_type base,
     item.sub_type  = sub_type;
     item.quantity  = qty;
     item.plus      = plus;
-    item.special   = force_ego;
+    item.brand     = force_ego;
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
         && !can_wear_armour(item, false, false))
     {
-        if (item.sub_type == ARM_HELMET)
+        if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
         else if (item.sub_type == ARM_BUCKLER)
             item.sub_type = ARM_SHIELD;
@@ -171,7 +175,7 @@ item_def* newgame_make_item(object_class_type base,
 
     // Wanderers may or may not already have a spell. - bwr
     // Also, when this function gets called their possible randbook
-    // has not been initalised and will trigger an ASSERT.
+    // has not been initialised and will trigger an ASSERT.
     if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
     {
         spell_type which_spell = spells_in_book(item)[0];
@@ -188,6 +192,22 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
 
     switch (weapon)
     {
+    case WPN_SHORTBOW:
+    case WPN_HAND_CROSSBOW:
+    case WPN_HUNTING_SLING:
+        newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
+        break;
+    default:
+        break;
+    }
+}
+
+static void _give_ammo(weapon_type weapon, int plus)
+{
+    ASSERT(weapon != NUM_WEAPONS);
+
+    switch (weapon)
+    {
     case WPN_THROWN:
         if (species_can_throw_large_rocks(you.species))
             newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
@@ -198,15 +218,12 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
         newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
         break;
     case WPN_SHORTBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_SHORTBOW, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
         break;
     case WPN_HAND_CROSSBOW:
-        newgame_make_item(OBJ_WEAPONS, WPN_HAND_CROSSBOW, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
         break;
     case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_WEAPONS, WPN_HUNTING_SLING, 1, plus);
         newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
         break;
     default:
@@ -275,6 +292,9 @@ static void _give_items_skills(const newgame_def& ng)
 
     give_job_equipment(you.char_class);
     give_job_skills(you.char_class);
+
+    if (job_gets_ranged_weapons(you.char_class))
+        _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
     // Deep Dwarves get a wand of heal wounds (5).
     if (you.species == SP_DEEP_DWARF)
@@ -351,11 +371,6 @@ static void _give_basic_knowledge()
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
-
-    // Won't appear unidentified anywhere.
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = true;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_JEWELLERY] = true;
-    you.type_ids[OBJ_SCROLLS][SCR_CURSE_ARMOUR] = true;
 
     // Removed item types are handled in _set_removed_types_as_identified.
 }
@@ -478,23 +493,24 @@ static void _setup_generic(const newgame_def& ng)
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].defined())
+        auto &item = you.inv[i];
+        if (!item.defined())
             continue;
-        you.inv[i].pos = ITEM_IN_INVENTORY;
-        you.inv[i].link = i;
-        you.inv[i].slot = index_to_letter(you.inv[i].link);
-        item_colour(you.inv[i]);  // set correct special and colour
+        item.pos = ITEM_IN_INVENTORY;
+        item.link = i;
+        item.slot = index_to_letter(item.link);
+        item_colour(item);  // set correct special and colour
     }
 
-    // A second pass to apply item_slot option.
-    for (int i = 0; i < ENDOFPACK; ++i)
+    // A second pass to apply the item_slot option.
+    for (auto &item : you.inv)
     {
-        if (!you.inv[i].defined())
+        if (!item.defined())
             continue;
-        if (!you.inv[i].props.exists("adjusted"))
+        if (!item.props.exists("adjusted"))
         {
-            you.inv[i].props["adjusted"] = true;
-            auto_assign_item_slot(you.inv[i]);
+            item.props["adjusted"] = true;
+            auto_assign_item_slot(item);
         }
     }
 

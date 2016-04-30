@@ -102,6 +102,7 @@ ITEM:   royal jelly
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
+NSUBST: 2 = 12:2 / * = 2.
 MAP
 ............
 ....aaaa....
@@ -125,8 +126,8 @@ WEIGHT: 15
 TAGS:     uniq_second_food extra chance_second_food
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p =  potion of poison w:5 / potion of ambrosia w:1 / nothing
-MONS:     big kobold ; wand of magic darts ident:type . short sword
+KITEM:    p =  potion of degeneration w:5 / potion of ambrosia w:1 / nothing
+MONS:     big kobold ; wand of flame ident:type . short sword
 MAP
 XXXXX..WWWWW
 XXXXX..WWWWW
@@ -166,7 +167,7 @@ DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   spider / brain worm w:5 / worm w:5 / worker ant
+MONS:   wasp / worm w:5 / worker ant
 MONS:   wasp w:7 / soldier ant w:13
 ITEM:   beef jerky q:3 / fruit q:3
 ITEM:   royal jelly q:3, royal jelly q:6
@@ -267,10 +268,10 @@ TAGS:   uniq_second_food extra chance_second_food
 TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
-KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
-ITEM:  fruit q:1
-ITEM:  royal jelly q:2
-ITEM:  bread ration q:3
+KMONS:  A = unseen horror w:16 / nothing w:4
+ITEM:   fruit q:1
+ITEM:   royal jelly q:2
+ITEM:   bread ration q:3
 SUBST:  D : DDDDE
 NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP
@@ -293,13 +294,14 @@ TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirr
 # D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
 KMONS:   A = kobold
 KMONS:   B = orc
-KMONS:   C = deep elf fighter
+KMONS:   C = deep elf mage
 KMONS:   D = spriggan
 KMONS:   E = merfolk
 KMONS:   F = human
 KMONS:   G = necrophage
 KMONS:   H = crimson imp
-KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
+KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
+             mundane hand axe w:1 no_pickup
 KITEM:   Ya = bread ration / meat ration
 KITEM:   b = royal jelly / fruit q:1
 KFEAT:   1Yab = shallow_water
@@ -390,8 +392,7 @@ DEPTH:  D:8-14
 WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   deep elf fighter ; rapier | falchion / \
-        human ; short sword | rapier / \
+MONS:   human ; short sword | rapier / \
         orc warrior ; dagger / \
         spriggan ; dagger
 ITEM:   slice of pizza q:8, bread ration q:2

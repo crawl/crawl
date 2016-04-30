@@ -12,7 +12,6 @@ bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
-#define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 #define ORIGINAL_TYPE_KEY "original_type"
 
 enum poly_power_type
@@ -33,7 +32,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                        bool force_beh = false);
 
 void slimify_monster(monster* mons, bool hostile = false);
-bool mon_can_be_slimified(monster* mons);
+bool mon_can_be_slimified(const monster* mons);
 
 void seen_monster(monster* mons);
 #endif

@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "misc.h"
 #include "mutation.h"
@@ -86,13 +87,18 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Has the [player's] current god's one-time ability been used? (if any)
+function one_time_ability_used() */
+LUARET1(you_one_time_ability_used, boolean,
+        you.one_time_ability_used[you.religion])
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
 LUARET1(you_rot, number, player_rotted())
 LUARET1(you_poison_survival, number, poison_survival())
 LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
-LUARET1(you_hunger, number, you.hunger_state)
+LUARET1(you_hunger, number, you.hunger_state - 1)
 LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
@@ -148,14 +154,15 @@ LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
 LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
-LUARET1(you_phase_shifted, boolean, you.duration[DUR_PHASE_SHIFT])
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
 LUARET1(you_contaminated, number, get_contamination_level())
 LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
+#if TAG_MAJOR_VERSION == 34
 LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
+#endif
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
@@ -182,7 +189,17 @@ LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
-LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
+LUARET1(you_see_cell_solid_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID))
+LUARET1(you_see_cell_solid_see_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID_SEE))
+LUARET1(you_piety_rank, number, piety_rank())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
 
@@ -437,9 +454,9 @@ LUAFN(you_is_level_on_stack)
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        return luaL_argerror(ls, 1, err.c_str());
+        return luaL_argerror(ls, 1, err.what());
     }
 
     PLUARET(boolean, is_level_on_stack(lev));
@@ -524,6 +541,7 @@ static const struct luaL_reg you_clib[] =
     { "gold"        , you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
+    { "one_time_ability_used" , you_one_time_ability_used },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
@@ -559,7 +577,6 @@ static const struct luaL_reg you_clib[] =
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
     { "shrouded",     you_shrouded },
-    { "phase_shifted", you_phase_shifted },
     { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },
@@ -592,7 +609,9 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
+#if TAG_MAJOR_VERSION == 34
     { "antimagic",    you_antimagic },
+#endif
     { "status",       you_status },
 
     { "can_consume_corpses",      you_can_consume_corpses },
@@ -614,6 +633,8 @@ static const struct luaL_reg you_clib[] =
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
+    { "see_cell_solid",    you_see_cell_solid_rel },
+    { "see_cell_solid_see",you_see_cell_solid_see_rel },
 
     { "mutation",          you_mutation },
     { "temp_mutation",     you_temp_mutation },

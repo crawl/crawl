@@ -265,6 +265,14 @@ private:
 };
 const Form* get_form(transformation_type form = you.form);
 
+enum undead_form_reason
+{
+    UFR_TOO_DEAD  = -1,
+    UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
+    UFR_TOO_ALIVE = 1,
+};
+undead_form_reason lifeless_prevents_form(transformation_type form = you.form);
+
 bool form_can_wield(transformation_type form = you.form);
 bool form_can_wear(transformation_type form = you.form);
 bool form_can_fly(transformation_type form = you.form);
@@ -283,7 +291,8 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 bool check_form_stat_safety(transformation_type new_form);
 
 bool transform(int pow, transformation_type which_trans,
-               bool involuntary = false, bool just_check = false);
+               bool involuntary = false, bool just_check = false,
+               string *fail_reason = nullptr);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
@@ -300,6 +309,7 @@ const char* transform_name(transformation_type form = you.form);
 int form_hp_mod();
 
 void emergency_untransform();
+void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 

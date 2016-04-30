@@ -19,14 +19,14 @@
 #define SW_READIED "sw_readied"
 #define SW_TRACKING "sw_tracking"
 
+// How many aut until the next doom hound pops out of doom howl?
+#define NEXT_DOOM_HOUND_KEY "next_doom_hound"
+
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
 spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
-
-monster_type pick_swarmer();
-spret_type cast_summon_swarm(int pow, god_type god, bool fail);
 
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
@@ -41,14 +41,14 @@ bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, bool punish);
 
-bool tukima_affects(const monster *mon);
+bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail);
 
 spret_type cast_call_imp(int pow, god_type god, bool fail);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
-                       int spell = 0);
+                       int spell = 0, bool friendly = true);
 spret_type cast_summon_demon(int pow, god_type god = GOD_NO_GOD,
                              bool fail = false);
 spret_type cast_summon_greater_demon(int pow, god_type god, bool fail);
@@ -66,6 +66,8 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail);
 
 spret_type cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);
+
+void doom_howl(int time);
 
 void init_servitor(monster* servitor, actor* caster);
 spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);

@@ -111,6 +111,14 @@ against much stronger enemies, and pays little heed to easier victories.
 Furthermore, while fair fights are not required, harming one's allies will
 incur Okawaru's wrath.
 %%%%
+Pakellas
+
+Pakellas the Inventive believes in the supremacy of devices, magical or
+otherwise, over spells and other forms of magic. Followers, although cut off
+from ambient magical power, are provided with magical energy to empower their
+devices so long as they use them to assert Pakellas' supremacy. Pakellas will
+grant devout worshippers access to increasingly powerful devices.
+%%%%
 Qazlal
 
 Qazlal Stormbringer is a violent god of tempests, who delights in unleashing
@@ -303,6 +311,17 @@ Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
 gift followers with weapons and armour.
 %%%%
+Pakellas powers
+
+Followers of Pakellas do not regenerate their magic power naturally, and are
+forbidden from using external means to do so; instead, they are granted
+magical energy on killing beings. They may use increasing amounts of magical
+energy to strengthen their devices, temporarily granting them additional
+power, and can also use their magical energy to recharge their devices.
+Sufficiently devout followers will receive new devices from Pakellas, and may
+eventually petition Pakellas to personally charge one of their devices beyond
+its normal limits.
+%%%%
 Qazlal powers
 
 Followers of Qazlal are protected from the clouds they create. As a follower of
@@ -394,7 +413,7 @@ Ashenzari wrath
 
 Ashenzari's wrath is not like other gods'; it is constant and unrelenting for
 its duration. Victims find their skills impaired, and their enemies divinely
-guided - never losing track of them, never ending the hunt.
+guided – never losing track of them, never ending the hunt.
 %%%%
 Beogh wrath
 
@@ -402,7 +421,7 @@ Blasphemers against the word of Beogh find themselves confronted with direct
 and physical opposition. Those who still worship Beogh find their followers
 regularly deserting them; they, and others, are further assaulted by waves of
 orcish warriors. When working through intermediaries fails, Beogh hurls
-dancing electric weapons at offenders, or simply smites them - and when smiting
+dancing electric weapons at offenders, or simply smites them – and when smiting
 true sinners, Beogh has a heavy hand indeed!
 %%%%
 Cheibriados wrath
@@ -418,7 +437,7 @@ Dithmenos wrath
 When angered, Dithmenos turns the shadows against victims. Monsters emerge
 from the darkness, both illusions woven from shadow and the very shadows
 themselves turning against sinners. Novices are swarmed by flitting shadows and
-illusionary trolls; experts by shadow fiends and illusionary dragons.
+illusionary trolls; experts by tzitzimimeh and illusionary dragons.
 Dithmenos's subtle punishments are, if anything, more dangerous: victims find
 the shadows ripped away from them, hunted with nowhere to hide; or find
 themselves smothered in shadow and sleeping, perhaps forever.
@@ -434,7 +453,7 @@ Fedhas wrath
 
 It is Fedhas's considered opinion that offenders against the natural order
 (Fedhas) simply need more exposure to nature to realize the error of their
-ways. Accordingly, Fedhas provides said nature, in the form of pure elemental
+ways. Accordingly, Fedhas provides said exposure, in the form of pure elemental
 destruction, waves of giant spores rising from nearby corpses, and, for the
 truly incorrigible, surrounding rings of animate mushrooms and acid-spitting
 oklobs.
@@ -497,6 +516,16 @@ Okawaru's most vicious warriors are sent against rebellious servants. Novices
 find themselves swarmed by packs of ogres and gnolls, while champions are
 surrounded by titans and elvish blademasters.
 %%%%
+Pakellas wrath
+
+Those that offend Pakellas will find their magical devices drained of their
+power, their magic reserves emptied, and even their very life force fed
+into the ever-hungry engine that is progress on Pakellas' behalf. Those who
+abandon Pakellas altogether will further find themselves unable to regenerate
+their magical power so long as Pakellas' attention remains on them, and that
+their devices fail to work as intended – though they still have their
+intended effects, they will also harm the user in their use.
+%%%%
 Qazlal wrath
 
 Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
@@ -512,7 +541,7 @@ Sif Muna wrath
 
 Those in Sif Muna's ill graces find the very forces of magic rebelling against
 them. They are confused and stupefied, their magical reserves drained, their
-enchantments unravelled. Casting spells, too, becomes unreliable - and even
+enchantments unravelled. Casting spells, too, becomes unreliable – and even
 dangerous.
 %%%%
 the Shining One wrath
@@ -524,15 +553,15 @@ shouted at and silenced.
 Trog wrath
 
 Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
-by berserkers - from packs of bears to, for the most powerful, mobs of giants
-and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
+by berserkers – from packs of bears to, for the most powerful, mobs of giants
+and trolls. Their bodies decay, slow, and collapse – and sometimes, they're
 just blasted by Trog's fiery rage directly.
 %%%%
 Vehumet wrath
 
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
-struck by flame and frost; archmages by firestorms and hellfire. Their own
-conjurations, too, are wont to misfire at the worst possible moments.
+struck by flame and frost; archmages by crystal spears and firestorms. Their
+own conjurations, too, are wont to misfire at the worst possible moments.
 %%%%
 Xom wrath
 

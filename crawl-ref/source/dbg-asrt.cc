@@ -212,7 +212,7 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|     %c     |   %d   |   %3d    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
@@ -428,7 +428,7 @@ static void _debug_marker_scan()
 
         if (type < MAT_FEATURE || type >= NUM_MAP_MARKER_TYPES)
         {
-            mprf(MSGCH_ERROR, "Makrer #%d at (%d, %d) has invalid type %d",
+            mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) has invalid type %d",
                  i, marker->pos.x, marker->pos.y, (int) type);
         }
 
@@ -512,7 +512,7 @@ static void _debug_dump_lua_markers(FILE *file)
         if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
-        fprintf(file, "Lua marker %d at (%d, %d):\n",
+        fprintf(file, "Lua marker %u at (%d, %d):\n",
                 i, marker->pos.x, marker->pos.y);
         fprintf(file, "{{{{\n");
         fprintf(file, "%s", result.c_str());
@@ -627,6 +627,7 @@ void do_crash_dump()
 
     if (!crawl_state.test && !_assert_msg.empty())
         fprintf(stderr, "\n%s", _assert_msg.c_str());
+    // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
             "Please submit a bug report at https://crawl.develz.org/mantis/ "
@@ -760,9 +761,6 @@ void do_crash_dump()
 
 // Assertions and such
 
-//---------------------------------------------------------------
-// BreakStrToDebugger
-//---------------------------------------------------------------
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 // FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
@@ -800,11 +798,6 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 }
 
 #ifdef ASSERTS
-//---------------------------------------------------------------
-//
-// AssertFailed
-//
-//---------------------------------------------------------------
 NORETURN void AssertFailed(const char *expr, const char *file, int line,
                            const char *text, ...)
 {

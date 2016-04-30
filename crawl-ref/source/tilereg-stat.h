@@ -10,11 +10,11 @@ class StatRegion : public TextRegion
 public:
     StatRegion(FontWrapper *font);
 
-    virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(string &tip);
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual bool update_tip_text(string &tip) override;
 
-    virtual void render();
-    virtual void clear();
+    virtual void render() override;
+    virtual void clear() override;
 
 protected:
     ShapeBuffer m_shape_buf;

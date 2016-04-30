@@ -37,7 +37,6 @@ InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 
 void InventoryRegion::pack_buffers()
 {
-    // Pack base separately, as it comes from a different texture...
     unsigned int i = 0 + (m_grid_page*mx*my - m_grid_page*2); // this has to match the logic in cursor_index()
     for (int y = 0; y < my; y++)
     {
@@ -48,17 +47,9 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if ((y==my-1 && x==mx-1 && item.tile)
-                || (y==0 && x==0 && m_grid_page>0))
-            {
-                // draw a background for paging tiles
-                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
-                continue;
-            }
-
             if (item.flag & TILEI_FLAG_FLOOR)
             {
-                if (i >= (unsigned int) mx * my * (m_grid_page+1) && item.tile)
+                if (i > (unsigned int) mx * my * (m_grid_page+1) && item.tile)
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
@@ -66,7 +57,7 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_dngn_tile(t, x, y);
             }
             else
-                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
+                m_buf.add_main_tile(TILE_ITEM_SLOT, x, y);
         }
     }
 
@@ -80,7 +71,7 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if (y==my-1 && x==mx-1 && item.tile)
+            if (_is_next_button(i-1))
             {
                 // continuation to next page icon
                 m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
@@ -134,7 +125,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     // handle paging
-    if (m_cursor.x==(mx-1) && m_cursor.y==(my-1) && event.button==MouseEvent::LEFT)
+    if (_is_next_button(cursor_index()) && event.button==MouseEvent::LEFT)
     {
         // next page
         m_grid_page++;
@@ -207,7 +198,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         }
         else // in inventory
         {
-            describe_item(you.inv[idx], true);
+            describe_item(you.inv[idx]);
             redraw_screen();
         }
         return CK_MOUSE_CMD;
@@ -247,7 +238,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
     if (equipped && item.cursed())
     {
-        // Misc. items/rods can always be evoked, cursed or not.
+        // Evocable items (e.g. dispater staff) are still evocable when cursed.
         if (item_is_evokable(item))
             return true;
 
@@ -754,8 +745,15 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    int remaining = mx*my*(m_grid_page+1) - m_items.size();
-    int empty_on_this_row = mx - m_items.size() % mx;
+    // ensure we don't end up stuck on a later page.
+    const int total_items = m_items.size() + num_ground;
+    // can store mx*my items on first page, but lose 2 for each following page
+    // (next & prev buttons)
+    const int max_page = max(0, (total_items - 2)) / (mx*my - 2);
+    m_grid_page = min(m_grid_page, max_page);
+
+    const int remaining = mx*my - m_items.size();
+    const int empty_on_this_row = mx - m_items.size() % mx;
 
     // If we're not on the last row...
     if ((int)m_items.size() < mx * (my-1))
@@ -764,7 +762,7 @@ void InventoryRegion::update()
         if (num_ground > remaining - empty_on_this_row)
         {
             // Fill out part of this row.
-            int fill = remaining - num_ground;
+            const int fill = remaining - num_ground;
             for (int i = 0; i < fill; ++i)
             {
                 InventoryTile desc;
@@ -849,9 +847,26 @@ bool InventoryRegion::_is_prev_button(int idx)
     return m_grid_page>0 && idx == mx*my*m_grid_page-2*m_grid_page;
 }
 
+/**
+ * How many items are we actually looking at (inv+floor), not counting fake
+ * padding items inserted on the first page?
+ *
+ * Only valid for page 1.
+ */
+int InventoryRegion::_real_item_count()
+{
+    // xxx: this seems like a classic reduce()...
+    int total = 0;
+    for (auto desc : m_items)
+        if (desc.idx != -1)
+            ++total;
+    return total;
+}
+
 bool InventoryRegion::_is_next_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return idx == mx*my*(m_grid_page+1)-1;
+    return idx == (mx*my - 2)*(m_grid_page+1) - 1 + 2
+            && _real_item_count() >= mx*my;
 }
 #endif

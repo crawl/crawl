@@ -37,7 +37,7 @@ public:
 
     virtual ~spell_scroller();
 protected:
-    bool process_key(int keyin);
+    bool process_key(int keyin) override;
 protected:
     spellset spells;
     const monster_info *mon_owner;

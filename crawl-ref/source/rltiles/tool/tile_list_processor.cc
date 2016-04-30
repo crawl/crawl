@@ -963,8 +963,8 @@ bool tile_list_processor::write_data(bool image, bool code)
                 ucname.c_str(), ucname.c_str());
         fprintf(fp, "#include \"tiledef_defines.h\"\n\n");
 
-        for (size_t i = 0; i < m_include.size(); ++i)
-            fprintf(fp, "#include \"%s\"\n", m_include[i].c_str());
+        for (const auto& include : m_include)
+            fprintf(fp, "#include \"%s\"\n", include.c_str());
 
         fprintf(fp, "%s", "\n\n");
 
@@ -1054,8 +1054,8 @@ bool tile_list_processor::write_data(bool image, bool code)
             max_enum += m_abstract[last_idx].first;
             max_enum += "_MAX";
 
-            for (size_t j = 0; j < max_enum.size(); ++j)
-                max_enum[j] = toupper(max_enum[j]);
+            for (char& c : max_enum)
+                c = toupper(c);
 
             fprintf(fp, "    %s_%s_MAX = %s\n};\n\n", m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
         }
@@ -1364,22 +1364,21 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "\n");
 
         vector<string> uc_max_enum;
-        for (size_t i = 0; i < m_abstract.size(); ++i)
+        vector<string> lc_enum;
+        for (const auto& abstract : m_abstract)
         {
-            string max_enum = m_abstract[i].second;
+            string max_enum = abstract.second;
             max_enum += "_";
-            max_enum += m_abstract[i].first;
+            max_enum += abstract.first;
             max_enum += "_MAX";
 
-            for (size_t j = 0; j < max_enum.size(); ++j)
-                max_enum[j] = toupper(max_enum[j]);
+            for (char& c : max_enum)
+                c = toupper(c);
 
             uc_max_enum.push_back(max_enum);
-        }
 
-        vector<string> lc_enum;
-        for (size_t i = 0; i < m_abstract.size(); ++i)
-            lc_enum.push_back(m_abstract[i].first);
+            lc_enum.push_back(abstract.first);
+        }
 
         fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx)\n{\n", lcname.c_str());
         add_abstracts(fp, "return (tile_%s_count(idx));", lc_enum, uc_max_enum);
@@ -1411,12 +1410,12 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "bool tile_%s_index(const char *str, tileidx_t *idx)\n{\n",
                 lcname.c_str());
-        for (size_t i = 0; i < lc_enum.size(); ++i)
+        for (const auto& str : lc_enum)
         {
             fprintf(fp,
                 "    if (tile_%s_index(str, idx))\n"
                 "        return true;\n",
-                lc_enum[i].c_str());
+                str.c_str());
         }
         fprintf(fp, "%s",
             "    return false;\n"
@@ -1531,16 +1530,16 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!m_page.m_tiles.empty())
             fprintf(fp, "%s.png: \\\n", lcname.c_str());
 
-        for (size_t i = 0; i < m_depends.size(); ++i)
-             fprintf(fp, "  %s \\\n", m_depends[i].c_str());
+        for (const auto& str : m_depends)
+             fprintf(fp, "  %s \\\n", str.c_str());
 
         // Also generate empty dependencies for each file.
         // This way, if a file gets removed, the dependency file
         // won't complain about not having a rule to make the non-existent file.
         fprintf(fp, "%s", "\n\n");
 
-        for (size_t i = 0; i < m_depends.size(); ++i)
-             fprintf(fp, "%s:\n", m_depends[i].c_str());
+        for (const auto& str : m_depends)
+             fprintf(fp, "%s:\n", str.c_str());
 
         fclose(fp);
     }
@@ -1567,8 +1566,8 @@ bool tile_list_processor::write_data(bool image, bool code)
         else
         {
             fprintf(fp, "define([\"jquery\",");
-            for (size_t i = 0; i < m_abstract.size(); ++i)
-                fprintf(fp, "\"./tileinfo-%s\", ", m_abstract[i].first.c_str());
+            for (const auto& abstract : m_abstract)
+                fprintf(fp, "\"./tileinfo-%s\", ", abstract.first.c_str());
             fprintf(fp, "],\n       function ($, ");
             for (size_t i = 0; i < m_abstract.size(); ++i)
             {
@@ -1584,8 +1583,8 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         if (m_abstract.size() > 0)
         {
-            for (size_t i = 0; i < m_abstract.size(); ++i)
-                fprintf(fp, "$.extend(exports, %s);\n", m_abstract[i].first.c_str());
+            for (const auto& abstract : m_abstract)
+                fprintf(fp, "$.extend(exports, %s);\n", abstract.first.c_str());
         }
 
         if (m_start_value_module.size() > 0)
@@ -1706,8 +1705,8 @@ bool tile_list_processor::write_data(bool image, bool code)
                 max_enum += m_abstract[last_idx].first;
                 max_enum += "_MAX";
 
-                for (size_t j = 0; j < max_enum.size(); ++j)
-                    max_enum[j] = toupper(max_enum[j]);
+                for (char& c : max_enum)
+                    c = toupper(c);
 
                 fprintf(fp, "exports.%s_MAX = window.%s_%s_MAX = %s.%s;\n\n",
                         ucname.c_str(), m_prefix.c_str(), ucname.c_str()
@@ -1716,21 +1715,20 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
 
             vector<string> uc_max_enum;
-            for (size_t i = 0; i < m_abstract.size(); ++i)
+            vector<string> lc_enum;
+            for (const auto& abstract : m_abstract)
             {
-                string max_enum = m_abstract[i].first;
+                string max_enum = abstract.first;
                 max_enum += "_MAX";
-                for (size_t j = 0; j < max_enum.size(); ++j)
-                    max_enum[j] = toupper(max_enum[j]);
+                for (char& c : max_enum)
+                    c = toupper(c);
 
-                max_enum = m_abstract[i].first + "." + max_enum;
+                max_enum = abstract.first + "." + max_enum;
 
                 uc_max_enum.push_back(max_enum);
-            }
 
-            vector<string> lc_enum;
-            for (size_t i = 0; i < m_abstract.size(); ++i)
-                lc_enum.push_back(m_abstract[i].first);
+                lc_enum.push_back(abstract.first);
+            }
 
             fprintf(fp, "exports.get_tile_info = function (idx)\n{\n");
             add_abstracts(fp, "return (%s.get_tile_info(idx));", lc_enum, uc_max_enum, true);

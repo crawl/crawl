@@ -597,7 +597,7 @@ struct opacity_trans : public opacity_func
 
     CLONE(opacity_trans)
 
-    opacity_type operator()(const coord_def &l) const
+    opacity_type operator()(const coord_def &l) const override
     {
         return orig(transform(l));
     }
@@ -842,12 +842,12 @@ struct los_param_funcs : public los_param
     {
     }
 
-    bool los_bounds(const coord_def& p) const
+    bool los_bounds(const coord_def& p) const override
     {
         return map_bounds(p + center) && bounds.contains(p);
     }
 
-    opacity_type opacity(const coord_def& p) const
+    opacity_type opacity(const coord_def& p) const override
     {
         return opc(p + center);
     }

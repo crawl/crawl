@@ -35,6 +35,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"
@@ -44,6 +45,7 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
+#include "transform.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -126,6 +128,7 @@ bool TilesFramework::initialise()
     _send_version();
     send_exit_reason("unknown");
     _send_options();
+    _send_layout();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
     m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
@@ -213,6 +216,7 @@ void TilesFramework::finish_message()
         fragment_start += fragment_size;
     }
     m_msg_buf.clear();
+    m_need_flush = true;
 }
 
 void TilesFramework::send_message(const char *format, ...)
@@ -239,7 +243,11 @@ void TilesFramework::send_message(const char *format, ...)
 
 void TilesFramework::flush_messages()
 {
-    send_message("*{\"msg\":\"flush_messages\"}");
+    if (m_need_flush)
+    {
+        send_message("*{\"msg\":\"flush_messages\"}");
+        m_need_flush = false;
+    }
 }
 
 void TilesFramework::_await_connection()
@@ -457,6 +465,18 @@ void TilesFramework::_send_options()
     finish_message();
 }
 
+void TilesFramework::_send_layout()
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+    tiles.json_open_object("message_pane");
+    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_bool("small_more", Options.small_more);
+    tiles.json_close_object();
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+
 void TilesFramework::push_menu(Menu* m)
 {
     MenuInfo mi;
@@ -503,6 +523,19 @@ void TilesFramework::close_all_menus()
 {
     while (m_menu_stack.size())
         pop_menu();
+}
+
+static void _send_text_cursor(bool enabled)
+{
+    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
+                       enabled ? "true" : "false");
+}
+
+void TilesFramework::set_text_cursor(bool enabled)
+{
+    if (m_text_cursor == enabled) return;
+
+    m_text_cursor = enabled;
 }
 
 static void _send_ui_state(WebtilesUIState state)
@@ -570,7 +603,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
+        if (status == DUR_DIVINE_SHIELD)
         {
             if (!you.duration[status])
                 continue;
@@ -655,7 +688,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
-        prank = max(0, piety_rank() - 1);
+        prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
     {
@@ -801,6 +834,10 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
+    _update_int(force_full, c.unarmed_attack_colour,
+                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+                "quiver_available");
 
     json_close_object(true);
 
@@ -920,7 +957,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -929,7 +967,8 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
                                         TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -1173,6 +1212,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 {
                     json_write_comma();
                     write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                    json_write_null("mcache");
                 }
             }
         }
@@ -1209,7 +1249,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     mcache_entry *entry = mcache.get(mcache_idx);
                     if (entry)
                         _send_mcache(entry, in_water, false);
+                    else
+                        json_write_null("mcache");
                 }
+                else
+                    json_write_null("mcache");
             }
         }
         else if (fg_idx >= TILE_MAIN_MAX)
@@ -1218,6 +1262,16 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
+                json_write_null("mcache");
+            }
+        }
+        else
+        {
+            if (fg_changed)
+            {
+                json_write_comma();
+                json_write_null("doll");
+                json_write_null("mcache");
             }
         }
 
@@ -1536,6 +1590,9 @@ void TilesFramework::_send_everything()
 {
     _send_version();
     _send_options();
+    _send_layout();
+
+    _send_text_cursor(m_text_cursor);
 
     // UI State
     _send_ui_state(m_ui_state);
@@ -1543,13 +1600,15 @@ void TilesFramework::_send_everything()
 
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
-    _send_map(true);
-
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
+
+    // Map is sent after player, otherwise HP/MP bar can be left behind in the
+    // old location if the player has moved
+    _send_map(true);
 
     // Menus
     json_open_object();
@@ -1588,6 +1647,11 @@ void TilesFramework::clrscr()
     cgotoxy(1, 1);
 
     set_need_redraw();
+}
+
+void TilesFramework::layout_reset()
+{
+    m_layout_reset = true;
 }
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
@@ -1633,6 +1697,18 @@ void TilesFramework::redraw()
             m_mcache_ref_done = false;
         }
         return;
+    }
+
+    if (m_layout_reset)
+    {
+        _send_layout();
+        m_layout_reset = false;
+    }
+
+    if (m_last_text_cursor != m_text_cursor)
+    {
+        _send_text_cursor(m_text_cursor);
+        m_last_text_cursor = m_text_cursor;
     }
 
     if (m_last_ui_state != m_ui_state)

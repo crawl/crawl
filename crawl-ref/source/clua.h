@@ -13,10 +13,6 @@ extern "C" {
 #include <set>
 #include <string>
 
-#ifndef CLUA_MAX_MEMORY_USE
-#define CLUA_MAX_MEMORY_USE (6 * 1024)
-#endif
-
 class CLua;
 
 class lua_stack_cleaner
@@ -62,7 +58,7 @@ public:
 
     const lua_datum &operator = (const lua_datum &other);
 
-    void shutdown(CLua &lua);
+    void shutdown(CLua &lua) override;
 
     ~lua_datum();
 
@@ -216,9 +212,10 @@ public:
     lua_text_pattern(const string &pattern);
     ~lua_text_pattern();
 
-    bool valid() const;
-    bool matches(const string &s) const;
-    const string &tostring() const { return pattern; }
+    bool valid() const override;
+    bool matches(const string &s) const override;
+    pattern_match match_location(const string &s) const override;
+    const string &tostring() const override { return pattern; }
 
     static bool is_lua_pattern(const string &s);
 

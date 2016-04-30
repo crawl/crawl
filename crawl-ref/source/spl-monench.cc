@@ -13,12 +13,15 @@
 #include "spl-util.h"
 #include "terrain.h"
 
-int englaciate(coord_def where, int pow, int, actor *agent)
+int englaciate(coord_def where, int pow, actor *agent)
 {
     actor *victim = actor_at(where);
 
     if (!victim || victim == agent)
         return 0;
+
+    if (agent->is_monster() && mons_aligned(agent, victim))
+        return 0; // don't let monsters hit friendlies
 
     monster* mons = victim->as_monster();
 
@@ -61,7 +64,9 @@ spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
     mpr("You radiate an aura of cold.");
-    apply_area_visible(englaciate, pow, &you);
+    apply_area_visible([pow] (coord_def where) {
+        return englaciate(where, pow, &you);
+    }, you.pos());
     return SPRET_SUCCESS;
 }
 

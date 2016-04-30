@@ -58,19 +58,19 @@ typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
 typedef function<int (const string &, const string &, string)> key_describer;
 
 /// A set of optional functionality for lookup types.
-enum lookup_type_flag
+enum class lookup_type
 {
-    LTYPF_NONE            = 0,
+    NONE            = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
-    LTYPF_DB_SUFFIX       = 1<<0,
+    DB_SUFFIX       = 1<<0,
     /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT    = 1<<1,
+    DISABLE_SORT    = 1<<1,
     /// whether the display menu for this supports tiles
-    LTYPF_SUPPORT_TILES   = 1<<2,
+    SUPPORT_TILES   = 1<<2,
     /// whether the display menu for this has toggleable sorting
-    LTYPF_TOGGLEABLE_SORT = 1<<3,
+    TOGGLEABLE_SORT = 1<<3,
 };
-DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+DEF_BITFIELD(lookup_type_flags, lookup_type);
 
 /// A description of a lookup that the player can do. (e.g. (M)onster data)
 class LookupType
@@ -119,7 +119,7 @@ public:
     /// a function returning 'true' if the search result corresponding to
     /// the corresponding search should be filtered out of the results
     db_find_filter filter_forbid;
-    /// A set of optional functionality; see lookup_type_flag for details
+    /// A set of optional functionality; see lookup_type for details
     lookup_type_flags flags;
 private:
     MenuEntry* make_menu_entry(char letter, string &key) const;
@@ -128,7 +128,10 @@ private:
     /**
      * Does this lookup type support toggling the sort order of results?
      */
-    bool toggleable_sort() const { return bool(flags & LTYPF_TOGGLEABLE_SORT); }
+    bool toggleable_sort() const
+    {
+        return bool(flags & lookup_type::TOGGLEABLE_SORT);
+    }
 
 private:
     /// Function that fetches a list of keys, without taking arguments.
@@ -249,18 +252,7 @@ public:
 static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
     vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
-
-    if (key_matches.size() == 1)
-        return key_matches;
-    else if (key_matches.size() > 52)
-        return key_matches;
-
     vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
-
-    if (key_matches.empty() && body_matches.empty())
-        return key_matches;
-    else if (key_matches.empty() && body_matches.size() == 1)
-        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
     vector<string> tmp = key_matches;
@@ -361,16 +353,15 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key.c_str());
+    monster_type mon_num = get_monster_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
 
 static bool _spell_filter(string key, string body)
 {
-    if (!ends_with(key, " spell"))
+    if (!strip_suffix(key, "spell"))
         return true;
-    key.erase(key.length() - 6);
 
     spell_type spell = spell_by_name(key);
 
@@ -398,9 +389,8 @@ static bool _card_filter(string key, string body)
     lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (!ends_with(key, " card"))
+    if (!strip_suffix(key, "card"))
         return true;
-    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
@@ -413,16 +403,17 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
-    if (!ends_with(key, " ability"))
+
+    if (!strip_suffix(key, "ability"))
         return true;
-    key.erase(key.length() - 8);
 
-    if (string_matches_ability_name(key))
-        return false;
-
-    return true;
+    return !string_matches_ability_name(key);
 }
 
+static bool _status_filter(string key, string body)
+{
+    return !strip_suffix(lowercase(key), " status");
+}
 
 
 static void _recap_mon_keys(vector<string> &keys)
@@ -431,6 +422,38 @@ static void _recap_mon_keys(vector<string> &keys)
     {
         monster_type type = get_monster_by_name(keys[i]);
         keys[i] = mons_type_name(type, DESC_PLAIN);
+    }
+}
+
+/**
+ * Fixup spell names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of spell names.
+ */
+static void _recap_spell_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " spell"
+        const string key_name = keys[i].substr(0, keys[i].length() - 6);
+        // then get the real name
+        keys[i] = make_stringf("%s spell",
+                               spell_title(spell_by_name(key_name)));
+    }
+}
+
+/**
+ * Fixup ability names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of ability names.
+ */
+static void _recap_ability_keys(vector<string> &keys)
+{
+    for (auto &key : keys)
+    {
+        strip_suffix(key, "ability");
+        // get the real name
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
     }
 }
 
@@ -739,7 +762,7 @@ string LookupType::prompt_string() const
  */
 string LookupType::suffix() const
 {
-    if (flags & LTYPF_DB_SUFFIX)
+    if (flags & lookup_type::DB_SUFFIX)
         return " " + type;
     return "";
 }
@@ -773,7 +796,7 @@ void LookupType::display_keys(vector<string> &key_list) const
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
 #ifdef USE_TILE_LOCAL
-    !(flags & LTYPF_SUPPORT_TILES);
+    !(flags & lookup_type::SUPPORT_TILES);
 #else
     true;
 #endif
@@ -854,10 +877,8 @@ MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
 string LookupType::key_to_menu_str(const string &key) const
 {
     string str = uppercase_first(key);
-
-    if (ends_with(str, suffix())) // perhaps we should assert this?
-        str.erase(str.length() - suffix().length());
-
+    // perhaps we should assert this?
+    strip_suffix(str, suffix());
     return str;
 }
 
@@ -895,8 +916,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.body << desc << extra_info;
 
     string title = key;
-    if (ends_with(title, suffix))
-        title.erase(title.length() - suffix.length());
+    strip_suffix(title, suffix);
     title = uppercase_first(title);
     linebreak_string(footer, width - 1);
 
@@ -1006,7 +1026,7 @@ static int _describe_cloud(const string &key, const string &suffix,
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
 
-    const string extra_info = is_opaque_cloud_type(cloud) ?
+    const string extra_info = is_opaque_cloud(cloud) ?
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will."
         : "";
@@ -1045,14 +1065,6 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    // spellbooks/rods are interactive & so require special handling
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        item_colour(item);
-        return _describe_spell_item(item);
-    }
-
     string stats;
     if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
         || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
@@ -1061,6 +1073,13 @@ static int _describe_item(const string &key, const string &suffix,
     {
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
+    }
+    // spellbooks/rods are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        item_colour(item);
+        return _describe_spell_item(item);
     }
 
     return _describe_key(key, suffix, footer, stats);
@@ -1097,52 +1116,6 @@ static string _branch_entry_runes(branch_type br)
                             "at least %d rune%s of Zot.",
                             br == BRANCH_ZIGGURAT ? "portal" : "branch",
                             num_runes, num_runes > 1 ? "s" : "");
-    }
-
-    return desc;
-}
-
-static branch_type _rune_to_branch(int rune)
-{
-    switch (rune)
-    {
-    case RUNE_SWAMP:       return BRANCH_SWAMP;
-    case RUNE_SNAKE:       return BRANCH_SNAKE;
-    case RUNE_SHOALS:      return BRANCH_SHOALS;
-    case RUNE_SPIDER:      return BRANCH_SPIDER;
-    case RUNE_SLIME:       return BRANCH_SLIME;
-    case RUNE_VAULTS:      return BRANCH_VAULTS;
-    case RUNE_TOMB:        return BRANCH_TOMB;
-    case RUNE_DIS:         return BRANCH_DIS;
-    case RUNE_GEHENNA:     return BRANCH_GEHENNA;
-    case RUNE_COCYTUS:     return BRANCH_COCYTUS;
-    case RUNE_TARTARUS:    return BRANCH_TARTARUS;
-    case RUNE_ABYSSAL:     return BRANCH_ABYSS;
-    case RUNE_DEMONIC:     return BRANCH_PANDEMONIUM;
-    case RUNE_MNOLEG:      return BRANCH_PANDEMONIUM;
-    case RUNE_LOM_LOBON:   return BRANCH_PANDEMONIUM;
-    case RUNE_CEREBOV:     return BRANCH_PANDEMONIUM;
-    case RUNE_GLOORX_VLOQ: return BRANCH_PANDEMONIUM;
-    default:               return NUM_BRANCHES;
-    }
-}
-
-static string _branch_runes(branch_type br)
-{
-    string desc;
-    vector<string> rune_names;
-
-    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        if (_rune_to_branch(i) == br)
-            rune_names.push_back(rune_type_name(i));
-
-    // Abyss and Pan runes are explained in their descriptions.
-    if (!rune_names.empty() && br != BRANCH_ABYSS && br != BRANCH_PANDEMONIUM)
-    {
-        desc = make_stringf("\n\nThis branch contains the %s rune%s of Zot.",
-                            comma_separated_line(begin(rune_names),
-                                                 end(rune_names)).c_str(),
-                            rune_names.size() > 1 ? "s" : "");
     }
 
     return desc;
@@ -1259,7 +1232,8 @@ static int _describe_branch(const string &key, const string &suffix,
                          + _branch_entry_runes(branch)
                          + _branch_depth(branch)
                          + _branch_subbranches(branch)
-                         + _branch_runes(branch);
+                         + "\n\n"
+                         + branch_rune_desc(branch, false);
 
     return _describe_key(key, suffix, footer, info);
 }
@@ -1269,43 +1243,47 @@ static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
-               LTYPF_SUPPORT_TILES | LTYPF_TOGGLEABLE_SORT),
-    LookupType('S', "spell", nullptr, _spell_filter,
+               lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
+    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
-    LookupType('A', "ability", nullptr, _ability_filter,
+               lookup_type::SUPPORT_TILES),
+    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_card,
-               LTYPF_DB_SUFFIX),
+               lookup_type::DB_SUFFIX),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _simple_menu_gen,
                _describe_item,
-               LTYPF_NONE),
+               lookup_type::NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_generic,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god,
-               LTYPF_SUPPORT_TILES),
+               lookup_type::SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
                _describe_branch,
-               LTYPF_DISABLE_SORT),
+               lookup_type::DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
-               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
+               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+    LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic,
+               lookup_type::DB_SUFFIX),
 };
 
 /**
@@ -1435,11 +1413,11 @@ static bool _find_description(string &response)
         return false;
 
     ASSERT(*lookup_type_ptr);
-    const LookupType lookup_type = **lookup_type_ptr;
+    const LookupType ltype = **lookup_type_ptr;
 
-    const bool want_regex = !(lookup_type.no_search());
+    const bool want_regex = !(ltype.no_search());
     const string regex = want_regex ?
-                         _prompt_for_regex(lookup_type, response) :
+                         _prompt_for_regex(ltype, response) :
                          "";
 
     if (!response.empty())
@@ -1454,30 +1432,30 @@ static bool _find_description(string &response)
 
 
     // Try to get an exact match first.
-    const bool exact_match = _exact_lookup_match(lookup_type, regex);
+    const bool exact_match = _exact_lookup_match(ltype, regex);
 
-    vector<string> key_list = lookup_type.matching_keys(regex);
+    vector<string> key_list = ltype.matching_keys(regex);
 
-    const bool by_symbol = lookup_type.supports_glyph_lookup()
+    const bool by_symbol = ltype.supports_glyph_lookup()
                            && regex.size() == 1;
-    const string type = lowercase_string(lookup_type.type);
+    const string type = lowercase_string(ltype.type);
     response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        lookup_type.describe(key_list[0]);
+        ltype.describe(key_list[0]);
         return true;
     }
 
-    if (exact_match && lookup_type.describe(regex, true) != ' ')
+    if (exact_match && ltype.describe(regex, true) != ' ')
         return true;
 
-    if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
+    if (!(ltype.flags & lookup_type::DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
 
-    lookup_type.display_keys(key_list);
+    ltype.display_keys(key_list);
     return true;
 }
 

@@ -88,7 +88,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Can't use them with a shield.
     if (ng.species == SP_SPRIGGAN && ng.job == JOB_FIGHTER
-        && wpn == WPN_TRIDENT)
+        && (wpn == WPN_TRIDENT || wpn == WPN_SPEAR))
     {
         return CC_BANNED;
     }
@@ -101,8 +101,11 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_RESTRICTED;
     }
 
-    if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR)
+    if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR
+        && !(ng.job == JOB_FIGHTER && ng.species == SP_FORMICID))
+    {
         return CC_BANNED;
+    }
 
     // Javelins are always good, tomahawks not so much.
     if (wpn == WPN_THROWN)

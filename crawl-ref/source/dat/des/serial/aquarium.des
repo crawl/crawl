@@ -12,11 +12,11 @@
 #   -> D:4-6   some shallow water, fungus, bat
 #   -> D:7-12  deep water, electric eel,
 #   -> D:13-15 deep water, electric eel, sea snake, snapping turtle
-#   -> D:16-18 ice, polar bear, yak, death yak, wolf
-#   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
-#   -> D:22-24 lava, fire vortex, lava snake, salamander
-#   -> D:25-27 lava, fire vortex, fire bat, fire elemental
-#   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
+#   -> ??????? ice, polar bear, yak, wolf
+#   -> ??????? ice, ice beast, simulacrum, freezing clouds
+#   -> ??????? lava, fire vortex, lava snake, salamander
+#   -> ??????? lava, fire vortex, fire bat, fire elemental
+#   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond obelisk
 #
 # Most of these vaults come in three sizes/shapes depending on
 #  which characters of w, D and E turn into water.
@@ -28,7 +28,7 @@
 #  subtype are generated.
 #   -> bridges - a corridor with water on both sides
 #   -> windows - water on the side of a room or corridor
-#   -> views - water with multiple uncconected windows
+#   -> views - water with multiple unconnected windows
 #   -> balconies - a room with water on 3 sides
 #   -> pools - water in the middle of a room
 #
@@ -46,7 +46,7 @@
 default-depth:
 
 #
-# A general initalization function called for everything.  The
+# A general initialisation function called for everything. The
 #  size/shape and creature style cannot be set randomly here
 #  because this is run separately for each subvault.
 #
@@ -93,9 +93,9 @@ function init_aquarium(e)
                  w:50 generate_awake insubstantial wisp /
                  w:5  generate_awake water elemental /
                  w:4  generate_awake air elemental]] )
-    -- I tried ussing [[ ]] here, but Crawl could not find the
-    --  mons_diamond_obelisk tile then.  The problem went away
-    --  when I put it back to single quotes
+    -- I tried using [[ ]] here, but Crawl could not find the
+    --  mons_diamond_obelisk tile then. The problem went away
+    --  when I put it back to single quotes.
     e.kmons('_ = diamond obelisk')
   elseif you.absdepth() <= 3 then
     e.subst('w = _')
@@ -192,7 +192,7 @@ end
 
 #
 # This function replaces the specified glyphs with a random
-#  non-bridge subvault.  Using this functions guarantees that
+#  non-bridge subvault. Using this function guarantees that
 #  the weights remain consistent.
 #
 
@@ -205,8 +205,8 @@ end
 }}
 
 #
-# This function is used to initialize the bridges in the
-#  aquarium_bridge_island_??? vaults.  There is a longer
+# This function is used to initialise the bridges in the
+#  aquarium_bridge_island_??? vaults. There is a longer
 #  explanation under "bridges" below.
 #
 {{

@@ -24,6 +24,7 @@
 #include "place.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-goditem.h" // detect_items
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -81,7 +82,8 @@ void wizard_place_stairs(bool down)
     if (stairs == DNGN_UNSEEN)
         return;
 
-    dungeon_terrain_changed(you.pos(), stairs, false);
+    mprf("Creating %sstairs.", down ? "down" : "up");
+    dungeon_terrain_changed(you.pos(), stairs);
 }
 
 void wizard_level_travel(bool down)
@@ -248,7 +250,7 @@ bool wizard_create_feature(const coord_def& pos)
     env.tile_flv(pos).special = 0;
     env.grid_colours(pos) = 0;
     const dungeon_feature_type old_feat = grd(pos);
-    dungeon_terrain_changed(pos, feat, false);
+    dungeon_terrain_changed(pos, feat, false, false, false, true);
     // Update gate tiles, if existing.
     if (feat_is_door(old_feat) || feat_is_door(feat))
     {
@@ -349,35 +351,23 @@ void wizard_map_level()
     if (!is_map_persistent())
     {
         if (!yesno("Force level to be mappable?", true, 'n'))
+        {
             canned_msg(MSG_OK);
-        else
-            env.properties[FORCE_MAPPABLE_KEY] = true;
+            return;
+        }
+        env.properties[FORCE_MAPPABLE_KEY] = true;
     }
 
+    mpr("Mapping level.");
     magic_mapping(1000, 100, true, true);
-}
-
-static int find_trap_slot()
-{
-    for (int i = 0; i < MAX_TRAPS; ++i)
-        if (env.trap[i].type == TRAP_UNASSIGNED)
-            return i;
-
-    return -1;
+    detect_items(1000);
 }
 
 bool debug_make_trap(const coord_def& pos)
 {
     char requested_trap[80];
-    int trap_slot  = find_trap_slot();
     trap_type trap = TRAP_UNASSIGNED;
     int gridch     = grd(pos);
-
-    if (trap_slot == -1)
-    {
-        mpr("Sorry, this level can't take any more traps.");
-        return false;
-    }
 
     if (gridch != DNGN_FLOOR)
     {
@@ -388,7 +378,10 @@ bool debug_make_trap(const coord_def& pos)
     msgwin_get_line("What kind of trap? ",
                     requested_trap, sizeof(requested_trap));
     if (!*requested_trap)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     string spec = lowercase_string(requested_trap);
     vector<trap_type> matches;
@@ -439,21 +432,16 @@ bool debug_make_trap(const coord_def& pos)
         }
     }
 
-    bool success = place_specific_trap(you.pos(), trap);
-    if (success)
-    {
-        mprf("Created %s, marked it undiscovered.",
-             (trap == TRAP_RANDOM)
-                ? "a random trap"
-                : env.trap[env.tgrid(you.pos())].name(DESC_A).c_str());
-    }
-    else
-        mpr("Could not create trap - too many traps on level.");
+    place_specific_trap(you.pos(), trap);
+    mprf("Created %s, marked it undiscovered.",
+         (trap == TRAP_RANDOM)
+            ? "a random trap"
+            : trap_at(you.pos())->name(DESC_A).c_str());
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
 
-    return success;
+    return true;
 }
 
 bool debug_make_shop(const coord_def& pos)
@@ -464,27 +452,14 @@ bool debug_make_shop(const coord_def& pos)
         return false;
     }
 
-    bool have_shop_slots = false;
-    for (int i = 0; i < MAX_SHOPS; ++i)
-    {
-        if (env.shop[i].type == SHOP_UNASSIGNED)
-        {
-            have_shop_slots = true;
-            break;
-        }
-    }
-
-    if (!have_shop_slots)
-    {
-        mpr("There are too many shops on this level.");
-        return false;
-    }
-
     char requested_shop[80];
     msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     const shop_type new_shop_type = str_to_shoptype(requested_shop);
 
@@ -496,7 +471,6 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     place_spec_shop(pos, new_shop_type);
-    link_items();
     mpr("Done.");
     return true;
 }
@@ -761,6 +735,8 @@ void wizard_list_levels()
 
 void wizard_recreate_level()
 {
+    mpr("Regenerating level.");
+
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
     _free_all_vaults();
 
@@ -806,7 +782,7 @@ void wizard_clear_used_vaults()
 void wizard_abyss_speed()
 {
     char specs[256];
-    mprf(MSGCH_PROMPT, "Set abyss speed to what? (now %d, higher value = "
+    mprf(MSGCH_PROMPT, "Set Abyss speed to what? (now %d, higher value = "
                        "higher speed) ", you.abyss_speed);
 
     if (!cancellable_get_line(specs, sizeof(specs)))
@@ -814,6 +790,7 @@ void wizard_abyss_speed()
         const int speed = atoi(specs);
         if (speed || specs[0] == '0')
         {
+            mprf("Setting Abyss speed to %i.", speed);
             you.abyss_speed = speed;
             return;
         }

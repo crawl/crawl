@@ -109,8 +109,9 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
     {
-        formatted_string::parse_string(me->get_text(needs_cursor),
-                                       true, nullptr, col).display();
+        formatted_string s = formatted_string::parse_string(
+            me->get_text(needs_cursor), true, nullptr, col);
+        s.chop(get_number_of_cols()).display();
     }
     else
     {
@@ -124,6 +125,7 @@ void MenuDisplayText::draw_more()
 {
     cgotoxy(1, m_menu->get_y_offset() + m_menu->get_pagesize() -
             count_linebreaks(m_menu->get_more()));
+    textcolour(LIGHTGREY);
     m_menu->get_more().display();
 }
 
@@ -347,12 +349,12 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 
 void Menu::do_menu()
 {
-    draw_menu();
-
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);
     _webtiles_title_changed = false;
 #endif
+
+    draw_menu();
 
     alive = true;
     while (alive)
@@ -494,7 +496,7 @@ bool Menu::process_key(int keyin)
     case CK_END:
     {
         nav = true;
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
         {
             first_entry = breakpoint;
@@ -606,9 +608,12 @@ bool Menu::process_key(int keyin)
         break;
 
     case '_':
-        show_pickup_menu_help();
-        nav     = true;
-        repaint = true;
+        if (help_key() != "")
+        {
+            show_specific_help(help_key());
+            nav     = true;
+            repaint = true;
+        }
         break;
 
 #ifdef TOUCH_UI
@@ -661,18 +666,15 @@ bool Menu::process_key(int keyin)
     if (!isadigit(keyin))
         num = -1;
 
-    if (nav)
+    if (nav && repaint || always_redraw())
     {
-        if (repaint)
-        {
 #ifdef USE_TILE_WEB
-            webtiles_update_scroll_pos();
+        webtiles_update_scroll_pos();
 #endif
-            draw_menu();
-        }
-        else if (allow_easy_exit() && is_set(MF_EASY_EXIT))
-            return false;
+        draw_menu();
     }
+    else if (nav && allow_easy_exit() && is_set(MF_EASY_EXIT))
+        return false;
     return true;
 }
 
@@ -747,7 +749,7 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
         if (fs_length < avail_width)
         {
             char fmt[20];
-            sprintf(fmt, "%%%ds", avail_width-fs_length);
+            sprintf(fmt, "%%%us", avail_width-fs_length);
             cprintf(fmt, " ");
         }
     }
@@ -956,7 +958,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     const bool    fake = m->props.exists("fake");
     const coord_def c  = m->pos;
-          tileidx_t ch = TILE_FLOOR_NORMAL;
+    tileidx_t       ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
     {
@@ -1313,12 +1315,16 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    formatted_string fs =
-        formatted_string(item_colour(-1, first ? title : title2));
-
+    auto col = item_colour(-1, first ? title : title2);
     string text = (first ? title->get_text() : title2->get_text());
 
-    fs.cprintf("%s", text.c_str());
+    formatted_string fs = formatted_string(col);
+
+    if (flags & MF_ALLOW_FORMATTING)
+        fs += formatted_string::parse_string(text);
+    else
+        fs.cprintf("%s", text.c_str());
+
     if (flags & MF_SHOW_PAGENUMBERS)
     {
         // The total number of pages is well defined, but the current
@@ -1536,29 +1542,43 @@ void Menu::webtiles_set_suffix(const formatted_string suffix)
     }
 }
 
-void Menu::webtiles_update_item(int index) const
+void Menu::webtiles_update_items(int start, int end) const
 {
+    ASSERT_RANGE(start, 0, (int) items.size());
+    ASSERT_RANGE(end, start, (int) items.size());
+
     tiles.json_open_object();
 
     tiles.json_write_string("msg", "update_menu_items");
-    tiles.json_write_int("chunk_start", index);
+    tiles.json_write_int("chunk_start", start);
 
     tiles.json_open_array("items");
-    tiles.json_open_object();
 
-    const MenuEntry* me = items[index];
-    if (me->selected_qty)
-        tiles.json_write_int("sq", me->selected_qty);
-    tiles.json_write_string("text", me->get_text());
-    int col = item_colour(index, me);
-    if (col != MENU_ITEM_STOCK_COLOUR)
-        tiles.json_write_int("colour", col);
+    for (int i = start; i <= end; ++i)
+    {
+        tiles.json_open_object();
+        const MenuEntry* me = items[i];
+        if (me->selected_qty)
+            tiles.json_write_int("sq", me->selected_qty);
+        tiles.json_write_string("text", me->get_text());
+        int col = item_colour(i, me);
+        // previous colour field is deleted by client if new one not sent
+        if (col != MENU_ITEM_STOCK_COLOUR)
+            tiles.json_write_int("colour", col);
+        webtiles_write_tiles(*me);
+        tiles.json_close_object();
+    }
 
-    tiles.json_close_object();
     tiles.json_close_array();
 
     tiles.json_close_object();
     tiles.finish_message();
+}
+
+
+void Menu::webtiles_update_item(int index) const
+{
+    webtiles_update_items(index, index);
 }
 
 void Menu::webtiles_update_title() const
@@ -1586,6 +1606,30 @@ void Menu::webtiles_write_title() const
     tiles.json_write_string("text", _webtiles_title.to_colour_string());
     tiles.json_write_string("suffix", _webtiles_suffix.to_colour_string());
     tiles.json_close_object("title");
+}
+
+void Menu::webtiles_write_tiles(const MenuEntry& me) const
+{
+    vector<tile_def> t;
+    if (me.get_tiles(t) && !t.empty())
+    {
+        tiles.json_open_array("tiles");
+
+        for (const tile_def &tile : t)
+        {
+            tiles.json_open_object();
+
+            tiles.json_write_int("t", tile.tile);
+            tiles.json_write_int("tex", tile.tex);
+
+            if (tile.ymax != TILE_Y)
+                tiles.json_write_int("ymax", tile.ymax);
+
+            tiles.json_close_object();
+        }
+
+        tiles.json_close_array();
+    }
 }
 
 void Menu::webtiles_write_item(int index, const MenuEntry* me) const
@@ -1624,26 +1668,7 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     if (me->preselected)
         tiles.json_write_int("preselected", me->preselected);
 
-    vector<tile_def> t;
-    if (me->get_tiles(t) && !t.empty())
-    {
-        tiles.json_open_array("tiles");
-
-        for (const tile_def &tile : t)
-        {
-            tiles.json_open_object();
-
-            tiles.json_write_int("t", tile.tile);
-            tiles.json_write_int("tex", tile.tex);
-
-            if (tile.ymax != TILE_Y)
-                tiles.json_write_int("ymax", tile.ymax);
-
-            tiles.json_close_object();
-        }
-
-        tiles.json_close_array();
-    }
+    webtiles_write_tiles(*me);
 
     tiles.json_close_object();
 }
@@ -1824,6 +1849,31 @@ void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
     formatted_string::parse_string_to_multiple(s, parts, wrap_col);
     for (const formatted_string &part : parts)
         add_item_formatted_string(part);
+
+    if (new_line)
+        add_item_formatted_string(formatted_string::parse_string("\n"));
+}
+
+void formatted_scroller::add_raw_text(const string& s, bool new_line,
+                                      int wrap_col)
+{
+    vector<formatted_string> parts;
+
+    vector<string> lines = split_string("\n", s, false, true);
+    if (wrap_col > 0)
+    {
+        vector<string> pre_split = move(lines);
+        for (string &line : pre_split)
+        {
+            if (line.empty())
+                lines.emplace_back(" ");
+            while (!line.empty())
+                lines.push_back(wordwrap_line(line, wrap_col, false, true));
+        }
+    }
+
+    for (const string &line : lines)
+        add_item_formatted_string(formatted_string(line));
 
     if (new_line)
         add_item_formatted_string(formatted_string::parse_string("\n"));
@@ -2048,7 +2098,7 @@ bool formatted_scroller::process_key(int keyin)
     case CK_MOUSE_CMD:
     CASE_ESCAPE
         return false;
-    case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
+    case ' ': case '+': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
     case CK_MOUSE_CLICK:
         repaint = page_down();
@@ -2069,7 +2119,7 @@ bool formatted_scroller::process_key(int keyin)
         break;
     case CK_END:
     {
-        const int breakpoint = (items.size() + 1) - pagesize;
+        const int breakpoint = items.size() - pagesize;
         if (first_entry < breakpoint)
             repaint = jump_to(breakpoint);
         break;
@@ -2119,8 +2169,7 @@ int ToggleableMenu::pre_process(int key)
         draw_menu();
 
 #ifdef USE_TILE_WEB
-        for (unsigned int i = 0; i < items.size(); ++i)
-            webtiles_update_item(i);
+        webtiles_update_items(0, items.size() - 1);
 #endif
 
         if (flags & MF_TOGGLE_ACTION)
@@ -3067,9 +3116,8 @@ void SaveMenuItem::_pack_doll()
 #endif
 
 MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0),
-                           m_max_coord(0,0)
+                           m_max_coord(0,0), m_object_name("unnamed object")
 {
-    m_object_name = "unnamed object";
 #ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();

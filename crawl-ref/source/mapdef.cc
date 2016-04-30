@@ -37,7 +37,7 @@
 #include "mon-place.h"
 #include "mutant-beast.h"
 #include "place.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
@@ -153,7 +153,7 @@ string mapdef_split_key_item(const string &s, string *key, int *separator,
     return "";
 }
 
-int store_tilename_get_index(const string tilename)
+int store_tilename_get_index(const string& tilename)
 {
     if (tilename.empty())
         return 0;
@@ -161,7 +161,7 @@ int store_tilename_get_index(const string tilename)
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
     for (i = 0; i < env.tile_names.size(); ++i)
-        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+        if (tilename == env.tile_names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
@@ -276,24 +276,24 @@ level_range::operator raw_range () const
     return r;
 }
 
-void level_range::set(const string &br, int s, int d) throw (string)
+void level_range::set(const string &br, int s, int d)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
     else if ((branch = branch_by_abbrevname(br)) == NUM_BRANCHES)
-        throw make_stringf("Unknown branch: '%s'", br.c_str());
+        throw bad_level_id_f("Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
     deepest    = d;
 
     if (deepest < shallowest || deepest <= 0)
     {
-        throw make_stringf("Level-range %s:%d-%d is malformed",
-                           br.c_str(), s, d);
+        throw bad_level_id_f("Level-range %s:%d-%d is malformed",
+                             br.c_str(), s, d);
     }
 }
 
-level_range level_range::parse(string s) throw (string)
+level_range level_range::parse(string s)
 {
     level_range lr;
     trim_string(s);
@@ -325,7 +325,7 @@ level_range level_range::parse(string s) throw (string)
     return lr;
 }
 
-void level_range::parse_partial(level_range &lr, const string &s) throw (string)
+void level_range::parse_partial(level_range &lr, const string &s)
 {
     if (isadigit(s[0]))
     {
@@ -337,7 +337,6 @@ void level_range::parse_partial(level_range &lr, const string &s) throw (string)
 }
 
 void level_range::parse_depth_range(const string &s, int *l, int *h)
-    throw (string)
 {
     if (s == "*")
     {
@@ -358,7 +357,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
     {
         *l = *h = strict_aton<int>(s.c_str());
         if (!*l)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
     else
     {
@@ -371,7 +370,7 @@ void level_range::parse_depth_range(const string &s, int *l, int *h)
             *h = strict_aton<int>(tail.c_str());
 
         if (!*l || !*h || *l > *h)
-            throw string("Bad depth: ") + s;
+            throw bad_level_id("Bad depth: " + s);
     }
 }
 
@@ -384,7 +383,7 @@ void level_range::set(int s, int d)
         deepest = shallowest;
 
     if (deepest < shallowest)
-        throw make_stringf("Bad depth range: %d-%d", shallowest, deepest);
+        throw bad_level_id_f("Bad depth range: %d-%d", shallowest, deepest);
 }
 
 void level_range::reset()
@@ -1052,8 +1051,7 @@ void map_lines::extend(int min_width, int min_height, char fill)
     // Extend overlay matrix as well.
     if (overlay.get())
     {
-        unique_ptr<overlay_matrix> new_overlay(
-            new overlay_matrix(width(), height()));
+        auto new_overlay = make_unique<overlay_matrix>(width(), height());
 
         for (int y = 0; y < old_height; ++y)
             for (int x = 0; x < old_width; ++x)
@@ -1563,8 +1561,7 @@ void map_lines::rotate(bool clockwise)
 
     if (overlay.get())
     {
-        unique_ptr<overlay_matrix> new_overlay(
-            new overlay_matrix(lines.size(), map_width));
+        auto new_overlay = make_unique<overlay_matrix>(lines.size(), map_width);
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
@@ -2334,13 +2331,23 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     const uint8_t minor = unmarshallUByte(inf);
 
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
-        throw map_load_exception(name);
+    {
+        throw map_load_exception(make_stringf(
+            "Map was built for a different version of Crawl (%s) "
+            "(map: %d.%d us: %d.%d)",
+            name.c_str(), int(major), int(minor),
+            TAG_MAJOR_VERSION, TAG_MINOR_VERSION));
+    }
 
     string fp_name;
     unmarshallString4(inf, fp_name);
 
     if (fp_name != name)
-        throw map_load_exception(name);
+    {
+        throw map_load_exception(make_stringf(
+            "Map fp_name (%s) != name (%s)!",
+            fp_name.c_str(), name.c_str()));
+    }
 
     prelude.read(inf);
     mapchunk.read(inf);
@@ -2402,7 +2409,10 @@ void map_def::load()
 
     reader inf(loadfile, TAG_MINOR_VERSION);
     if (!inf.valid())
-        throw map_load_exception(name);
+    {
+        throw map_load_exception(
+                make_stringf("Map inf is invalid: %s", name.c_str()));
+    }
     inf.advance(cache_offset);
     read_full(inf, true);
 
@@ -3314,7 +3324,7 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
-static void _register_subvault(const string name, const string spaced_tags)
+static void _register_subvault(const string &name, const string &spaced_tags)
 {
     if (spaced_tags.find(" allow_dup ") == string::npos
         || spaced_tags.find(" luniq ") != string::npos)
@@ -3323,7 +3333,7 @@ static void _register_subvault(const string name, const string spaced_tags)
     }
 
     for (const string &tag : split_string(" ", spaced_tags))
-        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+        if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_"))
             env.new_used_subvault_tags.insert(tag);
 }
 
@@ -3623,20 +3633,22 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_NATURAL;
                     if (slot_vals[j] == "magical")
                         cur_spells[i].flags |= MON_SPELL_MAGICAL;
-                    if (slot_vals[j] == "demonic")
-                        cur_spells[i].flags |= MON_SPELL_DEMONIC;
                     if (slot_vals[j] == "wizard")
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no_silent")
+                    if (slot_vals[j] == "no silent")
                         cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")
                         cur_spells[i].flags |= MON_SPELL_NOISY;
+                    if (slot_vals[j] == "short range")
+                        cur_spells[i].flags |= MON_SPELL_SHORT_RANGE;
+                    if (slot_vals[j] == "long range")
+                        cur_spells[i].flags |= MON_SPELL_LONG_RANGE;
                 }
                 if (!(cur_spells[i].flags & MON_SPELL_TYPE_MASK))
                 {
@@ -3805,9 +3817,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             {
                 mspec.place = level_id::parse_level_id(place);
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                error = err;
+                error = err.what();
                 return slot;
             }
         }
@@ -4046,16 +4058,20 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
-            mspec.number  = nspec.number;
             if (nspec.colour > COLOUR_UNDEF && mspec.colour <= COLOUR_UNDEF)
                 mspec.colour = nspec.colour;
             if (nspec.hd != 0)
                 mspec.hd = nspec.hd;
-            if (nspec.props.exists(MUTANT_BEAST_FACETS))
-            {
-                mspec.props[MUTANT_BEAST_FACETS]
-                    = nspec.props[MUTANT_BEAST_FACETS];
+#define MAYBE_COPY(x) \
+            if (nspec.props.exists((x))) \
+            { \
+                mspec.props[(x)] \
+                    = nspec.props[(x)]; \
             }
+            MAYBE_COPY(MUTANT_BEAST_FACETS);
+            MAYBE_COPY(MGEN_BLOB_SIZE);
+            MAYBE_COPY(MGEN_NUM_HEADS);
+#undef MAYBE_COPY
         }
 
         if (!mspec.items.empty())
@@ -4148,11 +4164,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     int mod = ends_with(s, zombie_types);
     if (!mod)
     {
-        const string spectre("spectral ");
-        if (s.find(spectre) == 0)
+        if (starts_with(s, "spectral "))
         {
             mod = ends_with(" spectre", zombie_types);
-            s = s.substr(spectre.length());
+            s = s.substr(9); // strlen("spectral ")
         }
         else
         {
@@ -4178,7 +4193,8 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
                                              &dummy_feat, &place);
 
     spec.monbase = static_cast<monster_type>(base_monster.type);
-    spec.number = base_monster.number;
+    if (base_monster.props.exists(MGEN_NUM_HEADS))
+        spec.props[MGEN_NUM_HEADS] = base_monster.props[MGEN_NUM_HEADS];
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
@@ -4202,10 +4218,9 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
 {
-    int    nheads = -1;
     string prefix = name.substr(0, name.find("-"));
 
-    nheads = atoi(prefix.c_str());
+    int nheads = atoi(prefix.c_str());
     if (nheads != 0)
         ;
     else if (prefix == "0")
@@ -4232,7 +4247,9 @@ mons_spec mons_list::get_hydra_spec(const string &name) const
         nheads = 20;
     }
 
-    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
+    mons_spec spec(MONS_HYDRA);
+    spec.props[MGEN_NUM_HEADS] = nheads;
+    return spec;
 }
 
 mons_spec mons_list::get_slime_spec(const string &name) const
@@ -4257,7 +4274,9 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 #endif
     }
 
-    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
+    mons_spec spec(MONS_SLIME_CREATURE);
+    spec.props[MGEN_BLOB_SIZE] = slime_size;
+    return spec;
 }
 
 // Handle draconians specified as:
@@ -4498,24 +4517,24 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-
-
-    // this is intended for debugging only
-    if (ends_with(name, " mbeast"))
+    const auto m_index = name.find(" mutant beast");
+    if (m_index != string::npos)
     {
         mons_spec spec = MONS_MUTANT_BEAST;
 
-        const vector<string> segments = split_string(" ", name);
-        if (segments.size() > 3)
+        const string trimmed = name.substr(0, m_index);
+        const vector<string> segments = split_string(" ", trimmed);
+        if (segments.size() > 2)
             return MONS_PROGRAM_BUG; // too many words
 
+        const bool fully_specified = segments.size() == 2;
         spec.hd = _mutant_beast_xl(segments[0]);
-        if (spec.hd == 0 && segments.size() == 3)
+        if (spec.hd == 0 && fully_specified)
             return MONS_PROGRAM_BUG; // gave invalid tier spec
 
-        if (spec.hd == 0 || segments.size() == 3)
+        if (spec.hd == 0 || fully_specified)
         {
-            const int seg = segments.size() == 3 ? 1 : 0;
+            const int seg = segments.size() - 1;
             const vector<string> facet_names
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
@@ -4845,7 +4864,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "steel",
         "silver",
         "paralysis",
+#if TAG_MAJOR_VERSION == 34
         "slow",
+#endif
         "sleep",
         "confusion",
 #if TAG_MAJOR_VERSION == 34
@@ -5100,9 +5121,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         {
             result.place = level_id::parse_level_id(place);
         }
-        catch (const string &err)
+        catch (const bad_level_id &err)
         {
-            error = err;
+            error = err.what();
             return false;
         }
     }
@@ -5237,8 +5258,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["make_book_theme_randart"] = true;
-        // make_book_theme_randart requires the following properties:
+        result.props["build_themed_book"] = true;
+        // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
         // spell: <include this spell>, owner:<name of owner>
@@ -5265,16 +5286,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             if (disc2 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
-                return false;
-            }
-        }
-
-        if (disc1 != 0 && disc2 != 0)
-        {
-            if (disciplines_conflict(disc1, disc2))
-            {
-                error = make_stringf("Bad combination of spell schools: %s & %s.",
-                                    st_disc1.c_str(), st_disc2.c_str());
                 return false;
             }
         }
@@ -5337,7 +5348,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[RANDBK_OWNER_KEY] = owner;
 
         result.base_type = OBJ_BOOKS;
-        // This is changed in make_book_theme_randart.
+        // This is changed in build_themed_book().
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
@@ -5424,9 +5435,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     }
 
     // Check for "any objclass"
-    if (s.find("any ") == 0)
+    if (starts_with(s, "any "))
         parse_random_by_class(s.substr(4), result);
-    else if (s.find("random ") == 0)
+    else if (starts_with(s, "random "))
         parse_random_by_class(s.substr(7), result);
     // Check for actual item names.
     else
@@ -5729,9 +5740,9 @@ string map_marker_spec::apply_transform(map_lines &map)
             mark->pos = p;
             map.add_marker(mark);
         }
-        catch (const string &err)
+        catch (const bad_map_marker &err)
         {
-            return err;
+            return err.what();
         }
     }
     return "";
@@ -5767,11 +5778,9 @@ map_flags &map_flags::operator |= (const map_flags &o)
 
     return *this;
 }
-
 typedef map<string, unsigned long> flag_map;
 
-map_flags map_flags::parse(const string flag_list[],
-                           const string &s) throw(string)
+map_flags map_flags::parse(const string flag_list[], const string &s)
 {
     map_flags mf;
 
@@ -5799,7 +5808,7 @@ map_flags map_flags::parse(const string flag_list[],
                 mf.flags_set |= *val;
         }
         else
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
+            throw bad_map_flag(flag);
     }
 
     return mf;
@@ -6019,10 +6028,9 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask |= map_flags::parse(flag_list, s);
     }
-    catch (const string &error)
+    catch (const bad_map_flag &error)
     {
-        err = error;
-        return err;
+        err = make_stringf("Unknown flag: '%s'", error.what());
     }
 
     return err;

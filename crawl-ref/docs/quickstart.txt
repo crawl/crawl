@@ -29,7 +29,7 @@ name. Don't spend too much time over this, as your first character will *not*
 last very long (sorry, but it's true).
 
 Next you are given menus of species and backgrounds from which to choose.
-A hill orc, ogre or troll Fighter is a good bet. Elves are quite fragile,
+A hill orc, minotaur or troll Fighter is a good bet. Elves are quite fragile,
 humans are pretty average at everything, and the weirder species are mostly
 too tricky for beginning players. Finally, you may be given a choice of
 weapons. I suggest an axe (axes are fun).
@@ -47,13 +47,14 @@ Now you are in the game. The game screen has three parts:
  EXPLORING
 
 Try walking around, using either the numeric keypad (try numlock off and on) or
-the Rogue (hjklyubn) keys. To move in a given direction until you reach
-something interesting or see a hostile creature, press Shift and the direction.
+the Rogue (hjklyubn) keys. Pressing 'o' will activate auto-explore, which will
+move until an enemy is seen, or some other notable event (e.g. finding a set of
+stairs) occurs.
 
 If you want to know what a certain character on the screen represents, you can
-use the 'x' (examine) command to get a short description. You use the 'O', 'C'
-commands to open or close doors, and the '<' (up) and '>' (down) commands to
-climb staircases.
+use the 'x' (examine) command to get a short description, and then 'v' to get
+more information. You use the 'O', 'C' commands to open or close doors, and the
+'<' (up) and '>' (down) commands to climb staircases.
 
 The Dungeon gets more dangerous (but more interesting!) as you go down. If you
 get lost you can access a map of the whole level you are on with the 'X'
@@ -65,7 +66,9 @@ After walking around for a while, you will no doubt come across some items
 lying around (you may come across some monsters as well; for help in dealing
 with them skip to the Monsters section). You can pick up items with the 'g'
 (get) or ',' commands and drop them again with 'd' (drop), and the 'i'
-(inventory) command shows you what you're carrying.
+(inventory) command shows you what you're carrying. While examining your
+inventory, press any item's key to see more information about it, and to list
+available commands.
 
 There are several different types of items:
 
@@ -74,12 +77,13 @@ There are several different types of items:
    magic.
 
  - Armour ([). Wear it, or take it off, with the 'W' (Wear) command. Heavier
-   armours give more protection, but may hamper your ability to fight and to
-   dodge attacks aimed at you. These can also be cursed.
+   armours give more protection, but may hamper your ability to fight, dodge,
+   and cast spells. These can also be cursed.
 
- - Ammunition (which has the ( sign). Throw it with 'f' and 'F' (fire). Darts
-   are meant to be thrown by hand; other missiles need an appropriate launcher
-   to be wielded (e.g. arrows are only effective when shot with a bow).
+ - Ammunition (which has the ( sign). Throw it with 'f' and 'F' (fire).
+   Stones, tomahawks and javelins are meant to be thrown by hand; other
+   missiles need an appropriate launcher to be wielded (e.g. arrows are only
+   effective when shot with a bow).
 
  - Wands (/), Scrolls (?) and Potions (!) can be very valuable, but have
    limited uses (scrolls and potions can only be used once each, wands contain
@@ -89,32 +93,24 @@ There are several different types of items:
    appearance. But once you have used, for example, a potion of curing, you
    will in future recognise all potions of curing.
 
- - Rings (=) and Amulets (") often contain powerful magic, but it can be
-   difficult to work out exactly what one does. They are put on with 'P' (put
-   on) and can be removed with the same command, or also with 'R'. They can,
-   like weapons, be cursed.
+ - Rings (=) and Amulets (") provide various mostly-helpful effects. They are
+   put on with 'P' (put on) and can be removed with 'R'. They can, like
+   weapons, be cursed.
 
  - Food (%) is vital to your survival. Eat it with the 'e' (eat) command when
    hungry. Monsters' corpses, also %, can be eaten if chopped up (the 'c'
-   command), but not all of them are healthful, and many species of player
-   character dislike eating raw flesh unless very hungry.
+   command), though not all of them are edible.
 
- - Money ($) can be used to buy stuff in shops, and increases your score if
-   you escape.
+ - Money ($) can be used to buy stuff in shops.
 
 There are a few other types of items, but you will discover these as you play.
-
-One vital command to remember when dealing with items is examing items more
-closely. In order to do so, bring up the inventory ('i') and press the key of
-any item therein. This gives you a short description of any item. Use it on
-everything you find. The magical Scroll of Identify can also help for
-identifying magical items of uncertain nature.
 
  MONSTERS
 
 You will also run into monsters (most of which are represented by letters of
 the alphabet). You can attack a monster by trying to move into the square it
-is occupying.
+is occupying. Pressing Tab will automatically move toward & attack nearby
+monsters.
 
 When you are wounded you lose hit points (displayed near the top of the stats
 list); these return gradually over time through the natural process of

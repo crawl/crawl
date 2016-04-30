@@ -1,0 +1,294 @@
+# Overflow pakellas vaults themed as experiments conducted by Pakellas
+# in front of the player.
+
+{{
+
+-- Common message function called by triggers for the "beginning" and "end" of
+-- the experiments.
+function pakellas_experiment_message(is_beginning)
+  local messages
+  if is_beginning then
+    messages = {'"Let the experiment begin!"',
+                '"This experiment should produce some interesting results."',
+                '"Let\'s find out what happens when I do this."',
+                '"Perhaps this approach will lead to a solution."',
+                '"The experiment must go on!"'}
+  else
+    messages = {'"Back to the drawing board!"',
+                '"Hmm...time to find another test subject."',
+                '"Just as I predicted!"',
+                '"Ah, a very interesting result!"',
+                '"Hmm...that\'s not supposed to happen."'}
+  end
+  crawl.god_speaks("Pakellas", "Pakellas says, " ..
+                     messages[crawl.random_range(1, #messages)])
+end
+
+local cloud_types = {"poison gas", "flame", "freezing vapour", "acidic fog",
+                     "mutagenic fog", "negative energy"}
+
+function cycle_cloud_type(self, fog_machine, triggerer, marker, ev)
+  if fog_machine.enabled
+     and triggerer.type == "turn"
+     and triggerer.sub_type == "countdown" then
+    local index = crawl.random_range(1, #cloud_types)
+    fog_machine.cloud_type = cloud_types[index]
+    self.subject_fog.cloud_type = cloud_types[index]
+  end
+end
+
+function callback.pakellas_cloud_experiment_begin(data, triggerable,
+                                                  triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  -- Make sure we can see the subject.
+  local spos = dgn.find_marker_positions_by_prop("experiment", "subject")[1]
+  if spos ~= nil then
+    if not you.see_cell(spos.x, spos.y) then
+      return
+    end
+    data.fog_machines["chamber"].enabled = true
+    data.triggered = true
+    pakellas_experiment_message(true)
+  end
+end
+
+function callback.pakellas_cloud_experiment_end(data, triggerable, triggerer,
+                                                marker, ev)
+  local pt = dgn.find_marker_positions_by_prop("experiment", "subject")
+  if pt == nil then
+    return
+  end
+
+  if you.see_cell(pt[1].x, pt[1].y) then
+    pakellas_experiment_message()
+  end
+  data.fog_machines["chamber"].enabled = false
+  data.fog_machines["chamber"].cloud_type = "magical condensation"
+  data.fog_machines["subject"].cloud_type = "magical condensation"
+end
+
+-- setup function used by both statue vaults.
+function pakellas_statue_experiment_setup(e)
+  local trig_start = TriggerableFunction:new{
+    func="callback.pakellas_statue_experiment_begin",
+    repeated=true,
+    data={turns=you.turns(), tc=0, triggered=false} }
+  trig_start:add_triggerer(DgnTriggerer:new{type="player_los"})
+  e.lua_marker('_', trig_start)
+
+  -- The 'end' callback occurs when either monster dies, but the triggers share
+  -- data so the callback will have an effect only once.
+  death_data = {triggered=false}
+  local trig_statue = TriggerableFunction:new{
+              func="callback.pakellas_statue_experiment_end", repeated=false,
+              data=death_data}
+  trig_statue:add_triggerer(DgnTriggerer:new{type="monster_dies",
+                                             target="statue"})
+  e.lua_marker('1', trig_statue)
+
+  local trig_subject = TriggerableFunction:new{
+              func="callback.pakellas_statue_experiment_end", repeated=false,
+              data=death_data}
+  trig_subject:add_triggerer(DgnTriggerer:new{type="monster_dies",
+                             target="subject"})
+  e.lua_marker('2', trig_subject)
+end
+
+-- Statue experiment callback functions.
+function callback.pakellas_statue_experiment_begin(data, triggerable, triggerer,
+                                                   marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local statue_pos = dgn.find_marker_positions_by_prop("experiment", "statue")
+  local gate_pos = dgn.find_marker_positions_by_prop("experiment", "gate")
+  if statue_pos == nil or gate_pos == nil then
+    return
+  end
+
+  -- Make sure we've at least seen the statue.
+  if not you.see_cell(statue_pos[1].x, statue_pos[1].y) then
+    return
+  end
+
+  for i, pos in ipairs(gate_pos) do
+    dgn.terrain_changed(pos.x, pos.y, "floor", false, false)
+  end
+  data.triggered = true
+  pakellas_experiment_message(true)
+end
+
+function callback.pakellas_statue_experiment_end(data, triggerable, triggerer,
+                                                marker, ev)
+  if data.triggered then
+    return
+  end
+
+  local pt = dgn.find_marker_positions_by_prop("experiment", "altar")
+  if pt == nil then
+    return
+  end
+
+  if you.see_cell(pt[1].x, pt[1].y) then
+    data.triggered = true
+    pakellas_experiment_message()
+  end
+end
+
+}}
+
+NAME:    gammafunk_pakellas_cloud_experiment
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+TAGS:    generate_awake no_monster_gen no_trap_gen no_item_gen no_pool_fixup
+DEPTH:   D:2-
+KFEAT:   _ = altar_pakellas
+MONS:    hungry ghost / ugly thing / hydra / rakshasa spells:none ; nothing \
+         / fire dragon / wolf spider / ice dragon
+KFEAT:   p = clear_stone_wall
+TILE:    p = dngn_transparent_stone_green
+COLOUR:  p = lightgreen
+SUBST:   x : xcv, w : wWl
+KPROP:   -'1 = no_tele_into
+MARKER:  1 = lua:portal_desc {experiment="subject"}
+MARKER:  1 = lua:MonPropsMarker:new{experiment="experiment"}
+MARKER:  ' = lua:portal_desc {experiment="chamber"}
+
+{{
+  local subject_fog = fog_machine { cloud_type = "magical condensation",
+                                    pow_max = 6, delay = 30, size = 3,
+                                    walk_dist =2, excl_rad = -1}
+  lua_marker('1', subject_fog)
+
+  local fog_listener = {}
+  fog_listener.func = global_function("cycle_cloud_type")
+  fog_listener.subject_fog = subject_fog
+  local chamber_fog = fog_machine { cloud_type = "magical condensation",
+                                    pow_max = 6, delay = 30, size = 1,
+                                    excl_rad = -1,
+                                    listener = fog_listener }
+  chamber_fog.enabled = false
+  lua_marker("'", chamber_fog)
+
+  local tm = TriggerableFunction:new{
+    func="callback.pakellas_cloud_experiment_begin",
+    repeated=true,
+    data={turns=you.turns(), tc=0, triggered=false,
+          fog_machines={["chamber"] = chamber_fog,
+                        ["subject"] = subject_fog}} }
+  tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+  lua_marker('_', tm)
+
+  local tm = TriggerableFunction:new{
+              func="callback.pakellas_cloud_experiment_end", repeated=false,
+              data={fog_machines={["chamber"] = chamber_fog,
+                                  ["subject"] = subject_fog}} }
+  tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="experiment"})
+  lua_marker('_', tm)
+
+}}
+MAP
+xxxxxxxx
+xnnnn.wx
+xn--n..x
+xn1-n_.+
+xnnnn..x
+xp'pw.wx
+xp'ppppx
+xp''''px
+xpppp'px
+xb''''px
+xppppppx
+xxxxxxxx
+ENDMAP
+
+NAME:    gammafunk_pakellas_statue_experiment
+TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+TAGS:    generate_awake no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+DEPTH:   D:2-
+KFEAT:   p = clear_stone_wall
+KFEAT:   _ = altar_pakellas
+MONS:    orange crystal statue att:neutral
+: if you.depth() <= 7 then
+MONS:    iguana / jelly / hippogriff / crocodile / wasp / wyvern / yak / troll
+: else
+MONS:    wyvern / yak / troll / komodo dragon / ugly thing / hydra
+: end
+KPROP:   -lwp12 = no_tele_into
+TILE:    n = dngn_transparent_stone_green
+COLOUR:  n = lightgreen
+SUBST:   x : xcv
+MARKER:  p = lua:portal_desc {experiment="gate"}
+MARKER:  _ = lua:portal_desc {experiment="altar"}
+MARKER:  1 = lua:portal_desc {experiment="statue"}
+MARKER:  1 = lua:MonPropsMarker:new{statue="statue"}
+MARKER:  2 = lua:MonPropsMarker:new{subject="subject"}
+: pakellas_statue_experiment_setup(_G)
+MAP
+xxx+xxx
+xb...bx
+xb._.bx
+xnnnnnx
+xnl1lnx
+xn---nx
+xnpppnx
+xnw2-nx
+xnnnnnx
+xxxxxxx
+ENDMAP
+
+NAME:   gammafunk_pakellas_spire_experiment
+TAGS:   temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
+TAGS:   generate_awake no_monster_gen no_item_gen no_trap_gen no_pool_fixup
+DEPTH:  D:2-
+KFEAT:  p = clear_stone_wall
+KFEAT:  _ = altar_pakellas
+KMONS:  P = bush
+MONS:   lightning spire att:neutral
+MONS:   gargoyle ; nothing / deep elf knight ; nothing / manticore / cyclops \
+        / hydra / deep elf annihilator ; nothing / very ugly thing \
+        / fire dragon / ice dragon / boulder beetle / sphinx \
+        / tengu reaver ; nothing
+KPROP:  -wpP12 = no_tele_into
+TILE:   n = dngn_transparent_stone_green
+COLOUR: n = lightgreen
+SUBST:  x : xcv
+MARKER: p = lua:portal_desc {experiment="gate"}
+MARKER: _ = lua:portal_desc {experiment="altar"}
+MARKER: 1 = lua:portal_desc {experiment="statue"}
+MARKER: 1 = lua:MonPropsMarker:new{statue="statue"}
+MARKER: 2 = lua:MonPropsMarker:new{subject="subject"}
+: pakellas_statue_experiment_setup(_G)
+MAP
+xxx+xxx
+xb...bx
+xb._.bx
+xnnnnnx
+xnw1wnx
+xnPPPnx
+xnpppnx
+xn-2-nx
+xnnnnnx
+xxxxxxx
+ENDMAP

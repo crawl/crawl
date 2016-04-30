@@ -33,7 +33,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE
@@ -42,16 +41,17 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 darkness DARKNESS
+discord DISCORD
 enslavement ENSLAVEMENT
 haste HASTE
+infusion INFUSION
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
-tukimas_dance TUKIMAS_DANCE
-infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
-discord DISCORD
+tukimas_dance TUKIMAS_DANCE
+violent_unravelling VIOLENT_UNRAVELLING
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
@@ -69,7 +69,6 @@ inner_flame INNER_FLAME
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
-condensation_shield CONDENSATION_SHIELD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
 freezing_cloud FREEZING_CLOUD
@@ -145,7 +144,6 @@ controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
-phase_shift PHASE_SHIFT
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
@@ -159,20 +157,20 @@ irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 
-# rod spells
-%sdir misc
-error PARALYSE
-error BOLT_OF_INACCURACY
-error SUMMON_SWARM
-error THUNDERBOLT
-error MELEE
-error EXPLOSIVE_BOLT
-%sdir gui/spells/air
+# item-based spells
+%sdir gui/spells/misc
+paralyse PARALYSE
+bolt_inacc BOLT_OF_INACCURACY
+bolt_thunder THUNDERBOLT
+bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
+bolt_random RANDOM_BOLT
+scattershot SCATTERSHOT
+bolt_corrosive CORROSIVE_BOLT
+iceblast ICEBLAST
 %sdir gui/spells/summoning
 summon_shadow_creatures WEAVE_SHADOWS
-%sdir misc
-error RANDOM_BOLT
+
 
 # spells normally only used by monsters
 %sdir gui/spells/monster
@@ -195,13 +193,13 @@ error BLINKBOLT
 brain_feed BRAIN_FEED
 %sdir misc
 error CALL_LOST_SOUL
+error CALL_OF_CHAOS
 error CALL_TIDE
 %sdir gui/spells/monster
 cantrip CANTRIP
 %sdir misc
 error CHAIN_OF_CHAOS
 error CHAOS_BREATH
-error CHAOTIC_MIRROR
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
@@ -231,11 +229,10 @@ error GHOSTLY_FIREBALL
 error SPECTRAL_CLOUD
 %sdir gui/spells/monster
 haste_other HASTE_OTHER
-hellfire_burst HELLFIRE_BURST
+call_down_damnation CALL_DOWN_DAMNATION
 %sdir misc
 error HOLY_BREATH
 error HOLY_FLAMES
-error IGNITE_POISON_SINGLE
 error INJURY_BOND
 error INK_CLOUD
 error INVISIBILITY_OTHER
@@ -310,7 +307,7 @@ error WORD_OF_RECALL
 
 # spells mimicking natural abilities
 %sdir gui/abilities
-hellfire HELLFIRE
+hurl_damnation HURL_DAMNATION
 
 # spells mimicking divine abilities
 %sdir gui/invocations

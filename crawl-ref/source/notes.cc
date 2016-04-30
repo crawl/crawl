@@ -28,21 +28,6 @@
 
 vector<Note> note_list;
 
-// return the real number of the power (casting out nonexistent powers),
-// starting from 0, or -1 if the power doesn't exist
-static int _real_god_power(int religion, int idx)
-{
-    if (god_gain_power_messages[religion][idx][0] == 0)
-        return -1;
-
-    int count = 0;
-    for (int j = 0; j < idx; ++j)
-        if (god_gain_power_messages[religion][j][0])
-            ++count;
-
-    return count;
-}
-
 static bool _is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -103,6 +88,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_GOD_GIFT
         || note.type == NOTE_GET_MUTATION
         || note.type == NOTE_LOSE_MUTATION
+        || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
         || note.type == NOTE_BUY_ITEM
@@ -140,13 +126,6 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_XOM_EFFECT)
         return Options.note_xom_effects;
 
-    // God powers might be noteworthy if it's an actual power.
-    if (note.type == NOTE_GOD_POWER
-        && _real_god_power(note.first, note.second) == -1)
-    {
-        return false;
-    }
-
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
@@ -154,18 +133,11 @@ static bool _is_noteworthy(const Note& note)
         return false;
     }
 
-    // Skills are noteworthy if in the skill value list or if
-    // it's a new maximal skill (depending on options).
+    // Skills are always noteworthy in order to construct the skill_gains table
+    // in the chardump. The options to control display are used in
+    // Note::hidden().
     if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
-    {
-        if (Options.note_all_skill_levels
-            || note.second <= 27 && Options.note_skill_levels[note.second]
-            || Options.note_skill_max && _is_highest_skill(note.first))
-        {
-            return true;
-        }
-        return false;
-    }
+        return true;
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.place);
@@ -178,7 +150,7 @@ static bool _is_noteworthy(const Note& note)
         const Note& rnote(oldnote);
         switch (note.type)
         {
-        case NOTE_GOD_POWER:
+        case NOTE_PIETY_RANK:
             if (rnote.first == note.first && rnote.second == note.second)
                 return false;
             break;
@@ -201,17 +173,6 @@ static bool _is_noteworthy(const Note& note)
         }
     }
     return true;
-}
-
-static const char* _number_to_ordinal(int number)
-{
-    const char* ordinals[5] = { "first", "second", "third", "fourth", "fifth" };
-
-    if (number < 1)
-        return "[unknown ordinal (too small)]";
-    if (number > 5)
-        return "[unknown ordinal (too big)]";
-    return ordinals[number-1];
 }
 
 string Note::describe(bool when, bool where, bool what) const
@@ -325,12 +286,11 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_POLY_MONSTER:
             result << name << " changed into " << desc;
             break;
-        case NOTE_GOD_POWER:
-            result << "Acquired "
-                   << apostrophise(god_name(static_cast<god_type>(first)))
-                   << " "
-                   << _number_to_ordinal(_real_god_power(first, second)+1)
-                   << " power";
+        case NOTE_PIETY_RANK:
+            result << "Reached "
+                   << string(second, '*')
+                   << " piety under "
+                   << god_name(static_cast<god_type>(first));
             break;
         case NOTE_GET_MUTATION:
             result << "Gained mutation: "
@@ -410,6 +370,18 @@ string Note::describe(bool when, bool where, bool what) const
     return result.str();
 }
 
+bool Note::hidden() const
+{
+    // Hide skill gains that are not enabled by options.
+    if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
+    {
+        return !(Options.note_all_skill_levels
+                 || second <= 27 && Options.note_skill_levels[second]
+                 || Options.note_skill_max && _is_highest_skill(first));
+    }
+    return false;
+}
+
 void Note::check_milestone() const
 {
     if (crawl_state.game_is_arena())
@@ -426,7 +398,7 @@ void Note::check_milestone() const
             ASSERT_RANGE(br, 0, NUM_BRANCHES);
             string branch = place.describe(true, false);
 
-            if (branch.find("The ") == 0)
+            if (starts_with(branch, "The "))
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
@@ -438,7 +410,7 @@ void Note::check_milestone() const
                      || br == BRANCH_ZIGGURAT)
             {
                 string level = place.describe(true, true);
-                if (level.find("Level ") == 0)
+                if (starts_with(level, "Level "))
                     level[0] = tolower(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",

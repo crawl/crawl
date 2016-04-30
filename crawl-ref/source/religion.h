@@ -18,10 +18,13 @@
 
 #define NUM_VEHUMET_GIFTS 13
 
+#define NUM_PIETY_STARS 6
+
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
 bool is_unknown_god(god_type god);
+bool god_has_name(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
@@ -34,16 +37,12 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
-string get_god_powers(god_type which_god);
-string get_god_likes(god_type which_god, bool verbose = false);
-string get_god_dislikes(god_type which_god, bool verbose = false);
-
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD, bool immediate = false);
+void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
@@ -55,7 +54,7 @@ int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
 bool player_can_join_god(god_type which_god);
-void join_religion(god_type which_god, bool immediate = true);
+void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
 
@@ -85,28 +84,25 @@ static inline bool in_good_standing(god_type god, int pbreak = -1)
 }
 
 int had_gods();
-int piety_rank(int piety = -1);
+int piety_rank(int piety = you.piety);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
-bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monster* mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
+bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god,
                      bool rod_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-bool god_can_protect_from_harm(god_type god);
 int elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
 bool fedhas_neutralises(const monster* target);
-void print_sacrifice_message(god_type, const item_def &,
-                             piety_gain_t, bool = false);
 void nemelex_death_message();
 
 bool tso_unchivalric_attack_safe_monster(const monster* mon);
@@ -125,8 +121,6 @@ bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
 bool god_hates_attacking_friend(god_type god, const monster *fr);
-bool god_likes_item(god_type god, const item_def& item);
-bool god_likes_items(god_type god, bool greedy_explore = false);
 
 void religion_turn_start();
 void religion_turn_end();
@@ -146,6 +140,46 @@ bool do_god_gift(bool forced = false);
 vector<god_type> temple_god_list();
 vector<god_type> nontemple_god_list();
 
-extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
+class god_iterator
+{
+public:
+    god_iterator();
+
+    operator bool() const;
+    const god_type operator*() const;
+    const god_type operator->() const;
+    god_iterator& operator++();
+    god_iterator operator++(int);
+
+protected:
+    int i;
+};
+
+struct god_power
+{
+    // 1-6 means it unlocks at that many stars of piety;
+    // 0 means it is always available when worshipping the god;
+    // -1 means it is available even under penance;
+    // 7 means it is a capstone.
+    int rank;
+    ability_type abil;
+    const char* gain;
+    const char* loss;
+
+    god_power(int rank_, ability_type abil_, const char* gain_,
+              const char* loss_ = "") :
+              rank{rank_}, abil{abil_}, gain{gain_},
+              loss{*loss_ ? loss_ : gain_}
+    { }
+
+    god_power(int rank_, const char* gain_, const char* loss_ = "") :
+              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_)
+    { }
+
+    void display(bool gaining, const char* fmt) const;
+};
+
+void set_god_ability_slots();
+vector<god_power> get_god_powers(god_type god);
+
 #endif

@@ -14,24 +14,24 @@ public:
     OGLStateManager();
 
     // State Manipulation
-    virtual void set(const GLState& state);
-    virtual void pixelstore_unpack_alignment(unsigned int bpp);
-    virtual void reset_view_for_redraw(float x, float y);
+    virtual void set(const GLState& state) override;
+    virtual void pixelstore_unpack_alignment(unsigned int bpp) override;
+    virtual void reset_view_for_redraw(float x, float y) override;
     virtual void reset_view_for_resize(const coord_def &m_windowsz,
-                                       const coord_def &m_drawablesz);
-    virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale);
-    virtual void reset_transform();
+                                       const coord_def &m_drawablesz) override;
+    virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) override;
+    virtual void reset_transform() override;
 #ifdef __ANDROID__
-    virtual void fixup_gl_state();
+    virtual void fixup_gl_state() override;
 #endif
 
     // Texture-specific functinos
-    virtual void delete_textures(size_t count, unsigned int *textures);
-    virtual void generate_textures(size_t count, unsigned int *textures);
-    virtual void bind_texture(unsigned int texture);
+    virtual void delete_textures(size_t count, unsigned int *textures) override;
+    virtual void generate_textures(size_t count, unsigned int *textures) override;
+    virtual void bind_texture(unsigned int texture) override;
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt,
-                              int xoffset=-1, int yoffset=-1);
+                              int xoffset=-1, int yoffset=-1) override;
 protected:
     GLState m_current_state;
 #ifdef __ANDROID__
@@ -48,12 +48,12 @@ public:
     OGLShapeBuffer(bool texture = false, bool colour = false,
                    drawing_modes prim = GLW_RECTANGLE);
 
-    virtual const char *print_statistics() const;
-    virtual unsigned int size() const;
+    virtual const char *print_statistics() const override;
+    virtual unsigned int size() const override;
 
-    virtual void add(const GLWPrim &rect);
-    virtual void draw(const GLState &state);
-    virtual void clear();
+    virtual void add(const GLWPrim &rect) override;
+    virtual void draw(const GLState &state) override;
+    virtual void clear() override;
 
 protected:
     // Helper methods for adding specific primitives.

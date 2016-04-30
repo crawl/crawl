@@ -18,21 +18,18 @@ enum skill_menu_flags
     SKMF_RESKILL_FROM      = 1<<0,
     SKMF_RESKILL_TO        = 1<<1,
     SKMF_RESKILLING        = SKMF_RESKILL_FROM | SKMF_RESKILL_TO,
-    SKMF_EXPERIENCE_CARD   = 1<<2,
-    SKMF_EXPERIENCE_POTION = 1<<3,
-    SKMF_EXPERIENCE        = SKMF_EXPERIENCE_CARD | SKMF_EXPERIENCE_POTION,
+    SKMF_EXPERIENCE        = 1<<2,
     SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
-    SKMF_MANUAL            = 1<<4,  // was SKMF_CROSSTRAIN
-                           //1<<5,  // was SKMF_ANTITRAIN
-    SKMF_ENHANCED          = 1<<6,
-    SKMF_REDUCED           = 1<<7,
+    SKMF_MANUAL            = 1<<3,
+    SKMF_ENHANCED          = 1<<4,
+    SKMF_REDUCED           = 1<<5,
     SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
 
-    SKMF_SKILL_ICONS       = 1<<8,
-    SKMF_APTITUDE          = 1<<9,
-    SKMF_SIMPLE            = 1<<10, // Simple mode for tutorial and hint mode.
-    SKMF_HELP              = 1<<11,
+    SKMF_SKILL_ICONS       = 1<<6,
+    SKMF_APTITUDE          = 1<<7,
+    SKMF_SIMPLE            = 1<<8, // Simple mode for tutorial and hint mode.
+    SKMF_HELP              = 1<<9,
 };
 
 #define SKM_HELP -1
@@ -53,7 +50,7 @@ class SkillTextTileItem : public TextTileItem
 public:
     SkillTextTileItem() {};
 protected:
-    bool handle_mouse(const MouseEvent& me);
+    bool handle_mouse(const MouseEvent& me) override;
 };
 #endif
 
@@ -74,7 +71,7 @@ public:
     void set_display();
     void set_name(bool keep_hotkey);
     void set_skill(skill_type sk = SK_NONE);
-
+    void set_cost();
 private:
     skill_type m_sk;
 
@@ -129,7 +126,7 @@ public:
 
     void clear_flag(int flag);
     void init(int flag);
-    void clear();
+    void clear() override;
     bool is_set(int flag) const;
     void set_flag(int flag);
     void toggle_flag(int flag);

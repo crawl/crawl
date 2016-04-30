@@ -9,7 +9,6 @@ adjust.o \
 areas.o \
 arena.o \
 artefact.o \
-asg.o \
 attack.o \
 attitude-change.o \
 beam.o \
@@ -131,7 +130,6 @@ losglobal.o \
 losparam.o \
 luaterp.o \
 macro.o \
-main.o \
 makeitem.o \
 map_knowledge.o \
 mapdef.o \
@@ -177,6 +175,7 @@ ouch.o \
 output.o \
 package.o \
 pattern.o \
+pcg.o \
 perlin.o \
 place-info.o \
 place.o \
@@ -189,6 +188,7 @@ player.o \
 potion.o \
 prompt.o \
 quiver.o \
+randbook.o \
 random.o \
 random-var.o \
 ranged_attack.o \

@@ -251,6 +251,7 @@ define(function () {
     bg_flags.flags.ELDRITCH_SE = [0, 0x08];
     bg_flags.flags.ELDRITCH_SW = [0, 0x10];
     bg_flags.flags.LANDING     = [0, 0x200];
+    bg_flags.flags.RAY_MULTI   = [0, 0x400];
     bg_flags.mask              = 0x0000FFFF;
 
     // Since the current flag implementation is really slow we use a trivial
@@ -272,17 +273,17 @@ define(function () {
 
     // Menu flags -- see menu.h
     var mf = {};
-    mf.NOSELECT         = 0x0000;
-    mf.SINGLESELECT     = 0x0001;
-    mf.MULTISELECT      = 0x0002;
-    mf.NO_SELECT_QTY    = 0x0004;
-    mf.ANYPRINTABLE     = 0x0008;
-    mf.SELECT_BY_PAGE   = 0x0010;
-    mf.ALWAYS_SHOW_MORE = 0x0020;
-    mf.NOWRAP           = 0x0040;
-    mf.ALLOW_FILTER     = 0x0080;
-    mf.ALLOW_FORMATTING = 0x0100;
-    mf.SHOW_PAGENUMBERS = 0x0200;
+    mf.NOSELECT         = 0x0001;
+    mf.SINGLESELECT     = 0x0002;
+    mf.MULTISELECT      = 0x0004;
+    mf.NO_SELECT_QTY    = 0x0008;
+    mf.ANYPRINTABLE     = 0x0010;
+    mf.SELECT_BY_PAGE   = 0x0020;
+    mf.ALWAYS_SHOW_MORE = 0x0040;
+    mf.NOWRAP           = 0x0080;
+    mf.ALLOW_FILTER     = 0x0100;
+    mf.ALLOW_FORMATTING = 0x0200;
+    mf.SHOW_PAGENUMBERS = 0x0400;
     mf.EASY_EXIT        = 0x1000;
     mf.START_AT_END     = 0x2000;
     mf.PRESELECTED      = 0x4000;

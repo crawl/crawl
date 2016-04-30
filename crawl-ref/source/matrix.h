@@ -10,11 +10,22 @@ template <typename Z>
 class Matrix
 {
 public:
-    Matrix(int width, int height, const Z &initial);
-    Matrix(int width, int height);
-    ~Matrix();
+    Matrix(int _width, int _height)
+        : mwidth(_width), mheight(_height), size(_width * _height),
+          data(new Z[size])
+    {
+    }
+    Matrix(int _width, int _height, const Z &initial)
+        : Matrix(_width, _height)
+    {
+        init(initial);
+    }
 
-    void init(const Z &initial);
+    void init(const Z &initial)
+    {
+        fill(data.get(), data.get() + size, initial);
+    }
+
     Z &operator () (int x, int y)
     {
         return data[x + y * mwidth];
@@ -36,36 +47,7 @@ public:
     int height() const { return mheight; }
 
 private:
-    Z *data;
     int mwidth, mheight, size;
+    unique_ptr<Z[]> data;
 };
-
-template <typename Z>
-Matrix<Z>::Matrix(int _width, int _height, const Z &initial)
-    : data(nullptr), mwidth(_width), mheight(_height), size(_width * _height)
-{
-    data = new Z [ size ];
-    init(initial);
-}
-
-template <typename Z>
-Matrix<Z>::Matrix(int _width, int _height)
-    : data(nullptr), mwidth(_width), mheight(_height), size(_width * _height)
-{
-    data = new Z [ size ];
-}
-
-template <typename Z>
-Matrix<Z>::~Matrix()
-{
-    delete [] data;
-}
-
-template <typename Z>
-void Matrix<Z>::init(const Z &initial)
-{
-    for (int i = 0; i < size; ++i)
-        data[i] = initial;
-}
-
 #endif    // MATRIX_H

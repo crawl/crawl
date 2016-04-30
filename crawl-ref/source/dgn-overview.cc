@@ -295,14 +295,8 @@ static string _get_unseen_branches()
             continue;
 
         const branch_type branch = it->id;
-
-        if (branch == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
-            || branch == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
-            || branch == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
-            || branch == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
-        {
+        if (!connected_branch_can_exist(branch))
             continue;
-        }
 
         if (branch == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;
@@ -654,7 +648,7 @@ static void _seen_altar(god_type god, const coord_def& pos)
 
 static void _seen_shop(const coord_def& pos)
 {
-    shops_present[level_pos(level_id::current(), pos)] = get_shop(pos)->type;
+    shops_present[level_pos(level_id::current(), pos)] = shop_at(pos)->type;
 }
 
 static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
@@ -733,21 +727,6 @@ void enter_branch(branch_type branch, level_id from)
     }
 }
 
-// Mark a shop guaranteed on this level if we haven't been there yet.
-// Used by Gozag's call merchant ability.
-// Only one per level!
-void mark_offlevel_shop(level_id lid, shop_type type)
-{
-    ASSERT(!shops_present.count(level_pos(lid, coord_def())));
-    shops_present[level_pos(lid, coord_def())] = type;
-}
-
-void unmark_offlevel_shop(level_id lid)
-{
-    ASSERT(shops_present.count(level_pos(lid, coord_def())));
-    shops_present.erase(level_pos(lid, coord_def()));
-}
-
 // Add an annotation on a level if we corrupt with Lugonu's ability
 void mark_corrupted_level(level_id li)
 {
@@ -789,11 +768,8 @@ static string unique_name(monster* mons)
         name += ", " + short_ghost_description(mons, true);
     else
     {
-        if (strstr(name.c_str(), "royal jelly")
-            || strstr(name.c_str(), "Royal Jelly"))
-        {
+        if (strstr(name.c_str(), "Royal Jelly"))
             name = "Royal Jelly";
-        }
         if (strstr(name.c_str(), "Lernaean hydra"))
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))
@@ -991,4 +967,23 @@ void unmarshallUniqueAnnotations(reader& inf)
         level.load(inf);
         auto_unique_annotations.insert(make_pair(name, level));
     }
+}
+
+/**
+ * Can the player encounter the given connected branch, given their
+ * knowledge of which have been seen so far?
+ * @param br A connected branch.
+ * @returns True if the branch can exist, false otherwise.
+*/
+bool connected_branch_can_exist(branch_type br)
+{
+    if (br == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+        || br == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+        || br == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+        || br == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
+    {
+        return false;
+    }
+
+    return true;
 }

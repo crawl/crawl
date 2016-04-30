@@ -530,21 +530,9 @@ potion of mutation
 
 당신의 몸에 매우 이상하고 기묘한 일을 일으키는 물약이다.
 %%%%
-potion of poison
-
-역한 독성의 액체다.
-%%%%
-potion of porridge
-
-곡물 섬유소가 많이 포함된 죽이다.
-%%%%
 potion of resistance
 
 짧은 시간동안, 여러 종류의 원소와 독에 대한 저항력을 제공해주는 물약이다.
-%%%%
-potion of slowing
-
-짧은 시간동안 모든 동작을 느리게 만드는 물약이다.
 %%%%
 quad damage
 
@@ -632,10 +620,6 @@ rod of inaccuracy
 
 이 지팡이는 사용자가 강력하지만 극도로 부정확한 파워 볼트를 날릴 수 있게
 해준다.
-%%%%
-rod of the swarm
-
-이 지팡이는 사용자가 벌레떼를 소환할 수 있도록 해준다.
 %%%%
 royal jelly
 

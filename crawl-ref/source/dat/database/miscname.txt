@@ -177,7 +177,11 @@ burning hair
 
 coffee
 
+dragon dung
+
 fire and brimstone
+
+mustard
 
 pepper
 
@@ -188,6 +192,8 @@ something weird
 sulphur
 
 tea
+
+the scent of fear
 
 wet wool
 %%%%
@@ -218,7 +224,11 @@ yak
 # random uselessness: "You hear XXX."
 sound_name
 
+a burbling brook
+
 a crunching sound
+
+a lullaby played backwards
 
 a very strange noise
 
@@ -234,7 +244,13 @@ the distant roaring of an enraged @_roaring_animal_name_@
 
 the chiming of a distant gong
 
+the sound of one hand clapping
+
 the tinkle of an enormous bell
+
+whispers in an ancient language
+
+whistling wind
 %%%%
 # Used both by Summon Horrible Things and Malign Gateway.
 SHT_int_loss
@@ -309,7 +325,7 @@ It is said that the Orb of Zot exists deep within this dungeon, but nobody has e
 %%%%
 welcome_spam Halloween
 
-They say the Orb is deep down, but nobody ever got it. Be careful! Halloween tonight.
+@welcome_spam@ Be careful! Halloween tonight.
 
 The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
 

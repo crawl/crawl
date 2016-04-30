@@ -4,6 +4,8 @@
 
 #include "tilereg-dgn.h"
 
+#include <algorithm> // any_of
+
 #include "cio.h"
 #include "cloud.h"
 #include "command.h"
@@ -391,16 +393,13 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
-    // We don't handle grid targeted spells yet.
-    if (flags & SPFLAG_GRID)
-        return false;
-
     // Most spells are blocked by transparent walls.
+    // XXX: deduplicate this with the other two? smitey spell lists
     if (targeted && !you.see_cell_no_trans(target->pos()))
     {
         switch (spell)
         {
-        case SPELL_HELLFIRE_BURST:
+        case SPELL_CALL_DOWN_DAMNATION:
         case SPELL_SMITING:
         case SPELL_HAUNT:
         case SPELL_FIRE_STORM:
@@ -465,38 +464,21 @@ static bool _is_appropriate_evokable(const item_def& item,
 
 static bool _have_appropriate_evokable(const actor* target)
 {
-    // Felids cannot use wands.
-    if (you.species == SP_FELID)
-        return false;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
-            return true;
-    }
-
-    return false;
+    return any_of(begin(you.inv), end(you.inv),
+                  [target] (const item_def &item) -> bool
+                  {
+                      return item.defined()
+                          && _is_appropriate_evokable(item, target);
+                  });
 }
 
 static item_def* _get_evokable_item(const actor* target)
 {
     vector<const item_def*> list;
 
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def &item(you.inv[i]);
-
-        if (!item.defined())
-            continue;
-
-        if (_is_appropriate_evokable(item, target))
+    for (const auto &item : you.inv)
+        if (item.defined() && _is_appropriate_evokable(item, target))
             list.push_back(&item);
-    }
 
     ASSERT(!list.empty());
 
@@ -795,11 +777,10 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
         if (you.see_cell(gc))
         {
-            const int cloudidx = env.cgrid(gc);
-            if (cloudidx != EMPTY_CLOUD)
+            if (cloud_struct* cloud = cloud_at(gc))
             {
                 string terrain_desc = desc;
-                desc = cloud_name_at_index(cloudidx);
+                desc = cloud->cloud_name(true);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;

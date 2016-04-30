@@ -456,6 +456,9 @@ lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
 orange_crystal ORANGE_CRYSTAL
+vines VINES
+kryias KRYIAS
+talos TALOS
 %end_ctg
 
 ### Arms
@@ -540,6 +543,7 @@ axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
 axe_of_woe AXE_OF_WOE
+frostbite FROSTBITE
 ## launchers
 blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
@@ -617,10 +621,6 @@ large_mace LARGE_MACE
 black_whip BLACK_WHIP
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
-hammer HAMMER
-hammer2
-hammer_one HAMMER1
-hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
 flail_ball2
@@ -817,6 +817,7 @@ lshield_spiral LARGE_SHIELD_SPIRAL LSHIELD_LAST_NORM
 
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
+buckler_warlock BUCKLER_WARLOCK
 
 shield_donald SHIELD_DONALD
 shield_bullseye SHIELD_BULLSEYE

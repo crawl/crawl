@@ -244,7 +244,7 @@ function sroom_mythical_zoo(e)
     end
 
     local mons = {}
-    mons[1] = "fire drake w:" .. math.max(38 - Z * 2, 1)
+    mons[1] = "rime drake w:" .. math.max(38 - Z * 2, 1)
     mons[2] = "basilisk w:" .. math.max(38 - Z * 2, 1)
     mons[3] = "wyvern w:" .. math.max(42 - Z * 2, 1)
     mons[4] = "hippogriff w:" .. math.max(42 - Z * 2, 1)

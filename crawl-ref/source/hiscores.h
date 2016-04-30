@@ -58,6 +58,8 @@ private:
     string      raw_line;
 
     string      version;
+    string      save_rcs_version;
+    string      save_tag_version;
     uint8_t     tiles;
     int         points;
     string      name;

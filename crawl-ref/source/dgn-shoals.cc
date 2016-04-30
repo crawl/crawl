@@ -351,9 +351,8 @@ static coord_def _shoals_region_center(
     double cx = 0.0, cy = 0.0;
     vector<coord_def> visit(1, c);
     FixedArray<bool, GXM, GYM> visited(false);
-    for (size_t i = 0; i < visit.size(); ++i)
+    for (const auto p : visit)
     {
-        const coord_def p(visit[i]);
         visited(p) = true;
 
         ++nseen;
@@ -562,12 +561,12 @@ static vector<coord_def> _shoals_windshadows(grid_bool &windy)
             wind_points.emplace_back(x, wi.y > epsilon ? 1 : GYM - 2);
     }
 
-    for (size_t i = 0; i < wind_points.size(); ++i)
+    for (const coord_dbl& coord : wind_points)
     {
-        const coord_def here(_int_coord(wind_points[i]));
+        const coord_def here(_int_coord(coord));
         windy(here) = true;
 
-        coord_dbl next = wind_points[i] + wi;
+        coord_dbl next = coord + wi;
         while (_int_coord(next) == here)
             next += wi;
 
@@ -851,7 +850,7 @@ static void _shoals_apply_tide_feature_at(
     if (crawl_state.generating_level)
         grd(c) = feat;
     else
-        dungeon_terrain_changed(c, feat, true, false, true);
+        dungeon_terrain_changed(c, feat, false, true);
 }
 
 // Determines if the tide is rising or falling based on before and

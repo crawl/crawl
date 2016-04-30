@@ -125,47 +125,45 @@ static void _labyrinth_place_exit(const coord_def &end)
     grd(end) = DNGN_EXIT_LABYRINTH;
 }
 
-// Checks whether a given grid has at least one neighbour surrounded
-// entirely by non-floor.
-static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
-{
-    for (adjacent_iterator ai(pos); ai; ++ai)
-    {
-        const coord_def& p = *ai;
-        if (!in_bounds(p))
-            return true;
-
-        if (recurse)
-        {
-            if (grd(p) == DNGN_FLOOR)
-                return false;
-        }
-        else if (_has_no_floor_neighbours(p, true))
-            return true;
-    }
-
-    return recurse;
-}
-
 // Change the borders of the labyrinth to another (undiggable) wall type.
 static void _change_labyrinth_border(const dgn_region &region,
                                      const dungeon_feature_type wall)
 {
     const coord_def &end = region.pos + region.size;
+    int leftmost = end.x, rightmost = region.pos.x,
+        upmost = end.y, downmost = region.pos.y;
     for (int y = region.pos.y-1; y <= end.y; ++y)
+    {
         for (int x = region.pos.x-1; x <= end.x; ++x)
         {
-            const coord_def c(x, y);
-            if (!in_bounds(c)) // paranoia
-                continue;
-
-            if (grd(c) == wall || !feat_is_wall(grd(c)))
-                continue;
-
-            // All border grids have neighbours without any access to floor.
-            if (_has_no_floor_neighbours(c))
-                grd[x][y] = wall;
+            if (!feat_is_solid(grd[x][y]))
+            {
+                if (x < leftmost)
+                    leftmost = x;
+                if (x > rightmost)
+                    rightmost = x;
+                if (y < upmost)
+                    upmost = y;
+                if (y > downmost)
+                    downmost = y;
+            }
         }
+    }
+
+    for (int y = region.pos.y-1; y <= end.y; ++y)
+    {
+        for (int x = region.pos.x-1; x <= end.x; ++x)
+        {
+            if (x < leftmost
+                || x > rightmost
+                || y < upmost
+                || y > downmost)
+            {
+                ASSERT(feat_is_solid(grd[x][y]));
+                grd[x][y] = wall;
+            }
+        }
+    }
 }
 
 static void _change_walls_from_centre(const dgn_region &region,
@@ -233,6 +231,7 @@ static void _change_walls_from_centre(const dgn_region &region,
 
         ldist.emplace_back(dist, feat);
     }
+    va_end(args);
 
     _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);
 }
@@ -432,37 +431,32 @@ static bool _grid_has_wall_neighbours(const coord_def& pos,
     return false;
 }
 
-static void _vitrify_wall_neighbours(const coord_def& pos, bool first)
+static void _vitrify_wall_and_neighbours(const coord_def& pos, bool first)
 {
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
+    if (grd(pos) == DNGN_ROCK_WALL)
+        grd(pos) = DNGN_CLEAR_ROCK_WALL;
+    else if (grd(pos) == DNGN_STONE_WALL)
+        grd(pos) = DNGN_CLEAR_STONE_WALL;
+    else
+        return;
 
-    for (orth_adjacent_iterator ni(pos); ni; ++ni)
+    if (you.wizard)
+        env.pgrid(pos) |= FPROP_HIGHLIGHT;
+
+    for (orth_adjacent_iterator ai(pos); ai; ++ai)
     {
-        const coord_def& p = *ni;
-        if (!in_bounds(p))
+        const coord_def& p = *ai;
+        if (!in_bounds(p) || map_masked(p, MMT_VAULT))
             continue;
 
-        // Don't vitrify vault grids
-        if (map_masked(p, MMT_VAULT))
-            continue;
-
-        if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
+        // Always continue vitrification if there are adjacent
+        // walls other than continuing in the same direction.
+        // Otherwise, there's still a 40% chance of continuing.
+        // Also, always do more than one iteration.
+        if (first || x_chance_in_y(2,5)
+            || _grid_has_wall_neighbours(p, p + (p - pos)))
         {
-            grd(p) = static_cast<dungeon_feature_type>(grd(p) + clear_plus);
-#ifdef WIZARD
-            if (you.wizard)
-                env.pgrid(p) |= FPROP_HIGHLIGHT;
-#endif
-            // Always continue vitrification if there are adjacent
-            // walls other than continuing in the same direction.
-            // Otherwise, there's still a 40% chance of continuing.
-            // Also, always do more than one iteration.
-            if (first || x_chance_in_y(2,5)
-                || _grid_has_wall_neighbours(p, p + (p - pos)))
-            {
-                _vitrify_wall_neighbours(p, false);
-            }
+            _vitrify_wall_and_neighbours(p, false);
         }
     }
 }
@@ -475,11 +469,8 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
     if (one_chance_in(3)) // Potentially lots of glass.
         glass_num += random2(7);
 
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
-
     coord_def pos;
-    while (0 < glass_num--)
+    for (int i = 0; i < glass_num; ++i)
     {
         if (!_find_random_nonmetal_wall(region, pos))
             break;
@@ -487,12 +478,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
         if (_has_vault_in_radius(pos, 5, MMT_VAULT))
             continue;
 
-        grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
-#ifdef WIZARD
-        if (you.wizard)
-            env.pgrid(pos) |= FPROP_HIGHLIGHT;
-#endif
-        _vitrify_wall_neighbours(pos, true);
+        _vitrify_wall_and_neighbours(pos, true);
     }
 }
 

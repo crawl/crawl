@@ -47,9 +47,9 @@ string dgn_set_default_depth(const string &s)
     {
         lc_default_depths = depth_ranges::parse_depth_ranges(s);
     }
-    catch (const string &error)
+    catch (const bad_level_id &err)
     {
-        return error;
+        return err.what();
     }
     return "";
 }
@@ -63,9 +63,9 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             drs.add_depths(depth_ranges::parse_depth_ranges(depth));
         }
-        catch (const string &error)
+        catch (const bad_level_id &err)
         {
-            luaL_error(ls, error.c_str());
+            luaL_error(ls, err.what());
         }
     }
 }
@@ -110,9 +110,9 @@ static int dgn_place(lua_State *ls)
             {
                 map->place = depth_ranges::parse_depth_ranges(luaL_checkstring(ls, 2));
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                luaL_error(ls, err.c_str());
+                luaL_error(ls, err.what());
             }
         }
     }
@@ -214,9 +214,9 @@ static int dgn_depth_chance(lua_State *ls)
     {
         map->_chance.add_range(depth, map_chance(chance_priority, chance));
     }
-    catch (const string &error)
+    catch (const bad_level_id &error)
     {
-        luaL_error(ls, error.c_str());
+        luaL_error(ls, error.what());
     }
     return 0;
 }
@@ -862,16 +862,13 @@ static int dgn_terrain_changed(lua_State *ls)
         type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
-    const bool affect_player =
-    lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_features =
-    lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
+        lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_items =
-    lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
+        lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
     dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
                                        luaL_checkint(ls, 2)),
-                            type, affect_player,
-                            preserve_features, preserve_items);
+                            type, preserve_features, preserve_items);
     return 0;
 }
 
@@ -933,12 +930,10 @@ static int dgn_cloud_at(lua_State *ls)
     if (!in_bounds(c))
         return 0;
 
-    int cloudno = env.cgrid(c);
-
-    if (cloudno == EMPTY_CLOUD)
-        lua_pushstring(ls, "none");
+    if (cloud_struct* cloud = cloud_at(c))
+        lua_pushstring(ls, cloud->cloud_name(true).c_str());
     else
-        lua_pushstring(ls, cloud_name_at_index(cloudno).c_str());
+        lua_pushstring(ls, "none");
 
     return 1;
 }
@@ -1249,7 +1244,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return 0;
     }
 
-    if (kc == KC_NCATEGORIES || kc != KC_OTHER)
+    if (kc != KC_OTHER)
     {
         string error = "Invalid kill category '";
         error += kname;
@@ -1276,8 +1271,8 @@ static int dgn_delete_cloud(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
-        delete_cloud(env.cgrid(c));
+    if (in_bounds(c))
+        delete_cloud(c);
 
     return 0;
 }
@@ -1925,7 +1920,7 @@ LUAFN(_vp_size)
 LUAFN(_vp_orient)
 {
     VP(vp);
-    PLUARET(number, vp.orient)
+    PLUARET(number, vp.orient);
 }
 
 LUAFN(_vp_map)

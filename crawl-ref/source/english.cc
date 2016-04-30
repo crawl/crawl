@@ -56,7 +56,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 
     if (ends_with(name, "us"))
     {
-        if (ends_with(name, "lotus"))
+        if (ends_with(name, "lotus") || ends_with(name, "status"))
             return name + "es";
         else
             // Fungus, ufetubus, for instance.
@@ -150,6 +150,11 @@ string pluralise(const string &name, const char * const qualifiers[],
     {
         // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)
         return name + "u";
+    }
+    else if (name == "Tzitzimitl")
+    {
+        // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
+        return name.substr(0, name.length() - 2) + "meh";
     }
 
     return name + "s";
@@ -348,9 +353,17 @@ string article_a(const string &name, bool lowercase)
     {
         case 'a': case 'e': case 'i': case 'o': case 'u':
         case 'A': case 'E': case 'I': case 'O': case 'U':
-            // XXX: Hack
+            // XXX: Hack for hydras.
             if (starts_with(name, "one-"))
                 return a + name;
+            return an + name;
+        case '1':
+            // XXX: Hack^2 for hydras.
+            if (starts_with(name, "11-") || starts_with(name, "18-"))
+                return an + name;
+            return a + name;
+        case '8':
+            // Eighty, eight hundred, eight thousand, ...
             return an + name;
         default:
             return a + name;

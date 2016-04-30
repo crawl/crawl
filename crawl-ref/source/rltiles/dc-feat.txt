@@ -189,9 +189,6 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
-## strange machine for Tukima's Wizlab
-machine_tukima DNGN_MACHINE_TUKIMA
-
 ## an icy teleporter
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 
@@ -382,7 +379,6 @@ wizlab_portal4
 wizlab_portal5
 wizlab_portal6
 wizlab_portal7
-wizlab_portal8
 wizlab_gone DNGN_PORTAL_WIZLAB_GONE
 ossuary_portal DNGN_PORTAL_OSSUARY
 ossuary_gone DNGN_PORTAL_OSSUARY_GONE
@@ -458,6 +454,10 @@ qazlal0 DNGN_ALTAR_QAZLAL
 qazlal1
 qazlal2
 ru DNGN_ALTAR_RU
+pakellas0 DNGN_ALTAR_PAKELLAS
+pakellas1
+pakellas2
+pakellas3
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
@@ -614,10 +614,10 @@ effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
 ray RAY
+ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
-slot ITEM_SLOT
 effect/sanctuary SANCTUARY
 mold_small1 MOLD
 mold_small2

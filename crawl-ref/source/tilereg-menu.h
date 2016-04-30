@@ -16,9 +16,9 @@ class MenuRegion : public ControlRegion
 public:
     MenuRegion(ImageManager *im, FontWrapper *entry);
 
-    virtual int handle_mouse(MouseEvent &event);
-    virtual void render();
-    virtual void clear();
+    virtual int handle_mouse(MouseEvent &event) override;
+    virtual void render() override;
+    virtual void clear() override;
 
     int maxpagesize() const;
     void set_entry(int index, const string &s, int colour, const MenuEntry *me,
@@ -27,7 +27,7 @@ public:
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);
 protected:
-    virtual void on_resize();
+    virtual void on_resize() override;
     virtual void place_entries();
     int mouse_entry(int x, int y);
 
@@ -53,7 +53,7 @@ protected:
     int m_more_region_start;
 #endif
 
-    virtual void run() {};
+    virtual void run() override {};
     void _place_entries(const int left_offset, const int top_offset,
                         const int menu_width);
     void _clear_buffers();

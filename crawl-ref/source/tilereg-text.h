@@ -10,8 +10,8 @@ public:
     TextRegion(FontWrapper *font);
     virtual ~TextRegion();
 
-    virtual void render();
-    virtual void clear();
+    virtual void render() override;
+    virtual void clear() override;
 
     // STATIC -
     // TODO enne - move these to TilesFramework?
@@ -53,7 +53,7 @@ public:
     void scroll();
 
 protected:
-    virtual void on_resize();
+    virtual void on_resize() override;
     FontWrapper *m_font;
 };
 

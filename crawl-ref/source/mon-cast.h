@@ -20,6 +20,8 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
                     actor* act, bool ignore_tension = false,
                     const vector<coord_def>* excluded = nullptr);
 
+void aura_of_brilliance(monster* agent);
+
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
@@ -39,8 +41,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
 void mons_cast_haunt(monster* mons);
 bool mons_word_of_recall(monster* mons, int recall_target);
-void finish_chanting_fire_storm(monster* mons, coord_def foe_pos);
-void finish_chanting_word_of_entropy(monster* mons, actor *mons_foe);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
 

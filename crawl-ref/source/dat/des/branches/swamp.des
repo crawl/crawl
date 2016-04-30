@@ -1042,9 +1042,7 @@ ENDMAP
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
 MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
-KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
-           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-           name_adjective tile:mons_withered_plant
+KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
    oo.oooo
@@ -1216,8 +1214,7 @@ MONS: hydra
 NSUBST: : = 5:W / *:.
 SUBST: w = w:10 t:10
 KFEAT: K = shallow_water
-KITEM: K = potion of poison / potion of degeneration / \
-           potion of mutation
+KITEM: K = potion of degeneration w:20 / potion of mutation
 KPROP: w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
@@ -1306,11 +1303,7 @@ ENDMAP
 
 NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
-# Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
-MONS: necromancer spells:bolt_of_cold.15.wizard;\
-                         agony.15.wizard;\
-                         animate_dead.15.wizard;\
-                         simulacrum.15.wizard
+MONS: necromancer
 KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / hornet zombie / alligator zombie / \
@@ -1499,9 +1492,7 @@ MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
 KMONS:   6 = bog body / spriggan zombie w:4 / troll zombie w:4
 KMONS:   7 = large abomination w:2 / swamp worm zombie / giant leech zombie / \
              alligator zombie w:6 / spiny frog zombie w:6
-KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
-              tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
-              name_adjective tile:mons_withered_plant
+KMONS:   q = withered plant
 KFEAT:   67 = W
 KPROP:   ~ = no_tele_into
 SUBST:   1 = 12, " = 6:15 W
@@ -1916,7 +1907,7 @@ TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
 PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  float
-MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
+MONS:    swamp dragon, swamp drake, hydra, rime drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
@@ -2005,7 +1996,7 @@ TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
 MONS:    fire dragon, lindwurm / fire crab w:8, swamp dragon / hydra w:12
-MONS:    fire drake / mottled dragon w:6 / swamp drake / steam dragon w:4
+MONS:    mottled dragon w:6 / swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \
@@ -2242,4 +2233,47 @@ c..f..c'G:::::G'C':::'C
 c%3...c'::'''::'C:::''C
 cc%..ccCC=C-C=CCCC:'''C
  cccccWWW'.@.'WWWCCCCC@
+ENDMAP
+
+###############################################################################
+# Another Basic swamp end, by johnstein
+# about 27 basic swamp enemies & 1/11 chance of L. Hydra
+NAME:    swamp_basic_johnstein
+PLACE:   Swamp:$
+ORIENT:  float
+WEIGHT:  20
+SUBST:   1 = 111''
+SUBST:   % = %'
+KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
+SUBST:   ' = .....WWW, - = ..wwwWW, T = .wWtt, C = ccct
+KFEAT:   1 =  floor / floor / shallow_water
+KITEM:   O = decaying rune of Zot
+NSUBST:  O = 1:O / *:*
+: if crawl.one_chance_in(11) then
+     KMONS: O = the lernaean hydra
+: else
+     KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
+     KITEM: * = *
+: end
+MAP
+   tt  tt
+  ttttttttt @@@   tt  tt
+tttccccccttt'-'ttttttttt
+ttcc%O%Ccccc'-'ccccccccctt
+tccT1-1-Cccc1-1ccccC%O%cctt
+tcT1'1'1'ccc'-'cccC-1-1Tcctt
+tccT1-1-ccc-1T1-cc'1'1'1Tcct
+ttcC'-'ccc''TTT''cc-1-1Tcctt
+ tcC-1ccc1-ccccc-1cc'-'Ccctt
+ttcC-1cc'-cc%O%cc-'cc1-Ccctt
+ttc'-'c1-cc-1-1-cc-1c1-Ccct
+ttc-1Cc'-c'1'1'1'c-'c''-cctt
+ tc-''c1-cc-1-1-cc-1cC1-cct
+ttcC1'1'''cC'-'Cc-''c''-cttt
+ttccccC'''cC'-'Cc'''1'1cctt
+ ttttccC-1'1'T'1'1-CCccctt
+  ttttccC-1'TTT'1-Cccccttt
+    tttcccccccccccccttttt
+     ttttttttttttttttt t
+       tt   ttt ttt t
 ENDMAP

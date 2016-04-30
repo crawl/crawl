@@ -33,7 +33,9 @@ enum monster_info_flags
     MB_SICK,
     MB_CAUGHT,
     MB_WEBBED,
-    MB_FRENZIED,
+#if TAG_MAJOR_VERSION == 34
+    MB_OLD_FRENZIED,
+#endif
     MB_PETRIFYING,
     MB_PETRIFIED,
     MB_VULN_MAGIC,
@@ -83,7 +85,9 @@ enum monster_info_flags
     MB_PERM_SUMMON,
     MB_INNER_FLAME,
     MB_UMBRAED,
-    MB_ROUSED,
+#if TAG_MAJOR_VERSION == 34
+    MB_OLD_ROUSED,
+#endif
     MB_BREATH_WEAPON,
     MB_DEATHS_DOOR,
     MB_FIREWOOD,
@@ -96,7 +100,7 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
-    MB_STONESKIN,
+    MB_MAGIC_ARMOUR,
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
@@ -136,14 +140,22 @@ enum monster_info_flags
     MB_REPEL_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
-#endif
     MB_CONDENSATION_SHIELD,
+#endif
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+#endif
     MB_AIRBORNE,
+    MB_BRILLIANCE_AURA,
+    MB_EMPOWERED_SPELLS,
+    MB_READY_TO_HOWL,
+    MB_PARTIALLY_CHARGED,
+    MB_FULLY_CHARGED,
+    MB_GOZAG_INCITED,
     NUM_MB_FLAGS
 };
 
@@ -154,7 +166,6 @@ struct monster_info_base
     string mname;
     monster_type type;
     monster_type base_type;
-    monster_type draco_type;
     union
     {
         // These must all be the same size!
@@ -177,7 +188,9 @@ struct monster_info_base
     int ac;
     int ev;
     int base_ev;
+    int mr;
     resists_t mresists;
+    bool can_see_invis;
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
@@ -210,9 +223,8 @@ struct monster_info : public monster_info_base
                           monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
-    : monster_info_base(mi)
+    : monster_info_base(mi), i_ghost(mi.i_ghost)
     {
-        i_ghost = mi.i_ghost;
         for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
@@ -247,7 +259,6 @@ struct monster_info : public monster_info_base
         short damage;
         short ac;
         monster_type acting_part;
-        bool can_sinv;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const
@@ -284,10 +295,7 @@ struct monster_info : public monster_info_base
 
     string constriction_description() const;
 
-    monster_type draco_or_demonspawn_subspecies() const
-    {
-        return draco_type;
-    }
+    monster_type draco_or_demonspawn_subspecies() const;
 
     mon_intel_type intel() const
     {
@@ -345,6 +353,9 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
+
+    bool has_trivial_ench(enchant_type ench) const;
+    bool debuffable() const;
 
 protected:
     string _core_name() const;

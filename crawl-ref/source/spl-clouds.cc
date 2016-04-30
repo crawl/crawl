@@ -51,9 +51,9 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         return SPRET_ABORT;
     }
 
-    const int cloud = env.cgrid(where);
+    cloud_struct* cloud = cloud_at(where);
 
-    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+    if (cloud && cloud->type != CLOUD_FIRE)
     {
         if (agent->is_player())
             mpr("There's already a cloud there!");
@@ -83,19 +83,19 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     if (agent->is_player())
         did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
 
-    if (cloud != EMPTY_CLOUD)
+    if (cloud)
     {
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         if (you.see_cell(where))
             mpr("The fire roars with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
-        env.cloud[cloud].decay += extra_dur * 5;
-        env.cloud[cloud].source = agent->mid;
+        cloud->decay += extra_dur * 5;
+        cloud->source = agent->mid;
         if (agent->is_player())
-            env.cloud[cloud].set_whose(KC_YOU);
+            cloud->set_whose(KC_YOU);
         else
-            env.cloud[cloud].set_killer(KILL_MON_MISSILE);
+            cloud->set_killer(KILL_MON_MISSILE);
     }
     else
     {
@@ -110,46 +110,6 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
-
-    return SPRET_SUCCESS;
-}
-
-// Assumes beem.range has already been set. -cao
-spret_type stinking_cloud(int pow, bolt &beem, bool fail)
-{
-    beem.name        = "stinking cloud";
-    beem.colour      = GREEN;
-    beem.damage      = dice_def(1, 0);
-    beem.hit         = 20;
-    beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_MEPHITIC;
-    beem.ench_power  = pow;
-    beem.source_id   = MID_PLAYER;
-    beem.thrower     = KILL_YOU;
-    beem.pierce      = false;
-    beem.is_explosion = true;
-    beem.origin_spell = SPELL_MEPHITIC_CLOUD;
-    beem.aux_source.clear();
-
-    // Fire tracer.
-    beem.source            = you.pos();
-    beem.attitude          = ATT_FRIENDLY;
-    beem.friend_info.count = 0;
-    beem.is_tracer         = true;
-    beem.fire();
-
-    if (beem.beam_cancelled)
-    {
-        // We don't want to fire through friendlies.
-        canned_msg(MSG_OK);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    // Really fire.
-    beem.is_tracer = false;
-    beem.fire();
 
     return SPRET_SUCCESS;
 }
@@ -238,7 +198,7 @@ spret_type cast_ring_of_flames(int power, bool fail)
     fail_check();
     did_god_conduct(DID_FIRE, min(5 + power/5, 50));
     you.increase_duration(DUR_FIRE_SHIELD,
-                          5 + (power / 10) + (random2(power) / 5), 50,
+                          6 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
     manage_fire_shield(1);
     return SPRET_SUCCESS;
@@ -248,36 +208,16 @@ void manage_fire_shield(int delay)
 {
     ASSERT(you.duration[DUR_FIRE_SHIELD]);
 
-    int old_dur = you.duration[DUR_FIRE_SHIELD];
-
-    you.duration[DUR_FIRE_SHIELD]-= delay;
-    if (you.duration[DUR_FIRE_SHIELD] < 0)
-        you.duration[DUR_FIRE_SHIELD] = 0;
-
-    // Melt ice armour and condensation shield entirely.
+    // Melt ice armour entirely.
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
 
     // Remove fire clouds on top of you
-    if (env.cgrid(you.pos()) != EMPTY_CLOUD
-        && env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)
-    {
-        delete_cloud_at(you.pos());
-    }
-
-    if (!you.duration[DUR_FIRE_SHIELD])
-    {
-        mprf(MSGCH_DURATION, "Your ring of flames gutters out.");
-        return;
-    }
-
-    int threshold = get_expiration_threshold(DUR_FIRE_SHIELD);
-
-    if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
-        mprf(MSGCH_WARN, "Your ring of flames is guttering out.");
+    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
+        delete_cloud(you.pos());
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD)
+        if (!cell_is_solid(*ai) && !cloud_at(*ai))
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
@@ -311,7 +251,7 @@ void corpse_rot(actor* caster)
 
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
-        if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
+        if (!is_sanctuary(*ri) && !cloud_at(*ri))
             for (stack_iterator si(*ri); si; ++si)
                 if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
@@ -349,7 +289,7 @@ void holy_flames(monster* caster, actor* defender)
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         if (!in_bounds(*ai)
-            || env.cgrid(*ai) != EMPTY_CLOUD
+            || cloud_at(*ai)
             || cell_is_solid(*ai)
             || is_sanctuary(*ai)
             || monster_at(*ai))
@@ -374,7 +314,7 @@ void holy_flames(monster* caster, actor* defender)
 
 static bool _safe_cloud_spot(const monster* mon, coord_def p)
 {
-    if (cell_is_solid(p) || env.cgrid(p) != EMPTY_CLOUD)
+    if (cell_is_solid(p) || cloud_at(p))
         return false;
 
     if (actor_at(p) && mons_aligned(mon, actor_at(p)))
@@ -385,15 +325,15 @@ static bool _safe_cloud_spot(const monster* mon, coord_def p)
 
 void apply_control_winds(const monster* mon)
 {
-    vector<int> cloud_list;
+    vector<coord_def> cloud_list;
     for (distance_iterator di(mon->pos(), true, false, LOS_RADIUS); di; ++di)
     {
-        if (env.cgrid(*di) != EMPTY_CLOUD
+        if (cloud_at(*di)
             && cell_see_cell(mon->pos(), *di, LOS_SOLID)
-            && (di.radius() < 6 || env.cloud[env.cgrid(*di)].type == CLOUD_FOREST_FIRE
-                                || (actor_at(*di) && mons_aligned(mon, actor_at(*di)))))
+            && (di.radius() < 6 || cloud_at(*di)->type == CLOUD_FOREST_FIRE
+                                || actor_at(*di) && mons_aligned(mon, actor_at(*di))))
         {
-            cloud_list.push_back(env.cgrid(*di));
+            cloud_list.push_back(*di);
         }
     }
 
@@ -407,27 +347,26 @@ void apply_control_winds(const monster* mon)
 
     for (int i = cloud_list.size() - 1; i >= 0; --i)
     {
-        cloud_struct* cl = &env.cloud[cloud_list[i]];
-
+        const coord_def p = cloud_list[i];
         // Leave clouds engulfing hostiles alone
-        if (actor_at(cl->pos) && !mons_aligned(actor_at(cl->pos), mon))
+        if (actor_at(p) && !mons_aligned(actor_at(p), mon))
             continue;
 
         bool pushed = false;
 
         coord_def newpos;
-        if (cl->pos != mon->pos())
+        if (p != mon->pos())
         {
-            wind_beam.target = cl->pos;
+            wind_beam.target = p;
             wind_beam.fire();
             for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1; ++j)
             {
-                if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
+                if (wind_beam.path_taken[j] == p)
                 {
                     newpos = wind_beam.path_taken[j+1];
                     if (_safe_cloud_spot(mon, newpos))
                     {
-                        swap_clouds(newpos, wind_beam.path_taken[j]);
+                        swap_clouds(p, newpos);
                         pushed = true;
                         break;
                     }
@@ -437,24 +376,21 @@ void apply_control_winds(const monster* mon)
 
         if (!pushed)
         {
-            for (distance_iterator di(cl->pos, true, true, 1); di; ++di)
+            for (distance_iterator di(p, true, true, 1); di; ++di)
             {
                 if ((newpos.origin() || adjacent(*di, newpos))
                     && di->distance_from(mon->pos())
-                        == (cl->pos.distance_from(mon->pos()) + 1)
+                        == (p.distance_from(mon->pos()) + 1)
                     && _safe_cloud_spot(mon, *di))
                 {
-                    swap_clouds(*di, cl->pos);
+                    swap_clouds(*di, p);
                     pushed = true;
                     break;
                 }
             }
 
-            if (!pushed && actor_at(cl->pos) && mons_aligned(mon, actor_at(cl->pos)))
-            {
-                env.cloud[cloud_list[i]].decay =
-                        env.cloud[cloud_list[i]].decay / 2 - 20;
-            }
+            if (!pushed && actor_at(p) && mons_aligned(mon, actor_at(p)))
+                cloud_at(p)->decay = cloud_at(p)->decay / 2 - 20;
         }
     }
 }

@@ -76,6 +76,9 @@ debuglog.txt
 dolls.txt
 macro.txt
 
+# Valgrind logs from misc/grind.sh
+/source/grind.log
+
 # Tile copied files
 /source/dat/tiles/dngn.png
 /source/dat/tiles/floor.png
@@ -205,3 +208,8 @@ icon.png
 /source/android-project/gen
 /source/android-project/libs
 /source/android-project/obj
+
+# generated files for monster
+/source/util/monster/monster
+/source/util/monster/vault_monster_data.h
+/source/util/monster/*.d

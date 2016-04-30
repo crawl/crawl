@@ -24,6 +24,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
@@ -34,6 +35,7 @@
 #include "files.h"
 #include "fineff.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -67,6 +69,7 @@
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "teleport.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -75,8 +78,7 @@
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
-        || flavour == BEAM_STEAM)
+        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -97,7 +99,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     }
 }
 
-// NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
@@ -150,16 +151,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
-    case BEAM_HELLFIRE:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            hurted = 0;
-            if (doEffects)
-                mpr("You resist completely.");
-        }
-#endif
-        break;
+    case BEAM_DAMNATION:
+        break; // sucks to be you (:
 
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour, hurted);
@@ -304,7 +297,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_GHOSTLY_FLAME:
     {
-        if (you.holiness() == MH_UNDEAD)
+        if (you.holiness() & MH_UNDEAD)
         {
             if (doEffects && hurted > 0)
             {
@@ -335,16 +328,26 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
 /**
  * Handle side-effects for exposure to element other than damage.
+ * Historically this handled item destruction, and melting meltable enchantments. Now it takes care of 3 things:
+ *   - triggering qazlal's elemental adaptations
+ *   - slowing cold-blooded players (draconians, hydra form)
+ *   - putting out fires
+ * This function should be called exactly once any time a player is exposed to the
+ * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG. For the sake of Qazlal's
+ * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when
+ * receiving physical damage. Hybrid damage (brands) should call it twice with appropriate
+ * flavours.
  *
  * @param flavour The beam type.
- * @param strength The strength, which is interpreted as a number of player turns.
+ * @param strength The strength of the attack. Used in different ways for different side-effects.
+ *     For qazlal_elemental_adapt: (i) it is used for the probability of triggering, and (ii) the resulting length of the effect.
  * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
  *                          is cold-blooded and not cold-resistant, slow the
  *                          player 50% of the time.
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
@@ -582,7 +585,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
     }
 }
 
-static void _maybe_spawn_monsters(int dam, const char* aux,
+static void _maybe_spawn_monsters(int dam, const bool is_torment,
                                   kill_method_type death_type,
                                   mid_t death_source)
 {
@@ -592,8 +595,8 @@ static void _maybe_spawn_monsters(int dam, const char* aux,
     if (!damager)
         return;
 
-    // Exclude torment damage.
-    if (aux && strstr(aux, "torment"))
+    // Exclude torment damage. Ugh.
+    if (is_torment)
         return;
 
     monster_type mon;
@@ -624,7 +627,7 @@ static void _maybe_spawn_monsters(int dam, const char* aux,
         for (int i = 0; i < how_many; ++i)
         {
             mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
-                         damager->mindex(), 0, you.religion);
+                         damager->mindex(), MG_NONE, you.religion);
 
             if (create_monster(mg))
                 count_created++;
@@ -685,13 +688,16 @@ static void _powered_by_pain(int dam)
 
 static void _maybe_fog(int dam)
 {
+    const int minpiety = have_passive(passive_t::hit_smoke)
+        ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
+        : piety_breakpoint(2); // Xom
+
     const int upper_threshold = you.hp_max / 2;
     const int lower_threshold = upper_threshold
                                 - upper_threshold
-                                  * (you.piety - piety_breakpoint(2))
-                                  / (MAX_PIETY - piety_breakpoint(2));
-    if (you_worship(GOD_DITHMENOS)
-        && you.piety >= piety_breakpoint(2)
+                                  * (you.piety - minpiety)
+                                  / (MAX_PIETY - minpiety);
+    if (have_passive(passive_t::hit_smoke)
         && (dam > 0 && you.form == TRAN_SHADOW
             || dam >= lower_threshold
                && x_chance_in_y(dam - lower_threshold,
@@ -744,6 +750,26 @@ static void _maybe_confuse()
     }
 }
 
+/**
+ * If you have dismissal, consider teleporting away a monster that hurt you.
+ **/
+static void _maybe_dismiss(mid_t source)
+{
+    if (you.dismissal(true, true))
+    {
+        if (monster* mon = monster_by_mid(source))
+        {
+            // 10% chance to teleport away monsters that harm you
+            if (!mon->no_tele() && one_chance_in(10))
+            {
+                item_def *amulet = you.slot_item(EQ_AMULET);
+                mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
+                teleport_fineff::schedule(mon);
+            }
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -751,7 +777,7 @@ static void _place_player_corpse(bool explode)
 
     monster dummy;
     dummy.type = player_mons(false);
-    define_monster(&dummy);
+    define_monster(&dummy); // assumes player_mons is not a zombie
     dummy.position = you.pos();
     dummy.props["always_corpse"] = true;
     dummy.mname = you.your_name;
@@ -776,6 +802,30 @@ static void _wizard_restore_life()
         set_hp(you.hp_max);
 }
 #endif
+
+static int _apply_extra_harm(int dam, mid_t source)
+{
+    bool do_extra_harm = you.extra_harm();
+
+    if (!do_extra_harm)
+    {
+        monster* damager = monster_by_mid(source);
+        // Don't check for monster amulet if there source isn't a monster
+        if (!damager)
+            return dam;
+        else
+            do_extra_harm = damager->extra_harm();
+    }
+
+    if (do_extra_harm)
+    {
+        if (you.extra_harm())
+            did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
+        return dam * 5 / 4;
+    }
+
+    return dam;
+}
 
 void reset_damage_counters()
 {
@@ -839,6 +889,14 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         return;
 
     int drain_amount = 0;
+
+    const bool is_torment = (aux && (strstr(aux, "torment")
+                || strstr(aux, "Torment")
+                || strstr(aux, "exploding lurking horror")));
+
+    // Multiply damage if amulet of harm is in play
+    if (dam != INSTANT_DEATH)
+        dam = _apply_extra_harm (dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
@@ -985,7 +1043,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
-            _maybe_spawn_monsters(dam, aux, death_type, source);
+            _maybe_spawn_monsters(dam, is_torment, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (death_type != KILLED_BY_POISON)
@@ -995,6 +1053,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
+            _maybe_dismiss(source);
         }
         if (you.hp > 0)
           return;

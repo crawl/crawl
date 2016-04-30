@@ -34,8 +34,10 @@ module "crawl"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
+#include "state.h"
 #include "stringutil.h"
 #include "tutorial.h"
+#include "unwind.h"
 #include "version.h"
 #include "view.h"
 #include "worley.h"
@@ -343,24 +345,32 @@ static int crawl_process_command(lua_State *ls)
     return 1;
 }
 
-/*
----
-function process_keys() */
-static int crawl_process_keys(lua_State *ls)
+static bool _check_can_do_command(lua_State *ls)
 {
     const delay_type current_delay = current_delay_action();
     if (current_delay && current_delay != DELAY_MACRO)
     {
         luaL_error(ls, "Cannot currently process new keys (%s delay active)",
                    delay_name(current_delay));
-        return 0;
+        return false;
     }
 
     if (you.turn_is_over)
     {
         luaL_error(ls, "Cannot currently process new keys (turn is over)");
-        return 0;
+        return false;
     }
+
+    return true;
+}
+
+/*
+---
+function process_keys() */
+static int crawl_process_keys(lua_State *ls)
+{
+    if (!_check_can_do_command(ls))
+        return 0;
 
     const char* keys = luaL_checkstring(ls, 1);
 
@@ -378,11 +388,69 @@ static int crawl_process_keys(lua_State *ls)
         return 0;
     }
 
+    unwind_bool gen(crawl_state.invisible_targeting,
+            lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
+
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
     for (int i = 1, len = strlen(keys); i < len; i++)
         macro_sendkeys_end_add_expanded(keys[i]);
 
     process_command(cmd);
+
+    return 0;
+}
+
+static int crawl_do_commands(lua_State *ls)
+{
+    if (!_check_can_do_command(ls))
+        return 0;
+
+    unwind_bool gen(crawl_state.invisible_targeting,
+                    lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
+    if (lua_isboolean(ls, 2))
+        lua_pop(ls, 1);
+    if (!lua_istable(ls, 1))
+    {
+        luaL_argerror(ls, 1, "Must be an array");
+        return 0;
+    }
+    vector<string> commands;
+
+    lua_pushnil(ls);
+    while (lua_next(ls, 1))
+    {
+        if (!lua_isstring(ls, -1))
+        {
+            luaL_argerror(ls, 1, "Table contains non-string");
+            return 0;
+        }
+        commands.push_back(lua_tostring(ls, -1));
+        lua_pop(ls, 1);
+    }
+
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
+    bool first = true;
+    command_type firstcmd = CMD_NO_CMD;
+    for (const auto& command : commands)
+    {
+        command_type cmd = name_to_command(command);
+        if (cmd == CMD_NO_CMD)
+        {
+            luaL_argerror(ls, 1, ("Invalid command: " + command).c_str());
+            return 0;
+        }
+
+        if (first)
+        {
+            firstcmd = cmd;
+            first = false;
+        }
+        else
+            macro_sendkeys_end_add_expanded(command_to_key(cmd));
+    }
+
+    process_command(firstcmd);
 
     return 0;
 }
@@ -912,8 +980,7 @@ static int crawl_err_trace(lua_State *ls)
     if (err)
     {
         // This code from lua.c:traceback() (mostly)
-        const char *errs = lua_tostring(ls, 1);
-        string errstr = errs? errs : "";
+        (void) lua_tostring(ls, 1);
         lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
         if (!lua_istable(ls, -1))
         {
@@ -1069,6 +1136,7 @@ static const struct luaL_reg crawl_clib[] =
     { "sendkeys",           crawl_sendkeys },
     { "process_command",    crawl_process_command },
     { "process_keys",       crawl_process_keys },
+    { "do_commands",        crawl_do_commands },
 #ifdef USE_SOUND
     { "playsound",          crawl_playsound },
 #endif
@@ -1139,16 +1207,16 @@ LUAFN(_crawl_redraw_view)
 
 LUAFN(_crawl_redraw_stats)
 {
-    you.wield_change        = true;
-    you.redraw_title        = true;
-    you.redraw_quiver       = true;
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    you.wield_change         = true;
+    you.redraw_title         = true;
+    you.redraw_quiver        = true;
+    you.redraw_hit_points    = true;
+    you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
-    you.redraw_experience   = true;
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_status_flags = 0xFFFFFFFF;
+    you.redraw_experience    = true;
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_status_lights = true;
 
     print_stats();
     return 0;
@@ -1176,8 +1244,8 @@ LUAFN(_crawl_millis)
 
 static string _crawl_make_name(lua_State *ls)
 {
-    // A quick wrapper around itemname:make_name. Seed is random_int().
-    return make_name(random_int());
+    // A quick wrapper around itemname:make_name.
+    return make_name();
 }
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())

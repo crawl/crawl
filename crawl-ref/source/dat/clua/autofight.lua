@@ -17,6 +17,8 @@ local ATT_NEUTRAL = 1
 local LOS_RADIUS = 7
 
 AUTOFIGHT_STOP = 30
+AUTOFIGHT_HUNGER_STOP = 0
+AUTOFIGHT_HUNGER_STOP_UNDEAD = false
 AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
@@ -27,9 +29,18 @@ AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
   local d2v = {
-    [-1] = { [-1] = 'y', [0] = 'h', [1] = 'b'},
-    [0]  = { [-1] = 'k',            [1] = 'j'},
-    [1]  = { [-1] = 'u', [0] = 'l', [1] = 'n'},
+    [-1] = { [-1] = "CMD_MOVE_UP_LEFT",  [0] = "CMD_MOVE_LEFT",  [1] = "CMD_MOVE_DOWN_LEFT"},
+    [0]  = { [-1] = "CMD_MOVE_UP",                               [1] = "CMD_MOVE_DOWN"},
+    [1]  = { [-1] = "CMD_MOVE_UP_RIGHT", [0] = "CMD_MOVE_RIGHT", [1] = "CMD_MOVE_DOWN_RIGHT"},
+  }
+  return d2v[dx][dy]
+end
+
+local function target_delta_to_vi(dx, dy)
+  local d2v = {
+    [-1] = { [-1] = "CMD_TARGET_UP_LEFT",  [0] = "CMD_TARGET_LEFT",  [1] = "CMD_TARGET_DOWN_LEFT"},
+    [0]  = { [-1] = "CMD_TARGET_UP",                                 [1] = "CMD_TARGET_DOWN"},
+    [1]  = { [-1] = "CMD_TARGET_UP_RIGHT", [0] = "CMD_TARGET_RIGHT", [1] = "CMD_TARGET_DOWN_RIGHT"},
   }
   return d2v[dx][dy]
 end
@@ -46,15 +57,13 @@ local function adjacent(dx, dy)
   return abs(dx) <= 1 and abs(dy) <= 1
 end
 
-local function vector_move(dx, dy)
-  local str = ''
+local function vector_move(a, dx, dy)
   for i = 1,abs(dx) do
-    str = str .. delta_to_vi(sign(dx), 0)
+    a[#a+1] = target_delta_to_vi(sign(dx), 0)
   end
   for i = 1,abs(dy) do
-    str = str .. delta_to_vi(0, sign(dy))
+    a[#a+1] = target_delta_to_vi(0, sign(dy))
   end
-  return str
 end
 
 local function have_reaching()
@@ -124,7 +133,7 @@ local function move_towards(dx, dy)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.process_keys(move)
+    crawl.do_commands({move})
   end
 end
 
@@ -220,27 +229,40 @@ local function get_target(no_move)
 end
 
 local function attack_fire(x,y)
-  move = 'fr' .. vector_move(x, y) .. 'f'
-  crawl.process_keys(move)
+  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_fire_stop(x,y)
-  move = 'fr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_reach(x,y)
-  move = 'vr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move)
+  local a = {"CMD_EVOKE_WIELDED", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_melee(x,y)
-  move = delta_to_vi(x, y)
-  crawl.process_keys(move)
+  crawl.do_commands({delta_to_vi(x, y)})
 end
 
 local function set_stop_level(key, value, mode)
   AUTOFIGHT_STOP = tonumber(value)
+end
+
+local function set_hunger_stop_level(key, value, mode)
+  AUTOFIGHT_HUNGER_STOP = tonumber(value)
+end
+
+local function set_hunger_stop_undead(key, value, mode)
+  AUTOFIGHT_HUNGER_STOP_UNDEAD = string.lower(value) ~= "false"
 end
 
 local function set_af_caught(key, value, mode)
@@ -276,22 +298,36 @@ function af_hp_is_low()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
 end
 
+function af_food_is_low()
+  if you.race() == "Mummy" or you.transform() == "lich" then
+      return false
+  elseif (not AUTOFIGHT_HUNGER_STOP_UNDEAD)
+         and (you.race() == "Vampire" or you.race() == "Ghoul") then
+      return false
+  else
+      return (AUTOFIGHT_HUNGER_STOP ~= nil
+              and you.hunger() <= AUTOFIGHT_HUNGER_STOP)
+  end
+end
+
 function attack(allow_movement)
   local x, y, info = get_target(not allow_movement)
   local caught = you.caught()
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
+  elseif af_food_is_low() then
+    crawl.mpr("You are too hungry to fight recklessly!")
   elseif you.confused() then
     crawl.mpr("You are too confused!")
   elseif caught then
     if AUTOFIGHT_CAUGHT then
-      crawl.process_keys(delta_to_vi(1, 0)) -- Direction doesn't matter.
+      crawl.do_commands({delta_to_vi(1, 0)}) -- Direction doesn't matter.
     else
       crawl.mpr("You are " .. caught .. "!")
     end
   elseif info == nil then
     if AUTOFIGHT_WAIT and not allow_movement then
-      crawl.process_keys('s')
+      crawl.do_commands({"CMD_WAIT"})
     else
       crawl.mpr("No target in view!")
     end
@@ -310,7 +346,7 @@ function attack(allow_movement)
       move_towards(x,y)
     end
   elseif AUTOFIGHT_WAIT then
-    crawl.process_keys('s')
+    crawl.do_commands({"CMD_WAIT"})
   else
     crawl.mpr("No target in range!")
   end
@@ -362,6 +398,8 @@ function toggle_autothrow()
 end
 
 chk_lua_option.autofight_stop = set_stop_level
+chk_lua_option.autofight_hunger_stop = set_hunger_stop_level
+chk_lua_option.autofight_hunger_stop_undead = set_hunger_stop_undead
 chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove

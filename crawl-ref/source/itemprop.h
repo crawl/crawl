@@ -49,10 +49,15 @@ bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;
+bool item_is_cursable(const item_def &item, bool ignore_holy_wrath = false);
 bool curse_an_item(bool ignore_holy_wrath = false);
 void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
-                     bool check_bondage = true);
+void do_uncurse_item(item_def &item, bool check_bondage = true);
+inline constexpr bool item_type_has_curses(object_class_type base_type)
+{
+        return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
+}
 
 // stationary:
 void set_net_stationary(item_def &item);
@@ -105,11 +110,10 @@ bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;
-int wand_max_charges(int type) PURE;
+int wand_max_charges(const item_def &item) PURE;
 bool is_known_empty_wand(const item_def &item) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
-bool is_enchantable_armour(const item_def &arm, bool uncurse,
-                           bool unknown = false) PURE;
+bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
@@ -145,8 +149,6 @@ int single_damage_type(const item_def &item) PURE;
 
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = false);
 
-int weapon_str_weight(const item_def &wpn) PURE;
-
 skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
@@ -158,6 +160,7 @@ bool is_range_weapon(const item_def &item) PURE;
 missile_type fires_ammo_type(const item_def &item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
 const char *ammo_name(const item_def &bow) PURE;
+const char *ammo_name(const weapon_type bow) PURE;
 bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
@@ -173,8 +176,6 @@ int  ammo_type_damage(int missile_type) PURE;
 reach_type weapon_reach(const item_def &item) PURE;
 
 // Macguffins
-bool item_is_rune(const item_def &item,
-                  rune_type which_rune = NUM_RUNE_TYPES) PURE;
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;
@@ -185,10 +186,13 @@ int &evoker_debt(int evoker_type);
 bool evoker_is_charged(const item_def &item);
 
 // ring functions:
-bool ring_has_pluses(const item_def &item) PURE;
+bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
 // food functions:
+#if TAG_MAJOR_VERSION == 34
+bool is_real_food(food_type food) PURE;
+#endif
 bool is_blood_potion(const item_def &item) PURE;
 bool food_is_meaty(int food_type) PURE;
 bool food_is_meaty(const item_def &item) PURE;
@@ -223,7 +227,7 @@ int property(const item_def &item, int prop_type) PURE;
 int armour_prop(int armour, int prop_type) PURE;
 bool gives_ability(const item_def &item) PURE;
 bool gives_resistance(const item_def &item) PURE;
-bool is_item_jelly_edible(const item_def &item);
+bool item_is_jelly_edible(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type) IMMUTABLE;
 equipment_type get_item_slot(const item_def &item) PURE;
 
@@ -237,9 +241,7 @@ void seen_item(const item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {
-    return item.base_type == OBJ_WEAPONS
-           || item.base_type == OBJ_STAVES
-           || item.base_type == OBJ_RODS;
+    return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
 }
 
 void remove_whitespace(string &str);

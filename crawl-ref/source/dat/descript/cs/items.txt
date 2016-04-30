@@ -182,14 +182,6 @@ potion of might
 
 Magický nápoj, výrazně zvyšující fyzickou sílu člověka, který jej vypije.
 %%%%
-potion of poison
-
-Hnusná jedovatá kapalina.
-%%%%
-potion of slowing
-
-Lektvar, který zpomaluje vaše akce.
-%%%%
 quarterstaff
 
 Robustni dreveni kul určenej k boji.
@@ -229,10 +221,6 @@ inteligence.
 ring of wizardry
 
 Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.
-%%%%
-rod of the swarm
-
-Tato hůl umožňuje jeho nositely přivolat roj hmyzu.
 %%%%
 scroll of fear
 

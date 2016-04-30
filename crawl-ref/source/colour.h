@@ -36,7 +36,6 @@ enum element_type
     ETC_DWARVEN,        // used for colouring dwarf fabric items
     ETC_ORCISH,         // used for colouring orc fabric items
     ETC_FLASH,          // flashy colours
-    ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
     ETC_MIST,           // colour of mist
@@ -60,7 +59,10 @@ enum element_type
     ETC_DITHMENOS,      // Dithmenos altar colours
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
+#if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
+#endif
+    ETC_PAKELLAS,       // Pakellas altar colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

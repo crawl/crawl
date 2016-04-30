@@ -43,7 +43,7 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs ruin_lair")
+  e.tags("extra luniq_grunt_megastairs transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
@@ -1152,7 +1152,7 @@ KITEM:   ! = damaged executioner's axe, damaged short sword, \
              damaged long sword, damaged morningstar
 KITEM:   + = damaged eveningstar, damaged short sword, \
              damaged long sword, damaged war axe
-KITEM:   & = damaged hammer / nothing
+KITEM:   & = damaged mace / nothing
 MONS:    fungus, plant
 MONS:    adder, scorpion
 MONS:    rat / porcupine, river rat / hell rat
@@ -1212,7 +1212,7 @@ MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 SUBST:   F = G:99 F:1
-KMONS:   F = orange crystal statue / obsidian statue / ice statue
+KMONS:   F = orange crystal statue / obsidian statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
@@ -1406,7 +1406,7 @@ DEPTH:   D:10-13, Lair:1-5
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
 MONS:    giant gecko / giant newt, crocodile, iguana
-MONS:    fire drake / swamp drake
+MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
@@ -1551,15 +1551,17 @@ ENDMAP
 NAME:   forest_paths
 DEPTH:  D, Depths, Lair
 ORIENT: float
-FTILE:  .t0@*123 = floor_moss
+FTILE:  .t0@*12345 = floor_moss
+MONS:   spriggan, spriggan rider, spriggan defender
+MONS:   spriggan druid n_adj n_noc name:young hd:8, spriggan druid
 : if you.absdepth() < 5 then
-SUBST:  12 = ., 3 = 0
-: elseif you.absdepth() > 15 then
-:   if you.in_branch("Lair") then
-MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
-:   else
-MONS:   spriggan, spriggan druid, spriggan rider
-:   end
+SUBST:  130 = ., 245 = 0
+: elseif you.absdepth() < 14 then
+SUBST:  1 = 1., 2 = 1, 35 = 0.
+: elseif you.absdepth() < 22 or you.in_branch("Lair") then
+SUBST:  3 = 0, 5 = 4
+: else
+SUBST:  2 = 3, 1 = 2
 : end
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
@@ -1567,21 +1569,21 @@ MAP
  xxxxtttttttttttttttttttttt...ttttttttttttttttttttx
 xxttttttttttttttttttttttttttt..tttttttttttttt0}tttx
 xttttttttt.tt......ttttttttttt..tttttttttttt..ttttx
-xtttttttt.t...ttt.0.tttttttttt.tttttttttt3..ttttttx
+xtttttttt.t...ttt.0.tttttttttt.tttttttttt2..ttttttx
 xtt......tttttttt...ttttttttttt.tttttt...ttttttttxx
 xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
 @.ttttttttttttttt..tttttttttttt1.tt...ttttttttttttx
-xttttttttttttttt..tttttttttttttt2...ttttttttttttttx
+xttttttttttttttt..tttttttttttttt5...ttttttttttttttx
 xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
-xtttttttttttttttt1.1.tttttttttttt.tttttttttt...tttx
-xtttttttttttttttttt.1...tttttttttt..ttttttt.2*..ttx
-xttttttttttttttttttttt1...ttttttttt.ttttttt.000.ttx
-xttttttttttttttttttttttt...tttttttt.ttttt1..3.2tttx
-xttttttttttttttttttttttttt....tttt.ttttttt.tt.t0ttx
+xtttttttttttttttt1.1.tttttttttttt.tttttttttt%..tttx
+xtttttttttttttttttt.0...tttttttttt..ttttttt.5*..ttx
+xttttttttttttttttttttt1...ttttttttt.ttttttt.000%ttx
+xttttttttttttttttttttttt...tttttttt.ttttt1..2.5tttx
+xttttttttttttttttttttttttt....tttt.ttttttt.tt.t3ttx
 xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
 .....ttttttttttttttttttttttt1..tttttttttt.ttttttttx
-@.....tttttttt...ttttttttttt1..tttttttt..ttttttttxx
-xttttt..ttt....tt...tt.......30.ttttt..tttttttttxx
+@.....tttttttt..1ttttttttttt1..tttttttt..ttttttttxx
+xttttt..ttt0...tt...tt.......20.ttttt..tttttttttxx
 xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
 xxxtttttttttttttttttttttttttttt....ttttttttttxxx
   xxxtttttttttttttttttttttttttttttttttttttxxxx
@@ -1804,14 +1806,8 @@ KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
-KMONS:  Z = col:flash deep elf sorcerer \
-        name:deep_elf_elementalist n_rpl n_des n_noc \
-        tile:mons_deep_elf_elementalist \
-        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
-               sticky_flame_range.11.wizard;\
-               summon_water_elementals.11.wizard;\
-               haste.11.wizard;blink.11.wizard \
-        ; robe ego:fire_resistance | \
+KMONS:  Z = deep elf elementalist ; \
+        robe ego:fire_resistance | \
         robe ego:cold_resistance | \
         robe ego:resistance . dagger ego:freezing | \
         dagger ego:flaming | dagger ego:electrocution
@@ -1864,7 +1860,7 @@ ENDMAP
 #
 NAME:    nrook_guardian_serpent_snake_passage
 ORIENT:  float
-DEPTH:   D:9-, Depths, Snake
+DEPTH:   D:9-, Snake
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
@@ -1894,6 +1890,7 @@ ENDMAP
 # There is a path to the center that the freezing clouds never appear on.
 # It's pretty obvious. -LP
 NAME:    lemuel_ice_spiral_1
+DEPTH:   D:12-
 WEIGHT:  1
 ORIENT:  float
 TAGS:    no_item_gen no_monster_gen
@@ -1938,7 +1935,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-, Depths
+DEPTH:   D:5-
 TAGS:    no_item_gen no_monster_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -1968,7 +1965,7 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
+MONS:   molten gargoyle / hell hound / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
@@ -2246,20 +2243,19 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . arbalest ego:flaming . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
+MONS:    orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          siren ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of draining . \
+MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          great sword . chain mail / tengu reaver ; chain mail . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
-KMONS:   A = fire drake / salamander / fire elemental
+KMONS:   A = hell hound / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
-KMONS:   C = salamander firebrand / ophan w:5 / balrug w:5
+KMONS:   C = salamander stormcaller / ophan w:5 / balrug w:5
 KMONS:   D = hydra simulacrum / bog body / polar bear
 KMONS:   E = freezing wraith / ice devil / harpy simulacrum
 KMONS:   F = blizzard demon / azure jelly
@@ -2276,7 +2272,7 @@ KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
 KMONS:   Q = naga warrior / orc warlord / minotaur
 KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
 KMONS:   S = deep elf mage / wizard / boggart
-KMONS:   T = deep elf conjurer / orc sorcerer / giant orange brain
+KMONS:   T = deep elf mage / orc sorcerer / giant orange brain
 KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
 KMONS:   V = cyclops / centaur warrior / naga sharpshooter
 KMONS:   W = manticore / yaktaur captain / stone giant
@@ -2321,11 +2317,9 @@ bb$.vvv.....bbb.$vv
 ENDMAP
 
 ###############################################################################
-# Nasty temple of Zin. Note that the boss is locked in a room until
-# the player opens it... and the player can see it ahead of time.
-
+# Nasty temple of Zin.
 NAME:   evilmike_silver_temple
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen patrolling
 DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
@@ -2336,13 +2330,11 @@ KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
 : end
 NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
-FTILE:  '+_!$%*|1234D = floor_vault
+FTILE:  '+_!$%*|1234 = floor_vault
 TILE:   v = dngn_metal_wall_white
-TILE:   c = dngn_transparent_wall_white
-COLOUR: v = white
-KFEAT:  D = runed_door
+TILE:   n = dngn_transparent_stone_white
+COLOUR: vn = white
 SUBST:  !' = .
-: set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
@@ -2354,7 +2346,7 @@ MAP
 .v'''vvvvvvvvv...vvvv'vv'''v'v.
 .v'''v'''vvvvv...vvvv'vv'''v'v.
 .v'''v'''vv3'vv.vv'3v''''v'''v.
-.v'''+'''vv''vvDvv''vvvvvvvv+v.
+.v'''+'''vv''vv+vv''vvvvvvvv+v.
 .v+vvv'A'vv+vvv'vvv+vvvvvvvv1v.
 .v1'vv%%%v'''''''''''vvvvvv''v.
 .vv''vvvvv'v'v'''v'v'vvvvv''vv.
@@ -2365,9 +2357,9 @@ MAP
 ...v.vvv''vvv'2'1'vvv''vvv.v...
 .v...vvvv''vvv'''vvv''vvvv...v.
 ...v.vvvvv'3vvvnvvv3'vvvvv.v...
-.v...vvvvvvDv'''''Dvvvvvvv...v.
+.v...vvvvvv+v'''''+vvvvvvv...v.
 ...v.v$$$$v''''4''''v****v.v...
-.v...v$$$$D'''v_v'''D*||*v...v.
+.v...v$$$$+'''v_v'''+*||*v...v.
 ...v.v$$$$vvvvvvvvvvv****v.v...
 .....vvvvvvvvvvvvvvvvvvvvv.....
 ...............................
@@ -2380,15 +2372,16 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
-         deep elf knight / phantasmal warrior / spriggan berserker / \
-         guardian serpent w:5 / harpy w:5 / salamander mystic
+         deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
+         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
+         salamander mystic
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
-         hell knight w:5 / orc warlord / minotaur / octopode crusher / \
+         hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
          spriggan berserker w:3 / spriggan air mage w:4 / \
          deep troll earth mage w:4 / deep elf death mage w:2
@@ -2458,7 +2451,7 @@ NSUBST:  C : 2:1 / * = c:299 1:1
 SUBST:   X = xx., 1 = 1:29 .:1, t = t:99 1:1, u = t
 SUBST:   . = .:2975 1:20 2:1 3:2 4:2, | = *||
 TILE:    c = wall_marble
-FTILE:   .t1234567Gcx+d*| = floor_lair
+FTILE:   .Tt1234567Gcx+d*| = floor_lair
 COLOUR:  c = white
 COLOUR:  .1234567d*| = green
 MAP
@@ -2510,8 +2503,9 @@ KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
 KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
-KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
-           deep elf summoner / deep elf sorcerer
+KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
+           deep elf annihilator w:5 / deep elf death mage / \
+           deep elf mage / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2571,8 +2565,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf conjurer / deep elf knight
-MONS:    deep elf fighter band w:6 / deep elf knight band
+KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
 SUBST:   a : X., A : Y., b : XX., B : YY.
@@ -2697,19 +2691,12 @@ NAME: lightli_tower_of_babel
 ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
-DEPTH: Dis, !D:$, Depths, !Depths:$
-: if you.in_branch("Depths") then
-# A more worthy adversary badly wanted.
-# What about an obvious up-HD rename of hell knight? *duck*
-MONS: fire giant
-: else
-MONS: Hell Sentinel
-: end
-MONS: flying skull
-ITEM: bolt ego:exploding q:5
+DEPTH: Dis, !Dis:$, Depths, !Depths:$
+MONS: patrolling iron giant, flying skull
+ITEM: bolt
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
-ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:hellfire w:1
+ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:damnation w:1
 : if you.in_branch("Dis") then
 SUBST: defg = .
 : end
@@ -2749,9 +2736,7 @@ TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   Depths, Geh, !Geh:$
 PLACE:   Depths:$
 WEIGHT:  5 (Depths:$, Geh), 10
-# Spell set is Hell Knight II; it has the more powerful ranged spell.
-MONS:    hell knight spells:pain.17.wizard;bolt_of_fire.17.wizard;\
-                     blink.17.wizard
+MONS:    hell knight
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    mottled draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
@@ -2888,75 +2873,69 @@ ENDMAP
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
 ## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
-DEPTH:    Depths:2-, !Depths:$
+DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
-KMONS:    f = plant / fungus
-KMONS:    RS = electric eel / water elemental
+KMONS:    P = plant / fungus
+KMONS:    R = water elemental
+KMONS:    S = water elemental / w:2 merfolk impaler / w:2 merfolk javelineer
 ## Main monster sets
-KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
-              / minotaur / satyr / merfolk impaler / deep elf knight
-KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
-              / octopode crusher
-KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
-KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
-              / alligator snapping turtle / shambling mangrove / thorn hunter
-KMONS:    6 = merfolk avatar
-KMONS:    7 = water nymph / wind drake / sphinx
-KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
-              / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
-              / w:5 caustic shrike
-KMONS:    O = the Enchantress band
+KMONS:    1 = spriggan berserker / ettin / deep troll shaman
+KMONS:    2 = spriggan defender / yaktaur captain / stone giant
+KMONS:    3 = spriggan air mage / deep elf annihilator / entropy weaver \
+              / rakshasa
+KMONS:    4 = orange crystal statue
+KMONS:    5Z = fire dragon / ice dragon / iron dragon / w:5 spark wasp band \
+               / sphinx / emperor scorpion
+KMONS:    6 = storm dragon / golden dragon / quicksilver dragon
+KMONS:    7 = w:15 tengu reaver / stone giant / fire giant / frost giant
+KMONS:    D = titan / juggernaut / w:15 caustic shrike
+KMONS:    O = w:5 the Enchantress band / iron giant band, iron giant band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
-KITEM:    E| = |
-KFEAT:    f5Z67DER%$*| = W
+KITEM:    D| = |
+KFEAT:    P5Z67DR%$*| = W
 KFEAT:    S = w
 KFEAT:    u = t
-KPROP:    ~`ZR = no_tele_into
+KPROP:    ~"ZR = no_tele_into
 SHUFFLE:  HI / JK
-NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
+NSUBST:   H = 1:4 / *:G
+SUBST:    I = -, J = G, K = 7, L = 6 7 D:2, B : cP, C : cP, ~' = PPPPW, -" = W
 COLOUR:   c = white
 COLOUR:   x = cyan
 TILE:     u = dngn_mangrove
 TILE:     x = wall_pebble_cyan
-FTILE:    .+ctuGTUf1234O = floor_pebble_cyan
-veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
-}}
+FTILE:    .+ctuGTUP1234O = floor_pebble_cyan
 MAP
       ccccccccccccccccccccccccc
-    cccttct1t.t.'Gx'Hx'Hx'ucuTccc
-   cc'...+....3.''''''I''''+'wwwcc
-  ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
-  ccc'.GcccBBccccccccccccccc''''wwc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-+.''''.nucU|$''''...''''''++'D''''llc
-+.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
-+.''''.nucU|$''''...''''''++'D''''llc
-c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
-cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
- cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
- ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
- cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
- cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
-  ccGR.cc~``cccccUGUccccc""'5x'''Sc
-  ccc'.GcccCCccccccccccccccc''''wwc
-  ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
-   cc'...+....3.''''''K''''+'wwwcc
-    cccttct1t.t.'Gx''''Jx'ucuTccc
+    cccttct1t.t.-Gx-Hx-Hx-ucuTccc
+   cc-...+....3.------I----+-wwwcc
+  ccG-.2.+.t2t.t--Gx-Hx-Hx-+---wwcc
+  ccc-.GcccBBccccccccccccccc----wwc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
++.---..nucU|$----...------++-7----llc
++.-U-.2nUcGD|----.O.--7---++---U--lGc
++.---..nucU|$----...------++-7----llc
+c..1...c~ccc--cu--7--uc--cccG-u-u-wTc
+cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
+ cccc++cR~ccc--cccGccc--ccc'--u5u-Sc
+ ct1...c"~cccL---ccc---Lccc'-u-x--wc
+ cT---.n""~ccc---$%$---ccc'--x6u-wwc
+ cccc-.n~Z"cccc--*D*--cccc'-u-u--wcc
+  ccGR.cc~""cccccUGUccccc''-5x---Sc
+  ccc-.GcccCCccccccccccccccc----wwc
+  ccG-.2.+.t2t.t----Jx-----+---wwcc
+   cc-...+....3.------K----+-wwwcc
+    cccttct1t.t.-Gx----Jx-ucuTccc
      ccccccccccccccccccccccccccc
 ENDMAP
 
@@ -3095,6 +3074,37 @@ xxl.lll...xx...lllxx..llxxxx..xxlllxx
                         xxxxx
 ENDMAP
 
+NAME:   kennysheep_slugbush
+DEPTH:  D:3-7
+ORIENT: float
+MONS:   dart slug
+NSUBST: w = 15:xxc
+NSUBST: . = 1:[GG.. / 1:(GG.. / 1:G. / 5:%
+SUBST:  G:GtT
+SUBST:  1 = 11111..
+KPROP:  w = no_tele_into
+MAP
+         @
+    @  WW1WW  @
+     1wWwwwww1
+    wwwWwwwwwww
+ @ wwwwWWWwwwwww @
+  1wwwwwwWWwwwww1
+  wwwwwwwwWwwwwww
+ wwww.wwwWWwwwwwww
+ www.www...w...www
+@1ww.....{.....ww1@
+ www..ww...ww.wwww
+ wwwwwwwWWwwwwwwww
+  wwwwwwWwwwwwwww
+  1wwwwwWwwwwwww1
+ @ wwwwwWWwwwwww @
+    wwwwwWWwwww
+     1wwwwwWw1
+    @  WW1WW  @
+         @
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
@@ -3158,6 +3168,9 @@ NAME:    minmay_opposing_rooms
 DEPTH:   D:4-
 ORIENT:  float
 SHUFFLE: 0%
+: if you.absdepth() < 6 then
+SUBST:   9 = 0
+: end
 MAP
 xxxxxxxxxxxxxxcccccxx
 xxxx........xcc%.%ccx
@@ -3392,7 +3405,7 @@ NAME:    lemuel_ice_statue
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
-DEPTH:   D:7-, Elf, Depths
+DEPTH:   D:7-
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU
@@ -3419,25 +3432,29 @@ ENDMAP
 
 #############################################################################
 # Oklob gauntlet
-# average of 2.3 oklobs, and at most 5 of them
+# average of 2.2 oklobs, and at most 5 of them
 NAME:    dpeg_oklob_gauntlet
 DEPTH:   Depths, !Depths:$, Lair, Snake, Elf
-MONS:    plant, oklob plant
 ORIENT:  float
+MONS:    plant, oklob plant, thorn hunter, acid blob
 SHUFFLE: ]}) / def
-NSUBST:  ' = 5:2 *:1
-NSUBST:  2 = 1:2 *:112
-SUBST:   1=1w, "=ww.
-SUBST:   d=|*, e=|*, f=|*
+NSUBST:  ' = 1:2 / 4 = 11122 / *:1
+NSUBST:  " = 1:W / * = wwW, ` = 1:W / * = wwW
+SUBST:   def = |*
+: if you.in_branch("Depths") then
+NSUBST:  3 = 1:3 / 1:4 / *:34...
+: else
+SUBST:   3 = .
+: end
 MAP
 xxxxxxxxxxxxx
 xxxxx]})xxxxx
-xxxxx...xxxxx
-x'ww.....ww'x
-x'"......."'x
-x'"......."'x
-x'"......."'x
-x'"......."'x
+xxxxx.3.xxxxx
+x'ww3...3ww'x
+x'".......`'x
+x'".......`'x
+x'".......`'x
+x'".......`'x
 x'ww.....ww'x
 xxxxxx+xxxxxx
 ENDMAP
@@ -4086,29 +4103,31 @@ ORIENT:  float
 TAGS:    transparent no_monster_gen
 DEPTH:   D:6-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
-KMONS:   " = 0
-KMONS:   ` = 9
-KITEM:   "` = % / $ w:5
-KMASK:   , = !no_monster_gen
-SHUFFLE: XzZ / '"`
+KMONS:   0 = 0
+KMONS:   9 = 9
+KITEM:   09 = % / $ w:5
+SHUFFLE: XzZ / '09
 SUBST:   XzZ = x, ' = ., x : x:90 c
+: if you.absdepth() < 13 then
+NSUBST:  0 = 4:0 / * = 00., 9 = 1:9 / 1:90 / * = 0
+: end
 MAP
-           ,,,,,,,,,,,,,,,,,,,,,
-          ,,,,,,,,,,,,,,,,,,,,,,,
-         ,,.X..'..X..'..X..'..X.,,
-        ,,.'x'XxX'x'XxX'x'XxX'x',,
-       ,,.,,X..'..X..'..X..'..X.,,
-      ,,.X,,'..z..`..z..'..X...,,
-     ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
-    ,,..,X..'..z..`..z..'..X.,,
-   ,,.X,,'..z..`..z..'..X...,,
-  ,,.'x'XxX"x"ZxZ"x"XxX'x'.,,
- ,,...X..'..z..`..z..'..X.,,
-,,.X..'..X..'..X..'..X...,,
-,,'x'XxX'x'XxX'x'XxX'x'.,,
-,,.X..'..X..'..X..'..X.,,
- ,,,,,,,,,,,,,,,,,,,,,,,
-  ,,,,,,,,,,,,,,,,,,,,,
+           .....................
+          .......................
+         ...X..'..X..'..X..'..X...
+        ...'x'XxX'x'XxX'x'XxX'x'..
+       .....X..'..X..'..X..'..X...
+      ...X..'..z..9..z..'..X.....
+     ...'x'XxX0x0ZxZ0x0XxX'x'...
+    .....X..'..z..9..z..'..X...
+   ...X..'..z..9..z..'..X.....
+  ...'x'XxX0x0ZxZ0x0XxX'x'...
+ .....X..'..z..9..z..'..X...
+...X..'..X..'..X..'..X.....
+..'x'XxX'x'XxX'x'XxX'x'...
+...X..'..X..'..X..'..X...
+ .......................
+  .....................
 ENDMAP
 
 ###############################################################################
@@ -4128,34 +4147,34 @@ KITEM:   45 = * / % w:5
 SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
 : elseif you.absdepth() > 20 then
 SUBST:   x : x m:5, X : ccccbv, ' : .:70 w:20 l
-: elseif you.absdepth() > 13 then
+: elseif you.absdepth() > 11 then
 SUBST:   x : x m:3, X : xcc, ' : .:80 wW
 : else
-SUBST:   x : x m:2, X : xxc, ' : .:90 W
+SUBST:   x : x m:2, X : xxc, ' : .:90 W, 5 = 4
 : end
 MAP
   xxxxxxxx
- xxXXXXXxxx
-xxxX1'1Xxxxx
+ xxXXXXXXxx
+xxxX1'.1Xxxx
 xXXXX.XXXXxx
 xX.XX.XX1Xxx
 +.'..'..'Xxxxxx
 xX.XX.XX1Xxxxxxx
 xXXXX.XXXXXXXXxxx
-xxxX.'.XX5.'4Xxxxx
-xXXXX.XXXXX.XXXXxx
-xX2XX.XX.XX.XX4Xxx
+xXXX.'.XX5.'4Xxxxx
+xX2XX.XXXXX.XXXXxx
+xX.XX.XX.XX.XX4Xxx
 xX'..'..'..'..'Xxxxxx
 xX3XX.XX.XX.XX.Xxxxxxx
 xXXXX.XXXXX.XX5XXXXXxxx
-xxxX3'3XxX.'.XXX1'1Xxxx
-xxxXXXXXXXX.XXXXX.XXXXx
- xxxxxxX3XX.XX.XX.XX1Xx
+xxX3.'3XxX.'.XXX1'1XXXx
+xxXXXXXXXXX.XXXXX.XX1Xx
+ xxxxxxX3XX.XX.XX.XX.Xx
   xxxxxX'..'..'..'..'Xx
-     xxX3XX.XX.XX.XX1Xx
-     xxXXXX.XXXXX.XXXXx
-     xxxxX3'2XxX.'.Xxxx
-      xxxXXXXXxXX.XXxx
+     xxX.XX.XX.XX.XX1Xx
+     xxX3XX.XXXXX.XXXXx
+     xxXXX3'.2XX.'.Xxxx
+      xxxXXXXXXXX.XXxx
        xxxxxxxxxx+xxx
 ENDMAP
 
@@ -4163,10 +4182,13 @@ ENDMAP
 
 NAME:   hangedman_cross_cluster
 TAGS:   patrolling transparent no_monster_gen
-DEPTH:  D:8-, !D:$, Depths, !Depths:$
+DEPTH:  D:9-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  C = CTUV, y : xc, z : ccvb, 1 = 0''
 KMASK:  ' = !no_monster_gen
+: if you.in_branch("D") then
+SUBST:  8 = 009
+: end
 MAP
               '''''''''
              '''.xxx.'''
@@ -4182,15 +4204,15 @@ MAP
 ''..x......x......c......x......x...'
 'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
 'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
-'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'x.$x0.x'''''''c.8c9.c'''''''x.0x$.x'
 '...x.....ccc.....c.....ccc.....x...'
 ''.xxx.....c.....ccc.....c.....xxx.''
-'''''...c.%c9.c.......c.9c%.c...'''''
+'''''...c.%c9.c.......c.8c%.c...'''''
  '''''..ccczccc..|C|..ccczccc..'''''
-'''''...c.%c9.c.......c.9c%.c...'''''
+'''''...c.%c8.c.......c.9c%.c...'''''
 ''.xxx.....c.....ccc.....c.....xxx.''
 '...x.....ccc.....c.....ccc.....x...'
-'x.$x0.x'''''''c.9c9.c'''''''x.0x$.x'
+'x.$x0.x'''''''c.9c8.c'''''''x.0x$.x'
 'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
 'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
 '...x......x......c......x......x...'
@@ -4349,7 +4371,7 @@ KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
 : elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / \
+KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / \
             w:5 hell sentinel / iron dragon / tormentor / iron golem / \
             place:Dis
 SUBST:  *% = .
@@ -4358,7 +4380,7 @@ KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / place:Geh
 SUBST:  *% = .
 : elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / \
+KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / \
             lich / ancient lich / w:15 place:Tar
 SUBST:  *% = .
 : elseif you.in_branch("Coc") then
@@ -4407,16 +4429,18 @@ NAME:    hangedman_box_tower
 TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
-KMONS:   1 = patrolling 0 w:40 / nothing
+KMONS:   1 = patrolling 0
 KMONS:   4 = 9 w:40 / 0 band
-KITEM:   1 = % w:75 / $ w:20 / nothing w:4 / * w:1
+KITEM:   1d = % w:75 / $ w:20 / nothing w:4 / * w:1
 KITEM:   $ = $ w:40 / nothing
 KFEAT:   D = any shop
 SHUFFLE: *|, CT, 23 / CT, 8w / 8w / w8
 SHUFFLE: 1239 / 1239 / 1239 / 1239 / $444, wW / wW / wW / mm
 NSUBST:  = = 1:+ / 1:==XX+ / *:=, - = 1:+ / 1:xxxx+ / *:x
-SUBST:   X = x, 23 = 9, = : y:3 x:1, | : |:4 D:1, C : C:3 T:17
-SUBST:   T = T:5 U:2 V:2 Y:1, x : x:13 y:1 c:1, G : G:1 c:1 y:8
+NSUBST:  1 = 30:1 / 15 = 1dd / * = d.
+SUBST:   X = x, 23 = 9, = : y:3 x:1, | : |:4 D:1
+SUBST:   C : C:3 T:17, T = T:5 U:2 V:2 Y:1
+SUBST:   x : x:13 y:1 c:1, G : G:1 c:1 y:8
 SUBST:   z : y:3 v:1 b:1 x:1, y : c:13 v:1 b:1
 MAP
                .........
@@ -5027,6 +5051,9 @@ ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  F : .:40 GTUb
 SUBST:  9 = 9.
+: if you.absdepth() < 12 then
+SUBST:  8 = 9
+: end
 MAP
             .......
           ....9x9....
@@ -5959,8 +5986,7 @@ KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
 KFEAT:  ~ = floor
 MONS:   kobold demonologist
-KMONS:  P = plant col:magenta name:demonic name_adjective \
-        tile:mons_demonic_plant
+KMONS:  P = demonic plant
 KMONS:  p = plant
 NSUBST: p = 3=xcbtvmnw.' / 5:P
 NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'
@@ -6592,4 +6618,257 @@ MAP
    ccc.G..1G...G1..G1.c2cccc
    cccccccccccccccccccccccc
     ccccccccccccccccccccc
+ENDMAP
+
+NAME:   kennysheep_windowed_halls
+DEPTH:  D:5-, Depths
+ORIENT: float
+SUBST:  c : cccvb
+MAP
+ccccccccccccccccccccccc
+c0...0c0...0c0...0c***c
+c.....c.....c.....c9|9c
+c..c..c..c..c..c..c***c
+c..c..c..c..c..c..ccc+c
+c..c.....c.....c......c
+c..c.....c.....c......c
+c..cnnccccnnccccnnccccc
+c.....................@
+c.....................@
+c..ccccnnccccnncccccccc
+c..c.....c.....c......c
+c..c.....c.....c......c
+c..c..c..c..c..c..ccc+c
+c..c..c..c..c..c..c000c
+c.....c.....c.....c*G*c
+c0...0c0...0c0...0c000c
+ccccccccccccccccccccccc
+ENDMAP
+
+NAME: kennysheep_ambush_hall
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST: T : TGV.
+MAP
+      x..@..x
+   xxxxxx.xxxxxx
+  xx....x+x....xx
+ xx....x...x....xx
+ x...0x.....x0...x
+xx..0x..T.T..x0..xx
+x%..x.........x..%x
+x...x.........x...x
+x*..x..T...T..x..*x
+x...x.........x...x
+x%..x.........x..%x
+xx..0x..T.T..x0..xx
+ x...0x.....x0...x
+ xx....x...x....xx
+  xx....x+x....xx
+   xxxxxx.xxxxxx
+      x..@..x
+ENDMAP
+
+NAME: kennysheep_blocky_hall
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+MAP
+        xxxxxxxxxxxxx
+        x...........x
+        x.....0.....+
+        x...........x
+xx+xxxxxx...xxxxx...x
+x...........xxxxx...x
+x...........xxxxx...x
+x..........%xxxxx...x
+x...xxxxxxxxxxxxx...xxxxx
+x...xxxxxxxxxxxxx.......x
+x.0.xxxxxxxxxxxxx.......x
+x...xxxxxxxxxxxxx%......x
+x...xxxxxxxxxxxxxxxxx...x
+x......%xxxxxxxxxxxxx...x
+x.......xxxxxxxxxxxxx.0.x
+x.......xxxxxxxxxxxxx...x
+xxxxx...xxxxxxxxxxxxx...x
+    x...xxxxx%..........x
+    x...xxxxx...........x
+    x...xxxxx...........x
+    x...xxxxx...xxxxxx+xx
+    x...........x
+    +.....0.....x
+    x...........x
+    xxxxxxxxxxxxx
+ENDMAP
+
+NAME: kennysheep_blocky_room
+DEPTH: D:8-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+: if you.absdepth() < 5 then
+SUBST:  9 = 0
+NSUBST: * = 2:* / *:%
+: end
+MAP
+        xxxxxxxxxxxxx
+        x...........x
+        x.....0.....+
+        x...........x
+xx+xxxxxx...xxxxx...x
+x...........x..0x...x
+x...........x...x...x
+x...........x...x...x
+x...xxxxxxx+x...x...xxxxx
+x...x9........G.x.......x
+x.0.x....G......x.......x
+x...x.......*...+.......x
+x...xxx+x..*%*..xxxxx...x
+x.......x...*.......x...x
+x.......x......G....x.0.x
+x.......x.G........9x...x
+xxxxx...x...x+xxxxxxx...x
+    x...x...x...........x
+    x...x...x...........x
+    x...x0..x...........x
+    x...xxxxx...xxxxxx+xx
+    x...........x
+    +.....0.....x
+    x...........x
+    xxxxxxxxxxxxx
+ENDMAP
+
+NAME: kennysheep_room_grid
+DEPTH: D:12-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+: if you.absdepth() < 5 then
+SUBST:  9 = 0
+NSUBST: * = 2:* / *:%
+: end
+MAP
+ xxxxx xxxxx xxxxx
+xx...x@x...x@x...xx
+x.....x.....x.....x
+x..0..x..0..x..0..x
+x.....x.....x.....x
+xx...xxx...xxx...xx
+ @xxxxxxxxxxxxxxx@
+xx...xxx...xxx...xx
+x.....x.9*9.x.....x
+x..0..x.*%*.x..0..x
+x.....x.0*0.x.....x
+xx...xxx...xxx...xx
+ @xxxxxxx+xxxxxxx@
+xx...xxx...xxx...xx
+x.....x.....x.....x
+x..0..x..0..x..0..x
+x.....x.....x.....x
+xx...x@x...x@x...xx
+ xxxxx xxxxx  xxxx
+ENDMAP
+
+NAME: kennysheep_bubbly
+DEPTH: D:12-, Depths, Elf, Zot
+ORIENT: float
+MAP
+         xxxxxxx
+       xxx.....xxx
+      xx.........xx
+     xx...........xx
+     x.............x
+    xx...0.xxx.0...xx
+    x.....xx xx.....x
+    x....xx   xx....+
+    x....x     x....+
+    x....xx   xx....+
+    x.....xx xx.....x
+    xx...0.xxx.0...xx
+     x.............x
+  xxxxx...........xx
+ xx...xx.........xx
+xx.....xx......xxx
++..0$0..xxx+++xx
++..$%$..x......xx
++..0$0..x.......xx
+xx.....xx........xx
+ xx...xx..........x
+  xxxxx....0*9....x
+      x....*%*....x
+      x....9*0....x
+      x...........x
+      xx.........xx
+       xx.......xx
+        xx.....xx
+         xxxxxxx
+ENDMAP
+
+
+NAME: kennysheep_spiral_hall
+DEPTH: D:4-, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST:  G : GTV.
+MAP
+    xx.@.xx
+   xx.....xx
+   x.......x
+  xx.......xx
+  x.........x
+  x.........xx
+ xxxxx.......x
+ xG..xxxx....x
+ x......x....x
+ x......xx...x
+xx...x...x...xx
+x....x...x0...x
+x...xx...xx...x
+x...x.....x...x
+x...x.....x...x
+x...x..%..x...x
+x...x0%G%0x...x
+x...x..%..x...x
+x...x.....x...x
+x...x.....x...x
+x...xx...xx...x
+x...0x...x....x
+xx...x...x...xx
+ x...xx......x
+ x....x......x
+ x....xxxx..Gx
+ x.......xxxxx
+ xx.........x
+  x.........x
+  xx.......xx
+   x.......x
+   xx.....xx
+    xx.@.xx
+ENDMAP
+
+NAME: kennysheep_oblong_rooms
+DEPTH: D:$, Depths, Elf, Zot
+ORIENT: float
+TAGS: transparent
+SUBST:  G : GTV.
+MAP
+        ccccccccccccc
+    ccccc...........ccccc
+  ccc........0.0........ccc
+  c...........G...........c
+  +.....G....0.0....G.....+
+  c.......................c
+  ccc...................ccc
+    ccccc...........ccccc
+        ccccc+++ccccc
+     cccc...........cccc
+cccccc.................cccccc
+c*cc.....................cc*c
+c|8......G.........G......8|c
+c*cc..........G..........cc*c
+cccccc.................cccccc
+     cccc...........cccc
+        cccccc.cccccc
+            cc8cc
+            c*|*c
+            ccccc
 ENDMAP

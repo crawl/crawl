@@ -17,7 +17,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
@@ -500,6 +500,6 @@ void initialise_item_descriptions()
 
 void fix_up_jiyva_name()
 {
-    you.jiyva_second_name = make_name(random_int(), MNAME_JIYVA);
+    you.jiyva_second_name = make_name(get_uint32(), MNAME_JIYVA);
     ASSERT(you.jiyva_second_name[0] == 'J');
 }

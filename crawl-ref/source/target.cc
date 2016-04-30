@@ -5,6 +5,7 @@
 #include <cmath>
 #include <utility> // swap
 
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "english.h"
@@ -14,6 +15,7 @@
 #include "los_def.h"
 #include "losglobal.h"
 #include "spl-damage.h"
+#include "spl-goditem.h" // player_is_debuffable
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -59,11 +61,16 @@ bool targetter::has_additional_sites(coord_def loc)
     return false;
 }
 
+bool targetter::affects_monster(const monster_info& mon)
+{
+    return true; //TODO: false
+}
+
 targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
                                int pow, int min_ex_rad, int max_ex_rad) :
-                               range(r),
                                min_expl_rad(min_ex_rad),
-                               max_expl_rad(max_ex_rad)
+                               max_expl_rad(max_ex_rad),
+                               range(r)
 {
     ASSERT(act);
     ASSERT(min_ex_rad >= 0);
@@ -73,7 +80,7 @@ targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
     beam.set_agent(act);
     origin = aim = act->pos();
     beam.attitude = ATT_FRIENDLY;
-    zappy(zap, pow, beam);
+    zappy(zap, pow, false, beam);
     beam.is_tracer = true;
     beam.is_targeting = true;
     beam.range = range;
@@ -101,26 +108,34 @@ bool targetter_beam::set_aim(coord_def a)
     path_taken = tempbeam.path_taken;
 
     if (max_expl_rad > 0)
-    {
-        bolt tempbeam2 = beam;
-        tempbeam2.target = origin;
-        for (auto c : path_taken)
-        {
-            if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
-                break;
-            tempbeam2.target = c;
-            if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
-                break;
-        }
-        tempbeam2.use_target_as_pos = true;
-        exp_map_min.init(INT_MAX);
-        tempbeam2.determine_affected_cells(exp_map_min, coord_def(), 0,
-                                           min_expl_rad, true, true);
-        exp_map_max.init(INT_MAX);
-        tempbeam2.determine_affected_cells(exp_map_max, coord_def(), 0,
-                                           max_expl_rad, true, true);
-    }
+        set_explosion_aim(beam);
+
     return true;
+}
+
+void targetter_beam::set_explosion_aim(bolt tempbeam)
+{
+    set_explosion_target(tempbeam);
+    tempbeam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                      min_expl_rad, true, true);
+    exp_map_max.init(INT_MAX);
+    tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                                      max_expl_rad, true, true);
+}
+
+void targetter_beam::set_explosion_target(bolt &tempbeam)
+{
+    tempbeam.target = origin;
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
+            break;
+        tempbeam.target = c;
+        if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
+            break;
+    }
 }
 
 bool targetter_beam::valid_aim(coord_def a)
@@ -145,6 +160,7 @@ bool targetter_beam::can_affect_outside_range()
 aff_type targetter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
+    int visit_count = 0;
     coord_def c;
     aff_type current = AFF_YES;
     for (auto pc : path_taken)
@@ -159,6 +175,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
         c = pc;
         if (c == loc)
         {
+            visit_count++;
             if (max_expl_rad > 0)
                 on_path = true;
             else if (cell_is_solid(pc))
@@ -171,7 +188,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
 
             }
             else
-                return current;
+                continue;
         }
         if (anyone_there(pc)
             && !penetrates_targets
@@ -183,22 +200,87 @@ aff_type targetter_beam::is_affected(coord_def loc)
             current = AFF_MAYBE;
         }
     }
-    if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
+    if (max_expl_rad > 0)
     {
-        bool aff_wall = beam.can_affect_wall(grd(loc));
-        if (!cell_is_solid(loc) || aff_wall)
+        if ((loc - c).rdist() <= 9)
         {
-            coord_def centre(9,9);
-            if (exp_map_min(loc - c + centre) < INT_MAX)
+            bool aff_wall = beam.can_affect_wall(grd(loc));
+            if (!cell_is_solid(loc) || aff_wall)
             {
-                return (!cell_is_solid(loc) || aff_wall)
-                       ? AFF_YES : AFF_MAYBE;
+                coord_def centre(9,9);
+                if (exp_map_min(loc - c + centre) < INT_MAX)
+                {
+                    return (!cell_is_solid(loc) || aff_wall)
+                           ? AFF_YES : AFF_MAYBE;
+                }
+                if (exp_map_max(loc - c + centre) < INT_MAX)
+                    return AFF_MAYBE;
             }
-            if (exp_map_max(loc - c + centre) < INT_MAX)
-                return AFF_MAYBE;
         }
+        else
+            return on_path ? AFF_TRACER : AFF_NO;
     }
-    return on_path ? AFF_TRACER : AFF_NO;
+
+    return visit_count == 0 ? AFF_NO :
+           visit_count == 1 ? AFF_YES :
+                              AFF_MULTIPLE;
+}
+
+bool targetter_beam::affects_monster(const monster_info& mon)
+{
+    //XXX: this is a disgusting hack that probably leaks information!
+    //     bolt::is_harmless (and transitively, bolt::nasty_to) should
+    //     take monster_infos instead.
+    const monster* m = monster_at(mon.pos);
+    return m && (!beam.is_harmless(m) || beam.nice_to(mon))
+           && !(beam.is_enchantment() && beam.has_saving_throw()
+                && beam.flavour != BEAM_VIRULENCE
+                && mon.res_magic() == MAG_IMMUNE);
+}
+
+targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
+    : targetter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
+{
+}
+
+/**
+ * Will a casting of Violent Unravelling explode a target at the given loc?
+ *
+ * @param c     The location in question.
+ * @return      Whether, to the player's knowledge, there's a valid target for
+ *              Violent Unravelling at the given coordinate.
+ */
+static bool unravelling_explodes_at(const coord_def c)
+{
+    if (you.pos() == c && player_is_debuffable())
+        return true;
+
+    const monster_info* mi = env.map_knowledge(c).monsterinfo();
+    return mi && mi->debuffable();
+}
+
+bool targetter_unravelling::set_aim(coord_def a)
+{
+    if (!targetter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = aim;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    bolt explosion_beam = beam;
+    set_explosion_target(beam);
+    if (unravelling_explodes_at(beam.target))
+        min_expl_rad = 1;
+    else
+        min_expl_rad = 0;
+
+    set_explosion_aim(beam);
+
+    return true;
 }
 
 targetter_imb::targetter_imb(const actor *act, int pow, int r) :
@@ -511,7 +593,7 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
 {
     return in_bounds(loc)
            && !cell_is_solid(loc)
-           && (!avoid_clouds || env.cgrid(loc) == EMPTY_CLOUD);
+           && !(avoid_clouds && cloud_at(loc));
 }
 
 bool targetter_cloud::valid_aim(coord_def a)
@@ -532,7 +614,7 @@ bool targetter_cloud::valid_aim(coord_def a)
         return notify_fail(_wallmsg(a));
     if (agent)
     {
-        if (env.cgrid(a) != EMPTY_CLOUD && avoid_clouds)
+        if (cloud_at(a) && avoid_clouds)
             return notify_fail("There's already a cloud there.");
         ASSERT(_cloudable(a, avoid_clouds));
     }
@@ -702,7 +784,7 @@ static void _make_ray(ray_def &ray, coord_def a, coord_def b)
     // Like beams, we need to allow picking the "better" ray if one is blocked
     // by a wall.
     if (!find_ray(a, b, ray, opc_solid_see))
-        ray = ray_def(geom::ray(a.x + 0.5, a.y + 0.5, b.x + 0.5, b.y + 0.5));
+        ray = ray_def(geom::ray(a.x + 0.5, a.y + 0.5, b.x - a.x, b.y - a.y));
 }
 
 static bool left_of(coord_def a, coord_def b)
@@ -725,12 +807,10 @@ bool targetter_thunderbolt::set_aim(coord_def a)
 
     // For consistency with beams, we need to
     _make_ray(ray, origin, aim);
-    bool hit = true;
-    while ((origin - (p = ray.pos())).rdist() <= range)
+    while ((origin - (p = ray.pos())).rdist() <= range
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
+        if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_YES;
             arc_length[origin.distance_from(p)]++;
@@ -742,12 +822,10 @@ bool targetter_thunderbolt::set_aim(coord_def a)
         return true;
 
     _make_ray(ray, origin, prev);
-    hit = true;
-    while ((origin - (p = ray.pos())).rdist() <= range)
+    while ((origin - (p = ray.pos())).rdist() <= range
+           && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
+        if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
             arc_length[origin.distance_from(p)]++;
@@ -1007,8 +1085,8 @@ bool targetter_shadow_step::set_aim(coord_def a)
 // Determine the set of valid landing sites
 void targetter_shadow_step::set_additional_sites(coord_def a)
 {
-     get_additional_sites(a);
-     additional_sites = temp_sites;
+    get_additional_sites(a);
+    additional_sites = temp_sites;
 }
 
 // Determine the set of valid landing sites for the target, putting the results
@@ -1237,18 +1315,26 @@ bool targetter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
 
-    if (!targetter::set_aim(a))
+    // confused monster targeting might be fuzzed across a wall, so
+    // skip the validation in the parent function and set aim directly.
+    // N.B. We assume this targetter can actually handle an invalid aim
+    // (not all targetters can).
+    if (!agent || agent->is_monster())
+        aim = a;
+    // ... but for UI consistency, players should be restricted to LOS.
+    else if (!targetter::set_aim(a))
+        return false;
+
+    if (a == origin)
         return false;
 
     ray_def orig_ray;
     _make_ray(orig_ray, origin, a);
     coord_def p;
-    bool hit = false;
 
     const double spread_range = (double)(num_beams - 1) * PI / 40.0;
     for (size_t i = 0; i < num_beams; i++)
     {
-        hit = true;
         double spread = (num_beams == 1)
                         ? 0.0
                         : -(spread_range / 2.0)
@@ -1262,11 +1348,10 @@ bool targetter_shotgun::set_aim(coord_def a)
             -orig_ray.r.dir.x * sin(spread) + orig_ray.r.dir.y * cos(spread);
         ray_def tempray = rays[i];
         p = tempray.pos();
-        while ((origin - (p = tempray.pos())).rdist() <= range)
+        while ((origin - (p = tempray.pos())).rdist() <= range
+               && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
         {
-            if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-                hit = false;
-            if (hit && p != origin)
+            if (p != origin)
                 zapped[p] = zapped[p] + 1;
             tempray.advance();
         }
@@ -1284,21 +1369,4 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     return (zapped[loc] >= num_beams) ? AFF_YES :
            (zapped[loc] > 0)          ? AFF_MAYBE
                                       : AFF_NO;
-}
-
-targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
-{
-    targets = target_list;
-    origin = center;
-}
-
-aff_type targetter_list::is_affected(coord_def loc)
-{
-    return find(begin(targets), end(targets), loc) == end(targets) ? AFF_NO
-                                                                   : AFF_YES;
-}
-
-bool targetter_list::valid_aim(coord_def a)
-{
-    return true;
 }

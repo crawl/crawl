@@ -7,6 +7,8 @@
 
 #include "arena.h"
 
+#include <stdexcept>
+
 #include "act-iter.h"
 #include "colour.h"
 #include "command.h"
@@ -45,6 +47,13 @@ extern void world_reacts();
 namespace arena
 {
     static void write_error(const string &error);
+
+    struct arena_error : public runtime_error
+    {
+        explicit arena_error(const string &msg) : runtime_error(msg) {}
+        explicit arena_error(const char *msg) : runtime_error(msg) {}
+    };
+#define arena_error_f(...) arena_error(make_stringf(__VA_ARGS__))
 
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
@@ -244,10 +253,13 @@ namespace arena
         const unwind_stringset mnames(you.uniq_map_names);
 
         string map_name = "arena_" + arena_type;
-        const map_def *map = random_map_for_tag(map_name.c_str());
+        const map_def *map = random_map_for_tag(map_name);
 
         if (!map)
-            throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());
+        {
+            throw arena_error_f("No arena maps named \"%s\"",
+                                arena_type.c_str());
+        }
 
 #ifdef USE_TILE
         // Arena is never saved, so we can skip this.
@@ -259,8 +271,8 @@ namespace arena
         bool success = dgn_place_map(map, false, true);
         if (!success)
         {
-            throw make_stringf("Failed to create arena named \"%s\"",
-                               arena_type.c_str());
+            throw arena_error_f("Failed to create arena named \"%s\"",
+                                arena_type.c_str());
         }
         link_items();
 
@@ -284,8 +296,8 @@ namespace arena
             return "random v random";
     }
 
+    /// @throws arena_error if a monster specification is invalid.
     static void parse_faction(faction &fact, string spec)
-        throw (string)
     {
         fact.clear();
         fact.desc = spec;
@@ -294,12 +306,12 @@ namespace arena
         {
             const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
-                throw err;
+                throw arena_error(err);
         }
     }
 
+    /// @throws arena_error if the monster specification is invalid.
     static void parse_monster_spec()
-        throw (string)
     {
         string spec = find_monster_spec();
 
@@ -318,7 +330,7 @@ namespace arena
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
 
         if (real_summons && respawn)
-            throw (string("Can't set real_summons and respawn at same time."));
+            throw arena_error("Can't set real_summons and respawn at same time.");
 
         if (summon_throttle <= 0)
             summon_throttle = INT_MAX;
@@ -350,11 +362,11 @@ namespace arena
             {
                 place = level_id::parse_level_id(arena_place);
             }
-            catch (const string &err)
+            catch (const bad_level_id &err)
             {
-                throw make_stringf("Bad place '%s': %s",
-                                   arena_place.c_str(),
-                                   err.c_str());
+                throw arena_error_f("Bad place '%s': %s",
+                                    arena_place.c_str(),
+                                    err.what());
             }
         }
 
@@ -369,8 +381,8 @@ namespace arena
 
         if (factions.size() != 2)
         {
-            throw make_stringf("Expected arena monster spec \"xxx v yyy\", "
-                               "but got \"%s\"", spec.c_str());
+            throw arena_error_f("Expected arena monster spec \"xxx v yyy\", "
+                                "but got \"%s\"", spec.c_str());
         }
 
         try
@@ -378,11 +390,11 @@ namespace arena
             parse_faction(faction_a, factions[0]);
             parse_faction(faction_b, factions[1]);
         }
-        catch (const string &err)
+        catch (const arena_error &err)
         {
-            throw make_stringf("Bad monster spec \"%s\": %s",
-                               spec.c_str(),
-                               err.c_str());
+            throw arena_error_f("Bad monster spec \"%s\": %s",
+                                spec.c_str(),
+                                err.what());
         }
 
         if (faction_a.desc == faction_b.desc)
@@ -393,7 +405,6 @@ namespace arena
     }
 
     static void setup_monsters()
-        throw (string)
     {
         faction_a.reset();
         faction_b.reset();
@@ -491,8 +502,8 @@ namespace arena
         crawl_view.mlistsz.y += exp;
     }
 
+    /// @throws arena_error if the specification was invalid.
     static void setup_fight()
-        throw (string)
     {
         //no_messages mx;
         parse_monster_spec();
@@ -909,10 +920,10 @@ namespace arena
         {
             parse_monster_spec();
         }
-        catch (const string &error)
+        catch (const arena_error &error)
         {
-            write_error(error);
-            game_ended_with_error(error);
+            write_error(error.what());
+            game_ended_with_error(error.what());
         }
 
         if (file != nullptr)
@@ -981,10 +992,10 @@ namespace arena
             {
                 setup_fight();
             }
-            catch (const string &error)
+            catch (const arena_error &error)
             {
-                write_error(error);
-                game_ended_with_error(error);
+                write_error(error.what());
+                game_ended_with_error(error.what());
             }
             do_fight();
 
@@ -1121,22 +1132,17 @@ void arena_placed_monster(monster* mons)
                                              : "enters the arena");
 #endif
 
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        short it = mons->inv[i];
-        if (it != NON_ITEM)
-        {
-            item_def &item(mitm[it]);
-            item.flags |= ISFLAG_IDENT_MASK;
+        ii->flags |= ISFLAG_IDENT_MASK;
 
-            // Set the "drop" time here in case the monster drops the
-            // item without dying, like being polymorphed.
-            arena::item_drop_times[it] = arena::turns;
-        }
+        // Set the "drop" time here in case the monster drops the
+        // item without dying, like being polymorphed.
+        arena::item_drop_times[ii->index()] = arena::turns;
     }
 
     if (arena::name_monsters && !mons->is_named())
-        mons->mname = make_name(random_int());
+        mons->mname = make_name();
 
     if (summoned)
     {
@@ -1144,12 +1150,8 @@ void arena_placed_monster(monster* mons)
         if (arena::real_summons)
         {
             mons->del_ench(ENCH_ABJ, true, false);
-            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            {
-                short it = mons->inv[i];
-                if (it != NON_ITEM)
-                    mitm[it].flags &= ~ISFLAG_SUMMONED;
-            }
+            for (mon_inv_iterator ii(*mons); ii; ++ii)
+                ii->flags &= ~ISFLAG_SUMMONED;
         }
 
         if (arena::move_summons)
@@ -1262,16 +1264,12 @@ void arena_monster_died(monster* mons, killer_type killer,
     if (mons->flags & MF_HARD_RESET)
         return;
 
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        int idx = mons->inv[i];
-        if (idx == NON_ITEM)
+        if (ii->flags & ISFLAG_SUMMONED)
             continue;
 
-        if (mitm[idx].flags & ISFLAG_SUMMONED)
-            continue;
-
-        arena::item_drop_times[idx] = arena::turns;
+        arena::item_drop_times[ii->index()] = arena::turns;
     }
 }
 

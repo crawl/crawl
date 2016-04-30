@@ -2,6 +2,7 @@
 
 #include "godpassive.h"
 
+#include <algorithm>
 #include <cmath>
 
 #include "artefact.h"
@@ -9,7 +10,9 @@
 #include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "directn.h"
 #include "env.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
@@ -21,16 +24,297 @@
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-cast.h"
+#include "mon-place.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "throw.h"
+
+// TODO: template out the differences between this and god_power.
+// TODO: use the display method rather than dummy powers in god_powers.
+// TODO: finish using these for implementing passive abilities.
+struct god_passive
+{
+    // 1-6 means it unlocks at that many stars of piety;
+    // 0 means it is always present when in good standing with the god;
+    // -1 means it is present even under penance;
+    int rank;
+    passive_t pasv;
+    const char* gain;
+    const char* loss;
+
+    god_passive(int rank_, passive_t pasv_, const char* gain_,
+                const char* loss_ = "")
+        : rank{rank_}, pasv{pasv_}, gain{gain_}, loss{*loss_ ? loss_ : gain_}
+    { }
+
+    god_passive(int rank_, const char* gain_, const char* loss_ = "")
+        : god_passive(rank_, passive_t::none, gain_, loss_)
+    { }
+
+    void display(bool gaining, const char* fmt) const
+    {
+        const char * const str = gaining ? gain : loss;
+        if (isupper(str[0]))
+            god_speaks(you.religion, str);
+        else
+            god_speaks(you.religion, make_stringf(fmt, str).c_str());
+    }
+};
+
+static const vector<god_passive> god_passives[NUM_GODS] =
+{
+    // no god
+    { },
+
+    // Zin
+    {
+        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
+        { -1, passive_t::resist_mutation, "GOD can shield you from mutations" },
+        { -1, passive_t::resist_polymorph,
+              "GOD can protect you from unnatural transformations" },
+        { -1, passive_t::resist_hell_effects,
+              "GOD can protect you from effects of Hell" },
+        { -1, passive_t::warn_shapeshifter,
+              "GOD will warn you about shapeshifters" },
+    },
+
+    // TSO
+    {
+        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
+        { -1, passive_t::abjuration_protection_hd,
+              "GOD protects your summons from abjuration" },
+        { -1, passive_t::bless_followers_vs_unholy,
+              "GOD blesses your followers when they kill evil or unholy beings"
+        },
+        { -1, passive_t::restore_hp_mp_vs_unholy,
+              "gain health and magic from killing evil or unholy beings" },
+        {  0, passive_t::halo, "are surrounded by divine halo" },
+    },
+
+    // Kikubaaqudgha
+    {
+        {  0, passive_t::deaths_door_hp_boost,
+              "can retain more of your health when standing in Death's Door" },
+        {  2, passive_t::miscast_protection_necromancy,
+              "GOD protects you from necromancy miscasts and mummy death curses"
+        },
+        {  4, passive_t::resist_torment, "GOD protects you from torment" },
+    },
+
+    // Yredelemnul
+    {
+        {  3, passive_t::nightvision, "can see well in the dark" },
+    },
+
+    // Xom
+    { },
+
+    // Vehumet
+    {
+        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+        {  3, passive_t::spells_success, "are less likely to miscast destructive spells" },
+        {  4, passive_t::spells_range, "can cast destructive spells farther" },
+    },
+
+    // Okawaru
+    {
+        // None
+    },
+
+    // Makhleb
+    {
+        { -1, passive_t::restore_hp, "gain health from killing" },
+    },
+
+    // Sif Muna
+    {
+        {  2, passive_t::miscast_protection, "GOD protects you from miscasts" },
+    },
+
+    // Trog
+    {
+        { -1, passive_t::abjuration_protection,
+              "GOD protects your allies from abjuration" },
+        {  0, passive_t::extend_berserk, "can maintain berserk longer and you "
+                                         "are less likely to pass out" },
+    },
+
+    // Nemelex
+    {
+        {  0, passive_t::cards_power, "cards are more powerful" }
+    },
+
+    // Elyvilon
+    {
+        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
+        { -1, passive_t::protect_ally, "can protect the life of your allies" },
+    },
+
+    // Lugonu
+    {
+        { -1, passive_t::safe_distortion,
+              "protected from distortion unwield effects" },
+        { -1, passive_t::map_rot_res_abyss,
+              "remember the shape of the Abyss better" },
+        {  5, passive_t::attract_abyssal_rune,
+              "GOD will help you find the Abyssal rune.",
+              "GOD will no longer help you find the Abyssal rune."
+        },
+    },
+
+    // Beogh
+    {
+        { -1, passive_t::share_exp, "share experience with your followers" },
+        {  0, passive_t::bonus_ac, "gain increased benefits from armour" },
+        {  3, passive_t::convert_orcs, "inspire orcs to join your side" },
+        {  3, passive_t::bless_followers,
+              "GOD will bless your followers.",
+              "GOD will no longer bless your followers."
+        },
+        {  5, passive_t::water_walk, "walk on water" },
+    },
+
+    // Jiyva
+    {
+        { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
+        { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
+        { -1, passive_t::jelly_eating, "GOD allows jellies to devour more items" },
+        { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
+        {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
+        {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
+        {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
+        {  5, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
+        {  6, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
+    },
+
+    // Fedhas
+    {
+        { -1, passive_t::pass_through_plants, "can walk through plants" },
+        { -1, passive_t::shoot_through_plants, "can safely fire through allied plants" },
+        {  0, passive_t::friendly_plants, "Allied plants are friendly towards you" },
+    },
+
+    // Cheibriados
+    {
+        { -1, passive_t::no_haste, "are protected from inadvertent hurry" },
+        { -1, passive_t::slowed, "move less quickly" },
+        {  0, passive_t::slow_orb_run,
+              "GOD will aid your escape with the Orb of Zot.",
+              "GOD will no longer aid your escape with the Orb of Zot."
+        },
+        {  0, passive_t::stat_boost,
+              "GOD supports your attributes",
+              "GOD no longer supports your attributes",
+        },
+        {  0, passive_t::slow_abyss,
+              "GOD will slow the abyss.",
+              "GOD will no longer slow the abyss."
+        },
+        // TODO: this one should work regardless of penance
+        {  1, passive_t::slow_metabolism, "have a slowed metabolism" },
+    },
+
+    // Ashenzari
+    {
+        { -1, passive_t::want_curses, "prefer cursed items" },
+        { -1, passive_t::detect_portals, "sense portals" },
+        { -1, passive_t::identify_items, "sense the properties of items" },
+        {  0, passive_t::auto_map, "have improved mapping abilities" },
+        {  0, passive_t::detect_montier, "sense threats" },
+        {  0, passive_t::detect_items, "sense items" },
+        {  0, passive_t::search_traps, "are better at searching for traps" },
+        {  2, passive_t::bondage_skill_boost,
+              "get a skill boost from cursed items" },
+        {  3, passive_t::sinv, "are clear of vision" },
+        {  4, passive_t::clarity, "are clear of mind" },
+    },
+
+    // Dithmenos
+    {
+        {  1, passive_t::nightvision, "can see well in the dark" },
+        {  1, passive_t::umbra, "are surrounded by an umbra" },
+        // TODO: this one should work regardless of penance.
+        {  3, passive_t::hit_smoke, "emit smoke when hit" },
+        {  4, passive_t::shadow_attacks,
+              "Your attacks are mimicked by a shadow.",
+              "Your attacks are no longer mimicked by a shadow."
+        },
+        {  4, passive_t::shadow_spells,
+              "Your attack spells are mimicked by a shadow.",
+              "Your attack spells are no longer mimicked by a shadow."
+        },
+    },
+
+    // Gozag
+    {
+        { -1, passive_t::detect_gold, "detect gold" },
+        {  0, passive_t::goldify_corpses, "GOD turns all corpses to gold." },
+        {  0, passive_t::gold_aura, "have a gold aura" },
+    },
+
+    // Qazlal
+    {
+        {  0, passive_t::resist_own_clouds, "clouds generated by your actions don't harm you" },
+        {  1, passive_t::storm_shield, "generate elemental clouds to protect you" },
+        {  4, passive_t::upgraded_storm_shield, "chances to be struck by projectiles are reduced" },
+        {  5, passive_t::elemental_adaptation, "elemental attacks leaves you somewhat more resistant to themxo" }
+    },
+
+    // Ru
+    {
+        {  1, passive_t::aura_of_power, "your enemies will sometime fail their attack or even hit themselves" },
+        {  2, passive_t::upgraded_aura_of_power, "enemies that inflict damage upon you will sometime receive a detrimental status effect" },
+    },
+
+    // Pakellas
+    {
+        { -1, passive_t::no_mp_regen, "GOD prevents you from regenerating your mana reserve" },
+        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+    },
+};
+
+bool have_passive(passive_t passive)
+{
+    const auto &pasvec = god_passives[you.religion];
+    return any_of(begin(pasvec), end(pasvec),
+                  [passive] (const god_passive &p) -> bool
+                  {
+                      return p.pasv == passive
+                          && piety_rank() >= p.rank
+                          && (!player_under_penance() || p.rank < 0);
+                  });
+}
+
+bool will_have_passive(passive_t passive)
+{
+    const auto &pasvec = god_passives[you.religion];
+    return any_of(begin(pasvec), end(pasvec),
+                  [passive] (const god_passive &p) -> bool
+                  {
+                      return p.pasv == passive;
+                  });
+}
+
+// Returns a large number (10) if we will never get this passive.
+int rank_for_passive(passive_t passive)
+{
+    const auto &pasvec = god_passives[you.religion];
+    const auto found = find_if(begin(pasvec), end(pasvec),
+                              [passive] (const god_passive &p) -> bool
+                              {
+                                  return p.pasv == passive;
+                              });
+    return found == end(pasvec) ? 10 : found->rank;
+}
 
 int chei_stat_boost(int piety)
 {
-    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
+    if (!have_passive(passive_t::stat_boost))
         return 0;
     if (piety < piety_breakpoint(0))  // Since you've already begun to slow down.
         return 1;
@@ -43,7 +327,7 @@ int chei_stat_boost(int piety)
 void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
-    if (!you_worship(GOD_JIYVA))
+    if (!have_passive(passive_t::jelly_eating))
         return;
 
     if (crawl_state.game_is_sprint())
@@ -55,7 +339,6 @@ void jiyva_eat_offlevel_items()
             break;
 
         const int branch = random2(NUM_BRANCHES);
-        int js = JS_NONE;
 
         // Choose level based on main dungeon depth so that levels of
         // short branches aren't picked more often.
@@ -83,7 +366,7 @@ void jiyva_eat_offlevel_items()
 
             for (stack_iterator si(p); si; ++si)
             {
-                if (!is_item_jelly_edible(*si) || one_chance_in(4))
+                if (!item_is_jelly_edible(*si) || one_chance_in(4))
                     continue;
 
                 if (one_chance_in(4))
@@ -95,58 +378,12 @@ void jiyva_eat_offlevel_items()
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                sacrifice_item_stack(*si, &js);
+                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
-                jiyva_slurp_message(js);
             }
             return;
         }
-    }
-}
-
-void jiyva_slurp_bonus(int item_value, int *js)
-{
-    if (player_under_penance(GOD_JIYVA))
-        return;
-
-    if (you.piety >= piety_breakpoint(1)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && !you_foodless())
-    {
-        //same as a sultana
-        lessen_hunger(70, true);
-        *js |= JS_FOOD;
-    }
-
-    if (you.piety >= piety_breakpoint(3)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.magic_points < you.max_magic_points)
-    {
-        inc_mp(max(random2(item_value), 1));
-        *js |= JS_MP;
-    }
-
-    if (you.piety >= piety_breakpoint(4)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.hp < you.hp_max
-        && !you.duration[DUR_DEATHS_DOOR])
-    {
-        inc_hp(max(random2(item_value), 1));
-        *js |= JS_HP;
-    }
-}
-
-void jiyva_slurp_message(int js)
-{
-    if (js != JS_NONE)
-    {
-        if (js & JS_FOOD)
-            mpr("You feel a little less hungry.");
-        if (js & JS_MP)
-            canned_msg(MSG_GAIN_MAGIC);
-        if (js & JS_HP)
-            canned_msg(MSG_GAIN_HEALTH);
     }
 }
 
@@ -163,13 +400,13 @@ static bool _two_handed()
     if (!wpn)
         return false;
 
-    hands_reqd_type wep_type = you.hands_reqd(*wpn);
+    hands_reqd_type wep_type = you.hands_reqd(*wpn, true);
     return wep_type == HANDS_TWO;
 }
 
 void ash_check_bondage(bool msg)
 {
-    if (!you_worship(GOD_ASHENZARI))
+    if (!will_have_passive(passive_t::bondage_skill_boost))
         return;
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
@@ -398,11 +635,15 @@ bool god_id_item(item_def& item, bool silent)
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
     iflags_t ided = 0;
 
-    if (you_worship(GOD_ASHENZARI))
+    if (have_passive(passive_t::identify_items))
     {
+        // Ashenzari (and other gods with both identify_items and want_curses)
+        // ties identification of weapon/armour plusses to cursed slots.
+        const bool ash = have_passive(passive_t::want_curses);
+
         // Don't identify runes or the orb, since this has no gameplay purpose
         // and might mess up other things.
-        if (item_is_rune(item) || item_is_orb(item))
+        if (item.base_type == OBJ_RUNES || item_is_orb(item))
             return false;
 
         ided = ISFLAG_KNOW_CURSE;
@@ -420,13 +661,13 @@ bool god_id_item(item_def& item, bool silent)
             ided |= ISFLAG_IDENT_MASK;
 
         if (item.base_type == OBJ_ARMOUR
-            && _is_slot_cursed(get_armour_slot(item)))
+            && (!ash || _is_slot_cursed(get_armour_slot(item))))
         {
             ided |= ISFLAG_KNOW_PLUSES;
         }
 
         if (is_weapon(item)
-            && _is_slot_cursed(EQ_WEAPON))
+            && (!ash || _is_slot_cursed(EQ_WEAPON)))
         {
             ided |= ISFLAG_KNOW_PLUSES;
         }
@@ -459,7 +700,7 @@ bool god_id_item(item_def& item, bool silent)
 
 void ash_id_monster_equipment(monster* mon)
 {
-    if (!you_worship(GOD_ASHENZARI))
+    if (!have_passive(passive_t::identify_items))
         return;
 
     bool id = false;
@@ -479,7 +720,7 @@ void ash_id_monster_equipment(monster* mon)
             continue;
         }
 
-        if (x_chance_in_y(piety_rank() - 1, 6))
+        if (x_chance_in_y(piety_rank(), 6))
         {
             if (i == MSLOT_WAND)
             {
@@ -537,7 +778,7 @@ static bool _check_portal(coord_def where)
 
 int ash_detect_portals(bool all)
 {
-    if (!you_worship(GOD_ASHENZARI))
+    if (!have_passive(passive_t::detect_portals))
         return 0;
 
     int portals_found = 0;
@@ -599,7 +840,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
             boost[SK_STAVES] = 1;
 
         }
-        // Rods and staves with an evokable ability but no melee effect.
+        // Staves with an evokable ability but no melee effect.
         else if (is_weapon(*wpn)
                  && item_is_evokable(*wpn, false, false, false, false, false))
         {
@@ -648,7 +889,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // factor * piety_rank * skill_level
+    // factor * (piety_rank + 1) * skill_level
     // low bonus    -> factor = 3
     // medium bonus -> factor = 5
     // high bonus   -> factor = 7
@@ -658,7 +899,7 @@ int ash_skill_boost(skill_type sk, int scale)
     for (skill_type cross : get_crosstrain_skills(sk))
         skill_points += you.skill_points[cross] * 2 / 5;
 
-    skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
+    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
     int level = you.skills[sk];
@@ -670,14 +911,14 @@ int ash_skill_boost(skill_type sk, int scale)
     return min(level, 27 * scale);
 }
 
-int gozag_gold_in_los(actor *who)
+int gozag_gold_in_los(actor *whom)
 {
-    if (!in_good_standing(GOD_GOZAG))
+    if (!have_passive(passive_t::gold_aura))
         return 0;
 
     int gold_count = 0;
 
-    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
+    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
@@ -692,7 +933,7 @@ int gozag_gold_in_los(actor *who)
 
 int qazlal_sh_boost(int piety)
 {
-    if (!in_good_standing(GOD_QAZLAL, 0))
+    if (!have_passive(passive_t::storm_shield))
         return 0;
 
     return min(piety, piety_breakpoint(5)) / 10;
@@ -711,7 +952,7 @@ int tso_sh_boost()
 
 void qazlal_storm_clouds()
 {
-    if (!in_good_standing(GOD_QAZLAL, 0))
+    if (!have_passive(passive_t::storm_shield))
         return;
 
     // You are a *storm*. You are pretty loud!
@@ -724,7 +965,7 @@ void qazlal_storm_clouds()
          ri; ++ri)
     {
         int count = 0;
-        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD)
+        if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
         // No clouds in corridors.
@@ -765,11 +1006,19 @@ void qazlal_storm_clouds()
     }
 }
 
+/**
+ * Handle Qazlal's elemental adaptation.
+ * This should be called (exactly once) for physical, fire, cold, and electrical damage.
+ * Right now, it is called only from expose_player_to_element. This may merit refactoring.
+ *
+ * @param flavour the beam type.
+ * @param strength The adaptations will trigger strength in (11 - piety_rank()) times. In practice, this is mostly called with a value of 2.
+ */
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
-        || !in_good_standing(GOD_QAZLAL, 4)
-        || !x_chance_in_y(strength, 12 - piety_rank()))
+        || !have_passive(passive_t::elemental_adaptation)
+        || !x_chance_in_y(strength, 11 - piety_rank()))
     {
         return;
     }
@@ -798,6 +1047,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
             break;
+        case BEAM_MMISSILE: // for LCS, iron shot
         case BEAM_MISSILE:
         case BEAM_FRAG:
             what = BEAM_MISSILE;
@@ -836,7 +1086,9 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     mprf(MSGCH_GOD, "You feel %sprotected from %s.",
          you.duration[dur] > 0 ? "more " : "", descript.c_str());
 
-    you.increase_duration(dur, 10 * strength, 80);
+    // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
+    // it seems like a constant would be better, based on the typical value of 2.
+    you.increase_duration(dur, 20, 80);
 
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
@@ -850,8 +1102,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
  */
 bool does_ru_wanna_redirect(monster* mon)
 {
-    return you_worship(GOD_RU)
-            && you.piety >= piety_breakpoint(0)
+    return have_passive(passive_t::aura_of_power)
             && !mon->friendly()
             && you.see_cell(mon->pos())
             && !mons_is_firewood(mon)
@@ -879,4 +1130,237 @@ ru_interference get_ru_attack_interference_level()
 
     else
         return DO_NOTHING;
+}
+
+/**
+ * ID the charges of wands and rods in the player's possession.
+ */
+void pakellas_id_device_charges()
+{
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        if (!you.inv[which_item].defined()
+            || !(you.inv[which_item].base_type == OBJ_WANDS
+                 || you.inv[which_item].base_type == OBJ_RODS)
+            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES)
+               && item_ident(you.inv[which_item], ISFLAG_KNOW_TYPE))
+        {
+            continue;
+        }
+        if (you.inv[which_item].base_type == OBJ_RODS)
+            set_ident_flags(you.inv[which_item], ISFLAG_KNOW_TYPE);
+        set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
+        mprf_nocap("%s",
+                   get_menu_colour_prefix_tags(you.inv[which_item],
+                                               DESC_INVENTORY).c_str());
+    }
+}
+
+static bool _shadow_acts(bool spell)
+{
+    const passive_t pasv = spell ? passive_t::shadow_spells
+                                 : passive_t::shadow_attacks;
+    if (!have_passive(pasv))
+        return false;
+
+    const int minpiety = piety_breakpoint(rank_for_passive(pasv) - 1);
+
+    // 10% chance at minimum piety; 50% chance at 200 piety.
+    const int range = MAX_PIETY - minpiety;
+    const int min   = range / 5;
+    return x_chance_in_y(min + ((range - min)
+                                * (you.piety - minpiety)
+                                / (MAX_PIETY - minpiety)),
+                         2 * range);
+}
+
+monster* shadow_monster(bool equip)
+{
+    if (monster_at(you.pos()))
+        return nullptr;
+
+    int wpn_index  = NON_ITEM;
+
+    // Do a basic clone of the weapon.
+    item_def* wpn = you.weapon();
+    if (equip
+        && wpn
+        && is_weapon(*wpn))
+    {
+        wpn_index = get_mitm_slot(10);
+        if (wpn_index == NON_ITEM)
+            return nullptr;
+        item_def& new_item = mitm[wpn_index];
+        if (wpn->base_type == OBJ_STAVES)
+        {
+            new_item.base_type = OBJ_WEAPONS;
+            new_item.sub_type  = WPN_STAFF;
+        }
+        else
+        {
+            new_item.base_type = wpn->base_type;
+            new_item.sub_type  = wpn->sub_type;
+        }
+        new_item.quantity = 1;
+        new_item.rnd = 1;
+        new_item.flags   |= ISFLAG_SUMMONED;
+    }
+
+    monster* mon = get_free_monster();
+    if (!mon)
+    {
+        if (wpn_index)
+            destroy_item(wpn_index);
+        return nullptr;
+    }
+
+    mon->type       = MONS_PLAYER_SHADOW;
+    mon->behaviour  = BEH_SEEK;
+    mon->attitude   = ATT_FRIENDLY;
+    mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                    | MF_WAS_IN_VIEW | MF_HARD_RESET;
+    mon->hit_points = you.hp;
+    mon->set_hit_dice(min(27, max(1,
+                                  you.skill_rdiv(wpn_index != NON_ITEM
+                                                 ? item_attack_skill(mitm[wpn_index])
+                                                 : SK_UNARMED_COMBAT, 10, 20)
+                                  + you.skill_rdiv(SK_FIGHTING, 10, 20))));
+    mon->set_position(you.pos());
+    mon->mid        = MID_PLAYER;
+    mon->inv[MSLOT_WEAPON]  = wpn_index;
+    mon->inv[MSLOT_MISSILE] = NON_ITEM;
+
+    mgrd(you.pos()) = mon->mindex();
+
+    return mon;
+}
+
+void shadow_monster_reset(monster *mon)
+{
+    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_WEAPON]);
+    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_MISSILE]);
+
+    mon->reset();
+}
+
+/**
+ * Check if the player is in melee range of the target.
+ *
+ * Certain effects, e.g. distortion blink, can cause monsters to leave melee
+ * range between the initial hit & the shadow mimic.
+ *
+ * XXX: refactor this with attack/fight code!
+ *
+ * @param target    The creature to be struck.
+ * @return          Whether the player is melee range of the target, using
+ *                  their current weapon.
+ */
+static bool _in_melee_range(actor* target)
+{
+    const int dist = (you.pos() - target->pos()).abs();
+    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
+}
+
+void dithmenos_shadow_melee(actor* target)
+{
+    if (!target
+        || !target->alive()
+        || !_in_melee_range(target)
+        || !_shadow_acts(false))
+    {
+        return;
+    }
+
+    monster* mon = shadow_monster();
+    if (!mon)
+        return;
+
+    mon->target     = target->pos();
+    mon->foe        = target->mindex();
+
+    fight_melee(mon, target);
+
+    shadow_monster_reset(mon);
+}
+
+void dithmenos_shadow_throw(const dist &d, const item_def &item)
+{
+    ASSERT(d.isValid);
+    if (!_shadow_acts(false))
+        return;
+
+    monster* mon = shadow_monster();
+    if (!mon)
+        return;
+
+    int ammo_index = get_mitm_slot(10);
+    if (ammo_index != NON_ITEM)
+    {
+        item_def& new_item = mitm[ammo_index];
+        new_item.base_type = item.base_type;
+        new_item.sub_type  = item.sub_type;
+        new_item.quantity  = 1;
+        new_item.rnd = 1;
+        new_item.flags    |= ISFLAG_SUMMONED;
+        mon->inv[MSLOT_MISSILE] = ammo_index;
+
+        mon->target = clamp_in_bounds(d.target);
+
+        bolt beem;
+        beem.set_target(d);
+        setup_monster_throw_beam(mon, beem);
+        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
+        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
+    }
+
+    shadow_monster_reset(mon);
+}
+
+void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
+{
+    if (!orig_beam)
+        return;
+
+    const coord_def target = orig_beam->target;
+
+    if (orig_beam->target.origin()
+        || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
+        || orig_beam->flavour == BEAM_ENSLAVE
+           && monster_at(target) && monster_at(target)->friendly()
+        || !_shadow_acts(true))
+    {
+        return;
+    }
+
+    monster* mon = shadow_monster();
+    if (!mon)
+        return;
+
+    // Don't let shadow spells get too powerful.
+    mon->set_hit_dice(max(1,
+                          min(3 * spell_difficulty(spell),
+                              you.experience_level) / 2));
+
+    mon->target = clamp_in_bounds(target);
+    if (actor_at(target))
+        mon->foe = actor_at(target)->mindex();
+
+    spell_type shadow_spell = spell;
+    if (!orig_beam->is_enchantment())
+    {
+        shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
+                                           : SPELL_SHADOW_SHARD;
+    }
+
+    bolt beem;
+    beem.target = target;
+    beem.aimed_at_spot = orig_beam->aimed_at_spot;
+
+    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
+         mon->name(DESC_THE).c_str());
+    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
+
+    shadow_monster_reset(mon);
 }
