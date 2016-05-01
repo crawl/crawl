@@ -239,6 +239,7 @@ enum shout_type
     S_ROAR,                 // roar
     S_SCREAM,               // scream
     S_BELLOW,               // bellow (yaks)
+    S_BLEAT,                // bleat (sheep)
     S_TRUMPET,              // trumpets (elephants)
     S_SCREECH,              // screech
     S_BUZZ,                 // buzz
