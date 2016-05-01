@@ -756,7 +756,7 @@ static string _describe_mutant_beast_tier(int tier)
 {
     static const string tier_descs[] = {
         "It is of an unusually buggy age.",
-        "It is larval, freshly emerged from its mother's pouch and weak.",
+        "It is larval and weak, freshly emerged from its mother's pouch.",
         "It is a juvenile, out of the larval stage but below its mature "
         "strength.",
         "It is mature, stronger than a juvenile but weaker than its elders.",
