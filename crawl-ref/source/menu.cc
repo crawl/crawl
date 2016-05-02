@@ -991,7 +991,14 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else if (mons_is_draconian(m->type))
     {
         tileset.emplace_back(tileidx_draco_base(*m), TEX_PLAYER);
-        tileidx_t job = tileidx_draco_job(*m);
+        const tileidx_t job = tileidx_draco_job(*m);
+        if (job)
+            tileset.emplace_back(job, TEX_PLAYER);
+    }
+    else if (mons_is_demonspawn(m->type))
+    {
+        tileset.emplace_back(tileidx_demonspawn_base(*m), TEX_PLAYER);
+        const tileidx_t job = tileidx_demonspawn_job(*m);
         if (job)
             tileset.emplace_back(job, TEX_PLAYER);
     }
