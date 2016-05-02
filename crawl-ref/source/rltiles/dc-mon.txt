@@ -670,7 +670,52 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
-mutant_beast MONS_MUTANT_BEAST
+%sdir mon/mutantbeast
+base1 MUTANT_BEAST_BASE
+base2
+base3
+base4
+base5
+bwing1 MUTANT_BEAST_WING_BASE
+bwing2
+bwing3
+bwing4
+bwing5
+fire1 MUTANT_BEAST_FIRE
+fire2
+fire3
+fire4
+fire5
+weird1 MUTANT_BEAST_WEIRD
+weird2
+weird3
+weird4
+weird5
+horn1 MUTANT_BEAST_HORN
+horn2
+horn3
+horn4
+horn5
+ox1 MUTANT_BEAST_OX
+ox2
+ox3
+ox4
+ox5
+shock1 MUTANT_BEAST_SHOCK
+shock2
+shock3
+shock4
+shock5
+sting1 MUTANT_BEAST_STING
+sting2
+sting3
+sting4
+sting5
+twing1 MUTANT_BEAST_WING_TOP
+twing2
+twing3
+twing4
+twing5
 %sdir mon/unique
 sojobo MONS_SOJOBO
 # staveless must be immediately after the normal tile

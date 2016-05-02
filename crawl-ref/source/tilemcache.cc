@@ -9,6 +9,7 @@
 #include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "mutant-beast.h"
 #include "options.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
@@ -23,6 +24,7 @@ enum mcache_type
     MCACHE_DRACO,
     MCACHE_GHOST,
     MCACHE_DEMON,
+    MCACHE_MBEAST,
     MCACHE_MAX,
 
     MCACHE_nullptr,
@@ -75,6 +77,19 @@ protected:
     tileidx_t m_equ_tile;
     tileidx_t m_shd_tile;
     bool draco;
+};
+
+class mcache_mbeast : public mcache_entry
+{
+public:
+    mcache_mbeast(const monster_info& mon);
+
+    virtual int info(tile_draw_info *dinfo) const override;
+
+    static bool valid(const monster_info& mon);
+
+protected:
+    vector<tileidx_t> layers;
 };
 
 class mcache_ghost : public mcache_entry
@@ -154,6 +169,8 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
     }
     else if (mcache_demon::valid(minf))
         entry = new mcache_demon(minf);
+    else if (mcache_mbeast::valid(minf))
+        entry = new mcache_mbeast(minf);
     else if (mcache_ghost::valid(minf))
         entry = new mcache_ghost(minf);
     else if (mcache_draco::valid(minf))
@@ -1423,7 +1440,7 @@ bool mcache_ghost::transparent() const
 
 mcache_demon::mcache_demon(const monster_info& minf)
 {
-    ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
+    ASSERT(mcache_demon::valid(minf));
 
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
 
@@ -1464,6 +1481,57 @@ int mcache_demon::info(tile_draw_info *dinfo) const
 bool mcache_demon::valid(const monster_info& mon)
 {
     return mon.type == MONS_PANDEMONIUM_LORD;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// mcache_mbeast
+
+mcache_mbeast::mcache_mbeast(const monster_info& minf)
+{
+    ASSERT(mcache_mbeast::valid(minf));
+
+    // the layer order should be:
+    // base < fire < bwing < ox < weird < sting < twing < shock < horn
+    // (lowest to highest)
+
+    const int tier
+        = mutant_beast_tier(minf.props[MUTANT_BEAST_TIER].get_short()) - 1;
+    ASSERT(tier >= 0);
+    ASSERT(tier < (short)tile_player_count(TILEP_MUTANT_BEAST_BASE));
+    layers.push_back(TILEP_MUTANT_BEAST_BASE + tier);
+
+    int facets = 0; // bitfield
+    for (auto facet : minf.props[MUTANT_BEAST_FACETS].get_vector())
+        facets |= (1 << facet.get_int());
+
+    // an ordered list of tiers and corresponding tiles to add.
+    // tiers may appear repeatedly, if they have multiple layers.
+    static const vector<pair<beast_facet, tileidx_t>> facet_layers = {
+        { BF_FIRE,  TILEP_MUTANT_BEAST_FIRE },
+        { BF_BAT,   TILEP_MUTANT_BEAST_WING_BASE },
+        { BF_OX,    TILEP_MUTANT_BEAST_OX },
+        { BF_WEIRD, TILEP_MUTANT_BEAST_WEIRD },
+        { BF_STING, TILEP_MUTANT_BEAST_STING },
+        { BF_BAT,   TILEP_MUTANT_BEAST_WING_TOP },
+        { BF_SHOCK, TILEP_MUTANT_BEAST_SHOCK },
+        { BF_OX,    TILEP_MUTANT_BEAST_HORN },
+    };
+
+    for (auto &facet_layer : facet_layers)
+        if (facets & (1 << facet_layer.first))
+            layers.emplace_back(facet_layer.second + tier);
+}
+
+int mcache_mbeast::info(tile_draw_info *dinfo) const
+{
+    for (int i = 0; i < (int)layers.size(); ++i)
+        dinfo[i].set(layers[i]);
+    return layers.size();
+}
+
+bool mcache_mbeast::valid(const monster_info& mon)
+{
+    return mon.type == MONS_MUTANT_BEAST;
 }
 
 #endif
