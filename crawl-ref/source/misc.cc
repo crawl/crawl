@@ -792,8 +792,11 @@ int apply_chunked_AC(int dam, int ac)
 
 void handle_real_time(chrono::time_point<chrono::system_clock> now)
 {
-    you.real_time_delta = chrono::duration_cast<chrono::milliseconds>(
-            now - you.last_keypress_time);
+    const chrono::milliseconds elapsed =
+     chrono::duration_cast<chrono::milliseconds>(now - you.last_keypress_time);
+    you.real_time_delta = min<chrono::milliseconds>(
+      elapsed,
+      (chrono::milliseconds)(IDLE_TIME_CLAMP * 1000));
     you.real_time_ms += you.real_time_delta;
     you.last_keypress_time = now;
 }
