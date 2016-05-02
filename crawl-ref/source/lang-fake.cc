@@ -74,8 +74,8 @@ static const char* jager[][4] =
   {"hyur","you"},
   {"have","hef"},
   {"wh","v"},
-  {"^w","v"},
-  {"w","v", "o"},
+  {"^w","v", 0, " -"}, // "w - a spear" (inventory letters)
+  {"w","v", "o", " -"},
   {"^ha","he"},
   {"ha","he", "c"},
   {"any","henny"},
