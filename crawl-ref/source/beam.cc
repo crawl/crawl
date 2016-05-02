@@ -3270,8 +3270,7 @@ void bolt::tracer_affect_player()
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
     {
-        // Don't ask if we're aiming at ourselves.
-        if (!aimed_at_feet && !dont_stop_player && !harmless_to_player())
+        if (!dont_stop_player && !harmless_to_player())
         {
             string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
                                          item ? name.c_str() : "beam");
@@ -3280,6 +3279,7 @@ void bolt::tracer_affect_player()
             {
                 friend_info.count++;
                 friend_info.power += you.experience_level;
+                // Don't ask about aiming at ourself twice.
                 dont_stop_player = true;
             }
             else

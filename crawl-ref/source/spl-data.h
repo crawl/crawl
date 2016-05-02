@@ -280,7 +280,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
     SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER
         | SPFLAG_CLOUD,
     6,
     200,
@@ -292,7 +292,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA
         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
     3,
     100,
@@ -473,8 +473,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
-        | SPFLAG_CLOUD,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
     6,
     200,
     5, 5,
@@ -1516,7 +1515,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_EVAPORATE, "Evaporate",
     SPTYP_FIRE | SPTYP_TRANSMUTATION,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
     2,
     50,
     5, 5,
@@ -3376,8 +3375,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLAMING_CLOUD, "Flaming Cloud",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
-        | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
+    SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
+        | SPFLAG_CLOUD,
     5,
     0,
     5, 5,

@@ -38,8 +38,7 @@ enum spflag_type
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
     SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
     SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas
-    SPFLAG_ALLOW_SELF           = 0x800000,      // Not helpful, but may want to
-                                                 // target self
+                               // 0x800000,      // was SPFLAG_ALLOW_SELF
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
