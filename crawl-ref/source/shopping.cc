@@ -1428,6 +1428,12 @@ void ShopMenu::purchase_selected()
          });
     vector<int> bought_indices;
     int outside_items = 0;
+
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items purchased.
+    map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     // Will iterate backwards through the shop (because of the earlier sort).
     // This means we can erase() from shop.stock (since it only invalidates
     // pointers to later elements), but nothing else.
@@ -1450,6 +1456,9 @@ void ShopMenu::purchase_selected()
         bought_indices.push_back(i);
         bought_something = true;
     }
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
