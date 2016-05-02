@@ -1351,11 +1351,8 @@ spret_type your_spells(spell_type spell, int powc,
         args.top_prompt = title;
         if (testbits(flags, SPFLAG_NOT_SELF))
             args.self = CONFIRM_CANCEL;
-        if (testbits(flags, SPFLAG_HELPFUL)
-            || testbits(flags, SPFLAG_ALLOW_SELF))
-        {
+        else
             args.self = CONFIRM_NONE;
-        }
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
