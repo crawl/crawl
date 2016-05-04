@@ -1,4 +1,4 @@
-Stone Soup 0.18 (up to 0.18-a0-1788-g92de1ac)
+Stone Soup 0.18 (20160504)
 --------------------------------------------
 
 Highlights
@@ -83,8 +83,6 @@ Items
     Appears on Zig:27 of all ziggurats and in the Tomb:3 loot.
   - Unrand: The +8 frozen axe "Frostbite" {freezing cloud, *Noise +Fly rC+}, an
     executioner's axe that may create freezing clouds on those it strikes.
-  - Unrand: The +12 armour of Talos {ponderous, rF+}, a troll/ogre-sized plate
-    armour.
   - Unrand: The +3 Warlock's Mirror {reflection}, a buckler that allows
     reflection of piercing effects and enchantments, among other things.
 * The Etheric Cage now multiplies gained contam, instead of generating it.
