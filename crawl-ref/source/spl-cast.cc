@@ -313,6 +313,14 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     return chance * fail_reduce / 100;
 }
 
+/**
+ * Calculate the player's failure rate with the given spell, including all
+ * modifiers. (Armour, mutations, statuses effects, etc.)
+ *
+ * @param spell     The spell in question.
+ * @return          A failure rate. This is *not* a percentage - for a human-
+ *                  readable version, call _get_true_fail_rate().
+ */
 int raw_spell_fail(spell_type spell)
 {
     int chance = 60;
