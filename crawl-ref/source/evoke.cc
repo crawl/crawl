@@ -665,16 +665,6 @@ void zap_wand(int slot)
     // Reset range.
     beam.range = _wand_range(type_zapped);
 
-#ifdef WIZARD
-    if (you.wizard)
-    {
-        string str = wand.inscription;
-        int wiz_range = strip_number_tag(str, "range:");
-        if (wiz_range != TAG_UNFOUND)
-            beam.range = wiz_range;
-    }
-#endif
-
     dec_mp(mp_cost, false);
     if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
         pakellas_evoke_backfire(zap_to_spell(type_zapped));
