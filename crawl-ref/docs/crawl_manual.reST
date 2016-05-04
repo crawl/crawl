@@ -197,18 +197,18 @@ Shield
 Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
-  Abbreviated to "Str". Increases your effectiveness with melee and ranged
-  weapons. Affects your ability to use heavy armours and shields effectively.
+  Abbreviated to "Str". Increases your damage with melee and ranged weapons.
+  Affects your ability to use heavy armours and shields effectively.
 
 Intelligence
   Abbreviated to "Int". Affects how well you can cast spells as well as how much
   nutrition spellcasting takes.
 
 Dexterity
-  Abbreviated to "Dex". Somewhat increases your effectiveness with melee and
-  ranged weapons. Significantly affects your ability to dodge attacks aimed
-  at you, your general effectiveness with shields, your stealth, and your
-  effectiveness when stabbing unaware enemies.
+  Abbreviated to "Dex". Increases your accuracy with melee and ranged weapons.
+  Significantly affects your ability to dodge attacks aimed at you, your general
+  effectiveness with shields, your stealth, and your effectiveness when stabbing
+  unaware enemies.
 
 Attributes grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or while using certain artefacts or abilities.
@@ -269,7 +269,8 @@ Stealth
 There are many ailments or enchantments that can temporarily befall you. These
 are noted in the stats area below the experience line. Many of them are
 self-explanatory, like Pois or Hungry. Many others, however, can be subtle, and
-a full list with explanations is given in Appendix `5. List of Enchantments`_.
+their effects can be examined by pressing '?/T' and searching for the name of
+status effect.
 
 Monsters within your field of vision are listed on a special panel, the monster
 list. Single monsters also get indicators of their health status in the form of
@@ -278,8 +279,8 @@ mode you can directly target single monsters by use of the monster list. Use
 'Ctrl-L' to toggle this.
 
 Sometimes characters will be able to use special abilities, e.g. the Naga's
-ability to spit poison or the magical power to turn invisible granted by a ring.
-These are accessed through the 'a' command.
+ability to spit poison or the magical power to fly granted by a ring. These are
+accessed through the 'a' command.
 
 ****************************************
 D. Exploring the dungeon
@@ -585,8 +586,6 @@ The details screen shows:
 
   * Magical abilities are innate magical effects. They are affected
     by antimagic.
-
-  * Demonic and angelic abilities are similar to magical abilities.
 
   * Divine abilities call upon the monster's god for a magical effect.
     They are prevented by silence, but not affected by antimagic.
@@ -1465,7 +1464,7 @@ Kobolds
   the sort of people you would want to spend much time with, unless you happened
   to be a Kobold yourself.
 
-  They tend to more agile and weaker than Halflings, and are slightly more
+  They tend to be more agile and weaker than Halflings, and are slightly more
   talented at using most types of magic, particularly necromancy. They are
   competent in combat, especially with short blades, maces or crossbows, and are
   also very adept at using magical devices. They often live as scavengers,
@@ -2989,10 +2988,3 @@ Spirit
 
 Inacc
   inaccuracy (affects all attacks that can miss)
-
-Debugging inscriptions
-========================================
-
-If you've entered wizard mode, then you can change the zapping range of a wand
-by inscribing it with 'range:number' (e.g., 'range:50'). This only works for
-wands zapped by the player.
