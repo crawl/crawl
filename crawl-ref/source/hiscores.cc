@@ -2658,7 +2658,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    desc += (is_vowel(auxkilldata[0])) ? "... with an "
+                    desc += auxkilldata == "damnation" ? "... with " :
+                            (is_vowel(auxkilldata[0])) ? "... with an "
                                                        : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();
