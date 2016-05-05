@@ -1707,7 +1707,8 @@ void scorefile_entry::init(time_t dt)
     zigmax     = you.zig_max;
 
     scrolls_used = 0;
-    pair<caction_type, int> p(CACT_USE, OBJ_SCROLLS);
+    dprf("checking %d", caction_compound(OBJ_SCROLLS));
+    pair<caction_type, int> p(CACT_USE, caction_compound(OBJ_SCROLLS));
 
     const int maxlev = min<int>(you.max_level, 27);
     if (you.action_count.count(p))
@@ -1715,7 +1716,7 @@ void scorefile_entry::init(time_t dt)
             scrolls_used += you.action_count[p][i];
 
     potions_used = 0;
-    p = make_pair(CACT_USE, OBJ_POTIONS);
+    p = make_pair(CACT_USE, caction_compound(OBJ_POTIONS));
     if (you.action_count.count(p))
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];

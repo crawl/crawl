@@ -68,5 +68,6 @@ enum block_type    // auxtype for counted actions
 void count_action(caction_type type, int subtype = -32768,
                   int auxtype = -32768);
 pair<int, int> caction_extract_types(int compound_subtype);
+int caction_compound(int subtype = -32768, int auxtype = -32768);
 
 #endif
