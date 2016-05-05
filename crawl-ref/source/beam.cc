@@ -1074,8 +1074,9 @@ void bolt::affect_wall()
         const string veto_key = burns_trees ? "veto_fire" : "veto_disintegrate";
         const bool vetoed = env.markers.property_at(pos(), MAT_ANY, veto_key)
                             == "veto";
+        // XXX: should check env knowledge for feat_is_tree()
         if (god_relevant && feat_is_tree(grd(pos())) && !vetoed
-            && !is_targeting && !dont_stop_trees)
+            && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
         {
             const string prompt =
                 make_stringf("Are you sure you want to %s %s?",
