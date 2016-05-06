@@ -453,9 +453,6 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_damnation
 TILE_EQ: crossbow_fire
-FIRE:    2
-COLD:    -1
-MAGIC:   1
 BOOL:    unholy
 
 NAME:    sword of the Doom Knight
