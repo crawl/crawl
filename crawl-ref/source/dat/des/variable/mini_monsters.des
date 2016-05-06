@@ -5606,7 +5606,7 @@ TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3, 1 (Vaults)
 MONS:   patrolling iron troll
 KMONS:  d = patrolling iron dragon
-KITEM:  d = ring of protection unrand:ring_of_robustness no_pickup
+KITEM:  d = ring_of_robustness no_pickup
 MAP
 ...............
 .vvvvv.@.vvvvv.
@@ -5636,7 +5636,7 @@ MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
 : else
 MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : end
-ITEM:   double sword unrand:sword_of_zonguldrok no_pickup
+ITEM:   sword_of_zonguldrok no_pickup
 MAP
 ...............
 .cc+cccccccccc.
@@ -5661,7 +5661,7 @@ NAME:   minmay_guarded_unrand_curses
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths, Crypt
 WEIGHT: 3
-MONS:   reaper, reaper; scythe unrand:scythe_of_curses, mummy, guardian mummy
+MONS:   reaper, reaper; scythe_of_curses, mummy, guardian mummy
 KPROP:  12' = no_tele_into
 MAP
 ..............
@@ -5689,7 +5689,7 @@ DEPTH:  Depths
 WEIGHT: 3
 MONS:   patrolling crystal guardian
 MONS:   orange crystal statue
-ITEM:   hat unrand:crown_of_dyrovepreva no_pickup
+ITEM:   crown_of_dyrovepreva no_pickup
 KPROP:  12d' = no_tele_into
 SUBST:  ' = .
 MAP
@@ -5735,8 +5735,8 @@ WEIGHT: 3
 # However, the player *can see* that the efreet is wielding an artefact.
 KMONS:  l = fire elemental / nothing w:40
 KFEAT:  l = l
-KMONS:  1 = patrolling Azrael; scimitar unrand:scimitar_of_flaming_death, \
-            patrolling efreet; scimitar unrand:scimitar_of_flaming_death
+KMONS:  1 = patrolling Azrael; scimitar_of_flaming_death, \
+            patrolling efreet; scimitar_of_flaming_death
 KPROP:  1' = no_tele_into
 SUBST:  v : vc
 SUBST:  ' = .
@@ -5764,7 +5764,7 @@ DEPTH:  Depths
 WEIGHT: 3
 MONS:   wizard, orange crystal statue / obsidian statue
 KMONS:  3 = lich / ancient lich
-KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage no_pickup
+KITEM:  3 = ring_of_the_mage no_pickup
 KPROP:  32' = no_tele_into
 SUBST:  ' = .
 MAP
@@ -5882,7 +5882,7 @@ MONS:   ice devil / rust devil / orange demon / red devil / hellwing / \
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb
 KFEAT:  - = altar_makhleb
-KITEM:  - = broad axe unrand:obsidian_axe no_pickup
+KITEM:  - = obsidian_axe no_pickup
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0}
@@ -5910,7 +5910,7 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, Crypt
 WEIGHT: 3
 MONS:   death knight ; \
-        great sword unrand:sword_of_the_doom_knight . \
+        sword_of_the_doom_knight . \
         chain mail w:7 | \
         plate armour w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
@@ -5948,7 +5948,7 @@ WEIGHT:  3
 MONS:    minotaur, fire giant, frost giant, spriggan defender, \
          deep elf blademaster
 SHUFFLE: 12345
-ITEM:    demon blade unrand:autumn_katana
+ITEM:    autumn_katana
 SUBST:   u = t.
 TILE:    t = DNGN_TREE_YELLOW / DNGN_TREE_LIGHTRED w:5 / DNGN_TREE_RED / \
              DNGN_TREE_DEAD w:5

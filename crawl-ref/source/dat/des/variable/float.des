@@ -1146,7 +1146,7 @@ ENDMAP
 NAME:    old_forge
 DEPTH:   D:4-12
 ORIENT:  float
-KITEM:   ? = long sword unrand:singing_sword, damaged short sword, \
+KITEM:   ? = singing_sword, damaged short sword, \
              damaged long sword, damaged hand axe
 KITEM:   ! = damaged executioner's axe, damaged short sword, \
              damaged long sword, damaged morningstar
@@ -1843,7 +1843,7 @@ KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
 KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
             randbook disc:earth
 KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
-            quarterstaff unrand:elemental_staff
+            elemental_staff
 MAP
        ccccccccc
       ccE+'''cwcc
@@ -2712,7 +2712,7 @@ MONS: patrolling iron giant, flying skull
 ITEM: bolt
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
-ITEM: arbalest ego:flaming w:9 ident:type / arbalest unrand:damnation w:1
+ITEM: arbalest ego:flaming w:9 ident:type / damnation w:1
 : if you.in_branch("Dis") then
 SUBST: defg = .
 : end
@@ -2830,7 +2830,7 @@ NAME:   ragdoll_tomb_raider
 TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  D:14-, Depths, Crypt, !Crypt:$
 ORIENT: float
-KITEM:  $ = amulet of regeneration unrand:amulet_of_vitality / acquire any
+KITEM:  $ = amulet_of_vitality / acquire any
 KITEM:  12345d = gold / any / nothing
 KITEM:  67M = superb_item / any
 KFEAT:  ~ = known zot trap

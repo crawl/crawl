@@ -782,22 +782,22 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
           ring of flight not_cursed ident:all
-KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
-              shield unrand:shield_of_the_gong ident:all, \
-              plate armour unrand:maxwells_patent_armour ident:all, \
-              great mace unrand:dark_maul ident:all, \
-              triple crossbow unrand:sniper ident:all, \
-              quarterstaff unrand:majin-bo ident:all
-KITEM:    T = longbow unrand:piercer ident:all, \
-              long sword unrand:singing_sword ident:all, \
-              great mace unrand:mace_of_variability ident:all, \
-              great sword unrand:sword_of_power ident:all, \
-              scythe unrand:scythe_of_curses ident:all, \
-              double sword unrand:sword_of_zonguldrok ident:all, \
-              spear unrand:wyrmbane ident:all, \
-              triple sword unrand:plutonium_sword ident:all, \
-              club unrand:devastator ident:all, \
-              great mace unrand:firestarter ident:all
+KITEM:    R = obsidian_axe ident:all, \
+              shield_of_the_gong ident:all, \
+              maxwells_patent_armour ident:all, \
+              dark_maul ident:all, \
+              sniper ident:all, \
+              majin-bo ident:all
+KITEM:    T = piercer ident:all, \
+              singing_sword ident:all, \
+              mace_of_variability ident:all, \
+              sword_of_power ident:all, \
+              scythe_of_curses ident:all, \
+              sword_of_zonguldrok ident:all, \
+              wyrmbane ident:all, \
+              plutonium_sword ident:all, \
+              devastator ident:all, \
+              firestarter ident:all
 KITEM:    S = disc of storms ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
