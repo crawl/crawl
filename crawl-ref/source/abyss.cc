@@ -2002,7 +2002,8 @@ void abyss_maybe_spawn_xp_exit()
     if (!player_in_branch(BRANCH_ABYSS)
         || !you.props.exists(ABYSS_STAIR_XP_KEY)
         || you.props[ABYSS_STAIR_XP_KEY].get_int() > 0
-        || !in_bounds(you.pos()))
+        || !in_bounds(you.pos())
+        || feat_is_staircase(grd(you.pos())))
     {
         return;
     }
