@@ -2811,7 +2811,8 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_BOLT_OF_FIRE
            || origin_spell == SPELL_BOLT_OF_MAGMA
            || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_EXPLOSIVE_BOLT;
+           || origin_spell == SPELL_EXPLOSIVE_BOLT
+           || origin_spell == SPELL_INNER_FLAME;
 }
 
 bool bolt::can_affect_wall(dungeon_feature_type wall) const
