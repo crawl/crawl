@@ -411,11 +411,11 @@ SUBST: G : YlG
 :   demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
-:   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
-:   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
-:   centaur barding unrand:black_knights_horse_barding w:1 | \
-:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:damnation w:1 | \
-:   double sword unrand:sword_of_zonguldrok w:1")
+:   grand grimoire w:1 | sceptre_of_torment w:1 | \
+:   scythe_of_curses w:1 | majin-bo w:1 | \
+:   black_knights_horse_barding w:1 | \
+:   obsidian_axe w:1 | damnation w:1 | \
+:   sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP
@@ -646,7 +646,7 @@ KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
    potion of mutation | potion of lignification | book of changes w:5 | \
    wand of polymorph | ugly thing chunk | book of transfigurations w:5 | \
    book of alchemy w:5 | randbook disc:transmutation w:5 | \
-   triple sword unrand:plutonium_sword w:1
+   plutonium_sword w:1
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }

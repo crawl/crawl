@@ -897,7 +897,7 @@ ITEM:       potion of beneficial mutation q:1, potion of cure mutation
 : if you.unrands("hat of the alchemist") then
 ITEM:       any jewellery randart
 : else
-ITEM:       any jewellery randart / w:5 hat unrand:hat_of_the_alchemist
+ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 : end
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
@@ -1079,7 +1079,7 @@ LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 2:e / 1:f / * = d:20 e:2
 ITEM:       any scroll / any potion, any book w:2
-ITEM:       double sword unrand:sword_of_zonguldrok
+ITEM:       sword_of_zonguldrok
 KFEAT:      GW = G
 KPROP:      12'def$ZL+ = no_tele_into
 {{
@@ -1193,7 +1193,7 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:15 tile:mons_wucad_mu_statue
-KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
+KITEM:      8 = staff_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1375,7 +1375,7 @@ KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
-             cloak unrand:cloak_of_starlight w:20 / cloak unrand:cloak_of_the_thief
+             cloak_of_starlight w:20 / cloak_of_the_thief
 KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water
 KFEAT:   ^ = known permanent teleport trap
@@ -1519,7 +1519,7 @@ KMONS:      5 = twister
 wizname = crawl.make_name()
 
 kmons ("    6 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
-         .. " ; robe unrand:robe_of_clouds . quick blade ego:electrocution |"
+         .. " ; robe_of_clouds . quick blade ego:electrocution |"
          .. " quick blade ego:freezing | dagger ego:electrocution | dagger ego:freezing")
 }}
 MARKER:     ! = lua:fog_machine { \
@@ -1691,7 +1691,7 @@ KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
             wand of acid / staff of summoning / any book w:30 / any good_item w:15
-KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
+KITEM:      j = majin-bo
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / 1:j / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
@@ -1810,12 +1810,7 @@ MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
                      shadow_creatures.48.magical \
               col:lightmagenta tile:mons_zot_statue
 {{
-if you.unrands("moon troll leather armour") then
-    mons("patrolling moon troll ; troll leather armour randart")
-else
-    mons("patrolling moon troll ; troll leather armour " ..
-         "unrand:moon_troll_leather_armour")
-end
+mons("patrolling moon troll ; moon troll leather armour")
 set_random_mon_list ("rust devil w:20 / eye of devastation / stone giant " ..
                      "/ tentacled starspawn / great orb of eyes " ..
                      "/ neqoxec w:5 / golden eye w:5 / very ugly thing w:5 " ..

@@ -547,12 +547,6 @@ ITEM:     (list of items, separated by comma)
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
-          * "unrand:item_name" will make a given unrandom by a given name,
-            like "long sword unrand:singing_sword". Omit any apostrophes
-            in the name (e.g, unrand:vampires_tooth). If the name has
-            something between double quotes then use that string (e.g,
-            unrand:bloodbane). If the unique already exists, the base item
-            will be given instead.
           * "randart" will force a randart. Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
@@ -627,6 +621,20 @@ ITEM:     (list of items, separated by comma)
           it is equivalent to a KITEM plus a MARKER; the former applies to
           the glyph after all substitutions, while the latter considers only
           those substitutions that precede the delayed_decay call.
+
+          Unrands
+          -------------------
+          You can specify fixed artefacts, e.g. the scythe of curses, by
+          naming them: "KITEM: e = scythe of curses". If the desired unrand's
+          names has something between double quotes, use that: e.g, bloodbane.
+
+          If this unrand has already been placed, a randart of the same type
+          will be created instead. Staff unrands, since they have no
+          corresponding type that can be transformed into a randart, are
+          replaced by an appropriate magical staff. (E.g. a staff of poison.)
+          The lua function you.unrands() ('you.unrands("scythe of curses")')
+          can be used to check whether an unrand has already been seen, if
+          you don't want to use the default fallback.
 
           Randart spell books
           -------------------

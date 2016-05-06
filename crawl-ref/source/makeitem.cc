@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "art-enum.h" // unrand -> magic staff silliness
 #include "artefact.h"
 #include "colour.h"
 #include "decks.h"
@@ -1931,24 +1932,50 @@ int items(bool allow_uniques,
            || item.base_type == OBJ_JEWELLERY && force_type == NUM_JEWELLERY
            || force_type < get_max_subtype(item.base_type));
 
-    item.quantity = 1;          // generally the case
-
     // make_item_randart() might do things differently based upon the
     // acquirement agent, especially for god gifts.
     if (agent != -1 && !is_stackable_item(item))
         origin_acquired(item, agent);
 
+    item.quantity = 1;          // generally the case
+
     if (force_ego < SP_FORBID_EGO)
     {
-        force_ego = -force_ego;
-        if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
+        const int unrand_id = -force_ego;
+        if (get_unique_item_status(unrand_id) == UNIQ_NOT_EXISTS)
         {
-            make_item_unrandart(mitm[p], force_ego);
+            make_item_unrandart(mitm[p], unrand_id);
             ASSERT(mitm[p].is_valid());
             return p;
         }
-        // the base item otherwise
-        item.brand = SPWPN_NORMAL;
+
+        // make a corresponding randart instead.
+        const unrandart_entry* unrand = get_unrand_entry(unrand_id);
+        ASSERT(unrand);
+        item.base_type = unrand->base_type;
+
+        if (unrand->base_type == OBJ_WEAPONS
+            && unrand->sub_type == WPN_STAFF)
+        {
+            item.base_type = OBJ_STAVES;
+            if (unrand_id == UNRAND_WUCAD_MU)
+                force_type = STAFF_ENERGY;
+            else if (unrand_id == UNRAND_OLGREB)
+                force_type = STAFF_POISON;
+            else
+                force_type = OBJ_RANDOM;
+            // XXX: small chance of the other unrand...
+            // (but we won't hit this case until a new staff unrand is added)
+        }
+        else if (unrand->base_type == OBJ_JEWELLERY
+                 && unrand->sub_type == AMU_NOTHING)
+        {
+            force_type = NUM_JEWELLERY;
+        }
+        else
+            force_type = unrand->sub_type;
+
+        item_level = ISPEC_RANDART;
         force_ego = 0;
     }
 
