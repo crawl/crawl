@@ -36,12 +36,12 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 0.2 Release Prerequisites
 
    Before building the packages, you should have the release version tagged
-   with all commits included, including final changelog.txt entry for the
-   version. Additionally this tag should include a commit updating
-   crawl-ref/source/debian/changelog text file.
+   with all commits included, including final `docs/changelog.txt' entry for
+   the version and a commit updating the `crawl-ref/source/debian/changelog'
+   Debian changelog.
 
-   To make this commit, you need to add an entry to this file in the following
-   format:
+   To update the Debian changelog, add an entry at the top of this file in the
+   following format.
 
    crawl (2:VER-1) unstable; urgency=low
 
@@ -50,52 +50,42 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
     -- devname <devemail>  TIMESTAMP
 
    You can copy the previous entry, update the version, and use output from the
-   `date' command to update the timestamp. The format must match the previous
-   entries. A command like the following will give you a valid timestamp:
+   `date' command to update the timestamp. A command like the following will
+   give you a valid timestamp:
 
    date +'%a, %d %b %Y %R:%S %z'
 
-   Before you make the commit with the changelog entry, it's a good idea to
-   make a version tag for testing purposes and try the steps 1 through 6 below
-   to make sure that the changelog entry you made is right and that the package
-   will build with pbuilder. You can make a test tag (using version 0.17.0 as
-   an example) with a command like:
+   The entire entry must mach the format of previous entries; note the lines
+   following the first `crawl' line have leading spaces. Incorrect formatting
+   can cause debuild and hence pbuilder to fail.
 
-   git tag -a 0.17.0
-
-   Any error in the format will happen early in the test package build, so you
-   don't have to wait for it to finish. If the entry seems fine, you can make
-   the commit updating the debian changelog and tag the final release. You can
-   delete your testing tag with:
-
-   git tag -d 0.17.0
-
-   See guide.txt in this directory for details on making the release.
+   Once the file is updated, commit the change to the repository so that it's
+   included in the release version tag.
 
 
 1. Make a copy of the of the source packages and extract
 
-   The source packages should be made using the package-source target. Run the
-   following from the source directory if you haven't yet:
+   The source packages should be made using the `package-source' target. Run
+   the following from the source directory if you haven't yet:
 
    make package-source
 
    This will make several files in the toplevel repo dir, but you specifically
-   need the stone_soup-VER-tar.xz file. Copy this to a location where you'd
-   like to prepare the packages, then exactract the source directory and rename
-   the original file. Using version 0.17 as an example and with ~/crawl-deb as
-   my staging directory:
+   need the `stone_soup-VER-nodeps.tar.xz' file. Copy this to a location where
+   you'd like to prepare the packages, then exactract the source directory and
+   rename the original file. Using version 0.17 as an example and with
+   ~/crawl-deb as my staging directory:
 
    mkdir -p ~/crawl-deb
-   cp stone_soup-0.17.0.tar.xz ~/crawl-deb
+   cp stone_soup-0.17.0-nodeps.tar.xz ~/crawl-deb
    cd ~/crawl-deb
    tar Jxf stone_soup-0.17.0.tar.xz
    mv stone_soup-0.17.0 crawl-0.17.0
-   mv stone_soup-0.17.0.tar.xz crawl-0.17.0.orig.tar.xz
+   mv stone_soup-0.17.0-nodeps.tar.xz crawl-0.17.0.orig.tar.xz
 
-   The name formats of crawl-VER and crawl-VER.orig.EXT for the source
-   directory and archive are specifically looked for by pbuilder, so these
-   renaming steps are required.
+   Note that the name formats of crawl-VER and crawl-VER.orig.EXT for the
+   source directory and archive are specifically looked for by pbuilder, so
+   these file renaming steps are required.
 
 
 2. Copy and update the debian directory in the source directory
@@ -128,7 +118,7 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    You'll need a cowbuilder chroot directory for each architecture you want to
    build. If you're using the example pbuilderrc, we use the scheme
-   `DIST-ARCH.cow'. For example, when building based on debian stable, we'll
+   `DIST-ARCH.cow'. For example, when building based on debian stable, we'd
    use:
 
        /var/cache/pbuilder/stable-amd64.cow
@@ -196,18 +186,22 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    You'll need to upload the deb files above in addition to the
    `crawl_VER-1.dsc' file to the crawl account on CDO. The staging directory
-   ~/upload/deb-files can be used for this, but you'll need to clear out the
-   previous release files.
+   ~/upload/<version>/deb-files can be used for this
 
    We install each release into a component named after the major version of
-   the release. If you're logged into CDO, go to the repository root directory
-   `deb' and install the .deb files and the .dsc file using reprepro. An
-   example using 0.17 and ~/upload/deb-files as a staging directory):
+   the release. If you're logged into CDO, edit the `deb/conf/distributions`
+   file, adding the new version in the "Components:" field before the final
+   entry for "trunk". Example entry with 0.17 added:
+
+   Components: 0.10 0.11 0.12 0.13 0.14 0.15 0.16 0.17 trunk
+
+   Then install the .deb files and the .dsc file using reprepro. An example
+   using 0.17 and `~/upload/0.17.0/deb-files' as a staging directory:
 
    cd ~/deb
-   for i in ../upload/deb-files/*.deb
+   for i in ../upload/0.17.0/deb-files/*.deb
        do reprepro -C 0.17 includedeb crawl "$i"; done
-   for i in ../upload/deb-files/*.dsc
+   for i in ../upload/0.17.0/deb-files/*.dsc
        do reprepro -C 0.17 includedsc crawl "$i"; done
 
    Make sure to use the right major version number in those -C arguments.
@@ -220,13 +214,14 @@ https://www.debian.org/doc/manuals/maint-guide/index.en.html
 
    To test that the repository is working, follow the apt instructions on the
    download page to add the DCSS repo and signing key, being sure to use the
-   correct crawl major version in sources.list. Then update your apt-cache, and
-   install the crawl and crawl-tiles packages on your system.
+   correct crawl major version in sources.list. Then update your apt-cache with
+   `apt-get update`, install the crawl and crawl-tiles packages on your system,
+   and run them.
 
 
 8. Update the download page
 
-   The major version in the example command to add the repository URL should be
+   The version in the Linux example command to add the repository URL should be
    updated. See release.txt for details on keeping the CDO website in sync with
    the website repository.
 
