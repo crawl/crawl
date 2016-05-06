@@ -1823,9 +1823,9 @@ void handle_monster_move(monster* mons)
 
     if (mons->is_projectile())
     {
-        if (iood_act(*mons))
-            return;
-        mons->lose_energy(EUT_MOVE);
+        iood_act(*mons);
+        if (iood_still_moving(*mons))
+            mons->lose_energy(EUT_MOVE);
         return;
     }
 
