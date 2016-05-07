@@ -668,8 +668,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "<w>2</w>.      List of Character Backgrounds\n"
             "<w>3</w>.      List of Skills\n"
             "<w>4</w>.      List of Keys and Commands\n"
-            "<w>5</w>.      List of Enchantments\n"
-            "<w>6</w>.      Inscriptions\n",
+            "<w>5</w>.      Inscriptions\n",
             true, true, _cmdhelp_textfilter);
 
         vector<formatted_string> blines = cols.formatted_lines();
