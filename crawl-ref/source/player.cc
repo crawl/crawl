@@ -2312,8 +2312,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  */
 static int _player_armour_adjusted_dodge_bonus(int scale)
 {
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, MAX_STAT_VALUE,
-            MAX_STAT_VALUE);
+    const int ev_dex = stepdown(you.dex(), 18, ROUND_CLOSE, MAX_STAT_VALUE);
 
     const int dodge_bonus =
         (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
