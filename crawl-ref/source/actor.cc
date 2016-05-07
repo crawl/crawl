@@ -861,8 +861,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     ASSERT(this != other);
     ASSERT(alive());
 
-    if (is_insubstantial())
+    if (is_insubstantial()
+        || mons_is_projectile(type) || mons_is_projectile(other->type))
+    {
         return;
+    }
 
     if (is_monster())
         behaviour_event(as_monster(), ME_WHACK, agent);
