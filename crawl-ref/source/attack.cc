@@ -1256,11 +1256,9 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 {
     int damage_plus = 0;
     if (!aux && using_weapon())
-    {
         damage_plus = get_weapon_plus();
-        if (you.duration[DUR_CORROSION])
-            damage_plus -= 4 * you.props["corrosion_amount"].get_int();
-    }
+    if (you.duration[DUR_CORROSION])
+        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
     damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
