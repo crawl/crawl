@@ -328,6 +328,9 @@ leave a free line between them.
 E) Commenting
 -------------
 
+Comments should not be used to archive old code. If something is no longer
+needed, do not comment it out, simply remove it.
+
 If you feel that a method is complicated enough to be difficult to understand,
 or has restrictions or effects that might not be obvious, add explanatory
 comments before it. You may sign your comments if you wish to.
