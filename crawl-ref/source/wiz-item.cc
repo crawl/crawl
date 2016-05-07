@@ -800,7 +800,12 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         acq_calls++;
         total_quant += item.quantity;
-        subtype_quants[item.sub_type] += item.quantity;
+        // hack alert: put rods & unrands into the end of staff acq
+        const int subtype_index
+            = item.base_type == OBJ_STAVES ? item.sub_type :
+              item.base_type == OBJ_RODS ? NUM_STAVES + item.sub_type :
+              NUM_STAVES + NUM_RODS; // an unrand, WPN_STAFF
+        subtype_quants[subtype_index] += item.quantity;
 
         max_plus    = max(max_plus, item.plus);
         total_plus += item.plus;
@@ -1185,7 +1190,24 @@ static void _debug_acquirement_stats(FILE *ostat)
             continue;
 
         item.sub_type = i;
-        string name = item.name(desc, terse, true);
+
+        if (type == OBJ_STAVES)
+        {
+            if (i == NUM_STAVES + NUM_RODS) // unrand
+            {
+                item.base_type = OBJ_WEAPONS;
+                item.sub_type = WPN_STAFF;
+            }
+            else if (i >= NUM_STAVES) // rod
+            {
+                item.base_type = OBJ_RODS;
+                item.sub_type = i - NUM_STAVES;
+            }
+            else
+                item.base_type = OBJ_STAVES; // actual staff
+        }
+
+        const string name = item.name(desc, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
