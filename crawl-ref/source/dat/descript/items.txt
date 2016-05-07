@@ -889,7 +889,7 @@ ring of fire
 
 A ring that brings its wearer more in contact with the powers of fire. It
 grants resistance to heat and enhances fire magic, but causes vulnerability to
-cold and weakens ice magic.
+cold.
 %%%%
 ring of flight
 
@@ -899,8 +899,7 @@ airborne, making it ill-suited for longer trips above deadly liquid.
 ring of ice
 
 A ring that brings its wearer more in contact with the powers of ice. It grants
-resistance to cold and enhances ice magic, but causes vulnerability to heat and
-weakens fire magic.
+resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
@@ -1188,17 +1187,15 @@ fastened on one end.
 %%%%
 staff of air
 
-A staff that increases the power of air spells cast by its wielder, but
-decreases that of earth spells. It insulates the wielder from electricity. If
-the wielder is skilled in Evocations and Air Magic, they can shock those struck
-by it.
+A staff that increases the power of air spells cast by its wielder, and
+insulates them from electricity. If the wielder is skilled in Evocations and
+Air Magic, they can shock those struck by it.
 %%%%
 staff of cold
 
-A staff that increases the power of ice spells cast by its wielder, but
-decreases that of fire spells. It protects the wielder from the effects of
-cold. If the wielder is skilled in Evocations and Ice Magic, they can freeze
-those struck by it.
+A staff that increases the power of ice spells cast by its wielder, and
+protects them from the effects of cold. If the wielder is skilled in Evocations
+and Ice Magic, they can freeze those struck by it.
 %%%%
 staff of conjuration
 
@@ -1212,9 +1209,9 @@ Necromancy, they can inflict great pain on those living souls they strike.
 %%%%
 staff of earth
 
-A staff that increases the power of earth spells cast by its wielder, but
-decreases that of air spells. If the wielder is skilled in Evocations and Earth
-magic, they can crush those struck by it.
+A staff that increases the power of earth spells cast by its wielder. If the
+wielder is skilled in Evocations and Earth magic, they can crush those struck
+by it.
 %%%%
 staff of energy
 
@@ -1224,10 +1221,9 @@ energy to restore their reserves of magic.
 %%%%
 staff of fire
 
-A staff that increases the power of fire spells cast by its wielder, but
-decreases that of cold spells. It protects the wielder from the effects of
-fire. If the wielder is skilled in Evocations and Fire Magic, they can burn
-those struck by it.
+A staff that increases the power of fire spells cast by its wielder, and
+protects them from the effects of fire. If the wielder is skilled in Evocations
+and Fire Magic, they can burn those struck by it.
 %%%%
 staff of poison
 
