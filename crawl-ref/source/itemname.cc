@@ -2958,7 +2958,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
                 ASSERT(consonant_set.size() > 1);
                 len += consonant_set.size() - 2; // triples increase len
-                name += consonant_set.c_str();
+                name += consonant_set;
             }
             else // Place a single letter instead.
             {

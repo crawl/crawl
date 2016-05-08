@@ -83,7 +83,7 @@ void debug_dump_levgen()
         mpr("Level vaults:");
         for (auto &vault : env.level_vaults)
         {
-            string vault_name = vault->map.name.c_str();
+            string vault_name = vault->map.name;
             if (vault->map.subvault_places.size())
             {
                 vault_name += " [";
