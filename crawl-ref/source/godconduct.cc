@@ -334,7 +334,7 @@ static peeve_map divine_peeves[] =
             1, 1
         } },
         { DID_UNCLEAN, {
-            "you use unclean or chatoic magic or items", true,
+            "you use unclean or chaotic magic or items", true,
             1, 1, " forgives your inadvertent unclean act, just this once."
         } },
         { DID_CHAOS, {
