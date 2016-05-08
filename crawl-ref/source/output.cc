@@ -1950,8 +1950,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
-            const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(col).c_str();
+            string colname = melded ? "darkgrey" : colour_to_str(col);
 
             const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);
@@ -1959,11 +1958,11 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = make_stringf(
                      "<w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
-                     colname,
+                     colname.c_str(),
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
                                  melded ? sw - 43 : sw - 36, false).c_str(),
-                     colname);
+                     colname.c_str());
             equip_chars.push_back(equip_char);
         }
         else if (eqslot == EQ_WEAPON
