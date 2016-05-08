@@ -1695,7 +1695,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             target().x, target().y);
 
         marker_result =
-            env.markers.property_at(target(), MAT_ANY, "portal_debug").c_str();
+            env.markers.property_at(target(), MAT_ANY, "portal_debug");
 
         mprf(MSGCH_DIAGNOSTICS, "Got result: %s!",
             marker_result.empty() ? "nothing" : marker_result.c_str());

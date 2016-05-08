@@ -837,7 +837,7 @@ static void _construct_species_menu(const newgame_def& ng,
     if (_char_defined(defaults))
     {
         string tmp_string = "Tab - ";
-        tmp_string += _char_description(defaults).c_str();
+        tmp_string += _char_description(defaults);
         // Adjust the end marker to aling the - because
         // Tab text is longer by 2
         tmp = new TextItem();
