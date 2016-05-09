@@ -92,7 +92,7 @@ static bool _print_error_screen(const char *message, ...)
 
     // And finally output the message.
     clrscr();
-    formatted_string::parse_string(error_msg, false).display();
+    formatted_string::parse_string(error_msg).display();
     getchm();
     return true;
 }

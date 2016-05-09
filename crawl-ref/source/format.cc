@@ -60,7 +60,6 @@ void display_tagged_block(const string &s)
 }
 
 formatted_string formatted_string::parse_string(const string &s,
-                                                bool eot_ends_format,
                                                 bool (*process)(const string &tag),
                                                 int main_colour)
 {
@@ -70,11 +69,8 @@ formatted_string formatted_string::parse_string(const string &s,
     formatted_string fs;
 
     parse_string1(s, fs, colour_stack, process);
-    if (eot_ends_format)
-    {
-        if (colour_stack.back() != colour_stack.front())
-            fs.textcolour(colour_stack.front());
-    }
+    if (colour_stack.back() != colour_stack.front())
+        fs.textcolour(colour_stack.front());
     return fs;
 }
 

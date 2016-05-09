@@ -2847,7 +2847,7 @@ formatted_string hints_abilities_info()
 
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    return formatted_string::parse_string(text.str(), false);
+    return formatted_string::parse_string(text.str());
 }
 
 // Explains the basics of the skill screen. Don't bother the player with the

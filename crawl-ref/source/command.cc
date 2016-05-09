@@ -644,7 +644,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 #endif
             "<w>V</w>: Version information\n"
             "<w>Home</w>: This screen\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
         cols.add_formatted(
             1,
@@ -669,7 +669,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
             "<w>3</w>.      List of Skills\n"
             "<w>4</w>.      List of Keys and Commands\n"
             "<w>5</w>.      Inscriptions\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
         vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
@@ -727,7 +727,7 @@ void show_specific_help(const string &key)
     {
         formatted_lines.push_back(
             formatted_string::parse_string(
-                line, true, _cmdhelp_textfilter));
+                line, _cmdhelp_textfilter));
     }
     _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }
@@ -743,12 +743,12 @@ void show_targeting_help()
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    cols.add_formatted(0, targeting_help_1, true, true);
+    cols.add_formatted(0, targeting_help_1, true);
 #ifdef WIZARD
     if (you.wizard)
-        cols.add_formatted(0, targeting_help_wiz, true, true);
+        cols.add_formatted(0, targeting_help_wiz, true);
 #endif
-    cols.add_formatted(1, targeting_help_2, true, true);
+    cols.add_formatted(1, targeting_help_2, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }
 void show_interlevel_travel_branch_help()
@@ -794,7 +794,7 @@ static void _add_command(column_composer &cols, const int column,
     cols.add_formatted(
             column,
             line.c_str(),
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 }
 
 static void _add_insert_commands(column_composer &cols, const int column,
@@ -850,7 +850,7 @@ static void _add_insert_commands(column_composer &cols, const int column,
     cols.add_formatted(
             column,
             line.c_str(),
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 }
 
 static void _add_formatted_keyhelp(column_composer &cols)
@@ -861,7 +861,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "To move in a direction or to attack, \n"
             "use the numpad (try Numlock off and \n"
             "on) or vi keys:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
@@ -875,7 +875,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Rest/Search:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
@@ -885,12 +885,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "    something is detected. If Health\n"
             "    and Magic are already full, stops\n"
             "    when 100 turns over (<w>numpad-5</w>)\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>Extended Movement:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 0, CMD_EXPLORE, "auto-explore");
     _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
@@ -901,7 +901,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -910,12 +910,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "            moving if necessary\n"
             "<w>Shift-Tab</w> : attack nearest monster\n"
             "            without moving\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>Item types (and common commands)\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
@@ -957,12 +957,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
             "    Carry it to the surface and win!\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>Other Gameplay Actions:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
                          CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
@@ -980,7 +980,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Non-Gameplay Commands / Info\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
     _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
@@ -1008,18 +1008,18 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Game Saving and Quitting:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
     _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
     _add_command(cols, 1, CMD_QUIT, "Abandon the current character");
     cols.add_formatted(1, "         and quit the game\n",
-                       false, true, _cmdhelp_textfilter);
+                       false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
             "<h>Player Character Information:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
     _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
@@ -1036,7 +1036,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Dungeon Interaction and Information:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
                          CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
@@ -1045,25 +1045,25 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
     cols.add_formatted(1, "         pickup part of a single stack\n",
-                       false, true, _cmdhelp_textfilter);
+                       false, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
     _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
     cols.add_formatted(1, "         in view\n",
-                       false, true, _cmdhelp_textfilter);
+                       false, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
     cols.add_formatted(1, "         slowest ally\n",
-                           false, true, _cmdhelp_textfilter);
+                           false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
             "<h>Item Interaction (inventory):\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
@@ -1098,13 +1098,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Item Interaction (floor):\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
     cols.add_formatted(
             1,
             "    (press twice for pick up menu)\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
@@ -1125,7 +1125,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Additional help:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     string text =
             "Many commands have context sensitive "
@@ -1142,7 +1142,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1, text,
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 }
 
 static void _add_formatted_hints_help(column_composer &cols)
@@ -1154,7 +1154,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             "To move in a direction or to attack, \n"
             "use the numpad (try Numlock off and \n"
             "on) or vi keys:\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
@@ -1165,9 +1165,9 @@ static void _add_formatted_hints_help(column_composer &cols)
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
 
-    cols.add_formatted(0, " ", false, true, _cmdhelp_textfilter);
+    cols.add_formatted(0, " ", false, _cmdhelp_textfilter);
     cols.add_formatted(0, "<w>Shift-Dir.</w> runs into one direction",
-                       false, true, _cmdhelp_textfilter);
+                       false, _cmdhelp_textfilter);
     _add_insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
                          CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
     _add_command(cols, 0, CMD_EXPLORE, "autoexplore", 2);
@@ -1175,7 +1175,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Rest/Search:\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
@@ -1185,19 +1185,19 @@ static void _add_formatted_hints_help(column_composer &cols)
             "    something is detected. If Health\n"
             "    and Magic are already full, stops\n"
             "    when 100 turns over (<w>numpad-5</w>)\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "\n<h>Attacking monsters\n"
             "Walking into a monster will attack it\n"
             "with the wielded weapon or barehanded.",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "\n<h>Ranged combat and magic\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 0, "<w>%</w> to throw/fire missiles",
                          CMD_FIRE, 0);
@@ -1211,7 +1211,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     // Second column.
     cols.add_formatted(
             1, "<h>Item types (and common commands)\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 1,
                          "<console><cyan>)</cyan> : </console>"
@@ -1270,7 +1270,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
-    cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
+    cols.add_formatted(1, " ", false, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
     _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
     _add_command(cols, 1, CMD_DROP, "drop item", 2);
@@ -1279,7 +1279,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Additional important commands\n",
-            true, true, _cmdhelp_textfilter);
+            true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save the game and exit", 2);
     _add_command(cols, 1, CMD_REPLAY_MESSAGES, "show previous messages", 2);
@@ -1296,7 +1296,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             "<w>+</w> and <w>-</w> : cycle between targets\n"
             "<w>f</w> or <w>p</w> : shoot at previous target\n"
             "         if still alive and in sight\n",
-            false, true, _cmdhelp_textfilter);
+            false, _cmdhelp_textfilter);
 }
 
 void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
@@ -1378,7 +1378,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-E</w> dump level builder information\n"
                        "<w>Ctrl-R</w> regenerate current level\n"
                        "<w>P</w>      create a level based on a vault\n",
-                       true, true);
+                       true);
 
     cols.add_formatted(1,
                        "<yellow>Other player related effects</yellow>\n"
@@ -1435,7 +1435,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "(not prefixed with <w>&</w>!)\n"
                        "<w>x?</w>     list targeted commands\n"
                        "<w>X?</w>     list map-mode commands\n",
-                       true, true);
+                       true);
 
     int key = _show_keyhelp_menu(cols.formatted_lines(), false,
                                  Options.easy_exit_menu);
