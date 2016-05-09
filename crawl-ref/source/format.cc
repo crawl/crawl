@@ -68,7 +68,6 @@ void display_tagged_block(const string &s)
  * Take a string and turn it into a formatted_string.
  *
  * @param s             The input string: e.g. "<red>foo</red>".
- *                      XXX: is this used anywhere else?
  * @param main_colour   The initial & default text colour.
  * @return          A formatted string corresponding to the input.
  */
