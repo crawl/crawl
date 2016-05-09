@@ -383,7 +383,7 @@ static void _show_morgue(scorefile_entry& se)
     cols.add_formatted(
             0,
             morgue_text,
-            true, true);
+            true);
 
     vector<formatted_string> blines = cols.formatted_lines();
 

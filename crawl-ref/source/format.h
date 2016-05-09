@@ -48,7 +48,6 @@ public:
 public:
     static formatted_string parse_string(
             const string &s,
-            bool  eot_ends_format = true,
             bool (*process_tag)(const string &tag) = nullptr,
             int main_colour = LIGHTGREY);
 
