@@ -110,7 +110,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
     {
         formatted_string s = formatted_string::parse_string(
-            me->get_text(needs_cursor), nullptr, col);
+            me->get_text(needs_cursor), col);
         s.chop(get_number_of_cols()).display();
     }
     else
@@ -1765,7 +1765,6 @@ void column_composer::clear()
 void column_composer::add_formatted(int ncol,
                                     const string &s,
                                     bool add_separator,
-                                    bool (*tfilt)(const string &),
                                     int  margin)
 {
     ASSERT_RANGE(ncol, 0, (int) columns.size());
@@ -1783,10 +1782,7 @@ void column_composer::add_formatted(int ncol,
     }
 
     for (const string &seg : segs)
-    {
-        newlines.push_back(
-                formatted_string::parse_string(seg, tfilt));
-    }
+        newlines.push_back(formatted_string::parse_string(seg));
 
     strip_blank_lines(newlines);
 
@@ -2938,7 +2934,7 @@ void FormattedTextItem::render()
         m_font_buf.clear();
         // FIXME: m_fg_colour doesn't work here while it works in console.
         textcolour(m_fg_colour);
-        m_font_buf.add(formatted_string::parse_string(m_render_text, nullptr,
+        m_font_buf.add(formatted_string::parse_string(m_render_text,
                                                       m_fg_colour),
                        m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
