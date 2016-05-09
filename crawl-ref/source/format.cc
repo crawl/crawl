@@ -82,7 +82,7 @@ formatted_string formatted_string::parse_string(const string &s,
 
     parse_string1(s, fs, colour_stack);
     if (colour_stack.back() != colour_stack.front())
-        fs.textcolour(colour_stack.front());
+        fs.textcolour(colour_stack.front()); // XXX: this does nothing
     return fs;
 }
 
@@ -114,7 +114,7 @@ void formatted_string::parse_string_to_multiple(const string &s,
         fs.textcolour(colour_stack.back());
         parse_string1(line, fs, colour_stack);
         if (colour_stack.back() != colour_stack.front())
-            fs.textcolour(colour_stack.front());
+            fs.textcolour(colour_stack.front()); // XXX: this does nothing
     }
 }
 
