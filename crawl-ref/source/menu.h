@@ -520,7 +520,6 @@ public:
     void add_formatted(int ncol,
             const string &tagged_text,
             bool  add_separator = true,
-            bool (*text_filter)(const string &tag) = nullptr,
             int   margin = -1);
 
     vector<formatted_string> formatted_lines() const;

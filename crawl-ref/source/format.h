@@ -48,7 +48,6 @@ public:
 public:
     static formatted_string parse_string(
             const string &s,
-            bool (*process_tag)(const string &tag) = nullptr,
             int main_colour = LIGHTGREY);
 
     static void parse_string_to_multiple(const string &s,
@@ -61,8 +60,7 @@ private:
     int find_last_colour() const;
 
     static void parse_string1(const string &s, formatted_string &fs,
-                              vector<int> &colour_stack,
-                              bool (*process_tag)(const string &tag));
+                              vector<int> &colour_stack);
 
 public:
     struct fs_op

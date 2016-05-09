@@ -69,17 +69,11 @@ void display_tagged_block(const string &s)
  * Take a string and turn it into a formatted_string.
  *
  * @param s             The input string: e.g. "<red>foo</red>".
- * @param process       *Probably* a filter for tags; applied to tags to see
- *                      whether contained text is filtered. A return value of
- *                      'false' will result in text being filtered out.
- *                      e.g.: command.cc:_cmdhelp_textfilter().
  *                      XXX: is this used anywhere else?
  * @param main_colour   The initial & default text colour.
  * @return          A formatted string corresponding to the input.
  */
 formatted_string formatted_string::parse_string(const string &s,
-                                                bool (*process)
-                                                    (const string &tag),
                                                 int main_colour)
 {
     // main_colour will usually be LIGHTGREY (default).
@@ -87,7 +81,7 @@ formatted_string formatted_string::parse_string(const string &s,
 
     formatted_string fs;
 
-    parse_string1(s, fs, colour_stack, process);
+    parse_string1(s, fs, colour_stack);
     if (colour_stack.back() != colour_stack.front())
         fs.textcolour(colour_stack.front());
     return fs;
@@ -119,7 +113,7 @@ void formatted_string::parse_string_to_multiple(const string &s,
         out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
-        parse_string1(line, fs, colour_stack, nullptr);
+        parse_string1(line, fs, colour_stack);
         if (colour_stack.back() != colour_stack.front())
             fs.textcolour(colour_stack.front());
     }
@@ -127,8 +121,7 @@ void formatted_string::parse_string_to_multiple(const string &s,
 
 // Helper for the other parse_ methods.
 void formatted_string::parse_string1(const string &s, formatted_string &fs,
-                                     vector<int> &colour_stack,
-                                     bool (*process)(const string &tag))
+                                     vector<int> &colour_stack)
 {
     // FIXME: This is a lame mess, just good enough for the task on hand
     // (keyboard help).
@@ -136,7 +129,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
     string::size_type length = s.length();
 
     string currs;
-    bool masked = false;
 
     for (tag = 0; tag < length; ++tag)
     {
@@ -165,16 +157,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
 
         if (s[tag] != '<' || tag >= length - 1)
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
         // Is this a << escape?
         if (s[tag + 1] == '<')
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             tag++;
             continue;
         }
@@ -183,16 +173,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
         // No closing >?
         if (endpos == string::npos)
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
         string tagtext = s.substr(tag + 1, endpos - tag - 1);
         if (tagtext.empty() || tagtext == "/")
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
@@ -201,17 +189,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             revert_colour = true;
             tagtext = tagtext.substr(1);
             tag++;
-        }
-
-        if (tagtext[0] == '?')
-        {
-            if (tagtext.length() == 1)
-                masked = false;
-            else if (process && !process(tagtext.substr(1)))
-                masked = true;
-
-            tag += tagtext.length() + 1;
-            continue;
         }
 
         if (!currs.empty())
