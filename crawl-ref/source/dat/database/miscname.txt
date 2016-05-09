@@ -321,7 +321,7 @@ The bosom of this dungeon contains the fabled artefact, the Orb of Zot.
 
 Will you be the one to retrieve the fabulous Orb of Zot from the depths?
 
-It is said that the Orb of Zot exists deep within this dungeon, but nobody has ever found it.
+It is said that the Orb of Zot exists deep within this dungeon.
 %%%%
 welcome_spam Halloween
 
