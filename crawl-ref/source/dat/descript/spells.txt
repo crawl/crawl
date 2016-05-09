@@ -260,7 +260,7 @@ Violently mutilates all nearby corpses, wrapping them around the caster to
 serve as both armour and shield. As it takes hits, the carrion will gradually
 fall away, faster and faster as more is piled on, though increased power will
 tighten its grasp on the caster's body. It has no effect on casters in Statue
-Form, or with Stoneskin or Ozocubu's Armour active.
+Form, or with Ozocubu's Armour active.
 %%%%
 Cleansing Flame spell
 
