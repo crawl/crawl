@@ -489,7 +489,10 @@ void formatted_string::fs_op::display() const
     switch (type)
     {
     case FSOP_COLOUR:
-        ::textcolour(x);
+#ifndef USE_TILE_LOCAL
+        if (x < MAX_TERM_COLOUR)
+#endif
+            ::textcolour(x);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());
