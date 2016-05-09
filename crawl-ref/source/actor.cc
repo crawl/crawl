@@ -862,7 +862,8 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     ASSERT(alive());
 
     if (is_insubstantial()
-        || mons_is_projectile(type) || mons_is_projectile(other->type))
+        || mons_is_projectile(type)
+        || other && mons_is_projectile(other->type))
     {
         return;
     }
