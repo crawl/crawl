@@ -117,7 +117,12 @@ static string _item_inscription(const item_def &item)
     }
 
     if (!item.inscription.empty())
-        insparts.push_back(item.inscription);
+    {
+        // sanitize colour tags, to prevent someone from recolouring the
+        // entire description screen or similar. would be nice to support...
+        insparts.push_back(
+            formatted_string::parse_string(item.inscription).tostring());
+    }
 
     if (insparts.empty())
         return "";
