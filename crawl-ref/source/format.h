@@ -54,9 +54,9 @@ public:
                                          vector<formatted_string> &out,
                                          int wrap_col = 0);
 
-    static int get_colour(const string &tag);
 
 private:
+    static int get_colour(const string &tag);
     int find_last_colour() const;
 
     static void parse_string1(const string &s, formatted_string &fs,

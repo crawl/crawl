@@ -40,8 +40,7 @@ int formatted_string::get_colour(const string &tag)
     if (tag == "w")
         return WHITE;
 
-    const int colour = str_to_colour(tag);
-    return colour != -1? colour : LIGHTGREY;
+    return str_to_colour(tag);
 }
 
 // Display a formatted string without printing literal \n.
@@ -212,7 +211,16 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             }
         }
         else
-            colour_stack.push_back(get_colour(tagtext));
+        {
+            const int colour = get_colour(tagtext);
+            if (colour == -1)
+            {
+                fs.textcolour(LIGHTRED);
+                fs.cprintf("<%s>", tagtext.c_str());
+            }
+            else
+                colour_stack.push_back(colour);
+        }
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
         fs.textcolour(colour_stack.back());
