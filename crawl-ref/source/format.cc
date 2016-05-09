@@ -26,6 +26,12 @@ formatted_string::formatted_string(const string &s, int init_colour)
     cprintf(s);
 }
 
+/**
+ * For a given tag, return the corresponding colour.
+ *
+ * @param tag       The tag: e.g. "red", "lightblue", "h", "w".
+ * @return          The corresponding colour (e.g. RED), or LIGHTGREY.
+ */
 int formatted_string::get_colour(const string &tag)
 {
     if (tag == "h")
@@ -59,8 +65,21 @@ void display_tagged_block(const string &s)
     }
 }
 
+/**
+ * Take a string and turn it into a formatted_string.
+ *
+ * @param s             The input string: e.g. "<red>foo</red>".
+ * @param process       *Probably* a filter for tags; applied to tags to see
+ *                      whether contained text is filtered. A return value of
+ *                      'false' will result in text being filtered out.
+ *                      e.g.: command.cc:_cmdhelp_textfilter().
+ *                      XXX: is this used anywhere else?
+ * @param main_colour   The initial & default text colour.
+ * @return          A formatted string corresponding to the input.
+ */
 formatted_string formatted_string::parse_string(const string &s,
-                                                bool (*process)(const string &tag),
+                                                bool (*process)
+                                                    (const string &tag),
                                                 int main_colour)
 {
     // main_colour will usually be LIGHTGREY (default).
@@ -227,6 +246,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
         fs.cprintf(currs);
 }
 
+/// Return a plaintext version of this string, sans tags, colours, etc.
 formatted_string::operator string() const
 {
     string s;
