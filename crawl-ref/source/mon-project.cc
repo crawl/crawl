@@ -29,7 +29,6 @@
 #include "viewchar.h"
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow);
-static bool _projectile_mons_strike(monster &mon, actor &victim);
 
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
@@ -249,13 +248,6 @@ static void _iood_stop(monster& mon, bool msg = true)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
-bool iood_still_moving(const monster &mon)
-{
-    if (mons_is_boulder(&mon))
-        return mon.has_ench(ENCH_ROLLING);
-    return mon.alive();
-}
-
 static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 {
     const float x = mon.props[IOOD_X];
@@ -374,112 +366,14 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     return true;
 }
 
-/**
- * Try to move a given projectile monster (iood/boulder beetle) along its
- * current trajectory.
- *
- * @param mon           The monster in question.
- * @param no_trail      Whether to skip leaving a trail of dust/magic clouds.
- */
-static void _projectile_move(monster& mon, bool no_trail = false)
+// returns true if the orb is gone
+bool iood_act(monster& mon, bool no_trail)
 {
-    const bool iood = mons_is_projectile(mon.type);
-    float x = mon.props[IOOD_X];
-    float y = mon.props[IOOD_Y];
-    const float vx = mon.props[IOOD_VX];
-    const float vy = mon.props[IOOD_VY];
-
-    x += vx;
-    y += vy;
-
-    mon.props[IOOD_X] = x;
-    mon.props[IOOD_Y] = y;
-    mon.props[IOOD_DIST].get_int()++;
-
-    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
-    if (!in_bounds(pos))
-    {
-        _iood_stop(mon);
-        return;
-    }
-
-    if (iood && mon.props.exists(IOOD_FLAWED))
-    {
-        const actor *caster = actor_by_mid(mon.summoner);
-        if (!caster || caster->pos().origin() ||
-            (caster->pos() - pos).rdist() > LOS_RADIUS)
-        {   // not actual vision, because of the smoke trail
-            _iood_stop(mon);
-            return;
-        }
-    }
-
-    if (pos == mon.pos())
-        return;
-
-    if (!no_trail)
-    {
-        place_cloud(iood ? CLOUD_MAGIC_TRAIL : CLOUD_DUST_TRAIL, mon.pos(),
-                    2 + random2(3), &mon);
-    }
-
-    if (cell_is_solid(pos))
-    {
-        const int boulder_noisiness = 5; // don't want this to be big
-        if (you.see_cell(pos) && you.see_cell(mon.pos()))
-        {
-            mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
-                 feature_description_at(pos, false, DESC_A).c_str());
-            if (!iood)
-                noisy(boulder_noisiness, pos);
-        }
-        else if (!iood && !silenced(you.pos()))
-            noisy(boulder_noisiness, pos, "You hear a crash.");
-
-
-        if (iood) // blow up the wall
-            _iood_hit(mon, pos);
-        else // boulders need to stop now
-            _iood_stop(mon);
-
-        return;
-    }
-
-    actor *victim = actor_at(pos);
-    if (victim && _projectile_mons_strike(mon, *victim))
-        return;
-
-    if (!iood_still_moving(mon))
-        return;
-
-    // Boulders stop at lava/water to prevent unusual behaviour;
-    // skimming across the water like a pebble could be justifiable, but
-    // it raises too many questions.
-    if (!iood && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
-    {
-        mprf("%s screeches to a halt.", mon.name(DESC_THE, true).c_str());
-        _iood_stop(mon,false);
-        return;
-    }
-
-    if (!mon.move_to_pos(pos))
-    {
-        _iood_stop(mon);
-        return;
-    }
-
-    // move_to_pos() just trashed the coords, set them again
-    mon.props[IOOD_X] = x;
-    mon.props[IOOD_Y] = y;
-}
-
-void iood_act(monster& mon, bool no_trail)
-{
-    const bool iood = mons_is_projectile(mon.type);
+    bool iood = mons_is_projectile(mon.type);
     ASSERT(iood || mons_is_boulder(&mon));
 
-    const float x = mon.props[IOOD_X];
-    const float y = mon.props[IOOD_Y];
+    float x = mon.props[IOOD_X];
+    float y = mon.props[IOOD_Y];
     float vx = mon.props[IOOD_VX];
     float vy = mon.props[IOOD_VY];
 
@@ -490,13 +384,8 @@ void iood_act(monster& mon, bool no_trail)
     if (!vx && !vy) // not initialized
     {
         _iood_stop(mon);
-        return;
+        return true;
     }
-
-    // DEBUG
-    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
-    ASSERT(!cell_is_solid(pos));
-    // DEBUG
 
     _normalize(vx, vy);
 
@@ -550,179 +439,243 @@ void iood_act(monster& mon, bool no_trail)
         mon.props[IOOD_VY] = vy;
     }
 
-    _projectile_move(mon, no_trail);
-}
+move_again:
 
-/**
- * Slam a projectile monster (rolling boulder beetle or iood) into a victim.
- *
- * @param mon       The projectile monster in question.
- * @param victim    The player or monster being struck.
- * @return          Whether the projectile is done moving for the turn.
- */
-static bool _projectile_mons_strike(monster &mon, actor &victim)
-{
-    const bool iood = mons_is_projectile(mon.type);
-    const coord_def pos = victim.pos();
-    monster* mons = victim.as_monster();
+    x += vx;
+    y += vy;
 
-    if (mons && iood && mons_is_projectile(victim.type))
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
+    mon.props[IOOD_DIST].get_int()++;
+
+    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
+    if (!in_bounds(pos))
     {
-        // Weak orbs just fizzle instead of exploding.
-        if (mons->props[IOOD_DIST].get_int() < 2
-            || mon.props[IOOD_DIST].get_int() < 2)
-        {
-            if (mons->props[IOOD_DIST].get_int() < 2)
-            {
-                if (you.see_cell(pos))
-                    mpr("The orb fizzles.");
-                monster_die(mons, KILL_DISMISSED, NON_MONSTER);
-            }
+        _iood_stop(mon);
+        return true;
+    }
 
-            // Return, if the acting orb fizzled.
-            if (mon.props[IOOD_DIST].get_int() < 2)
+    if (iood && mon.props.exists(IOOD_FLAWED))
+    {
+        const actor *caster = actor_by_mid(mon.summoner);
+        if (!caster || caster->pos().origin() ||
+            (caster->pos() - pos).rdist() > LOS_RADIUS)
+        {   // not actual vision, because of the smoke trail
+            _iood_stop(mon);
+            return true;
+        }
+    }
+
+    if (pos == mon.pos())
+        return false;
+
+    if (!no_trail)
+    {
+        place_cloud(iood ? CLOUD_MAGIC_TRAIL : CLOUD_DUST_TRAIL, mon.pos(),
+                    2 + random2(3), &mon);
+    }
+
+    actor *victim = actor_at(pos);
+    if (cell_is_solid(pos) || victim)
+    {
+        if (cell_is_solid(pos))
+        {
+            const int boulder_noisiness = 5; // don't want this to be big
+            if (you.see_cell(pos) && you.see_cell(mon.pos()))
             {
-                if (you.see_cell(pos))
-                    mpr("The orb fizzles.");
-                monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+                mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
+                     feature_description_at(pos, false, DESC_A).c_str());
+                if (!iood)
+                    noisy(boulder_noisiness, pos);
+            }
+            else if (!iood && !silenced(you.pos()))
+                noisy(boulder_noisiness, pos, "You hear a crash.");
+
+            if (!iood) // boulders need to stop now
+            {
+                _iood_stop(mon);
                 return true;
             }
         }
-        else
+
+        monster* mons = (victim && victim->is_monster()) ?
+            (monster*) victim : 0;
+
+        if (mons && iood && mons_is_projectile(victim->type))
+        {
+            // Weak orbs just fizzle instead of exploding.
+            if (mons->props[IOOD_DIST].get_int() < 2
+                || mon.props[IOOD_DIST].get_int() < 2)
+            {
+                if (mons->props[IOOD_DIST].get_int() < 2)
+                {
+                    if (you.see_cell(pos))
+                        mpr("The orb fizzles.");
+                    monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                }
+
+                // Return, if the acting orb fizzled.
+                if (mon.props[IOOD_DIST].get_int() < 2)
+                {
+                    if (you.see_cell(pos))
+                        mpr("The orb fizzles.");
+                    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+                    return true;
+                }
+            }
+            else
+            {
+                if (mon.observable())
+                    mpr("The orbs collide in a blinding explosion!");
+                else
+                    mpr("You hear a loud magical explosion!");
+                noisy(40, pos);
+                monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                _iood_hit(mon, pos, true);
+                return true;
+            }
+        }
+
+        if (mons && mons_is_boulder(&mon) && mons_is_boulder(mons))
         {
             if (mon.observable())
-                mpr("The orbs collide in a blinding explosion!");
-            else
-                mpr("You hear a loud magical explosion!");
-            noisy(40, pos);
-            monster_die(mons, KILL_DISMISSED, NON_MONSTER);
-            _iood_hit(mon, pos, true);
-            return true;
-        }
-    }
-
-    if (mons && mons_is_boulder(&mon) && mons_is_boulder(mons))
-    {
-        if (mon.observable())
-        {
-            mpr("The boulders collide with a stupendous crash!");
-            noisy(20, pos);
-        }
-        else
-            noisy(20, pos, "You hear a loud crashing sound!");
-
-        // Remove ROLLING and add DAZED
-        _iood_stop(mon);
-        _iood_stop(*mons);
-        if (!mon.check_clarity(false))
-            mon.add_ench(ENCH_CONFUSION);
-        if (!mons->check_clarity(false))
-            mons->add_ench(ENCH_CONFUSION);
-        return true;
-    }
-
-    if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
-    {
-        // Try to swap with the submerged creature.
-        if (mon.swap_with(mons))
-        {
-            dprf("iood: Swapping with a submerged monster.");
-            return true;
-        }
-
-        // if swap fails, move ahead
-        dprf("iood: Boosting above a submerged monster (can't swap).");
-        mon.lose_energy(EUT_MOVE);
-        _projectile_move(mon);
-        return true;
-    }
-
-    if (victim.alive() && _iood_shielded(mon, victim))
-    {
-        item_def *shield = victim.shield();
-        if ((!shield || !shield_reflects(*shield)) && !victim.reflection())
-        {
-            if (victim.is_player())
-                mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-            else
             {
-                simple_monster_message(mons, (" blocks "
-                                              + mon.name(DESC_THE, true)
-                                              + ".").c_str());
+                mpr("The boulders collide with a stupendous crash!");
+                noisy(20, pos);
             }
-            victim.shield_block_succeeded(&mon);
+            else
+                noisy(20, pos, "You hear a loud crashing sound!");
+
+            // Remove ROLLING and add DAZED
             _iood_stop(mon);
+            _iood_stop(*mons);
+            if (!mon.check_clarity(false))
+                mon.add_ench(ENCH_CONFUSION);
+            if (!mons->check_clarity(false))
+                mons->add_ench(ENCH_CONFUSION);
             return true;
         }
 
-        if (victim.is_player())
+        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
         {
-            if (shield && shield_reflects(*shield)) {
-                mprf("Your %s reflects %s!",
-                     shield->name(DESC_PLAIN).c_str(),
-                     mon.name(DESC_THE, true).c_str());
-                ident_reflector(shield);
-            }
-            else // has reflection property not from shield
+            // Try to swap with the submerged creature.
+            if (mon.swap_with(mons))
             {
-                mprf("%s reflects off an invisible shield around you!",
-                     mon.name(DESC_THE, true).c_str());
+                dprf("iood: Swapping with a submerged monster.");
+                return false;
+            }
+            else // if swap fails, move ahead
+            {
+                dprf("iood: Boosting above a submerged monster (can't swap).");
+                mon.lose_energy(EUT_MOVE);
+                goto move_again;
             }
         }
-        else if (you.see_cell(pos))
+
+        if (victim && _iood_shielded(mon, *victim))
         {
-            if (victim.observable())
+            item_def *shield = victim->shield();
+            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
-                if (shield && shield_reflects(*shield))
+                if (victim->is_player())
+                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
+                else
                 {
-                    mprf("%s reflects %s with %s %s!",
-                         victim.name(DESC_THE, true).c_str(),
-                         mon.name(DESC_THE, true).c_str(),
-                         mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         shield->name(DESC_PLAIN).c_str());
+                    simple_monster_message(mons, (" blocks "
+                        + mon.name(DESC_THE, true) + ".").c_str());
+                }
+                victim->shield_block_succeeded(&mon);
+                _iood_stop(mon);
+                return true;
+            }
+
+            if (victim->is_player())
+            {
+                if (shield && shield_reflects(*shield)) {
+                    mprf("Your %s reflects %s!",
+                        shield->name(DESC_PLAIN).c_str(),
+                        mon.name(DESC_THE, true).c_str());
                     ident_reflector(shield);
+                }
+                else // has reflection property not from shield
+                {
+                    mprf("%s reflects off an invisible shield around you!",
+                            mon.name(DESC_THE, true).c_str());
+                }
+            }
+            else if (you.see_cell(pos))
+            {
+                if (victim->observable())
+                {
+                    if (shield && shield_reflects(*shield))
+                    {
+                        mprf("%s reflects %s with %s %s!",
+                            victim->name(DESC_THE, true).c_str(),
+                            mon.name(DESC_THE, true).c_str(),
+                            mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                            shield->name(DESC_PLAIN).c_str());
+                        ident_reflector(shield);
+                    }
+                    else
+                    {
+                        mprf("%s reflects off an invisible shield around %s!",
+                            mon.name(DESC_THE, true).c_str(),
+                            victim->name(DESC_THE, true).c_str());
+
+                        item_def *amulet = victim->slot_item(EQ_AMULET);
+                        if (amulet)
+                            ident_reflector(amulet);
+                    }
                 }
                 else
                 {
-                    mprf("%s reflects off an invisible shield around %s!",
-                         mon.name(DESC_THE, true).c_str(),
-                         victim.name(DESC_THE, true).c_str());
-
-                    item_def *amulet = victim.slot_item(EQ_AMULET);
-                    if (amulet)
-                        ident_reflector(amulet);
+                    mprf("%s bounces off thin air!",
+                        mon.name(DESC_THE, true).c_str());
                 }
             }
-            else
-            {
-                mprf("%s bounces off thin air!",
-                     mon.name(DESC_THE, true).c_str());
-            }
+            victim->shield_block_succeeded(&mon);
+
+            // mid_t is unsigned so won't fit in a plain int
+            mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;
+            mon.props[IOOD_VX] = vx = -vx;
+            mon.props[IOOD_VY] = vy = -vy;
+
+            // Need to get out of the victim's square.
+
+            // If you're next to the caster and both of you wear shields of
+            // reflection, this can lead to a brief game of ping-pong, but
+            // rapidly increasing shield penalties will make it short.
+            mon.lose_energy(EUT_MOVE);
+            goto move_again;
         }
-        victim.shield_block_succeeded(&mon);
 
-        // mid_t is unsigned so won't fit in a plain int
-        mon.props[IOOD_REFLECTOR] = (int64_t) victim.mid;
-        // this is weird when gell's gravitas is involved
-        mon.props[IOOD_VX] = -mon.props[IOOD_VX].get_float();
-        mon.props[IOOD_VY] = -mon.props[IOOD_VY].get_float();
-
-        // Need to get out of the victim's square.
-
-        // If you're next to the caster and both of you wear shields of
-        // reflection, this can lead to a brief game of ping-pong, but
-        // rapidly increasing shield penalties will make it short.
-        mon.lose_energy(EUT_MOVE);
-        _projectile_move(mon);
-        return true;
+        if (_iood_hit(mon, pos))
+        {
+            if (!iood)
+                _iood_stop(mon);
+            return true;
+        }
     }
 
-    if (_iood_hit(mon, pos))
+    // Boulders stop at lava/water to prevent unusual behaviour;
+    // skimming across the water like a pebble could be justifiable, but
+    // it raises too many questions.
+    if (!iood && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
     {
-        if (!iood)
-            _iood_stop(mon);
+        mprf("%s screeches to a halt.", mon.name(DESC_THE, true).c_str());
+        _iood_stop(mon,false);
         return true;
     }
+
+    if (!mon.move_to_pos(pos))
+    {
+        _iood_stop(mon);
+        return true;
+    }
+
+    // move_to_pos() just trashed the coords, set them again
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
 
     return false;
 }
