@@ -790,7 +790,7 @@ static monsterentry mondata[] =
 
 {
     MONS_DEEP_ELF_ARCHER, 'e', BROWN, "deep elf archer",
-    M_WARM_BLOOD | M_ARCHER | M_DONT_MELEE | M_SPEAKS,
+    M_WARM_BLOOD | M_ARCHER | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
