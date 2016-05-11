@@ -550,8 +550,10 @@ ENDMAP
 
 # This vault can be highly OOD, which is why lindwurms are used in the
 # first place; unlike most dragon-types, lindwurms are flightless.
+# The no_trap_gen tag prevents teleport traps (or shafts) that might set
+# the lindwurms free.
 NAME:   minmay_lindwurm_lava
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:8-, Lair:2-
 KPROP:  '*|1> = no_tele_into
 KMONS:  1 = lindwurm
