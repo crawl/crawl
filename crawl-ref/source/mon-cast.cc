@@ -1575,7 +1575,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
     int affected = 0;
 
     vector<monster* > seen_affected;
-    for (monster_near_iterator mi(&chief, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(chief.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         const monster *mons = *mi;
         // can't buff yourself
@@ -1656,7 +1656,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
     int affected = 0;
 
     vector<monster* > seen_affected;
-    for (monster_near_iterator mi(&mon, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(mon.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         const monster *mons = *mi;
         // can't buff yourself
@@ -2098,7 +2098,7 @@ static bool _incite_monsters(const monster* mon, bool actual)
     // Only things both in LOS of the inciter and within radius 3.
     const int radius = 3;
     int goaded = 0;
-    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())
             continue;
@@ -2697,7 +2697,7 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
     tracer.foe_ratio = 0;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (agent == *ai || !agent->can_see(**ai) || !vulnerable(*ai))
+        if (agent == *ai || !vulnerable(*ai))
             continue;
 
         if (mons_aligned(agent, *ai))
@@ -2750,12 +2750,8 @@ static void _cast_black_mark(monster* agent)
 {
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (!ai->visible_to(agent)
-            || ai->is_player()
-            || !mons_aligned(*ai, agent))
-        {
+        if (ai->is_player() || !mons_aligned(*ai, agent))
             continue;
-        }
         monster* mon = ai->as_monster();
         if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(mon))
         {
@@ -2770,12 +2766,8 @@ void aura_of_brilliance(monster* agent)
     bool did_something = false;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (!ai->visible_to(agent)
-            || ai->is_player()
-            || !mons_aligned(*ai, agent))
-        {
+        if (ai->is_player() || !mons_aligned(*ai, agent))
             continue;
-        }
         monster* mon = ai->as_monster();
         if (_valid_aura_of_brilliance_ally(agent, mon))
         {
@@ -2847,7 +2839,7 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(**ai))
+        if (hitfunc.is_affected(ai->pos()) == AFF_NO)
             continue;
 
         if (mons_aligned(agent, *ai))
@@ -7996,7 +7988,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         if (!foe)
             return true;
 
-        for (actor_near_iterator ai(foe, LOS_SOLID); ai; ++ai)
+        for (actor_near_iterator ai(foe->pos(), LOS_SOLID); ai; ++ai)
             if (*ai != mon && *ai != foe && !ai->is_stationary()
                 && mon->can_see(**ai))
             {
