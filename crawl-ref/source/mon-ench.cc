@@ -1119,11 +1119,8 @@ static bool _apply_grasping_roots(monster* mons)
     bool found_hostile = false;
     for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mons_aligned(mons, *ai) || ai->is_insubstantial()
-            || !ai->visible_to(mons))
-        {
+        if (mons_aligned(mons, *ai) || ai->is_insubstantial())
             continue;
-        }
 
         found_hostile = true;
 
@@ -1273,7 +1270,7 @@ static void _merfolk_avatar_song(monster* mons)
     // Only call up drowned souls if we're largely alone; otherwise our
     // mesmerisation can support the present allies well enough.
     int ally_hd = 0;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (*mi != mons && mons_aligned(mons, *mi) && mons_is_threatening(*mi)
             && mi->type != MONS_DROWNED_SOUL)

@@ -2765,7 +2765,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     }
     else if (mon_tracer)
     {
-        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
         {
             if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
