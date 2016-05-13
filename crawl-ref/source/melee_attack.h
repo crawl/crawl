@@ -121,7 +121,6 @@ private:
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
 
-    int  player_aux_stat_modify_damage(int damage);
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage) override;
 

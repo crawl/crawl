@@ -1297,7 +1297,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
 
-    aux_damage  = player_aux_stat_modify_damage(aux_damage);
+    aux_damage  = player_stat_modify_damage(aux_damage);
 
     aux_damage  = random2(aux_damage);
 
@@ -1435,21 +1435,6 @@ void melee_attack::player_warn_miss()
     // Upset only non-sleeping non-fleeing monsters if we missed.
     if (!defender->asleep() && !mons_is_fleeing(defender->as_monster()))
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
-}
-
-int melee_attack::player_aux_stat_modify_damage(int damage)
-{
-    int dammod = 20;
-
-    if (you.strength() > 10)
-        dammod += random2(you.strength() - 9);
-    else if (you.strength() < 10)
-        dammod -= random2(11 - you.strength());
-
-    damage *= dammod;
-    damage /= 20;
-
-    return damage;
 }
 
 // A couple additive modifiers that should be applied to both unarmed and
@@ -3359,7 +3344,7 @@ void melee_attack::do_minotaur_retaliation()
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
-        dmg = player_aux_stat_modify_damage(dmg);
+        dmg = player_stat_modify_damage(dmg);
         dmg = random2(dmg);
         dmg = player_apply_fighting_skill(dmg, true);
         dmg = player_apply_misc_modifiers(dmg);
