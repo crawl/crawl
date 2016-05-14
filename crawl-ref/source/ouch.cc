@@ -818,11 +818,7 @@ static int _apply_extra_harm(int dam, mid_t source)
     }
 
     if (do_extra_harm)
-    {
-        if (you.extra_harm())
-            did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
         return dam * 5 / 4;
-    }
 
     return dam;
 }
