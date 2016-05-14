@@ -562,8 +562,7 @@ Aborts an ongoing skill transfer.
 Shadow Step ability
 
 Allows you to step into the shadow of any creature within your umbra, as long
-as they are immobile or asleep, landing adjacent to the target. (Invisible
-creatures don't cast shadows.)
+as they are immobile or asleep, landing adjacent to the target.
 %%%%
 Shadow Form ability
 

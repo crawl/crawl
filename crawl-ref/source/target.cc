@@ -1100,7 +1100,8 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
 
     const actor *victim = actor_at(a);
     if (!victim || !victim->as_monster()
-        || mons_is_firewood(victim->as_monster()) || victim->invisible()
+        || mons_is_firewood(victim->as_monster())
+        || !agent->can_see(*victim)
         || !victim->umbraed())
     {
         no_landing_reason = BLOCKED_NO_TARGET;
