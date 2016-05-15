@@ -1588,22 +1588,23 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
                            killer == KILL_YOU_CONF ||
                            killer == KILL_YOU_MISSILE;
     const bool pet_kill = _is_pet_kill(killer, killer_index);
-    const bool your_fault = your_kill && killer_index != YOU_FAULTLESS
-                            || pet_kill;
 
     // Pretend the monster is already dead, so that make_god_gifts_disappear
     // (and similar) don't kill it twice.
     unwind_var<int> fake_hp(mons.hit_points, 0);
 
     // if you or your pets didn't do it, no one cares
-    if (!your_fault)
+    if (!your_kill && !pet_kill)
         return;
 
+    // player gets credit for reflection kills, but not blame
+    const bool blameworthy = god_hates_killing(you.religion, &mons)
+                             && killer_index != YOU_FAULTLESS;
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
     // XXX: this will break holy death curses if they're added back...
     // but tbh that shouldn't really be in conducts anyway
-    if (!maybe_good_kill && !god_hates_killing(you.religion, &mons))
+    if (!maybe_good_kill && !blameworthy)
         return;
 
     mon_holy_type holiness = mons.holiness();
