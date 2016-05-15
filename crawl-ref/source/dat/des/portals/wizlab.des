@@ -777,6 +777,8 @@ KFEAT:      ^ = stone_wall
 COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
+MARKER:     x = lua:portal_desc {wall_drop=1}
+MARKER:     + = lua:portal_desc {wall_drop=1}
 TILE:       !x = wall_sandstone
 {{
 local box_marker = TriggerableFunction:new {
