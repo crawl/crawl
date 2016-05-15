@@ -1627,6 +1627,7 @@ NAME:    johnstein_pakellas_dig
 DEPTH:   D:2-
 TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
 KFEAT:   _ = altar_pakellas
+KPROP:   _ = no_tele_into
 KITEM:   ' = wand of digging ident:all charges:1 / \
              wand of disintegration ident:all charges:1 w:2
 : interest_check(_G)
