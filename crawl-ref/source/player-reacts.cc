@@ -757,7 +757,7 @@ static void _decrement_durations()
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
-    you.maybe_degrade_bone_armour(1, delay);
+    you.maybe_degrade_bone_armour(delay);
 
     if (!env.sunlight.empty())
         process_sunlights();

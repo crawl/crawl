@@ -8510,10 +8510,9 @@ string player::hands_act(const string &plural_verb,
  * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
  * 90% at ten...
  *
- * @param mult    A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
  * @param trials  The number of times to potentially shed armour.
  */
-void player::maybe_degrade_bone_armour(int mult, int trials)
+void player::maybe_degrade_bone_armour(int trials)
 {
     if (attribute[ATTR_BONE_ARMOUR] <= 0)
         return;
@@ -8523,9 +8522,9 @@ void player::maybe_degrade_bone_armour(int mult, int trials)
     for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
         denom = div_rand_round(denom * 4, 5);
 
-    const int degraded_armour = binomial(trials, mult, denom);
+    const int degraded_armour = binomial(trials, 1, denom);
     dprf("degraded armour? (%d armour, %d/%d in %d trials): %d",
-         attribute[ATTR_BONE_ARMOUR], mult, denom, trials, degraded_armour);
+         attribute[ATTR_BONE_ARMOUR], 1, denom, trials, degraded_armour);
     if (degraded_armour <= 0)
         return;
 

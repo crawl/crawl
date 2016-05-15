@@ -3410,7 +3410,6 @@ bool bolt::misses_player()
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
-            hit_shield(&you);
             if (!penet)
                 return true;
         }
@@ -4746,16 +4745,6 @@ bool bolt::god_cares() const
     return effect_known || effect_wanton;
 }
 
-/** Apply effects of this beam to a blocker.
- *
- *  @param blocker the actor that just blocked.
- */
-void bolt::hit_shield(actor* blocker) const
-{
-    if (blocker->is_player())
-        you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
-}
-
 // Return true if the block succeeded (including reflections.)
 bool bolt::attempt_block(monster* mon)
 {
@@ -4814,7 +4803,6 @@ bool bolt::attempt_block(monster* mon)
                 finish_beam();
             }
 
-            hit_shield(mon);
             mon->shield_block_succeeded(agent());
         }
     }

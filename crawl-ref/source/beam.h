@@ -280,7 +280,6 @@ public:
 private:
     void internal_ouch(int dam);
     // for both
-    void hit_shield(actor* victim) const;
     void knockback_actor(actor *act, int dam);
 
     // tracers

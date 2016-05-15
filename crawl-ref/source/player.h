@@ -521,7 +521,7 @@ public:
         override;
 
     int base_ac_from(const item_def &armour, int scale = 1) const;
-    void maybe_degrade_bone_armour(int mult, int trials = 1);
+    void maybe_degrade_bone_armour(int trials);
 
     int inaccuracy() const override;
 
