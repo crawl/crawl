@@ -155,6 +155,7 @@ Okapi
 # not strictly an animal... :)
 Monkey's Uncle
 
+Circus Animals
 #classical mythical animals
 Cockatrice
 
