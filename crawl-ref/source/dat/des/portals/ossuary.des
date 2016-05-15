@@ -684,9 +684,9 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    w:15 withered plant /\
-         mummy
+         mummy \
          spells:throw_frost.18.wizard;slow.27.wizard \
-         name:magical n_adj n_noc /\
+         name:magical n_suf /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)
