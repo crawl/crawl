@@ -155,6 +155,7 @@ Okapi
 # not strictly an animal... :)
 Monkey's Uncle
 
+Circus Animals
 #classical mythical animals
 Cockatrice
 
@@ -237,6 +238,8 @@ Insecurity
 Vexation
 
 Disappointment
+
+Entitlement
 
 # inaction
 Lifelessness
@@ -336,6 +339,14 @@ Contentment
 
 Mirth
 
+Tender Moments
+
+Lucidity
+
+Knowledge
+
+New Discoveries
+
 # divine events
 Divine Compulsion
 
@@ -411,6 +422,10 @@ Resilience
 Fashionability
 
 Impressiveness
+
+Gravitas
+
+Resonance
 %%%%
 _wacky_armour_name_
 
@@ -489,6 +504,20 @@ Forking Paths
 the Pink Corner
 
 Philately
+
+Synchronized Stabbing
+
+This Worked Last Time
+
+Goodbye, My Love
+
+Precision Catastrophes
+
+Poor Excuses
+
+Dramatic Exits
+
+Thank Me Later
 %%%%
 # Lemuel's suggestions
 _celestial_bodies_
@@ -653,6 +682,12 @@ Pirate
 Buccaneer
 
 Moneychanger
+
+Thinker
+
+Learner
+
+Teacher
 %%%%
 # something for Xom
 _game_name_
@@ -668,7 +703,17 @@ Parlour Games
 
 the Game of Kings
 
+Dice, Bag, and Bottle
+
+Spin the Turtle
+
+You Go First
+
+Over Soon
+
 # children's games
+Never Talk to Strangers
+
 Peek-a-Boo
 
 Hide-and-Seek
@@ -765,6 +810,8 @@ the Burgomaster
 the Failed Coup
 
 Sovereignty
+
+the Greedy
 %%%%
 _other_armour_name_
 
@@ -787,6 +834,14 @@ Sorcery
 Broken Taboos
 
 Bedevilment
+
+Muttered Phrases
+
+the Arcane
+
+Words of Power
+
+Gestures
 
 # other
 Crawling
@@ -826,6 +881,24 @@ Wasted Space
 the Other World
 
 Inevitability
+
+Perfidy
+
+Dogmatism
+
+Happy Babbling
+
+the Slightly Bent
+
+the Moon Troll
+
+God Told Me To
+
+Time Monsters
+
+the Sacrificial Victim
+
+Undesirable Species
 %%%%
 _card_
 
