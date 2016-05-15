@@ -633,7 +633,6 @@ c**E~..........<..........~Deec
 ccccccccccccccccccccccccccccccc
 ENDMAP
 
-# Bog bodies might be a bit too hard, but with HD of 1 they might be fine.
 NAME:    ossuary_zaba_flooded
 WEIGHT:  20
 ORIENT:  encompass
