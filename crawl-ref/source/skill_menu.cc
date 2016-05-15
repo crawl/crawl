@@ -280,12 +280,14 @@ COLOURS SkillMenuEntry::get_colour() const
         return CYAN;
     }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
+             && (you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false)
+                 // Drained a tiny but nonzero amount.
+                 || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
     {
-        if (you.skill(m_sk, 10, true) > you.skill(m_sk, 10, false))
-            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
-        else
+        if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
+        else
+            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
     }
     else if (mastered())
         return YELLOW;
@@ -1079,6 +1081,11 @@ void SkillMenu::init_flags()
         else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
+
+    // You might be drained by a small enough amount to not affect the
+    // rounded numbers.
+    if (you.attribute[ATTR_XP_DRAIN])
+        set_flag(SKMF_REDUCED);
 }
 
 void SkillMenu::init_title()
