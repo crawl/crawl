@@ -549,6 +549,16 @@ recite_closure
 "So sayeth Zin."
 
 "Purity be upon you all."
+
+"Written in blood; sealed by your death."
+
+"From Zin's mouth, by Zin's hand."
+
+w:5
+"Thus shall it ever be."
+
+w:3
+"In fire! In pain!"
 %%%%
 ##########################
 # Xom's response to prayer
@@ -568,6 +578,9 @@ You feel someone pinching you. As you turn, you see no one.
 
 w:1
 Xom says: Amen!
+
+w:1
+Xom says: Aww... shucks!
 %%%%
 _trout_species_
 
@@ -603,6 +616,12 @@ a second-hand
 a prohibited
 
 a challenging
+
+a delicious
+
+a moldy
+
+a fake
 
 w:2
 a kilgore
@@ -644,7 +663,7 @@ Gozag says: A full purse beats having friends.
 
 Gozag says: The world belongs to the rich.
 
-Gozag says: [Eat|Kill|Defeat] the poor!
+Gozag says: [Eat|Kill|Defeat|Leverage|Tread upon] the poor!
 
 Gozag says: No better sound than the ting-a-ling of coins.
 
