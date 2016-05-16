@@ -284,6 +284,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Pakellas
     {
+      { 0, "gain magical power from killing" },
       { 1, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
@@ -3042,7 +3043,6 @@ static void _join_zin()
 static void _join_pakellas()
 {
     mprf(MSGCH_GOD, "You stop regenerating magic.");
-    mprf(MSGCH_GOD, "You can now gain magical power from killing.");
     pakellas_id_device_charges();
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
