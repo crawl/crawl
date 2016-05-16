@@ -217,7 +217,7 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison, no_upgrade
+BOOL:    poison
 
 NAME:    staff of Wucad Mu
 INSCRIP: channel
@@ -497,7 +497,7 @@ COLOUR:   ETC_WATER
 TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
-BOOL:     elec, poison
+BOOL:     elec, poison, no_upgrade
 MAGIC:    1
 
 NAME:    mithril axe "Arga"
