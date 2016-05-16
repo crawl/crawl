@@ -1539,11 +1539,12 @@ KFEAT:  m = iron_grate
 KMASK:  1 = opaque
 MONS:   patrolling lich / patrolling ancient lich
 MONS:   bone dragon / curse skull / curse toe
-MONS:   flying skull / skeletal warrior / w:40 nothing
+MONS:   flying skull / skeletal warrior / skeleton
 MONS:   ancient champion
+KMONS:  F = orange crystal statue / obsidian statue
+KITEM:  | = | no_pickup
 KFEAT:  ^ = alarm trap
-SUBST:  F = G:99 F:1
-KMONS:  F = orange crystal statue / obsidian statue / ice statue
+SUBST:  3 = 3., F = G:99 F:1
 {{
 lua_marker("|",
            Triggerable.synchronized_markers(
@@ -1562,11 +1563,11 @@ MAP
 ..vllll.%|||%.llllv..
 .4vll..%|||||%..llv4.
 ..vl....%|||%....lv..
-..vl.............lv..
-..vmm..F.vvv.F..mmv..
+..vmm...........mmv..
+..v1m..F.vvv.F..m1v..
 ..v1m...^^^^^...m1v..
 ..vvvvvvv+++vvvvvvv..
-...vv..2.....2..vv...
+...vv..2..4..2..vv...
  ..vv.333333333.vv..
  ...vvv.......vvv...
    ...vv+++++vv...
@@ -1874,7 +1875,6 @@ ENDMAP
 #  mummy (greater mummy, mummy priests, sphinx)
 #
 # Loot:
-#  around 30k per map, regardless of monster set
 #  roughly similar loot to evilmike's haunted forest
 NAME:   due_elkab
 PLACE:  Crypt:$
@@ -1888,14 +1888,14 @@ KFEAT:  YD = closed_door
 KFEAT:  ER = alarm trap
 KFEAT:  CSd = floor
 COLOUR: YsDdE = darkgrey
-NSUBST: . = 5:0 / *:.
-KMONS:  0 = lost soul / nothing
+NSUBST: . = 3:0 / 2 = 0. / *:.
+KMONS:  0 = lost soul
 : local brnd = crawl.random2(15)
 : if brnd > 10 then
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
 MONS:   ancient lich
 MONS:   bone dragon w:1 / ancient champion / lich w:1
-MONS:   flying skull / skeleton
+MONS:   caustic shrike skeleton / titan skeleton
 MONS:   w:50 skeleton / wight
 MONS:   generate_awake bone dragon / generate_awake curse toe
 : elseif brnd > 6 then
@@ -1906,38 +1906,40 @@ KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight
 KMONS:  4 = phantasmal warrior / jiangshi
 KMONS:  5 = vampire / zombie / golden dragon zombie w:3 / storm dragon zombie w:3
 KMONS:  6 = generate_awake vampire mage
+SUBST:  2 = ., ' = 2, " = 4
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
 MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
-MONS:   spectral thing / simulacrum / shadow w:5 / wraith w:5 / shadow wraith / \
-        spectral storm dragon w:5 / spectral ice dragon w:5 / \
-        spectral iron dragon w:5
+MONS:   spectral thing / simulacrum / shadow w:3 / wraith w:2 / shadow wraith / \
+        spectral storm dragon w:5 / spectral quicksilver dragon w:5
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
+SUBST:  2 = ., ' = 2, " = 4
 : else
 MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
 MONS:   greater mummy
-MONS:   mummy priest w:8 / ushabti
+MONS:   mummy priest / ushabti w:6
 MONS:   guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
+SUBST:  '" = .
 NSUBST:  %*| = 1:d / 1:h
 : crypt_loot_plus(_G)
 MAP
                 ccccccccccccccccccccccccccccccc
                 ccccccccccccccccccccccccccccccc
                 cc*$*c|%*.......**|c.........cc
-                cc$3$c|*....2....%|c..G.3.G..cc
+                cc$3$c|*...'2'...%|c..G.3.G..cc
                 cc...c|%|.......|%|c.........cc
                 ccc+cccccc.....ccccccc+cccBBBcc
                 cc...c...ccc+ccc...c.....c$$$cc
                 cc.4.c.G.4.RRR.4.G.+..G..c$$$cc
 cccccccccccccccccc...c.............c.....c%%*cc
 ccccccccccccccccccc+ccccccc+++ccccccc+ccccccccc
-c$$A...c|...*c%.*cc...ccc.......ccc...cc%*|%*cc
+c$$A.".c|.".*c%"*cc...ccc.......ccc...cc%*|%*cc
 c$$A.3.c..3..c.3.c..G.....G...G.....G..c..3..cc
 c$$A...c.....c...c..1...............1..c.....cc
 c$$Ac+cccc+cccc+cc..G..G..G...G..G..G..cc+++ccc

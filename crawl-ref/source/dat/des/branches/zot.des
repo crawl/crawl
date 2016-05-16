@@ -1918,7 +1918,7 @@ ENDMAP
 # Madness, frenzy, and lunacy, eh?
 # bh's curves made me think of some weird yet orderly decorum for Zot.
 NAME:    hangedman_zot_decor_unnerving_road
-TAGS:    extra transparent
+TAGS:    extra transparent no_pool_fixup
 DEPTH:   Zot
 WEIGHT:  8
 SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
@@ -1934,6 +1934,7 @@ MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
              start_clouds = 1, excl_rad = 0 }
+KPROP:   l = no_cloud_gen
 MAP
       XXXX...&&.
       Xllvv......

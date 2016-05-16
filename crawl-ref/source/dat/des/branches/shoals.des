@@ -515,21 +515,22 @@ ENDMAP
 NAME: nicolae_shoals_aquamancer_cove
 DEPTH: Shoals
 TAGS: no_monster_gen
-KMONS: 123 = merfolk aquamancer / nothing w:3
-SUBST: c = x.
+KMONS: 123 = merfolk aquamancer
+SUBST: X = x.
 KFEAT: 1 = w
 KFEAT: 2 = .
 KFEAT: 3 = W
+NSUBST: 1 = 1:1 / 1:w / * = 1www
 MAP
-     xxcc.@
+     xxxX.@
     xx...2.
-  xxxc.ccx.
-xxxcc...cxxx
-xccc.....ccxx
-xc...3W3...cxx
-x..WWwwwWW..cx
-x.Ww1www1wW.cx
-cw1wwwwwww1wcx
+  xxxX.Xxx.
+xxxXX...Xxxx
+xXXX..*..XXxx
+xX...3W3...Xxx
+x..WWwwwWW..Xx
+x.Ww1www1wW.Xx
+Xw1wwwwwww1wXx
   wwwwwwwww
     wwwww
 ENDMAP
@@ -1066,8 +1067,9 @@ ENDMAP
 
 ##############################################################################
 # Branch ends.
-# Note that the Shoals usually have a randomised end map; predrawn maps
-# (which need not be encompassing) are sometimes used, though.
+# Note that the Shoals usually have a randomised end map, by placing many
+# copies of the same cave structures. Pre-made, non-encompass maps could also
+# work, though they're not used yet.
 ##############################################################################
 
 NAME: shoals_end_simple
@@ -1090,7 +1092,7 @@ WEIGHT: 8
 : shoals_finale_setup(_G, 'grunt_ice', crawl.random_range(5,6))
 
 # Grunt's garden Shoals ending
-# Weighted lower on account of being more open and potentially nasty.
+# Weighted lower on account of being more open and nasty.
 NAME: shoals_end_grunt_garden
 ORIENT: float
 PLACE: Shoals:$
@@ -1167,7 +1169,7 @@ NAME:    shoals_rune_alternative
 TAGS:    shoal_rune_hangedman shoal_mimic_hangedman water_ok allow_dup \
          transparent no_dump
 KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
-KMONS:   3 = kraken / harpy band w:5
+KMONS:   3 = kraken / harpy band w:15
 KMONS:   d = merfolk avatar / water nymph w:5
 : if shoals_vault_is_mimic() then
 KITEM:   d = barnacled rune of zot mimic
@@ -1229,7 +1231,6 @@ KFEAT:   123456 = w
 SHUFFLE: 123 / 123 / 123 / 456 / 456
 SHUFFLE: AB / AB / BA, CD / CD / DC
 SUBST:   AC = x, B = w, D = .
-LROCKTILE: wall_pebble_lightgray
 MAP
   .@xxxx
  .x....xx
@@ -1336,52 +1337,52 @@ ENDMAP
 # gardens. If we get another satyr unique at some point, that would be a
 # good candidate for this.
 
-NAME:   shoals_garden_rune
-TAGS:   shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok no_dump
-TAGS:   allow_dup transparent
+NAME:    shoals_garden_rune
+TAGS:    shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok
+TAGS:    no_dump allow_dup transparent
 : if shoals_vault_is_mimic() then
-KITEM:  O = barnacled rune of Zot mimic
+KITEM:   O = barnacled rune of Zot mimic
 : else
-KITEM:  O = barnacled rune of Zot
+KITEM:   O = barnacled rune of Zot
 : end
-KPROP:  O = no_tide
-MONS:   satyr w:30 / merfolk impaler / merfolk javelineer / merfolk aquamancer
-MONS:   faun / 0
-MONS:   nothing w:20 / plant
-SUBST:  . = ..3
-NSUBST: 1 = 4:1 / 4:1. / 8:2 / 4:P / *:.
-SUBST:  P = .3
+KPROP:   O = no_tide
+MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
+MONS:    faun w:6 / 0
+KMONS:   P = plant
+NSUBST:  1 = 4:1 / 2:1. / 2:1. / 8:2 / *:.
+SHUFFLE: abcdefghijk, ABCDEFGH
+SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
 MAP
-   .....
- ...PPP...
- .PPP1PPP.
-..P11111P..
-.PP11111PP.
-.P111O111P.
-.PP11111PP.
-..P11111P..
- .PPP1PPP.
- ...PPP...
-   .....
+   abcbd
+ kkaBAAdee
+ jCCB1HHGf
+ijD11111Gfg
+iED11111FFg
+hE111O111Eh
+gFF11111DEi
+gfG11111Dji
+ fGHH1BCCj
+ eedAABakk
+   dbcba
 ENDMAP
 
 NAME:   shoals_garden
 TAGS:   shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
-MONS:   faun / 0
-MONS:   nothing w:20 / plant
-SUBST:  . = ..2
-NSUBST: 1 = 2:1 / 2:. / 4:1. / 8:2 / 4:P / *:.
-SUBST:  P = .2
+MONS:   faun w:6 / 0
+KMONS:  P = plant
+NSUBST: 1 = 2:1 / 2:1. / 2:1. / *:.
+SHUFFLE: abcdefghijk, ABCDEFGH
+SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
 MAP
-   .....
- ...PPP...
- .PPP1PPP.
-..P11111P..
-.PP11111PP.
-.P111|111P.
-.PP11111PP.
-..P11111P..
- .PPP1PPP.
- ...PPP...
-   .....
+   abcbd
+ kkaBAAdee
+ jCCB1HHGf
+ijD11111Gfg
+iED11111FFg
+hE111|111Eh
+gFF11111DEi
+gfG11111Dji
+ fGHH1BCCj
+ eedAABakk
+   dbcba
 ENDMAP

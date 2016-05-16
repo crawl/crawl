@@ -728,7 +728,7 @@ ENDMAP
 
 NAME:   dpeg_vaults_pockets_of_resistance
 TAGS:   vaults_hard
-SUBST:  0 = 0000099998
+NSUBST: 0 = 3 = 899 / 12 = 099 / * = 0
 MAP
   xxx......
  xxxxx....xxx

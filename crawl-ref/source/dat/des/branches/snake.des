@@ -52,7 +52,7 @@ NAME:   minmay_snake_entry_guardpost_large
 TAGS:   snake_entry
 WEIGHT: 2
 ORIENT: float
-MONS:   naga warrior, naga / nothing
+MONS:   naga, naga / nothing
 KFEAT:  O = enter_snake_pit
 MAP
 c@ccccccc
@@ -75,15 +75,14 @@ TAGS:   snake_entry ruin_lair
 ORIENT: float
 MONS:   ball python, adder, water moccasin, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
-SUBST:  1 = 1., 2 = 2., 3 = 3.
-SUBST:  1 = 122223333, 2 = 122333344, 3 = 33444
+SUBST:  3 = 33444 .:50, 2 = 122333344 .:90, 1 = 122223333 .:90
 KFEAT:  O = enter_snake_pit
 MAP
 xxxx.@1xxxxxxP@xxxxx
 xxxx1.PxxxxxP..xxxxx
 xxxxx..xxxxx1.xxxxxx
-xxxxxP..xxxx..xxxxxx
-xxxxxP.1xxxx2..xxxxx
+ xxxxP..xxxx..xxxxx
+ xxxxP.1xxxx2..xxxx
 xxxxxx..Pxxxx1Pxxxxx
 xxxxxxx2.xxxP.xxxxxx
 xxxxxxxP1xx1..xxxxxx
@@ -93,10 +92,10 @@ xx21xxP..PO.P..2xx1P
 P.....1.3.1.xx.....@
 @.1PxxxP..xxxx.Px1P.
 xxxxxxxx.1xxxx2xxxxx
-xxxxxxxx..Pxx..xxxxx
-xxxxxxxx..PxxP.1xxxx
-xxxxxxx1.2xxxx..xxxx
-xxxxxxxP.xxxxxx1..Px
+xxxxxxxx..Pxx..xxxx
+xxxxxxxx..PxxP.1xxx
+ xxxxxx1.2xxxx..xxxx
+ xxxxxxP.xxxxxx1..Px
 xxxxxxx.1xxxxxxxP...
 xxxxxx.@.Pxxxxxxxx.@
 ENDMAP
@@ -105,7 +104,7 @@ NAME:   minmay_snake_entry_spellcaster
 TAGS:   snake_entry
 ORIENT: float
 WEIGHT: 2
-MONS:   naga mage / guardian serpent
+MONS:   guardian serpent
 KFEAT:  O = enter_snake_pit
 MAP
 ...
@@ -1005,8 +1004,6 @@ PLACE:   Snake:$
 WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
-KFEAT:   Z = known teleport trap w:2 / .
-KFEAT:   z = permanent teleport trap / Zot trap / . w:20
 MONS:    naga / nothing
 MONS:    greater naga / nothing
 MONS:    guardian serpent / nothing
@@ -1034,9 +1031,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx''''''c4O4c""""""xxxxxxxxxxx
-xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
+xxxxxxxxxxxxxxxxxx'xxxcccccxxx"xxxxxxxxxxxxx
+xxxxxxxxxxxxx'xx''''''c4O4c""""""xx"xxxxxxxx
+xxxxxxxxxxx''''''xxxx6646466xxxx""""""xxxxxx
 xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
 xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
 xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
@@ -1045,7 +1042,7 @@ xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
 xxxxxxx'Y'''''''''''''45354"""""""""""""Z"xx
 xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
 xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
-xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
+xxxxxxxxxxxxx''''xxxxxx...xxxxxx""""xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
 xxxxxxxxxx!....._xx...43335...xx_...!!!xxxxx
@@ -1098,15 +1095,15 @@ xxxxxxxxc.....334v....v........x44....cx
 xxxxxxxxc......334......v.......4333..cx
 xxxxxxxcc..C...........4.4..v......C..cx
 xxxxxxxc...CC...........1.........CC..cx
-xxxxxxxc..3CC..........4.4........CC.3cx
-xxxxxxxc..3CC.......v........2....CC.3cx
-xxxxxxxc..1CC.........1...1......CC..1cx
+xxxxxxxc3..CC..........4.4........CC.3cx
+xxxxxxxc3..CC.......v........2....CC.3cx
+xxxxxxxc1..CC.........1...1......CC..1cx
 xxxxxxxcc..CC.....1.....1.....1.CCC..ccx
 xxxxxxxxc...CCC......3333333....CC...cxx
 xxxxxxxxc....CCCC....3333333....CC...cxx
 xxxxxxxxc.....CCCCCC...........CC....cxx
-xxxxxxxxc........CCCC...O....CCC.....cxx
-xxxxxxxxcc........CC.CcccccCC.CC....ccxx
+xxxxxxxxc........CCCc...O....cCC.....cxx
+xxxxxxxxcc........Cc.CcccccCC.cC....ccxx
 xxxxxxxxxc..........CCCcccCCCC......cxxx
 xxxxxxxxxccc.....3..............3..ccxxx
 xxxxxxxxxxxcccc..13............31cccxxxx
@@ -1132,10 +1129,11 @@ MONS:    naga
 MONS:    naga warrior / naga sharpshooter w:5
 MONS:    naga mage w:40 / naga ritualist / naga sharpshooter
 MONS:    greater naga
-SUBST:   c : c:20 v:5, 1 = 11.
+SHUFFLE: ABC
+SUBST:   A = x, B : xx., C = ., c : c:20 v:5, 1 = 111.
 NSUBST:  2 = 6 = 23 / 6:. / * = 23..
-NSUBST:  4 = 3:4 / 4 = 12233 / 6:. / * = 44123....
-NSUBST:  X = 4:x / 2:. / * = x..
+NSUBST:  4 = 5:4 / 4 = 12233 / 6:. / * = 44123....
+NSUBST:  X = 4:x / 4:. / * = x..
 KITEM:   O = serpentine rune of Zot
 MAP
 xxxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
@@ -1146,41 +1144,38 @@ xxxxxxxxxxxxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc...2..cxxxccccccccxxxxxx
 xxxxxxxxxxxxcccccc......ccccc......cccxxxx
 xxxxxxxxccccc...2.......2.......1....ccccc
-xxxxxcccc...........4............1........
-xxxccc...........2..X..2.........2.......@
+xxxxxcccc.......A...4............1........
+xxxccc..........A2..X..2.........2.......@
 xxcc...............2.2..........1.........
 xxc....4.....ccccc......cccccc......cccccc
-xcc.......ccccxxxc......cxxxxccccccccxxxxx
-xc...1...ccxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
-xc....X..cxxxxxxxc...X..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc...2..cxxxxxxxxxxxxxxxxx
-xcc.......ccccxxxc......cxxxxxxxxxxxxxxxxx
-xxc....1.....ccccc......ccccccxxxxxxxxxxxx
+xcc...1...ccccxxxc......cxxxxccccccccxxxxx
+xc...X.B.ccxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
+xc....4B.ccxxxxxxc...X..cxxxxxxxxxxxxxxxxx
+xcc....1..ccccxxxc...2..cxxxxxxxxxxxxxxxxx
+xxc..........ccccc......ccccccxxxxxxxxxxxx
 xxcc.........................cccccxxxxxxxx
-xxxccc.....4.....................ccccxxxxx
-xxxxxcccc...1......4X...............cccxxx
+xxxccc.....4....C........A.......ccccxxxxx
+xxxxxcccc...1...C..4X....A..........cccxxx
 xxxxxxxxccccc........X4........1......ccxx
 xxxxxxxxxxxxcccccc......ccccc..........cxx
 xxxxxxxxxxxxxxxxxc......cxxxcccc..1....ccx
-xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.......cx
-xxxxxxxxxxxxxxxxxc..X21.cxxxxxxxc..X4...cx
-xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.......cx
-xxxxxxxxxxxxxxxxxc......cxxxcccc..1....ccx
+xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.B.X...cx
+xxxxxxxxxxxxxxxxxc..X21.cxxxxxxcc.B.4...cx
+xxxxxxxxxxxxxxxxxc..1...cxxxcccc..1....ccx
 xxxxxxxxxxxxcccccc......ccccc..........cxx
 xxxxxxxxccccc........4.........4......ccxx
-xxxxxcccc...........1X.......2......cccxxx
-xxxccc...............4...........ccccxxxxx
+xxxxxcccc.......A...1X...C...2......cccxxx
+xxxccc..........A....4...C.......ccccxxxxx
 xxcc.........................cccccxxxxxxxx
-xxc....1.2...ccccc......ccccccxxxxxxxxxxxx
-xcc.......ccccxxxc...1..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
-xc.1..X..cxxxxxxxc...2..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc..1X..cxxxxxxxxxxxxxxxxx
+xxc....1.2...ccccc...1..ccccccxxxxxxxxxxxx
+xcc..4....ccccxxxc..1...cxxxxxxxxxxxxxxxxx
+xc..1X.B.ccxxxxxxc...2..cxxxxxxxxxxxxxxxxx
+xc...4.B.ccxxxxxxc..1X..cxxxxxxxxxxxxxxxxx
 xcc.......ccccxxxc...1..cxxxxxxxxxxxxxxxxx
 xxc....1.2...ccccc..2...ccccccxxxxxxxxxxxx
 xxcc.................1.....4.cccccxxxxxxxx
-xxxccc........1.....4........1...ccccxxxxx
-xxxxxcccc..4.2X4.....1......12.4....cccxxx
+xxxccc........1.C...4........1...ccccxxxxx
+xxxxxcccc..4.2X4C....1......12X4....cccxxx
 xxxxxxxxccccc.1.....2........1....4..Ocxxx
 xxxxxxxxxxxxcccccccccccccccccccccccccccxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1435,5 +1430,6 @@ cc...cc..cc......cc..cc......cc..cc...cc
                cc.1111.cc
                 cc....cc
                  cc++cc
-                 ..@@..
+                 @....@
+                   cc
 ENDMAP

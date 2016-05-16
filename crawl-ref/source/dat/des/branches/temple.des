@@ -993,32 +993,28 @@ ORIENT:  encompass
 SHUFFLE: AC
 SUBST:   A = B
 NSUBST:  C = 1:{ / *:.
+KPROP: wW = no_tele_into
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
 SUBST:   W : mvbG
 : elseif arnd < 3 then
-SUBST:   W = w
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
 KMONS:   1 = electric eel
 : else
-SUBST:   W = w
-:end
-KPROP: wW1 = no_submerge
-KPROP: wW1 = no_tele_into
-#
-: local brnd = crawl.random2(10)
-: if brnd == 0 then
-SUBST:  w = l
-COLOUR: m = lightred
-COLOUR: c = lightred
-: elseif brnd < 4 then
-SUBST:  m = c
-: else
-COLOUR: m = blue
-COLOUR: c = blue
-:end
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
 MAP
                ccccccccccccc
            ccccc...........ccccc
@@ -1054,32 +1050,28 @@ WEIGHT:  5
 TAGS:    no_rotate no_pool_fixup
 ORIENT:  encompass
 NSUBST:  A = 1:{ / *:.
+KPROP: wW = no_tele_into
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
 SUBST:   W : mvbG
 : elseif arnd < 3 then
-SUBST:   W = w
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
 KMONS:   1 = electric eel
 : else
-SUBST:   W = w
-:end
-KPROP: wW1 = no_submerge
-KPROP: wW1 = no_tele_into
-#
-: local brnd = crawl.random2(10)
-: if brnd == 0 then
-SUBST:  w = l
-COLOUR: m = lightred
-COLOUR: c = lightred
-: elseif brnd < 4 then
-SUBST:  m = c
-: else
-COLOUR: m = blue
-COLOUR: c = blue
-:end
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
 MAP
                ccccccccccccc
            ccccc...........ccccc

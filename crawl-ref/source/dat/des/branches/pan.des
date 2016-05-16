@@ -2130,7 +2130,7 @@ ENDMAP
 NAME:   evilmike_mini_pan_V
 KITEM:  ( = |
 KFEAT:  ( = (
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 x.@.xxxxxxxxxxxxxxxxx.@.x
