@@ -1802,8 +1802,9 @@ string mut_upgrade_summary(mutation_type mut)
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    string mut_desc = mutation_desc(mut, you.mutation[mut] + 1);
-    strip_suffix(lowercase(mut_desc), ".");
+    string mut_desc =
+        lowercase_first(mutation_desc(mut, you.mutation[mut] + 1));
+    strip_suffix(mut_desc, ".");
     return mut_desc;
 }
 
