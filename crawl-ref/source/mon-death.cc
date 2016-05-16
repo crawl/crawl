@@ -2138,7 +2138,9 @@ item_def* monster_die(monster* mons, killer_type killer,
                 }
 
                 // perhaps this should go to its own function
-                if (mp_heal && in_good_standing(GOD_PAKELLAS, 2))
+                if (mp_heal
+                    && in_good_standing(GOD_PAKELLAS, 1)
+                    && !you_foodless_normally())
                 {
                     simple_god_message(" collects the excess magic power.");
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
