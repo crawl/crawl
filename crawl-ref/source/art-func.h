@@ -237,21 +237,12 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
 // XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 
-static void _olgreb_pluses(item_def *item)
-{
-    // Giving Olgreb's staff a little lift since staves of poison have
-    // been made better. -- bwr
-    item->plus  = you.skill(SK_POISON_MAGIC) / 3;
-}
-
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     if (you.can_smell())
         _equip_mpr(show_msgs, "You smell chlorine.");
     else
         _equip_mpr(show_msgs, "The staff glows a sickly green.");
-
-    _olgreb_pluses(item);
 }
 
 static void _OLGREB_unequip(item_def *item, bool *show_msgs)
@@ -260,11 +251,6 @@ static void _OLGREB_unequip(item_def *item, bool *show_msgs)
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
-}
-
-static void _OLGREB_world_reacts(item_def *item)
-{
-    _olgreb_pluses(item);
 }
 
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
