@@ -266,8 +266,7 @@ TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 VALUE:   1250
-CURSED:  3
-BOOL:    special, evil, corpse_violating
+BOOL:    evil, corpse_violating
 
 NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
