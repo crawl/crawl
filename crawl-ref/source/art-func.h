@@ -1242,12 +1242,12 @@ static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
         _equip_mpr(show_msgs, "You feel like a king!");
     else if (rings)
         _equip_mpr(show_msgs, "You feel regal.");
-    item->plus = 8 + rings;
+    item->plus = 8 + 2 * rings;
 }
 
 static void _OCTOPUS_KING_world_reacts(item_def *item)
 {
-    item->plus = 8 + _octorings_worn();
+    item->plus = 8 + 2 * _octorings_worn();
 }
 
 ///////////////////////////////////////////////////
