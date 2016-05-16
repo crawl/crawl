@@ -321,7 +321,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
-ANGRY:   9
+ANGRY:   5
 BOOL:    berserk
 STEALTH: -1
 
@@ -442,7 +442,7 @@ TILE:     urand_jihad
 TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
-ANGRY:    3
+ANGRY:    5
 STEALTH:  -1
 LIFE:     1
 
@@ -933,7 +933,7 @@ TILE:    urand_bloodlust
 STR:     2
 INT:     -2
 MAGIC:   1
-ANGRY:   9
+ANGRY:   5
 SLAY:    3
 CURSED:  3
 
