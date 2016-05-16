@@ -1183,35 +1183,36 @@ ENDMAP
 # There are scientists about; beware, as they may wish to experiment on you! The
 # idea was by Zaba, and the execution by due!
 #
-# TODO: Make this layout actually be like other volcanoes,
-#       and also actually contain decent threats.
+# TODO: Upgrade the threat levels a little.
 NAME:       volcano_bunker
 WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 #           Loot: 11 items, 8 gold.
 :           volcano_setup(_G)
-ITEM:       fruit
+KITEM:      h = fruit
 COLOUR:     m = blue
-MONS:       human ; mace ego:flaming ident:type . robe ego:fire_resistance ident:type
+MONS:       human ; mace ego:flaming . robe ego:fire_resistance ident:type
 MONS:       toenail golem
+MONS:       dancing weapon ; mace ego:flaming
 :           place_chained_volcano(_G)
 :           set_feature_name("clear_rock_wall", "glass window")
-KFEAT:      K = .
+KFEAT:      K = w
+KFEAT:      h = W
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
-                                    delay=300, size=3 } )
+                                    delay=250, size=3 } )
 KPROP:      lVK = no_tele_into
 MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
  xxxlllllllxxxlxxx          v.vvvvvvvvv.v
 xxlllVlllllllllllxxxx       v.v22$e$$fv.v
- xxlllllllllllllllllxxx     v.v$$$gddgv.v
-xxllllllllllllllllllllxx    v.+ggdf$$ev.v
+ xxlllllllllllllllllxxx     v.v$$egddgv.v
+xxllllllllllllllllllllxx    v.+ggdf$$3v.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
- xxllllllllm.....vKiii...1...v.....+....v
-  xxlllllllv.121.viWtWW......+.<.vvvvvvvv
-   xxllllllm.....vllttW..1...v...vxxx
+ xxllllllllm.....vKWhW...1...v.....+....v
+  xxlllllllv.121.vWWthW..2...+.<.vvvvvvvv
+   xxllllllm.....vlltth..1...v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
       xxlllm.....v.v..1v1.....v..m..yxx
      xxllllv.<.A.+.v+vvvvv+v+vvv.+..Lyxxx

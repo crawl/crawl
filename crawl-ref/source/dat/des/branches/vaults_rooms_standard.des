@@ -1402,7 +1402,7 @@ ENDMAP
 
 NAME:     vaults_mumra_minichess
 TAGS:     vaults_room
-SUBST:    . = ...0
+NSUBST:   . = 12 = 0. / *:.
 MAP
   ..xx..
   ..xx..
@@ -1560,15 +1560,15 @@ TAGS: vaults_room
 SHUFFLE: AB
 KMONS: W = vault warden
 SUBST: G : xxx...GTb, A : +, B : +x
-KMONS: 0 = 0 band
+KMONS: 1 = 0 band
 MAP
-x.0.0.x
+x.1.0.x
 xx...xx
 xG.W.Gx
 xxABAxx
 xG.W.Gx
 xx...xx
-x.0.0.x
+x.0.1.x
 ENDMAP
 
 NAME: nicolae_vaults_stairing_the_circle

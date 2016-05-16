@@ -232,37 +232,42 @@ NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
 DEPTH:  D:10-, Depths
 MONS:   wizard / boggart / nothing
+MONS:   crystal guardian / giant orange brain / rakshasa
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
             delay_max = 50, size_min = 1, size_max = 5,  \
             walk_dist = 0, spread_rate= 100 }
 SUBST:  F = .
+: if you.absdepth() > 18 then
+SUBST:  1 = 2
+: end
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbbb
-b....................Fbb.
-b...bbbbb..1......1..bb..
-b..bb***bb..........bb...
-b.bb.....bb..1..1..bb....
-b......1..bb......bb..1..
-b..........bb||||bb......
-b.1...bb...FbbbbbbF.....
-b....bb....bb....bb.....
-b...bb.1..bb......bb....
-b..bb....bb........bb...
-bbbb....bb....bb.1.Fbb..
-b|.bb........bb....bb..
-b...bb...1..bb....bb...
-b....bb....bb....bb....
-b1....bbbbbb....bb.....
-bbb........bb.........
-b|bb........bb.....1..
-b.1bb........bb.......
-b...bb........bb.....
-b...Fbb.............
-b...bb.............
-b..bb....1......
-b.bb........
-b......
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xbbbbbbbbbbbbbbbbbbbbbbbbb
+xb....................Fbb.
+xb...bbbbb..1......1..bb..
+xb..bb***bb..........bb...
+xb.bb.....bb..1..1..bb....
+xb......1..bb......bb..1..
+xb..........bb||||bb......
+xb.1...bb...FbbbbbbF.....
+xb....bb....bb....bb.....
+xb...bb.1..bb......bb....
+xb..bb....bb........bb...
+xbbbb....bb....bb.1.Fbb..
+xb*.bb........bb....bb..
+xb...bb...1..bb....bb...
+xb....bb....bb....bb....
+xb1....bbbbbb....bb.....
+xbbb........bb.........
+xb*bb........bb.....1..
+xb.1bb........bb.......
+xb...bb........bb.....
+xb...Fbb.............
+xb...bb.............
+xb..bb....1......
+xb.bb........
+xb......
 ENDMAP
 
 NAME:   minmay_elf_outpost
@@ -434,72 +439,75 @@ ENDMAP
 NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
-DEPTH:  Depths, !Depths:$, Orc
+DEPTH:  D:12-, !D:$, Orc
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
 MAP
-xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
-x**..........x414x..........**xx
-x**..........x4.4x..........**xx
-x............+...+....4.......xx
-x....4..4....x...x............xx
-x............x...x.......4....xx
-x............xx.xx............xx
-x...4......xxxx+xxxx......6...xx
-x........xxx.......xxx........xx
-xxx...xxxx..2.....2..xxxx...xxxx
-xxxx+xxxx.............xxxx+xxxxx
-xxx...xxx.............xxx...xxxx
-x......x...............x......xx
-x..4...x...2...C...2...x...5..xx
-x......x...............x......xx
-x...4..xx.............xx..5...xx
-x$......x....2...2....x......$xx
-x$6..5..xx.....3.....xx.5...7$xx
-x$$$.....xxx.......xxx.....$$$xx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
+xx**..........x414x..........**xx
+xx**..........x4.4x..........**xx
+xx............+...+....4.......xx
+xx....4..4....x...x............xx
+xx............x...x.......4....xx
+xx............xx.xx............xx
+xx...4......xxxx+xxxx......6...xx
+xx........xxx.......xxx........xx
+xxxx...xxxx..2.....2..xxxx...xxxx
+xxxxx+xxxx.............xxxx+xxxxx
+xxxx...xxx.............xxx...xxxx
+xx......x...............x......xx
+xx..4...x...2...C...2...x...5..xx
+xx......x...............x......xx
+xx...4..xx.............xx..5...xx
+xx$......x....2...2....x......$xx
+xx$6..5..xx.....3.....xx.5...7$xx
+xx$$$.....xxx.......xxx.....$$$xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################
 # Fort Yaktaur (Matthew Ludivico)
 #
 NAME:   fort_yaktaur
+TAGS:   no_pool_fixup
 ORIENT: southeast
-DEPTH:  Depths, !Depths:$
-MONS:   yaktaur, death yak, minotaur, random
-MONS:   yak, gnoll, random
+DEPTH:  D:11-, !D:$
+MONS:   gnoll, yak, death yak, yaktaur, minotaur
 MAP
-.........@....wwwwwwwwwwwwwwwwwxx
-.ccccc.......ww....wwww....wwwwxx
-.c$c%c......ww.ccccccccc.......xx
-.c+c+c......ww.c.%$....ccccccccxx
-.c...+......ww.c*.115..c$$+|*|cxx
-.c1..c.....ww..c...55+ccc+cxx+cxx
-.ccccc.....ww..ccccccc....c|+*cxx
-............ww.......c5...cxx+cxx
-....6.ccccc.ww.w...2.+51..c|1.cxx
-....63+...c..wwww..21+51..c2.2cxx
-....6.ccccc..wwwwww..c5...cc+ccxx
-............wwwwwww..c........cxx
-............wwwwwww..ccccccccccxx
-...........ww1w..www...........xx
-.......566.www.....www.........xx
-.........1ww....ccccc..........xx
-.....566.w......+...c..........xx
-.........www....ccccc..........xx
-...........ww............wwwwwwxx
-.......3....wwwww......www.....xx
-......666.......ww...www.......xx
-.....cc+cc.......wwwww.........xx
-.....c...c.....................xx
-.....ccccc.....................xx
-...............................xx
-...............................xx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.........@....wwwwwwwwwwwwwwwwwxxx
+.ccccc.......ww....wwww....wwwwxxx
+.c$c%c......ww.ccccccccc.......xxx
+.c+c+c......ww.c.%$....ccccccccxxx
+.c...+......ww.c*.542..c$$+|*|cxxx
+.c4..c.....ww..c...22+ccc+cxx+cxxx
+.ccccc.....ww..ccccccc....c|+*cxxx
+............ww.......c2...cxx+cxxx
+....1.ccccc.ww.w...3.+24..c|5.cxxx
+....14+...c..wwww..34+24..c3.3cxxx
+....1.ccccc..wwwwww..c2...cc+ccxxx
+............wwwwwww..c........cxxx
+............wwwwwww..ccccccccccxxx
+...........ww4w..www...........xxx
+.......211.www.....www.........xxx
+.........4ww....ccccc..........xxx
+.....211.w......+...c..........xxx
+.........www....ccccc..........xxx
+...........ww............wwwwwwxxx
+.......4....wwwww......www.....xxx
+......111.......ww...www.......xxx
+.....cc+cc.......wwwww.........xxx
+.....c...c.....................xxx
+.....ccccc.....................xxx
+...............................xxx
+...............................xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################

@@ -1262,25 +1262,28 @@ NAME:   lemuel_troll_bridge
 DEPTH:  D:9-, Depths
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
-KPROP:  1 = no_tele_into
-SUBST:  1 = 1:50 2 3:5
-MONS:   troll
-MONS:   deep troll
-MONS:   iron troll
+MONS:   yak, death yak
+MONS:   troll, deep troll, iron troll
+MONS:   deep troll earth mage, deep troll shaman
+: if you.absdepth() > 21 then
+SUBST:  3 = 4:30 5:5 6 7, 1 = 2
+: else
+SUBST:  3 = 3:50 4 5:5
+: end
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx
-xwwwx...........................xxxxxx
+xwwwx.............1.............xxxxxx
 xwwwx...........................xxxxxx
 xwwwwwwwwwwwwwwwww.wwwwwwwwwww..xxxxxx
-xxwwwwwwwwwwwxxxxw.wwwwwwwwwwwwwwwwxxx
-xxwwwwwwwwwwwx11xw.wxxxxwwwwwwwwwwwwxx
-xxwwwwwwwwwwwx11=...=11xwwwwwwwwwwwwwx
-xxxwwwwwwwwwwxxxxw.wx11xwwwwwwwwwwwwwx
-xxxxxwwwwwwwwwwwww.wxxxxwwwwwwwwwwwwwx
+xxwwwwwwwwwwxxxxxw.wwwwwwwwwwwwwwwwxxx
+xxwwwwwwwwwwx333xw.wxxxxxwwwwwwwwwwwxx
+xxwwwwwwwwwwx*33+...+33*xwwwwwwwwwwwwx
+xxxwwwwwwwwwxxxxxw.wx333xwwwwwwwwwwwwx
+xxxxxwwwwwwwwwwwww.wxxxxxwwwwwwwwwwwwx
 xxxxx...wwwwwwwwww.wwwwwwwwwwwwwwwwwwx
 xxxxx...........................xwwwwx
-xxxxx...........................xxwwwx
+xxxxx............1.1............xxwwwx
 xxxxx...........................xxwwwx
 xxxxx...........................xxxxxx
 ENDMAP
@@ -1314,42 +1317,53 @@ ENDMAP
 # Vampire Tower by Lemuel Pitkin
 #
 NAME:    lemuel_vampire_tower
-ORIENT:  float
+TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D:12-, Depths, !Depths:$, Crypt
+ORIENT:  float
 MONS:    rat / porcupine / w:6 river rat / w:3 hell rat / w:20 bat
-MONS:    flying skull, human zombie
-MONS:    vampire, vampire mage, vampire knight
+MONS:    wolf / spectral wolf w:2 / hell hound w:12 / raiju w:2
+MONS:    flying skull, phantasmal warrior / jiangshi
+MONS:    human zombie, frost giant zombie / fire giant zombie, vampire
+KMONS:   8 = vampire mage
+KMONS:   9 = vampire knight
+KMONS:   0 = Jory / doom hound w:4, doom hound
 KITEM:   > = any good_item
 KFEAT:   > = >
-KFEAT:   ; = altar_yredelemnul/altar_kikubaaqudgha
+KFEAT:   ; = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: defg
-SUBST:   d = +, e = x, f = x, g = x
-SUBST:   1 = 1 .:20
-SUBST:   1 : 1:30 2
-SUBST:   w:w.
+SUBST:   d = +, efg = x
+NSUBST:  1 = 10:1 / 8 = 1. / *:.
+: if you.absdepth() < 18 then
+SUBST:   1 : 1:30 3, 2 = 3
+: else
+# Downward order required to cleanly upgrade the monster set.
+SUBST:   3 = 4, 2 = 3, 1 : 2:30 3
+SUBST:   9 = 0, 8 = 9, 7 = 89, 5 = 6
+: end
+SUBST:   w : ww...
 MAP
-F..wwwwwwwwwwwwwwwww..F
+x..wwwwwwwwwwwwwwwww..x
 ..wwwwwwwwwwwwwwwwwww..
-.www111xxxx+xxxx111www.
-www111xxx22322xxx111www
-ww111xx.+23432+.xx111ww
-ww11dx..ccccccc..xe11ww
+.wWw111xxxx+xxxx111wWw.
+www113xxx22522xxx311www
+ww111xx.+25752+.xx111ww
+ww13dx..ccccccc..xe31ww
 ww1xx..ccc|>|ccc..xx1ww
-wwxx..ccccc6ccccc..xxww
-wwx..ccc33+4+33ccc..xww
+wwxx..ccccc9ccccc..xxww
+wwx..ccc55+7+55ccc..xww
 wwx.ccccccc+ccccccc.xww
-wwx.c***x.....ccccc4xww
-wwx.c***+..5..ccccc.xww
-wwx4cc**x4.;.4ccccc.xww
+wwx.c***x.....ccccc7xww
+wwx.c***+..8..ccccc.xww
+wwx7cc**x7.;.7ccccc.xww
 wwx..ccxx.....cccc..xww
-wwxx..ccx..4..ccc..xxww
+wwxx..ccx..7..ccc..xxww
 ww1xx..cc.....cc..xx1ww
-ww11fx..ccc.ccc..xg11ww
+ww13fx..ccc.ccc..xg31ww
 ww111xx..cc+cc..xx111ww
-www111xx..333..xx111www
-.www111xxxxxxxxx111www.
+www113xx..333..xx311www
+.wWw111xxxxxxxxx111wWw.
 ..wwwwwwwwwwwwwwwwwww..
-F..wwwwwwwwwwwwwwwww..F
+x..wwwwwwwwwwwwwwwww..x
 ENDMAP
 
 ##############################################################################
@@ -1357,45 +1371,47 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Depths, !Depths:$, Lair:6-, Snake:1-4
+DEPTH:   Lair:6-, !Lair:$, Snake, !Snake:$, Depths, !Depths:$
 ORIENT:  float
-SHUFFLE: AB@
-SUBST:   x = .:30 W x:4
-SUBST:   A : x, B : x
-SUBST:   D = .:30 W
-KFEAT:   E = w:20 . / x / w:50 W / w:30 w
-KFEAT:   F = w:150 w / w:70 W / . / x
-KFEAT:   G = x / . / w / W
-KFEAT:   H = . / W
-KMONS:   D = Plant / w:200 nothing
-KMONS:   E = w:2 slime creature / swamp worm /\
-             w:2 vampire mosquito / w:1 crocodile / w:1000 nothing
-KMONS:   F = w:2 slime creature / swamp worm /\
-             w:2 vampire mosquito / w:2 swamp drake / w:1000 nothing
-KMONS:   H = swamp drake / swamp dragon / hydra
-KITEM:   H = any good_item / any potion / gold
-: if not you.in_branch("Snake") and you.absdepth() < 18 then
-NSUBST:  H = 3:H / 2 = HH.W / *: .W
+KMONS:   1 = slime creature w:20 / swamp worm w:50 / \
+             vampire mosquito / crocodile / swamp drake w:15
+KMONS:   23 = alligator / swamp dragon / hydra
+KMONS:   45 = tentacled monstrosity / thorn hunter
+KITEM:   3 = any good_item / any potion / gold
+KITEM:   5 = acquire any / gold good_item / any potion q:4 w:20
+KMONS:   P = plant
+KFEAT:   1324P = W
+NSUBST:  @ = 1:@ / *:X
+SUBST:   x = w:30 x:4, X = x
+SUBST:   ` = wx, ~ = w:9 x:2
+SUBST:   " = .:2 x:1 W:4 P:1 w:3, - = .:9 W:2
+: if you.absdepth() < 19 then
+NSUBST:  W = 3:1 / 3 = 1W / *:W
+NSUBST:  8 = 3:3 / 2 = 31 / * = 1W
+: else
+NSUBST:  W = 4:1 / 4:2 / 1 = 24 / 4 = 12 / *:W
+NSUBST:  8 = 2:5 / 3:3 / * = 1W
 : end
+KPROP:   wP = no_tele_into
 MAP
-xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
-xxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxx
-xxxxGHHFFGGGGFFFEEDEEGGFFFxxGGxxx
-xxFFFHHFFFFFGFFFFEEDEEFFFFFFFFGxx
-xGGFFFFDDEEFFFFFEEDEEFFFFFFFFFFGx
-xxGFFFFEEDDEEFFEEDEEFFFEEEFFFFGxx
-xGFFFFFFFEEDEEEDDEEEEEEEDDEEEFFGx
-xGGFFFFFFFEEDEDEEEEEEEDDEEDDDEEDB
-xxGFFFFFFFFEEDEDDEDDDDEEEEEEEDDxx
-xxxGFFFFFFEEDEEEEDEEEEEFFFFFFFFxx
-xxxxFFFFFEEDEEFFFFDDFFFFFFFFFGGGx
-xxxGFFFFEEDEEFFFFFFEDEFFFFFFFxxxx
-xGGFFFFFFDEEFFFFFFFFEDFFFFFFGGxxx
-xGFFFFFFEEDEEFFFFFFFFEDEFFFGxxxxx
-xxGxxxGFEEDEEFFFFGGGFFHHHGxxxxxxx
-xxxxxxxGFEEDEEGGxxxxxGFHGxxxxxxxx
-xxxxxxxxGFDEGGxxxxxxxxxGxxxxxxxxx
-xxxxxxxxxxAxxxxxxxxxxxxxxxxxxxxxx
+XXXXXXXXXXXXXXxxx@xxxxxxxxxxxxxxx
+Xxxxxx```xxxxxx`"-""xxxx``xxxxxxx
+Xxxx`88~~````~~~""-""``~~~xx``xxx
+Xx~~~88~~~~~`~~~~""-""~~~~~~~~`xx
+X``~~~~--""~~~~~""-""~~~~~~~~~~`x
+Xx`~~~~""--""~~""-""~~~"""~~~~`xx
+X`~~~~~~~""-"""--"""""""--"""~~`x
+X``~~~~~~~""-"-"""""""--""---""-@
+Xx`~~~~~~~~""-"--"----"""""""--xx
+xxx`~~~~~~""-""""-"""""~~~~~~~~xx
+xxxx~~~~~""-""~~~~--~~~~~~~~~```X
+xxx`~~~~""-""~~~~~~"-"~~~~~~~xxxX
+x``~~~~~~-""~~~~~~~~"-~~~~~~``xxX
+x`~~~~~~""-""~~~~~~~~"-"~~~`xxxxX
+xx`xxx`~""-""~~~~```~~888`xxxxxxX
+xxxxxxx`~""-""``xxxxx`~8`xxxxxxxX
+xxxxxxxx`~-"``xxxxxxxxx`xxxxxxxxX
+xxxxxxxxxx@xxxxxxXXXXXXXXXXXXXXXX
 ENDMAP
 
 ##############################################################################
@@ -2041,23 +2057,23 @@ ENDMAP
 #
 NAME:   mu_elephants_graveyard
 ORIENT: float
-TAGS:   no_monster_gen no_rotate no_vmirror
+TAGS:   no_monster_gen no_rotate no_vmirror no_pool_fixup
 DEPTH:  Depths, Lair, !Lair:$
-  # next: we generate more dire elephants at greater depths
-  # we also turn the shallow water into deep water at the lowest depths
+  # we generate more dire elephants and deeper water at greater depths
 : if you.in_branch("Lair") then
-MONS:   elephant, fungus, plant
+MONS:   elephant, dire elephant, spriggan
 : else
-MONS:   w:1 elephant / dire elephant, fungus, plant
-SUBST: W : w
+MONS:   w:1 elephant / dire elephant, hellephant, spriggan defender
+SUBST:  W : w
 :end
-SUBST: % = .:5 %:3
+MONS:   fungus, plant
+SUBST:  % = .:5 %:3
 : dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton')
 SUBST:  . = .:69 1:1
-SUBST:  P = 3
-SUBST:  a = .2
-SUBST:  b = 23
-SUBST:  c = 3tt
+SUBST:  P = 4
+SUBST:  a = .4
+SUBST:  b = 45
+SUBST:  c = 5tt
 MAP
 ............................
 ............................
@@ -2067,8 +2083,8 @@ MAP
 ......tttccccccccccttt......
 .....ttcccbbbbbbbbccctt.....
 ....ttccbbbaaaaaabbbcctt....
-....tccbbaaa...1aaabbcct....
-...ttcbbaa...%%...aabbctt...
+....tccbbaaa2..3aaabbcct....
+...ttcbbaa*..%%..*aabbctt...
 ..ttccbaa..%%%%%%..aabcctt..
 ..tccbba..%%%%%%%%..abbcct..
 ..tcbbaa.%%.PPP%%%%.aabbct..
@@ -2101,26 +2117,26 @@ DEPTH:   D:9-, Depths, Crypt
 MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
-MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
-KMONS:   4 = Boris / lich / death knight
-KMONS:   5 = lich / death knight
+MONS:    vampire knight / jiangshi / flayed ghost
+KMONS:   4 = Boris / lich / revenant
+KMONS:   5 = lich / revenant
 : elseif you.absdepth() > 13 then
-MONS:    skeletal warrior / eidolon
-KMONS:   4 = Frances / vampire mage / necromancer
-KMONS:   5 = vampire mage / necromancer
+MONS:    phantasmal warrior / skeletal warrior / eidolon
+KMONS:   4 = Frances / vampire mage / death knight
+KMONS:   5 = vampire mage / death knight
 : else
-MONS:    wight / necrophage / shadow w:5
+MONS:    wight / wraith / shadow
 KMONS:   4 = Josephine / skeletal warrior / necromancer
 KMONS:   5 = skeletal warrior / necromancer
 : end
 SHUFFLE: Aa / Bb / Cc / Dd / Ee
-SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
+SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
 : if you.in_branch("Crypt") then
 SUBST:   x = c
 : end
 MAP
-    xxxxxxxxx
-    x2233322x
+   xxxxxxxxxxx
+   xx2233322xx
 xaaxx22x5x22xxccx
 xAAx.x2x+x2x.xCCx
 xAAxx.xx1xx.xxCCx
@@ -2131,8 +2147,8 @@ xBBxxx.x*x.xxxDDx
 xBBxx.xx1xx.xxDDx
 xBBx.x2x+x2x.xDDx
 xbbxx22x4x22xxddx
-    x2233322x
-    xxxxxxxxx
+   xx2233322xx
+   xxxxxxxxxxx
 ENDMAP
 
 ##############################################################################

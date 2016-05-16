@@ -2576,11 +2576,11 @@ ENDMAP
 # Another Ice Statue vault
 NAME:  ice2_lemuel
 TAGS:  no_pool_fixup no_monster_gen
-DEPTH: D:12-, Depths, !Depths:$, Lair, Coc, !Coc:$
+DEPTH: D:12-, Depths, !Depths:$, Lair:2-, Coc, !Coc:$
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
 KMONS: 3 = ice devil / ice dragon / freezing wraith
-KMONS: 4 = ice fiend / blizzard demon / ice dragon w:5
+KMONS: 4 = ice fiend / blizzard demon / shard shrike
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
 SUBST:  3 = 4, 2 = 223
