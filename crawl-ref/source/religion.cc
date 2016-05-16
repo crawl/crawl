@@ -286,9 +286,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 1, ABIL_PAKELLAS_QUICK_CHARGE,
            "spend your magic to charge your devices" },
-      { 2, "Pakellas will collect and distill excess magic from your kills.",
-           "Pakellas no longer collects and distills excess magic from your "
-           "kills." },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
