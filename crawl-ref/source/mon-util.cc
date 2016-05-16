@@ -821,11 +821,16 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return cheibriados_monster_player_speed_delta(mon) > 0;
 }
 
-// Dithmenos also hates fire users and generally fiery beings.
+// Dithmenos also hates fire users, flaming weapons, and generally fiery beings.
 bool mons_is_fiery(const monster* mon)
 {
     if (mons_genus(mon->type) == MONS_DRACONIAN
         && draco_or_demonspawn_subspecies(mon) == MONS_RED_DRACONIAN)
+    {
+        return true;
+    }
+    if (mons_genus(mon->type) == MONS_DANCING_WEAPON
+        && mon->weapon()->brand == SPWPN_FLAMING)
     {
         return true;
     }
