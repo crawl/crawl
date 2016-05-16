@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "colour.h"
 #include "coordit.h"
 #include "dungeon.h"
@@ -837,13 +838,15 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         if (!player)
             return act->res_fire() >= 3;
         return you.duration[DUR_FIRE_SHIELD]
-               || you.mutation[MUT_FLAME_CLOUD_IMMUNITY];
+               || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
+               || player_equip_unrand(UNRAND_FIRESTARTER);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_energy(cloud.agent()) > 0;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
-        return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
+        return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]
+               || player_equip_unrand(UNRAND_FROSTBITE);
     case CLOUD_MEPHITIC:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:
