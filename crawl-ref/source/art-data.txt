@@ -181,7 +181,7 @@ VALUE:   1000
 ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
-NAME:    Mace of Variability
+NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    +0   # Set on generation
 COLOUR:  ETC_RANDOM
@@ -191,7 +191,7 @@ VALUE:   700
 BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
-NAME:    Glaive of Prune
+NAME:    glaive of Prune
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    +12
 COLOUR:  LIGHTMAGENTA
@@ -201,7 +201,7 @@ VALUE:   1000
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 
-NAME:    Sword of Power
+NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +0 # Set on wield
 COLOUR:  RED
@@ -210,7 +210,7 @@ TILE_EQ: sword_of_power
 VALUE:   1000
 BOOL:    special, no_upgrade
 
-NAME:    Staff of Olgreb
+NAME:    staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_POISON
@@ -219,7 +219,7 @@ TILE_EQ: olgreb
 VALUE:   1000
 BOOL:    poison, no_upgrade
 
-NAME:    Staff of Wucad Mu
+NAME:    staff of Wucad Mu
 INSCRIP: channel
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
@@ -238,7 +238,7 @@ TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
 VALUE:   1000
 
-NAME:    Scythe of Curses
+NAME:    scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13
 COLOUR:  ETC_DEATH
@@ -249,7 +249,7 @@ VALUE:   800
 CURSED:  3
 BOOL:    evil
 
-NAME:    Sceptre of Torment
+NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
 COLOUR:  ETC_GOLD
@@ -258,7 +258,7 @@ TILE_EQ: mace_ruby
 VALUE:   1200
 BOOL:    special, evil
 
-NAME:    Sword of Zonguldrok
+NAME:    sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
 COLOUR:  ETC_BONE
@@ -268,7 +268,7 @@ BRAND:   SPWPN_REAPING
 VALUE:   1250
 BOOL:    evil, corpse_violating
 
-NAME:    Sword of Cerebov
+NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
 TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
@@ -282,7 +282,7 @@ VALUE:   2000
 BRAND:   SPWPN_FLAMING
 BOOL:    unholy, nogen
 
-NAME:    Staff of Dispater
+NAME:    staff of Dispater
 APPEAR:  golden staff
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +4
@@ -292,7 +292,7 @@ TILE_EQ: dispater
 VALUE:   1200
 BOOL:    unholy, nogen
 
-NAME:    Sceptre of Asmodeus
+NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
@@ -883,7 +883,7 @@ DEX:      -1
 LIFE:     1
 BOOL:     poison
 
-NAME:     shield of the gong
+NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +18
 COLOUR:   ETC_GOLD
@@ -1229,7 +1229,7 @@ CURSED:  1
 BOOL:    evil, seeinv, nogen
 
 ENUM:    VINES
-NAME:    robe of vines
+NAME:    robe of Vines
 OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +2
 COLOUR:  GREEN

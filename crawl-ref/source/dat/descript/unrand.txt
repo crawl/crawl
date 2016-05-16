@@ -18,32 +18,32 @@ A bloodstained axe that was the favourite weapon of the old god Trog, before it
 was lost. It induces a bloodthirsty berserker rage in warriors who use it in
 battle.
 %%%%
-Mace of Variability
+mace of Variability
 
 A weapon with a peculiar reputation — said to be at times peerless in quality,
 and other times virtually useless. No one knows exactly who would have made
 such a weapon, or why, but Xom is probably to blame somehow.
 %%%%
-Glaive of Prune
+glaive of Prune
 
 A purple glaive that was created by a mad god, and carries a curse which
 transforms anyone wielding it into a prune. Fortunately, the curse works very
 slowly, and one can use it briefly with no consequences worse than slightly
 purple skin and a few wrinkles.
 %%%%
-Sword of Power
+sword of Power
 
 A mighty sword which rewards the powerful with power and the meek with
 weakness.
 %%%%
-Staff of Olgreb
+staff of Olgreb
 
 A staff which was once wielded by the mighty wizard Olgreb. It increases the
 power of its wielder's poison magic, and can be evoked to activate its own
 venomous spells. Its touch may poison even resistant creatures, and it grants
 protection from all venoms while wielded.
 %%%%
-Staff of Wucad Mu
+staff of Wucad Mu
 
 A crystal staff overflowing with magical energies. It can be evoked to restore
 large amounts of magical energy, but with the risk of damaging the user's mind.
@@ -55,34 +55,34 @@ An ivory-like dagger that looks like it could have been crafted from the tooth
 of some enormous predatory creature. It is lethally vampiric, and restores a
 greater portion of life to its user than other vampiric weapons.
 %%%%
-Scythe of Curses
+scythe of Curses
 
 A scythe surrounded by an ominous aura of dread. It carries a terrible and
 highly irritating curse, which it busily inflicts on both the wielder and their
 enemies.
 %%%%
-Sceptre of Torment
+sceptre of Torment
 
 An accursed golden sceptre, created by some unknown hellish power. It
 frequently causes agonising pain in all those unfortunate enough to gaze upon
 it.
 %%%%
-Sword of Zonguldrok
+sword of Zonguldrok
 
 A blade imbued with the essence of a legendary necromancer. Those slain in its
 presence are reanimated by its power and forced to fight on.
 %%%%
-Sword of Cerebov
+sword of Cerebov
 
 A twisted blade, covered in eerie flames. Its demonic power burns away some of
 the fire resistance of those it strikes.
 %%%%
-Staff of Dispater
+staff of Dispater
 
-A legendary staff, granting the power to unleash the fires of Hell — although
-not without draining the wielder's vitality in the process.
+A legendary staff, granting the power to unleash damnation — although not
+without draining the wielder's vitality in the process.
 %%%%
-Sceptre of Asmodeus
+sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
 Evoking it can summon fiery demons from their infernal home to do your bidding,
@@ -399,7 +399,7 @@ A cloak stitched from the hides of hundreds of hell rats, by an enchantress
 with a magic loom and too much time on her hands. It provides excellent
 protection from rats of all kinds.
 %%%%
-shield of the gong
+shield of the Gong
 
 A heavy bronze gong that can be worn as a shield. According to some mystics,
 beating on such a gong can grant the wearer spiritual protection.
@@ -596,7 +596,7 @@ A gold crown set with jet-black gems. It permanently afflicts its wearer with
 agonising pain, substantially reducing their resilience but rendering them
 immune to further torments.
 %%%%
-robe of vines
+robe of Vines
 
 A robe woven of living vines. The vines form a symbiotic relationship with
 their wearer, greatly increasing their regeneration, but preventing them from

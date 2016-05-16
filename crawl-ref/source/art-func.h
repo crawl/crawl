@@ -96,7 +96,7 @@ static bool _evoke_sceptre_of_asmodeus()
 
     if (m)
     {
-        mpr("The Sceptre summons one of its servants.");
+        mpr("The sceptre summons one of its servants.");
         did_god_conduct(DID_UNHOLY, 3);
 
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
@@ -136,7 +136,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
             && defender->res_fire() <= 3
             && !you.duration[DUR_FIRE_VULN])
         {
-            mpr("The Sword of Cerebov burns away your fire resistance.");
+            mpr("The sword of Cerebov burns away your fire resistance.");
             you.increase_duration(DUR_FIRE_VULN, 3 + random2(dam), 50);
         }
         if (defender->is_monster()
@@ -146,7 +146,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
         {
             if (you.can_see(*attacker))
             {
-                mprf("The Sword of Cerebov burns away %s fire resistance.",
+                mprf("The sword of Cerebov burns away %s fire resistance.",
                      defender->name(DESC_ITS).c_str());
             }
             defender->as_monster()->add_ench(
@@ -164,7 +164,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!unmeld)
     {
         MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
-                      random2(70), "the Scythe of Curses", NH_NEVER);
+                      random2(70), "the scythe of Curses", NH_NEVER);
     }
 }
 
@@ -183,7 +183,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
-                      random2(9), random2(70), "the Scythe of Curses",
+                      random2(9), random2(70), "the scythe of Curses",
                       NH_NEVER);
     }
 }
@@ -442,7 +442,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 static void _wucad_miscast(actor* victim, int power,int fail)
 {
     MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
-                  "the Staff of Wucad Mu", NH_NEVER);
+                  "the staff of Wucad Mu", NH_NEVER);
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
