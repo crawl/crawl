@@ -1099,232 +1099,178 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     return TILEP_MONS_SKELETON_SMALL;
 }
 
-static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
+/**
+ * For a given monster, what tile is appropriate for that monster if it's a
+ * zombie?
+ *
+ * If it's another kind of derived undead (e.g. a skeleton), the actual tile to
+ * be used will be derived from the zombie tile we return here.
+ *
+ * @param mon   The monster in question.
+ * @return      An appropriate zombie tile; e.g. TILEP_MONS_ZOMBIE_DRAGON.
+ */
+static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
 {
-    const int z_type = mon.type;
     const monster_type subtype = mon.base_type;
-
     const int z_size = mons_zombie_size(subtype);
-
-    tileidx_t z_tile = 0;
 
     switch (get_mon_shape(subtype))
     {
     case MON_SHAPE_HUMANOID:
         if (subtype == MONS_JUGGERNAUT)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_JUGGERNAUT;
-            break;
-        }
+            return TILEP_MONS_ZOMBIE_JUGGERNAUT;
+
         switch (mons_genus(subtype))
         {
         case MONS_GOBLIN:
-            z_tile = TILEP_MONS_ZOMBIE_GOBLIN;
-            break;
+            return TILEP_MONS_ZOMBIE_GOBLIN;
         case MONS_HOBGOBLIN:
-            z_tile = TILEP_MONS_ZOMBIE_HOBGOBLIN;
-            break;
+            return TILEP_MONS_ZOMBIE_HOBGOBLIN;
         case MONS_GNOLL:
-            z_tile = TILEP_MONS_ZOMBIE_GNOLL;
-            break;
+            return TILEP_MONS_ZOMBIE_GNOLL;
         case MONS_HUMAN:
-            z_tile = TILEP_MONS_ZOMBIE_HUMAN;
-            break;
+            return TILEP_MONS_ZOMBIE_HUMAN;
         case MONS_KOBOLD:
-            z_tile = TILEP_MONS_ZOMBIE_KOBOLD;
-            break;
+            return TILEP_MONS_ZOMBIE_KOBOLD;
         case MONS_ORC:
-            z_tile = TILEP_MONS_ZOMBIE_ORC;
-            break;
+            return TILEP_MONS_ZOMBIE_ORC;
         case MONS_TROLL:
-            z_tile = TILEP_MONS_ZOMBIE_TROLL;
-            break;
+            return TILEP_MONS_ZOMBIE_TROLL;
         case MONS_OGRE:
-            z_tile = TILEP_MONS_ZOMBIE_OGRE;
-            break;
+            return TILEP_MONS_ZOMBIE_OGRE;
         default:
             break;
         }
-        if (z_tile)
-            break;
         // fallthrough to other humanoid cases
     case MON_SHAPE_HUMANOID_WINGED:
         if (mons_genus(subtype) == MONS_HARPY)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_HARPY;
-            break;
-        }
+            return TILEP_MONS_ZOMBIE_HARPY;
         // fallthrough to other humanoid cases
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
         if (mons_genus(subtype) == MONS_DRACONIAN)
-            z_tile = TILEP_MONS_ZOMBIE_DRACONIAN;
-        else
-        {
-            z_tile = (z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_SMALL
-                      : TILEP_MONS_ZOMBIE_LARGE);
-        }
-        break;
+            return TILEP_MONS_ZOMBIE_DRACONIAN;
+        return z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_SMALL
+                                 : TILEP_MONS_ZOMBIE_LARGE;
     case MON_SHAPE_CENTAUR:
-        z_tile = TILEP_MONS_ZOMBIE_CENTAUR;
-        break;
+        return TILEP_MONS_ZOMBIE_CENTAUR;
     case MON_SHAPE_NAGA:
-        z_tile = TILEP_MONS_ZOMBIE_NAGA;
-        break;
+        return TILEP_MONS_ZOMBIE_NAGA;
     case MON_SHAPE_QUADRUPED_WINGED:
         if (mons_genus(subtype) != MONS_DRAGON
             && mons_genus(subtype) != MONS_WYVERN
             && mons_genus(subtype) != MONS_DRAKE)
         {
             if (mons_genus(subtype) == MONS_GRIFFON)
-                z_tile = TILEP_MONS_ZOMBIE_GRIFFON;
-            else
-                z_tile = TILEP_MONS_ZOMBIE_QUADRUPED_WINGED;
-            break;
+                return TILEP_MONS_ZOMBIE_GRIFFON;
+            return TILEP_MONS_ZOMBIE_QUADRUPED_WINGED;
         }
         // else fall-through for skeletons & dragons
     case MON_SHAPE_QUADRUPED:
         if (mons_genus(subtype) == MONS_DRAGON
             || mons_genus(subtype) == MONS_WYVERN)
         {
-            if (subtype == MONS_MOTTLED_DRAGON
-                || subtype == MONS_STEAM_DRAGON)
-            {
-                z_tile = TILEP_MONS_ZOMBIE_DRAKE;
-            }
-            else
-                z_tile = TILEP_MONS_ZOMBIE_DRAGON;
-            break;
+            if (subtype == MONS_MOTTLED_DRAGON || subtype == MONS_STEAM_DRAGON)
+                return TILEP_MONS_ZOMBIE_DRAKE;
+            return TILEP_MONS_ZOMBIE_DRAGON;
         }
-        else if (mons_genus(subtype) == MONS_DRAKE)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_DRAKE;
-            break;
-        }
-        else if (subtype == MONS_LERNAEAN_HYDRA && z_type == MONS_ZOMBIE)
+        if (mons_genus(subtype) == MONS_DRAKE)
+            return TILEP_MONS_ZOMBIE_DRAKE;
+        if (subtype == MONS_LERNAEAN_HYDRA && mon.type == MONS_ZOMBIE)
         {
             // Step down the number of heads to get the appropriate tile:
-            // For the last five heads, use tiles 1-5, for greater amounts
+            // for the last five heads, use tiles 1-5, for greater amounts
             // use the next tile for every 5 more heads.
-            z_tile = tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE,
-                                       mon.number <= 5 ?
-                                       mon.number - 1 : 4 + (mon.number - 1)/5);
-            break;
+            return tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE,
+                                     mon.number <= 5 ?
+                                     mon.number - 1 :
+                                     4 + (mon.number - 1)/5);
         }
-        else if (mons_genus(subtype) == MONS_HYDRA)
+        if (mons_genus(subtype) == MONS_HYDRA)
+            return TILEP_MONS_ZOMBIE_HYDRA + min(mon.num_heads, 5) - 1;
+        if ((mons_genus(subtype) == MONS_GIANT_LIZARD
+             || mons_genus(subtype) == MONS_CROCODILE))
         {
-            z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + min(mon.num_heads, 5) - 1;
-            break;
+            return TILEP_MONS_ZOMBIE_LIZARD;
         }
-        else if ((mons_genus(subtype) == MONS_GIANT_LIZARD
-                  || mons_genus(subtype) == MONS_CROCODILE))
-        {
-            z_tile = TILEP_MONS_ZOMBIE_LIZARD;
-            break;
-        }
-        else if (mons_genus(subtype) == MONS_RAT)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_RAT;
-            break;
-        }
-        else if (subtype == MONS_QUOKKA)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_QUOKKA;
-            break;
-        }
-        else if (subtype == MONS_JACKAL)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_JACKAL;
-            break;
-        }
-        else if (mons_genus(subtype) == MONS_HOUND)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_HOUND;
-            break;
-        }
-        // else fall-through
+        if (mons_genus(subtype) == MONS_RAT)
+            return TILEP_MONS_ZOMBIE_RAT;
+        if (subtype == MONS_QUOKKA)
+            return TILEP_MONS_ZOMBIE_QUOKKA;
+        if (subtype == MONS_JACKAL)
+            return TILEP_MONS_ZOMBIE_JACKAL;
+        if (mons_genus(subtype) == MONS_HOUND)
+            return TILEP_MONS_ZOMBIE_HOUND;
+        // else fall-through to other quadrupeds
     case MON_SHAPE_QUADRUPED_TAILLESS:
-        if (mons_genus(subtype) == MONS_GIANT_FROG || mons_genus(subtype) == MONS_BLINK_FROG)
-            z_tile = TILEP_MONS_ZOMBIE_TOAD;
-        else if (mons_genus(subtype) == MONS_CRAB)
-            z_tile = TILEP_MONS_ZOMBIE_CRAB;
-        else if (subtype == MONS_SNAPPING_TURTLE || subtype == MONS_ALLIGATOR_SNAPPING_TURTLE)
-            z_tile = TILEP_MONS_ZOMBIE_TURTLE;
-        else
+        if (mons_genus(subtype) == MONS_GIANT_FROG
+            || mons_genus(subtype) == MONS_BLINK_FROG)
         {
-            z_tile = (z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_QUADRUPED_SMALL
-                      : TILEP_MONS_ZOMBIE_QUADRUPED_LARGE);
+            return TILEP_MONS_ZOMBIE_TOAD;
         }
-        break;
+        if (mons_genus(subtype) == MONS_CRAB)
+            return TILEP_MONS_ZOMBIE_CRAB;
+        if (mons_genus(subtype) == MONS_SNAPPING_TURTLE)
+            return TILEP_MONS_ZOMBIE_TURTLE;
+        return z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_QUADRUPED_SMALL
+                                 : TILEP_MONS_ZOMBIE_QUADRUPED_LARGE;
     case MON_SHAPE_BAT:
         if (mons_genus(subtype) == MONS_BENNU) // birds
-            z_tile = TILEP_MONS_ZOMBIE_BIRD;
-        else
-            z_tile = TILEP_MONS_ZOMBIE_BAT;
-        break;
+            return TILEP_MONS_ZOMBIE_BIRD;
+        return TILEP_MONS_ZOMBIE_BAT;
     case MON_SHAPE_SNAIL:
     case MON_SHAPE_SNAKE:
         if (mons_genus(subtype) == MONS_WORM)
-            z_tile = TILEP_MONS_ZOMBIE_WORM;
-        else if (subtype == MONS_ADDER)
-            z_tile = TILEP_MONS_ZOMBIE_ADDER;
-        else
-            z_tile = TILEP_MONS_ZOMBIE_SNAKE;
-        break;
+            return TILEP_MONS_ZOMBIE_WORM;
+        if (subtype == MONS_ADDER)
+            return TILEP_MONS_ZOMBIE_ADDER;
+        return TILEP_MONS_ZOMBIE_SNAKE;
     case MON_SHAPE_FISH:
-        z_tile = TILEP_MONS_ZOMBIE_FISH;
+        return TILEP_MONS_ZOMBIE_FISH;
         break;
     case MON_SHAPE_CENTIPEDE:
     case MON_SHAPE_INSECT:
         if (mons_genus(subtype) == MONS_BEETLE)
-            z_tile = TILEP_MONS_ZOMBIE_BEETLE;
-        else if (subtype == MONS_GIANT_COCKROACH)
-            z_tile = TILEP_MONS_ZOMBIE_ROACH;
-        else
-            z_tile = TILEP_MONS_ZOMBIE_BUG;
-        break;
+            return TILEP_MONS_ZOMBIE_BEETLE;
+        if (subtype == MONS_GIANT_COCKROACH)
+            return TILEP_MONS_ZOMBIE_ROACH;
+        return TILEP_MONS_ZOMBIE_BUG;
     case MON_SHAPE_INSECT_WINGED:
-        z_tile = TILEP_MONS_ZOMBIE_BEE;
-        break;
+        return TILEP_MONS_ZOMBIE_BEE;
     case MON_SHAPE_ARACHNID:
         if (subtype == MONS_SCORPION)
-            z_tile = TILEP_MONS_ZOMBIE_SCORPION;
-        else if (mons_class_body_size(subtype) >= SIZE_MEDIUM)
-            z_tile = TILEP_MONS_ZOMBIE_SPIDER_LARGE; // for a spider!
-        else
-            z_tile = TILEP_MONS_ZOMBIE_SPIDER_SMALL;
-        break;
+            return TILEP_MONS_ZOMBIE_SCORPION;
+        if (mons_class_body_size(subtype) >= SIZE_MEDIUM)
+            return TILEP_MONS_ZOMBIE_SPIDER_LARGE; // for a spider!
+        return TILEP_MONS_ZOMBIE_SPIDER_SMALL;
     case MON_SHAPE_MISC:
         if (subtype == MONS_KRAKEN)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_KRAKEN;
-            break;
-        }
-        else if (mons_genus(subtype) == MONS_OCTOPODE)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_OCTOPODE;
-            break;
-        }
-        else if (mons_genus(subtype) == MONS_UGLY_THING)
-        {
-            z_tile = TILEP_MONS_ZOMBIE_UGLY_THING;
-            break;
-        }
+            return TILEP_MONS_ZOMBIE_KRAKEN;
+        if (mons_genus(subtype) == MONS_OCTOPODE)
+            return TILEP_MONS_ZOMBIE_OCTOPODE;
+        if (mons_genus(subtype) == MONS_UGLY_THING)
+            return TILEP_MONS_ZOMBIE_UGLY_THING;
+        // fallthrough to default
     default:
-        z_tile = TILEP_ERROR;
+        return TILEP_ERROR;
     }
+}
 
-    if (z_type == MONS_SKELETON)
-        z_tile = _zombie_tile_to_skeleton(z_tile);
-
-    if (z_type == MONS_SPECTRAL_THING)
-        z_tile = _zombie_tile_to_spectral(z_tile);
-
-    if (z_type == MONS_SIMULACRUM)
-        z_tile = _zombie_tile_to_simulacrum(z_tile);
-
-    return z_tile;
+/// What tile should be used for a given derived undead monster?
+static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
+{
+    const tileidx_t zombie_tile = _mon_to_zombie_tile(mon);
+    switch (mon.type)
+    {
+        case MONS_SKELETON:
+            return _zombie_tile_to_skeleton(zombie_tile);
+        case MONS_SPECTRAL_THING:
+            return _zombie_tile_to_spectral(zombie_tile);
+        case MONS_SIMULACRUM:
+            return _zombie_tile_to_simulacrum(zombie_tile);
+        default:
+            return zombie_tile;
+    }
 }
 
 // Special case for *taurs which have a different tile
