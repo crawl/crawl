@@ -2475,8 +2475,8 @@ tileidx_t tileidx_item(const item_def &item)
         if (is_artefact(item))
         {
             const int offset = item.rnd
-                               % tile_main_count(TILE_AMU_RANDOM_OFFSET);
-            return TILE_AMU_RANDOM_OFFSET + offset;
+                               % tile_main_count(TILE_AMU_RANDART_OFFSET);
+            return TILE_AMU_RANDART_OFFSET + offset;
         }
 
         if (item.flags & ISFLAG_KNOW_TYPE)

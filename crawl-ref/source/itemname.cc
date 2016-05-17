@@ -893,9 +893,9 @@ static const char* amulet_secondary_string(uint32_t s)
 static const char* amulet_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "zirconium", "sapphire", "golden", "emerald", "garnet", "bronze",
-        "brass", "copper", "ruby", "ivory", "bone", "platinum", "jade",
-        "fluorescent", "crystal", "cameo", "pearl", "blue", "peridot",
+        "sapphire", "zirconium", "golden", "emerald", "garnet", "bronze",
+        "brass", "copper", "ruby", "citrine", "bone", "platinum", "jade",
+        "fluorescent", "amethyst", "cameo", "pearl", "blue", "peridot",
         "jasper", "diamond", "malachite", "steel", "cabochon", "silver",
         "soapstone", "lapis lazuli", "filigree", "beryl"
     };
