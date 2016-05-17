@@ -4181,6 +4181,12 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     trim_string(s);
 
     mons_spec base_monster = mons_by_name(s);
+    if (mons_class_flag(base_monster.type, M_CANT_SPAWN))
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
+
     if (base_monster.type < 0)
         base_monster.type = MONS_PROGRAM_BUG;
 
