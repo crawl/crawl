@@ -668,8 +668,7 @@ ruby
 tiger_eye
 jade
 glass
-###########random
-agate RING_RANDOM_OFFSET RING_COL_FIRST
+agate
 clay
 diamond
 emerald
@@ -683,7 +682,7 @@ plain_red
 plain_yellow
 plain_black
 bronze
-moonstone RING_COL_LAST
+moonstone
 
 ###########randarts
 %sdir item/ring/randarts
@@ -749,8 +748,7 @@ bone
 platinum
 jade
 flourescent
-###########random
-amethyst AMU_RANDOM_OFFSET AMU_COL_FIRST
+amethyst
 cameo
 pearl
 blue
@@ -764,7 +762,7 @@ silver
 soapstone
 lapis_lazuli
 filigree
-beryl AMU_COL_LAST
+beryl
 
 ###########randarts
 %sdir item/amulet/randarts
@@ -864,16 +862,15 @@ i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
 
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
-###0paperback / hardback 16
 %sdir item/book
-book_of_the_dead BOOK_PAPER_OFFSET
-dark_blue BOOK_COL_FIRST
+light_gray BOOK_OFFSET UNSEEN_BOOK
+dark_blue
 dark_green
 cyan
 red
 purple
 tan
-light_gray
+book_of_the_dead
 dark_gray
 light_blue
 light_green
@@ -881,9 +878,8 @@ turquoise
 pink
 magenta
 yellow
-white BOOK_COL_LAST
-##########leather 8
-parchment BOOK_LEATHER_OFFSET UNSEEN_BOOK
+white
+parchment
 leather
 tan
 plaid
@@ -891,16 +887,14 @@ light_brown
 light_brown
 dark_brown
 dark_brown
-###########metal 8
-bronze BOOK_METAL_OFFSET
+bronze
 copper
 silver
 gold
 metal_blue
 metal_cyan
 metal_green
-############papyrus 1
-cloth BOOK_PAPYRUS
+cloth
 ############manuals
 manual1 BOOK_MANUAL
 manual2

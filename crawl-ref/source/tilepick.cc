@@ -60,16 +60,6 @@ COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
-// Some tile sets have a corresponding tile for every colour (excepting black).
-// If this assert breaks, then it means that either there are tiles that are
-// being unused in the tileset or an incorrect type of tile will get used.
-COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_RING_COL_LAST - TILE_RING_COL_FIRST + 1);
-COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1);
-COMPILE_CHECK(MAX_TERM_COLOUR - 1
-              == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
-
 TextureID get_dngn_tex(tileidx_t idx)
 {
     ASSERT(idx < TILE_FEAT_MAX);
@@ -2409,7 +2399,6 @@ tileidx_t tileidx_item(const item_def &item)
     const int type        = item.sub_type;
     const int subtype_rnd = item.subtype_rnd;
     const int rnd         = item.rnd;
-    const int colour      = item.get_colour();
 
     switch (clas)
     {
@@ -2499,21 +2488,8 @@ tileidx_t tileidx_item(const item_def &item)
         if (item.sub_type == BOOK_MANUAL)
             return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
 
-        switch (rnd % NDSC_BOOK_PRI)
-        {
-        case 0:
-        case 1:
-        default:
-            return TILE_BOOK_PAPER_OFFSET + colour;
-        case 2:
-            return TILE_BOOK_LEATHER_OFFSET
-                   + rnd % tile_main_count(TILE_BOOK_LEATHER_OFFSET);
-        case 3:
-            return TILE_BOOK_METAL_OFFSET
-                   + rnd % tile_main_count(TILE_BOOK_METAL_OFFSET);
-        case 4:
-            return TILE_BOOK_PAPYRUS;
-        }
+        return TILE_BOOK_OFFSET
+               + rnd % tile_main_count(TILE_BOOK_OFFSET);
 
     case OBJ_STAVES:
         if (item.flags & ISFLAG_KNOW_TYPE)
