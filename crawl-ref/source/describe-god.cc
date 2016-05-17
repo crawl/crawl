@@ -726,21 +726,21 @@ static void _describe_god_powers(god_type which_god)
 
     case GOD_JIYVA:
         have_any = true;
-        if (piety < piety_breakpoint(2))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::resist_corrosion))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("%s shields you from corrosive effects.\n",
                 uppercase_first(god_name(which_god)).c_str());
 
-        if (piety < piety_breakpoint(1))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::slime_feed))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
-                piety >= piety_breakpoint(4) ? ", power and health" :
-                piety >= piety_breakpoint(3) ? " and power" :
-                                               "");
+                have_passive(passive_t::slime_hp) ? ", power and health" :
+                have_passive(passive_t::slime_mp) ? " and power" :
+                                                    "");
         break;
 
     case GOD_FEDHAS:
@@ -755,10 +755,10 @@ static void _describe_god_powers(god_type which_god)
 
     case GOD_CHEIBRIADOS:
         have_any = true;
-        if (!in_good_standing(which_god))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::stat_boost))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("%s supports your attributes (+%d).\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 chei_stat_boost(piety));
@@ -811,10 +811,10 @@ static void _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         if (!you_foodless_normally())
         {
-            if (piety < piety_breakpoint(1))
-                textcolour(DARKGREY);
-            else
+            if (have_passive(passive_t::bottle_mp))
                 textcolour(god_colour(which_god));
+            else
+                textcolour(DARKGREY);
 
             cprintf("%s will collect and distill excess magic from your "
                     "kills.\n",
