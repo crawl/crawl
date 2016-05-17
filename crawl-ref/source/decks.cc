@@ -1564,7 +1564,7 @@ static void _exile_card(int power, deck_rarity_type rarity)
     // Calculate how many extra banishments you get.
     const int power_level = _get_power_level(power, rarity);
     int nemelex_bonus = 0;
-    if (in_good_standing(GOD_NEMELEX_XOBEH))
+    if (have_passive(passive_t::cards_power))
         nemelex_bonus = you.piety;
 
     int extra_targets =

@@ -34,6 +34,7 @@
 #include "food.h"
 #include "format.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
 #include "itemname.h"
@@ -4018,7 +4019,7 @@ bool runrest::run_should_stop() const
     const map_cell& tcell = env.map_knowledge(targ);
 
     if (tcell.cloud() != CLOUD_NONE
-        && (!in_good_standing(GOD_QAZLAL)
+        && (!have_passive(passive_t::resist_own_clouds)
             || !YOU_KILL(tcell.cloudinfo()->killer)))
     {
         return true;
