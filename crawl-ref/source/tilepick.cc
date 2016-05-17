@@ -1071,6 +1071,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BAT:
         return TILEP_MONS_SKELETON_BAT;
     case TILEP_MONS_ZOMBIE_HARPY:
+    case TILEP_MONS_ZOMBIE_BIRD:
         return TILEP_MONS_SKELETON_BIRD;
     case TILEP_MONS_ZOMBIE_FISH:
         return TILEP_MONS_SKELETON_FISH;
@@ -1257,7 +1258,10 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         }
         break;
     case MON_SHAPE_BAT:
-        z_tile = TILEP_MONS_ZOMBIE_BAT;
+        if (mons_genus(subtype) == MONS_BENNU) // birds
+            z_tile = TILEP_MONS_ZOMBIE_BIRD;
+        else
+            z_tile = TILEP_MONS_ZOMBIE_BAT;
         break;
     case MON_SHAPE_SNAIL:
     case MON_SHAPE_SNAKE:
