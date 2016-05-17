@@ -884,8 +884,6 @@ leather
 tan
 plaid
 light_brown
-light_brown
-dark_brown
 dark_brown
 bronze
 copper
