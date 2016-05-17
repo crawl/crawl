@@ -1212,11 +1212,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
-        if (!prevent && temp && (you.haloed()
-                                 || in_good_standing(GOD_SHINING_ONE)))
-        {
+        if (!prevent && temp && (you.haloed() || have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
-        }
         break;
 
     case SPELL_REPEL_MISSILES:

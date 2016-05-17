@@ -524,11 +524,8 @@ static string _get_god_misc_info(god_type which_god)
                                       " Invocations skill. All abilities are"
                                       " purely based on piety.";
 
-            if (which_god == GOD_ASHENZARI
-                && in_good_standing(which_god, 1))
-            {
+            if (have_passive(passive_t::bondage_skill_boost))
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
-            }
 
             return piety_only;
         }
