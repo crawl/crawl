@@ -386,6 +386,24 @@ ccccccc.....C```D
        c.@cc
 ENDMAP
 
+NAME: nicolae_geh_amphitheater
+TAGS: extra decor transparent
+DEPTH: Geh, !Geh:1
+SUBST: { = {[(
+MAP
+   lllll
+ lllclclll
+ lclllllcl
+llll...lll
+lcl......@
+lll..{...@
+lcl......@
+llll...lll
+ lclllllcl
+ lllclclll
+   lllll
+ENDMAP
+
 ##############################################################################
 # Asmodeus (Gehenna) - the original
 ##############################################################################

@@ -1,3 +1,15 @@
+###############################################################################
+# shops.des: The file for minivaults centered around a single shops. The
+#            generic vaults, with the 'shop' tag, can be placed by themselves
+#            or in sets of multiple shops throughout valid levels. The themed
+#            vaults are excluded from the latter, but are collected here for
+#            ease of reference.
+#
+# <<1>>      Generic
+# <<2>>      Themed
+#
+###############################################################################
+
 lua {{
 require('dlua/vault.lua')
 
@@ -72,7 +84,10 @@ end)
 MAP
 ENDMAP
 
-# Shop vaults: Tagged shop, may only contain a single shop.
+###############################################################################
+# <<1>> Generic.
+#       Tagged shop, may only contain a single shop. No threats.
+#
 NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 100
@@ -276,19 +291,15 @@ cww.wwc
 ccc+ccc
 ENDMAP
 
-NAME: nicolae_shop_scaring_up_business
-TAGS: allow_dup extra shop
-WEIGHT: 1
-KFEAT: O = food shop
-KMONS: O = patrolling hungry ghost
-MAP
-...
-.O.
-...
-ENDMAP
+###############################################################################
+# <<2>> Themed.
+#       Not tagged shop, but still contains one. Can have threats, and can have
+#       have a specific custom item list. Even if the below examples don't show
+#       it, try to have some restraint with additions here.
+#
 
 #####################################################
-# Custom venom shop Vault
+# Custom venom shop
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen
 DEPTH:   D:4-, Depths
@@ -312,7 +323,7 @@ xxxxx
 ENDMAP
 
 #####################################################
-# Custom earth shop Vault
+# Custom earth shop
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
@@ -342,7 +353,7 @@ MAP
 ENDMAP
 
 #####################################################
-# Custom blood shop Vault
+# Custom blood shop
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen
 DEPTH:   D:12-, Depths
@@ -564,4 +575,89 @@ MAP
 c.S.c
 .....
  c.c
+ENDMAP
+
+# Why not take a chance on an unidentified artefact?
+NAME: nicolae_antique_artefacts
+TAGS: transparent
+DEPTH: D:10-, Depths
+WEIGHT: 1
+SHUFFLE: -m
+SUBST: - = .
+KFEAT: m = iron_grate
+KFEAT: S = antiques shop type:Antique suffix:Artefacts count:6 ; \
+   any weapon randart | any armour randart | any jewellery randart w:4
+MAP
+.......
+.-vmv-.
+.v...v.
+.m.S.m.
+.v...v.
+.-vmv-.
+.......
+ENDMAP
+
+NAME: nicolae_shop_scaring_up_business
+TAGS: extra
+DEPTH: D:7-
+WEIGHT: 1
+KFEAT: O = food shop
+KMONS: O = patrolling hungry ghost
+MAP
+...
+.O.
+...
+ENDMAP
+
+# Get away from it all.
+NAME: nicolae_island_escapes
+DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
+TAGS: no_trap_gen no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
+WEIGHT: 5
+SHUFFLE: Aa/Bb
+SUBST: Aa = t, B = ..t, b = .
+KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
+ scroll of blinking | scroll of teleportation | scroll of fog w:8 | \
+ potion of flight | potion of invisibility w:8 | potion of haste w:1 | \
+ ring of flight w:5 | ring of teleportation w:5 | ring of stealth w:4 | \
+ wand of teleportation w:5 | wand of digging w:4 | wand of hasting w:1
+MAP
+  wwwwwwwww
+ wwwwwwwwwww
+ wwwwwwwwwww
+ wwwwBABwwww
+@wwwa...Awww
+@wwwb.S>Bwww
+@wwwa...Awww
+ wwwwBABwwww
+ wwwwwwwwwww
+ wwwwwwwwwww
+  wwwwwwwww
+ENDMAP
+
+# Eat the purple.
+NAME: nicolae_transmutations_shop
+TAGS: transparent no_item_gen no_monster_gen no_trap_gen
+DEPTH: D:8-, Depths, Zot
+COLOUR: m = magenta
+TILE: m = dngn_transparent_wall_magenta
+KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
+   potion of cure mutation q:1 w:5 | potion of beneficial mutation q:1 w:5 | \
+   potion of mutation | potion of lignification | book of changes w:5 | \
+   wand of polymorph | ugly thing chunk | book of transfigurations w:5 | \
+   book of alchemy w:5 | randbook disc:transmutation w:5 | \
+   triple sword unrand:plutonium_sword w:1
+MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
+   pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
+   spread_rate = 0, excl_rad = 0 }
+MAP
+.........
+.mmmmmmm.
+.mFFFFFm.
+.m....Fm.
+....S.Fm.
+.m....Fm.
+.mFFFFFm.
+.mmmmmmm.
+.........
 ENDMAP

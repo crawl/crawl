@@ -858,6 +858,25 @@ xxt.txx
  xx+xx
 ENDMAP
 
+# Sometimes you just don't feel like walking all the way downstairs, you know?
+NAME: nicolae_temple_entry_ecumenical
+TAGS: temple_entry uniq_ecumenical_altar
+WEIGHT: 1
+ORIENT: float
+SUBST: c : ct, - : p.
+KMONS: p = plant
+KFEAT: O = enter_temple
+KFEAT: _ = altar_ecumenical
+MAP
+ ccccc...ccccc
+ccccc-...-ccccc
+cc---..T..---cc
+c-...........-c
+c-._..---..O.-c
+c-...-ccc-...-c
+cc---ccccc---cc
+ ccccccccccccc
+ENDMAP
 
 ##############################################################################
 # Temple maps
