@@ -60,6 +60,7 @@ zombie_rat MONS_ZOMBIE_RAT
 zombie_roach MONS_ZOMBIE_ROACH
 zombie_scorpion MONS_ZOMBIE_SCORPION
 zombie_spider_small MONS_ZOMBIE_SPIDER_SMALL
+zombie_bird MONS_ZOMBIE_BIRD
 
 %sdir mon/undead/skeletons
 ## Skeletons
