@@ -512,22 +512,24 @@ void dec_penance(god_type god, int val)
             }
 
             // TSO's halo is once more available.
-            if (god == GOD_SHINING_ONE
-                     && you.piety >= piety_breakpoint(0))
+            if (have_passive(passive_t::halo))
             {
                 mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL && you.piety >= piety_breakpoint(0))
+
+            if (have_passive(passive_t::storm_shield))
             {
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
                 you.redraw_armour_class = true; // also handles shields
             }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
-            else if (god == GOD_JIYVA)
+
+            if (have_passive(passive_t::neutral_slimes))
                 add_daction(DACT_SLIME_NEW_ATTEMPT);
-            else if (god == GOD_PAKELLAS)
+
+            if (have_passive(passive_t::identify_devices))
                 pakellas_id_device_charges();
 
             if (have_passive(passive_t::friendly_plants)
@@ -687,6 +689,8 @@ static void _inc_penance(god_type god, int val)
         }
         else if (god == GOD_QAZLAL)
         {
+            // Can't use have_passive(passive_t::storm_shield) because we
+            // just gained penance.
             if (you.piety >= piety_breakpoint(0))
             {
                 mprf(MSGCH_GOD, god, "The storm surrounding you dissipates.");

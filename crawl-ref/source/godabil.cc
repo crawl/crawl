@@ -6151,8 +6151,7 @@ void ru_reset_sacrifice_timer(bool clear_timer)
 bool will_ru_retaliate()
 {
     // Scales up to a 33% chance of retribution
-    return you_worship(GOD_RU)
-           && you.piety >= piety_breakpoint(1)
+    return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
            && one_chance_in(div_rand_round(480, you.piety));
 }
