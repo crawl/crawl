@@ -1065,6 +1065,104 @@ yxx-----wwwww-xy
         Yyyxxxy
 ENDMAP
 
+NAME: nicolae_shoals_this_corrosion
+DEPTH: Shoals
+TAGS: water_ok no_item_gen
+NSUBST: % = 1:d / *:%%%%%*
+KMONS: 1 = oklob plant
+KMONS: 2 = siren
+KMONS: p = plant
+KITEM: d = any ring w:24 / any ring good_item w:5
+MAP
+ xxxxxx
+xx1WW.xx
+x%.ww.pp@
+x%2ww.pp@
+x%.ww.pp@
+xx1WW.xx
+ xxxxxx
+ENDMAP
+
+# XXX: Rare teleport islets possibilities.
+NAME: nicolae_shoals_kraken_party
+DEPTH: Shoals, !Shoals:1
+TAGS: no_monster_gen no_trap_gen water_ok
+SUBST: { = {[(, . = ......wW, - = ...W
+KFEAT: 1 = w
+KMONS: 1 = kraken
+MAP
+      --.@.--
+ xxxxxxx---xxxxxxx
+ x1w-.........-w1x
+ xw--.........--wx
+ x--%.........%--x
+ x...............x
+-x...............x-
+-x...............x-
+.-...............-.
+@-.......{.......-@
+.-...............-.
+-x...............x-
+-x...............x-
+ x............%--x
+ x--%........%--wx
+ xw--........--1xx
+ x1w-........-wxx
+ xxxxxxx---xxxxx
+      --.@.--
+ENDMAP
+
+NAME: nicolae_shoals_water_shrine
+DEPTH: Shoals
+TAGS: water_ok no_monster_gen no_item_gen
+NSUBST: 1 = 3:A / 3:E / 1:AWW / 1:EWW, 2 = 2:N / 1:Nww / *:w
+KMONS: A = merfolk aquamancer
+KMONS: N = water nymph
+KMONS: E = water elemental
+KFEAT: AE = W
+KFEAT: N = w
+CLEAR: _
+MAP
+     c c
+   c     c
+      _
+ c   1W1   c
+    WWWWW
+c  1W2w2W1  c
+   WWw2wWW
+c  1W2w2W1  c
+    WWWWW
+ c   1W1   c
+      _
+   c     c
+     c c
+ENDMAP
+
+NAME: nicolae_shoals_drake_roost
+DEPTH: Shoals
+TAGS: water_ok no_monster_gen no_tide patrolling
+SUBST: W = WWW w:6
+NSUBST: . = 2:s / 2:f / 2:i / 1:sfi / 2:sfi.. / *:.
+KMONS: s = steam dragon
+KMONS: f = rime drake
+KMONS: i = wind drake
+MAP
+   WWWWWWWW
+ WWWWWWWWWWWW
+ WWWWWWWWWWWW
+WWWWWWWWWWWWWW
+WWWWW....WWWWW
+WWWW......WWWW
+WWWW..xx..WWWW
+WWWW..xx..WWWW
+WWWW......WWWW
+WWWWW....WWWWW
+WWWWWWWWWWWWWW
+ WWWWWWWWWWWW
+ WWWWWWWWWWWW
+   WWWWWWWW
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map, by placing many

@@ -573,7 +573,6 @@ MAP
 .............
 ENDMAP
 
-
 ### Fedhas overflow altars ####################################################
 
 NAME:   fedhas_altar_1
@@ -1921,7 +1920,6 @@ c'''''b'''''c
 cccccc@cccccc
 ENDMAP
 
-
 NAME: nicolae_ru_path_of_blood
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
 TAGS: no_monster_gen
@@ -2056,7 +2054,6 @@ xWWWWWWWx
 xxWWWWWxx
  xxxxxxx
 ENDMAP
-
 
 ### Trog overflow altars ######################################################
 
@@ -2469,6 +2466,27 @@ xIT...TIx
 xxxx+xxxx
 ENDMAP
 
+NAME: nicolae_xom_altar_mimics
+TAGS: temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
+DEPTH: D:3-
+WEIGHT: 1
+NSUBST: _ = 1:_ / 2:XXX_ / *:X
+KFEAT: _ = altar_xom
+KFEAT: X = altar_xom mimic
+: interest_check(_G)
+MAP
+  .......
+  ._..._.
+ .........
+ .........
+...........
+._..._..._.
+...........
+ .........
+ .........
+  ._..._.
+  .......
+ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
 
@@ -2686,7 +2704,6 @@ MAP
  ..G.G..
   .....
 ENDMAP
-
 
 ### The Shining One overflow altars ###########################################
 
