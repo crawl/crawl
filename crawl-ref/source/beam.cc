@@ -5624,13 +5624,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_AFFECTED;
         }
 
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            obvious_effect = true;
-            return MON_OTHER;
-        }
-
         // Being a puppet on magic strings is a nasty thing.
         // Mindless creatures shouldn't probably mind, but because of complex
         // behaviour of enslaved neutrals, let's disallow that for now.
