@@ -2551,8 +2551,6 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "Why is it so dark? Have they never heard of torches?"
 
-@The_monster@ says, "I bought a lantern at a shop, but it didn't work. I hate that."
-
 @The_monster@ ponders, "They're ugly as hell, too!"
 
 @The_monster@ says, "I ran into an orc. He called himself a warlord, and I asked what war?"
