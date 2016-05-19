@@ -1175,7 +1175,7 @@ static string _verbose_info0(const monster_info& mi)
     if (mi.is(MB_INNER_FLAME))
         return "inner flame";
     if (mi.is(MB_DUMB))
-        return "dumb";
+        return "stupefied";
     if (mi.is(MB_PARALYSED))
         return "paralysed";
     if (mi.is(MB_CAUGHT))
