@@ -469,6 +469,9 @@ A web
 
 A spider's web. The spider who left it must have been huge, as it seems to be
 made for trapping {{ return you.genus(true) }} rather than flies.
+
+Any creature caught in it will send out telltale vibrations, alerting and
+attracting spiders nearby.
 %%%%
 An abandoned shop
 
