@@ -1954,6 +1954,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     for (const mon_spell_slot &slot : spl)
         if (!(get_spell_flags(slot.spell) & SPFLAG_HOLY))
             mon->spells.push_back(slot);
+    if (mon->spells.size())
+        mon->props[CUSTOM_SPELLS_KEY] = true;
 
     name_zombie(mon, &orig);
 
