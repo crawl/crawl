@@ -407,7 +407,7 @@ void gozag_set_bribe(monster* traitor)
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
 
-    if (bribability > 0)
+    if (bribability > 0 && !traitor->friendly())
     {
         const monster* leader =
             traitor->props.exists("band_leader")
