@@ -2816,6 +2816,18 @@ spectral thing
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
 %%%%
+spellforged servitor
+
+“When you think
+ Your toys have gone berserk
+ It's an illusion
+ You cannot shirk”
+    -Siouxsie and the Banshees, "Spellbound"
+%%%%
+Spellforged Servitor spell
+
+<spellforged servitor>
+%%%%
 staff
 
 “Bashō Osho said to his disciples, ‘If you have a staff, I will give you a
