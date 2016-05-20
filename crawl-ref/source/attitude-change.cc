@@ -407,34 +407,34 @@ void gozag_set_bribe(monster* traitor)
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
 
-    if (bribability > 0 && !traitor->friendly())
-    {
-        const monster* leader =
-            traitor->props.exists("band_leader")
-            ? monster_by_mid(traitor->props["band_leader"].get_int())
-            : nullptr;
+    if (bribability <= 0 || traitor->friendly())
+        return;
 
-        if (leader)
+    const monster* leader =
+        traitor->props.exists("band_leader")
+        ? monster_by_mid(traitor->props["band_leader"].get_int())
+        : nullptr;
+
+    if (leader)
+    {
+        if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
+            || leader->props.exists(FRIENDLY_BRIBE_KEY))
         {
-            if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
-                || leader->props.exists(FRIENDLY_BRIBE_KEY))
-            {
-                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
-            }
-            else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
-                     || leader->props.exists(NEUTRAL_BRIBE_KEY))
-            {
-                traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
-            }
+            traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
         }
-        else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+        else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
+                 || leader->props.exists(NEUTRAL_BRIBE_KEY))
         {
-            // Sometimes get permanent followers
-            if (one_chance_in(3))
-                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
-            else
-                traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
+            traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
         }
+    }
+    else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+    {
+        // Sometimes get permanent followers
+        if (one_chance_in(3))
+            traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
+        else
+            traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
     }
 }
 
