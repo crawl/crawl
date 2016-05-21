@@ -112,6 +112,12 @@ force_more_message += press .* to convert to Beogh
 force_more_message += welcomes you( back)?!
 force_more_message += You have lost your religion
 
+# Dangerous weapons
+force_more_message += is wielding.*(distortion|chaos)
+# dancing weapons require special handling...
+force_more_message += there is a.*(distortion|chaos)
+force_more_message += of (distortion|chaos) comes into view.
+
 # Banishment
 force_more_message += You are cast into the Abyss
 force_more_message += You are cast deeper into the Abyss
