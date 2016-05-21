@@ -1323,7 +1323,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
-        handle_monster_shouts(mon);
+        monster_consider_shouting(*mon);
     }
 
     const bool isPacified = mon->pacified();

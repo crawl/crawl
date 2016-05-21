@@ -3693,7 +3693,7 @@ static bool _monster_move(monster* mons)
                 noisy(noise_level, mons->pos(), mons->mid);
             }
             else if (one_chance_in(5))
-                handle_monster_shouts(mons, true);
+                monster_attempt_shout(*mons);
             else
             {
                 // Just be noisy without messaging the player.
