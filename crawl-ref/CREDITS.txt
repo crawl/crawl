@@ -177,6 +177,7 @@
     Dom 'Bodrick' Light
     Mark Lodato
     Rob Lund
+    Lynn
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
@@ -255,7 +256,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    Mauris Van Hauwe
     Mikko Vepsäläinen
     waylon531
     Steven Wheeler
