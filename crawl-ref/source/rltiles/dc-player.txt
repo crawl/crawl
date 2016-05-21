@@ -11,6 +11,7 @@ misc/cursor CURSOR
 ###BASE
 %parts_ctg BASE
 %sdir player/base
+%rim 0
 human_f HUMAN
 human_m
 human2_f
@@ -29,7 +30,6 @@ halfling_m HALFLING
 halfling_f
 orc_f ORC
 orc_m
-%rim 0
 lorc_m0 LAVA_ORC
 lorc_f0
 lorc_m1 LAVA_ORC_HEAT
@@ -44,23 +44,12 @@ lorc_f3
 lorc_f4
 lorc_f5
 lorc_f6
-%rim 1
 kobold_m KOBOLD
 kobold_f
-kobold2_m
-kobold2_f
 mummy_m MUMMY
 mummy_f
 naga_f NAGA
 naga_m
-naga_darkgreen_f
-naga_darkgreen_m
-naga_lightgreen_f
-naga_lightgreen_m
-naga_blue_f
-naga_blue_m
-naga_red_f
-naga_red_m
 ogre_m OGRE
 ogre_f
 troll_f TROLL
@@ -70,11 +59,10 @@ octopode2
 octopode3
 octopode4
 octopode5
-%rim 0
 djinni_f DJINNI
 djinni_m
-%rim 1
-formicid FORMICID
+formicid_f FORMICID
+formicid_m
 vine_stalker_f VINE_STALKER
 vine_stalker_m
 
@@ -100,38 +88,24 @@ draconian_red_m
 draconian_white_f DRACONIAN_WHITE
 draconian_white_m DRACONIAN_LAST
 
-centaur_lightgrey_f CENTAUR
-centaur_lightgrey_m
-centaur_darkgrey_f
-centaur_darkgrey_m
-centaur_darkbrown_f
-centaur_darkbrown_m
-centaur_brown_f
+centaur_brown_f CENTAUR
 centaur_brown_m
-centaur_lightbrown_f
-centaur_lightbrown_m
+centaur_grey_f
+centaur_grey_m
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
 spriggan_f
 minotaur_m MINOTAUR
 minotaur_f
-minotaur_brown1_m
-minotaur_brown2_m
-demonspawn_pink DEMONSPAWN
-demonspawn_red_f
+demonspawn_red_f DEMONSPAWN
 demonspawn_red_m
 demonspawn_black_f
 demonspawn_black_m
 ghoul_m GHOUL
-ghoul2_m
-ghoul2_f
-tengu_wingless_f TENGU
-tengu_wingless_m
-tengu_winged_f
-tengu_winged_m
-tengu_wingless_brown_f
-tengu_wingless_brown_m
+ghoul_f
+tengu_f TENGU
+tengu_m
 merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
@@ -142,12 +116,9 @@ deep_dwarf_m DEEP_DWARF
 deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
-gargoyle_red_m
-gargoyle_red_f
 gargoyle_brown_m
 gargoyle_brown_f
 %sdir player/felids
-%rim 0
 cat1 FELID
 cat2
 cat3
