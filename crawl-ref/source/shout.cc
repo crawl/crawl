@@ -129,10 +129,9 @@ bool monster_attempt_shout(monster &mon)
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
-    // XXX: this block is insane
     if (shout == S_SILENT && !mon.visible_to(&you)
-        || shout != S_SILENT && !player_can_hear(mon.pos())
-        || mon.has_ench(ENCH_MUTE))
+        || shout != S_SILENT && (silenced(mon.pos())
+                                 ||mon.has_ench(ENCH_MUTE)))
     {
         return false;
     }
@@ -217,7 +216,7 @@ void monster_shout(monster* mons, int shout)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << endl;
     }
-    else
+    else if (s_type == S_SILENT || !silenced(you.pos()))
     {
         msg_channel_type channel = MSGCH_TALK;
         if (s_type == S_SILENT)
