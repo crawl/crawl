@@ -95,34 +95,63 @@ static string _shout_key(const monster &mons)
     return mons_type_name(mons.type, DESC_PLAIN);
 }
 
-void handle_monster_shouts(monster* mons, bool force)
+/**
+ * Let a monster consider whether or not it wants to shout, and, if so, shout.
+ *
+ * @param mon       The monster in question.
+ */
+void monster_consider_shouting(monster &mon)
 {
-    if (!force && one_chance_in(5))
-        return;
-
-    if (mons->cannot_move() || mons->asleep() || mons->has_ench(ENCH_DUMB))
+    if (one_chance_in(5))
         return;
 
     // Friendly or neutral monsters don't shout.
-    if (!force && (mons->friendly() || mons->neutral()))
+    // XXX: redundant with one of two uses (mon-behv.cc)
+    if (mon.friendly() || mon.neutral())
         return;
 
-    // Get it once, since monster might be S_RANDOM, in which case
-    // mons_shouts() will return a different value every time.
-    // Demon lords will insult you as a greeting, but later we'll
-    // choose a random verb and loudness for them.
-    shout_type  s_type = mons_shouts(mons->type, false);
+    monster_attempt_shout(mon);
+}
+
+/**
+ * If it's at all possible for a monster to shout, have it do so.
+ *
+ * @param mon       The monster in question.
+ * @return          Whether a shout occurred.
+ */
+bool monster_attempt_shout(monster &mon)
+{
+    if (mon.cannot_move() || mon.asleep() || mon.has_ench(ENCH_DUMB))
+        return false;
+
+    const shout_type shout = mons_shouts(mon.type, false);
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
-    if (s_type == S_SILENT && !mons->visible_to(&you)
-        || s_type != S_SILENT && !player_can_hear(mons->pos())
-        || mons->has_ench(ENCH_MUTE))
+    // XXX: this block is insane
+    if (shout == S_SILENT && !mon.visible_to(&you)
+        || shout != S_SILENT && !player_can_hear(mon.pos())
+        || mon.has_ench(ENCH_MUTE))
     {
-        return;
+        return false;
     }
 
+    monster_shout(&mon, shout);
+    return true;
+}
+
+
+/**
+ * Have a monster perform a specific shout.
+ *
+ * @param mons      The monster in question.
+ *                  TODO: use a reference, not a pointer
+ * @param shout    The shout_type to use.
+ */
+void monster_shout(monster* mons, int shout)
+{
+    shout_type s_type = static_cast<shout_type>(shout);
     mon_acting mact(mons);
 
     // less specific, more specific.

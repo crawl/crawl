@@ -136,7 +136,7 @@ void seen_monsters_react(int stealth)
             if (!(*mi)->alive())
                 continue;
 
-            handle_monster_shouts(*mi);
+            monster_consider_shouting(**mi);
         }
 
         if (!mi->visible_to(&you))

@@ -1233,7 +1233,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         && mon->alive()
         && mons_shouts(mon->type, false) != S_SILENT)
     {
-        handle_monster_shouts(mon, true);
+        monster_attempt_shout(*mon);
     }
 
     return true;
