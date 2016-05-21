@@ -255,6 +255,7 @@ enum shout_type
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
+    // Only used for the verb/volume of random demon taunts
     S_VERY_SOFT,
     S_SOFT,
     S_NORMAL,
