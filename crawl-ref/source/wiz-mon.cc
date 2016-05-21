@@ -662,6 +662,13 @@ void debug_make_monster_shout(monster* mon)
         return;
     }
 
+    if (mon->cannot_move() || mon->asleep())
+        mpr("The monster is unable to speak right now.");
+    else if (mon->has_ench(ENCH_DUMB))
+        mpr("The monster is stupefied, and permanently unable to speak.");
+    else if (mon->has_ench(ENCH_MUTE))
+        mpr("The monster is currently muted.");
+
     if (type == 's')
     {
         if (silenced(you.pos()))
