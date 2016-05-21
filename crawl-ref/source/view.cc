@@ -256,20 +256,32 @@ static void _genus_factoring(map<monster_type, int> &types,
     types[genus] = num;
 }
 
-/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
-static void _divine_headsup(const vector<monster*> monsters,
-                            map<monster_type, int> &types)
+/// Return a warning for the player about newly-seen monsters, as appropriate.
+static string _monster_headsup(const vector<monster*> &monsters,
+                               map<monster_type, int> &types,
+                               bool divine)
 {
-    string warning_msg = " warns you:";
-    bool warning = false;
+    string warning_msg = "";
     for (const monster* mon : monsters)
     {
-        if (!mon->props.exists("ash_id") && !mon->props.exists("zin_id"))
+        const bool ash_ided = mon->props.exists("ash_id");
+        const bool zin_ided = mon->props.exists("zin_id");
+        const bool has_branded_weapon
+            = (mon->weapon() && mon->weapon()->brand
+               || mon->weapon(1) && mon->weapon(1)->brand);
+        if ((divine && !ash_ided && !zin_ided)
+            || (!divine && !has_branded_weapon))
+        {
             continue;
+        }
+
+        if (!divine && monsters.size() == 1)
+            continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
 
-        warning_msg += " ";
+        if (warning_msg.size())
+            warning_msg += " ";
 
         string monname;
         if (monsters.size() == 1)
@@ -283,6 +295,15 @@ static void _divine_headsup(const vector<monster*> monsters,
         warning_msg += uppercase_first(monname);
 
         warning_msg += " is";
+        if (!divine)
+        {
+            if (mon->type != MONS_DANCING_WEAPON)
+                warning_msg += " ";
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                      DESC_NONE) + ".";
+            continue;
+        }
+
         if (you_worship(GOD_ZIN))
         {
             warning_msg += " a foul ";
@@ -292,22 +313,42 @@ static void _divine_headsup(const vector<monster*> monsters,
         }
         else
         {
-            warning_msg += " "
-            + get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                         DESC_NONE);
+            // TODO: deduplicate
+            if (mon->type != MONS_DANCING_WEAPON)
+                warning_msg += " ";
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                      DESC_NONE);
         }
         warning_msg += ".";
-        warning = true;
     }
 
-    if (warning)
-    {
-        simple_god_message(warning_msg.c_str());
+    return warning_msg;
+}
+
+/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
+static void _divine_headsup(const vector<monster*> &monsters,
+                            map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, true);
+    if (!warnings.size())
+        return;
+
+    const string warning_msg = " warns you: " + warnings;
+    simple_god_message(warning_msg.c_str());
 #ifndef USE_TILE_LOCAL
-        if (you_worship(GOD_ZIN))
-            update_monster_pane();
+    // XXX: should this really be here...?
+    if (you_worship(GOD_ZIN))
+        update_monster_pane();
 #endif
-    }
+}
+
+static void _secular_headsup(const vector<monster*> &monsters,
+                             map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, false);
+    if (!warnings.size())
+        return;
+    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
 }
 
 /**
@@ -344,6 +385,7 @@ static void _handle_comes_into_view(const vector<string> &msgs,
     }
 
     _divine_headsup(monsters, types);
+    _secular_headsup(monsters, types);
 }
 
 /// If the player has the shout mutation, maybe shout at newly-seen monsters.
