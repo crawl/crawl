@@ -276,15 +276,15 @@ vicinity to be raised as spectral servants.
 %%%%
 Vit status
 
-You are divinely vitalised, provideing protection from poison, confusion,
+You are divinely vitalised, providing protection from poison, confusion,
 petrification, rotting and sickness, and increasing and sustaining your
 strength, intelligence and dexterity.
 %%%%
 RoF status
 
 You are surrounded by a ring of flame clouds, increasing the power of your fire
-magic and giving protection from fire. However, it also makes you much more
-susceptible to cold.
+magic and giving protection from fire but also making you much more susceptible
+to cold.
 %%%%
 MR- status
 
@@ -292,13 +292,13 @@ You are more vulnerable to hostile enchantments.
 %%%%
 Stone status
 
-You are petrified, and completely unable to act. You will be very easy to hit,
-but will be somewhat more difficult to injure when you are hit.
+You are petrified, and completely unable to act. You are very easy to hit,
+but all damage taken is substantially reduced.
 %%%%
 Petr status
 
-You are turning to stone. Your actions are slowed, and you will soon be
-completely petrified. (see: Stone status)
+You are turning to stone. Your actions are slowed, all damage taken is slightly
+reduced, and you will soon be completely petrified (gaining the Stone status).
 %%%%
 Resist status
 
