@@ -122,6 +122,17 @@ public:
 };
 extern const opacity_no_actor opc_no_actor;
 
+// A cell is considered clear unless the player knows it's
+// opaque.
+class opacity_excl : public opacity_func
+{
+public:
+    CLONE(opacity_excl)
+
+    opacity_type operator()(const coord_def& p) const override;
+};
+extern const opacity_excl opc_excl;
+
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between
 // relative coordinates (-8,-8)..(8,8) and real coordinates,
