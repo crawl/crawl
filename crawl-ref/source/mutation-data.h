@@ -574,7 +574,7 @@ static const mutation_def mut_data[] =
    "Your genes go into a fast flux.",
    ""},
 
-  {"You feel genetically stable.",
+  {"Nature stops experimenting on you.",
    "Your wild genetic ride slows down.",
    ""},
 },
