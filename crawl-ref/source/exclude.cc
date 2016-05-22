@@ -120,34 +120,6 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
     }
 }
 
-static opacity_type _feat_opacity(dungeon_feature_type feat)
-{
-    return feat_is_opaque(feat) ? OPC_OPAQUE
-         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
-}
-
-// A cell is considered clear unless the player knows it's
-// opaque.
-class opacity_excl : public opacity_func
-{
-public:
-    CLONE(opacity_excl)
-
-    opacity_type operator()(const coord_def& p) const override
-    {
-        map_cell& cell = env.map_knowledge(p);
-        if (!cell.seen())
-            return OPC_CLEAR;
-        else if (!cell.changed())
-            return _feat_opacity(env.grid(p));
-        else if (cell.feat() != DNGN_UNSEEN)
-            return _feat_opacity(cell.feat());
-        else
-            return OPC_CLEAR;
-    }
-};
-static opacity_excl opc_excl;
-
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, string dsc, bool vaultexcl)
     : pos(p), radius(r),
