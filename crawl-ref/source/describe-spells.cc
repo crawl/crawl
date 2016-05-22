@@ -111,9 +111,8 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("\n%s possesses %sthe following sets of %s abilities%s:",
+    return make_stringf("\n%s possesses the following %s abilities%s:",
                         pronoun.c_str(),
-                        num_books > 1 ? "one of " : "",
                         descriptor.c_str(),
                         _ability_type_vulnerabilities(type).c_str());
 }
