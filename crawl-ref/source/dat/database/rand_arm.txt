@@ -155,7 +155,8 @@ Okapi
 # not strictly an animal... :)
 Monkey's Uncle
 
-Circus Animals
+Circus Animal
+
 #classical mythical animals
 Cockatrice
 
@@ -552,6 +553,12 @@ Black Moon
 %%%%
 _instrument_name_
 
+the Fiddle
+
+the Fife
+
+Pan-Flutes
+
 Trumpets
 
 the Kettle-Drum
@@ -573,6 +580,14 @@ the Harp
 the Gusle
 %%%%
 _evil_being_
+
+Tempters
+
+the Tormentor
+
+Vampiric Thralls
+
+the Lichloved
 
 the Devil
 
@@ -709,7 +724,7 @@ Spin the Turtle
 
 You Go First
 
-Over Soon
+It's Over Quickly
 
 # children's games
 Never Talk to Strangers
