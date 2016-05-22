@@ -6364,7 +6364,7 @@ salamander stormcaller charge
 %%%%
 giant eyeball charge
 
-@The_monster@ view fixates on @foe@.
+@The_monster@'s view fixates on @foe@.
 
 @The_monster@'s stare focuses on @foe@.
 
