@@ -283,6 +283,13 @@ LUAFN(moninf_get_is_unique)
     return 1;
 }
 
+LUAFN(moninf_get_is_stationary)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mons_class_is_stationary(mi->type));
+    return 1;
+}
+
 LUAFN(moninf_get_damage_desc)
 {
     MONINF(ls, 1, mi);
@@ -350,6 +357,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(can_be_constricted),
     MIREG(reach_range),
     MIREG(is_unique),
+    MIREG(is_stationary),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
