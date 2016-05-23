@@ -77,6 +77,166 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
+// Item offering messages for the gods:
+// & is replaced by "is" or "are" as appropriate for the item.
+// % is replaced by "s" or "" as appropriate.
+// Text between [] only appears if the item already glows.
+// First message is if there's no piety gain; second is if piety gain is
+// one; third is if piety gain is more than one.
+static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
+{
+    // No god
+    {
+        " & eaten by a bored swarm of bugs.",
+        " & eaten by a swarm of bugs.",
+        " & eaten by a ravening swarm of bugs."
+    },
+    // Zin
+    {
+        " barely glow% and disappear%.",
+        " glow% silver and disappear%.",
+        " glow% blindingly silver and disappear%.",
+    },
+    // TSO
+    {
+        " glow% a dingy golden colour and disappear%.",
+        " glow% a golden colour and disappear%.",
+        " glow% a brilliant golden colour and disappear%.",
+    },
+    // Kikubaaqudgha
+    {
+        " convulse% and rot% away.",
+        " convulse% madly and rot% away.",
+        " convulse% furiously and rot% away.",
+    },
+    // Yredelemnul
+    {
+        " slowly crumble% to dust.",
+        " crumble% to dust.",
+        " turn% to dust in an instant.",
+    },
+    // Xom (no sacrifices)
+    {
+        " & eaten by a bored bug.",
+        " & eaten by a bug.",
+        " & eaten by a greedy bug.",
+    },
+    // Vehumet
+    {
+        " fade% into nothingness.",
+        " burn% into nothingness.",
+        " explode% into nothingness.",
+    },
+    // Okawaru
+    {
+        " slowly burn% to ash.",
+        " & consumed by flame.",
+        " & consumed in a burst of flame.",
+    },
+    // Makhleb
+    {
+        " disappear% without a sign.",
+        " flare% red and disappear%.",
+        " flare% blood-red and disappear%.",
+    },
+    // Sif Muna
+    {
+        " & gone without a[dditional] glow.",
+        " glow% slightly [brighter ]for a moment, and & gone.",
+        " glow% [brighter ]for a moment, and & gone.",
+    },
+    // Trog
+    {
+        " & slowly consumed by flames.",
+        " & consumed in a column of flame.",
+        " & consumed in a roaring column of flame.",
+    },
+    // Nemelex (no sacrifices)
+    {
+        " & eaten by a bored swarm of bugs.",
+        " & eaten by a swarm of bugs.",
+        " & eaten by a ravening swarm of bugs."
+    },
+    // Elyvilon
+    {
+        " barely shimmer% and break% into pieces.",
+        " shimmer% and break% into pieces.",
+        " shimmer% wildly and break% into pieces.",
+    },
+    // Lugonu
+    {
+        " disappear% into the void.",
+        " & consumed by the void.",
+        " & voraciously consumed by the void.",
+    },
+    // Beogh
+    {
+        " slowly crumble% into the ground.",
+        " crumble% into the ground.",
+        " disintegrate% into the ground.",
+    },
+    // Jiyva
+    {
+        " slowly dissolve% into ooze.",
+        " dissolve% into ooze.",
+        " disappear% with a satisfied slurp.",
+    },
+    // Fedhas
+    {
+        " & slowly absorbed by the ecosystem.",
+        " & absorbed by the ecosystem.",
+        " & instantly absorbed by the ecosystem.",
+    },
+    // Cheibriados (slow god, so better sacrifices are slower)
+    {
+        " freeze% in place and instantly disappear%.",
+        " freeze% in place and disappear%.",
+        " freeze% in place and slowly fade%.",
+    },
+    // Ashenzari
+    {
+        " flicker% black.",
+        " pulsate% black.",          // unused
+        " strongly pulsate% black.", // unused
+    },
+    // Dithmenos
+    {
+        " slowly dissolves into the shadows.",
+        " dissolves into the shadows.",
+        " rapidly dissolves into the shadows.",
+    },
+    // Gozag
+    {
+        " softly glitters and disappears.",
+        " glitters and disappears.",
+        " brightly glitters and disappears.",
+    },
+    // Qazlal
+    {
+        " slowly dissolves into the earth.",
+        " is consumed by the earth.",
+        " is consumed by a violent tear in the earth.",
+    },
+    // Ru
+    {
+        " disappears in a small burst of power.",
+        " disappears in a burst of power",
+        " disappears in an immense burst of power",
+    },
+    // Pakellas
+    {
+        " slowly breaks apart.",
+        " falls apart.",
+        " is torn apart in a burst of bright light.",
+    },
+    // Ukayaw
+    {
+        " pulses once and is destroyed.",
+        " pulses twice and is destroyed.",
+        " pulses thrice and is destroyed.",
+    },
+};
+
 const vector<god_power> god_powers[NUM_GODS] =
 {
     // no god
@@ -292,7 +452,10 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },
-    }
+    },
+    // Ukayaw
+    {
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -1474,6 +1637,9 @@ bool do_god_gift(bool forced)
             }
             break;
 
+        case GOD_UKAYAW:
+            break;
+
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         {
@@ -1659,6 +1825,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_PAKELLAS:      return "Pakellas";
+    case GOD_UKAYAW:        return "Ukayaw";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2792,6 +2959,8 @@ static void _apply_monk_bonus()
     // monks get bonus piety for first god
     if (you_worship(GOD_RU))
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+    else if (you_worship(GOD_UKAYAW))  // Gaining piety past this point does nothing
+        gain_piety(15, 1, false); // of value with this god and looks weird.
     else
         gain_piety(35, 1, false);
 }
@@ -3627,6 +3796,8 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
+        case GOD_UKAYAW:
+            // We handle Ukayaw elsewhere because this func gets called rarely
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
             // These gods do not lose piety over time.
@@ -3688,6 +3859,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTCYAN;
 
     case GOD_DITHMENOS:
+    case GOD_UKAYAW:
         return MAGENTA;
 
     case GOD_QAZLAL:
@@ -3783,6 +3955,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_PAKELLAS:
         return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
+
+    case GOD_UKAYAW:
+        return random_choose(RED, MAGENTA);
 
     default:
         return YELLOW;

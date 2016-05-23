@@ -61,6 +61,18 @@ static int _gold_level()
                                : 1;
 }
 
+static int _invocations_level()
+{
+    int invo = you.skill(SK_INVOCATIONS);
+    return (invo == 27) ? 7 :
+           (invo >= 24) ? 6 :
+           (invo >= 20) ? 5 :
+           (invo >= 16) ? 4 :
+           (invo >= 12) ? 3 :
+           (invo >= 8)  ? 2
+                        : 1;
+}
+
 static string _describe_favour(god_type which_god)
 {
     if (player_under_penance())
@@ -75,8 +87,9 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
-    const int rank = which_god == GOD_GOZAG ? _gold_level()
-    : _piety_level(you.piety);
+    const int rank = which_god == GOD_GOZAG ? _gold_level() :
+                     which_god == GOD_UKAYAW ? _invocations_level() :
+                     _piety_level(you.piety);
 
     const string godname = god_name(which_god);
     switch (rank)
@@ -203,6 +216,10 @@ static const char *divine_title[][8] =
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
+
+    // Ukayaw -- reveler theme
+    {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
+        "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -211,6 +228,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
+    else if (which_god == GOD_UKAYAW)
+        title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
     else
