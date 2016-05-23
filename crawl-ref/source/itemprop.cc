@@ -1541,10 +1541,17 @@ bool check_armour_size(const item_def &item, size_type size)
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
-// Returns whether a wand or rod can be charged.
-// If hide_charged is true, wands known to be full will return false.
-// (This distinction is necessary because even full wands/rods give a message.)
-bool item_is_rechargeable(const item_def &it, bool hide_charged)
+/**
+ * Can the given item be recharged?
+ *
+ * @param it            The item in question.
+ * @param hide_charged  Whether wands known to be full should be included.
+ * @param divine        Whether the source of recharging is divine (and so can
+                        only recharge, not increase enchantment on rods).
+ * @return              Whether the item can be recharged.
+ *
+ */
+bool item_is_rechargeable(const item_def &it, bool hide_charged, bool divine)
 {
     // These are obvious...
     if (it.base_type == OBJ_WANDS)
@@ -1567,9 +1574,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
-            return it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                   || it.charges < it.charge_cap
-                   || it.rod_plus < MAX_WPN_ENCHANT;
+            return !divine && (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                               || it.rod_plus < MAX_WPN_ENCHANT)
+                   || it.charges < it.charge_cap;
         }
         return true;
     }

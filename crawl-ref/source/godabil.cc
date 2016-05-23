@@ -6476,10 +6476,10 @@ bool pakellas_check_quick_charge(bool quiet)
     if (!enough_mp(1, quiet))
         return false;
 
-    if (!any_items_of_type(OSEL_RECHARGE))
+    if (!any_items_of_type(OSEL_DIVINE_RECHARGE))
     {
         if (!quiet)
-            mpr(no_selectables_message(OSEL_RECHARGE));
+            mpr(no_selectables_message(OSEL_DIVINE_RECHARGE));
         return false;
     }
 
