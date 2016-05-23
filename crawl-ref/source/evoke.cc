@@ -761,12 +761,15 @@ void zap_wand(int slot)
 int recharge_wand(bool known, const string &pre_msg, int num, int den)
 {
     int item_slot = -1;
+    bool divine = num > 0 && den > 0;
     do
     {
         if (item_slot == -1)
         {
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
-                                            OSEL_RECHARGE, true, true, false);
+                                            divine ? OSEL_DIVINE_RECHARGE
+                                                   : OSEL_RECHARGE,
+                                            true, true, false);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -808,7 +811,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             int charge_gain = wand_max_charges(wand) / 3;
 
             const int new_charges =
-                num > 0 && den > 0
+                divine
                 ? min<int>(charge_gain * 3,
                            max<int>(wand.charges + 1,
                                     wand.charges + 3 * charge_gain * num / den))
@@ -853,8 +856,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             // This is consistent with scrolls of enchant weapon/armour
             const string orig_name = wand.name(DESC_YOUR);
 
-            if (num == 0 && den == 0
-                && wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+            if (!divine && wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
                 wand.charge_cap += ROD_CHARGE_MULT * random_range(1, 2);
 
@@ -866,7 +868,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
 
             if (wand.charges < wand.charge_cap)
             {
-                if (num > 0 && den > 0)
+                if (divine)
                 {
                     wand.charges =
                         min<int>(wand.charge_cap,
@@ -879,7 +881,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
                 work = true;
             }
 
-            if (num == 0 && den == 0 && wand.rod_plus < MAX_WPN_ENCHANT)
+            if (!divine && wand.rod_plus < MAX_WPN_ENCHANT)
             {
                 wand.rod_plus += random_range(1, 2);
                 if (wand.rod_plus > MAX_WPN_ENCHANT)
