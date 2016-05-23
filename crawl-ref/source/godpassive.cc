@@ -16,6 +16,7 @@
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "godprayer.h"
 #include "invent.h" // in_inventory
@@ -26,6 +27,7 @@
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"

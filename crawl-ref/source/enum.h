@@ -1295,7 +1295,7 @@ enum conduct_type
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
     DID_CHANNEL,                          // Pakellas
-
+    DID_HURT_FOE,                         // Ukayaw
     NUM_CONDUCTS
 };
 
@@ -1671,6 +1671,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
     DNGN_ALTAR_PAKELLAS,
+    DNGN_ALTAR_UKAYAW,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1737,6 +1738,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHADOW_DORMANT,
     DNGN_ALTAR_ECUMENICAL,
     DNGN_ALTAR_PAKELLAS,
+    DNGN_ALTAR_UKAYAW,
 #endif
 
     NUM_FEATURES
@@ -2207,6 +2209,7 @@ enum god_type
     GOD_QAZLAL,
     GOD_RU,
     GOD_PAKELLAS,
+    GOD_UKAYAW,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
