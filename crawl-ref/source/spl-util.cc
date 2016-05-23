@@ -818,7 +818,7 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype)
     case SPTYP_ICE:
         return "Ice";
     case SPTYP_TRANSMUTATION:
-        return "Trmt";
+        return "Tmut";
     case SPTYP_NECROMANCY:
         return "Necr";
     case SPTYP_SUMMONING:
