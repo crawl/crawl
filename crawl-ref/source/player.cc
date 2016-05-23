@@ -7181,13 +7181,14 @@ bool player::visible_to(const actor *looker) const
     if (crawl_state.game_is_arena())
         return false;
 
+    const bool invis_to = invisible() && !looker->can_see_invisible()
+                          && !in_water();
     if (this == looker)
-        return can_see_invisible() || !invisible();
+        return !invis_to;
 
     const monster* mon = looker->as_monster();
     return mon->friendly()
-        || (!mon->has_ench(ENCH_BLIND)
-            && (!invisible() || mon->can_see_invisible()));
+        || (!mon->has_ench(ENCH_BLIND) && !invis_to);
 }
 
 /**
