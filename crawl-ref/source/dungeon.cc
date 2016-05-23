@@ -1353,81 +1353,97 @@ void fixup_misplaced_items()
     }
 }
 
+/*
+ * At the top or bottom of a branch, adjust or remove illegal stairs:
+ *
+ * - non-vault escape hatches pointing outside the branch are removed
+ * - non-vault stone stairs down from X:$ are removed
+ * - stone stairs up from X:1 are replaced with branch exit feature
+ *   - if there is more than one such stair, an error is logged
+ * - vault-specified hatches or stairs are replaced with appropriate features
+ *   - hatches down from X:$ are pointed up instead, and vice versa on X:1
+ *   - for single-level branches, all hatches turn into the branch exit feature
+ *   - if the branch has an "escape feature", it is used instead of hatches up
+ */
 static void _fixup_branch_stairs()
 {
-    // Top level of branch levels - replaces up stairs with stairs back to
-    // dungeon or wherever:
-    if (you.depth == 1)
-    {
+    const auto& branch = your_branch();
+    const bool root = player_in_branch(root_branch);
+    const bool top = you.depth == 1;
+    const bool bottom = at_branch_bottom();
+
+    const dungeon_feature_type exit =
+        root ? DNGN_EXIT_DUNGEON
+             : branch.exit_stairs;
+    const dungeon_feature_type escape =  root ? DNGN_EXIT_DUNGEON :
+        branch.escape_feature == NUM_FEATURES ? DNGN_ESCAPE_HATCH_UP :
+                                                branch.escape_feature;
+    const dungeon_feature_type up_hatch =
+        top &&  bottom ? exit :
+        top && !bottom ? DNGN_ESCAPE_HATCH_DOWN :
+                         escape;
+
 #ifdef DEBUG_DIAGNOSTICS
-        int count = 0;
+    int count = 0;
 #endif
-        // Just in case we somehow get here with more than one stair placed.
-        // Prefer stairs that are placed in vaults for picking an exit at
-        // random.
-        vector<coord_def> vault_stairs, normal_stairs;
-        dungeon_feature_type exit = your_branch().exit_stairs;
-        if (player_in_branch(root_branch))
-            exit = DNGN_EXIT_DUNGEON;
-        for (rectangle_iterator ri(1); ri; ++ri)
+    // Just in case we somehow get here with more than one stair placed.
+    // Prefer stairs that are placed in vaults for picking an exit at
+    // random.
+    vector<coord_def> vault_stairs, normal_stairs;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const bool vault = map_masked(*ri, MMT_VAULT);
+        const auto escape_replacement = vault ? up_hatch : DNGN_FLOOR;
+        if (bottom && (feat_is_stone_stair_down(grd(*ri))
+                       || grd(*ri) == DNGN_ESCAPE_HATCH_DOWN))
+        {
+            _set_grd(*ri, escape_replacement);
+        }
+
+        if (top)
         {
             if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
-                _set_grd(*ri, DNGN_FLOOR);
+                _set_grd(*ri, escape_replacement);
             else if (feat_is_stone_stair_up(grd(*ri)))
             {
 #ifdef DEBUG_DIAGNOSTICS
-                if (count++ && !player_in_branch(root_branch))
+                if (count++ && !root)
                 {
                     mprf(MSGCH_ERROR, "Multiple branch exits on %s",
                          level_id::current().describe().c_str());
                 }
 #endif
-                if (player_in_branch(root_branch))
+                if (root)
                 {
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                     _set_grd(*ri, exit);
                 }
                 else
                 {
-                    if (map_masked(*ri, MMT_VAULT))
+                    if (vault)
                         vault_stairs.push_back(*ri);
                     else
                         normal_stairs.push_back(*ri);
                 }
             }
         }
-        if (!player_in_branch(root_branch))
-        {
-            vector<coord_def> stairs;
-            if (!vault_stairs.empty())
-                stairs = vault_stairs;
-            else
-                stairs = normal_stairs;
-
-            if (!stairs.empty())
-            {
-                shuffle_array(stairs);
-                coord_def coord = *(stairs.begin());
-                env.markers.add(new map_feature_marker(coord, grd(coord)));
-                _set_grd(coord, exit);
-                for (auto it = stairs.begin() + 1; it != stairs.end(); it++)
-                    _set_grd(*it, DNGN_FLOOR);
-            }
-        }
     }
-
-    // Bottom level of branch - wipes out down stairs and hatches
-    dungeon_feature_type feat = DNGN_FLOOR;
-
-    if (at_branch_bottom())
+    if (!root)
     {
-        for (rectangle_iterator ri(1); ri; ++ri)
+        vector<coord_def> stairs;
+        if (!vault_stairs.empty())
+            stairs = vault_stairs;
+        else
+            stairs = normal_stairs;
+
+        if (!stairs.empty())
         {
-            if (feat_is_stone_stair_down(grd(*ri))
-                || grd(*ri) == DNGN_ESCAPE_HATCH_DOWN)
-            {
-                _set_grd(*ri, feat);
-            }
+            shuffle_array(stairs);
+            coord_def coord = *(stairs.begin());
+            env.markers.add(new map_feature_marker(coord, grd(coord)));
+            _set_grd(coord, exit);
+            for (auto it = stairs.begin() + 1; it != stairs.end(); it++)
+                _set_grd(*it, DNGN_FLOOR);
         }
     }
 }
