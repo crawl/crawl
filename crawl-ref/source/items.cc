@@ -3234,7 +3234,7 @@ zap_type item_def::zap() const
                              ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
                              ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
                              ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
-                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_INVISIBILITY,
+                             ZAP_INVISIBILITY,
                              ZAP_BOLT_OF_FIRE);
     }
 
