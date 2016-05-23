@@ -1101,37 +1101,35 @@ ENDMAP
 ##############################################################################
 # Cavepeople
 #
-NAME:   erik_1
+NAME:   erik_cavepeople
+TAGS:   no_monster_gen
+DEPTH:  D:7-11
 ORIENT: float
 WEIGHT: 5
-TAGS:   no_monster_gen
-DEPTH:  D:7-11, Lair
-#
-SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
-SUBST: r=n, R=N, s=n, S=N
-SUBST: n=., N=@
-SUBST: u=x, v=x, w=x, y=x, z=x
-SUBST: U=x, V=x, W=x, Y=x, Z=x
-#
-SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
-MONS:  jackal/hound, human, Edmund/Jessica/Sigmund, Ijyb/Psyche
-MONS:  sheep/nothing
+MONS:   jackal / hound, sheep, human
+# XXX: Use some function to cover for used uniques,
+# like in kennysheep_goblin_castle.
+MONS:   Edmund / Jessica / Sigmund, Ijyb / Psyche
+SUBST:  1 = 11., 3 = 3., 4 = 34, 5 = 35
+# Guarantee two winding tunnel into the center in this mess.
+SHUFFLE: rR / sS / uU / vV / wW / yY / zZ, uU / nN
+SUBST:   rsn = . RSN = @, uUvVwWyYzZ = x
 MAP
          xSxxxxx    xxxxxxxxxxUx
          xxssxxx    xx1xxxxxxuxx
 xxxxxxxxxxxxxssx    x111xxxxxuxx
 xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxx
-Zzzxzxzxx555xxsxxxxxxx1xxxxxuxxx
-xxxxxxxzxx5xxx.xxx..x1xxxxxuxxxx
-   xxxxzxx5xxxx......xxxxxuuxxxx
-   xxxzxxxx5xx...2...cccxxxux
-   xxxzxxxx....2224..+$cxxuxx
-   xxxxz.......2ll22.cccxxxux
-   xxxxxx......3222.xxxxxxuxxxxxxxxx
-   xxxxxxyxxxx2.......xxuuxxvvvvxxxx
+Zzzxzxzxx222xxsxxxxxxx1xxxxxuxxx
+xxxxxxxzxx2xxx.xxx..x1xxxxxuxxxx
+   xxxxzxx2xxxx......xxxxxuuxxxx
+   xxxzxxxx2xx...3...ccccxxux
+   xxxzxxxx....3335..+$$cxuxx
+   xxxxz.......3ll33.ccccxxux
+   xxxxxx......4333.xxxxxxuxxxxxxxxx
+   xxxxxxyxxxx3.......xxuuxxvvvvxxxx
    xxxxxyxxxx.......xx..vxvvxxxxvxxx
 xxxxxxyyxxxxxrxxxxx.xxwxxvxxxxxxxvvx
-xxxyxyxxxxxxrxxrxxxx.xxwxxxxxxxxxvxx
+xxxyxyxxxxxxrxxrxxxx%xxwxxxxxxxxxvxx
 xyyyyxxxxxxxxrrxrrxxxxxxwxxxxxxxvxxx
 xyxxxx     xxxxrxrrxxxxxxwwxxxxxxvvxxxxx
 Yxxxxx     xxxxxxxrxxxxxxxxwxxxxxxxvvxvV
