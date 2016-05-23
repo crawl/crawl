@@ -175,7 +175,6 @@ ENDMAP
 NAME:    giant_chief_lemuel
 DEPTH:   D:11-, Orc, Depths:2-
 ORIENT:  north
-SHUFFLE: ae / bB / gG / dD
 SUBST:   ; = .'
 : if you.branch() == "Depths" then
 MONS:    patrolling iron giant, nothing, nothing
@@ -184,48 +183,47 @@ MONS:    ogre mage band / deep troll shaman band w:5 / \
          deep troll earth mage band w:5
 MONS:    death yak / catoblepas w:2
 NSUBST:  6 = 2:6 / *:.
-KFEAT:   F = G
 SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
-SHUFFLE: 'F1/ww2
-SHUFFLE: w2/l3
+SUBST:   G = '
+# Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
+SHUFFLE: '1 / '1 / w2 / l3
 : end
-SUBST:   C = ?5
-SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
-SUBST:   0 = 4 7 8:20 .:20
-SUBST:   | : |:30 Z
-SUBST:   ! = +x
-KFEAT:   Z = floor
-KMONS:   Z = hill giant zombie / stone giant zombie / cyclops zombie /\
-             titan zombie
-KFEAT:   ( = .
+KMONS:   Z = hill giant zombie / cyclops zombie / \
+             stone giant zombie / titan zombie
+KMONS:   P = plant
 KITEM:   ( = any weapon good_item
-KMONS:   8 = plant
-KFEAT:   8 = floor
+KITEM:   Z = large rock
+SHUFFLE: aA / bB / dD / eE
+SUBST:   aA = ., b : x., B : x., d : x., D : x., e : x., E : x.
+SUBST:   0 = 4 7 9:2 P:18 ., 5 = 5:20 x`
+SUBST:   | : |||Z
+SUBST:   X = x., - = +x, ' = .
+KPROP:   5` = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
-xxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cx
-xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+..+.........5cx
-x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
-x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
-x....<.....+?....xxxxxxxxx$$$..cccc+cccccccccccccc.c(((((+..........cx
-x?........?xxxx.xxxxxxxx<+$$$..+.......+...........c(((((c.......***cx
-xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
-xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx+xxxx
-xxxxxx!xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
-xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0ggggdddddd????xxx||xxx
-x...xxxxx???0?aaaaabbbb..;'''''ccc+++ccc''''';...ggggggdddddd???xxxxxx
-xx.xxx???......aaaabbbbb...;''F,''''''',F'';........ggggggdddd.???xxxx
-x?!??.....0...aaaa..bbb........;''''''';.........ggggggg.ddd..0...?xxx
-xx..........aaaaa....bbbbb.........4...ggggggggggggggg...dddd......??x
-xx?...aaaaaaaaaa.......bbbbbbbbb..0..ggggggggggggggg...0....dd......?x
-xxaaaaaaaaaaaa.....0.....bbbbbbbbbggggggggggggggg...........dd......?x
-xxaaaaaaaa[....@..........bbbbb..@..gggggggg........@.......d.....@..x
+xxxxXXXxxxxxxX***XXxxxxxxxxxxxxx.........7...c...444..cccc.........<cx
+xx$$$$$$XxxxxX.6..XxxxxxxxxxAAAA..7..........+........+..+.........5cx
+xX$$$$$$.XxxX.666.xxxxxxAAAAAxxx7....7.......c........cccc.........1cx
+x.$$$$$$..Xx...6..AAAAAAAxxxxxxx............7ccccc+ccccccc.........5cx
+x....<.....+X....xxxxxxxxx$$$..cccc+cccccccccccccc.c(((((+..........cx
+xX........Xxxxx.xxxxxxxx<+$$$..+.......+...........c(((((c.......***cx
+xx........Xxx...xxxxxxxxxxx-xxxc..4.4..ccccccccccccccccccc444....***cx
+xxxxX...Xxxxx.xxxxxxxxxxxxx5xxxc...4...cxxx5xxxxxxxxxxxxxxxxxxxxx+xxxx
+xxxxxx-xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
+xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0eeeeddddddXXXXxxx||xxx
+x...xxxxxXXX0Xaaaaabbbb..;'''''ccc+++ccc''''';...eeeeeeddddddXXXxxxxxx
+xx.xxxXXX......aaaabbbbb...;''G,''''''',G'';........eeeeeedddd.XXXxxxx
+xX-XX.....0...aaaa..bbb........;''''''';.........eeeeeee.ddd..0...Xxxx
+xx..........aaaaa....bbbbb.........4...eeeeeeeeeeeeeee...dddd......XXx
+xxX...aaaaaaaaaa.......bbbbbbbbb..0..eeeeeeeeeeeeeee...0....dd......Xx
+xxaaaaaaaaaaaa.....0.....bbbbbbbbbeeeeeeeeeeeeeee...........dd......Xx
+xxaaaaaaaa[....@..........bbbbb..@..eeeeeeee........@.......d.....@..x
 ENDMAP
 
 NAME:   minmay_smoke_and_mirrors

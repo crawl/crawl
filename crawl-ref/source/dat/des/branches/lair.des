@@ -2561,8 +2561,8 @@ NSUBST:  A = 3:8 / 1:65 / * = 33338, B = 3:4 / 1:24 / * = 33334
 NSUBST:  C = 1:6 / 1:5 / 1:2 / *:3, 5 = 2:5 / 2 = 5.. / *:.
 SUBST:   X = x., z = x'
 CLEAR:   '
-# Give another hint about the dragon cave.
 NSUBST:  " = 1:GU / *:.
+KMASK:   $7 = no_trap_gen
 : lair_small_ending(_G)
 MAP
             zzzzzxxzzxxzzxxxxzzxxxzzzxxx
@@ -2578,9 +2578,9 @@ zxc$$$$ccxxx...Xxxxxxx2..x.xxxx..2xxxxxx
 xxc$$$$$cxxx..xxxxxxxXx3..xXxx..3xxxxxxx
 xxcc$7$$cxx..xxxxxxxxxxx.P..X...xXxxxxxx
 xxxcc$$ccxX..Xxxxxxxxxxx....3.xxxxxxxxxx
-xxxxccc=cX".xxxxxxxxxXx...P.xxxxCCCxxxxx
-xxxxxxxc1""xxxxxxxxxXx...XxxXxx5CCC*xxxx
-xxxxxxxX""xxXxxxxXxx...3xxxxxxx*333xxxxx
+xxxxccc=c"..xxxxxxxxxXx...P.xxxxCCCxxxxx
+xxxxxxxc1".xxxxxxxxxXx...XxxXxx5CCC*xxxx
+xxxxxxx"""xxXxxxxXxx...3xxxxxxx*333xxxxx
 xxxxxxxxX.2.xxxxxx....x..xxxxxxxx..xxxxx
 xxxxxxxxxX...xXx...3Xxx2...1xxxx...xxxxx
 xxxxxxxxxxx.......Xxxxxx..........xxxxxx

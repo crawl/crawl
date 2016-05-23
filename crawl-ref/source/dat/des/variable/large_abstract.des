@@ -768,32 +768,34 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KPROP:  .089 = no_tele_into
-SUBST:  c : cv
-KMONS:  0 = 0
+KMONS:  01 = 0
 KMONS:  8 = 8
-KMONS:  9 = 9
-KITEM:  0 = %
+KMONS:  92 = 9
+KITEM:  01 = %
 KITEM:  8 = |
-KITEM:  9 = *
+KITEM:  92 = *
+SUBST:  c : cv
+KPROP:  .089 = no_tele_into
 MAP
-@cccccccccccccccc
-c+..ccccccccccccc
-c...0cccccccccccc
-c...9cccccccccccc
-cc09=xccccccccccc
-ccccxx...cccccccc
-ccccc....0ccccccc
-ccccc...09ccccccc
-ccccc..098ccccccc
-cccccc098=xcccccc
-cccccccccxx....cc
-cccccccccc.....0c
-cccccccccc....09c
-cccccccccc...098c
-cccccccccc..0988c
-ccccccccccc0988cc
-ccccccccccccccccc
+@cccccccccccccccccx
+c+''ccccccccccccccx
+c'''1cccccccccccccx
+c'''2cccccccccccccx
+cc12mmccccccccccccx
+ccccmm...cccccccccx
+ccccc....0ccccccccx
+ccccc...09ccccccccx
+ccccc..098ccccccccx
+cccccc098mmcccccccx
+cccccccccmm....cccx
+cccccccccc.....0ccx
+cccccccccc....09ccx
+cccccccccc...098ccx
+cccccccccc..0988ccx
+ccccccccccc0988cccx
+ccccccccccccccccccx
+ccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_box_of_statues
