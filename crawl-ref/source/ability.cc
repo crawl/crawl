@@ -593,6 +593,10 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
+    // Ukayaw
+    { ABIL_UKAYAW_STOMP, "Stomp",
+        3, 0, 100, generic_cost::fixed(20), {FAIL_INVO}, abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -2988,6 +2992,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 #endif
         break;
     }
+
+    case ABIL_UKAYAW_STOMP:
+        fail_check();
+        if (!ukayaw_stomp())
+            return SPRET_ABORT;
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
