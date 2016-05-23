@@ -54,7 +54,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
 {
     static const map<mon_spell_slot_flag, string> descriptors =
     {
-        { MON_SPELL_NATURAL, "special" },
+        { MON_SPELL_NATURAL, "natural" },
         { MON_SPELL_MAGICAL, "magical" },
         { MON_SPELL_PRIEST,  "divine" },
     };
@@ -71,7 +71,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
  * @param mi                The player's information about the caster.
  * @return                  A header string for the bookset; e.g.,
  *                          "She has mastered one of the following spellbooks:\n"
- *                          "It possesses the following special abilities:\n"
+ *                          "It possesses the following natural abilities:\n"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
                                const monster_info &mi)
