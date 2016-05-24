@@ -4579,7 +4579,7 @@ string get_mon_shape_str(const mon_body_shape shape)
         "bug", "humanoid", "winged humanoid", "tailed humanoid",
         "winged tailed humanoid", "centaur", "naga",
         "quadruped", "tailless quadruped", "winged quadruped",
-        "bat", "snake", "fish",  "insect", "winged insect",
+        "bat", "bird", "snake", "fish",  "insect", "winged insect",
         "arachnid", "centipede", "snail", "plant", "fungus", "orb",
         "blob", "misc"
     };
