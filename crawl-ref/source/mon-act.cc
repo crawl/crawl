@@ -2633,7 +2633,7 @@ static void _clear_monster_flags()
     // monsters get their actions in the next round.
     // Also clear one-turn deep sleep flag.
     // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
         mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
 }
 

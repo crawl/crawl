@@ -4967,7 +4967,7 @@ void debug_monspells()
 // are handled properly.
 void reset_all_monsters()
 {
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately

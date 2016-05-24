@@ -173,7 +173,7 @@ LUAFN(debug_bouncy_beam)
 LUAFN(debug_cull_monsters)
 {
     // At least one empty space in menv
-    for (const auto &mons : menv)
+    for (const auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
             return 0;
 
