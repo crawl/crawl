@@ -294,6 +294,7 @@ enum mon_body_shape
     MON_SHAPE_QUADRUPED_TAILLESS,
     MON_SHAPE_QUADRUPED_WINGED,
     MON_SHAPE_BAT,
+    MON_SHAPE_BIRD,
     MON_SHAPE_SNAKE, // Including eels and worms
     MON_SHAPE_FISH,
     MON_SHAPE_INSECT,
