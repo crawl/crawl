@@ -773,8 +773,17 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
         weapon->plus++;
 
         // Including you, if you were a dragonform felid with lives left.
-        mprf("<green>The lance glows as it skewers %s.</green>",
-              name.c_str());
+        if (weapon->plus == 18)
+        {
+            mprf("<white>The lance glows brightly as it skewers %s. You feel "
+                 "that it has reached its full power.</white>",
+                 name.c_str());
+        }
+        else
+        {
+            mprf("<green>The lance glows as it skewers %s.</green>",
+                 name.c_str());
+        }
 
         you.wield_change = true;
     }
