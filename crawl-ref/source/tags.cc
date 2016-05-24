@@ -48,6 +48,7 @@
 #include "ghost.h"
 #include "godabil.h" // just for the Ru sac penalty key
 #include "godcompanions.h"
+#include "godpassive.h" // ash_check_bondage
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
