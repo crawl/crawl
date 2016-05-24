@@ -4578,6 +4578,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             mon->put_to_sleep(agent(), 0);
     }
 
+    if (YOU_KILL(thrower) && !mon->wont_attack())
+        you.pet_target = mon->mindex();
+
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
         || origin_spell == SPELL_STICKY_FLAME_RANGE
