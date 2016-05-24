@@ -343,11 +343,11 @@ static void _spray_lightning(int range, int power)
  */
 bool disc_of_storms()
 {
-    const int fail_rate =
-        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
-
     if (!pakellas_device_surge())
         return false;
+
+    const int fail_rate =
+        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
 
     if (x_chance_in_y(fail_rate, 100))
     {
@@ -366,12 +366,15 @@ bool disc_of_storms()
     }
 
     const int disc_count
-        = roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7));
+        = roll_dice(2, player_adjust_evoc_power(
+                           1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7)));
     ASSERT(disc_count);
 
     mpr("The disc erupts in an explosion of electricity!");
-    const int range = you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5; // 5--14
-    const int power = 30 + you.skill(SK_EVOCATIONS, 2); // 30-84
+    const int range = player_adjust_evoc_power(
+                          you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5); // 5--14
+    const int power = player_adjust_evoc_power(
+                          30 + you.skill(SK_EVOCATIONS, 2)); // 30-84
     for (int i = 0; i < disc_count; ++i)
         _spray_lightning(range, power);
 
