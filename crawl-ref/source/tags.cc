@@ -3469,6 +3469,10 @@ static void tag_read_you_items(reader &th)
         }
 #endif
     }
+
+    // Update bondage in case items changed slots or cursedness.
+    ash_check_bondage(false);
+
 #if TAG_MAJOR_VERSION == 34
     if (!bad_slots.empty())
     {
@@ -3491,7 +3495,6 @@ static void tag_read_you_items(reader &th)
             {
                 you.equip[i] = -1;
                 you.melded.set(i, false);
-                // XXX: need to update ash bondage, or is this too early?
                 continue;
             }
 #endif
@@ -4519,8 +4522,9 @@ void unmarshallItem(reader &th, item_def &item)
         item.used_count = 0;
     }
 
+    // rods can't be cursed anymore
     if (item.base_type == OBJ_RODS && item.cursed())
-        do_uncurse_item(item); // rods can't be cursed anymore
+        do_uncurse_item(item, false); // we'll check bondage later
 #endif
 
     if (is_unrandom_artefact(item))
