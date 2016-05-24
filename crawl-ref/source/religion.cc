@@ -1649,6 +1649,14 @@ bool do_god_gift(bool forced)
                 you.props[UKAYAW_AUDIENCE_TIMER] = -1;
                 success = true;
             }
+            else if (you.piety == piety_breakpoint(3)
+                && you.props[UKAYAW_BOND_TIMER].get_int() == 0)
+            {
+                you.props[UKAYAW_BOND_TIMER] = -1;
+                success = true;
+            }
+            else
+                success = false;
 
             break;
 

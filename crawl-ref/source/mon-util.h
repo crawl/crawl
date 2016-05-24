@@ -541,4 +541,5 @@ int max_mons_charge(monster_type m);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);
+void radiate_pain_bond(const monster* mon, int damage);
 #endif

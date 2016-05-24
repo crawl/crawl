@@ -1367,6 +1367,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
+}
 
 /**
  * check if the monster in this cell exists and is a valid target for Ukayaw
@@ -1428,4 +1429,42 @@ void ukayaw_prepares_audience()
         you.props[UKAYAW_AUDIENCE_TIMER] = 0;
 }
 
+/**
+ * Apply pain bond to the monster in this cell.
+ */
+static int _bond_audience(coord_def where)
+{
+    if (!cell_has_valid_target(where))
+        return 0;
+    monster* mons = monster_at(where);
+    ASSERT(mons);
+
+    if (mons_intel(mons) < I_ANIMAL)
+        return 0;
+
+    int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level
+                 - mons->get_hit_dice();
+    int duration = 10 + random2(power);
+    mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
+
+    return 1;
+}
+
+/**
+ * On hitting **** piety, all the monsters are pain bonded.
+ */
+void ukayaw_bonds_audience()
+{
+    int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
+    if (count > 1)
+    {
+        mprf(MSGCH_GOD, "Ukayaw links your audience in an emotional bond!");
+        apply_area_visible(_bond_audience, you.pos());
+
+        // Increment a delay timer to prevent players from spamming this ability
+        // via piety loss and gain. Timer is in AUT.
+        you.props[UKAYAW_BOND_TIMER] = 300 + random2(201);
+    }
+    else // Reset the timer because we didn't actually execute.
+        you.props[UKAYAW_BOND_TIMER] = 0;
 }

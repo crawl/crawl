@@ -6592,6 +6592,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_RESISTANCE:            return "resistance";
     case BEAM_UNRAVELLING:           return "unravelling";
     case BEAM_UNRAVELLED_MAGIC:      return "unravelled magic";
+    case BEAM_SHARED_PAIN:           return "shared pain";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

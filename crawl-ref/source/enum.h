@@ -641,7 +641,8 @@ enum beam_type                  // bolt::flavour
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
     BEAM_UNRAVELLING,
-    BEAM_LAST_ENCHANTMENT = BEAM_UNRAVELLING,
+    BEAM_SHARED_PAIN,
+    BEAM_LAST_ENCHANTMENT = BEAM_SHARED_PAIN,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -2091,6 +2092,7 @@ enum enchant_type
     ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
     ENCH_EMPOWERED_SPELLS, // affected by above
     ENCH_GOZAG_INCITE,
+    ENCH_PAIN_BOND, // affected by above
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

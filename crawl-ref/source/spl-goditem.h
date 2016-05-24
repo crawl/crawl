@@ -38,6 +38,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_DEFLECT_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
+    ENCH_PAIN_BOND,
 };
 
 bool player_is_debuffable();
