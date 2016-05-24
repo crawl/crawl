@@ -4886,6 +4886,7 @@ enum daction_type
 #if TAG_MAJOR_VERSION == 34
     DACT_ALLY_SACRIFICE_LOVE,
 #endif
+    DACT_ALLY_HEPLIAKLQANA,
     DACT_UPGRADE_ANCESTOR,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
