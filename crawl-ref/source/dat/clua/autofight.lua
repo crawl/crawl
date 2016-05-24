@@ -162,7 +162,8 @@ local function move_towards(dx, dy)
 end
 
 local function will_tab(ax, ay, bx, by)
-  if abs(bx-ax) <= 1 and abs(by-ay) <= 1 then
+  if abs(bx-ax) <= 1 and abs(by-ay) <= 1 or
+     abs(bx-ax) <= 2 and abs(by-ay) <= 2 and have_reaching() then
     return true
   end
   local move = choose_move_towards(ax, ay, bx, by, can_move_maybe)
