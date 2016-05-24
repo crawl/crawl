@@ -419,6 +419,7 @@ static void _handle_ukayaw_time(int time_taken)
     _handle_ukayaw_piety(time_taken);
 
     int audience_timer = you.props[UKAYAW_AUDIENCE_TIMER].get_int();
+    int bond_timer = you.props[UKAYAW_BOND_TIMER].get_int();
 
     // For the timered abilities, if we set the timer to -1, that means we
     // need to trigger the abilities this turn. Otherwise we'll decrement the
@@ -432,6 +433,13 @@ static void _handle_ukayaw_time(int time_taken)
     else
         you.props[UKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
+    if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
+            && x_chance_in_y(time_taken, time_taken * 10 + bond_timer)))
+    {
+        ukayaw_bonds_audience();
+    }
+    else
+        you.props[UKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
 }
 
 /**

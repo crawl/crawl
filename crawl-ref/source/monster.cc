@@ -4562,7 +4562,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
-        if (agent && agent->is_player() && mons_gives_xp(this, agent))
+        // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
+        // Ditto poison DOT, and also for flavor reasons in that case.
+        if (agent && agent->is_player() && mons_gives_xp(this, agent)
+            && flavour != BEAM_SHARED_PAIN)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
@@ -6113,6 +6116,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         else if (heal(damage*2))
             simple_monster_message(this, " seems to be charged up!");
         return;
+    }
+
+    if (has_ench(ENCH_PAIN_BOND)) {
+        radiate_pain_bond(this, damage);
     }
 
     // Don't discharge on small amounts of damage (this helps avoid
