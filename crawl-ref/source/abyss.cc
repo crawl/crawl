@@ -24,6 +24,7 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
+#include "godcompanions.h" // hep stuff
 #include "godpassive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "itemprop.h"
@@ -584,6 +585,12 @@ static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_abyss_transit())
         mons.set_transit(level_id(BRANCH_ABYSS));
+    // make sure we don't end up with an invalid hep ancestor
+    else if (hepliaklqana_ancestor() == mons.mid)
+    {
+        remove_companion(&mons);
+        you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
+    }
 
     mons.destroy_inventory();
     monster_cleanup(&mons);

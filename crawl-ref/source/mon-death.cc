@@ -2628,6 +2628,17 @@ item_def* monster_die(monster* mons, killer_type killer,
         && !(mons->flags & MF_BANISHED))
     {
         remove_companion(mons);
+        if (mons_is_hepliaklqana_ancestor(mons->type))
+        {
+            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
+            if (!you.can_see(*mons))
+            {
+                mprf("%s has departed this plane of existence.",
+                     hepliaklqana_ally_name().c_str());
+            }
+            // respawn in ~30-60 turns
+            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+        }
     }
 
     // If we kill an invisible monster reactivate autopickup.
