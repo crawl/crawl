@@ -2231,10 +2231,12 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     {
         pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
+        if (mons_is_hepliaklqana_ancestor(mons->type))
+            pbolt.foe_ratio = 100; // do not harm the player!
         // Foe ratio for summoning greater demons & undead -- they may be
         // summoned, but they're hostile and would love nothing better
         // than to nuke the player and his minions.
-        if (mons_att_wont_attack(pbolt.attitude)
+        else if (mons_att_wont_attack(pbolt.attitude)
             && !mons_att_wont_attack(mons->attitude))
         {
             pbolt.foe_ratio = 25;

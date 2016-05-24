@@ -31,6 +31,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1492,6 +1493,17 @@ bool mons_is_or_was_unique(const monster& mon)
 }
 
 /**
+ * Is the given type one of Hepliaklqana's granted ancestors?
+ *
+ * @param mc    The type of monster in question.
+ * @return      Whether that monster is a player ancestor.
+ */
+bool mons_is_hepliaklqana_ancestor(monster_type mc)
+{
+    return mons_class_flag(mc, M_ANCESTOR);
+}
+
+/**
  * Can this type of monster be blinded?
  *
  * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
@@ -1865,6 +1877,26 @@ static mon_attack_def _mutant_beast_attack(const monster &mon, int attk_number)
     return { };
 }
 
+/**
+ * Get the attack type, attack flavour and damage for the given attack of an
+ * ancestor granted by Hepliaklqana_ancestor_attack.
+ *
+ * @param mon           The monster in question.
+ * @param attk_number   Which attack number to get.
+ * @return              A mon_attack_def for the specified attack.
+ */
+static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
+                                                     int attk_number)
+{
+    if (attk_number != 0)
+        return { };
+
+    const int HD = mon.get_experience_level();
+    const int dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
+
+    return { AT_HIT, AF_PLAIN, dam };
+}
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -1901,6 +1933,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(*mon, attk_number);
+    else if (mons_is_hepliaklqana_ancestor(mc))
+        return _hepliaklqana_ancestor_attack(*mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
@@ -5457,5 +5491,77 @@ void throw_monster_bits(const monster* mon)
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());
         target->hurt(&you, damage);
+    }
+}
+
+/// What spell should an ancestor have in their customizeable slot?
+static spell_type _ancestor_custom_spell(spell_type default_spell)
+{
+    const int specialization = hepliaklqana_specialization();
+    return specialization ? hepliaklqana_specialization_spell(specialization) :
+                            default_spell;
+}
+
+/// Add an ancestor spell to the given list.
+static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
+{
+    spells.emplace_back(spell, 40, MON_SPELL_WIZARD);
+}
+
+/**
+ * Set the correct spells for a given ancestor, corresponding to their HD and
+ * type.
+ *
+ * @param ancestor      The ancestor in question.
+ * @param notify        Whether to print messages if anything changes.
+ */
+void set_ancestor_spells(monster &ancestor, bool notify)
+{
+    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
+
+    vector<spell_type> old_spells;
+    for (auto spellslot : ancestor.spells)
+        old_spells.emplace_back(spellslot.spell);
+
+    ancestor.spells = {};
+    const int HD = ancestor.get_experience_level();
+    switch (ancestor.type)
+    {
+    case MONS_ANCESTOR_BATTLEMAGE:
+        _add_ancestor_spell(ancestor.spells,
+                            _ancestor_custom_spell(SPELL_THROW_FROST));
+        _add_ancestor_spell(ancestor.spells, HD >= 18 ?
+                                             SPELL_LEHUDIBS_CRYSTAL_SPEAR :
+                                             SPELL_STONE_ARROW);
+        break;
+    case MONS_ANCESTOR_HEXER:
+        _add_ancestor_spell(ancestor.spells,
+                            _ancestor_custom_spell(SPELL_SLOW));
+        _add_ancestor_spell(ancestor.spells, HD >= 14 ? SPELL_MASS_CONFUSION
+                                                      : SPELL_CONFUSE);
+        break;
+    default:
+        break;
+    }
+
+    if (HD >= 14)
+        ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
+
+    if (ancestor.spells.size())
+        ancestor.props[CUSTOM_SPELLS_KEY] = true;
+
+    if (!notify)
+        return;
+
+    for (auto spellslot : ancestor.spells)
+    {
+        if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
+            == old_spells.end())
+        {
+            mprf("%s regains %s memory of %s.",
+                 ancestor.name(DESC_YOUR, true).c_str(),
+                 ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
+                 spell_title(spellslot.spell));
+        }
     }
 }

@@ -381,6 +381,12 @@ azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
 %sdir mon/nonliving
+%rim 0
+ancestor MONS_ANCESTOR
+ancestor_knight MONS_ANCESTOR_KNIGHT
+ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
+ancestor_hexer MONS_ANCESTOR_HEXER
+%rim 1
 
 ## Abominations ('X')
 %sdir mon/demons
