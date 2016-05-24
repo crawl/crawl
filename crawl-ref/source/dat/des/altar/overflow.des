@@ -86,11 +86,11 @@ function species_mock(e)
   elseif you.race() == "Deep Elf" then
     e.kmons("1 = insubstantial wisp")
   elseif you.race() == "Halfling" then
-    e.kmons("1 = hobgoblin")
+    e.kmons("1 = hobgoblin ; mundane sling")
   elseif you.race() == "High Elf" then
     e.kmons("1 = giant orange brain")
   elseif you.race() == "Hill Orc" then
-    e.kmons("1 = goblin")
+    e.kmons("1 = goblin ; mundane hand axe")
   elseif you.race() == "Human" then
     e.kmons("1 = killer klown")
   elseif you.race() == "Felid" then
@@ -114,7 +114,7 @@ function species_mock(e)
   elseif you.race() == "Octopode" then
     e.kmons("1 = tentacled monstrosity")
   elseif you.race() == "Ogre" then
-    e.kmons("1 = ettin simulacrum")
+    e.kmons("1 = ettin skeleton")
   elseif you.race() == "Spriggan" then
     e.kmons("1 = unseen horror")
   elseif you.race() == "Tengu" then

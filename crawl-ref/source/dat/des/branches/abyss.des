@@ -1457,20 +1457,20 @@ KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
 SHUFFLE: 12
 SUBST:   X = xxxxc, c = cccvb
-FTILE:   "Ad456O = floor_crystal_squares
+FTILE:   "Ade456O = floor_crystal_squares
 COLOUR:  "de456O = lightmagenta
 MAP
     .....  . X ".@
   ........cXXXXX. X
- ...xmxmxcx c c.c" .
- ..mxd4dxm 1..2..c..
+ ...xmxmxcx c2c.c" .
+ ..mxd4dxm1......c..
 ..xxd5d4dxx.......X"
 ..md6ddd5d+3.....cX
-@.x4d4O4d4+...e.1 XXA
+@.x4d4O4d4+...e..1XXA
 ..md5ddd6d+3.....cX
 ..xxd4d5dxx.......X"
- ..mxd4dxm 1..2..c..
- ...xmxmxxx c c.c" .
+ ..mxd4dxm1......c..
+ ...xmxmxxx c2c.c" .
   ........XXXXXX. X
     .....  . X ".@
 ENDMAP

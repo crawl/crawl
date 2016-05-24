@@ -1349,24 +1349,21 @@ ENDMAP
 NAME:   shoals_iceberg_rune
 TAGS:   shoal_rune_grunt_ice shoal_mimic_grunt_ice water_ok no_dump
 TAGS:   transparent allow_dup
+MONS:   merfolk impaler ; trident ego:freezing good_item . robe w:7 / \
+        merfolk impaler ; demon trident ego:freezing good_item . robe w:1 / \
+        merfolk impaler w:2 / merfolk javelineer / merfolk aquamancer
+KMONS:  K = kraken simulacrum / frost giant w:20
 : if shoals_vault_is_mimic() then
 KITEM:  O = barnacled rune of Zot mimic
 : else
 KITEM:  O = barnacled rune of Zot
 : end
-KPROP:  O = no_tide
-NSUBST: A = 1:. / 1:x. / *:x
-NSUBST: 1 = 4:1 / 4:1.
-: if crawl.one_chance_in(3) then
-NSUBST: w = 1:K / *:w
-KMONS:  K = kraken simulacrum
 KFEAT:  K = deep_water
-: end
-MONS:   merfolk impaler ; trident ego:freezing good_item . robe w:7 / \
-        merfolk impaler ; demon trident ego:freezing good_item . robe w:1 / \
-        merfolk impaler w:2 / frost giant / \
-        merfolk javelineer / merfolk aquamancer
+NSUBST: A = 1:. / 1:xxxx. / *:x
+NSUBST: 1 = 4:1 / 4 = 1., 0 = 2:0 / 2:. / * = 00...
+NSUBST: w = 1:K / *:w
 : shoals_ice_setup(_G)
+KPROP:  O = no_tide
 MAP
    .......
   .-------.
@@ -1386,7 +1383,7 @@ ENDMAP
 # Shoal iceberg
 NAME:      shoals_iceberg
 TAGS:      shoal_hut_grunt_ice water_ok no_dump allow_dup transparent
-NSUBST:    A = 1:. / 1:x. / *:x
+NSUBST:    A = 1:. / 1:xx. / *:x
 NSUBST:    0 = 2:. / 2:0 / * = 0.
 : shoals_ice_setup(_G)
 MAP
@@ -1438,18 +1435,18 @@ ENDMAP
 NAME:    shoals_garden_rune
 TAGS:    shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok
 TAGS:    no_dump allow_dup transparent
+MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
+MONS:    faun w:6 / 0
+KMONS:   P = plant
 : if shoals_vault_is_mimic() then
 KITEM:   O = barnacled rune of Zot mimic
 : else
 KITEM:   O = barnacled rune of Zot
 : end
-KPROP:   O = no_tide
-MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
-MONS:    faun w:6 / 0
-KMONS:   P = plant
-NSUBST:  1 = 4:1 / 2:1. / 2:1. / 8:2 / *:.
+NSUBST:  1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
 SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
+KPROP:   O = no_tide
 MAP
    abcbd
  kkaBAAdee
