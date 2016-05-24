@@ -1109,15 +1109,12 @@ static void _fill_exclude_radius(const travel_exclude &exc)
         for (int x = c.x - radius; x <= c.x + radius; ++x)
         {
             const coord_def p(x, y);
-            if (!map_bounds(x, y) || !env.map_knowledge(p).known()
-                || travel_point_distance[x][y])
-            {
+            if (!map_bounds(x, y) || travel_point_distance[x][y])
                 continue;
-            }
 
             if (is_exclude_root(p))
                 travel_point_distance[x][y] = PD_EXCLUDED;
-            else if (is_excluded(p))
+            else if (is_excluded(p) && env.map_knowledge(p).known())
                 travel_point_distance[x][y] = PD_EXCLUDED_RADIUS;
         }
 }
