@@ -269,6 +269,12 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
+    if (you.is_stationary())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return SPRET_ABORT;
+    }
+
     coord_def dest;
     for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
