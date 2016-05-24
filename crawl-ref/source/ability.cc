@@ -32,6 +32,7 @@
 #include "exercise.h"
 #include "food.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -601,6 +602,10 @@ static const ability_def Ability_List[] =
     { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
         8, 0, 500, generic_cost::fixed(0),
         {FAIL_INVO, 120 + piety_breakpoint(4), 5, 1}, abflag::NONE},
+
+    // Hepliaklqana
+    { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
+        2, 0, 50, 0, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1474,6 +1479,16 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return pakellas_check_quick_charge(quiet);
+
+        // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_RECALL:
+        if (hepliaklqana_ancestor() == MID_NOBODY)
+        {
+            if (!quiet)
+                mpr("Your ancestor is still trapped in memory!");
+            return false;
+        }
+        return true;
 
     default:
         return true;
@@ -3015,6 +3030,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (!ukayaw_grand_finale())
             return SPRET_ABORT;
+        break;
+
+    case ABIL_HEPLIAKLQANA_RECALL:
+        fail_check();
+        if (try_recall(hepliaklqana_ancestor()))
+            upgrade_hepliaklqana_ancestor(true);
         break;
 
     case ABIL_RENOUNCE_RELIGION:

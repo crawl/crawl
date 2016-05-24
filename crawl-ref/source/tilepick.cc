@@ -3505,6 +3505,9 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
     case ABIL_PAKELLAS_SUPERCHARGE:
         return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
+    // Hepliaklqana
+    case ABIL_HEPLIAKLQANA_RECALL:
+        return TILEG_ABILITY_HEP_RECALL;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
