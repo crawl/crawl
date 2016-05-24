@@ -6914,6 +6914,93 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
 }
 
 /**
+ * Describe the effect of a given ancestor specialization.
+ *
+ * @param specialization    The specialization in question.
+ *                          E.g. ABIL_HEPLIAKLQANA_KNIGHT_REACHING.
+ * @return                  A short description of what the ancestor will do;
+ *                          e.g. "wielding a broad axe", or "casting Iceblast".
+ */
+static string _specialization_description(int specialization)
+{
+    const int ancestor_type = you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int();
+    if (ancestor_type == MONS_ANCESTOR_KNIGHT)
+    {
+        const int weapon = hepliaklqana_specialization_weapon(specialization);
+        const string base_name = item_base_name(OBJ_WEAPONS, weapon);
+        return make_stringf("wielding a %s", base_name.c_str());
+    }
+
+    const spell_type spell = hepliaklqana_specialization_spell(specialization);
+    return make_stringf("casting %s", spell_title(spell));
+}
+
+
+/**
+ * Build a prompt for a given ancestor specialization.
+ *
+ * @param specialization    The specialization in question.
+ *                          E.g. ABIL_HEPLIAKLQANA_KNIGHT_REACHING.
+ * @return                  A confirmation prompt for the player before
+ *                          finalizing the specialization; e.g.
+ *                          "Are you sure you want to remember your ancestor
+ *                          wielding a broad axe of flaming?"
+ */
+static string _ancestor_specialization_prompt(int specialization)
+{
+    string spec_desc = _specialization_description(specialization);
+    // we want this in the prompt, but it's clutter in notes/milestones
+    if (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() == MONS_ANCESTOR_KNIGHT)
+    {
+        // the following is hacky on several levels
+        const string ego = you.experience_level < 27 ? "flaming" : "speed";
+        spec_desc += " of " + ego;
+    }
+    return make_stringf("Are you sure you want to remember your ancestor %s?",
+                        spec_desc.c_str());
+}
+
+/**
+ * Permanently specialize the player's companion,
+ * after prompting to make sure the player is certain.
+ *
+ * @param specialization   The specialization; should be an ability enum.
+ *                         E.g. ABIL_HEPLIAKLQANA_KNIGHT_REACHING.
+ * @return                 Whether the player went through with the choice.
+ */
+bool hepliaklqana_specialize_ancestor(int specialization)
+{
+    if (hepliaklqana_ancestor()
+        && companion_is_elsewhere(hepliaklqana_ancestor()))
+    {
+        // ugly hack to avoid dealing with upgrading offlevel ancestors
+        mpr("You can't make this choice while your ancestor is elsewhere.");
+        return false;
+    }
+
+    const string prompt = _ancestor_specialization_prompt(specialization);
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.props[HEPLIAKLQANA_SPECIALIZATION_KEY] = specialization;
+    upgrade_hepliaklqana_ancestor(true);
+    god_speaks(you.religion, "It is so.");
+
+    const string spec_desc = _specialization_description(specialization);
+    take_note(Note(NOTE_ANCESTOR_SPECIALIZATION, 0, 0, spec_desc));
+    const string mile_text
+        = make_stringf("remembered their ancestor %s %s.",
+                       hepliaklqana_ally_name().c_str(),
+                       spec_desc.c_str());
+    mark_milestone("ancestor.special", mile_text);
+
+    return true;
+}
+
+/**
  * Heal the player's ancestor, remove a variety of detrimental status effects,
  * and apply resistance for a few turns.
  *

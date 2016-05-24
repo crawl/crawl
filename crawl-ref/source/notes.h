@@ -58,6 +58,10 @@ enum NOTE_TYPES
     NOTE_FOCUS_CARD,            /* needs: increased stat value, decreased stat value,
                                    increased stat name (string), decreased stat name (string) */
     NOTE_ANCESTOR_TYPE,          /* needs: ancestor class (string) */
+#if TAG_MAJOR_VERSION == 34
+    NOTE_ANCESTOR_DEATH,         /* needs: ancestor death (string) */
+#endif
+    NOTE_ANCESTOR_SPECIALIZATION, /* needs: ancestor specialization (string) */
     NOTE_NUM_TYPES
 };
 

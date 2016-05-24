@@ -3095,6 +3095,16 @@ void level_change(bool skip_attribute_increase)
             _gain_and_note_hp_mp();
 
         xom_is_stimulated(12);
+        if (in_good_standing(GOD_HEPLIAKLQANA))
+        {
+            upgrade_hepliaklqana_ancestor();
+            if (you.experience_level == HEP_SPECIALIZATION_LEVEL
+                && you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+            {
+                god_speaks(you.religion,
+                           "You can now specialize your ancestor.");
+            }
+        }
 
         learned_something_new(HINT_NEW_LEVEL);
     }

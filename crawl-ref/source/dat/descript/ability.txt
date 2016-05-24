@@ -859,3 +859,41 @@ Ancestor Life: Hexer ability
 Choose to remember your ancestor as a hexer, a cunning rogue capable of skilled
 knifework and debilitating spellcasting. This choice is permanent and cannot be
 undone.
+%%%%
+Knight: Demon Trident ability
+
+Remember your ancestor as wielding an enchanted demon trident, a weapon capable
+of reaching past allies (such as yourself) to attack foes. This choice is
+permanent and cannot be undone.
+%%%%
+Knight: Broad Axe ability
+
+Remember your ancestor as wielding an enchanted broad axe, a weapon capable of
+cleaving through many surrounding foes with each blow. This choice is permanent
+and cannot be undone.
+%%%%
+Battlemage: Iceblast ability
+
+Remember your ancestor as casting Iceblast, which conjures a noisy explosion of
+cold and physical damage. The blast radius can often hit multiple foes, but may
+be ineffective if you are in melee yourself, since your ancestor will never
+target an enemy you're next to with this. This choice is permanent and cannot
+be undone.
+%%%%
+Battlemage: Bolt of Magma ability
+
+Remember your ancestor as casting Bolt of Magma, which conjures a penetrating
+beam of fire and physical damage. This choice is permanent and cannot be
+undone.
+%%%%
+Hexer: Paralyse ability
+
+Remember your ancestor as casting Paralyse, which targets single enemies and,
+if they fail to resist, leaves them completely helpless for the next several
+turns. This choice is permanent and cannot be undone.
+%%%%
+Hexer: Englaciation ability
+
+Remember your ancestor as casting Metabolic Englaciation, which slows all
+non-cold-resistant nearby foes for several turns. This choice is permanent and
+cannot be undone.
