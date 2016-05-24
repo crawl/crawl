@@ -606,6 +606,8 @@ static const ability_def Ability_List[] =
     // Hepliaklqana
     { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
         2, 0, 50, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
+        4, 0, 200, 4, {FAIL_INVO, 60, 4, 25}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1481,6 +1483,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return pakellas_check_quick_charge(quiet);
 
         // only available while your ancestor is alive.
+    case ABIL_HEPLIAKLQANA_IDEALISE:
     case ABIL_HEPLIAKLQANA_RECALL:
         if (hepliaklqana_ancestor() == MID_NOBODY)
         {
@@ -3031,6 +3034,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (!ukayaw_grand_finale())
             return SPRET_ABORT;
         break;
+
+    case ABIL_HEPLIAKLQANA_IDEALISE:
+        return hepliaklqana_idealise(fail);
 
     case ABIL_HEPLIAKLQANA_RECALL:
         fail_check();

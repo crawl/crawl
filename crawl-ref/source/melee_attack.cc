@@ -3593,6 +3593,9 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
     if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
 
+    if (as_mon->has_ench(ENCH_IDEALISED))
+        damage *= 2; // !
+
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
 

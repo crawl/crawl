@@ -3449,6 +3449,8 @@ int monster::armour_class(bool calc_unid) const
         ac += ICEMAIL_MAX;
     if (has_ench(ENCH_BONE_ARMOUR))
         ac += 6 + get_hit_dice() / 3;
+    if (has_ench(ENCH_IDEALISED))
+        ac += 4 + get_hit_dice() / 3;
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
@@ -6734,7 +6736,14 @@ bool monster::is_jumpy() const
 // Currently only used for Aura of Brilliance.
 int monster::spell_hd(spell_type spell) const
 {
-    return get_hit_dice() + (has_ench(ENCH_EMPOWERED_SPELLS) ? 5 : 0);
+    int hd = get_hit_dice();
+    if (mons_is_hepliaklqana_ancestor(type))
+        hd = max(1, hd * 2 / 3);
+    if (has_ench(ENCH_IDEALISED))
+        hd *= 2;
+    if (has_ench(ENCH_EMPOWERED_SPELLS))
+        hd += 5;
+    return hd;
 }
 
 void monster::align_avatars(bool force_friendly)
