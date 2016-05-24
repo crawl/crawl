@@ -6720,8 +6720,7 @@ bool ukayaw_line_pass()
     }
 
     if (monster_at(beam.target))
-        mpr("Something unexpectedly blocked you, preventing you from "
-                "passing!");
+        mpr("Something unexpectedly blocked you, preventing you from passing!");
     else
     {
         line_pass.fire();
