@@ -6734,3 +6734,119 @@ bool ukayaw_line_pass()
 
     return true;
 }
+
+bool ukayaw_grand_finale()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("No encores!");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+
+    // query for location:
+    dist beam;
+
+    monster* mons;
+
+    while (1)
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+        args.may_target_monster = true;
+        args.top_prompt = "Aiming: <white>Grand Finale</white>";
+        args.self = CONFIRM_CANCEL;
+        targetter_smite tgt(&you, 7, 0, 0);
+        args.hitfunc = &tgt;
+        direction(beam, args);
+        if (crawl_state.seen_hups)
+        {
+            clear_messages();
+            mpr("Cancelling grand finale due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+            return false;         // early return
+
+        mons = monster_at(beam.target);
+        if (!mons || !you.can_see(*mons))
+        {
+            clear_messages();
+            mpr("You can't perceive a target there!");
+            continue;
+        }
+
+        if (mons_intel(mons) < I_ANIMAL)
+        {
+            clear_messages();
+            mpr("The target can't bond with you emotionally!");
+            continue;
+        }
+
+        if (mons->has_ench(ENCH_DEATHS_DOOR))
+        {
+            clear_messages();
+            mpr("The target is shielded from death!");
+            continue;
+        }
+
+        if (grd(beam.target) == DNGN_OPEN_SEA)
+        {
+            clear_messages();
+            mpr("You would fall into the sea!");
+            continue;
+        }
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        {
+            clear_messages();
+            mpr("You would fall into the sea of lava!");
+            continue;
+        }
+        else if (!check_moveto(beam.target, "move"))
+        {
+            // try again (messages handled by check_moveto)
+        }
+        else if (you.see_cell_no_trans(beam.target))
+        {
+            // Grid in los, no problem.
+            break;
+        }
+        else if (you.trans_wall_blocking(beam.target))
+        {
+            clear_messages();
+            mpr("There's something in the way!");
+        }
+        else
+        {
+            clear_messages();
+            mpr("You can only target visible locations.");
+        }
+    }
+
+    ASSERT(mons);
+
+    // kill the target
+    mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+    mons->flags |= MF_EXPLODE_KILL;
+    if (!mons->is_insubstantial())
+        throw_monster_bits(mons); // have some fun while we're at it
+
+    monster_die(mons, KILL_YOU, NON_MONSTER, false);
+
+    if (!mons->alive())
+        move_player_to_grid(beam.target, false);
+    else
+        mpr("You spring back to your original position.");
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    set_piety(piety_breakpoint(0)); // Reset piety to 1*.
+
+    return true;
+}

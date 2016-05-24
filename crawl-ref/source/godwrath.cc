@@ -1894,6 +1894,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_PAKELLAS:      do_more = _pakellas_retribution(); break;
+    case GOD_UKAYAW:        do_more = _ukayaw_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

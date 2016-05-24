@@ -5427,3 +5427,35 @@ void radiate_pain_bond(const monster* mon, int damage){
         }
     }
 }
+
+// When a monster explodes violently, add some spice
+void throw_monster_bits(const monster* mon)
+{
+    for (actor_near_iterator ai(mon->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->is_monster())
+            continue;
+
+        monster* target = ai->as_monster();
+
+        if (mon == target) // can't throw chunks of something at itself.
+            continue;
+
+        int distance = target->pos().distance_from(mon->pos());
+        if (!one_chance_in(distance + 4)) // generally gonna miss
+            continue;
+
+        int damage = 1 + random2(mon->get_hit_dice());
+
+        mprf("%s is hit by a flying piece of %s!",
+                target->name(DESC_THE, false).c_str(),
+                mon->name(DESC_THE, false).c_str());
+
+        // Because someone will get a kick out of this some day.
+        if (mons_eats_items(mon))
+            target->corrode_equipment("flying bits", 1);
+
+        behaviour_event(target, ME_ANNOY, &you, you.pos());
+        target->hurt(&you, damage);
+    }
+}
