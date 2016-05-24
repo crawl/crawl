@@ -1385,8 +1385,8 @@ static const zap_info zap_data[] =
     200,
     new calcdice_calculator<3, 14, 3, 5>,
     new tohit_calculator<40>,
-    nullptr,
-    nullptr,
+    new dicedef_calculator<3, 6, 1, 12>, // slightly weaker than magma/fireball
+    new tohit_calculator<40>,
     WHITE,
     false,
     BEAM_ICE,
