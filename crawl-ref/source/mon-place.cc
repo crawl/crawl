@@ -1176,7 +1176,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
 monster* get_free_monster()
 {
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
         {
             mons.reset();

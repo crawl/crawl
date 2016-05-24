@@ -476,6 +476,6 @@ void tag_followers()
 
 void untag_followers()
 {
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
         mons.flags &= ~MF_TAKING_STAIRS;
 }
