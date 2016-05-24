@@ -412,8 +412,11 @@ static void _maybe_set_patrol_route(monster* mons)
 
 static bool _mons_can_cast_dig(const monster* mons, bool random)
 {
-    if (mons->foe == MHITNOT || !mons->has_spell(SPELL_DIG) || mons->confused())
+    if (mons->foe == MHITNOT || !mons->has_spell(SPELL_DIG) || mons->confused()
+        || mons->berserk_or_insane())
+    {
         return false;
+    }
 
     const bool antimagiced = mons->has_ench(ENCH_ANTIMAGIC)
                       && (random
@@ -433,6 +436,7 @@ static bool _mons_can_zap_dig(const monster* mons)
     return mons->foe != MHITNOT
            && !mons->asleep()
            && !mons->confused() // they don't get here anyway
+           && !mons->berserk_or_insane()
            && !mons->submerged()
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
