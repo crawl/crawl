@@ -860,6 +860,11 @@ Choose to remember your ancestor as a hexer, a cunning rogue capable of skilled
 knifework and debilitating spellcasting. This choice is permanent and cannot be
 undone.
 %%%%
+Ancestor Identity ability
+
+Think back and remember who your ancestor preferred to be known as, correcting
+their name and gender to those you recall. This does not take any time.
+%%%%
 Knight: Demon Trident ability
 
 Remember your ancestor as wielding an enchanted demon trident, a weapon capable
