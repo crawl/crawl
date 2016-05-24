@@ -50,6 +50,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h"
+#include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mutation.h"
@@ -6846,6 +6847,67 @@ bool ukayaw_grand_finale()
     crawl_state.cancel_cmd_repeat();
 
     set_piety(piety_breakpoint(0)); // Reset piety to 1*.
+
+    return true;
+}
+
+/**
+ * Permanently choose a class for the player's companion,
+ * after prompting to make sure the player is certain.
+ *
+ * @param ancestor_choice     The ancestor's class; should be an ability enum.
+ * @return                  Whether the player went through with the choice.
+ */
+bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
+{
+    if (hepliaklqana_ancestor()
+        && companion_is_elsewhere(hepliaklqana_ancestor()))
+    {
+        // ugly hack to avoid dealing with upgrading offlevel ancestors
+        mpr("You can't make this choice while your ancestor is elsewhere.");
+        return false;
+    }
+
+    static const map<int, monster_type> ancestor_types = {
+        { ABIL_HEPLIAKLQANA_TYPE_KNIGHT, MONS_ANCESTOR_KNIGHT },
+        { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE, MONS_ANCESTOR_BATTLEMAGE },
+        { ABIL_HEPLIAKLQANA_TYPE_HEXER, MONS_ANCESTOR_HEXER },
+    };
+
+    auto ancestor_mapped = map_find(ancestor_types, ancestor_choice);
+    ASSERT(ancestor_mapped);
+    const auto ancestor_type = *ancestor_mapped;
+    const string ancestor_type_name = mons_type_name(ancestor_type, DESC_A);
+
+    if (!yesno(make_stringf("Are you sure you want to remember your ancestor "
+                            "as %s?", ancestor_type_name.c_str()).c_str(),
+               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.props[HEPLIAKLQANA_ALLY_TYPE_KEY] = ancestor_type;
+
+    if (monster* ancestor = hepliaklqana_ancestor_mon())
+    {
+        ancestor->type = ancestor_type;
+        give_weapon(ancestor, -1);
+        ASSERT(ancestor->weapon());
+        give_shield(ancestor);
+        set_ancestor_spells(*ancestor);
+    }
+
+    god_speaks(you.religion, "It is so.");
+    take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0, ancestor_type_name));
+    const string mile_text
+        = make_stringf("remembered their ancestor %s as %s.",
+                       hepliaklqana_ally_name().c_str(),
+                       ancestor_type_name.c_str());
+    mark_milestone("ancestor.class", mile_text);
+
+    if (you.experience_level >= HEP_SPECIALIZATION_LEVEL)
+        god_speaks(you.religion, "You can now specialize your ancestor.");
 
     return true;
 }

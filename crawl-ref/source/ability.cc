@@ -609,6 +609,13 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
         4, 0, 200, 4, {FAIL_INVO, 60, 4, 25}, abflag::NONE },
 
+    { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
+        0, 0, 0, 0, {FAIL_INVO},abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
+        0, 0, 0, 0, {FAIL_INVO},abflag::NONE },
+    { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
+        0, 0, 0, 0, {FAIL_INVO},abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3044,6 +3051,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             upgrade_hepliaklqana_ancestor(true);
         break;
 
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        if (!hepliaklqana_choose_ancestor_type(abil.ability))
+            return SPRET_ABORT;
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3608,6 +3622,9 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         first_slot = letter_to_index('G');
         break;
     default:
@@ -3652,6 +3669,19 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         }
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
+    }
+    if (you_worship(GOD_HEPLIAKLQANA))
+    {
+        // XXX: should we check ignore_piety?
+        if (piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        {
+            for (int anc_type = ABIL_HEPLIAKLQANA_FIRST_TYPE;
+                 anc_type <= ABIL_HEPLIAKLQANA_LAST_TYPE;
+                 ++anc_type)
+            {
+                abilities.push_back(static_cast<ability_type>(anc_type));
+            }
+        }
     }
     if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
