@@ -53,6 +53,7 @@
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -6970,5 +6971,145 @@ spret_type hepliaklqana_idealise(bool fail)
     const int dur = random_range(50, 80)
                     + random2(you.skill(SK_INVOCATIONS, 10));
     ancestor->add_ench({ ENCH_IDEALISED, 1, &you, dur});
+    return SPRET_SUCCESS;
+}
+
+/**
+ * Prompt to allow the player to choose a target for the Transference ability.
+ *
+ * @return  The chosen target, or the origin if none was chosen.
+ */
+static coord_def _get_transference_target()
+{
+    dist spd;
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_ANY;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = true;
+    args.self = CONFIRM_NONE;
+    args.show_floor_desc = true;
+    args.top_prompt = "Select a target.";
+
+    direction(spd, args);
+
+    if (!spd.isValid)
+        return coord_def();
+    return spd.target;
+}
+
+/// Slow any monsters near the destination of Tranferrence.
+static void _transfer_slow_nearby(coord_def destination)
+{
+    for (adjacent_iterator it(destination); it; ++it)
+    {
+        monster* mon = monster_at(*it);
+        if (!mon || mons_is_hepliaklqana_ancestor(mon->type))
+            continue;
+
+        // ~3-6 turns at 0 invo, ~6-20 turns at 27 invo
+        const int dur = random_range(30 + you.skill(SK_INVOCATIONS, 1),
+                                     60 + you.skill(SK_INVOCATIONS, 5));
+        // XXX: consider adjusting by target HD?
+        if (mon->add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur)))
+            simple_monster_message(mon, " is slowed by nostalgia.");
+    }
+}
+
+/**
+ * Activate Hepliaklqana's Transference ability, swapping the player's
+ * ancestor with a targeted creature & potentially activating the deathswap
+ * effect.
+ *
+ * @param fail      Whether the effect should fail after checking validity.
+ * @return          Whether the ability succeeded, failed, or was aborted.
+ */
+spret_type hepliaklqana_transference(bool fail)
+{
+    monster *ancestor = hepliaklqana_ancestor_mon();
+    if (!ancestor || !you.can_see(*ancestor))
+    {
+        mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
+        return SPRET_ABORT;
+    }
+
+    coord_def target = _get_transference_target();
+    if (target.origin())
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
+    actor* victim = actor_at(target);
+    const bool victim_visible = victim && you.can_see(*victim);
+    if ((!victim || !victim_visible)
+        && !yesno("You can't see anything there. Try transferring anyway?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
+    if (victim == ancestor)
+    {
+        mpr("You can't transfer your ancestor with themself!");
+        return SPRET_ABORT;
+    }
+
+    if (victim_visible && mons_is_tentacle_or_tentacle_segment(victim->type))
+    {
+        mpr("You can't transfer that.");
+        return SPRET_ABORT;
+    }
+
+    const coord_def destination = ancestor->pos();
+    if (victim == &you && !check_moveto(destination, "transfer"))
+        return SPRET_ABORT;
+
+    const bool uninhabitable = victim && !victim->is_habitable(destination);
+    if (uninhabitable && victim_visible)
+    {
+        mprf("%s could never have existed in %s!",
+             victim->name(DESC_THE).c_str(), feat_type_name(grd(destination)));
+        return SPRET_ABORT;
+    }
+
+    // we assume the ancestor flies & so can survive anywhere anything can.
+
+    fail_check();
+
+    if (!victim || uninhabitable
+        || mons_is_tentacle_or_tentacle_segment(victim->type))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_SUCCESS;
+    }
+
+    if (victim->is_player())
+    {
+        ancestor->move_to_pos(target, true, true);
+        victim->move_to_pos(destination, true, true);
+    } else
+        ancestor->swap_with(victim->as_monster());
+
+    mprf("%s swap%s with %s!",
+         victim->name(DESC_THE).c_str(),
+         victim->is_player() ? "" : "s",
+         ancestor->name(DESC_YOUR).c_str());
+
+    check_place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
+    check_place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
+
+    if (victim->is_monster())
+        mons_relocated(victim->as_monster());
+
+    ancestor->apply_location_effects(destination);
+    victim->apply_location_effects(target);
+
+    if (you.piety >= piety_breakpoint(5))
+        _transfer_slow_nearby(destination);
+
     return SPRET_SUCCESS;
 }

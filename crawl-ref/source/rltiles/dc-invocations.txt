@@ -29,6 +29,7 @@ gozag_potion_petition ABILITY_GOZAG_POTION_PETITION
 gozag_call_merchant ABILITY_GOZAG_CALL_MERCHANT
 gozag_bribe_branch ABILITY_GOZAG_BRIBE_BRANCH
 hep_idealise ABILITY_HEP_IDEALISE
+hep_transference ABILITY_HEP_TRANSFERENCE
 hep_recall ABILITY_HEP_RECALL
 hep_knight ABILITY_HEP_KNIGHT
 hep_battlemage ABILITY_HEP_BATTLEMAGE

@@ -833,6 +833,17 @@ them, giving them a short-lived but dramatic increase in strength and armour.
 The quality of the healing and duration of the idealisation granted are both
 improved by the Invocations skill.
 %%%%
+Transference ability
+
+By passing through the realms of memory, force a targeted creature to exchange
+its existence with your ancestor's, leaving each where the other stood a moment
+before.
+
+With great piety, those near the target will be caught in nostalgic
+recollections of an idyllic past, affecting even mindless constructs with no
+past of their own. This will slow them momentarily; Invocations skill will
+increase the duration of this effect.
+%%%%
 Ancestor Life: Knight ability
 
 Choose to remember your ancestor as a knight, a strong melee combatant with
