@@ -7147,7 +7147,10 @@ spret_type hepliaklqana_transference(bool fail)
         return SPRET_ABORT;
     }
 
-    if (victim_visible && mons_is_tentacle_or_tentacle_segment(victim->type))
+    const bool victim_immovable
+        = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
+                     || victim->is_stationary());
+    if (victim_visible && victim_immovable)
     {
         mpr("You can't transfer that.");
         return SPRET_ABORT;
@@ -7169,8 +7172,7 @@ spret_type hepliaklqana_transference(bool fail)
 
     fail_check();
 
-    if (!victim || uninhabitable
-        || mons_is_tentacle_or_tentacle_segment(victim->type))
+    if (!victim || uninhabitable || victim_immovable)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
