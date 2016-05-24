@@ -2646,8 +2646,11 @@ item_def* monster_die(monster* mons, killer_type killer,
     // can see the monster. There are several edge cases where a monster
     // is visible to the player but we still need to turn autopickup
     // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS))
+    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS)
+        && !mons->friendly())
+    {
         autotoggle_autopickup(false);
+    }
 
     if (corpse && _reaping(mons))
         corpse = nullptr;
