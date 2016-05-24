@@ -1975,9 +1975,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_EVOKE_BLINK:      // randarts
         fail_check();
-        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            pakellas_evoke_backfire(SPELL_BLINK);
-        else if (!pakellas_device_surge())
+        if (!pakellas_device_surge())
             return SPRET_FAIL;
         // deliberate fall-through
     case ABIL_BLINK:            // mutation
@@ -1986,9 +1984,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
         fail_check();
-        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            pakellas_evoke_backfire(SPELL_BERSERKER_RAGE);
-        else if (!pakellas_device_surge())
+        if (!pakellas_device_surge())
             return SPRET_FAIL;
         you.go_berserk(true);
         break;
@@ -2031,9 +2027,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (!invis_allowed())
             return SPRET_ABORT;
         fail_check();
-        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            pakellas_evoke_backfire(SPELL_INVISIBILITY);
-        else if (!pakellas_device_surge())
+        if (!pakellas_device_surge())
             return SPRET_FAIL;
         surge_power(you.spec_evoke());
         potionlike_effect(POT_INVISIBILITY,
@@ -2063,12 +2057,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         else
         {
-            if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            {
-                pakellas_evoke_backfire(SPELL_REPEL_MISSILES);
-                // we'd use SPELL_FLY, but that was removed...
-            }
-            else if (!pakellas_device_surge())
+            if (!pakellas_device_surge())
                 return SPRET_FAIL;
             surge_power(you.spec_evoke());
             fly_player(

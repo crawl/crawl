@@ -448,15 +448,15 @@ god_iterator god_iterator::operator++(int)
 
 bool active_penance(god_type god)
 {
-    // Ashenzari's penance isn't active; Nemelex's penance is only active
-    // when the penance counter is above 100; good gods only have active
-    // wrath when they hate your current god.
+    // Nemelex's penance is only active when the penance counter is above 100;
+    // good gods only have active wrath when they hate your current god.
     return player_under_penance(god)
            && !is_unavailable_god(god)
            && god != GOD_ASHENZARI
            && god != GOD_GOZAG
            && god != GOD_RU
            && god != GOD_HEPLIAKLQANA
+           && god != GOD_PAKELLAS
            && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
@@ -469,7 +469,8 @@ bool xp_penance(god_type god)
            && !is_unavailable_god(god)
            && (god == GOD_ASHENZARI
                || god == GOD_GOZAG
-               || god == GOD_HEPLIAKLQANA);
+               || god == GOD_HEPLIAKLQANA
+               || god == GOD_PAKELLAS);
 }
 
 void dec_penance(god_type god, int val)
@@ -2453,7 +2454,7 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
         return false;
     }
 
-    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
+    int pgn = should_scale_piety ? piety_scale(original_gain) : original_gain;
 
     if (crawl_state.game_is_sprint() && should_scale_piety)
         pgn = sprint_modify_piety(pgn);
@@ -2937,6 +2938,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _set_penance(old_god, 50);
         break;
+
     default:
         _set_penance(old_god, 25);
         break;

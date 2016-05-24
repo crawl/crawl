@@ -234,9 +234,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
         return false;
     }
 
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_SUMMON_HELL_BEAST);
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
         return true;
     surge_power(you.spec_evoke());
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
@@ -348,9 +346,7 @@ bool disc_of_storms()
     const int fail_rate =
         30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
 
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_CHAIN_LIGHTNING); // approx
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
         return false;
 
     if (x_chance_in_y(fail_rate, 100))
@@ -483,6 +479,13 @@ void zap_wand(int slot)
     if (player_mutation_level(MUT_NO_ARTIFICE))
     {
         mpr("You cannot evoke magical items.");
+        return;
+    }
+
+    if (player_under_penance(GOD_PAKELLAS))
+    {
+        simple_god_message("'s wrath prevents you from evoking devices!",
+                           GOD_PAKELLAS);
         return;
     }
 
@@ -666,11 +669,9 @@ void zap_wand(int slot)
     beam.range = _wand_range(type_zapped);
 
     dec_mp(mp_cost, false);
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(zap_to_spell(type_zapped));
-    else if (wand.sub_type != WAND_HEAL_WOUNDS
-             && wand.sub_type != WAND_DIGGING
-             && wand.sub_type != WAND_TELEPORTATION)
+    if (wand.sub_type != WAND_HEAL_WOUNDS
+        && wand.sub_type != WAND_DIGGING
+        && wand.sub_type != WAND_TELEPORTATION)
     {
         if (!pakellas_device_surge())
         {
@@ -1013,9 +1014,7 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_MONSTROUS_MENAGERIE); // approx
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
         return false;
     surge_power(you.spec_evoke());
     mpr("You open the lid...");
@@ -1076,9 +1075,7 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_SUMMON_VERMIN); // approx
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
         return false;
     surge_power(you.spec_evoke());
     mpr("You reach into the bag...");
@@ -1433,9 +1430,7 @@ static bool _lamp_of_fire()
         if (you.confused())
             target.confusion_fuzz();
 
-        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            pakellas_evoke_backfire(SPELL_FIRE_ELEMENTALS); // approx
-        else if (!pakellas_device_surge())
+        if (!pakellas_device_surge())
         {
             you.turn_is_over = false;
             return false;
@@ -1841,9 +1836,7 @@ static bool _stone_of_tremors()
     if (stop_attack_prompt(hitfunc, "attack"))
         return false;
 
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_EARTH_ELEMENTALS); // approx
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
     {
         you.turn_is_over = true;
         return false;
@@ -1958,9 +1951,7 @@ static bool _phial_of_floods()
             target.confusion_fuzz();
             beam.set_target(target);
         }
-        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-            pakellas_evoke_backfire(SPELL_WATER_ELEMENTALS); // approx
-        else if (!pakellas_device_surge())
+        if (!pakellas_device_surge())
         {
             you.turn_is_over = true;
             return false;
@@ -2070,9 +2061,7 @@ static spret_type _phantom_mirror()
         return SPRET_FAIL;
     }
 
-    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(SPELL_PHANTOM_MIRROR); // approx
-    else if (!pakellas_device_surge())
+    if (!pakellas_device_surge())
         return SPRET_FAIL;
     surge_power(you.spec_evoke());
     const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
@@ -2291,6 +2280,13 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
+        if (player_under_penance(GOD_PAKELLAS))
+        {
+            simple_god_message("'s wrath prevents you from evoking devices!",
+                               GOD_PAKELLAS);
+            return false;
+        }
+
         if (!(pract = _rod_spell(you.inv[slot], check_range)))
             return false;
 
@@ -2346,10 +2342,19 @@ bool evoke_item(int slot, bool check_range)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (player_mutation_level(MUT_NO_ARTIFICE)
+        if ((player_mutation_level(MUT_NO_ARTIFICE)
+             || player_under_penance(GOD_PAKELLAS)
+                && !is_deck(item))
             && item.sub_type != MISC_ZIGGURAT)
         {
-            return mpr("You cannot evoke magical items."), false;
+            if (player_mutation_level(MUT_NO_ARTIFICE))
+                mpr("You cannot evoke magical items.");
+            else
+            {
+                simple_god_message("'s wrath prevents you from evoking "
+                                   "devices!", GOD_PAKELLAS);
+            }
+            return false;
         }
 
         if (is_deck(item))
@@ -2374,9 +2379,7 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
-            if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-                pakellas_evoke_backfire(SPELL_AIR_ELEMENTALS); // approx
-            else if (!pakellas_device_surge())
+            if (!pakellas_device_surge())
             {
                 you.turn_is_over = true;
                 break;
