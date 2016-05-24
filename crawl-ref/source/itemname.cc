@@ -2002,6 +2002,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (know_type && know_pluses && !basename && !qualname && !dbname)
                 buff << make_stringf("%+d ", special);
 
+            if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
+                buff << "supercharged ";
+
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
             else if (item_typ == ROD_IRON)
