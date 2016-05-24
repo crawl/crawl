@@ -527,6 +527,8 @@ static peeve_map divine_peeves[] =
     },
     // GOD_UKAYAW,
     peeve_map(),
+    // GOD_HEPLIAKLQANA,
+    peeve_map(),
 };
 
 string get_god_dislikes(god_type which_god)
@@ -1011,6 +1013,17 @@ static like_map divine_likes[] =
         { DID_HURT_FOE, { "hurt your foes", 1, 1, 1, 0, nullptr, [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 denom = 1;
+            }
+        } },
+    },
+    // GOD_HEPLIAKLQANA,
+    {
+        { DID_EXPLORATION, {
+            "you explore the world", false, 0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 14;
             }
         } },
     },

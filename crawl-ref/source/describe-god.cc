@@ -220,6 +220,10 @@ static const char *divine_title[][8] =
     // Ukayaw -- reveler theme
     {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
         "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
+
+    // Hepliaklqana -- memory/ancestry theme
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+        "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
