@@ -1205,15 +1205,20 @@ string get_god_likes(god_type which_god)
         text += " doesn't like anything? This is a bug; please report it.";
     else
     {
-        text += " likes it when ";
-        text += comma_separated_line(likes.begin(), likes.end());
-        text += ".";
+        if (!likes.empty())
+        {
+            text += " likes it when ";
+            text += comma_separated_line(likes.begin(), likes.end());
+            text += ".";
+            if (!really_likes.empty())
+            {
+                text += " ";
+                text += uppercase_first(god_name(which_god));
+            }
+        }
 
         if (!really_likes.empty())
         {
-            text += " ";
-            text += uppercase_first(god_name(which_god));
-
             text += " especially likes it when ";
             text += comma_separated_line(really_likes.begin(),
                                          really_likes.end());
