@@ -618,6 +618,19 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
         0, 0, 0, 0, {FAIL_INVO},abflag::NONE },
 
+    { ABIL_HEPLIAKLQANA_KNIGHT_REACHING, "Knight: Demon Trident",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING, "Knight: Broad Axe",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST, "Battlemage: Iceblast",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA, "Battlemage: Bolt of Magma",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_HEXER_PARALYSE, "Hexer: Paralyse",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION, "Hexer: Englaciation",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3064,6 +3077,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
+    case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
+    case ABIL_HEPLIAKLQANA_HEXER_PARALYSE:
+    case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
+        if (!hepliaklqana_specialize_ancestor(abil.ability))
+            return SPRET_ABORT;
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3631,6 +3654,12 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+    case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
+    case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
+    case ABIL_HEPLIAKLQANA_HEXER_PARALYSE:
+    case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
         first_slot = letter_to_index('G');
         break;
     default:
@@ -3660,6 +3689,32 @@ int find_ability_slot(const ability_type abil, char firstletter)
     return -1;
 }
 
+/**
+ * Add the appropriate specialization choice options for the player's chosen
+ * ancestor type.
+ *
+ * @param[out] abilities   A vector to which the specializiation choices should
+ *                         be added.
+ */
+static void _add_hep_specialization_choices(vector<ability_type> &abilities)
+{
+    static const map<int, vector<ability_type>> specializations = {
+        { MONS_ANCESTOR_KNIGHT,     { ABIL_HEPLIAKLQANA_KNIGHT_REACHING,
+                                      ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING } },
+        { MONS_ANCESTOR_BATTLEMAGE, { ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST,
+                                      ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA } },
+        { MONS_ANCESTOR_HEXER,      { ABIL_HEPLIAKLQANA_HEXER_PARALYSE,
+                                      ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION } },
+    };
+
+    const int ancestor = you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int();
+    const vector<ability_type> *choices = map_find(specializations, ancestor);
+    ASSERT(choices);
+    for (ability_type choice : *choices)
+        abilities.push_back(choice);
+}
+
+
 vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
                                        bool ignore_penance)
 {
@@ -3687,6 +3742,13 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             {
                 abilities.push_back(static_cast<ability_type>(anc_type));
             }
+        }
+
+        if (you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY)
+            && you.experience_level >= HEP_SPECIALIZATION_LEVEL
+            && !you.props.exists(HEPLIAKLQANA_SPECIALIZATION_KEY))
+        {
+            _add_hep_specialization_choices(abilities);
         }
     }
     if (you.transfer_skill_points > 0)

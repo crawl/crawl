@@ -176,6 +176,7 @@ bool ukayaw_line_pass();
 bool ukayaw_grand_finale();
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
+bool hepliaklqana_specialize_ancestor(int specialization);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 #endif
