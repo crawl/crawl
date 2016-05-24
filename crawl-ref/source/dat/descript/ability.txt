@@ -832,3 +832,19 @@ are forgotten, harmful effects are wiped away, and a glow of perfection infuses
 them, giving them a short-lived but dramatic increase in strength and armour.
 The quality of the healing and duration of the idealisation granted are both
 improved by the Invocations skill.
+%%%%
+Ancestor Life: Knight ability
+
+Choose to remember your ancestor as a knight, a strong melee combatant with
+superior defenses. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Battlemage ability
+
+Choose to remember your ancestor as a battlemage, a warrior equipped with
+powerful conjurations. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Hexer ability
+
+Choose to remember your ancestor as a hexer, a cunning rogue capable of skilled
+knifework and debilitating spellcasting. This choice is permanent and cannot be
+undone.

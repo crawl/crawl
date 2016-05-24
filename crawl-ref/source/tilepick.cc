@@ -3512,6 +3512,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HEP_RECALL;
     case ABIL_HEPLIAKLQANA_IDEALISE:
         return TILEG_ABILITY_HEP_IDEALISE;
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+        return TILEG_ABILITY_HEP_KNIGHT;
+    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+        return TILEG_ABILITY_HEP_BATTLEMAGE;
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        return TILEG_ABILITY_HEP_HEXER;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

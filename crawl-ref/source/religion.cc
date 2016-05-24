@@ -2384,6 +2384,12 @@ static void _gain_piety_point()
 
             you.one_time_ability_used.set(you.religion);
         }
+        if (you_worship(GOD_HEPLIAKLQANA)
+            && rank == 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        {
+           god_speaks(you.religion,
+                      "You may now remember your ancestor's life.");
+        }
     }
 
     // Every piety level change also affects AC.
