@@ -137,6 +137,10 @@ function ch_stash_search_annotate_item(it)
   end
   annot = annot .. it.class(true) .. "}"
 
+  if it.class(true) == "armour" then
+      annot = annot .. " {" .. it.subtype() .. " armor}"
+  end
+
   local resistances = {
     ["MR+"] = "magic",
     ["rC+"] = "cold",
