@@ -963,6 +963,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     case ABIL_BLINK:
         return 48 - (17 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
+        break;
 
     case ABIL_NEMELEX_DEAL_FOUR:
         return 70 - (you.piety * 2 / 45) - you.skill(SK_EVOCATIONS, 9) / 2;
