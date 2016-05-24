@@ -598,6 +598,9 @@ static const ability_def Ability_List[] =
         3, 0, 100, generic_cost::fixed(20), {FAIL_INVO}, abflag::NONE },
     { ABIL_UKAYAW_LINE_PASS, "Line Pass",
         4, 0, 200, generic_cost::fixed(40), {FAIL_INVO}, abflag::NONE},
+    { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
+        8, 0, 500, generic_cost::fixed(0),
+        {FAIL_INVO, 120 + piety_breakpoint(4), 5, 1}, abflag::NONE},
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3007,6 +3010,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_UKAYAW_GRAND_FINALE:
+        fail_check();
+        if (!ukayaw_grand_finale())
+            return SPRET_ABORT;
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
