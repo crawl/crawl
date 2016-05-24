@@ -1987,18 +1987,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
 
     case OBJ_RODS:
-        if (know_curse && !terse)
-        {
-            if (cursed())
-                buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
-                     && !know_pluses
-                     && (!know_type || !is_artefact(*this)))
-            {
-                buff << "uncursed ";
-            }
-        }
-
         if (!know_type)
         {
             if (!basename)
@@ -2021,9 +2009,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }
-
-        if (know_curse && cursed() && terse)
-            buff << " (curse)";
         break;
 
     case OBJ_STAVES:
