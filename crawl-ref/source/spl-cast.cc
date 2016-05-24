@@ -1377,8 +1377,6 @@ spret_type your_spells(spell_type spell, int powc,
         }
     }
 
-    if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(spell);
     if (evoked && !pakellas_device_surge())
         return SPRET_FAIL;
 
