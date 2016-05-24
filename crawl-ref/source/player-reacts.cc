@@ -414,6 +414,26 @@ static void _handle_ukayaw_piety(int time_taken)
     you.props[UKAYAW_MONSTER_HURT_VALUE] = 0;
 }
 
+static void _handle_ukayaw_time(int time_taken)
+{
+    _handle_ukayaw_piety(time_taken);
+
+    int audience_timer = you.props[UKAYAW_AUDIENCE_TIMER].get_int();
+
+    // For the timered abilities, if we set the timer to -1, that means we
+    // need to trigger the abilities this turn. Otherwise we'll decrement the
+    // timer down to a minimum of 0, at which point it becomes eligible to
+    // trigger again.
+    if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
+            && x_chance_in_y(time_taken, time_taken * 10 + audience_timer)))
+    {
+        ukayaw_prepares_audience();
+    }
+    else
+        you.props[UKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
+
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -443,6 +463,8 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
+    if (you_worship(GOD_UKAYAW))
+        _handle_ukayaw_time(you.time_taken);
 }
 
 static bool _check_recite()

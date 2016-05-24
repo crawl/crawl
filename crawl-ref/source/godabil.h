@@ -42,6 +42,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
+#define UKAYAW_AUDIENCE_TIMER "ukayaw_audience_timer"
 #define UKAYAW_DID_DANCE_ACTION "ukayaw_did_dance_action"
 #define UKAYAW_NUM_MONSTERS_HURT "ukayaw_num_monsters_hurt"
 #define UKAYAW_MONSTER_HURT_VALUE "ukayaw_monster_hurt_value"
