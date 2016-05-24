@@ -757,11 +757,10 @@ static string _describe_mutant_beast_tier(int tier)
     static const string tier_descs[] = {
         "It is of an unusually buggy age.",
         "It is larval and weak, freshly emerged from its mother's pouch.",
-        "It is a juvenile, out of the larval stage but below its mature "
-        "strength.",
+        "It is a juvenile, no longer larval but below its mature strength.",
         "It is mature, stronger than a juvenile but weaker than its elders.",
-        "It is an elder, stronger than most mature beasts.",
-        "It is a primal beast, most powerful of its kind.",
+        "It is an elder, stronger than mature beasts.",
+        "It is a primal beast, the most powerful of its kind.",
     };
     COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
 
