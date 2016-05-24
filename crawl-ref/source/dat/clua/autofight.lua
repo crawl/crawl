@@ -87,18 +87,37 @@ local function is_safe_square(dx, dy)
     return view.is_safe_square(dx, dy)
 end
 
-local function try_move(dx, dy)
-  m = monster.get_monster_at(dx, dy)
-  -- attitude > ATT_NEUTRAL should mean you can push past the monster
-  if is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL) then
-    return delta_to_vi(dx, dy)
-  else
-    return nil
+local function can_move_maybe(dx, dy)
+  if view.feature_at(dx,dy) ~= "unseen" and view.is_safe_square(dx,dy) then
+    local m = monster.get_monster_at(dx, dy)
+    if not m or not m:is_firewood() then
+      return true
+    end
   end
+  return false
 end
 
-local function move_towards(dx, dy)
+local function can_move_now(dx, dy)
+  local m = monster.get_monster_at(dx, dy)
+  -- attitude > ATT_NEUTRAL should mean you can push past the monster
+  return (is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL))
+end
+
+local function choose_move_towards(ax, ay, bx, by, square_func)
   local move = nil
+  local dx = bx - ax
+  local dy = by - ay
+  local function try_move(mx, my)
+    if mx == 0 and my == 0 then
+      return nil
+    elseif abs(ax+mx) > LOS_RADIUS or abs(ay+my) > LOS_RADIUS then
+      return nil
+    elseif square_func(ax+mx, ay+my) then
+      return {mx,my}
+    else
+      return nil
+    end
+  end
   if abs(dx) > abs(dy) then
     if abs(dy) == 1 then
       move = try_move(sign(dx), 0)
@@ -130,11 +149,27 @@ local function move_towards(dx, dy)
     end
     if move == nil then move = try_move(sign(dx), 0) end
   end
+  return move
+end
+
+local function move_towards(dx, dy)
+  local move = choose_move_towards(0, 0, dx, dy, can_move_now)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.do_commands({move})
+    crawl.do_commands({delta_to_vi(move[1],move[2])})
   end
+end
+
+local function will_tab(ax, ay, bx, by)
+  if abs(bx-ax) <= 1 and abs(by-ay) <= 1 then
+    return true
+  end
+  local move = choose_move_towards(ax, ay, bx, by, can_move_maybe)
+  if move == nil then
+    return false
+  end
+  return will_tab(ax+move[1], ay+move[2], bx, by)
 end
 
 local function get_monster_info(dx,dy,no_move)
@@ -196,6 +231,9 @@ local function is_candidate_for_attack(x,y)
   end
   if m:name() == "butterfly"
       or m:name() == "orb of destruction" then
+    return false
+  end
+  if not (have_ranged() or will_tab(0,0,x,y)) then
     return false
   end
   if m:is_firewood() then
