@@ -713,13 +713,6 @@ void zap_wand(int slot)
             wand.used_count += wasted_charges;
     }
 
-    // Identify if unknown.
-    if (!alreadyknown)
-    {
-        set_ident_type(wand, true);
-        mprf_nocap("%s", wand.name(DESC_INVENTORY_EQUIP).c_str());
-    }
-
     if (item_type_known(wand)
         && (item_ident(wand, ISFLAG_KNOW_PLUSES)
             || you.skill_rdiv(SK_EVOCATIONS) > random2(27)))
