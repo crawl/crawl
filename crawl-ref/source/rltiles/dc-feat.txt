@@ -459,6 +459,7 @@ pakellas1
 pakellas2
 pakellas3
 ukayaw DNGN_ALTAR_UKAYAW
+hep DNGN_ALTAR_HEPLIAKLQANA
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn

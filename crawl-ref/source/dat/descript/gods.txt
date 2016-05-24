@@ -59,6 +59,15 @@ Followers of Gozag do not earn piety; the only way to impress this god is by
 amassing a fortune, and worshippers may request as much assistance as they can
 afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
 %%%%
+Hepliaklqana
+
+Hepliaklqana the Forgotten accepts the worship of those who would remember
+their forebears, and fight alongside the greatest of them all. Hepliaklqana
+demands only that followers explore and form new experiences; as they advance
+in this service, they will find themselves able to shape and control their
+ancestor's memory, eventually bringing them into the ranks of the mythical
+heroes.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -266,6 +275,17 @@ distracted by imaginings of great wealth. Stalwarts can order immediate help
 in the form of potions, with prices being dictated by the Greedy. Particularly
 well-off adherents may attract shopkeepers into the dungeon, and even bribe
 entire branches.
+%%%%
+Hepliaklqana powers
+
+All of Hepliaklqana's worshippers are offered the service of the greatest of
+their ancestors; this ancestor is at first remembered as they were at the
+start of their own adventures, but will advance in skill as their descendant
+does. Hepliaklqana always allows followers to recall their ancestors to their
+side, and, even if the ancestor is destroyed, Hepliaklqana will call it forth
+again not too long after. Further advancement in Hepliaklqana's service allows
+worshippers to restore and strengthen their ancestor, to swap them with other
+creatures, and to choose how to remember their life's talents.
 %%%%
 Jiyva powers
 
@@ -477,6 +497,14 @@ ways. Accordingly, Fedhas provides said exposure, in the form of pure elemental
 destruction, waves of giant spores rising from nearby corpses, and, for the
 truly incorrigible, surrounding rings of animate mushrooms and acid-spitting
 oklobs.
+%%%%
+Hepliaklqana wrath
+
+Hepliaklqana believes that the only reasonable punishment for turning one's
+back on the path of memory is to be denied its use. All new experience is
+denied to the unfortunate apostate, until Hepliaklqana decides they have
+been punished enough. This will not be quick: unlike some, Hepliaklqana has
+a long memory...
 %%%%
 Gozag wrath
 
