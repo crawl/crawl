@@ -1849,6 +1849,52 @@ static bool _pakellas_retribution()
     return true;
 }
 
+static bool _choose_hostile_monster(const monster* mon)
+{
+    return mon->attitude == ATT_HOSTILE;
+}
+
+
+static bool _ukayaw_retribution()
+{
+    const god_type god = GOD_UKAYAW;
+
+    // check if we have monsters around
+    monster* mon = nullptr;
+    mon = choose_random_nearby_monster(0, _choose_hostile_monster);
+
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+        if (mon && mon->can_go_berserk())
+        {
+            simple_god_message(make_stringf(" drives %s into a dance frenzy!",
+                                     mon->name(DESC_THE).c_str()).c_str(), god);
+            mon->go_berserk(true);
+            return true;
+        }
+        // else we intentionally fall through
+
+    case 2:
+    case 3:
+        if (mon)
+        {
+            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+                                    god);
+            paralyse_player(_god_wrath_name(god));
+            return false;
+        }
+        // else we intentionally fall through
+
+    case 5:
+        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        noisy(35, you.pos());
+        break;
+    }
+    return true;
+}
+
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
