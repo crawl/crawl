@@ -819,3 +819,8 @@ overall increase is determined by the size of your donation.
 Curse Item ability
 
 Curses a chosen item, at the cost of a scroll of remove curse.
+%%%%
+Recall Ancestor ability
+
+Recalls your ancestor from anywhere in the dungeon to your immediate
+surroundings.

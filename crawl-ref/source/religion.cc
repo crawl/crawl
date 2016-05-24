@@ -305,6 +305,10 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_UKAYAW_LINE_PASS, "pass through a line of other dancers" },
       { 5, ABIL_UKAYAW_GRAND_FINALE, "merge with and destroy a victim" },
     },
+
+    // Hepliaklqana
+    { { 0, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
