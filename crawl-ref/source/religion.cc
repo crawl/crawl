@@ -456,6 +456,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Ukayaw
     {
       { 1, ABIL_UKAYAW_STOMP, "stomp with the beat" },
+      { 2, ABIL_UKAYAW_LINE_PASS, "pass through a line of other dancers" },
     },
 };
 
