@@ -552,7 +552,7 @@ struct item_def
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;           ///< rate at which a rod recharges; +slay
+        int rod_plus;           ///< rate at which a rod recharges
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
