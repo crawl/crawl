@@ -989,7 +989,7 @@ static void _grab_followers()
     }
 
     // Clear flags of monsters that didn't follow.
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
     {
         if (!mons.alive())
             continue;
