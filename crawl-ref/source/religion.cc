@@ -50,6 +50,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-gear.h" // give_shield
 #include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
@@ -76,6 +77,11 @@
 #endif
 
 #define PIETY_HYSTERESIS_LIMIT 1
+
+static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD);
+static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
+static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
+static special_armour_type _hepliaklqana_shield_ego(int HD);
 
 const vector<god_power> god_powers[NUM_GODS] =
 {
@@ -1233,6 +1239,392 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
+}
+
+/**
+ * What's the name of the ally Hepliaklqana granted the player?
+ *
+ * @return      The ally's name.
+ */
+string hepliaklqana_ally_name()
+{
+    return you.props[HEPLIAKLQANA_ALLY_NAME_KEY].get_string();
+}
+
+/**
+ * What specialization has the player chosen for their ancestor, if any?
+ *
+ * @return  The appropriate ability_type enum (e.g.
+ *          ABIL_HEPLIAKLQANA_KNIGHT_REACHING), or 0 if no specialization was
+ *          chosen.
+ */
+int hepliaklqana_specialization()
+{
+    // using get_int() without checking for exists would make it exist
+    if (you.props.exists(HEPLIAKLQANA_SPECIALIZATION_KEY))
+        return you.props[HEPLIAKLQANA_SPECIALIZATION_KEY].get_int();
+    return 0;
+}
+
+/**
+ * How much HD should the ally granted by Hepliaklqana have?
+ *
+ * @return      The player's xl * 2/3.
+ */
+static int _hepliaklqana_ally_hd()
+{
+    if (!crawl_state.need_save) // on main menu or otherwise don't have 'you'
+        return 27; // v0v
+    // round up
+    return (you.experience_level - 1) * 2 / 3 + 1;
+}
+
+/**
+ * How much max HP should the ally granted by Hepliaklqana have?
+ *
+ * @return      5/hd from 1-11 HD, 10/hd from 12-18.
+ *              (That is, 5 HP at 1 HD, 120 at 18.)
+ */
+static int _hepliaklqana_ally_hp()
+{
+    const int HD = _hepliaklqana_ally_hd();
+    return HD * 5 + max(0, (HD - 12) * 5);
+}
+
+/**
+ * Creates a mgen_data with the information needed to create the ancestor
+ * granted by Hepliaklqana.
+ *
+ * XXX: should this be populating a mgen_data passed by reference, rather than
+ * returning one on the stack?
+ *
+ * @return    The mgen_data that creates a hepliaklqana ancestor.
+ */
+mgen_data hepliaklqana_ancestor_gen_data()
+{
+    const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
+        (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
+        MONS_ANCESTOR;
+    mgen_data mg(type, BEH_FRIENDLY, &you, 0, 0, you.pos(),
+                 MHITYOU, MG_AUTOFOE, GOD_HEPLIAKLQANA);
+    mg.hd = _hepliaklqana_ally_hd();
+    mg.hp = _hepliaklqana_ally_hp();
+    mg.extra_flags |= MF_NO_REWARD;
+    mg.mname = hepliaklqana_ally_name();
+    mg.props[MON_GENDER_KEY]
+        = you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
+    return mg;
+}
+
+/// Print a message for an ancestor's *something* being gained.
+static void _regain_memory(const monster &ancestor, string memory)
+{
+    mprf("%s regains the memory of %s %s.",
+         ancestor.name(DESC_YOUR, true).c_str(),
+         ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
+         memory.c_str());
+}
+
+static string _item_ego_name(object_class_type base_type, int brand)
+{
+    switch (base_type)
+    {
+    case OBJ_WEAPONS:
+    {
+        // 'remembers... draining' reads better than 'drain', but 'flame'
+        // reads better than 'flaming'
+        const bool terse = brand == SPWPN_FLAMING
+                           || brand == SPWPN_ANTIMAGIC;
+        return brand_type_name(brand, terse);
+    }
+    case OBJ_ARMOUR:
+        // XXX: hack
+        return "reflection";
+    default:
+        die("unsupported object type");
+    }
+}
+
+/// Print a message for an ancestor's item being gained/type upgraded.
+static void _regain_item_memory(const monster &ancestor,
+                                object_class_type base_type,
+                                int sub_type,
+                                int brand)
+{
+    const string base_name = item_base_name(base_type, sub_type);
+    if (!brand)
+    {
+        _regain_memory(ancestor, base_name);
+        return;
+    }
+
+    const string ego_name = _item_ego_name(base_type, brand);
+    const string item_name
+        = make_stringf("%s of %s",
+                       item_base_name(base_type, sub_type).c_str(),
+                       ego_name.c_str());
+    _regain_memory(ancestor, item_name);
+}
+
+/**
+ * Update the ancestor's stats after the player levels up. Upgrade HD and HP,
+ * and give appropriate messaging for that and any other notable upgrades
+ * (spells, resists, etc).
+ *
+ * @param quiet_force     Whether to squash messages & force upgrades,
+ *                        even if the HD is unchanged.
+ */
+void upgrade_hepliaklqana_ancestor(bool quiet_force)
+{
+    monster* ancestor = hepliaklqana_ancestor_mon();
+    if (!ancestor || !ancestor->alive())
+        return;
+
+    // housekeeping
+    ancestor->mname = hepliaklqana_ally_name();
+    ancestor->props[MON_GENDER_KEY]
+        = you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
+
+    const int old_hd = ancestor->get_experience_level();
+    const int hd = _hepliaklqana_ally_hd();
+    ancestor->set_hit_dice(hd);
+    if (old_hd == hd && !quiet_force)
+        return; // assume nothing changes except at different HD
+
+    const int old_mhp = ancestor->max_hit_points;
+    ancestor->max_hit_points = _hepliaklqana_ally_hp();
+    ancestor->hit_points =
+        div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
+                       old_mhp);
+
+    if (!quiet_force)
+    {
+        mprf("%s remembers more of %s old skill.",
+             ancestor->name(DESC_YOUR, true).c_str(),
+             ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+    }
+
+    set_ancestor_spells(*ancestor, !quiet_force);
+
+    const bool ancestor_offlevel = companion_is_elsewhere(ancestor->mid);
+    if (ancestor_offlevel)
+        add_daction(DACT_UPGRADE_ANCESTOR);
+
+    // assumption: ancestors can lose weapons (very rarely - tukima's),
+    // and it's weird for them to just reappear, so only upgrade existing ones
+    if (ancestor->weapon())
+    {
+        if (!ancestor_offlevel)
+            upgrade_hepliaklqana_weapon(*ancestor, *ancestor->weapon());
+
+        const weapon_type wpn = _hepliaklqana_weapon_type(ancestor->type, hd);
+        const brand_type brand = _hepliaklqana_weapon_brand(ancestor->type, hd);
+        if (wpn != _hepliaklqana_weapon_type(ancestor->type, old_hd)
+            && !quiet_force)
+        {
+            _regain_item_memory(*ancestor, OBJ_WEAPONS, wpn, brand);
+        }
+        else if (brand != _hepliaklqana_weapon_brand(ancestor->type, old_hd)
+                 && !quiet_force)
+        {
+            mprf("%s remembers %s %s %s.",
+                 ancestor->name(DESC_YOUR, true).c_str(),
+                 ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str(),
+                 apostrophise(item_base_name(OBJ_WEAPONS, wpn)).c_str(),
+                 brand_type_name(brand, brand != SPWPN_DRAINING));
+        }
+    }
+    // but shields can't be lost, and *can* be gained (knight at hd 5)
+    // so give them out as appropriate
+    if (!ancestor_offlevel)
+    {
+        if (ancestor->shield())
+            upgrade_hepliaklqana_shield(*ancestor, *ancestor->shield());
+        else
+            give_shield(ancestor);
+    }
+
+    const armour_type shld = _hepliaklqana_shield_type(ancestor->type, hd);
+    if (shld != _hepliaklqana_shield_type(ancestor->type, old_hd)
+        && !quiet_force)
+    {
+        // doesn't currently support egos varying separately from shield types
+        _regain_item_memory(*ancestor, OBJ_ARMOUR, shld,
+                            _hepliaklqana_shield_ego(hd));
+    }
+
+    if (quiet_force)
+        return;
+}
+
+/**
+ * For a spellcasting ancestor (e.g. a hexer or battlemage), what spell is
+ * granted by a given specialization?
+ *
+ * @param specialization    The specialization in question; e.g.
+ *                          ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST.
+ * @return                  The appropriate spell type, e.g. SPELL_ICEBLAST.
+ *                          By default, returns NUM_SPELLS.
+ */
+spell_type hepliaklqana_specialization_spell(int specialization)
+{
+    switch (specialization)
+    {
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
+        return SPELL_ICEBLAST;
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
+        return SPELL_BOLT_OF_MAGMA;
+    case ABIL_HEPLIAKLQANA_HEXER_PARALYSE:
+        return SPELL_PARALYSE;
+    case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
+        return SPELL_ENGLACIATION;
+    default:
+        return NUM_SPELLS;
+    }
+}
+
+/**
+ * For an ancestor knight, what weapon is granted by a given specialization?
+ *
+ * @param specialization    The specialization in question; e.g.
+ *                          ABIL_HEPLIAKLQANA_KNIGHT_REACHING.
+ * @return                  The appropriate weapon type, e.g. WPN_BROAD_AXE.
+ *                          By default, returns NUM_WEAPONS.
+ */
+weapon_type hepliaklqana_specialization_weapon(int specialization)
+{
+    switch (specialization)
+    {
+    case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
+        return WPN_DEMON_TRIDENT;
+    case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
+        return WPN_BROAD_AXE;
+    default:
+        return NUM_WEAPONS;
+    }
+}
+
+/**
+ * What type of weapon should an ancestor of the given HD have?
+ *
+ * @param mc   The type of ancestor in question.
+ * @param HD   The HD of the ancestor in question.
+ * @return     An appropriate weapon_type.
+ */
+static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
+{
+    switch (mc)
+    {
+    case MONS_ANCESTOR_HEXER:
+        return HD < 18 ? WPN_DAGGER : WPN_QUICK_BLADE;
+    case MONS_ANCESTOR_KNIGHT:
+    {
+        const int specialization = hepliaklqana_specialization();
+        return specialization ?
+               hepliaklqana_specialization_weapon(specialization) :
+               WPN_LONG_SWORD;
+    }
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return HD < 14 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
+    default:
+        return NUM_WEAPONS; // should never happen
+    }
+}
+
+/**
+ * What brand should an ancestor of the given HD's weapon have, if any?
+ *
+ * @param mc   The type of ancestor in question.
+ * @param HD   The HD of the ancestor in question.
+ * @return     An appropriate weapon_type.
+ */
+static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
+{
+    switch (mc)
+    {
+        case MONS_ANCESTOR_HEXER:
+            return HD < 18 ?   SPWPN_DRAINING :
+                               SPWPN_ANTIMAGIC;
+        case MONS_ANCESTOR_KNIGHT:
+            return !hepliaklqana_specialization() ?   SPWPN_NORMAL :
+                   HD < 18 ?                          SPWPN_FLAMING :
+                                                      SPWPN_SPEED;
+        case MONS_ANCESTOR_BATTLEMAGE:
+            return HD < 14 ?   SPWPN_NORMAL :
+                               SPWPN_FREEZING;
+        default:
+            return SPWPN_NORMAL;
+    }
+}
+
+/**
+ * Setup an ancestor's weapon after their class is chosen, when the player
+ * levels up, or after they're resummoned (or initially created for wrath).
+ *
+ * @param[in]   ancestor      The ancestor for whom the weapon is intended.
+ * @param[out]  item          The item to be configured.
+ * @param       notify        Whether messages should be printed when something
+ *                            changes. (Weapon type or brand.)
+ */
+void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item)
+{
+    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
+    if (ancestor.type == MONS_ANCESTOR)
+        return; // bare-handed!
+
+    item.base_type = OBJ_WEAPONS;
+    item.sub_type = _hepliaklqana_weapon_type(ancestor.type,
+                                              ancestor.get_experience_level());
+    item.brand = _hepliaklqana_weapon_brand(ancestor.type,
+                                            ancestor.get_experience_level());
+    item.plus = 0;
+    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+}
+
+/**
+ * What kind of shield should an ancestor of the given HD be given?
+ *
+ * @param mc        The type of ancestor in question.
+ * @param HD        The HD (XL) of the ancestor in question.
+ * @return          An appropriate type of shield, or NUM_ARMOURS.
+ */
+static armour_type _hepliaklqana_shield_type(monster_type mc, int HD)
+{
+    if (mc != MONS_ANCESTOR_KNIGHT)
+        return NUM_ARMOURS;
+    if (HD < 14)
+        return ARM_SHIELD;
+    return ARM_LARGE_SHIELD;
+}
+
+static special_armour_type _hepliaklqana_shield_ego(int HD)
+{
+    return HD < 14 ? SPARM_NORMAL : SPARM_REFLECTION;
+}
+
+/**
+ * Setup an ancestor's weapon after their class is chosen, when the player
+ * levels up, or after they're resummoned (or initially created for wrath).
+ *
+ * @param[in]   ancestor      The ancestor for whom the weapon is intended.
+ * @param[out]  item          The item to be configured.
+ * @return                    True iff the ancestor should have a weapon.
+ */
+void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
+{
+    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
+    const int HD = ancestor.get_experience_level();
+    const armour_type shield_type = _hepliaklqana_shield_type(ancestor.type,
+                                                              HD);
+    if (shield_type == NUM_ARMOURS)
+        return; // no shield yet!
+
+    item.base_type = OBJ_ARMOUR;
+    item.sub_type = shield_type;
+    item.brand = _hepliaklqana_shield_ego(HD);
+    item.plus = 0;
+    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+    item.quantity = 1;
 }
 
 bool vehumet_is_offering(spell_type spell)
@@ -3012,6 +3404,40 @@ static void _join_gozag()
     add_daction(DACT_GOLD_ON_TOP);
 }
 
+/**
+ * Choose an antique name for a Hepliaklqana-granted ancestor.
+ *
+ * @param female    Whether the ancestor is female or male.
+ * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
+ */
+static string _make_ancestor_name(bool female)
+{
+    const string gender_name = female ? "female" : "male";
+    const string suffix = " " + gender_name + " name";
+    const string name = getRandNameString("ancestor", suffix);
+    return name.empty() ? make_name() : name;
+}
+
+/// Setup when joining the devoted followers of Hepliaklqana.
+static void _join_hepliaklqana()
+{
+    // initial setup.
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
+    {
+        const bool female = coinflip();
+        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(female);
+        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = female ? GENDER_FEMALE
+                                                         : GENDER_MALE;
+    }
+
+    // Complimentary ancestor upon joining.
+    const mgen_data mg = hepliaklqana_ancestor_gen_data();
+    delayed_monster(mg);
+    simple_god_message(make_stringf(" brings forth the memory of your ancestor,"
+                                    " %s!",
+                                    mg.mname.c_str()).c_str());
+}
+
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3105,6 +3531,7 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
+    { GOD_HEPLIAKLQANA, _join_hepliaklqana },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
@@ -4111,6 +4538,7 @@ static void _place_delayed_monsters()
         if (mon)
         {
             if (you_worship(GOD_YREDELEMNUL)
+                || you_worship(GOD_HEPLIAKLQANA)
                 || have_passive(passive_t::convert_orcs))
             {
                 add_companion(mon);

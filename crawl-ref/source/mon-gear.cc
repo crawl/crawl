@@ -16,6 +16,7 @@
 #include "items.h"
 #include "mon-place.h"
 #include "randbook.h" // roxanne, roxanne...
+#include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
 #include "tilepick.h"
 #include "unwind.h"
@@ -1466,6 +1467,13 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
+    case MONS_ANCESTOR_HEXER:
+    case MONS_ANCESTOR_BATTLEMAGE:
+    case MONS_ANCESTOR_KNIGHT:
+        force_item = true;
+        upgrade_hepliaklqana_weapon(*mon, item);
+        break;
+
     default:
         break;
     }
@@ -1922,6 +1930,24 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR,
                               coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
                               ISPEC_GOOD_ITEM);
+        break;
+
+    case MONS_ANCESTOR_KNIGHT:
+    {
+        item_def shld;
+        upgrade_hepliaklqana_shield(*mon, shld);
+        if (!shld.defined())
+            break;
+
+        item_set_appearance(shld);
+
+        const int thing_created = get_mitm_slot();
+        if (thing_created == NON_ITEM)
+            break;
+
+        mitm[thing_created] = shld;
+        _give_monster_item(mon, thing_created, true);
+    }
         break;
 
     default:
@@ -2446,6 +2472,11 @@ void give_weapon(monster *mons, int level_number, bool spectral_orcs)
 void give_armour(monster *mons, int level_number)
 {
     _give_armour(mons, 1 + level_number/2, false, false);
+}
+
+void give_shield(monster *mons)
+{
+    _give_shield(mons, -1);
 }
 
 void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs, bool merc)

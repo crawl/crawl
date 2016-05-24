@@ -539,6 +539,10 @@ anaconda
 A very large snake that moves with startling rapidity on both land and in the
 water. It kills not by poison but by constricting its prey.
 %%%%
+ancestor
+
+A warrior from the distantly remembered past.
+%%%%
 ancient lich
 
 A lich who, having existed for countless centuries, has grown almost
@@ -612,6 +616,11 @@ bat
 
 A large grey bat that, despite being herbivorous, is quite aggressive. It is
 myopic and uses echolocation to navigate.
+%%%%
+battlemage
+
+A warrior from the distantly remembered past, skilled in both conjurations and
+melee combat.
 %%%%
 battlesphere
 
@@ -1387,6 +1396,11 @@ A hideous skeletal demon. It swoops through the air on powerful wings of
 ancient withered skin, taking sadistic joy from harrying those who would try
 to flee its grasp.
 %%%%
+hexer
+
+A warrior from the distantly remembered past, ready with debilitating spells
+and deadly knifework.
+%%%%
 hill giant
 
 A massive, burly humanoid standing taller even than an ogre. Hill giants are
@@ -1565,6 +1579,11 @@ Killer Klown
 A comical figure full of life and laughter. It looks very happy to see you...
 but is there a slightly malicious cast to its features? Is that red face paint
 or something altogether less pleasant?
+%%%%
+knight
+
+A warrior from the distantly remembered past, well equipped with arms and
+armour both.
 %%%%
 kobold
 

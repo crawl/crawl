@@ -424,6 +424,13 @@ enum ability_type
     ABIL_UKAYAW_LINE_PASS,
     ABIL_UKAYAW_GRAND_FINALE,
 
+    ABIL_HEPLIAKLQANA_KNIGHT_REACHING,
+    ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING,
+    ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST,
+    ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA,
+    ABIL_HEPLIAKLQANA_HEXER_PARALYSE,
+    ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -3342,6 +3349,10 @@ enum monster_type                      // menv[].type
     MONS_PLAYER,                // a certain ugly creature
 #if TAG_MAJOR_VERSION > 34
     MONS_PLAYER_SHADOW,         // Dithmenos
+    MONS_ANCESTOR,              // Hepliaklqana
+    MONS_ANCESTOR_KNIGHT,
+    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_HEXER,
 #endif
     MONS_TEST_SPAWNER,
 
@@ -3506,6 +3517,10 @@ enum monster_type                      // menv[].type
     MONS_WITHERED_PLANT,
     MONS_DART_SLUG,
     MONS_HOWLER_MONKEY,
+    MONS_ANCESTOR,
+    MONS_ANCESTOR_KNIGHT,
+    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_HEXER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4871,6 +4886,7 @@ enum daction_type
 #if TAG_MAJOR_VERSION == 34
     DACT_ALLY_SACRIFICE_LOVE,
 #endif
+    DACT_UPGRADE_ANCESTOR,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

@@ -19,6 +19,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "godabil.h"
 #include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -190,7 +191,8 @@ static bool _is_public_key(string key)
      || key == ELVEN_IS_ENERGIZED_KEY
      || key == MUTANT_BEAST_FACETS
      || key == MUTANT_BEAST_TIER
-     || key == DOOM_HOUND_HOWLED_KEY)
+     || key == DOOM_HOUND_HOWLED_KEY
+     || key == MON_GENDER_KEY)
     {
         return true;
     }
@@ -1799,4 +1801,14 @@ monster_type monster_info::draco_or_demonspawn_subspecies() const
     if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
         return player_species_to_mons_species(i_ghost.species);
     return ::draco_or_demonspawn_subspecies(type, base_type);
+}
+
+const char *monster_info::pronoun(pronoun_type variant) const
+{
+    if (props.exists(MON_GENDER_KEY))
+    {
+        return decline_pronoun((gender_type)props[MON_GENDER_KEY].get_int(),
+                               variant);
+    }
+    return mons_pronoun(type, variant, true);
 }

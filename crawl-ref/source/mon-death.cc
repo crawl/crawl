@@ -522,8 +522,11 @@ void record_monster_defeat(const monster* mons, killer_type killer)
         return;
     if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->is_summoned())
         return;
-    if (mons->is_named() && mons->friendly())
+    if (mons->is_named() && mons->friendly()
+        && !mons_is_hepliaklqana_ancestor(mons->type))
+    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
+    }
     else if (mons_is_notable(*mons))
     {
         take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
