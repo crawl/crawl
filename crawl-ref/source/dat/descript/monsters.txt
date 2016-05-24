@@ -541,7 +541,7 @@ water. It kills not by poison but by constricting its prey.
 %%%%
 ancestor
 
-A warrior from the distantly remembered past.
+A construct of memory, resembling a warrior from the distantly remembered past.
 %%%%
 ancient lich
 
@@ -619,8 +619,8 @@ myopic and uses echolocation to navigate.
 %%%%
 battlemage
 
-A warrior from the distantly remembered past, skilled in both conjurations and
-melee combat.
+A construct of memory, resembling a warrior from the distantly remembered past.
+It's skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
@@ -1398,8 +1398,8 @@ to flee its grasp.
 %%%%
 hexer
 
-A warrior from the distantly remembered past, ready with debilitating spells
-and deadly knifework.
+A construct of memory, resembling a warrior from the distantly remembered past.
+It's ready with debilitating spells and deadly knifework.
 %%%%
 hill giant
 
@@ -1582,8 +1582,8 @@ or something altogether less pleasant?
 %%%%
 knight
 
-A warrior from the distantly remembered past, well equipped with arms and
-armour both.
+A construct of memory, resembling a warrior from the distantly remembered past.
+It's well equipped with arms and armour both.
 %%%%
 kobold
 
