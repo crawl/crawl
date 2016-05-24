@@ -7055,8 +7055,9 @@ spret_type hepliaklqana_idealise(bool fail)
     if (cured)
         simple_monster_message(ancestor, "'s debilitations are forgotten!");
 
+    // XXX: player_adjust_invoc_power?
     const int dur = random_range(50, 80)
-                    + random2(you.skill(SK_INVOCATIONS, 10));
+                    + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
     ancestor->add_ench({ ENCH_IDEALISED, 1, &you, dur});
     return SPRET_SUCCESS;
 }
@@ -7099,6 +7100,7 @@ static void _transfer_slow_nearby(coord_def destination)
         // ~3-6 turns at 0 invo, ~6-20 turns at 27 invo
         const int dur = random_range(30 + you.skill(SK_INVOCATIONS, 1),
                                      60 + you.skill(SK_INVOCATIONS, 5));
+        // XXX: player_adjust_invoc_power?
         // XXX: consider adjusting by target HD?
         if (mon->add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur)))
             simple_monster_message(mon, " is slowed by nostalgia.");
