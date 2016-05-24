@@ -2665,6 +2665,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         reduce_xp_penance(god, exp_gained);
     }
 
+    if (player_under_penance(GOD_HEPLIAKLQANA))
+        return; // no xp for you!
+
     const unsigned int old_exp = you.experience;
 
     dprf("gain_exp: %d", exp_gained);
