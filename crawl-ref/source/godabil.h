@@ -174,4 +174,6 @@ bool pakellas_device_surge();
 bool ukayaw_stomp();
 bool ukayaw_line_pass();
 bool ukayaw_grand_finale();
+
+spret_type hepliaklqana_idealise(bool fail);
 #endif

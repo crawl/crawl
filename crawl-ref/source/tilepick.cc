@@ -1732,6 +1732,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_RECALL;
     if (mons.is(MB_LIGHTLY_DRAINED) || mons.is(MB_HEAVILY_DRAINED))
         ch |= TILE_FLAG_DRAIN;
+    if (mons.is(MB_IDEALISED))
+        ch |= TILE_FLAG_IDEALISED;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -3508,6 +3510,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Hepliaklqana
     case ABIL_HEPLIAKLQANA_RECALL:
         return TILEG_ABILITY_HEP_RECALL;
+    case ABIL_HEPLIAKLQANA_IDEALISE:
+        return TILEG_ABILITY_HEP_IDEALISE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
