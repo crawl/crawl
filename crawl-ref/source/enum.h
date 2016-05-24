@@ -421,6 +421,7 @@ enum ability_type
 
     // Ukayaw
     ABIL_UKAYAW_STOMP = 1240,
+    ABIL_UKAYAW_LINE_PASS,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
