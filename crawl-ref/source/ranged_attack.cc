@@ -29,12 +29,14 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true)
+      should_alert_defender(true), launch_type(LRET_FUMBLED)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
     string proj_name = projectile->name(DESC_PLAIN);
+    // init launch type early, so we can use it later in the constructor
+    launch_type = is_launched(attacker, weapon, *projectile);
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
@@ -43,7 +45,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if (is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
+    else if (launch_type == LRET_LAUNCHED)
     {
         aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
@@ -298,8 +300,7 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon()
-        || is_launched(attacker, weapon, *projectile) == LRET_THROWN)
+    if (using_weapon() || launch_type == LRET_THROWN)
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
@@ -323,13 +324,12 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon
-           && is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED;
+    return weapon && launch_type == LRET_LAUNCHED;
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
+    if (launch_type == LRET_FUMBLED)
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -355,7 +355,7 @@ int ranged_attack::weapon_damage()
 int ranged_attack::calc_base_unarmed_damage()
 {
     // No damage bonus for throwing non-throwing weapons.
-    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
+    if (launch_type == LRET_FUMBLED)
         return 0;
 
     int damage = you.skill_rdiv(wpn_skill);
