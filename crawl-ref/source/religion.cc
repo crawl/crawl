@@ -3459,6 +3459,15 @@ static void _join_hepliaklqana()
     simple_god_message(make_stringf(" brings forth the memory of your ancestor,"
                                     " %s!",
                                     mg.mname.c_str()).c_str());
+
+    // no one will ever run into this.
+    if (you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY)
+        && you.experience_level >= HEP_SPECIALIZATION_LEVEL
+        && !hepliaklqana_specialization())
+    {
+        // TODO: deduplicate this message
+        god_speaks(you.religion, "You may now specialize your ancestor.");
+    }
 }
 
 /// Setup when joining the gelatinous groupies of Jiyva.
