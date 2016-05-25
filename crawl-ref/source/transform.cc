@@ -18,7 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "godpassive.h" // passive_t::water_walk
+#include "godpassive.h" // passive_t::resist_polymorph
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1460,10 +1460,7 @@ bool feat_dangerous_for_form(transformation_type which_trans,
         return !form_likes_lava(which_trans);
 
     if (feat == DNGN_DEEP_WATER)
-    {
-        return !have_passive(passive_t::water_walk)
-            && !form_likes_water(which_trans);
-    }
+        return !you.can_water_walk() && !form_likes_water(which_trans);
 
     return false;
 }

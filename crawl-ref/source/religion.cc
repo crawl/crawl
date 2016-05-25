@@ -608,10 +608,17 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
+// TODO: find out what this is duplicating & deduplicate it
 static bool _need_water_walking()
 {
     return you.ground_level() && you.species != SP_MERFOLK
            && grd(you.pos()) == DNGN_DEEP_WATER;
+}
+
+static void _grant_temporary_waterwalk()
+{
+    mprf("Your water-walking will last only until you reach solid ground.");
+    you.props[TEMP_WATERWALK_KEY] = true;
 }
 
 bool jiyva_is_dead()
@@ -668,7 +675,7 @@ static void _inc_penance(god_type god, int val)
         if (will_have_passive(passive_t::water_walk)
             && _need_water_walking() && !have_passive(passive_t::water_walk))
         {
-            fall_into_a_pool(grd(you.pos()));
+            _grant_temporary_waterwalk();
         }
 
         if (will_have_passive(passive_t::stat_boost))
@@ -2550,7 +2557,7 @@ void lose_piety(int pgn)
     if (will_have_passive(passive_t::water_walk) && _need_water_walking()
         && !have_passive(passive_t::water_walk))
     {
-        fall_into_a_pool(grd(you.pos()));
+        _grant_temporary_waterwalk();
     }
     if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
@@ -2705,7 +2712,7 @@ void excommunication(bool voluntary, god_type new_god)
     }
     // You might have lost water walking at a bad time...
     if (had_water_walk && _need_water_walking())
-        fall_into_a_pool(grd(you.pos()));
+        _grant_temporary_waterwalk();
     if (had_stat_boost)
     {
         redraw_screen();
