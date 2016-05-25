@@ -284,6 +284,7 @@ enum mons_equip_desc_level_type
     DESC_WEAPON,
     DESC_FULL,
     DESC_IDENTIFIED,
+    DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
 #ifndef USE_TILE_LOCAL
