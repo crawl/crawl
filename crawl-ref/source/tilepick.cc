@@ -904,6 +904,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ORC:
     case TILEP_MONS_ZOMBIE_HUMAN:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
+    case TILEP_MONS_ZOMBIE_MONKEY:
         return TILEP_MONS_SPECTRAL_SMALL;
     case TILEP_MONS_ZOMBIE_LARGE:
     case TILEP_MONS_ZOMBIE_OGRE:
@@ -974,6 +975,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ORC:
     case TILEP_MONS_ZOMBIE_HUMAN:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
+    case TILEP_MONS_ZOMBIE_MONKEY:
         return TILEP_MONS_SIMULACRUM_SMALL;
     case TILEP_MONS_ZOMBIE_LARGE:
     case TILEP_MONS_ZOMBIE_OGRE:
@@ -1038,6 +1040,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SMALL:
     case TILEP_MONS_ZOMBIE_GOBLIN:
     case TILEP_MONS_ZOMBIE_KOBOLD:
+    case TILEP_MONS_ZOMBIE_MONKEY:
         return TILEP_MONS_SKELETON_SMALL;
     case TILEP_MONS_ZOMBIE_HOBGOBLIN:
     case TILEP_MONS_ZOMBIE_GNOLL:
@@ -1141,6 +1144,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_ADDER,                   TILEP_MONS_ZOMBIE_ADDER },
         { MONS_WOLF_SPIDER,             TILEP_MONS_ZOMBIE_SPIDER_LARGE },
         { MONS_EMPEROR_SCORPION,        TILEP_MONS_ZOMBIE_SPIDER_LARGE },
+        { MONS_HOWLER_MONKEY,           TILEP_MONS_ZOMBIE_MONKEY },
     };
     // per-genus zombies - use by default
     static const map<monster_type, tileidx_t> genus_tiles = {
