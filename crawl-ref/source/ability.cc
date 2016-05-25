@@ -2312,6 +2312,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+        if (you.magic_points >= you.max_magic_points)
+        {
+            mpr("Your reserves of magic are already full.");
+            return SPRET_ABORT;
+        }
         fail_check();
         surge_power(you.spec_invoc(), "divine");
         mpr("You channel some magical energy.");
