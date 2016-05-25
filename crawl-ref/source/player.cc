@@ -3102,7 +3102,7 @@ void level_change(bool skip_attribute_increase)
                 && you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
             {
                 god_speaks(you.religion,
-                           "You can now specialize your ancestor.");
+                           "You may now specialize your ancestor.");
             }
         }
 

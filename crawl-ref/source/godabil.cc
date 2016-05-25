@@ -6908,7 +6908,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     mark_milestone("ancestor.class", mile_text);
 
     if (you.experience_level >= HEP_SPECIALIZATION_LEVEL)
-        god_speaks(you.religion, "You can now specialize your ancestor.");
+        god_speaks(you.religion, "You may now specialize your ancestor.");
 
     return true;
 }
