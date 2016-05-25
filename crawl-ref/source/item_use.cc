@@ -68,6 +68,132 @@
 #include "view.h"
 #include "xom.h"
 
+// The menu class for using items from either inv or floor.
+// Derivative of InvMenu
+
+class UseItemMenu : public InvMenu
+{
+public:
+    vector<const item_def*> item_inv;
+    vector<const item_def*> item_floor;
+
+    void populate_list(int item_type);
+    void populate_menu();
+
+    // Constructor
+    // Requires int for item filter.
+    // Accepts:
+    //      OBJ_POTIONS
+    //      OBJ_SCROLLS
+    UseItemMenu (int);
+};
+
+UseItemMenu::UseItemMenu(int item_type) {
+    set_flags( MF_SINGLESELECT );
+    set_type( MT_INVLIST );
+    populate_list(item_type);
+    populate_menu();
+}
+
+void UseItemMenu::populate_list(int item_type)
+{
+    // Load inv items first
+    for (const auto &item : you.inv)
+    {
+        // Populate the vector with filter
+        if (item.defined() && item_is_selected(item, item_type))
+                item_inv.push_back(&item);
+    }
+    // Load floor items
+    item_list_on_square(item_floor, you.visible_igrd(you.pos()));
+    // Filter
+    erase_if(item_floor, [=](const item_def* item)
+    {
+        return !item_is_selected(*item,item_type);
+    });
+}
+
+void UseItemMenu::populate_menu()
+{
+    // Load the inv items first, they have a hotkey
+    MenuEntry *me = new MenuEntry("Inv Items", MEL_TITLE, 0, 0, false);
+    add_entry(me);
+    load_items(item_inv, 0, 0, false);
+
+    // Need a tracker for inv item hotkeys and floor item hotkeys
+    set<char> keys_unused;
+    for (int i = 0; i < 52; ++i)
+        keys_unused.insert(index_to_letter(i));
+
+    // Remove inventory item hotkeys from the tracker
+    for (MenuEntry *entry : items)
+    {
+        if (!entry->hotkeys.empty())
+            keys_unused.erase(char(entry->hotkeys[0]));
+    }
+
+    // Load floor items to menu
+    me = new MenuEntry("Floor Items", MEL_TITLE, 0, 0, false);
+    add_entry(me);
+
+    load_items(item_floor, 0, 0, false);
+
+    // Go through each menu item
+    for (MenuEntry* entry : items)
+    {
+        // Make an InvEntry out of it
+        auto ie = dynamic_cast<InvEntry *>(entry);
+        // If this is an inventory item, leave its hotkeys alone
+        if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
+        {
+            if (keys_unused.empty())
+                entry->hotkeys[0] = (' ');
+            else
+            {
+                // Give it the next unused hotkey
+                auto it = keys_unused.begin();
+                auto hotkey = *it;
+                entry->hotkeys[0] = hotkey;
+                keys_unused.erase(it);
+            }
+        }
+    }
+    return;
+}
+
+/*
+ * Prompt use of a consumable from either player inventory or the floor.
+ *
+ * This function generates a menu containing type_expect items based on the
+ * object_class_type to be acted on by another function. First it will list
+ * items in inventory, then items on the floor. If player cancels out of menu,
+ * nullptr is returned.
+ *
+ * @param object_class_type     The desired command which will decide item types.
+ *                              OBJ_POTIONS and OBJ_SCROLLS are valid.
+ *
+ * @return                      A chosen item_def*, or nullptr.
+ */
+
+item_def* _use_an_item(int item_type)
+{
+    // Init the menu
+    UseItemMenu menu (item_type);
+
+    vector<MenuEntry*> sel = menu.show(true);
+
+    if (sel.empty())
+        return nullptr;
+
+    ASSERT(sel.size() == 1);
+
+    auto ie = dynamic_cast<InvEntry *>(sel[0]);
+    item_def* target = const_cast<item_def*>(ie->item);
+
+    redraw_screen();
+    return target;
+}
+
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
 
@@ -1658,7 +1784,7 @@ static void _vampire_corpse_help()
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
-void drink(int slot)
+void drink(item_def* potion)
 {
     if (you_foodless(true))
     {
@@ -1692,33 +1818,30 @@ void drink(int slot)
         return;
     }
 
-    if (slot == -1)
+    if (!potion)
     {
-        slot = prompt_invent_item("Drink which item?",
-                                  MT_INVLIST, OBJ_POTIONS,
-                                  true, true, true, 0, -1, nullptr,
-                                  OPER_QUAFF);
-        if (prompt_failed(slot))
+        potion = _use_an_item(OBJ_POTIONS);
+
+        if (!potion)
         {
-            _vampire_corpse_help();
-            return;
+            int slot = PROMPT_ABORT;
+            if (prompt_failed(slot))
+            {
+                _vampire_corpse_help();
+                return;
+            }
         }
     }
 
-    item_def& potion = you.inv[slot];
-
-    if (potion.base_type != OBJ_POTIONS)
+    if (potion->base_type != OBJ_POTIONS)
     {
-        if (you.species == SP_VAMPIRE && potion.base_type == OBJ_CORPSES)
-            eat_food(slot);
-        else
-            mpr("You can't drink that!");
+        mpr("You can't drink that!");
         return;
     }
 
-    const bool alreadyknown = item_type_known(potion);
+    const bool alreadyknown = item_type_known(*potion);
 
-    if (alreadyknown && is_bad_item(potion, true))
+    if (alreadyknown && is_bad_item(*potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return;
@@ -1729,7 +1852,6 @@ void drink(int slot)
     // potions on monsters.
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
-    potion_type pot_type = (potion_type)potion.sub_type;
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
@@ -1738,7 +1860,7 @@ void drink(int slot)
         return;
     }
 
-    if (!quaff_potion(potion))
+    if (!quaff_potion(*potion))
         return;
 
     if (!alreadyknown && dangerous)
@@ -1747,17 +1869,22 @@ void drink(int slot)
         // a dangerous monster nearby...
         xom_is_stimulated(200);
     }
-    if (is_blood_potion(potion))
+    if (is_blood_potion(*potion))
     {
         // Always drink oldest potion.
-        remove_oldest_perishable_item(potion);
+        remove_oldest_perishable_item(*potion);
     }
-    dec_inv_item_quantity(slot, 1);
+    if (in_inventory(*potion))
+    {
+        dec_inv_item_quantity(potion->link, 1);
+        auto_assign_item_slot(*potion);
+    }
+    else
+        dec_mitm_item_quantity(potion->index(), 1);
     count_action(CACT_USE, OBJ_POTIONS);
-    auto_assign_item_slot(potion);
     you.turn_is_over = true;
     // This got deferred from PotionExperience::effect to prevent SIGHUP abuse.
-    if (pot_type == POT_EXPERIENCE)
+    if (potion->sub_type == POT_EXPERIENCE)
         level_change();
 }
 
@@ -2258,7 +2385,7 @@ void random_uselessness()
     }
 }
 
-static void _handle_read_book(int item_slot)
+static void _handle_read_book(item_def* book)
 {
     if (you.berserk())
     {
@@ -2272,18 +2399,18 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    item_def& book(you.inv[item_slot]);
-    ASSERT(book.sub_type != BOOK_MANUAL);
+    //item_def& book = item;
+    ASSERT(book->sub_type != BOOK_MANUAL);
 
 #if TAG_MAJOR_VERSION == 34
-    if (book.sub_type == BOOK_BUGGY_DESTRUCTION)
+    if (book->sub_type == BOOK_BUGGY_DESTRUCTION)
     {
         mpr("This item has been removed, sorry!");
         return;
     }
 #endif
 
-    read_book(book);
+    read_book(*book);
 }
 
 static void _vulnerability_scroll()
@@ -2473,37 +2600,37 @@ string cannot_read_item_reason(const item_def &item)
  * @param slot      The slot of the item in the player's inventory. If -1, the
  *                  player is prompted to choose a slot.
  */
-void read(int slot)
+void read(item_def* scroll)
 {
     if (!player_can_read())
         return;
 
-    int item_slot = (slot != -1) ? slot
-                                 : prompt_invent_item("Read which item?",
-                                                       MT_INVLIST,
-                                                       OBJ_SCROLLS,
-                                                       true, true, true, 0, -1,
-                                                       nullptr, OPER_READ);
+    if (!scroll)
+    {
+        scroll = _use_an_item(OBJ_SCROLLS);
+        if (!scroll)
+        {
+            int slot = PROMPT_ABORT;
+            if (prompt_failed(slot))
+                return;
+        }
+    }
 
-    if (prompt_failed(item_slot))
-        return;
-
-    const item_def& scroll = you.inv[item_slot];
-    const string failure_reason = cannot_read_item_reason(scroll);
+    const string failure_reason = cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
         return;
     }
 
-    if (scroll.base_type == OBJ_BOOKS)
+    if (scroll->base_type == OBJ_BOOKS)
     {
-        _handle_read_book(item_slot);
+        _handle_read_book(scroll);
         return;
     }
 
     // need to handle this before we waste time (with e.g. blurryvis)
-    if (scroll.sub_type == SCR_BLINKING && item_type_known(scroll)
+    if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
         && player_has_orb()
         && !yesno("Your blink will be uncontrolled - continue anyway?",
                   false, 'n'))
@@ -2537,12 +2664,19 @@ void read(int slot)
     {
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
-        start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
+        if (in_inventory(*scroll))
+        {
+            start_delay(DELAY_BLURRY_SCROLL, turns,
+                        letter_to_index(scroll->slot), 0);
+        }
+        else
+            start_delay(DELAY_BLURRY_SCROLL, turns,
+                        scroll->index(), 1);
         if (player_mutation_level(MUT_BLURRY_VISION) == 1)
             you.time_taken /= 2;
     }
     else
-        read_scroll(item_slot);
+        read_scroll(scroll);
 }
 
 /**
@@ -2555,9 +2689,9 @@ void read(int slot)
  *
  * @param slot      The slot of the item in the player's inventory.
  */
-void read_scroll(int item_slot)
+void read_scroll(item_def* item)
 {
-    item_def& scroll = you.inv[item_slot];
+    item_def& scroll = *item;
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
     const bool alreadyknown = item_type_known(scroll);
@@ -2836,7 +2970,10 @@ void read_scroll(int item_slot)
 
     if (!cancel_scroll)
     {
-        dec_inv_item_quantity(item_slot, 1);
+        if (in_inventory(scroll))
+            dec_inv_item_quantity(scroll.link, 1);
+        else
+            dec_mitm_item_quantity(scroll.index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
@@ -2850,7 +2987,7 @@ void read_scroll(int item_slot)
         && which_scroll != SCR_AMNESIA)
     {
         mprf("It %s a %s.",
-             you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
+             scroll.quantity < prev_quantity ? "was" : "is",
              scroll_name.c_str());
     }
 
@@ -3043,7 +3180,7 @@ void tile_item_use(int idx)
             if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
             {
                 if (check_warning_inscriptions(item, OPER_READ))
-                    _handle_read_book(idx);
+                    _handle_read_book(&you.inv[idx]);
             } // else it's a spellbook
             else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(); // offers all spells, might not be what we want
@@ -3051,7 +3188,7 @@ void tile_item_use(int idx)
 
         case OBJ_SCROLLS:
             if (check_warning_inscriptions(item, OPER_READ))
-                read(idx);
+                read(&you.inv[idx]);
             return;
 
         case OBJ_JEWELLERY:
@@ -3063,7 +3200,7 @@ void tile_item_use(int idx)
 
         case OBJ_POTIONS:
             if (check_warning_inscriptions(item, OPER_QUAFF))
-                drink(idx);
+                drink(&you.inv[idx]);
             return;
 
         default:
