@@ -37,6 +37,8 @@
 #include "godpassive.h"
 #include "godwrath.h"
 #include "hints.h"
+#include "itemname.h" // item_type_known
+#include "itemprop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -256,6 +258,13 @@ static void _genus_factoring(map<monster_type, int> &types,
     types[genus] = num;
 }
 
+static bool _is_weapon_worth_listing(const item_def *wpn)
+{
+    return wpn && (wpn->base_type == OBJ_RODS || wpn->base_type == OBJ_STAVES
+                   || is_unrandom_artefact(*wpn)
+                   || get_weapon_brand(*wpn) != SPWPN_NORMAL);
+}
+
 /// Return a warning for the player about newly-seen monsters, as appropriate.
 static string _monster_headsup(const vector<monster*> &monsters,
                                map<monster_type, int> &types,
@@ -267,8 +276,8 @@ static string _monster_headsup(const vector<monster*> &monsters,
         const bool ash_ided = mon->props.exists("ash_id");
         const bool zin_ided = mon->props.exists("zin_id");
         const bool has_branded_weapon
-            = (mon->weapon() && mon->weapon()->brand
-               || mon->weapon(1) && mon->weapon(1)->brand);
+            = _is_weapon_worth_listing(mon->weapon())
+              || _is_weapon_worth_listing(mon->weapon(1));
         if ((divine && !ash_ided && !zin_ided)
             || (!divine && !has_branded_weapon))
         {
@@ -297,9 +306,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
         warning_msg += " is";
         if (!divine)
         {
-            if (mon->type != MONS_DANCING_WEAPON)
-                warning_msg += " ";
-            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON,
                                                       DESC_NONE) + ".";
             continue;
         }
