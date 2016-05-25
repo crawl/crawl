@@ -541,7 +541,9 @@ water. It kills not by poison but by constricting its prey.
 %%%%
 ancestor
 
-A construct of memory, resembling a warrior from the distantly remembered past.
+A humanoid construct of insubstantial memory, floating through the air. Though
+perhaps somewhat changed in shape and bearing few discernable features, still
+it seems somehow to resemble a warrior from the distantly remembered past.
 %%%%
 ancient lich
 
@@ -619,8 +621,10 @@ myopic and uses echolocation to navigate.
 %%%%
 battlemage
 
-A construct of memory, resembling a warrior from the distantly remembered past.
-It's skilled with both conjurations and melee combat.
+A humanoid construct of insubstantial memory, floating through the air. Though
+perhaps somewhat changed in shape and bearing few discernable features, still
+it seems somehow to resemble a warrior from the distantly remembered past,
+skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
@@ -1398,8 +1402,10 @@ to flee its grasp.
 %%%%
 hexer
 
-A construct of memory, resembling a warrior from the distantly remembered past.
-It's ready with debilitating spells and deadly knifework.
+A humanoid construct of insubstantial memory, floating through the air. Though
+perhaps somewhat changed in shape and bearing few discernable features, still
+it seems somehow to resemble a warrior from the distantly remembered past,
+ready with debilitating spells and deadly knifework.
 %%%%
 hill giant
 
@@ -1582,8 +1588,10 @@ or something altogether less pleasant?
 %%%%
 knight
 
-A construct of memory, resembling a warrior from the distantly remembered past.
-It's well equipped with arms and armour both.
+A humanoid construct of insubstantial memory, floating through the air. Though
+perhaps somewhat changed in shape and bearing few discernable features, still
+it seems somehow to resemble a warrior from the distantly remembered past,
+well equipped with arms and armour both.
 %%%%
 kobold
 
