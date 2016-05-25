@@ -3067,9 +3067,6 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
-    if (which_god == GOD_HEPLIAKLQANA && you.species == SP_FELID)
-        return false;
-
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
@@ -3718,10 +3715,6 @@ void god_pitch(god_type which_god)
         {
             simple_god_message(" does not accept worship from those who cannot "
                               "deal a hand of cards!", which_god);
-        } else if (you.species == SP_FELID && which_god == GOD_HEPLIAKLQANA)
-        {
-            simple_god_message(" does not accept worship from the spawn of "
-                               "common housecats!", which_god);
         }
         else if (player_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
