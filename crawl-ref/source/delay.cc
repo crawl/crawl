@@ -506,13 +506,13 @@ bool already_learning_spell(int spell)
  * @return              false if the player is confused, berserk, silenced,
  *                      has no scroll in the given slot, etc; true otherwise.
  */
-static bool _can_read_scroll(int inv_slot)
+static bool _can_read_scroll(item_def* scroll)
 {
     // prints its own messages
     if (!player_can_read())
         return false;
 
-    const string illiteracy_reason = cannot_read_item_reason(you.inv[inv_slot]);
+    const string illiteracy_reason = cannot_read_item_reason(*scroll);
     if (illiteracy_reason.empty())
         return true;
 
@@ -681,7 +681,13 @@ void handle_delay()
     }
     else if (delay.type == DELAY_BLURRY_SCROLL)
     {
-        if (!_can_read_scroll(delay.parm1))
+        if (delay.parm2 == 0 && !_can_read_scroll(&you.inv[delay.parm1]))
+        {
+            _pop_delay();
+            you.time_taken = 0;
+            return;
+        }
+        else if (delay.parm2 == 1 && !_can_read_scroll(&mitm[delay.parm1]))
         {
             _pop_delay();
             you.time_taken = 0;
@@ -949,8 +955,17 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_BLURRY_SCROLL:
         // Make sure the scroll still exists, the player isn't confused, etc
-        if (_can_read_scroll(delay.parm1))
-            read_scroll(delay.parm1);
+        if (delay.parm2 == 0 && _can_read_scroll(&you.inv[delay.parm1]))
+        {
+            item_def* scroll = &you.inv[delay.parm1];
+            read_scroll(scroll);
+        }
+        else if (delay.parm2 == 1 && _can_read_scroll(&mitm[delay.parm1]))
+        {
+            item_def* scroll = &mitm[delay.parm1];
+            read_scroll(scroll);
+        }
+
         break;
 
     case DELAY_BUTCHER:
