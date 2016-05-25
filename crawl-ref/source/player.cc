@@ -397,7 +397,7 @@ static void _splash()
 {
     if (you.can_swim())
         noisy(4, you.pos(), "Floosh!");
-    else if (!have_passive(passive_t::water_walk))
+    else if (!you.can_water_walk())
         noisy(8, you.pos(), "Splash!");
 }
 
@@ -445,35 +445,39 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
 
-        if (feat_is_water(new_grid) && !stepped)
-            _splash();
-
-        if (feat_is_water(new_grid) && !you.can_swim()
-            && !have_passive(passive_t::water_walk))
+        if (feat_is_water(new_grid))
         {
-            if (stepped)
-            {
-                you.time_taken *= 13 + random2(8);
-                you.time_taken /= 10;
-            }
+            if (!stepped)
+                _splash();
 
-            if (!feat_is_water(old_feat))
+            if (!you.can_swim() && !you.can_water_walk())
             {
-                mprf("You %s the %s water.",
-                     stepped ? "enter" : "fall into",
-                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
-            }
+                if (stepped)
+                {
+                    you.time_taken *= 13 + random2(8);
+                    you.time_taken /= 10;
+                }
 
-            if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
-                mpr("You sink to the bottom.");
+                if (!feat_is_water(old_feat))
+                {
+                    mprf("You %s the %s water.",
+                         stepped ? "enter" : "fall into",
+                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                }
 
-            if (!feat_is_water(old_feat))
-            {
-                mpr("Moving in this stuff is going to be slow.");
-                if (you.invisible())
-                    mpr("...and don't expect to remain undetected.");
+                if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
+                    mpr("You sink to the bottom.");
+
+                if (!feat_is_water(old_feat))
+                {
+                    mpr("Moving in this stuff is going to be slow.");
+                    if (you.invisible())
+                        mpr("...and don't expect to remain undetected.");
+                }
             }
         }
+        else if (you.props.exists(TEMP_WATERWALK_KEY))
+            you.props.erase(TEMP_WATERWALK_KEY);
     }
 
     // Traps go off.
@@ -576,7 +580,7 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return !permanently && have_passive(passive_t::water_walk)
+    return !permanently && you.can_water_walk()
            || (species_likes_water(you.species) || !permanently)
                && form_likes_water();
 }
@@ -5542,8 +5546,7 @@ bool player::is_sufficiently_rested() const
 
 bool player::in_water() const
 {
-    return ground_level() && !have_passive(passive_t::water_walk)
-           && feat_is_water(grd(pos()));
+    return ground_level() && !you.can_water_walk() && feat_is_water(grd(pos()));
 }
 
 bool player::in_lava() const
@@ -5564,6 +5567,13 @@ bool player::can_swim(bool permanently) const
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || !permanently)
                 && form_can_swim();
+}
+
+/// Can the player do a passing imitation of a notorious Palestinian?
+bool player::can_water_walk() const
+{
+    return have_passive(passive_t::water_walk)
+           || you.props.exists(TEMP_WATERWALK_KEY);
 }
 
 int player::visible_igrd(const coord_def &where) const

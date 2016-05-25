@@ -476,6 +476,11 @@ string describe_mutations(bool center_title)
 
     if (have_passive(passive_t::water_walk))
         result += "<green>You can walk on water.</green>\n";
+    else if (you.can_water_walk())
+    {
+        result += "<lightgreen>You can walk on water until reaching land."
+                  "</lightgreen>";
+    }
 
     if (you.duration[DUR_FIRE_SHIELD])
         result += "<green>You are immune to clouds of flame.</green>\n";

@@ -2650,7 +2650,7 @@ static string _status_mut_abilities(int sw)
             !form_keeps_mutations()));
     }
 
-    if (have_passive(passive_t::water_walk))
+    if (you.can_water_walk())
         mutations.emplace_back("walk on water");
 
     string current;

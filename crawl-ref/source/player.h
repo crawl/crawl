@@ -35,6 +35,7 @@
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"
+#define TEMP_WATERWALK_KEY "temp_waterwalk"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -454,6 +455,7 @@ public:
     bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
+    bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const override;
     bool is_banished() const override;
