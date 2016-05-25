@@ -534,47 +534,36 @@ void zap_wand(int slot)
         return;
     }
 
-    // already know the type
-    const bool alreadyknown = item_type_known(wand);
     // will waste charges
     const bool wasteful     = !item_ident(wand, ISFLAG_KNOW_PLUSES);
           bool invis_enemy  = false;
     const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
-    targetter *hitfunc      = 0;
+    targetter *hitfunc      = _wand_targetter(&wand);
 
-    if (!alreadyknown)
+    switch (wand.sub_type)
     {
-        beam.effect_known = false;
-        beam.effect_wanton = false;
+    case WAND_DIGGING:
+    case WAND_TELEPORTATION:
+        targ_mode = TARG_ANY;
+        break;
+
+    case WAND_HEAL_WOUNDS:
+    case WAND_HASTING:
+        targ_mode = TARG_FRIEND;
+        break;
+
+    default:
+        targ_mode = TARG_HOSTILE;
+        break;
     }
-    else
-    {
-        switch (wand.sub_type)
-        {
-        case WAND_DIGGING:
-        case WAND_TELEPORTATION:
-            targ_mode = TARG_ANY;
-            break;
 
-        case WAND_HEAL_WOUNDS:
-        case WAND_HASTING:
-            targ_mode = TARG_FRIEND;
-            break;
-
-        default:
-            targ_mode = TARG_HOSTILE;
-            break;
-        }
-
-        hitfunc = _wand_targetter(&wand);
-    }
     const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
 
     int power =
         (15 + you.skill(SK_EVOCATIONS, 5) / 2)
         * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
-    const int tracer_range = (alreadyknown && !randeff)
-                           ? _wand_range(type_zapped) : _max_wand_range();
+    const int tracer_range = !randeff ? _wand_range(type_zapped)
+                                      : _max_wand_range();
     const string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY)
                     + (wasteful ? " <lightred>(will waste charges)</lightred>"
@@ -603,7 +592,7 @@ void zap_wand(int slot)
         return;
     }
 
-    if (alreadyknown && zap_wand.target == you.pos())
+    if (zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
             && you.no_tele_print_reason(false, false))
@@ -629,7 +618,7 @@ void zap_wand(int slot)
     if (randeff)
     {
         beam.effect_known = false;
-        beam.effect_wanton = alreadyknown;
+        beam.effect_wanton = true;
     }
 
     beam.source   = you.pos();
@@ -661,7 +650,7 @@ void zap_wand(int slot)
                                      || invis_enemy
                                      || aimed_at_self);
 
-    if (risky && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
+    if (risky && wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         // Xom loves it when you use a Wand of Random Effects and
         // there is a dangerous monster nearby...
@@ -739,18 +728,6 @@ void zap_wand(int slot)
     practise(EX_DID_ZAP_WAND);
     count_action(CACT_EVOKE, EVOC_WAND);
     alert_nearby_monsters();
-
-    if (!alreadyknown && risky)
-    {
-        // Xom loves it when you use an unknown wand and there is a
-        // dangerous monster nearby...
-        xom_is_stimulated(200);
-    }
-
-    // Need to do this down here since auto_assign_item_slot may
-    // move the item in memory.
-    if (!alreadyknown)
-        auto_assign_item_slot(wand);
 
     you.turn_is_over = true;
 }
