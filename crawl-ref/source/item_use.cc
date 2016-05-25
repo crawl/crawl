@@ -150,6 +150,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("This weapon is holy and will not allow you to wield it.");
             id_brand = true;
         }
+        else
+            return false;
     }
     else if (!ignore_temporary_disability
              && you.hunger_state < HS_FULL
@@ -163,6 +165,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("This weapon is vampiric, and you must be Full or above to equip it.");
             id_brand = true;
         }
+        else
+            return false;
     }
 #if TAG_MAJOR_VERSION == 34
     else if (you.species == SP_DJINNI
@@ -174,6 +178,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
             id_brand = true;
         }
+        else
+            return false;
     }
 #endif
 
