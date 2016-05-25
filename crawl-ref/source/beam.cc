@@ -5773,9 +5773,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!mon->has_ench(ENCH_SAP_MAGIC)
             && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
         {
-            if (simple_monster_message(mon, " seems less certain of"
-                                            " their magic."))
+            if (you.can_see(*mon))
             {
+                mprf("%s seems less certain of %s magic.",
+                     mon->name(DESC_THE).c_str(), mon->pronoun(PRONOUN_POSSESSIVE).c_str());
                 obvious_effect = true;
             }
         }
