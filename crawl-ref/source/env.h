@@ -144,8 +144,9 @@ extern struct crawl_environment env;
  * Use as the range expression in a for loop:
  *     for (auto &mons : menv_real)
  */
-static const struct
+static const struct menv_range_proxy
 {
+    menv_range_proxy() {}
     monster *begin() const { return &menv[0]; }
     monster *end()   const { return &menv[MAX_MONSTERS]; }
 } menv_real;
