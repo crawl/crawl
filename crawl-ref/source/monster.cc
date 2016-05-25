@@ -4206,13 +4206,13 @@ int monster::res_magic(bool calc_unid) const
     // (remove ", false" and add appropriate flag checks for calc_unid)
 
     if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-        && (calc_unid || mitm[armour].flags | ISFLAG_KNOW_TYPE))
+        && (calc_unid || (mitm[armour].flags & ISFLAG_KNOW_TYPE)))
     {
         u += get_armour_res_magic(mitm[armour], false);
     }
 
     if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
-        && (calc_unid || mitm[shld].flags | ISFLAG_KNOW_TYPE))
+        && (calc_unid || (mitm[shld].flags & ISFLAG_KNOW_TYPE)))
     {
         u += get_armour_res_magic(mitm[shld], false);
     }
