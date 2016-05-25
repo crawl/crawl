@@ -306,7 +306,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
         warning_msg += " is";
         if (!divine)
         {
-            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON,
+            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON_WARNING,
                                                       DESC_NONE) + ".";
             continue;
         }
