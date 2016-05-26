@@ -3,7 +3,7 @@ Stone Soup 0.19 (up to 0.19-a0-284-gc035690)
 
 Highlights
 ----------
-* New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
+* New gods: Ukayaw the Reveler and Hepliaklqana the Forgotten.
 
 Character
 ---------
@@ -16,9 +16,9 @@ Gods
   - Piety decays extremely rapidly over time.
   - 1*: Stomp: deals damage to all adjacent enemies.
   - 2*: Line Pass: instantly travel through a line of enemies, confusing some
-  - 3*: Solo Time: on reaching 3*, briefly paralyse all visible enemies.
-  - 4*: Pain Bond: on reaching 4*, all visible enemies begin sharing damage
-        taken with each-other.
+  - Solo Time: on reaching 3*, briefly paralyse all visible enemies.
+  - Pain Bond: on reaching 4*, all visible enemies begin sharing damage
+    taken with each-other.
   - 5*: Grand Finale: blink into and instantly kill target intelligent monster.
 * New temple god: Hepliaklqana the Forgotten.
   - Grants a permanent customizeable ally, respawning on a delay after death.
@@ -44,8 +44,9 @@ Items
 * The Octopus King trident's enchantment bonus for wearing Octopus King rings
   is now +2 (prev. +1).
 * The Staff of Olgreb now has a fixed +9 enchantment.
+* The Sword of Zonguldrok no longer creates hostile dead or curses itself.
 * The arbalest 'Damnation' doesn't provides resistances, and does more damage.
-* Elemental enhancers no longer penalize spells of the opposite element.
+* Elemental enhancers no longer penalise spells of the opposite element.
 * The amulet of harm is no longer evil.
 * Wands of random effects can no longer produce digging or disintegration.
 
