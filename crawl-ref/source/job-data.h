@@ -56,7 +56,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
-    3, 4, 5,
+    4, 3, 5,
     { SP_DEEP_DWARF, SP_HALFLING, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN,
       SP_DEMONSPAWN, },
     { "short sword", "leather armour", "wand of flame charges:15",
