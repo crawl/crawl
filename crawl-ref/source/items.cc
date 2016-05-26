@@ -83,6 +83,43 @@
 #include "view.h"
 #include "xom.h"
 
+/**
+ * Return an item's location (floor or inventory) and the corresponding mitm
+ * int or inv slot referring to it.
+ *
+ * @param    item_def   The item_def.  item_int(item) or item_int(*item).
+ *
+ * @return              A pair containing bool and int. Bool will be true for
+ *                      items in inventory, false if not. The int will be
+ *                      either index into either you.inv or mitm.
+ */
+
+pair<bool, int> item_int(item_def &item)
+{
+    if (in_inventory(item))
+        return make_pair (true, item.slot);
+    return make_pair (false, item.index());
+}
+
+
+/**
+ * Return an item_def& requested by an item's inv slot or mitm index.
+ * If you want an item_def* then call via &item_from_int(inv, number).
+ *
+ * @param   bool inv        Is the item in inventory (true)?
+ * @param   int number      The number associated with the item. Either
+ *                          inv.slot or mitm[index()].
+ *
+ * @return                  item_def*
+ */
+
+item_def& item_from_int(bool inv, int number)
+{
+    if (inv)
+        return you.inv[number];
+    return mitm[number];
+}
+
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
