@@ -2436,7 +2436,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // or invisibility.
     for (actor_near_iterator ai(c, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mons_aligned(agent, *ai) && !(ai->holiness() & MH_NONLIVING))
+        if (mons_aligned(agent, *ai) && !(ai->holiness() & MH_NONLIVING)
+            && *ai != victim)
         {
             if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
