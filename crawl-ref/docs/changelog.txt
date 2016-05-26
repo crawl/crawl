@@ -1,3 +1,65 @@
+Stone Soup 0.19 (up to 0.19-a0-284-gc035690)
+--------------------------------------------
+
+Highlights
+----------
+* New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
+
+Character
+---------
+* Corrosion slaying penalties now affect unarmed & auxiliary attacks.
+
+Gods
+----
+* New temple god: Ukayaw the Reveler.
+  - Piety gained by dealing damage to enemies.
+  - Piety decays extremely rapidly over time.
+  - 1*: Stomp: deals damage to all adjacent enemies.
+  - 2*: Line Pass: instantly travel through a line of enemies, confusing some
+  - 3*: Solo Time: on reaching 3*, briefly paralyse all visible enemies.
+  - 4*: Pain Bond: on reaching 4*, all visible enemies begin sharing damage
+        taken with each-other.
+  - 5*: Grand Finale: blink into and instantly kill target intelligent monster.
+* New temple god: Hepliaklqana the Forgotten.
+  - Grants a permanent customizeable ally, respawning on a delay after death.
+    The ally automatically grows in strength as you level up.
+  - Piety granted for exploration.
+  - 0*: Recall: interlevel recall for your ally.
+  - 2*: Remember Life: choose between Hexer, Knight or Battlemage classes for
+        your ancestor. At XL 15, further specialization is available.
+  - 3*: Transference: swap your ancestor with any creature in LOS, or yourself.
+  - 4*: Idealise: heal your ancestor & temporarily increase their AC, damage
+        and spellpower dramatically.
+  - 5*: Transference slows enemies adjacent to the target.
+* Beogh's water-walking now always lasts until the player is on land.
+* Pakellas suppresses Vine Stalker MP drain.
+* Pakellas's wrath no longer drains the player or their items, but instead
+  passively blocks all device use for its duration.
+* Many divine abilities have had their hunger costs removed or increased.
+* Gods that hate specific monsters no longer prevent you from enslaving them.
+
+Items
+-----
+* Firestarter and Frostbite now provide immunity to their cloud types.
+* The Octopus King trident's enchantment bonus for wearing Octopus King rings
+  is now +2 (prev. +1).
+* The Staff of Olgreb now has a fixed +9 enchantment.
+* The arbalest 'Damnation' doesn't provides resistances, and does more damage.
+* Elemental enhancers no longer penalize spells of the opposite element.
+* The amulet of harm is no longer evil.
+* Wands of random effects can no longer produce digging or disintegration.
+
+Monsters
+--------
+* Hellions no longer have fire resistance or cold vulnerability.
+* Deep elf archers no longer fire their bows in melee.
+
+Spells
+------
+* Cigotuvi's Embrace only degrades over time, not on-hit.
+* Simulacrum's duration is significantly shorter.
+
+
 Stone Soup 0.18 (20160504)
 --------------------------------------------
 
