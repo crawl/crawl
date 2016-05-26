@@ -29,6 +29,7 @@
 #include "english.h"
 #include "files.h"
 #include "food.h"
+#include "format.h" // formatted_string
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "goditem.h"
@@ -7220,7 +7221,9 @@ static void _hepliaklqana_choose_name()
         return;
     }
 
-    const string new_name = trimmed_string(buf);
+    // strip whitespace & colour tags
+    const string new_name
+        = trimmed_string(formatted_string::parse_string(buf).tostring());
     if (old_name == new_name || !new_name.size())
     {
         canned_msg(MSG_OK);
