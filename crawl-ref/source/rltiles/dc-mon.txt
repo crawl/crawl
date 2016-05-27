@@ -677,6 +677,7 @@ tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
 %sdir mon/mutantbeast
+%rim 0
 base1 MUTANT_BEAST_BASE
 base2
 base3
@@ -723,6 +724,7 @@ twing3
 twing4
 twing5
 %sdir mon/unique
+%rim 1
 sojobo MONS_SOJOBO
 # staveless must be immediately after the normal tile
 arachne MONS_ARACHNE
