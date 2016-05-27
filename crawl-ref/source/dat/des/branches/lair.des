@@ -1459,7 +1459,7 @@ ENDMAP
 
 NAME:   wad_woods_minihive
 TAGS:   uniq_beehive
-DEPTH:  D:8-16, Lair, Forest
+DEPTH:  D:8-, Lair, Forest
 ORIENT: float
 COLOUR: a = yellow
 TILE:   a = wall_wax

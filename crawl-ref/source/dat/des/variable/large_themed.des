@@ -1727,7 +1727,7 @@ ppptc.......c..........c...c...ctpt''
 ENDMAP
 
 NAME: cheibrodos_hippocracy
-DEPTH: D:12-15
+DEPTH: D:12-
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: north
 MONS: giant orange brain, small abomination, giant eyeball, demonic crawler
