@@ -388,6 +388,9 @@ public:
     bool        restart_after_game; // If true, Crawl will not close on game-end
     bool        restart_after_save; // .. or on save
 
+    bool        read_persist_options; // If true, Crawl will try to load
+                                      // options from c_persist.options
+
     vector<text_pattern> drop_filter;
 
     FixedVector<FixedBitVector<NUM_AINTERRUPTS>, NUM_DELAYS> activity_interrupts;
