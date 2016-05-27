@@ -1211,12 +1211,8 @@ int main(int argc, char* argv[])
     } while (false)
 
         // Don't record regular rF as damnation vulnerability.
-        int rfire = get_resist(res, MR_RES_FIRE);
-        bool rdamnation = rfire >= 4;
-        if (rfire > 3)
-            rfire = 3;
-        res2(RED, damnation, (int)rdamnation);
-        res2(RED, fire, rfire);
+        res(RED, FIRE);
+        res(RED, DAMNATION);
         res(BLUE, COLD);
         res(CYAN, ELEC);
         res(GREEN, POISON);
