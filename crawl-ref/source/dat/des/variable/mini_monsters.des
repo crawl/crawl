@@ -1227,7 +1227,7 @@ ENDMAP
 
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
 NAME:  eino_house_with_fridge
-DEPTH: D:9-15, Lair:2-
+DEPTH: D:9-, Lair:2-
 TAGS:  no_monster_gen no_item_gen
 MONS:  patrolling necromancer, plant
 MONS:  river rat simulacrum / wolf simulacrum / \
@@ -2455,7 +2455,7 @@ ENDMAP
 
 NAME:    hangedman_batty
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:11-15, Crypt, !Crypt:$
+DEPTH:   D:11-, Crypt, !Crypt:$
 WEIGHT:  5
 MONS:    bat, phantom, vampire, unseen horror
 MONS:    phantasmal warrior, vampire knight, jiangshi
@@ -5344,7 +5344,7 @@ cccc+cccc
 ENDMAP
 
 NAME:   kennysheep_inner_square
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *
@@ -5394,7 +5394,7 @@ cccccccc++cccccccc
 ENDMAP
 
 NAME:   kennysheep_two_boxes
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *

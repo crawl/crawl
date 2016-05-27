@@ -5952,7 +5952,7 @@ ENDMAP
 
 NAME:   cheibrodos_leafed_vault
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  D:14-16, Depths:1-5
+DEPTH:  D:14-, Depths:1-5
 ORIENT: float
 NSUBST: - = 4 = 8 / 8 = 9 / 90 = . / * = .:45 0
 SUBST:  " = $:5 * |:3
@@ -6366,7 +6366,7 @@ MAP
 ENDMAP
 
 NAME: cheibrodos_lost_city_excavation
-DEPTH: D:11-15, Depths
+DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.in_branch("D") then
