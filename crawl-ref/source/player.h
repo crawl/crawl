@@ -36,6 +36,7 @@
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
+#define EMERGENCY_FLIGHT_KEY "emergency_flight"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
