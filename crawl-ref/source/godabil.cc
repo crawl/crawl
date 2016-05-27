@@ -7201,7 +7201,7 @@ spret_type hepliaklqana_transference(bool fail)
     victim->apply_location_effects(target);
 
     if (you.piety >= piety_breakpoint(5))
-        _transfer_slow_nearby(destination);
+        _transfer_slow_nearby(target);
 
     return SPRET_SUCCESS;
 }
