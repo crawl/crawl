@@ -7164,7 +7164,7 @@ spret_type hepliaklqana_transference(bool fail)
     const bool uninhabitable = victim && !victim->is_habitable(destination);
     if (uninhabitable && victim_visible)
     {
-        mprf("%s could never have existed in %s!",
+        mprf("%s can't be transferred into %s.",
              victim->name(DESC_THE).c_str(), feat_type_name(grd(destination)));
         return SPRET_ABORT;
     }
