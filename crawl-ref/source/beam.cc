@@ -5889,11 +5889,11 @@ struct explosion_sfx
 // A map from origin_spells to special explosion info for each.
 const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_HURL_DAMNATION, {
-        "The damnation unfurls!",
+        "The sphere of damnation explodes!",
         "the wailing of the damned",
     } },
     { SPELL_CALL_DOWN_DAMNATION, {
-        "The damnation unfurls!",
+        "The sphere of damnation explodes!",
         "the wailing of the damned",
     } },
     { SPELL_FIREBALL, {
