@@ -929,6 +929,7 @@ void game_options::reset_options()
     pizzas.clear();
 
     regex_search = false;
+    autopickup_search = false;
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
@@ -2875,6 +2876,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 [](string p) { return !trimmed_string(p).empty(); });
     }
     else BOOL_OPTION(regex_search);
+    else BOOL_OPTION(autopickup_search);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif

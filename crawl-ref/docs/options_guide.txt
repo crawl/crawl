@@ -60,7 +60,8 @@ The contents of this text are:
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
                 automagic_stop, fail_severity_to_confirm, easy_door,
-                warn_hatches, enable_recast_spell, confirm_action, regex_search
+                warn_hatches, enable_recast_spell, confirm_action,
+                regex_search, autopickup_search
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1298,6 +1299,13 @@ regex_search = false
         this setting, queries prefixed with / will be performed as a regular
         expression search and queries prefixed with = will be performed as a
         substring search.
+
+autopickup_search = false
+        If enabled, items are annotated with {autopickup} while searching
+        with ^F if they would be picked up by autopickup. This means that
+        searching for "autopickup" will list all such items. Note that this
+        option may slow down your game if you have a complicated custom
+        autopickup function.
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------

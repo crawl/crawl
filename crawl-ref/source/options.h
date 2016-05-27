@@ -421,6 +421,8 @@ public:
                                    // fraction of HP or MP
 
     bool        regex_search; // whether to default to regex search for ^F
+    bool        autopickup_search; // whether to annotate stash items with
+                                   // autopickup status
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
