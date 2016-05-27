@@ -5076,16 +5076,37 @@ void fly_player(int pow, bool already_flying)
         float_player();
 }
 
+static void _enable_emergency_flight()
+{
+    mpr("You can't land here! You focus on prolonging your flight, but the "
+        "process is mentally draining.");
+    you.props[EMERGENCY_FLIGHT_KEY] = true;
+}
+
+/**
+ * Handle the player's flight ending. Apply emergency flight if needed.
+ *
+ * @param quiet         Should we notify the player flight is ending?
+ * @return              If flight was ended.
+ */
 bool land_player(bool quiet)
 {
     // there was another source keeping you aloft
     if (you.airborne())
         return false;
 
+    // Handle landing on (formerly) instakill terrain
+    if (is_feat_dangerous(orig_terrain(you.pos()), true, false))
+    {
+        _enable_emergency_flight();
+        return false;
+    }
+
     if (!quiet)
         mpr("You float gracefully downwards.");
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
+
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false);
@@ -5522,6 +5543,7 @@ bool player::airborne() const
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI
 #endif
+        || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
     {
