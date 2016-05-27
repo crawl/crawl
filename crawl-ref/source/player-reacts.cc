@@ -668,27 +668,12 @@ static void _decrement_durations()
         }
     }
 
-    // Handle Powered By Death strength and duration
+    // Decrement Powered By Death strength
     int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
-    if (pbd_str > 1)
+    if (pbd_str > 0 && _decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
     {
-        // Roll to decrement (on average) 1 per-10 aut.
-        const int decrement_rolls = div_rand_round(delay, 10);
-        const int dec = binomial(decrement_rolls, 1, 4);
-
-        // We don't want to accidentally terminate the effect after slow actions
-        pbd_str = max(pbd_str - dec, 1);
-        you.props[POWERED_BY_DEATH_KEY] = pbd_str;
-        if (dec > 0)
-            dprf("Decrementing Powered by Death strength to %d", pbd_str);
-    }
-    if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
-    {
-        if (pbd_str > 0)
-        {
-            mprf(MSGCH_DURATION, "You feel less regenerative.");
-            you.props[POWERED_BY_DEATH_KEY] = 0;
-        }
+        you.props[POWERED_BY_DEATH_KEY] = pbd_str - 1;
+        reset_powered_by_death_duration();
     }
 
     dec_ambrosia_player(delay);

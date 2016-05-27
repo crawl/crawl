@@ -51,6 +51,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
@@ -2524,20 +2525,16 @@ item_def* monster_die(monster* mons, killer_type killer,
             || killer == KILL_YOU_CONF
             || pet_kill))
     {
-        // Set duration
-        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
-
-        // avg 10 turns at L1, 20 at L3
-        const int pbd_dur = pbd_level * 5 + roll_dice(2, 4);
-        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
-        if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
-            you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+        // Enable the status
+        reset_powered_by_death_duration();
 
         // Maybe increase strength. The chance decreases with number
         // of existing stacks.
+        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
         if (x_chance_in_y(10 - pbd_str, 10))
         {
-            const int pbd_inc = random_range(1, pbd_level);
+            const int pbd_inc = random2(1 + pbd_level);
             you.props[POWERED_BY_DEATH_KEY] = pbd_str + pbd_inc;
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
