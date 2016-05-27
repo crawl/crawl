@@ -2419,7 +2419,8 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (destroy_tentacles(mons)
             && !in_transit
-            && you.see_cell(mons->pos()))
+            && you.see_cell(mons->pos())
+            && !was_banished)
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
                 mpr("The dead kraken's tentacles slide back into the water.");
