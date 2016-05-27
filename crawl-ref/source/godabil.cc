@@ -7110,8 +7110,8 @@ static void _transfer_slow_nearby(coord_def destination)
 
 /**
  * Activate Hepliaklqana's Transference ability, swapping the player's
- * ancestor with a targeted creature & potentially activating the deathswap
- * effect.
+ * ancestor with a targeted creature & potentially slowing monsters adjacent
+ * to the target.
  *
  * @param fail      Whether the effect should fail after checking validity.
  * @return          Whether the ability succeeded, failed, or was aborted.
