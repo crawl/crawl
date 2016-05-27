@@ -2936,6 +2936,16 @@ void monster::banish(actor *agent, const string &, const int, bool force)
         return;
     }
 
+    if (mons_is_tentacle_or_tentacle_segment(type))
+    {
+        monster* head = monster_by_mid(tentacle_connect);
+        if (head)
+        {
+            head->banish(agent, "", 0, force);
+            return;
+        }
+    }
+
     simple_monster_message(this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(this, agent))
