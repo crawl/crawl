@@ -1152,6 +1152,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_HOBGOBLIN,               TILEP_MONS_ZOMBIE_HOBGOBLIN },
         { MONS_GNOLL,                   TILEP_MONS_ZOMBIE_GNOLL },
         { MONS_HUMAN,                   TILEP_MONS_ZOMBIE_HUMAN },
+        { MONS_GHOUL,                   TILEP_MONS_ZOMBIE_HUMAN }, // for skel
         { MONS_KOBOLD,                  TILEP_MONS_ZOMBIE_KOBOLD },
         { MONS_ORC,                     TILEP_MONS_ZOMBIE_ORC },
         { MONS_TROLL,                   TILEP_MONS_ZOMBIE_TROLL },
