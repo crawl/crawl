@@ -1101,6 +1101,7 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
     const actor *victim = actor_at(a);
     if (!victim || !victim->as_monster()
         || mons_is_firewood(victim->as_monster())
+        || victim->as_monster()->friendly()
         || !agent->can_see(*victim)
         || !victim->umbraed())
     {
