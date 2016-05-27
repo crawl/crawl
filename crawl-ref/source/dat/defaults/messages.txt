@@ -86,6 +86,7 @@ force_more_message += Your scales start
 force_more_message += You fall through a shaft
 force_more_message += You fall into the water!
 force_more_message += You fall into the lava!
+force_more_message += You focus on prolonging your flight
 force_more_message += Marking area around .* as unsafe
 force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy

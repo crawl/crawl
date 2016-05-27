@@ -744,12 +744,18 @@ static void _decrement_durations()
             {
                 land_player();
             }
+            else
+            {
+                // Disable emergency flight if it was active
+                you.props.erase(EMERGENCY_FLIGHT_KEY);
+            }
         }
         else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
             you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             you.duration[DUR_FLIGHT] = 0;
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
     }
 
@@ -889,6 +895,20 @@ static void _rot_ghoul_players()
         mprf(MSGCH_WARN, "You feel your flesh rotting away.");
         rot_hp(1);
     }
+}
+
+static void _handle_emergency_flight()
+{
+    ASSERT(you.props[EMERGENCY_FLIGHT_KEY].get_bool());
+
+    if (!is_feat_dangerous(orig_terrain(you.pos()), true, false))
+    {
+        mpr("You float gracefully downwards.");
+        land_player();
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+    else
+        drain_player(15, true, true);
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter
@@ -1069,6 +1089,9 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+
+    if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
+        _handle_emergency_flight();
 }
 
 void extract_manticore_spikes(const char* endmsg)
