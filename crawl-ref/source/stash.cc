@@ -90,7 +90,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
     // autopickup configuration annotations, and annotating an item based on
     // item_needs_autopickup while trying to decide if the item needs to be
     // autopickedup leads to infinite recursion
-    if (item_needs_autopickup(*item))
+    if (Options.autopickup_search && item_needs_autopickup(*item))
         text += " {autopickup}";
 
     return text;
