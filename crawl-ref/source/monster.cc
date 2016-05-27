@@ -6812,3 +6812,12 @@ bool monster::has_facet(int facet) const
             return true;
     return false;
 }
+
+/// If the player attacks this monster, will it become hostile?
+bool monster::angered_by_attacks() const
+{
+    return !has_ench(ENCH_INSANE)
+            && !mons_is_avatar(type)
+            && type != MONS_SPELLFORGED_SERVITOR
+            && !mons_is_hepliaklqana_ancestor(type);
+}

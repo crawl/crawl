@@ -1126,11 +1126,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         else if (!mons_is_fleeing(mon))
             mon->behaviour = BEH_SEEK;
 
-        if (src == &you
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type)
-            && mon->type != MONS_SPELLFORGED_SERVITOR
-            && !mons_is_hepliaklqana_ancestor(mon->type))
+        if (src == &you && mon->angered_by_attacks())
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
@@ -1288,10 +1284,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player()
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type)
-            && !mons_is_hepliaklqana_ancestor(mon->type))
+        if (src->is_player() && mon->angered_by_attacks())
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
