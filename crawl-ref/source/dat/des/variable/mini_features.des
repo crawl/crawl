@@ -2665,6 +2665,37 @@ xx.xxxx
    xxx
 ENDMAP
 
+NAME: chequers_big_river
+TAGS: no_pool_fixup transparent extra decor
+SUBST: - = W:30 w X
+KMONS: X = plant
+KFEAT: X = W / .
+# There's a guaranteed path across
+MAP
+.....
+.xxxxxxxxxxx
+.xxxxxxxxxxx
+.xxwwxxxxxxx
+.xxxwwxxxxxx
+...xxwwxxx.@
+ ..xwwwxx......@
+ ..xxwwwx........
+@...-wwww.........
+ ....-ww--WW.......
+ ....W-www-........@
+ .....W--w--...........
+ .......-ww----...........@
+  @....W--wwww----.....................@.
+   ......---wwwww----.......W...........xxxxxxxx
+    .......---wwwwwwW---W--------....xxxxxxxxxxx
+    .........-wwwwwwwWWWwwwwwwww----wwwxxxxxxxxx
+      @....WW------wwwWWW---wwwwwwwwwwwwwwwxxxxx
+       .......WW..W--W.WW..W----wwwwwwwwwwxxxxxx.
+       ..........................xxxxxxxxxxxxxxx.
+                        @       .........xxxxxxx.
+                                        .........
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

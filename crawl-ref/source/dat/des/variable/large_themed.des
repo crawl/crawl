@@ -907,22 +907,18 @@ ENDMAP
 # Wizard Prison
 #
 NAME:   evilmike_wizard_prison
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_trap_gen no_item_gen
 DEPTH:  Depths, !Depths:$, Crypt:1-4
-ORIENT: southeast
+ORIENT: west
 NSUBST: 3 = 3:. / *:3
-SUBST:  ^ : ^mmm
-KFEAT:  ^ = permanent teleport trap
 KFEAT:  m = iron_grate
-KFEAT:  y = rock_wall
-KMASK:  y = no_wall_fixup
-KPROP:  -d|*$14567^ = no_tele_into
-FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
+KPROP:  -$14567 = no_tele_into
+FTILE:  -mc$*|14567 = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
-# This is to mark the wall clearly diggable.
-TILE:   y = WALL_NORMAL
 MONS:   patrolling silent spectre
+KMONS:  1 = patrolling silent spectre
+KITEM:  1 = gold
 MONS:   patrolling curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
 MONS:   ogre mage / deep elf mage / wizard / necromancer / \
@@ -934,37 +930,32 @@ NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
 MONS:   human att:neutral
 NSUBST: 4 = 1:7 / *:4
-ITEM:   acquire any
 SUBST:  - = .
 MAP
-xxxxxxxxxxxc.@.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxxxxxxxxc.c.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxcccccccc.c.ccccccccxxxx
-xxxxc-4cc--c...c4-cc--cxxxx
-xxxxc--cc4-c3.3c--cc-4cxxxx
-xxxccmmccmmcc+ccmmccmmccxxx
-xxxc3..................cxxx
-xxxc3................3.cxxx
-xxxcmmcmmc+cmmcmmcmmc..cccx
-xxxc--c-4c-c4-c4-c-4c..m4cx
-xxxc-4c--c-cccccccccc..m-cx
-xxxccccccc---^1y|c--m.3cccx
-xxxccccccc-ccccc|c-4m..m4cx
-xxxc4-c--c-c-4c||cccc..m-cx
-xxxc--c-4c-c--cddc-4c..cccx
-xxxcmmcmmc+cmmccccmmc..cxxx
-xxxc3..................cxxx
-xxxc3.................3cxxx
-xxxccmmcmmcmmc..cmmcmmccxxx
-xxxxc4-c-4c--c..c--c-4cxxxx
-xxxxc--c--c4-c..c4-c--cxxxx
-xccccccccccycc.2cccccccxxxx
-xc|$*$*$cccy-ccccxxxxxxxxxx
-xc$|$*$*-6-y-cxxxxxxxxxxxxx
-xcccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
+xxcccccccccccccccccccxx
+xxc-4c--c--c4-c--c-4cxx
+xxc--c4-c4-c--c-4c--cxx
+xccmmcmmcmmcmmcmmcmmcxx
+xc3............3....3cx
+xc3..................cx
+xcmmcmmc+cmmcmmcmmc..cx
+xc--c-4c-c4-c4-c-4c3.cx
+xc4-c--c-c--c--c--c..cx
+xccccccc-cccccccccc..ccccccccc
+xccccccc-m$*1ccc--m..+.c...c.+
+xccccccc-m$*|ccc4-m..+...c...+
+xccccccc-cccccccccc..ccccccccc
+xc4-c--c-c-4c4-c--c..cx
+xc--c-4c-c--c--c-4c3.cx
+xcmmcmmc+cmmcmmcmmc..cx
+xc3..................cx
+xc3............3....3cx
+xccmmcmmcmmcmmcmmcmmccx
+xxc4-c-4c--c--c--c-4cxx
+xxc--c--c4-c-4c4-c--cxx
+xxcccccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################
