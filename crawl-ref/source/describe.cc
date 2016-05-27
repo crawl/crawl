@@ -1061,9 +1061,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "animated as a zombie friendly to the killer.";
             break;
         case SPWPN_ANTIMAGIC:
-            description += "It disrupts the flow of magical energy around "
-                    "spellcasters and certain magical creatures (including "
-                    "the wielder).";
+            description += "It reduces the magical energy of the wielder, "
+                    "and disrupts the spells and magical abilities of those "
+                    "hit. Natural abilities and divine invocations are not "
+                    "affected.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
