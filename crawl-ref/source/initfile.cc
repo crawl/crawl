@@ -698,6 +698,8 @@ void game_options::reset_options()
 #endif
     restart_after_save = false;
 
+    read_persist_options = false;
+
     macro_dir = SysEnv.macro_dir;
 
 #if !defined(DGAMELAUNCH)
@@ -1582,6 +1584,16 @@ void read_init_file(bool runscript)
     if (f.error())
         return;
     Options.read_options(f, runscript);
+
+    if (Options.read_persist_options)
+    {
+        // Read options from a .persist file if one exists.
+        clua.load_persist();
+        clua.pushglobal("c_persist.options");
+        if (lua_isstring(clua, -1))
+            read_options(lua_tostring(clua, -1), runscript);
+        lua_pop(clua, 1);
+    }
 
     // Load late binding extra options from the command line AFTER init.txt.
     Options.filename     = "extra opts last";
@@ -2619,6 +2631,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(restart_after_game);
     else BOOL_OPTION(restart_after_save);
 #endif
+    else BOOL_OPTION(read_persist_options);
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
     else if (key == "easy_confirm")
