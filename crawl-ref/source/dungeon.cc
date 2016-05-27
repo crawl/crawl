@@ -1375,13 +1375,13 @@ static void _fixup_branch_stairs()
     const dungeon_feature_type exit =
         root ? DNGN_EXIT_DUNGEON
              : branch.exit_stairs;
-    const dungeon_feature_type escape =  root ? DNGN_EXIT_DUNGEON :
+    const dungeon_feature_type escape =
         branch.escape_feature == NUM_FEATURES ? DNGN_ESCAPE_HATCH_UP :
                                                 branch.escape_feature;
     const dungeon_feature_type up_hatch =
-        top &&  bottom ? exit :
-        top && !bottom ? DNGN_ESCAPE_HATCH_DOWN :
-                         escape;
+        top && bottom ? exit :
+                  top ? DNGN_ESCAPE_HATCH_DOWN :
+                        escape;
 
 #ifdef DEBUG_DIAGNOSTICS
     int count = 0;
