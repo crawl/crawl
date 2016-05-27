@@ -63,6 +63,29 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
 }
 
 /**
+ * What type of effects is this spell type vulnerable to?
+ *
+ * @param type              The type of spell-ability; e.g. MON_SPELL_MAGICAL.
+ * @return                  A description of the spell's vulnerabilities.
+ */
+static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
+{
+    switch (type)
+    {
+        case MON_SPELL_WIZARD:
+            return " (which are affected by silence and antimagic)";
+        case MON_SPELL_NATURAL:
+            return " (which may be affected by silence)";
+        case MON_SPELL_MAGICAL:
+            return " (which are affected by antimagic)";
+        case MON_SPELL_PRIEST:
+            return " (which are affected by silence)";
+        default:
+            die("Unhandled spell type in _ability_type_vulnerabilities!");
+    }
+}
+
+/**
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
@@ -80,21 +103,18 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("\n%s has mastered %s:", pronoun.c_str(),
+        return make_stringf("\n%s has mastered %s%s:", pronoun.c_str(),
                             num_books > 1 ? "one of the following spellbooks"
-                                          : "the following spells");
+                                          : "the following spells",
+                            _ability_type_vulnerabilities(type).c_str());
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
-    if (num_books > 1)
-    {
-        return make_stringf("\n%s possesses one of the following sets of %s abilities:",
-                            pronoun.c_str(), descriptor.c_str());
-    }
-
-    return make_stringf("\n%s possesses the following %s abilities:",
-                        pronoun.c_str(), descriptor.c_str());
+    return make_stringf("\n%s possesses the following %s abilities%s:",
+                        pronoun.c_str(),
+                        descriptor.c_str(),
+                        _ability_type_vulnerabilities(type).c_str());
 }
 
 /**
