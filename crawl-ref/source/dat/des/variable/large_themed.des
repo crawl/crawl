@@ -67,7 +67,7 @@ MONS:    ice statue / obsidian statue / orange crystal statue
 : end
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
-ITEM:    ring of teleportation / ring of flight
+ITEM:    ring of flight ident:type
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx

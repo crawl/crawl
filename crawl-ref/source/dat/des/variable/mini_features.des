@@ -2823,7 +2823,7 @@ ENDMAP
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
-ITEM:   ring of teleportation / scroll of teleportation q:3
+ITEM:   scroll of teleportation ident:type q:3
 DEPTH:  D:5-, Depths
 MAP
    wwwwwwwww

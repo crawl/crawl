@@ -224,7 +224,6 @@ KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
 KMONS:   z = killer bee
 KMONS:   Z = queen bee
-ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
 ITEM:    amulet of reflection
 KITEM:   gzZ = royal jelly w:10 / nothing w:40
@@ -255,7 +254,7 @@ x.......xccccccxxxxxxx.........................................w"..xxx
 x.(...{.xc....cbbbbbxx................xxx...................."w......x
 x.......++.U..++.].++.....'''....'l'....xxx................."ww"..)..x
 x...[...xc....cbbbbbxx...'''..''lllll'....xx...vvEvvEv......"ww"....xx
-x.......xcccccccxxxxxx.......'llllllll.....x...vd...9v...."www".....xx
+x.......xcccccccxxxxxx.......'llllllll.....x...v....9v...."www".....xx
 xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx
 x.............................'lllll'.....xx...v9....v.www..w".....xxx
 x....""w.............".xxx......'ll'......x....vvEEEEvwww.www.....xxxx
