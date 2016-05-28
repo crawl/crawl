@@ -4563,10 +4563,13 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             return 0;
 
         // Apply damage multipliers for amulet of harm
-        if ((extra_harm() || (agent && agent->extra_harm()))
-             && amount != INSTANT_DEATH)
-        {
-            amount = amount * 5 / 4;
+        if (amount != INSTANT_DEATH) {
+            // +30% damage when the opponent has harm
+            if (agent && agent->extra_harm())
+                amount = amount * 13 / 10;
+            // +20% damage when self has harm
+            else if (extra_harm())
+                amount = amount * 6 / 5;
         }
 
         // Apply damage multipliers for quad damage
