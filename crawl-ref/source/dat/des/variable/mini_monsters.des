@@ -5794,6 +5794,8 @@ KMONS:   Q = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
                               demon blade good_item | triple sword good_item | \
                               double sword good_item
+KITEM:   s = long sword good_item / good_item great sword / \
+             demon blade good_item / triple sword good_item / double sword good_item
 KMONS:   o = orc warrior / orc knight w:5
 KMONS:   e = deep elf knight
 NSUBST:  k = 4:k / 2 = k. / *:.
@@ -5804,7 +5806,7 @@ NSUBST:  k = 1:A / 1:C / *:o
 : elseif you.in_branch("Elf") then
 NSUBST:  k = 2 = EFIJ / *:e
 : elseif you.absdepth() < 10 then
-SUBST:   k = ABCD
+SUBST:   k = ABCD, S = s
 : elseif you.absdepth() < 13 then
 SUBST:   k = CDEFGH
 : elseif you.absdepth() < 16 then
