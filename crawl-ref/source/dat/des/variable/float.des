@@ -2269,7 +2269,7 @@ MONS:    vampire knight ; wand of lightning | wand of iceblast . \
          halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
 KMONS:   A = hell hound / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
-KMONS:   C = salamander stormcaller / ophan w:5 / balrug w:5
+KMONS:   C = ophan / balrug
 KMONS:   D = hydra simulacrum / bog body / polar bear
 KMONS:   E = freezing wraith / ice devil / harpy simulacrum
 KMONS:   F = blizzard demon / azure jelly

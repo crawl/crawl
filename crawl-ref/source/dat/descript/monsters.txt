@@ -2076,12 +2076,6 @@ Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
 half-snake creature with a legendary affinity for fire.
 %%%%
-salamander stormcaller
-
-A salamander whose hands are wreathed in lashing tendrils of flame. This fire
-cultist has the ability to call down a torrent of flames on their foes, though
-the ritual takes some time to complete.
-%%%%
 salamander mystic
 
 A member of the salamander's scholarly caste, possessed of lesser size and

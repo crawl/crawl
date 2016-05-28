@@ -88,7 +88,6 @@ static const pop_entry pop_d[] =
   { 13, 23,  335, SEMI, MONS_GRIFFON },
   { 13, 27,   89, FALL, MONS_CATOBLEPAS },
   { 14, 19,  140, FLAT, MONS_WIZARD },
-  { 14, 21,  140, RISE, MONS_SALAMANDER_STORMCALLER },
   { 14, 22,  260, SEMI, MONS_FREEZING_WRAITH },
   { 14, 22,  270, SEMI, MONS_SIMULACRUM },
   { 14, 22,  115, SEMI, MONS_BOGGART },
@@ -416,7 +415,6 @@ static const pop_entry pop_vaults[] =
   {  1, 12,  510, FALL, MONS_VAULT_WARDEN },
   {  1, 12,  415, FALL, MONS_YAKTAUR_CAPTAIN },
   {  2,  6,   32, PEAK, MONS_CRYSTAL_GUARDIAN },
-  {  2, 12,   75, FALL, MONS_SALAMANDER_STORMCALLER },
   {  2, 12,  340, FALL, MONS_STONE_GIANT },
   {  2, 12,  192, PEAK, MONS_ETTIN },
   {  3, 10,   80, FLAT, MONS_DEEP_ELF_MAGE },
@@ -862,7 +860,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    8, FLAT, MONS_HELL_KNIGHT },
   {  1,  5,    8, FLAT, MONS_NECROMANCER },
   {  1,  5,    8, FLAT, MONS_WIZARD },
-  {  1,  5,    8, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
   {  1,  5,    8, FLAT, MONS_OPHAN },
@@ -1366,7 +1363,6 @@ static const pop_entry pop_lava_snake[] =
   {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
   {  1,   4,  200, FLAT, MONS_SALAMANDER },
   {  0,   6,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
-  {  2,   4,  55,  RISE, MONS_SALAMANDER_STORMCALLER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1378,7 +1374,6 @@ static const pop_entry pop_lava_depths[] =
   {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },
   {  1,  6,  100, FLAT, MONS_SALAMANDER },
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
-  {  3,  6,   55, RISE, MONS_SALAMANDER_STORMCALLER },
   {  1,  6,  400, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1388,7 +1383,6 @@ static const pop_entry pop_lava_hell[] =
   {  1,  8,   300, FALL, MONS_FIRE_ELEMENTAL },
   {  1,  6,    25, FALL, MONS_MOLTEN_GARGOYLE },
   {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },
-  {  1,  7,    75, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };

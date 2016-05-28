@@ -3049,7 +3049,6 @@ enum monster_type                      // menv[].type
     MONS_SALAMANDER,
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
-    MONS_SALAMANDER_STORMCALLER,
 #endif
 
     // Water monsters:
@@ -3519,7 +3518,9 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
+#if TAG_MAJOR_VERSION == 34
     MONS_SALAMANDER_STORMCALLER,
+#endif
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
     MONS_MUTANT_BEAST,
