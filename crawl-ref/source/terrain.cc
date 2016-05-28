@@ -1526,8 +1526,7 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
 }
 
 /**
- * Apply harmful environmental effects from the current tile terrain to the
- * player.
+ * Affect the player when they fall into a pool of water or lava.
  *
  * @param entry     The terrain type in question.
  */
@@ -1552,25 +1551,6 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     // included in default force_more_message
 
     clear_messages();
-    if (terrain == DNGN_LAVA)
-    {
-        if (you.species == SP_MUMMY)
-            mpr("You burn to ash...");
-        else
-            mpr("The lava burns you to a cinder!");
-        ouch(INSTANT_DEATH, KILLED_BY_LAVA);
-    }
-    else if (terrain == DNGN_DEEP_WATER)
-    {
-        mpr("You sink like a stone!");
-
-        if (you.is_artificial() || you.undead_state())
-            mpr("You fall apart...");
-        else
-            mpr("You drown...");
-
-        ouch(INSTANT_DEATH, KILLED_BY_WATER);
-    }
 }
 
 typedef map<string, dungeon_feature_type> feat_desc_map;
