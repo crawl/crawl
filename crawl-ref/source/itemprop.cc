@@ -3038,7 +3038,6 @@ void seen_item(const item_def &item)
 static const map<int, const char*> debt_map = {
     { MISC_FAN_OF_GALES,        "fan_debt" },
     { MISC_LAMP_OF_FIRE,        "lamp_debt" },
-    { MISC_STONE_OF_TREMORS,    "stone_debt" },
     { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
     { MISC_HORN_OF_GERYON,      "horn_debt" },
 };

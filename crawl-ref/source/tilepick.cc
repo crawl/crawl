@@ -2342,9 +2342,11 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_is_charged(item) ? TILE_MISC_LAMP_OF_FIRE
                                        : TILE_MISC_LAMP_OF_FIRE_INERT;
 
+#if TAG_MAJOR_VERSION == 34
     case MISC_STONE_OF_TREMORS:
         return evoker_is_charged(item) ? TILE_MISC_STONE_OF_TREMORS
                                        : TILE_MISC_STONE_OF_TREMORS_INERT;
+#endif
 
     case MISC_PHIAL_OF_FLOODS:
         return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
