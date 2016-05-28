@@ -1538,7 +1538,7 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
         const int specialization = hepliaklqana_specialization();
         return specialization ?
                hepliaklqana_specialization_weapon(specialization) :
-               WPN_LONG_SWORD;
+               WPN_FLAIL;
     }
     case MONS_ANCESTOR_BATTLEMAGE:
         return HD < 14 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
