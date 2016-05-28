@@ -343,7 +343,7 @@ mset(with_props(spec_fn(function ()
   local e = 12 + you.zigs_completed() * 3
   return "fire elemental / hell hound / efreet / " ..
          "fire dragon w:" .. d .. " / fire giant w:" .. d .. " / " ..
-         "salamander stormcaller w:" .. d .. " / orb of fire w:" .. e
+         "orb of fire w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()

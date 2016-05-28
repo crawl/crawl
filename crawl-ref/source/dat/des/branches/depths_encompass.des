@@ -15,7 +15,7 @@
                     .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
                     .. 'nothing w:68')
             e.kmons('2 = spriggan berserker / tengu warrior w:20')
-            e.kmons('3 = deep elf high priest / salamander stormcaller')
+            e.kmons('3 = deep elf high priest')
         end
         e.subst('% = * %:20 .')
         e.lua_marker(':', fog_machine { cloud_type = "flame",
@@ -28,7 +28,7 @@
         e.weight("5")
         e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
                "storm dragon w:5 / shock serpent w:5 / " ..
-               "blizzard demon w:15 / salamander stormcaller w:15")
+               "blizzard demon w:15")
         e.mons("w:20 obsidian statue / w:1 orange crystal statue")
         e.mons("glowing shapeshifter")
         e.mons("very ugly thing / ugly thing w:5")
@@ -218,7 +218,7 @@ MONS:   spriggan air mage / fire giant
 : else
 MONS:   salamander w:8 / salamander mystic w:12 / \
         tengu conjurer / tengu warrior / nothing w:5
-MONS:   salamander stormcaller / tengu reaver
+MONS:   tengu reaver
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -454,7 +454,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = red devil / hell hound / efreet w:5
 KMONS: 5 = sun demon
-KMONS: 6 = salamander stormcaller / balrug
+KMONS: 6 = balrug
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen

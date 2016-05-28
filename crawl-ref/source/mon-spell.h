@@ -2025,11 +2025,10 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+#if TAG_MAJOR_VERSION == 34
     {  MST_SALAMANDER_STORMCALLER,
-      {
-       { SPELL_FIRE_STORM, 35, MON_SPELL_WIZARD },
-      }
     },
+#endif
 
     {  MST_ENTROPY_WEAVER,
       {

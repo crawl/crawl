@@ -4523,7 +4523,6 @@ static const pop_entry _planerend_lair[] =
 static const pop_entry _planerend_snake[] =
 { // Snake enemies
   {  1,   1,   40, FLAT, MONS_ANACONDA },
-  {  1,   1,   60, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
   {  1,   1,  100, FLAT, MONS_GREATER_NAGA },
   { 0,0,0,FLAT,MONS_0 }
@@ -6354,8 +6353,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_FIRE_STORM:
-        if (mons->type == MONS_SALAMANDER_STORMCALLER && !_spell_charged(mons))
-            return;
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         break;

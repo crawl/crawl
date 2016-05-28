@@ -1222,16 +1222,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                  0);
         break;
 
-    case MONS_SALAMANDER_STORMCALLER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(5, WPN_HALBERD,
-                                                5, WPN_TRIDENT,
-                                                3, WPN_SPEAR,
-                                                2, WPN_GLAIVE,
-                                                0);
-        break;
-
-
     case MONS_SPRIGGAN:
         item.base_type = OBJ_WEAPONS;
         // no quick blades for mooks
