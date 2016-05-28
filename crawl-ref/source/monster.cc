@@ -6719,16 +6719,11 @@ bool monster::is_illusion() const
 
 bool monster::is_divine_companion() const
 {
-    // hepliaklqana's companions don't depend on attitude, and shouldn't ever
-    // be summoned or lack stair-climbing capability.
-    // (in principle, this shouldn't matter, but things get broken...)
-    if (mons_is_god_gift(this, GOD_HEPLIAKLQANA))
-        return true;
-
     return attitude == ATT_FRIENDLY
            && !is_summoned()
            && (mons_is_god_gift(this, GOD_BEOGH)
-               || mons_is_god_gift(this, GOD_YREDELEMNUL))
+               || mons_is_god_gift(this, GOD_YREDELEMNUL)
+               || mons_is_god_gift(this, GOD_HEPLIAKLQANA))
            && mons_can_use_stairs(this);
 }
 
