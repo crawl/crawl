@@ -679,15 +679,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
             (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
         // The player never needs more than one.
         {MISC_DISC_OF_STORMS,
-            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7)},
+            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 13)},
         {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 15)},
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 18)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 15)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 18)},
         {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 15)},
-        {MISC_STONE_OF_TREMORS,
-            (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)}
+            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 18)},
     };
 
     int result = *random_choose_weighted(choices);

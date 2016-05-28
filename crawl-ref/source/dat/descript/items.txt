@@ -1259,14 +1259,6 @@ stone
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
 thrown by hand or launched with a sling.
 %%%%
-stone of tremors
-
-A polished stone inhabited by benevolent earth spirits. Raising it aloft will
-send powerful shockwaves through the dungeon as the spirits seek solid form
-within its rock. Those creatures standing near to walls will be pelted with
-falling rubble as the rocky surface heaves and crumbles, while others may be
-swallowed up by cracks in the earth itself.
-%%%%
 shadow dragon armour
 
 A suit of armour made from the scales of a great umbral dragon. It is heavier

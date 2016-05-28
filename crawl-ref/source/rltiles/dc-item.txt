@@ -978,11 +978,13 @@ misc_fan MISC_FAN_OF_GALES
 misc_fan_inert MISC_FAN_OF_GALES_INERT
 misc_lamp MISC_LAMP_OF_FIRE
 misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
+# Remove stone when TAG_MAJOR_VERSION > 34
 misc_stone MISC_STONE_OF_TREMORS
 misc_stone_inert MISC_STONE_OF_TREMORS_INERT
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 %rim 1
+# Remove when TAG_MAJOR_VERSION > 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS

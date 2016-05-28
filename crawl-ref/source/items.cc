@@ -3793,8 +3793,10 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_PHANTOM_MIRROR:
             return RED;
+#if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:
             return BROWN;
+#endif
         case MISC_DISC_OF_STORMS:
             return LIGHTGREY;
         case MISC_PHIAL_OF_FLOODS:

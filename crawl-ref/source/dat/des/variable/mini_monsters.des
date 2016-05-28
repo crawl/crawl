@@ -1628,8 +1628,7 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of shadows
 ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
-ITEM:    fan of gales / lamp of fire / \
-         stone of tremors / phial of floods
+ITEM:    fan of gales / lamp of fire / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
@@ -2893,9 +2892,9 @@ TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
-ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
-ITEM:    wand of digging / wand of disintegration
-ITEM:    stone of tremors
+ITEM:    scroll of teleportation q:2
+ITEM:    wand of digging
+ITEM:    wand of disintigration
 ITEM:    scroll of teleportation q:2 w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
@@ -3471,7 +3470,7 @@ SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
-ITEM:    ring of teleportation / stone of tremors
+ITEM:    scroll of teleportation q:2
 MAP
 ...........
 .vvnvvvnvv.

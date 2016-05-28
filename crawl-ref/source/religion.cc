@@ -1039,7 +1039,6 @@ static int _pakellas_high_misc()
     static const vector<int> high_miscs = {
         MISC_FAN_OF_GALES,
         MISC_LAMP_OF_FIRE,
-        MISC_STONE_OF_TREMORS,
         MISC_PHIAL_OF_FLOODS,
         MISC_DISC_OF_STORMS,
     };
