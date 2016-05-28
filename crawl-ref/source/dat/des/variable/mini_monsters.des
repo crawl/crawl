@@ -2894,7 +2894,7 @@ MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
 ITEM:    scroll of teleportation q:2
 ITEM:    wand of digging
-ITEM:    wand of disintigration
+ITEM:    wand of disintegration
 ITEM:    scroll of teleportation q:2 w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
