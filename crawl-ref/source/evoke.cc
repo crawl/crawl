@@ -1790,7 +1790,10 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
 
-    if (!actor_is_illusion_cloneable(victim))
+    // Mirrored monsters (including by Mara, rakshasas) can still be
+    // re-reflected.
+    if (!actor_is_illusion_cloneable(victim)
+        && !victim->has_ench(ENCH_PHANTOM_MIRROR))
     {
         mpr("The mirror can't reflect that.");
         return SPRET_ABORT;
