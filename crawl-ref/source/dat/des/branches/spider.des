@@ -604,120 +604,110 @@ NAME:   nicolae_spider_mines_1
 DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 TAGS:   uniq_spidermines
-SUBST:  B = z..
-RTILE:  O = wall_lair
-FTILE:  Oz = floor_orc
-RTILE:  X = wall_stone_smooth
-COLOUR: O = brown
-COLOUR: z = brown
-COLOUR: X = lightgrey
-SUBST:  O = x
-SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
-            tarantella w:1 /  nothing w:96
+            tarantella w:1 / nothing w:96
+KITEM:  z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
+KFEAT:  z = web / floor w:60
+KFEAT:  X = rock_wall
+SUBST:  B = z.., z = v:1 z:14
+FTILE:  Xzvc = floor_orc
+TILE:   X = wall_orc
+TILE:   c = wall_stone_smooth
+COLOUR: Xv = brown
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
-KFEAT: z = web / floor w:60
 MAP
 xxxxxxxxxxxxxxx
 xxxxxxxx......xx
 xxxxxx.....x...xx
 xxxx.......xx...@
 xxxx....BBBxx...@
-xxxx.xxxxBBOxx..@
-xxxxxxOOOBBBOxxxx
-xxxxxOOOzzzzOOOxx
-xxxOOOOzzzzzzOOOx
-xxOOOzzzzzzzzzOOx
-xOOOzzzzzzzzzzOOx
-xOOzzzzzzzzzzOOxx
-xOOzzzzzzzzzOOxx
-xOOzzzzzzzzzOOx
-xxOOzzzzzzzzOOx
-xxxOOzzzzzzOOxx
-xxxOOzzzzzzOOxx
-xxXXXXXXXXXXXXx
-xxXXXXXXXXXXXXx
+xxxx.xxxxBBXxx..@
+xxxxxxXXXBBBXxxxx
+xxxxxXXXzzzzXXXxx
+xxxXXXXzzzzzzXXXx
+xxXXXzzzzzzzzzXXx
+xXXXzzzzzzzzzzXXx
+xXXzzzzzzzzzzXXxx
+xXXzzzzzzzzzXXxx
+xXXzzzzzzzzzXXx
+xxXXzzzzzzzzXXx
+xxxXXzzzzzzXXxxx
+xXXXXzzzzzzXXXXx
+xXccccccccccccXx
+xXccccccccccccXx
 ENDMAP
 
 NAME:   nicolae_spider_mines_2
+TAGS:   uniq_spidermines
 DEPTH:  Spider, !Spider:$
 ORIENT: southeast
-TAGS:   uniq_spidermines
-SUBST:  B = z..
-RTILE:  O = wall_lair
-FTILE:  OzI_ = floor_orc
-RTILE:  X = wall_stone_smooth
-COLOUR: O = brown
-COLOUR: z = brown
-COLOUR: X = lightgrey
-SUBST:  O = x
-SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
             tarantella w:1 / nothing w:96
-: dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
-KFEAT: z = web / floor w:60
+KITEM:  z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
+KFEAT:  z = web / floor w:60
 KFEAT:  _ = altar_beogh
-
+KFEAT:  X = rock_wall
+SUBST:  B = z.., z = v:1 z:14
+FTILE:  XzvcI_ = floor_orc
+TILE:   X = wall_orc
+TILE:   c = wall_stone_smooth
+COLOUR: Xzv = brown
+: dgn.delayed_decay(_G, 'v', 'orc skeleton')
 MAP
-       xxxxxxxxxxxxx
-       @.....xxxxxxx
-       @........xxxx
-       @xxxxxx..xxxx
-       xxOBBBBBBxxxx
-     xxxOOBBBOOOxxxx
-   xxxOOOzzzzzzOOxxx
-  xxOOOOzzzzzzzOOxxx
-  xOOOOOzIzzzIzOOxxx
-  xOzzzzzzz_zzzOOxxx
-  xOzzzzzIzzzIzzOOxx
-  xOzzzzzzzzzzzzOOxx
-  xOOOOzzzzzzzzOOxxx
-   xxOOOzzzzzzOOOxxx
-   xXXXXXXXXXXXXXXxx
-   xXXXXXXXXXXXXXXxx
+     xxxxxxxxxxxxx
+     @.....xxxxxxx
+     @........xxxx
+     @xxxxxx..xxxx
+     xxXBBBBBBxxxx
+   xxxXXBBBXXXxxxx
+ xxxXXXzzzzzzXXxxx
+xxXXXXzzzzzzzXXxxx
+xXXXXXzIzzzIzXXxxx
+xXzzzzzzz_zzzXXxxx
+xXzzzzzIzzzIzzXXxx
+xXzzzzzzzzzzzzXXxx
+xXXXXzzzzzzzzXXxxx
+xXXXXXzzzzzzXXXXXx
+xXccccccccccccccXx
+xXccccccccccccccXx
 ENDMAP
 
 NAME:   nicolae_spider_mines_3
+TAGS:   uniq_spidermines
 DEPTH:  Spider, !Spider:$
 ORIENT: southwest
-TAGS:   uniq_spidermines
-NSUBST: F = 1:Q / *:z
-SUBST:  B = z..
-RTILE:  O = wall_lair
-FTILE:  OzQ = floor_orc
-RTILE:  X = wall_stone_smooth
-COLOUR: O = brown
-COLOUR: z = brown
-COLOUR: X = lightgrey
-SUBST:  O = x
-SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
             tarantella w:1 / nothing w:96
+KITEM:  z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
+KFEAT:  z = web / floor w:60
+KFEAT:  Q = abandoned_shop
+KFEAT:  X = rock_wall
+NSUBST: F = 1:Q / *:z
+SUBST:  B = z.., z = v:1 z:14
+FTILE:  XzvQ = floor_orc
+TILE:   X = wall_orc
+TILE:   c = wall_stone_smooth
+COLOUR: Xzv = brown
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
-KFEAT: z = web / floor w:60
-KFEAT: Q = abandoned_shop
 MAP
          xxxxxxxxx
-xxxxxxxxxxOOOOOOOxx
-xxxxxxxxxxOzzzzzOOxxx
-xxxxxxxxxxOzzzFzzOxxxxx
-xxxxxxxOOOOOzzzzzOx...@
-xxOOOOOOOOOOzzzzOOx...@
-xxOzzzzOOOOzzzzzOxx...@
-xxOzzzzzOOzzzzzzOx....x
-xxOzzFzzzzzzzzzzOx...xx
-xxOzzzzzzzzzzzzBBBBB.x
-xxOzzzzzzzFzzzBBBBBBxx
-xxOOzzzzzzzzzOOxxxxxxx
-xxxOOzzzzzzzzOOxxxxxxx
-xxxOOzzzzzzzOOxxxxxxxxx
-xxxxOOzzzzzzOOxxxxxxxxx
-xxxxxOzzzzzzOOxxxxxxxxx
-xxxxXXXXXXXXXXXxxxxxxxx
-xxxxXXXXXXXXXXXxxxxxxxx
+xxxxxxxxxxXXXXXXXxx
+xxxxxxxxxxXzzzzzXXxxx
+xxxxxxxxxxXzzzFzzXxxxxx
+xxxxxxxXXXXXzzzzzXx...@
+xxXXXXXXXXXXzzzzXXx...@
+xxXzzzzXXXXzzzzzXxx...@
+xxXzzzzzXXzzzzzzXx....x
+xxXzzFzzzzzzzzzzXx...xx
+xxXzzzzzzzzzzzzBBBBB.x
+xxXzzzzzzzFzzzBBBBBBxx
+xxXXzzzzzzzzzXXxxxxxxx
+xxxXXzzzzzzzzXXxxxxxxx
+xxxXXzzzzzzzXXxxxxxxxxx
+xxxxXXzzzzzzXXxxxxxxxxx
+xxxXXXzzzzzzXXXXxxxxxxx
+xxxXcccccccccccXxxxxxxx
+xxxXcccccccccccXxxxxxxx
 ENDMAP
 
 # Misc minivaults

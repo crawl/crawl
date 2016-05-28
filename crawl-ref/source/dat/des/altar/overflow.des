@@ -82,7 +82,7 @@ function species_mock(e)
   elseif you.race() == "Draconian" then
     e.kmons("1 = death drake")
   elseif you.race() == "Deep Dwarf" then
-    e.kmons("1 = dwarf zombie")
+    e.kmons("1 = deep dwarf zombie")
   elseif you.race() == "Deep Elf" then
     e.kmons("1 = insubstantial wisp")
   elseif you.race() == "Halfling" then
@@ -98,7 +98,7 @@ function species_mock(e)
   elseif you.race() == "Formicid" then
     e.kmons("1 = soldier ant")
   elseif you.race() == "Gargoyle" then
-    e.kmons("1 = dancing weapon ; mundane mace")
+    e.kmons("1 = earth elemental")
   elseif you.race() == "Ghoul" then
     e.kmons("1 = death ooze")
   elseif you.race() == "Kobold" then
@@ -106,7 +106,7 @@ function species_mock(e)
   elseif you.race() == "Merfolk" then
     e.kmons("1 = giant frog")
   elseif you.race() == "Minotaur" then
-    e.kmons("1 = death yak")
+    e.kmons("1 = yak")
   elseif you.race() == "Mummy" then
     e.kmons("1 = human zombie")
   elseif you.race() == "Naga" then
@@ -3374,6 +3374,38 @@ cc....T....cc
    ccc@ccc
 ENDMAP
 
+# Xom seems to not think much of Hepliaklqana's ancestral focus,
+# and mocks the species roots of incoming pilgrims.
+# This will probably go over most players' heads, but it's neat anyway -- PF
+NAME:    regret_index_temple_of_mockery
+TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
+DEPTH:   D:2-9
+: species_mock(_G)
+KMONS:   2 = spectral ugly thing
+KFEAT:   A = altar_xom
+KFEAT:   B = altar_hepliaklqana
+SHUFFLE: AB
+SUBST:   G = G...
+KPROP:   12' = no_tele_into
+KMASK:   12' = no_item_gen
+KMASK:   12' = no_trap_gen
+KMASK:   ' = no_monster_gen
+MARKER:  2 = lua:fog_machine { cloud_type = "thin mist", \
+             pow_min = 100, pow_max = 100, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
+MAP
+cccccc
+ccb'bccccc
+cb2n1bc.+.
+c'nnnnc.c.
+cb1nA...cc
+ccbn.G.bc
+cccc..Bcc
+ c...bcc
+ c+cccc
+ c..c
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
@@ -3923,34 +3955,4 @@ MAP
  xxG...G...Gxx
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
-ENDMAP
-
-# Xom seems to not think much of Hepliaklqana's ancestral focus,
-# and mocks the species roots of incoming pilgrims.
-# This will probably go over most players' heads, but it's neat anyway -- PF
-NAME:    regret_index_temple_of_mockery
-TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
-DEPTH:   D:2-9
-KFEAT:   A = altar_xom
-KFEAT:   B = altar_hepliaklqana
-SHUFFLE: AB
-SUBST:   G = G...
-KPROP:   1'" = no_tele_into
-KMASK:   1'" = no_item_gen
-KMASK:   '" = no_monster_gen
-MARKER:  " = lua:fog_machine { cloud_type = "thin mist", \
-pow_min = 100, pow_max = 100, delay = 1, \
-size = 1, walk_dist = 0, start_clouds = 1 }
-: species_mock(_G)
-MAP
-ccccc
-ccb'bccccc
-cb"n1bc.+.
-c'nnnnc.c.
-cb1nA...cc
-ccbn.G.bc
-ccc..Bcc
-c...bcc
-c+cccc
-c..c
 ENDMAP

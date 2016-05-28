@@ -1604,7 +1604,7 @@ KFEAT:  ~ = floor
 COLOUR: ~ = green
 FTILE:  .BGd = floor_marble
 FTILE:  ~t{ = floor_grass
-FTILE:  c = wall_marble
+TILE:   c = wall_marble
 MAP
 ttttttttttttttttttttt
 twwwwwwwwwwwwwwwwwwwt

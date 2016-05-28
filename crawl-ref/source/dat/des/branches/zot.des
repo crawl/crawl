@@ -1662,12 +1662,12 @@ MARKER: + = lua:restrict_door()
 # The choice of altar might matter more once monster gods are better implemented.
 # Till then, it's just a style thing.
 KFEAT: _ = altar_xom / altar_lugonu / altar_zin / altar_the_shining_one / \
-           altar_makhleb / altar_yredelemnul
+           altar_makhleb / altar_qazlal / altar_yredelemnul
 SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook spells:summon_demon&fireball&animate_dead&airstrike title:the_Zealot
-KITEM: F = randbook spells:bolt_of_fire&fireball&sticky_flame&conjure_flame title:Fire_and_Brimstone
+KITEM: Z = randbook numspells:4 spells:summon_demon&fireball&animate_dead&airstrike title:the_Zealot
+KITEM: F = randbook numspells:4 spells:bolt_of_fire&fireball&sticky_flame&conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
 TILE: r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
@@ -1705,7 +1705,7 @@ TAGS:    no_monster_gen
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
-KMONS:   C = nonbase red draconian w:6
+KMONS:   C = balrug / nonbase red draconian w:6
 KMONS:   D = cyan very ugly thing
 KMONS:   E = black draconian
 KMONS:   F = electric golem / nonbase black draconian w:6
@@ -1722,6 +1722,8 @@ KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = acquire any
+# Rotates out loot, upstairs, downstairs,
+# both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
          fgfg''() / fgfg'')( / dede'''' / dede'''' / dede''''
 SHUFFLE: ABC / DEF / GHI / JKL / MNO
