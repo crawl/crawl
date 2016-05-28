@@ -468,9 +468,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_FREEZING,
             0);
 
-        if (item_type == WPN_BLOWGUN)
-            item_props[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-        else if (item_attack_skill(item) == SK_CROSSBOWS)
+        if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
             // crossbows. This may change in future.
