@@ -25,8 +25,9 @@ be divided between the wearer's reserves of health and magic.
 %%%%
 amulet of harm
 
-An amulet containing a spirit that increases damage dealt to and by its wearer
-by one fourth. Removing the amulet will cause the spirit to drain the wearer.
+An amulet containing a spirit that somewhat increases all damage dealt to its
+wearer, while increasing all damage dealt by a greater degree. Removing the
+amulet will cause the spirit to drain the wearer.
 %%%%
 amulet of inaccuracy
 
