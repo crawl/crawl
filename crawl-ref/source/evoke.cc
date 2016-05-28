@@ -1686,7 +1686,7 @@ static bool _phial_of_floods()
     bolt beam;
 
     const int power =
-        player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6));
+        player_adjust_evoc_power(10 + you.skill(SK_EVOCATIONS, 4));
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
