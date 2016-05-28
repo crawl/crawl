@@ -1359,7 +1359,7 @@ KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
-KITEM:   e = ring of teleportation w:25 / any ring w:5
+KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
