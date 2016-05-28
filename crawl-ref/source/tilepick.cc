@@ -948,6 +948,9 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SPIDER_SMALL:
         return TILEP_MONS_SPECTRAL_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
+    case TILEP_MONS_IRON_DRAGON:
+    case TILEP_MONS_GOLDEN_DRAGON:
+    case TILEP_MONS_QUICKSILVER_DRAGON:
         return TILEP_MONS_SPECTRAL_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
         return TILEP_MONS_SPECTRAL_DRAKE;
@@ -1018,6 +1021,9 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SPIDER_SMALL:
         return TILEP_MONS_SIMULACRUM_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
+    case TILEP_MONS_IRON_DRAGON:
+    case TILEP_MONS_GOLDEN_DRAGON:
+    case TILEP_MONS_QUICKSILVER_DRAGON:
         return TILEP_MONS_SIMULACRUM_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
         return TILEP_MONS_SIMULACRUM_DRAKE;
@@ -1091,6 +1097,9 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_WORM:
         return TILEP_MONS_SKELETON_SNAKE;
     case TILEP_MONS_ZOMBIE_DRAGON:
+    case TILEP_MONS_IRON_DRAGON:
+    case TILEP_MONS_GOLDEN_DRAGON:
+    case TILEP_MONS_QUICKSILVER_DRAGON:
         return TILEP_MONS_SKELETON_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
         return TILEP_MONS_SKELETON_DRAKE;
@@ -1145,6 +1154,9 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_WOLF_SPIDER,             TILEP_MONS_ZOMBIE_SPIDER_LARGE },
         { MONS_EMPEROR_SCORPION,        TILEP_MONS_ZOMBIE_SPIDER_LARGE },
         { MONS_HOWLER_MONKEY,           TILEP_MONS_ZOMBIE_MONKEY },
+        { MONS_IRON_DRAGON,             TILEP_MONS_ZOMBIE_IRON_DRAGON },
+        { MONS_GOLDEN_DRAGON,           TILEP_MONS_ZOMBIE_GOLDEN_DRAGON },
+        { MONS_QUICKSILVER_DRAGON,      TILEP_MONS_ZOMBIE_QUICKSILVER_DRAGON },
     };
     // per-genus zombies - use by default
     static const map<monster_type, tileidx_t> genus_tiles = {
@@ -1179,6 +1191,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_KRAKEN,                  TILEP_MONS_ZOMBIE_KRAKEN },
         { MONS_OCTOPODE,                TILEP_MONS_ZOMBIE_OCTOPODE },
         { MONS_UGLY_THING,              TILEP_MONS_ZOMBIE_UGLY_THING },
+        { MONS_ELEPHANT,                TILEP_MONS_ZOMBIE_ELEPHANT },
     };
 
     struct shape_size_tiles {
