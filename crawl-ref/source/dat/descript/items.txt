@@ -459,8 +459,7 @@ A long single-edged sword with a slightly curved blade.
 fan of gales
 
 An enchanted fan inhabited by benevolent air spirits. Swinging the fan
-unleashes a blast of wind around the bearer and sets the spirits free to sweep
-away the bearer's enemies.
+unleashes a powerful blast of wind around the bearer.
 %%%%
 fen folio
 
@@ -614,7 +613,7 @@ half-moon blades at both ends.
 lamp of fire
 
 A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
-the spirits free to dance about in a blaze upon the bearer's enemies.
+the spirits free to trail clouds of searing flame around the target.
 %%%%
 large rock
 
@@ -738,7 +737,7 @@ weaker than the creature it mirrors.
 phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial and sets free the water spirits
+unleashes a torrent of water from the phial and sets free the water elementals
 that dwell within it.
 %%%%
 plate armour

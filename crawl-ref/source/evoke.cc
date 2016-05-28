@@ -1355,8 +1355,7 @@ static bool _check_path_overlap(const vector<coord_def> &path1,
 }
 
 static bool _fill_flame_trails(coord_def source, coord_def target,
-                               vector<bolt> &beams, vector<coord_def> &elementals,
-                               int num)
+                               vector<bolt> &beams, int num)
 {
     const int NUM_TRIES = 10;
     vector<vector<coord_def> > paths;
@@ -1385,8 +1384,6 @@ static bool _fill_flame_trails(coord_def source, coord_def target,
             paths.push_back(path);
             beams.push_back(beam1);
             beams.push_back(beam2);
-            if (path.size() > 3)
-                elementals.push_back(path.back());
         }
     }
 
@@ -1399,7 +1396,7 @@ static bool _lamp_of_fire()
     dist target;
 
     const int pow =
-        player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4));
+        player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 14, 4));
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
@@ -1422,10 +1419,9 @@ static bool _lamp_of_fire()
         mpr("The flames dance!");
 
         vector<bolt> beams;
-        vector<coord_def> elementals;
         int num_trails = _num_evoker_elementals();
 
-        _fill_flame_trails(you.pos(), target.target, beams, elementals, num_trails);
+        _fill_flame_trails(you.pos(), target.target, beams, num_trails);
 
         for (bolt &beam : beams)
         {
@@ -1440,24 +1436,10 @@ static bool _lamp_of_fire()
             beam.name       = "trail of fire";
             beam.hit        = 10 + (pow/8);
             beam.damage     = dice_def(2, 5 + pow/4);
-            beam.ench_power = 1 + (pow/10);
+            beam.ench_power = 3 + (pow/5);
             beam.loudness   = 5;
             beam.fire();
         }
-
-        beh_type attitude = BEH_FRIENDLY;
-        if (player_will_anger_monster(MONS_FIRE_ELEMENTAL))
-            attitude = BEH_HOSTILE;
-        for (coord_def epos : elementals)
-        {
-            mgen_data mg(MONS_FIRE_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
-                         epos, 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
-                         MONS_FIRE_ELEMENTAL, COLOUR_INHERIT,
-                         PROX_CLOSE_TO_PLAYER);
-            mg.hd = 6 + (pow/20);
-            create_monster(mg);
-        }
-
         return true;
     }
 
@@ -1473,10 +1455,9 @@ struct dist_sorter
     }
 };
 
-static int _gale_push_dist(const actor* agent, const actor* victim)
+static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 {
-    int dist =
-        player_adjust_evoc_power(1 + you.skill_rdiv(SK_EVOCATIONS, 1, 10));
+    int dist = 1 + random2(pow / 20);
 
     if (victim->airborne())
         dist++;
@@ -1548,7 +1529,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         wind_beam.target = act->pos();
         wind_beam.fire();
 
-        int push = _gale_push_dist(agent, act);
+        int push = _gale_push_dist(agent, act, pow);
         bool pushed = false;
 
         for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push;
@@ -1697,45 +1678,6 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     for (auto it : collisions)
         if (it.first->alive())
             it.first->collide(it.second, agent, pow);
-}
-
-static void _fan_of_gales_elementals()
-{
-    int radius =
-        min(6,
-            player_adjust_evoc_power(4 + you.skill_rdiv(SK_EVOCATIONS, 1, 6)));
-
-    vector<coord_def> elementals;
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE, true); ri; ++ri)
-    {
-        if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
-            && !cell_is_solid(*ri)
-            && cell_see_cell(you.pos(), *ri, LOS_NO_TRANS))
-        {
-            elementals.push_back(*ri);
-        }
-    }
-    shuffle_array(elementals);
-
-    int num_elementals = _num_evoker_elementals();
-
-    bool created = false;
-    beh_type attitude = BEH_FRIENDLY;
-    if (player_will_anger_monster(MONS_AIR_ELEMENTAL))
-        attitude = BEH_HOSTILE;
-    for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
-    {
-        mgen_data mg (MONS_AIR_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
-                      elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
-                      GOD_NO_GOD, MONS_AIR_ELEMENTAL, COLOUR_INHERIT,
-                      PROX_CLOSE_TO_PLAYER);
-        mg.hd =
-            player_adjust_evoc_power(6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
-        if (create_monster(mg))
-            created = true;
-    }
-    if (created)
-        mpr("The winds coalesce and take form.");
 }
 
 static bool _is_rock(dungeon_feature_type feat)
@@ -2366,9 +2308,8 @@ bool evoke_item(int slot, bool check_range)
             }
             surge_power(you.spec_evoke());
             wind_blast(&you,
-                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10)),
+                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15)),
                        coord_def());
-            _fan_of_gales_elementals();
             expend_xp_evoker(item);
             pract = 1;
             break;
