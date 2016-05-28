@@ -6784,13 +6784,6 @@ bool uskayaw_grand_finale()
             continue;
         }
 
-        if (mons_intel(mons) < I_ANIMAL)
-        {
-            clear_messages();
-            mpr("The target can't bond with you emotionally!");
-            continue;
-        }
-
         if (mons->has_ench(ENCH_DEATHS_DOOR))
         {
             clear_messages();

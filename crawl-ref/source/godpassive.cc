@@ -1379,7 +1379,7 @@ static int _check_for_uskayaw_targets(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (mons_intel(mons) < I_ANIMAL)
+    if (mons_is_firewood(mons))
         return 0;
 
     return 1;
@@ -1393,13 +1393,10 @@ static int _check_for_uskayaw_targets(coord_def where)
  */
 static int _prepare_audience(coord_def where)
 {
-    if (!cell_has_valid_target(where))
+    if (!_check_for_uskayaw_targets(where))
         return 0;
-    monster* mons = monster_at(where);
-    ASSERT(mons);
 
-    if (mons_intel(mons) < I_ANIMAL)
-        return 0;
+    monster* mons = monster_at(where);
 
     int power =  max(1, random2(1 + you.skill(SK_INVOCATIONS, 2))
                  + you.experience_level - mons->get_hit_dice());
@@ -1434,13 +1431,10 @@ void uskayaw_prepares_audience()
  */
 static int _bond_audience(coord_def where)
 {
-    if (!cell_has_valid_target(where))
+    if (!_check_for_uskayaw_targets(where))
         return 0;
-    monster* mons = monster_at(where);
-    ASSERT(mons);
 
-    if (mons_intel(mons) < I_ANIMAL)
-        return 0;
+    monster* mons = monster_at(where);
 
     int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level
                  - mons->get_hit_dice();
