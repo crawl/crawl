@@ -6617,14 +6617,15 @@ bool ukayaw_line_pass()
     }
     // query for location:
     int range = 8;
-    int pow = min(200, 50 + you.skill(SK_INVOCATIONS) * 6);
+    int invo_skill = you.skill(SK_INVOCATIONS);
+    int pow = (10 + invo_skill + random2(invo_skill));
     dist beam;
     bolt line_pass;
     line_pass.thrower = KILL_YOU;
     line_pass.name = "line pass";
     line_pass.source_name = "you";
     line_pass.source_id = MID_PLAYER;
-    line_pass.flavour = BEAM_CONFUSION;
+    line_pass.flavour = BEAM_IRRESISTIBLE_CONFUSION;
     line_pass.source = you.pos();
     line_pass.hit = AUTOMATIC_HIT;
     line_pass.range = range;

@@ -5351,8 +5351,13 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     // Early out if the enchantment is meaningless.
     if (!ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
-    // Check magic resistance. (virulence is special-cased)
-    if (has_saving_throw() && flavour != BEAM_VIRULENCE)
+
+    // Virulence and irresistible confusion cannot be resisted w/ MR.
+    bool irresistible = flavour == BEAM_IRRESISTIBLE_CONFUSION
+                        || flavour == BEAM_VIRULENCE;
+
+    // Check magic resistance.
+    if (has_saving_throw() && !irresistible)
     {
         if (mons_immune_magic(mon))
             return MON_UNAFFECTED;
@@ -5569,20 +5574,24 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_SPORE:
     case BEAM_CONFUSION:
+    case BEAM_IRRESISTIBLE_CONFUSION:
         if (mon->check_clarity(false))
         {
             if (you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
-
-        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(),
-                                      ench_power * BASELINE_DELAY)))
         {
-            // FIXME: Put in an exception for things you won't notice
-            // becoming confused.
-            if (simple_monster_message(mon, " appears confused."))
-                obvious_effect = true;
+            // irresistible confusion has a shorter duration.
+            const int dur = (flavour == BEAM_IRRESISTIBLE_CONFUSION) ?
+                                    ench_power : ench_power * BASELINE_DELAY;
+            if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
+            {
+                // FIXME: Put in an exception for things you won't notice
+                // becoming confused.
+                if (simple_monster_message(mon, " appears confused."))
+                    obvious_effect = true;
+            }
         }
         return MON_AFFECTED;
 
@@ -6600,6 +6609,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_UNRAVELLING:           return "unravelling";
     case BEAM_UNRAVELLED_MAGIC:      return "unravelled magic";
     case BEAM_SHARED_PAIN:           return "shared pain";
+    case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
