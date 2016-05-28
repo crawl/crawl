@@ -173,7 +173,9 @@ static void _monster_spellbooks(const monster_info &mi,
                 { MONS_SERPENT_OF_HELL_TARTARUS, 3 },
             };
 
-            const size_t *s_i_ptr = map_find(serpent_indices, mi.type);
+            const monster_type serpent_type
+                = mons_class_is_zombified(mi.type) ? mi.base_type : mi.type;
+            const size_t *s_i_ptr = map_find(serpent_indices, serpent_type);
             ASSERT(s_i_ptr);
             const size_t serpent_index = *s_i_ptr;
             ASSERT_LESS(serpent_index, ARRAYSZ(serpent_of_hell_breaths));
