@@ -2912,17 +2912,6 @@ xddx
 xxxx
 ENDMAP
 
-NAME:  minmay_bad_closet
-TAGS:  extra
-DEPTH: D:2-12
-ITEM:  scroll of immolation / potion of degeneration w:20
-MAP
-xxxx
-xddx
-xddx
-xx+x
-ENDMAP
-
 NAME:    minmay_variable_closet
 TAGS:    extra
 DEPTH:   D:9-, Depths
