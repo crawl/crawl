@@ -3144,7 +3144,7 @@ static void _god_welcome_handle_gear()
         ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
-    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         const item_def* item = you.slot_item(static_cast<equipment_type>(i));
         if (item && god_hates_item(*item))
