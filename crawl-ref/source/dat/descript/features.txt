@@ -582,17 +582,20 @@ The floor.
 %%%%
 Some deep water
 
-A pool of deep water. The unexpected end of flight whilst above deep water has
-been the death of many careless adventurers.
+A pool of deep water. Only very large creatures can wade through this, and only
+those well-adapted to water can swim through it; for the rest, the only way
+through is to fly over.
 %%%%
 Some lava
 
 An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
+Nothing but the mythical salamander can cross this without flight.
 %%%%
 Some shallow water
 
 A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
 landlubbers — this is sometimes dangerous, but never directly fatal.
+#TODO: explain naga/grey drac/ogre/troll lack of fumbling penalties
 %%%%
 The open sea
 
