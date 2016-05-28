@@ -373,8 +373,7 @@ void debuff_player()
     for (auto duration : buffs.durations)
     {
         int &len = you.duration[duration];
-        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
-            && len > 11)
+        if (duration == DUR_TRANSFORMATION && len > 11)
         {
             len = 11;
             need_msg = true;
