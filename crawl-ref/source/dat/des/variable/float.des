@@ -3119,6 +3119,53 @@ MAP
          @
 ENDMAP
 
+
+NAME:    hangedman_elemental_death_ray
+TAGS:    transparent patrolling
+DEPTH:   Depths, !Depths:$
+ORIENT:  float
+MONS:    necromancer ; wand of iceblast . \
+         staff of fire w:15 | quarterstaff ego:flaming w:14 | \
+         rod of ignition w:1 ident:type . \
+         robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
+         robe ego:resistance w:1
+MONS:    necromancer ; wand of lightning . \
+         staff of cold ident:type | quarterstaff ego:freezing ident:type . \
+         robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
+         robe ego:resistance w:1
+MONS:    fire giant ; battleaxe ego:freezing
+MONS:    frost giant ; great sword ego:flaming
+MONS:    ettin simulacrum, efreet, deep elf mage
+KITEM:   d = lamp of fire, *
+KITEM:   e = lajatang ego:freezing ident:type, *
+SHUFFLE: 12, 34, 5df / 6eF, {[(<
+FTILE:   fF'@{[(< = floor_pebble_darkgray
+COLOUR:  fF'@ = white
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 6, pow_max = 6, delay = 150, \
+             size_min = 2, size_max = 2, walk_dist = 0, start_clouds = 1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 6, pow_max = 6, delay = 200, \
+             size_min = 2, size_max = 2, walk_dist = 0, start_clouds = 1 }
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   [(< = '
+: end
+MAP
+ ......                              @{[
+..bbbb..                             xxx
+.bb51bb..
+.+53dbfF''fF'
+.bb57bb..   'fF'
+..bbbb..       'fF@
+ ......           'fF'           ......
+                     @fF'       ..bbbb..
+                        'fF'   ..bb76bb.
+                           'fF''fFbe46+.
+                               ..bb26bb.
+xxx                             ..bbbb..
+(<@                              ......
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.

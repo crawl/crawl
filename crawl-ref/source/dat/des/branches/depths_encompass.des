@@ -216,9 +216,9 @@ MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
         ogre mage w:8 / ettin / stone giant / frost giant w:8 / nothing
 MONS:   spriggan air mage / fire giant
 : else
-MONS:   salamander w:8 / salamander mystic w:12 / \
+MONS:   yaktaur w:8 / centaur warrior / minotaur w:2 / \
         tengu conjurer / tengu warrior / nothing w:5
-MONS:   tengu reaver
+MONS:   tengu reaver / sphinx
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
@@ -485,9 +485,9 @@ NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = ice devil / simulacrum w:20 / freezing wraith
-KMONS: 5 = ice devil
-KMONS: 6 = blizzard demon / ice dragon
+KMONS: 4 = ice devil / ettin simulacrum w:20 / freezing wraith
+KMONS: 5 = quicksilver dragon simulacrum
+KMONS: 6 = blizzard demon
 KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
