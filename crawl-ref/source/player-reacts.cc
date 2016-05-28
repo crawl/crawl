@@ -908,7 +908,10 @@ static void _handle_emergency_flight()
         you.props.erase(EMERGENCY_FLIGHT_KEY);
     }
     else
-        drain_player(15, true, true);
+    {
+        const int drain = div_rand_round(15 * you.time_taken, BASELINE_DELAY);
+        drain_player(drain, true, true);
+    }
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter
