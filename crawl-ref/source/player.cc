@@ -6006,6 +6006,22 @@ static int _bone_armour_bonus()
 }
 
 /**
+ * How many points of AC does the player get from their sanguine armour, if
+ * they have any?
+ *
+ * @return      The AC bonus * 100. (For scaling.)
+ */
+static int _sanguine_armour_bonus()
+{
+    if (!you.duration[DUR_SANGUINE_ARMOUR])
+        return 0;
+
+    const int mut_lev = you.mutation[MUT_SANGUINE_ARMOUR];
+    // like iridescent, but somewhat moreso (when active)
+    return 300 + mut_lev * 300;
+}
+
+/**
  * How much AC does the player get from an unenchanted version of the given
  * armour?
  *
@@ -6114,6 +6130,7 @@ int player::armour_class(bool /*calc_unid*/) const
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
+    AC += _sanguine_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
 

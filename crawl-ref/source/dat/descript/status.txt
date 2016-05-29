@@ -483,3 +483,8 @@ Howl status
 A terrifying howl is echoing in your mind, calling forth powerful creatures to
 attack you.
 %%%%
+Blood status
+
+Your body is covered in congealed blood, serving as armour for as long as you
+remain seriously injured.
+%%%%

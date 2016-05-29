@@ -1435,6 +1435,23 @@ static const mutation_def mut_data[] =
    "You feel more encumbered by your armour.",
    "You feel more encumbered by your armour."},
 },
+
+{ MUT_SANGUINE_ARMOUR, 2, 3, mutflag::GOOD, false,
+  "sanguine armour",
+
+  {"When seriously injured, your bleeding wounds create flimsy armour.",
+   "When seriously injured, your bleeding wounds create armour.",
+   "When seriously injured, your bleeding wounds create dense armour."},
+
+  {"You feel your blood thicken.",
+   "You feel your blood thicken.",
+   "You feel your blood thicken."},
+
+  {"You feel your blood thin.",
+   "You feel your blood thin.",
+   "You feel your blood thin."},
+},
+
 { MUT_CAMOUFLAGE, 1, 3, mutflag::GOOD, true,
   "camouflage",
 

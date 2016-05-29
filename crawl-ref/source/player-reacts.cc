@@ -844,6 +844,23 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+    const bool sanguine_armour_valid
+        = you.hp <= you.hp_max / 2
+          && you.mutation[MUT_SANGUINE_ARMOUR]
+          && mutation_activity_level(MUT_SANGUINE_ARMOUR) == MUTACT_FULL;
+    if (sanguine_armour_valid)
+    {
+        const bool was_active = you.duration[DUR_SANGUINE_ARMOUR];
+        you.duration[DUR_SANGUINE_ARMOUR] = random_range(60, 100);
+        if (!was_active)
+        {
+            mpr("Your blood congeals into armour.");
+            you.redraw_armour_class = true;
+        }
+    }
+    else if (you.duration[DUR_SANGUINE_ARMOUR])
+        you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))

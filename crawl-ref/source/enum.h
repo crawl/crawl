@@ -1953,6 +1953,7 @@ enum duration_type
 #endif
     DUR_VERTIGO,
     DUR_ANCESTOR_DELAY,
+    DUR_SANGUINE_ARMOUR,
     NUM_DURATIONS
 };
 
@@ -3662,6 +3663,7 @@ enum mutation_type
     MUT_YELLOW_SCALES,
 #if TAG_MAJOR_VERSION > 34
     MUT_STURDY_FRAME,
+    MUT_SANGUINE_ARMOUR,
 #endif
     MUT_CAMOUFLAGE,
 
@@ -3840,6 +3842,7 @@ enum mutation_type
     MUT_TEMPERATURE_SENSITIVITY,
 #if TAG_MAJOR_VERSION == 34
     MUT_STURDY_FRAME,
+    MUT_SANGUINE_ARMOUR,
 #endif
     NUM_MUTATIONS,
 
