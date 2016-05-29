@@ -121,16 +121,12 @@ void UseItemMenu::populate_menu()
     load_items(item_inv, 0, 0, false);
 
     // Need a tracker for inv item hotkeys and floor item hotkeys
-    set<char> keys_unused;
-    for (int i = 0; i < 52; ++i)
-        keys_unused.insert(index_to_letter(i));
+    set<char> used_keys;
 
     // Remove inventory item hotkeys from the tracker
     for (MenuEntry *entry : items)
-    {
         if (!entry->hotkeys.empty())
-            keys_unused.erase(char(entry->hotkeys[0]));
-    }
+            used_keys.insert(char(entry->hotkeys[0]));
 
     // Load floor items to menu
     me = new MenuEntry("Floor Items", MEL_TITLE, 0, 0, false);
@@ -138,6 +134,7 @@ void UseItemMenu::populate_menu()
 
     load_items(item_floor, 0, 0, false);
 
+    menu_letter hotkey;
     // Go through each menu item
     for (MenuEntry* entry : items)
     {
@@ -146,16 +143,11 @@ void UseItemMenu::populate_menu()
         // If this is an inventory item, leave its hotkeys alone
         if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
         {
-            if (keys_unused.empty())
-                entry->hotkeys[0] = (' ');
-            else
+            do
             {
-                // Give it the next unused hotkey
-                auto it = keys_unused.begin();
-                auto hotkey = *it;
-                entry->hotkeys[0] = hotkey;
-                keys_unused.erase(it);
-            }
+                ++hotkey;
+            } while (used_keys.count(hotkey) && used_keys.erase(hotkey));
+            entry->hotkeys[0] = hotkey;
         }
     }
     return;
