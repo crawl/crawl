@@ -324,6 +324,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return MUTACT_INACTIVE;
     }
 
+    if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
@@ -1974,6 +1977,8 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_STURDY_FRAME, MUT_STURDY_FRAME, MUT_STURDY_FRAME },
+      { -33, -33, 0 } },
+    { 1, { MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR },
       { -33, -33, 0 } },
     // Tier 2 facets
     { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },

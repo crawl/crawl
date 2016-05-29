@@ -553,6 +553,10 @@ static const duration_def duration_data[] =
       {{ "The world stops spinning.", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_SANGUINE_ARMOUR, LIGHTBLUE, "Blood",
+      "sanguine armour", "",
+      "Your shed blood clings to and protects you.", D_NO_FLAGS,
+        {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
