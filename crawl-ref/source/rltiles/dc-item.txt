@@ -1002,7 +1002,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_dungeons
@@ -1011,7 +1011,6 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_summoning
 %finish
-# Remove wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_wonders
@@ -1024,6 +1023,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_changes
@@ -1041,7 +1041,7 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_dungeons
@@ -1050,7 +1050,6 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_summoning
 %finish
-# Remove wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_wonders
@@ -1063,6 +1062,7 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_changes
@@ -1080,7 +1080,7 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_dungeons
@@ -1089,7 +1089,6 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_summoning
 %finish
-# Remove wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_wonders
@@ -1102,6 +1101,7 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_changes

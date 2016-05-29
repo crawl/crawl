@@ -104,13 +104,13 @@
        "centaur barding", "chain mail", "crystal ball of energy", "cloak",
        "crystal plate armour", "potion of cancellation", "rod of clouds",
        "book of clouds", "staff of cold", "wand of confusion", "cutlass",
-       "staff of conjuration", "deck of changes", "manual of crossbows",
-       "manual of conjurations", "manual of charms", "potion of curing" }
+       "staff of conjuration", "manual of crossbows", "manual of conjurations",
+       "manual of charms", "potion of curing" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger", "deck of defence",
-       "deck of destruction", "demon blade", "demon trident", "demon whip",
-       "dire flail", "disc of storms", "double sword", "amulet of dismissal",
+       "book of dreams", "book of the dragon", "dagger", "deck of destruction",
+       "demon blade", "demon trident", "demon whip", "dire flail",
+       "disc of storms", "double sword", "amulet of dismissal",
        "ring of dexterity", "manual of dodging", "wand of disintegration",
        "staff of death", "wand of digging" }
 
@@ -160,7 +160,7 @@
       elseif s == "N" then i = { "book of necromancy", "naga barding",
        "necronomicon", "needle", "scroll of noise", "manual of necromancy" }
 
-      elseif s == "O" then i = { "deck of oddities" }
+      elseif s == "O" then i = { "any" }
 
       elseif s == "P" then i = { "book of party tricks", "book of power",
        "pearl dragon armour", "phantom mirror", "phial of floods",
@@ -182,10 +182,9 @@
 
       elseif s == "S" then i = { "scimitar", "short sword",
        "sling bullet", "scale mail", "book of summonings", "book of the sky",
-       "deck of summoning", "ring of see invisible",
-       "ring of slaying", "spear", "ring of stealth", "ring of strength",
-       "rod of shadows", "ring of sustain attributes", "manual of stealth",
-       "sack of spiders", "scroll of summoning", "scythe",
+       "ring of see invisible", "ring of slaying", "spear", "ring of stealth",
+       "ring of strength", "rod of shadows", "ring of sustain attributes",
+       "manual of stealth", "sack of spiders", "scroll of summoning", "scythe",
        "book of spatial translocations", "scroll of silence", "shield",
        "shortbow", "wand of slowing", "manual of staves",
        "steam dragon armour", "shadow dragon armour", "storm dragon armour",

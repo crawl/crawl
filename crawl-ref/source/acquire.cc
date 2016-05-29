@@ -667,8 +667,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     const vector<pair<int, int> > choices =
     {
         // Decks have lowest weight.
-        {MISC_DECK_OF_CHANGES,                             2 },
-        {MISC_DECK_OF_DEFENCE,                             2 },
+        {MISC_DECK_OF_ESCAPE,                              4 },
+        {MISC_DECK_OF_DESTRUCTION,                         4 },
+        {MISC_DECK_OF_WAR,                                 4 },
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
             (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},

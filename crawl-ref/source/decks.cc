@@ -193,7 +193,7 @@ static map<misc_item_type, deck_type_data> all_decks =
 {
     { MISC_DECK_OF_ESCAPE, {
         "escape",
-        1, { &deck_of_transport, &deck_of_emergency }
+        2, { &deck_of_transport, &deck_of_emergency }
     } },
     { MISC_DECK_OF_DESTRUCTION, {
         "destruction",
@@ -204,12 +204,10 @@ static map<misc_item_type, deck_type_data> all_decks =
         "dungeons",
         0, { &deck_of_dungeons }
     } },
-#endif
     { MISC_DECK_OF_SUMMONING, {
         "summoning",
-        5, { &deck_of_summoning }
+        0, { &deck_of_summoning }
     } },
-#if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_WONDERS, {
         "wonders",
         0, { &deck_of_wonders }
@@ -225,16 +223,18 @@ static map<misc_item_type, deck_type_data> all_decks =
     } },
     { MISC_DECK_OF_WAR, {
         "war",
-        1, { &deck_of_battle, &deck_of_summoning }
+        2, { &deck_of_battle, &deck_of_summoning }
     } },
+#if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_CHANGES, {
         "changes",
-        5, { &deck_of_battle, &deck_of_transport }
+        0, { &deck_of_battle, &deck_of_transport }
     } },
     { MISC_DECK_OF_DEFENCE, {
         "defence",
-        5, { &deck_of_battle, &deck_of_emergency }
+        0, { &deck_of_battle, &deck_of_emergency }
     } },
+#endif
 };
 
 static void _check_odd_card(uint8_t flags)

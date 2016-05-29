@@ -272,10 +272,6 @@ decaying skeleton
 
 Et rådnende skelet.
 %%%%
-deck of defence
-
-Et spil magiske kort som hovedsagligt beskytter brugeren mod skade.
-%%%%
 deck of destruction
 
 Et spil magiske kort som for det meste slynger død og ødelæggelse efter dine
@@ -284,10 +280,6 @@ fjender (eller dig selv hvis du er uheldig).
 deck of punishment
 
 Et spil magiske kort som hærger brugeren.
-%%%%
-deck of summonings
-
-Et spil magiske kort som afbilder en lang række sære og underfulde væsener.
 %%%%
 deck of war
 

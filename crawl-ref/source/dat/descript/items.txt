@@ -368,16 +368,6 @@ decaying skeleton
 
 A decaying skeleton.
 %%%%
-deck of changes
-
-A deck of magical cards which induce changes in the user's environment or in
-the user themself.
-%%%%
-deck of defence
-
-A deck of magical cards, most of which defend the user from harm in various
-ways.
-%%%%
 deck of destruction
 
 A deck of magical cards, most of which hurl death and destruction at one's foes
@@ -395,10 +385,6 @@ other decks.
 deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
-%%%%
-deck of summoning
-
-A deck of magical cards, depicting a range of weird and wondrous creatures.
 %%%%
 deck of war
 
