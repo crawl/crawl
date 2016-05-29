@@ -543,10 +543,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
-    {
         mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
-        autotoggle_autopickup(false);
-    }
     else
         player_messaged = false;
 

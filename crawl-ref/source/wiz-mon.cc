@@ -636,9 +636,6 @@ void wizard_dismiss_all_monsters(bool force_all)
 
     int count = dismiss_monsters(buf);
     mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
-    // If it was turned off turn autopickup back on if all monsters went away.
-    if (!*buf)
-        autotoggle_autopickup(false);
 }
 
 void debug_make_monster_shout(monster* mon)

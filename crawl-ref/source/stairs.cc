@@ -803,7 +803,7 @@ void floor_transition(dungeon_feature_type how,
     else
         maybe_update_stashes();
 
-    request_autopickup();
+    autopickup();
 }
 
 void take_stairs(dungeon_feature_type force_stair, bool going_up,

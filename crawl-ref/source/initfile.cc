@@ -760,7 +760,7 @@ void game_options::reset_options()
     scroll_margin_y  = 2;
     always_show_exclusions = true;
 
-    autopickup_on    = 1;
+    autopickup_on    = true;
     autopickup_starting_ammo = true;
     default_manual_training = false;
     default_show_all_skills = false;

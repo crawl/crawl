@@ -127,7 +127,6 @@ static void _multidrop(vector<SelItem> tmp_items);
 static bool _merge_items_into_inv(item_def &it, int quant_got,
                                   int &inv_slot, bool quiet);
 
-static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
 
 static inline string _autopickup_item_name(const item_def &item)
@@ -760,16 +759,6 @@ void item_list_on_square(vector<const item_def*>& items, int obj)
         items.push_back(& (*si));
 }
 
-bool need_to_autopickup()
-{
-    return will_autopickup;
-}
-
-void request_autopickup(bool do_pickup)
-{
-    will_autopickup = do_pickup;
-}
-
 bool item_is_branded(const item_def& item)
 {
     switch (item.base_type)
@@ -1276,13 +1265,6 @@ bool pickup_single_item(int link, int qty)
     if (item_is_stationary(mitm[link]))
     {
         mpr("You can't pick that up.");
-        return false;
-    }
-    if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
-        && !yesno("Are you sure you want to pick up this pile of gold now?",
-                  true, 'n'))
-    {
-        canned_msg(MSG_OK);
         return false;
     }
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
@@ -2852,20 +2834,6 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
     return _is_option_autopickup(item, ignore_force);
 }
 
-bool can_autopickup()
-{
-    // [ds] Checking for autopickups == 0 is a bad idea because
-    // autopickup is still possible with inscriptions and
-    // pickup_thrown.
-    if (Options.autopickup_on <= 0)
-        return false;
-
-    if (!i_feel_safe())
-        return false;
-
-    return true;
-}
-
 typedef bool (*item_comparer)(const item_def& pickup_item,
                               const item_def& inv_item);
 
@@ -3065,9 +3033,7 @@ static void _do_autopickup()
     int  n_did_pickup   = 0;
     int  n_tried_pickup = 0;
 
-    will_autopickup = false;
-
-    if (!can_autopickup())
+    if (!Options.autopickup_on)
     {
         item_check();
         return;

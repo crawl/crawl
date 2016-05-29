@@ -636,7 +636,7 @@ static bool _is_valid_explore_target(const coord_def& where)
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         LevelStashes *lev = StashTrack.find_current_level();
-        return lev && lev->needs_visit(where, can_autopickup());
+        return lev && lev->needs_visit(where, Options.autopickup_on);
     }
 
     return false;
@@ -1248,7 +1248,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
         if (runmode == RMODE_EXPLORE_GREEDY)
         {
-            autopickup = can_autopickup();
+            autopickup = Options.autopickup_on;
             need_for_greed = autopickup;
         }
     }
@@ -4137,7 +4137,7 @@ void runrest::clear()
 // explore_discoveries
 
 explore_discoveries::explore_discoveries()
-    : can_autopickup(::can_autopickup()),
+    : can_autopickup(Options.autopickup_on),
       es_flags(0),
       current_level(nullptr), items(), stairs(), portals(), shops(), altars(),
       runed_doors()

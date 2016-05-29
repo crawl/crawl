@@ -5338,9 +5338,6 @@ bool enchant_monster_invisible(monster* mon, const string &how)
              how.c_str(),
              is_visible ? " for a moment."
                         : "!");
-
-        if (!is_visible && !mons_is_safe(mon))
-            autotoggle_autopickup(true);
     }
 
     return true;

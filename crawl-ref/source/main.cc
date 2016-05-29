@@ -1393,16 +1393,6 @@ static void _input()
     if (!you_are_delayed())
         set_more_autoclear(false);
 
-    if (need_to_autopickup())
-    {
-        autopickup();
-        if (you.turn_is_over)
-        {
-            world_reacts();
-            return;
-        }
-    }
-
     if (need_to_autoinscribe())
         autoinscribe();
 
@@ -2072,11 +2062,8 @@ void process_command(command_type cmd)
     case CMD_ENABLE_MORE:  crawl_state.show_more_prompt = true;  break;
 
     case CMD_TOGGLE_AUTOPICKUP:
-        if (Options.autopickup_on < 1)
-            Options.autopickup_on = 1;
-        else
-            Options.autopickup_on = 0;
-        mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
+        Options.autopickup_on = !Options.autopickup_on;
+        mprf("Autopickup is now %s.", Options.autopickup_on ? "on" : "off");
         break;
 
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
@@ -2100,7 +2087,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_INSPECT_FLOOR:
-        request_autopickup();
+        autopickup();
         if (player_on_single_stack() && !you.running)
             pickup(true);
         break;
@@ -3515,8 +3502,8 @@ static void _move_player(coord_def move)
 
         you.prev_move = move;
         move.reset();
+        autopickup();
         you.turn_is_over = true;
-        request_autopickup();
     }
 
     // BCR - Easy doors single move

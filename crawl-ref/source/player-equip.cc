@@ -224,9 +224,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_EVASION])
         you.redraw_evasion = true;
 
-    if (proprt[ARTP_SEE_INVISIBLE])
-        autotoggle_autopickup(false);
-
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
@@ -807,7 +804,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_SEE_INVISIBLE:
             mpr("You feel perceptive.");
-            autotoggle_autopickup(false);
             break;
 
         case SPARM_INVISIBILITY:
@@ -1161,11 +1157,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case RING_ICE:
         mpr("You feel more attuned to ice.");
-        break;
-
-    case RING_SEE_INVISIBLE:
-        if (item_type_known(item))
-            autotoggle_autopickup(false);
         break;
 
     case RING_PROTECTION:

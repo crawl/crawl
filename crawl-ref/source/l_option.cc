@@ -36,7 +36,7 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
 static int option_autopick(lua_State *ls, const char *name, void *data,
                            bool get)
 {
-    lua_pushboolean(ls, Options.autopickup_on>0);
+    lua_pushboolean(ls, Options.autopickup_on);
     return 1;
 }
 

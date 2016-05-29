@@ -93,7 +93,6 @@ delay_type get_delay(const string &);
 
 void run_macro(const char *macroname = nullptr);
 
-void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),

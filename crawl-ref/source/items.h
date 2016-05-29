@@ -73,7 +73,6 @@ void destroy_item(int dest, bool never_created = false);
 void lose_item_stack(const coord_def& where);
 
 void item_check();
-void request_autopickup(bool do_pickup = true);
 
 bool player_on_single_stack();
 void pickup_menu(int item_link);
@@ -124,9 +123,6 @@ bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 
 bool item_needs_autopickup(const item_def &, bool ignore_force = false);
-bool can_autopickup();
-
-bool need_to_autopickup();
 void autopickup();
 
 int find_free_slot(const item_def &i);

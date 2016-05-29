@@ -523,10 +523,7 @@ void dec_penance(god_type god, int val)
             if (have_passive(passive_t::bonus_ac))
                  you.redraw_armour_class = true;
             if (have_passive(passive_t::sinv))
-            {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
-                autotoggle_autopickup(false);
-            }
             if (have_passive(passive_t::stat_boost))
             {
                 simple_god_message(" restores the support of your attributes.");
@@ -2369,8 +2366,6 @@ static void _gain_piety_point()
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
         if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
-        if (rank == rank_for_passive(passive_t::sinv))
-            autotoggle_autopickup(false);
         if (rank == rank_for_passive(passive_t::clarity))
         {
             // Inconsistent with donning amulets, but matches the

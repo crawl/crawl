@@ -966,7 +966,7 @@ static void _finish_delay(const delay_queue_item &delay)
             // ...Or, equivalently, if it's the last butcher one.
                 || !_is_butcher_delay(you.delay_queue[1].type)))
         {
-            request_autopickup();
+            autopickup();
         }
         you.turn_is_over = true;
         break;
@@ -1082,7 +1082,6 @@ static command_type _get_running_command()
 static bool _auto_eat(delay_type type)
 {
     return Options.auto_eat_chunks
-           && Options.autopickup_on > 0
            && (!you.gourmand()
                || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED)
@@ -1531,34 +1530,6 @@ static inline bool _monster_warning(activity_interrupt_type ai,
     return true;
 }
 
-// Turns autopickup off if we ran into an invisible monster or saw a monster
-// turn invisible.
-// Turns autopickup on if we saw an invisible monster become visible or
-// killed an invisible monster.
-void autotoggle_autopickup(bool off)
-{
-    if (off)
-    {
-        if (Options.autopickup_on > 0)
-        {
-            Options.autopickup_on = -1;
-            mprf(MSGCH_WARN,
-                 "Deactivating autopickup; reactivate with <w>%s</w>.",
-                 command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
-        }
-        if (crawl_state.game_is_hints())
-        {
-            learned_something_new(HINT_INVISIBLE_DANGER);
-            Hints.hints_seen_invisible = you.num_turns;
-        }
-    }
-    else if (Options.autopickup_on < 0) // was turned off automatically
-    {
-        Options.autopickup_on = 1;
-        mprf(MSGCH_WARN, "Reactivating autopickup.");
-    }
-}
-
 // Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &at,
@@ -1568,12 +1539,6 @@ bool interrupt_activity(activity_interrupt_type ai,
         return false;
 
     const interrupt_block block_recursive_interrupts;
-    if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
-    {
-        const monster* mon = at.mons_data;
-        if (mon && !mon->visible_to(&you) && !mon->submerged())
-            autotoggle_autopickup(true);
-    }
 
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);

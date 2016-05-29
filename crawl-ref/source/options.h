@@ -193,7 +193,7 @@ public:
     // Whether exclusions and exclusion radius are visible in the viewport.
     bool        always_show_exclusions;
 
-    int         autopickup_on;
+    bool        autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
     bool        default_show_all_skills;

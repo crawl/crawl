@@ -1506,11 +1506,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             ash_check_bondage();
             break;
 
-        case MUT_ACUTE_VISION:
-            // We might have to turn autopickup back on again.
-            autotoggle_autopickup(false);
-            break;
-
         case MUT_NIGHTSTALKER:
             update_vision_range();
             break;
