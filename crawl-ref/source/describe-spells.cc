@@ -77,7 +77,7 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
         return "";
     silencable |= type == MON_SPELL_WIZARD || type == MON_SPELL_PRIEST;
     const bool antimagicable
-        = type == MON_SPELL_WIZARD || type == MON_SPELL_PRIEST;
+        = type == MON_SPELL_WIZARD || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
     return make_stringf(" (which are affected by%s%s%s)",
                         silencable ? " silence" : "",
