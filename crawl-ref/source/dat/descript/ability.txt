@@ -784,8 +784,8 @@ Invocations skill.
 Line Pass ability
 
 Passes through a contiguous line of creatures at superhuman speed, ending up
-in a new location. Any creatures passed through in this way may be confused,
-with the chance of confusion increasing with Invocations skill.
+in a new location. Any creatures passed through in this way will be confused
+briefly, with the duration of confusion increasing with Invocations skill.
 %%%%
 Grand Finale ability
 
