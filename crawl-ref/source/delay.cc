@@ -681,13 +681,7 @@ void handle_delay()
     }
     else if (delay.type == DELAY_BLURRY_SCROLL)
     {
-        if (delay.parm2 == 0 && !_can_read_scroll(you.inv[delay.parm1]))
-        {
-            _pop_delay();
-            you.time_taken = 0;
-            return;
-        }
-        else if (delay.parm2 == 1 && !_can_read_scroll(mitm[delay.parm1]))
+        if (!_can_read_scroll(item_from_int(delay.parm2, delay.parm1)))
         {
             _pop_delay();
             you.time_taken = 0;
@@ -955,11 +949,8 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_BLURRY_SCROLL:
         // Make sure the scroll still exists, the player isn't confused, etc
-        if (delay.parm2 == 0 && _can_read_scroll(you.inv[delay.parm1]))
-            read_scroll(you.inv[delay.parm1]);
-        else if (delay.parm2 == 1 && _can_read_scroll(mitm[delay.parm1]))
-            read_scroll(mitm[delay.parm1]);
-
+        if (_can_read_scroll(item_from_int(delay.parm2, delay.parm1)))
+            read_scroll(item_from_int(delay.parm2, delay.parm1));
         break;
 
     case DELAY_BUTCHER:

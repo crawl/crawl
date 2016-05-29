@@ -2655,14 +2655,8 @@ void read(item_def* scroll)
     {
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
-        if (in_inventory(*scroll))
-        {
-            start_delay(DELAY_BLURRY_SCROLL, turns,
-                        letter_to_index(scroll->slot), 0);
-        }
-        else
-            start_delay(DELAY_BLURRY_SCROLL, turns,
-                        scroll->index(), 1);
+        const pair<bool, int> item = item_int(*scroll);
+        start_delay(DELAY_BLURRY_SCROLL, turns, item.second, item.first);
         if (player_mutation_level(MUT_BLURRY_VISION) == 1)
             you.time_taken /= 2;
     }
