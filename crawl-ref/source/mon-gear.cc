@@ -210,8 +210,7 @@ static item_def* make_item_for_monster(
     iflags_t flags = 0);
 
 static void _give_weapon(monster* mon, int level, bool melee_only = false,
-                         bool give_aux_melee = true, bool spectral_orcs = false,
-                         bool merc = false)
+                         bool give_aux_melee = true, bool spectral_orcs = false)
 {
     bool force_item = false;
     bool force_uncursed = false;
@@ -224,7 +223,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     item.base_type = OBJ_UNASSIGNED;
 
-    if (type == MONS_DANCING_WEAPON || merc)
+    if (type == MONS_DANCING_WEAPON)
         level = ISPEC_GOOD_ITEM;
 
     // moved setting of quantity here to keep it in mind {dlb}
@@ -1945,7 +1944,7 @@ static void _give_shield(monster* mon, int level)
     }
 }
 
-static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
+static void _give_armour(monster* mon, int level, bool spectral_orcs)
 {
     item_def               item;
 
@@ -2394,21 +2393,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         break;
 
     default:
-        if (merc) //mercenaries always get something
-            break;
-        else
-            return;
-    }
-
-    if (merc)
-    {
-        level = ISPEC_GOOD_ITEM;
-
-        if (item.base_type == OBJ_UNASSIGNED)
-        {
-            item.base_type = OBJ_ARMOUR;
-            item.sub_type = mons_is_draconian(type) ? ARM_CLOAK : ARM_ROBE;
-        }
+        return;
     }
 
     // Only happens if something in above switch doesn't set it. {dlb}
@@ -2461,7 +2446,7 @@ void give_weapon(monster *mons, int level_number, bool spectral_orcs)
 
 void give_armour(monster *mons, int level_number)
 {
-    _give_armour(mons, 1 + level_number/2, false, false);
+    _give_armour(mons, 1 + level_number/2, false);
 }
 
 void give_shield(monster *mons)
@@ -2469,7 +2454,7 @@ void give_shield(monster *mons)
     _give_shield(mons, -1);
 }
 
-void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs, bool merc)
+void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
@@ -2479,8 +2464,8 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
     _give_book(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
-    _give_weapon(mons, level_number, false, true, spectral_orcs, merc);
+    _give_weapon(mons, level_number, false, true, spectral_orcs);
     _give_ammo(mons, level_number, mons_summoned);
-    _give_armour(mons, 1 + level_number / 2, spectral_orcs, merc);
+    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
     _give_shield(mons, 1 + level_number / 2);
 }
