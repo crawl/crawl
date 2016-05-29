@@ -293,11 +293,6 @@ deck of war
 
 Et spil magiske kort som er nyttige før og under en kamp.
 %%%%
-deck of wonders
-
-Et spil med særdeles mystiske og magiske kort som kan ændre brugerens fysiske
-og mentale tilstand til det bedre eller det værre.
-%%%%
 demon blade
 
 Et grufuldt våben, som er smedet i Helvedes ild. Det bliver endnu mere

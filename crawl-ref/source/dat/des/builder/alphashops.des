@@ -205,7 +205,7 @@
       elseif s == "V" then i = { "scroll of vulnerability" }
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
-       "deck of war", "deck of wonders", "war axe", "staff of wizardry" }
+       "deck of war", "war axe", "staff of wizardry" }
 
       elseif s == "X" then i = { "any" }
 

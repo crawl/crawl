@@ -779,8 +779,7 @@ KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
 ITEM:   potion of experience q:1 / scroll of acquirement q:1 /\
-        scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
-        legendary deck of wonders ident:type
+        scroll of enchant armour q:2 / scroll of enchant weapon q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -967,8 +966,7 @@ SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
             good_item bardiche / good_item executioner's axe
 KITEM:  e = potion of experience q:1 / scroll of acquirement q:1 /\
-            scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
-            legendary deck of wonders ident:type
+            scroll of enchant armour q:2 / scroll of enchant weapon q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
