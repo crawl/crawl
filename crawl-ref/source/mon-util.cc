@@ -2496,7 +2496,7 @@ unique_books get_unique_spells(const monster_info &mi,
             if (mspell_list[msidx].type == book)
                 break;
 
-        vector<spell_type> spells;
+        vector<mon_spell_slot> slots;
 
         // Only prepend the first time; might be misleading if a draconian
         // ever gets multiple sets of natural abilities.
@@ -2505,12 +2505,12 @@ unique_books get_unique_spells(const monster_info &mi,
             const mon_spell_slot breath =
                 drac_breath(mi.draco_or_demonspawn_subspecies());
             if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
-                spells.push_back(breath.spell);
+                slots.push_back(breath);
             // No other spells; quit right away.
             if (book == MST_NO_SPELLS)
             {
-                if (spells.size())
-                    result.push_back(spells);
+                if (slots.size())
+                    result.push_back(slots);
                 return result;
             }
         }
@@ -2524,14 +2524,20 @@ unique_books get_unique_spells(const monster_info &mi,
             if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
                 continue;
 
-            if (find(spells.begin(), spells.end(), slot.spell) == spells.end())
-                spells.push_back(slot.spell);
+            if (none_of(slots.begin(), slots.end(),
+                [&](const mon_spell_slot& oldslot)
+                {
+                    return oldslot.spell == slot.spell;
+                }))
+            {
+                slots.push_back(slot);
+            }
         }
 
-        if (spells.size() == 0)
+        if (slots.size() == 0)
             continue;
 
-        result.push_back(spells);
+        result.push_back(slots);
     }
 
     return result;
