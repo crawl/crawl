@@ -551,8 +551,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_bottle_blood = interrupt_butcher",
         "interrupt_vampire_feed = interrupt_butcher",
-        "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
-        "interrupt_macro = interrupt_multidrop",
+        "interrupt_macro = hp_loss, monster_attack, teleport, stat",
         "interrupt_travel = interrupt_butcher, hungry, hit_monster, "
                             "sense_monster",
         "interrupt_run = interrupt_travel, message",

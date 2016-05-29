@@ -70,8 +70,6 @@
 #include "view.h"
 #include "xom.h"
 
-extern vector<SelItem> items_for_multidrop;
-
 class interrupt_block
 {
 public:
@@ -102,8 +100,7 @@ static bool _is_parent_delay(delay_type delay)
     // including travel; in practise travel still assumes there can be
     // no parent delay.
     return delay_is_run(delay)
-           || delay == DELAY_MACRO
-           || delay == DELAY_MULTIDROP;
+           || delay == DELAY_MACRO;
 }
 
 static int _push_delay(const delay_queue_item &delay)
@@ -221,13 +218,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         // Losing work here is okay... having to start from
         // scratch is a reasonable behaviour. -- bwr
         mpr("Your memorisation is interrupted.");
-        _pop_delay();
-        break;
-
-    case DELAY_MULTIDROP:
-        // No work lost
-        if (!items_for_multidrop.empty())
-            mpr("You stop dropping stuff.");
         _pop_delay();
         break;
 
@@ -659,26 +649,6 @@ void handle_delay()
             return;
         }
     }
-    else if (delay.type == DELAY_MULTIDROP)
-    {
-        // Throw away invalid items. XXX: what are they?
-        while (!items_for_multidrop.empty()
-               // Don't look for gold in inventory
-               && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
-               && !you.inv[items_for_multidrop[0].slot].defined())
-        {
-            items_for_multidrop.erase(items_for_multidrop.begin());
-        }
-
-        if (items_for_multidrop.empty())
-        {
-            // Ran out of things to drop.
-            _pop_delay();
-            you.turn_is_over = false;
-            you.time_taken = 0;
-            return;
-        }
-    }
     else if (delay.type == DELAY_BLURRY_SCROLL)
     {
         if (!_can_read_scroll(item_from_int(delay.parm2, delay.parm1)))
@@ -694,11 +664,10 @@ void handle_delay()
     {
         dprf("Delay type: %d (%s), duration: %d",
              delay.type, delay_name(delay.type), delay.duration);
-        // delay.duration-- *must* be done before multidrop, because
-        // multidrop is now a parent delay, which means other delays
-        // can be pushed to the front of the queue, invalidating the
-        // "delay" reference here, and resulting in tons of debugging
-        // fun with valgrind.
+        // delay.duration-- *must* be done before any parent delays,
+        // since other delay can be pushed to the front of the queue,
+        // invalidating the "delay" reference here, and resulting in
+        // tons of debugging fun with valgrind.
         delay.duration--;
 
         switch (delay.type)
@@ -735,16 +704,6 @@ void handle_delay()
 
         case DELAY_BLURRY_SCROLL:
             mprf(MSGCH_MULTITURN_ACTION, "You continue reading the scroll.");
-            break;
-
-        case DELAY_MULTIDROP:
-            if (!drop_item(items_for_multidrop[0].slot,
-                           items_for_multidrop[0].quantity))
-            {
-                you.turn_is_over = false;
-                you.time_taken = 0;
-            }
-            items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
         case DELAY_EAT:
@@ -980,11 +939,11 @@ static void _finish_delay(const delay_queue_item &delay)
         if (!you.inv[delay.parm1].defined())
             break;
 
-        if (!drop_item(delay.parm1, delay.parm2))
-        {
-            you.turn_is_over = false;
-            you.time_taken = 0;
-        }
+        if (drop_item(delay.parm1, delay.parm2))
+            remove_from_multidrop(delay.parm1);
+        // Dropping the item should take no time.
+        you.turn_is_over = false;
+        you.time_taken = 0;
         break;
 
     case DELAY_ASCENDING_STAIRS:
@@ -1651,7 +1610,7 @@ static const char *delay_names[] =
 #if TAG_MAJOR_VERSION == 34
     "weapon_swap",
 #endif
-    "passwall", "drop_item", "multidrop", "ascending_stairs",
+    "passwall", "drop_item", "ascending_stairs",
     "descending_stairs",
 #if TAG_MAJOR_VERSION == 34
     "recite",

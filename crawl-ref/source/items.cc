@@ -123,6 +123,9 @@ item_def& item_from_int(bool inv, int number)
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
+// We keep this around so that if you get interrupted, the 'd' menu will
+// pre-select the previously-selected items.
+static vector<SelItem> items_for_multidrop;
 static void _multidrop(vector<SelItem> tmp_items);
 static bool _merge_items_into_inv(item_def &it, int quant_got,
                                   int &inv_slot, bool quiet);
@@ -2358,8 +2361,9 @@ bool multiple_items_at(const coord_def& where)
  * @param item_dropped the inventory index of the item to drop
  * @param quant_drop the number of items to drop, -1 to drop the whole stack.
  *
- * @return True if we took time, either because we dropped the item
- *         or because we took a preliminary step (removing a ring, etc.).
+ * @return True if the item was dropped immediately, false if not,
+ *         either because we took a preliminary step (removing a ring, etc.)
+ *         or the drop failed due to a full level/cursed item.
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
@@ -2387,9 +2391,6 @@ bool drop_item(int item_dropped, int quant_drop)
         {
             // The delay handles the case where the item disappeared.
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
-            // We didn't actually succeed yet, but remove_ring took time,
-            // so return true anyway.
-            return true;
         }
 
         return false;
@@ -2417,7 +2418,7 @@ bool drop_item(int item_dropped, int quant_drop)
                     start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
                     // We didn't actually succeed yet, but takeoff_armour
                     // took a turn to start up, so return true anyway.
-                    return true;
+                    return false;
                 }
             }
             return false;
@@ -2432,8 +2433,8 @@ bool drop_item(int item_dropped, int quant_drop)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
             return false;
-        // May have been destroyed by removal. Returning true because we took
-        // time to swap away.
+        // May have been destroyed by removal. Returning true because it left the
+        // inventory.
         else if (!item.defined())
             return true;
     }
@@ -2462,7 +2463,6 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     dec_inv_item_quantity(item_dropped, quant_drop);
-    you.turn_is_over = true;
 
     you.last_pickup.erase(item_dropped);
 
@@ -2524,59 +2524,12 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
     return NUM_MONSTER_SLOTS;
 }
 
-static string _drop_selitem_text(const vector<MenuEntry*> *s)
-{
-    bool extraturns = false;
-
-    if (s->empty())
-        return "";
-
-    for (MenuEntry *entry : *s)
-    {
-        const item_def *item = static_cast<item_def *>(entry->data);
-        const int eq = get_equip_slot(item);
-        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
-        {
-            extraturns = true;
-            break;
-        }
-    }
-
-    return make_stringf(" (%u%s turn%s)",
-               (unsigned int)s->size(),
-               extraturns? "+" : "",
-               s->size() > 1? "s" : "");
-}
-
-vector<SelItem> items_for_multidrop;
-
-// Arrange items that have been selected for multidrop so that
-// equipped items are dropped after other items, and equipped items
-// are dropped in the same order as their EQ_ slots are numbered.
-static bool _drop_item_order(const SelItem &first, const SelItem &second)
-{
-    const item_def &i1 = you.inv[first.slot];
-    const item_def &i2 = you.inv[second.slot];
-
-    const int slot1 = get_equip_slot(&i1),
-              slot2 = get_equip_slot(&i2);
-
-    if (slot1 != -1 && slot2 != -1)
-        return slot1 < slot2;
-    else if (slot1 != -1 && slot2 == -1)
-        return false;
-    else if (slot2 != -1 && slot1 == -1)
-        return true;
-
-    return first.slot < second.slot;
-}
-
 /**
  * Prompts the user for an item to drop.
  */
 void drop()
 {
-    if (inv_count() < 1 && you.gold == 0)
+    if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
@@ -2593,7 +2546,7 @@ void drop()
 
     tmp_items = prompt_invent_items(prompt.c_str(), MT_DROP,
                                      -1, nullptr, true, true, 0,
-                                     &Options.drop_filter, _drop_selitem_text,
+                                     &Options.drop_filter, nullptr,
                                      &items_for_multidrop);
 
     if (tmp_items.empty())
@@ -2607,33 +2560,22 @@ void drop()
 
 static void _multidrop(vector<SelItem> tmp_items)
 {
-    // Sort the dropped items so we don't see weird behaviour when
-    // dropping a worn robe before a cloak (old behaviour: remove
-    // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
-    // cloak).
-    sort(tmp_items.begin(), tmp_items.end(), _drop_item_order);
-
     // If the user answers "no" to an item an with a warning inscription,
     // then remove it from the list of items to drop by not copying it
     // over to items_for_multidrop.
     items_for_multidrop.clear();
     for (SelItem& si : tmp_items)
     {
-        const int item_quant = si.item->quantity;
-
-        // EVIL HACK: Fix item quantity to match the quantity we will drop,
-        // in order to prevent misleading messages when dropping
-        // 15 of 25 arrows inscribed with {!d}.
-        if (si.quantity && si.quantity != item_quant)
-            const_cast<item_def*>(si.item)->quantity = si.quantity;
-
-        // Check if we can add it to the multidrop list.
-        bool warning_ok = check_warning_inscriptions(*(si.item), OPER_DROP);
-
-        // Restore the item quantity if we mangled it.
-        if (item_quant != si.item->quantity)
-            const_cast<item_def*>(si.item)->quantity = item_quant;
-
+        bool warning_ok;
+        {
+            // EVIL HACK: Fix item quantity to match the quantity we will drop,
+            // in order to prevent misleading messages when dropping
+            // 15 of 25 arrows inscribed with {!d}.
+            item_def& item = *const_cast<item_def*>(si.item);
+            unwind_var<item_def> hack(item);
+            item.quantity = si.quantity;
+            warning_ok = check_warning_inscriptions(item, OPER_DROP);
+        }
         if (warning_ok)
             items_for_multidrop.push_back(si);
     }
@@ -2644,13 +2586,23 @@ static void _multidrop(vector<SelItem> tmp_items)
         return;
     }
 
-    if (items_for_multidrop.size() == 1) // only one item
-    {
-        drop_item(items_for_multidrop[0].slot, items_for_multidrop[0].quantity);
-        items_for_multidrop.clear();
-    }
-    else
-        start_delay(DELAY_MULTIDROP, items_for_multidrop.size());
+    vector<int> dropped;
+    for (SelItem& si : items_for_multidrop)
+        if (drop_item(si.slot, si.quantity))
+            dropped.push_back(si.slot);
+
+    for (int slot : dropped)
+        remove_from_multidrop(slot);
+}
+
+// Remove an item from multidrop once it's been successfully dropped.
+void remove_from_multidrop(int slot)
+{
+    erase_if(items_for_multidrop,
+             [=](const SelItem& si)
+             {
+                return si.slot == slot;
+             });
 }
 
 static void _autoinscribe_item(item_def& item)
