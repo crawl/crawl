@@ -3056,6 +3056,8 @@ tileidx_t tileidx_skill(skill_type skill, int train)
                 ch = TILEG_INVOCATIONS_E_ON; break;
             case GOD_FEDHAS:
                 ch = TILEG_INVOCATIONS_F_ON; break;
+            case GOD_HEPLIAKLQANA:
+                ch = TILEG_INVOCATIONS_H_ON; break;
             case GOD_LUGONU:
                 ch = TILEG_INVOCATIONS_L_ON; break;
             case GOD_MAKHLEB:
