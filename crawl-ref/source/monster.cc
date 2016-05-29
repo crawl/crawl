@@ -4749,12 +4749,6 @@ void monster::uglything_mutate(colour_t force_colour)
     uglything_init(true);
 }
 
-void monster::uglything_upgrade()
-{
-    ghost->ugly_thing_to_very_ugly_thing();
-    uglything_init();
-}
-
 // Randomise potential damage.
 static int _estimated_trap_damage(trap_type trap)
 {
