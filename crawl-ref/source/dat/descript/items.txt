@@ -25,11 +25,10 @@ be divided between the wearer's reserves of health and magic.
 %%%%
 amulet of harm
 
-An amulet created to amplify all damage dealt by the wearer. No matter how
-clever the artificer who crafted the amulet, they never seem to be able to
-prevent the amulet from amplifying all damage dealt to the wearer as well,
-albiet to a lesser degree. When the effects of the amulet are severed by
-removing it, the magical backlash significantly drains the wearer.
+An amulet created to amplify all damage dealt by the wearer. As an unfortunate
+side effect, it also amplifies all damage dealt to the wearer, albeit to a
+lesser degree. When the effects of the amulet are severed by removing it, the
+magical backlash significantly drains the wearer.
 %%%%
 amulet of inaccuracy
 
