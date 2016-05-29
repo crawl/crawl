@@ -1843,6 +1843,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                 cast_iood_burst(power/6, beam.target);
         }
         else
+        {
             zapping(ztype, power/6, beam);
             if (venom_vuln)
             {
@@ -1854,6 +1855,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                     you.increase_duration(DUR_POISON_VULN, 10 - power_level * 5 + random2(6), 50);
                 }
             }
+        }
     }
     else if (ztype == ZAP_IOOD && power_level == 2)
     {
