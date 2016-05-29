@@ -39,7 +39,9 @@ enum deck_type
     DECK_OF_DUNGEONS,
 #endif
     DECK_OF_SUMMONING,
+#if TAG_MAJOR_VERSION == 34
     DECK_OF_WONDERS,
+#endif
 };
 
 enum card_flags_type

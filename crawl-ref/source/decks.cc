@@ -91,6 +91,7 @@ deck_archetype deck_of_transport =
     { CARD_SWAP,       {5, 5, 5} },
     { CARD_VELOCITY,   {5, 5, 5} },
     { CARD_SOLITUDE,   {5, 5, 5} },
+    { CARD_SHAFT,      {5, 5, 5} },
 };
 
 deck_archetype deck_of_emergency =
@@ -98,7 +99,6 @@ deck_archetype deck_of_emergency =
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_EXILE,      {0, 1, 2} },
-    { CARD_SHAFT,      {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
     { CARD_ELIXIR,     {5, 5, 5} },
     { CARD_CLOUD,      {5, 5, 5} },
@@ -106,13 +106,14 @@ deck_archetype deck_of_emergency =
 
 deck_archetype deck_of_destruction =
 {
-    { CARD_VITRIOL,  {5, 5, 5} },
-    { CARD_HAMMER,   {5, 5, 5} },
-    { CARD_VENOM,    {5, 5, 5} },
-    { CARD_STORM,    {5, 5, 5} },
-    { CARD_PAIN,     {5, 5, 3} },
-    { CARD_ORB,      {5, 5, 5} },
-    { CARD_DEGEN,    {5, 5, 5} },
+    { CARD_VITRIOL,    {5, 5, 5} },
+    { CARD_HAMMER,     {5, 5, 5} },
+    { CARD_VENOM,      {5, 5, 5} },
+    { CARD_STORM,      {5, 5, 5} },
+    { CARD_PAIN,       {5, 5, 3} },
+    { CARD_ORB,        {5, 5, 5} },
+    { CARD_DEGEN,      {5, 5, 5} },
+    { CARD_WILD_MAGIC, {5, 5, 5} },
 };
 
 deck_archetype deck_of_battle =
@@ -123,6 +124,7 @@ deck_archetype deck_of_battle =
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
     { CARD_FORTITUDE,     {5, 5, 5} },
+    { CARD_DOWSING,       {3, 3, 3} },
 };
 
 deck_archetype deck_of_summoning =
@@ -138,6 +140,7 @@ deck_archetype deck_of_summoning =
     { CARD_WATER,           {5, 5, 5} },
 };
 
+#if TAG_MAJOR_VERSION == 34
 deck_archetype deck_of_wonders =
 {
     { CARD_WILD_MAGIC,        {5, 5, 5} },
@@ -145,7 +148,6 @@ deck_archetype deck_of_wonders =
     { CARD_ALCHEMIST,         {5, 5, 5} },
 };
 
-#if TAG_MAJOR_VERSION == 34
 deck_archetype deck_of_dungeons =
 {
     { CARD_WATER,     {5, 5, 5} },
@@ -207,10 +209,12 @@ static map<misc_item_type, deck_type_data> all_decks =
         "summoning",
         5, { &deck_of_summoning }
     } },
+#if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_WONDERS, {
         "wonders",
-        5, { &deck_of_wonders }
+        0, { &deck_of_wonders }
     } },
+#endif
     { MISC_DECK_OF_ODDITIES, {
         "oddities",
         0, { &deck_of_oddities }
@@ -225,7 +229,7 @@ static map<misc_item_type, deck_type_data> all_decks =
     } },
     { MISC_DECK_OF_CHANGES, {
         "changes",
-        5, { &deck_of_battle, &deck_of_wonders }
+        5, { &deck_of_battle, &deck_of_transport }
     } },
     { MISC_DECK_OF_DEFENCE, {
         "defence",

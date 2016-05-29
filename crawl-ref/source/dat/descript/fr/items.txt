@@ -429,11 +429,6 @@ deck of war
 
 Un paquet de cartes magiques, utile avant et pendant la bataille.
 %%%%
-deck of wonders
-
-Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
-l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
-%%%%
 demon blade
 
 Une arme terrible, forgée dans les flammes de l'Enfer.

@@ -404,11 +404,6 @@ deck of war
 
 A deck of magical cards which are useful before and during battle.
 %%%%
-deck of wonders
-
-A deck of highly mysterious and magical cards, which can alter the user's
-physical and mental condition, for better or worse.
-%%%%
 demon blade
 
 A terrible weapon, forged in the fires of Hell.
