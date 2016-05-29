@@ -198,7 +198,6 @@ Drawing this card causes wild magic (as if from miscasting a spell) to act upon
 its user's enemies. Each creature affected will restore some of the user's
 magic.
 %%%%
-# deck of summonings
 the Crusade card
 
 The card depicts a winged soldier with a flaming sword, leading a vast army.

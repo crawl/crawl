@@ -406,11 +406,6 @@ decaying skeleton
 
 Un squelette en décomposition.
 %%%%
-deck of defence
-
-Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
-dangers par divers moyens.
-%%%%
 deck of destruction
 
 Un paquet de cartes magiques, dont la plupart provoque la mort et la
@@ -419,11 +414,6 @@ destruction des ennemis (ou, par malchance, à soi-même).
 deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
-%%%%
-deck of summonings
-
-Un paquet de cartes magiques, représentant un éventail de créatures étranges et
-merveilleux.
 %%%%
 deck of war
 

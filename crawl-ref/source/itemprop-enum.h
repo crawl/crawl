@@ -234,14 +234,11 @@ enum misc_item_type
 #endif
     MISC_DISC_OF_STORMS,
 
-    // pure decks
     MISC_DECK_OF_ESCAPE,
     MISC_DECK_OF_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_DUNGEONS,
-#endif
     MISC_DECK_OF_SUMMONING,
-#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_WONDERS,
 #endif
 #if TAG_MAJOR_VERSION > 34
@@ -249,12 +246,11 @@ enum misc_item_type
 #endif
     MISC_DECK_OF_PUNISHMENT,
 
-    // mixed decks
     MISC_DECK_OF_WAR,
+#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_CHANGES,
     MISC_DECK_OF_DEFENCE,
 
-#if TAG_MAJOR_VERSION == 34
     MISC_RUNE_OF_ZOT,
 #endif
 
@@ -277,14 +273,13 @@ enum misc_item_type
 // in no particular order (but we need *a* fixed order for dbg-scan)
 const vector<misc_item_type> deck_types =
 {
-    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION, MISC_DECK_OF_SUMMONING,
+    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
-    MISC_DECK_OF_WONDERS,
+    MISC_DECK_OF_SUMMONING, MISC_DECK_OF_WONDERS,
 #endif
     MISC_DECK_OF_ODDITIES, MISC_DECK_OF_PUNISHMENT, MISC_DECK_OF_WAR,
-    MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE,
 #if TAG_MAJOR_VERSION == 34
-    MISC_DECK_OF_DUNGEONS,
+    MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE, MISC_DECK_OF_DUNGEONS,
 #endif
 };
 
