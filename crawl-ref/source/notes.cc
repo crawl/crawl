@@ -109,7 +109,6 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_FOCUS_CARD
         || note.type == NOTE_ANCESTOR_TYPE
         || note.type == NOTE_ANCESTOR_DEATH
         || note.type == NOTE_ANCESTOR_SPECIALIZATION)
@@ -354,10 +353,6 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Offered knowledge of "
                    << spell_title(static_cast<spell_type>(first))
                    << " by Vehumet.";
-            break;
-        case NOTE_FOCUS_CARD:
-            result << "Drew Focus: " << name << " increased to " << first << ", "
-                   << desc << " decreased to " << second;
             break;
         case NOTE_ANCESTOR_TYPE:
             result << "Remembered your ancestor " << hepliaklqana_ally_name()

@@ -140,11 +140,8 @@ deck_archetype deck_of_summoning =
 
 deck_archetype deck_of_wonders =
 {
-    { CARD_FOCUS,             {3, 3, 3} },
-    { CARD_HELIX,             {3, 4, 5} },
     { CARD_WILD_MAGIC,        {5, 5, 5} },
     { CARD_DOWSING,           {5, 5, 5} },
-    { CARD_MERCENARY,         {5, 5, 5} },
     { CARD_ALCHEMIST,         {5, 5, 5} },
 };
 
@@ -166,8 +163,6 @@ deck_archetype deck_of_oddities =
     { CARD_FEAST,   {5, 5, 5} },
     { CARD_FAMINE,  {5, 5, 5} },
     { CARD_CURSE,   {5, 5, 5} },
-    { CARD_HELIX,   {5, 5, 5} },
-    { CARD_FOCUS,   {5, 5, 5} },
 };
 
 deck_archetype deck_of_punishment =
@@ -343,8 +338,10 @@ const char* card_name(card_type card)
     case CARD_BLADE:           return "the Blade";
     case CARD_SHADOW:          return "the Shadow";
     case CARD_POTION:          return "the Potion";
+#if TAG_MAJOR_VERSION == 34
     case CARD_FOCUS:           return "Focus";
     case CARD_HELIX:           return "the Helix";
+#endif
     case CARD_DOWSING:         return "Dowsing";
     case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
@@ -379,7 +376,9 @@ const char* card_name(card_type card)
     case CARD_SWINE:           return "the Swine";
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
+#if TAG_MAJOR_VERSION == 34
     case CARD_MERCENARY:       return "the Mercenary";
+#endif
     case CARD_ILLUSION:        return "the Illusion";
     case CARD_DEGEN:           return "Degeneration";
     case NUM_CARDS:            return "a buggy card";
@@ -2058,128 +2057,6 @@ static void _potion_card(int power, deck_rarity_type rarity)
 
 }
 
-static void _focus_card(int power, deck_rarity_type rarity)
-{
-    stat_type best_stat = STAT_STR;
-    stat_type worst_stat = STAT_STR;
-
-    for (int i = 1; i < 3; ++i)
-    {
-        stat_type s = static_cast<stat_type>(i);
-        const int best_diff = you.base_stats[s] - you.base_stats[best_stat];
-        if (best_diff > 0 || best_diff == 0 && coinflip())
-            best_stat = s;
-
-        const int worst_diff = you.base_stats[s] - you.base_stats[worst_stat];
-        if (worst_diff < 0 || worst_diff == 0 && coinflip())
-            worst_stat = s;
-    }
-
-    while (best_stat == worst_stat)
-    {
-        best_stat  = static_cast<stat_type>(random2(3));
-        worst_stat = static_cast<stat_type>(random2(3));
-    }
-
-    modify_stat(best_stat, 1, false);
-    modify_stat(worst_stat, -1, false);
-
-    const char* stats[3] = { "Str", "Int", "Dex" };
-    take_note(Note(NOTE_FOCUS_CARD, you.base_stats[best_stat], you.base_stats[worst_stat],
-              stats[best_stat], stats[worst_stat]));
-}
-
-static void _remove_bad_mutation()
-{
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, "helix card", false, false, false, true))
-        mpr("You feel transcendent for a moment.");
-}
-
-static void _helix_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-
-    if (power_level == 0)
-    {
-        switch (how_mutated() ? random2(3) : 0)
-        {
-        case 0:
-            mutate(RANDOM_MUTATION, "helix card");
-            break;
-        case 1:
-            delete_mutation(RANDOM_MUTATION, "helix card");
-            mutate(RANDOM_MUTATION, "helix card");
-            break;
-        case 2:
-            delete_mutation(RANDOM_MUTATION, "helix card");
-            break;
-        }
-    }
-    else if (power_level == 1)
-    {
-        switch (how_mutated() ? random2(3) : 0)
-        {
-        case 0:
-            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
-                   "helix card");
-            break;
-        case 1:
-            if (coinflip())
-                _remove_bad_mutation();
-            else
-                delete_mutation(RANDOM_MUTATION, "helix card");
-            break;
-        case 2:
-            if (coinflip())
-            {
-                if (coinflip())
-                {
-                    _remove_bad_mutation();
-                    mutate(RANDOM_MUTATION, "helix card");
-                }
-                else
-                {
-                    delete_mutation(RANDOM_MUTATION, "helix card");
-                    mutate(RANDOM_GOOD_MUTATION, "helix card");
-                }
-            }
-            else
-            {
-                delete_mutation(RANDOM_MUTATION, "helix card");
-                mutate(RANDOM_MUTATION, "helix card");
-            }
-            break;
-        }
-    }
-    else
-    {
-        switch (random2(3))
-        {
-        case 0:
-            _remove_bad_mutation();
-            break;
-        case 1:
-            mutate(RANDOM_GOOD_MUTATION, "helix card");
-            break;
-        case 2:
-            if (coinflip())
-            {
-                // If you get unlucky, you could get here with no bad
-                // mutations and simply get a mutation effect. Oh well.
-                _remove_bad_mutation();
-                mutate(RANDOM_MUTATION, "helix card");
-            }
-            else
-            {
-                delete_mutation(RANDOM_MUTATION, "helix card");
-                mutate(RANDOM_GOOD_MUTATION, "helix card");
-            }
-            break;
-        }
-    }
-}
-
 static void _dowsing_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2549,87 +2426,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
     }
 }
 
-static void _mercenary_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    const monster_type merctypes[] =
-    {
-        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
-        MONS_TENGU, MONS_DEEP_ELF_MAGE, MONS_ORC_KNIGHT,
-        RANDOM_BASE_DEMONSPAWN, MONS_OGRE_MAGE, MONS_MINOTAUR,
-        RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
-    };
-
-    int merc;
-    monster *mon;
-    bool hated = player_mutation_level(MUT_NO_LOVE);
-
-    while (1)
-    {
-        merc = power_level + random2(3 * (power_level + 1));
-        ASSERT(merc < (int)ARRAYSZ(merctypes));
-
-        mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
-                    0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
-
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        // This is a bit of a hack to use give_monster_proper_name to feed
-        // the mgen_data, but it gets the job done.
-        monster tempmon;
-        tempmon.type = merctypes[merc];
-        if (give_monster_proper_name(&tempmon, false))
-            mg.mname = tempmon.mname;
-        else
-            mg.mname = make_name();
-        // This is used for giving the merc better stuff in mon-gear.
-        mg.props["mercenary items"] = true;
-
-        mon = create_monster(mg);
-
-        if (!mon)
-        {
-            mpr("You see a puff of smoke.");
-            return;
-        }
-
-        // always hostile, don't try to find a good one
-        if (hated)
-            break;
-        if (player_will_anger_monster(mon))
-        {
-            dprf("God %s doesn't like %s, retrying.",
-            god_name(you.religion).c_str(), mon->name(DESC_THE).c_str());
-            monster_die(mon, KILL_RESET, NON_MONSTER);
-            continue;
-        }
-        else
-            break;
-    }
-
-    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
-
-    redraw_screen(); // We want to see the monster while it's asking to be paid.
-
-    if (hated)
-    {
-        simple_monster_message(mon, " is unwilling to work for you!");
-        return;
-    }
-
-    const int fee = fuzz_value(exper_value(mon), 15, 15);
-    if (fee > you.gold)
-    {
-        mprf("You cannot afford %s fee of %d gold!",
-             mon->name(DESC_ITS).c_str(), fee);
-        simple_monster_message(mon, " attacks!");
-        return;
-    }
-
-    mon->props["mercenary_fee"] = fee;
-    run_uncancel(UNC_MERCENARY, mon->mid);
-}
-
+#if TAG_MAJOR_VERSION == 34
 bool recruit_mercenary(int mid)
 {
     monster *mon = monster_by_mid(mid);
@@ -2662,6 +2459,7 @@ bool recruit_mercenary(int mid)
     you.del_gold(fee);
     return true;
 }
+#endif
 
 static void _alchemist_card(int power, deck_rarity_type rarity)
 {
@@ -3010,8 +2808,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_BLADE:            _blade_card(power, rarity); break;
     case CARD_SHADOW:           _shadow_card(power, rarity); break;
     case CARD_POTION:           _potion_card(power, rarity); break;
-    case CARD_FOCUS:            _focus_card(power, rarity); break;
-    case CARD_HELIX:            _helix_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
@@ -3031,7 +2827,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_BANSHEE:          _banshee_card(power, rarity); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
-    case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
     case CARD_CLOUD:            _cloud_card(power, rarity); break;
     case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
@@ -3085,6 +2880,9 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_ANIMAL:
     case CARD_SUMMON_SKELETON:
     case CARD_PLACID_MAGIC:
+    case CARD_FOCUS:
+    case CARD_HELIX:
+    case CARD_MERCENARY:
         mpr("This type of card no longer exists!");
         break;
 #endif
