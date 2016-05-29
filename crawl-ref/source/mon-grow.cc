@@ -98,11 +98,6 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
             hit_points     = min(hit_points, max_hit_points);
         }
     }
-
-    // An ugly thing is the only ghost demon monster that can level up.
-    // If one has leveled up to a very ugly thing, upgrade it properly.
-    if (type == MONS_VERY_UGLY_THING)
-        uglything_upgrade();
 }
 
 bool monster::level_up_change()
