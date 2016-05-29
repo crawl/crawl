@@ -216,14 +216,6 @@ static int l_item_do_drop(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    int eq = get_equip_slot(item);
-    if (eq >= 0 && eq < NUM_EQUIP)
-    {
-        lua_pushboolean(ls, false);
-        lua_pushstring(ls, "Can't drop worn items");
-        return 2;
-    }
-
     int qty = item->quantity;
     if (lua_isnumber(ls, 1))
     {
