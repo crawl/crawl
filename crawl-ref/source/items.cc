@@ -1007,9 +1007,6 @@ void pickup_menu(int item_link)
         mpr(pickup_warning);
         learned_something_new(HINT_FULL_INVENTORY);
     }
-
-    if (n_did_pickup)
-        you.turn_is_over = true;
 }
 
 bool origin_known(const item_def &item)
@@ -1775,8 +1772,6 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         // quantity before firing the position event, because the latter needs
         // the object's index.
         dec_mitm_item_quantity(obj, quant_got);
-
-        you.turn_is_over = true;
     }
 
     return keep_going;
@@ -3067,7 +3062,6 @@ static bool _interesting_explore_pickup(const item_def& item)
 
 static void _do_autopickup()
 {
-    bool did_pickup     = false;
     int  n_did_pickup   = 0;
     int  n_tried_pickup = 0;
 
@@ -3111,7 +3105,6 @@ static void _do_autopickup()
 
             if (pickup_result)
             {
-                did_pickup = true;
                 if (interesting_pickup)
                     n_did_pickup++;
             }
@@ -3128,9 +3121,6 @@ static void _do_autopickup()
 
     if (!pickup_warning.empty())
         mpr(pickup_warning);
-
-    if (did_pickup)
-        you.turn_is_over = true;
 
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
