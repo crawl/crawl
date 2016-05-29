@@ -2377,7 +2377,7 @@ void random_uselessness()
     }
 }
 
-static void _handle_read_book(item_def* book)
+static void _handle_read_book(item_def& book)
 {
     if (you.berserk())
     {
@@ -2391,18 +2391,17 @@ static void _handle_read_book(item_def* book)
         return;
     }
 
-    //item_def& book = item;
-    ASSERT(book->sub_type != BOOK_MANUAL);
+    ASSERT(book.sub_type != BOOK_MANUAL);
 
 #if TAG_MAJOR_VERSION == 34
-    if (book->sub_type == BOOK_BUGGY_DESTRUCTION)
+    if (book.sub_type == BOOK_BUGGY_DESTRUCTION)
     {
         mpr("This item has been removed, sorry!");
         return;
     }
 #endif
 
-    read_book(*book);
+    read_book(book);
 }
 
 static void _vulnerability_scroll()
@@ -2617,7 +2616,7 @@ void read(item_def* scroll)
 
     if (scroll->base_type == OBJ_BOOKS)
     {
-        _handle_read_book(scroll);
+        _handle_read_book(*scroll);
         return;
     }
 
@@ -2668,7 +2667,7 @@ void read(item_def* scroll)
             you.time_taken /= 2;
     }
     else
-        read_scroll(scroll);
+        read_scroll(*scroll);
 }
 
 /**
@@ -2679,11 +2678,10 @@ void read(item_def* scroll)
  * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
  * player chooses to cancel at the last moment.
  *
- * @param slot      The slot of the item in the player's inventory.
+ * @param scroll The scroll to be read.
  */
-void read_scroll(item_def* item)
+void read_scroll(item_def& scroll)
 {
-    item_def& scroll = *item;
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
     const bool alreadyknown = item_type_known(scroll);
@@ -3172,7 +3170,7 @@ void tile_item_use(int idx)
             if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
             {
                 if (check_warning_inscriptions(item, OPER_READ))
-                    _handle_read_book(&you.inv[idx]);
+                    _handle_read_book(you.inv[idx]);
             } // else it's a spellbook
             else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(); // offers all spells, might not be what we want
