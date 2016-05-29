@@ -18,7 +18,7 @@ struct mon_spellbook
     vector<mon_spell_slot> spells;
 };
 
-typedef vector<vector<spell_type> > unique_books;
+typedef vector<vector<mon_spell_slot>> unique_books;
 
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon);
 unique_books get_unique_spells(const monster_info &mon,

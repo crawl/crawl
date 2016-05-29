@@ -163,11 +163,11 @@ LUAFN(moninf_get_spells)
 
     for (size_t i = 0; i < num_books; ++i)
     {
-        const vector<spell_type> &unique_spells = books[i];
+        const vector<mon_spell_slot> &unique_slots = books[i];
         vector<string> spell_titles;
 
-        for (const spell_type spell : unique_spells)
-            spell_titles.emplace_back(spell_title(spell));
+        for (const auto& slot : unique_slots)
+            spell_titles.emplace_back(spell_title(slot.spell));
 
         clua_stringtable(ls, spell_titles);
         lua_rawseti(ls, -2, i+1);
