@@ -116,7 +116,7 @@ void UseItemMenu::populate_list(int item_type)
 void UseItemMenu::populate_menu()
 {
     // Load the inv items first, they have a hotkey
-    MenuEntry *me = new MenuEntry("Inv Items", MEL_TITLE, 0, 0, false);
+    MenuEntry *me = new MenuEntry("Inventory Items", MEL_TITLE, 0, 0, false);
     add_entry(me);
     load_items(item_inv, 0, 0, false);
 
