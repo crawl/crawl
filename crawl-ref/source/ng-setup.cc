@@ -3,6 +3,7 @@
 #include "ng-setup.h"
 
 #include "ability.h"
+#include "adjust.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "end.h"
@@ -481,6 +482,26 @@ static void _setup_generic(const newgame_def& ng)
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
+
+    // Leave the a/b slots open so if the first thing you pick up is a weapon,
+    // you can use ' to swap between your items.
+    for (const auto entry : map<job_type, char>(
+                                { { JOB_EARTH_ELEMENTALIST, 'a' },
+                                  { JOB_ARCANE_MARKSMAN, 'b' } }))
+    {
+        if (you.char_class == entry.first)
+        {
+            for (int slot = 0; slot < ENDOFPACK; ++slot)
+            {
+                if (!you.inv[slot].defined())
+                {
+                    swap_inv_slots(letter_to_index(entry.second),
+                                   slot, false);
+                    break;
+                }
+            }
+        }
+    }
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
