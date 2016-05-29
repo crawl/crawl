@@ -25,9 +25,11 @@ be divided between the wearer's reserves of health and magic.
 %%%%
 amulet of harm
 
-An amulet containing a spirit that somewhat increases all damage dealt to its
-wearer, while increasing all damage dealt by a greater degree. Removing the
-amulet will cause the spirit to drain the wearer.
+An amulet created to amplify all damage dealt by the wearer. No matter how
+clever the artificer who crafted the amulet, they never seem to be able to
+prevent the amulet from amplifying all damage dealt to the wearer as well,
+albiet to a lesser degree. When the effects of the amulet are severed by
+removing it, the magical backlash significantly drains the wearer.
 %%%%
 amulet of inaccuracy
 
