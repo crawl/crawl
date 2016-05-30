@@ -280,6 +280,12 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  0, passive_t::identify_devices, "GOD identifies your wands and rods" },
         {  1, passive_t::bottle_mp, "GOD collects and distills excess magic from your kills" },
     },
+    
+    // Uskayaw
+    { },
+
+    // Hepliaklqana
+    { },
 };
 
 bool have_passive(passive_t passive)
