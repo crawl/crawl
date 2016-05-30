@@ -3093,7 +3093,6 @@ bool player_can_join_god(god_type which_god)
     if (player_mutation_level(MUT_NO_LOVE)
         && (which_god == GOD_BEOGH
             ||  which_god == GOD_JIYVA
-            ||  which_god == GOD_ELYVILON
             ||  which_god == GOD_HEPLIAKLQANA))
     {
         return false;
@@ -3720,7 +3719,6 @@ void god_pitch(god_type which_god)
         }
         else if (player_mutation_level(MUT_NO_LOVE)
                  && (which_god == GOD_BEOGH
-                     || which_god == GOD_ELYVILON
                      || which_god == GOD_JIYVA
                      || which_god == GOD_HEPLIAKLQANA))
         {
