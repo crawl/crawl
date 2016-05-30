@@ -598,7 +598,7 @@ static const ability_def Ability_List[] =
     { ABIL_UKAYAW_STOMP, "Stomp",
         3, 0, 100, generic_cost::fixed(20), {FAIL_INVO}, abflag::NONE },
     { ABIL_UKAYAW_LINE_PASS, "Line Pass",
-        4, 0, 200, generic_cost::fixed(40), {FAIL_INVO}, abflag::NONE},
+        4, 0, 200, generic_cost::fixed(30), {FAIL_INVO}, abflag::NONE},
     { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
         8, 0, 500, generic_cost::fixed(0),
         {FAIL_INVO, 120 + piety_breakpoint(4), 5, 1}, abflag::NONE},
