@@ -173,22 +173,15 @@ void UseItemMenu::populate_menu()
  * items in inventory, then items on the floor. If player cancels out of menu,
  * nullptr is returned.
  *
- * @param object_class_type     The desired command which will decide item types.
- *                              OBJ_POTIONS and OBJ_SCROLLS are valid.
+ * @param object_class_type The object class or OSEL_* of items to list.
+ * @param oper The operation being done to the selected item.
  *
- * @return                      A chosen item_def*, or nullptr.
+ * @return a pointer to the chosen item, or nullptr if none was chosen.
  */
 
-static item_def* _use_an_item(int item_type)
+static item_def* _use_an_item(int item_type, operation_types oper)
 {
     item_def* target = nullptr;
-    // What is player trying to do? Assign oper based on item_type.
-    operation_types oper;
-    switch (item_type)
-    {
-        case OBJ_POTIONS: oper = OPER_QUAFF;
-        case OBJ_SCROLLS: oper = OPER_READ;
-    }
 
     // First handle things that will return nullptr
 
@@ -1862,7 +1855,7 @@ void drink(item_def* potion)
 
     if (!potion)
     {
-        potion = _use_an_item(OBJ_POTIONS);
+        potion = _use_an_item(OBJ_POTIONS, OPER_QUAFF);
 
         if (!potion)
         {
@@ -2648,7 +2641,7 @@ void read(item_def* scroll)
 
     if (!scroll)
     {
-        scroll = _use_an_item(OBJ_SCROLLS);
+        scroll = _use_an_item(OBJ_SCROLLS, OPER_READ);
         if (!scroll)
         {
             int slot = PROMPT_ABORT;
