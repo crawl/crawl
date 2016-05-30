@@ -1005,7 +1005,7 @@ static const mutation_def mut_data[] =
 { MUT_ICEMAIL, 0, 1, mutflag::GOOD, false,
   "icemail",
 
-  {"A meltable icy envelope protects you from harm (AC +", "", ""},
+  {"A meltable icy envelope protects you from harm. (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 },
