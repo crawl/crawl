@@ -1102,17 +1102,32 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
  *
  * @param selector          A object_selector.
  * @param excluded_slot     An item slot to ignore.
+ * @param inspect_floor     If true, also check the floor where the player is
+ *                          standing.
+ *
  * @return                  Whether there are any items matching the given
  *                          selector in the player's inventory.
  */
-bool any_items_of_type(int selector, int excluded_slot)
+bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 {
-    return any_of(begin(you.inv), end(you.inv),
+    bool ret = any_of(begin(you.inv), end(you.inv),
                   [=] (const item_def &item) -> bool
                   {
                       return item.defined() && item.link != excluded_slot
                           && item_is_selected(item, selector);
                   });
+    if (!ret && inspect_floor)
+    {
+        vector<const item_def*> item_floor;
+        item_list_on_square(item_floor, you.visible_igrd(you.pos()));
+        ret = any_of(begin(item_floor), end(item_floor),
+                      [=] (const item_def* item) -> bool
+                      {
+                          return item->defined()
+                                    && item_is_selected(*item, selector);
+                      });
+    }
+    return ret;
 }
 
 // Use title = nullptr for stock Inventory title
@@ -1354,7 +1369,7 @@ vector<SelItem> prompt_invent_items(
     return items;
 }
 
-static int _digit_to_index(char digit, operation_types oper)
+int digit_inscription_to_inv_index(char digit, operation_types oper)
 {
     const char iletter = static_cast<char>(oper);
 
@@ -1886,7 +1901,7 @@ int prompt_invent_item(const char *prompt,
         else if (count == nullptr && isadigit(keyin))
         {
             // scan for our item
-            int res = _digit_to_index(keyin, oper);
+            int res = digit_inscription_to_inv_index(keyin, oper);
             if (res != -1)
             {
                 ret = res;

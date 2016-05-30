@@ -186,7 +186,7 @@ protected:
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool item_is_selected(const item_def &item, int selector);
-bool any_items_of_type(int type_expect, int excluded_slot = -1);
+bool any_items_of_type(int type_expect, int excluded_slot = -1, bool inspect_floor = false);
 string no_selectables_message(int item_selector);
 
 string slot_description();
@@ -247,4 +247,5 @@ bool item_is_evokable(const item_def &item, bool reach = true,
 bool nasty_stasis(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
+int digit_inscription_to_inv_index(char digit, operation_types oper);
 #endif
