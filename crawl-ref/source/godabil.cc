@@ -6618,7 +6618,7 @@ bool ukayaw_line_pass()
     // query for location:
     int range = 8;
     int invo_skill = you.skill(SK_INVOCATIONS);
-    int pow = (10 + invo_skill + random2(invo_skill));
+    int pow = (25 + invo_skill + random2(invo_skill));
     dist beam;
     bolt line_pass;
     line_pass.thrower = KILL_YOU;
