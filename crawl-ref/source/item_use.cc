@@ -115,44 +115,53 @@ void UseItemMenu::populate_list(int item_type)
 
 void UseItemMenu::populate_menu()
 {
-    // Load the inv items first, they have a hotkey
-    MenuEntry *me = new MenuEntry("Inventory Items", MEL_TITLE, 0, 0, false);
-    add_entry(me);
-    load_items(item_inv, 0, 0, false);
-
     // Need a tracker for inv item hotkeys and floor item hotkeys
     set<char> used_keys;
 
-    // Remove inventory item hotkeys from the tracker
-    for (MenuEntry *entry : items)
-        if (!entry->hotkeys.empty())
-            used_keys.insert(char(entry->hotkeys[0]));
-
-    // Load floor items to menu
-    me = new MenuEntry("Floor Items", MEL_TITLE, 0, 0, false);
-    add_entry(me);
-
-    load_items(item_floor, 0, 0, false);
-
-    menu_letter hotkey;
-    // Go through each menu item
-    for (MenuEntry* entry : items)
+    // Load the inv items first, they have a hotkey
+    if (!item_inv.empty())
     {
-        // Make an InvEntry out of it
-        auto ie = dynamic_cast<InvEntry *>(entry);
-        // If this is an inventory item, leave its hotkeys alone
-        if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
+        add_entry(new MenuEntry("Inventory Items", MEL_TITLE, 0, 0, false));
+
+        load_items(item_inv, 0, 0, false);
+
+        // Remove inventory item hotkeys from the tracker
+        for (MenuEntry *entry : items)
+            if (!entry->hotkeys.empty())
+                used_keys.insert(char(entry->hotkeys[0]));
+    }
+
+    if (!item_floor.empty())
+    {
+        // Load floor items to menu
+        add_entry(new MenuEntry("Floor Items", MEL_TITLE, 0, 0, false));
+
+        load_items(item_floor, 0, 0, false);
+
+        menu_letter hotkey;
+        // Go through each menu item
+        for (MenuEntry* entry : items)
         {
-            while (used_keys.count(hotkey))
+            // Make an InvEntry out of it
+            auto ie = dynamic_cast<InvEntry *>(entry);
+            // If this is an inventory item, leave its hotkeys alone
+            if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
             {
-                // Remove it from used_keys, so the second time through
-                // we re-use all letters, inventory or not.
-                used_keys.erase(hotkey);
-                ++hotkey;
+                while (used_keys.count(hotkey))
+                {
+                    // Remove it from used_keys, so the second time through
+                    // we re-use all letters, inventory or not.
+                    used_keys.erase(hotkey);
+                    ++hotkey;
+                }
+                entry->hotkeys[0] = hotkey++;
             }
-            entry->hotkeys[0] = hotkey++;
         }
     }
+
+    if (item_inv.empty() && item_floor.empty())
+        add_entry(new MenuEntry("No Items", MEL_TITLE, 0, 0, false));
+
     return;
 }
 
