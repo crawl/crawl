@@ -79,6 +79,7 @@ public:
 
     void populate_list(int item_type);
     void populate_menu();
+    bool process_key(int key) override;
 
     // Constructor
     // Requires int for item filter.
@@ -163,6 +164,16 @@ void UseItemMenu::populate_menu()
         add_entry(new MenuEntry("No Items", MEL_TITLE, 0, 0, false));
 
     return;
+}
+
+bool UseItemMenu::process_key(int key)
+{
+    if (isadigit(key) || key == '*' || key == '\\')
+    {
+        lastch = key;
+        return false;
+    }
+    return Menu::process_key(key);
 }
 
 /*
