@@ -4563,7 +4563,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             return 0;
 
         // Apply damage multipliers for amulet of harm
-        if (amount != INSTANT_DEATH) {
+        if (amount != INSTANT_DEATH)
+        {
             // +30% damage when the opponent has harm
             if (agent && agent->extra_harm())
                 amount = amount * 13 / 10;
@@ -6149,9 +6150,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
     }
 
-    if (has_ench(ENCH_PAIN_BOND)) {
+    if (has_ench(ENCH_PAIN_BOND))
         radiate_pain_bond(this, damage);
-    }
 
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
