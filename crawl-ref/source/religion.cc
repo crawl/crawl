@@ -299,11 +299,11 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Pakellas will now supercharge a wand or rod... once.",
            "Pakellas is no longer ready to supercharge a wand or rod." },
     },
-    // Ukayaw
+    // Uskayaw
     {
-      { 1, ABIL_UKAYAW_STOMP, "stomp with the beat" },
-      { 2, ABIL_UKAYAW_LINE_PASS, "pass through a line of other dancers" },
-      { 5, ABIL_UKAYAW_GRAND_FINALE, "merge with and destroy a victim" },
+      { 1, ABIL_USKAYAW_STOMP, "stomp with the beat" },
+      { 2, ABIL_USKAYAW_LINE_PASS, "pass through a line of other dancers" },
+      { 5, ABIL_USKAYAW_GRAND_FINALE, "merge with and destroy a victim" },
     },
 
     // Hepliaklqana
@@ -1889,20 +1889,20 @@ bool do_god_gift(bool forced)
             }
             break;
 
-        case GOD_UKAYAW:
-            // Ukayaw's triggered abilities trigger if you set the timer to -1.
+        case GOD_USKAYAW:
+            // Uskayaw's triggered abilities trigger if you set the timer to -1.
             // We do this so that we trigger at the end of the round instead of
             // at the time we deal damage.
             if (you.piety == piety_breakpoint(2)
-                && you.props[UKAYAW_AUDIENCE_TIMER].get_int() == 0)
+                && you.props[USKAYAW_AUDIENCE_TIMER].get_int() == 0)
             {
-                you.props[UKAYAW_AUDIENCE_TIMER] = -1;
+                you.props[USKAYAW_AUDIENCE_TIMER] = -1;
                 success = true;
             }
             else if (you.piety == piety_breakpoint(3)
-                && you.props[UKAYAW_BOND_TIMER].get_int() == 0)
+                && you.props[USKAYAW_BOND_TIMER].get_int() == 0)
             {
-                you.props[UKAYAW_BOND_TIMER] = -1;
+                you.props[USKAYAW_BOND_TIMER] = -1;
                 success = true;
             }
             else
@@ -2095,7 +2095,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_PAKELLAS:      return "Pakellas";
-    case GOD_UKAYAW:        return "Ukayaw";
+    case GOD_USKAYAW:        return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
@@ -3249,7 +3249,7 @@ static void _apply_monk_bonus()
     // monks get bonus piety for first god
     if (you_worship(GOD_RU))
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-    else if (you_worship(GOD_UKAYAW))  // Gaining piety past this point does nothing
+    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false); // of value with this god and looks weird.
     else
         gain_piety(35, 1, false);
@@ -4132,8 +4132,8 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
-        case GOD_UKAYAW:
-            // We handle Ukayaw elsewhere because this func gets called rarely
+        case GOD_USKAYAW:
+            // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
             // These gods do not lose piety over time.
@@ -4196,7 +4196,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTCYAN;
 
     case GOD_DITHMENOS:
-    case GOD_UKAYAW:
+    case GOD_USKAYAW:
         return MAGENTA;
 
     case GOD_QAZLAL:
@@ -4293,7 +4293,7 @@ colour_t god_message_altar_colour(god_type god)
     case GOD_PAKELLAS:
         return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
 
-    case GOD_UKAYAW:
+    case GOD_USKAYAW:
         return random_choose(RED, MAGENTA);
 
     case GOD_HEPLIAKLQANA:

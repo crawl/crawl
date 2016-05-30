@@ -429,8 +429,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_RU;
     case DNGN_ALTAR_PAKELLAS:
         return TILE_DNGN_ALTAR_PAKELLAS;
-    case DNGN_ALTAR_UKAYAW:
-        return TILE_DNGN_ALTAR_UKAYAW;
+    case DNGN_ALTAR_USKAYAW:
+        return TILE_DNGN_ALTAR_USKAYAW;
     case DNGN_ALTAR_HEPLIAKLQANA:
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
     case DNGN_ALTAR_ECUMENICAL:
@@ -3068,7 +3068,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
                 ch = TILEG_INVOCATIONS_Q_ON; break;
             case GOD_SIF_MUNA:
                 ch = TILEG_INVOCATIONS_S_ON; break;
-            case GOD_UKAYAW:
+            case GOD_USKAYAW:
                 ch = TILEG_INVOCATIONS_U_ON; break;
             case GOD_YREDELEMNUL:
                 ch = TILEG_INVOCATIONS_Y_ON; break;

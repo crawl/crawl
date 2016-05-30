@@ -119,7 +119,7 @@ KFEAT:  R = altar_gozag
 KFEAT:  S = altar_qazlal
 KFEAT:  U = altar_ru
 KFEAT:  V = altar_pakellas
-KFEAT:  W = altar_ukayaw
+KFEAT:  W = altar_uskayaw
 KMONS:  X = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 KFEAT:  Y = altar_hepliaklqana

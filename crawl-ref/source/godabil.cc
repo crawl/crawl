@@ -6594,7 +6594,7 @@ static int _get_stomped(monster* mons)
     return 1;
 }
 
-bool ukayaw_stomp()
+bool uskayaw_stomp()
 {
     mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
@@ -6604,7 +6604,7 @@ bool ukayaw_stomp()
     return true;
 }
 
-bool ukayaw_line_pass()
+bool uskayaw_line_pass()
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6738,7 +6738,7 @@ bool ukayaw_line_pass()
     return true;
 }
 
-bool ukayaw_grand_finale()
+bool uskayaw_grand_finale()
 {
     ASSERT(!crawl_state.game_is_arena());
 

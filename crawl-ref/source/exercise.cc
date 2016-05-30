@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include "ability.h"
-#include "godabil.h" // for UKAYAW_DID_DANCE_ACTION
+#include "godabil.h" // for USKAYAW_DID_DANCE_ACTION
 #include "itemprop.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -276,7 +276,7 @@ void practise(exer_type ex, int param1)
     }
 
     // Doing a second switch to reduce code duplication
-    // If we did an action that's plausibly an attack, we might gain Ukayaw
+    // If we did an action that's plausibly an attack, we might gain Uskayaw
     // piety, assuming monsters were also damaged.
     // We handle melee attacks in melee_attack::player_exercise_combat_skills()
     // because it only calls practice() sometimes.
@@ -290,7 +290,7 @@ void practise(exer_type ex, int param1)
         case EX_WILL_THROW_MSL:
         case EX_WILL_LAUNCH:
         case EX_WILL_STAB:
-            you.props[UKAYAW_DID_DANCE_ACTION] = true;
+            you.props[USKAYAW_DID_DANCE_ACTION] = true;
         default:
             break;
     }

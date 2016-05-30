@@ -419,10 +419,10 @@ enum ability_type
     ABIL_PAKELLAS_QUICK_CHARGE,
     ABIL_PAKELLAS_SUPERCHARGE,
 
-    // Ukayaw
-    ABIL_UKAYAW_STOMP = 1240,
-    ABIL_UKAYAW_LINE_PASS,
-    ABIL_UKAYAW_GRAND_FINALE,
+    // Uskayaw
+    ABIL_USKAYAW_STOMP = 1240,
+    ABIL_USKAYAW_LINE_PASS,
+    ABIL_USKAYAW_GRAND_FINALE,
 
     // Hepliaklqana
     ABIL_HEPLIAKLQANA_RECALL = 1250,
@@ -1322,7 +1322,7 @@ enum conduct_type
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
     DID_CHANNEL,                          // Pakellas
-    DID_HURT_FOE,                         // Ukayaw
+    DID_HURT_FOE,                         // Uskayaw
     NUM_CONDUCTS
 };
 
@@ -1698,7 +1698,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
     DNGN_ALTAR_PAKELLAS,
-    DNGN_ALTAR_UKAYAW,
+    DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
     DNGN_ALTAR_ECUMENICAL,
 #endif
@@ -1766,7 +1766,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHADOW_DORMANT,
     DNGN_ALTAR_ECUMENICAL,
     DNGN_ALTAR_PAKELLAS,
-    DNGN_ALTAR_UKAYAW,
+    DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
 #endif
 
@@ -2242,7 +2242,7 @@ enum god_type
     GOD_QAZLAL,
     GOD_RU,
     GOD_PAKELLAS,
-    GOD_UKAYAW,
+    GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
     NUM_GODS,                          // always after last god
 

@@ -379,26 +379,26 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
-// Ukawyaw piety decays incredibly fast, but only to a baseline level of *.
-// Using Ukayaw abilities can still take you under *.
-static void _handle_ukayaw_piety(int time_taken)
+// Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
+// Using Uskayaw abilities can still take you under *.
+static void _handle_uskayaw_piety(int time_taken)
 {
-    if (you.props[UKAYAW_DID_DANCE_ACTION].get_bool()
-            && you.props[UKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
+    if (you.props[USKAYAW_DID_DANCE_ACTION].get_bool()
+            && you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
     {
-        int num_hurt = you.props[UKAYAW_NUM_MONSTERS_HURT];
-        int hurt_val = you.props[UKAYAW_MONSTER_HURT_VALUE];
+        int num_hurt = you.props[USKAYAW_NUM_MONSTERS_HURT];
+        int hurt_val = you.props[USKAYAW_MONSTER_HURT_VALUE];
         int piety_gain = max(num_hurt, stepdown_value(hurt_val, 5, 10, 20, 40));
 
         gain_piety(piety_gain);
-        you.props[UKAYAW_AUT_SINCE_PIETY_GAIN] = 0;
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = 0;
     }
     else if (you.piety > piety_breakpoint(0))
     {
         // If we didn't do a dance action and we can lose piety, we're going
         // to lose piety proportional to the time since the last time we took
         // a dance action and hurt a monster.
-        int time_since_gain = you.props[UKAYAW_AUT_SINCE_PIETY_GAIN].get_int();
+        int time_since_gain = you.props[USKAYAW_AUT_SINCE_PIETY_GAIN].get_int();
 
         int piety_lost = min(you.piety - piety_breakpoint(0),
                 div_rand_round(time_since_gain, 10));
@@ -406,21 +406,21 @@ static void _handle_ukayaw_piety(int time_taken)
         if (piety_lost > 0)
             lose_piety(piety_lost);
 
-        you.props[UKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain + time_taken;
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain + time_taken;
     }
 
-    // Re-initialize Ukayaw piety variables
-    you.props[UKAYAW_DID_DANCE_ACTION] = false;
-    you.props[UKAYAW_NUM_MONSTERS_HURT] = 0;
-    you.props[UKAYAW_MONSTER_HURT_VALUE] = 0;
+    // Re-initialize Uskayaw piety variables
+    you.props[USKAYAW_DID_DANCE_ACTION] = false;
+    you.props[USKAYAW_NUM_MONSTERS_HURT] = 0;
+    you.props[USKAYAW_MONSTER_HURT_VALUE] = 0;
 }
 
-static void _handle_ukayaw_time(int time_taken)
+static void _handle_uskayaw_time(int time_taken)
 {
-    _handle_ukayaw_piety(time_taken);
+    _handle_uskayaw_piety(time_taken);
 
-    int audience_timer = you.props[UKAYAW_AUDIENCE_TIMER].get_int();
-    int bond_timer = you.props[UKAYAW_BOND_TIMER].get_int();
+    int audience_timer = you.props[USKAYAW_AUDIENCE_TIMER].get_int();
+    int bond_timer = you.props[USKAYAW_BOND_TIMER].get_int();
 
     // For the timered abilities, if we set the timer to -1, that means we
     // need to trigger the abilities this turn. Otherwise we'll decrement the
@@ -429,18 +429,18 @@ static void _handle_ukayaw_time(int time_taken)
     if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
             && x_chance_in_y(time_taken, time_taken * 10 + audience_timer)))
     {
-        ukayaw_prepares_audience();
+        uskayaw_prepares_audience();
     }
     else
-        you.props[UKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
+        you.props[USKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
     if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
             && x_chance_in_y(time_taken, time_taken * 10 + bond_timer)))
     {
-        ukayaw_bonds_audience();
+        uskayaw_bonds_audience();
     }
     else
-        you.props[UKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
+        you.props[USKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
 }
 
 /**
@@ -472,8 +472,8 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
-    if (you_worship(GOD_UKAYAW))
-        _handle_ukayaw_time(you.time_taken);
+    if (you_worship(GOD_USKAYAW))
+        _handle_uskayaw_time(you.time_taken);
 }
 
 static bool _check_recite()

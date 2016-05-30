@@ -201,7 +201,7 @@ KFEAT:    s = altar_qazlal
 KFEAT:    t = altar_gozag
 KFEAT:    u = altar_ru
 KFEAT:    v = altar_pakellas
-KFEAT:    w = altar_ukayaw
+KFEAT:    w = altar_uskayaw
 KFEAT:    y = altar_hepliaklqana
 : line_setup(_G)
 : lua_marker('~', props_marker {

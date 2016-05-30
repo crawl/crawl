@@ -1370,9 +1370,9 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 }
 
 /**
- * check if the monster in this cell exists and is a valid target for Ukayaw
+ * check if the monster in this cell exists and is a valid target for Uskayaw
  */
-static int _check_for_ukayaw_targets(coord_def where)
+static int _check_for_uskayaw_targets(coord_def where)
 {
     if (!cell_has_valid_target(where))
         return 0;
@@ -1413,20 +1413,20 @@ static int _prepare_audience(coord_def where)
  * On hitting *** piety, all the monsters are paralysed by their appreciation
  * for your dance.
  */
-void ukayaw_prepares_audience()
+void uskayaw_prepares_audience()
 {
-    int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
+    int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 0)
     {
-        mprf(MSGCH_GOD, "Ukayaw prepares the audience for your solo!");
+        mprf(MSGCH_GOD, "Uskayaw prepares the audience for your solo!");
         apply_area_visible(_prepare_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability
         // via piety loss and gain. Timer is in AUT.
-        you.props[UKAYAW_AUDIENCE_TIMER] = 300 + random2(201);
+        you.props[USKAYAW_AUDIENCE_TIMER] = 300 + random2(201);
     }
     else // Reset the timer because we didn't actually execute.
-        you.props[UKAYAW_AUDIENCE_TIMER] = 0;
+        you.props[USKAYAW_AUDIENCE_TIMER] = 0;
 }
 
 /**
@@ -1453,18 +1453,18 @@ static int _bond_audience(coord_def where)
 /**
  * On hitting **** piety, all the monsters are pain bonded.
  */
-void ukayaw_bonds_audience()
+void uskayaw_bonds_audience()
 {
-    int count = apply_area_visible(_check_for_ukayaw_targets, you.pos());
+    int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 1)
     {
-        mprf(MSGCH_GOD, "Ukayaw links your audience in an emotional bond!");
+        mprf(MSGCH_GOD, "Uskayaw links your audience in an emotional bond!");
         apply_area_visible(_bond_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability
         // via piety loss and gain. Timer is in AUT.
-        you.props[UKAYAW_BOND_TIMER] = 300 + random2(201);
+        you.props[USKAYAW_BOND_TIMER] = 300 + random2(201);
     }
     else // Reset the timer because we didn't actually execute.
-        you.props[UKAYAW_BOND_TIMER] = 0;
+        you.props[USKAYAW_BOND_TIMER] = 0;
 }
