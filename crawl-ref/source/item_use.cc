@@ -215,9 +215,10 @@ static item_def* _use_an_item(int item_type, operation_types oper)
                 prompt_failed(PROMPT_ABORT);
                 return nullptr;
             }
+            break;
         }
         else if (sel.empty())
-            return nullptr;
+            return nullptr; // TODO: handle keys like \ and *
         else
         {
             ASSERT(sel.size() == 1);
@@ -230,6 +231,7 @@ static item_def* _use_an_item(int item_type, operation_types oper)
                 prompt_failed(PROMPT_ABORT);
                 return nullptr;
             }
+            break;
         }
     }
 
