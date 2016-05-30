@@ -1118,8 +1118,7 @@ bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
                   });
     if (!ret && inspect_floor)
     {
-        vector<const item_def*> item_floor;
-        item_list_on_square(item_floor, you.visible_igrd(you.pos()));
+        auto item_floor = item_list_on_square(you.visible_igrd(you.pos()));
         ret = any_of(begin(item_floor), end(item_floor),
                       [=] (const item_def* item) -> bool
                       {
