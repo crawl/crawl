@@ -179,7 +179,7 @@ void UseItemMenu::populate_menu()
  * @return                      A chosen item_def*, or nullptr.
  */
 
-item_def* _use_an_item(int item_type)
+static item_def* _use_an_item(int item_type)
 {
     item_def* target = nullptr;
     // What is player trying to do? Assign oper based on item_type.
