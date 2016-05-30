@@ -237,7 +237,8 @@ static const mutation_type _all_scales[] =
     MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
-    MUT_YELLOW_SCALES,
+    MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
+    MUT_SANGUINE_ARMOUR,
 };
 
 static bool _is_covering(mutation_type mut)
