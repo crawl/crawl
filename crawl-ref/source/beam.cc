@@ -3355,11 +3355,12 @@ bool bolt::misses_player()
 
     bool train_shields_more = false;
 
+    const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
         && you.shielded()
         && !aimed_at_feet
-        && player_shield_class() > 0)
+        && SH > 0)
     {
         // We use the original to-hit here.
         // (so that effects increasing dodge chance don't increase block...?)
@@ -3371,8 +3372,7 @@ bool bolt::misses_player()
         // 50% chance of blocking ench-type effects at 20 displayed sh
         const bool omnireflected
             = hit == AUTOMATIC_HIT
-              && x_chance_in_y(player_shield_class(),
-                               player_shield_class() + 40);
+              && x_chance_in_y(SH, omnireflect_chance_denom(SH));
 
         dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
         if ((testhit < block && hit != AUTOMATIC_HIT) || omnireflected)
@@ -6700,4 +6700,19 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
            && beam.origin_spell != SPELL_CHAIN_LIGHTNING
            && (mons_atts_aligned(victim->attitude, origin_attitude)
                || victim->neutral());
+}
+
+/**
+ * Given some shield value, what is the chance that omnireflect will activate
+ * on an AUTOMATIC_HIT attack?
+ *
+ * E.g., if 40 is returned, there is a SH in 40 chance of a given attack being
+ * reflected.
+ *
+ * @param SH        The SH (shield) value of the omnireflect user.
+ * @return          A denominator to the chance of omnireflect activating.
+ */
+int omnireflect_chance_denom(int SH)
+{
+    return SH + 40;
 }

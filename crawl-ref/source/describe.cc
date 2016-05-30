@@ -16,6 +16,7 @@
 #include <string>
 
 #include "adjust.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
@@ -1283,6 +1284,15 @@ static string _describe_ammo(const item_def &item)
     return description;
 }
 
+static string _warlock_mirror_reflect_desc()
+{
+    const int SH = crawl_state.need_save ? player_shield_class() : 0;
+    const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
+    return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
+           "% chance to reflect enchantments and other normally unblockable "
+           "effects.";
+}
+
 static string _describe_armour(const item_def &item, bool verbose)
 {
     string description;
@@ -1310,6 +1320,9 @@ static string _describe_armour(const item_def &item, bool verbose)
                 else
                     description += "\n";
             }
+
+            if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
+                description += _warlock_mirror_reflect_desc();
         }
         else
         {
