@@ -1415,7 +1415,7 @@ void uskayaw_prepares_audience()
     int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 0)
     {
-        mprf(MSGCH_GOD, "Uskayaw prepares the audience for your solo!");
+        simple_god_message(" prepares the audience for your solo!");
         apply_area_visible(_prepare_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability
@@ -1452,7 +1452,7 @@ void uskayaw_bonds_audience()
     int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 1)
     {
-        mprf(MSGCH_GOD, "Uskayaw links your audience in an emotional bond!");
+        simple_god_message(" links your audience in an emotional bond!");
         apply_area_visible(_bond_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability
