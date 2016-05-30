@@ -181,19 +181,57 @@ void UseItemMenu::populate_menu()
 
 item_def* _use_an_item(int item_type)
 {
+    item_def* target = nullptr;
+    // What is player trying to do? Assign oper based on item_type.
+    operation_types oper;
+    switch (item_type)
+    {
+        case OBJ_POTIONS: oper = OPER_QUAFF;
+        case OBJ_SCROLLS: oper = OPER_READ;
+    }
+
+    // First handle things that will return nullptr
+
+    // No selectable items in inv or floor
+    if (!any_items_of_type(item_type, 0, true))
+    {
+        mprf(MSGCH_PROMPT, "%s",
+             no_selectables_message(item_type).c_str());
+        return nullptr;
+    }
+
     // Init the menu
     UseItemMenu menu (item_type);
 
-    vector<MenuEntry*> sel = menu.show(true);
-    redraw_screen();
+    while (true)
+    {
+         vector<MenuEntry*> sel = menu.show(true);
+        redraw_screen();
 
-    if (sel.empty())
-        return nullptr;
+        // Handle inscribed item keys
+        if (isadigit(menu.getkey()))
+        {
+            target = &item_from_int(true,
+                                    digit_inscription_to_inv_index(
+                                    menu.getkey(),oper));
+            break;
+        }
 
-    ASSERT(sel.size() == 1);
+        if (sel.empty())
+            return nullptr;
 
-    auto ie = dynamic_cast<InvEntry *>(sel[0]);
-    item_def* target = const_cast<item_def*>(ie->item);
+        ASSERT(sel.size() == 1);
+
+        auto ie = dynamic_cast<InvEntry *>(sel[0]);
+        target = const_cast<item_def*>(ie->item);
+
+        // Check for a warning. If player says no, return nullptr with a message.
+        if (!check_warning_inscriptions(*target, oper))
+        {
+            prompt_failed(PROMPT_ABORT);
+            return nullptr;
+        }
+    }
 
     return target;
 }
