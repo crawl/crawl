@@ -569,14 +569,15 @@ struct item_def
     /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
-    /// Index in the mitm array of the next item in the stack. NON_ITEM for
-    /// the last item in a stack. For items in player inventory, instead
-    /// the index into you.inv. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
+    /// For floor items, index in the mitm array of the next item in the
+    /// pile. NON_ITEM for the last item in a pile. For items in player
+    /// inventory, instead the index into you.inv. For items in monster
+    /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
+    /// equal to ITEM_IN_SHOP.
     short  link;
-    // Inventory letter of the item. For items in player inventory, equal
-    // to index_to_letter(link). For other items, equal to the slot letter
-    // the item had when it was last in player inventory.
+    /// Inventory letter of the item. For items in player inventory, equal
+    /// to index_to_letter(link). For other items, equal to the slot letter
+    /// the item had when it was last in player inventory.
     short  slot;
 
     level_id orig_place;
