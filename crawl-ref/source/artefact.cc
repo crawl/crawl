@@ -542,10 +542,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
     {
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS; // they already have slaying!
-        case ARTP_POISON:
-        case ARTP_SEE_INVISIBLE:
-            return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
-            // naga already have rPois & sInv!
         case ARTP_CORRODE:
             return !extant_props[ARTP_RCORR];
         case ARTP_RCORR:

@@ -440,11 +440,8 @@ tileidx_t tilep_equ_boots(const item_def &item)
             return tile;
     }
 
-    if (item.sub_type == ARM_NAGA_BARDING)
-        return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
-
-    if (item.sub_type == ARM_CENTAUR_BARDING)
-        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
+    if (item.sub_type == ARM_BARDING)
+        return TILEP_BOOTS_BARDING + min(etype, 3);
 
     if (item.sub_type != ARM_BOOTS)
         return 0;

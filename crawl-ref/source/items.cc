@@ -3469,8 +3469,7 @@ colour_t item_def::armour_colour() const
     {
         case ARM_CLOAK:
             return WHITE;
-        case ARM_NAGA_BARDING:
-        case ARM_CENTAUR_BARDING:
+        case ARM_BARDING:
             return GREEN;
         case ARM_ROBE:
             return RED;
