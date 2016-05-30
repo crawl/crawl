@@ -8,7 +8,9 @@ inv := menu_colour
 # Djinn can eat, but most foodstuff is useless.
 inv += $inedible:.*useless_item.*carrion.*
 
-inv += $forbidden:.*forbidden.*
+# Other forbidden foods are handled in menu_colors.txt, where they
+# will be overridden by "useless" and "inedible".
+inv += $forbidden:.*forbidden.*corpse
 
 inv += $preferred:.*preferred.*
 
