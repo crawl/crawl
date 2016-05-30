@@ -390,8 +390,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     // We also check the ground
-    vector<const item_def*> items;
-    item_list_on_square(items, you.visible_igrd(you.pos()));
+    auto items = item_list_on_square(you.visible_igrd(you.pos()));
 
     for (const item_def *bptr : items)
     {

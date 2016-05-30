@@ -106,7 +106,7 @@ void UseItemMenu::populate_list(int item_type)
                 item_inv.push_back(&item);
     }
     // Load floor items
-    item_list_on_square(item_floor, you.visible_igrd(you.pos()));
+    item_floor = item_list_on_square(you.visible_igrd(you.pos()));
     // Filter
     erase_if(item_floor, [=](const item_def* item)
     {

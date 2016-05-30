@@ -752,10 +752,12 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in mitm.
  * @param exclude_stationary If true, don't include stationary items.
 */
-void item_list_on_square(vector<const item_def*>& items, int obj)
+vector<const item_def*> item_list_on_square(int obj)
 {
+    vector<const item_def*> items;
     for (stack_iterator si(obj); si; ++si)
         items.push_back(& (*si));
+    return items;
 }
 
 bool need_to_autopickup()
@@ -838,9 +840,7 @@ void item_check()
 
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
-    vector<const item_def*> items;
-
-    item_list_on_square(items, you.visible_igrd(you.pos()));
+    auto items = item_list_on_square(you.visible_igrd(you.pos()));
 
     if (items.empty())
         return;
@@ -938,8 +938,7 @@ void pickup_menu(int item_link)
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
-    vector<const item_def*> items;
-    item_list_on_square(items, item_link);
+    auto items = item_list_on_square(item_link);
     ASSERT(items.size());
 
     string prompt = "Pick up what? " + slot_description()
