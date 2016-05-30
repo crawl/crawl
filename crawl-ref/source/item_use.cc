@@ -198,31 +198,38 @@ static item_def* _use_an_item(int item_type, operation_types oper)
 
     while (true)
     {
-         vector<MenuEntry*> sel = menu.show(true);
+        vector<MenuEntry*> sel = menu.show(true);
         redraw_screen();
 
         // Handle inscribed item keys
         if (isadigit(menu.getkey()))
         {
-            target = &item_from_int(true,
-                                    digit_inscription_to_inv_index(
-                                    menu.getkey(),oper));
-            break;
+            int idx = digit_inscription_to_inv_index(menu.getkey(), oper);
+            // No such item.
+            if (idx < 0)
+                return nullptr;
+
+            target = &item_from_int(true, idx);
+            if (!check_warning_inscriptions(*target, oper))
+            {
+                prompt_failed(PROMPT_ABORT);
+                return nullptr;
+            }
         }
-
-        if (sel.empty())
+        else if (sel.empty())
             return nullptr;
-
-        ASSERT(sel.size() == 1);
-
-        auto ie = dynamic_cast<InvEntry *>(sel[0]);
-        target = const_cast<item_def*>(ie->item);
-
-        // Check for a warning. If player says no, return nullptr with a message.
-        if (!check_warning_inscriptions(*target, oper))
+        else
         {
-            prompt_failed(PROMPT_ABORT);
-            return nullptr;
+            ASSERT(sel.size() == 1);
+
+            auto ie = dynamic_cast<InvEntry *>(sel[0]);
+            target = const_cast<item_def*>(ie->item);
+
+            if (!check_warning_inscriptions(*target, oper))
+            {
+                prompt_failed(PROMPT_ABORT);
+                return nullptr;
+            }
         }
     }
 
