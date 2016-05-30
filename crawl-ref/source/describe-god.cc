@@ -88,7 +88,7 @@ static string _describe_favour(god_type which_god)
         return uppercase_first(describe_xom_favour());
 
     const int rank = which_god == GOD_GOZAG ? _gold_level() :
-                     which_god == GOD_UKAYAW ? _invocations_level() :
+                     which_god == GOD_USKAYAW ? _invocations_level() :
                      _piety_level(you.piety);
 
     const string godname = god_name(which_god);
@@ -217,7 +217,7 @@ static const char *divine_title[][8] =
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
 
-    // Ukayaw -- reveler theme
+    // Uskayaw -- reveler theme
     {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
         "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
 
@@ -232,7 +232,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_UKAYAW)
+    else if (which_god == GOD_USKAYAW)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];

@@ -458,7 +458,7 @@ pakellas0 DNGN_ALTAR_PAKELLAS
 pakellas1
 pakellas2
 pakellas3
-ukayaw DNGN_ALTAR_UKAYAW
+uskayaw DNGN_ALTAR_USKAYAW
 hep DNGN_ALTAR_HEPLIAKLQANA
 unknown DNGN_UNKNOWN_ALTAR
 

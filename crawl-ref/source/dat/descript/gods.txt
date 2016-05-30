@@ -170,14 +170,14 @@ to see their spellbooks burn. In return, worshippers of Trog gain the ability
 to go berserk at will in combat, and will be granted gifts of powerful weapons.
 Followers are absolutely forbidden the use of spell magic.
 %%%%
-Ukayaw
+Uskayaw
 
-Ukayaw the Reveler is a god of ecstatic dance. On the surface, Ukayaw
+Uskayaw the Reveler is a god of ecstatic dance. On the surface, Uskayaw
 appreciates many forms of worship, but in the dungeon most worshippers stick to
-the dance of combat. Ukayaw appreciates the passion and rhythm of combat,
+the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
 rewarding followers for each strike they deliver and for the damage they deal
-their foes. The longer the dance continues, the greater powers Ukayaw offers.
-When the dance ends, Ukayaw quickly loses interest.
+their foes. The longer the dance continues, the greater powers Uskayaw offers.
+When the dance ends, Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
@@ -405,14 +405,14 @@ powerful raging allies. Eventually, Trog will gift followers with weapons
 focused on damage.
 %%%%
 %%%%
-Ukayaw powers
+Uskayaw powers
 
-Ukayaw offers powers that help worshippers continue the dance. Worshippers can
+Uskayaw offers powers that help worshippers continue the dance. Worshippers can
 stomp to damage foes around them and rapidly move through a line of creatures
-while confusing them. When a worshipper's dance reaches a certain point, Ukayaw
+while confusing them. When a worshipper's dance reaches a certain point, Uskayaw
 will freeze all foes so that the dancer may take a solo. If the dance continues,
-Ukayaw will link the emotions of foes, forcing them to share their pain. If the
-dance continues, Ukayaw allows you to end it by melding with and then violently
+Uskayaw will link the emotions of foes, forcing them to share their pain. If the
+dance continues, Uskayaw allows you to end it by melding with and then violently
 exploding a foe, killing it instantly.
 %%%%
 Vehumet powers
@@ -602,11 +602,11 @@ by berserkers – from packs of bears to, for the most powerful, mobs of giants
 and trolls. Their bodies decay, slow, and collapse – and sometimes, they're
 just blasted by Trog's fiery rage directly.
 %%%%
-Ukayaw wrath
+Uskayaw wrath
 
-Ukayaw's wrath turns the powers of the dance against the offender. The
+Uskayaw's wrath turns the powers of the dance against the offender. The
 prude will find their foes going berserk and will be forced to helplessly watch
-as foes execute their own solos. When the dance is getting too slow, Ukayaw will
+as foes execute their own solos. When the dance is getting too slow, Uskayaw will
 attempt to bring more revelers.
 %%%%
 Vehumet wrath

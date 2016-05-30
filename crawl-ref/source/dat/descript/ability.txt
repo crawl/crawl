@@ -773,7 +773,7 @@ sacrifices while there is an existing offer still extended.
 Each consecutive rejection increases the sacrifice timer significantly.
 Accepting a sacrifice will reset the timer to the standard length.
 %%%%
-# Ukayaw
+# Uskayaw
 Stomp ability
 
 Stomps down in time with the rhythm of the dance, sending a shockwave through
@@ -793,7 +793,7 @@ Merges with a target emotionally and physically, and then bursts forth from
 them, violently splitting them apart and killing them instantly. This ability
 becomes easier to use as the worshipper's piety and Invocations skill increase.
 
-More violent Ukayaw sects consider their members not to be true worshippers
+More violent Uskayaw sects consider their members not to be true worshippers
 until they have performed this rite.
 %%%%
 Renounce Religion ability

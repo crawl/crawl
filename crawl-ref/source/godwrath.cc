@@ -83,7 +83,7 @@ static const char *_god_wrath_adjectives[] =
     "adversity",        // Qazlal
     "disappointment",   // Ru
     "progress",         // Pakellas
-    "fury",             // Ukayaw
+    "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
@@ -1756,9 +1756,9 @@ static bool _choose_hostile_monster(const monster* mon)
 }
 
 
-static bool _ukayaw_retribution()
+static bool _uskayaw_retribution()
 {
-    const god_type god = GOD_UKAYAW;
+    const god_type god = GOD_USKAYAW;
 
     // check if we have monsters around
     monster* mon = nullptr;
@@ -1840,7 +1840,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
-    case GOD_UKAYAW:        do_more = _ukayaw_retribution(); break;
+    case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

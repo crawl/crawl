@@ -42,12 +42,12 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
-#define UKAYAW_AUDIENCE_TIMER "ukayaw_audience_timer"
-#define UKAYAW_BOND_TIMER "ukayaw_bond_timer"
-#define UKAYAW_DID_DANCE_ACTION "ukayaw_did_dance_action"
-#define UKAYAW_NUM_MONSTERS_HURT "ukayaw_num_monsters_hurt"
-#define UKAYAW_MONSTER_HURT_VALUE "ukayaw_monster_hurt_value"
-#define UKAYAW_AUT_SINCE_PIETY_GAIN "ukayaw_aut_since_piety_gain"
+#define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
+#define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
+#define USKAYAW_DID_DANCE_ACTION "uskayaw_did_dance_action"
+#define USKAYAW_NUM_MONSTERS_HURT "uskayaw_num_monsters_hurt"
+#define USKAYAW_MONSTER_HURT_VALUE "uskayaw_monster_hurt_value"
+#define USKAYAW_AUT_SINCE_PIETY_GAIN "uskayaw_aut_since_piety_gain"
 
 struct bolt;
 class stack_iterator;
@@ -171,9 +171,9 @@ bool pakellas_check_quick_charge(bool quiet);
 int pakellas_effective_hex_power(int pow);
 bool pakellas_device_surge();
 
-bool ukayaw_stomp();
-bool ukayaw_line_pass();
-bool ukayaw_grand_finale();
+bool uskayaw_stomp();
+bool uskayaw_line_pass();
+bool uskayaw_grand_finale();
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 bool hepliaklqana_specialize_ancestor(int specialization);

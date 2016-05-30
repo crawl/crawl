@@ -278,7 +278,7 @@ void shadow_monster_reset(monster *mon);
 void dithmenos_shadow_melee(actor* target);
 void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
-void ukayaw_prepares_audience();
-void ukayaw_bonds_audience();
+void uskayaw_prepares_audience();
+void uskayaw_bonds_audience();
 
 #endif

@@ -594,12 +594,12 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
-    // Ukayaw
-    { ABIL_UKAYAW_STOMP, "Stomp",
+    // Uskayaw
+    { ABIL_USKAYAW_STOMP, "Stomp",
         3, 0, 100, generic_cost::fixed(20), {FAIL_INVO}, abflag::NONE },
-    { ABIL_UKAYAW_LINE_PASS, "Line Pass",
+    { ABIL_USKAYAW_LINE_PASS, "Line Pass",
         4, 0, 200, generic_cost::fixed(30), {FAIL_INVO}, abflag::NONE},
-    { ABIL_UKAYAW_GRAND_FINALE, "Grand Finale",
+    { ABIL_USKAYAW_GRAND_FINALE, "Grand Finale",
         8, 0, 500, generic_cost::fixed(0),
         {FAIL_INVO, 120 + piety_breakpoint(4), 5, 1}, abflag::NONE},
 
@@ -3029,21 +3029,21 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_UKAYAW_STOMP:
+    case ABIL_USKAYAW_STOMP:
         fail_check();
-        if (!ukayaw_stomp())
+        if (!uskayaw_stomp())
             return SPRET_ABORT;
         break;
 
-    case ABIL_UKAYAW_LINE_PASS:
+    case ABIL_USKAYAW_LINE_PASS:
         fail_check();
-        if (!ukayaw_line_pass())
+        if (!uskayaw_line_pass())
             return SPRET_ABORT;
         break;
 
-    case ABIL_UKAYAW_GRAND_FINALE:
+    case ABIL_USKAYAW_GRAND_FINALE:
         fail_check();
-        if (!ukayaw_grand_finale())
+        if (!uskayaw_grand_finale())
             return SPRET_ABORT;
         break;
 
