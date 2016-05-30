@@ -458,7 +458,8 @@ static void _describe_book(const spellbook_contents &book,
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
         if (hd > 0 && crawl_state.need_save
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
+            && mon_owner->attitude != ATT_FRIENDLY)
         {
             description.cprintf("%c - (%d%%) %s",
                             spell_letter,
