@@ -5582,9 +5582,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_AFFECTED;
         }
         {
-            // irresistible confusion has a shorter duration.
-            const int dur = (flavour == BEAM_IRRESISTIBLE_CONFUSION) ?
-                                    ench_power : ench_power * BASELINE_DELAY;
+            // irresistible confusion has a shorter duration and is weaker
+            // against strong monsters
+            int dur = ench_power;
+            if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
+                dur = max(10, dur - mon->get_hit_dice());
+            else
+                dur *= BASELINE_DELAY; // regular confusion is 10x longer
+
             if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
             {
                 // FIXME: Put in an exception for things you won't notice
