@@ -173,6 +173,7 @@ item_def* _use_an_item(int item_type)
     UseItemMenu menu (item_type);
 
     vector<MenuEntry*> sel = menu.show(true);
+    redraw_screen();
 
     if (sel.empty())
         return nullptr;
@@ -182,7 +183,6 @@ item_def* _use_an_item(int item_type)
     auto ie = dynamic_cast<InvEntry *>(sel[0]);
     item_def* target = const_cast<item_def*>(ie->item);
 
-    redraw_screen();
     return target;
 }
 
