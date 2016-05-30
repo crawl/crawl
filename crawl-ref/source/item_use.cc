@@ -143,11 +143,14 @@ void UseItemMenu::populate_menu()
         // If this is an inventory item, leave its hotkeys alone
         if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
         {
-            do
+            while (used_keys.count(hotkey))
             {
+                // Remove it from used_keys, so the second time through
+                // we re-use all letters, inventory or not.
+                used_keys.erase(hotkey);
                 ++hotkey;
-            } while (used_keys.count(hotkey) && used_keys.erase(hotkey));
-            entry->hotkeys[0] = hotkey;
+            }
+            entry->hotkeys[0] = hotkey++;
         }
     }
     return;
