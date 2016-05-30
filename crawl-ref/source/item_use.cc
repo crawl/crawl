@@ -88,9 +88,9 @@ public:
     UseItemMenu (int);
 };
 
-UseItemMenu::UseItemMenu(int item_type) {
-    set_flags( MF_SINGLESELECT );
-    set_type( MT_INVLIST );
+UseItemMenu::UseItemMenu(int item_type)
+    : InvMenu(MF_SINGLESELECT)
+{
     populate_list(item_type);
     populate_menu();
 }
