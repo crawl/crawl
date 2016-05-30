@@ -210,12 +210,13 @@ static item_def* _use_an_item(int item_type, operation_types oper)
     while (true)
     {
         vector<MenuEntry*> sel = menu.show(true);
+        int keyin = menu.getkey();
         redraw_screen();
 
         // Handle inscribed item keys
-        if (isadigit(menu.getkey()))
+        if (isadigit(keyin))
         {
-            int idx = digit_inscription_to_inv_index(menu.getkey(), oper);
+            int idx = digit_inscription_to_inv_index(keyin, oper);
             // No such item.
             if (idx < 0)
                 return nullptr;
@@ -228,8 +229,11 @@ static item_def* _use_an_item(int item_type, operation_types oper)
             }
             break;
         }
+        else if (keyin == '\\')
+            check_item_knowledge();
+        // TODO: handle * key
         else if (sel.empty())
-            return nullptr; // TODO: handle keys like \ and *
+            return nullptr;
         else
         {
             ASSERT(sel.size() == 1);
