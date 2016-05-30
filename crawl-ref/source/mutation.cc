@@ -1860,7 +1860,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
-        ostr << mdef.have[0] << player_icemail_armour_class() << ").";
+        ostr << mdef.have[0] << player_icemail_armour_class() << ")";
         result = ostr.str();
     }
     else if (!ignore_player && you.species == SP_FELID && mut == MUT_CLAWS)
