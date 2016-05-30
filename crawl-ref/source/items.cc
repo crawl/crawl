@@ -97,7 +97,7 @@
 pair<bool, int> item_int(item_def &item)
 {
     if (in_inventory(item))
-        return make_pair (true, item.slot);
+        return make_pair (true, item.link);
     return make_pair (false, item.index());
 }
 
