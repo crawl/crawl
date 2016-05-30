@@ -2070,7 +2070,6 @@ try_again:
 
     ret.clear();
     int absfacet = 0;
-    int scales = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
     int cloud_producing = 0;
@@ -2099,9 +2098,6 @@ try_again:
 
                 ret.emplace_back(m, next_facet->when[i], absfacet);
 
-                if (_is_covering(m))
-                    ++scales;
-
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
@@ -2115,9 +2111,6 @@ try_again:
             ++absfacet;
         }
     }
-
-    if (scales > 3)
-        goto try_again;
 
     if (ice_elemental + fire_elemental > 1)
         goto try_again;
