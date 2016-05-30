@@ -6011,7 +6011,7 @@ static int _bone_armour_bonus()
  *
  * @return      The AC bonus * 100. (For scaling.)
  */
-static int _sanguine_armour_bonus()
+int sanguine_armour_bonus()
 {
     if (!you.duration[DUR_SANGUINE_ARMOUR])
         return 0;
@@ -6130,7 +6130,7 @@ int player::armour_class(bool /*calc_unid*/) const
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
-    AC += _sanguine_armour_bonus();
+    AC += sanguine_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
 
