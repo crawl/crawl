@@ -633,7 +633,6 @@ c**E~..........<..........~Deec
 ccccccccccccccccccccccccccccccc
 ENDMAP
 
-# Bog bodies might be a bit too hard, but with HD of 3 they seem to be fine.
 NAME:    ossuary_zaba_flooded
 WEIGHT:  20
 ORIENT:  encompass
@@ -684,9 +683,9 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    w:15 withered plant /\
-         bog body hd:3 \
-         spells:throw_frost.18.wizard;slow.18.wizard \
-         name:decayed n_adj n_noc /\
+         mummy \
+         spells:throw_frost.18.wizard;slow.27.wizard \
+         name:bog n_adj /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)
