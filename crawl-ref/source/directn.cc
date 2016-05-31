@@ -1027,7 +1027,14 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     if (!success)
     {
         // The previous target is no good. Try to find one from scratch.
-        success = _find_square_wrapper(result, 1,
+        success = hitfunc && _find_square_wrapper(result, 1,
+                               bind(_find_monster_expl,
+                                    placeholders::_1, mode,
+                                    needs_path, range, hitfunc,
+                                    // First try to bizap
+                                    AFF_MULTIPLE, AFF_YES),
+                               hitfunc)
+                  || _find_square_wrapper(result, 1,
                                        bind(restricts == DIR_SHADOW_STEP ?
                                             _find_shadow_step_mons : _find_monster,
                                             placeholders::_1, mode, needs_path,
