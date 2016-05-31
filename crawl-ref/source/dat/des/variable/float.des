@@ -1369,7 +1369,7 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair:6-, !Lair:$, Snake, !Snake:$, Depths, !Depths:$
+DEPTH:   Lair:4-, !Lair:$, Snake, !Snake:$, Depths, !Depths:$
 ORIENT:  float
 KMONS:   1 = slime creature w:20 / swamp worm w:50 / \
              vampire mosquito / crocodile / swamp drake w:15
@@ -1416,7 +1416,7 @@ ENDMAP
 # Another low-level vault - LP
 #
 NAME:    lemuel_reptile_caves
-DEPTH:   D:10-13, Lair:1-5
+DEPTH:   D:10-13, Lair:1-, !Lair:$
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
 MONS:    giant gecko / giant newt, crocodile, iguana
@@ -1525,7 +1525,7 @@ ENDMAP
 # of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
-DEPTH:  Lair:7-, D:11-
+DEPTH:  Lair:5-, D:11-
 TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
