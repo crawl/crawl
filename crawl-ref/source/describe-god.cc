@@ -324,6 +324,25 @@ static string _describe_ash_skill_boost()
     return desc.str();
 }
 
+/// Build & return a table of Hep's granted ancestor upgrades
+static string _describe_ancestor_upgrades()
+{
+    // TODO: don't hardcode this
+    // TODO: grey out columns for unchosen ancestors
+    // TODO: higlight upgrades taken
+    return "Ancestors:\n"
+    "                  Battlemage        Hexer               Knight\n"
+    "XL\n"
+    "1                Quarterstaff    Dagger (drn.)           Flail\n"
+    "1                 Throw Frost        Slow               Shield\n"
+    "1                 Stone Arrow      Confuse           Armour (+AC)\n"
+    "15 (Option A):    Magma Bolt       Paralyse       Demon Trident (flame)\n"
+    "15 (Option B):     Iceblast      Metabol. Engl.     Broad Axe (flame)\n"
+    "21               Laj. (freeze)   Mass Confusion      Lg. Shld (refl.)\n"
+    "21                   Haste           Haste               Haste\n"
+    "27               Crystal Spear     Qbl. (am)         Speed (wpn ego)";
+}
+
 // from dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;
 
@@ -577,6 +596,9 @@ static string _get_god_misc_info(god_type which_god)
         case GOD_PAKELLAS:
             return "The power of Pakellas' abilities is governed by "
                    "Evocations skill instead of Invocations.";
+
+        case GOD_HEPLIAKLQANA:
+            return _describe_ancestor_upgrades();
 
         default:
             return "";
