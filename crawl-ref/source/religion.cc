@@ -1852,9 +1852,10 @@ bool do_god_gift(bool forced)
         }
 
         case GOD_YREDELEMNUL:
-            if (forced
-                || (random2(you.piety) >= piety_breakpoint(2)
-                    && one_chance_in(4)))
+            if (!player_mutation_level(MUT_NO_LOVE)
+                && (forced
+                    || (random2(you.piety) >= piety_breakpoint(2)
+                        && one_chance_in(4))))
             {
                 unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
                                          + you.num_current_gifts[you.religion] / 2;
