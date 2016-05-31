@@ -163,9 +163,6 @@ void UseItemMenu::populate_menu()
                         return entry;
                     });
     }
-
-    if (item_inv.empty() && item_floor.empty())
-        add_entry(new MenuEntry("No Items", MEL_TITLE, 0, 0, false));
 }
 
 bool UseItemMenu::process_key(int key)
