@@ -4990,10 +4990,12 @@ bool invis_allowed(bool quiet, string *fail_reason)
         msg = "Your halo prevents invisibility.";
         success = false;
     }
-    else if (you.backlit(false))
+    else if (you.backlit())
     {
         msg = "Invisibility will do you no good right now";
-        if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
+        if (quiet)
+            success = false;
+        else if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             success = false;
