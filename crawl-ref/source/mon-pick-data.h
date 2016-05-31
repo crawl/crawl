@@ -353,19 +353,19 @@ static const pop_entry pop_spider[] =
 
 static const pop_entry pop_slime[] =
 { // Slime Pits
-  {  1,  6, 2000, FLAT, MONS_JELLY },
-  {  1,  6, 2000, FLAT, MONS_SLIME_CREATURE },
-  {  1,  6, 1000, FLAT, MONS_ACID_BLOB },
-  {  1,  6,  515, FLAT, MONS_EYE_OF_DRAINING },
-  {  1,  6,  515, FLAT, MONS_AZURE_JELLY },
-  {  1,  6,  515, FLAT, MONS_SHINING_EYE },
-  {  1,  6,  200, FLAT, MONS_GOLDEN_EYE },
-  {  1,  9,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  9,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
-  {  1,  6,  200, RISE, MONS_DEATH_OOZE },
-  {  2,  6,  100, RISE, MONS_GIANT_ORANGE_BRAIN },
-  {  2,  9,   50, SEMI, MONS_GIANT_EYEBALL },
-  {  1,  6,  750, FLAT, MONS_NO_MONSTER }, // Old ooze weight
+  {  1,  5, 2000, FLAT, MONS_JELLY },
+  {  1,  5, 2000, FLAT, MONS_SLIME_CREATURE },
+  {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
+  {  1,  5,  515, FLAT, MONS_EYE_OF_DRAINING },
+  {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
+  {  1,  5,  515, FLAT, MONS_SHINING_EYE },
+  {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
+  {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
+  {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  5,  200, RISE, MONS_DEATH_OOZE },
+  {  2,  5,  100, RISE, MONS_GIANT_ORANGE_BRAIN },
+  {  2,  8,   50, SEMI, MONS_GIANT_EYEBALL },
+  {  1,  5,  750, FLAT, MONS_NO_MONSTER }, // Old ooze weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
