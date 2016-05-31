@@ -1045,6 +1045,9 @@ int get_real_mp(bool include_items);
 int get_contamination_level();
 string describe_contamination(int level);
 
+bool sanguine_armour_valid();
+void activate_sanguine_armour();
+
 void set_mp(int new_amount);
 
 bool player_regenerates_hp();
