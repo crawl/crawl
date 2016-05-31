@@ -459,7 +459,7 @@ string no_selectables_message(int item_selector)
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
-                             MenuEntry *(*procfn)(MenuEntry *me))
+                             function<MenuEntry* (MenuEntry*)> procfn)
 {
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
@@ -745,7 +745,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_GOLD);
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
-                                MenuEntry *(*procfn)(MenuEntry *me),
+                                function<MenuEntry* (MenuEntry*)> procfn,
                                 menu_letter ckey, bool sort)
 {
     vector<const item_def*> xlatitems;
@@ -755,7 +755,7 @@ menu_letter InvMenu::load_items(const vector<item_def>& mitems,
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
-                                MenuEntry *(*procfn)(MenuEntry *me),
+                                function<MenuEntry* (MenuEntry*)> procfn,
                                 menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
@@ -834,7 +834,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             }
             do_preselect(ie);
 
-            add_entry(procfn? (*procfn)(ie) : ie);
+            add_entry(procfn ? procfn(ie) : ie);
         }
     }
 
