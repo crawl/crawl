@@ -86,12 +86,13 @@ public:
     // Accepts:
     //      OBJ_POTIONS
     //      OBJ_SCROLLS
-    UseItemMenu (int);
+    UseItemMenu(int selector, const char* prompt);
 };
 
-UseItemMenu::UseItemMenu(int item_type)
+UseItemMenu::UseItemMenu(int item_type, const char* prompt)
     : InvMenu(MF_SINGLESELECT)
 {
+    set_title(prompt);
     populate_list(item_type);
     populate_menu();
 }
@@ -122,7 +123,9 @@ void UseItemMenu::populate_menu()
     // Load the inv items first, they have a hotkey
     if (!item_inv.empty())
     {
-        add_entry(new MenuEntry("Inventory Items", MEL_TITLE, 0, 0, false));
+        auto subtitle = new MenuEntry("Inventory Items", MEL_TITLE);
+        subtitle->colour = LIGHTGREY;
+        add_entry(subtitle);
 
         load_items(item_inv, 0, 0, false);
 
@@ -135,7 +138,9 @@ void UseItemMenu::populate_menu()
     if (!item_floor.empty())
     {
         // Load floor items to menu
-        add_entry(new MenuEntry("Floor Items", MEL_TITLE, 0, 0, false));
+        auto subtitle = new MenuEntry("Floor Items", MEL_TITLE);
+        subtitle->colour = LIGHTGREY;
+        add_entry(subtitle);
 
         load_items(item_floor, 0, 0, false);
 
@@ -184,13 +189,15 @@ bool UseItemMenu::process_key(int key)
  * items in inventory, then items on the floor. If player cancels out of menu,
  * nullptr is returned.
  *
- * @param object_class_type The object class or OSEL_* of items to list.
+ * @param item_type The object_class_type or OSEL_* of items to list.
  * @param oper The operation being done to the selected item.
+ * @param prompt The prompt on the menu title
  *
  * @return a pointer to the chosen item, or nullptr if none was chosen.
  */
 
-static item_def* _use_an_item(int item_type, operation_types oper)
+static item_def* _use_an_item(int item_type, operation_types oper,
+                              const char* prompt)
 {
     item_def* target = nullptr;
 
@@ -205,7 +212,7 @@ static item_def* _use_an_item(int item_type, operation_types oper)
     }
 
     // Init the menu
-    UseItemMenu menu (item_type);
+    UseItemMenu menu (item_type, prompt);
 
     while (true)
     {
@@ -1871,7 +1878,7 @@ void drink(item_def* potion)
 
     if (!potion)
     {
-        potion = _use_an_item(OBJ_POTIONS, OPER_QUAFF);
+        potion = _use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
 
         if (!potion)
         {
@@ -2653,7 +2660,7 @@ void read(item_def* scroll)
 
     if (!scroll)
     {
-        scroll = _use_an_item(OBJ_SCROLLS, OPER_READ);
+        scroll = _use_an_item(OBJ_SCROLLS, OPER_READ, "Read which item?");
         if (!scroll)
             return;
     }
