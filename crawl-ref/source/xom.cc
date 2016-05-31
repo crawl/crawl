@@ -3050,8 +3050,11 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_ENCHANT_MONSTER;
     }
 
-    if (tension > random2(5) && x_chance_in_y(7, sever))
+    if (tension > random2(5) && x_chance_in_y(7, sever)
+        && !you.mut[MUT_NO_LOVE])
+    {
         return XOM_GOOD_SINGLE_ALLY;
+    }
     if (tension < random2(5) && x_chance_in_y(8, sever)
         && !_xom_scenery_candidates().empty() || one_chance_in(8))
     {
@@ -3061,10 +3064,14 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (x_chance_in_y(9, sever) && mon_nearby(_hostile_snake))
         return XOM_GOOD_SNAKES;
 
-    if (tension > random2(10) && x_chance_in_y(10, sever))
+    if (tension > random2(10) && x_chance_in_y(10, sever)
+        && !you.mut[MUT_NO_LOVE])
+    {
         return XOM_GOOD_ALLIES;
+    }
     if (tension > random2(8) && x_chance_in_y(11, sever)
-        && _find_monster_with_animateable_weapon())
+        && _find_monster_with_animateable_weapon()
+        && !you.mut[MUT_NO_LOVE])
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
