@@ -330,8 +330,8 @@ static string _describe_ancestor_upgrades()
     // TODO: don't hardcode this
     // TODO: grey out columns for unchosen ancestors
     // TODO: higlight upgrades taken
-    return "Ancestors:\n"
-    "                  Battlemage        Hexer               Knight\n"
+    return
+    "Ancestors:        Battlemage        Hexer               Knight\n"
     "XL\n"
     "1                Quarterstaff    Dagger (drain)          Flail\n"
     "1                 Throw Frost        Slow               Shield\n"
