@@ -3093,8 +3093,9 @@ bool player_can_join_god(god_type which_god)
 
     if (player_mutation_level(MUT_NO_LOVE)
         && (which_god == GOD_BEOGH
-            ||  which_god == GOD_JIYVA
-            ||  which_god == GOD_HEPLIAKLQANA))
+            || which_god == GOD_JIYVA
+            || which_god == GOD_HEPLIAKLQANA
+            || which_god == GOD_FEDHAS))
     {
         return false;
     }
