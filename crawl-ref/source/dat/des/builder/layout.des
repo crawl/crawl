@@ -606,7 +606,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     if you.in_branch("Lair") then
         wall_type = 'x'
         percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:4
-        percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:8
+        percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:$
         percent_thickness_4 = 10 + you.depth_fraction() * 40
         percent_inner_new_wall = 0
         percent_inner_box   = 0

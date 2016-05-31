@@ -525,7 +525,7 @@ ENDMAP
 #
 NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
-DEPTH:   Lair:3-7
+DEPTH:   Lair:3-, !Lair:$
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
@@ -762,7 +762,7 @@ ENDMAP
 #
 NAME:   pf_torpor_hydra
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  Lair:3-7
+DEPTH:  Lair:3-, !Lair:$
 MONS:   torpor snail, hydra
 # A decent item visible from the door, a superb item not visible, and a couple
 # of floor items anywhere
@@ -931,7 +931,7 @@ ENDMAP
 ###############################################################################
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type
-DEPTH: Lair:6-
+DEPTH: Lair:4-
 TAGS: extra no_pool_fixup
 MONS: w:1 generate_awake patrolling catoblepas / w:4 nothing
 SUBST: a = w W .
@@ -979,7 +979,7 @@ ENDMAP
 # A polar bear lost in the jungle, how odd
 NAME:  roderic_lost_polar_bear
 TAGS:  no_monster_gen
-DEPTH: Lair:3-7
+DEPTH: Lair:3-, !Lair:$
 MONS:  plant, polar_bear, bush
 SUBST: ? = 1t
 SUBST: ' = .:80 1 3:3
@@ -1585,7 +1585,7 @@ ENDMAP
 # contains one catoblepas, three other monsters and four items
 # the walls are usually thick enough to make this only accessible from the floor below
 NAME: kennysheep_catoblepas_arena
-DEPTH: Lair:5-7
+DEPTH: Lair:4-, !Lair:$
 TAGS:  no_monster_gen ruin
 MONS:  catoblepas
 NSUBST: d = 4=%* / 3:0 / *:.
@@ -1679,7 +1679,7 @@ ENDMAP
 
 ## A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
-DEPTH:  Lair:3-7
+DEPTH:  Lair:3-, !Lair:$
 ORIENT: north
 TAGS:   no_pool_fixup no_rotate patrolling
 SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
@@ -1836,7 +1836,7 @@ __________________
 ENDMAP
 
 NAME: nicolae_lair_yak_garden
-DEPTH: Lair:6-
+DEPTH: Lair:4-
 TAGS: no_monster_gen no_item_gen no_trap_gen
 SUBST: P = P.
 NSUBST: D = 1:D / *:.

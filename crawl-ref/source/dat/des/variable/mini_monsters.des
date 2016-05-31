@@ -2187,7 +2187,7 @@ ENDMAP
 # Bad water, a lot of carrion and feeders around, yuck!
 NAME:   roderic_carrion_pond
 TAGS:   no_monster_gen no_trap_gen
-DEPTH:  Lair:2-7, Swamp
+DEPTH:  Lair:2-, !Lair:$, Swamp
 MONS:   necrophage
 SUBST:  ' = 111.
 SUBST:  ? = %%.

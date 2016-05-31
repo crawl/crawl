@@ -168,7 +168,7 @@ DEPTH:  D:10-, Orc, Lair:4-, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Josephine band")
 
 NAME:   uniq_kirke
-DEPTH:  D:12-, Lair:5-, Elf:1, Swamp, Snake, Shoals, Spider
+DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
 
 NAME:   uniq_louise
@@ -196,7 +196,7 @@ DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  D:12-, Orc:$, Lair:5-
+DEPTH:  D:12-, Orc:$, Lair:4-
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_pikel
