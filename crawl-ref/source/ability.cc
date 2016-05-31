@@ -974,6 +974,12 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_ENSLAVE_SOUL:
+    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
+    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
+    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_TROG_BROTHERS_IN_ARMS:
+    case ABIL_GOZAG_BRIBE_BRANCH:
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
         if (player_mutation_level(MUT_NO_LOVE))
             return ABIL_NON_ABILITY;
         else
