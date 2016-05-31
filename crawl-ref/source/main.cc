@@ -3459,14 +3459,17 @@ static void _move_player(coord_def move)
 
         if (swap)
             _swap_places(targ_monst, mon_swap_dest);
-        else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+        else if (you.duration[DUR_CLOUD_TRAIL])
         {
             if (cell_is_solid(you.pos()))
                 ASSERT(you.wizmode_teleported_into_rock);
             else
             {
-                check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
-                                  random_range(3, 10), &you, 0, ETC_RANDOM);
+                auto cloud = static_cast<cloud_type>(
+                    you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+                ASSERT(cloud != CLOUD_NONE);
+                check_place_cloud(cloud,you.pos(), random_range(3, 10), &you,
+                                  0, -1);
             }
         }
 

@@ -764,8 +764,10 @@ static void _decrement_durations()
         set_hp(allowed_deaths_door_hp());
         you.redraw_hit_points = true;
     }
+
     // XXX: this should probably be changed to be by aut rather than turns vvv
-    _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
+    if (_decrement_a_duration(DUR_CLOUD_TRAIL, 1))
+        you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
 
     if (you.duration[DUR_DARKNESS] && you.haloed())
     {
