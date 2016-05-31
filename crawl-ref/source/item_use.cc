@@ -127,12 +127,14 @@ void UseItemMenu::populate_menu()
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
 
-        load_items(item_inv, 0, 0, false);
-
-        // Remove inventory item hotkeys from the tracker
-        for (MenuEntry *entry : items)
-            if (!entry->hotkeys.empty())
-                used_keys.insert(char(entry->hotkeys[0]));
+        load_items(item_inv,
+                   [&](MenuEntry* entry) -> MenuEntry*
+                   {
+                       // Remove inventory item hotkeys from the tracker
+                       if (!entry->hotkeys.empty())
+                           used_keys.insert(char(entry->hotkeys[0]));
+                       return entry;
+                   });
     }
 
     if (!item_floor.empty())
@@ -142,33 +144,28 @@ void UseItemMenu::populate_menu()
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
 
-        load_items(item_floor, 0, 0, false);
-
         menu_letter hotkey;
-        // Go through each menu item
-        for (MenuEntry* entry : items)
-        {
-            // Make an InvEntry out of it
-            auto ie = dynamic_cast<InvEntry *>(entry);
-            // If this is an inventory item, leave its hotkeys alone
-            if (!entry->hotkeys.empty() && ie && !in_inventory(*(ie->item)))
-            {
-                while (used_keys.count(hotkey))
-                {
-                    // Remove it from used_keys, so the second time through
-                    // we re-use all letters, inventory or not.
-                    used_keys.erase(hotkey);
-                    ++hotkey;
-                }
-                entry->hotkeys[0] = hotkey++;
-            }
-        }
+        load_items(item_floor,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        if (!entry->hotkeys.empty())
+                        {
+                            while (used_keys.count(hotkey))
+                            {
+                                // Remove it from used_keys, so the second time
+                                // through we re-use all letters, inventory or
+                                // not.
+                                used_keys.erase(hotkey);
+                                ++hotkey;
+                            }
+                            entry->hotkeys[0] = hotkey++;
+                        }
+                        return entry;
+                    });
     }
 
     if (item_inv.empty() && item_floor.empty())
         add_entry(new MenuEntry("No Items", MEL_TITLE, 0, 0, false));
-
-    return;
 }
 
 bool UseItemMenu::process_key(int key)
