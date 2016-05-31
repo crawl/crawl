@@ -1864,11 +1864,10 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ")";
         result = ostr.str();
     }
-    else if (mut == MUT_SANGUINE_ARMOUR && sanguine_armour_bonus())
+    else if (mut == MUT_SANGUINE_ARMOUR)
     {
         ostringstream ostr;
-        ostr << mdef.have[0] << " (AC +" << sanguine_armour_bonus() / 100
-                             << ")";
+        ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
         result = ostr.str();
     }
     else if (!ignore_player && you.species == SP_FELID && mut == MUT_CLAWS)
