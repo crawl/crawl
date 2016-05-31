@@ -971,6 +971,13 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     tileset.emplace_back(ch, get_dngn_tex(ch));
 
+    if (m->attitude == ATT_FRIENDLY)
+        tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
+    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
+        tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
+    else if (m->neutral())
+        tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+
     if (m->type == MONS_DANCING_WEAPON)
     {
         // For fake dancing weapons, just use a generic long sword, since
@@ -1051,8 +1058,8 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILEI_HEART, TEX_ICONS);
-    else if (m->attitude == ATT_GOOD_NEUTRAL)
+        tileset.emplace_back(TILEI_FRIENDLY, TEX_ICONS);
+    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
         tileset.emplace_back(TILEI_GOOD_NEUTRAL, TEX_ICONS);
     else if (m->neutral())
         tileset.emplace_back(TILEI_NEUTRAL, TEX_ICONS);

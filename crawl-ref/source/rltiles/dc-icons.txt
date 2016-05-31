@@ -26,7 +26,7 @@ cobweb_none_0 TRAP_WEB
 %resetcol
 %rim 0
 %sdir misc/icons
-heart HEART
+friendly FRIENDLY
 good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
