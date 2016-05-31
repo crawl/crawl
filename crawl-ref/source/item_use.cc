@@ -73,7 +73,6 @@
 
 class UseItemMenu : public InvMenu
 {
-public:
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
@@ -81,6 +80,7 @@ public:
     void populate_menu();
     bool process_key(int key) override;
 
+public:
     // Constructor
     // Requires int for item filter.
     // Accepts:
