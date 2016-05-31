@@ -1034,14 +1034,16 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                             range, hitfunc),
                                        hitfunc);
 
-        // We might be able to hit monsters in LOS that are outside of
-        // normal range, but inside explosion/cloud range
-        if (!success && hitfunc && hitfunc->can_affect_outside_range()
-            && (you.current_vision > range
-                // We also piggyback on the same code to find an LRD targetting
-                // spot.
-                || hitfunc->can_affect_walls()))
+        // This is used for three things:
+        // * For all LRD targetting
+        // * To aim explosions so they try to miss you
+        // * To hit monsters in LOS that are outside of normal range, but
+        //   inside explosion/cloud range
+        if (hitfunc && hitfunc->can_affect_outside_range())
         {
+            coord_def old_result;
+            if (success)
+                old_result = result;
             for (aff_type mon_aff : { AFF_YES, AFF_MAYBE })
             {
                 for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
@@ -1053,7 +1055,13 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                                 mon_aff, allowed_self_aff),
                                            hitfunc);
                     if (success)
+                    {
+                        // If we're hitting ourselves anyway, just target the
+                        // monster's position (this looks less strange).
+                        if (allowed_self_aff == AFF_YES && !old_result.origin())
+                            result = old_result;
                         break;
+                    }
                 }
                 if (success)
                     break;
@@ -2483,10 +2491,6 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
     }
 #endif
 
-    // Only check for explosive targeting at the edge of the range
-    if (you.pos().distance_from(where) != range && !hitfunc->can_affect_walls())
-        return false;
-
     // Target outside LOS.
     if (!cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return false;
@@ -2775,7 +2779,7 @@ static bool _find_square(coord_def &mfp, int direction,
         if (!crawl_view.in_viewport_g(targ))
             continue;
 
-        if (!in_bounds(targ) && (!hitfunc || !hitfunc->can_affect_walls()))
+        if (!map_bounds(targ))
             continue;
 
         if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
