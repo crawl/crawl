@@ -792,6 +792,19 @@ static int dgn_change_rock_colour(lua_State *ls)
     return 0;
 }
 
+static int dgn_reset_feature_name_for(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    const int map_index = env.level_map_ids(c);
+    if (map_index != INVALID_MAP_INDEX)
+    {
+        const string feat_name = lua_tostring(ls, 3);
+        const dungeon_feature_type feat = dungeon_feature_by_name(feat_name);
+        env.level_vaults[map_index]->map.feat_renames.erase(feat);
+    }
+    return 0;
+}
+
 static int dgn_colour_at(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1856,6 +1869,7 @@ const struct luaL_reg dgn_dlib[] =
 { "delete_cloud", dgn_delete_cloud },
 { "place_cloud", dgn_place_cloud },
 { "noisy", dgn_noisy },
+{ "reset_feature_name_for", dgn_reset_feature_name_for },
 
 { "is_passable", _dgn_is_passable },
 
