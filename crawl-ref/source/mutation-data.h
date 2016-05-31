@@ -1436,7 +1436,7 @@ static const mutation_def mut_data[] =
    "You feel more encumbered by your armour."},
 },
 
-{ MUT_SANGUINE_ARMOUR, 2, 3, mutflag::GOOD, false,
+{ MUT_SANGUINE_ARMOUR, 0, 3, mutflag::GOOD, false,
   "sanguine armour",
 
   {"When seriously injured, your bleeding wounds create armour. (AC +",
