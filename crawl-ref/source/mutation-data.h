@@ -1439,9 +1439,9 @@ static const mutation_def mut_data[] =
 { MUT_SANGUINE_ARMOUR, 2, 3, mutflag::GOOD, false,
   "sanguine armour",
 
-  {"When seriously injured, your bleeding wounds create armour.",
-   "When seriously injured, your bleeding wounds create thick armour.",
-   "When seriously injured, your bleeding wounds create very thick armour."},
+  {"When seriously injured, your bleeding wounds create armour. (AC +",
+   "When seriously injured, your bleeding wounds create thick armour. (AC +",
+   "When seriously injured, your bleeding wounds create very thick armour. (AC +"},
 
   {"You feel your blood thicken.",
    "You feel your blood thicken.",
