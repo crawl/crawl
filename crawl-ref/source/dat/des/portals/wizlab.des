@@ -1553,7 +1553,7 @@ COLOUR:     wWv#4 = silver
 :           set_feature_name("crystal_wall", "wall of white crystal")
 
 epilogue{{
-            wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+            wizlab_milestone(_G, "The Chambers of the Cloud Mage")
 }}
 #           Map is ugly because border_fill_type doesn't allow for (yet)
 #           recolouring.
@@ -1702,7 +1702,7 @@ SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_feature_name("stone_wall", "black wall")
 :           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
-            wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
+            wizlab_milestone(_G, "The Hall of the Hellbinder")
 }}
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
