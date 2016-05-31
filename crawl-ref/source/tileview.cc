@@ -1378,16 +1378,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
     else if (mc.flags & MAP_HALOED)
-    {
-        monster_info* mon = mc.monsterinfo();
-        if (mon && mons_class_gives_xp(mon->type))
-        {
-            cell.halo = HALO_MONSTER;
-            print_blood = false;
-        }
-        else
-            cell.halo = HALO_RANGE;
-    }
+        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 
