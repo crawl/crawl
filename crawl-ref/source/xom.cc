@@ -1008,13 +1008,17 @@ static void _xom_do_potion(int /*sever*/)
     potion_type pot = POT_CURING;
     do
     {
-        pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
-                            POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
-                            POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE);
-
-        if (pot == POT_EXPERIENCE && !one_chance_in(6))
-            pot = POT_BERSERK_RAGE;
-        // TODO: replace with random_choose_weighted
+        pot = random_choose_weighted(10, POT_CURING,
+                                     10, POT_HEAL_WOUNDS,
+                                     10, POT_MAGIC,
+                                     10, POT_HASTE,
+                                     10, POT_MIGHT,
+                                     10, POT_AGILITY,
+                                     10, POT_BRILLIANCE,
+                                     10, POT_INVISIBILITY,
+                                     10, POT_BERSERK_RAGE,
+                                     1,  POT_EXPERIENCE,
+                                     0);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
