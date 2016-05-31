@@ -8682,13 +8682,13 @@ void player_end_berserk()
 
 /**
  * Does the player have the Sanguine Armour mutation (not suppressed by a form)
- * while being at a low enough HP (<50%) for its benefits to trigger?
+ * while being at a low enough HP (<67%) for its benefits to trigger?
  *
  * @return Whether Sanguine Armour should be active.
  */
 bool sanguine_armour_valid()
 {
-    return you.hp <= you.hp_max / 2
+    return you.hp <= you.hp_max * 2 / 3
            && _mut_level(MUT_SANGUINE_ARMOUR, MUTACT_FULL);
 }
 
