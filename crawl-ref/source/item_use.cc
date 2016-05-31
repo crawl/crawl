@@ -198,7 +198,7 @@ static item_def* _use_an_item(int item_type, operation_types oper,
     // First handle things that will return nullptr
 
     // No selectable items in inv or floor
-    if (!any_items_of_type(item_type, 0, true))
+    if (!any_items_of_type(item_type, -1, true))
     {
         mprf(MSGCH_PROMPT, "%s",
              no_selectables_message(item_type).c_str());
