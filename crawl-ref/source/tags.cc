@@ -4521,6 +4521,10 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_RODS && item.cursed())
         do_uncurse_item(item); // rods can't be cursed anymore
+
+    // Unify bardings.
+    if (item.sub_type == ARM_NAGA_BARDING)
+        item.sub_type = ARM_BARDING;
 #endif
 
     if (is_unrandom_artefact(item))

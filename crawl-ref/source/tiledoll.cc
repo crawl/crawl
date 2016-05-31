@@ -549,8 +549,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
                                         TILEP_BASE_NAGA);
 
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_BARDING
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
@@ -559,8 +559,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
                                         TILEP_BASE_CENTAUR);
 
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_BARDING
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;

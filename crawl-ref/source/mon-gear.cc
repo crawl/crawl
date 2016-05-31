@@ -2170,7 +2170,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                        /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_CENTAUR_BARDING;
+            item.sub_type  = ARM_BARDING;
         }
         else
             return;
@@ -2188,7 +2188,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                     :  200))
         {
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_NAGA_BARDING;
+            item.sub_type  = ARM_BARDING;
         }
         else if (type == MONS_GREATER_NAGA
                  || type == MONS_NAGA_RITUALIST
@@ -2203,7 +2203,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_VASHNIA:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_NAGA_BARDING;
+        item.sub_type  = ARM_BARDING;
         level = ISPEC_GOOD_ITEM;
         break;
 
@@ -2322,7 +2322,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_NESSOS:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_CENTAUR_BARDING;
+        item.sub_type  = ARM_BARDING;
         break;
 
     case MONS_NIKOLA:

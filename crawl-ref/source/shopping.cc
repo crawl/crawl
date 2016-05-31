@@ -491,8 +491,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
-        case ARM_CENTAUR_BARDING:
-        case ARM_NAGA_BARDING:
+        case ARM_BARDING:
         case ARM_PLATE_ARMOUR:
             valued += 230;
             break;
