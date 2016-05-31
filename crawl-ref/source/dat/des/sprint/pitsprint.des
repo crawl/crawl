@@ -141,7 +141,7 @@ function base_monster_setup(e)
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
            lorocyproca / brimstone fiend / ice fiend / tzitzimitl /\
            hell sentinel / executioner")
-  e.kmons("U = place:Slime:6 / slime creature band /\
+  e.kmons("U = place:Slime:$ / slime creature band /\
            death ooze / azure jelly / acid blob /\
            giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
