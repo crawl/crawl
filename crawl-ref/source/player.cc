@@ -8679,3 +8679,27 @@ void player_end_berserk()
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
     you.redraw_quiver = true; // Can throw again.
 }
+
+/**
+ * Does the player have the Sanguine Armour mutation (not suppressed by a form)
+ * while being at a low enough HP (<50%) for its benefits to trigger?
+ *
+ * @return Whether Sanguine Armour should be active.
+ */
+bool sanguine_armour_valid()
+{
+    return you.hp <= you.hp_max / 2
+           && _mut_level(MUT_SANGUINE_ARMOUR, MUTACT_FULL);
+}
+
+/// Trigger sanguine armour, updating the duration & messaging as appropriate.
+void activate_sanguine_armour()
+{
+    const bool was_active = you.duration[DUR_SANGUINE_ARMOUR];
+    you.duration[DUR_SANGUINE_ARMOUR] = random_range(60, 100);
+    if (!was_active)
+    {
+        mpr("Your blood congeals into armour.");
+        you.redraw_armour_class = true;
+    }
+}

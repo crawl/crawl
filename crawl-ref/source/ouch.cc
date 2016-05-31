@@ -1033,6 +1033,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_spawn_monsters(dam, is_torment, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            if (sanguine_armour_valid())
+                activate_sanguine_armour();
             if (death_type != KILLED_BY_POISON)
             {
                 _maybe_corrode();
