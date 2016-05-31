@@ -219,7 +219,7 @@ static item_def* _use_an_item(int item_type, operation_types oper)
             int idx = digit_inscription_to_inv_index(keyin, oper);
             // No such item.
             if (idx < 0)
-                return nullptr;
+                break;
 
             target = &item_from_int(true, idx);
         }
@@ -227,7 +227,7 @@ static item_def* _use_an_item(int item_type, operation_types oper)
             check_item_knowledge();
         // TODO: handle * key
         else if (sel.empty())
-            return nullptr;
+            break;
         else
         {
             ASSERT(sel.size() == 1);
@@ -239,13 +239,14 @@ static item_def* _use_an_item(int item_type, operation_types oper)
         if (target)
         {
             if (!check_warning_inscriptions(*target, oper))
-            {
-                prompt_failed(PROMPT_ABORT);
-                return nullptr;
-            }
-            return target;
+                target = nullptr;
+            break;
         }
     }
+
+    if (!target)
+        prompt_failed(PROMPT_ABORT);
+    return target;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -1874,12 +1875,8 @@ void drink(item_def* potion)
 
         if (!potion)
         {
-            int slot = PROMPT_ABORT;
-            if (prompt_failed(slot))
-            {
-                _vampire_corpse_help();
-                return;
-            }
+            _vampire_corpse_help();
+            return;
         }
     }
 
@@ -2658,11 +2655,7 @@ void read(item_def* scroll)
     {
         scroll = _use_an_item(OBJ_SCROLLS, OPER_READ);
         if (!scroll)
-        {
-            int slot = PROMPT_ABORT;
-            if (prompt_failed(slot))
-                return;
-        }
+            return;
     }
 
     const string failure_reason = cannot_read_item_reason(*scroll);
