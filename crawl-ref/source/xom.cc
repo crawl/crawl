@@ -1308,9 +1308,9 @@ static void _xom_rearrange_pieces(int sever)
                     mpr("Some monsters swap places.");
                     did_message = true;
                 }
-                if (one_chance_in(3))
+                if (one_chance_in(4))
                     _confuse_monster(mons[mon1], sever);
-                if (one_chance_in(3))
+                if (one_chance_in(4))
                     _confuse_monster(mons[mon2], sever);
             }
         }
@@ -3099,12 +3099,6 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
-    if (tension > 0 && x_chance_in_y(14, sever)
-        && _rearrangeable_pieces().size())
-    {
-        return XOM_GOOD_SWAP_MONSTERS;
-    }
-
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
@@ -3196,6 +3190,13 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     // It's pointless to confuse player if there's no danger nearby.
     if (tension > 0 && x_chance_in_y(9, sever))
         return XOM_BAD_CONFUSION;
+
+    if (tension > 0 && x_chance_in_y(14, sever)
+        && _rearrangeable_pieces().size())
+    {
+        return XOM_BAD_SWAP_MONSTERS;
+    }
+
     if (x_chance_in_y(12, sever))
         return XOM_BAD_MISCAST_MAJOR;
     if (x_chance_in_y(14, sever) && mon_nearby(_choose_chaos_upgrade))
@@ -3775,7 +3776,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_ACQUIREMENT, { "acquirement", _xom_acquirement }},
     { XOM_GOOD_ALLIES, { "summon allies", _xom_send_allies }},
     { XOM_GOOD_POLYMORPH, { "good polymorph", _xom_good_polymorph }},
-    { XOM_GOOD_SWAP_MONSTERS, { "swap monsters", _xom_rearrange_pieces }},
     { XOM_GOOD_TELEPORT, { "good teleportation", _xom_good_teleport }},
     { XOM_GOOD_VITRIFY, { "vitrification", _xom_vitrify }},
     { XOM_GOOD_MUTATION, { "good mutations", _xom_give_good_mutations }},
@@ -3802,6 +3802,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                  _xom_bad_enchant_monster, 10}},
     { XOM_BAD_BLINK_MONSTERS, { "blink monsters", _xom_blink_monsters, 10}},
     { XOM_BAD_CONFUSION, { "confuse player", _xom_player_confusion_effect, 13}},
+    { XOM_BAD_SWAP_MONSTERS, { "swap monsters", _xom_rearrange_pieces, 20 }},
     { XOM_BAD_CHAOS_UPGRADE, { "chaos upgrade", _xom_chaos_upgrade, 20}},
     { XOM_BAD_TELEPORT, { "bad teleportation", _xom_bad_teleport, -1}},
     { XOM_BAD_POLYMORPH, { "bad polymorph", _xom_bad_polymorph, 30}},

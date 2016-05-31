@@ -109,7 +109,7 @@ static xom_event_type _find_xom_event_from_string(const string &event_name)
 
     xom_event_type x = XOM_DID_NOTHING;
 
-    for (int i = 0; i < XOM_LAST_REAL_ACT; ++i)
+    for (int i = 0; i <= XOM_LAST_REAL_ACT; ++i)
     {
         const xom_event_type xi = static_cast<xom_event_type>(i);
         const string x_name = lowercase_string(xom_effect_to_name(xi));
