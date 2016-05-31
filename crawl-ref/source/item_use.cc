@@ -222,12 +222,6 @@ static item_def* _use_an_item(int item_type, operation_types oper)
                 return nullptr;
 
             target = &item_from_int(true, idx);
-            if (!check_warning_inscriptions(*target, oper))
-            {
-                prompt_failed(PROMPT_ABORT);
-                return nullptr;
-            }
-            break;
         }
         else if (keyin == '\\')
             check_item_knowledge();
@@ -240,17 +234,18 @@ static item_def* _use_an_item(int item_type, operation_types oper)
 
             auto ie = dynamic_cast<InvEntry *>(sel[0]);
             target = const_cast<item_def*>(ie->item);
+        }
 
+        if (target)
+        {
             if (!check_warning_inscriptions(*target, oper))
             {
                 prompt_failed(PROMPT_ABORT);
                 return nullptr;
             }
-            break;
+            return target;
         }
     }
-
-    return target;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
