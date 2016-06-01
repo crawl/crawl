@@ -2676,7 +2676,9 @@ static void _xom_cloud_trail(int /*sever*/)
 {
     you.duration[DUR_CLOUD_TRAIL] = random_range(600, 1200);
     you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
+        // 80% chance of a useful trail
         random_choose_weighted(20, CLOUD_CHAOS,
+                               10, CLOUD_MAGIC_TRAIL,
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
