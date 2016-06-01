@@ -454,6 +454,10 @@ static const char *weapon_brands_verbose[] =
  */
 static const char* _vorpal_brand_name(const item_def &item, bool terse)
 {
+    // Dummy "All Hand Weapons" item from objstat.
+    if (item.sub_type == NUM_WEAPONS)
+        return "vorpal";
+
     if (is_range_weapon(item))
         return "velocity";
 
