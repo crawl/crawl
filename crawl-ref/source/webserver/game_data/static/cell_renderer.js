@@ -792,9 +792,12 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             else if (fg.NEUTRAL)
                 this.draw_icon(icons.NEUTRAL, x, y);
 
-            //The berserk icon is in the lower right, so status_shift doesn't need changing.
+            //These icons are in the lower right, so status_shift doesn't need changing.
             if (fg.BERSERK)
                 this.draw_icon(icons.BERSERK, x, y);
+            if (fg.IDEALISED)
+                this.draw_icon(icons.IDEALISED, x, y);
+
 
             var status_shift = 0;
             if (fg.STAB)
