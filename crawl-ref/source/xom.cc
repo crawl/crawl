@@ -1037,6 +1037,24 @@ static void _xom_do_potion(int /*sever*/)
     level_change(); // need this for !xp - see mantis #3245
 }
 
+static void _confuse_monster(monster* mons, int sever)
+{
+    if (mons->check_clarity(false))
+        return;
+    if (mons->holiness() & (MH_NONLIVING | MH_PLANT))
+        return;
+
+    const bool was_confused = mons->confused();
+    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+          &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
+    {
+        if (was_confused)
+            simple_monster_message(mons, " looks rather more confused.");
+        else
+            simple_monster_message(mons, " looks rather confused.");
+    }
+}
+
 static void _xom_confuse_monsters(int sever)
 {
     bool spoke = false;
@@ -1050,13 +1068,7 @@ static void _xom_confuse_monsters(int sever)
             god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
         spoke = true;
 
-        if (!mi->check_clarity(false) // may print a message!
-            && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                        &menv[ANON_FRIENDLY_MONSTER],
-                                        random2(sever) * 10)))
-        {
-            simple_monster_message(*mi, " looks rather confused.");
-        }
+        _confuse_monster(*mi, sever);
     }
 
     if (spoke)
@@ -1206,22 +1218,6 @@ static void _xom_good_polymorph(int /*sever*/)
 static void _xom_bad_polymorph(int /*sever*/)
 {
     _xom_polymorph_nearby_monster(false);
-}
-
-static void _confuse_monster(monster* mons, int sever)
-{
-    if (mons->check_clarity(false))
-        return;
-
-    const bool was_confused = mons->confused();
-    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-          &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
-    {
-        if (was_confused)
-            simple_monster_message(mons, " looks rather more confused.");
-        else
-            simple_monster_message(mons, " looks rather confused.");
-    }
 }
 
 bool swap_monsters(monster* m1, monster* m2)
@@ -2406,24 +2402,16 @@ static void _xom_player_confusion_effect(int sever)
     mprf(MSGCH_WARN, "You are %sconfused.",
          conf ? "more " : "");
 
-    // Sometimes Xom gets carried away and starts confusing
-    // other creatures too.
+    // At higher severities, Xom is less likely to confuse surrounding
+    // creatures.
     bool mons_too = false;
-    if (coinflip())
+    if (random2(sever) < 30)
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (one_chance_in(20))
+            if (random2(sever) > 30)
                 continue;
-
-            if (!mi->check_clarity(false)
-                && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                                            &menv[ANON_FRIENDLY_MONSTER],
-                                            random2(sever) * 10)))
-            {
-                simple_monster_message(*mi,
-                                       " looks rather confused.");
-            }
+            _confuse_monster(*mi, sever);
             mons_too = true;
         }
     }
