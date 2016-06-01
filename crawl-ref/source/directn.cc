@@ -2498,12 +2498,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
     }
 #endif
 
-    // Target outside LOS.
-    if (!cell_see_cell(you.pos(), where, LOS_DEFAULT))
-        return false;
-
-    // Target in LOS but only via glass walls, so no direct path.
-    if (!you.see_cell_no_trans(where))
+    if (!hitfunc->valid_aim(where))
         return false;
 
     // Target is blocked by something
