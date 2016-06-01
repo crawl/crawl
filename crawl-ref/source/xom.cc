@@ -2676,13 +2676,22 @@ static void _xom_repel_stairs(bool unclimbable)
 static void _xom_moving_stairs(int) { _xom_repel_stairs(false); }
 static void _xom_unclimable_stairs(int) { _xom_repel_stairs(true); }
 
-static void _xom_colour_smoke_trail(int /*sever*/)
+static void _xom_cloud_trail(int /*sever*/)
 {
-    you.duration[DUR_COLOUR_SMOKE_TRAIL] = random_range(60, 120);
+    you.duration[DUR_CLOUD_TRAIL] = random_range(600, 1200);
+    you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
+        // 80% chance of a useful trail
+        random_choose_weighted(20, CLOUD_CHAOS,
+                               10, CLOUD_MAGIC_TRAIL,
+                               5,  CLOUD_MIASMA,
+                               5,  CLOUD_PETRIFY,
+                               5,  CLOUD_MUTAGENIC,
+                               5,  CLOUD_NEGATIVE_ENERGY,
+                               0);
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "colour smoke trail"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
 
-    const string speech = _get_xom_speech("colour smoke trail");
+    const string speech = _get_xom_speech("cloud trail");
     god_speaks(GOD_XOM, speech.c_str());
 }
 
@@ -3042,6 +3051,12 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return tension > 0 ? XOM_GOOD_SPELL_TENSION : XOM_GOOD_SPELL_CALM;
     }
 
+    if (tension <= 0 && x_chance_in_y(5, sever)
+        && !you.duration[DUR_CLOUD_TRAIL])
+    {
+        return XOM_GOOD_CLOUD_TRAIL;
+    }
+
     if (tension > 0 && x_chance_in_y(5, sever)
         && mon_nearby([](monster* mon){ return !mon->wont_attack(); }))
     {
@@ -3168,12 +3183,6 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
 
     if (!nasty && x_chance_in_y(4, sever))
         return XOM_BAD_MISCAST_MINOR;
-
-    if (!nasty && tension <= 0 && x_chance_in_y(5, sever)
-        && !you.duration[DUR_COLOUR_SMOKE_TRAIL])
-    {
-        return XOM_BAD_COLOUR_SMOKE_TRAIL;
-    }
 
     // Sometimes do noise out of combat.
     if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever))
@@ -3787,9 +3796,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
+    { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
 
-    { XOM_BAD_COLOUR_SMOKE_TRAIL, { "coloured smoke trail",
-                                    _xom_colour_smoke_trail, 10}},
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
     { XOM_BAD_MISCAST_HARMLESS, { "harmless miscast",
                                     _xom_harmless_miscast, 10}},
