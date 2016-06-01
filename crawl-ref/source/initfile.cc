@@ -2317,27 +2317,38 @@ static void _bindkey(string field)
 
     const string key_str = field.substr(start_bracket + 1,
                                         end_bracket - start_bracket - 1);
+    const char *s = key_str.c_str();
+
+    ucs_t wc;
+    vector<ucs_t> wchars;
+    while (int l = utf8towc(&wc, s))
+    {
+        s += l;
+        wchars.push_back(wc);
+    }
 
     int key;
 
     // TODO: Function keys.
-    if (key_str.length() == 0)
+    if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-    else if (key_str.length() == 1)
-        key = key_str[0];
-    else if (key_str.length() == 2)
+    else if (wchars.size() == 1)
+        key = wchars[0];
+    else if (wchars.size() == 2)
     {
-        if (key_str[0] != '^')
+        // Ctrl + non-ascii is meaningless here.
+        if (wchars[0] != '^' || wchars[1] > 127)
         {
             mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
                  key_str.c_str(), field.c_str());
             return;
         }
-        key = CONTROL(key_str[1]);
+
+        key = CONTROL(wchars[0]);
     }
     else
     {
