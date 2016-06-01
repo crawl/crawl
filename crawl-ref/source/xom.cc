@@ -3741,15 +3741,6 @@ struct xom_effect_count
     xom_effect_count(string e, int c) : effect(e), count(c) {};
 };
 
-static bool _sort_xom_effects(const xom_effect_count &a,
-                              const xom_effect_count &b)
-{
-    if (a.count == b.count)
-        return a.effect < b.effect;
-
-    return a.count > b.count;
-}
-
 /// A type of action Xom can take.
 struct xom_event
 {
@@ -3889,6 +3880,15 @@ void validate_xom_events()
 }
 
 #ifdef WIZARD
+static bool _sort_xom_effects(const xom_effect_count &a,
+                              const xom_effect_count &b)
+{
+    if (a.count == b.count)
+        return a.effect < b.effect;
+
+    return a.count > b.count;
+}
+
 static string _list_exploration_estimate()
 {
     int explored = 0;
