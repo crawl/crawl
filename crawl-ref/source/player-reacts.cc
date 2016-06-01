@@ -765,9 +765,11 @@ static void _decrement_durations()
         you.redraw_hit_points = true;
     }
 
-    // XXX: this should probably be changed to be by aut rather than turns vvv
-    if (_decrement_a_duration(DUR_CLOUD_TRAIL, 1))
+    if (_decrement_a_duration(DUR_CLOUD_TRAIL, delay,
+            "Your trail of clouds dissipates."))
+    {
         you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
+    }
 
     if (you.duration[DUR_DARKNESS] && you.haloed())
     {

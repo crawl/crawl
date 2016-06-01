@@ -2674,7 +2674,7 @@ static void _xom_unclimable_stairs(int) { _xom_repel_stairs(true); }
 
 static void _xom_cloud_trail(int /*sever*/)
 {
-    you.duration[DUR_CLOUD_TRAIL] = random_range(60, 120);
+    you.duration[DUR_CLOUD_TRAIL] = random_range(600, 1200);
     you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
         random_choose_weighted(20, CLOUD_CHAOS,
                                5,  CLOUD_MIASMA,
