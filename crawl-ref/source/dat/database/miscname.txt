@@ -252,7 +252,7 @@ whispers in an ancient language
 
 whistling wind
 %%%%
-# Used both by Summon Horrible Things and Malign Gateway.
+# Used by Summon Horrible Things.
 SHT_int_loss
 
 Your mind reels, touched by the horrors through the portal.
