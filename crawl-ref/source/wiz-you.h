@@ -8,6 +8,7 @@
 
 #include "enum.h"
 
+#ifdef WIZARD
 #define FREEZE_TIME_KEY "freeze_time"
 
 void wizard_cast_spec_spell();
@@ -39,5 +40,6 @@ void wizard_change_species_to(species_type sp);
 job_type find_job_from_string(const string &job_str);
 void wizard_change_job_to(job_type job);
 void wizard_xom_acts();
+#endif
 
 #endif

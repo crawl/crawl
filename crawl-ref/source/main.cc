@@ -1516,8 +1516,10 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
+#ifdef WIZARD
     if (you.props.exists(FREEZE_TIME_KEY))
         you.turn_is_over = false;
+#endif
 
     if (you.turn_is_over)
     {
