@@ -1975,7 +1975,7 @@ int items(bool allow_uniques,
             force_type = unrand->sub_type;
 
         item_level = ISPEC_RANDART;
-        force_ego = 0;
+        item.brand = 0;
     }
 
     // Determine sub_type accordingly. {dlb}
