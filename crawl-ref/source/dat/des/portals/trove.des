@@ -130,8 +130,7 @@ function trove.get_trove_item(e, value, base_item)
 
   local pots = {
        {base="potion", type="resistance", quant=2+d(3)},
-       {base="potion", type="agility", quant=4+d(3)+d(2)},
-       {base="potion", type="experience", quant=1} }
+       {base="potion", type="agility", quant=4+d(3)+d(2)} }
 
   local heal_pots = {
        {base="potion", type="curing", quant=12+d(4)+d(4)},
