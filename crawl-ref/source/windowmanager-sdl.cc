@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
+#include "unicode.h"
 #include "version.h"
 #include "windowmanager.h"
 
@@ -684,10 +685,14 @@ int SDLWrapper::wait_event(wm_event *event)
 
         break;
     case SDL_TEXTINPUT:
+    {
         event->type = WME_KEYPRESS;
         // XXX: handle multiple keys?
-        event->key.keysym.sym = sdlevent.text.text[0];
+        ucs_t wc;
+        utf8towc(&wc, sdlevent.text.text);
+        event->key.keysym.sym = wc;
         break;
+    }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);
