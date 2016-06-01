@@ -8,6 +8,8 @@
 
 #include "ouch.h"
 
+#define XOM_CLOUD_TRAIL_TYPE_KEY "xom_cloud_trail_type"
+
 struct item_def;
 
 enum xom_message_type
@@ -45,10 +47,10 @@ enum xom_event_type
     XOM_GOOD_FAKE_DESTRUCTION,
     XOM_GOOD_ENCHANT_MONSTER,
     XOM_GOOD_FOG,
-    XOM_LAST_GOOD_ACT = XOM_GOOD_FOG,
+    XOM_GOOD_CLOUD_TRAIL,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_CLOUD_TRAIL,
 
     // bad acts
-    XOM_BAD_COLOUR_SMOKE_TRAIL,
     XOM_BAD_MISCAST_PSEUDO,
     XOM_BAD_MISCAST_HARMLESS,
     XOM_BAD_MISCAST_MINOR,

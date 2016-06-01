@@ -583,7 +583,7 @@ static const duration_def duration_data[] =
     { DUR_GOURMAND, 0, "", "", "gourmand", "", D_NO_FLAGS},
         { DUR_REPEL_STAIRS_MOVE, 0, "", "", "repel stairs move", "", D_NO_FLAGS, {{""}}},
     { DUR_REPEL_STAIRS_CLIMB, 0, "", "", "repel stairs climb", "", D_NO_FLAGS, {{""}}},
-    { DUR_COLOUR_SMOKE_TRAIL, 0, "", "", "coloured smoke trail", "", D_NO_FLAGS},
+    { DUR_CLOUD_TRAIL, 0, "", "", "cloud trail", "", D_NO_FLAGS},
     { DUR_TIME_STEP, 0, "", "", "time step", "", D_NO_FLAGS},
     { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS,
       {{ "Your icy envelope is restored.", _redraw_armour }}},
