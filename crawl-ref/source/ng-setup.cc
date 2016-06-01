@@ -500,7 +500,7 @@ static void _setup_generic(const newgame_def& ng)
     // you can use ' to swap between your items.
     if (you.char_class == JOB_EARTH_ELEMENTALIST)
         _free_up_slot('a');
-    if (you.char_class == JOB_ARCANE_MARKSMAN)
+    if (you.char_class == JOB_ARCANE_MARKSMAN && ng.weapon != WPN_THROWN)
         _free_up_slot('b');
 
     // Give tutorial skills etc
