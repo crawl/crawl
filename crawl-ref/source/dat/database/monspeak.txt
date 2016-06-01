@@ -2311,6 +2311,8 @@ Liver
 Mugger
 
 Walk
+
+Earwax
 %%%%
 # Lowercase words
 _crazy_yiuf_wordlist2_
@@ -2454,6 +2456,13 @@ pizzabubble
 noodlescoop
 
 mumblescurry
+
+alas
+
+rumpyflump
+
+sizzlefizz
+
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
@@ -5286,6 +5295,8 @@ w:1
 %%%%
 _Natasha_death_common_
 
+@The_monster@ yowls pathetically as @subjective@ dies!
+
 @The_monster@ screams in fury as @subjective@ dies!
 
 @The_monster@ screams in pain as @subjective@ dies!
@@ -5781,6 +5792,8 @@ w:5
 @_Rupert_rare_@
 %%%%
 _Rupert_common_
+
+VISUAL:@The_monster@ looks as if @subjective@ doubts whether @foe@ exists.
 
 VISUAL:@The_monster@ looks excited.
 
@@ -6667,6 +6680,9 @@ w:1
 
 w:1
 @The_monster@ screams @at_foe@, "@Foe_god@ is but a nuisance to me, mortal!"
+
+w:1
+@The_monster@ screams @at_foe@, "@Foe_god@ will weep as I flay your corpse!"
 %%%%
 ##############################################
 # Special orc speech
