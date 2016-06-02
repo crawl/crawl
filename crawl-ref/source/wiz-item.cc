@@ -802,7 +802,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_quant += item.quantity;
         // hack alert: put rods & unrands into the end of staff acq
         const int subtype_index
-            = item.base_type == OBJ_STAVES ? item.sub_type :
+            = type != OBJ_STAVES || item.base_type == OBJ_STAVES ? item.sub_type :
               item.base_type == OBJ_RODS ? NUM_STAVES + item.sub_type :
               NUM_STAVES + NUM_RODS; // an unrand, WPN_STAFF
         subtype_quants[subtype_index] += item.quantity;
