@@ -1157,8 +1157,6 @@ static void _debug_acquirement_stats(FILE *ostat)
     item.quantity  = 1;
     item.base_type = type;
 
-    const description_level_type desc = (type == OBJ_BOOKS ? DESC_PLAIN
-                                                           : DESC_DBNAME);
     const bool terse = (type == OBJ_BOOKS ? false : true);
 
     // First, get the maximum name length.
@@ -1172,7 +1170,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             continue;
 
         item.sub_type = i;
-        string name = item.name(desc, terse, true);
+        string name = item.name(DESC_DBNAME, terse, true);
 
         max_width = max(max_width, strwidth(name));
     }
@@ -1207,7 +1205,7 @@ static void _debug_acquirement_stats(FILE *ostat)
                 item.base_type = OBJ_STAVES; // actual staff
         }
 
-        const string name = item.name(desc, terse, true);
+        const string name = item.name(DESC_DBNAME, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
