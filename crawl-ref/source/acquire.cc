@@ -965,24 +965,6 @@ static bool _should_acquire_manual(int agent)
 }
 
 /**
- * For the purposes of acquirement, does the player have any skill in magic,
- *
- * @return  true iff the player has any nonzero magic skill AND if they do not
- *          worship Trog.
- */
-static bool _knows_and_likes_magic()
-{
-    if (you_worship(GOD_TROG))
-        return false;
-
-    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        if (_is_magic_skill(sk) && _skill_rdiv(sk) >= 1)
-            return true;
-
-    return false;
-}
-
-/**
  * Turn a given book into an acquirement-quality manual.
  *
  * @param book[out]     The book to be turned into a manual.
@@ -992,8 +974,6 @@ static bool _acquire_manual(item_def &book)
 {
     int weights[NUM_SKILLS] = { 0 };
     int total_weights = 0;
-
-    const bool knows_magic = _knows_and_likes_magic();
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
@@ -1008,11 +988,6 @@ static bool _acquire_manual(item_def &book)
         // you couldn't use unless you switched your religion.
         if (_skill_useless_with_god(sk))
             w /= 2;
-
-        // If we don't have any magic skills, make non-magic skills
-        // more likely.
-        if (!knows_magic && !_is_magic_skill(sk))
-            w *= 2;
 
         weights[sk] = w;
         total_weights += w;
