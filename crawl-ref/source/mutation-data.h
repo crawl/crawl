@@ -1443,11 +1443,11 @@ static const mutation_def mut_data[] =
    "When seriously injured, your bleeding wounds create thick armour. (AC +",
    "When seriously injured, your bleeding wounds create very thick armour. (AC +"},
 
-  {"You feel your blood thicken.",
+  {"You feel your blood ready itself to protect you.",
    "You feel your blood thicken.",
    "You feel your blood thicken."},
 
-  {"You feel your blood thin.",
+  {"You feel your blood become entirely quiescent.",
    "You feel your blood thin.",
    "You feel your blood thin."},
 },
