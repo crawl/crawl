@@ -48,6 +48,22 @@ static armour_type _useless_armour_type();
 
 
 /**
+ * Get a randomly rounded value for the player's specified skill, unmodified
+ * by crosstraining, draining, etc.
+ *
+ * @param skill     The skill in question; e.g. SK_ARMOUR.
+ * @param mult      A multiplier to the skill, for higher precision.
+ * @return          A rounded value of that skill; e.g. _skill_rdiv(SK_ARMOUR)
+ *                  for a value of 10.1 will return 11 90% of the time &
+ *                  10 the remainder.
+ */
+static int _skill_rdiv(skill_type skill, int mult = 1)
+{
+    const int scale = 256;
+    return div_rand_round(you.skill(skill, mult * scale, true), scale);
+}
+
+/**
  * Choose a random subtype of armour to generate through acquirement/divine
  * gifts.
  *
@@ -188,12 +204,14 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  */
 static armour_type _acquirement_shield_type()
 {
+    const int scale = 256;
     vector<pair<armour_type, int>> weights = {
-        { ARM_BUCKLER,       player_shield_racial_factor() * 4
-                                - you.skills[SK_SHIELDS] },
-        { ARM_SHIELD,        10 },
-        { ARM_LARGE_SHIELD,  20 - player_shield_racial_factor() * 4
-                                + div_rand_round(you.skills[SK_SHIELDS], 2) },
+        { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
+                                - _skill_rdiv(SK_SHIELDS, scale) },
+        { ARM_SHIELD,        10 * scale },
+        { ARM_LARGE_SHIELD,  20 * scale
+                             - player_shield_racial_factor() * 4 * scale
+                             + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
 
     return filtered_vector_select(weights, [] (armour_type shtyp) {
@@ -229,7 +247,7 @@ static int _body_acquirement_weight(armour_type armour,
 
     // highest chance when armour skill = (displayed) evp - 3
     const int evp = armour_prop(armour, PARM_EVASION);
-    const int skill = min(27, you.skills[SK_ARMOUR] + 3);
+    const int skill = min(27, _skill_rdiv(SK_ARMOUR) + 3);
     const int sk_diff = skill + evp / 10;
     const int inv_diff = max(1, 27 - sk_diff);
     // armour closest to ideal evp is 27^3 times as likely as the furthest away
@@ -247,9 +265,9 @@ static armour_type _acquirement_body_armour(bool divine)
 {
     // Using an arbitrary legacy formula, do we think the player doesn't care
     // about armour EVP?
-    const bool warrior = random2(you.skills[SK_SPELLCASTING] * 3
-                            + you.skills[SK_DODGING])
-                         < random2(you.skills[SK_ARMOUR] * 2);
+    const bool warrior = random2(_skill_rdiv(SK_SPELLCASTING, 3)
+                                + _skill_rdiv(SK_DODGING))
+                         < random2(_skill_rdiv(SK_ARMOUR, 2));
 
     vector<pair<armour_type, int>> weights;
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
@@ -424,14 +442,14 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     int best_sk = 0;
 
     for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
-        if (you.skills[i] > best_sk)
-            best_sk = you.skills[i];
+        best_sk = max(best_sk, _skill_rdiv((skill_type)i));
+    best_sk = max(best_sk, _skill_rdiv(SK_UNARMED_COMBAT));
 
     for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
-        int weight = you.skills[sk] + 1;
+        int weight = _skill_rdiv(sk) + 1;
         // Exaggerate the weighting if it's a scroll acquirement.
         if (!divine)
             weight = (weight + 1) * (weight + 2);
@@ -440,8 +458,6 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (x_chance_in_y(weight, count))
             skill = sk;
     }
-    if (you.skills[SK_UNARMED_COMBAT] > best_sk)
-        best_sk = you.skills[SK_UNARMED_COMBAT];
 
     // Now choose a subtype which uses that skill.
     int result = OBJ_RANDOM;
@@ -454,7 +470,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     // shield skill is 0 so they always weight towards 2H.
     const int shield_sk = you.species == SP_FORMICID
         ? 0
-        : you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
+        : _skill_rdiv(SK_SHIELDS) * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -518,12 +534,10 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
 
     for (int i = SK_SLINGS; i <= SK_THROWING; i++)
     {
-        if (you.skills[i])
-        {
-            count += you.skills[i];
-            if (x_chance_in_y(you.skills[i], count))
-                skill = i;
-        }
+        const int sk = _skill_rdiv((skill_type)i);
+        count += sk;
+        if (x_chance_in_y(sk, count))
+            skill = i;
     }
 
     missile_type result = MI_TOMAHAWK;
@@ -589,9 +603,9 @@ static bool _want_rod(int agent)
     // First look at skills to determine whether the player gets a rod.
     int spell_skills = 0;
     for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
-        spell_skills += you.skills[i];
+        spell_skills += _skill_rdiv((skill_type)i);
 
-    return random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
+    return random2(spell_skills) < _skill_rdiv(SK_EVOCATIONS) + 3
            && !one_chance_in(5);
 }
 
@@ -655,8 +669,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
-    int skills = you.skills[SK_EVOCATIONS]
-        * max(you.skills[SK_SPELLCASTING], you.skills[SK_INVOCATIONS]);
+    int skills = _skill_rdiv(SK_EVOCATIONS)
+        * max(_skill_rdiv(SK_SPELLCASTING), _skill_rdiv(SK_INVOCATIONS));
     if (x_chance_in_y(skills, MAX_SKILL_LEVEL * MAX_SKILL_LEVEL)
         && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
     {
@@ -851,9 +865,7 @@ static int _spell_weight(spell_type spell)
     {
         if (disciplines & disc)
         {
-            int skill = you.skills[spell_type2skill(disc)];
-
-            weight += skill;
+            weight += _skill_rdiv(spell_type2skill(disc));
             count++;
         }
     }
@@ -934,7 +946,7 @@ static bool _should_acquire_manual(int agent)
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        const int weight = you.skills[sk];
+        const int weight = _skill_rdiv(sk);
 
         if (_is_magic_skill(sk))
             magic_weights += weight;
@@ -964,7 +976,7 @@ static bool _knows_and_likes_magic()
         return false;
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        if (_is_magic_skill(sk) && you.skills[sk] >= 1)
+        if (_is_magic_skill(sk) && _skill_rdiv(sk) >= 1)
             return true;
 
     return false;
@@ -985,7 +997,7 @@ static bool _acquire_manual(item_def &book)
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        int skl = you.skills[sk];
+        const int skl = _skill_rdiv(sk);
 
         if (skl == 27 || is_useless_skill(sk))
             continue;
@@ -1068,7 +1080,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     {
         const int level = agent == GOD_XOM ?
             random_range(1, 9) :
-            max(1, (you.skills[SK_SPELLCASTING] + 2) / 3);
+            max(1, (_skill_rdiv(SK_SPELLCASTING) + 2) / 3);
 
         book.sub_type  = BOOK_RANDART_LEVEL;
         if (!make_book_level_randart(book, level))
@@ -1106,7 +1118,7 @@ static int _weapon_brand_quality(int brand, bool range)
     case SPWPN_NORMAL:
         return 0;
     case SPWPN_PAIN:
-        return you.skills[SK_NECROMANCY] / 2;
+        return _skill_rdiv(SK_NECROMANCY) / 2;
     case SPWPN_VORPAL:
         return range ? 5 : 1;
     }
