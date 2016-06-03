@@ -1173,7 +1173,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_DRACONIAN,               TILEP_MONS_ZOMBIE_DRACONIAN },
         { MONS_GRIFFON,                 TILEP_MONS_ZOMBIE_GRIFFON },
         { MONS_DRAGON,                  TILEP_MONS_ZOMBIE_DRAGON },
-        { MONS_WYVERN,                  TILEP_MONS_ZOMBIE_DRAGON },
+        { MONS_WYVERN,                  TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_DRAKE,                   TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_GIANT_LIZARD,            TILEP_MONS_ZOMBIE_LIZARD },
         { MONS_CROCODILE,               TILEP_MONS_ZOMBIE_LIZARD },
