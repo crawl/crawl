@@ -433,18 +433,19 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     return type_wanted;
 }
 
-static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
+/**
+ * Randomly choose a class of weapons (those using a specific weapon skill)
+ * for acquirement to give the player. Weight toward the player's skills.
+ *
+ * @param divine    Whether this is a god gift, which are less strongly
+ *                  tailored to the player's skills.
+ * @return          An appropriate weapon skill; e.g. SK_LONG_BLADES.
+ */
+static skill_type _acquirement_weapon_skill(bool divine)
 {
-    // Asking for a weapon is biased towards your skills.
-    // First pick a skill, weighting towards those you have.
+    // reservoir sample.
     int count = 0;
     skill_type skill = SK_FIGHTING;
-    int best_sk = 0;
-
-    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
-        best_sk = max(best_sk, _skill_rdiv((skill_type)i));
-    best_sk = max(best_sk, _skill_rdiv(SK_UNARMED_COMBAT));
-
     for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
     {
         // Adding a small constant allows for the occasional
@@ -459,9 +460,21 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
             skill = sk;
     }
 
+    return skill;
+}
+
+static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
+{
+    const skill_type skill = _acquirement_weapon_skill(divine);
+
+    int best_sk = 0;
+    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
+        best_sk = max(best_sk, _skill_rdiv((skill_type)i));
+    best_sk = max(best_sk, _skill_rdiv(SK_UNARMED_COMBAT));
+
     // Now choose a subtype which uses that skill.
     int result = OBJ_RANDOM;
-    count = 0;
+    int count = 0;
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
@@ -483,10 +496,6 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (wskill != skill)
             continue;
         item_considered.sub_type = i;
-
-        // Can't get blessed weapons through acquirement, only from TSO
-        if (is_blessed(item_considered))
-            continue;
 
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
 
@@ -521,6 +530,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (!you.seen_weapon[i])
             acqweight *= 5; // strong emphasis on type variety, brands go only second
 
+        // reservoir sampling
         if (x_chance_in_y(acqweight, count += acqweight))
             result = i;
     }
