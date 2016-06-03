@@ -237,7 +237,7 @@ callback.pakellas_its_alive_begin = make_begin_trigger_func(
   pakellas_its_alive_begin)
 
 function pakellas_its_alive_end(data, triggerable, triggerer, marker, ev)
-  local mons_list = {"elder mutant beast", "electric golem", "toenail golem",
+  local mons_list = {"primal mutant beast", "electric golem", "toenail golem",
                      "shining eye", "tentacled monstrosity", "acid blob",
                      "very ugly thing"}
   local result_mons = mons_list[crawl.random_range(1, #mons_list)]
@@ -379,10 +379,9 @@ KFEAT:  g = iron_grate
 KFEAT:  h = iron_grate
 KFEAT:  _ = altar_pakellas
 KMONS:  P = bush
-MONS:   human never_corpse ; nothing / elf never_corpse ; nothing / \
-        / orc never_corpse ; nothing / kobold never_corpse ; nothing / \
-        / halfling never_corpse ; nothing / warg never_corpse / \
-        / yak never_corpse / redback never_corpse
+MONS:   human never_corpse ; nothing / elf never_corpse ; nothing \
+        / troll never_corpse / warg never_corpse / yak never_corpse \
+        / wolf spider never_corpse
 MONS:   lightning spire att:neutral
 KPROP:  wlgh12 = no_tele_into
 TILE:   n = dngn_transparent_stone_green
