@@ -3298,9 +3298,6 @@ static string _monster_stat_description(const monster_info& mi)
                                               "slowed by cold attacks.\n";
     }
 
-    if (mons_class_flag(mi.type, M_GLOWS))
-        result << uppercase_first(pronoun) << " is outlined in light.\n";
-
     // Seeing invisible.
     if (mi.can_see_invisible())
         result << uppercase_first(pronoun) << " can see invisible.\n";
