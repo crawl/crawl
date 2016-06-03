@@ -17,7 +17,6 @@
 
 #include "artefact.h"
 #include "art-enum.h"
-#include "decks.h"
 #include "dungeon.h"
 #include "food.h"
 #include "goditem.h"
@@ -687,13 +686,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         return MISC_CRYSTAL_BALL_OF_ENERGY;
     }
 
-    // Total weight if none have been seen is 100.
     const vector<pair<int, int> > choices =
     {
-        // Decks have lowest weight.
-        {MISC_DECK_OF_ESCAPE,                              4 },
-        {MISC_DECK_OF_DESTRUCTION,                         4 },
-        {MISC_DECK_OF_WAR,                                 4 },
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
             (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
@@ -1259,16 +1253,14 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying sif-gifted rarebook!";
     }
 
-    // Pakellas doesn't gift decks (that's Nemelex's turf).
     // The crystal ball case should be handled elsewhere, but just in
     // case, it's also handled here.
     if (agent == GOD_PAKELLAS)
     {
         if (item.base_type == OBJ_MISCELLANY
-            && (is_deck(item)
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
+            && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
         {
-            return "Destroying deck or CBoE that Pakellas hates!";
+            return "Destroying CBoE that Pakellas hates!";
         }
     }
 
@@ -1473,12 +1465,6 @@ int acquirement_create_item(object_class_type class_wanted,
                 // On a weapon, an enchantment of less than 0 is never viable.
                 acq_item.plus = max(static_cast<int>(acq_item.plus), random2(2));
             }
-        }
-        else if (is_deck(acq_item))
-        {
-            // Non-legendary decks aren't very useful for non-nemelexites
-            // and nemelexites get plenty of lower-quality decks anyway.
-            acq_item.deck_rarity = DECK_RARITY_LEGENDARY;
         }
 
         // Last check: don't acquire items your god hates.
