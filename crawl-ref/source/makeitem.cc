@@ -809,7 +809,6 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_INVISIBILITY,
                              SPARM_MAGIC_RESISTANCE);
 
     case ARM_HAT:
@@ -937,7 +936,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         // deliberate fall-through
 #endif
     case SPARM_INVISIBILITY:
-        return slot == EQ_CLOAK;
+        return false;
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:

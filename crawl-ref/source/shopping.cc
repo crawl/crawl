@@ -2010,9 +2010,6 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 
 // TODO:
 //
-// * If you get a randart which lets you turn invisible, then remove
-//   any ordinary rings of invisibility from the shopping list.
-//
 // * If you collected enough spellbooks that all the spells in a
 //   shopping list book are covered, then auto-remove it.
 bool ShoppingList::cull_identical_items(const item_def& item, int cost)
