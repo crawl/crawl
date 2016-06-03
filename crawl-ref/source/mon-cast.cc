@@ -7500,7 +7500,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || !(foe->holiness() & MH_UNDEAD);
 
     case SPELL_CORONA:
-        return !foe || foe->backlit() || foe->glows_naturally();
+        return !foe || foe->backlit();
 
     case SPELL_BERSERKER_RAGE:
         // Snorg does not go berserk as often until wounded.
@@ -7538,8 +7538,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || mon->has_ench(ENCH_REGENERATION);
 
     case SPELL_INVISIBILITY:
-        return mon->has_ench(ENCH_INVIS)
-               || mon->glows_naturally();
+        return mon->has_ench(ENCH_INVIS);
 
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:

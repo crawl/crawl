@@ -416,7 +416,6 @@ public:
 #if TAG_MAJOR_VERSION == 34
     int heat_radius() const override;
 #endif
-    bool glows_naturally() const override;
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;

@@ -3115,11 +3115,6 @@ bool monster::umbra() const
     return umbraed() && !haloed();
 }
 
-bool monster::glows_naturally() const
-{
-    return mons_class_flag(type, M_GLOWS);
-}
-
 bool monster::caught() const
 {
     return has_ench(ENCH_HELD);

@@ -5291,10 +5291,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = !(mon->is_summoned() || mon->has_ench(ENCH_INNER_FLAME));
         break;
 
-    case BEAM_CORONA:
-        rc = !mon->glows_naturally();
-        break;
-
     default:
         break;
     }
@@ -5612,10 +5608,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_INVISIBILITY:
     {
-        // Already glowing.
-        if (mon->glows_naturally())
-            return MON_UNAFFECTED;
-
         if (enchant_monster_invisible(mon, "flickers and vanishes"))
             obvious_effect = true;
 
