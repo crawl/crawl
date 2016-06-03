@@ -2826,7 +2826,8 @@ KMONS:    5Z = fire dragon / ice dragon / iron dragon / w:5 spark wasp band \
 KMONS:    6 = storm dragon / golden dragon / quicksilver dragon
 KMONS:    7 = w:15 tengu reaver / stone giant / fire giant / frost giant
 KMONS:    D = titan / juggernaut / w:15 caustic shrike
-KMONS:    O = w:5 the Enchantress band / iron giant band, iron giant band
+KMONS:    O = w:5 the Enchantress band / spriggan defender band, \
+              spriggan defender band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $

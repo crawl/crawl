@@ -1066,7 +1066,6 @@ static const pop_entry pop_depths[] =
   {  5, 14,   50, FLAT, MONS_JUGGERNAUT },
   {  6, 14,   50, FLAT, MONS_TITAN },
   {  6, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
-  {  6, 14,   25, FLAT, MONS_IRON_GIANT },
   { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
