@@ -686,15 +686,17 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         return MISC_CRYSTAL_BALL_OF_ENERGY;
     }
 
+    const bool NO_LOVE = player_mutation_level(MUT_NO_LOVE);
+
     const vector<pair<int, int> > choices =
     {
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         {MISC_SACK_OF_SPIDERS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         {MISC_PHANTOM_MIRROR,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         // The player never needs more than one.
         {MISC_DISC_OF_STORMS,
             (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 13)},
