@@ -2993,8 +2993,7 @@ static void _join_ru()
 static void _join_trog()
 {
     for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        if (you.skills[sk])
-            you.train[sk] = 0;
+        you.train[sk] = you.train_alt[sk] = 0;
 
     // When you start worshipping Trog, you make all non-hostile magic
     // users hostile.
