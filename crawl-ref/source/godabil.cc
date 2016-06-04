@@ -6248,7 +6248,8 @@ bool ru_power_leap()
         return false;
     }
 
-    if (you.is_stationary()) {
+    if (you.is_stationary())
+    {
         mpr("You can't move from your position!");
         return false;
     }
@@ -6617,7 +6618,8 @@ bool uskayaw_line_pass()
         return false;
     }
 
-    if (you.is_stationary()) {
+    if (you.is_stationary())
+    {
         mpr("You can't move from your position!");
         return false;
     }
