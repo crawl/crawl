@@ -324,23 +324,50 @@ static string _describe_ash_skill_boost()
     return desc.str();
 }
 
-/// Build & return a table of Hep's granted ancestor upgrades
+/// Build & return a table of Hep's upgrades for your chosen ancestor type.
 static string _describe_ancestor_upgrades()
 {
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        return "";
+
     // TODO: don't hardcode this
-    // TODO: grey out columns for unchosen ancestors
     // TODO: higlight upgrades taken
-    return
-    "Ancestors:        Battlemage        Hexer               Knight\n"
-    "XL\n"
-    "1                Quarterstaff    Dagger (drain)          Flail\n"
-    "1                 Throw Frost        Slow               Shield\n"
-    "1                 Stone Arrow      Confuse          Splint Mail (+AC)\n"
-    "15 (Option A):    Magma Bolt       Paralyse       Demon Trident (flame)\n"
-    "15 (Option B):     Iceblast      Metabol. Engl.     Broad Axe (flame)\n"
-    "21               Laj. (freeze)   Mass Confusion      Lg. Shld (refl.)\n"
-    "21                   Haste           Haste               Haste\n"
-    "27               Crystal Spear     Qbl. (am)         Speed (wpn ego)";
+    // XXX: maybe it'd be nice to let you see other ancestor types'...?
+    switch (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int())
+    {
+    case MONS_ANCESTOR_KNIGHT:
+        return "XL                      Knight\n"
+               "                        Flail\n"
+               "                        Shield\n"
+               "                   Splint Mail (+AC)\n"
+               "15 (Option A)    Demon Trident (flame)\n"
+               "15 (Option B)      Broad Axe (flame)\n"
+               "21              Large Shield (reflect)\n"
+               "21                      Haste\n"
+               "27                Speed (weapon ego)\n";
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return "XL                    Battlemage\n"
+               "                     Quarterstaff\n"
+               "                      Throw Frost\n"
+               "                      Stone Arrow\n"
+               "15 (Option A)         Magma Bolt\n"
+               "15 (Option B)          Iceblast\n"
+               "21                  Lajatang (freeze)\n"
+               "21                       Haste\n"
+               "27                   Crystal Spear\n";
+    case MONS_ANCESTOR_HEXER:
+        return "XL                       Hexer\n"
+               "                     Dagger (drain)\n"
+               "                         Slow\n"
+               "                        Confuse\n"
+               "15                     Paralyse\n"
+               "21 (Option A)    Metabolic Englaciation\n"
+               "21 (Option B)        Mass Confusion\n"
+               "21                       Haste\n"
+               "27                Quickblade (antimagic)\n";
+    default:
+        return "";
+    }
 }
 
 // from dgn-overview.cc
