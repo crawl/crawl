@@ -158,9 +158,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Sif Muna
-    { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "tap ambient magical fields" },
+    { { 1, "tap ambient fields to cast spells when your magical energy is low" }
       { 2, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
+      { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
       { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
           "forget spells at will" },
     },
@@ -758,6 +759,11 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DEVICE_SURGE])
                 you.duration[DUR_DEVICE_SURGE] = 0;
+        }
+        else if (god == GOD_SIF_MUNA)
+        {
+            if (you.duration[DUR_CHANNEL_ENERGY])
+                you.duration[DUR_CHANNEL_ENERGY] = 0;
         }
 
         if (you_worship(god))
@@ -2796,6 +2802,8 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_SIF_MUNA:
+        if (you.duration[DUR_CHANNEL_ENERGY])
+            you.duration[DUR_CHANNEL_ENERGY] = 0;
         _set_penance(old_god, 50);
         break;
 

@@ -537,6 +537,8 @@ static const duration_def duration_data[] =
       {{ "Your cleaving frenzy subsides." }}},
     { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
+    { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Chan", "", "channel",
+      "You are rapidly regenerating magical energy.", D_DISPELLABLE },
     { DUR_DEVICE_SURGE, WHITE, "Surge", "device surging", "device surge",
       "You have readied a device surge.", D_EXPIRES,
       {{ "Your device surge dissipates." },
@@ -557,6 +559,9 @@ static const duration_def duration_data[] =
       "sanguine armour", "",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
+    { DUR_NO_CAST, RED, "-Cast", "no casting", "",
+      "You are unable to cast spells.", D_NO_FLAGS,
+      {{ "You regain access to your magic." }, {}, true }},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

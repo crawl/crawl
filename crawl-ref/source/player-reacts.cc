@@ -677,6 +677,7 @@ static void _decrement_durations()
     }
 
     dec_ambrosia_player(delay);
+    dec_channel_player(delay);
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
