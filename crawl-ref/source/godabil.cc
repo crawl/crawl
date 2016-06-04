@@ -4007,7 +4007,7 @@ void spare_beogh_convert()
             mpr("You can't move from your position!"); \
             return false;                              \
         }                                              \
-    } while(0)
+    } while (0)
 
 bool dithmenos_shadow_step()
 {
