@@ -1893,8 +1893,10 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
 
     const int HD = mon.get_experience_level();
     const int dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
+    // battlemages do double base melee damage (+25-50% including their weapon)
+    const int dam_mult = mon.type == MONS_ANCESTOR_BATTLEMAGE ? 2 : 1;
 
-    return { AT_HIT, AF_PLAIN, dam };
+    return { AT_HIT, AF_PLAIN, dam * dam_mult };
 }
 
 /** Get the attack type, attack flavour and damage for a monster attack.

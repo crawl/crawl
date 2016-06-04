@@ -350,6 +350,7 @@ static string _describe_ancestor_upgrades()
                "                     Quarterstaff\n"
                "                      Throw Frost\n"
                "                      Stone Arrow\n"
+               "                     +Melee Damage\n"
                "15 (Option A)         Magma Bolt\n"
                "15 (Option B)          Iceblast\n"
                "21                  Lajatang (freeze)\n"
