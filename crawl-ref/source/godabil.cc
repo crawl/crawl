@@ -6248,6 +6248,12 @@ bool ru_power_leap()
         return false;
     }
 
+    if (you.is_stationary())
+    {
+        mpr("You can't move from your position!");
+        return false;
+    }
+
     // query for location:
     dist beam;
 
