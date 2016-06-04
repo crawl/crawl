@@ -2065,9 +2065,18 @@ int player_movement_speed()
     return mv;
 }
 
-const int player_adjust_evoc_power(const int power)
+/**
+ * Multiply the power of some evocation per the player's current evocations
+ * enhancers.
+ *
+ * @param power         The base power of the evocation.
+ * @param enhancers     Bonus enhancers to evocations (pak device surge).
+ * @return              A modified power value.
+ */
+const int player_adjust_evoc_power(const int power, int enhancers)
 {
-    return stepdown_spellpower(100*apply_enhancement(power, you.spec_evoke()));
+    const int total_enhancers = you.spec_evoke() + enhancers;
+    return stepdown_spellpower(100 *apply_enhancement(power, total_enhancers));
 }
 
 const int player_adjust_invoc_power(const int power)
@@ -3655,12 +3664,6 @@ bool player::gourmand(bool calc_unid, bool items) const
 {
     return player_mutation_level(MUT_GOURMAND) > 0
            || actor::gourmand(calc_unid, items);
-}
-
-int player::spec_evoke(bool calc_unid, bool items) const
-{
-    return actor::spec_evoke(calc_unid, items)
-           + attribute[ATTR_PAKELLAS_DEVICE_SURGE];
 }
 
 bool player::stasis(bool calc_unid, bool items) const

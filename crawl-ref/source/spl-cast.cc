@@ -416,7 +416,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 {
     int power = 0;
     if (rod)
-        power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
+        power = 5 + you.skill(SK_EVOCATIONS, 3); // will be adjusted later
     else
     {
         const spschools_type disciplines = get_spell_disciplines(spell);
@@ -1377,13 +1377,16 @@ spret_type your_spells(spell_type spell, int powc,
         }
     }
 
-    if (evoked && !pakellas_device_surge())
-        return SPRET_FAIL;
-
+    if (evoked)
+    {
+        const int surge = pakellas_surge_devices();
+        powc = player_adjust_evoc_power(powc, surge);
+        surge_power(you.spec_evoke() + surge);
+    }
+    else if (allow_fail)
+        surge_power(_spell_enhancement(spell));
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
-    if (allow_fail || evoked)
-        surge_power(evoked ? you.spec_evoke() : _spell_enhancement(spell));
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
