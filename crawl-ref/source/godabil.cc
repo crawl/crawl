@@ -6842,8 +6842,10 @@ bool uskayaw_grand_finale()
     // kill the target
     mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
-    if (!mons->is_insubstantial())
+    if (!mons->is_insubstantial()) {
+        blood_spray(mons->pos(), mons->mons_species(), mons->hit_points / 5);
         throw_monster_bits(mons); // have some fun while we're at it
+    }
 
     monster_die(mons, KILL_YOU, NON_MONSTER, false);
 
