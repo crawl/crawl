@@ -723,6 +723,57 @@ void wizard_list_items()
     }
 }
 
+static int _subtype_index(int acq_type, const item_def &item)
+{
+    // Certain acquirement types can acquire different classes of items than
+    // they claim to, so... pack them in at the end, as a hack.
+    switch (acq_type)
+    {
+        case OBJ_MISCELLANY:
+            if (item.base_type == OBJ_RODS)
+                return NUM_MISCELLANY + item.sub_type;
+            break;
+        case OBJ_STAVES:
+            if (item.base_type == OBJ_WEAPONS) // unrand staff
+                return NUM_STAVES;
+            break;
+        default:
+            break;
+    }
+
+    return item.sub_type;
+}
+
+/// Reverse the _subtype_index() hack.
+static void _fill_item_from_subtype(object_class_type acq_type, int subtype,
+                                    item_def &item)
+{
+    switch (acq_type)
+    {
+        case OBJ_MISCELLANY:
+            if (subtype >= NUM_MISCELLANY)
+            {
+                item.base_type = OBJ_RODS;
+                item.sub_type = subtype - NUM_MISCELLANY;
+                return;
+            }
+            break;
+        case OBJ_STAVES:
+            if (subtype == NUM_STAVES) // unrand staff
+            {
+                item.base_type = OBJ_WEAPONS;
+                item.sub_type = WPN_STAFF;
+                return;
+            }
+            break;
+        default:
+            break;
+    }
+
+    item.base_type = acq_type;
+    item.sub_type = subtype;
+}
+
 static void _debug_acquirement_stats(FILE *ostat)
 {
     int p = get_mitm_slot(11);
@@ -800,11 +851,9 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         acq_calls++;
         total_quant += item.quantity;
-        // hack alert: put rods & unrands into the end of staff acq
-        const int subtype_index
-            = type != OBJ_STAVES || item.base_type == OBJ_STAVES ? item.sub_type :
-              item.base_type == OBJ_RODS ? NUM_STAVES + item.sub_type :
-              NUM_STAVES + NUM_RODS; // an unrand, WPN_STAFF
+        // hack alert: put unrands into the end of staff acq
+        // and rods into the end of misc acq
+        const int subtype_index = _subtype_index(type, item);
         subtype_quants[subtype_index] += item.quantity;
 
         max_plus    = max(max_plus, item.plus);
@@ -1187,23 +1236,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         if (subtype_quants[i] == 0)
             continue;
 
-        item.sub_type = i;
-
-        if (type == OBJ_STAVES)
-        {
-            if (i == NUM_STAVES + NUM_RODS) // unrand
-            {
-                item.base_type = OBJ_WEAPONS;
-                item.sub_type = WPN_STAFF;
-            }
-            else if (i >= NUM_STAVES) // rod
-            {
-                item.base_type = OBJ_RODS;
-                item.sub_type = i - NUM_STAVES;
-            }
-            else
-                item.base_type = OBJ_STAVES; // actual staff
-        }
+        _fill_item_from_subtype(type, i, item);
 
         const string name = item.name(DESC_DBNAME, terse, true);
 

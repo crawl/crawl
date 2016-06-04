@@ -604,19 +604,6 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static bool _want_rod(int agent)
-{
-    if (agent == GOD_PAKELLAS)
-        return true;
-
-    // First look at skills to determine whether the player gets a rod.
-    int spell_skills = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
-        spell_skills += _skill_rdiv((skill_type)i);
-
-    return random2(spell_skills) < _skill_rdiv(SK_EVOCATIONS) + 3
-           && !one_chance_in(5);
-}
 
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 {
@@ -829,9 +816,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Staves and rods have a common acquirement class.
-        if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
-            class_wanted = _want_rod(agent) ? OBJ_RODS : OBJ_STAVES;
+        // Misc items and rods have a common acquirement class.
+        if (class_wanted == OBJ_MISCELLANY || class_wanted == OBJ_RODS)
+            class_wanted = one_chance_in(8) ? OBJ_RODS : OBJ_MISCELLANY;
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1540,6 +1527,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISCELLANY);
         bad_class.set(OBJ_WANDS);
     }
+    if (you_worship(GOD_TROG))
+        bad_class.set(OBJ_STAVES);
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
@@ -1551,7 +1540,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_BOOKS,      "Book" },
         { OBJ_STAVES,     "Staff" },
         { OBJ_WANDS,      "Wand" },
-        { OBJ_MISCELLANY, "Miscellaneous" },
+        { OBJ_MISCELLANY, "Misc. Evocable" },
         { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
         { OBJ_MISSILES,   "Ammunition" },
