@@ -240,7 +240,7 @@ void SkillRegion::update()
         if (you.skills[skill] >= 27)
             desc.tile = tileidx_skill(skill, TRAINING_MASTERED);
         else if (!you.training[skill])
-            desc.tile = tileidx_skill(skill, TRAINING_DISABLED);
+            desc.tile = tileidx_skill(skill, TRAINING_INACTIVE);
         else
             desc.tile = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;

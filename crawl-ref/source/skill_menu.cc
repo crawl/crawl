@@ -239,7 +239,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         }
         else if (you.training[m_sk] == TRAINING_DISABLED)
         {
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_DISABLED),
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE),
                                       TEX_GUI));
         }
         else

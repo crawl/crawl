@@ -3093,6 +3093,8 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     {
     case TRAINING_DISABLED:
         return ch + TILEG_FIGHTING_OFF - TILEG_FIGHTING_ON;
+    case TRAINING_INACTIVE:
+        return ch + TILEG_FIGHTING_INACTIVE - TILEG_FIGHTING_ON;
     case TRAINING_ENABLED:
         return ch;
     case TRAINING_FOCUSED:

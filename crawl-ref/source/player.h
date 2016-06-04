@@ -68,11 +68,13 @@ int check_stealth();
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
 {
-    TRAINING_MASTERED = -1,
     TRAINING_DISABLED = 0,
     TRAINING_ENABLED,
     TRAINING_FOCUSED,
-    NUM_TRAINING_STATUSES
+    NUM_TRAINING_STATUSES,
+    // the below are only used for display purposes, not training.
+    TRAINING_MASTERED,
+    TRAINING_INACTIVE, ///< enabled but not used (in auto mode)
 };
 
 // needed for assert in is_player()
