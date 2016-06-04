@@ -1520,7 +1520,10 @@ vector<string> monster_info::attributes() const
     if (is(MB_GOZAG_INCITED))
         v.emplace_back("incited by Gozag");
     if (is(MB_PAIN_BOND))
-        v.emplace_back("sharing its pain");
+    {
+        v.push_back(string("sharing ")
+                    + pronoun(PRONOUN_POSSESSIVE) + " pain");
+    }
     if (is(MB_IDEALISED))
         v.emplace_back("idealised");
     return v;
