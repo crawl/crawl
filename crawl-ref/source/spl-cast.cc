@@ -627,6 +627,12 @@ static bool _can_cast()
         return false;
     }
 
+    if (you.duration[DUR_NO_CAST])
+    {
+        mpr("You are unable to acess your magic!");
+        return false;
+    }
+
     if (!you.undead_state() && !you_foodless()
         && you.hunger_state <= HS_STARVING)
     {
@@ -767,12 +773,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    const int cost = spell_mana(spell);
+    int cost = spell_mana(spell);
+    int sifcast_amount = 0;
     if (!enough_mp(cost, true))
     {
-        mpr("You don't have enough magic to cast that spell.");
-        crawl_state.zero_turns_taken();
-        return false;
+        if (you_worship(GOD_SIF_MUNA)
+            && yesno("Sifcast this spell?", true, 'n'))
+        {
+            sifcast_amount = cost - you.magic_points;
+            cost = you.magic_points;
+        }
+        else
+        {
+            mpr("You don't have enough magic to cast that spell.");
+            crawl_state.zero_turns_taken();
+            return false;
+        }
     }
 
     if (check_range && spell_no_hostile_in_range(spell))
@@ -884,6 +900,11 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    if (sifcast_amount)
+    {
+        mpr("You briefly lose access to your magic!");
+        you.set_duration(DUR_NO_CAST, 1 + sifcast_amount);
+    }
     you.turn_is_over = true;
     alert_nearby_monsters();
 

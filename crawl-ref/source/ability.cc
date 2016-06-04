@@ -415,10 +415,10 @@ static const ability_def Ability_List[] =
       {FAIL_INVO, 90, 2, 5}, abflag::HOSTILE },
 
     // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
-      0, 0, 100, 0, {FAIL_INVO, 40, 2, 20}, abflag::NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
+      0, 0, 200, 2, {FAIL_INVO, piety_breakpoint(2), 0, 1}, abflag::NONE },
 
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
@@ -2330,20 +2330,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, nullptr, fail);
     }
 
-    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-        if (you.magic_points >= you.max_magic_points)
-        {
-            mpr("Your reserves of magic are already full.");
-            return SPRET_ABORT;
-        }
-        fail_check();
-        surge_power(you.spec_invoc(), "divine");
-        mpr("You channel some magical energy.");
-
-        inc_mp(player_adjust_invoc_power(
-                   1 + random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4) + 2)));
-        break;
-
     case ABIL_OKAWARU_HEROISM:
         fail_check();
         surge_power(you.spec_invoc(), "divine");
@@ -2493,6 +2479,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+    {
+        fail_check();
+        you.increase_duration(DUR_CHANNEL_ENERGY,
+                              player_adjust_invoc_power(
+                                  4 + random2avg(you.skill_rdiv(SK_INVOCATIONS,
+                                                                2, 3), 2)),
+                              100);
+        break;
+    }
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
         if (you.duration[DUR_LIFESAVING])

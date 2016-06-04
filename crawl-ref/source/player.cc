@@ -4982,6 +4982,23 @@ void dec_ambrosia_player(int delay)
         mpr("You feel less invigorated.");
 }
 
+void dec_channel_player(int delay)
+{
+    if (!you.duration[DUR_CHANNEL_ENERGY])
+        return;
+
+    you.duration[DUR_CHANNEL_ENERGY] =
+        max(0, you.duration[DUR_CHANNEL_ENERGY] - delay);
+
+    // 3-5 per turn, 9-50 over (3-10) turns
+    const int mp_restoration = div_rand_round(delay*(3 + random2(3)),
+                                              BASELINE_DELAY);
+    inc_mp(mp_restoration);
+
+    if (!you.duration[DUR_CHANNEL_ENERGY])
+        mpr("You feel less invigorated.");
+}
+
 bool invis_allowed(bool quiet, string *fail_reason)
 {
     string msg;
