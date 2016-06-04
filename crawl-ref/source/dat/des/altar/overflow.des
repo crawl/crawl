@@ -102,7 +102,7 @@ function species_mock(e)
   elseif you.race() == "Deep Elf" then
     e.kmons("1 = insubstantial wisp")
   elseif you.race() == "Halfling" then
-    e.kmons("1 = hobgoblin ; mundane sling")
+    e.kmons("1 = hobgoblin ; mundane hunting sling")
   elseif you.race() == "High Elf" then
     e.kmons("1 = giant orange brain")
   elseif you.race() == "Hill Orc" then
