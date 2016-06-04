@@ -3996,8 +3996,18 @@ void spare_beogh_convert()
     }
 }
 
+#define STATIONARY_CHECK                               \
+    do {                                               \
+        if (you.is_stationary()) {                     \
+            mpr("You can't move from your position!"); \
+            return false;                              \
+        }                                              \
+    } while (0)
+
 bool dithmenos_shadow_step()
 {
+    STATIONARY_CHECK;
+
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
     const int range = you.umbra_radius();
@@ -6248,11 +6258,7 @@ bool ru_power_leap()
         return false;
     }
 
-    if (you.is_stationary())
-    {
-        mpr("You can't move from your position!");
-        return false;
-    }
+    STATIONARY_CHECK;
 
     // query for location:
     dist beam;
