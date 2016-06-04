@@ -6579,6 +6579,10 @@ static int _get_stomped(monster* mons)
     if (mons == nullptr)
         return 0;
 
+    // Don't hurt your own demonic guardians
+    if (testbits(mons->flags, MF_DEMONIC_GUARDIAN) && mons->friendly())
+        return 0;
+
     behaviour_event(mons, ME_ANNOY, &you);
 
     // Damage starts at 1/6th of monster current HP, then gets some damage
