@@ -796,16 +796,41 @@ static void _add_good_randart_prop(artefact_prop_type prop,
     item_props[prop] += artp_data[prop].gen_good_value();
 }
 
+/**
+ * Generate the properties for a randart. We start with a quality level, then
+ * determine number of good and bad properties from that level. The more good
+ * properties we have, the more likely we are to add some bad properties in
+ * to make it a bit more interesting.
+ *
+ * For each "good" and "bad" property we want, we randomly pick from the total
+ * list of good or bad properties; if the picked property already exists and
+ * can have variable levels, we increment the levels by a certain amount. There
+ * is a maximum number of distinct properties that can be applied to a randart
+ * (for legibility, mostly), so overflow gets picked as increments to
+ * variable-level properties when possible.
+ *
+ * @param item          The item to apply properties to.
+ * @param item_props    The properties of that item.
+ * @param quality       How high quality the randart will be, measured in number
+                        of rolls for good property boosts.
+ * @param max_bad_props The maximum number of bad properties this artefact can
+                        be given.
+ */
 static void _get_randart_properties(const item_def &item,
-                                    artefact_properties_t &item_props)
+                                    artefact_properties_t &item_props,
+                                    int quality = 0,
+                                    const int max_bad_props = 2)
 {
     const object_class_type item_class = item.base_type;
 
-    // first figure out how good we want the artefact to be, range 1 to 7.
-    const int quality = max(1, binomial(7, 30));
+    // If we didn't receive a quality level, figure out how good we want the
+    // artefact to be. The default calculation range is 1 to 7.
+    if (quality < 1)
+        quality = max(1, binomial(7, 30));
+
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
-    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2);
+    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), max_bad_props);
     // we start by assuming we'll allow one good property per quality level
     // and an additional one for each bad property.
     int good = quality + bad;
