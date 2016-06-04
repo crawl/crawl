@@ -18,8 +18,6 @@
 
 #define NUM_VEHUMET_GIFTS 13
 
-#define HEP_SPECIALIZATION_LEVEL 15
-
 #define NUM_PIETY_STARS 6
 
 bool is_evil_god(god_type god);
@@ -125,6 +123,7 @@ void vehumet_accept_gift(spell_type spell);
 mgen_data hepliaklqana_ancestor_gen_data();
 string hepliaklqana_ally_name();
 int hepliaklqana_specialization();
+int hepliaklqana_specialization_level();
 weapon_type hepliaklqana_specialization_weapon(int specialization);
 spell_type hepliaklqana_specialization_spell(int specialization);
 

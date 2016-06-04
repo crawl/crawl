@@ -39,7 +39,7 @@ hep_battlemage ABILITY_HEP_BATTLEMAGE
 hep_magma ABILITY_HEP_MAGMA
 hep_iceblast ABILITY_HEP_ICEBLAST
 hep_hexer ABILITY_HEP_HEXER
-hep_para ABILITY_HEP_PARALYSE
+hep_mass_confusion ABILITY_HEP_MASS_CONFUSION
 hep_englaciate ABILITY_HEP_ENGLACIATE
 jiyva_cure_bad_mutations ABILITY_JIYVA_CURE_BAD_MUTATIONS
 jiyva_paralyse_jelly ABILITY_JIYVA_PARALYSE_JELLY

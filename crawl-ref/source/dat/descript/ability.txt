@@ -886,11 +886,11 @@ Remembers your ancestor as casting Bolt of Magma, which conjures a penetrating
 beam of fire and physical damage. This choice is permanent and cannot be
 undone.
 %%%%
-Hexer: Paralyse ability
+Hexer: Mass Confusion ability
 
-Remembers your ancestor as casting Paralyse, which targets single enemies and,
-if they fail to resist, leaves them completely helpless for the next several
-turns. This choice is permanent and cannot be undone.
+Remembers your ancestor as casting Mass Confusion, which confuses all nearby
+foes which fail to resist the magic. This choice is permanent and cannot be
+undone.
 %%%%
 Hexer: Englaciation ability
 
