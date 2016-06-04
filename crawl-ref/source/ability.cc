@@ -622,7 +622,7 @@ static const ability_def Ability_List[] =
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING, "Knight: Broad Axe",
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-    { ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST, "Battlemage: Iceblast",
+    { ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE, "Battlemage: Force Lance",
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA, "Battlemage: Bolt of Magma",
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3091,7 +3091,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
     case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
-    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE:
     case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
     case ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION:
     case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
@@ -3669,7 +3669,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
     case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
     case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
-    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE:
     case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
     case ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION:
     case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
@@ -3714,7 +3714,7 @@ static void _add_hep_specialization_choices(vector<ability_type> &abilities)
     static const map<int, vector<ability_type>> specializations = {
         { MONS_ANCESTOR_KNIGHT,     { ABIL_HEPLIAKLQANA_KNIGHT_REACHING,
                                       ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING } },
-        { MONS_ANCESTOR_BATTLEMAGE, { ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST,
+        { MONS_ANCESTOR_BATTLEMAGE, { ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE,
                                       ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA } },
         { MONS_ANCESTOR_HEXER,      { ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION,
                                       ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION } },

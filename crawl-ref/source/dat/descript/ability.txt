@@ -873,12 +873,11 @@ Remembers your ancestor as wielding an enchanted broad axe, a weapon capable of
 cleaving through many surrounding foes with each blow. This choice is permanent
 and cannot be undone.
 %%%%
-Battlemage: Iceblast ability
+Battlemage: Force Lance ability
 
-Remembers your ancestor as casting Iceblast, which conjures a noisy explosion
-of cold and physical damage. The blast radius can often hit multiple foes, but
-may be ineffective if you are in melee yourself, since your ancestor will avoid
-affecting you with the blast. This choice is permanent and cannot be undone.
+Remembers your ancestor as casting Force Lance, which knocks targets back and
+does extra damage to those slammed into walls or other creatures. This choice
+is permanent and cannot be undone.
 %%%%
 Battlemage: Bolt of Magma ability
 
