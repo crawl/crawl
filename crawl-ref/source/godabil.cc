@@ -6611,6 +6611,12 @@ bool uskayaw_line_pass()
         crawl_state.cancel_cmd_repeat();
         return false;
     }
+
+    if (you.is_stationary()) {
+        mpr("You can't move from your position!");
+        return false;
+    }
+
     // query for location:
     int range = 8;
     int invo_skill = you.skill(SK_INVOCATIONS);
