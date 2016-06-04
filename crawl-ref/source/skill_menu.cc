@@ -233,11 +233,20 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     {
         m_name->clear_tile();
         if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
-        else if (!you.training[m_sk])
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED),
+                                      TEX_GUI));
+        }
+        else if (you.training[m_sk] == TRAINING_DISABLED)
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_DISABLED),
+                                      TEX_GUI));
+        }
         else
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]), TEX_GUI));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
+                                      TEX_GUI));
+        }
     }
 #endif
     set_level();
@@ -299,7 +308,7 @@ COLOURS SkillMenuEntry::get_colour() const
             return LIGHTGREEN;
         return you.train[m_sk] ? LIGHTGREEN : GREEN;
     }
-    else if (you.train[m_sk] == 2)
+    else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
     else
         return LIGHTGREY;
@@ -316,7 +325,7 @@ string SkillMenuEntry::get_prefix()
         letter = ' ';
 
     const int sign = (!you.can_train[m_sk] || mastered()) ? ' ' :
-                                   (you.train[m_sk] == 2) ? '*' :
+                                   (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
     return make_stringf(" %c %c", letter, sign);
@@ -751,7 +760,7 @@ void SkillMenu::init(int flag)
             if (!is_useless_skill(sk) && !you.can_train[sk])
             {
                 you.can_train.set(sk);
-                you.train[sk] = false;
+                you.train[sk] = TRAINING_DISABLED;
             }
         }
     }
@@ -1019,7 +1028,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
         return;
 
     // XXX: should use a pointer instead.
-    FixedVector<int8_t, NUM_SKILLS> tmp;
+    FixedVector<training_status, NUM_SKILLS> tmp;
 
     switch (sw)
     {
@@ -1381,11 +1390,14 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     ASSERT(you.can_train[sk]);
     if (keyn >= 'A' && keyn <= 'Z')
-        you.train.init(0);
+        you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
-        you.train[sk] = !you.train[sk];
+        you.train[sk] = (you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
-        you.train[sk] = (you.train[sk] + 1) % 3;
+    {
+        you.train[sk]
+            = (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES);
+    }
     else
         die("Invalid state.");
     reset_training();

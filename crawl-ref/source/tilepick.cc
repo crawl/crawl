@@ -2978,6 +2978,13 @@ tileidx_t tileidx_spell(spell_type spell)
     return get_spell_tile(spell);
 }
 
+/**
+ * Get the appropriate tile for the given skill @ the given training level.
+ *
+ * @param skill     The skill in question; e.g. SK_FIGHTING.
+ * @param train     The training_status to render at; e.g. TRAINING_DISABLED.
+ * @return          An appropriate tile; e.g. TILEG_FIGHTING_OFF>
+ */
 tileidx_t tileidx_skill(skill_type skill, int train)
 {
     tileidx_t ch;
@@ -3084,17 +3091,18 @@ tileidx_t tileidx_skill(skill_type skill, int train)
 
     switch (train)
     {
-    case 0: // disabled
+    case TRAINING_DISABLED:
         return ch + TILEG_FIGHTING_OFF - TILEG_FIGHTING_ON;
-    case 1: // enabled
+    case TRAINING_ENABLED:
         return ch;
-    case 2: // focused
+    case TRAINING_FOCUSED:
         return ch + TILEG_FIGHTING_FOCUS - TILEG_FIGHTING_ON;
-    case -1: // mastered
+    case TRAINING_MASTERED:
         return ch + TILEG_FIGHTING_MAX - TILEG_FIGHTING_ON;
+    default:
+        die("invalid skill tile type");
     }
 
-    die("invalid skill tile type");
 }
 
 tileidx_t tileidx_command(const command_type cmd)

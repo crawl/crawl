@@ -481,7 +481,9 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && you.can_train[sk])
     {
-        you.train[sk] = min(max(luaL_checkint(ls, 2), 0), 2);
+        you.train[sk] = min(max((training_status)luaL_checkint(ls, 2),
+                                                 TRAINING_DISABLED),
+                                             TRAINING_FOCUSED);
         reset_training();
     }
 

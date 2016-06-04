@@ -702,7 +702,7 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 
 #ifdef USE_TILE
     const skill_type skill = str_to_skill(str);
-    me->add_tile(tile_def(tileidx_skill(skill, 1), TEX_GUI));
+    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
 #endif
 
     return me;

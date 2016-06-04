@@ -5463,8 +5463,8 @@ void player::init_skills()
 {
     auto_training = !(Options.default_manual_training);
     skills.init(0);
-    train.init(false);
-    train_alt.init(false);
+    train.init(TRAINING_DISABLED);
+    train_alt.init(TRAINING_DISABLED);
     training.init(0);
     can_train.reset();
     skill_points.init(0);
