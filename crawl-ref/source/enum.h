@@ -561,7 +561,9 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
-    ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
+#if TAG_MAJOR_VERSION == 34
+    ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.
+#endif
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     NUM_ATTRIBUTES
 };

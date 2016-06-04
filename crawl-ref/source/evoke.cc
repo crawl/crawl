@@ -234,14 +234,13 @@ static bool _evoke_horn_of_geryon(item_def &item)
         return false;
     }
 
-    if (!pakellas_device_surge())
-        return true;
-    surge_power(you.spec_evoke());
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     did_god_conduct(DID_UNHOLY, 3);
     int num = 1;
     const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
+        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);
     if (adjusted_power + random2(90) > 130)
         ++num;
     if (adjusted_power + random2(90) > 180)
@@ -343,11 +342,11 @@ static void _spray_lightning(int range, int power)
  */
 bool disc_of_storms()
 {
-    if (!pakellas_device_surge())
-        return false;
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
 
     const int fail_rate =
-        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
+        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS), surge);
 
     if (x_chance_in_y(fail_rate, 100))
     {
@@ -367,14 +366,14 @@ bool disc_of_storms()
 
     const int disc_count
         = roll_dice(2, player_adjust_evoc_power(
-                           1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7)));
+                           1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7), surge));
     ASSERT(disc_count);
 
     mpr("The disc erupts in an explosion of electricity!");
     const int range = player_adjust_evoc_power(
-                          you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5); // 5--14
+                          you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5, surge); // 5--14
     const int power = player_adjust_evoc_power(
-                          30 + you.skill(SK_EVOCATIONS, 2)); // 30-84
+                          30 + you.skill(SK_EVOCATIONS, 2), surge); // 30-84
     for (int i = 0; i < disc_count; ++i)
         _spray_lightning(range, power);
 
@@ -665,13 +664,9 @@ void zap_wand(int slot)
         && wand.sub_type != WAND_DIGGING
         && wand.sub_type != WAND_TELEPORTATION)
     {
-        if (!pakellas_device_surge())
-        {
-            you.turn_is_over = true;
-            return;
-        }
-        surge_power(you.spec_evoke());
-        power = player_adjust_evoc_power(power);
+        const int surge = pakellas_surge_devices();
+        surge_power(you.spec_evoke() + surge);
+        power = player_adjust_evoc_power(power, surge);
     }
 
     // zapping() updates beam.
@@ -994,9 +989,8 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
-    if (!pakellas_device_surge())
-        return false;
-    surge_power(you.spec_evoke());
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
     mpr("You open the lid...");
 
     if (!box.plus)
@@ -1011,7 +1005,7 @@ static bool _box_of_beasts(item_def &box)
     const int hd_min = min(27,
                            player_adjust_evoc_power(
                                you.skill(SK_EVOCATIONS)
-                               + random2(7) - random2(7)));
+                               + random2(7) - random2(7), surge));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -1055,9 +1049,8 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
-    if (!pakellas_device_surge())
-        return false;
-    surge_power(you.spec_evoke());
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
     mpr("You reach into the bag...");
 
     if (!sack.charges)
@@ -1078,14 +1071,16 @@ static bool _sack_of_spiders(item_def &sack)
     int count =
         player_adjust_evoc_power(
             1 + random2(2)
-            + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)));
+            + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)),
+            surge);
     for (int n = 0; n < count; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_spiders,
                                              max(1, min(27,
                                              player_adjust_evoc_power(
-                                                 you.skill(SK_EVOCATIONS)))),
+                                                 you.skill(SK_EVOCATIONS),
+                                                 surge))),
                                              _sack_of_spiders_veto_mon);
         mgen_data mg = mgen_data(mon,
                                  BEH_FRIENDLY, &you,
@@ -1100,7 +1095,7 @@ static bool _sack_of_spiders(item_def &sack)
     {
         mpr("...and things crawl out!");
         // Also generate webs on hostile monsters and trap them.
-        int rad = LOS_RADIUS / 2 + 2;
+        const int rad = LOS_RADIUS / 2 + 2;
         for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
         {
             trap_def *trap = trap_at((*mi)->pos());
@@ -1115,9 +1110,14 @@ static bool _sack_of_spiders(item_def &sack)
                 continue;
             }
 
-            int chance = 100 - (100 * (you.pos().distance_from((*mi)->pos()) - 1) / rad)
-                - player_adjust_evoc_power(2 * (27 - you.skill(SK_EVOCATIONS)));
-            if (x_chance_in_y(chance, 100))
+            // web chance increases with proximity & evo skill
+            // code here uses double negatives; sorry! i blame the other guy
+            // don't try to make surge affect web chance; too messy.
+            const int web_dist_factor
+                = 100 * (you.pos().distance_from((*mi)->pos()) - 1) / rad;
+            const int web_skill_factor = 2 * (27 - you.skill(SK_EVOCATIONS));
+            const int web_chance = 100 - web_dist_factor - web_skill_factor;
+            if (x_chance_in_y(web_chance, 100))
             {
                 if (trap && trap->type == TRAP_WEB)
                     destroy_trap((*mi)->pos());
@@ -1169,9 +1169,11 @@ static bool _ball_of_energy()
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
-    surge_power(you.spec_evoke());
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
 
-    int use = player_adjust_evoc_power(random2(you.skill(SK_EVOCATIONS, 6)));
+    int use = player_adjust_evoc_power(random2(you.skill(SK_EVOCATIONS, 6)),
+                                       surge);
 
     if (use < 2)
         lose_stat(STAT_INT, 1 + random2avg(7, 2));
@@ -1187,7 +1189,8 @@ static bool _ball_of_energy()
         int proportional = (you.magic_points * 100) / you.max_magic_points;
 
         if (random2avg(
-                77 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2)), 4)
+                77 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2),
+                                              surge), 4)
             > proportional
             || one_chance_in(25))
         {
@@ -1199,7 +1202,7 @@ static bool _ball_of_energy()
             mpr("You are suffused with power!");
             inc_mp(
                 player_adjust_evoc_power(
-                    5 + random2avg(you.skill(SK_EVOCATIONS), 2)));
+                    5 + random2avg(you.skill(SK_EVOCATIONS), 2), surge));
 
             ret = true;
         }
@@ -1210,11 +1213,11 @@ static bool _ball_of_energy()
     return ret;
 }
 
-static int _num_evoker_elementals()
+static int _num_evoker_elementals(int surge)
 {
     int n = 1;
     const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
+        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);
     if (adjusted_power + random2(70) > 110)
         ++n;
     if (adjusted_power + random2(70) > 170)
@@ -1394,9 +1397,6 @@ static bool _lamp_of_fire()
 {
     bolt base_beam;
     dist target;
-
-    const int pow =
-        player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 14, 4));
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
@@ -1407,22 +1407,20 @@ static bool _lamp_of_fire()
         if (you.confused())
             target.confusion_fuzz();
 
-        if (!pakellas_device_surge())
-        {
-            you.turn_is_over = false;
-            return false;
-        }
-
-        surge_power(you.spec_evoke());
+        const int surge = pakellas_surge_devices();
+        surge_power(you.spec_evoke() + surge);
         did_god_conduct(DID_FIRE, 6 + random2(3));
 
         mpr("The flames dance!");
 
         vector<bolt> beams;
-        int num_trails = _num_evoker_elementals();
+        int num_trails = _num_evoker_elementals(surge);
 
         _fill_flame_trails(you.pos(), target.target, beams, num_trails);
 
+        const int pow =
+            player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 14, 4),
+                                     surge);
         for (bolt &beam : beams)
         {
             if (beam.source == beam.target)
@@ -1685,9 +1683,8 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
-    const int power =
-        player_adjust_evoc_power(10 + you.skill(SK_EVOCATIONS, 4));
-    zappy(ZAP_PRIMAL_WAVE, power, false, beam);
+    const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
+    zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
@@ -1695,28 +1692,31 @@ static bool _phial_of_floods()
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
     if (spell_direction(target, beam, &args)
-        && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
+        && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
         if (you.confused())
         {
             target.confusion_fuzz();
             beam.set_target(target);
         }
-        if (!pakellas_device_surge())
-        {
-            you.turn_is_over = true;
-            return false;
-        }
-        surge_power(you.spec_evoke());
+
+        const int surge = pakellas_surge_devices();
+        surge_power(you.spec_evoke() + surge);
+        const int power = player_adjust_evoc_power(base_pow, surge);
+        // use real power to recalc hit/dam
+        zappy(ZAP_PRIMAL_WAVE, power, false, beam);
+
         beam.fire();
 
         vector<coord_def> elementals;
         // Flood the endpoint
         coord_def center = beam.path_taken.back();
         int num = player_adjust_evoc_power(
-                      5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7));
+                      5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7),
+                      surge);
         int dur = player_adjust_evoc_power(
-                      40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3));
+                      40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3),
+                      surge);
         for (distance_iterator di(center, true, false, 2); di && num > 0; ++di)
         {
             const dungeon_feature_type feat = grd(*di);
@@ -1731,7 +1731,7 @@ static bool _phial_of_floods()
             }
         }
 
-        int num_elementals = _num_evoker_elementals();
+        int num_elementals = _num_evoker_elementals(surge);
 
         bool created = false;
         num = min(num_elementals,
@@ -1747,7 +1747,7 @@ static bool _phial_of_floods()
                           MONS_WATER_ELEMENTAL, COLOUR_INHERIT,
                           PROX_CLOSE_TO_PLAYER);
             mg.hd = player_adjust_evoc_power(
-                        6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15));
+                        6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15), surge);
             if (create_monster(mg))
                 created = true;
         }
@@ -1808,20 +1808,21 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
 
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+
     monster* mon = clone_mons(victim, true);
     if (!mon)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_FAIL;
     }
-
-    if (!pakellas_device_surge())
-        return SPRET_FAIL;
-    surge_power(you.spec_evoke());
-    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
+    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3),
+                                               surge);
     int dur = min(6, max(1,
                          player_adjust_evoc_power(
-                             you.skill(SK_EVOCATIONS, 1) / 4 + 1)
+                             you.skill(SK_EVOCATIONS, 1) / 4 + 1,
+                             surge)
                          * (100 - victim->check_res_magic(power)) / 100));
 
     mon->attitude = ATT_FRIENDLY;
@@ -1981,8 +1982,6 @@ bool evoke_item(int slot, bool check_range)
     const unrandart_entry *entry = is_unrandom_artefact(item)
         ? get_unrand_entry(item.unrand_idx) : nullptr;
 
-    you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0; // set later if needed
-
     if (entry && entry->evoke_func)
     {
         ASSERT(item_is_equipped(item));
@@ -2128,23 +2127,23 @@ bool evoke_item(int slot, bool check_range)
 #endif
 
         case MISC_FAN_OF_GALES:
+        {
             if (!evoker_is_charged(item))
             {
                 mpr("That is presently inert.");
                 return false;
             }
-            if (!pakellas_device_surge())
-            {
-                you.turn_is_over = true;
-                break;
-            }
-            surge_power(you.spec_evoke());
+
+            const int surge = pakellas_surge_devices();
+            surge_power(you.spec_evoke() + surge);
             wind_blast(&you,
-                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15)),
+                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15),
+                                                surge),
                        coord_def());
             expend_xp_evoker(item);
             pract = 1;
             break;
+        }
 
         case MISC_LAMP_OF_FIRE:
             if (!evoker_is_charged(item))

@@ -169,7 +169,7 @@ string ru_sacrifice_vector(ability_type sac);
 
 bool pakellas_check_quick_charge(bool quiet);
 int pakellas_effective_hex_power(int pow);
-bool pakellas_device_surge();
+int pakellas_surge_devices();
 
 bool uskayaw_stomp();
 bool uskayaw_line_pass();

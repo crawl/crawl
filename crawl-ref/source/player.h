@@ -728,7 +728,6 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
-    int spec_evoke(bool calc_unid = true, bool items = true) const override;
     bool stasis(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
@@ -985,7 +984,7 @@ int player_spec_charm();
 int player_spec_poison();
 int player_spec_summ();
 
-const int player_adjust_evoc_power(const int power);
+const int player_adjust_evoc_power(const int power, int enhancers = 0);
 const int player_adjust_invoc_power(const int power);
 
 int player_speed();
