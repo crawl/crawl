@@ -37,7 +37,7 @@ hep_cleaving ABILITY_HEP_CLEAVING
 hep_reaching ABILITY_HEP_REACHING
 hep_battlemage ABILITY_HEP_BATTLEMAGE
 hep_magma ABILITY_HEP_MAGMA
-hep_iceblast ABILITY_HEP_ICEBLAST
+hep_force_lance ABILITY_HEP_FORCE_LANCE
 hep_hexer ABILITY_HEP_HEXER
 hep_mass_confusion ABILITY_HEP_MASS_CONFUSION
 hep_englaciate ABILITY_HEP_ENGLACIATE

@@ -1493,16 +1493,16 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
  * granted by a given specialization?
  *
  * @param specialization    The specialization in question; e.g.
- *                          ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST.
- * @return                  The appropriate spell type, e.g. SPELL_ICEBLAST.
+ *                          ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION.
+ * @return                  The appropriate spell type, e.g. SPELL_ENGLACIATION.
  *                          By default, returns NUM_SPELLS.
  */
 spell_type hepliaklqana_specialization_spell(int specialization)
 {
     switch (specialization)
     {
-    case ABIL_HEPLIAKLQANA_BATTLEMAGE_ICEBLAST:
-        return SPELL_ICEBLAST;
+    case ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE:
+        return SPELL_FORCE_LANCE;
     case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
         return SPELL_BOLT_OF_MAGMA;
     case ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION:

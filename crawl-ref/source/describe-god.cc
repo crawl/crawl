@@ -352,7 +352,7 @@ static string _describe_ancestor_upgrades()
                "                      Stone Arrow\n"
                "                     +Melee Damage\n"
                "15 (Option A)         Magma Bolt\n"
-               "15 (Option B)          Iceblast\n"
+               "15 (Option B)         Force Lance\n"
                "21                  Lajatang (freeze)\n"
                "21                       Haste\n"
                "27                   Crystal Spear\n";
