@@ -198,7 +198,10 @@ local function get_monster_info(dx,dy,no_move)
     -- Melee is better than throwing.
     info.attack_type = 3
   end
-  info.can_attack = (info.attack_type > 0) and 1 or 0
+  if info.attack_type == 0 and not will_tab(0,0,dx,dy) then
+    info.attack_type = -1
+  end
+  info.can_attack = (info.attack_type > 0) and 1 or info.attack_type
   info.safe = m:is_safe() and -1 or 0
   info.constricting_you = m:is_constricting_you() and 1 or 0
   -- Only prioritize good stabs: sleep and paralysis.
@@ -232,9 +235,6 @@ local function is_candidate_for_attack(x,y)
   end
   if m:name() == "butterfly"
       or m:name() == "orb of destruction" then
-    return false
-  end
-  if not (have_ranged() or will_tab(0,0,x,y)) then
     return false
   end
   if m:is_firewood() then
@@ -380,6 +380,8 @@ function attack(allow_movement)
     attack_melee(x,y)
   elseif info.attack_type == 1 then
     attack_reach(x,y)
+  elseif info.attack_type == -1 then
+    crawl.mpr("No reachable target in view!")
   elseif allow_movement then
     if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
       move_towards(x,y)
