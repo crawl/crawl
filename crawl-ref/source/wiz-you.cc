@@ -528,8 +528,8 @@ void wizard_set_skill_level(skill_type skill)
 
     if (amount == 27)
     {
-        you.train[skill] = 0;
-        you.train_alt[skill] = 0;
+        you.train[skill] = TRAINING_DISABLED;
+        you.train_alt[skill] = TRAINING_DISABLED;
         reset_training();
         check_selected_skills();
     }
@@ -562,7 +562,7 @@ void wizard_set_all_skills()
 
             if (amount == 27)
             {
-                you.train[sk] = 0;
+                you.train[sk] = TRAINING_DISABLED;
                 you.training[sk] = 0;
             }
         }

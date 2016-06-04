@@ -2530,8 +2530,8 @@ static void tag_read_you(reader &th)
         you.skills[j]          = unmarshallUByte(th);
         ASSERT(you.skills[j] <= 27 || you.wizard);
 
-        you.train[j]    = unmarshallByte(th);
-        you.train_alt[j]    = unmarshallByte(th);
+        you.train[j]    = (training_status)unmarshallByte(th);
+        you.train_alt[j]    = (training_status)unmarshallByte(th);
         you.training[j] = unmarshallInt(th);
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
