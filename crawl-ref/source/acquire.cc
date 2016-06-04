@@ -1432,6 +1432,10 @@ int acquirement_create_item(object_class_type class_wanted,
             default:
                 break;
             }
+
+            // bump jewel acq power up a bit
+            if (one_chance_in(2) && !is_artefact(acq_item))
+                make_item_randart(acq_item);
         }
         else if (acq_item.base_type == OBJ_WEAPONS
                  && !is_unrandom_artefact(acq_item))
