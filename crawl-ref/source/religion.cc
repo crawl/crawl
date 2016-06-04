@@ -1278,10 +1278,23 @@ string hepliaklqana_ally_name()
  */
 int hepliaklqana_specialization()
 {
+    // sanity & 'save compat' (old hexers specialized at xl 15)
+    if (you.experience_level < hepliaklqana_specialization_level())
+        return 0;
     // using get_int() without checking for exists would make it exist
     if (you.props.exists(HEPLIAKLQANA_SPECIALIZATION_KEY))
         return you.props[HEPLIAKLQANA_SPECIALIZATION_KEY].get_int();
     return 0;
+}
+
+/// At what level will the player be able to specialize their current ancestor?
+int hepliaklqana_specialization_level()
+{
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        return INT_MAX;
+    if (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() == MONS_ANCESTOR_HEXER)
+        return 21;
+    return 15;
 }
 
 /**
@@ -1492,8 +1505,8 @@ spell_type hepliaklqana_specialization_spell(int specialization)
         return SPELL_ICEBLAST;
     case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
         return SPELL_BOLT_OF_MAGMA;
-    case ABIL_HEPLIAKLQANA_HEXER_PARALYSE:
-        return SPELL_PARALYSE;
+    case ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION:
+        return SPELL_MASS_CONFUSION;
     case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
         return SPELL_ENGLACIATION;
     default:
@@ -3472,8 +3485,7 @@ static void _join_hepliaklqana()
                                     mg.mname.c_str()).c_str());
 
     // no one will ever run into this.
-    if (you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY)
-        && you.experience_level >= HEP_SPECIALIZATION_LEVEL
+    if (you.experience_level >= hepliaklqana_specialization_level()
         && !hepliaklqana_specialization())
     {
         // TODO: deduplicate this message

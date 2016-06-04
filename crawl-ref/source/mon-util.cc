@@ -5542,10 +5542,10 @@ void set_ancestor_spells(monster &ancestor, bool notify)
                                              SPELL_STONE_ARROW);
         break;
     case MONS_ANCESTOR_HEXER:
+        _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
+                                                      : SPELL_SLOW);
         _add_ancestor_spell(ancestor.spells,
-                            _ancestor_custom_spell(SPELL_SLOW));
-        _add_ancestor_spell(ancestor.spells, HD >= 14 ? SPELL_MASS_CONFUSION
-                                                      : SPELL_CONFUSE);
+                            _ancestor_custom_spell(SPELL_CONFUSE));
         break;
     default:
         break;
