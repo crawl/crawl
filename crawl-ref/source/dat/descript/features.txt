@@ -900,8 +900,8 @@ A portal leading to a wizard's laboratory. It seems to be fading away.
 %%%%
 A gilded inferno
 
-A burning portal leading to the Gauntlet. The spirits on the other side, audible
-through the gold-limned flames, seem to be growing restless.
+A burning portal leading to the Gauntlet. The spirits on the other side,
+audible through the gold-limned flames, seem to be growing restless.
 %%%%
 ###########
 ### Sprint
