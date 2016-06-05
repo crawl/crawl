@@ -503,19 +503,14 @@ void SkillMenuEntry::set_cost()
 {
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
-    auto baseline = skill_cost_baseline();
-    auto next_level = one_level_cost(m_sk);
     if (skill_has_manual(m_sk))
-    {
-        next_level /= 2;
         m_progress->set_fg_colour(LIGHTGREEN);
-    }
     else
         m_progress->set_fg_colour(CYAN);
 
-    auto ratio = (float)next_level / baseline;
+    auto ratio = scaled_skill_cost(m_sk);
     // Don't let the displayed number go greater than 4 characters
-    if (next_level > 0)
+    if (ratio > 0)
         m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
 }
 

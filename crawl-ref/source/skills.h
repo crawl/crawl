@@ -37,6 +37,7 @@ string skill_names(const skill_set &skills);
 
 int skill_cost_baseline();
 int one_level_cost(skill_type sk);
+float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
