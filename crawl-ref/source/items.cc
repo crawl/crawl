@@ -1468,7 +1468,9 @@ bool is_stackable_item(const item_def &item)
     }
 
     if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR)
-        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
+        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
+        || item.is_type(OBJ_MISCELLANY, MISC_SACK_OF_SPIDERS)
+        || item.is_type(OBJ_MISCELLANY, MISC_BOX_OF_BEASTS))
     {
         return true;
     }
