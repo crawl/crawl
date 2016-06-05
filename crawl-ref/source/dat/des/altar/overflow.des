@@ -2348,6 +2348,26 @@ MAP
     ......
 ENDMAP
 
+### Uskayaw overflow altars ###################################################
+
+NAME:   dancing_weapons_uskayaw
+DEPTH:  D:2-9
+TAGS:   temple_overflow_1 temple_overflow_uskayaw
+KFEAT:  _ = altar_uskayaw
+KPROP:  X = no_tele_into
+NSUBST: X = 2:1 / *:.
+MONS:   generate_awake dancing weapon ; dagger
+MAP
+.......
+.mmmmm.
+.mXXXm.
+.mXXXm.
+.mmmmm.
+.......
+..._...
+ .....
+ENDMAP
+
 ### Vehumet overflow altars ###################################################
 
 # Rather than put the flame cloud on the altar, flames now surround the
