@@ -1958,14 +1958,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         buff << misc_type_name(item_typ, know_type);
 
-        if ((item_typ == MISC_BOX_OF_BEASTS
-                  || item_typ == MISC_SACK_OF_SPIDERS)
-                    && used_count > 0
-                    && !dbname)
-        {
-            buff << " {used: " << used_count << "}";
-        }
-        else if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
+        if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
             buff << " (inert)";
 
         break;

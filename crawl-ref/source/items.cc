@@ -4467,14 +4467,6 @@ bool get_item_by_name(item_def *item, const char* specs,
         init_rod_mp(*item);
         break;
 
-    case OBJ_MISCELLANY:
-        if (item->sub_type == MISC_BOX_OF_BEASTS
-            || item->sub_type == MISC_SACK_OF_SPIDERS)
-        {
-            item->charges = 50;
-        }
-        break;
-
     case OBJ_POTIONS:
         item->quantity = 12;
         if (is_blood_potion(*item))

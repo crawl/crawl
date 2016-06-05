@@ -989,11 +989,14 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
+    const int surge = pakellas_surge_devices() + you.spec_evoke();
+    surge_power(surge);
     mpr("You open the lid...");
 
-    if (!box.plus)
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    const int power = player_adjust_evoc_power(evo_skill, surge);
+
+    if (x_chance_in_y(5, 10 + power))
     {
         mpr("...but the box appears empty, and falls apart.");
         ASSERT(in_inventory(box));
@@ -1004,8 +1007,7 @@ static bool _box_of_beasts(item_def &box)
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
                            player_adjust_evoc_power(
-                               you.skill(SK_EVOCATIONS)
-                               + random2(7) - random2(7), surge));
+                               evo_skill + random2(7) - random2(7), surge));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -1034,9 +1036,7 @@ static bool _box_of_beasts(item_def &box)
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
     xom_is_stimulated(10); // dubious
     did_god_conduct(DID_CHAOS, random_range(5,10));
-    // Decrease charges
-    box.charges--;
-    box.used_count++;
+
     return true;
 }
 
@@ -1049,11 +1049,16 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
+    const int surge = pakellas_surge_devices() + you.spec_evoke();
+    surge_power(surge);
     mpr("You reach into the bag...");
 
-    if (!sack.charges)
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    int count = player_adjust_evoc_power(
+            1 + random2(2) + random2(div_rand_round(evo_skill * 10, 30)), surge);
+    const int power = player_adjust_evoc_power(evo_skill, surge);
+
+    if (x_chance_in_y(4, 10 + power))
     {
         mpr("...but the bag is empty, and unravels at your touch.");
         ASSERT(in_inventory(sack));
@@ -1061,18 +1066,14 @@ static bool _sack_of_spiders(item_def &sack)
         return false;
     }
 
-    if (one_chance_in(5))
+    if (x_chance_in_y(5, 10 + power))
     {
         mpr("...but nothing happens.");
         return false;
     }
 
     bool success = false;
-    int count =
-        player_adjust_evoc_power(
-            1 + random2(2)
-            + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)),
-            surge);
+
     for (int n = 0; n < count; n++)
     {
         // Invoke mon-pick with our custom list
