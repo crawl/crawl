@@ -303,10 +303,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 1, ABIL_USKAYAW_STOMP, "stomp with the beat" },
       { 2, ABIL_USKAYAW_LINE_PASS, "pass through a line of other dancers" },
-      { 3, "Uskayaw will force your foes to helplessly watch your dance.",
-           "Uskayaw will no longer force your foes to helplessly watch your dance."},
-      { 4, "Uskayaw will force your foes to share their pain.",
-           "Uskayaw will no longer force your foes to share their pain."},
+      { 3, "Uskayaw will force your foes to helplessly watch your dance.", "", true },
+      { 4, "Uskayaw will force your foes to share their pain.", "", true },
       { 5, ABIL_USKAYAW_GRAND_FINALE, "merge with and destroy a victim" },
     },
 
@@ -353,6 +351,10 @@ void god_power::display(bool gaining, const char* fmt) const
     {
         return;
     }
+
+    // some god powers want to appear in ^, but not be displayed on piety change
+    if (muted)
+      return;
     const char* str = gaining ? gain : loss;
     if (isupper(str[0]))
         god_speaks(you.religion, str);
