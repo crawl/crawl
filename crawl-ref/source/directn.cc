@@ -1046,7 +1046,10 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // * To aim explosions so they try to miss you
         // * To hit monsters in LOS that are outside of normal range, but
         //   inside explosion/cloud range
-        if (hitfunc && hitfunc->can_affect_outside_range())
+        if (hitfunc && hitfunc->can_affect_outside_range()
+            && (!hitfunc->set_aim(result)
+                || hitfunc->is_affected(result) < AFF_YES
+                || hitfunc->is_affected(you.pos()) > AFF_NO))
         {
             coord_def old_result;
             if (success)
