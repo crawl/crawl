@@ -190,6 +190,25 @@ int one_level_cost(skill_type sk)
            - skill_exp_needed(you.skills[sk], sk);
 }
 
+/**
+ * The number displayed in the 'cost' interface on the m screen.
+ *
+ * @param sk the skill to compute the cost of
+ * @returns the cost of raising sk from floor(level) to ceiling(level),
+ *          as a multiple of skill_cost_baseline()
+ */
+float scaled_skill_cost(skill_type sk)
+{
+    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
+        return 0;
+    int baseline = skill_cost_baseline();
+    int next_level = one_level_cost(sk);
+    if (skill_has_manual(sk))
+        baseline *= 2;
+
+    return (float)next_level / baseline;
+}
+
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
