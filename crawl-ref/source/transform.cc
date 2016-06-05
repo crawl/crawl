@@ -1248,7 +1248,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
         {
             if (form_can_wield(you.form))
                 unequip = true;
-            if (!is_weapon(*equip))
+            if (!is_weapon(*equip) && equip->base_type != OBJ_RODS)
                 unequip = true;
         }
 
