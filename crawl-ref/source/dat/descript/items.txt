@@ -995,7 +995,7 @@ sack of spiders
 
 A woven silk bag. Opening it will release a number of spiders and other
 insects, as well as creating webs nearby. Its effectiveness increases with
-Evocations skill.
+Evocations skill. It contains 5-15 charges.
 %%%%
 sacred scourge
 
