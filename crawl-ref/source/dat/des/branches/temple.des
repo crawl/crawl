@@ -894,13 +894,13 @@ ENDMAP
 # See altar.des.
 #
 # There are some main themes for temple maps, and then some sporadic maps.
-# For news maps in a theme, stick to its defining properties (colour, or
+# For new maps in a theme, stick to its defining properties (colour, or
 # shape), unless you know what you are doing. New maps for a theme can be
 # used for variety and (more often) to allow differing numbers of altars.
 
 ##########################################################################
 # Circular temples
-#   Total weight: 80 = 40+10+10+5+5+5+5
+#   Total weight: 90 = 40+10+10+10+5+5+5+5
 #   The classical shape, so highest weight.
 #   Several versions, to accommodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
@@ -1191,6 +1191,39 @@ cc.................T...T.................cc
     ccc..........B...B...B..........ccc
       ccc.........................ccc
         cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+# 20 gods
+NAME:   dpeg_circular_temple_20
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc.........B.........cccc
+      ccc........B.......B........ccc
+    ccc......B...............B......ccc
+   cc.................................cc
+  cc......B.....................B......cc
+ cc.....................................cc
+ c.......................................c
+cc......B..........T...T..........B......cc
+c.........................................c
+c.........................................c
+c......B........T....{....T........B......c
+c.........................................c
+c.........................................c
+cc......B..........T...T..........B......cc
+ c.......................................c
+ cc.....................................cc
+  cc......B.....................B......cc
+   cc.................................cc
+    ccc......B...............B......ccc
+      ccc........B.......B........ccc
+        cccc.........B.........cccc
            ccccc...........ccccc
                ccccccccccccc
 ENDMAP
@@ -2141,8 +2174,108 @@ xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 11 gods
-NAME:   triangle_lava_temple_11
+# 15 gods
+NAME:   triangle_lava_temple_15
+PLACE:  Temple
+WEIGHT: 5
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll.....B.....lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll.....B.......B.....lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll............B............llllllllllllllllllx
+xlllllllllllllllll.....B...............B.....lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll................{................llllllllllllllx
+xlllllllllllll.....B.......................B.....lllllllllllllx
+xllllllllllll.............B.........B.............llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....B.................................B....lllllllllx
+xllllllll.............B.................B............lllllllllx
+xllllllll......................B.....................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 19 gods
+NAME:   triangle_lava_temple_19
+PLACE:  Temple
+WEIGHT: 5
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xllllllllllllllllllllllllllll.....llllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll..B...B..llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll...B.........B...llllllllllllllllllllllx
+xlllllllllllllllllllll...................lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll...........B...........lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll...........................lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...........B.......B...........lllllllllllllllx
+xllllllllllllll...B.........................B...llllllllllllllx
+xlllllllllllll...................................lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.............B.....{.....B.............lllllllllllx
+xllllllllll...B.................................B...llllllllllx
+xlllllllll...........................................lllllllllx
+xllllllll..........B.......................B.........lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll.................B.......B................llllllllllx
+xllllllllllll....................................lllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 10 gods
+NAME:   triangle_lava_temple_10
 PLACE:  Temple
 WEIGHT: 10
 TAGS:   no_rotate
