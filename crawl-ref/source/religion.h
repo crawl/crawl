@@ -176,15 +176,19 @@ struct god_power
     ability_type abil;
     const char* gain;
     const char* loss;
+    bool muted;
 
     god_power(int rank_, ability_type abil_, const char* gain_,
-              const char* loss_ = "") :
+              const char* loss_ = "", bool muted_ = false) :
               rank{rank_}, abil{abil_}, gain{gain_},
-              loss{*loss_ ? loss_ : gain_}
+              loss{*loss_ ? loss_ : gain_}, muted{muted_}
     { }
 
-    god_power(int rank_, const char* gain_, const char* loss_ = "") :
-              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_)
+    god_power(int rank_,
+              const char* gain_,
+              const char* loss_ = "",
+              bool muted_ = false) :
+              god_power(rank_, ABIL_NON_ABILITY, gain_, loss_, muted_)
     { }
 
     void display(bool gaining, const char* fmt) const;
