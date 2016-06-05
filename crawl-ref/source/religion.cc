@@ -158,7 +158,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Sif Muna
-    { { 1, "tap ambient fields to cast spells when your magical energy is low" }
+    { { 1, "tap ambient fields to cast spells at low magical energy" },
       { 2, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
       { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
