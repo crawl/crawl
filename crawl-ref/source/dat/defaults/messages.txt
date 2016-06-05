@@ -79,6 +79,10 @@ msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 
+# Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
+msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.
+msc += mute:Uskayaw will no longer force your foes to share their pain\.
+
 ## Messages so important to require a --more--
 
 force_more_message += You have reached level
