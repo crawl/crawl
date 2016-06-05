@@ -817,7 +817,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     do
     {
         // Misc items and rods have a common acquirement class.
-        if (class_wanted == OBJ_MISCELLANY || class_wanted == OBJ_RODS)
+        if (class_wanted == OBJ_MISCELLANY && you.species != SP_FELID)
             class_wanted = one_chance_in(8) ? OBJ_RODS : OBJ_MISCELLANY;
 
         // Vampires acquire blood, not food.
