@@ -544,6 +544,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_BANISHMENT:
     case SPELL_ENSLAVEMENT:
     case SPELL_SLUG_DART:
+    case SPELL_QUICKSILVER_BOLT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -728,15 +729,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MIASMA;
         beam.hit      = 17 + power / 20;
         beam.pierce   = true;
-        break;
-
-    case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon and purple draconian
-        beam.colour     = random_colour();
-        beam.name       = "bolt of dispelling energy";
-        beam.short_name = "dispelling energy";
-        beam.damage     = dice_def(3, 20);
-        beam.hit        = 16 + power / 25;
-        beam.flavour    = BEAM_MMISSILE;
         break;
 
     case SPELL_HURL_DAMNATION:           // fiend's damnation

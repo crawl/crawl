@@ -6516,6 +6516,9 @@ string bolt::get_short_name() const
         return "energy";
     }
 
+    if (name == "bolt of dispelling energy")
+        return "dispelling energy";
+
     if (flavour == BEAM_NONE || flavour == BEAM_MISSILE
         || flavour == BEAM_MMISSILE)
     {
