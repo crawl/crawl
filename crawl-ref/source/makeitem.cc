@@ -1788,14 +1788,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                                       MISC_PHANTOM_MIRROR);
     }
 
-    // set initial charges
-    if (item.sub_type == MISC_BOX_OF_BEASTS
-        || item.sub_type == MISC_SACK_OF_SPIDERS)
-    {
-        item.charges = random_range(5, 15, 2);
-        item.used_count = 0;
-    }
-
     if (is_deck(item))
     {
         item.initial_cards = random_range(MIN_STARTING_CARDS,

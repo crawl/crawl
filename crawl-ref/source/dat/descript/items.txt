@@ -292,7 +292,8 @@ box of beasts
 A box filled with the bizarre leftovers of a depraved wizard's magical
 experimentations. Opening it might set loose a friendly mutant beast: bizarre
 creatures, each with their own combination of traits. Increased skill with
-Evocations will allow stronger beasts to be released.
+Evocations will allow stronger beasts to be released, and reduce the chances
+of accidentally destroying the box when using it.
 
 There are six known traits:
  * Bat beasts fly and move very quickly, but erratically.
@@ -994,8 +995,9 @@ A talisman which allows entry into the Realm of Zot.
 sack of spiders
 
 A woven silk bag. Opening it will release a number of spiders and other
-insects, as well as creating webs nearby. Its effectiveness increases with
-Evocations skill.
+insects, as well as creating webs nearby. Evocations skill increases its
+effectiveness and reduces the chances of accidentally destroying the bag when
+it is used.
 %%%%
 sacred scourge
 
