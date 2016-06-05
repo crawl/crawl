@@ -2354,8 +2354,9 @@ NAME:   dancing_weapons_uskayaw
 DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
 KFEAT:  _ = altar_uskayaw
-KPROP:  X = no_tele_into
 NSUBST: X = 2:1 / *:.
+KPROP:  1. = no_tele_into
+KMASK:  1. = no_trap_gen
 MONS:   generate_awake dancing weapon ; dagger
 MAP
 .......
