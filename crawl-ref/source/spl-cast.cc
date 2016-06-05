@@ -903,7 +903,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (sifcast_amount)
     {
         mpr("You briefly lose access to your magic!");
-        you.set_duration(DUR_NO_CAST, 1 + sifcast_amount);
+        you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
     }
     you.turn_is_over = true;
     alert_nearby_monsters();
