@@ -6498,6 +6498,9 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (species == SP_FORMICID)
         return pluralise(species_name(species)) + " cannot teleport.";
 
+    if (!(your_branch().branch_flags & BFLAG_NO_TLOC))
+        return "This branch prevents translocation.";
+
     vector<string> problems;
 
     if (duration[DUR_DIMENSION_ANCHOR])

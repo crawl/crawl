@@ -294,7 +294,7 @@ const Branch branches[NUM_BRANCHES] =
 
 #if TAG_MAJOR_VERSION > 34
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 24,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS | BFLAG_NO_TLOC,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET,
       "Oubliette", "the Gauntlet", "Gauntlet",
       "Welcome to the Gauntlet! Best of luck.",
@@ -311,7 +311,7 @@ const Branch branches[NUM_BRANCHES] =
       'U', {}, 0 },
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 24,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS | BFLAG_NO_TLOC,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET,
       "Gauntlet", "the Gauntlet", "Gauntlet",
       "Welcome to the Gauntlet! Best of luck.",

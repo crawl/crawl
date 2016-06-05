@@ -13,21 +13,38 @@
 #
 # == TODO == 
 # -- general --
-# * long explicit list of (no weapons!) rewards
+# * tab functions
+# * long explicit list of useful rewards? eh. acquire any.
 # * monster set balance
+#   * research to see if uniques can be placed here and then cleared to spawn later
+#     (may be very messy, pan lord arrangements are not very simple)
 # * portal messages, feature descriptions, branch text, etc
-# * no teleport level status (avoid cheating)
+#   * use PF's edits in the personal todo
+# * bugtest no teleport level status (avoid cheating)
 # * unique portal tiles
+#   * gold and jewel encrusted permarock? red and gold main colours,
+#     white and purple decorative colours. implementabe?
+#     let ontoclasm / canofworms know near completion point.
+# * For the orderly grids:
+#   Paralyze all monsters (or, if possible, only the competition) while
+#   generating them awake, and unparalyze / reparalyze them with every
+#   odd / even teleporter use- allows not being able to see _all_ of
+#   a chamber's contents, just most, without player stealth factoring in.
+#   Also, prevents stabber builds from just stabbing everything.
 # -- maps --
+# * keep adjusting clouds
 # * more entrances
+#   * check vault rooms
+#   * alternate contestant uniques code
 # * additional layouts
-# (crashes when wizmode regenerating due to only having one, even)
-# -- concept map --
-# * cleaner teleporter arrangements
-#   (can indexing be done with subvault calls?)
-# * much higher randomization
-# * interior decoration
-# * exterior decoration
+#   * jewel
+# * hexagram alternative (later, requires monster list tweaking)
+#   based on lowering layers of walls and glass to free enemies,
+#   instead of all the teleporters
+# -- concept maps --
+# * expand first map's middle ring slightly, breaking up the symmetry
+# * is it still not dangerous enough? see monster set balance.
+# * terrain randomization
 #
 ################################################################################
 
@@ -67,49 +84,87 @@ function gauntlet_portal(e, ptype)
   e.kfeat("O = enter_gauntlet")
 end
 
+function gauntlet_alternate_contestants(e)
+   contestant = "Wiglaf"
+end
+
 function audience_members(e)
-   a = "generate_awake"
-   audience_members = a .. " lesser demon w:25 / " .. a .. " common demon w:15 / " ..
-                      a .. " greater demon w:2 / " .. a .. " corrupter w:2 / " ..
-                      a .. " boggart w:2 / " .. a .. " worldbinder w:2"
+   aw = "generate_awake"
+   audience = aw .. " lesser demon w:25 / " .. aw .. " common demon w:15 / " ..
+              aw .. " greater demon w:2 / " .. aw .. " corrupter w:2 / " ..
+              aw .. " rakshasa w:2 / " .. aw .. " efreet w:2 / " ..
+              aw .. " boggart w:2 / " .. aw .. " worldbinder w:2"
 end
 
 -- Deliberately excluded from the below groupings:
--- * Common Vaults/Depths threats: yaktaur captains, mid-tier dragons / giants
--- * Vaults branch-specific set relies on more traditional layouts
--- * Non-draconian Zot enemies
--- Hesitations: deep elf sorcerer / demonologist (banishment),
--- other demonspawn (fixes needed), Fiends, pearl dragon.
+-- * Yaktaur captains, mid-tier dragons / giants (too common)
+-- * Convokers, Wardens (bad layout fits)
+-- * Non-draconian Zot enemies (dilution, special status)
+-- * Deep elf sorcerers and demonologists (banishment)
 
 function gauntlet_tier_one(e)
-   tier_one = "emperor scorpion / spark wasp / torpor snail w:5 / " ..
-              "entropy weaver / ghost moth / moth of wrath w:5 / satyr / " ..
-              "greater naga / shambling mangrove / thorn hunter / " ..
-              "spriggan berserker / spriggan air mage / deep elf death mage / " ..
-              "dancing weapon ; glaive good_item / flayed ghost / eidolon / " ..
-              "vampire knight / jiangshi / phantasmal warrior / rakshasa / " .. 
-              "green death w:5 / giant eyeball w:5 / very ugly thing / " ..
-              "tentacled starspawn / apocalypse crab w:5"
+   -- Split to control placing support.
+   tier_onea = "catoblepas w:5 / torpor snail w:5 / entropy weaver / " ..
+               "moth of wrath w:5 / deep elf death mage / flayed ghost / " ..
+               "eidolon / phantasmal warrior / giant eyeball w:5 / " ..
+               "hellion w:5 / shadow demon w:5 / apocalypse crab w:5"
+   tier_oneb = "emperor scorpion / spark wasp / ghost moth / satyr / " ..
+               "greater naga / shambling mangrove / thorn hunter / " ..
+               "spriggan berserker / spriggan air mage / very ugly thing w:5 / " ..
+               "azure jelly / dancing weapon ; glaive good_item / " ..
+               "vampire knight / jiangshi / green death / tentacled starspawn"
 end
 
 function gauntlet_tier_two(e)
-  tier_two = "caustic shrike / shard shrike / sphinx / storm dragon /  " ..
-             "shadow dragon / tengu reaver / spriggan defender / " ..
-             "deep elf annihilator / deep elf high priest / " ..
-             "war gargoyle / crystal guardian / revenant / ancient champion / " ..
-             "hellion w:5 / balrug / blizzard demon / shadow demon w:5 /  " ..
-             "reaper / doom hound / tentacled monstrosity / acid blob / " ..
-             "glowing shapeshifter hd:18 / starcursed mass w:5"
+  tier_two = "caustic shrike / sphinx / storm dragon / shadow dragon / " ..
+             "tengu reaver / spriggan defender / deep elf annihilator /" ..
+             "deep elf high priest / war gargoyle / crystal guardian / " ..
+             "revenant / ancient champion / profane servitor / balrug / " ..
+             "blizzard demon / reaper / tentacled monstrosity / " ..
+             "acid blob / glowing shapeshifter hd:18 / starcursed mass w:5"
 end
 
 function gauntlet_tier_three(e)
-   tier_three = "golden dragon / quicksilver dragon /  " ..
-                "iron dragon / titan / juggernaut w:5 / iron giant w:5 / " ..
-                "deep elf blademaster / deep elf master archer / " ..
-                "black draconian knight / yellow draconian scorcher / " ..
-                "purple draconian zealot / white draconian annihilator / " ..
-                "ancient lich / curse skull w:5 / executioner w:5 / " ..
-                "hellephant / warmonger / corrupter / daeva"
+   -- Split to control placing hell monsters.
+   tier_threeb = "golden dragon / quicksilver dragon / iron dragon / " ..
+                 "titan / juggernaut w:5 / deep elf blademaster / " ..
+                 "deep elf master archer / green draconian monk / " ..
+                 "black draconian knight / yellow draconian scorcher / " ..
+                 "purple draconian zealot / white draconian annihilator / " ..
+                 "ancient lich / curse skull w:5 / executioner w:5 / " ..
+                 "hellephant / warmonger / blood saint / corrupter / daeva"
+   tier_threez = "pearl dragon / shard shrike / doom hound / iron giant / " ..
+                 "brimstone fiend / ice fiend / shadow fiend / hell sentinel"
+end
+
+function gauntlet_outside_clouds(e)
+   -- First cloud type shouldn't harm potential decorative plants.
+   local cloud_type_a = {"sparse dust", "sparse dust",
+                         "magical condensation", "magical condensation",
+                         "thin mist", "thin mist", "translocational energy"}
+   local cloud_type_b = {"seething chaos", "negative energy", "acidic fog",
+                         "mutagenic fog", "foul pestilence"}
+   brume = util.random_from(cloud_type_a)
+   smaze = util.random_from(cloud_type_b)
+end
+
+function gauntlet_corpse_mound(e)
+   -- Weigh down the skeletons of races that don't appear in the dungeon,
+   -- weigh up the divine and the demonic.
+   victims = "centaur corpse / deep dwarf corpse / elf corpse w:20 / " ..
+             "demigod corpse w:30 / draconian corpse / " ..
+             "demonspawn corpse w:30 / felid corpse w:5 / " ..
+             "formicid corpse w:5 / ghoul corpse / " ..
+             "halfling corpse w:5 / orc corpse / human corpse / " ..
+             "kobold corpse / merfolk corpse / minotaur corpse / " ..
+             "naga corpse / octopode corpse w:5 / spriggan corpse / " ..
+             "tengu corpse / troll corpse"
+   venatio = "catoblepas corpse / hydra corpse / kraken corpse / " ..
+             "ghost moth corpse / giant orange brain corpse / " ..
+             "caustic shrike corpse / iron dragon corpse / " ..
+             "golden dragon corpse / quicksilver dragon corpse / " ..
+             "juggernaut corpse / iron giant corpse / " ..
+             "apocalypse crab corpse / hellephant corpse"
 end
 
 function teleporter_gauntlet_switch_fn(data, triggerable, triggerer, marker, ev)
@@ -147,10 +202,12 @@ function gauntlet_teleporters(e, teleporter_glyphs, teleport_spot_glyphs)
 end
 
 function gauntlet_setup(e)
+  e.tags("no_monster_gen")
   e.tile("X = wall_permarock_red")
   e.tile("o = wall_permarock_clear_yellow")
   e.orient("encompass")
   e.kfeat("< = exit_gauntlet")
+  e.ftile("A< = floor_marble")
 end
 
 }}
@@ -159,147 +216,283 @@ end
 # Entries.
 default-depth: Vaults, Crypt, Depths
 
-NAME:   gauntlet_entry_basic
+NAME:   gauntlet_entry_regret_index_swirl
+TAGS:   mini_float patrolling
+WEIGHT: 20
+: gauntlet_portal(_G)
+MAP
+ ..b$b
+bb..bb.
+$bb+b..
+b.+O+.b
+..b+bb$
+.bb..bb
+ b$b..
+ENDMAP
+
+NAME:   gauntlet_entry_regret_index_diamonds
 TAGS:   mini_float
 : gauntlet_portal(_G)
 MAP
- ..b.b
-bb..bb.
-.bb+b..
-b.+O+.b
-..b+bb.
-.bb..bb
- b.b..
+  ...
+ ..b...xxxxx.
+..b.b........
+.b.$.b.$.b..
+..b.b.O.b.b..
+ ..b.$.b.$.b.
+........b.b..
+.xxxxx...b..
+        ...
+ENDMAP
+
+NAME:    gauntlet_entry_regret_index_preview
+MONS:    eye of devastation, swamp dragon, manticore
+MONS:    anaconda / shock serpent, redback / hornet
+SHUFFLE: 12345
+: gauntlet_portal(_G)
+MAP
+..........
+..bbbbb...
+.bb2.+.....
+.b1..n....@
+.b..$bb....
+.b+nb+n....
+.b.$nOn$.b.
+....n+bn+b.
+....bb$.4b.
+@....n...b.
+.....+3.bb.
+  ..bbbbb..
+  .........
 ENDMAP
 
 ###############################################################################
 # Contents.
 default-depth: Gauntlet
 
-NAME:     gauntlet_concept
-TAGS:     allow_dup
-SUBVAULT: h : gauntlet_concept_round_one
-SUBVAULT: H : gauntlet_concept_round_one
-SUBVAULT: i : gauntlet_concept_round_two
-SUBVAULT: I : gauntlet_concept_round_two
-SUBVAULT: j : gauntlet_concept_round_three
-SUBVAULT: J : gauntlet_concept_round_three
-SUBST:    hijHIJ = .
-FTILE:    ' = floor_w_marble
-COLOUR:   ' = red
+## Orderly, symmetrical teleporter grids / tesselation. Lots of redundant,
+## inaccesssible chambers barely visible during completion, to imply a much
+## larger map than is actually visible. Low round variation, though.
+NAME:     gauntlet_regret_index_staggerstep
+TAGS:     allow_dup no_pool_fixup
+: gauntlet_tier_one(_G)
+: gauntlet_tier_two(_G)
+: gauntlet_tier_three(_G)
+: kmons("1 = " .. tier_oneb)
+: kmons("2 = " .. tier_onea .. " / " .. tier_oneb)
+: kmons("3 = " .. tier_two)
+: kmons("4 = " .. tier_threeb)
+: kmons("5 = " .. tier_threeb .. " / " .. tier_threez)
+# Decoration: demon audience, round hierarchy,
+# barely visible overgrown / swampy exterior, floor stripes.
 : audience_members(_G)
-: kmons("0 = " .. audience_members)
-: gauntlet_teleporters(_G, 'qrs([{!@~', 'QRS)]}?&^')
+: kmons("0 = " .. audience)
+KMONS:    p = plant
+KMONS:    B = bush
+KMONS:    P = demonic plant
+KITEM:    g = stone q:1
+KITEM:    h = large rock q:1
+KFEAT:    C : altar_okawaru / altar_trog
+KFEAT:    D : altar_xom / altar_nemelex_xobeh
+KFEAT:    E : altar_makhleb
+SHUFFLE:  CDE / CDE / CDE / VTU / pBt / ghG / cvb / ~~~ / ~~~
+SHUFFLE:  `' / `' / P' / F' / wW / lL
+NSUBST:   ` = 20:j. / 10:k. / *:.
+NSUBST:   P = 200:PPPp / 50 = P. / 30:j / *:.
+NSUBST:   w = 50:Pf. / 25 = fw. / 30:j / *:w, wW = 375:w / *:.
+NSUBST:   l = 50:Pf. / 25 = fl. / 30:j / *:l, lL = 375:l / *:.
+NSUBST:   j = 20:j. / 10:k. / *:., f = 15:f / *:.
+NSUBST:   F = 25:f / 10:F / *:.
+SUBST:    ~' = .
+: gauntlet_corpse_mound(_G)
+: dgn.delayed_decay(_G, 'j', victims)
+: dgn.delayed_decay(_G, 'k', venatio)
+: gauntlet_outside_clouds(_G)
+MARKER: f = lua:fog_machine { cloud_type = brume, pow_min = 20, pow_max = 30, \
+                              delay_min = 10, delay_max = 30, size = 4, \
+                              walk_dist = 4, spread_rate = 8 }
+MARKER: F = lua:fog_machine { cloud_type = smaze, pow_min = 30, pow_max = 40, \
+                              delay_min = 10, delay_max = 30, size = 6, \
+                              walk_dist = 4, spread_rate = 8, excl_rad = -1 }
+KPROP:    l = no_cloud_gen
+FTILE:    " = floor_w_marble
+COLOUR:   " = red
+: gauntlet_teleporters(_G, 'QRS{([-?@', 'qrs})]_!&')
 : gauntlet_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X......oooo......oooo......X......oooo......oooo......X
-X......o0.o......o..o....ooXoo....o..o......o..o......X
+X````````X````````X````"```X````````X''''"'''X''''''''X
+X````````X````````X```"```"X````````X'''"'''"X''''''''X
+X````````X````````X``"```"`X````````X''"'''"'X''''''''X
+X````````X````````X`"```"``X````````X'"'''"''X''''''''X
+X````````X````````X"```"```X````````X"'''"'''X''''''''X
+X````````X````````X```"````X````````X'''"''''X''''''''X
+X``````oooo``````oooo"`````X``````oooo'"''''oooo''''''X
+X``````o0.o`````"o..o````ooXoo````o..o"'''''o..o''''''X
 XXXXXXXo..oXXXXXXo.0oXXXXo...oXXXXo..oXXXXXXo..oXXXXXXX
-X......oooo...'..ooooHH)Ho0.0o....oooo......oooo......X
-X........X...'...'XHHHHHHooXoo......X........X........X
-X........X..A...'.oHHHHHHHHX........X........X........X
-X........X.'...'.(XHHHHHHHHX........X........X........X
-X........X'...<...oHHHHHHHHX........X........X........X
-X........X...'....XHHHHHHHHX........X........X........X
-X........X..'...ooooHHHHHooXoo.....oooo......X........X
-X......oooo'.[..o0.oHHqHHo0..o.....o..o.....oooo......X
+X``````oooo..."..oooo..}.o0`0o``"`oooo``````oooo''''"'X
+X````````X..."..."X....x.ooXoo`"```"X````````X'''''"''X
+X````````X..A...".o.3..2...X``"```"`X````````X''''"'''X
+X````````X."...".{X.x......X`"```"``X````````X'''"'''"X
+X````````X"...<...o...C..x.X"```"```X````````X''"'''"'X
+X````````X..."....X...3..1.X```"````X````````X'"'''"''X
+X```````"X.."...oooo..x..ooXoo"````oooo``````X"'''"'''X
+X``````oooo".-..o0.o..Q..o0..o`````o..o`````oooo'"''''X
 XXXXXXXo..oXoXoXo.0oXXoXXo..0oXXXXXo0.oXXXXXo..oXXXXXXX
-X......o.0ohhhhhoooo..$'$ooXooII}IIoooo.....o..o......X
-X......oooohhhhhhhX...'...'XIIIIIIIIX.......oooo......X
-X........XhhhhhhhhX..Q...'$oIIIIIIIIX........X........X
-X........Xhhhhhhhqo$'...'.{XIIIIIIIIX........X........X
-X........X]hhhhhhhX'...<...oIIIIIIIIX........X........X
-X........XhhhhhhhhX$..'....XIIIIIIIIX........X........X
-X.......oooohhhhoooo.'...oooooIIIIIoooo....oooo.......X
-X.......o0.ohhhho0.o'$!..o0..oIIrIIo0.o....o0.o.......X
+X````"`o.0o.....oooo..$"$ooXoo..)..oooo````"o..o``````X
+X```"``oooo.3x....X..."..."X.3..x.3.X`````"`oooo``````X
+X``"```"`X........X..q..."$o........X````"```X````````X
+X`"```"``X....C3xQo$".%.".(X.x..D.x.X```"```"X````````X
+X"```"```X_x2.....X"...<...o........X``"```"`X````````X
+X```"````X........X$.."....X.4....2.X`"```"``X````````X
+X``"````oooo..x1oooo."...ooooo..x..oooo``"`oooo```````X
+X`"`````o0.o....o0.o"$?..o0..o..R..o0.o`"``o0.o```````X
 XXXXXXXXX..XXXXXX..XXoXoXo.0.oXXoXXX..XXXXXo..oXXXXXXXX
-X.......o.0o....o.0oiiiiio..0o$..$'o.0oJJ&Jo.0o.......X
-X.......oooo....ooooiiiiiooooo...'$ooooJJJJoooo.......X
-X........X........XiiiiiiiiX$...'..$XJJJJJJJJX........X
-X........X........XiiiiiiiiX...R%..'oJJJJJJJJX........X
-X........X........X?iiiiiiro..'%%%'@XJJJJJJJJX........X
-X........X........XiiiiiiiiX$'..%<..oJJJJJJJJX........X
-X......oooo.......XiiiiiiiiX'$..'..$XJJJJJJJoooo......X
-X......o..o.....ooooiiiiiooXoo$'~.$ooooJJsJJo0.o......X
+X```````o.0o``"`o.0o.....o..0o$..$"o.0o..].o.0o`````"`X
+X```````oooo`"``oooo3.x.4ooooo..."$oooo..x.oooo````"``X
+X````````X``"```"`X........X$..."..$X....4...X````"```X
+X````````X`"```"``X........X...r%.."o.3....x.X```"```"X
+X````````X"```"```X!x.D..xRo.."%.%"[X.x..E.3.X``"```"`X
+X````````X```"````X........X$"..%<..o.2..5...X`"```"``X
+X``````oooo`"`````X.3.x.2..X"$.."..$X....x..oooo``"```X
+X``````o..o"````oooo.....ooXoo$"@.$oooo..S..o0`o`"````X
 XXXXXXXo..oXXXXXo.0oXXXXXo0..oXoXoXo0.oXXoXXo..oXXXXXXX
-X......oooo.....o..o.....o..0ojjjjjo.0o$$$$'oooo......X
-X........X......oooo.....ooXoojjjjjoooo...'.$X........X
-X........X........X........XjjjjjjjjX$.||'..$X........X
-X........X........X........XjjjjjjjjX$.|S%..'X........X
-X........X........X........X^jjjjjjso$.'%%%'$X........X
-X........X........X........XjjjjjjjjX$'..%<|$X........X
-X........X........X......ooXoojjjjjjX'...'||$X........X
-X......oooo......oooo....o0.0ojjjjoooo$$'$$$oooo......X
+X''''"'oooo`````o..o`````o..0o.....o.0o$$$$"oooo``````X
+X'''"'''"X``````oooo````"ooXoo.3x2.oooo...".$X"```````X
+X''"'''"'X````````X````"```X........X$.d|"..$X````````X
+X'"'''"''X````````X```"```"X........X$.|s%.."X````````X
+X"'''"'''X````````X``"```"`X&x4.E5xSo$."%%%"$X````````X
+X'''"''''X````````X`"```"``X........X$"..%<|$X````````X
+X''"'''''X````````X"```"`ooXoo.x3...X"..."|d$X````````X
+X'"''''oooo``````oooo`"``o0`0o....oooo$$"$$$oooo``````X
 XXXXXXXo..oXXXXXXo..oXXXXo...oXXXXo0.oXXXXXXo..oXXXXXXX
-X......o..o......o..o....ooXoo....o..o......o.0o......X
-X......oooo......oooo......X......oooo......oooo......X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
-X........X........X........X........X........X........X
+X''''''o..o'''''"o..o````ooXoo````o..o"`````o.0o``````X
+X''''''oooo''''"'oooo``````X`````"oooo``````oooo``````X
+X''''''''X''''"'''X````````X````"```X````````X````````X
+X''''''''X'''"'''"X````````X```"```"X````````X````````X
+X''''''''X''"'''"'X````````X``"```"`X````````X````````X
+X''''''''X'"'''"''X````````X`"```"``X````````X````````X
+X''''''''X"'''"'''X````````X"```"```X````````X````````X
+X''''''''X'''"''''X````````X```"````X````````X````````X
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
-NAME:   gauntlet_concept_round_one
-TAGS:   gauntlet_concept_round_one allow_dup unrand
-: gauntlet_tier_one(_G)
-: gauntlet_tier_two(_G)
-: kmons("1 = " .. tier_one)
-: kmons("2 = " .. tier_two)
-MAP
-  .. .
-..1.x.
-.....2..
-.x......
-......x.
-.2...1..
- ..x..
- .. ..
-ENDMAP
-
-NAME:   gauntlet_concept_round_two
-TAGS:   gauntlet_concept_round_two allow_dup unrand
+NAME:     gauntlet_regret_index_scroll
+TAGS:     no_pool_fixup
+WEIGHT:   8
 : gauntlet_tier_one(_G)
 : gauntlet_tier_two(_G)
 : gauntlet_tier_three(_G)
-: kmons("1 = " .. tier_one)
-: kmons("2 = " .. tier_two)
-: kmons("3 = " .. tier_three)
+: kmons("1 = " .. tier_oneb)
+: kmons("2 = " .. tier_onea .. " / " .. tier_oneb)
+: kmons("3 = " .. tier_two)
+: kmons("4 = " .. tier_threeb)
+: kmons("5 = " .. tier_threeb .. " / " .. tier_threez)
+KITEM:    d = acquire any
+# Decoration: demon audience, round hierarchy,
+# barely visible overgrown / swampy exterior, floor stripes.
+: audience_members(_G)
+: kmons("0 = " .. audience)
+KMONS:    p = plant
+KMONS:    B = bush
+KMONS:    P = demonic plant
+KITEM:    g = stone q:1
+KITEM:    h = large rock q:1
+KFEAT:    C : altar_okawaru / altar_trog
+KFEAT:    D : altar_xom / altar_nemelex_xobeh
+KFEAT:    E : altar_makhleb
+SHUFFLE:  CDE / CDE / CDE / VTU / pBt / ghG / cvb / ~~~ / ~~~
+SHUFFLE:  `' / `' / P' / F' / wW / lL
+NSUBST:   ` = 20:j. / 10:k. / *:.
+NSUBST:   P = 200:PPPp / 50 = P. / 30:j / *:.
+NSUBST:   w = 50:Pf. / 25 = fw. / 30:j / *:w, wW = 225:w / *:.
+NSUBST:   l = 50:Pf. / 25 = fl. / 30:j / *:l, lL = 225:l / *:.
+NSUBST:   j = 20:j. / 10:k. / *:., f = 15:f / *:.
+NSUBST:   F = 20:f / 10:F / *:.
+SUBST:    ~' = .
+: gauntlet_corpse_mound(_G)
+: dgn.delayed_decay(_G, 'j', victims)
+: dgn.delayed_decay(_G, 'k', venatio)
+: gauntlet_outside_clouds(_G)
+MARKER: f = lua:fog_machine { cloud_type = brume, pow_min = 20, pow_max = 30, \
+                              delay_min = 10, delay_max = 30, size = 3, \
+                              walk_dist = 4, spread_rate = 6 }
+MARKER: F = lua:fog_machine { cloud_type = smaze, pow_min = 30, pow_max = 40, \
+                              delay_min = 10, delay_max = 30, size = 5, \
+                              walk_dist = 4, spread_rate = 6, excl_rad = -1 }
+KPROP:    l = no_cloud_gen
+FTILE:    " = floor_w_marble
+COLOUR:   " = red
+: gauntlet_teleporters(_G, 'QRS{([-?@', 'qrs})]_!&')
+: gauntlet_setup(_G)
 MAP
-  .. ..
-..1.x.2.
-........
-.x..3.x.
-........
-..2...1.
-  ..x..
-  .. ..
+                      XXXXX
+             XXXXXXXXXX```XXXX
+         XXXXX"''''X`````````X
+         X...o"""'"X`````````X
+         X...o"'"""X`````````X
+         XoXoX"''''X`````````X     XXXXX
+XXXXXXXXXX```XXXX``XXXX```XXXXXXXXXX```XXXX
+X"''''X`````````X````"XoXoX"````X`````````X
+X"""'"X`````````X"""`"o...o"""`"X`````````X
+X"'"""X`````````X"`"""o.0.o"`"""X`````````X
+X"''''X`````````X````"XoXoX"````X`````````X     XXXXX
+XXXX``XoXX```XXoXXXXoXX...XXoX``XoXX```XXoXXXXXXX```XXXX
+   X````"XoXoXA....X..2....3.X````"XoXoX"````X`````````X
+   X""`""X...o"".""X}x...x...X""`""o...o""`""X`````````X
+   X``"``o0..X.."..X....C....X``"``X...X``"``X`````````X
+   X""`""X...o"".""X...x...xQX""`""o.0.o""`""X`````````X
+   X````"XoXoX<....X.3....1..X````"XoXoX"````X`````````X
+   XXXXoXX```XXoX..XoXX...XXoXXXXoXX...XXoX``XoXX```XXoXXXX
+      X`````````X....{XoXoXq....X..4....3.X````"XoXoX"````X
+      X`````````X"""."o0..o"""$"X)x...x...X"""`"o...o"""`"X
+      X`````````X"."""o..0o"$"""X...x...xRX"`"""o.0.o"`"""X
+      X`````````X....-XoXoX<....X.3..D.2..X````"XoXoX"````X
+      XXXX```XXoXXXXoXX...XXoX..XoXX...XXoXXXXoXX...XXoX``XXXX
+         XoXoX"````X..2....3.X....(XoXoXr....X..4....2.X````"XXXXX
+         X...X""`""X_x...x...X""$""X0..X""%""X]x..3x...X""`""X...X
+         X...o``"``X....C....X%."..o...o$%"%$X....E....X``"``o...X
+         X...X""`""X...x...xQX""$""X..0X""%""X...x...xSX""`""X...X
+         XXXXX"````X.3....1..X....?XoXoX<....X.5....3..X````"XoXoX
+             XXXX``XoXX...XXoXXXXoXX...XXoX..XoXX...XXoXXXXoXX```XXXX
+                X````"XoXoX"````X..4.D..3.X....[XoXoXs$$$$X`````````X
+                X"""`"o.0.o"""`"X!x...x...X"""$"o0..o"""$"X`````````X
+                X"`"""o...o"`"""X...x...xRX"$"""o..0o"$"""X`````````X
+                X````"XoXoX"````X.3....2..X....@XoXoX<$$$$X`````````X
+                XXXXoXX```XXoX``XoXX...XXoXXXXoXX...XXoX..XoXX```XXoXXXX
+                   X`````````X````"XoXoX"````X..4....3.X$*$%"XoXoX"````X
+                   X`````````X""`""o.0.o""`""X&x...x...X""|""o...X""`""X
+                   X`````````X``"``X...X``"``X....E....Xd|"|dX..0o``"``X
+                   X`````````X""`""o...o""`""X...x3..xSX""|""o...X""`""X
+                   X`````````X````"XoXoX"````X.5....2..X$%$*"XoXoX"````X
+                   XXXX```XXXXXXXoXX```XXoX``XoXX...XXoXXXXoXX```XXoX``XXXX
+                      XXXXX     X`````````X````"XoXoX"````X`````````X''''"X
+                                X`````````X"""`"o.0.o"""`"X`````````X"""'"X
+                                X`````````X"`"""o...o"`"""X`````````X"'"""X
+                                X`````````X````"XoXoX"````X`````````X''''"X
+                                XXXX```XXXXXXXoXX```XXoX``XoXX```XXXXXXXXXX
+                                   XXXXX     X`````````X''''"XoXoX
+                                             X`````````X"""'"X...X
+                                             X`````````X"'"""X...X
+                                             X`````````X''''"XXXXX
+                                             XXXX```XXXXXXXXXX
+                                                XXXXX
 ENDMAP
 
-NAME:   gauntlet_concept_round_three
-TAGS:   gauntlet_concept_round_three allow_dup unrand
-: gauntlet_tier_one(_G)
-: gauntlet_tier_two(_G)
-: gauntlet_tier_three(_G)
-: kmons("1 = " .. tier_one)
-: kmons("2 = " .. tier_two)
-: kmons("3 = " .. tier_three)
+NAME:   gauntlet_regret_index_jewel
+WEIGHT: 0
+ORIENT: encompass
 MAP
-  .. .
-  ..x.
-..3..2..
-......x.
-.x..1...
-......2.
-..3.x..
-  .. ..
+     e e
+    e e e
+ d d e e c c
+d d doeoc c c
+ d doX.Xoc c
+  doX.X.X c
+ a aoX.Xob b
+a a aoXob b b
+ a a dod b b
+  a d d d b
+     d d
+      d
 ENDMAP

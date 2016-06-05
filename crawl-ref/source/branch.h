@@ -20,6 +20,7 @@ enum branch_flag_type
     BFLAG_DANGEROUS_END   = (1 << 4), // bottom level is more dangerous than normal
     BFLAG_SPOTTY          = (1 << 5), // Connect vaults with more open paths, not hallways.
     BFLAG_NO_SHAFTS       = (1 << 6), // Don't generate random shafts.
+    BFLAG_NO_TLOC         = (1 << 7), // Apply permanent dimension anchor effect to the player.
 };
 
 struct Branch

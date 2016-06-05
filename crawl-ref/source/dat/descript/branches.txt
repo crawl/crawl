@@ -248,12 +248,14 @@ capable of constructing such a realm deserved their reputation.
 %%%%
 Gauntlet
 
-While nearly all demons and devils directly encountered in the Dungeon and its
-connected planes are too violent and soul-draining to practice the renown
-traditions of pacts and temptation, the conceit lives on in horrible tomes of
-otherworldly summoning, many an accursed artifact- and the Gauntlet. The
-blood sports in this oppressive, decadent locale attracts a very wide range
-of varied champions, precise riches, and a large demonic audience.
+While most demons encountered in the Dungeon and its connected planes are too
+fond of simple violence to practice the traditions of pacts and temptation,
+those conceits live on here, in the Gauntlet. The blood sports in this
+oppressive, decadent locale attract a wide range of champions, battling for
+riches before a delighted diabolical audience.
+
+The Gauntlet is shielded against its gladiators teleporting or blinking away,
+as viewers find such escape methods boring.
 %%%%
 Depths
 
