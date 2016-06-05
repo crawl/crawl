@@ -581,8 +581,10 @@ int exp_rate(int killer)
 {
     // Damage by the spectral weapon is considered to be the player's damage ---
     // so the player does not lose any exp from dealing damage with a spectral weapon summon
+    // ditto hep ancestors (sigh)
     if (!invalid_monster_index(killer)
-        && menv[killer].type == MONS_SPECTRAL_WEAPON
+        && (menv[killer].type == MONS_SPECTRAL_WEAPON
+            || mons_is_hepliaklqana_ancestor(menv[killer].type))
         && menv[killer].summoner == MID_PLAYER)
     {
         return 2;
