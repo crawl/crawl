@@ -143,7 +143,7 @@ bool targetter_beam::valid_aim(coord_def a)
     }
     if ((origin - a).rdist() > range)
         return notify_fail("Out of range.");
-    return !cell_is_solid(a) || beam.can_affect_wall(grd(a));
+    return true;
 }
 
 bool targetter_beam::can_affect_outside_range()
