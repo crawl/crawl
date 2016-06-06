@@ -680,7 +680,7 @@ static const artefact_prop_data artp_data[] =
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
-    { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
+    { "MP", ARTP_VAL_ANY, 15,       // ARTP_MAGICAL_POWER,
         _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 0, 0 },
     { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_BASE_DELAY,
     { "HP", ARTP_VAL_ANY, 0,       // ARTP_HP,
