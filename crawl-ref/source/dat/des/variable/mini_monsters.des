@@ -2007,47 +2007,6 @@ bb......bb
    b++b
 ENDMAP
 
-NAME: amalloy_card_club
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:2-, Orc, Elf
-# a pair of 2s, playing against a pair of either 1(hard) or 3(easy)
-SHUFFLE: 12
-SUBST: 1 : 13
-# We want this vault to be placeable in a large range of depths, but can't just
-# use auto-scaling monster placement because we want:
-# - two pairs of identical monsters (sitting in pairs across the table)
-# - monsters who would plausibly be playing cards (ie, not beetles)
-# So instead we hand-pick monster sets for elf, orc, and early/mid/late D, and
-# scale the deck quality accordingly - it's mostly for theming, but we might as
-# well make it depth-appropriate loot too.
-: if you.in_branch("Elf") then
-MONS: deep elf mage, deep elf mage, deep elf mage
-ITEM: legendary deck
-: elseif you.in_branch("Orc") then
-MONS: orc warrior, orc wizard, orc
-ITEM: ornate deck / w:5 legendary deck
-: elseif you.depth() >= 12 then
-MONS: hill giant, two-headed ogre, ogre
-ITEM: ornate deck
-: elseif you.depth() >= 6 then
-MONS: crimson imp / shadow imp, orc wizard, orc
-ITEM: plain deck / w:5 ornate deck
-: else
-MONS: gnoll, hobgoblin, goblin
-ITEM: plain deck
-: end
-# Occasionally one of them brings a snack to the table.
-NSUBST: . = 1:e
-ITEM: nothing / w:2 bread ration / w:2 meat ration / w:2 fruit q:1\
-      / w:1 potion of ambrosia
-MAP
-xx+xx
-x.1.x
-x2d2x
-x.1.x
-xxxxx
-ENDMAP
-
 ################################################################################
 #
 # <<4>> Demons and undead

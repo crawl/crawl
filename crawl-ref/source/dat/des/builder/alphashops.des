@@ -4,10 +4,10 @@
 # scroll, staff, wand) or unit of measurement (slice, pair) is ignored when
 # alphabetizing item names of the form "X of (the) Y". This way the shops have
 # more variety between them.
-# Various items, such as carrion, hides, skins, blessed weapons, zigfigs, and
-# nonphysical decks, aren't listed. Letters with less than five items don't get
-# shops. Code exists for shopless letters anyway, so there's less code editing
-# needed if they get new items at some point in the future.
+# Various items, such as carrion, hides, skins, blessed weapons, and zigfigs
+# aren't listed. Letters with less than five items don't get shops. Code exists
+# for shopless letters anyway, so there's less code editing needed if they get
+# new items at some point in the future.
 
 {{
    -- random_subset function by gammafunk.
@@ -108,14 +108,14 @@
        "manual of charms", "potion of curing" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger", "deck of destruction",
-       "demon blade", "demon trident", "demon whip", "dire flail",
-       "disc of storms", "double sword", "amulet of dismissal",
-       "ring of dexterity", "manual of dodging", "wand of disintegration",
-       "staff of death", "wand of digging" }
+       "book of dreams", "book of the dragon", "dagger", "demon blade",
+       "demon trident", "demon whip", "dire flail", "disc of storms",
+       "double sword", "amulet of dismissal", "ring of dexterity",
+       "manual of dodging", "wand of disintegration", "staff of death",
+       "wand of digging" }
 
       elseif s == "E" then i = { "book of enchantments", "manual of evocations",
-       "deck of escape", "eveningstar", "ring of evasion", "executioner's axe",
+       "eveningstar", "ring of evasion", "executioner's axe",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
        "wand of enslavement", "book of envenomations", "book of the earth",
        "scroll of enchant weapon", "manual of earth magic", "staff of energy" }
@@ -204,7 +204,7 @@
       elseif s == "V" then i = { "scroll of vulnerability" }
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
-       "deck of war", "war axe", "staff of wizardry" }
+       "war axe", "staff of wizardry" }
 
       elseif s == "X" then i = { "any" }
 
