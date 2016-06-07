@@ -38,7 +38,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         end
     end
 
-    e.ftile(".t+%*|q01234567COGTU = floor_grass")
+    e.ftile(".t+%*|q012345678COGTU = floor_grass")
 
     e.kfeat("O = shallow_water")
     if mist then
@@ -1466,6 +1466,12 @@ TILE:   a = wall_wax
 SUBST:  a = x
 : wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
 MONS:   killer bee, queen bee
+KMONS:  8 = meliai
+KITEM:  8 = %
+: if (you.in_branch("Lair") and you.absdepth() > 14) or
+:     you.absdepth() > 12 then
+NSUBST: 6 = 3:8 / *:6
+: end
 KMASK:  W = no_monster_gen
 MAP
         ttttttt..t    tt.

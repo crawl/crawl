@@ -537,31 +537,33 @@ ENDMAP
 
 # Some wasp vaults. Wasps eat spiders (and players).
 NAME:   spiders_nest_wasp_nest
+TAGS:   no_trap_gen uniq_wasphive
 DEPTH:  Spider
 MONS:   hornet / w:5 wasp
-SUBST:  1 = %1
-SUBST:  a = .a
-SUBST:  A = a
+NSUBST: 1 = 1:% / 1:1 / * = %1
+SUBST:  a = .a, A = a
 COLOUR: a = brown
 TILE:   a = wall_wax
 SUBST:  a = x
+KPROP:  1% = no_tele_into
 MAP
   ......
  ..aaaa..
 ..aAAAAA..
-.aAA111Aa.
+.amA111Aa.
 .aA1111Aa.
 .aA1111Aa.
-.aAA11AAa.
+.aAA11Ama.
 ..aAAAAa..
  ..aaaa..
   ......
 ENDMAP
 
 NAME:   lemuel_wasp_nest
+TAGS:   uniq_wasphive
 DEPTH:  Spider
-MONS:   wasp / weight:2 hornet
-WEIGHT: 1
+WEIGHT: 2
+MONS:   wasp / hornet w:2
 SUBST:  1=1 .:15
 SUBST:  ?=a.
 COLOUR: a = brown
@@ -586,7 +588,7 @@ aa?...a.a...?aa
 ENDMAP
 
 NAME:   guppyfry_wasp_nest
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen uniq_wasphive
 DEPTH:  Spider
 MONS:   wasp / hornet / nothing
 SUBST:  - = wW.%

@@ -1163,6 +1163,37 @@ WWWWWWWWWWWWWW
    WWWWWWWW
 ENDMAP
 
+NAME:    regret_index_shoals_crete
+TAGS:    no_monster_gen
+DEPTH:   Shoals
+MONS:    snapping turtle / griffon / elephant w:4
+MONS:    faun, satyr, meliai, minotaur
+KMONS:   _ = merfolk javelineer
+KMONS:   b = bush
+KMONS:   p = plant
+ITEM:    any potion, longbow good_item, greatsling good_item
+# Bacchus-approved.
+KFEAT:   6 = altar_uskayaw
+SHUFFLE: 35, ABC, FGHI
+SUBST:   0 = 24., X : xp.., Y : xp..
+SUBST:   A = x, B : p., F = x, G = p., CHI = .
+: dgn.delayed_decay(_G, 'h', 'snapping turtle corpse')
+: dgn.delayed_decay(_G, 'h', 'griffon corpse')
+MAP
+    ccccccxxxxxxxcccccc
+    c3dd*xxx.6.xxx*dd5c
+    c..2xx2.b0b.4xx4..c
+    cex+xWWx...xWWx+xfc
+    cxx...WW.1.WW...xxc
+   xxx2.CBAWX.XWABC.4xxx
+  xx...1..WWW1WWW..1...xx
+xxx...IHGFWYWWWYWFGHI..xxx
+.........WW..W..WW........
+ ....xxxWW...W...WWxxx....
+       xxx...W...xxx
+         xxxx@xxxx
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map, by placing many
