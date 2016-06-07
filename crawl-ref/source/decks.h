@@ -184,7 +184,5 @@ card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
 const vector<card_type> get_drawn_cards(const item_def& deck);
-// see and mark the first card with a scroll.
-bool deck_identify_first(int slot);
 
 #endif

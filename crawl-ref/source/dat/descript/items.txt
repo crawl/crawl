@@ -1066,8 +1066,6 @@ monsters that are affected.
 scroll of identify
 
 A useful magic scroll which identifies the properties of any unknown object.
-
-If used on a deck of cards, it will also reveal the top card.
 %%%%
 scroll of immolation
 
