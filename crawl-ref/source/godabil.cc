@@ -4840,6 +4840,14 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.hitfunc = &tgt;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
+
+        if (cell_is_solid(beam.target))
+        {
+            mprf("There is %s there.",
+                 article_a(feat_type_name(grd(beam.target))).c_str());
+            return SPRET_ABORT;
+        }
+
         bolt tempbeam;
         tempbeam.source    = beam.target;
         tempbeam.target    = beam.target;
