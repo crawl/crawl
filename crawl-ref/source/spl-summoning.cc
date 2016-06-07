@@ -3067,7 +3067,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
     if (prism)
     {
-        if (you.can_see(*caster))
+        if (you.can_see(*caster) || caster->is_player())
         {
             mprf("%s %s a prism of explosive energy!",
                  caster->name(DESC_THE).c_str(),
