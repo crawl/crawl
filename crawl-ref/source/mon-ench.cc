@@ -539,7 +539,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // before being polymorphed into a non-invisible monster.
         if (you.see_cell(pos()) && !you.can_see_invisible() && !backlit()
             && !has_ench(ENCH_SUBMERGED)
-            && !friendly() && !you.duration[DUR_TELEPATHY])
+            && !friendly())
         {
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
