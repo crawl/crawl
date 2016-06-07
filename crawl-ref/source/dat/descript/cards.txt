@@ -262,30 +262,12 @@ furious lightning.
 
 Drawing this card will draw a god's wrath against the user.
 %%%%
-Xom card
-
-The card depicts the ceaseless, shimmering, chromatic lights of an altar to Xom.
-
-Drawing this card draws Xom's attention to the user.
-%%%%
-the Feast card
-
-The card depicts lords and ladies gorging themselves in a lavish banquet hall.
-
-Drawing this card will leave its user completely full.
-%%%%
 Famine card
 
 The card depicts a gaunt figure crawling along an expanse of dry, cracked
 earth.
 
 Drawing this card will leave its user on the brink of starvation.
-%%%%
-the Curse card
-
-The card depicts unravelling bandages coated in sigils.
-
-Drawing this card places curses on the user's possessions.
 %%%%
 # Punishment
 the Wraith card

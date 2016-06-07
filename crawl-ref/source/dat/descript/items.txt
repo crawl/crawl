@@ -378,11 +378,6 @@ deck of escape
 
 A deck of magical cards, mainly dealing with various forms of escape.
 %%%%
-deck of oddities
-
-A deck of magical cards that have the strangest tendency to get mixed in with
-other decks.
-%%%%
 deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
