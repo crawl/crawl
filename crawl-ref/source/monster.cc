@@ -4188,6 +4188,9 @@ int monster::res_magic(bool calc_unid) const
 
 bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
+    if (branch_prevents_tele(your_branch()) && !blinking)
+        return true;
+
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
     if (mons_class_is_stationary(type))
