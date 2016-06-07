@@ -67,6 +67,10 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
 int ranged_attack::calc_to_hit(bool random)
 {
     orig_to_hit = attack::calc_to_hit(random);
+
+    if (orig_to_hit == AUTOMATIC_HIT)
+        return AUTOMATIC_HIT;
+
     if (teleport)
     {
         orig_to_hit +=
