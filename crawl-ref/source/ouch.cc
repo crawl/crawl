@@ -885,7 +885,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Multiply damage if amulet of harm is in play
     if (dam != INSTANT_DEATH)
-        dam = _apply_extra_harm (dam, source);
+        dam = _apply_extra_harm(dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)

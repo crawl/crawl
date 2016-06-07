@@ -2620,6 +2620,14 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
+static void _torment_card()
+{
+    if (you.undead_or_demonic())
+        holy_word_player(HOLY_WORD_CARD);
+    else
+        torment_player(&you, TORMENT_CARDS);
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2700,7 +2708,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_BANSHEE:          _banshee_card(power, rarity); break;
-    case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
+    case CARD_TORMENT:          _torment_card(); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_CLOUD:            _cloud_card(power, rarity); break;
     case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;

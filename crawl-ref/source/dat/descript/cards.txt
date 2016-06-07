@@ -286,8 +286,7 @@ Torment card
 
 The card depicts a screaming figure being tortured on the rack.
 
-Drawing this card will call on the powers of darkness, causing agonising injury
-to any nearby living creature.
+Drawing this card will cause agonising injury to the user.
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card
