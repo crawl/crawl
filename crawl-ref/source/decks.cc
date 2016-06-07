@@ -156,7 +156,6 @@ deck_archetype deck_of_dungeons =
     { CARD_TROWEL,    {0, 0, 3} },
     { CARD_MINEFIELD, {5, 5, 5} },
 };
-#endif
 
 deck_archetype deck_of_oddities =
 {
@@ -166,6 +165,7 @@ deck_archetype deck_of_oddities =
     { CARD_FAMINE,  {5, 5, 5} },
     { CARD_CURSE,   {5, 5, 5} },
 };
+#endif
 
 deck_archetype deck_of_punishment =
 {
@@ -209,11 +209,11 @@ static map<misc_item_type, deck_type_data> all_decks =
         "wonders",
         0, { &deck_of_wonders }
     } },
-#endif
     { MISC_DECK_OF_ODDITIES, {
         "oddities",
         0, { &deck_of_oddities }
     } },
+#endif
     { MISC_DECK_OF_PUNISHMENT, {
         "punishment",
         0, { &deck_of_punishment }
@@ -233,12 +233,6 @@ static map<misc_item_type, deck_type_data> all_decks =
     } },
 #endif
 };
-
-static void _check_odd_card(uint8_t flags)
-{
-    if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
-        mpr("This card doesn't seem to belong here.");
-}
 
 int cards_in_deck(const item_def &deck)
 {
@@ -358,8 +352,10 @@ const char* card_name(card_type card)
     case CARD_SUMMON_FLYING:   return "Foxfire";
     case CARD_RANGERS:         return "the Rangers";
     case CARD_SUMMON_UGLY:     return "Repulsiveness";
+#if TAG_MAJOR_VERSION == 34
     case CARD_XOM:             return "Xom";
     case CARD_FAMINE:          return "Famine";
+#endif
     case CARD_FEAST:           return "the Feast";
     case CARD_WARPWRIGHT:      return "Warpwright";
     case CARD_SHAFT:           return "the Shaft";
@@ -373,7 +369,9 @@ const char* card_name(card_type card)
     case CARD_TORMENT:         return "Torment";
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";
+#if TAG_MAJOR_VERSION == 34
     case CARD_CURSE:           return "the Curse";
+#endif
     case CARD_SWINE:           return "the Swine";
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
@@ -425,13 +423,6 @@ const string deck_contents(uint8_t deck_type)
     output += comma_separated_fn(cards.begin(), cards.end(), card_name);
     output += ".";
 
-    if (deck_type != MISC_DECK_OF_PUNISHMENT
-        && deck_type != MISC_DECK_OF_ODDITIES)
-    {
-        output += "\n(One in a hundred cards may be drawn from the deck of "
-                  "oddities, instead.)";
-    }
-
     return output;
 }
 
@@ -466,23 +457,16 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     return result;
 }
 
-static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity,
-                              bool &was_oddity)
+static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity)
 {
     const deck_archetype *pdeck = _random_sub_deck(deck_type);
-
-    if (one_chance_in(100))
-    {
-        pdeck      = &deck_of_oddities;
-        was_oddity = true;
-    }
 
     return _choose_from_archetype(pdeck, rarity);
 }
 
-static card_type _random_card(const item_def& item, bool &was_oddity)
+static card_type _random_card(const item_def& item)
 {
-    return _random_card(item.sub_type, item.deck_rarity, was_oddity);
+    return _random_card(item.sub_type, item.deck_rarity);
 }
 
 static card_type _draw_top_card(item_def& deck, bool message,
@@ -506,8 +490,6 @@ static card_type _draw_top_card(item_def& deck, bool message,
         const char *verb = (_flags & CFLAG_DEALT) ? "deal" : "draw";
 
         mprf("You %s a card... It is %s.", verb, card_name(card));
-
-        _check_odd_card(_flags);
     }
 
     return card;
@@ -1225,12 +1207,10 @@ bool draw_three(int slot)
 // rather than "draw" (for the Deal Four out-of-cards situation).
 void draw_from_deck_of_punishment(bool deal)
 {
-    bool oddity;
     uint8_t flags = CFLAG_PUNISHMENT;
     if (deal)
         flags |= CFLAG_DEALT;
-    card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON,
-                                  oddity);
+    card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON);
 
     mprf("You %s a card...", deal ? "deal" : "draw");
     card_effect(card, DECK_RARITY_COMMON, flags);
@@ -1245,9 +1225,6 @@ static int _xom_check_card(item_def &deck, card_type card,
         amusement = 200;
     else if (!item_type_known(deck))
         amusement *= 2;
-    // Expecting one type of card but got another, real funny.
-    else if (flags & CFLAG_ODDITY)
-        amusement = 200;
 
     if (player_in_a_dangerous_place())
         amusement *= 2;
@@ -1257,11 +1234,6 @@ static int _xom_check_card(item_def &deck, card_type card,
 
     switch (card)
     {
-    case CARD_XOM:
-        // Handled elsewhere
-        amusement = 0;
-        break;
-
     case CARD_EXILE:
         // Nothing happened, boring.
         if (player_in_branch(BRANCH_ABYSS))
@@ -1269,7 +1241,6 @@ static int _xom_check_card(item_def &deck, card_type card,
         break;
 
     case CARD_FAMINE:
-    case CARD_CURSE:
     case CARD_SWINE:
         // Always hilarious.
         amusement = 255;
@@ -1319,10 +1290,10 @@ void evoke_deck(item_def& deck)
         }
     }
 
-    const int amusement   = _xom_check_card(deck, card, flags);
+    const int amusement = _xom_check_card(deck, card, flags);
 
-    // Oddity and punishment cards don't give any information about the deck.
-    if (flags & (CFLAG_ODDITY | CFLAG_PUNISHMENT))
+    // Punishment cards don't give any information about the deck.
+    if (flags & (CFLAG_PUNISHMENT))
         allow_id = false;
 
     deck.used_count++;
@@ -2107,32 +2078,6 @@ static void _godly_wrath()
         mpr("You somehow manage to escape divine attention...");
 }
 
-static void _curse_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-
-    mpr("You feel a malignant aura surround you.");
-    if (power_level >= 2)
-    {
-        // Curse (almost) everything.
-        // Ignore holy wrath weapons here, to avoid being stuck in a loop
-        while (curse_an_item(true) && !one_chance_in(1000))
-            ;
-    }
-    else if (power_level == 1)
-    {
-        // Curse an average of four items.
-        while (curse_an_item(true) && !one_chance_in(4))
-            ;
-    }
-    else
-    {
-        // Curse 1.5 items on average.
-        if (curse_an_item() && coinflip())
-            curse_an_item();
-    }
-}
-
 static void _crusade_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2780,19 +2725,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         }
     }
 
-    if (which_card == CARD_XOM && !crawl_state.is_god_acting())
-    {
-        if (you_worship(GOD_XOM))
-        {
-            // Being a self-centered deity, Xom *always* finds this
-            // maximally hilarious.
-            god_speaks(GOD_XOM, "Xom roars with laughter!");
-            you.gift_timeout = 200;
-        }
-        else if (player_under_penance(GOD_XOM))
-            god_speaks(GOD_XOM, "Xom laughs nastily.");
-    }
-
     switch (which_card)
     {
     case CARD_SWAP:             _swap_monster_card(power, rarity); break;
@@ -2806,7 +2738,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_POTION:           _potion_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
-    case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_SHAFT:            _shaft_card(power, rarity); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
@@ -2819,7 +2750,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
-    case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_BANSHEE:          _banshee_card(power, rarity); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
@@ -2844,13 +2774,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             mpr("You feel rather smug.");
         else
             set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
-        break;
-
-    case CARD_FEAST:
-        if (you_foodless())
-            mpr("You feel a horrible emptiness.");
-        else
-            set_hunger(HUNGER_MAXIMUM, true);
         break;
 
     case CARD_SWINE:
@@ -2879,6 +2802,9 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_FOCUS:
     case CARD_HELIX:
     case CARD_MERCENARY:
+    case CARD_XOM:
+    case CARD_FEAST:
+    case CARD_CURSE:
         mpr("This type of card no longer exists!");
         break;
 #endif
@@ -3032,14 +2958,8 @@ void init_deck(item_def &item)
 
     for (int i = 0; i < item.initial_cards; ++i)
     {
-        bool      was_odd = false;
-        card_type card    = _random_card(item, was_odd);
-
-        uint8_t flags = 0;
-        if (was_odd)
-            flags = CFLAG_ODDITY;
-
-        _set_card_and_flags(item, i, card, flags);
+        card_type card    = _random_card(item);
+        _set_card_and_flags(item, i, card, 0);
     }
 
     ASSERT(cards_in_deck(item) == item.initial_cards);

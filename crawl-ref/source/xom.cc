@@ -3443,30 +3443,8 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
     }
 #endif
 
-    god_type which_god = GOD_XOM;
-    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM
-        && !_player_is_dead()
-        && !debug)
-    {
-        which_god = crawl_state.which_god_acting();
-
-        if (crawl_state.is_god_retribution())
-        {
-            niceness = false;
-            simple_god_message(" asks Xom for help in punishing you, and "
-                               "Xom happily agrees.", which_god);
-        }
-        else
-        {
-            niceness = true;
-            simple_god_message(" calls in a favour from Xom.", which_god);
-        }
-    }
-
     if (tension == -1)
-        tension = get_tension(which_god);
+        tension = get_tension(GOD_XOM);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
     // No message during heavy-duty wizmode testing:
