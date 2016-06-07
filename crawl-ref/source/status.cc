@@ -636,6 +636,19 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case STATUS_NO_TELE:
+    {
+        if (!you.stasis() && branch_prevents_tele(your_branch()))
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "-Tele";
+            inf->short_text   = "prevented from teleporting";
+            inf->long_text    = "Powerful magical forces prevent "
+                                "you teleporting in this level.";
+        }
+        break;
+	}
+
     default:
         if (!found)
         {

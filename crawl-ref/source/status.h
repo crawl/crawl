@@ -48,7 +48,8 @@ enum status_type
     STATUS_CLOUD,
     STATUS_BONE_ARMOUR,
     STATUS_ORB,
-    STATUS_LAST_STATUS = STATUS_ORB
+    STATUS_NO_TELE,
+    STATUS_LAST_STATUS = STATUS_NO_TELE,
 };
 
 struct status_info

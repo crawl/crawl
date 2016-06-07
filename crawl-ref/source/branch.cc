@@ -237,3 +237,8 @@ branch_type rune_location(rune_type rune)
 
     return NUM_BRANCHES;
 }
+
+bool branch_prevents_tele(Branch br)
+{
+    return br.branch_flags & BFLAG_NO_TELE;
+}
