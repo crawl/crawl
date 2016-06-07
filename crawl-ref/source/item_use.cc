@@ -2224,8 +2224,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         }
 
         item_def& item(you.inv[item_slot]);
-        if (fully_identified(item)
-            && (!is_deck(item) || top_card_is_known(item)))
+        if (fully_identified(item))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             more();
@@ -2238,9 +2237,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
 
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-        if (is_deck(item) && !top_card_is_known(item))
-            deck_identify_first(item_slot);
 
         // Output identified item.
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());

@@ -769,21 +769,6 @@ static void _deck_ident(item_def& deck)
     }
 }
 
-bool deck_identify_first(int slot)
-{
-    item_def& deck(you.inv[slot]);
-    if (top_card_is_known(deck))
-        return false;
-
-    uint8_t flags;
-    card_type card = get_card_and_flags(deck, -1, flags);
-
-    _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN);
-
-    mprf("You get a glimpse of the first card. It is %s.", card_name(card));
-    return true;
-}
-
 // Draw the top four cards of an unstacked deck and play them all.
 // Discards the rest of the deck. Return false if the operation was
 // failed/aborted along the way.
