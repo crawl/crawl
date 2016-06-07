@@ -133,7 +133,9 @@ cloud_yellow_smoke CLOUD_YELLOW_SMOKE
 %repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
 %resetcol
 
-cloud_miasma CLOUD_MIASMA
+cloud_miasma0 CLOUD_MIASMA_0
+cloud_miasma1 CLOUD_MIASMA_1
+cloud_miasma2 CLOUD_MIASMA_2
 cloud_tloc_energy CLOUD_TLOC_ENERGY
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
 cloud_mutagenic_small2

@@ -2749,7 +2749,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                 break;
 
             case CLOUD_MIASMA:
-                ch = TILE_CLOUD_MIASMA;
+                ch = TILE_CLOUD_MIASMA_0 + dur;
                 break;
 
             case CLOUD_BLACK_SMOKE:
