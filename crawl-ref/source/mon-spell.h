@@ -1512,7 +1512,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ASTERION,
       {
        { SPELL_MAJOR_DESTRUCTION, 11, MON_SPELL_PRIEST },
-       { SPELL_SPECTRAL_WEAPON, 22, MON_SPELL_PRIEST },
+       { SPELL_GREATER_SERVANT_MAKHLEB, 22, MON_SPELL_PRIEST },
        { SPELL_HASTE, 32, MON_SPELL_PRIEST },
       }
     },

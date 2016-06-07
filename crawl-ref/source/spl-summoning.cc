@@ -3334,6 +3334,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HOLIES,              { 4, 2 } },
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
+    { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     // Rod specials
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };
