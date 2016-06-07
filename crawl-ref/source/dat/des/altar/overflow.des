@@ -1288,16 +1288,6 @@ U@U
 U@U
 ENDMAP
 
-NAME:  nemelex_deck
-TAGS:  temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
-TAGS:  transparent
-KFEAT: _ = altar_nemelex_xobeh
-KITEM: _ = plain deck
-: interest_check(_G)
-MAP
-_
-ENDMAP
-
 ###################################################################
 # Nemelex altar (Shiori)
 # Perhaps could have different parameters for the two types of clouds,
