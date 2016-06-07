@@ -467,6 +467,8 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
+    you.props["corrosion_amount"] = 0;
+
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);
