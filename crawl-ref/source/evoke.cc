@@ -2114,7 +2114,7 @@ bool evoke_item(int slot, bool check_range)
         if (is_deck(item))
         {
             evoke_deck(item);
-            pract = 1;
+            practise(EX_DID_USE_DECK);
             count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }
