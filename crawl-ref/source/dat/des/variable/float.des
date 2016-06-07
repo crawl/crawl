@@ -2252,85 +2252,6 @@ MAP
 ENDMAP
 
 ###############################################################################
-
-NAME:    hangedman_opposites_gauntlet
-TAGS:    no_monster_gen patrolling
-ORIENT:  float
-DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of flame . arbalest ego:freezing . bolt ego:none . chain mail
-MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
-MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
-         siren ; chain mail . javelin ego:poisoned
-MONS:    fire giant ; battleaxe ego:freezing ident:type
-MONS:    frost giant ; great sword ego:flaming ident:type
-MONS:    golden dragon / crystal guardian w:8
-MONS:    vampire knight ; wand of lightning | wand of iceblast . \
-         great sword . chain mail / tengu reaver ; chain mail . \
-         halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
-KMONS:   A = hell hound / salamander / fire elemental
-KMONS:   B = lindwurm / fire crab / efreet w:5
-KMONS:   C = ophan / balrug
-KMONS:   D = hydra simulacrum / bog body / polar bear
-KMONS:   E = freezing wraith / ice devil / harpy simulacrum
-KMONS:   F = blizzard demon / azure jelly
-KMONS:   G = air elemental / harpy / sixfirhy w:5
-KMONS:   H = raiju / shock serpent / wind drake w:5
-KMONS:   I = spriggan air mage / storm dragon
-KMONS:   J = gargoyle / earth elemental w:5 / basilisk
-KMONS:   K = catoblepas / boulder beetle
-KMONS:   L = iron dragon / deep troll earth mage / war gargoyle w:5
-KMONS:   M = elephant / hydra / wolf spider
-KMONS:   N = dire elephant / alligator / anaconda
-KMONS:   O = bone dragon w:20 / emperor scorpion / alligator snapping turtle
-KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
-KMONS:   Q = naga warrior / orc warlord / minotaur
-KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
-KMONS:   S = deep elf mage / wizard / boggart
-KMONS:   T = deep elf mage / orc sorcerer / giant orange brain
-KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
-KMONS:   V = cyclops / centaur warrior / naga sharpshooter
-KMONS:   W = manticore / yaktaur captain / stone giant
-KMONS:   X = deep elf master archer / merfolk javelineer / thorn hunter w:20
-KFEAT:   g = granite_statue
-KFEAT:   u = fountain_sparkling
-KMASK:   @' = !no_monster_gen
-KITEM:   | = superb_item, star_item / any w:20
-SHUFFLE: AB / DE, GH / JK, MN / ST
-: if you.absdepth() < 20 then
-SHUFFLE: ABDE / GHJK / MNST / PQVW, MN / PQ, ST / VW
-: else
-SUBST: B = C, A = B, E = F, D = E, H = I, G = H, K = L, J = K
-SUBST: N = O, M = N, T = U, S = T, 2 = 6, 3 = 7
-SHUFFLE: BCEF / HIKL / NOTU / QRWX, NO / QR, TU / WX
-NSUBST:  1 = 1:4 / 1:5
-: end
-MAP
-      vvvcbbb
-    vvv..2..bbb
-   vv1...u...1bb
-  vv...b...v...bb
- vv...bb+c+vv...bb
-vv...bb.....vv...bb
-v|3bbb.......vvv3|b
-v|bbM.........Svv|b
-bbbNMvvv...bbbSTvvv
-vvvvvvvv+c+bbbbbbbb
-bbbHGvvv...bbbJKvvv
-b*bbG.........Jvv*v
-b*Abbb.......vvvD*v
-bBA..bb.....vv..DEv
-vvv...bb+c+vv...bbb
-b$vv...b...v...bb$v
-b$$vv.........bb$$v
-bb$.vvv.....bbb.$vv
- bb..gv++c++bg..vv
-  bb...........vv
-   bbb.u(.)u.vvv
-     bnbbnvvnv
-     '@'''''@'
-ENDMAP
-
-###############################################################################
 # Nasty temple of Zin.
 NAME:   evilmike_silver_temple
 TAGS:   no_monster_gen patrolling
@@ -3164,6 +3085,142 @@ MAP
                                ..bb26bb.
 xxx                             ..bbbb..
 (<@                              ......
+ENDMAP
+
+# the +4 great sword "Dinovoldo's Tail" {explosions}
+NAME:   regret_index_qazlal_generations
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+DEPTH:  Depths, !Depths:$, Zot, !Zot:$
+PLACE:  Depths:$
+WEIGHT: 1 (Depths:$), 10
+ORIENT: float
+KMONS:  1 = red very ugly thing / white very ugly thing / \
+            cyan very ugly thing w:15
+KMONS:  2 = fire dragon / ice dragon
+KMONS:  3 = dancing weapon ; broad axe ego:flaming | scimitar ego:freezing | \
+                             trident ego:electrocution | flail ego:vorpal
+KMONS:  4 = stone giant w:15 / fire giant / frost giant
+KMONS:  5 = spark wasp / catoblepas
+KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
+KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
+                                staff of air | staff of earth . \
+                                robe ego:resistance good_item ident:type
+KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
+                           halberd ego:electrocution | lajatang ego:vorpal . \
+                           fire dragon armour | ice dragon armour
+KMONS:  9 = red draconian / white draconian / black draconian
+KMONS:  0 = red draconian monk / white draconian monk / black draconian monk
+KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
+KMONS:  & = ancient lich
+KITEM:  $ = $ no_pickup
+KFEAT:  ~ = .
+KFEAT:  _ = altar_qazlal
+KFEAT:  Z = enter_zot
+SUBST:  A = 1 3:14, B = 2 4:14, C = 5:14 6
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+SUBST:  } = Z, ])> = ., 1 = 9
+NSUBST: ! = 2:8 / 2:9
+: elseif you.in_branch("Zot") then
+SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0
+NSUBST: ! = 1:6 / 1:0 / 1:! / 1:&
+: else
+SUBST:  )] = .
+NSUBST: ! = 2:6 / 1:7 / 1:8
+: end
+SHUFFLE: '"-`
+COLOUR:  ' = red
+COLOUR:  " = white
+COLOUR:  - = lightblue
+COLOUR:  ` = brown
+FTILE:   ' = floor_pebble_red
+FTILE:   " = floor_pebble_white
+FTILE:   - = floor_pebble_cyan
+FTILE:   ` = floor_pebble_brown
+FTILE:   ~$ = floor_pebble_darkgray
+KPROP:   ~wl = no_tele_into
+MAP
+                 bbbb
+                bbbbbb
+     .@.       bbb..bbb       .@.
+    ..c..     bbb....bbb     ..c..
+   ..cnc..   bbbB.bb.Cbbb   ..cnc..
+  ..cncnc.. bbb.....b..bbb ..cncnc..
+  @cncccnc.bbb..bb''b...bbb.cncccnc@
+  ..cncccncbb..b.``'".b..bbcncccnc..
+   ..cncccbb+..b.`-"".b..+bbcccnc..
+    ..cncbb2+b...b--bb..b+4bbcnc..
+     ..cbb4.nbb..b.....bbb.2bbc..
+      bbb2.nnnbbC.bb.Bbbw+n.4bbb
+     bbb++nnl~wbb....bbw$l+bbbbbb
+    bbb..bbn~l~wbb..bbw$l$wbb..bbb
+   bbb....bbw~l~wbbbbw$l$wbb....bbb
+  bbb...b..bbw~l~wbbw$l$wbb...'..bbb
+ bbbB..''b.Bbbw~lnnn+l$wbbA.`..'.Abbb
+bbb..b.b'....bbwnn|!n+wbb..`..b.'..bbb
+bb..b``..b"...bbn|]}!nbb..`.b.......++
+bb...`b..""b..bbn!_)|nbb.......b."..++
+bbb....-b.b..bbwnn!|nnwbb..-.b.."..bbb
+ bbbB.b--..Bbbw~lnnnnl~wbbA.-..".Abbb
+  bbb..b...bbw~l~wbbw~l~wbb..-...bbb
+   bbb....bbw~l~wbbbbw~l~wbb....bbb
+    bbb..bbn~l~wbb..bbw~l~nbb..bbb
+     bbb++nnl~wbb....bbw~lnn++bbb
+      bbb2.nnnbbA.'b.Bbbnnn.1bbb
+     ..bbb1.nbb...b'...bbn.2bbc..
+    ..cncbb2+b....'.....b+1bbcnc..
+   ..cncccbb+..b`..."b"..+bbcccnc..
+  ..cncccnbbb..`b`..."b..bbcncccnc..
+  @cncccnc.bbb.....-....bbb.cncccnc@
+  ..cncnc.. bbb...-b...bbb ..cncnc..
+   ..cnc..   bbbB.b-.Abbb   ..cnc..
+    ..c..     bbb....bbb     ..c..
+     .@.       bbb..bbb       .@.
+                bbbbbb
+                 bbbb
+ENDMAP
+
+NAME:    regret_index_uskayaw_diablada_macabre
+TAGS:    no_monster_gen no_item_gen patrolling
+DEPTH:   Depths:2-, !Depths:$
+ORIENT:  float
+# The dances of angels and devils, of blessed birds and antagonist serpents...
+# and perhaps the stinger plunging into the poor toro de lidia?
+MONS:    dancing weapon ; scythe ego:antimagic
+MONS:    cherub, rakshasa, angel / daeva, balrug / blizzard demon
+MONS:    caustic shrike, shadow dragon
+KMONS:   8 = tengu reaver
+KMONS:   9 = bone dragon
+KMONS:   0 = hornet
+KMONS:   & = minotaur
+KMONS:   ? = spark wasp
+KMONS:   ! = catoblepas
+KFEAT:   _ = altar_uskayaw
+# Rotate pillars, monster sets, stairs.
+# No doors to aide the wasps, but still use doors to nerf the birds.
+SHUFFLE: vb, ABCDEF, 2345+ / 6789+ / 0&!?-, {}, {[(, }])
+SUBST:   A = c, B : c., C : c., DEF- = .
+MAP
+      xx.@...xx
+    xxxvvvcbbbxxx
+   xxvvv$$c$$bbbxx
+  xxvv.........bbxx
+ xxvv...b.4.v...bbxx
+xxvv.3.bb+c+vv.4.bbxx
+xbb...bb2...2vv...vvx
+.b**bbb...B...vvv%%v.
+.b*bb....A.C....vv%v.
+.bbb....F1..D}...vvv@
+.nnnnn.E.._..E.nnnnn.
+@bbb...{D..1F....vvv.
+.b%bb....C.A....vv*v.
+.b%%bbb...B...vvv**v.
+xbb...bb3...3vv...vvx
+xxvv.5.bb+c+vv.2.bbxx
+ xxvv...b.5.v...bbxx
+  xxvv.........bbxx
+   xxvvv$$c$$bbbxx
+    xxvvvvcbbbxx
+     xx....@.xx
 ENDMAP
 
 ###############################################################################

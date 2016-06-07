@@ -2135,3 +2135,65 @@ xxxxxx....FF.a.aaa.a.GF....xxxxxx
       ...xx.X.......X.xx...
       .@.xx.@.......@.xx.@.
 ENDMAP
+
+###############################################################################
+
+NAME:    regret_index_dithmenos_brocken_genspenst
+TAGS:    no_monster_gen no_item_gen no_rotate patrolling
+DEPTH:   Depths, !Depths:$, Tar, !Tar:$
+ORIENT:  south
+MONS:    shadow, boggart, rakshasa, shadow wraith
+MONS:    vampire knight, shadow demon, shadow dragon
+KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
+KMONS:   8 = bone dragon / reaper / doom hound
+KMONS:   _ = tzitzimitl
+KFEAT:   _ = altar_dithmenos
+ITEM:    robe_of_night, ring_of_shadows
+ITEM:    cloak_of_the_thief, boots_of_the_assassin
+ITEM:    shadow dragon armour randart, ring of stealth randart
+ITEM:    phantom mirror, potion of invisibility ident:type q:2
+KFEAT:   F = floor
+SHUFFLE: 56, defghi, jk|
+: if you.in_branch("Tar") then
+SUBST:   02 = 00014, 9k = 8, d = }, e = ), f = ], ghij = .
+: else
+SUBST:   0 = 11112234
+: end
+MARKER:  F = lua:fog_machine { cloud_type = "black smoke", pow_min = 75, \
+                               pow_max = 100, delay_min = 50, delay_max = 75, \
+                               size = 1, walk_dist = 0, spread_rate = 5 }
+TILE:    c = dngn_stone_dark
+FTILE:   F = floor_pebble_darkgray
+COLOUR:  m = lightmagenta
+TILE:    m = dngn_transparent_wall_darkgray
+MAP
+         cc..c.c..cc
+         cc.......cc
+        cc..c...c..cc
+       ccc..c...c..ccc
+       ccc..c.3.c..ccc
+       cc1.m..c..m.1cc
+      ccc1.F.2c2.F.1ccc
+      ccc..m.4c4.m..ccc
+      cc..c..ccc..c..cc
+     ccc..c..ccc..c..ccc
+     ccc..c..ccc..c..ccc
+     cc..m..cc5cc..m..cc
+    ccc..F..++5++..F..ccc
+    ccc..m.6++.++6.m..ccc
+    cc..c..ccc.ccc..c..cc
+    cc..c..ccc.ccc..c..cc
+   ccc..c..cc...cc..c..ccc
+   cc..m..ccc...ccc..m..cc
+   cc..F..ccc...ccc..F..cc
+  ccc..m.0cc0...0cc0.m..ccc
+  cc5....ccc0.d.0ccc....6cc
+  cc..c..++..*e*..++..c..cc
+  cc9...7++.jk_kj.++7...9cc
+ ccccccccccccmFmcccccccccccc
+ ccccccccccccccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
