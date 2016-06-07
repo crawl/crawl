@@ -1243,6 +1243,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_EXECUTIONERS:
     case SPELL_DOOM_HOWL:
     case SPELL_AURA_OF_BRILLIANCE:
+    case SPELL_GREATER_SERVANT_MAKHLEB:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6382,6 +6383,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_BRILLIANCE_AURA);
         aura_of_brilliance(mons);
         return;
+
+    case SPELL_GREATER_SERVANT_MAKHLEB:
+    {
+        const monster_type servants[] = { MONS_EXECUTIONER, MONS_GREEN_DEATH,
+                                          MONS_BLIZZARD_DEMON, MONS_BALRUG,
+                                          MONS_CACODEMON };
+
+        create_monster(mgen_data(RANDOM_ELEMENT(servants), SAME_ATTITUDE(mons),
+                                 mons, 5, spell_cast, mons->pos(), mons->foe,
+                                 MG_NONE, god));
+        return;
+    }
+
     }
 
     // If a monster just came into view and immediately cast a spell,
