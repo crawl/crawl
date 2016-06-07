@@ -2355,8 +2355,7 @@ static void _prep_input()
     textcolour(LIGHTGREY);
 
     you.redraw_status_lights = true;
-    if (!player_stair_delay())
-        print_stats();
+    print_stats();
 
     viewwindow();
     maybe_update_stashes();

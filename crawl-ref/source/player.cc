@@ -6219,12 +6219,7 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
                               10 : 0;
 
-    const int stairs_penalty = player_stair_delay()
-                                && !(evit & EV_IGNORE_HELPLESS) ?
-                                    5 :
-                                    0;
-
-    return base_evasion - constrict_penalty - invis_penalty - stairs_penalty;
+    return base_evasion - constrict_penalty - invis_penalty;
 }
 
 bool player::heal(int amount)
