@@ -72,7 +72,7 @@ The contents of this text are:
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
                 view_delay, force_more_message, flash_screen_message,
-                use_animations, cloud_status
+                use_animations, darken_beyond_range, cloud_status
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1513,6 +1513,11 @@ use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
                              ability or casts a spell.
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
+
+darken_beyond_range = true
+        If set to true, everything beyond range when targeting will be
+        coloured grey. Setting this to false will also disable the "range"
+        category of the use_animations option.
 
 force_more_message += <regex>, <regex>
         (List option)

@@ -1893,7 +1893,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
         mpr("You can't see any susceptible monsters within range! "
             "(Use <w>V</w> to cast anyway.)");
 
-        if (Options.use_animations & UA_RANGE)
+        if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
             targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);
