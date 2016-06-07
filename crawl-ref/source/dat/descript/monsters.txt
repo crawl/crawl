@@ -1679,6 +1679,12 @@ A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
 %%%%
+meliai
+
+A nymphal hybrid, with a winged torso of a human ontop of the stinging abdomen
+of a bee. The meliai serve under many roles: priestesses of nature, nurses to
+the divine, and warrior-champions for their hives.
+%%%%
 merfolk
 
 A hybrid with the torso of a human and the tail of a fish, a merfolk dwells

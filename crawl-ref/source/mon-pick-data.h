@@ -47,7 +47,7 @@ static const pop_entry pop_d[] =
   {  6, 16,  335, SEMI, MONS_WIGHT },
   {  6, 16,  335, SEMI, MONS_NO_MONSTER }, // Old giant spore weight.
   {  7, 14,  415, SEMI, MONS_BIG_KOBOLD },
-  {  7, 14,  500, SEMI, MONS_KILLER_BEE },
+  {  7, 13,  470, SEMI, MONS_KILLER_BEE },
   {  7, 15,   89, PEAK, MONS_STEAM_DRAGON },
   {  7, 17,  515, SEMI, MONS_HIPPOGRIFF },
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
@@ -76,7 +76,8 @@ static const pop_entry pop_d[] =
   { 11, 21,  192, PEAK, MONS_DEATH_KNIGHT },
   { 11, 23,  515, SEMI, MONS_HYDRA },
   { 12, 19,  475, SEMI, MONS_DEEP_ELF_MAGE },
-  { 12, 20,  515, SEMI, MONS_VAMPIRE_MOSQUITO },
+  { 12, 20,  150, SEMI, MONS_MELIAI },
+  { 12, 20,  500, SEMI, MONS_VAMPIRE_MOSQUITO },
   { 12, 22,  440, FALL, MONS_SLIME_CREATURE },
   { 13, 21,   89, PEAK, MONS_RAKSHASA },
   { 13, 17,  925, FLAT, MONS_CENTAUR_WARRIOR },
@@ -345,6 +346,7 @@ static const pop_entry pop_spider[] =
   {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
   {  1,  9,  300, SEMI, MONS_ENTROPY_WEAVER },
   {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
+  {  2,  4,   12, FLAT, MONS_MELIAI },
   {  2, 10,  260, PEAK, MONS_SPARK_WASP },
   { 0,0,0,FLAT,MONS_0 }
 };

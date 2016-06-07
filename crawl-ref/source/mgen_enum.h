@@ -113,6 +113,7 @@ enum band_type
     BAND_JOSEPHINE,
     BAND_IRON_GIANT,
     BAND_HOWLER_MONKEY,
+    BAND_MELIAI,
     NUM_BANDS                   // always last
 };
 

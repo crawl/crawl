@@ -2135,4 +2135,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MELIAI,
+      {
+       { SPELL_SMITING, 18, MON_SPELL_PRIEST },
+       { SPELL_HEAL_OTHER, 18, MON_SPELL_PRIEST },
+      }
+    },
+
 };

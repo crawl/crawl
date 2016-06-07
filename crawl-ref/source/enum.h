@@ -2719,6 +2719,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_MELIAI,
+#endif
     MONS_VAMPIRE_MOSQUITO,
 #if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
@@ -3541,6 +3544,7 @@ enum monster_type                      // menv[].type
     MONS_ANCESTOR_KNIGHT,
     MONS_ANCESTOR_BATTLEMAGE,
     MONS_ANCESTOR_HEXER,
+    MONS_MELIAI,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
