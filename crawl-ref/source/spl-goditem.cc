@@ -472,15 +472,6 @@ void debuff_monster(monster &mon)
     simple_monster_message(&mon, "'s magical effects unravel!");
 }
 
-int detect_traps(int pow)
-{
-    pow = min(50, pow);
-
-    // Trap detection moved to traps.cc. -am
-    const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
-}
-
 // pow -1 for passive
 int detect_items(int pow)
 {

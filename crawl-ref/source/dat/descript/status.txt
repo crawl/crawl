@@ -317,10 +317,6 @@ You are covering ground swiftly.
 
 You are covering ground slowly.
 %%%%
-Emp status
-
-You are telepathically detecting nearby creatures.
-%%%%
 DDoor status
 
 You are temporarily invulnerable to harm, but are brought close to death in the
