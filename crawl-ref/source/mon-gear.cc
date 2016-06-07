@@ -1456,6 +1456,15 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
+    case MONS_MELIAI:
+        // labrys
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(12, WPN_HAND_AXE,
+                                                 7, WPN_WAR_AXE,
+                                                 1, WPN_BROAD_AXE,
+                                                 0);
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -2007,6 +2016,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_GNOLL_SHAMAN:
+    case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_ROBE : ARM_LEATHER_ARMOUR;
         break;

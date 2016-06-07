@@ -2067,7 +2067,8 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
 
     if (you.can_see(*mon))
     {
-        if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
+        if (mon->type == MONS_QUEEN_BEE && (targ->type == MONS_KILLER_BEE ||
+                                            targ->type == MONS_MELIAI))
         {
             mprf("%s calls on %s to defend %s!",
                 mon->name(DESC_THE).c_str(),
@@ -2094,7 +2095,8 @@ static bool _incite_monsters(const monster* mon, bool actual)
     int goaded = 0;
     for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (*mi == mon || !mi->needs_berserk())
+        // XXX: Ugly hack to skip the spellcaster rules for meliai.
+        if (*mi == mon || !mi->needs_berserk(mon->type != MONS_QUEEN_BEE))
             continue;
 
         if (is_sanctuary(mi->pos()))
@@ -2103,9 +2105,10 @@ static bool _incite_monsters(const monster* mon, bool actual)
         // Cannot goad other moths of wrath!
         if (mon->type == MONS_MOTH_OF_WRATH
             && mi->type == MONS_MOTH_OF_WRATH
-        // Queen bees can only incite killer bees.
+        // Queen bees can only incite bees.
             || mon->type == MONS_QUEEN_BEE
-               && mi->type != MONS_KILLER_BEE)
+               && mi->type != MONS_KILLER_BEE &&
+                  mi->type != MONS_MELIAI)
         {
             continue;
         }
