@@ -29,7 +29,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true), launch_type(LRET_FUMBLED)
+      should_alert_defender(true), launch_type(LRET_BUGGY)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -324,7 +324,9 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon && launch_type == LRET_LAUNCHED;
+    return weapon && launch_type == LRET_LAUNCHED
+                     || (launch_type == LRET_BUGGY // not initialized
+                         && is_launched(attacker, weapon, *projectile));
 }
 
 int ranged_attack::weapon_damage()

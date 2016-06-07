@@ -210,6 +210,7 @@ enum jewellery_type
 
 enum launch_retval
 {
+    LRET_BUGGY = -1, // could be 0 maybe? TODO: test
     LRET_FUMBLED,
     LRET_LAUNCHED,
     LRET_THROWN,
