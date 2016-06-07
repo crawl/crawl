@@ -160,6 +160,7 @@ void fire_target_behaviour::set_prompt()
         case LRET_FUMBLED:  msg << "Tossing away "; break;
         case LRET_LAUNCHED: msg << "Firing ";             break;
         case LRET_THROWN:   msg << "Throwing ";           break;
+        case LRET_BUGGY:    msg << "Bugging "; break;
         }
     }
 
@@ -832,6 +833,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         break;
     case LRET_FUMBLED:
         practise(EX_WILL_THROW_OTHER);
+        break;
+    case LRET_BUGGY:
+        dprf("Unknown launch type for weapon."); // should never happen :)
         break;
     }
 
