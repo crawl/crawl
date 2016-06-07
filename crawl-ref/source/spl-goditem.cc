@@ -1006,18 +1006,12 @@ bool cast_smiting(int pow, monster* mons)
     return success;
 }
 
-static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
+void holy_word_player(holy_word_source_type source)
 {
     if (!you.undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker && attacker->is_player())
-        hploss = max(0, you.hp / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 3);
+    int hploss = max(0, you.hp / 2 - 1);
 
     if (!hploss)
         return;
@@ -1033,7 +1027,7 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
     switch (source)
     {
     case HOLY_WORD_SCROLL:
-        aux = "scroll of holy word";
+        aux = "a scroll of holy word";
         break;
 
     case HOLY_WORD_ZIN:
@@ -1042,6 +1036,10 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
 
     case HOLY_WORD_TSO:
         aux = "the Shining One's holy word";
+        break;
+
+    case HOLY_WORD_CARD:
+        aux = "the Torment card";
         break;
     }
 
@@ -1057,20 +1055,14 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, source, attacker);
+        holy_word_player(source);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker == mons)
-        hploss = max(0, mons->hit_points / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 5);
+    int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
     {
@@ -1083,24 +1075,22 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy or daze its user.
-    if (attacker != mons)
-    {
-        // Currently, holy word annoys the monsters it affects
-        // because it can kill them, and because hostile
-        // monsters don't use it.
-        // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-        if (attacker != nullptr
-            && (attacker != &you
-                || source != HOLY_WORD_SCROLL
-                || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
-        {
-            behaviour_event(mons, ME_ANNOY, attacker);
-        }
 
-        mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                                   (10 + random2(10)) * BASELINE_DELAY));
+    // Currently, holy word annoys the monsters it affects
+    // because it can kill them, and because hostile
+    // monsters don't use it.
+    // Tolerate unknown scroll, to not annoy Yred worshippers too much.
+    if (attacker != nullptr
+        && attacker != mons
+        && (attacker != &you
+            || source != HOLY_WORD_SCROLL
+            || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
+    {
+        behaviour_event(mons, ME_ANNOY, attacker);
     }
+
+    mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                               (10 + random2(10)) * BASELINE_DELAY));
 }
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
@@ -1177,7 +1167,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_SCEPTRE:
-        aux = "Sceptre of Torment";
+        aux = "sceptre of Torment";
         break;
 
     case TORMENT_SCROLL:
@@ -1203,7 +1193,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
     }
 
-    ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
+    ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
 
     return;
 }

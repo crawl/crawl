@@ -69,6 +69,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 
 void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker = nullptr);
+void holy_word_player(holy_word_source_type source);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_cell(coord_def where, actor *attacker, torment_source_type taux);
