@@ -94,42 +94,59 @@ MAP
 ENDMAP
 
 NAME:    eino_jars
-TAGS:    extra
+TAGS:    patrolling uniq_beehive
 DEPTH:   D:7-14
-SHUFFLE: 11%
-MONS:    killer bee / nothing w:5
-SUBST:   % = %*
+KMONS:   1 = killer bee
+KMONS:   2 = meliai
+KITEM:   1 = %
+KITEM:   2 = *
+: if you.absdepth() < 12 then
+NSUBST:  1 = 1:1 / * = 11.
+: else
+NSUBST:  1 = 1:2 / 2 = 21 / 1:. / * = 11.
+: end
 MAP
-xxxxxx
-x1111x
-x1111x
-x++++x
-@....@
+ xxxxx
+ x111x
+ x1x1x.@.
+ x+++x.x.
+...........
+  .x.x+++x
+  .@.x1x1x
+     x111x
+     xxxxx
 ENDMAP
 
-# Beehive which needs digging to access
+# Beehive which needs digging to access.
 NAME:   hive_lemuel
-TAGS:   uniq_beehive
+TAGS:   no_trap_gen
 DEPTH:  D:9-, Spider
-MONS:   killer bee, wasp, hornet
+MONS:   killer bee, meliai, queen bee, wasp, hornet
 KMONS:  *R = worm
-SUBST:  ? : .w
-SUBST:  1 = 1 a:2, 1 : 1:15 2 3:2
-SUBST:  * : * R:3
 KITEM:  * = *
 KITEM:  R = royal jelly
+SUBST:  ? : .w
+SUBST:  * : * R:3
+# Since one has to dig the bees out, early meliai are fine.
+: if crawl.x_chance_in_y(15, 27) then
+TAGS:   uniq_beehive
+NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
+: else
+TAGS:   uniq_wasphive
+SUBST:  1 : 4 5:4
+: end
 COLOUR: x = yellow
 TILE:   x = wall_wax
 MAP
   ????????
  ??????????
 ???xxxxxx???
-??xmxxxxmx??
+??xmxxxxxx??
 ??xx1111xx??
 ??xx1**1xx??
 ??xx1**1xx??
 ??xx1111xx??
-??xmxxxxmx??
+??xxxxxxmx??
 ???xxxxxx???
  ??????????
   ????????
@@ -137,23 +154,26 @@ ENDMAP
 
 # Beehive minivault
 NAME:   minivault_7
-TAGS:   uniq_beehive
+TAGS:   uniq_beehive patrolling
 DEPTH:  D:9-
-MONS:   patrolling queen bee, patrolling killer bee
+MONS:   queen bee, meliai, killer bee
 KITEM:  R = royal jelly
 COLOUR: x = yellow
 TILE:   x = wall_wax
+: if you.absdepth() < 12 then
+SUBST:  2 = 3
+: end
 MAP
 ............
 ....xxxx....
-..x2x2xxxx..
-..xxRx2x2x..
-.xx2xRx2xxx.
-.x2xRx1xRx2.
-.xx2xRxRx2x.
-.xxx2x2x2xx.
-..x2xRx2xx..
-...xx2xx2x..
+..x3x3xxxx..
+..xxRx3x2x..
+.xx3xRx3xxx.
+.x2xRx1xRx3.
+.xx3xRxRx3x.
+.xxx3x3x3xx.
+..x3xRx3xx..
+...xx2xx3x..
 ....xxxx....
 ............
 ENDMAP
@@ -358,14 +378,19 @@ MAP
 ENDMAP
 
 NAME:   nicolae_looking_at_the_future
-TAGS:   no_monster_gen no_trap_gen uniq_beehive
+TAGS:   no_monster_gen no_trap_gen uniq_beehive patrolling
 DEPTH:  D:8-, Spider
-KMONS:  B = patrolling queen bee
-KMONS:  b = patrolling killer bee
+KMONS:  B = queen bee
+KMONS:  b = killer bee
+KMONS:  M = meliai
 KMONS:  p = plant
-NSUBST: b = 1:B / 1:b / * = bb.
 : if you.in_branch("Spider") then
 SUBST:  + = .
+: end
+: if you.absdepth() > 12 then
+NSUBST: b = 1:B / 3:M / *:b
+: else
+NSUBST: b = 1:B / 1:b / * = bb.
 : end
 MAP
 xxxxx++xxxxx

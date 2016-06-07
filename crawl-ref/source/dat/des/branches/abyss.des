@@ -334,12 +334,14 @@ C   111111 ww 111111   C
 ENDMAP
 
 NAME:   hangedman_abyss_sting
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen uniq_wasphive
 KMONS:  1 = orange demon
 KMONS:  2 = hornet / wasp / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
-KITEM:  23 = royal jelly / nothing
+KITEM:  3 = royal jelly
+COLOUR: x = yellow
+TILE:   x = wall_wax
 MAP
  xxxxxxx
 xx22222xx
