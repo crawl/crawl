@@ -806,6 +806,7 @@ void game_options::reset_options()
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = !is_tiles();
+    darken_beyond_range    = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -3628,6 +3629,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(rest_wait_both);
     else INT_OPTION(rest_wait_percent, 0, 100);
     else BOOL_OPTION(cloud_status);
+    else BOOL_OPTION(darken_beyond_range);
     else if (key == "dump_message_count")
     {
         // Capping is implicit

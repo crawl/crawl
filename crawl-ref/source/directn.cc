@@ -919,7 +919,7 @@ char mlist_index_to_letter(int index)
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (range)
+    if (range && Options.darken_beyond_range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
