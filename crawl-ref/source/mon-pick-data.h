@@ -1072,17 +1072,18 @@ static const pop_entry pop_depths[] =
 
 static const pop_entry pop_gauntlet[] =
 { // Gauntlet
-  { 1, 1,  300, FLAT, MONS_ENTROPY_WEAVER },
-  { 1, 1,  300, FLAT, MONS_THORN_HUNTER },
-  { 1, 1,  300, FLAT, MONS_SATYR },
-  { 1, 1,  300, FLAT, MONS_GREATER_NAGA },
-  { 1, 1,  400, FLAT, MONS_PHANTASMAL_WARRIOR },
-  { 1, 1,  500, FLAT, MONS_RAKSHASA },
-  { 1, 1,  300, FLAT, MONS_SHADOW_DEMON },
-  { 1, 1,  500, FLAT, MONS_WORLDBINDER },
-  { 1, 1,  400, FLAT, MONS_VERY_UGLY_THING },
-  { 1, 1,  300, FLAT, MONS_SPHINX },
-  { 1, 1,  300, FLAT, MONS_WAR_GARGOYLE },
+  { 1, 1,  45, FLAT, MONS_VERY_UGLY_THING },
+  { 1, 1,  25, FLAT, MONS_STORM_DRAGON },
+  { 1, 1,  25, FLAT, MONS_SPHINX },
+  { 1, 1,  25, FLAT, MONS_WAR_GARGOYLE },
+  { 1, 1,  30, FLAT, MONS_ENTROPY_WEAVER },
+  { 1, 1,  30, FLAT, MONS_THORN_HUNTER },
+  { 1, 1,  30, FLAT, MONS_SATYR },
+  { 1, 1,  30, FLAT, MONS_GREATER_NAGA },
+  { 1, 1,  45, FLAT, MONS_PHANTASMAL_WARRIOR },
+  { 1, 1,  45, FLAT, MONS_RAKSHASA },
+  { 1, 1,  25, FLAT, MONS_SHADOW_DEMON },
+  { 1, 1,  45, FLAT, MONS_WORLDBINDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
