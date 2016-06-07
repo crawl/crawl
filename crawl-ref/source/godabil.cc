@@ -4004,7 +4004,7 @@ void spare_beogh_convert()
 #define STATIONARY_CHECK                               \
     do {                                               \
         if (you.is_stationary()) {                     \
-            mpr("You can't move from your position!"); \
+            canned_msg(MSG_CANNOT_MOVE);               \
             return false;                              \
         }                                              \
     } while (0)
