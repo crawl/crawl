@@ -2532,21 +2532,6 @@ string get_skill_description(skill_type skill, bool need_title)
                 result += "Note that Trog doesn't use Invocations, due to its "
                           "close connection to magic.";
             }
-            else if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "Note that Nemelex uses Evocations rather than "
-                          "Invocations.";
-            }
-            break;
-
-        case SK_EVOCATIONS:
-            if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "This is the skill all of Nemelex's abilities rely "
-                          "on.";
-            }
             break;
 
         case SK_SPELLCASTING:

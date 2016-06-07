@@ -613,11 +613,6 @@ static string _get_god_misc_info(god_type which_god)
                    "you gain half of the monster's experience value. Pacified "
                    "monsters try to leave the level.";
 
-        case GOD_NEMELEX_XOBEH:
-            return "The power of Nemelex Xobeh's abilities and of the "
-                   "cards' effects is governed by Evocations skill "
-                   "instead of Invocations.";
-
         case GOD_GOZAG:
             return _describe_branch_bribability();
 
@@ -678,7 +673,7 @@ static string _god_penance_message(god_type which_god)
     const string penance_message =
         (which_god == GOD_NEMELEX_XOBEH
          && which_god_penance > 0 && which_god_penance <= 100)
-            ? "%s doesn't play fair with you." :
+            ? "%s won't play fair with you." :
         (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
         (which_god_penance >= 20)   ? "%s is annoyed with you." :
         (which_god_penance >=  5)   ? "%s well remembers your sins." :

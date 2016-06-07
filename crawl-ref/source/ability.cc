@@ -177,7 +177,6 @@ static skill_type _invo_skill()
     {
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
-        case GOD_NEMELEX_XOBEH:
         case GOD_PAKELLAS:
             return SK_EVOCATIONS;
         case GOD_ASHENZARI:
@@ -1017,7 +1016,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         break;
 
     case ABIL_NEMELEX_DEAL_FOUR:
-        return 70 - (you.piety * 2 / 45) - you.skill(SK_EVOCATIONS, 9) / 2;
+        return 70 - (you.piety * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
 
     default:
         return base_chance;

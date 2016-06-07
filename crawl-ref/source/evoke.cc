@@ -2097,8 +2097,8 @@ bool evoke_item(int slot, bool check_range)
         did_work = true; // easier to do it this way for misc items
 
         if ((player_mutation_level(MUT_NO_ARTIFICE)
-             || player_under_penance(GOD_PAKELLAS)
-                && !is_deck(item))
+             || player_under_penance(GOD_PAKELLAS))
+            && !is_deck(item)
             && item.sub_type != MISC_ZIGGURAT)
         {
             if (player_mutation_level(MUT_NO_ARTIFICE))
