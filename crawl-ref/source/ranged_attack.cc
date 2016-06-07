@@ -328,8 +328,8 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon && launch_type == LRET_LAUNCHED
-                     || (launch_type == LRET_BUGGY // not initialized
+    return weapon && (launch_type == LRET_LAUNCHED
+                     || launch_type == LRET_BUGGY // not initialized
                          && is_launched(attacker, weapon, *projectile));
 }
 
