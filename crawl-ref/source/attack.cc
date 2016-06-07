@@ -508,7 +508,7 @@ bool attack::distortion_affects_defender()
     case BLINK:
         if (defender_visible)
             obvious_effect = true;
-        if (!defender->no_tele(true, false))
+        if (!defender->no_tele(true, false, true))
             blink_fineff::schedule(defender);
         break;
     case BANISH:

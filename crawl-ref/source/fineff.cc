@@ -234,7 +234,7 @@ void trample_follow_fineff::fire()
 void blink_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive() && !defend->no_tele(true, false))
+    if (defend && defend->alive() && !defend->no_tele(true, false, true))
         defend->blink();
 }
 
