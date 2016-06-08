@@ -298,7 +298,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_WIGHT:
-    case MONS_NORRIS:
         item.base_type = OBJ_WEAPONS;
 
         if (one_chance_in(6))
@@ -1857,11 +1856,6 @@ static void _give_shield(monster* mon, int level)
             shield->props["worn_tile_name"] = "buckler_spriggan";
             bind_item_tile(*shield);
         }
-        break;
-
-    case MONS_NORRIS:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                              level * 2 + 1, 1);
         break;
 
     case MONS_WIGLAF:
