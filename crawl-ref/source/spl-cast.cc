@@ -629,7 +629,7 @@ static bool _can_cast()
 
     if (you.duration[DUR_NO_CAST])
     {
-        mpr("You are unable to acess your magic!");
+        mpr("You are unable to access your magic!");
         return false;
     }
 
@@ -639,7 +639,6 @@ static bool _can_cast()
         canned_msg(MSG_NO_ENERGY);
         return false;
     }
-
 
     return true;
 }
@@ -777,11 +776,24 @@ bool cast_a_spell(bool check_range, spell_type spell)
     int sifcast_amount = 0;
     if (!enough_mp(cost, true))
     {
-        if (you_worship(GOD_SIF_MUNA)
-            && yesno("Sifcast this spell?", true, 'n'))
+        if (have_passive(passive_t::no_mp_casting))
         {
-            sifcast_amount = cost - you.magic_points;
-            cost = you.magic_points;
+            simple_god_message(" offers you divine energy.");
+            string prompt = make_stringf("Temporarily lose access to your "
+                                         "magic to cast %s?",
+                                         spell_title(spell));
+
+            if (!yesno(prompt.c_str(), true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                crawl_state.zero_turns_taken();
+                return false;
+            }
+            else
+            {
+                sifcast_amount = cost - you.magic_points;
+                cost = you.magic_points;
+            }
         }
         else
         {
@@ -905,6 +917,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         mpr("You briefly lose access to your magic!");
         you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
     }
+
     you.turn_is_over = true;
     alert_nearby_monsters();
 
