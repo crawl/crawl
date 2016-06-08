@@ -3,6 +3,10 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Cloud spell
+
+Conjures up a large cloud of acidic fog.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly

@@ -512,6 +512,12 @@ acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.
 %%%%
+acid crab
+
+Sickly yellow and mutated by proximity to slimes and sewers, these crabs
+are known to spray caustic fog when threatened, attacking, mating, or
+whenever they please.
+%%%%
 adder
 
 The common dungeon snake. A species of troglodytic reptile commonly found in

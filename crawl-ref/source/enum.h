@@ -3548,6 +3548,7 @@ enum monster_type                      // menv[].type
     MONS_ANCESTOR_BATTLEMAGE,
     MONS_ANCESTOR_HEXER,
     MONS_MELIAI,
+    MONS_ACID_CRAB,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4675,6 +4676,7 @@ enum spell_type
     SPELL_SLUG_DART,
     SPELL_SPRINT,
     SPELL_GREATER_SERVANT_MAKHLEB,
+    SPELL_ACID_CLOUD,
     NUM_SPELLS
 };
 
