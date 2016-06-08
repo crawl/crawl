@@ -3390,8 +3390,8 @@ int monster::base_armour_class() const
     if (mons_is_hepliaklqana_ancestor(type))
     {
         if (type == MONS_ANCESTOR_KNIGHT)
-            return get_experience_level() * 3 / 2 + 5;
-        return get_experience_level();
+            return get_experience_level() + 7;
+        return get_experience_level() / 2;
     }
 
     const int base_ac = get_monster_data(type)->AC;
