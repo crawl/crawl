@@ -920,6 +920,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_TURTLE:
         return TILEP_MONS_SPECTRAL_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
+    case TILEP_MONS_ZOMBIE_ELEPHANT:
         return TILEP_MONS_SPECTRAL_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_TOAD:
         return TILEP_MONS_SPECTRAL_TOAD;
@@ -995,6 +996,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_TOAD:
+    case TILEP_MONS_ZOMBIE_ELEPHANT:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_BAT:
         return TILEP_MONS_SIMULACRUM_BAT;
@@ -1075,6 +1077,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_TURTLE:
         return TILEP_MONS_SKELETON_TURTLE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
+    case TILEP_MONS_ZOMBIE_ELEPHANT:
         return TILEP_MONS_SKELETON_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_TOAD:
         return TILEP_MONS_SKELETON_TOAD;
