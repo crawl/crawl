@@ -219,10 +219,6 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
-Norris title
-
-Norris the Nihilist
-%%%%
 Pikel title
 
 Pikel the Slaver

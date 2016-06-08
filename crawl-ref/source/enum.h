@@ -3287,7 +3287,9 @@ enum monster_type                      // menv[].type
     MONS_RUPERT,
     MONS_WIGLAF,
     MONS_XTAHUA,
+#if TAG_MAJOR_VERSION == 34
     MONS_NORRIS,
+#endif
     MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,
