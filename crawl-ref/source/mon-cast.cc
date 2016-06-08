@@ -1262,15 +1262,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
-    if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
-    {
-        int range = _mons_spell_range(theBeam.origin_spell, *mons);
-        while (grid_distance(mons->pos(), mons->target) > range)
-        {
-            theBeam = mons_spell_beam(mons, spell_cast, power);
-            range = _mons_spell_range(theBeam.origin_spell, *mons);
-        }
-    }
     bolt_parent_init(theBeam, pbolt);
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
