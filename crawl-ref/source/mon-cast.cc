@@ -434,7 +434,7 @@ int mons_spell_range(spell_type spell, int hd)
 
 static spell_type _random_bolt_spell()
 {
-	return random_choose(SPELL_VENOM_BOLT,
+    return random_choose(SPELL_VENOM_BOLT,
                          SPELL_BOLT_OF_DRAINING,
                          SPELL_BOLT_OF_FIRE,
                          SPELL_LIGHTNING_BOLT,
@@ -444,7 +444,7 @@ static spell_type _random_bolt_spell()
 
 static spell_type _major_destruction_spell()
 {
-	return random_choose(SPELL_BOLT_OF_FIRE,
+    return random_choose(SPELL_BOLT_OF_FIRE,
                          SPELL_FIREBALL,
                          SPELL_LIGHTNING_BOLT,
                          SPELL_STICKY_FLAME,
@@ -485,13 +485,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     spell_type real_spell = spell_cast;
 
     if (spell_cast == SPELL_RANDOM_BOLT)
-    {
         real_spell = _random_bolt_spell();
-    }
     else if (spell_cast == SPELL_MAJOR_DESTRUCTION)
-    {
         real_spell = _major_destruction_spell();
-    }
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {
         // ones with ranges too small are fixed in setup_mons_cast
