@@ -1650,7 +1650,7 @@ w:5
 %%%%
 _Aizul_common_
 
-VISUAL:@The_monster@ yawns, and then pretends he didn't.
+VISUAL:@The_monster@ yawns, and then pretends @possessive@ didn't.
 
 @The_monster@ says, "Feeling sleepy?"
 
@@ -1743,7 +1743,7 @@ _Asterion_common_
 
 VISUAL:@The_monster@ snorts and paws the ground.
 
-VISUAL:@The_monster@ slowly taps his weapon in his hand.
+VISUAL:@The_monster@ slowly taps @possessive@ weapon in @possessive@ hand.
 
 @The_monster@ says, "Soon your soul will belong to Makhleb." @player_only@
 
@@ -2787,7 +2787,7 @@ w:50
 
 @The_monster@ says, "Don't bother, there's only junk at the bottom."
 
-@The_monster@ says, "I asked the warden where the rune was. He slammed the door in my face."
+@The_monster@ says, "I asked the warden where the rune was. She slammed the door in my face."
 
 @The_monster@ says, "I don't remember getting an invitation to a convocation."
 
@@ -2904,7 +2904,7 @@ w:50
 
 @The_monster@ says, "I've never heard of a star spawning anything."
 
-@The_monster@ throws up his hands and says, "Alright, I admit it, I'm lost!"
+@The_monster@ throws up @possessive@ hands and says, "Alright, I admit it, I'm lost!"
 
 @The_monster@ says, "I hate wrenching sensations."
 
@@ -3243,7 +3243,7 @@ w:50
 
 @The_monster@ says, "Beogh's pretty racist."
 
-@The_monster@ says, "One of the priests looked like he was going to ask me to join... I guess he changed his mind."
+@The_monster@ says, "One of the priests looked like she was going to ask me to join... I guess she changed her mind."
 
 @The_monster@ says, "You think walking on water is cool? I can swim."
 
@@ -3780,7 +3780,7 @@ _Duvessa_common_
 
 VISUAL:@The_monster@ gestures with @possessive@ weapon @at_foe@.
 
-@The_monster@ says @to_foe@, "My weaknesses are his strengths!"
+@The_monster@ says @to_foe@, "My weaknesses are @possessive@ strengths!"
 
 @The_monster@ says @to_foe@, "Where magic fails, the sword succeeds!"
 
@@ -5924,7 +5924,7 @@ _Sigmund_rare_
 VISUAL:@The_monster@ smiles chillingly.
 ## END Sigmund ##
 %%%%
-############ SOJOBO ### tengu king
+############ SOJOBO ### tengu queen
 Sojobo
 
 @_Sojobo_common_@
@@ -5936,7 +5936,7 @@ _Sojobo_common_
 
 VISUAL:@The_monster@ strikes a fencing pose.
 
-@The_monster@ barks orders to his subordinates.
+@The_monster@ barks orders to @possessive@ subordinates.
 
 VISUAL:@The_monster@ grins devilishly.
 
@@ -6029,9 +6029,9 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
-##################### A coarse and lanky orc. Urug lost his eye in a fight with a harpy,
+##################### A coarse and lanky orc. Urug lost her eye in a fight with a harpy,
 ############ URUG ### and has sworn to slay every last one of them. Unfortunately, the
-##################### vision in his remaining eye is not very good, and he has mistaken you for one.
+##################### vision in her remaining eye is not very good, and she has mistaken you for one.
 Urug
 
 @_Urug_common_@
