@@ -3318,7 +3318,40 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SERPENT_OF_HELL_BREATH, "serpent of hell breath",
+    SPELL_SERPENT_OF_HELL_GEH_BREATH, "gehenna serpent of hell breath",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_SERPENT_OF_HELL_COC_BREATH, "cocytus serpent of hell breath",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_SERPENT_OF_HELL_DIS_BREATH, "dis serpent of hell breath",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_SERPENT_OF_HELL_TAR_BREATH, "tartarus serpent of hell breath",
     SPTYP_CONJURATION,
     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
     5,

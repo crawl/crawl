@@ -497,9 +497,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         // ones with ranges too small are fixed in setup_mons_cast
         real_spell = _legendary_destruction_spell();
     }
-    else if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
+    else if (spell_is_soh_breath(spell_cast))
     {
         // this will be fixed up later in mons_cast
+        // XXX: is this necessary?
         real_spell = SPELL_FIRE_BREATH;
     }
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
@@ -4786,35 +4787,6 @@ static void _cast_flay(monster* source, actor *defender)
     }
 }
 
-// marking this extern (const defaults to static) so that monster can link to it
-extern const spell_type serpent_of_hell_breaths[][3] =
-{
-    // Geh
-    {
-        SPELL_FIRE_BREATH,
-        SPELL_FLAMING_CLOUD,
-        SPELL_FIREBALL
-    },
-    // Coc
-    {
-        SPELL_COLD_BREATH,
-        SPELL_FREEZING_CLOUD,
-        SPELL_FLASH_FREEZE
-    },
-    // Dis
-    {
-        SPELL_METAL_SPLINTERS,
-        SPELL_QUICKSILVER_BOLT,
-        SPELL_LEHUDIBS_CRYSTAL_SPEAR
-    },
-    // Tar
-    {
-        SPELL_BOLT_OF_DRAINING,
-        SPELL_MIASMA_BREATH,
-        SPELL_CORROSIVE_BOLT
-    }
-};
-
 static bool _spell_charged(monster *mons)
 {
     mon_enchant ench = mons->get_ench(ENCH_SPELL_CHARGED);
@@ -4864,33 +4836,16 @@ static bool _spell_charged(monster *mons)
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise)
 {
-    if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
+    if (spell_is_soh_breath(spell_cast))
     {
-        monster_type serpent_type = mons_is_zombified(mons)
-            ? mons->base_monster
-            : mons->type;
-        ASSERT(serpent_type >= MONS_SERPENT_OF_HELL);
-        ASSERT(serpent_type <= MONS_SERPENT_OF_HELL_TARTARUS);
+        const vector<spell_type> *breaths = soh_breath_spells(spell_cast);
+        ASSERT(breaths);
+        ASSERT(mons->heads() == (int)breaths->size());
 
-#if TAG_MAJOR_VERSION > 34
-        const int idx = serpent_type - MONS_SERPENT_OF_HELL;
-#else
-        const int idx =
-            serpent_type == MONS_SERPENT_OF_HELL          ? 0
-          : serpent_type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
-          : serpent_type == MONS_SERPENT_OF_HELL_DIS      ? 2
-          : serpent_type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
-          :                                                 -1;
-#endif
-        ASSERT(idx < (int)ARRAYSZ(serpent_of_hell_breaths));
-        ASSERT(idx >= 0);
-        ASSERT(mons->heads() == ARRAYSZ(serpent_of_hell_breaths[idx]));
-
-        for (int i = 0; i < mons->heads(); ++i)
+        for (spell_type head_spell : *breaths)
         {
             if (!mons->get_foe())
                 return;
-            spell_type head_spell = serpent_of_hell_breaths[idx][i];
             setup_mons_cast(mons, pbolt, head_spell);
             mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }

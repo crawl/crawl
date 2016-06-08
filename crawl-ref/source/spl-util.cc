@@ -1564,3 +1564,35 @@ skill_type arcane_mutation_to_skill(mutation_type mutation)
             return spell_type2skill(spschools_type::exponent(exp));
     return SK_NONE;
 }
+
+bool spell_is_soh_breath(spell_type spell)
+{
+    return spell == SPELL_SERPENT_OF_HELL_GEH_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_COC_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_DIS_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_TAR_BREATH;
+}
+
+const vector<spell_type> *soh_breath_spells(spell_type spell)
+{
+    static const map<spell_type, vector<spell_type>> soh_breaths = {
+        { SPELL_SERPENT_OF_HELL_GEH_BREATH,
+            { SPELL_FIRE_BREATH,
+              SPELL_FLAMING_CLOUD,
+              SPELL_FIREBALL } },
+        { SPELL_SERPENT_OF_HELL_COC_BREATH,
+            { SPELL_COLD_BREATH,
+              SPELL_FREEZING_CLOUD,
+              SPELL_FLASH_FREEZE } },
+        { SPELL_SERPENT_OF_HELL_DIS_BREATH,
+            { SPELL_METAL_SPLINTERS,
+              SPELL_QUICKSILVER_BOLT,
+              SPELL_LEHUDIBS_CRYSTAL_SPEAR } },
+        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
+            { SPELL_BOLT_OF_DRAINING,
+              SPELL_MIASMA_BREATH,
+              SPELL_CORROSIVE_BOLT } },
+    };
+
+    return map_find(soh_breaths, spell);
+}
