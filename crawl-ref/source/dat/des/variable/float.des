@@ -6310,7 +6310,7 @@ ENDMAP
 
 NAME:   kennysheep_cluttered_fort
 ORIENT: float
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 NSUBST: % : 1:|
 SUBST:  % = *
 SUBST:  9 = 9900.
@@ -6342,7 +6342,7 @@ ENDMAP
 NAME:   kennysheep_bubble_arena
 TAGS:   no_item_gen no_trap_gen
 ORIENT: float
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 NSUBST: % = 5:|
 SUBST:  % : %$
 : ks_random_setup(_G, true)
