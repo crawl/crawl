@@ -2193,42 +2193,34 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    int item_slot = -1;
+    //int item_slot = -1;
+    item_def* itemp = nullptr;
     while (true)
     {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item(
-                "Identify which item? (\\ to view known items)",
-                MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
-                -1, nullptr, OPER_ANY, true);
-        }
+        if (!itemp)
+            itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
+                                 "Choose an item to identify.");
 
-        if (item_slot == PROMPT_NOTHING)
-            return !alreadyknown;
-
-        if (item_slot == PROMPT_ABORT)
+        if (itemp == nullptr)
         {
-            if (alreadyknown
-                || crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0))
+            if (!any_items_of_type(OSEL_UNIDENT, 0, true))
             {
-                canned_msg(MSG_OK);
-                return !alreadyknown;
-            }
-            else
-            {
-                item_slot = -1;
-                continue;
+                if (alreadyknown
+                    || crawl_state.seen_hups
+                    || yesno("Really abort (and waste the scroll)?", false, 0))
+                {
+                        canned_msg(MSG_OK);
+                        return !alreadyknown;
+                }
             }
         }
 
-        item_def& item(you.inv[item_slot]);
+        item_def& item = *itemp;
         if (fully_identified(item))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             more();
-            item_slot = -1;
+            itemp = nullptr;
             continue;
         }
 
@@ -2240,18 +2232,19 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
 
         // Output identified item.
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        if (item_slot == you.equip[EQ_WEAPON])
-            you.wield_change = true;
-
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item_slot == you.equip[EQ_AMULET]
-            && !item_known_cursed(item))
+        if (in_inventory(item))
         {
-            learned_something_new(HINT_INACCURACY);
-        }
+            if (item.link == you.equip[EQ_WEAPON])
+                you.wield_change = true;
 
-        auto_assign_item_slot(item);
-        return true;
+            if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
+                && item.link == you.equip[EQ_AMULET]
+                && !item_known_cursed(item))
+                    learned_something_new(HINT_INACCURACY);
+
+            auto_assign_item_slot(item);
+        }
+    return true;
     }
 }
 
