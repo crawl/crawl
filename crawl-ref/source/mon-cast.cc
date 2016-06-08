@@ -432,6 +432,26 @@ int mons_spell_range(spell_type spell, int hd)
     return spell_range(spell, power, false);
 }
 
+static spell_type _random_bolt_spell()
+{
+	return random_choose(SPELL_VENOM_BOLT,
+                         SPELL_BOLT_OF_DRAINING,
+                         SPELL_BOLT_OF_FIRE,
+                         SPELL_LIGHTNING_BOLT,
+                         SPELL_QUICKSILVER_BOLT,
+                         SPELL_CORROSIVE_BOLT);
+}
+
+static spell_type _major_destruction_spell()
+{
+	return random_choose(SPELL_BOLT_OF_FIRE,
+                         SPELL_FIREBALL,
+                         SPELL_LIGHTNING_BOLT,
+                         SPELL_STICKY_FLAME,
+                         SPELL_IRON_SHOT,
+                         SPELL_BOLT_OF_DRAINING,
+                         SPELL_ORB_OF_ELECTRICITY);
+}
 static spell_type _legendary_destruction_spell()
 {
     return random_choose_weighted(25, SPELL_FIREBALL,
@@ -464,24 +484,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     spell_type real_spell = spell_cast;
 
-    if (spell_cast == SPELL_MAJOR_DESTRUCTION)
+    if (spell_cast == SPELL_RANDOM_BOLT)
     {
-        real_spell = random_choose(SPELL_BOLT_OF_FIRE,
-                                   SPELL_FIREBALL,
-                                   SPELL_LIGHTNING_BOLT,
-                                   SPELL_STICKY_FLAME,
-                                   SPELL_IRON_SHOT,
-                                   SPELL_BOLT_OF_DRAINING,
-                                   SPELL_ORB_OF_ELECTRICITY);
+        real_spell = _random_bolt_spell();
     }
-    else if (spell_cast == SPELL_RANDOM_BOLT)
+    else if (spell_cast == SPELL_MAJOR_DESTRUCTION)
     {
-        real_spell = random_choose(SPELL_VENOM_BOLT,
-                                   SPELL_BOLT_OF_DRAINING,
-                                   SPELL_BOLT_OF_FIRE,
-                                   SPELL_LIGHTNING_BOLT,
-                                   SPELL_QUICKSILVER_BOLT,
-                                   SPELL_CORROSIVE_BOLT);
+        real_spell = _major_destruction_spell();
     }
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {

@@ -769,8 +769,8 @@ destroyed at any power level.
 %%%%
 Legendary Destruction spell
 
-Conjures two destructive magical effects. The effects may be Fireball,
-Iceblast, or Ghostly Fireball.
+Conjures two explosive magical effects in instant succession. The effects can
+be any mix of Fireball, Iceblast, and Ghostly Fireball.
 %%%%
 Lehudib's Crystal Spear spell
 
