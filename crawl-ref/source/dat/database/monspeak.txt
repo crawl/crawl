@@ -3789,7 +3789,7 @@ _Duvessa_common_
 
 VISUAL:@The_monster@ gestures with @possessive@ weapon @at_foe@.
 
-@The_monster@ says @to_foe@, "My weaknesses are @possessive@ strengths!"
+@The_monster@ says @to_foe@, "My weaknesses are his strengths!"
 
 @The_monster@ says @to_foe@, "Where magic fails, the sword succeeds!"
 
