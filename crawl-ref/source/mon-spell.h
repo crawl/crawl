@@ -1791,6 +1791,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SEARING_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                     | MON_SPELL_NOISY },
+       { SPELL_PARALYSE, 18, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
       }
     },
 
