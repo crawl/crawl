@@ -2311,6 +2311,8 @@ Liver
 Mugger
 
 Walk
+
+Earwax
 %%%%
 # Lowercase words
 _crazy_yiuf_wordlist2_
@@ -2454,6 +2456,13 @@ pizzabubble
 noodlescoop
 
 mumblescurry
+
+alas
+
+rumpyflump
+
+sizzlefizz
+
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
@@ -3587,6 +3596,8 @@ VISUAL:@The_monster@ shakes @possessive@ head.
 @The_monster@ says, "I think I hate rivers, but I can't remember why."
 
 @The_monster@ says, "That guy with the scythe is really mean."
+
+@The_monster@ says, "I spend most of my time avoiding Sonja."
 
 w:1
 @The_monster@ says, "What kind of a name is Fauntleroy?"
@@ -5286,6 +5297,10 @@ w:1
 %%%%
 _Natasha_death_common_
 
+@The_monster@ screeches in despair, and dies.
+
+@The_monster@ yowls pathetically as @subjective@ dies!
+
 @The_monster@ screams in fury as @subjective@ dies!
 
 @The_monster@ screams in pain as @subjective@ dies!
@@ -5782,6 +5797,8 @@ w:5
 %%%%
 _Rupert_common_
 
+VISUAL:@The_monster@ looks as if @subjective@ doubts whether @foe@ exists.
+
 VISUAL:@The_monster@ looks excited.
 
 VISUAL:@The_monster@ looks confused.
@@ -5795,6 +5812,8 @@ VISUAL:@The_monster@ looks confused.
 @The_monster@ screams @at_foe@, "Hurray!"
 %%%%
 _Rupert_rare_
+
+@The_monster@ screams @at_foe@, "I will not be chunked!"
 
 @The_monster@ asks @foe,@ "You're a monster, aren't you?"
 
@@ -6500,6 +6519,8 @@ VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
 sheep
 
 @The_monster@ "Baaaas" balefully.
+
+Glaring, @The_monster@ utters a "Baaa" @to_foe@. 
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre
@@ -6667,6 +6688,9 @@ w:1
 
 w:1
 @The_monster@ screams @at_foe@, "@Foe_god@ is but a nuisance to me, mortal!"
+
+w:1
+@The_monster@ screams @at_foe@, "@Foe_god@ will weep as I flay your corpse!"
 %%%%
 ##############################################
 # Special orc speech
