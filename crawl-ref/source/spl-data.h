@@ -2985,7 +2985,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
     8,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    5, 5,
     8, 0,
     TILEG_LEGENDARY_DESTRUCTION,
 },
