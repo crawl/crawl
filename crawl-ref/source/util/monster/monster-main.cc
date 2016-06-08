@@ -434,11 +434,12 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         if (spell_is_soh_breath(sp))
         {
             const vector<spell_type> *breaths = soh_breath_spells(sp);
+            ASSERT(breaths);
 
             ret += "{";
             for (unsigned int k = 0; k < mp->number; ++k)
             {
-                const spell_type breath = breaths[k];
+                const spell_type breath = (*breaths)[k];
                 const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)
