@@ -434,8 +434,7 @@ int mons_spell_range(spell_type spell, int hd)
 
 static spell_type _legendary_destruction_spell()
 {
-	return random_choose_weighted(
-                                  25, SPELL_FIREBALL,
+    return random_choose_weighted(25, SPELL_FIREBALL,
                                   20, SPELL_ICEBLAST,
                                   15, SPELL_GHOSTLY_FIREBALL,
                                   0);
