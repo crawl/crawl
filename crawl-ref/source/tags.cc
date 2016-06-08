@@ -5464,6 +5464,24 @@ static void tag_read_level(reader &th)
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
+static spell_type _fixup_soh_breath(monster_type mtyp)
+{
+    switch (mtyp)
+    {
+        case MONS_SERPENT_OF_HELL:
+        default:
+            return SPELL_SERPENT_OF_HELL_GEH_BREATH;
+        case MONS_SERPENT_OF_HELL_COCYTUS:
+            return SPELL_SERPENT_OF_HELL_COC_BREATH;
+        case MONS_SERPENT_OF_HELL_DIS:
+            return SPELL_SERPENT_OF_HELL_DIS_BREATH;
+        case MONS_SERPENT_OF_HELL_TARTARUS:
+            return SPELL_SERPENT_OF_HELL_TAR_BREATH;
+    }
+}
+#endif
+
 static void tag_read_level_items(reader &th)
 {
     env.trap.clear();
@@ -5650,6 +5668,11 @@ void unmarshallMonster(reader &th, monster& m)
         else if (slot.spell == SPELL_CHANT_FIRE_STORM)
         {
             slot.spell = SPELL_FIRE_STORM;
+            m.spells.push_back(slot);
+        }
+        else if (slot.spell == SPELL_SERPENT_OF_HELL_BREATH_REMOVED)
+        {
+            slot.spell = _fixup_soh_breath(m.type);
             m.spells.push_back(slot);
         }
         else if (slot.spell != SPELL_DELAYED_FIREBALL

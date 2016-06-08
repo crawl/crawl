@@ -38,8 +38,6 @@
 #include <set>
 #include <unistd.h>
 
-extern const spell_type serpent_of_hell_breaths[4][3];
-
 const coord_def MONSTER_PLACE(20, 20);
 
 const string CANG = "cang";
@@ -433,21 +431,14 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         spell_type sp = slot.spell;
         if (!ret.empty())
             ret += ", ";
-        if (sp == SPELL_SERPENT_OF_HELL_BREATH)
+        if (spell_is_soh_breath(sp))
         {
-            const int idx =
-                mp->type == MONS_SERPENT_OF_HELL ?              0 :
-                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?  1 :
-                    mp->type == MONS_SERPENT_OF_HELL_DIS ?      2 :
-                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 :
-                                                               -1;
-            ASSERT(idx >= 0 && idx <= 3);
-            ASSERT(mp->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
+            const vector<spell_type> *breaths = soh_breath_spells(sp);
 
             ret += "{";
             for (unsigned int k = 0; k < mp->number; ++k)
             {
-                const spell_type breath = serpent_of_hell_breaths[idx][k];
+                const spell_type breath = breaths[k];
                 const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)

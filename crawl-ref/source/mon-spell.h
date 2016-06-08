@@ -583,10 +583,34 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_SERPENT_OF_HELL,
+    {  MST_SERPENT_OF_HELL_GEH,
       {
-       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                            | MON_SPELL_NOISY },
+       { SPELL_SERPENT_OF_HELL_GEH_BREATH, 35,
+           MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_COC,
+      {
+       { SPELL_SERPENT_OF_HELL_COC_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_DIS,
+      {
+       { SPELL_SERPENT_OF_HELL_DIS_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_TAR,
+      {
+       { SPELL_SERPENT_OF_HELL_TAR_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
        { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
       }
     },
