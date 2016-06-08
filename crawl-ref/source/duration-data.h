@@ -537,7 +537,7 @@ static const duration_def duration_data[] =
       {{ "Your cleaving frenzy subsides." }}},
     { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
-    { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Chan", "", "channel",
+    { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "", "channel",
       "You are rapidly regenerating magical energy.", D_DISPELLABLE },
     { DUR_DEVICE_SURGE, WHITE, "Surge", "device surging", "device surge",
       "You have readied a device surge.", D_EXPIRES,

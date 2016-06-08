@@ -378,10 +378,12 @@ three sacrifices which you can make in order to achieve greater power.
 %%%%
 Sif Muna powers
 
-Followers of Sif Muna can channel magical energy when they need it the most,
-and they gain a power to forget any spell at will, so as to learn new ones. Sif
-Muna protects spellcasters against the negative effects of miscasting a spell.
-Over time, followers will receive spellbooks containing a vast range of spells.
+Sif Muna will grant followers divine energy, allowing them to occasionally cast
+spells even with insufficient reserves of magic. Eventually worshippers will
+gain the ability to rapidly restore their magical energy, and to forget spells
+at will, so as to learn new ones. Sif Muna protects spellcasters against the
+negative effects of miscasting spells. Over time, followers will receive
+spellbooks containing a vast range of spells.
 %%%%
 the Shining One powers
 
