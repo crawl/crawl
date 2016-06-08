@@ -186,12 +186,17 @@ bool UseItemMenu::process_key(int key)
  * @param item_type The object_class_type or OSEL_* of items to list.
  * @param oper The operation being done to the selected item.
  * @param prompt The prompt on the menu title
+ * @param allowcancel If the user tries to cancel out of the prompt, run this
+ *                    function. If it returns false, continue the prompt rather
+ *                    than returning null.
  *
  * @return a pointer to the chosen item, or nullptr if none was chosen.
  */
 
 static item_def* _use_an_item(int item_type, operation_types oper,
-                              const char* prompt)
+                              const char* prompt,
+                              function<bool ()> allowcancel = []()
+                              { return true; })
 {
     item_def* target = nullptr;
 
@@ -217,19 +222,17 @@ static item_def* _use_an_item(int item_type, operation_types oper,
         // Handle inscribed item keys
         if (isadigit(keyin))
         {
-            int idx = digit_inscription_to_inv_index(keyin, oper);
-            // No such item.
-            if (idx < 0)
-                break;
-
-            target = &item_from_int(true, idx);
+            const int idx = digit_inscription_to_inv_index(keyin, oper);
+            if (idx >= 0)
+                target = &item_from_int(true, idx);
         }
-        else if (keyin == '\\')
-            check_item_knowledge();
         // TODO: handle * key
-        else if (sel.empty())
-            break;
-        else
+        else if (keyin == '\\')
+        {
+            check_item_knowledge();
+            continue;
+        }
+        else if (!sel.empty())
         {
             ASSERT(sel.size() == 1);
 
@@ -237,17 +240,18 @@ static item_def* _use_an_item(int item_type, operation_types oper,
             target = const_cast<item_def*>(ie->item);
         }
 
+        if (target && !check_warning_inscriptions(*target, oper))
+            target = nullptr;
         if (target)
+            return target;
+        else if (allowcancel())
         {
-            if (!check_warning_inscriptions(*target, oper))
-                target = nullptr;
-            break;
+            prompt_failed(PROMPT_ABORT);
+            return nullptr;
         }
+        else
+            continue;
     }
-
-    if (!target)
-        prompt_failed(PROMPT_ABORT);
-    return target;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -2193,59 +2197,42 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    //int item_slot = -1;
-    item_def* itemp = nullptr;
-    while (true)
+    item_def* itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
+                        "Identify which item? (\\ to view known items)",
+                        [=]()
+                        {
+                            return alreadyknown
+                                   || crawl_state.seen_hups
+                                   || yesno("Really abort (and waste the scroll)?", false, 0);
+                        });
+
+    if (!itemp)
+        return !alreadyknown;
+
+    item_def& item = *itemp;
+    if (alreadyknown)
+        mpr(pre_msg);
+
+    set_ident_type(item, true);
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Output identified item.
+    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (in_inventory(item))
     {
-        if (!itemp)
-            itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
-                                 "Choose an item to identify.");
+        if (item.link == you.equip[EQ_WEAPON])
+            you.wield_change = true;
 
-        if (itemp == nullptr)
+        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
+            && item.link == you.equip[EQ_AMULET]
+            && !item_known_cursed(item))
         {
-            if (!any_items_of_type(OSEL_UNIDENT, 0, true))
-            {
-                if (alreadyknown
-                    || crawl_state.seen_hups
-                    || yesno("Really abort (and waste the scroll)?", false, 0))
-                {
-                        canned_msg(MSG_OK);
-                        return !alreadyknown;
-                }
-            }
+            learned_something_new(HINT_INACCURACY);
         }
 
-        item_def& item = *itemp;
-        if (fully_identified(item))
-        {
-            mpr("Choose an unidentified item, or Esc to abort.");
-            more();
-            itemp = nullptr;
-            continue;
-        }
-
-        if (alreadyknown)
-            mpr(pre_msg);
-
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-        // Output identified item.
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        if (in_inventory(item))
-        {
-            if (item.link == you.equip[EQ_WEAPON])
-                you.wield_change = true;
-
-            if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-                && item.link == you.equip[EQ_AMULET]
-                && !item_known_cursed(item))
-                    learned_something_new(HINT_INACCURACY);
-
-            auto_assign_item_slot(item);
-        }
-    return true;
+        auto_assign_item_slot(item);
     }
+    return true;
 }
 
 static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
@@ -2523,9 +2510,9 @@ bool player_can_read()
  * response to print. Otherwise, if they do have such items, return the empty
  * string.
  */
-static string _no_items_reason(object_selector type)
+static string _no_items_reason(object_selector type, bool check_floor = false)
 {
-    if (!any_items_of_type(type))
+    if (!any_items_of_type(type, -1, check_floor))
         return no_selectables_message(type);
     return "";
 }
@@ -2607,7 +2594,7 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
 
         case SCR_IDENTIFY:
-            return _no_items_reason(OSEL_UNIDENT);
+            return _no_items_reason(OSEL_UNIDENT, true);
 
         case SCR_RECHARGING:
             return _no_items_reason(OSEL_RECHARGE);
