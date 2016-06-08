@@ -28,10 +28,10 @@ there. Underestimate her at your peril!
 %%%%
 Aizul
 
-Once the primary guardian serpent of a legendary treasure hoard, he was
-disgraced after thieves looted it while he slept. He now slithers about the
-dungeon, seeking vengeance against all would-be looters. He is an accomplished
-spellcaster, but no more deadly in melee combat than others of his kind.
+Once the primary guardian serpent of a legendary treasure hoard, she was
+disgraced after thieves looted it while she slept. She now slithers about the
+dungeon, seeking vengeance against all would-be looters. She is an accomplished
+spellcaster, but no more deadly in melee combat than others of her kind.
 %%%%
 Antaeus
 
@@ -74,7 +74,7 @@ regenerate his desiccated skeletal remains even if completely disintegrated.
 %%%%
 Cerebov
 
-A violent and wrathful demon, Cerebov appears as a giant human covered in
+A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
 shining golden armour and wielding a huge twisted sword.
 %%%%
 Chuck
@@ -196,7 +196,7 @@ A shadowy figure clothed in profound darkness.
 Grinder
 
 An inefficient shadow imp previously employed as a torturer in one of the lower
-circles of Hell. He has a tendency to complain and make inane statements.
+circles of Hell. She has a tendency to complain and make inane statements.
 %%%%
 Grum
 
@@ -220,7 +220,7 @@ test its edge.
 %%%%
 Ijyb
 
-A small and twisted goblin, wearing some ugly blue rags. He claims dominion
+A small and twisted goblin, wearing some ugly blue rags. She claims dominion
 over this level of the dungeon; the punishment for trespassing is death.
 %%%%
 Ilsuiw
@@ -273,11 +273,11 @@ for prey to slake its bottomless appetite.
 %%%%
 Lom Lobon
 
-Stoic and inscrutable, Lom Lobon is an ancient demon infamous for his mastery
-of magic. Rumoured to be the most learned being in the halls of Pandemonium, he
-is at times sought out by mortal wizards who offer their souls in exchange for
-the secrets of the arcane. Lacking the terrible wrath present in most demons,
-Lom Lobon's single eye instead hides a cold, impartial cruelty.
+Stoic and inscrutable, Lom Lobon is an ancient demon infamous for it's mastery
+of magic. Rumoured to be the most learned being in the halls of Pandemonium,
+it is at times sought out by mortal wizards who offer their souls in exchange
+for the secrets of the arcane. Lacking the terrible wrath present in most
+demons, Lom Lobon's single eye instead hides a cold, impartial cruelty.
 %%%%
 Louise
 
@@ -440,7 +440,7 @@ that is, easy meals — it attracts.
 %%%%
 Sojobo
 
-King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
+Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
 Sonja
 
@@ -460,12 +460,12 @@ draconian warrior. Her scales seem to shimmer and change colour as you watch.
 %%%%
 Urug
 
-A coarse and lanky orc. Urug lost his eye in a fight with a harpy, and has
-sworn to slay every last one of them. Unfortunately, the vision in his
-remaining eye is not very good, and he has mistaken you for one.
+A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
+sworn to slay every last one of them. Unfortunately, the vision in her
+remaining eye is not very good, and she has mistaken you for one.
 {{
     if you.can_smell() then
-        return "He smells terrible."
+        return "She smells terrible."
     end
 }}
 %%%%
