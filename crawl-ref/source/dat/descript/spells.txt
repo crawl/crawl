@@ -769,9 +769,8 @@ destroyed at any power level.
 %%%%
 Legendary Destruction spell
 
-Conjures forth one of several powerful magical effects. It may have the effects
-of Orb of Electricity, Lehudib's Crystal Spear, Orb of Destruction, Ghostly
-Fireball, Fireball, or Flash Freeze.
+Conjures two destructive magical effects. The effects may be Fireball,
+Iceblast, or Ghostly Fireball.
 %%%%
 Lehudib's Crystal Spear spell
 

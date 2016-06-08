@@ -432,6 +432,15 @@ int mons_spell_range(spell_type spell, int hd)
     return spell_range(spell, power, false);
 }
 
+static spell_type _legendary_destruction_spell()
+{
+	return random_choose_weighted(
+                                  25, SPELL_FIREBALL,
+                                  20, SPELL_ICEBLAST,
+                                  15, SPELL_GHOSTLY_FIREBALL,
+                                  0);
+}
+
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                      bool check_validity)
 {
@@ -478,13 +487,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {
         // ones with ranges too small are fixed in setup_mons_cast
-        real_spell = random_choose_weighted(10, SPELL_ORB_OF_ELECTRICITY,
-                                            10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-                                             2, SPELL_IOOD,
-                                             5, SPELL_GHOSTLY_FIREBALL,
-                                            10, SPELL_FIREBALL,
-                                            10, SPELL_FLASH_FREEZE,
-                                             0);
+        real_spell = _legendary_destruction_spell();
     }
     else if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
@@ -4893,6 +4896,18 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }
 
+        return;
+    }
+
+    if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
+    {
+        dprf("Legendary destruction double cast.");
+        setup_mons_cast(mons, pbolt, SPELL_LEGENDARY_DESTRUCTION);
+        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags, do_noise);
+        if (!mons->get_foe())
+            return;
+        setup_mons_cast(mons, pbolt, SPELL_LEGENDARY_DESTRUCTION);
+        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags, do_noise);
         return;
     }
     // Always do setup. It might be done already, but it doesn't hurt
