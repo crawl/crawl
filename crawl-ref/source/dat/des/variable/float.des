@@ -1324,7 +1324,7 @@ MONS:    flying skull, phantasmal warrior / jiangshi
 MONS:    human zombie, frost giant zombie / fire giant zombie, vampire
 KMONS:   8 = vampire mage
 KMONS:   9 = vampire knight
-KMONS:   0 = Jory / doom hound w:4, doom hound
+KMONS:   0 = Jory, dancing weapon ; demon blade good_item
 KITEM:   > = any good_item
 KFEAT:   > = >
 KFEAT:   ; = altar_yredelemnul / altar_kikubaaqudgha
@@ -2620,49 +2620,6 @@ cc.ccccccccccccccccccccccc
  c.cccccc......+.2..**|cc
  cc......ccccccc...2*|cc
   cccccccc     cccccccc
-ENDMAP
-
-NAME: lightli_tower_of_babel
-ORIENT: float
-# Random interlopers look badly out of place here.
-TAGS: no_monster_gen no_item_gen
-DEPTH: Dis, !Dis:$, Depths, !Depths:$
-MONS: patrolling iron giant, flying skull
-ITEM: bolt
-ITEM: potion of heal wounds
-ITEM: plate armour good_item
-ITEM: arbalest ego:flaming w:9 ident:type / damnation w:1
-: if you.in_branch("Dis") then
-SUBST: defg = .
-: end
-SUBST: ( = ()
-TILE: c = wall_marble
-MAP
-1.........2...2..........
-..cc....2...c...2....cc..
-..cc........2........cc..
-....v...............v....
-.....v...vvv.vvv...v.....
-......vvvv.ddd.vvvv......
-......vvvvdddddvvvv......
-.....vvvvv.ddd.vvvvv.....
-.2...vvvvvvv.vvvvvvv...2.
-....vvvvvvvv+vvvvvvvv....
-2...vd.dvvvv.vvvvd.dv...2
-....v...vvv...vvv...v....
-.c2...e..+..(..+..g...2c.
-....v...vvv.f.vvv...v....
-2...vd.dvvvv.vvvvd.dv...2
-....vvvvvvvv+vvvvvvvv....
-.2...vvvvvvv.vvvvvvv...2.
-.....vvvvvd...dvvvvv.....
-......vvvv..e..vvvv......
-......vvvvd...dvvvv......
-.....v...vvv.vvv...v.....
-....v...............v....
-..cc........2........cc..
-..cc....2...c...2....cc..
-..........2...2..........
 ENDMAP
 
 NAME:    grunt_bruiser_brothers
