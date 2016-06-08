@@ -6096,17 +6096,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_ignite_poison(mons, splpow, false);
         return;
 
-    case SPELL_LEGENDARY_DESTRUCTION:
-    {
-        if (pbolt.origin_spell == SPELL_IOOD)
-        {
-            cast_iood(mons, _mons_spellpower(SPELL_IOOD, *mons), &pbolt);
-            return;
-        }
-        // Don't return yet, we want to actually fire the random beam later
-        break;
-    }
-
     case SPELL_FORCEFUL_INVITATION:
         _branch_summon_helper(mons, spell_cast, _invitation_summons,
                               ARRAYSZ(_invitation_summons), 1 + random2(3));
