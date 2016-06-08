@@ -1095,12 +1095,6 @@ static void _entangle_actor(actor* act)
     {
         you.duration[DUR_GRASPING_ROOTS] = 10;
         you.redraw_evasion = true;
-        if (you.duration[DUR_FLIGHT] ||  you.attribute[ATTR_PERM_FLIGHT])
-        {
-            you.duration[DUR_FLIGHT] = 0;
-            you.attribute[ATTR_PERM_FLIGHT] = 0;
-            land_player(true);
-        }
     }
     else
     {
@@ -1129,32 +1123,7 @@ static bool _apply_grasping_roots(monster* mons)
 
         found_hostile = true;
 
-        // Roots can't reach things over deep water or lava
-        if (!feat_has_solid_floor(grd(ai->pos())))
-            continue;
-
-        // Some messages are suppressed for monsters, to reduce message spam.
-        if (ai->airborne())
-        {
-            if (x_chance_in_y(3, 5))
-                continue;
-
-            if (x_chance_in_y(10, 50 - ai->evasion()))
-            {
-                if (ai->is_player())
-                    mpr("Roots rise up to grasp you, but you nimbly evade.");
-                continue;
-            }
-
-            if (you.can_see(**ai))
-            {
-                mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
-                     ai->name(DESC_THE).c_str(),
-                     ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                     ai->is_monster() ? "" : "back ");
-            }
-        }
-        else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
+        if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
         {
             mprf("Roots grasp at your %s, making movement difficult.",
                  you.foot_name(true).c_str());

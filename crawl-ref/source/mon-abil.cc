@@ -1028,7 +1028,7 @@ void check_grasping_roots(actor* act, bool quiet)
         }
     }
 
-    if (!source || !feat_has_solid_floor(grd(act->pos())))
+    if (!source) 
     {
         if (act->is_player())
         {

@@ -5032,11 +5032,6 @@ bool flight_allowed(bool quiet, string *fail_reason)
         msg = "You can't fly while stuck in liquid ground.";
         success = false;
     }
-    else if (you.duration[DUR_GRASPING_ROOTS])
-    {
-        msg = "The grasping roots prevent you from becoming airborne.";
-        success = false;
-    }
 
     if (!success)
     {
@@ -5539,7 +5534,7 @@ player::~player()
 bool player::airborne() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
-    if (you.duration[DUR_GRASPING_ROOTS] || get_form()->forbids_flight())
+    if (get_form()->forbids_flight())
         return false;
 
     if (duration[DUR_FLIGHT]
