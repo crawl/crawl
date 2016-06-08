@@ -551,7 +551,7 @@ ENDMAP
 NAME:     d_20
 TAGS:     d_20
 KMONS:    1 = place:Depths:2
-KMONS:    2 = place:Depths:5
+KMONS:    2 = place:Depths:4
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -766,7 +766,7 @@ ENDMAP
 
 NAME:     d_27
 TAGS:     d_27
-KMONS:    1 = place:D:$
+KMONS:    1 = place:Depths:$
 KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
               bone dragon / golden dragon / mottled dragon
 KMONS:    3 = base draconian

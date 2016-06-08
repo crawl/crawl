@@ -185,6 +185,7 @@ end
 
 function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
+-- Late D entries for save compat, remove when TAG_MAJOR_VERSION > 34
     e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
     e.depth_chance("D:24", 10000)
