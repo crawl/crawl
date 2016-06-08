@@ -2523,14 +2523,15 @@ DEPTH: D:12-, Depths, !Depths:$, Lair:2-, Coc, !Coc:$
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
 KMONS: 3 = ice devil / ice dragon / freezing wraith
-KMONS: 4 = ice fiend / blizzard demon / shard shrike
+KMONS: 4 = ice fiend / blizzard demon
+KMONS: 5 = shard shrike
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
 SUBST:  3 = 4, 2 = 223
 NSUBST: | = 1:1 / *:|
 : end
 : if you.in_branch("Cocytus") then
-SUBST: | = .
+SUBST:  4 = 445, | = .
 : else
 SUBST: | = ||****%%%%
 SUBST: T = TU
