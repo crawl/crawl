@@ -135,6 +135,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Sif Muna
     {
+        {  1, passive_t::no_mp_casting, "cast spells with empty reserves of "
+                                        "magic" },
         {  2, passive_t::miscast_protection, "GOD protects you from miscasts" },
     },
 
