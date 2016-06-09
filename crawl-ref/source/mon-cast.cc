@@ -888,7 +888,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.name     = "spectral mist";
         beam.damage   = dice_def(0, 1);
         beam.colour   = CYAN;
-        beam.flavour  = BEAM_GHOSTLY_FLAME;
+        beam.flavour  = BEAM_MMISSILE;
         beam.hit      = AUTOMATIC_HIT;
         beam.pierce   = true;
         break;
