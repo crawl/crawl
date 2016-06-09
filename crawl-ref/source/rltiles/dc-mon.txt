@@ -100,7 +100,7 @@ natasha MONS_NATASHA
 %rim 1
 %sdir mon/animals
 
-## Bees ('k')
+## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
 ../meliai MONS_MELIAI
@@ -112,7 +112,7 @@ iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
-## Slugs ('j')
+## Slugs ('w')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
 
@@ -219,7 +219,7 @@ sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
 mana_viper MONS_MANA_VIPER
 
-## Bears ('U')
+## Bears ('h' again)
 black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
