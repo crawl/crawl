@@ -2251,9 +2251,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
-    if (you.wearing_ego(EQ_WEAPON, SPWPN_EVASION))
-        evbonus += 5;
-
     evbonus += you.scan_artefacts(ARTP_EVASION);
 
     // mutations

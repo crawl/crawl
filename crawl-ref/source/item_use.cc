@@ -1987,11 +1987,10 @@ static void _rebrand_weapon(item_def& wpn)
         if (is_range_weapon(wpn))
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAMING,
-                                    30, SPWPN_FREEZING,
-                                    20, SPWPN_VENOM,
-                                    20, SPWPN_VORPAL,
-                                    12, SPWPN_EVASION,
+                                    33, SPWPN_FLAMING,
+                                    33, SPWPN_FREEZING,
+                                    23, SPWPN_VENOM,
+                                    23, SPWPN_VORPAL,
                                     5, SPWPN_ELECTROCUTION,
                                     3, SPWPN_CHAOS,
                                     0);
@@ -2037,11 +2036,6 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_PROTECTION:
         flash_colour = YELLOW;
         mprf("%s projects an invisible shield of force!",itname.c_str());
-        break;
-
-    case SPWPN_EVASION:
-        flash_colour = YELLOW;
-        mprf("%s emits a repelling force!",itname.c_str());
         break;
 
     case SPWPN_FLAMING:
