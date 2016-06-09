@@ -4232,7 +4232,8 @@ void unmarshallItem(reader &th, item_def &item)
         && (item.brand == SPWPN_RETURNING
             || item.brand == SPWPN_REACHING
             || item.brand == SPWPN_ORC_SLAYING
-            || item.brand == SPWPN_DRAGON_SLAYING))
+            || item.brand == SPWPN_DRAGON_SLAYING
+            || item.brand == SPWPN_EVASION))
     {
         item.brand = SPWPN_NORMAL;
     }

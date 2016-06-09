@@ -1462,9 +1462,8 @@ static int _ego_damage_bonus(item_def &item)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL:      return 0;
-    case SPWPN_VORPAL:      // deliberate
-    case SPWPN_PROTECTION:  // fall through
-    case SPWPN_EVASION:     return 1;
+    case SPWPN_VORPAL:      // deliberate fall through
+    case SPWPN_PROTECTION:  return 1;
     default:                return 2;
     }
 }
@@ -3542,9 +3541,6 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
 
     int ev = base_evasion();
-
-    // check for evasion-brand weapons
-    ev += 5 * _weapons_with_prop(this, SPWPN_EVASION, calc_unid);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)

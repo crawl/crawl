@@ -291,10 +291,9 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
 
 /// brand weights for most ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
-    { SPWPN_NORMAL,   50 },
+    { SPWPN_NORMAL,   58 },
     { SPWPN_FLAMING,  24 },
     { SPWPN_FREEZING, 12 },
-    { SPWPN_EVASION,   8 },
     { SPWPN_VORPAL,    6 },
 };
 
@@ -559,10 +558,7 @@ static const weapon_def Weapon_prop[] =
     // Range weapons
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,
         SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
-        DAMV_NON_MELEE, 5, 0, {
-            { SPWPN_EVASION,  3 },
-            { SPWPN_NORMAL,  97 },
-        }},
+        DAMV_NON_MELEE, 5, 0, {}, },
 
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,
         SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
