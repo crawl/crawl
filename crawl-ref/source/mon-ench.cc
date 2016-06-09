@@ -1952,6 +1952,16 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         break;
 
+    case ENCH_PAIN_BOND:
+        if (decay_enchantment(en))
+        {
+            const string msg = " is no longer sharing " +
+                               pronoun(PRONOUN_POSSESSIVE, true) +
+                               " pain.";
+            simple_monster_message(this, msg.c_str());
+        }
+        break;
+
     default:
         break;
     }
