@@ -399,14 +399,20 @@ static void _handle_uskayaw_piety(int time_taken)
         // to lose piety proportional to the time since the last time we took
         // a dance action and hurt a monster.
         int time_since_gain = you.props[USKAYAW_AUT_SINCE_PIETY_GAIN].get_int();
+        time_since_gain += time_taken;
 
-        int piety_lost = min(you.piety - piety_breakpoint(0),
-                div_rand_round(time_since_gain, 10));
+        // Only start losing piety if it's been a few turns since we gained
+        // piety, in order to give more tolerance for missing in combat.
+        if (time_since_gain > 30)
+        {
+            int piety_lost = min(you.piety - piety_breakpoint(0),
+                    div_rand_round(time_since_gain, 10));
 
-        if (piety_lost > 0)
-            lose_piety(piety_lost);
+            if (piety_lost > 0)
+                lose_piety(piety_lost);
 
-        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain + time_taken;
+        }
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain;
     }
 
     // Re-initialize Uskayaw piety variables
