@@ -542,8 +542,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 WEIGHT:  6
-ITEM:    ring of flight / potion of flight / nothing
-ITEM:    potion of flight / nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
+ITEM:    potion of flight ident:type / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -573,8 +573,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 WEIGHT:  4
-ITEM:    ring of flight / potion of flight / nothing
-ITEM:    potion of flight, nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
+ITEM:    potion of flight ident:type, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
