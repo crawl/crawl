@@ -661,7 +661,6 @@ void zap_wand(int slot)
 
     dec_mp(mp_cost, false);
     if (wand.sub_type != WAND_HEAL_WOUNDS
-        && wand.sub_type != WAND_DIGGING
         && wand.sub_type != WAND_TELEPORTATION)
     {
         const int surge = pakellas_surge_devices();
@@ -993,10 +992,7 @@ static bool _box_of_beasts(item_def &box)
     surge_power(surge);
     mpr("You open the lid...");
 
-    const int evo_skill = you.skill(SK_EVOCATIONS);
-    const int power = player_adjust_evoc_power(evo_skill, surge);
-
-    if (x_chance_in_y(5, 10 + power))
+    if (one_chance_in(4))
     {
         mpr("...but the box appears empty, and falls apart.");
         ASSERT(in_inventory(box));
@@ -1007,7 +1003,8 @@ static bool _box_of_beasts(item_def &box)
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
                            player_adjust_evoc_power(
-                               evo_skill + random2(7) - random2(7), surge));
+                               you.skill(SK_EVOCATIONS)
+                               + random2(7) - random2(7), surge));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -1058,7 +1055,7 @@ static bool _sack_of_spiders(item_def &sack)
             1 + random2(2) + random2(div_rand_round(evo_skill * 10, 30)), surge);
     const int power = player_adjust_evoc_power(evo_skill, surge);
 
-    if (x_chance_in_y(4, 10 + power))
+    if (one_chance_in(4))
     {
         mpr("...but the bag is empty, and unravels at your touch.");
         ASSERT(in_inventory(sack));
