@@ -992,14 +992,6 @@ static bool _box_of_beasts(item_def &box)
     surge_power(surge);
     mpr("You open the lid...");
 
-    if (one_chance_in(4))
-    {
-        mpr("...but the box appears empty, and falls apart.");
-        ASSERT(in_inventory(box));
-        dec_inv_item_quantity(box.link, 1);
-        return false;
-    }
-
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
                            player_adjust_evoc_power(
@@ -1034,6 +1026,14 @@ static bool _box_of_beasts(item_def &box)
     xom_is_stimulated(10); // dubious
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
+    // After unboxing a beast, chance to break.
+    if (one_chance_in(3))
+    {
+        mpr("The now-empty box falls apart.");
+        ASSERT(in_inventory(box));
+        dec_inv_item_quantity(box.link, 1);
+    }
+
     return true;
 }
 
@@ -1054,14 +1054,6 @@ static bool _sack_of_spiders(item_def &sack)
     int count = player_adjust_evoc_power(
             1 + random2(2) + random2(div_rand_round(evo_skill * 10, 30)), surge);
     const int power = player_adjust_evoc_power(evo_skill, surge);
-
-    if (one_chance_in(4))
-    {
-        mpr("...but the bag is empty, and unravels at your touch.");
-        ASSERT(in_inventory(sack));
-        dec_inv_item_quantity(sack.link, 1);
-        return false;
-    }
 
     if (x_chance_in_y(5, 10 + power))
     {
@@ -1126,10 +1118,15 @@ static bool _sack_of_spiders(item_def &sack)
                 trap = trap_at((*mi)->pos());
                 trap->trigger(**mi);
             }
+
         }
-        // Decrease charges
-        sack.charges--;
-        sack.used_count++;
+        // After gettin' some bugs, check for destruction.
+        if (one_chance_in(3))
+        {
+            mpr("The now-empty bag unravels in your hand.");
+            ASSERT(in_inventory(sack));
+            dec_inv_item_quantity(sack.link, 1);
+        }
     }
     else
         // Failed to create monster for some reason
