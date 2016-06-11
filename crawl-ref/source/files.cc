@@ -2279,9 +2279,10 @@ void save_ghost(bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, or the Temple.
+    // No ghosts on D:1, D:2, the Temple, or the Abyss.
     if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)))
+                   || player_in_branch(BRANCH_TEMPLE)
+                   || player_in_branch(BRANCH_ABYSS)))
     {
         return;
     }
