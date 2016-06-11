@@ -415,9 +415,10 @@ deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
 %%%%
-deck of war
+deck of summoning
 
-Un paquet de cartes magiques, utile avant et pendant la bataille.
+Un paquet de cartes magiques, représentant un éventail de créatures étranges et
+merveilleux.
 %%%%
 demon blade
 

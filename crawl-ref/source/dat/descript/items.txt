@@ -382,9 +382,9 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 %%%%
-deck of war
+deck of summoning
 
-A deck of magical cards which are useful before and during battle.
+A deck of magical cards, depicting a range of weird and wonderful creatures.
 %%%%
 demon blade
 
