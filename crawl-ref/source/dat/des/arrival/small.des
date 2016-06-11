@@ -3188,3 +3188,22 @@ ccc...ccc
   cc{cc
    ccc
 ENDMAP
+
+NAME:   kennysheep_arrival_forest
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: south
+FTILE:  t'G = floor_grass
+COLOUR: ' = green
+MAP
+        xx+++xx
+       xxG...Gxx
+xxx   xx''...''xx   xxx
+xtxxxxx'''...'''xxxxxtx
+xt'''''''G...G'''''''tx
+xtt'''''''...'''''''ttx
+xtt'''''''...''''''tttx
+xtttttt''G.{.G''''ttttx
+xtttttttt'...'''ttttttx
+xtttttttttt.ttttttttttx
+xtttttttttttttttttttttx
+ENDMAP

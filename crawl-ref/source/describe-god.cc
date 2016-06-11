@@ -15,7 +15,9 @@
 #include "database.h"
 #include "describe.h"
 #include "english.h"
+#include "food.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "libutil.h"
@@ -59,6 +61,18 @@ static int _gold_level()
                                : 1;
 }
 
+static int _invocations_level()
+{
+    int invo = you.skill(SK_INVOCATIONS);
+    return (invo == 27) ? 7 :
+           (invo >= 24) ? 6 :
+           (invo >= 20) ? 5 :
+           (invo >= 16) ? 4 :
+           (invo >= 12) ? 3 :
+           (invo >= 8)  ? 2
+                        : 1;
+}
+
 static string _describe_favour(god_type which_god)
 {
     if (player_under_penance())
@@ -73,8 +87,9 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
-    const int rank = which_god == GOD_GOZAG ? _gold_level()
-    : _piety_level(you.piety);
+    const int rank = which_god == GOD_GOZAG ? _gold_level() :
+                     which_god == GOD_USKAYAW ? _invocations_level() :
+                     _piety_level(you.piety);
 
     const string godname = god_name(which_god);
     switch (rank)
@@ -201,6 +216,14 @@ static const char *divine_title[][8] =
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
+
+    // Uskayaw -- reveler theme
+    {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
+        "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
+
+    // Hepliaklqana -- memory/ancestry theme
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+        "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -209,6 +232,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
+    else if (which_god == GOD_USKAYAW)
+        title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
     else
@@ -297,6 +322,53 @@ static string _describe_ash_skill_boost()
     }
 
     return desc.str();
+}
+
+/// Build & return a table of Hep's upgrades for your chosen ancestor type.
+static string _describe_ancestor_upgrades()
+{
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        return "";
+
+    // TODO: don't hardcode this
+    // TODO: higlight upgrades taken
+    // XXX: maybe it'd be nice to let you see other ancestor types'...?
+    switch (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int())
+    {
+    case MONS_ANCESTOR_KNIGHT:
+        return "XL                      Knight\n"
+               "                        Flail\n"
+               "                        Shield\n"
+               "                   Splint Mail (+AC)\n"
+               "15 (Option A)    Demon Trident (flame)\n"
+               "15 (Option B)      Broad Axe (flame)\n"
+               "21              Large Shield (reflect)\n"
+               "21                      Haste\n"
+               "27                Speed (weapon ego)\n";
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return "XL                    Battlemage\n"
+               "                     Quarterstaff\n"
+               "                      Throw Frost\n"
+               "                      Stone Arrow\n"
+               "                     +Melee Damage\n"
+               "15 (Option A)         Magma Bolt\n"
+               "15 (Option B)         Force Lance\n"
+               "21                  Lajatang (freeze)\n"
+               "21                       Haste\n"
+               "27                   Crystal Spear\n";
+    case MONS_ANCESTOR_HEXER:
+        return "XL                       Hexer\n"
+               "                     Dagger (drain)\n"
+               "                         Slow\n"
+               "                        Confuse\n"
+               "15                     Paralyse\n"
+               "21 (Option A)    Metabolic Englaciation\n"
+               "21 (Option B)        Mass Confusion\n"
+               "21                       Haste\n"
+               "27                Quickblade (antimagic)\n";
+    default:
+        return "";
+    }
 }
 
 // from dgn-overview.cc
@@ -496,7 +568,7 @@ static void _god_wrath_description(god_type which_god)
 
     _print_top_line(which_god, width);
 
-    _print_string_wrapped(get_god_dislikes(which_god, true), width);
+    _print_string_wrapped(get_god_dislikes(which_god), width);
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
@@ -522,11 +594,8 @@ static string _get_god_misc_info(god_type which_god)
                                       " Invocations skill. All abilities are"
                                       " purely based on piety.";
 
-            if (which_god == GOD_ASHENZARI
-                && in_good_standing(which_god, 1))
-            {
+            if (have_passive(passive_t::bondage_skill_boost))
                 return piety_only + "\n\n" + _describe_ash_skill_boost();
-            }
 
             return piety_only;
         }
@@ -544,17 +613,15 @@ static string _get_god_misc_info(god_type which_god)
                    "you gain half of the monster's experience value. Pacified "
                    "monsters try to leave the level.";
 
-        case GOD_NEMELEX_XOBEH:
-            return "The power of Nemelex Xobeh's abilities and of the "
-                   "cards' effects is governed by Evocations skill "
-                   "instead of Invocations.";
-
         case GOD_GOZAG:
             return _describe_branch_bribability();
 
         case GOD_PAKELLAS:
             return "The power of Pakellas' abilities is governed by "
                    "Evocations skill instead of Invocations.";
+
+        case GOD_HEPLIAKLQANA:
+            return _describe_ancestor_upgrades();
 
         default:
             return "";
@@ -577,7 +644,7 @@ static void _detailed_god_description(god_type which_god)
     _print_string_wrapped(getLongDescription(god_name(which_god) + " powers"),
                           width);
 
-    _print_string_wrapped(get_god_likes(which_god, true), width);
+    _print_string_wrapped(get_god_likes(which_god), width);
     _print_string_wrapped(_get_god_misc_info(which_god), width);
 }
 
@@ -606,7 +673,7 @@ static string _god_penance_message(god_type which_god)
     const string penance_message =
         (which_god == GOD_NEMELEX_XOBEH
          && which_god_penance > 0 && which_god_penance <= 100)
-            ? "%s doesn't play fair with you." :
+            ? "%s won't play fair with you." :
         (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
         (which_god_penance >= 20)   ? "%s is annoyed with you." :
         (which_god_penance >=  5)   ? "%s well remembers your sins." :
@@ -725,29 +792,23 @@ static void _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_BEOGH:
-        have_any = true;
-        cprintf("You can pray to sacrifice all orcish remains on your "
-                "square.\n");
-        break;
-
     case GOD_JIYVA:
         have_any = true;
-        if (piety < piety_breakpoint(2))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::resist_corrosion))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("%s shields you from corrosive effects.\n",
                 uppercase_first(god_name(which_god)).c_str());
 
-        if (piety < piety_breakpoint(1))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::slime_feed))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
-                piety >= piety_breakpoint(4) ? ", power and health" :
-                piety >= piety_breakpoint(3) ? " and power" :
-                                               "");
+                have_passive(passive_t::slime_hp) ? ", power and health" :
+                have_passive(passive_t::slime_mp) ? " and power" :
+                                                    "");
         break;
 
     case GOD_FEDHAS:
@@ -762,10 +823,10 @@ static void _describe_god_powers(god_type which_god)
 
     case GOD_CHEIBRIADOS:
         have_any = true;
-        if (!in_good_standing(which_god))
-            textcolour(DARKGREY);
-        else
+        if (have_passive(passive_t::stat_boost))
             textcolour(god_colour(which_god));
+        else
+            textcolour(DARKGREY);
         cprintf("%s supports your attributes (+%d).\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 chei_stat_boost(piety));
@@ -816,6 +877,18 @@ static void _describe_god_powers(god_type which_god)
         have_any = true;
         cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
+        if (!you_foodless_normally())
+        {
+            if (have_passive(passive_t::bottle_mp))
+                textcolour(god_colour(which_god));
+            else
+                textcolour(DARKGREY);
+
+            cprintf("%s will collect and distill excess magic from your "
+                    "kills.\n",
+                    uppercase_first(god_name(which_god)).c_str());
+        }
+        break;
     }
 
     default:

@@ -163,11 +163,11 @@ LUAFN(moninf_get_spells)
 
     for (size_t i = 0; i < num_books; ++i)
     {
-        const vector<spell_type> &unique_spells = books[i];
+        const vector<mon_spell_slot> &unique_slots = books[i];
         vector<string> spell_titles;
 
-        for (const spell_type spell : unique_spells)
-            spell_titles.emplace_back(spell_title(spell));
+        for (const auto& slot : unique_slots)
+            spell_titles.emplace_back(spell_title(slot.spell));
 
         clua_stringtable(ls, spell_titles);
         lua_rawseti(ls, -2, i+1);
@@ -283,6 +283,13 @@ LUAFN(moninf_get_is_unique)
     return 1;
 }
 
+LUAFN(moninf_get_is_stationary)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mons_class_is_stationary(mi->type));
+    return 1;
+}
+
 LUAFN(moninf_get_damage_desc)
 {
     MONINF(ls, 1, mi);
@@ -350,6 +357,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(can_be_constricted),
     MIREG(reach_range),
     MIREG(is_unique),
+    MIREG(is_stationary),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),

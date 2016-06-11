@@ -406,11 +406,6 @@ decaying skeleton
 
 Un squelette en décomposition.
 %%%%
-deck of defence
-
-Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
-dangers par divers moyens.
-%%%%
 deck of destruction
 
 Un paquet de cartes magiques, dont la plupart provoque la mort et la
@@ -420,19 +415,9 @@ deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
 %%%%
-deck of summonings
-
-Un paquet de cartes magiques, représentant un éventail de créatures étranges et
-merveilleux.
-%%%%
 deck of war
 
 Un paquet de cartes magiques, utile avant et pendant la bataille.
-%%%%
-deck of wonders
-
-Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
-l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
 %%%%
 demon blade
 
@@ -1010,15 +995,6 @@ stone
 
 Un petit morceau d'un minéral naturel dense.. Elle peut être jetée à la main ou
 lancée avec une fronde.
-%%%%
-stone of tremors
-
-Une pierre polie habitée par de bienveillants esprits de la terre. La tenir en
-l'air enverra de puissantes ondes de choc dans le donjon pendant que les
-esprits cherchent une forme solide à l'intérieur de sa roche. Les créatures se
-tenant près des murs seront bombardés avec des chutes de gravats que la surface
-rocheuse laisse s'écrouler, tandis que d'autres peuvent être avalés par des
-fissures dans la terre elle-même.
 %%%%
 storm dragon armour
 

@@ -412,6 +412,7 @@ string no_selectables_message(int item_selector)
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
     case OSEL_RECHARGE:
+    case OSEL_DIVINE_RECHARGE:
     case OSEL_SUPERCHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
@@ -435,9 +436,9 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
         if (_has_hand_evokable())
-            return "You aren't carrying any items that can be evoked without being wielded.";
+            return "You aren't carrying any items that you can evoke without wielding.";
         else
-            return "You aren't carrying any items that can be evoked.";
+            return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -458,7 +459,7 @@ string no_selectables_message(int item_selector)
 }
 
 void InvMenu::load_inv_items(int item_selector, int excluded_slot,
-                             MenuEntry *(*procfn)(MenuEntry *me))
+                             function<MenuEntry* (MenuEntry*)> procfn)
 {
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
@@ -744,7 +745,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_GOLD);
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
-                                MenuEntry *(*procfn)(MenuEntry *me),
+                                function<MenuEntry* (MenuEntry*)> procfn,
                                 menu_letter ckey, bool sort)
 {
     vector<const item_def*> xlatitems;
@@ -754,7 +755,7 @@ menu_letter InvMenu::load_items(const vector<item_def>& mitems,
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
-                                MenuEntry *(*procfn)(MenuEntry *me),
+                                function<MenuEntry* (MenuEntry*)> procfn,
                                 menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
@@ -833,7 +834,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             }
             do_preselect(ie);
 
-            add_entry(procfn? (*procfn)(ie) : ie);
+            add_entry(procfn ? procfn(ie) : ie);
         }
     }
 
@@ -1027,14 +1028,16 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_RECHARGE:
+    case OSEL_DIVINE_RECHARGE:
     case OSEL_SUPERCHARGE:
-        return item_is_rechargeable(i, selector == OSEL_RECHARGE);
+        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE,
+                                    selector == OSEL_DIVINE_RECHARGE);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true, true);
 
     case OSEL_ENCH_ARM:
-        return is_enchantable_armour(i, true, true);
+        return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
         return itype == OBJ_FOOD && !is_inedible(i);
@@ -1056,24 +1059,10 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-    {
-        if (!is_weapon(i))
-            return false;
-        if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
-            // Ashenzari would just preserve the curse.
-            && !have_passive(passive_t::want_curses))
-        {
-            return true;
-        }
-        if (itype != OBJ_WEAPONS || is_artefact(i))
-            return false;
-        if (!item_ident(i, ISFLAG_KNOW_PLUSES))
-            return true;
-
-        if (i.plus < MAX_WPN_ENCHANT)
-            return true;
-        return false;
-    }
+        return itype == OBJ_WEAPONS
+               && !is_artefact(i)
+               && (!item_ident(i, ISFLAG_KNOW_PLUSES)
+                   || i.plus < MAX_WPN_ENCHANT);
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
@@ -1083,7 +1072,7 @@ bool item_is_selected(const item_def &i, int selector)
                 || is_shield(i)
                 || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
-                && !item_is_selected(i, OSEL_CURSED_WORN);
+                && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
         return item_is_cursable(i);
@@ -1113,17 +1102,31 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
  *
  * @param selector          A object_selector.
  * @param excluded_slot     An item slot to ignore.
+ * @param inspect_floor     If true, also check the floor where the player is
+ *                          standing.
+ *
  * @return                  Whether there are any items matching the given
  *                          selector in the player's inventory.
  */
-bool any_items_of_type(int selector, int excluded_slot)
+bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 {
-    return any_of(begin(you.inv), end(you.inv),
+    bool ret = any_of(begin(you.inv), end(you.inv),
                   [=] (const item_def &item) -> bool
                   {
                       return item.defined() && item.link != excluded_slot
                           && item_is_selected(item, selector);
                   });
+    if (!ret && inspect_floor)
+    {
+        auto item_floor = item_list_on_square(you.visible_igrd(you.pos()));
+        ret = any_of(begin(item_floor), end(item_floor),
+                      [=] (const item_def* item) -> bool
+                      {
+                          return item->defined()
+                                    && item_is_selected(*item, selector);
+                      });
+    }
+    return ret;
 }
 
 // Use title = nullptr for stock Inventory title
@@ -1365,7 +1368,7 @@ vector<SelItem> prompt_invent_items(
     return items;
 }
 
-static int _digit_to_index(char digit, operation_types oper)
+int digit_inscription_to_inv_index(char digit, operation_types oper)
 {
     const char iletter = static_cast<char>(oper);
 
@@ -1502,7 +1505,6 @@ static string _operation_verb(operation_types oper)
     case OPER_MEMORISE:       return "memorise from";
     case OPER_ZAP:            return "zap";
     case OPER_FIRE:           return "fire";
-    case OPER_PRAY:           return "sacrifice";
     case OPER_EVOKE:          return "evoke";
     case OPER_DESTROY:        return "destroy";
     case OPER_QUIVER:         return "quiver";
@@ -1547,11 +1549,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     {
         return true;
     }
-
-    // Rods are special-cased here, since I'm worried about the effects on
-    // monster behaviour of no longer counting them as melee weapons.
-    if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
-        return true;
 
     // The consequences of evokables are generally known unless it's a deck
     // and you don't know what kind of a deck it is.
@@ -1903,7 +1900,7 @@ int prompt_invent_item(const char *prompt,
         else if (count == nullptr && isadigit(keyin))
         {
             // scan for our item
-            int res = _digit_to_index(keyin, oper);
+            int res = digit_inscription_to_inv_index(keyin, oper);
             if (res != -1)
             {
                 ret = res;
@@ -1965,12 +1962,8 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    if (is_weapon(item))
+    if (is_weapon(item) || item.base_type == OBJ_RODS)
         return you.species != SP_FELID;
-
-    // The lantern needs to be wielded to be used.
-    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
-        return true;
 
     if (item.base_type == OBJ_MISSILES
         && (item.sub_type == MI_STONE
@@ -2001,12 +1994,22 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
 
+    const bool no_evocables = player_mutation_level(MUT_NO_ARTIFICE);
+    const char* const no_evocable_error = "You cannot evoke magical items.";
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
         if (entry->evoke_func && item_type_known(item))
         {
+            if (no_evocables)
+            {
+                if (msg)
+                    mpr(no_evocable_error);
+                return false;
+            }
+
             if (item_is_equipped(item) && !item_is_melded(item) || !equip)
                 return true;
 
@@ -2016,6 +2019,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             return false;
         }
         // Unrandart might still be evokable (e.g., reaching)
+    }
+
+    if (no_evocables
+        && item.base_type != OBJ_WEAPONS // reaching is ok.
+        && !(item.base_type == OBJ_MISCELLANY
+             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+    {
+        // the rest are forbidden under sac evocables.
+        if (msg)
+            mpr(no_evocable_error);
+        return false;
     }
 
     const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
@@ -2080,16 +2094,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-    case OBJ_MISCELLANY:
-        if (item.sub_type != MISC_LANTERN_OF_SHADOWS
 #if TAG_MAJOR_VERSION == 34
+    case OBJ_MISCELLANY:
+        if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
-#endif
             )
         {
             return true;
         }
-        // else fall through
+#endif
+        // removed items fallthrough to failure
+
     default:
         if (msg)
             mpr("That item cannot be evoked!");

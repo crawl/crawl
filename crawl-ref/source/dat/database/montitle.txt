@@ -219,10 +219,6 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
-Norris title
-
-Norris the Nihilist
-%%%%
 Pikel title
 
 Pikel the Slaver
@@ -265,7 +261,7 @@ Snorg the Insatiable
 %%%%
 Sojobo title
 
-Sojobo, King of Tengu
+Sojobo, Queen of Tengu
 %%%%
 Sonja title
 

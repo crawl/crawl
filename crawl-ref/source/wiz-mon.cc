@@ -556,7 +556,6 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_EMERGENCY,  "E" },
                 { MON_SPELL_NATURAL,    "N" },
                 { MON_SPELL_MAGICAL,    "M" },
-                { MON_SPELL_DEMONIC,    "D" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
                 { MON_SPELL_BREATH,     "br" },
@@ -664,15 +663,8 @@ void debug_make_monster_shout(monster* mon)
     }
 
     if (type == 's')
-    {
-        if (silenced(you.pos()))
-            mpr("You are silenced and likely won't hear any shouts.");
-        else if (silenced(mon->pos()))
-            mpr("The monster is silenced and likely won't give any shouts.");
-
         for (int i = 0; i < num_times; ++i)
-            handle_monster_shouts(mon, true);
-    }
+            monster_shout(mon, mons_shouts(mon->type, false));
     else
     {
         if (mon->invisible())
@@ -865,7 +857,7 @@ void wizard_make_monster_summoned(monster* mon)
     }
 
     mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
-    mprf(MSGCH_PROMPT, "[f] wrath [g] lantern  [h] aid   [m] misc    [s] spell");
+    mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
 
     mprf(MSGCH_PROMPT, "Which summon type? ");
 
@@ -887,7 +879,6 @@ void wizard_make_monster_summoned(monster* mon)
         case 'd': type = MON_SUMM_MISCAST; break;
         case 'e': type = MON_SUMM_ZOT; break;
         case 'f': type = MON_SUMM_WRATH; break;
-        case 'g': type = MON_SUMM_LANTERN; break;
         case 'h': type = MON_SUMM_AID; break;
         case 'm': type = 0; break;
 

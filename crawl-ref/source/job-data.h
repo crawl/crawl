@@ -56,7 +56,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
-    3, 4, 5,
+    4, 3, 5,
     { SP_DEEP_DWARF, SP_HALFLING, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN,
       SP_DEMONSPAWN, },
     { "short sword", "leather armour", "wand of flame charges:15",
@@ -115,7 +115,7 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_DEEP_DWARF, SP_SPRIGGAN, SP_GARGOYLE, SP_DEMIGOD,
       SP_GHOUL, SP_OCTOPODE, },
-    { "robe", "stone q:20", "book of Geomancy" },
+    { "book of Geomancy", "stone q:20", "robe", },
     WCHOICE_NONE,
     { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }

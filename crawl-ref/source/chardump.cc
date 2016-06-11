@@ -34,6 +34,7 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
@@ -977,6 +978,40 @@ static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,
     return false;
 }
 
+static void _count_action(caction_type type, int subtype)
+{
+    pair<caction_type, int> pair(type, subtype);
+    if (!you.action_count.count(pair))
+        you.action_count[pair].init(0);
+    you.action_count[pair][you.experience_level - 1]++;
+}
+
+/**
+ * The alternate type is stored in the higher bytes.
+ **/
+void count_action(caction_type type, int subtype, int auxtype)
+{
+    ASSERT_RANGE(subtype, -32768, 32768);
+    ASSERT_RANGE(auxtype, -32768, 32768);
+    _count_action(type, caction_compound(subtype, auxtype));
+}
+
+int caction_compound(int subtype, int auxtype)
+{
+    ASSERT_RANGE(subtype, -32768, 32768);
+    ASSERT_RANGE(auxtype, -32768, 32768);
+    return (auxtype << 16) | (subtype & 0xFFFF);
+}
+
+/**
+ * .first is the subtype; .second is the auxtype (-1 if none).
+ **/
+pair<int, int> caction_extract_types(int compound_subtype)
+{
+    return make_pair(int16_t(compound_subtype),
+                     int16_t(compound_subtype >> 16));
+}
+
 static string _describe_action(caction_type type)
 {
     switch (type)
@@ -987,6 +1022,12 @@ static string _describe_action(caction_type type)
         return " Fire";
     case CACT_THROW:
         return "Throw";
+    case CACT_ARMOUR:
+        return "Armor"; // "Armour" is too long
+    case CACT_BLOCK:
+        return "Block";
+    case CACT_DODGE:
+        return "Dodge";
     case CACT_CAST:
         return " Cast";
     case CACT_INVOKE:
@@ -1021,25 +1062,48 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static string _describe_action_subtype(caction_type type, int subtype)
+static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
 {
+    "No attack",
+    "Constrict",
+    "Kick",
+    "Headbutt",
+    "Peck",
+    "Tailslap",
+    "Punch",
+    "Bite",
+    "Pseudopods",
+    "Tentacles",
+};
+
+static string _describe_action_subtype(caction_type type, int compound_subtype)
+{
+    pair<int, int> types = caction_extract_types(compound_subtype);
+    int subtype = types.first;
+    int auxtype = types.second;
+
     switch (type)
     {
     case CACT_THROW:
     {
-        int basetype = subtype >> 16;
-        subtype = (short)(subtype & 0xFFFF);
-
-        if (basetype == OBJ_MISSILES)
+        if (auxtype == OBJ_MISSILES)
             return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
-        else if (basetype == OBJ_WEAPONS)
-            ; // fallthrough
         else
-            return "other";
+            return "Other";
     }
     case CACT_MELEE:
     case CACT_FIRE:
-        if (subtype >= UNRAND_START)
+        if (subtype == -1)
+        {
+            if (auxtype == -1)
+                return "Unarmed";
+            else
+            {
+                ASSERT_RANGE(auxtype, 0, NUM_UNARMED_ATTACKS);
+                return _aux_attack_names[auxtype];
+            }
+        }
+        else if (subtype >= UNRAND_START)
         {
             // Paranoia: an artefact may lose its specialness.
             const char *tn = get_unrand_entry(subtype)->type_name;
@@ -1047,8 +1111,36 @@ static string _describe_action_subtype(caction_type type, int subtype)
                 return uppercase_first(tn);
             subtype = get_unrand_entry(subtype)->sub_type;
         }
-        return (subtype == -1) ? "Unarmed"
-               : uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+        return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+    case CACT_ARMOUR:
+        return (subtype == -1) ? "Skin"
+               : uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+    case CACT_BLOCK:
+    {
+        if (subtype > -1)
+            return uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
+        switch (auxtype)
+        {
+        case BLOCK_OTHER:
+            return "Other"; // non-shield block
+        case BLOCK_REFLECT:
+            return "Reflection";
+        default:
+            return "Error";
+        }
+    }
+    case CACT_DODGE:
+    {
+        switch ((dodge_type)subtype)
+        {
+        case DODGE_EVASION:
+            return "Dodged";
+        case DODGE_DEFLECT:
+            return "Deflected";
+        default:
+            return "Error";
+        }
+    }
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
@@ -1058,11 +1150,11 @@ static string _describe_action_subtype(caction_type type, int subtype)
         if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
             return uppercase_first(get_unrand_entry(subtype)->name);
 
-        if (subtype >= 1 << 16)
+        if (auxtype > -1)
         {
             item_def dummy;
-            dummy.base_type = (object_class_type)(subtype >> 16);
-            dummy.sub_type  = subtype & 0xffff;
+            dummy.base_type = (object_class_type)(auxtype);
+            dummy.sub_type  = subtype;
             dummy.quantity  = 1;
             return uppercase_first(dummy.name(DESC_DBNAME, true));
         }
@@ -1543,15 +1635,26 @@ static string _dgl_timestamp_filename()
 }
 
 // Returns true if the given file exists and is not a timestamp file
-// of a known version.
+// of a known version or truncated timestamp file.
 static bool _dgl_unknown_timestamp_file(const string &filename)
 {
     if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
         reader r(inh);
-        const uint32_t file_version = unmarshallInt(r);
-        fclose(inh);
-        return file_version != DGL_TIMESTAMP_VERSION;
+        r.set_safe_read(true);
+        try
+        {
+            const uint32_t file_version = unmarshallInt(r);
+            fclose(inh);
+            return file_version != DGL_TIMESTAMP_VERSION;
+        }
+        catch (short_read_exception &e)
+        {
+            // Empty file, or <4 bytes: remove file and use it.
+            fclose(inh);
+            // True (don't use) if we couldn't remove it, false if we could.
+            return unlink_u(filename.c_str()) != 0;
+        }
     }
     return false;
 }
@@ -1560,7 +1663,7 @@ static bool _dgl_unknown_timestamp_file(const string &filename)
 // timestamps should not be written.
 static FILE *_dgl_timestamp_filehandle()
 {
-    static FILE *timestamp_file;
+    static FILE *timestamp_file = nullptr;
     static bool opened_file = false;
     if (!opened_file)
     {

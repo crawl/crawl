@@ -1835,7 +1835,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Intelligence, or Dexterity. "
+                "Strength, intelligence, or dexterity. "
                 "<w>Strength</w> affects your effectiveness in combat "
                 "and makes it easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
@@ -2847,7 +2847,7 @@ formatted_string hints_abilities_info()
 
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    return formatted_string::parse_string(text.str(), false);
+    return formatted_string::parse_string(text.str());
 }
 
 // Explains the basics of the skill screen. Don't bother the player with the

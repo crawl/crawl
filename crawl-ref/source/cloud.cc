@@ -12,10 +12,12 @@
 #include <algorithm>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "colour.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
@@ -816,7 +818,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     }
 
     // Qazlalites get immunity to their own clouds.
-    if (player && YOU_KILL(cloud.killer) && in_good_standing(GOD_QAZLAL))
+    if (player && YOU_KILL(cloud.killer) && have_passive(passive_t::resist_own_clouds))
         return true;
 #if TAG_MAJOR_VERSION == 34
 
@@ -836,13 +838,15 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         if (!player)
             return act->res_fire() >= 3;
         return you.duration[DUR_FIRE_SHIELD]
-               || you.mutation[MUT_FLAME_CLOUD_IMMUNITY];
+               || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
+               || player_equip_unrand(UNRAND_FIRESTARTER);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_energy(cloud.agent()) > 0;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
-        return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
+        return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]
+               || player_equip_unrand(UNRAND_FROSTBITE);
     case CLOUD_MEPHITIC:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:
@@ -919,6 +923,10 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     monster *mons = !player? act->as_monster() : nullptr;
     switch (cloud.type)
     {
+    case CLOUD_FIRE:
+    case CLOUD_STEAM:
+        if (player)
+            maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
     case CLOUD_RAIN:
     case CLOUD_STORM:
         if (act->is_fiery() && final_damage > 0)

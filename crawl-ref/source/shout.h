@@ -18,7 +18,9 @@ void noisy_equipment();
 void check_monsters_sense(sense_type sense, int range, const coord_def& where);
 
 void blood_smell(int strength, const coord_def& where);
-void handle_monster_shouts(monster* mons, bool force = false);
+void monster_consider_shouting(monster &mon);
+bool monster_attempt_shout(monster &mon);
+void monster_shout(monster *mons, int s_type);
 bool check_awaken(monster* mons, int stealth);
 
 void apply_noises();

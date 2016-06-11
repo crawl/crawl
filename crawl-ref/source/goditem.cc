@@ -208,10 +208,6 @@ bool is_evil_item(const item_def& item)
     case OBJ_BOOKS:
     case OBJ_RODS:
         return _is_bookrod_type(item, is_evil_spell);
-    case OBJ_MISCELLANY:
-        return item.sub_type == MISC_LANTERN_OF_SHADOWS;
-    case OBJ_JEWELLERY:
-        return item.sub_type == AMU_HARM;
     default:
         return false;
     }
@@ -410,10 +406,6 @@ static bool _is_potentially_fiery_item(const item_def& item)
 
 bool is_fiery_item(const item_def& item)
 {
-    // Flaming Death is handled through its fire brand.
-    if (is_unrandom_artefact(item, UNRAND_HELLFIRE))
-        return true;
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -655,85 +647,75 @@ bool god_hates_item(const item_def &item)
     return god_hates_item_handling(item) != DID_NOTHING;
 }
 
-bool god_dislikes_spell_type(spell_type spell, god_type god)
+/**
+ * Does the given god like items of the given kind enough to make artefacts
+ * from them? (Thematically.)
+ *
+ * @param item          The item which may be the basis for an artefact.
+ * @param which_god     The god in question.
+ * @return              Whether it makes sense for the given god to make an
+ *                      artefact out of the given item. Thematically.
+ *                      (E.g., Ely shouldn't be forging swords.)
+ */
+bool god_likes_item_type(const item_def &item, god_type which_god)
 {
-    if (god_hates_spell(spell, god))
-        return true;
-
-    unsigned int flags       = get_spell_flags(spell);
-    spschools_type disciplines = get_spell_disciplines(spell);
-
-    switch (god)
+    // XXX: also check god_hates_item()?
+    switch (which_god)
     {
-    case GOD_SHINING_ONE:
-        // TSO probably wouldn't like spells which would put enemies
-        // into a state where attacking them would be unchivalrous.
-        if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
-            || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
-            || spell == SPELL_HIBERNATION)
-        {
-            return true;
-        }
-        break;
+        case GOD_ELYVILON:
+            // Peaceful healer god: no weapons, no berserking.
+            if (item.base_type == OBJ_WEAPONS)
+                return false;
 
-    case GOD_XOM:
-        // Ideally, Xom would only like spells which have a random
-        // effect, are risky to use, or would otherwise amuse him, but
-        // that would be a really small number of spells.
+            if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
+                return false;
+            break;
 
-        // Neutral, but in an amusing way.
-        if (spell == SPELL_INNER_FLAME)
-            return false;
+        case GOD_SHINING_ONE:
+            // Crusader god: holiness, honourable combat.
+            if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
+                return false;
+            break;
 
-        // Xom would probably find these extra boring.
-        if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
-                     | SPFLAG_RECOVERY))
-        {
-            return true;
-        }
+        case GOD_SIF_MUNA:
+        case GOD_VEHUMET:
+            // The magic gods: no weapons, no preventing spellcasting.
+            if (item.base_type == OBJ_WEAPONS)
+                return false;
+            break;
 
-        // Things are more fun for Xom the less the player knows in
-        // advance.
-        if (disciplines & SPTYP_DIVINATION)
-            return true;
-        break;
+        case GOD_TROG:
+            // Anti-magic god: no spell use, no enhancing magic.
+            if (item.base_type == OBJ_BOOKS)
+                return false;
 
-    case GOD_ELYVILON:
-        // A peaceful god of healing wouldn't like combat spells.
-        if (disciplines & SPTYP_CONJURATION)
-            return true;
+            if (item.base_type == OBJ_JEWELLERY
+                && (item.sub_type == RING_WIZARDRY
+                    || item.sub_type == RING_ICE
+                    || item.sub_type == RING_MAGICAL_POWER))
+            {
+                return false;
+            }
+            break;
 
-        // Also doesn't like battle spells of the non-conjuration type.
-        if (flags & SPFLAG_BATTLE)
-            return true;
-        break;
+        case GOD_CHEIBRIADOS:
+            // Slow god: no quick blades, no berserking.
+            if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
+                return false;
 
-    default:
-        break;
+            if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
+                return false;
+            break;
+
+        case GOD_DITHMENOS:
+            // Shadow god: no reducing stealth.
+            if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
+                return false;
+            break;
+
+        default:
+            break;
     }
 
-    return false;
-}
-
-bool god_dislikes_spell_discipline(spschools_type discipline, god_type god)
-{
-    if (is_good_god(god) && (discipline & SPTYP_NECROMANCY))
-        return true;
-
-    switch (god)
-    {
-    case GOD_SHINING_ONE:
-        return bool(discipline & SPTYP_POISON);
-
-    case GOD_ELYVILON:
-        return bool(discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
-
-    case GOD_DITHMENOS:
-        return bool(discipline & SPTYP_FIRE);
-
-    default:
-        break;
-    }
-
-    return false;
+    return true;
 }

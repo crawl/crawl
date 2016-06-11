@@ -58,12 +58,14 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water.
+any nearby bodies of deep water. Extremely loud noises, such as those produced
+by lightning or scrolls of noise, will disrupt the effect, as will leaving the
+caster's line of sight.
 %%%%
 Awaken Earth spell
 
-Animates some rock walls adjacent to a target - including the target itself if
-it is a rock wall - to create some earth elementals.
+Animates some rock walls adjacent to a target – including the target itself if
+it is a rock wall – to create some earth elementals.
 %%%%
 Awaken Forest spell
 
@@ -228,7 +230,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster.
+Causes fear in those near to the caster. Adventurers suffering from this effect
+find that extremely loud noises, such as those produced by lightning or scrolls
+of noise, will disrupt it, as will leaving the caster's line of sight.
 %%%%
 Chain of Chaos spell
 
@@ -253,10 +257,10 @@ may knock back airborne targets.
 Cigotuvi's Embrace spell
 
 Violently mutilates all nearby corpses, wrapping them around the caster to
-serve as both armour and shield. As it takes hits, the carrion will gradually
-fall away, faster and faster as more is piled on, though increased power will
-tighten its grasp on the caster's body. It has no effect on casters in Statue
-Form, or with Stoneskin or Ozocubu's Armour active.
+serve as both armour and shield. The carrion will fall away over time, faster
+and faster as more is piled on, though increased power will tighten its grasp
+on the caster's body. It has no effect on casters in Statue Form, or with
+Ozocubu's Armour active.
 %%%%
 Cleansing Flame spell
 
@@ -512,7 +516,7 @@ target will be unable to be put to sleep again for some time.
 %%%%
 Entropic Weave spell
 
-Corrodes away the target's equipment.
+Corrodes the target, with no direct line of fire required.
 %%%%
 Excruciating Wounds spell
 
@@ -542,7 +546,7 @@ short-lived fire vortices.
 %%%%
 Fire Summon spell
 
-Summons demons of flame and hellfire.
+Summons demons of flame and damnation.
 %%%%
 Fireball spell
 
@@ -560,7 +564,7 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement.
+target's movement. It has no effect on targets that are already frozen.
 %%%%
 Force Lance spell
 
@@ -630,17 +634,17 @@ Heal Other spell
 
 Heals a nearby ally.
 %%%%
-Hellfire Burst spell
+Call Down Damnation spell
 
-Blasts a targeted enemy with hellfire, with no direct line of fire required.
-This ball of unholy flames explodes on impact, and is not affected by any means
-of protection such as armour or resistances. However, certain creatures,
-usually those able to create hellfire themselves, are immune to hellfire
-entirely.
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
 %%%%
-Hellfire spell
+Hurl Damnation spell
 
-<Hellfire ability>
+<Damnation ability>
 %%%%
 Holy Breath spell
 
@@ -765,9 +769,8 @@ destroyed at any power level.
 %%%%
 Legendary Destruction spell
 
-Conjures forth one of several powerful magical effects. It may have the effects
-of Orb of Electricity, Lehudib's Crystal Spear, Orb of Destruction, Ghostly
-Fireball, Fireball, or Flash Freeze.
+Conjures two explosive magical effects in instant succession. The effects can
+be any mix of Fireball, Iceblast, and Ghostly Fireball.
 %%%%
 Lehudib's Crystal Spear spell
 
@@ -823,7 +826,9 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster.
+Makes a targeted creature unwilling to move away from the caster. Extremely
+loud noises, such as those produced by lightning or scrolls of noise, will
+disrupt the effect, as will leaving the caster's line of sight.
 %%%%
 Metabolic Englaciation spell
 
@@ -877,8 +882,7 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything nearby for as long as the spell lasts. It is strongly focused on the
-caster, and will affect them even through poison resistance.
+everything nearby for as long as the spell lasts.
 %%%%
 Orb of Destruction spell
 
@@ -921,8 +925,8 @@ Prevents a creature from taking any action for a short time.
 %%%%
 Paralysis Gaze spell
 
-Prevents a creature from taking any action for a short time, with no direct
-line of fire required.
+Irresistably prevents a creature from taking any action for a short time,
+requiring multiple charges but not line of fire.
 %%%%
 Passage of Golubria spell
 
@@ -1109,8 +1113,7 @@ Eliminates all sound near the caster. This makes reading scrolls, casting
 spells, invoking divine abilities, or shouting impossible in the caster's
 vicinity. The spell's oppressive, unnatural effect will greatly hamper stealth.
 
-Certain monsters have demonic or angelic abilities which can be activated
-without speaking, and innate magical or special abilities will also still be
+Certain monsters have innate magical or special abilities which will still be
 usable while silenced.
 
 The effect starts out with a radius depending on power, which will then shrink,
@@ -1125,7 +1128,8 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer.
+singer. Extremely loud noises, such as those produced by lightning or scrolls
+of noise, will disrupt the effect, as will leaving the caster's line of sight.
 %%%%
 Sleep spell
 
@@ -1196,6 +1200,10 @@ Spits lava at a targeted creature.
 Spit Poison spell
 
 <Spit Poison ability>
+%%%%
+Sprint spell
+
+Causes the caster to cover ground more rapidly for a short duration.
 %%%%
 Static Discharge spell
 

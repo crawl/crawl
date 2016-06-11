@@ -74,6 +74,14 @@ __BELLOW seen
 
 SOUND:@The_monster@ bellows!
 %%%%
+__BLEAT unseen
+
+SOUND:You hear a bleat!
+%%%%
+__BLEAT seen
+
+SOUND:@The_monster@ bleats!
+%%%%
 __TRUMPET unseen
 
 SOUND:You hear a trumpeting!

@@ -59,6 +59,15 @@ Followers of Gozag do not earn piety; the only way to impress this god is by
 amassing a fortune, and worshippers may request as much assistance as they can
 afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
 %%%%
+Hepliaklqana
+
+Hepliaklqana the Forgotten accepts the worship of those who would remember
+their forebears, and fight alongside the greatest of them all. Hepliaklqana
+demands only that followers explore and form new experiences; as they advance
+in this service, they will find themselves able to shape and control their
+ancestor's memory, eventually bringing them into the ranks of the mythical
+heroes.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -116,9 +125,8 @@ Pakellas
 Pakellas the Inventive believes in the supremacy of devices, magical or
 otherwise, over spells and other forms of magic. Followers, although cut off
 from ambient magical power, are provided with magical energy to empower their
-devices so long as they use them to assert Pakellas' supremacy; those in
-high standing will eventually begin to receive new devices, and may eventually
-ask for one to be recrafted personally by Pakellas.
+devices so long as they use them to assert Pakellas' supremacy. Pakellas will
+grant devout worshippers access to increasingly powerful devices.
 %%%%
 Qazlal
 
@@ -161,6 +169,15 @@ Trog's name and burn books containing spells. Trog hates all wizards, and loves
 to see their spellbooks burn. In return, worshippers of Trog gain the ability
 to go berserk at will in combat, and will be granted gifts of powerful weapons.
 Followers are absolutely forbidden the use of spell magic.
+%%%%
+Uskayaw
+
+Uskayaw the Reveler is a god of ecstatic dance. On the surface, Uskayaw
+appreciates many forms of worship, but in the dungeon most worshippers stick to
+the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
+rewarding followers for each strike they deliver and for the damage they deal
+their foes. The longer the dance continues, the greater powers Uskayaw offers.
+When the dance ends, Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
@@ -259,6 +276,17 @@ in the form of potions, with prices being dictated by the Greedy. Particularly
 well-off adherents may attract shopkeepers into the dungeon, and even bribe
 entire branches.
 %%%%
+Hepliaklqana powers
+
+Hepliaklqana's worshippers are served by a guardian formed from their memories
+of their greatest ancestor. This ancestor is at first remembered as they were
+at the start of their fabled adventures, but will advance in skill as their
+descendant does. Hepliaklqana always allows followers to recall their ancestor
+to their side, and, even if the ancestor is destroyed, Hepliaklqana will call
+it forth again not long after. Further advancement in Hepliaklqana's service
+allows worshippers to restore and strengthen their ancestor, to swap them with
+other creatures, and to choose how to remember their life's talents.
+%%%%
 Jiyva powers
 
 Jiyva's followers can request jellies, turn monsters to slime, and eventually
@@ -319,9 +347,9 @@ forbidden from using external means to do so; instead, they are granted
 magical energy on killing beings. They may use increasing amounts of magical
 energy to strengthen their devices, temporarily granting them additional
 power, and can also use their magical energy to recharge their devices.
-Sufficiently devout followers will begin to receive devices from Pakellas, and
-may eventually petition Pakellas to personally charge one of their devices
-beyond its normal limits.
+Sufficiently devout followers will receive new devices from Pakellas, and may
+eventually petition Pakellas to personally charge one of their devices beyond
+its normal limits.
 %%%%
 Qazlal powers
 
@@ -376,6 +404,17 @@ increasing resistance to hostile enchantments. Later, followers may call in
 powerful raging allies. Eventually, Trog will gift followers with weapons
 focused on damage.
 %%%%
+%%%%
+Uskayaw powers
+
+Uskayaw offers powers that help worshippers continue the dance. Worshippers can
+stomp to damage foes around them and rapidly move through a line of creatures
+while confusing them. When a worshipper's dance reaches a certain point, Uskayaw
+will freeze all foes so that the dancer may take a solo. If the dance continues,
+Uskayaw will link the emotions of foes, forcing them to share their pain. If the
+dance continues, Uskayaw allows you to end it by melding with and then violently
+exploding a foe, killing it instantly.
+%%%%
 Vehumet powers
 
 Worshippers of Vehumet will quickly be able to recover their magical energy
@@ -414,7 +453,7 @@ Ashenzari wrath
 
 Ashenzari's wrath is not like other gods'; it is constant and unrelenting for
 its duration. Victims find their skills impaired, and their enemies divinely
-guided - never losing track of them, never ending the hunt.
+guided – never losing track of them, never ending the hunt.
 %%%%
 Beogh wrath
 
@@ -422,7 +461,7 @@ Blasphemers against the word of Beogh find themselves confronted with direct
 and physical opposition. Those who still worship Beogh find their followers
 regularly deserting them; they, and others, are further assaulted by waves of
 orcish warriors. When working through intermediaries fails, Beogh hurls
-dancing electric weapons at offenders, or simply smites them - and when smiting
+dancing electric weapons at offenders, or simply smites them – and when smiting
 true sinners, Beogh has a heavy hand indeed!
 %%%%
 Cheibriados wrath
@@ -438,7 +477,7 @@ Dithmenos wrath
 When angered, Dithmenos turns the shadows against victims. Monsters emerge
 from the darkness, both illusions woven from shadow and the very shadows
 themselves turning against sinners. Novices are swarmed by flitting shadows and
-illusionary trolls; experts by shadow fiends and illusionary dragons.
+illusionary trolls; experts by tzitzimimeh and illusionary dragons.
 Dithmenos's subtle punishments are, if anything, more dangerous: victims find
 the shadows ripped away from them, hunted with nowhere to hide; or find
 themselves smothered in shadow and sleeping, perhaps forever.
@@ -458,6 +497,14 @@ ways. Accordingly, Fedhas provides said exposure, in the form of pure elemental
 destruction, waves of giant spores rising from nearby corpses, and, for the
 truly incorrigible, surrounding rings of animate mushrooms and acid-spitting
 oklobs.
+%%%%
+Hepliaklqana wrath
+
+Hepliaklqana believes that the only reasonable punishment for turning one's
+back on the path of memory is to be denied its use. All new experience is
+denied to the unfortunate apostate, until Hepliaklqana decides they have
+been punished enough. This will not be quick: unlike some, Hepliaklqana has
+a long memory...
 %%%%
 Gozag wrath
 
@@ -519,13 +566,10 @@ surrounded by titans and elvish blademasters.
 %%%%
 Pakellas wrath
 
-Those that offend Pakellas will find their magical devices drained of their
-power, their magic reserves emptied, and even their very life force fed
-into the ever-hungry engine that is progress on Pakellas' behalf. Those who
-abandon Pakellas altogether will further find themselves unable to regenerate
-their magical power so long as Pakellas' attention remains on them, and that
-their devices fail to work as intended - though they still have their
-intended effects, they will also harm the user in their use.
+Those that offend Pakellas will find themselves completely unable to make use
+of their devices for the duration of Pakellas's displeasure. Those who abandon
+Pakellas altogether will also continue to be unable to regenerate their magical
+power so long as Pakellas' attention remains on them.
 %%%%
 Qazlal wrath
 
@@ -542,7 +586,7 @@ Sif Muna wrath
 
 Those in Sif Muna's ill graces find the very forces of magic rebelling against
 them. They are confused and stupefied, their magical reserves drained, their
-enchantments unravelled. Casting spells, too, becomes unreliable - and even
+enchantments unravelled. Casting spells, too, becomes unreliable – and even
 dangerous.
 %%%%
 the Shining One wrath
@@ -554,15 +598,22 @@ shouted at and silenced.
 Trog wrath
 
 Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
-by berserkers - from packs of bears to, for the most powerful, mobs of giants
-and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
+by berserkers – from packs of bears to, for the most powerful, mobs of giants
+and trolls. Their bodies decay, slow, and collapse – and sometimes, they're
 just blasted by Trog's fiery rage directly.
+%%%%
+Uskayaw wrath
+
+Uskayaw's wrath turns the powers of the dance against the offender. The
+prude will find their foes going berserk and will be forced to helplessly watch
+as foes execute their own solos. When the dance is getting too slow, Uskayaw will
+attempt to bring more revelers.
 %%%%
 Vehumet wrath
 
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
-struck by flame and frost; archmages by firestorms and hellfire. Their own
-conjurations, too, are wont to misfire at the worst possible moments.
+struck by flame and frost; archmages by crystal spears and firestorms. Their
+own conjurations, too, are wont to misfire at the worst possible moments.
 %%%%
 Xom wrath
 

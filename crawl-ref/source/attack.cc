@@ -15,6 +15,7 @@
 #include <cstring>
 
 #include "art-enum.h"
+#include "chardump.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"
@@ -192,21 +193,12 @@ int attack::calc_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
-            else if (weapon->base_type == OBJ_RODS)
-            {
-                mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->rod_plus;
-            }
         }
 
         // slaying bonus
         mhit += slaying_bonus(wpn_skill == SK_THROWING
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
-
-        // horror penalty
-        if (you.duration[DUR_HORROR])
-            mhit -= you.props[HORROR_PENALTY_KEY].get_int();
 
         // hunger penalty
         if (you.hunger_state <= HS_STARVING)
@@ -239,9 +231,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        if (using_weapon() && weapon->base_type == OBJ_RODS)
-            mhit += weapon->rod_plus;
     }
 
     // Penalties for both players and monsters:
@@ -250,8 +239,12 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_WOE))
+    if (using_weapon()
+        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
+            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
+    {
         return AUTOMATIC_HIT;
+    }
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -1206,10 +1199,10 @@ int attack::player_stat_modify_damage(int damage)
 {
     int dammod = 39;
 
-    if (you.strength() > 11)
-        dammod += (random2(you.strength() - 11) * 2);
-    else if (you.strength() < 9)
-        dammod -= (random2(9 - you.strength()) * 3);
+    if (you.strength() > 10)
+        dammod += (random2(you.strength() - 10) * 2);
+    else if (you.strength() < 10)
+        dammod -= (random2(10 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1248,10 +1241,12 @@ int attack::player_apply_misc_modifiers(int damage)
  */
 int attack::get_weapon_plus()
 {
-    if (weapon->base_type == OBJ_RODS)
-        return weapon->rod_plus;
-    if (weapon->base_type == OBJ_STAVES || weapon->sub_type == WPN_BLOWGUN)
+    if (weapon->base_type == OBJ_STAVES
+        || weapon->sub_type == WPN_BLOWGUN
+        || weapon->base_type == OBJ_RODS)
+    {
         return 0;
+    }
     return weapon->plus;
 }
 
@@ -1261,11 +1256,9 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 {
     int damage_plus = 0;
     if (!aux && using_weapon())
-    {
         damage_plus = get_weapon_plus();
-        if (you.duration[DUR_CORROSION])
-            damage_plus -= 4 * you.props["corrosion_amount"].get_int();
-    }
+    if (you.duration[DUR_CORROSION])
+        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
     damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
@@ -1505,7 +1498,7 @@ attack_flavour attack::random_chaos_attack_flavour()
                                          10, AF_COLD,
                                          10, AF_ELEC,
                                          10, AF_POISON,
-                                         10, AF_CHAOS,
+                                         10, AF_CHAOTIC,
                                           5, AF_DRAIN_XP,
                                           5, AF_VAMPIRIC,
                                           5, AF_HOLY,
@@ -1552,6 +1545,34 @@ attack_flavour attack::random_chaos_attack_flavour()
     return flavour;
 }
 
+bool attack::apply_poison_damage_brand()
+{
+    if (!one_chance_in(4))
+    {
+        int old_poison;
+
+        if (defender->is_player())
+            old_poison = you.duration[DUR_POISONING];
+        else
+        {
+            old_poison =
+                (defender->as_monster()->get_ench(ENCH_POISON)).degree;
+        }
+
+        defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
+
+        if (defender->is_player()
+               && old_poison < you.duration[DUR_POISONING]
+            || !defender->is_player()
+               && old_poison <
+                  (defender->as_monster()->get_ench(ENCH_POISON)).degree)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool attack::apply_damage_brand(const char *what)
 {
     bool brand_was_known = false;
@@ -1594,11 +1615,15 @@ bool attack::apply_damage_brand(const char *what)
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
+        defender->expose_to_element(BEAM_FIRE, 2);
+        if (defender->is_player())
+            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1627,35 +1652,13 @@ bool attack::apply_damage_brand(const char *what)
                 :  "There is a sudden explosion of sparks!";
             special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
+            defender->expose_to_element(BEAM_ELECTRICITY, 2);
         }
 
         break;
 
     case SPWPN_VENOM:
-        if (!one_chance_in(4))
-        {
-            int old_poison;
-
-            if (defender->is_player())
-                old_poison = you.duration[DUR_POISONING];
-            else
-            {
-                old_poison =
-                    (defender->as_monster()->get_ench(ENCH_POISON)).degree;
-            }
-
-            defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
-
-            if (defender->is_player()
-                   && old_poison < you.duration[DUR_POISONING]
-                || !defender->is_player()
-                   && old_poison <
-                      (defender->as_monster()->get_ench(ENCH_POISON)).degree)
-            {
-                obvious_effect = true;
-            }
-
-        }
+        obvious_effect = apply_poison_damage_brand();
         break;
 
     case SPWPN_DRAINING:
@@ -1782,14 +1785,11 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     default:
-        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_HELLFIRE))
+        if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
         {
-            calc_elemental_brand_damage(BEAM_HELLFIRE,
-                                        defender->is_icy() ? "melt" : "burn",
-                                        what);
-            defender->expose_to_element(BEAM_HELLFIRE);
+            calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
+            defender->expose_to_element(BEAM_DAMNATION);
             attacker->god_conduct(DID_UNHOLY, 2 + random2(3));
-            attacker->god_conduct(DID_FIRE, 10 + random2(5));
         }
         break;
     }
@@ -1822,24 +1822,13 @@ bool attack::apply_damage_brand(const char *what)
             miscast_level = -1;
     }
 
+    // Preserve Nessos's brand stacking in a hacky way -- but to be fair, it
+    // was always a bit of a hack.
+    if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
+        apply_poison_damage_brand();
+
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
-
-    if (defender->alive())
-    {
-        switch (brand)
-        {
-        case SPWPN_FLAMING:
-            defender->expose_to_element(BEAM_FIRE);
-            break;
-
-        case SPWPN_FREEZING:
-            defender->expose_to_element(BEAM_COLD, 2);
-            break;
-        default:
-            break;
-        }
-    }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {

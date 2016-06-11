@@ -73,12 +73,12 @@ Starts flight. During flight you can safely cross water and similar obstacles.
 Be warned, though, that some forms of flight are temporary and may time out at
 an inopportune moment, causing you to fall to your death.
 %%%%
-Hellfire ability
+Damnation ability
 
-Blasts a targeted enemy with hellfire. This ball of unholy flames explodes on
-impact, and is not affected by any means of protection such as armour or
-resistances. However, certain creatures, usually those able to create hellfire
-themselves, are immune to hellfire entirely.
+Blasts a targeted enemy with damnation. These unholy forces harm the victim and
+anyone adjacent, and are not affected by any means of protection, such as armour
+or resistances. However, certain creatures, usually those able to invoke
+damnation themselves, are entirely unscathed by damnation.
 %%%%
 Release Delayed Fireball ability
 
@@ -91,7 +91,7 @@ Stops singing your Song of Slaying.
 %%%%
 Self-Restoration ability
 
-Restores your Strength, Dexterity and Intelligence and heals any rotted health,
+Restores your strength, dexterity and intelligence and heals any rotted health,
 at the permanent cost of one magic point.
 %%%%
 Device Recharging ability
@@ -156,13 +156,14 @@ The recitation will have different effects depending on the target: the chaotic
 and unclean will be affected by powerful and damaging effects, undead and
 demons will be affected by weaker rebukes, and any other intelligent creatures
 will have confusion sown amongst them, with heretics and priests of gods other
-than Zin being punished much more strongly.
+than Zin being punished much more strongly. The effectiveness of the recitation
+is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your Strength, Intelligence and
-Dexterity.
+and sickness, and increases and sustains your strength, intelligence and
+dexterity. The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -190,12 +191,14 @@ Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
 undead and demons and dealing damage to all other hostile creatures. The user's
-allies are never affected.
+allies are never affected. The power of the blast is increased by Invocations
+skill.
 %%%%
 Summon Divine Warrior ability
 
-Summons a powerful warrior against evil, either an angel or a daeva. It may be
-blessed by the Shining One to stay longer in this world.
+Summons a powerful warrior against evil, either an angel or a daeva. The
+duration of their assistance is increased by Invocations skill, and glory in
+battle may lead the Shining One to bless them with an even longer stay.
 %%%%
 Brand Weapon With Holy Wrath ability
 
@@ -252,14 +255,16 @@ skeletons cannot leave the level they were created on.
 Drain Life ability
 
 Drains the life force of any nearby creatures, healing the user depending on
-the damage dealt.
+the damage dealt. The amount of life force drained is increased by Invocations
+skill.
 %%%%
 Enslave Soul ability
 
-Marks a monster's soul as ripe for the taking. Intelligent living, demonic and
-holy monsters can be targeted, as long as they are relatively uninjured. The
-duration of the mark is dependent on Invocations skill. If the monster dies
-while still marked, its soul will become yours.
+Marks a monster's soul as ripe for the taking. Intelligent living, holy and
+demonic monsters can be targeted (excepting most lords of Pandemonium), as
+long as they are relatively uninjured. The duration of the mark is dependent on
+Invocations skill. If the monster dies while still marked, its soul will become
+yours.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
@@ -269,15 +274,18 @@ at a time.
 Heroism ability
 
 Temporarily increases all of your combat skills, both offensive and defensive.
+The duration is increased by Invocations skill.
 %%%%
 Finesse ability
 
-Greatly increases your combat speed.
+Greatly increases your combat speed. The duration is increased by Invocations
+skill.
 %%%%
 # Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature.
+Shoots a random harmful blast at the targeted creature. Damage and accuracy
+are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -286,7 +294,8 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-Shoots a random harmful beam or explosion at the targeted creature.
+Shoots a random harmful beam or explosion at the targeted creature. Damage and
+accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 
@@ -346,8 +355,8 @@ Heals a small amount of health, depending on Invocations skill.
 Purification ability
 
 Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost Strength,
-Dexterity or Intelligence.
+petrification, rotting, and sickness, and fully restores any lost strength,
+dexterity or intelligence.
 %%%%
 Heal Other ability
 
@@ -386,19 +395,22 @@ Bend Space ability
 Bends the fabric of space, instantly translocating the user a short distance,
 and possibly also translocating and damaging other adjacent creatures. In
 warping the fabric of space, this ability ignores effects that would usually
-prevent translocations.
+prevent translocations. Invocations skill increases the chance of affecting
+nearby creatures and the damage dealt to those affected.
 %%%%
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and half the creature's experience value.
+some piety and half the creature's experience value. Invocations skill makes it
+harder to resist.
 %%%%
 Corrupt ability
 
 Corrupts the current level by unleashing Abyssal energies on it. This will
 cause the area nearby to change appearance, and will gate in demons from the
 Abyss bent on causing destruction. This will not work on levels already
-corrupted or in the Abyss itself.
+corrupted or in the Abyss itself. The size of the effect is increased by
+Invocations skill.
 %%%%
 Enter the Abyss ability
 
@@ -433,6 +445,7 @@ draw these cards in the order you chose.
 Smiting ability
 
 Smites any targeted enemy within sight, with no direct line of fire required.
+The strength of the smiting is increased by Invocations skill.
 %%%%
 Recall Orcish Followers ability
 
@@ -447,6 +460,11 @@ Give Item to Named Follower ability
 
 Gives a weapon or piece of armour to a named orcish follower. An orc can only
 ever receive one of these gifts.
+%%%%
+Resurrection ability
+
+Bring an orc corpse back to life. The orc will be an ally, even if it was not
+already one before it died.
 %%%%
 # Fedhas
 Sunlight ability
@@ -467,7 +485,8 @@ Rain ability
 
 Causes rain to fall around you, turning the dungeon floor into shallow water
 and shallow water into deep water. This may also allow plants and mushrooms to
-grow in areas that are not directly drenched.
+grow in areas that are not directly drenched. Invocations skill increases the
+number of rain-clouds created.
 %%%%
 Reproduction ability
 
@@ -502,7 +521,8 @@ Step From Time ability
 Removes you completely from the flow of time. Things around you will happen at
 their usual busy pace, and monsters will wander and may even forget about you.
 After some time has passed, you will return in the same state as the very
-second you departed.
+second you departed. Invocations skill increases the amount of time that passes
+while you're gone.
 %%%%
 # Jiyva
 Request Jelly ability
@@ -541,8 +561,8 @@ Aborts an ongoing skill transfer.
 # Dithmenos
 Shadow Step ability
 
-Allows you to step into the shadow of any creature within your umbra, as long
-as they are immobile or asleep, landing adjacent to the target.
+Allows you to step into the shadow of any hostile creature within your umbra,
+as long as they are immobile or asleep, landing adjacent to the target.
 %%%%
 Shadow Form ability
 
@@ -551,7 +571,8 @@ are permanently invisible and are immune to poison, draining, torment, and
 hostile enchantments. All incoming damage will be halved, and you will bleed
 smoke on any incoming attack. However, your ability to deal damage in melee
 will be halved, your spellcasting power will be greatly hampered, and your
-skills will be further drained when taking damage.
+skills will be further drained when taking damage. Invocations skill increases
+the duration of the transformation.
 %%%%
 # Gozag
 Potion Petition ability
@@ -595,14 +616,14 @@ indifferent if they have not become your allies.
 # Pakellas
 Device Surge ability
 
-Ready a device surge, which - on the next use of a magical device - triggers
-to convert some of your magical power to strengthen the effect of the device.
-The amount of magical power that can be used for a surge varies, but
-correlates with how devoted a follower is to Pakellas.
+Readies a device surge, which triggers on your next usage of a magical device
+to strengthen its power at the cost of some magic. The amount of magical power
+that can be used for a surge varies, but correlates with how devoted a follower
+is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spend two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand or rod. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
@@ -611,23 +632,25 @@ Supercharge ability
 Infuses magical energy into a rod or wand. For a rod, its recharge rate and
 capacity are set to slightly above the normal maximums for such a device;
 for wands, their capacity is significantly increased beyond normal and fully
-charged to this new capacity.
+charged to this new capacity. This ability may only be used once.
 %%%%
 # Qazlal
 Upheaval ability
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,
-or rubble.
+or rubble. Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
 Causes elemental clouds around you to coalesce into elementals. Your own
 clouds create friendly elementals; hostile clouds create hostile elementals;
-natural clouds create neutral elementals.
+natural clouds create neutral elementals. Invocations skill increases the
+maximum number of elementals that can be created with one use of the ability.
 %%%%
 Disaster Area ability
 
-Blasts the entire area around you with powerful natural forces.
+Blasts the entire area around you with powerful natural forces. Invocations
+skill increases both damage and area affected.
 %%%%
 # Ru
 Draw Out Power ability
@@ -657,9 +680,7 @@ Using this ability exhausts and severely drains you.
 %%%%
 Sacrifice Purity ability
 
-Sacrifices purity of body or mind, causing a single mutation. The mutation will
-be one of deterioration, deformed body, uncontrolled shouting, worse device
-healing, clumsiness, weakness or dopiness.
+Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
@@ -671,13 +692,11 @@ Sacrifices the ability to drink potions while threatened.
 %%%%
 Sacrifice Essence ability
 
-Sacrifices magical essence, causing a single mutation. The mutation will be one
-of reduced magic pool, MR-, or increased spellcasting difficulty.
+Sacrifices magical essence, causing a single mutation.
 %%%%
 Sacrifice Health ability
 
-Sacrifices physical health, causing a single mutation. The mutation will be one
-of reduced health, reduced Evasion, or reduced AC.
+Sacrifices physical health, causing a single mutation.
 %%%%
 Sacrifice Stealth ability
 
@@ -754,6 +773,29 @@ sacrifices while there is an existing offer still extended.
 Each consecutive rejection increases the sacrifice timer significantly.
 Accepting a sacrifice will reset the timer to the standard length.
 %%%%
+# Uskayaw
+Stomp ability
+
+Stomps down in time with the rhythm of the dance, sending a shockwave through
+all adjacent creatures. The shockwave deals damages the creatures it passes
+through in proportion to the creature's maximum health and the reveler's
+Invocations skill.
+%%%%
+Line Pass ability
+
+Passes through a contiguous line of creatures at superhuman speed, ending up
+in a new location. Any creatures passed through in this way will be confused
+briefly, with the duration of confusion increasing with Invocations skill.
+%%%%
+Grand Finale ability
+
+Merges with a target emotionally and physically, and then bursts forth from
+them, violently splitting them apart and killing them instantly. This ability
+becomes easier to use as the worshipper's piety and Invocations skill increase.
+
+More violent Uskayaw sects consider their members not to be true worshippers
+until they have performed this rite.
+%%%%
 Renounce Religion ability
 
 Renounces your faith. This will make you leave your god (and usually anger
@@ -775,4 +817,82 @@ overall increase is determined by the size of your donation.
 %%%%
 Curse Item ability
 
-In exchange for a scroll of remove curse, Ashenzari will curse one of your items.
+Curses a chosen item, at the cost of a scroll of remove curse.
+%%%%
+Recall Ancestor ability
+
+Recalls your ancestor from anywhere in the dungeon to your immediate
+surroundings.
+%%%%
+Idealise ability
+
+Restores your ancestor to an idyllic vision of their best self. Their wounds
+are forgotten, harmful effects are wiped away, and a glow of perfection infuses
+them, giving them a short-lived but dramatic increase in strength and armour.
+The quality of the healing and duration of the idealisation granted are both
+improved by the Invocations skill.
+%%%%
+Transference ability
+
+Forces a targeted creature to pass through the realms of memory and exchange
+places with your ancestor.
+
+With great piety, those near the target will be slowed for a duration depending
+on Invocations skill.
+%%%%
+Ancestor Life: Knight ability
+
+Remembers your ancestor as a knight, a strong melee combatant with superior
+defenses. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Battlemage ability
+
+Remembers your ancestor as a battlemage, a warrior capable of relentless offense
+with both melee and conjurations. This choice is permanent and cannot be undone.
+%%%%
+Ancestor Life: Hexer ability
+
+Remembers your ancestor as a hexer, a cunning rogue capable of skilled
+knifework and debilitating spellcasting. This choice is permanent and cannot be
+undone.
+%%%%
+Ancestor Identity ability
+
+Recalls who your ancestor preferred to be known as, correcting their name and
+gender. This does not take any time.
+%%%%
+Knight: Demon Trident ability
+
+Remembers your ancestor as wielding an enchanted demon trident, a weapon
+capable of reaching past allies (such as yourself) to attack foes. This choice
+is permanent and cannot be undone.
+%%%%
+Knight: Broad Axe ability
+
+Remembers your ancestor as wielding an enchanted broad axe, a weapon capable of
+cleaving through many surrounding foes with each blow. This choice is permanent
+and cannot be undone.
+%%%%
+Battlemage: Force Lance ability
+
+Remembers your ancestor as casting Force Lance, which knocks targets back and
+does extra damage to those slammed into walls or other creatures. This choice
+is permanent and cannot be undone.
+%%%%
+Battlemage: Bolt of Magma ability
+
+Remembers your ancestor as casting Bolt of Magma, which conjures a penetrating
+beam of fire and physical damage. This choice is permanent and cannot be
+undone.
+%%%%
+Hexer: Mass Confusion ability
+
+Remembers your ancestor as casting Mass Confusion, which confuses all nearby
+foes which fail to resist the magic. This choice is permanent and cannot be
+undone.
+%%%%
+Hexer: Englaciation ability
+
+Remembers your ancestor as casting Metabolic Englaciation, which slows all
+non-cold-resistant nearby foes for several turns. This choice is permanent and
+cannot be undone.

@@ -181,7 +181,7 @@ VALUE:   1000
 ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
-NAME:    Mace of Variability
+NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    +0   # Set on generation
 COLOUR:  ETC_RANDOM
@@ -191,7 +191,7 @@ VALUE:   700
 BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
-NAME:    Glaive of Prune
+NAME:    glaive of Prune
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    +12
 COLOUR:  LIGHTMAGENTA
@@ -201,7 +201,7 @@ VALUE:   1000
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 
-NAME:    Sword of Power
+NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +0 # Set on wield
 COLOUR:  RED
@@ -210,16 +210,16 @@ TILE_EQ: sword_of_power
 VALUE:   1000
 BOOL:    special, no_upgrade
 
-NAME:    Staff of Olgreb
+NAME:    staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    +0 # Set on wield
+PLUS:    +9
 COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison, no_upgrade
+BOOL:    poison
 
-NAME:    Staff of Wucad Mu
+NAME:    staff of Wucad Mu
 INSCRIP: channel
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
@@ -238,7 +238,7 @@ TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
 VALUE:   1000
 
-NAME:    Scythe of Curses
+NAME:    scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13
 COLOUR:  ETC_DEATH
@@ -249,7 +249,7 @@ VALUE:   800
 CURSED:  3
 BOOL:    evil
 
-NAME:    Sceptre of Torment
+NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
 COLOUR:  ETC_GOLD
@@ -258,7 +258,7 @@ TILE_EQ: mace_ruby
 VALUE:   1200
 BOOL:    special, evil
 
-NAME:    Sword of Zonguldrok
+NAME:    sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
 COLOUR:  ETC_BONE
@@ -266,10 +266,9 @@ TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 VALUE:   1250
-CURSED:  3
-BOOL:    special, evil, corpse_violating
+BOOL:    evil, corpse_violating
 
-NAME:    Sword of Cerebov
+NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
 TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
@@ -283,7 +282,7 @@ VALUE:   2000
 BRAND:   SPWPN_FLAMING
 BOOL:    unholy, nogen
 
-NAME:    Staff of Dispater
+NAME:    staff of Dispater
 APPEAR:  golden staff
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +4
@@ -293,7 +292,7 @@ TILE_EQ: dispater
 VALUE:   1200
 BOOL:    unholy, nogen
 
-NAME:    Sceptre of Asmodeus
+NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7
@@ -321,7 +320,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
-ANGRY:   9
+ANGRY:   5
 BOOL:    berserk
 STEALTH: -1
 
@@ -442,20 +441,17 @@ TILE:     urand_jihad
 TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
-ANGRY:    3
+ANGRY:    5
 STEALTH:  -1
 LIFE:     1
 
-NAME:    arbalest "Hellfire"
-INSCRIP: hellfire,
+NAME:    arbalest "Damnation"
+INSCRIP: damnation,
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 PLUS:    +6
 COLOUR:  ETC_FIRE
-TILE:    urand_hellfire
+TILE:    urand_damnation
 TILE_EQ: crossbow_fire
-FIRE:    2
-COLD:    -1
-MAGIC:   1
 BOOL:    unholy
 
 NAME:    sword of the Doom Knight
@@ -501,7 +497,7 @@ COLOUR:   ETC_WATER
 TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
-BOOL:     elec, poison
+BOOL:     elec, poison, no_upgrade
 MAGIC:    1
 
 NAME:    mithril axe "Arga"
@@ -529,13 +525,14 @@ BOOL:     elec
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +15
+PLUS:     +9
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
+INSCRIP:  nevermiss,
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -886,7 +883,7 @@ DEX:      -1
 LIFE:     1
 BOOL:     poison
 
-NAME:     shield of the gong
+NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +18
 COLOUR:   ETC_GOLD
@@ -935,7 +932,7 @@ TILE:    urand_bloodlust
 STR:     2
 INT:     -2
 MAGIC:   1
-ANGRY:   9
+ANGRY:   5
 SLAY:    3
 CURSED:  3
 
@@ -1232,7 +1229,7 @@ CURSED:  1
 BOOL:    evil, seeinv, nogen
 
 ENUM:    VINES
-NAME:    robe of vines
+NAME:    robe of Vines
 OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +2
 COLOUR:  GREEN
@@ -1263,6 +1260,7 @@ BRAND:   SPWPN_FREEZING
 COLD:    1
 BOOL:    skip_ego, fly, noises
 
+# TAG_MAJOR_VERSION == 34
 ENUM:     TALOS
 NAME:     armour of Talos
 OBJ:      OBJ_ARMOUR/ARM_PLATE_ARMOUR
@@ -1272,6 +1270,7 @@ TILE_EQ:  talos
 COLOUR:   ETC_FIRE
 BRAND:    SPARM_PONDEROUSNESS
 FIRE:     1
+BOOL:     nogen
 
 ENUM:     WARLOCK_MIRROR
 NAME:     warlock's mirror

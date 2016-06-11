@@ -35,8 +35,8 @@
     "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe " ..
     "never_corpse generate_awake " ..
     "col:lightred spells:symbol_of_torment.34.natural;" ..
-                        "hellfire.33.natural;" ..
-                        "hellfire_burst.33.natural"
+                        "hurl_damnation.33.natural;" ..
+                        "call_down_damnation.33.natural"
 
   local large_bag =
     "hill giant hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
@@ -102,7 +102,7 @@
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse " ..
     "col:lightred generate_awake perm_ench:haste " ..
     "spells:dig.26.natural;confuse.52.natural;" ..
-           "miasma_breath.26.natural;hellfire_burst.26.natural"
+           "miasma_breath.26.natural;call_down_damnation.26.natural"
 
   -- Uniques --
   local servant =
@@ -130,13 +130,13 @@
     ". large shield plus:12 not_cursed ego:none " ..
     "ident:all no_pickup"
 
-  -- Meatlord shadow creatures will be shadow fiends
+  -- Meatlord shadow creatures will be tzitzimimeh
   local meatlord =
     "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta " ..
     "generate_awake never_corpse " ..
-    "spells:shadow_creatures.44.demonic;airstrike.44.demonic;conjure_ball_lightning.22.demonic " ..
+    "spells:shadow_creatures.44.magical;airstrike.44.magical;conjure_ball_lightning.22.magical " ..
     "; ring of slaying plus:27000 not_cursed ident:all " ..
-    "no_pickup . mace unrand:sceptre_of_torment not_cursed " ..
+    "no_pickup . sceptre_of_torment not_cursed " ..
     "ident:all no_pickup"
 
   -- Unspeakable shadow creatures will be (a lot of) starcursed masses
@@ -161,14 +161,8 @@
   function weapon_creation(e)
     if you.race() == "Felid" then
       e.kitem("{ = ring of slaying plus:27000 ident:all no_pickup not_cursed")
-    elseif you.race() == "Spriggan" or
-           you.race() == "Kobold"   or
-           you.race() == "Halfling" then
-      e.kitem("{ = broad axe plus:27000 ident:all no_pickup \
-               not_cursed ego:vorpal unrand:axe_of_woe")
     else
-      e.kitem("{ = executioner's axe plus:27000 ident:all no_pickup \
-               not_cursed ego:vorpal unrand:axe_of_woe")
+      e.kitem("{ = axe_of_woe")
     end
   end
 
@@ -279,7 +273,7 @@
     dgn.create_monster(43, 63, phase)
 
     if you.turns() < 230 then
-    dgn.set_random_mon_list("shadow fiend / nothing")
+    dgn.set_random_mon_list("tzitzimitl / nothing")
     else
     dgn.set_random_mon_list("starcursed mass")
     end

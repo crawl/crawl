@@ -259,7 +259,7 @@ function arena_sprint_get_monster_set(round, boss)
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
-                "w:20 fire bat / fire elemental w:5 mottled dragon",
+                "w:20 fire bat / fire elemental / w:5 mottled dragon",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
@@ -286,7 +286,7 @@ function arena_sprint_get_monster_set(round, boss)
                     orc priest / orc high priest w:3 / orc sorcerer w:2 /\
                     orc warlord w:1 / urug w:2",
                 "place:Elf",
-                "place:Lair:5 w:30 / rupert w:1",
+                "place:Lair:4 w:30 / rupert w:1",
                 "place:Shoals",
                 "place:Swamp",
                 "place:Spider",
@@ -320,7 +320,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "neqoxec", "deep elf mage always_corpse",
+                "neqoxec",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
                 "hungry ghost"
@@ -367,7 +367,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "necrophage / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
-                "neqoxec", "deep elf mage always_corpse",
+                "neqoxec",
                 "moth of wrath / w:20 hill giant", "ball lightning",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye"
@@ -476,7 +476,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / wind drake /\
                     air elemental / ball lightning / storm dragon",
-                "shadow fiend / reaper / shadow dragon / death drake /\
+                "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
                     death knight w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / apis",
@@ -550,7 +550,7 @@ function arena_sprint_get_monster_set(round, boss)
                     white draconian",
                 "spriggan air mage / titan / electric golem / ball lightning /\
                     storm dragon",
-                "shadow fiend / reaper / shadow dragon / death drake /\
+                "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon w:20 / ophan / apis",
@@ -583,7 +583,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "greater mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
-                "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
+                "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice /\
@@ -621,7 +621,7 @@ function arena_sprint_get_monster_set(round, boss)
                     white draconian annihilator",
                 "spriggan air mage / titan / electric golem w:20 /\
                     storm dragon",
-                "shadow fiend / reaper / shadow dragon / death drake /\
+                "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5",
                 "daeva w:20 / angel / cherub / pearl dragon w:20 / ophan / apis",
@@ -653,7 +653,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "greater mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
-                "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
+                "brimstone fiend / ice fiend / tzitzimitl w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice / " ..
@@ -749,20 +749,17 @@ function arena_sprint_init_boss_table()
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
-    -- Pan sets are taken directly from pan.des
-    bs[10] = {"small abomination / small abomination / large abomination / " ..
-              "large abomination / neqoxec / neqoxec / cacodemon / " ..
-              "cacodemon / chaos spawn / chaos spawn", "mnoleg", "glowing rune of zot"}
-    bs[11] = {"hellwing / smoke demon / smoke demon / sixfirhy / " ..
-              "Green Death / blizzard demon / smoke demon / hellwing / " ..
-              "Green Death / hellwing", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / efreet / orange demon / orange demon / " ..
-              "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
+    -- Pan sets are based on those in pan.des
+    bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
+              "giant eyeball / golden eye / eye of devastation / " ..
+              "eye of draining / shining eye", "mnoleg", "glowing rune of zot"}
+    bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
+              "giant orange brain / titan / lich / draconian annihilator / " ..
+              "deep elf annihilator", "lom lobon", "magical rune of zot"}
+    bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"skeleton / skeleton / skeleton / " ..
-              "skeleton / soul eater / soul eater / lorocyproca / " ..
-              "executioner / executioner / executioner", "gloorx vloq",
-              "dark rune of zot"}
+    bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
+              "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
                "khufu hp:500", "golden rune of zot"}
     -- Shuffle the above 9. We only wind up using 6 through 9
@@ -989,7 +986,7 @@ LROCKTILE:  wall_hall
 # Positions are random, and you don't have enough time to reach an altar before
 # the game starts.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / k / l / n / \
-            o / p / q / r / s / *:.
+            o / p / q / r / s / t / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1009,6 +1006,7 @@ KFEAT:  p = altar_gozag
 KFEAT:  q = altar_qazlal
 KFEAT:  r = altar_ru
 KFEAT:  s = altar_pakellas
+KFEAT:  t = altar_uskayaw
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of iceblast charges:5 ident:all, \

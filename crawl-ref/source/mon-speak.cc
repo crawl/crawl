@@ -351,6 +351,10 @@ void maybe_mons_speaks(monster* mons)
     if (mons->attitude == ATT_NEUTRAL)
         return;
 
+    // too annoying for a permanent companion without more thought put into it
+    if (mons_is_hepliaklqana_ancestor(mons->type))
+        return;
+
     int chance = 21; // this is a very old number; no idea why it was chosen
 
     // allies stick around longer, so should probably have longer to say
@@ -445,11 +449,6 @@ bool mons_speaks(monster* mons)
 
         // Rolling beetles shouldn't twitch antennae
         if (mons->rolling())
-            return false;
-
-        // Monsters in a battle frenzy are likewise occupied.
-        // But roused holy creatures are not.
-        if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
             return false;
 
         // Charmed monsters aren't too expressive.
@@ -715,10 +714,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // If we failed to get a message with a winged or tailed humanoid,
-    // or a naga or centaur, try moving closer to plain humanoid.
-    if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
-        && shape <= MON_SHAPE_NAGA)
+    // If we failed to get a message with a partial/hybrid humanoid, try moving
+    // closer to plain humanoid.
+    if ((msg.empty() || msg == "__NEXT") && mon_shape_is_humanoid(shape)
+        && shape != MON_SHAPE_HUMANOID)
     {
         // If a humanoid monster has both wings and a tail, try removing
         // one and then the other to see if we get any results.

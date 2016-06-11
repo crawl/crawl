@@ -539,7 +539,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // before being polymorphed into a non-invisible monster.
         if (you.see_cell(pos()) && !you.can_see_invisible() && !backlit()
             && !has_ench(ENCH_SUBMERGED)
-            && !friendly() && !you.duration[DUR_TELEPATHY])
+            && !friendly())
         {
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
@@ -946,6 +946,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " seems less brilliant.");
         break;
 
+    case ENCH_IDEALISED:
+        if (!quiet)
+            simple_monster_message(this, " loses the glow of perfection.");
+        break;
+
     default:
         break;
     }
@@ -1014,6 +1019,13 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
 
     if (me.duration >= INFINITE_DURATION)
         return false;
+
+    // Gozag-incited haste/berserk is permanent.
+    if (has_ench(ENCH_GOZAG_INCITE)
+        && (en == ENCH_HASTE || en == ENCH_BERSERK))
+    {
+        return false;
+    }
 
     // Faster monsters can wiggle out of the net more quickly.
     const int spd = (me.ench == ENCH_HELD) ? speed :
@@ -1112,11 +1124,8 @@ static bool _apply_grasping_roots(monster* mons)
     bool found_hostile = false;
     for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mons_aligned(mons, *ai) || ai->is_insubstantial()
-            || !ai->visible_to(mons))
-        {
+        if (mons_aligned(mons, *ai) || ai->is_insubstantial())
             continue;
-        }
 
         found_hostile = true;
 
@@ -1266,7 +1275,7 @@ static void _merfolk_avatar_song(monster* mons)
     // Only call up drowned souls if we're largely alone; otherwise our
     // mesmerisation can support the present allies well enough.
     int ally_hd = 0;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (*mi != mons && mons_aligned(mons, *mi) && mons_is_threatening(*mi)
             && mi->type != MONS_DROWNED_SOUL)
@@ -1397,6 +1406,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_MAGIC_ARMOUR:
+    case ENCH_IDEALISED:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
@@ -1441,8 +1451,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         invalidate_agrid();
         break;
 
-    case ENCH_BATTLE_FRENZY:
-    case ENCH_ROUSED:
     case ENCH_DRAINED:
         decay_enchantment(en, false);
         break;
@@ -1944,6 +1952,16 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         break;
 
+    case ENCH_PAIN_BOND:
+        if (decay_enchantment(en))
+        {
+            const string msg = " is no longer sharing " +
+                               pronoun(PRONOUN_POSSESSIVE, true) +
+                               " pain.";
+            simple_monster_message(this, msg.c_str());
+        }
+        break;
+
     default:
         break;
     }
@@ -2062,9 +2080,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "sleepy",
 #endif
-    "held", "battle_frenzy",
+    "held",
 #if TAG_MAJOR_VERSION == 34
-    "temp_pacif",
+     "battle_frenzy", "temp_pacif",
 #endif
     "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
@@ -2083,10 +2101,17 @@ static const char *enchant_names[] =
 #endif
     "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "flight",
-    "liquefying", "tornado", "fake_abjuration",
+    "withdrawn",
+#if TAG_MAJOR_VERSION == 34
+    "attached",
+#endif
+    "guardian_timer", "flight", "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
+    "inner_flame",
+#if TAG_MAJOR_VERSION == 34
+    "roused",
+#endif
+    "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
@@ -2122,7 +2147,8 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
-    "aura_of_brilliance", "empowered_spells",
+    "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
+    "idealised",
     "buggy",
 };
 
@@ -2268,6 +2294,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
+    case ENCH_IDEALISED:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
@@ -2393,6 +2420,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 2 * BASELINE_DELAY;
         break;
+    case ENCH_GOZAG_INCITE:
+        cturn = 100; // is never decremented
     default:
         break;
     }

@@ -210,64 +210,6 @@ xxxx.......xxxx
 xxxx.......xxxx
 ENDMAP
 
-############################################################
-# The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
-#
-NAME:   metal_show
-TAGS:   vaults_room vaults_orient_e
-TAGS:   no_monster_gen no_item_gen no_wall_fixup
-WEIGHT: 2
-COLOUR: M = magenta
-COLOUR: K = magenta
-FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
-MARKER: # = lua:fog_machine{\
-            pow_max = 15, delay_min = 100, delay_max = 150, \
-            size = 2, size_buildup_amnt = 10, \
-            size_buildup_time = 1000 }
-KFEAT:  # = fountain_blood
-# the talent:
-: if crawl.one_chance_in(10) then
-NSUBST: M = M / K.
-: else
-SUBST:  M = .
-: end
-KMONS:  K = patrolling hell knight
-KMONS:  M = patrolling Margery
-# the staff-- manager and bartender:
-KMONS:  S = human; robe
-# the bouncers:
-KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
-# the fans:
-SUBST:  F = 011112223334455679.........
-SUBST:  F = 011112223333344569.........
-MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
-MONS:   ghoul / necrophage / vampire
-MONS:   wizard / necromancer
-MONS:   big kobold / kobold demonologist
-MONS:   w:5 deep elf knight / w:5 deep elf archer / deep elf mage
-MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
-        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
-        Wiglaf / Norris / goblin
-KITEM:  ! = any potion / potion of mutation, \
-            any potion / potion of degeneration, any potion
-KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
-MAP
-vvvvvvvvvvvvv....
-v!+.MMMM.+S$v....
-v!v.KKKK.v$$vF...
-vvvv#MM#vvvvvFF..
-v..FFFFFFvFFvFF..
-v!mFvFFvFvFF+BF..
-v!mFFFFFFvFFvFF..
-v!mFFFFFFvFF+BF..
-v!mFvFFvFvFFvFF..
-v!mFFFFFFvFF+BF..
-vSmFFFFFFvFFvFF..
-vvvvvBBvvvFFvFF..
-vFFFFFFFFFFFvF...
-vvvvvvvvvvvvv....
-ENDMAP
-
 NAME:    v_pattern_1
 TAGS:    luniq_lattice
 : vaults_room_setup(_G, ".", "small")
@@ -1460,7 +1402,7 @@ ENDMAP
 
 NAME:     vaults_mumra_minichess
 TAGS:     vaults_room
-SUBST:    . = ...0
+NSUBST:   . = 12 = 0. / *:.
 MAP
   ..xx..
   ..xx..
@@ -1618,15 +1560,15 @@ TAGS: vaults_room
 SHUFFLE: AB
 KMONS: W = vault warden
 SUBST: G : xxx...GTb, A : +, B : +x
-KMONS: 0 = 0 band
+KMONS: 1 = 0 band
 MAP
-x.0.0.x
+x.1.0.x
 xx...xx
 xG.W.Gx
 xxABAxx
 xG.W.Gx
 xx...xx
-x.0.0.x
+x.0.1.x
 ENDMAP
 
 NAME: nicolae_vaults_stairing_the_circle
@@ -1796,4 +1738,239 @@ MAP
            ...........
            .)...)...).
            ...........
+ENDMAP
+
+NAME: nicolae_vaults_network_s
+TAGS: vaults_room
+SHUFFLE: Aa/Bb/Cc/Dd/Ee
+SUBST: Aa = ., bcde = %, % = .....%%000
+NSUBST: B = . / x, C = . / x, D = . / x, E = . / x, F = . / x, G = . / x, \
+        H = . / x, I = . / x, J = . / x, K = . / x
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+    x..........
+    x..........
+xxxxx.xHxDxGx..
+..K%K.H%xdx%G..
+..xxx.xxxDxxx..
+..AaA.CcC.EeE..
+..xxxBxxx.xxx..
+..J%xbx%I.F%F..
+..xJxBxIx.xxxxx
+..........x
+..........x
+ENDMAP
+
+NAME: nicolae_vaults_network_barrier
+TAGS: vaults_room vaults_orient_e vaults_orient_w
+NSUBST: % = 1:0 / 5 = ....0% / * = .
+NSUBST: AB = 1:., BCD = 1:., DEF = 1:., FGH = 1:., HIJ = 1:., JK = 1:., \
+   LM = 1:., MNO = 1:., OPQ = 1:., QRS = 1:., STU = 1:., UV = 1:., Z = 1:. / *:x
+NSUBST: ab = 1:., bcd = 1:., def = 1:., fgh = 1:., hij = 1:., jk = 1:., \
+   lm = 1:., mno = 1:., opq = 1:., qrs = 1:., stu = 1:., uv = 1:., z = 1:. / *:x
+SUBST: ABCDEFGHIJKLMNOPQRSTUVabcdefghijklmnopqrstuv = x
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+...A%Z%L...a%z%l...
+...xBxMx...xbxmx...
+...C%Z%N...c%z%n...
+...xDxOx...xdxox...
+...E%Z%P...e%z%p...
+...xFxQx...xfxqx...
+...G%Z%R...g%z%r...
+...xHxSx...xhxsx...
+...I%Z%T...i%z%t...
+...xJxUx...xjxux...
+...K%Z%V...k%z%v...
+ENDMAP
+
+NAME: nicolae_vaults_network_square
+TAGS: vaults_room
+SHUFFLE: Aa/Bb/Cc/Dd, Ee/Ff
+SUBST: AaBbCcEe = ., df = %
+NSUBST: % = 1:0 / 5 = ...0% / * = ......%
+NSUBST: D = . / x, F = . / x, G = . / x, H = . / x, I = . / x, J = . / x, \
+        K = . / x, L = . / x, M = . / x, N = . / x, O = . / x, P = . / x, \
+        Q = . / x, R = . / x, S = . / x, T = . / x, U = . / x
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+.............
+.xTxExFxGxHx.
+.T%xexfx%x%H.
+.xxxExFxGxxx.
+.S%S.AaA.I%I.
+.xxxDxUxBxxx.
+.R%RdU%UbJ%J.
+.xxxDxUxBxxx.
+.Q%Q.CcC.K%K.
+.xxxOxNxMxxx.
+.P%x%x%x%x%L.
+.xPxOxNxMxLx.
+.............
+ENDMAP
+
+NAME: nicolae_vaults_network_periphery
+TAGS: vaults_room
+SUBST: % = .....%%000
+NSUBST: A = . / x, B = . / x, C = . / x, D = . / x, E = . / x, F = . / x, \
+        G = . / x, H = . / x, I = . / x, J = . / x, K = . / x, L = . / x
+NSUBST: M = x / ., N = x / ., O = x / ., P = x / .
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+.M.M.M.M.....
+.xAxBxCx.xDxN
+.A%x%x%C.D%D.
+.xAxBxCx.xxxN
+.........E%E.
+PxLx.....xxxN
+.L%L..)..F%F.
+Pxxx.....xFxN
+.K%K.........
+Pxxx.xIxHxGx.
+.J%J.I%x%x%G.
+PxJx.xIxHxGx.
+.....O.O.O.O.
+ENDMAP
+
+NAME: nicolae_vaults_network_star
+TAGS: vaults_room
+SUBST: % = ...%00
+NSUBST: % = 1:0 / 7 = ...%00 / * = .....%
+NSUBST: A = . / x, B = . / x, C = . / x, D = . / x, E = . / x, F = . / x, \
+     G = . / x, H = . / x, I = . / x, J = . / x, K = . / x, L = . / x, M = . / x
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+.............
+.)...xBx...).
+.....B%B.....
+...xAxIxCx...
+...A%I%I%C...
+.xHxLxMxJxDx.
+.H%L%M%M%J%D.
+.xHxLxMxJxDx.
+...G%K%K%E...
+...xGxKxEx...
+.....F%F.....
+.)...xFx...).
+.............
+ENDMAP
+
+NAME: nicolae_vaults_network_quincunx
+TAGS: vaults_room
+SUBVAULT: A : nico_quincunx
+SUBVAULT: B : nico_quincunx
+SUBVAULT: C : nico_quincunx
+SUBVAULT: D : nico_quincunx
+SUBVAULT: E : nico_quincunx
+MAP
+...................
+.........).........
+...................
+...xAAAx...xBBBx...
+...AAAAA...BBBBB...
+...AAAAA...BBBBB...
+...AAAAA...BBBBB...
+...xAAAxCCCxBBBx...
+.......CCCCC.......
+.).....CCCCC.....).
+.......CCCCC.......
+...xDDDxCCCxEEEx...
+...DDDDD...EEEEE...
+...DDDDD...EEEEE...
+...DDDDD...EEEEE...
+...xDDDx...xEEEx...
+...................
+.........).........
+...................
+ENDMAP
+
+NAME: nicolae_vaults_network_quinsquares
+TAGS: vaults_room
+SUBVAULT: A : nico_quincunx
+SUBVAULT: B : nico_quincunx
+SUBVAULT: C : nico_quincunx
+SUBVAULT: D : nico_quincunx
+SUBVAULT: E : nico_quincunx
+NSUBST: a = x / ., b = x / ., c = x / .
+MAP
+.............
+.xAAAxaxBBBx.
+.AAAAA.BBBBB.
+.AAAAAaBBBBB.
+.AAAAA.BBBBB.
+.xAAAxaxBBBx.
+.b.b.b.......
+.xDDDxcxEEEx.
+.DDDDD.EEEEE.
+.DDDDDcEEEEE.
+.DDDDD.EEEEE.
+.xDDDxcxEEEx.
+.............
+ENDMAP
+
+NAME: nicolae_vaults_network_quincunx_subvault
+TAGS: unrand nico_quincunx allow_dup
+SUBST: % = ....%0
+NSUBST: BDF = 1:x, ABHI = 1:., KFJE = 1:., CDIJ = 1:.
+SUBST: ABCDEFGHIJK = x
+KITEM: 0 = nothing / any w:5
+KMONS: 0 = 0 / 0 band w:5
+MAP
+ .xA
+G%H%B
+xKxIx
+F%J%C
+ ExD
+ENDMAP
+
+NAME: nicolae_vaults_bisected_exclaves
+TAGS: vaults_room opaque no_tele_into
+WEIGHT: 2
+SHUFFLE: abcdefghijk
+SUBST: abcd = m, e : xm, f : xm, ghijk = x, % = %%0
+MAP
+.....a.....
+.xex.x..)..
+.f%d.b.....
+.x.xcx.xix.
+.g...0.j%h.
+.x.xkxkx.x.
+.h%j.0...g.
+.xix.xcx.x.
+.....b.d%f.
+..)..x.xex.
+.....a.....
+ENDMAP
+
+NAME: nicolae_vaults_inception_corners
+TAGS: vaults_room
+WEIGHT: 3
+SHUFFLE: abcdef
+SUBST: a = +, bcdef = x, ) = )00. %:5, % = %., 0 = 0.
+MAP
+......fx....xf......
+.)...de......ed...).
+...%bc..)..)..cb%...
+..%xa..........ax%..
+..ba            ab..
+.dc.            .cd.
+fe..            ..ef
+x...            ...x
+..).            .)..
+....            ....
+....            ....
+..).            .)..
+x...            ...x
+fe..            ..ef
+.dc.            .cd.
+..ba            ab..
+..%xa..........ax%..
+...%bc..)..)..cb%...
+.)...de......ed...).
+......fx....xf......
 ENDMAP

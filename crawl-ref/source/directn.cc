@@ -95,7 +95,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
                           bool need_path, int range, targetter *hitfunc);
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
                                bool need_path, int range, targetter *hitfunc,
-                               aff_type aff);
+                               aff_type mon_aff, aff_type allowed_self_aff);
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
@@ -919,7 +919,7 @@ char mlist_index_to_letter(int index)
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (range)
+    if (range && Options.darken_beyond_range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -1027,30 +1027,55 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     if (!success)
     {
         // The previous target is no good. Try to find one from scratch.
-        success = _find_square_wrapper(result, 1,
+        success = hitfunc && _find_square_wrapper(result, 1,
+                               bind(_find_monster_expl,
+                                    placeholders::_1, mode,
+                                    needs_path, range, hitfunc,
+                                    // First try to bizap
+                                    AFF_MULTIPLE, AFF_YES),
+                               hitfunc)
+                  || _find_square_wrapper(result, 1,
                                        bind(restricts == DIR_SHADOW_STEP ?
                                             _find_shadow_step_mons : _find_monster,
                                             placeholders::_1, mode, needs_path,
                                             range, hitfunc),
                                        hitfunc);
 
-        // We might be able to hit monsters in LOS that are outside of
-        // normal range, but inside explosion/cloud range
-        if (!success && hitfunc && hitfunc->can_affect_outside_range()
-            && (you.current_vision > range || hitfunc->can_affect_walls()))
+        // This is used for three things:
+        // * For all LRD targetting
+        // * To aim explosions so they try to miss you
+        // * To hit monsters in LOS that are outside of normal range, but
+        //   inside explosion/cloud range
+        if (hitfunc && hitfunc->can_affect_outside_range()
+            && (!hitfunc->set_aim(result)
+                || hitfunc->is_affected(result) < AFF_YES
+                || hitfunc->is_affected(you.pos()) > AFF_NO))
         {
-            success = _find_square_wrapper(result, 1,
+            coord_def old_result;
+            if (success)
+                old_result = result;
+            for (aff_type mon_aff : { AFF_YES, AFF_MAYBE })
+            {
+                for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
+                {
+                    success = _find_square_wrapper(result, 1,
                                            bind(_find_monster_expl,
                                                 placeholders::_1, mode,
                                                 needs_path, range, hitfunc,
-                                                AFF_YES),
-                                           hitfunc)
-                   || _find_square_wrapper(result, 1,
-                                           bind(_find_monster_expl,
-                                                placeholders::_1, mode,
-                                                needs_path, range, hitfunc,
-                                                AFF_MAYBE),
+                                                mon_aff, allowed_self_aff),
                                            hitfunc);
+                    if (success)
+                    {
+                        // If we're hitting ourselves anyway, just target the
+                        // monster's position (this looks less strange).
+                        if (allowed_self_aff == AFF_YES && !old_result.origin())
+                            result = old_result;
+                        break;
+                    }
+                }
+                if (success)
+                    break;
+            }
         }
 
         // If we couldn't, maybe it was because of line-of-fire issues.
@@ -1695,7 +1720,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             target().x, target().y);
 
         marker_result =
-            env.markers.property_at(target(), MAT_ANY, "portal_debug").c_str();
+            env.markers.property_at(target(), MAT_ANY, "portal_debug");
 
         mprf(MSGCH_DIAGNOSTICS, "Got result: %s!",
             marker_result.empty() ? "nothing" : marker_result.c_str());
@@ -2461,10 +2486,8 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
 
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
                                bool need_path, int range, targetter *hitfunc,
-                               aff_type aff)
+                               aff_type mon_aff, aff_type allowed_self_aff)
 {
-    coord_def jump_pos;
-
     ASSERT(hitfunc);
 
 #ifdef CLUA_BINDINGS
@@ -2478,16 +2501,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
     }
 #endif
 
-    // Only check for explosive targeting at the edge of the range
-    if (you.pos().distance_from(where) != range && !hitfunc->can_affect_walls())
-        return false;
-
-    // Target outside LOS.
-    if (!cell_see_cell(you.pos(), where, LOS_DEFAULT))
-        return false;
-
-    // Target in LOS but only via glass walls, so no direct path.
-    if (!you.see_cell_no_trans(where))
+    if (!hitfunc->valid_aim(where))
         return false;
 
     // Target is blocked by something
@@ -2496,9 +2510,11 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
 
     if (hitfunc->set_aim(where))
     {
+        if (hitfunc->is_affected(you.pos()) > allowed_self_aff)
+            return false;
         for (monster_near_iterator mi(&you); mi; ++mi)
         {
-            if (hitfunc->is_affected(mi->pos()) == aff
+            if (hitfunc->is_affected(mi->pos()) == mon_aff
                 && _mons_is_valid_target(*mi, mode, range)
                 && _want_target_monster(*mi, mode, hitfunc))
             {
@@ -2768,7 +2784,7 @@ static bool _find_square(coord_def &mfp, int direction,
         if (!crawl_view.in_viewport_g(targ))
             continue;
 
-        if (!in_bounds(targ) && (!hitfunc || !hitfunc->can_affect_walls()))
+        if (!map_bounds(targ))
             continue;
 
         if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
@@ -3362,11 +3378,15 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
-    else if (level == DESC_IDENTIFIED)
+    else if (level == DESC_IDENTIFIED || level == DESC_WEAPON_WARNING
+             // dancing weapons' names already include this information
+             || level == DESC_WEAPON && mi.type != MONS_DANCING_WEAPON)
+    {
         return " " + mi.full_name(DESC_A);
+    }
 
     // Print the rest of the equipment only for full descriptions.
-    if (level == DESC_WEAPON)
+    if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
         return desc + weap;
 
     item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();

@@ -51,7 +51,7 @@ static string _get_persist_file();
 
 CLua::CLua(bool managed)
     : error(), managed_vm(managed), shutting_down(false),
-      throttle_unit_lines(10000),
+      throttle_unit_lines(50000),
       throttle_sleep_ms(0), throttle_sleep_start(2),
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
@@ -549,11 +549,6 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     return !err;
 }
 
-static maybe_bool _frombool(bool b)
-{
-    return b ? MB_TRUE : MB_FALSE;
-}
-
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
                                 va_list args)
 {
@@ -575,7 +570,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
-    maybe_bool r = _frombool(lua_toboolean(ls, -1));
+    maybe_bool r = frombool(lua_toboolean(ls, -1));
     CL_RESETSTACK_RETURN(ls, stacktop, r);
 }
 
@@ -608,7 +603,7 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
-    maybe_bool r = lua_isboolean(ls, -1) ? _frombool(lua_toboolean(ls, -1))
+    maybe_bool r = lua_isboolean(ls, -1) ? frombool(lua_toboolean(ls, -1))
                                          : MB_MAYBE;
     CL_RESETSTACK_RETURN(ls, stacktop, r);
 }

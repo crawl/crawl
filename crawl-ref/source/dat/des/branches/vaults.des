@@ -99,7 +99,7 @@ NAME:    david_vaults_3
 TAGS:    vaults_entry
 MONS:    human
 KMONS:   2 = orc knight / Donald, orc knight
-KMONS:   3 = skeletal warrior w:20 / Norris, skeletal warrior
+KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
 KMONS:   4 = hill giant / Rupert, hill giant
 SHUFFLE: 2349
 KFEAT:   O = enter_vaults

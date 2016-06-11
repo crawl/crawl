@@ -7,6 +7,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <chrono>
 #include <list>
 #include <memory>
 #include <vector>
@@ -34,6 +35,8 @@
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"
+#define TEMP_WATERWALK_KEY "temp_waterwalk"
+#define EMERGENCY_FLIGHT_KEY "emergency_flight"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -55,9 +58,24 @@ static const int BONE_ARMOUR_HIT_RATIO = 50;
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // relevant for swiftness, etc
 
+// Min delay for thrown projectiles.
+static const int FASTEST_PLAYER_THROWING_SPEED = 7;
+
 class targetter;
 
 int check_stealth();
+
+/// used for you.train[] & for rendering skill tiles (tileidx_skill)
+enum training_status
+{
+    TRAINING_DISABLED = 0,
+    TRAINING_ENABLED,
+    TRAINING_FOCUSED,
+    NUM_TRAINING_STATUSES,
+    // the below are only used for display purposes, not training.
+    TRAINING_MASTERED,
+    TRAINING_INACTIVE, ///< enabled but not used (in auto mode)
+};
 
 // needed for assert in is_player()
 #ifdef DEBUG_GLOBALS
@@ -91,7 +109,6 @@ public:
     bool          wizard;            // true if player has entered wiz mode.
     bool          explore;           // true if player has entered explore mode.
     time_t        birth_time;        // start time of game
-
 
     // ----------------
     // Long-term state:
@@ -169,8 +186,8 @@ public:
 #endif
 
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
-    FixedVector<int8_t, NUM_SKILLS> train; ///< 0: disabled, 1: normal, 2: focus
-    FixedVector<int8_t, NUM_SKILLS> train_alt; ///< config of the other mode
+    FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
+    FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
     FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
     FixedBitVector<NUM_SKILLS> can_train; ///< Is training this skill allowed?
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
@@ -253,11 +270,14 @@ public:
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
 
-    int           real_time;            // real time played (in seconds)
-    int           num_turns;            // number of turns taken
-    int           exploration;          // levels explored (16.16 bit real number)
+    int real_time() { return real_time_ms.count() / 1000; }
+    chrono::milliseconds real_time_ms;       // real time played
+    chrono::milliseconds real_time_delta;    // real time since last command
 
-    int           last_view_update;     // what turn was the view last updated?
+    int num_turns;            // number of turns taken
+    int exploration;          // levels explored (16.16 bit real number)
+
+    int                       last_view_update;     // what turn was the view last updated?
 
     // Warning: these two are quite different.
     //
@@ -341,7 +361,8 @@ public:
 
     delay_queue_type delay_queue;       // pending actions
 
-    time_t last_keypress_time;
+    chrono::time_point<chrono::system_clock> last_keypress_time;
+
     bool xray_vision;
     int8_t bondage_level;  // how much an Ash worshipper is into bondage
     int8_t bondage[NUM_ET];
@@ -447,6 +468,7 @@ public:
     bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
+    bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const override;
     bool is_banished() const override;
@@ -514,7 +536,7 @@ public:
         override;
 
     int base_ac_from(const item_def &armour, int scale = 1) const;
-    void maybe_degrade_bone_armour(int mult, int trials = 1);
+    void maybe_degrade_bone_armour(int trials);
 
     int inaccuracy() const override;
 
@@ -681,7 +703,7 @@ public:
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
     int res_acid(bool calc_unid = true) const override;
-    bool res_hellfire() const override { return false; };
+    bool res_damnation() const override { return false; };
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;
@@ -706,7 +728,6 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
-    int spec_evoke(bool calc_unid = true, bool items = true) const override;
     bool stasis(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
@@ -910,6 +931,7 @@ int player_hunger_rate(bool temp = true);
 int calc_hunger(int food_cost);
 
 int player_icemail_armour_class();
+int sanguine_armour_bonus();
 
 int player_wizardry(spell_type spell);
 
@@ -962,7 +984,7 @@ int player_spec_charm();
 int player_spec_poison();
 int player_spec_summ();
 
-const int player_adjust_evoc_power(const int power);
+const int player_adjust_evoc_power(const int power, int enhancers = 0);
 const int player_adjust_invoc_power(const int power);
 
 int player_speed();
@@ -980,7 +1002,6 @@ int slaying_bonus(bool ranged = false);
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
 
-int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status();
 
@@ -1007,6 +1028,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp();
 void calc_mp();
+void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
@@ -1033,6 +1055,9 @@ int get_real_mp(bool include_items);
 
 int get_contamination_level();
 string describe_contamination(int level);
+
+bool sanguine_armour_valid();
+void activate_sanguine_armour();
 
 void set_mp(int new_amount);
 
@@ -1089,7 +1114,6 @@ bool need_expiration_warning(dungeon_feature_type feat);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
 
-void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
 bool player_on_orb_run();
 

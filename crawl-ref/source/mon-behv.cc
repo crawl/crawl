@@ -95,8 +95,8 @@ static bool _mon_tries_regain_los(monster* mon)
         return false;
     }
 
-    // Randomize it a bit to make it less predictable.
-    return !one_chance_in(10);
+    // Randomize it to make it less predictable, and reduce flip-flopping.
+    return !one_chance_in(3);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -447,7 +447,7 @@ void handle_behaviour(monster* mon)
 
     while (changed)
     {
-        actor* afoe = mon->get_foe();
+        const actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
@@ -564,8 +564,13 @@ void handle_behaviour(monster* mon)
                     // If the player can see the target location, do not reset
                     // our target, even if this monster cannot (we'll assume
                     // the player passes along this information to allies)
-                    else if (!foepos.origin() && you.see_cell(foepos))
+                    // EXCEPTION: invisible enemies for allies without sinv
+                    // (otherwise your allies get stuck doing nothing)
+                    else if (!foepos.origin() && you.see_cell(foepos)
+                             && afoe->visible_to(mon))
+                    {
                         try_pathfind(mon);
+                    }
                     else
                     {
                         new_foe = MHITYOU;
@@ -620,6 +625,8 @@ void handle_behaviour(monster* mon)
                 {
                     _set_firing_pos(mon, you.pos());
                 }
+                else //
+                    mon->firing_pos.reset();
 
                 if (!isFriendly)
                     break;
@@ -1119,10 +1126,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         else if (!mons_is_fleeing(mon))
             mon->behaviour = BEH_SEEK;
 
-        if (src == &you
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type)
-            && mon->type != MONS_SPELLFORGED_SERVITOR)
+        if (src == &you && mon->angered_by_attacks())
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
@@ -1280,9 +1284,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player()
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type))
+        if (src->is_player() && mon->angered_by_attacks())
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
@@ -1316,7 +1318,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
-        handle_monster_shouts(mon);
+        monster_consider_shouting(*mon);
     }
 
     const bool isPacified = mon->pacified();
@@ -1481,7 +1483,10 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
-    return crawl_state.game_is_arena() || !mons->friendly() || !mons->is_summoned()
+    return crawl_state.game_is_arena()
+           || !mons->friendly()
+           || !mons->is_summoned()
+              && !mons_is_hepliaklqana_ancestor(mons->type)
            || you.see_cell_no_trans(mons->pos());
 }
 
@@ -1503,8 +1508,11 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         return false;
     }
 
-    if (!mons->friendly() || !mons->is_summoned())
+    if (!mons->friendly()
+        || !mons->is_summoned() && !mons_is_hepliaklqana_ancestor(mons->type))
+    {
         return true;
+    }
 
     return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
 }

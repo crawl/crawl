@@ -5,7 +5,7 @@
 # A small portal vault fixated on nasty weapons. (Axes and polearms by now.)
 # Castle like layout, with inner bailey and moat. Medieval warfare themed.
 #
-# Currently, the depth is fixed at D:7-16 and Orc. It would be nice if the
+# Currently, the depth is fixed at D:7-14 and Orc. It would be nice if the
 # portal vault could also appear deeper, with a harder monster set. For
 # example, draconians would be an option.
 #
@@ -779,8 +779,7 @@ KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
 ITEM:   potion of experience q:1 / scroll of acquirement q:1 /\
-        scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
-        legendary deck of wonders ident:type
+        scroll of enchant armour q:2 / scroll of enchant weapon q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -967,8 +966,7 @@ SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
             good_item bardiche / good_item executioner's axe
 KITEM:  e = potion of experience q:1 / scroll of acquirement q:1 /\
-            scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
-            legendary deck of wonders ident:type
+            scroll of enchant armour q:2 / scroll of enchant weapon q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -1070,8 +1068,6 @@ KMONS:  3 = orc sorcerer ; war axe | broad axe w:2 | battleaxe w:1 . \
         kobold demonologist w:20 ; war axe | broad axe w:2 | battleaxe w:1 . \
             ring mail | scale mail
 KMONS:  4 = electric eel
-KMONS:  defgDEF = mottled dragon / swamp dragon w:2 / wind drake /\
-            lindwurm w:5 / hydra w:1 / nothing w:328
 KITEM:  d = any weapon
 KITEM:  D = any weapon good_item
 KITEM:  e = any armour

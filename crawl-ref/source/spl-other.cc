@@ -183,7 +183,7 @@ void recall_orders(monster *mons)
 
 // Attempt to recall a single monster by mid, which might be either on or off
 // our current level. Returns whether this monster was successfully recalled.
-static bool _try_recall(mid_t mid)
+bool try_recall(mid_t mid)
 {
     monster* mons = monster_by_mid(mid);
     // Either it's dead or off-level.
@@ -227,7 +227,7 @@ void do_recall(int time)
         // Try to recall an ally.
         mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
         you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (_try_recall(mid))
+        if (try_recall(mid))
         {
             time -= you.attribute[ATTR_NEXT_RECALL_TIME];
             you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
@@ -269,9 +269,11 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    int shallow = 1 + min(pow / 30, 3);      // minimum penetrable depth
-    int range = shallow + random2(pow) / 25; // penetrable depth for this cast
-    int maxrange = shallow + pow / 25;       // max penetrable depth
+    if (you.is_stationary())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return SPRET_ABORT;
+    }
 
     coord_def dest;
     for (dest = you.pos() + delta;
@@ -290,15 +292,13 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 
     // Below here, failing to cast yields information to the
     // player, so we don't make the spell abort (return SPRET_SUCCESS).
-    monster *mon = monster_at(dest);
+    const monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
     else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
         mpr("Something is blocking your path through the rock.");
-    else if (walls > maxrange)
+    else if (walls > spell_range(SPELL_PASSWALL, pow))
         mpr("This rock feels extremely deep.");
-    else if (walls > range)
-        mpr("You fail to penetrate the rock.");
     else
     {
         string msg;

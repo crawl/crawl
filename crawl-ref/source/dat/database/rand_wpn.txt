@@ -51,6 +51,8 @@ Mastery
 Superiority
 
 Magnificence
+
+Hubris
 %%%%
 _conflict_name_
 
@@ -58,7 +60,7 @@ Conflict
 
 Tension
 
-Dischord
+Discord
 
 Division
 
@@ -71,6 +73,12 @@ Contention
 Dissent
 
 Quarrel
+
+Resumed Hostilities
+
+Fighting Over It
+
+a Spat
 %%%%
 _anger_name_
 
@@ -95,6 +103,10 @@ Indignation
 Outrage
 
 Scorn
+
+Disproportionate Response
+
+No More Talking
 %%%%
 _battle_or_war_
 
@@ -132,6 +144,8 @@ the Pyrrhic Victory
 
 #killing
 Blood-Lust
+
+Callousness
 
 Joyful Slaughter
 
@@ -348,6 +362,8 @@ Trial by Ordeal
 Blind Justice
 
 Judgement
+
+Accidental Termination
 %%%%
 _diviner_name_
 
@@ -1079,6 +1095,10 @@ Morality
 Mysticism
 
 Rationality
+
+Mutualism
+
+Syndicalism
 %%%%
 _science_name_
 

@@ -56,7 +56,7 @@ bool actor_near_iterator::valid(const actor* a) const
 {
     if (!a || !a->alive())
         return false;
-    if (viewer && !a->visible_to(a))
+    if (viewer && !a->visible_to(viewer))
         return false;
     return cell_see_cell(center, a->pos(), _los);
 }
@@ -120,7 +120,7 @@ bool monster_near_iterator::valid(const monster* a) const
 {
     if (!a || !a->alive())
         return false;
-    if (viewer && !a->visible_to(a))
+    if (viewer && !a->visible_to(viewer))
         return false;
     return cell_see_cell(center, a->pos(), _los);
 }

@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <ctime>
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -519,8 +520,6 @@ public:
     void add_formatted(int ncol,
             const string &tagged_text,
             bool  add_separator = true,
-            bool  eol_ends_format = true,
-            bool (*text_filter)(const string &tag) = nullptr,
             int   margin = -1);
 
     vector<formatted_string> formatted_lines() const;

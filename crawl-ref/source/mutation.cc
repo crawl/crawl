@@ -140,6 +140,7 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_SUSTAIN_ATTRIBUTES,  MUT_DETERIORATION,         -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -236,7 +237,8 @@ static const mutation_type _all_scales[] =
     MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
-    MUT_YELLOW_SCALES,
+    MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
+    MUT_SANGUINE_ARMOUR,
 };
 
 static bool _is_covering(mutation_type mut)
@@ -323,6 +325,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return MUTACT_INACTIVE;
     }
 
+    if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
@@ -394,7 +399,7 @@ string describe_mutations(bool center_title)
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
 
         result += _annotate_form_based(
-                    make_stringf("Your %s (AC +%d).",
+                    make_stringf("Your %s. (AC +%d)",
                        you.species == SP_NAGA ? "serpentine skin is tough" :
                        you.species == SP_GARGOYLE ? "stone body is resilient" :
                                                     scale_clause.c_str(),
@@ -418,6 +423,9 @@ string describe_mutations(bool center_title)
 
     if (you.species == SP_OCTOPODE)
     {
+        result += _annotate_form_based("You are amphibious.",
+                                       !form_likes_water());
+
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
@@ -472,6 +480,11 @@ string describe_mutations(bool center_title)
 
     if (have_passive(passive_t::water_walk))
         result += "<green>You can walk on water.</green>\n";
+    else if (you.can_water_walk())
+    {
+        result += "<lightgreen>You can walk on water until reaching land."
+                  "</lightgreen>";
+    }
 
     if (you.duration[DUR_FIRE_SHIELD])
         result += "<green>You are immune to clouds of flame.</green>\n";
@@ -506,10 +519,10 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    "<w>Right-click</w> or press '<w>!</w>'"
 #else
-    "<w>Right-click</w>"
+    "Press '<w>!</w>'"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
@@ -1205,10 +1218,9 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
         return true;
     }
 
-    const int item_resist_chance = mutclass == MUTCLASS_TEMPORARY ? 3 : 10;
     // To be nice, beneficial mutations go through removable sources of rMut.
     if (you.rmut_from_item() && !beneficial
-        && !one_chance_in(item_resist_chance))
+        && !one_chance_in(mut_resist_chance))
     {
         return true;
     }
@@ -1714,6 +1726,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
 
+            if (you.temp_mutation[mutat] >= you.mutation[mutat])
+                continue; // don't attempt to cure transient mutations
+
             break;
         }
     }
@@ -1784,12 +1799,22 @@ const char* mutation_name(mutation_type mut)
     return _get_mutation_def(mut).short_desc;
 }
 
-const char* mutation_desc_for_text(mutation_type mut)
+/**
+ * A summary of what the next level of a mutation does.
+ *
+ * @param mut   The mutation_type in question; e.g. MUT_FRAIL.
+ * @return      The mutation's description, helpfully trimmed.
+ *              e.g. "you are frail (-10% HP)".
+ */
+string mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
         return nullptr;
 
-    return _get_mutation_def(mut).desc;
+    string mut_desc =
+        lowercase_first(mutation_desc(mut, you.mutation[mut] + 1));
+    strip_suffix(mut_desc, ".");
+    return mut_desc;
 }
 
 int mutation_max_levels(mutation_type mut)
@@ -1836,11 +1861,19 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
-        ostr << mdef.have[0] << player_icemail_armour_class() << ").";
+        ostr << mdef.have[0] << player_icemail_armour_class() << ")";
+        result = ostr.str();
+    }
+    else if (mut == MUT_SANGUINE_ARMOUR)
+    {
+        ostringstream ostr;
+        ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
         result = ostr.str();
     }
     else if (!ignore_player && you.species == SP_FELID && mut == MUT_CLAWS)
         result = "You have sharp claws.";
+    else if (have_passive(passive_t::no_mp_regen) && mut == MUT_ANTIMAGIC_BITE)
+        result = "Your bite disrupts the magic of your enemies.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
@@ -1954,6 +1987,8 @@ static const facet_def _demon_facets[] =
       { -33, -33, 0 } },
     { 1, { MUT_STURDY_FRAME, MUT_STURDY_FRAME, MUT_STURDY_FRAME },
       { -33, -33, 0 } },
+    { 1, { MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR },
+      { -33, -33, 0 } },
     // Tier 2 facets
     { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },
       { -33, 0, 0 } },
@@ -1974,7 +2009,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
     // Tier 3 facets
-    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_HELLFIRE },
+    { 3, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_HURL_DAMNATION },
       { 50, 50, 50 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_FREEZING_CLOUD_IMMUNITY, MUT_PASSIVE_FREEZE },
       { 50, 50, 50 } },
@@ -2034,7 +2069,6 @@ try_again:
 
     ret.clear();
     int absfacet = 0;
-    int scales = 0;
     int ice_elemental = 0;
     int fire_elemental = 0;
     int cloud_producing = 0;
@@ -2063,9 +2097,6 @@ try_again:
 
                 ret.emplace_back(m, next_facet->when[i], absfacet);
 
-                if (_is_covering(m))
-                    ++scales;
-
                 if (m == MUT_COLD_RESISTANCE)
                     ice_elemental++;
 
@@ -2079,9 +2110,6 @@ try_again:
             ++absfacet;
         }
     }
-
-    if (scales > 3)
-        goto try_again;
 
     if (ice_elemental + fire_elemental > 1)
         goto try_again;
@@ -2440,4 +2468,10 @@ int augmentation_amount()
     }
 
     return amount;
+}
+
+void reset_powered_by_death_duration()
+{
+    const int pbd_dur = random_range(2, 5);
+    you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
 }

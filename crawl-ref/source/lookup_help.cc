@@ -252,18 +252,7 @@ public:
 static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
     vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
-
-    if (key_matches.size() == 1)
-        return key_matches;
-    else if (key_matches.size() > 52)
-        return key_matches;
-
     vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
-
-    if (key_matches.empty() && body_matches.empty())
-        return key_matches;
-    else if (key_matches.empty() && body_matches.size() == 1)
-        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
     vector<string> tmp = key_matches;
@@ -419,6 +408,11 @@ static bool _ability_filter(string key, string body)
         return true;
 
     return !string_matches_ability_name(key);
+}
+
+static bool _status_filter(string key, string body)
+{
+    return !strip_suffix(lowercase(key), " status");
 }
 
 
@@ -708,7 +702,7 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 
 #ifdef USE_TILE
     const skill_type skill = str_to_skill(str);
-    me->add_tile(tile_def(tileidx_skill(skill, 1), TEX_GUI));
+    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
 #endif
 
     return me;
@@ -1286,6 +1280,10 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+    LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic,
+               lookup_type::DB_SUFFIX),
 };
 
 /**

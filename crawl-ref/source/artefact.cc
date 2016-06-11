@@ -19,6 +19,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
+#include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -44,70 +45,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     // First check the item's base_type and sub_type, then check the
     // item's brand and other randart properties.
-    bool type_bad = false;
-    switch (which_god)
-    {
-    case GOD_ELYVILON:
-        // Peaceful healer god: no weapons, no berserking.
-        if (item.base_type == OBJ_WEAPONS)
-            type_bad = true;
 
-        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
-            type_bad = true;
-        break;
-
-    case GOD_SHINING_ONE:
-        // Crusader god: holiness, honourable combat.
-        if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
-            type_bad = true;
-        break;
-
-    case GOD_OKAWARU:
-        // Precision fighter god: no inaccuracy.
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY))
-            type_bad = true;
-        break;
-
-    case GOD_SIF_MUNA:
-    case GOD_VEHUMET:
-        // The magic gods: no weapons, no preventing spellcasting.
-        if (item.base_type == OBJ_WEAPONS)
-            type_bad = true;
-        break;
-
-    case GOD_TROG:
-        // Anti-magic god: no spell use, no enhancing magic.
-        if (item.base_type == OBJ_BOOKS)
-            type_bad = true;
-
-        if (item.base_type == OBJ_JEWELLERY
-            && (item.sub_type == RING_WIZARDRY
-             || item.sub_type == RING_FIRE
-             || item.sub_type == RING_ICE
-             || item.sub_type == RING_MAGICAL_POWER))
-        {
-            type_bad = true;
-        }
-        break;
-
-    case GOD_CHEIBRIADOS:
-        // Slow god: no quick blades, no berserking.
-        if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
-            type_bad = true;
-
-        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
-            type_bad = true;
-        break;
-
-    case GOD_DITHMENOS:
-        // Shadow god: no reducing stealth.
-        if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
-            type_bad = true;
-        break;
-
-    default:
-        break;
-    }
+    const bool type_bad = !god_likes_item_type(item, which_god);
 
     if (type_bad && !name_check_only)
     {
@@ -529,9 +468,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_FREEZING,
             0);
 
-        if (item_type == WPN_BLOWGUN)
-            item_props[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-        else if (item_attack_skill(item) == SK_CROSSBOWS)
+        if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
             // crossbows. This may change in future.
@@ -741,7 +678,7 @@ static const artefact_prop_data artp_data[] =
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
-    { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
+    { "MP", ARTP_VAL_ANY, 15,       // ARTP_MAGICAL_POWER,
         _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 0, 0 },
     { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_BASE_DELAY,
     { "HP", ARTP_VAL_ANY, 0,       // ARTP_HP,
@@ -857,16 +794,41 @@ static void _add_good_randart_prop(artefact_prop_type prop,
     item_props[prop] += artp_data[prop].gen_good_value();
 }
 
+/**
+ * Generate the properties for a randart. We start with a quality level, then
+ * determine number of good and bad properties from that level. The more good
+ * properties we have, the more likely we are to add some bad properties in
+ * to make it a bit more interesting.
+ *
+ * For each "good" and "bad" property we want, we randomly pick from the total
+ * list of good or bad properties; if the picked property already exists and
+ * can have variable levels, we increment the levels by a certain amount. There
+ * is a maximum number of distinct properties that can be applied to a randart
+ * (for legibility, mostly), so overflow gets picked as increments to
+ * variable-level properties when possible.
+ *
+ * @param item          The item to apply properties to.
+ * @param item_props    The properties of that item.
+ * @param quality       How high quality the randart will be, measured in number
+                        of rolls for good property boosts.
+ * @param max_bad_props The maximum number of bad properties this artefact can
+                        be given.
+ */
 static void _get_randart_properties(const item_def &item,
-                                    artefact_properties_t &item_props)
+                                    artefact_properties_t &item_props,
+                                    int quality = 0,
+                                    const int max_bad_props = 2)
 {
     const object_class_type item_class = item.base_type;
 
-    // first figure out how good we want the artefact to be, range 1 to 7.
-    const int quality = max(1, binomial(7, 30));
+    // If we didn't receive a quality level, figure out how good we want the
+    // artefact to be. The default calculation range is 1 to 7.
+    if (quality < 1)
+        quality = max(1, binomial(7, 30));
+
     // then consider adding bad properties. the better the artefact, the more
     // likely we add a bad property, up to a max of 2.
-    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2);
+    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), max_bad_props);
     // we start by assuming we'll allow one good property per quality level
     // and an additional one for each bad property.
     int good = quality + bad;

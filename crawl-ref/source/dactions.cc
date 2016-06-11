@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "godcompanions.h" // hepliaklqana_ancestor
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -42,8 +43,7 @@ static const char *daction_names[] =
     "old enslaved souls go poof",
 #if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
-#endif
-#if TAG_MAJOR_VERSION > 34
+#else
     "slimes allow another conversion attempt",
 #endif
     "holy beings go neutral",
@@ -53,8 +53,8 @@ static const char *daction_names[] =
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
     "corpses rot",
-    "Tomb loses -cTele",
 #if TAG_MAJOR_VERSION == 34
+    "Tomb loses -cTele",
     "slimes allow another conversion attempt",
 #endif
     "hogs to humans",
@@ -66,7 +66,11 @@ static const char *daction_names[] =
     "remove Gozag shops",
     "apply Gozag bribes",
     "Makhleb's servants go hostile",
+#if TAG_MAJOR_VERSION == 34
     "make all monsters hate you",
+#endif
+    "ancestor vanishes",
+    "upgrade ancestor",
 };
 #endif
 
@@ -96,6 +100,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
         return mons_is_plant(mon);
+    case DACT_ALLY_HEPLIAKLQANA:
+    case DACT_UPGRADE_ANCESTOR:
+        return mon->wont_attack() && mons_is_god_gift(mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
     case DACT_ALLY_TROG:
@@ -220,6 +227,16 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             }
             break;
 
+        case DACT_ALLY_HEPLIAKLQANA:
+            simple_monster_message(mon, " returns to the mists of memory.");
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            break;
+
+        case DACT_UPGRADE_ANCESTOR:
+            if (!in_transit)
+                upgrade_hepliaklqana_ancestor(true);
+            break;
+
         case DACT_OLD_ENSLAVED_SOULS_POOF:
             simple_monster_message(mon, " is freed.");
             // The monster disappears.
@@ -288,6 +305,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_SPELLCASTER:
     case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
+    case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
     case DACT_ALLY_TROG:
@@ -370,6 +388,10 @@ static void _apply_daction(daction_type act)
         }
         break;
     }
+    case DACT_UPGRADE_ANCESTOR:
+        if (!companion_is_elsewhere(hepliaklqana_ancestor()))
+            upgrade_hepliaklqana_ancestor(true);
+        break;
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:

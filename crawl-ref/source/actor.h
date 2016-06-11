@@ -252,7 +252,7 @@ public:
     virtual int armour_class(bool calc_unid = true) const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
-                 int stab_bypass = 0) const;
+                 int stab_bypass = 0, bool for_real = true) const;
     virtual int evasion(ev_ignore_type ign = EV_IGNORE_NONE,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
@@ -283,7 +283,7 @@ public:
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
-    virtual bool res_hellfire() const = 0;
+    virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
@@ -373,8 +373,6 @@ public:
 #if TAG_MAJOR_VERSION == 34
     virtual int heat_radius() const = 0;
 #endif
-
-    virtual bool glows_naturally() const { return false; };
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

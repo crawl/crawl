@@ -628,12 +628,6 @@ settle the battles of the near future.”
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
-Norris
-
-“Death and death alone gives meaning to life and this meaning is entirely
-negative.”
-    -Georges Poulet
-%%%%
 Orcish Mines
 
 “You load sixteen tons, what do you get
@@ -1682,8 +1676,8 @@ deeply-felt respect for any object in the universe than this here shotgun...”
 %%%%
 Iskenderun's Battlesphere spell
 
-“Rule 4: Close air support covereth a multitude of sins.”
-    -Howard Tayler, _The Seven Habits of Highly Effective Pirates_,
+“Maxim 4: Close air support covereth a multitude of sins.”
+    -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
      in _Schlock Mercenary_. 2008.
 %%%%
 jackal
@@ -2815,6 +2809,18 @@ spectral thing
 “On the hungry craving wind
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
+%%%%
+spellforged servitor
+
+“When you think
+ Your toys have gone berserk
+ It's an illusion
+ You cannot shirk”
+    -Siouxsie and the Banshees, "Spellbound"
+%%%%
+Spellforged Servitor spell
+
+<spellforged servitor>
 %%%%
 staff
 

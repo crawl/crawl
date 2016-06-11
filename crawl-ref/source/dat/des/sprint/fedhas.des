@@ -31,7 +31,7 @@ KMONS:  T = spriggan
 KMONS:  U = spriggan berserker
 KMONS:  V = Agnes
 KMONS:  W = spriggan defender
-KMONS:  X = spriggan rider ; longbow unrand:storm_bow . arrow
+KMONS:  X = spriggan rider ; storm_bow . arrow
 KMONS:  Y = bush
 KMONS:  a = wasp
 KMONS:  b = ghost moth
@@ -119,13 +119,15 @@ KFEAT:  R = altar_gozag
 KFEAT:  S = altar_qazlal
 KFEAT:  U = altar_ru
 KFEAT:  V = altar_pakellas
+KFEAT:  W = altar_uskayaw
 KMONS:  X = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
+KFEAT:  Y = altar_hepliaklqana
 
 MAP
-.T....V....T.
+.T..Y.V....T.
 .A.B.C.D.E.F.
-M.N.OXP.Q.R.S
+M.N.OXP.QWR.S
 .G.H.I.J.K.L.
 .T....U....T.
 ENDMAP

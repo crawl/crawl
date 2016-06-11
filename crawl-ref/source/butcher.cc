@@ -345,7 +345,7 @@ static void _create_monster_hide(const item_def &corpse)
         return;
     item_def& item = mitm[o];
 
-    do_uncurse_item(item, false);
+    do_uncurse_item(item);
 
     // Automatically identify the created hide.
     set_ident_flags(item, ISFLAG_IDENT_MASK);

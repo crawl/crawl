@@ -1,0 +1,7 @@
+# Changes for 0.18 include glyph colour changes.
+
+###########################
+# monsters
+###########################
+
+mon_glyph += lindwurm : lightgreen k

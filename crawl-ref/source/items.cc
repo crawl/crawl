@@ -64,6 +64,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "quiver.h"
+#include "randbook.h"
 #include "religion.h"
 #include "rot.h"
 #include "shopping.h"
@@ -81,6 +82,41 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
+
+/**
+ * Return an item's location (floor or inventory) and the corresponding mitm
+ * int or inv slot referring to it.
+ *
+ * @param item_def An item in either mitm (the floor or monster inventory)
+ *                 or you.inv.
+ *
+ * @return A pair containing bool and int. The bool is true for items in
+ *         inventory, false for others. The int is the item's index in either
+ *         you.inv or mitm.
+ */
+
+pair<bool, int> item_int(item_def &item)
+{
+    if (in_inventory(item))
+        return make_pair(true, item.link);
+    return make_pair(false, item.index());
+}
+
+
+/**
+ * Return an item_def& requested by an item's inv slot or mitm index.
+ *
+ * @param inv Is the item in inventory?
+ * @param number The index of the item, either in you.inv (if inv == true)
+ *               or in mitm (if inv == false).
+ *
+ * @return The item.
+ */
+
+item_def& item_from_int(bool inv, int number)
+{
+    return inv ? you.inv[number] : mitm[number];
+}
 
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
@@ -716,10 +752,12 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in mitm.
  * @param exclude_stationary If true, don't include stationary items.
 */
-void item_list_on_square(vector<const item_def*>& items, int obj)
+vector<const item_def*> item_list_on_square(int obj)
 {
+    vector<const item_def*> items;
     for (stack_iterator si(obj); si; ++si)
         items.push_back(& (*si));
+    return items;
 }
 
 bool need_to_autopickup()
@@ -802,9 +840,7 @@ void item_check()
 
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
-    vector<const item_def*> items;
-
-    item_list_on_square(items, you.visible_igrd(you.pos()));
+    auto items = item_list_on_square(you.visible_igrd(you.pos()));
 
     if (items.empty())
         return;
@@ -902,8 +938,7 @@ void pickup_menu(int item_link)
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
-    vector<const item_def*> items;
-    item_list_on_square(items, item_link);
+    auto items = item_list_on_square(item_link);
     ASSERT(items.size());
 
     string prompt = "Pick up what? " + slot_description()
@@ -1433,7 +1468,9 @@ bool is_stackable_item(const item_def &item)
     }
 
     if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR)
-        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
+        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
+        || item.is_type(OBJ_MISCELLANY, MISC_SACK_OF_SPIDERS)
+        || item.is_type(OBJ_MISCELLANY, MISC_BOX_OF_BEASTS))
     {
         return true;
     }
@@ -1937,8 +1974,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         set_ident_type(item, true);
 
     if ((item.base_type == OBJ_WANDS || item.base_type == OBJ_RODS)
-        && you_worship(GOD_PAKELLAS)
-        && in_good_standing(GOD_PAKELLAS))
+        && have_passive(passive_t::identify_devices))
     {
         if (item.base_type == OBJ_RODS)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
@@ -2044,17 +2080,6 @@ void mark_items_non_pickup_at(const coord_def &pos)
     {
         mitm[item].flags |= ISFLAG_DROPPED;
         mitm[item].flags &= ~ISFLAG_THROWN;
-        item = mitm[item].link;
-    }
-}
-
-void mark_items_non_visit_at(const coord_def &pos)
-{
-    int item = igrd(pos);
-    while (item != NON_ITEM)
-    {
-        if (god_likes_item(you.religion, mitm[item]))
-            mitm[item].flags |= ISFLAG_DROPPED;
         item = mitm[item].link;
     }
 }
@@ -3237,15 +3262,16 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        // old wand types
+        // choose from all existing wands, except:
+        // (1) don't allow /hw, because it encourages stuff like curing rot
+        // (2) allow /invis even though that was removed, because it's fun
         return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
                              ZAP_PARALYSE, ZAP_CONFUSE,
-                             ZAP_FIREBALL, ZAP_TELEPORT_OTHER,
+                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
                              ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
                              ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
-                             ZAP_DISINTEGRATE, ZAP_DIG, ZAP_THROW_FROST,
-                             ZAP_MAGIC_DART, ZAP_INVISIBILITY,
-                             ZAP_BOLT_OF_COLD, ZAP_BOLT_OF_FIRE);
+                             ZAP_INVISIBILITY,
+                             ZAP_BOLT_OF_FIRE);
     }
 
     switch (wand_sub_type)
@@ -3624,15 +3650,13 @@ colour_t item_def::amulet_colour() const
     // (use an array of [name, colour] tuples/structs)
     switch (subtype_rnd % NDSC_JEWEL_PRI)
     {
-        case 0:             // "zirconium amulet"
-        case 9:             // "ivory amulet"
+        case 1:             // "zirconium amulet"
         case 10:            // "bone amulet"
         case 11:            // "platinum amulet"
         case 16:            // "pearl amulet"
         case 20:            // "diamond amulet"
-        case 24:            // "silver amulet"
             return LIGHTGREY;
-        case 1:             // "sapphire amulet"
+        case 0:             // "sapphire amulet"
         case 17:            // "blue amulet"
         case 26:            // "lapis lazuli amulet"
             return BLUE;
@@ -3649,16 +3673,18 @@ colour_t item_def::amulet_colour() const
         case 15:            // "cameo amulet"
             return RED;
         case 22:            // "steel amulet"
-        case 23:            // "cabochon amulet"
+        case 24:            // "silver amulet"
         case 27:            // "filigree amulet"
             return CYAN;
         case 13:            // "fluorescent amulet"
-        case 14:            // "crystal amulet"
+        case 14:            // "amethyst amulet"
+        case 23:            // "cabochon amulet"
             return MAGENTA;
         case 2:             // "golden amulet"
         case 5:             // "bronze amulet"
         case 6:             // "brass amulet"
         case 7:             // "copper amulet"
+        case 9:             // "citrine amulet"
         default:
             return BROWN;
     }
@@ -3795,8 +3821,6 @@ colour_t item_def::miscellany_colour() const
 
     switch (sub_type)
     {
-        case MISC_LANTERN_OF_SHADOWS:
-            return BLUE;
         case MISC_FAN_OF_GALES:
             return CYAN;
 #if TAG_MAJOR_VERSION == 34
@@ -3805,8 +3829,10 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_PHANTOM_MIRROR:
             return RED;
+#if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:
             return BROWN;
+#endif
         case MISC_DISC_OF_STORMS:
             return LIGHTGREY;
         case MISC_PHIAL_OF_FLOODS:
@@ -3822,6 +3848,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
 #if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
         case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
@@ -4024,27 +4051,6 @@ bool item_def::is_mundane() const
     return false;
 }
 
-// Does the item cause autoexplore to visit it?
-// Excludes visited items (dropped flag) and ?RC for Ash.
-bool item_def::is_greedy_sacrificeable() const
-{
-    if (!god_likes_items(you.religion, true))
-        return false;
-
-    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
-        || item_needs_autopickup(*this)
-        || item_is_stationary_net(*this)
-        || inscription.find("!p") != string::npos
-        || inscription.find("=p") != string::npos
-        || inscription.find("!*") != string::npos
-        || inscription.find("!D") != string::npos)
-    {
-        return false;
-    }
-
-    return god_likes_item(you.religion, *this);
-}
-
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
@@ -4150,11 +4156,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
 
     while (item.sub_type == MISC_DECK_UNKNOWN)
     {
-        mprf(MSGCH_PROMPT,
-             "[a] escape     [b] destruction [c] summoning [d] wonders");
-        mprf(MSGCH_PROMPT,
-             "[e] war         [f] changes  [g] defence");
-        mpr("Which deck (ESC to exit)? ");
+        mprf(MSGCH_PROMPT, "[a] escape [b] destruction [c] war? (ESC to exit)");
 
         const int keyin = toalower(get_ch());
 
@@ -4170,11 +4172,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         {
             { 'a', MISC_DECK_OF_ESCAPE },
             { 'b', MISC_DECK_OF_DESTRUCTION },
-            { 'c', MISC_DECK_OF_SUMMONING },
-            { 'd', MISC_DECK_OF_WONDERS },
-            { 'e', MISC_DECK_OF_WAR },
-            { 'f', MISC_DECK_OF_CHANGES },
-            { 'g', MISC_DECK_OF_DEFENCE }
+            { 'c', MISC_DECK_OF_WAR },
         };
 
         const misc_item_type *deck_type = map_find(deckmap, keyin);
@@ -4453,10 +4451,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             item->skill_points = random_range(2000, 3000);
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-        {
-            make_book_theme_randart(*item, SPTYP_NONE, SPTYP_NONE,
-                                    5 + coinflip(), 20);
-        }
+            build_themed_book(*item, capped_spell_filter(20));
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);
@@ -4472,14 +4467,6 @@ bool get_item_by_name(item_def *item, const char* specs,
         item->charges    = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
         item->charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
         init_rod_mp(*item);
-        break;
-
-    case OBJ_MISCELLANY:
-        if (item->sub_type == MISC_BOX_OF_BEASTS
-            || item->sub_type == MISC_SACK_OF_SPIDERS)
-        {
-            item->charges = 50;
-        }
         break;
 
     case OBJ_POTIONS:

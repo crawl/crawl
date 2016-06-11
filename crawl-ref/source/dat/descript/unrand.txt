@@ -18,32 +18,32 @@ A bloodstained axe that was the favourite weapon of the old god Trog, before it
 was lost. It induces a bloodthirsty berserker rage in warriors who use it in
 battle.
 %%%%
-Mace of Variability
+mace of Variability
 
 A weapon with a peculiar reputation — said to be at times peerless in quality,
 and other times virtually useless. No one knows exactly who would have made
 such a weapon, or why, but Xom is probably to blame somehow.
 %%%%
-Glaive of Prune
+glaive of Prune
 
 A purple glaive that was created by a mad god, and carries a curse which
 transforms anyone wielding it into a prune. Fortunately, the curse works very
 slowly, and one can use it briefly with no consequences worse than slightly
 purple skin and a few wrinkles.
 %%%%
-Sword of Power
+sword of Power
 
 A mighty sword which rewards the powerful with power and the meek with
 weakness.
 %%%%
-Staff of Olgreb
+staff of Olgreb
 
 A staff which was once wielded by the mighty wizard Olgreb. It increases the
 power of its wielder's poison magic, and can be evoked to activate its own
 venomous spells. Its touch may poison even resistant creatures, and it grants
 protection from all venoms while wielded.
 %%%%
-Staff of Wucad Mu
+staff of Wucad Mu
 
 A crystal staff overflowing with magical energies. It can be evoked to restore
 large amounts of magical energy, but with the risk of damaging the user's mind.
@@ -55,34 +55,34 @@ An ivory-like dagger that looks like it could have been crafted from the tooth
 of some enormous predatory creature. It is lethally vampiric, and restores a
 greater portion of life to its user than other vampiric weapons.
 %%%%
-Scythe of Curses
+scythe of Curses
 
 A scythe surrounded by an ominous aura of dread. It carries a terrible and
 highly irritating curse, which it busily inflicts on both the wielder and their
 enemies.
 %%%%
-Sceptre of Torment
+sceptre of Torment
 
 An accursed golden sceptre, created by some unknown hellish power. It
 frequently causes agonising pain in all those unfortunate enough to gaze upon
 it.
 %%%%
-Sword of Zonguldrok
+sword of Zonguldrok
 
 A blade imbued with the essence of a legendary necromancer. Those slain in its
 presence are reanimated by its power and forced to fight on.
 %%%%
-Sword of Cerebov
+sword of Cerebov
 
 A twisted blade, covered in eerie flames. Its demonic power burns away some of
 the fire resistance of those it strikes.
 %%%%
-Staff of Dispater
+staff of Dispater
 
-A legendary staff, granting the power to unleash the fires of Hell — although
-not without draining the wielder's vitality in the process.
+A legendary staff, granting the power to unleash damnation — although not
+without draining the wielder's vitality in the process.
 %%%%
-Sceptre of Asmodeus
+sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
 Evoking it can summon fiery demons from their infernal home to do your bidding,
@@ -151,9 +151,9 @@ A glaive commissioned several years ago by a wealthy queen fearful for the
 safety of her vast treasury. No foe, the smith promised, could defeat a guard
 wielding such a weapon!
 
-The glaive was stolen a few months later, along with the rest of the queen's
-treasury; the guard, it transpired, had been caught napping. Still, it should
-serve more than adequately in the hands of a waking user.
+It was stolen a few months later, along with the rest of the queen's treasury;
+the guard, it transpired, had been caught napping. Still, it should serve more
+than adequately in the hands of a waking user.
 %%%%
 sword of Jihad
 
@@ -161,11 +161,10 @@ A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
 both the wielder and all of his or her mortal followers.
 %%%%
-arbalest "Hellfire"
+arbalest "Damnation"
 
-A flaming crossbow, forged in the fires of Gehenna. It imbues the bolts it
-fires with the raw power of its namesake, irresistible by any mortal armour or
-fireproofing.
+An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
+fires with the raw power of its namesake, irresistible by any mortal armour.
 %%%%
 sword of the Doom Knight
 
@@ -203,7 +202,7 @@ it.
 heavy crossbow "Sniper"
 
 A huge crossbow made of some black material. It is highly damaging, but
-extremely cumbersome to load.
+extremely cumbersome to load. It is enchanted to never miss its target.
 %%%%
 longbow "Piercer"
 
@@ -260,10 +259,8 @@ captain's cutlass
 
 An infamous weapon, once used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
-cutlass was thought to be lost with him.
-
-This blade has the capability to suddenly relieve opponents of their weapons,
-dealing extra damage in the process.
+cutlass was thought to be lost with him. It has the capability to suddenly
+relieve opponents of their weapons, dealing extra damage in the process.
 %%%%
 storm bow
 
@@ -370,9 +367,9 @@ visage.
 %%%%
 robe of Night
 
-A long black robe made of strange glossy material. It seems to shroud its
-wearer in darkness. According to legend, it was the gift of Ratri the Goddess
-of the Night to one of her followers.
+A long black robe made of strange glossy material. It shrouds its wearer in
+darkness, reducing the range of vision. According to legend, it was the gift
+of Ratri the Goddess of the Night to one of her followers.
 %%%%
 armour of the Dragon King
 
@@ -402,7 +399,7 @@ A cloak stitched from the hides of hundreds of hell rats, by an enchantress
 with a magic loom and too much time on her hands. It provides excellent
 protection from rats of all kinds.
 %%%%
-shield of the gong
+shield of the Gong
 
 A heavy bronze gong that can be worn as a shield. According to some mystics,
 beating on such a gong can grant the wearer spiritual protection.
@@ -590,7 +587,7 @@ A fine mesh cage designed to capture magical energy. Experimental notes suggest
 that research was abandoned when the cage began to capture magical
 contamination almost as effectively. Anyone reckless enough to place it on
 their head would find their magic regeneration dramatically increased, at the
-cost of occasional low-level contamination.
+cost of multiplying any magical contamination received.
 %%%%
 # TAG_MAJOR_VERSION == 34
 crown of Eternal Torment
@@ -599,7 +596,7 @@ A gold crown set with jet-black gems. It permanently afflicts its wearer with
 agonising pain, substantially reducing their resilience but rendering them
 immune to further torments.
 %%%%
-robe of vines
+robe of Vines
 
 A robe woven of living vines. The vines form a symbiotic relationship with
 their wearer, greatly increasing their regeneration, but preventing them from
@@ -607,7 +604,7 @@ being healed by potions and wands.
 %%%%
 Kryia's mail coat
 
-This armour is said to have been forged for Queen Kryia in her old age. She
+A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
 draughts that kept her alive.
@@ -622,8 +619,9 @@ draughts that kept her alive.
 %%%%
 frozen axe "Frostbite"
 
-This massive axe looks like it was carved from a glacier, or possibly calved
-from one. It leaves ice crystals in its wake as it swings through the air.
+A massive axe that looks like it was carved from a glacier, or possibly calved
+from one. It leaves ice crystals in its wake as it swings through the air, and
+grants its wielder protection from freezing vapours.
 %%%%
 armour of Talos
 

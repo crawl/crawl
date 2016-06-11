@@ -552,7 +552,7 @@ struct item_def
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;           ///< rate at which a rod recharges; +slay
+        int rod_plus;           ///< rate at which a rod recharges
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
@@ -569,12 +569,15 @@ struct item_def
     /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
-    /// Index in the mitm array of the next item in the stack. NON_ITEM for
-    /// the last item in a stack. For items in player inventory, instead
-    /// equal to slot. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
+    /// For floor items, index in the mitm array of the next item in the
+    /// pile. NON_ITEM for the last item in a pile. For items in player
+    /// inventory, instead the index into you.inv. For items in monster
+    /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
+    /// equal to ITEM_IN_SHOP.
     short  link;
-    // Inventory letter of the item.
+    /// Inventory letter of the item. For items in player inventory, equal
+    /// to index_to_letter(link). For other items, equal to the slot letter
+    /// the item had when it was last in player inventory.
     short  slot;
 
     level_id orig_place;
@@ -651,9 +654,6 @@ public:
 
     /** Is this item of a type that should not be generated enchanted? */
     bool is_mundane() const;
-
-    /** Should greedy-sacrifice autoexplore visit this item? */
-    bool is_greedy_sacrificeable() const;
 
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
@@ -738,7 +738,9 @@ enum mon_spell_slot_flag
     MON_SPELL_EMERGENCY   = 1 <<  0, // only use this spell slot in emergencies
     MON_SPELL_NATURAL     = 1 <<  1, // physiological, not really a spell
     MON_SPELL_MAGICAL     = 1 <<  2, // a generic magical ability
-    MON_SPELL_DEMONIC     = 1 <<  3, // demonic
+#if TAG_MAJOR_VERSION == 34
+    MON_SPELL_DEMONIC     = 1 <<  3, // merged with magical abilities
+#endif
     MON_SPELL_WIZARD      = 1 <<  4, // a real spell, affected by AM and silence
     MON_SPELL_PRIEST      = 1 <<  5,
 
@@ -762,14 +764,14 @@ COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
               == MON_SPELL_LAST_FLAG);
 
 constexpr mon_spell_slot_flags MON_SPELL_TYPE_MASK
-    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_DEMONIC
-    | MON_SPELL_WIZARD  | MON_SPELL_PRIEST;
+    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_WIZARD
+    | MON_SPELL_PRIEST;
 
 constexpr mon_spell_slot_flags MON_SPELL_INNATE_MASK
-    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_DEMONIC;
+    = MON_SPELL_NATURAL | MON_SPELL_MAGICAL;
 
 constexpr mon_spell_slot_flags MON_SPELL_ANTIMAGIC_MASK
-    = MON_SPELL_MAGICAL | MON_SPELL_DEMONIC | MON_SPELL_WIZARD;
+    = MON_SPELL_MAGICAL | MON_SPELL_WIZARD;
 
 constexpr mon_spell_slot_flags MON_SPELL_SILENCE_MASK
     = MON_SPELL_WIZARD  | MON_SPELL_PRIEST  | MON_SPELL_NO_SILENT;

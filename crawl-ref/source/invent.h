@@ -39,6 +39,7 @@ enum object_selector
                                         // known-cursed. Unknown-cursed items
                                         // are included, to prevent information
                                         // leakage.
+    OSEL_DIVINE_RECHARGE         = -21,
 };
 
 #define PROMPT_ABORT         -1
@@ -150,19 +151,19 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Make sure this menu does not outlive items, or mayhem will ensue!
     menu_letter load_items(const vector<item_def>& items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
-                        MenuEntry *(*procfn)(MenuEntry *me) = nullptr);
+                        function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
     vector<SelItem> get_selitems() const;
 
@@ -185,7 +186,7 @@ protected:
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool item_is_selected(const item_def &item, int selector);
-bool any_items_of_type(int type_expect, int excluded_slot = -1);
+bool any_items_of_type(int type_expect, int excluded_slot = -1, bool inspect_floor = false);
 string no_selectables_message(int item_selector);
 
 string slot_description();
@@ -246,4 +247,5 @@ bool item_is_evokable(const item_def &item, bool reach = true,
 bool nasty_stasis(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
+int digit_inscription_to_inv_index(char digit, operation_types oper);
 #endif

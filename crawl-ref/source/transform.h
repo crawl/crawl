@@ -309,6 +309,7 @@ const char* transform_name(transformation_type form = you.form);
 int form_hp_mod();
 
 void emergency_untransform();
+void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 

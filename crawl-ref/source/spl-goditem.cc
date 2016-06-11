@@ -249,8 +249,7 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
                 string key;
 
                 // Quadrupeds can't salute, etc.
-                mon_body_shape shape = get_mon_shape(mons);
-                if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                if (mon_shape_is_humanoid(get_mon_shape(mons)))
                     key = "_humanoid";
 
                 _print_holy_pacification_speech(key, mons,
@@ -374,8 +373,7 @@ void debuff_player()
     for (auto duration : buffs.durations)
     {
         int &len = you.duration[duration];
-        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
-            && len > 11)
+        if (duration == DUR_TRANSFORMATION && len > 11)
         {
             len = 11;
             need_msg = true;
@@ -430,6 +428,10 @@ static void _dispellable_monster_buffs(const monster &mon,
         if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
             continue;
 
+        // Gozag-incited haste is permanent.
+        if (ench == ENCH_HASTE && mon.has_ench(ENCH_GOZAG_INCITE))
+            continue;
+
         if (mon.has_ench(ench))
             buffs.push_back(ench);
     }
@@ -468,15 +470,6 @@ void debuff_monster(monster &mon)
         mon.del_ench(buff, true, true);
 
     simple_monster_message(&mon, "'s magical effects unravel!");
-}
-
-int detect_traps(int pow)
-{
-    pow = min(50, pow);
-
-    // Trap detection moved to traps.cc. -am
-    const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
 }
 
 // pow -1 for passive
@@ -641,7 +634,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
         if (!used && !pre_msg.empty())
             mpr(pre_msg);
 
-        do_uncurse_item(item, true, false, false);
+        do_uncurse_item(item, false);
         used = true;
     }
 }
@@ -663,7 +656,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
 
     // Players can no longer wield armour and jewellery as weapons, so we do
     // not need to check whether the EQ_WEAPON slot actually contains a weapon:
-    // only weapons (and rods and staves) are both wieldable and cursable.
+    // only weapons (and staves) are both wieldable and cursable.
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
@@ -769,6 +762,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     monster *mon;
     string targname;
 
+    vector<coord_def> veto_spots(8);
+    for (adjacent_iterator ai(where); ai; ++ai)
+        veto_spots.push_back(*ai);
+    const vector<coord_def> adj_spots = veto_spots;
+
     if (zin)
     {
         // We need to get this now because we won't be able to see
@@ -777,11 +775,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
-
-        vector<coord_def> veto_spots(8);
-        for (adjacent_iterator ai(where); ai; ++ai)
-            veto_spots.push_back(*ai);
-        vector<coord_def> adj_spots = veto_spots;
 
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
@@ -834,6 +827,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         }
     }
 
+    veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
@@ -846,9 +840,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor* act = actor_at(*ai))
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, act, true);
+                get_push_space(*ai, newpos, act, true, &veto_spots);
                 ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
+                veto_spots.push_back(newpos);
             }
         }
 
@@ -1011,18 +1006,12 @@ bool cast_smiting(int pow, monster* mons)
     return success;
 }
 
-static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
+void holy_word_player(holy_word_source_type source)
 {
     if (!you.undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker && attacker->is_player())
-        hploss = max(0, you.hp / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 3);
+    int hploss = max(0, you.hp / 2 - 1);
 
     if (!hploss)
         return;
@@ -1038,7 +1027,7 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
     switch (source)
     {
     case HOLY_WORD_SCROLL:
-        aux = "scroll of holy word";
+        aux = "a scroll of holy word";
         break;
 
     case HOLY_WORD_ZIN:
@@ -1047,6 +1036,10 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
 
     case HOLY_WORD_TSO:
         aux = "the Shining One's holy word";
+        break;
+
+    case HOLY_WORD_CARD:
+        aux = "the Torment card";
         break;
     }
 
@@ -1062,20 +1055,14 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, source, attacker);
+        holy_word_player(source);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker == mons)
-        hploss = max(0, mons->hit_points / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 5);
+    int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
     {
@@ -1088,24 +1075,22 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy or daze its user.
-    if (attacker != mons)
-    {
-        // Currently, holy word annoys the monsters it affects
-        // because it can kill them, and because hostile
-        // monsters don't use it.
-        // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-        if (attacker != nullptr
-            && (attacker != &you
-                || source != HOLY_WORD_SCROLL
-                || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
-        {
-            behaviour_event(mons, ME_ANNOY, attacker);
-        }
 
-        mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                                   (10 + random2(10)) * BASELINE_DELAY));
+    // Currently, holy word annoys the monsters it affects
+    // because it can kill them, and because hostile
+    // monsters don't use it.
+    // Tolerate unknown scroll, to not annoy Yred worshippers too much.
+    if (attacker != nullptr
+        && attacker != mons
+        && (attacker != &you
+            || source != HOLY_WORD_SCROLL
+            || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
+    {
+        behaviour_event(mons, ME_ANNOY, attacker);
     }
+
+    mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                               (10 + random2(10)) * BASELINE_DELAY));
 }
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
@@ -1182,7 +1167,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_SCEPTRE:
-        aux = "Sceptre of Torment";
+        aux = "sceptre of Torment";
         break;
 
     case TORMENT_SCROLL:
@@ -1208,7 +1193,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
     }
 
-    ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
+    ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
 
     return;
 }

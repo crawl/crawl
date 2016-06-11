@@ -119,9 +119,12 @@ enum brand_type // item_def.special
     SPWPN_RETURNING,
 #endif
     SPWPN_CHAOS,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_EVASION,
-
     MAX_GHOST_BRAND = SPWPN_EVASION,
+#else
+    MAX_GHOST_BRAND = SPWPN_CHAOS,
+#endif
 
 #if TAG_MAJOR_VERSION == 34
     SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
@@ -210,6 +213,7 @@ enum jewellery_type
 
 enum launch_retval
 {
+    LRET_BUGGY = -1, // could be 0 maybe? TODO: test
     LRET_FUMBLED,
     LRET_LAUNCHED,
     LRET_THROWN,
@@ -222,8 +226,10 @@ enum misc_item_type
 #endif
     MISC_FAN_OF_GALES,
     MISC_LAMP_OF_FIRE,
+#if TAG_MAJOR_VERSION == 34
     MISC_STONE_OF_TREMORS,
-    MISC_LANTERN_OF_SHADOWS,
+    MISC_BUGGY_LANTERN_OF_SHADOWS,
+#endif
     MISC_HORN_OF_GERYON,
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
@@ -232,25 +238,20 @@ enum misc_item_type
 #endif
     MISC_DISC_OF_STORMS,
 
-    // pure decks
     MISC_DECK_OF_ESCAPE,
     MISC_DECK_OF_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_DUNGEONS,
-#endif
     MISC_DECK_OF_SUMMONING,
     MISC_DECK_OF_WONDERS,
-#if TAG_MAJOR_VERSION > 34
-    MISC_DECK_OF_ODDITIES,
 #endif
     MISC_DECK_OF_PUNISHMENT,
 
-    // mixed decks
     MISC_DECK_OF_WAR,
+#if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_CHANGES,
     MISC_DECK_OF_DEFENCE,
 
-#if TAG_MAJOR_VERSION == 34
     MISC_RUNE_OF_ZOT,
 #endif
 
@@ -273,19 +274,25 @@ enum misc_item_type
 // in no particular order (but we need *a* fixed order for dbg-scan)
 const vector<misc_item_type> deck_types =
 {
-    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION, MISC_DECK_OF_SUMMONING,
-    MISC_DECK_OF_WONDERS, MISC_DECK_OF_ODDITIES, MISC_DECK_OF_PUNISHMENT,
-    MISC_DECK_OF_WAR, MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE,
+    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
-    MISC_DECK_OF_DUNGEONS,
+    MISC_DECK_OF_SUMMONING, MISC_DECK_OF_WONDERS, MISC_DECK_OF_ODDITIES,
+#endif
+    MISC_DECK_OF_PUNISHMENT, MISC_DECK_OF_WAR,
+#if TAG_MAJOR_VERSION == 34
+    MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE, MISC_DECK_OF_DUNGEONS,
 #endif
 };
 
 // in no particular order (but we need *a* fixed order for dbg-scan)
 const vector<misc_item_type> misc_types =
 {
-    MISC_FAN_OF_GALES, MISC_LAMP_OF_FIRE, MISC_STONE_OF_TREMORS,
-    MISC_LANTERN_OF_SHADOWS, MISC_HORN_OF_GERYON, MISC_BOX_OF_BEASTS,
+    MISC_FAN_OF_GALES, MISC_LAMP_OF_FIRE,
+#if TAG_MAJOR_VERSION == 34
+    MISC_STONE_OF_TREMORS,
+    MISC_BUGGY_LANTERN_OF_SHADOWS,
+#endif
+    MISC_HORN_OF_GERYON, MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY, MISC_DISC_OF_STORMS, MISC_PHIAL_OF_FLOODS,
     MISC_QUAD_DAMAGE, MISC_SACK_OF_SPIDERS, MISC_PHANTOM_MIRROR,
 #if TAG_MAJOR_VERSION == 34
@@ -513,7 +520,9 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
-    WPN_ROD, // base item for magical rods only
+#if TAG_MAJOR_VERSION == 34
+    WPN_SPIKED_FLAIL,
+#endif
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,

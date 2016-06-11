@@ -13,6 +13,7 @@
 #include "cloud.h"
 #include "food.h"
 #include "godconduct.h"
+#include "godwrath.h" // reduce_xp_penance
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -565,6 +566,14 @@ public:
 
     bool effect(bool=true, int=40, bool=true) const override
     {
+        if (player_under_penance(GOD_HEPLIAKLQANA))
+        {
+            simple_god_message(" appreciates the memories.",
+                               GOD_HEPLIAKLQANA);
+            reduce_xp_penance(GOD_HEPLIAKLQANA, 750 * you.experience_level);
+            return true;
+        }
+
         if (you.experience_level < you.get_max_xl())
         {
             mpr("You feel more experienced!");
@@ -710,6 +719,23 @@ public:
             }
             return false;
         }
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (was_known
+            && how_mutated(false, true) > how_mutated(false, true, false)
+            && !yesno("Your transient mutations will not be cured; Quaff anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        effect();
         return true;
     }
 

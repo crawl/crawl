@@ -392,11 +392,11 @@ bool chardump_parser::_check_skill(const vector<string> &tokens)
     double amount = atof(tokens[2].c_str());
     set_skill_level(skill, amount);
     if (tokens[0] == "+")
-        you.train[skill] = 1;
+        you.train[skill] = TRAINING_ENABLED;
     else if (tokens[0] == "*")
-        you.train[skill] = 2;
+        you.train[skill] = TRAINING_FOCUSED;
     else
-        you.train[skill] = 0;
+        you.train[skill] = TRAINING_DISABLED;
 
     redraw_skill(skill);
 

@@ -65,7 +65,7 @@ saves
 morgue
 *.map
 map.dump
-mapgen.log
+mapstat.log
 *.out
 *.stat
 objstat_*.txt

@@ -42,11 +42,6 @@ bool targetter::can_affect_outside_range()
     return false;
 }
 
-bool targetter::can_affect_walls()
-{
-    return false;
-}
-
 bool targetter::anyone_there(coord_def loc)
 {
     if (!map_bounds(loc))
@@ -509,11 +504,6 @@ bool targetter_fragment::set_aim(coord_def a)
     beam.determine_affected_cells(exp_map_max, coord_def(), 0,
                                   exp_range_max, false, false);
 
-    return true;
-}
-
-bool targetter_fragment::can_affect_walls()
-{
     return true;
 }
 
@@ -1100,7 +1090,9 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
 
     const actor *victim = actor_at(a);
     if (!victim || !victim->as_monster()
-        || mons_is_firewood(victim->as_monster()) || victim->invisible()
+        || mons_is_firewood(victim->as_monster())
+        || victim->as_monster()->friendly()
+        || !agent->can_see(*victim)
         || !victim->umbraed())
     {
         no_landing_reason = BLOCKED_NO_TARGET;
@@ -1369,4 +1361,91 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     return (zapped[loc] >= num_beams) ? AFF_YES :
            (zapped[loc] > 0)          ? AFF_MAYBE
                                       : AFF_NO;
+}
+
+targetter_monster_sequence::targetter_monster_sequence(const actor *act, int pow, int r) :
+                          targetter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
+{
+}
+
+bool targetter_monster_sequence::set_aim(coord_def a)
+{
+    if (!targetter_beam::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = origin;
+    bool last_cell_has_mons = true;
+    bool passed_through_mons = false;
+    for (auto c : path_taken)
+    {
+        if (!last_cell_has_mons)
+            return false; // we must have an uninterrupted chain of monsters
+
+        if (cell_is_solid(c))
+            break;
+
+        tempbeam.target = c;
+        if (anyone_there(c))
+        {
+            passed_through_mons = true;
+            tempbeam.use_target_as_pos = true;
+            exp_map.init(INT_MAX);
+            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
+                                              0, true, true);
+        }
+        else
+            last_cell_has_mons = false;
+    }
+
+    return passed_through_mons;
+}
+
+bool targetter_monster_sequence::valid_aim(coord_def a)
+{
+    if (!targetter_beam::set_aim(a))
+        return false;
+
+    bool last_cell_has_mons = true;
+    bool passed_through_mons = false;
+    for (auto c : path_taken)
+    {
+        if (!last_cell_has_mons)
+            return false; // we must have an uninterrupted chain of monsters
+
+        if (cell_is_solid(c))
+            return false;
+
+        if (!anyone_there(c))
+            last_cell_has_mons = false;
+        else
+            passed_through_mons = true;
+    }
+
+    return passed_through_mons;
+}
+
+aff_type targetter_monster_sequence::is_affected(coord_def loc)
+{
+    bool on_path = false;
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c))
+            break;
+        if (c == loc)
+            on_path = true;
+        if (anyone_there(c)
+            && !beam.ignores_monster(monster_at(c))
+            && (loc - c).rdist() <= 9)
+        {
+            coord_def centre(9,9);
+            if (exp_map(loc - c + centre) < INT_MAX
+                && !cell_is_solid(loc))
+            {
+                return AFF_YES;
+            }
+        }
+    }
+
+    return on_path ? AFF_TRACER : AFF_NO;
 }

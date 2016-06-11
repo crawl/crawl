@@ -292,6 +292,9 @@ slim. Still, here are a few general hints:
 
 * Descending deeper in the Abyss will increase the chance of finding an exit
   out, but also increase the danger you face.
+
+* Killing enemies can create a gateway out, but most enemies will be
+  too dangerous to fight; pick your battles carefully!
 %%%%
 Q:randart
 

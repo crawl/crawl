@@ -495,15 +495,17 @@ ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),
 ALTAR(DNGN_ALTAR_RU, "sacrificial altar of Ru", "altar_ru", BROWN),
-ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar to an unknown god", "altar_ecumenical", ETC_DARK),
+ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar of an unknown god", "altar_ecumenical", ETC_DARK),
 ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", ETC_PAKELLAS),
+ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
+ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
     DCHAR_FOUNTAIN, NUM_DCHAR_TYPES,\
     COLOUR_IS(colour),\
-    FFT_NONE, MF_FEATURE,\
+    FFT_NONE, MF_FLOOR,\
 }
 FOUNTAIN(DNGN_FOUNTAIN_BLUE, "fountain of clear blue water", "fountain_blue", BLUE),
 FOUNTAIN(DNGN_FOUNTAIN_SPARKLING, "fountain of sparkling water", "fountain_sparkling", LIGHTBLUE),

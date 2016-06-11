@@ -117,7 +117,7 @@ COLOUR:  ABdefghi = lightblue
 FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
 ITEM:    potion of curing q:1
-ITEM:    cloak unrand:ratskin_cloak
+ITEM:    ratskin_cloak
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
 ITEM:    amulet of inaccuracy mundane cursed

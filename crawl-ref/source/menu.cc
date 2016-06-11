@@ -110,7 +110,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
     {
         formatted_string s = formatted_string::parse_string(
-            me->get_text(needs_cursor), true, nullptr, col);
+            me->get_text(needs_cursor), col);
         s.chop(get_number_of_cols()).display();
     }
     else
@@ -971,6 +971,13 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     tileset.emplace_back(ch, get_dngn_tex(ch));
 
+    if (m->attitude == ATT_FRIENDLY)
+        tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
+    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
+        tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
+    else if (m->neutral())
+        tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+
     if (m->type == MONS_DANCING_WEAPON)
     {
         // For fake dancing weapons, just use a generic long sword, since
@@ -991,7 +998,14 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else if (mons_is_draconian(m->type))
     {
         tileset.emplace_back(tileidx_draco_base(*m), TEX_PLAYER);
-        tileidx_t job = tileidx_draco_job(*m);
+        const tileidx_t job = tileidx_draco_job(*m);
+        if (job)
+            tileset.emplace_back(job, TEX_PLAYER);
+    }
+    else if (mons_is_demonspawn(m->type))
+    {
+        tileset.emplace_back(tileidx_demonspawn_base(*m), TEX_PLAYER);
+        const tileidx_t job = tileidx_demonspawn_job(*m);
         if (job)
             tileset.emplace_back(job, TEX_PLAYER);
     }
@@ -1044,8 +1058,8 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILEI_HEART, TEX_ICONS);
-    else if (m->attitude == ATT_GOOD_NEUTRAL)
+        tileset.emplace_back(TILEI_FRIENDLY, TEX_ICONS);
+    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
         tileset.emplace_back(TILEI_GOOD_NEUTRAL, TEX_ICONS);
     else if (m->neutral())
         tileset.emplace_back(TILEI_NEUTRAL, TEX_ICONS);
@@ -1758,8 +1772,6 @@ void column_composer::clear()
 void column_composer::add_formatted(int ncol,
                                     const string &s,
                                     bool add_separator,
-                                    bool eol_ends_format,
-                                    bool (*tfilt)(const string &),
                                     int  margin)
 {
     ASSERT_RANGE(ncol, 0, (int) columns.size());
@@ -1777,10 +1789,7 @@ void column_composer::add_formatted(int ncol,
     }
 
     for (const string &seg : segs)
-    {
-        newlines.push_back(
-                formatted_string::parse_string(seg, eol_ends_format, tfilt));
-    }
+        newlines.push_back(formatted_string::parse_string(seg));
 
     strip_blank_lines(newlines);
 
@@ -1868,7 +1877,7 @@ void formatted_scroller::add_raw_text(const string& s, bool new_line,
             if (line.empty())
                 lines.emplace_back(" ");
             while (!line.empty())
-                lines.push_back(wordwrap_line(line, wrap_col, true, true));
+                lines.push_back(wordwrap_line(line, wrap_col, false, true));
         }
     }
 
@@ -2932,8 +2941,8 @@ void FormattedTextItem::render()
         m_font_buf.clear();
         // FIXME: m_fg_colour doesn't work here while it works in console.
         textcolour(m_fg_colour);
-        m_font_buf.add(formatted_string::parse_string(m_render_text, true,
-                                                      nullptr, m_fg_colour),
+        m_font_buf.add(formatted_string::parse_string(m_render_text,
+                                                      m_fg_colour),
                        m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
     }

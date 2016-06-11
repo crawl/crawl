@@ -83,6 +83,8 @@ static const char *_god_wrath_adjectives[] =
     "adversity",        // Qazlal
     "disappointment",   // Ru
     "progress",         // Pakellas
+    "fury",             // Uskayaw
+    "memory",           // Hepliaklqana (unused)
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -185,7 +187,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 {
     monster_type mon_type = MONS_SHADOW;
     if (tier >= 2 && count == 0 && coinflip())
-        mon_type = MONS_SHADOW_FIEND;
+        mon_type = MONS_TZITZIMITL;
     else if (tier >= 1 && count < 3 && coinflip())
         mon_type = MONS_SHADOW_DEMON;
 
@@ -595,7 +597,7 @@ static bool _makhleb_call_down_destruction()
 
     if (avatar == nullptr)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false; // not a very dazzling divine experience...
     }
 
@@ -1241,9 +1243,9 @@ static spell_type _vehumet_wrath_type()
             return random_choose(SPELL_ORB_OF_ELECTRICITY,
                                  SPELL_FLASH_FREEZE);
         case 8:
-            return random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR);
+            return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
         case 9:
-            return random_choose(SPELL_FIRE_STORM, SPELL_HELLFIRE);
+            return SPELL_FIRE_STORM;
         default:
             return SPELL_NO_SPELL;
     }
@@ -1263,14 +1265,14 @@ static bool _vehumet_retribution()
     monster* avatar = get_avatar(god);
     if (!avatar)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         return false;
     }
 
     const spell_type spell = _vehumet_wrath_type();
     if (spell == SPELL_NO_SPELL)
     {
-        simple_god_message("has no time to deal with you just now.", god);
+        simple_god_message(" has no time to deal with you just now.", god);
         shadow_monster_reset(avatar);
         return false;
     }
@@ -1285,7 +1287,6 @@ static bool _nemelex_retribution()
     // card theme
     const god_type god = GOD_NEMELEX_XOBEH;
 
-    // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
     return true;
@@ -1624,30 +1625,52 @@ static bool _dithmenos_retribution()
     return true;
 }
 
+static const pop_entry pop_qazlal_wrath[] =
+{
+  {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
+  {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
+  { 10, 22, 50, SEMI, MONS_SPARK_WASP },
+  { 18, 27, 50, RISE, MONS_STORM_DRAGON },
+
+  {  0, 12, 25, SEMI, MONS_FIRE_ELEMENTAL },
+  {  4, 12, 50, FLAT, MONS_FIRE_CRAB },
+  {  8, 16, 30, FLAT, MONS_LINDWURM },
+  { 12, 27, 50, SEMI, MONS_FIRE_DRAGON },
+
+  {  0, 12, 25, SEMI, MONS_WATER_ELEMENTAL },
+  {  2, 10, 50, FLAT, MONS_RIME_DRAKE },
+  { 12, 27, 50, SEMI, MONS_ICE_DRAGON },
+  { 20, 27, 30, RISE, MONS_SHARD_SHRIKE },
+
+  {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
+  {  2, 10, 50, FLAT, MONS_BASILISK },
+  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
+  { 18, 27, 50, RISE, MONS_IRON_DRAGON },
+
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 /**
- * Summon Qazlal's elemental minions to destroy the player!
+ * Summon elemental creatures to destroy the player!
  */
 static void _qazlal_summon_elementals()
 {
     const god_type god = GOD_QAZLAL;
 
-    mgen_data temp =
-        mgen_data::hostile_at(MONS_NO_MONSTER,
-                              _god_wrath_name(god),
-                              true, 0, 0, you.pos(), MG_NONE, god);
-
-    temp.hd = you.experience_level;
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    const int how_many = 1 + (you.experience_level / 5);
+    const int how_many = 1 + div_rand_round(you.experience_level, 7);
     bool success = false;
 
     for (int i = 0; i < how_many; i++)
     {
-        temp.cls = random_choose(MONS_FIRE_ELEMENTAL,
-                                 MONS_WATER_ELEMENTAL,
-                                 MONS_AIR_ELEMENTAL,
-                                 MONS_EARTH_ELEMENTAL);
+        monster_type mon = pick_monster_from(pop_qazlal_wrath,
+                                             you.experience_level);
+
+        mgen_data temp =
+            mgen_data::hostile_at(mon, _god_wrath_name(god),
+                                  true, 0, 0, you.pos(), MG_NONE, god);
+
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
         if (create_monster(temp, false))
             success = true;
     }
@@ -1702,20 +1725,6 @@ static bool _qazlal_retribution()
     return true;
 }
 
-void pakellas_evoke_backfire(spell_type spell)
-{
-    if (!one_chance_in(20))
-        return;
-
-    // Like Veh and Kiku: you can still get the spell to go through,
-    // but you get a miscast anyway.
-    simple_god_message(" does not allow the disloyal to dabble in "
-                        "devices!", GOD_PAKELLAS);
-    MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_PAKELLAS, spell,
-                  (you.experience_level / 2) + (spell_difficulty(spell) * 2),
-                  random2avg(88, 3), _god_wrath_name(GOD_PAKELLAS));
-}
-
 bool drain_wands()
 {
     vector<string> wands;
@@ -1740,89 +1749,49 @@ bool drain_wands()
     return true;
 }
 
-static bool _pakellas_drain_rods()
+static bool _choose_hostile_monster(const monster* mon)
 {
-    vector<string> rods;
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].defined())
-            continue;
-
-        if (you.inv[i].base_type == OBJ_RODS)
-        {
-            const int charges = you.inv[i].charges;
-            if (charges > 0 && coinflip())
-            {
-                you.inv[i].charges = 0;
-                if (you.inv[i].charge_cap > 6 * ROD_CHARGE_MULT)
-                    you.inv[i].charge_cap -= ROD_CHARGE_MULT;
-                if (you.inv[i].rod_plus > -3)
-                    you.inv[i].rod_plus -= 1 + random2(2);
-
-                rods.push_back(you.inv[i].name(DESC_PLAIN));
-            }
-        }
-    }
-    if (rods.empty())
-        return false;
-
-    mpr_comma_separated_list("Magical energy is drained from your ", rods);
-    return true;
+    return mon->attitude == ATT_HOSTILE;
 }
 
-static bool _pakellas_drain_evokers()
-{
-    vector<string> evokers;
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].defined())
-            continue;
 
-        if (is_xp_evoker(you.inv[i]) && evoker_is_charged(you.inv[i])
-            && coinflip())
+static bool _uskayaw_retribution()
+{
+    const god_type god = GOD_USKAYAW;
+
+    // check if we have monsters around
+    monster* mon = nullptr;
+    mon = choose_random_nearby_monster(0, _choose_hostile_monster);
+
+    switch (random2(5))
+    {
+    case 0:
+    case 1:
+        if (mon && mon->can_go_berserk())
         {
-            expend_xp_evoker(you.inv[i]);
-            evokers.push_back(you.inv[i].name(DESC_PLAIN));
+            simple_god_message(make_stringf(" drives %s into a dance frenzy!",
+                                     mon->name(DESC_THE).c_str()).c_str(), god);
+            mon->go_berserk(true);
+            return true;
         }
+        // else we intentionally fall through
+
+    case 2:
+    case 3:
+        if (mon)
+        {
+            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+                                    god);
+            paralyse_player(_god_wrath_name(god));
+            return false;
+        }
+        // else we intentionally fall through
+
+    case 5:
+        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        noisy(35, you.pos());
+        break;
     }
-    if (evokers.empty())
-        return false;
-
-    mpr_comma_separated_list("Magical energy is drained from your ", evokers);
-    return true;
-}
-
-/**
- * Call down the wrath of Pakellas upon the player!
- *
- * Devices / inventor theme.
- *
- * @return Whether to take further divine wrath actions afterward.
- */
-static bool _pakellas_retribution()
-{
-    simple_god_message(" sneers upon you!", GOD_PAKELLAS);
-
-    vector<bool(*)()> pakellas_wrath_funcs =
-        { drain_wands, _pakellas_drain_rods, _pakellas_drain_evokers };
-    shuffle_array(pakellas_wrath_funcs);
-    if (x_chance_in_y(pakellas_wrath_funcs.size(),
-                      pakellas_wrath_funcs.size() + 2))
-    {
-        for (auto func : pakellas_wrath_funcs)
-            if ((*func)())
-                return true;
-    }
-    if (you.magic_points > 0 && coinflip())
-    {
-        drain_mp(you.magic_points);
-        canned_msg(MSG_MAGIC_DRAIN);
-        return true;
-    }
-
-    // Pakellas can't or won't drain one of your possessions right now,
-    // so drain *you* instead...
-    drain_player(100, false, true);
     return true;
 }
 
@@ -1849,7 +1818,8 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
     // One in ten chance that Xom might do something good...
     case GOD_XOM:
-        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        xom_acts(abs(you.piety - HALF_MAX_PIETY),
+                 frombool(one_chance_in(10)));
         break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
@@ -1869,11 +1839,13 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
-    case GOD_PAKELLAS:      do_more = _pakellas_retribution(); break;
+    case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:
     case GOD_RU:
+    case GOD_HEPLIAKLQANA:
+    case GOD_PAKELLAS:
         // No reduction with time.
         return false;
 
@@ -1939,16 +1911,16 @@ void beogh_idol_revenge()
         return;
     }
 
-    const char *revenge;
+    string revenge;
 
     if (you_worship(GOD_BEOGH))
-        revenge = _get_beogh_speech("idol follower").c_str();
+        revenge = _get_beogh_speech("idol follower");
     else if (species_is_orcish(you.species))
-        revenge = _get_beogh_speech("idol orc").c_str();
+        revenge = _get_beogh_speech("idol orc");
     else
-        revenge = _get_beogh_speech("idol other").c_str();
+        revenge = _get_beogh_speech("idol other");
 
-    _god_smites_you(GOD_BEOGH, revenge);
+    _god_smites_you(GOD_BEOGH, revenge.c_str());
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)
@@ -2024,37 +1996,21 @@ void gozag_incite(monster *mon)
     behaviour_event(mon, ME_ALERT, &you);
 
     bool success = false;
-    const mon_attack_def attk = mons_attack_spec(mon, 0);
 
-    int tries = 3;
-    do
+    if (mon->needs_berserk(true, true))
     {
-        switch (random2(3))
-        {
-            case 0:
-                if (attk.type == AT_NONE || attk.damage == 0)
-                    break;
-                if (mon->has_ench(ENCH_MIGHT))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
-                success = true;
-                break;
-            case 1:
-                if (mon->has_ench(ENCH_HASTE))
-                    break;
-                enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
-                success = true;
-                break;
-            case 2:
-                if (!mon->can_go_berserk())
-                    break;
-                mon->go_berserk(true);
-                success = true;
-                break;
-        }
+        mon->go_berserk(true);
+        success = true;
     }
-    while (!success && --tries > 0);
+    else if (!mon->has_ench(ENCH_HASTE))
+    {
+        enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+        success = true;
+    }
 
     if (success)
+    {
+        mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
+    }
 }

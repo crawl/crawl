@@ -16,7 +16,7 @@ int sprint_modify_exp_inverse(int exp)
 
 int sprint_modify_piety(int piety)
 {
-    if (you_worship(GOD_OKAWARU))
+    if (you_worship(GOD_OKAWARU) || you_worship(GOD_USKAYAW))
         return piety;
     return piety * SPRINT_MULTIPLIER;
 }

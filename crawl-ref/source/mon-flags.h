@@ -47,8 +47,7 @@ enum monclass_flag_type : uint64_t
     /// monster can split
     M_SPLITS            = BIT(12),
 
-    /// monster glows with light
-    M_GLOWS             = BIT(13),
+                        //BIT(13), // was M_GLOWS
 
     /// monster is stationary
     M_STATIONARY        = BIT(14),
@@ -112,7 +111,8 @@ enum monclass_flag_type : uint64_t
     /// not a valid polymorph target (but can be polymorphed)
     M_NO_POLY_TO        = BIT(34),
 
-                        //BIT(35),
+    /// An ancestor granted by Hepliaklqana
+    M_ANCESTOR          = BIT(35),
 
     /// always leaves a corpse
     M_ALWAYS_CORPSE     = BIT(36),

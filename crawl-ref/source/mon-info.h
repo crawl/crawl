@@ -33,7 +33,9 @@ enum monster_info_flags
     MB_SICK,
     MB_CAUGHT,
     MB_WEBBED,
-    MB_FRENZIED,
+#if TAG_MAJOR_VERSION == 34
+    MB_OLD_FRENZIED,
+#endif
     MB_PETRIFYING,
     MB_PETRIFIED,
     MB_VULN_MAGIC,
@@ -83,7 +85,9 @@ enum monster_info_flags
     MB_PERM_SUMMON,
     MB_INNER_FLAME,
     MB_UMBRAED,
-    MB_ROUSED,
+#if TAG_MAJOR_VERSION == 34
+    MB_OLD_ROUSED,
+#endif
     MB_BREATH_WEAPON,
     MB_DEATHS_DOOR,
     MB_FIREWOOD,
@@ -151,6 +155,9 @@ enum monster_info_flags
     MB_READY_TO_HOWL,
     MB_PARTIALLY_CHARGED,
     MB_FULLY_CHARGED,
+    MB_GOZAG_INCITED,
+    MB_PAIN_BOND,
+    MB_IDEALISED,
     NUM_MB_FLAGS
 };
 
@@ -161,7 +168,6 @@ struct monster_info_base
     string mname;
     monster_type type;
     monster_type base_type;
-    monster_type draco_type;
     union
     {
         // These must all be the same size!
@@ -255,7 +261,6 @@ struct monster_info : public monster_info_base
         short damage;
         short ac;
         monster_type acting_part;
-        bool can_sinv;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const
@@ -282,20 +287,14 @@ struct monster_info : public monster_info_base
 
     vector<string> attributes() const;
 
-    const char *pronoun(pronoun_type variant) const
-    {
-        return mons_pronoun(type, variant, true);
-    }
+    const char *pronoun(pronoun_type variant) const;
 
     string wounds_description_sentence() const;
     string wounds_description(bool colour = false) const;
 
     string constriction_description() const;
 
-    monster_type draco_or_demonspawn_subspecies() const
-    {
-        return draco_type;
-    }
+    monster_type draco_or_demonspawn_subspecies() const;
 
     mon_intel_type intel() const
     {

@@ -87,6 +87,11 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Has the [player's] current god's one-time ability been used? (if any)
+function one_time_ability_used() */
+LUARET1(you_one_time_ability_used, boolean,
+        you.one_time_ability_used[you.religion])
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
@@ -155,7 +160,9 @@ LUARET1(you_contaminated, number, get_contamination_level())
 LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
+#if TAG_MAJOR_VERSION == 34
 LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
+#endif
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
@@ -474,11 +481,25 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && you.can_train[sk])
     {
-        you.train[sk] = min(max(luaL_checkint(ls, 2), 0), 2);
+        you.train[sk] = min(max((training_status)luaL_checkint(ls, 2),
+                                                 TRAINING_DISABLED),
+                                             TRAINING_FOCUSED);
         reset_training();
     }
 
     PLUARET(number, you.train[sk]);
+}
+
+LUAFN(you_skill_cost)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    float cost = scaled_skill_cost(sk);
+    if (cost == 0)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    PLUARET(number, max(1, (int)(10.0 * cost + 0.5)) * 0.1);
 }
 
 LUAFN(you_status)
@@ -534,6 +555,7 @@ static const struct luaL_reg you_clib[] =
     { "gold"        , you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
+    { "one_time_ability_used" , you_one_time_ability_used },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
@@ -549,6 +571,7 @@ static const struct luaL_reg you_clib[] =
     { "can_train_skill", you_can_train_skill },
     { "best_skill",   you_best_skill },
     { "train_skill",  you_train_skill },
+    { "skill_cost"  , you_skill_cost },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
@@ -601,7 +624,9 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
+#if TAG_MAJOR_VERSION == 34
     { "antimagic",    you_antimagic },
+#endif
     { "status",       you_status },
 
     { "can_consume_corpses",      you_can_consume_corpses },

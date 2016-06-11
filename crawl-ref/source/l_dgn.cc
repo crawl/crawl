@@ -792,6 +792,19 @@ static int dgn_change_rock_colour(lua_State *ls)
     return 0;
 }
 
+static int dgn_reset_feature_name_for(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    const int map_index = env.level_map_ids(c);
+    if (map_index != INVALID_MAP_INDEX)
+    {
+        const string feat_name = lua_tostring(ls, 3);
+        const dungeon_feature_type feat = dungeon_feature_by_name(feat_name);
+        env.level_vaults[map_index]->map.feat_renames.erase(feat);
+    }
+    return 0;
+}
+
 static int dgn_colour_at(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -862,16 +875,13 @@ static int dgn_terrain_changed(lua_State *ls)
         type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
-    const bool affect_player =
-    lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_features =
-    lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
+        lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_items =
-    lua_isboolean(ls, 6)? lua_toboolean(ls, 6) : true;
+        lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
     dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
                                        luaL_checkint(ls, 2)),
-                            type, affect_player,
-                            preserve_features, preserve_items);
+                            type, preserve_features, preserve_items);
     return 0;
 }
 
@@ -1859,6 +1869,7 @@ const struct luaL_reg dgn_dlib[] =
 { "delete_cloud", dgn_delete_cloud },
 { "place_cloud", dgn_place_cloud },
 { "noisy", dgn_noisy },
+{ "reset_feature_name_for", dgn_reset_feature_name_for },
 
 { "is_passable", _dgn_is_passable },
 

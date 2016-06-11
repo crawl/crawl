@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -66,6 +67,192 @@
 #include "unwind.h"
 #include "view.h"
 #include "xom.h"
+
+// The menu class for using items from either inv or floor.
+// Derivative of InvMenu
+
+class UseItemMenu : public InvMenu
+{
+    vector<const item_def*> item_inv;
+    vector<const item_def*> item_floor;
+
+    void populate_list(int item_type);
+    void populate_menu();
+    bool process_key(int key) override;
+
+public:
+    // Constructor
+    // Requires int for item filter.
+    // Accepts:
+    //      OBJ_POTIONS
+    //      OBJ_SCROLLS
+    UseItemMenu(int selector, const char* prompt);
+};
+
+UseItemMenu::UseItemMenu(int item_type, const char* prompt)
+    : InvMenu(MF_SINGLESELECT)
+{
+    set_title(prompt);
+    populate_list(item_type);
+    populate_menu();
+}
+
+void UseItemMenu::populate_list(int item_type)
+{
+    // Load inv items first
+    for (const auto &item : you.inv)
+    {
+        // Populate the vector with filter
+        if (item.defined() && item_is_selected(item, item_type))
+                item_inv.push_back(&item);
+    }
+    // Load floor items
+    item_floor = item_list_on_square(you.visible_igrd(you.pos()));
+    // Filter
+    erase_if(item_floor, [=](const item_def* item)
+    {
+        return !item_is_selected(*item,item_type);
+    });
+}
+
+void UseItemMenu::populate_menu()
+{
+    // Need a tracker for inv item hotkeys and floor item hotkeys
+    set<char> used_keys;
+
+    // Load the inv items first, they have a hotkey
+    if (!item_inv.empty())
+    {
+        auto subtitle = new MenuEntry("Inventory Items", MEL_TITLE);
+        subtitle->colour = LIGHTGREY;
+        add_entry(subtitle);
+
+        load_items(item_inv,
+                   [&](MenuEntry* entry) -> MenuEntry*
+                   {
+                       // Remove inventory item hotkeys from the tracker
+                       if (!entry->hotkeys.empty())
+                           used_keys.insert(char(entry->hotkeys[0]));
+                       return entry;
+                   });
+    }
+
+    if (!item_floor.empty())
+    {
+        // Load floor items to menu
+        auto subtitle = new MenuEntry("Floor Items", MEL_TITLE);
+        subtitle->colour = LIGHTGREY;
+        add_entry(subtitle);
+
+        menu_letter hotkey;
+        load_items(item_floor,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        if (!entry->hotkeys.empty())
+                        {
+                            while (used_keys.count(hotkey))
+                            {
+                                // Remove it from used_keys, so the second time
+                                // through we re-use all letters, inventory or
+                                // not.
+                                used_keys.erase(hotkey);
+                                ++hotkey;
+                            }
+                            entry->hotkeys[0] = hotkey++;
+                        }
+                        return entry;
+                    });
+    }
+}
+
+bool UseItemMenu::process_key(int key)
+{
+    if (isadigit(key) || key == '*' || key == '\\')
+    {
+        lastch = key;
+        return false;
+    }
+    return Menu::process_key(key);
+}
+
+/*
+ * Prompt use of a consumable from either player inventory or the floor.
+ *
+ * This function generates a menu containing type_expect items based on the
+ * object_class_type to be acted on by another function. First it will list
+ * items in inventory, then items on the floor. If player cancels out of menu,
+ * nullptr is returned.
+ *
+ * @param item_type The object_class_type or OSEL_* of items to list.
+ * @param oper The operation being done to the selected item.
+ * @param prompt The prompt on the menu title
+ * @param allowcancel If the user tries to cancel out of the prompt, run this
+ *                    function. If it returns false, continue the prompt rather
+ *                    than returning null.
+ *
+ * @return a pointer to the chosen item, or nullptr if none was chosen.
+ */
+
+static item_def* _use_an_item(int item_type, operation_types oper,
+                              const char* prompt,
+                              function<bool ()> allowcancel = []()
+                              { return true; })
+{
+    item_def* target = nullptr;
+
+    // First handle things that will return nullptr
+
+    // No selectable items in inv or floor
+    if (!any_items_of_type(item_type, -1, true))
+    {
+        mprf(MSGCH_PROMPT, "%s",
+             no_selectables_message(item_type).c_str());
+        return nullptr;
+    }
+
+    // Init the menu
+    UseItemMenu menu (item_type, prompt);
+
+    while (true)
+    {
+        vector<MenuEntry*> sel = menu.show(true);
+        int keyin = menu.getkey();
+        redraw_screen();
+
+        // Handle inscribed item keys
+        if (isadigit(keyin))
+        {
+            const int idx = digit_inscription_to_inv_index(keyin, oper);
+            if (idx >= 0)
+                target = &item_from_int(true, idx);
+        }
+        // TODO: handle * key
+        else if (keyin == '\\')
+        {
+            check_item_knowledge();
+            continue;
+        }
+        else if (!sel.empty())
+        {
+            ASSERT(sel.size() == 1);
+
+            auto ie = dynamic_cast<InvEntry *>(sel[0]);
+            target = const_cast<item_def*>(ie->item);
+        }
+
+        if (target && !check_warning_inscriptions(*target, oper))
+            target = nullptr;
+        if (target)
+            return target;
+        else if (allowcancel())
+        {
+            prompt_failed(PROMPT_ABORT);
+            return nullptr;
+        }
+        else
+            continue;
+    }
+}
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
@@ -149,6 +336,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("This weapon is holy and will not allow you to wield it.");
             id_brand = true;
         }
+        else
+            return false;
     }
     else if (!ignore_temporary_disability
              && you.hunger_state < HS_FULL
@@ -162,6 +351,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("This weapon is vampiric, and you must be Full or above to equip it.");
             id_brand = true;
         }
+        else
+            return false;
     }
 #if TAG_MAJOR_VERSION == 34
     else if (you.species == SP_DJINNI
@@ -173,6 +364,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
             mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
             id_brand = true;
         }
+        else
+            return false;
     }
 #endif
 
@@ -545,29 +738,25 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (ignore_temporary)
+        if (player_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
         {
-            // Hooves and talons were already checked by player_has_feet.
-
-            if (player_mutation_level(MUT_CLAWS, false) >= 3)
+            if (verbose)
             {
-                if (verbose)
-                {
-                    mprf("The hauberk won't fit your %s.",
-                         you.hand_name(true).c_str());
-                }
-                return false;
+                mprf("The hauberk won't fit your %s.",
+                     you.hand_name(true).c_str());
             }
-
-            if (player_mutation_level(MUT_HORNS, false) >= 3
-                || player_mutation_level(MUT_ANTENNAE, false) >= 3)
-            {
-                if (verbose)
-                    mpr("The hauberk won't fit your head.");
-                return false;
-            }
+            return false;
         }
-        else
+
+        if (player_mutation_level(MUT_HORNS, !ignore_temporary) >= 3
+            || player_mutation_level(MUT_ANTENNAE, !ignore_temporary) >= 3)
+        {
+            if (verbose)
+                mpr("The hauberk won't fit your head.");
+            return false;
+        }
+
+        if (!ignore_temporary)
         {
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
@@ -612,12 +801,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
     int bad_size = fit_armour_size(item, player_size);
+#if TAG_MAJOR_VERSION == 34
     if (is_unrandom_artefact(item, UNRAND_TALOS))
     {
         // adjust bad_size for the oversized plate armour
         // negative means levels too small, positive means levels too large
         bad_size = SIZE_LARGE - player_size;
     }
+#endif
 
     if (bad_size)
     {
@@ -1649,7 +1840,7 @@ static void _vampire_corpse_help()
         mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
-void drink(int slot)
+void drink(item_def* potion)
 {
     if (you_foodless(true))
     {
@@ -1683,33 +1874,26 @@ void drink(int slot)
         return;
     }
 
-    if (slot == -1)
+    if (!potion)
     {
-        slot = prompt_invent_item("Drink which item?",
-                                  MT_INVLIST, OBJ_POTIONS,
-                                  true, true, true, 0, -1, nullptr,
-                                  OPER_QUAFF);
-        if (prompt_failed(slot))
+        potion = _use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
+
+        if (!potion)
         {
             _vampire_corpse_help();
             return;
         }
     }
 
-    item_def& potion = you.inv[slot];
-
-    if (potion.base_type != OBJ_POTIONS)
+    if (potion->base_type != OBJ_POTIONS)
     {
-        if (you.species == SP_VAMPIRE && potion.base_type == OBJ_CORPSES)
-            eat_food(slot);
-        else
-            mpr("You can't drink that!");
+        mpr("You can't drink that!");
         return;
     }
 
-    const bool alreadyknown = item_type_known(potion);
+    const bool alreadyknown = item_type_known(*potion);
 
-    if (alreadyknown && is_bad_item(potion, true))
+    if (alreadyknown && is_bad_item(*potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return;
@@ -1720,7 +1904,6 @@ void drink(int slot)
     // potions on monsters.
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
-    potion_type pot_type = (potion_type)potion.sub_type;
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
@@ -1729,7 +1912,7 @@ void drink(int slot)
         return;
     }
 
-    if (!quaff_potion(potion))
+    if (!quaff_potion(*potion))
         return;
 
     if (!alreadyknown && dangerous)
@@ -1738,17 +1921,22 @@ void drink(int slot)
         // a dangerous monster nearby...
         xom_is_stimulated(200);
     }
-    if (is_blood_potion(potion))
+    if (is_blood_potion(*potion))
     {
         // Always drink oldest potion.
-        remove_oldest_perishable_item(potion);
+        remove_oldest_perishable_item(*potion);
     }
-    dec_inv_item_quantity(slot, 1);
+    if (in_inventory(*potion))
+    {
+        dec_inv_item_quantity(potion->link, 1);
+        auto_assign_item_slot(*potion);
+    }
+    else
+        dec_mitm_item_quantity(potion->index(), 1);
     count_action(CACT_USE, OBJ_POTIONS);
-    auto_assign_item_slot(potion);
     you.turn_is_over = true;
     // This got deferred from PotionExperience::effect to prevent SIGHUP abuse.
-    if (pot_type == POT_EXPERIENCE)
+    if (potion->sub_type == POT_EXPERIENCE)
         level_change();
 }
 
@@ -1799,11 +1987,10 @@ static void _rebrand_weapon(item_def& wpn)
         if (is_range_weapon(wpn))
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAMING,
-                                    30, SPWPN_FREEZING,
-                                    20, SPWPN_VENOM,
-                                    20, SPWPN_VORPAL,
-                                    12, SPWPN_EVASION,
+                                    33, SPWPN_FLAMING,
+                                    33, SPWPN_FREEZING,
+                                    23, SPWPN_VENOM,
+                                    23, SPWPN_VORPAL,
                                     5, SPWPN_ELECTROCUTION,
                                     3, SPWPN_CHAOS,
                                     0);
@@ -1849,11 +2036,6 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_PROTECTION:
         flash_colour = YELLOW;
         mprf("%s projects an invisible shield of force!",itname.c_str());
-        break;
-
-    case SPWPN_EVASION:
-        flash_colour = YELLOW;
-        mprf("%s emits a repelling force!",itname.c_str());
         break;
 
     case SPWPN_FLAMING:
@@ -1986,30 +2168,19 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     // Get item name now before changing enchantment.
     string iname = wpn.name(DESC_YOUR);
 
-    if (is_weapon(wpn))
+    if (is_weapon(wpn)
+        && !is_artefact(wpn)
+        && wpn.base_type == OBJ_WEAPONS
+        && wpn.plus < MAX_WPN_ENCHANT)
     {
-        if (!is_artefact(wpn)
-            && wpn.base_type == OBJ_WEAPONS
-            && wpn.plus < MAX_WPN_ENCHANT)
-        {
-            wpn.plus++;
-            success = true;
-            if (!quiet)
-                mprf("%s glows red for a moment.", iname.c_str());
-        }
-
-        if (wpn.cursed())
-        {
-            if (!success)
-                mprf("%s glows silver for a moment.", iname.c_str());
-            success = true;
-        }
-        // Mark the item as uncursed, whether or not it was cursed initially.
-        do_uncurse_item(wpn, true, true);
+        wpn.plus++;
+        success = true;
+        if (!quiet)
+            mprf("%s glows red for a moment.", iname.c_str());
     }
 
     if (!success && !quiet)
-        mprf("%s very briefly gains a red sheen.", iname.c_str());
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     if (success)
         you.wield_change = true;
@@ -2020,70 +2191,42 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    int item_slot = -1;
-    while (true)
+    item_def* itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
+                        "Identify which item? (\\ to view known items)",
+                        [=]()
+                        {
+                            return alreadyknown
+                                   || crawl_state.seen_hups
+                                   || yesno("Really abort (and waste the scroll)?", false, 0);
+                        });
+
+    if (!itemp)
+        return !alreadyknown;
+
+    item_def& item = *itemp;
+    if (alreadyknown)
+        mpr(pre_msg);
+
+    set_ident_type(item, true);
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Output identified item.
+    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (in_inventory(item))
     {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item(
-                "Identify which item? (\\ to view known items)",
-                MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
-                -1, nullptr, OPER_ANY, true);
-        }
-
-        if (item_slot == PROMPT_NOTHING)
-            return !alreadyknown;
-
-        if (item_slot == PROMPT_ABORT)
-        {
-            if (alreadyknown
-                || crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0))
-            {
-                canned_msg(MSG_OK);
-                return !alreadyknown;
-            }
-            else
-            {
-                item_slot = -1;
-                continue;
-            }
-        }
-
-        item_def& item(you.inv[item_slot]);
-        if (fully_identified(item)
-            && (!is_deck(item) || top_card_is_known(item)))
-        {
-            mpr("Choose an unidentified item, or Esc to abort.");
-            more();
-            item_slot = -1;
-            continue;
-        }
-
-        if (alreadyknown)
-            mpr(pre_msg);
-
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-        if (is_deck(item) && !top_card_is_known(item))
-            deck_identify_first(item_slot);
-
-        // Output identified item.
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        if (item_slot == you.equip[EQ_WEAPON])
+        if (item.link == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
         if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item_slot == you.equip[EQ_AMULET]
+            && item.link == you.equip[EQ_AMULET]
             && !item_known_cursed(item))
         {
             learned_something_new(HINT_INACCURACY);
         }
 
         auto_assign_item_slot(item);
-        return true;
     }
+    return true;
 }
 
 static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
@@ -2104,20 +2247,13 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     ac_change = 0;
 
-    // Cannot be enchanted nor uncursed.
-    if (!is_enchantable_armour(arm, true))
+    // Cannot be enchanted.
+    if (!is_enchantable_armour(arm))
     {
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
-
-        // That proved that it was uncursed.
-        if (!have_passive(passive_t::want_curses))
-            arm.flags |= ISFLAG_KNOW_CURSE;
-
         return false;
     }
-
-    const bool is_cursed = arm.cursed();
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -2134,27 +2270,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         hide2armour(arm);
         ac_change = property(arm, PARM_AC) - ac_change;
 
-        do_uncurse_item(arm, true, true);
-
         // No additional enchantment.
         return true;
-    }
-
-    // Even if not affected, it may be uncursed.
-    if (!is_enchantable_armour(arm, false))
-    {
-        if (!quiet)
-        {
-            if (is_cursed)
-            {
-                mprf("%s glows silver for a moment.",
-                     arm.name(DESC_YOUR).c_str());
-            }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
-        }
-        do_uncurse_item(arm, true, true);
-        return is_cursed; // was_cursed, really
     }
 
     // Output message before changing enchantment and curse status.
@@ -2166,7 +2283,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     arm.plus++;
     ac_change++;
-    do_uncurse_item(arm, true, true);
 
     return true;
 }
@@ -2203,7 +2319,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 
         item_def& arm(you.inv[item_slot]);
 
-        if (!is_enchantable_armour(arm, true, true))
+        if (!is_enchantable_armour(arm, true))
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
             more();
@@ -2287,7 +2403,7 @@ void random_uselessness()
     }
 }
 
-static void _handle_read_book(int item_slot)
+static void _handle_read_book(item_def& book)
 {
     if (you.berserk())
     {
@@ -2301,7 +2417,6 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    item_def& book(you.inv[item_slot]);
     ASSERT(book.sub_type != BOOK_MANUAL);
 
 #if TAG_MAJOR_VERSION == 34
@@ -2389,9 +2504,9 @@ bool player_can_read()
  * response to print. Otherwise, if they do have such items, return the empty
  * string.
  */
-static string _no_items_reason(object_selector type)
+static string _no_items_reason(object_selector type, bool check_floor = false)
 {
-    if (!any_items_of_type(type))
+    if (!any_items_of_type(type, -1, check_floor))
         return no_selectables_message(type);
     return "";
 }
@@ -2473,7 +2588,7 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
 
         case SCR_IDENTIFY:
-            return _no_items_reason(OSEL_UNIDENT);
+            return _no_items_reason(OSEL_UNIDENT, true);
 
         case SCR_RECHARGING:
             return _no_items_reason(OSEL_RECHARGE);
@@ -2502,37 +2617,33 @@ string cannot_read_item_reason(const item_def &item)
  * @param slot      The slot of the item in the player's inventory. If -1, the
  *                  player is prompted to choose a slot.
  */
-void read(int slot)
+void read(item_def* scroll)
 {
     if (!player_can_read())
         return;
 
-    int item_slot = (slot != -1) ? slot
-                                 : prompt_invent_item("Read which item?",
-                                                       MT_INVLIST,
-                                                       OBJ_SCROLLS,
-                                                       true, true, true, 0, -1,
-                                                       nullptr, OPER_READ);
+    if (!scroll)
+    {
+        scroll = _use_an_item(OBJ_SCROLLS, OPER_READ, "Read which item?");
+        if (!scroll)
+            return;
+    }
 
-    if (prompt_failed(item_slot))
-        return;
-
-    const item_def& scroll = you.inv[item_slot];
-    const string failure_reason = cannot_read_item_reason(scroll);
+    const string failure_reason = cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
         return;
     }
 
-    if (scroll.base_type == OBJ_BOOKS)
+    if (scroll->base_type == OBJ_BOOKS)
     {
-        _handle_read_book(item_slot);
+        _handle_read_book(*scroll);
         return;
     }
 
     // need to handle this before we waste time (with e.g. blurryvis)
-    if (scroll.sub_type == SCR_BLINKING && item_type_known(scroll)
+    if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
         && player_has_orb()
         && !yesno("Your blink will be uncontrolled - continue anyway?",
                   false, 'n'))
@@ -2566,12 +2677,13 @@ void read(int slot)
     {
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
-        start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
+        const pair<bool, int> item = item_int(*scroll);
+        start_delay(DELAY_BLURRY_SCROLL, turns, item.second, item.first);
         if (player_mutation_level(MUT_BLURRY_VISION) == 1)
             you.time_taken /= 2;
     }
     else
-        read_scroll(item_slot);
+        read_scroll(*scroll);
 }
 
 /**
@@ -2582,11 +2694,10 @@ void read(int slot)
  * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
  * player chooses to cancel at the last moment.
  *
- * @param slot      The slot of the item in the player's inventory.
+ * @param scroll The scroll to be read.
  */
-void read_scroll(int item_slot)
+void read_scroll(item_def& scroll)
 {
-    item_def& scroll = you.inv[item_slot];
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
     const bool alreadyknown = item_type_known(scroll);
@@ -2861,11 +2972,14 @@ void read_scroll(int item_slot)
     set_ident_type(scroll, true);
     set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    string scroll_name = scroll.name(DESC_QUALNAME).c_str();
+    string scroll_name = scroll.name(DESC_QUALNAME);
 
     if (!cancel_scroll)
     {
-        dec_inv_item_quantity(item_slot, 1);
+        if (in_inventory(scroll))
+            dec_inv_item_quantity(scroll.link, 1);
+        else
+            dec_mitm_item_quantity(scroll.index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
@@ -2879,7 +2993,7 @@ void read_scroll(int item_slot)
         && which_scroll != SCR_AMNESIA)
     {
         mprf("It %s a %s.",
-             you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
+             scroll.quantity < prev_quantity ? "was" : "is",
              scroll_name.c_str());
     }
 
@@ -3072,7 +3186,7 @@ void tile_item_use(int idx)
             if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
             {
                 if (check_warning_inscriptions(item, OPER_READ))
-                    _handle_read_book(idx);
+                    _handle_read_book(you.inv[idx]);
             } // else it's a spellbook
             else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(); // offers all spells, might not be what we want
@@ -3080,7 +3194,7 @@ void tile_item_use(int idx)
 
         case OBJ_SCROLLS:
             if (check_warning_inscriptions(item, OPER_READ))
-                read(idx);
+                read(&you.inv[idx]);
             return;
 
         case OBJ_JEWELLERY:
@@ -3092,7 +3206,7 @@ void tile_item_use(int idx)
 
         case OBJ_POTIONS:
             if (check_warning_inscriptions(item, OPER_QUAFF))
-                drink(idx);
+                drink(&you.inv[idx]);
             return;
 
         default:

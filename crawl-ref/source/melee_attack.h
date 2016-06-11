@@ -20,7 +20,8 @@ enum unarmed_attack_type
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_TENTACLES
+    UNAT_LAST_ATTACK = UNAT_TENTACLES,
+    NUM_UNARMED_ATTACKS,
 };
 
 class melee_attack : public attack
@@ -120,7 +121,6 @@ private:
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
 
-    int  player_aux_stat_modify_damage(int damage);
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage) override;
 

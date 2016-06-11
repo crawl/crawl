@@ -185,6 +185,7 @@ end
 
 function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
+-- Late D entries for save compat, remove when TAG_MAJOR_VERSION > 34
     e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
     e.depth_chance("D:24", 10000)
@@ -2130,7 +2131,7 @@ ENDMAP
 NAME:   evilmike_mini_pan_V
 KITEM:  ( = |
 KFEAT:  ( = (
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 x.@.xxxxxxxxxxxxxxxxx.@.x
@@ -2327,12 +2328,12 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KPROP: tb = no_tele_into
-NSUBST: t = 10:p / *:., b = 10:p / *:.
-KMONS: p = human / elf / orc / naga / centaur / draconian / \
-   ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
-   deep dwarf / felid / octopode / vampire / base draconian / demigod / \
-   demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+KMONS:  p = human / elf / orc / naga / centaur / draconian / ogre / \
+            minotaur / troll / kobold / mummy / ghoul / spriggan / felid / \
+            deep dwarf / octopode / vampire / base draconian / demigod / \
+            demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+NSUBST: t = 10:p / *:', b = 10:p / *:'
+KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP

@@ -231,6 +231,7 @@ public:
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
+    bool        darken_beyond_range; // whether to darken squares out of range
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -242,6 +243,8 @@ public:
     bool        no_dark_brand;    // Attribute for branding friendly monsters
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
+    int         autofight_warning;      // Amount of real time required between
+                                        // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
 
     int         fire_items_start; // index of first item for fire command
@@ -356,7 +359,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    autosac_type auto_sacrifice;
+    bool        auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
@@ -385,6 +388,9 @@ public:
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
     bool        restart_after_save; // .. or on save
+
+    bool        read_persist_options; // If true, Crawl will try to load
+                                      // options from c_persist.options
 
     vector<text_pattern> drop_filter;
 
@@ -416,6 +422,8 @@ public:
                                    // fraction of HP or MP
 
     bool        regex_search; // whether to default to regex search for ^F
+    bool        autopickup_search; // whether to annotate stash items with
+                                   // autopickup status
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

@@ -198,7 +198,7 @@ spret_type cast_ring_of_flames(int power, bool fail)
     fail_check();
     did_god_conduct(DID_FIRE, min(5 + power/5, 50));
     you.increase_duration(DUR_FIRE_SHIELD,
-                          5 + (power / 10) + (random2(power) / 5), 50,
+                          6 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
     manage_fire_shield(1);
     return SPRET_SUCCESS;
@@ -208,29 +208,12 @@ void manage_fire_shield(int delay)
 {
     ASSERT(you.duration[DUR_FIRE_SHIELD]);
 
-    int old_dur = you.duration[DUR_FIRE_SHIELD];
-
-    you.duration[DUR_FIRE_SHIELD]-= delay;
-    if (you.duration[DUR_FIRE_SHIELD] < 0)
-        you.duration[DUR_FIRE_SHIELD] = 0;
-
     // Melt ice armour entirely.
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
 
     // Remove fire clouds on top of you
     if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
         delete_cloud(you.pos());
-
-    if (!you.duration[DUR_FIRE_SHIELD])
-    {
-        mprf(MSGCH_DURATION, "Your ring of flames gutters out.");
-        return;
-    }
-
-    int threshold = get_expiration_threshold(DUR_FIRE_SHIELD);
-
-    if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
-        mprf(MSGCH_WARN, "Your ring of flames is guttering out.");
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)

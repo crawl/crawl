@@ -497,14 +497,14 @@ void doom_howl(int time)
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
     if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
-    // 1 nasty beast every 3-5 turns
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
         const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(30, 50);
+            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
@@ -521,7 +521,7 @@ void doom_howl(int time)
     {
         const monster_type howlcalled = random_choose(
                 MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
-                MONS_REAPER, MONS_TORMENTOR, MONS_SHADOW_FIEND
+                MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL
         );
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
@@ -759,7 +759,8 @@ bool tukima_affects(const actor &target)
            && is_weapon(*wpn)
            && !is_range_weapon(*wpn)
            && !is_special_unrandom_artefact(*wpn)
-           && !mons_class_is_animated_weapon(target.type);
+           && !mons_class_is_animated_weapon(target.type)
+           && !mons_is_hepliaklqana_ancestor(target.type);
 }
 
 /**
@@ -2024,7 +2025,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         {
             count++;
             player_angers_monster(sim);
-            sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
         }
     }
 
@@ -2101,7 +2102,7 @@ bool monster_simulacrum(monster *mon, bool actual)
                 {
                     was_successful = true;
                     player_angers_monster(sim);
-                    sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+                    sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
                     if (you.can_see(*sim))
                         num_seen++;
                 }
@@ -3066,7 +3067,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
     if (prism)
     {
-        if (you.can_see(*caster))
+        if (caster->observable())
         {
             mprf("%s %s a prism of explosive energy!",
                  caster->name(DESC_THE).c_str(),
@@ -3315,7 +3316,9 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },
     { SPELL_EARTH_ELEMENTALS,           { 3, 2 } },
     { SPELL_AIR_ELEMENTALS,             { 3, 2 } },
+#if TAG_MAJOR_VERSION == 34
     { SPELL_IRON_ELEMENTALS,            { 3, 2 } },
+#endif
     { SPELL_SUMMON_SPECTRAL_ORCS,       { 3, 2 } },
     { SPELL_FIRE_SUMMON,                { 4, 2 } },
     { SPELL_SUMMON_MINOR_DEMON,         { 3, 3 } },
@@ -3331,6 +3334,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HOLIES,              { 4, 2 } },
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
+    { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     // Rod specials
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };

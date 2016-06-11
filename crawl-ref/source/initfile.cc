@@ -293,8 +293,6 @@ int str_to_summon_type(const string &str)
         return MON_SUMM_WRATH;
     if (str == "aid")
         return MON_SUMM_AID;
-    if (str == "lantern")
-        return MON_SUMM_LANTERN;
 
     return spell_by_name(str);
 }
@@ -555,7 +553,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_vampire_feed = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, statue, hungry, hit_monster, "
+        "interrupt_travel = interrupt_butcher, hungry, hit_monster, "
                             "sense_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
@@ -700,6 +698,8 @@ void game_options::reset_options()
 #endif
     restart_after_save = false;
 
+    read_persist_options = false;
+
     macro_dir = SysEnv.macro_dir;
 
 #if !defined(DGAMELAUNCH)
@@ -802,9 +802,11 @@ void game_options::reset_options()
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
+    autofight_warning      = 0;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = !is_tiles();
+    darken_beyond_range    = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -884,8 +886,7 @@ void game_options::reset_options()
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK
-                              | ES_GREEDY_SACRIFICEABLE);
+                              | ES_GREEDY_VISITED_ITEM_STACK);
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -900,7 +901,7 @@ void game_options::reset_options()
     explore_auto_rest      = false;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = AS_NO;
+    auto_sacrifice         = false;
 
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
@@ -929,6 +930,7 @@ void game_options::reset_options()
     pizzas.clear();
 
     regex_search = false;
+    autopickup_search = false;
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
@@ -1058,7 +1060,7 @@ void game_options::reset_options()
 
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
-    tile_show_demon_tier     = true;
+    tile_show_demon_tier     = false;
 #ifdef USE_TILE_WEB
     // disabled by default due to performance issues
     tile_water_anim          = false;
@@ -1585,6 +1587,16 @@ void read_init_file(bool runscript)
         return;
     Options.read_options(f, runscript);
 
+    if (Options.read_persist_options)
+    {
+        // Read options from a .persist file if one exists.
+        clua.load_persist();
+        clua.pushglobal("c_persist.options");
+        if (lua_isstring(clua, -1))
+            read_options(lua_tostring(clua, -1), runscript);
+        lua_pop(clua, 1);
+    }
+
     // Load late binding extra options from the command line AFTER init.txt.
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
@@ -2088,12 +2100,6 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
-        else if (c == "greedy_sacrificeable" || c == "greedy_sacrificeables"
-                 || c == "greedy_sacrificable" || c == "greedy_sacrificables"
-                 || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
-        {
-            conditions |= ES_GREEDY_SACRIFICEABLE;
-        }
     }
     return conditions;
 }
@@ -2312,27 +2318,38 @@ static void _bindkey(string field)
 
     const string key_str = field.substr(start_bracket + 1,
                                         end_bracket - start_bracket - 1);
+    const char *s = key_str.c_str();
+
+    ucs_t wc;
+    vector<ucs_t> wchars;
+    while (int l = utf8towc(&wc, s))
+    {
+        s += l;
+        wchars.push_back(wc);
+    }
 
     int key;
 
     // TODO: Function keys.
-    if (key_str.length() == 0)
+    if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-    else if (key_str.length() == 1)
-        key = key_str[0];
-    else if (key_str.length() == 2)
+    else if (wchars.size() == 1)
+        key = wchars[0];
+    else if (wchars.size() == 2)
     {
-        if (key_str[0] != '^')
+        // Ctrl + non-ascii is meaningless here.
+        if (wchars[0] != '^' || wchars[1] > 127)
         {
             mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
                  key_str.c_str(), field.c_str());
             return;
         }
-        key = CONTROL(key_str[1]);
+
+        key = CONTROL(wchars[0]);
     }
     else
     {
@@ -2627,6 +2644,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(restart_after_game);
     else BOOL_OPTION(restart_after_save);
 #endif
+    else BOOL_OPTION(read_persist_options);
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
     else if (key == "easy_confirm")
@@ -2870,6 +2888,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 [](string p) { return !trimmed_string(p).empty(); });
     }
     else BOOL_OPTION(regex_search);
+    else BOOL_OPTION(autopickup_search);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -2882,6 +2901,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
+    else INT_OPTION(autofight_warning, 0, 1000);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else LIST_OPTION(note_monsters);
     else LIST_OPTION(note_messages);
@@ -3495,17 +3515,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(explore_auto_rest);
     else BOOL_OPTION(travel_key_stop);
-    else if (key == "auto_sacrifice")
-    {
-        if (field == "prompt_ignore")
-            auto_sacrifice = AS_PROMPT_IGNORE;
-        else if (field == "prompt" || field == "ask")
-            auto_sacrifice = AS_PROMPT;
-        else if (field == "before_explore")
-            auto_sacrifice = AS_BEFORE_EXPLORE;
-        else
-            auto_sacrifice = _read_bool(field, false) ? AS_YES : AS_NO;
-    }
+    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
         if (plain)
@@ -3619,6 +3629,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(rest_wait_both);
     else INT_OPTION(rest_wait_percent, 0, 100);
     else BOOL_OPTION(cloud_status);
+    else BOOL_OPTION(darken_beyond_range);
     else if (key == "dump_message_count")
     {
         // Capping is implicit

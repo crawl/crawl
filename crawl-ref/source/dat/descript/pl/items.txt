@@ -699,13 +699,6 @@ stone
 
 Mały kamyk. Można nim rzucić lub wystrzelić go z procy.
 %%%%
-stone of tremors
-
-Wygładzony kamień zamieszkały przez przyjazne duchy ziemi. Uderzenie tym
-kamieniem o skałę spowoduje małe trzęsienie ziemi, wyzwalając owe duchy.
-Ktokolwiek stoi w pobliżu surowej skały zostanie zasypany gradem mniejszych i
-większych odłamów — lub nawet zapadnie się w szczeliny w podłożu.
-%%%%
 storm dragon armour
 
 Zbroja ze skóry smoka zionącego piorunami. Jest cięższa niż większość smoczych

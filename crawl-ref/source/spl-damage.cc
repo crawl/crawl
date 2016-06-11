@@ -140,15 +140,14 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     return SPRET_SUCCESS;
 }
 
-// No setup/cast split here as monster hellfire is completely different.
-// Sad, but needed to maintain balance - monster hellfirers get asymmetric
-// torment too.
-bool cast_hellfire_burst(int pow, bolt &beam)
+// No setup/cast split here as monster damnation is completely different.
+// XXX make this not true
+bool cast_smitey_damnation(int pow, bolt &beam)
 {
-    beam.name              = "burst of hellfire";
-    beam.aux_source        = "burst of hellfire";
+    beam.name              = "damnation";
+    beam.aux_source        = "damnation";
     beam.ex_size           = 1;
-    beam.flavour           = BEAM_HELLFIRE;
+    beam.flavour           = BEAM_DAMNATION;
     beam.real_flavour      = beam.flavour;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTRED;
@@ -172,7 +171,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
         return false;
     }
 
-    mpr("You call forth a pillar of hellfire!");
+    mpr("You call forth a pillar of damnation!");
 
     beam.is_tracer = false;
     beam.in_explosion_phase = false;
@@ -448,7 +447,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
             ouch(hurted, KILLED_BY_BEAM, agent->mid,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
-            expose_player_to_element(BEAM_COLD, 5, added_effects);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
 
             // Note: this used to be 12!... and it was also applied even if
             // the player didn't take damage from the cold, so we're being
@@ -457,6 +456,7 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
         else
         {
             ouch(hurted, KILLED_BY_FREEZING);
+            you.expose_to_element(BEAM_COLD, 5, added_effects);
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
         }
     }
@@ -482,10 +482,13 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
     if (actual)
     {
-        behaviour_event(target, ME_ANNOY, agent,
-                        agent ? agent->pos() : coord_def(0, 0));
-
         target->hurt(agent, hurted, BEAM_COLD);
+
+        if (target->alive())
+        {
+            behaviour_event(target, ME_ANNOY, agent, // ME_WHACK?
+                            agent ? agent->pos() : coord_def(0, 0));
+        }
 
         if (target->alive() && you.can_see(*target))
             print_wounds(target);
@@ -829,6 +832,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
+    // TODO: check known rN instead of holiness
     if (mons->observable() && !(mons->holiness() & MH_NATURAL))
     {
         mpr("You can't drain life from that!");
@@ -863,7 +867,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (!(mons->holiness() & MH_NATURAL) || mons->res_negative_energy())
+    if (mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -1461,7 +1465,13 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
 
     if (agent->is_player())
+    {
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+
+        // Why are you casting this spell at all while worshipping Zin?
+        if (is_sanctuary(you.pos()) || is_sanctuary(mons->pos()))
+            remove_sanctuary(true);
+    }
     else
         mons->hurt(agent, dam, BEAM_MMISSILE);
 
@@ -1624,6 +1634,8 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
+    mon->expose_to_element(BEAM_FIRE, damage);
+
     if (tracer)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
 
@@ -1698,6 +1710,8 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     ouch(damage, KILLED_BY_BEAM, agent->mid,
          "by burning poison", you.can_see(*agent),
          agent->as_monster()->name(DESC_A, true).c_str());
+    if (damage > 0)
+        you.expose_to_element(BEAM_FIRE, 2);
 
     mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     you.duration[DUR_POISONING] = 0;
@@ -1873,6 +1887,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
                                     "static discharge");
         ouch(damage, KILLED_BY_BEAM, agent->mid, "by static electricity", true,
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
     }
     else if (victim->res_elec() > 0)
         return 0;
@@ -1884,6 +1900,8 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
+        if (damage > 0)
+            victim->expose_to_element(BEAM_ELECTRICITY, 2);
 
         if (damage)
         {
@@ -2747,7 +2765,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     }
     else if (mon_tracer)
     {
-        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
         {
             if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
@@ -2793,46 +2811,32 @@ void toxic_radiance_effect(actor* agent, int mult)
         if (agent->is_monster() && mons_aligned(agent, *ai))
             continue;
 
-        int dam = roll_dice(1, 3 + pow / 25) * mult;
-
-        // Only applied if the player is also not the agent; Done early so that
-        // distance falloff won't frequently reduce damage to 1.
-        if (ai->is_player())
-            dam = dam * 5 / 2;
-
-        // Give monster OTR a weaker distance falloff than player OTR
-        if (agent->is_player())
-            dam = dam * 3 / (2 + ai->pos().distance_from(agent->pos()));
-        else
-            dam = dam * 9 / (8 + ai->pos().distance_from(agent->pos()));
-
+        int dam = roll_dice(1, 1 + pow / 20) * mult;
         dam = resist_adjust_damage(*ai, BEAM_POISON, dam);
 
         if (ai->is_player())
         {
-            // We take direct damage only if we're not the agent, but we
-            // still get poisoned
+            // We're affected only if we're not the agent.
             if (!agent->is_player())
             {
                 ouch(dam, KILLED_BY_BEAM, agent->mid,
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 
-                poison_player(dam * 4 / 3, agent->name(DESC_A), "toxic radiance",
-                              false);
-            }
-            else
-            {
                 poison_player(roll_dice(2, 3), agent->name(DESC_A),
-                              "toxic radiance", true);
+                              "toxic radiance", false);
             }
         }
         else
         {
-            behaviour_event(ai->as_monster(), ME_ANNOY, agent, agent->pos());
             ai->hurt(agent, dam, BEAM_POISON);
-            if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
-                poison_monster(ai->as_monster(), agent, 1);
+            if (ai->alive())
+            {
+                behaviour_event(ai->as_monster(), ME_ANNOY, agent,
+                                agent->pos());
+                if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
+                    poison_monster(ai->as_monster(), agent, 1);
+            }
 
             if (agent->is_player() && is_sanctuary(ai->pos()))
                 break_sanctuary = true;
@@ -2905,7 +2909,10 @@ void handle_searing_ray()
     dec_mp(1);
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
+    {
+        mpr("You finish channeling your searing ray.");
         end_searing_ray();
+    }
 }
 
 void end_searing_ray()

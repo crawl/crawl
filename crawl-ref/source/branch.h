@@ -37,6 +37,7 @@ struct Branch
 
     dungeon_feature_type entry_stairs;
     dungeon_feature_type exit_stairs;
+    dungeon_feature_type escape_feature; // for branches with no up hatches allowed
     const char* shortname;      // "Slime Pits"
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"

@@ -265,6 +265,8 @@ KFEAT: G = altar_gozag
 KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
+KFEAT: U = altar_uskayaw
+KFEAT: H = altar_hepliaklqana
 KMONS: l = patrolling spatial vortex
 KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva
@@ -282,7 +284,7 @@ SUBST: x = c
 MAP
 xxxxxxxxxxx
 xE1ZxOToxCF
-xe..x..txyY
+xe..x.HtxyY
 xxx+x+xxx+x
 x..........
 #.f........
@@ -290,7 +292,7 @@ x...xxxxxx+
 x.f.xGlxm..
 x...xNDx...
 x+xxxXJx...
-x.s5xMRx..*
+xUs5xMRx..*
 xVSKxQP+..j
 ENDMAP
 
@@ -922,7 +924,7 @@ MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
 KMONS: f = butterfly
-KMONS: U = Norris ; morningstar ego:vorpal . large shield ego:reflection / \
+KMONS: U = Sojobo ; morningstar ego:vorpal . large shield ego:reflection / \
            Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
@@ -1271,7 +1273,7 @@ ENDMAP
 NAME: sprint_mu_dis_giant
 TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror
 MONS: patrolling iron elemental
-MONS: patrolling iron giant ; giant club unrand:skullcrusher
+MONS: patrolling iron giant ; skullcrusher
 MONS: iron dragon, rust devil, patrolling hell sentinel, war gargoyle, iron golem
 KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item

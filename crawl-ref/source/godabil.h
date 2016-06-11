@@ -10,7 +10,8 @@
 #include "itemprop-enum.h" // brand_type
 #include "spl-cast.h"
 
-#define BEOGH_WPN_GIFT_KEY "given beogh weapon"
+#define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
+#define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
@@ -23,6 +24,7 @@
 #define RU_SACRIFICE_PROGRESS_KEY "ru_progress_to_next_sacrifice"
 #define RU_SACRIFICE_DELAY_KEY "ru_sacrifice_delay"
 #define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
+#define RU_SAC_XP_LEVELS 2
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -32,6 +34,7 @@ const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
+#define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
 #define GOZAG_POTION_PETITION_AMOUNT 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
@@ -39,7 +42,12 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
-#define RU_SAC_XP_LEVELS 2
+#define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
+#define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
+#define USKAYAW_DID_DANCE_ACTION "uskayaw_did_dance_action"
+#define USKAYAW_NUM_MONSTERS_HURT "uskayaw_num_monsters_hurt"
+#define USKAYAW_MONSTER_HURT_VALUE "uskayaw_monster_hurt_value"
+#define USKAYAW_AUT_SINCE_PIETY_GAIN "uskayaw_aut_since_piety_gain"
 
 struct bolt;
 class stack_iterator;
@@ -75,6 +83,7 @@ bool jiyva_remove_bad_mutation();
 
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
+bool beogh_resurrect();
 
 bool yred_injury_mirror();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
@@ -140,7 +149,7 @@ bool gozag_bribe_branch();
 
 spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);
-void qazlal_elemental_force();
+spret_type qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 
 void init_sac_index();
@@ -154,9 +163,21 @@ bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
+int cell_has_valid_target(coord_def where);
 bool ru_apocalypse();
+string ru_sacrifice_vector(ability_type sac);
 
 bool pakellas_check_quick_charge(bool quiet);
 int pakellas_effective_hex_power(int pow);
-bool pakellas_device_surge();
+int pakellas_surge_devices();
+
+bool uskayaw_stomp();
+bool uskayaw_line_pass();
+bool uskayaw_grand_finale();
+
+bool hepliaklqana_choose_ancestor_type(int ancestor_type);
+bool hepliaklqana_specialize_ancestor(int specialization);
+spret_type hepliaklqana_idealise(bool fail);
+spret_type hepliaklqana_transference(bool fail);
+void hepliaklqana_choose_identity();
 #endif

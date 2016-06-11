@@ -8,6 +8,7 @@
 #include "ranged_attack.h"
 
 #include "areas.h"
+#include "chardump.h"
 #include "coord.h"
 #include "english.h"
 #include "env.h"
@@ -28,12 +29,14 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true)
+      should_alert_defender(true), launch_type(LRET_BUGGY)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
     string proj_name = projectile->name(DESC_PLAIN);
+    // init launch type early, so we can use it later in the constructor
+    launch_type = is_launched(attacker, weapon, *projectile);
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
@@ -42,7 +45,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if (is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
+    else if (launch_type == LRET_LAUNCHED)
     {
         aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
@@ -64,6 +67,10 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
 int ranged_attack::calc_to_hit(bool random)
 {
     orig_to_hit = attack::calc_to_hit(random);
+
+    if (orig_to_hit == AUTOMATIC_HIT)
+        return AUTOMATIC_HIT;
+
     if (teleport)
     {
         orig_to_hit +=
@@ -238,8 +245,14 @@ bool ranged_attack::handle_phase_dodged()
             defender->ablate_deflection();
         }
 
+        if (defender->is_player())
+            count_action(CACT_DODGE, DODGE_DEFLECT);
+
         return true;
     }
+
+    if (defender->is_player())
+        count_action(CACT_DODGE, DODGE_EVASION);
 
     if (needs_message)
     {
@@ -291,8 +304,7 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon()
-        || is_launched(attacker, weapon, *projectile) == LRET_THROWN)
+    if (using_weapon() || launch_type == LRET_THROWN)
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
@@ -316,13 +328,14 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon
-           && is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED;
+    return weapon && (launch_type == LRET_LAUNCHED
+                     || launch_type == LRET_BUGGY // not initialized
+                         && is_launched(attacker, weapon, *projectile));
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
+    if (launch_type == LRET_FUMBLED)
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -348,7 +361,7 @@ int ranged_attack::weapon_damage()
 int ranged_attack::calc_base_unarmed_damage()
 {
     // No damage bonus for throwing non-throwing weapons.
-    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
+    if (launch_type == LRET_FUMBLED)
         return 0;
 
     int damage = you.skill_rdiv(wpn_skill);
@@ -400,9 +413,8 @@ bool ranged_attack::apply_damage_brand(const char *what)
 
     const brand_type brand = get_weapon_brand(*weapon);
 
-    // No stacking elemental brands, unless you're Nessos.
-    if (attacker->type != MONS_NESSOS
-        && projectile->base_type == OBJ_MISSILES
+    // No stacking elemental brands.
+    if (projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) != SPMSL_NORMAL
         && get_ammo_brand(*projectile) != SPMSL_PENETRATION
         && (brand == SPWPN_FLAMING
@@ -580,7 +592,8 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
 int ranged_attack::blowgun_duration_roll(special_missile_type type)
 {
-    if (type == SPMSL_POISONED)
+    // Leaving monster poison the same by separating it from player poison
+    if (type == SPMSL_POISONED && attacker->is_monster())
         return 6 + random2(8);
 
     if (type == SPMSL_CURARE)
@@ -610,6 +623,8 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                 return 5 + random2(5);
         }
     }
+    else if (type == SPMSL_POISONED) // Player poison needles
+        return random2(3 + base_power * 2 + plus);
     else
         return 5 + random2(base_power + plus);
 }
@@ -637,7 +652,11 @@ bool ranged_attack::apply_missile_brand()
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
-        defender->expose_to_element(BEAM_FIRE);
+
+        defender->expose_to_element(BEAM_FIRE, 2);
+        if (defender->is_player())
+            maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
+
         attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:

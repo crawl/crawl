@@ -197,18 +197,18 @@ Shield
 Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
-  Abbreviated to "Str". Increases your effectiveness with melee and ranged
-  weapons. Affects your ability to use heavy armours and shields effectively.
+  Abbreviated to "Str". Increases your damage with melee and ranged weapons.
+  Affects your ability to use heavy armours and shields effectively.
 
 Intelligence
   Abbreviated to "Int". Affects how well you can cast spells as well as how much
   nutrition spellcasting takes.
 
 Dexterity
-  Abbreviated to "Dex". Somewhat increases your effectiveness with melee and
-  ranged weapons. Significantly affects your ability to dodge attacks aimed
-  at you, your general effectiveness with shields, your stealth, and your
-  effectiveness when stabbing unaware enemies.
+  Abbreviated to "Dex". Increases your accuracy with melee and ranged weapons.
+  Significantly affects your ability to dodge attacks aimed at you, your general
+  effectiveness with shields, your stealth, and your effectiveness when stabbing
+  unaware enemies.
 
 Attributes grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or while using certain artefacts or abilities.
@@ -269,7 +269,8 @@ Stealth
 There are many ailments or enchantments that can temporarily befall you. These
 are noted in the stats area below the experience line. Many of them are
 self-explanatory, like Pois or Hungry. Many others, however, can be subtle, and
-a full list with explanations is given in Appendix `5. List of Enchantments`_.
+their effects can be examined by pressing '?/T' and searching for the name of
+status effect.
 
 Monsters within your field of vision are listed on a special panel, the monster
 list. Single monsters also get indicators of their health status in the form of
@@ -278,8 +279,8 @@ mode you can directly target single monsters by use of the monster list. Use
 'Ctrl-L' to toggle this.
 
 Sometimes characters will be able to use special abilities, e.g. the Naga's
-ability to spit poison or the magical power to turn invisible granted by a ring.
-These are accessed through the 'a' command.
+ability to spit poison or the magical power to fly granted by a ring. These are
+accessed through the 'a' command.
 
 ****************************************
 D. Exploring the dungeon
@@ -579,14 +580,12 @@ The details screen shows:
   resistances, and special attacks.
 
 - Its spells and special abilities. Monster spells and abilities are
-  of five types:
+  of four types:
 
-  * Special abilities are innate, non-magical effects.
+  * Natural abilities are innate, non-magical effects.
 
   * Magical abilities are innate magical effects. They are affected
     by antimagic.
-
-  * Demonic and angelic abilities are similar to magical abilities.
 
   * Divine abilities call upon the monster's god for a magical effect.
     They are prevented by silence, but not affected by antimagic.
@@ -638,7 +637,7 @@ i
   show inventory - pressing the key of an item shows additional information
 
 {
-  inscribe item (see Appendix `6. Inscriptions`_)
+  inscribe item (see Appendix `5. Inscriptions`_)
 
 \\
   check list of already discovered items
@@ -692,7 +691,7 @@ unidentified items.
 Another useful command is the '{' key, which lets you inscribe items with a
 comment. You can also inscribe items when looking at your inventory with 'i',
 simply by pressing the letter of an item. For more details, and how to automate
-this process, check Appendix `6. Inscriptions`_.
+this process, check Appendix `5. Inscriptions`_.
 
 ) Weapons
 ========================================
@@ -739,7 +738,7 @@ what you want. Thus it will either be an item you previously chose and fired
 ranks highest in fire_order - if there are several of similar order, the one
 with the lowest inventory slot is chosen.
 
-See Appendix `6. Inscriptions`_ for inscriptions which let you fine-tune the
+See Appendix `5. Inscriptions`_ for inscriptions which let you fine-tune the
 list of items to choose from. See also the Missiles section of
 options_guide.txt.
 
@@ -829,7 +828,7 @@ While scrolls tend to affect your equipment or your environment, most potions
 affect your character in some way. The most common type is the simple curing
 potion, which restores some hit points and cures many ailments, but there are
 many other varieties of potions to be found. Potions can be quaffed (drunk) with
-the 'q' command. Try to avoid drinking poisonous potions!
+the 'q' command.
 
 / Wands
 ========================================
@@ -840,10 +839,11 @@ function when its charges run out. You must identify a wand to find out how many
 uses it has left. This can be done with a scroll of identify; characters with a
 good Evocations skill may also deduce the number of charges simply upon evoking
 the wand. Evoking a wand without having fully identified the number of charges
-remaining will waste some charges. Wands are aimed in the same way as missile
-weapons, and you can release the power of a wand by evoking it with 'V'. See
-section I for targeting. There are also a number of wands that may be useful to
-aim at yourself.
+remaining will waste some charges.
+
+Wands are aimed in the same way as missile weapons, and you can release the power
+of a wand by evoking it with 'V'. See section I for targeting. There are also a
+number of wands that may be useful to aim at yourself.
 
 =" Rings and Amulets
 ========================================
@@ -880,8 +880,7 @@ Rods ('|') hold unique spells that you can evoke while wielding the rod,
 using the 'v' command. The effectiveness of these spells is increased by
 Evocations skill. They have a pool of magical energy which regenerates
 according to the rod's enchantment (which can be increased using scrolls of
-recharging) and your Evocations skill. They are shorter than full-length staves
-and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels.
+recharging) and your Evocations skill.
 
 : Books
 ========================================
@@ -996,10 +995,6 @@ The chance of miscasting a spell is displayed on the spell screen, and coloured
 based on potential severity (with yellow representing a moderate chance, and red
 representing a severe chance).
 
-Many of the more powerful spells carry disadvantages or risks; you should read
-the spell description (obtained by reading the spellbook in which you found the
-spell) before casting anything.
-
 Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
 
@@ -1052,26 +1047,25 @@ There are a number of gods, demons and other assorted powers who will accept
 your character's worship, and sometimes give out favours in exchange. You can
 use the '^' command to check the requirements of whoever it is that you worship,
 and if you find religion to be an inconvenience you can always renounce your
-faith (use the 'a' command - but most gods resent being scorned). There is also
-a second page with additional details, press '^!' to access it.
-
-The 'p' command lets you pray to your god. Praying gives you a sense of what
-your god thinks of you, and for a few gods is used to trigger sacrifices of
-certain items or corpses.
+faith (use the 'a' command - but most gods resent being scorned). Further details
+can be seen with '!' while in the '^' screen.
 
 To use any powers which your god deems you fit for, access the abilities menu
-via the 'a' command; god-given abilities are listed as invocations.
+via the 'a' command; god-given abilities are listed as invocations. The god
+Fedhas Madash also has a corpse decay ability specially accessed through 'p'.
 
 Depending on background, some characters start out religious; others have to
 pray at an altar to dedicate themselves to a life of servitude. There are altars
 scattered all over the dungeon, and there are rumours of a special temple
-somewhere near the surface. At an altar, you can read a description of that
-god's general attitude by pressing 'p'. You will be asked afterward if you
-really want to attend this circle. If you want to see a list of the standard
-gods and which of them is already present with an altar in your dungeon, press
-'Ctrl-O'. You can also learn about standard and obscure gods by pressing '?/G'.
+somewhere near the surface.
 
-Note that the good gods will not accept demonic or undead devotees.
+At an altar, you can enter a god's service by pressing 'p' - you'll first be
+given a description of the god, and then be asked if you really want to join.
+To see a list of the standard gods and which of their altars you've seen in your
+current game, press 'Ctrl-O'. You can also learn about all gods by pressing '?/G'.
+
+Note that some gods are picky about who can enter their service; for example,
+good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
 from Berserker, Chaos Knight or Abyssal Knight.
@@ -1090,19 +1084,21 @@ there are plenty of nasty ones as well. Many mutations have multiple levels,
 each of which counts as a single mutation.
 
 You can also become mutated by overusing certain powerful enchantments,
-particularly Haste (not the kind you get from being berserk) and Invisibility,
-as your system absorbs too much magical energy - but you would have to spend
-quite a lot of your time hasted or invisible to be affected. However, some
-powerful items also radiate dangerous levels of magical energy. More often than
-not, the mutations caused by magical radiations express harmfully.
+particularly 'Haste' and 'Invisibility', as your system absorbs too much magical
+energy. A single use of those effects will never cause dangerous levels of magical
+contamination, but multiple uses in short succession, or usage with existing
+contamination from other sources (e.g. from miscasting spells) can cause trouble.
+Mutations from magical contamination are almost always harmful.
 
-Furthermore, certain corpses are mutagenic, and there are traps with mutation
-effects. There are also some spells and potions that cause mutations.
+Mutations can also be caused by specific potions, very rare trap effects, or
+spells cast by powerful enemies found deep in the dungeon. A few types of monsters
+have mutagenic corpses; these will appear in magenta by default.
 
 It is much more difficult to get rid of bad mutations than to get one. A lucky
-mutation attempt can actually remove mutations. However, the only sure-fire way
-is to quaff a potion of cure mutation, which will attempt to remove one or more
-random mutations.
+mutation attempt can actually remove mutations. However, the only sure-fire ways
+are to quaff a potion of cure mutation, which will attempt to remove one or more
+random mutations, or to join the gods Zin or Jivya, each of whom provides some
+remedy against mutations.
 
 Demonspawn are a special case. Characters of this species get certain special
 mutations as they gain levels; these are listed in cyan. They are permanent and
@@ -1365,7 +1361,7 @@ Many different species
   playing rather well, though.
 
 Dungeon layout
-  Even veteran players will find the Tomb or the Hells exciting (which are
+  Even veteran players may find the Tomb or the Hells exciting (which are
   designed such that life endangering situations can always pop up). These and
   other branches may or may not fit a given character's buildup. By the way, we
   strongly believe that games are pointless if you can reach the invincible
@@ -1419,25 +1415,24 @@ Hill Orcs
   cousins (the Cave Orcs) possess below the ground, descend in search of plunder
   and adventure.
 
-  Hill Orcs are more robust than Humans, and they have human-like reserves of
-  magical energy. Their forte is brute-force fighting, and they are skilled at
-  using most hand weapons (particularly axes, with which they are experts),
-  though they are not particularly good at using missile weapons. Hill Orcs are
-  passable users of most types of magic and are particularly skilled with Fire.
+  Hill Orcs are more robust than Humans. Their forte is brute-force fighting,
+  and they are skilled at using most hand weapons (particularly axes, with which
+  they are experts), though they are not particularly good at using missile
+  weapons. Hill Orcs are passable users of most types of magic and are
+  particularly skilled with Fire.
 
   Many Orcs feel superior to all other species and beings, and they have formed
   a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
-  can join Beogh whenever an orc priest is in sight.
+  can join Beogh even without an altar whenever an orc priest is in sight.
 
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
   in the oceans and rivers, seldom venturing toward land. However, Merfolk
   aren't as limited on land as some myths suggest; their tails will quickly
   reform into legs once they leave the water (and, likewise, their legs will
-  quickly reform into a tail should they ever enter water). Their agility is
-  often misjudged, and they tend to be surprisingly nimble on land as well as in
-  the water. Experts at swimming, they need not fear drowning and move very
-  quickly through water.
+  quickly reform into a tail should they ever enter water). They tend to be
+  surprisingly nimble on land as well as in the water. Experts at swimming,
+  they need not fear drowning and move very quickly through water.
 
   The Merfolk have developed their martial arts strongly on thrusting and
   grappling, since those are the most efficient ways to fight underwater. They
@@ -1469,7 +1464,7 @@ Kobolds
   the sort of people you would want to spend much time with, unless you happened
   to be a Kobold yourself.
 
-  They tend to be stronger and less agile than Halflings, and are slightly more
+  They tend to be more agile and weaker than Halflings, and are slightly more
   talented at using most types of magic, particularly necromancy. They are
   competent in combat, especially with short blades, maces or crossbows, and are
   also very adept at using magical devices. They often live as scavengers,
@@ -1514,8 +1509,8 @@ Centaurs
   Centaurs can move very quickly on their four legs, and are excellent with bows
   and other missile weapons; they are also reasonable at fighting in general
   while being slow learners at specific weapon skills. They advance quite slowly
-  in experience levels and are rather sub-average at using magic. Like Nagas,
-  they receive reduced protection from the body armour they wear.
+  in experience levels and are rather sub-par at using magic. Like Nagas, they
+  receive reduced protection from the body armour they wear.
 
 Ogres
   Ogres are huge, chunky creatures who typically are strong rather than smart,
@@ -1575,7 +1570,7 @@ Demigods
   also draw on great supplies of magical energy. On the downside, they advance
   more slowly in experience than any other race, gain skills slightly less
   quickly than Humans and, due to their status, cannot worship the various gods
-  and powers available to other classes of being.
+  and powers available to other races.
 
 Demonspawn
   Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
@@ -1687,14 +1682,14 @@ Vine Stalkers
   Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
   They possess a once-humanoid core, parasitised moments before death by the
   magical vines. Lacking any other discernible features, their faces are
-  dominated by their disproportionate, vicious maw with which they disrupt and
+  dominated by the disproportionate, vicious maw with which they disrupt and
   devour the magical energies of their foes.
 
   Magic courses freely through their bodies, and any damage they take is split
   between their health and magical reserves. They also physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
-  their bodies makes them frail to the extreme and they cannot benefit from
-  potions or wands to heal their wounds.
+  their bodies makes them extremely frail, and they cannot benefit from potions
+  or wands to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
@@ -1985,7 +1980,7 @@ Elementalists
     capabilities.
 
   Earth Magic
-    is a mixed bag, with destructive, defensive and utility spells available.
+    is a mixed bag, with destructive, debilitating and utility spells available.
 
 ****************************************
 3. List of skills
@@ -1999,7 +1994,7 @@ help menu using '?%', and during character choice with '%'.
 Fighting skills
 ========================================
 
-Fighting is the basic skill used in hand-to-hand combat, and applies no matter
+Fighting is the basic skill used in ranged and hand-to-hand combat, and applies no matter
 which weapon your character is wielding (if any). Fighting is also the skill
 that determines the number of hit points your character gets as they increase in
 levels (note that this is calculated so that you don't get a long run advantage
@@ -2313,7 +2308,7 @@ z
   are used. If you want to cast the spell nonetheless, use Z.
 
 Z
-  Cast a spell regardless of range limitations.
+  Cast a spell regardless of available targets.
 
 t
   Tell commands to allies, or shout (with tt).
@@ -2404,7 +2399,7 @@ Item interaction (inventory)
 
 {
   Inscribe item (check the autoinscribe option). An empty inscription or
-  inscribing only space will remove prior inscriptions. See Appendix `6.
+  inscribing only space will remove prior inscriptions. See Appendix `5.
   Inscriptions`_. You can also inscribe items when viewing them by pressing
   their slot key in the inventory.
 
@@ -2721,229 +2716,7 @@ Shift-direction
   Fire straight in that direction.
 
 ****************************************
-5. List of enchantments
-****************************************
-
-The stats area has room for showing the enchantments which you currently enjoy
-or have to suffer. A list of these enchantments follows, as some are either
-abbreviated or may have unusual effects.
-
-(Mostly) good enchantments
-========================================
-
-Full
-  You have eaten a lot.
-
-Very Full
-  You have eaten almost all you can for now.
-
-Engorged
-  You can't eat any more for now.
-
-Fast
-  All of your actions are 50% faster. This causes magical contamination
-  over time, and may cause dangerous levels of contamination if you were
-  already contaminated before gaining this status.
-
-Invis
-  You are invisible. Most enemies will be unable to see you &amp; will
-  suffer penalties to hit, though they may be able to guess at your
-  general location. Invis causes magical contamination over time, and
-  may cause dangerous levels of contamination if you were already
-  contaminated before gaining this status. If this effect is greyed out,
-  it is active (and causing contamination) but ineffective for some
-  reason (e.g. you are glowing, lit an angel's halo, etc).
-
-Tele
-  You are about to teleport, i.e. feeling "unstable". If you are about to
-  teleport, another effect that applies Tele (a scroll, wand, etc) will
-  cancel it.
-
-Fly
-  You fly above the ground, and are able to cross water and lava, or fight
-  above shallow water without penalties. Most types of flight will time out
-  - be sure you're not above deadly liquids when that happens!
-
-Agi
-  You are unnaturally agile. This provides bonuses to your dexterity, evasion,
-  and stealth.
-
-Brill
-  You are unnaturally smart. This provides bonuses to your intelligence,
-  spellcasting success, &amp; spellpower.
-
-Might
-  You are unnaturally strong. This provides bonuses to your strength &amp; damage
-  in physical combat.
-
-Regen
-  You regenerate hit points at an unnaturally fast rate. This is only shown for
-  temporary regeneration.
-
-RMsl
-  You repel missiles, i.e. there's a good chance to evade them. This effect, if
-  provided by a spell, has a chance to expire with every projectile it repels;
-  it otherwise lasts indefinitely.
-
-DMsl
-  You deflect missiles, i.e. there's a great chance to evade them. This effect,
-  if provided by a spell, has a chance to expire with every projectile it
-  deflects; it otherwise lasts indefinitely.
-
-Touch
-  Your unarmed attacks no longer deal damage, but have a chance of confusing
-  monsters that they hit.
-
-MR
-  You are more resistant to hostile enchantments.
-
-Berserk
-  You are stronger, faster, tougher! Beware, though, that if you do not kill
-  monsters this status will wear off even faster, and when it does, you will
-  be slowed and exhausted, possibly passing out temporarily as well.
-
-(Mostly) bad enchantments
-========================================
-
-Hungry
-  Most species can eat chunks of corpses only if hungry.
-
-Very Hungry
-  You are even hungrier than usual.
-
-Near Starving
-  You are in desperate need of food.
-
-Starving
-  You should really eat something; death is not far away. While starving, your
-  combat abilities are impaired and you are unable to cast spells or use many
-  evoked or divine abilities.
-
-Fainting
-  You are beyond starving, and are likely to lose consciousness and die at any
-  moment.
-
-Pois
-  You are poisoned and continually lose hit points. While poisoned, your current
-  health will be partially recoloured to display the eventual poison damage that
-  will be dealt. Cure with potions of curing or by waiting it out.
-
-Conf
-  You are confused. Actions may not work properly, or may be targeted in a
-  random direction. Spellcasting and scroll use are completely impossible.
-  Wait it out, or drink a potion of curing for immediate relief.
-
-Contam
-  You glow with mutagenic radiation. This can mutate you over time, usually with
-  a bad outcome. The colour indicates the severity: the first level (darkgrey)
-  is only a warning, and no mutation or loss of stealth will occur from it.
-
-Drain
-  Your skills have been drained by negative energy, and are less effective.
-  This status will not wear off by waiting, but will expire as you gain
-  experience. This status has multiple levels, and you can see just how much you
-  have been drained by looking at the skills screen.
-
-Breath
-  Some abilities (like breath weapons or Zin's recite invocation) require you to
-  catch your breath in between uses. These abilities cannot be re-used until the
-  Breath status disappears.
-
-Exh
-  You are too exhausted to use certain tiring abilities; notably, Berserk.
-
-Slow
-  All your actions take 50% longer.
-
-Para
-  You are paralysed, and completely unable to act.
-
-Sleep
-  You are asleep, and completely unable to act. Attacks will wake you.
-
-Held
-  You are held in a net or a spider web. You cannot move freely and will instead
-  try to struggle free.
-
-Constr
-  You are being constricted by an enemy and will take an increasing amount of
-  damage every turn. Also, movement (including blinking) away from the enemy is
-  restricted, although you can struggle to escape and will become increasingly
-  more likely to succeed when doing so multiple times.
-
-Mesm
-  You are mesmerised and cannot move away from the monster(s) mesmerising you.
-
-Fear
-  You are overcome with fear and cannot move towards the monster(s) causing
-  fear in you.
-
--Tele
-  Some effect is preventing you from teleporting or blinking.
-
-Mark
-  Due to the effects of a trap or a spell, monsters will now hunt you down more
-  precisely, and will be able to detect you even if you are not in their vision.
-
-Fire
-  You are covered with sticky fire, which causes damage over the next few turns.
-  Entering water will extinguish the flames.
-
-Corona
-  You are surrounded by light; this ruins your stealth and makes you easier to
-  hit.
-
-Barbs
-  There are dangerous barbs embedded in your skin, and moving around will cause
-  you to take damage. They will go away after standing in place for a few turns
-  or moving around.
-
-Sick
-  You have been sickened by some hostile effect. Hit points don't regenerate
-  until cured (wait it out or quaff a potion of curing). Occasionally a primary
-  attribute might drop.
-
-Vertigo
-  Translocational magic is disorienting you and making you dizzy. It should
-  pass soon, but until then you will have difficulty attacking, dodging, and
-  casting spells.
-
-Corr
-  Your equipment is covered with noxious acid! Both your effectiveness in
-  physical combat and defenses (AC) are reduced; the displayed number indicates
-  the former. After some time passes, the effect will disappear.
-
-Flay
-  You are covered in illusionary - but nonetheless deadly! - wounds. Destroying
-  the source of the illusion will restore the health that was 'flayed' away.
-
-Weak
-  Your physical attacks do less damage.
-
-Roots
-  You are held to the ground by animated roots. Your movement speed is slower,
-  your evasion is reduced, and you are unable to fly.
-
-Frozen
-  You are covered in ice, and your movement speed is reduced.
-
-Sap
-  Some demonic force is inhibiting your spellcasting; every spell that you cast
-  while this status is in effect will reduce your chances of casting more spells
-  successfuly. Casting stronger spells will reduce your success chances more than
-  casting weak spells will.
-
-Brainless, Clumsy, Collapse
-  One of your attributes (Intelligence, Dexterity, or Strength, respectively)
-  has fallen to 0. You suffer extreme penalties to most actions related to
-  the specific attribute. Increasing the attribute above 0 will cause the status
-  to go away in a few turns.
-
-There are several more enchantment messages for various spells. The description
-of the spell causing the enchantment will explain these.
-
-****************************************
-6. Inscriptions
+5. Inscriptions
 ****************************************
 
 You can use the { command to manually inscribe items; alternatively, you can
@@ -3215,10 +2988,3 @@ Spirit
 
 Inacc
   inaccuracy (affects all attacks that can miss)
-
-Debugging inscriptions
-========================================
-
-If you've entered wizard mode, then you can change the zapping range of a wand
-by inscribing it with 'range:number' (e.g., 'range:50'). This only works for
-wands zapped by the player.

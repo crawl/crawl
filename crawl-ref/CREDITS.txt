@@ -129,6 +129,7 @@
     Brett Foster
     Kyle Fox
     Chris Galardi
+    Benoît Giannangeli
     Ben Goetter
     Ed Gonzalez
     Rob Grant
@@ -176,6 +177,7 @@
     Dom 'Bodrick' Light
     Mark Lodato
     Rob Lund
+    Lynn
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
@@ -187,6 +189,7 @@
     James 'Eronarn' Meickle
     mikee
     Andrew Minton
+    Yer Mivvaggah
     Shawn M Moore
     Akinori Musha
     Mushboom
@@ -230,6 +233,7 @@
     Robert Shimmin
     Sigurd
     Edgar Simo
+    Skrybe
     Alex Smith
     Keanan Smith
     Richard Soderberg
@@ -252,7 +256,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    Mauris Van Hauwe
     Mikko Vepsäläinen
     waylon531
     Steven Wheeler

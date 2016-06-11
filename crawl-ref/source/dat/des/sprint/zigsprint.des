@@ -48,7 +48,7 @@ end
 
 function callback.make_hatch(data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("hatch", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false, false)
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false)
         dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
     end
     crawl.mpr("<magenta>An exit appears before you!</magenta>")
@@ -147,7 +147,7 @@ function choose_mset_1(e)
     e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:3")
 -- Fire
   elseif rnd < 83 then
-    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental")
+    e.kmons("1 = fire vortex / hell hound / fire elemental w:15")
 -- Ice
   elseif rnd < 85 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum")
@@ -309,7 +309,7 @@ function choose_mset_3(e)
                anaconda w:5 / guardian serpent")
 -- Lair
   elseif rnd < 19 then
-    e.kmons("1 =  place:Lair:2 / place:Lair:5 / place:Lair:8 w:5")
+    e.kmons("1 =  place:Lair:2 / place:Lair:4 / place:Lair:$ w:5")
 -- Spider
   elseif rnd < 24 then
     e.kmons("1 = place:Spider:$ w:70 / wasp / hornet")
@@ -386,7 +386,7 @@ function choose_mset_3(e)
     e.kmons("1 = common demon / place:Pan / pandemonium lord w:5")
 -- Tomb
   elseif rnd < 93 then
-    e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
 -- Elf
   elseif rnd < 98 then
     e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
@@ -412,7 +412,7 @@ function choose_mset_3(e)
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf")
 -- Holy
   else
@@ -474,7 +474,7 @@ local rnd = crawl.random2(142)
 -- Tartarus
   elseif rnd < 67 then
     e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:5 /\
-                 shadow fiend w:1 / spectral thing place:Tar:$ / ghoul w:5")
+                 tzitzimitl w:1 / spectral thing place:Tar:$ / ghoul w:5")
 -- Dis
   elseif rnd < 72 then
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
@@ -546,7 +546,7 @@ local rnd = crawl.random2(142)
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
                Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
@@ -627,9 +627,9 @@ xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxxxxxxxxxxxxxxxxxxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
-xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxSSSSSSSSSSSSSxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxxxxxxxxxxxxxxxxxSSSSSSSSSSSSSxOOOOOOOOOOOxxxxxxxxxxxxxxxxxxxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
@@ -646,8 +646,8 @@ xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxxxxxxxxxxxxxxxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xxxxxxxxxxxxxxxxxxxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xZZZZZZZZZZZZZZZZZxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
@@ -713,6 +713,8 @@ KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
 KFEAT:  w = altar_pakellas
+KFEAT:  x = altar_uskayaw
+KFEAT:  y = altar_hepliaklqana
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -782,38 +784,40 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
           ring of flight not_cursed ident:all
-KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
-              shield unrand:shield_of_the_gong ident:all, \
-              plate armour unrand:maxwells_patent_armour ident:all, \
-              great mace unrand:dark_maul ident:all, \
-              triple crossbow unrand:sniper ident:all, \
-              quarterstaff unrand:majin-bo ident:all
-KITEM:    T = longbow unrand:piercer ident:all, \
-              long sword unrand:singing_sword ident:all, \
-              great mace unrand:mace_of_variability ident:all, \
-              great sword unrand:sword_of_power ident:all, \
-              scythe unrand:scythe_of_curses ident:all, \
-              double sword unrand:sword_of_zonguldrok ident:all, \
-              spear unrand:wyrmbane ident:all, \
-              triple sword unrand:plutonium_sword ident:all, \
-              club unrand:devastator ident:all, \
-              great mace unrand:firestarter ident:all
+KITEM:    R = obsidian_axe ident:all, \
+              shield_of_the_gong ident:all, \
+              maxwells_patent_armour ident:all, \
+              dark_maul ident:all, \
+              sniper ident:all, \
+              majin-bo ident:all
+KITEM:    T = piercer ident:all, \
+              singing_sword ident:all, \
+              mace_of_variability ident:all, \
+              sword_of_power ident:all, \
+              scythe_of_curses ident:all, \
+              sword_of_zonguldrok ident:all, \
+              wyrmbane ident:all, \
+              plutonium_sword ident:all, \
+              devastator ident:all, \
+              firestarter ident:all
 KITEM:    S = disc of storms ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
-^f^g^h&A&i^j^k^
-e.........RT..l
-^..HG.........^
-d..IF.........m
-^..JE.....S...^
-c...D..M..P...n
-^......L..O...^
-b...C..K..N...o
-^...B.{.......^
-a.............p
-^w^v^u^t^s^r^q^
+^g^h^i&A&j^k^l^
+f.............m
+^.........RT..^
+e..HG.........n
+^..IF.........^
+d..JE.....S...o
+^...D..M..P...^
+c......L..O...p
+^...C..K..N...^
+b...B.{.......q
+^.............^
+a.............r
+^y^x^w^v^u^t^s^
 ENDMAP
 
 NAME:  room_1
@@ -1153,7 +1157,6 @@ MAP
 .................
 .................
 .................
-.................
 ...z.........z...
 ..zZz.......zZz..
 ...z.........z...
@@ -1168,7 +1171,6 @@ MAP
 ..1111111111111..
 ..1111111111111..
 ..1111111111111..
-.................
 .................
 .................
 .................

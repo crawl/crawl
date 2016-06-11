@@ -96,7 +96,7 @@ static bool _evoke_sceptre_of_asmodeus()
 
     if (m)
     {
-        mpr("The Sceptre summons one of its servants.");
+        mpr("The sceptre summons one of its servants.");
         did_god_conduct(DID_UNHOLY, 3);
 
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
@@ -136,17 +136,17 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
             && defender->res_fire() <= 3
             && !you.duration[DUR_FIRE_VULN])
         {
-            mpr("The Sword of Cerebov burns away your fire resistance.");
+            mpr("The sword of Cerebov burns away your fire resistance.");
             you.increase_duration(DUR_FIRE_VULN, 3 + random2(dam), 50);
         }
         if (defender->is_monster()
             && !mondied
-            && !defender->as_monster()->res_hellfire()
+            && !defender->as_monster()->res_damnation() // XXX: ???
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
             {
-                mprf("The Sword of Cerebov burns away %s fire resistance.",
+                mprf("The sword of Cerebov burns away %s fire resistance.",
                      defender->name(DESC_ITS).c_str());
             }
             defender->as_monster()->add_ench(
@@ -164,7 +164,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!unmeld)
     {
         MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
-                      random2(70), "the Scythe of Curses", NH_NEVER);
+                      random2(70), "the scythe of Curses", NH_NEVER);
     }
 }
 
@@ -183,7 +183,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
-                      random2(9), random2(70), "the Scythe of Curses",
+                      random2(9), random2(70), "the scythe of Curses",
                       NH_NEVER);
     }
 }
@@ -216,7 +216,8 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HELLFIRE, power, false, false, true) == SPRET_ABORT)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, false, true)
+        == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -236,21 +237,12 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
 // XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 
-static void _olgreb_pluses(item_def *item)
-{
-    // Giving Olgreb's staff a little lift since staves of poison have
-    // been made better. -- bwr
-    item->plus  = you.skill(SK_POISON_MAGIC) / 3;
-}
-
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     if (you.can_smell())
         _equip_mpr(show_msgs, "You smell chlorine.");
     else
         _equip_mpr(show_msgs, "The staff glows a sickly green.");
-
-    _olgreb_pluses(item);
 }
 
 static void _OLGREB_unequip(item_def *item, bool *show_msgs)
@@ -259,11 +251,6 @@ static void _OLGREB_unequip(item_def *item, bool *show_msgs)
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
-}
-
-static void _OLGREB_world_reacts(item_def *item)
-{
-    _olgreb_pluses(item);
 }
 
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
@@ -455,7 +442,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 static void _wucad_miscast(actor* victim, int power,int fail)
 {
     MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
-                  "the Staff of Wucad Mu", NH_NEVER);
+                  "the staff of Wucad Mu", NH_NEVER);
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
@@ -523,8 +510,6 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _VARIABILITY_world_reacts(item_def *item)
 {
-    do_uncurse_item(*item);
-
     if (x_chance_in_y(2, 5))
         item->plus += (coinflip() ? +1 : -1);
 
@@ -539,14 +524,6 @@ static void _VARIABILITY_world_reacts(item_def *item)
 static void _ZONGULDROK_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "You sense an extremely unholy aura.");
-}
-
-static void _ZONGULDROK_world_reacts(item_def *item)
-{
-    animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                 "the Sword of Zonguldrok");
-    did_god_conduct(DID_NECROMANCY, 1);
-    did_god_conduct(DID_CORPSE_VIOLATION, 1);
 }
 
 static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
@@ -772,8 +749,17 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
         weapon->plus++;
 
         // Including you, if you were a dragonform felid with lives left.
-        mprf("<green>The lance glows as it skewers %s.</green>",
-              name.c_str());
+        if (weapon->plus == 18)
+        {
+            mprf("<white>The lance glows brightly as it skewers %s. You feel "
+                 "that it has reached its full power.</white>",
+                 name.c_str());
+        }
+        else
+        {
+            mprf("<green>The lance glows as it skewers %s.</green>",
+                 name.c_str());
+        }
 
         you.wield_change = true;
     }
@@ -921,30 +907,30 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
+static void _DAMNATION_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
 }
 
-static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
+static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
                                            string* ammo_name, bool* returning)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
     beam->item->special = SPMSL_EXPLODING; // so that it mulches
-    beam->item->props[HELLFIRE_BOLT_KEY].get_bool() = true;
+    beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
-    beam->name    = "hellfire bolt";
-    *ammo_name    = "a hellfire bolt";
+    beam->name    = "damnation bolt";
+    *ammo_name    = "a damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
     bolt *expl   = new bolt(*beam);
-    expl->flavour = BEAM_HELLFIRE;
+    expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
-    expl->damage = dice_def(3, 8);
-    expl->name   = "hellfire";
+    expl->damage = dice_def(3, 12);
+    expl->name   = "damnation";
 
     beam->special_explosion = expl;
     return SM_FINISHED;
@@ -1265,12 +1251,12 @@ static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
         _equip_mpr(show_msgs, "You feel like a king!");
     else if (rings)
         _equip_mpr(show_msgs, "You feel regal.");
-    item->plus = 8 + rings;
+    item->plus = 8 + 2 * rings;
 }
 
 static void _OCTOPUS_KING_world_reacts(item_def *item)
 {
-    item->plus = 8 + _octorings_worn();
+    item->plus = 8 + 2 * _octorings_worn();
 }
 
 ///////////////////////////////////////////////////
@@ -1337,17 +1323,6 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
     // coinflip() chance of 1 MP per turn.
     if (player_regenerates_mp())
         inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
-    // It's more interesting to get a lump of contamination then to just add a
-    // small amount every turn, plus there's a small chance of rapid buildup.
-    if (one_chance_in(100))
-    {
-        // On average the player recovers 25 contam per turn, this should keep
-        // them in the gray a fair amount of time; be nicer if they're already
-        // in the yellow.
-        int contam = get_contamination_level() > 1 ? 300 : 1000;
-        contam = div_rand_round(contam * delay, BASELINE_DELAY);
-        contaminate_player(random_range(contam, contam * 2));
-    }
 }
 
 ///////////////////////////////////////////////////
@@ -1402,12 +1377,11 @@ static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
     coord_def spot = defender->pos();
-    if (!mondied
-        && !cell_is_solid(spot)
+    if (!cell_is_solid(spot)
         && !cloud_at(spot)
         && one_chance_in(5))
     {
-         place_cloud(CLOUD_COLD, spot, random_range(3, 5), attacker, 0);
+         place_cloud(CLOUD_COLD, spot, random_range(4, 8), attacker, 0);
     }
 }
 

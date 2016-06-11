@@ -102,6 +102,7 @@ ITEM:   royal jelly
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
+NSUBST: 2 = 12:2 / * = 2.
 MAP
 ............
 ....aaaa....

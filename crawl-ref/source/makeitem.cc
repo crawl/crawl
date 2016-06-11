@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "art-enum.h" // unrand -> magic staff silliness
 #include "artefact.h"
 #include "colour.h"
 #include "decks.h"
@@ -18,6 +19,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "randbook.h"
 #include "spl-book.h"
 #include "state.h"
 #include "stepdown.h"
@@ -215,8 +217,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                 return true;
         }
 
-        // Small clubs are never randarts.
-        if (item.sub_type == WPN_CLUB)
+        // Clubs and blowguns are never randarts.
+        if (item.sub_type == WPN_CLUB || item.sub_type == WPN_BLOWGUN)
             return false;
 
         // Mean enchantment +6.
@@ -294,18 +296,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
 
     if (type == WPN_BLOWGUN)
-    {
-        switch ((brand_type)brand)
-        {
-        case SPWPN_NORMAL:
-        case SPWPN_PROTECTION:
-        case SPWPN_SPEED:
-        case SPWPN_EVASION:
-            return true;
-        default:
-            return false;
-        }
-    }
+        return false;
 
     switch ((brand_type)brand)
     {
@@ -335,7 +326,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
 
     // Ranged-only brands.
     case SPWPN_PENETRATION:
-    case SPWPN_EVASION:
         if (!is_range_weapon(item))
             return false;
         break;
@@ -348,6 +338,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_FLAME:
     case SPWPN_FROST:
     case SPWPN_DRAGON_SLAYING:
+    case SPWPN_EVASION:
         return false;
 #endif
 
@@ -510,6 +501,17 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
     switch (item.sub_type)
     {
+#if TAG_MAJOR_VERSION == 34
+    case MI_DART:
+#endif
+    case MI_THROWING_NET:
+    case MI_STONE:
+    case MI_LARGE_ROCK:
+    case MI_SLING_BULLET:
+    case MI_ARROW:
+    case MI_BOLT:
+        rc = SPMSL_NORMAL;
+        break;
     case MI_NEEDLE:
         // Curare is special cased, all the others aren't.
         if (got_curare_roll(item_level))
@@ -523,24 +525,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     10, SPMSL_PARALYSIS,
                                     10, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED,
-                                    0);
-        break;
-    case MI_ARROW:
-        rc = random_choose_weighted(30, SPMSL_FLAME,
-                                    30, SPMSL_FROST,
-                                    20, SPMSL_POISONED,
-                                    15, SPMSL_DISPERSAL,
-                                    nw, SPMSL_NORMAL,
-                                    0);
-        break;
-    case MI_BOLT:
-        rc = random_choose_weighted(30, SPMSL_FLAME,
-                                    30, SPMSL_FROST,
-                                    20, SPMSL_POISONED,
-                                    15, SPMSL_PENETRATION,
-                                    15, SPMSL_SILVER,
-                                    10, SPMSL_STEEL,
-                                    nw, SPMSL_NORMAL,
                                     0);
         break;
     case MI_JAVELIN:
@@ -562,26 +546,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
-#if TAG_MAJOR_VERSION == 34
-    case MI_DART:
-#endif
-    case MI_THROWING_NET:
-    case MI_STONE:
-        // deliberate fall through
-    case MI_LARGE_ROCK:
-        // Stones get no brands. Slings may be branded.
-        rc = SPMSL_NORMAL;
-        break;
-    case MI_SLING_BULLET:
-        rc = random_choose_weighted(30, SPMSL_FLAME,
-                                    30, SPMSL_FROST,
-                                    20, SPMSL_POISONED,
-                                    15, SPMSL_STEEL,
-                                    15, SPMSL_SILVER,
-                                    20, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL,
-                                    0);
-        break;
     }
 
     ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
@@ -591,8 +555,13 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
 bool is_missile_brand_ok(int type, int brand, bool strict)
 {
-    // Stones can never be branded.
-    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL
+    // Launcher ammo can never be branded.
+    if ((type == MI_STONE
+        || type == MI_LARGE_ROCK
+        || type == MI_SLING_BULLET
+        || type == MI_ARROW
+        || type == MI_BOLT)
+        && brand != SPMSL_NORMAL
         && strict)
     {
         return false;
@@ -647,35 +616,27 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_FLAME:
-        return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT;
     case SPMSL_FROST:
-        return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT;
+        return false;
     case SPMSL_POISONED:
-        return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_JAVELIN
-               || type == MI_TOMAHAWK;
+        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_RETURNING:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
-        return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_TOMAHAWK
-               || type == MI_JAVELIN;
+        return type == MI_TOMAHAWK || type == MI_JAVELIN;
     case SPMSL_PENETRATION:
-        return type == MI_JAVELIN || type == MI_BOLT;
+        return type == MI_JAVELIN;
     case SPMSL_DISPERSAL:
-        return type == MI_ARROW || type == MI_TOMAHAWK;
+        return type == MI_TOMAHAWK;
     case SPMSL_EXPLODING:
-        return type == MI_SLING_BULLET || type == MI_TOMAHAWK;
+        return type == MI_TOMAHAWK;
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
-        return type == MI_BOLT || type == MI_SLING_BULLET
-               || type == MI_JAVELIN || type == MI_TOMAHAWK;
+        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     default: break;
     }
 
-    // Assume yes, if we've gotten this far.
+    // Assume no, if we've gotten this far.
     return false;
 }
 
@@ -1261,7 +1222,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
     if (armour_is_hide(item))
     {
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
         item.plus = 0;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
@@ -1580,10 +1541,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-    {
-        make_book_theme_randart(item, SPTYP_NONE, SPTYP_NONE,
-                                5 + coinflip(), 20);
-    }
+        build_themed_book(item, capped_spell_filter(20));
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level  = min(9, max(1, item_level / 3));
@@ -1807,28 +1765,16 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
-    else if (one_chance_in(3))
-        item.sub_type = random_deck_type();
     else
     {
         item.sub_type = random_choose(MISC_FAN_OF_GALES,
                                       MISC_LAMP_OF_FIRE,
-                                      MISC_STONE_OF_TREMORS,
                                       MISC_PHIAL_OF_FLOODS,
                                       MISC_DISC_OF_STORMS,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
-                                      MISC_LANTERN_OF_SHADOWS,
                                       MISC_PHANTOM_MIRROR);
-    }
-
-    // set initial charges
-    if (item.sub_type == MISC_BOX_OF_BEASTS
-        || item.sub_type == MISC_SACK_OF_SPIDERS)
-    {
-        item.charges = random_range(5, 15, 2);
-        item.used_count = 0;
     }
 
     if (is_deck(item))
@@ -1946,7 +1892,7 @@ int items(bool allow_uniques,
                                      0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
-        if (item_level > 7 && x_chance_in_y(21 + item_level, 3500))
+        if (item_level > 7 && x_chance_in_y(21 + item_level, 5000))
             item.base_type = OBJ_MISCELLANY;
 
         if (item_level < 7
@@ -1964,25 +1910,51 @@ int items(bool allow_uniques,
            || item.base_type == OBJ_JEWELLERY && force_type == NUM_JEWELLERY
            || force_type < get_max_subtype(item.base_type));
 
-    item.quantity = 1;          // generally the case
-
     // make_item_randart() might do things differently based upon the
     // acquirement agent, especially for god gifts.
     if (agent != -1 && !is_stackable_item(item))
         origin_acquired(item, agent);
 
+    item.quantity = 1;          // generally the case
+
     if (force_ego < SP_FORBID_EGO)
     {
-        force_ego = -force_ego;
-        if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
+        const int unrand_id = -force_ego;
+        if (get_unique_item_status(unrand_id) == UNIQ_NOT_EXISTS)
         {
-            make_item_unrandart(mitm[p], force_ego);
+            make_item_unrandart(mitm[p], unrand_id);
             ASSERT(mitm[p].is_valid());
             return p;
         }
-        // the base item otherwise
-        item.brand = SPWPN_NORMAL;
-        force_ego = 0;
+
+        // make a corresponding randart instead.
+        const unrandart_entry* unrand = get_unrand_entry(unrand_id);
+        ASSERT(unrand);
+        item.base_type = unrand->base_type;
+
+        if (unrand->base_type == OBJ_WEAPONS
+            && unrand->sub_type == WPN_STAFF)
+        {
+            item.base_type = OBJ_STAVES;
+            if (unrand_id == UNRAND_WUCAD_MU)
+                force_type = STAFF_ENERGY;
+            else if (unrand_id == UNRAND_OLGREB)
+                force_type = STAFF_POISON;
+            else
+                force_type = OBJ_RANDOM;
+            // XXX: small chance of the other unrand...
+            // (but we won't hit this case until a new staff unrand is added)
+        }
+        else if (unrand->base_type == OBJ_JEWELLERY
+                 && unrand->sub_type == AMU_NOTHING)
+        {
+            force_type = NUM_JEWELLERY;
+        }
+        else
+            force_type = unrand->sub_type;
+
+        item_level = ISPEC_RANDART;
+        item.brand = 0;
     }
 
     // Determine sub_type accordingly. {dlb}

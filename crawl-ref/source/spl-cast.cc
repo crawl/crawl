@@ -14,6 +14,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "database.h"
@@ -290,7 +291,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int fail_reduce = 100;
 
-    if (in_good_standing(GOD_VEHUMET, 2) && vehumet_supports_spell(spell))
+    if (have_passive(passive_t::spells_success) && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
         // back to 67%.
@@ -312,6 +313,14 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     return chance * fail_reduce / 100;
 }
 
+/**
+ * Calculate the player's failure rate with the given spell, including all
+ * modifiers. (Armour, mutations, statuses effects, etc.)
+ *
+ * @param spell     The spell in question.
+ * @return          A failure rate. This is *not* a percentage - for a human-
+ *                  readable version, call _get_true_fail_rate().
+ */
 int raw_spell_fail(spell_type spell)
 {
     int chance = 60;
@@ -376,8 +385,8 @@ int raw_spell_fail(spell_type spell)
 
     chance2 += get_form()->spellcasting_penalty;
 
-    chance2 -= 7 * player_mutation_level(MUT_SUBDUED_MAGIC);
-    chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 -= 2 * player_mutation_level(MUT_SUBDUED_MAGIC);
+    chance2 += 4 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
@@ -407,7 +416,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 {
     int power = 0;
     if (rod)
-        power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
+        power = 5 + you.skill(SK_EVOCATIONS, 3); // will be adjusted later
     else
     {
         const spschools_type disciplines = get_spell_disciplines(spell);
@@ -439,8 +448,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
         {
-            power *= (10 + 5 * player_mutation_level(MUT_WILD_MAGIC));
-            power /= (10 + 5 * player_mutation_level(MUT_SUBDUED_MAGIC));
+            power *= (10 + 3 * player_mutation_level(MUT_WILD_MAGIC));
+            power /= (10 + 3 * player_mutation_level(MUT_SUBDUED_MAGIC));
         }
 
         // Augmentation boosts spell power at high HP.
@@ -491,16 +500,16 @@ static int _spell_enhancement(spell_type spell)
         enhanced += player_spec_death();
 
     if (typeflags & SPTYP_FIRE)
-        enhanced += player_spec_fire() - player_spec_cold();
+        enhanced += player_spec_fire();
 
     if (typeflags & SPTYP_ICE)
-        enhanced += player_spec_cold() - player_spec_fire();
+        enhanced += player_spec_cold();
 
     if (typeflags & SPTYP_EARTH)
-        enhanced += player_spec_earth() - player_spec_air();
+        enhanced += player_spec_earth();
 
     if (typeflags & SPTYP_AIR)
-        enhanced += player_spec_air() - player_spec_earth();
+        enhanced += player_spec_air();
 
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
@@ -773,7 +782,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         mpr("You can't see any susceptible monsters within range! "
             "(Use <w>Z</w> to cast anyway.)");
 
-        if (Options.use_animations & UA_RANGE)
+        if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
             targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
             range_view_annotator show_range(&range);
@@ -1104,8 +1113,8 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
     {
     case SPELL_FIREBALL:
         return make_unique<targetter_beam>(&you, range, ZAP_FIREBALL, pow, 1, 1);
-    case SPELL_HELLFIRE:
-        return make_unique<targetter_beam>(&you, range, ZAP_HELLFIRE, pow, 1, 1);
+    case SPELL_HURL_DAMNATION:
+        return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC, pow,
                                            pow >= 100 ? 1 : 0, 1);
@@ -1303,7 +1312,11 @@ spret_type your_spells(spell_type spell, int powc,
         if (dir == DIR_DIR)
             mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
-        const bool needs_path = !testbits(flags, SPFLAG_TARGET);
+        const bool needs_path = !testbits(flags, SPFLAG_TARGET)
+                                // Apportation must be SPFLAG_TARGET, since a
+                                // shift-direction makes no sense for it, but
+                                // it nevertheless requires line-of-fire.
+                                || spell == SPELL_APPORTATION;
 
         const int range = calc_spell_range(spell, powc);
 
@@ -1338,11 +1351,8 @@ spret_type your_spells(spell_type spell, int powc,
         args.top_prompt = title;
         if (testbits(flags, SPFLAG_NOT_SELF))
             args.self = CONFIRM_CANCEL;
-        if (testbits(flags, SPFLAG_HELPFUL)
-            || testbits(flags, SPFLAG_ALLOW_SELF))
-        {
+        else
             args.self = CONFIRM_NONE;
-        }
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
             return SPRET_ABORT;
@@ -1367,21 +1377,23 @@ spret_type your_spells(spell_type spell, int powc,
         }
     }
 
-    if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
-        pakellas_evoke_backfire(spell);
-    if (evoked && !pakellas_device_surge())
-        return SPRET_FAIL;
-
+    if (evoked)
+    {
+        const int surge = pakellas_surge_devices();
+        powc = player_adjust_evoc_power(powc, surge);
+        surge_power(you.spec_evoke() + surge);
+    }
+    else if (allow_fail)
+        surge_power(_spell_enhancement(spell));
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
-    if (allow_fail || evoked)
-        surge_power(evoked ? you.spec_evoke() : _spell_enhancement(spell));
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
     int fail = 0;
+#if TAG_MAJOR_VERSION == 34
     bool antimagic = false; // lost time but no other penalty
 
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
@@ -1390,7 +1402,9 @@ spret_type your_spells(spell_type spell, int powc,
         mpr("You fail to access your magic.");
         fail = antimagic = true;
     }
-    else if (allow_fail)
+    else
+#endif
+    if (allow_fail)
     {
         int spfl = random2avg(100, 3);
 
@@ -1479,8 +1493,10 @@ spret_type your_spells(spell_type spell, int powc,
     }
     case SPRET_FAIL:
     {
+#if TAG_MAJOR_VERSION == 34
         if (antimagic)
             return SPRET_FAIL;
+#endif
 
         mprf("You miscast %s.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -1607,8 +1623,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_fire_storm(powc, beam, fail);
 
     // Demonspawn ability, no failure.
-    case SPELL_HELLFIRE_BURST:
-        return cast_hellfire_burst(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
+    case SPELL_CALL_DOWN_DAMNATION:
+        return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
@@ -1768,9 +1784,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);
-
-    case SPELL_MASS_CONFUSION:
-        return mass_enchantment(ENCH_CONFUSION, powc, fail);
 
     case SPELL_DISCORD:
         return mass_enchantment(ENCH_INSANE, powc, fail);
@@ -1954,6 +1967,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STONESKIN:
     case SPELL_SUMMON_SWARM:
     case SPELL_PHASE_SHIFT:
+    case SPELL_MASS_CONFUSION:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

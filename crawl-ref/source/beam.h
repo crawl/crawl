@@ -135,6 +135,7 @@ struct bolt
     bool chose_ray = false;       // do we want a specific ray?
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
+    bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
 
     int       bounces = 0;        // # times beam bounced off walls
     coord_def bounce_pos = {0,0}; // position of latest wall bounce,
@@ -216,7 +217,7 @@ private:
     bool is_blockable() const;
     bool is_omnireflectable() const;
     bool is_fiery() const;
-    bool is_superhot() const;
+    bool can_burn_trees() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool harmless_to_player() const;
@@ -226,6 +227,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool pierces_shields() const;
+    bool bush_immune(const monster &mons) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -278,7 +280,6 @@ public:
 private:
     void internal_ouch(int dam);
     // for both
-    void hit_shield(actor* victim) const;
     void knockback_actor(actor *act, int dam);
 
     // tracers
@@ -340,4 +341,6 @@ void bolt_parent_init(const bolt &parent, bolt &child);
 int explosion_noise(int rad);
 
 bool shoot_through_monster(const bolt& beam, const monster* victim);
+
+int omnireflect_chance_denom(int SH);
 #endif

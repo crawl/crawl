@@ -47,3 +47,27 @@ NORETURN void corrupted(const char *msg, ...)
 
     throw corrupted_save(buf);
 }
+
+/**
+ * Toss failures from a test into stderr & an error file, if there were any
+ * failures.
+ *
+ * @param fails     The failures, if any.
+ * @param name      Errors are dumped to "[name].out"; name should be unique.
+ */
+void dump_test_fails(string fails, string name)
+{
+    if (fails.empty())
+        return;
+
+    fprintf(stderr, "%s", fails.c_str());
+
+    const string outfile = make_stringf("%s.out", name.c_str());
+    FILE *f = fopen(outfile.c_str(), "w");
+    if (!f)
+        sysfail("can't write test output");
+    fprintf(f, "%s", fails.c_str());
+    fclose(f);
+    fail("%s event errors (dumped to %s)",
+         name.c_str(), outfile.c_str());
+}

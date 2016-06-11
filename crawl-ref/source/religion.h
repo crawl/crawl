@@ -37,9 +37,6 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
-string get_god_likes(god_type which_god, bool verbose = false);
-string get_god_dislikes(god_type which_god, bool verbose = false);
-
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
@@ -91,7 +88,6 @@ int piety_rank(int piety = you.piety);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
-bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monster* mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
@@ -107,8 +103,6 @@ bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
 bool fedhas_neutralises(const monster* target);
-void print_sacrifice_message(god_type, const item_def &,
-                             piety_gain_t, bool = false);
 void nemelex_death_message();
 
 bool tso_unchivalric_attack_safe_monster(const monster* mon);
@@ -126,9 +120,18 @@ bool is_follower(const monster* mon);
 bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
+mgen_data hepliaklqana_ancestor_gen_data();
+string hepliaklqana_ally_name();
+int hepliaklqana_specialization();
+int hepliaklqana_specialization_level();
+weapon_type hepliaklqana_specialization_weapon(int specialization);
+spell_type hepliaklqana_specialization_spell(int specialization);
+
+void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
+void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item);
+void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item);
+
 bool god_hates_attacking_friend(god_type god, const monster *fr);
-bool god_likes_item(god_type god, const item_def& item);
-bool god_likes_items(god_type god, bool greedy_explore = false);
 
 void religion_turn_start();
 void religion_turn_end();

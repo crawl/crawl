@@ -20,7 +20,6 @@ soldier_ant CORPSE_SOLDIER_ANT
 queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
-butterfly CORPSE_BUTTERFLY
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
 caustic_shrike CORPSE_CAUSTIC_SHRIKE
@@ -37,7 +36,6 @@ hell_hound CORPSE_HELL_HOUND
 doom_hound CORPSE_DOOM_HOUND
 raiju CORPSE_RAIJU
 hell_hog CORPSE_HELL_HOG
-holy_swine CORPSE_HOLY_SWINE
 black_bear CORPSE_BLACK_BEAR
 polar_bear CORPSE_POLAR_BEAR
 %sdir player/felids
@@ -63,7 +61,6 @@ porcupine CORPSE_PORCUPINE
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 scorpion CORPSE_SCORPION
 emperor_scorpion CORPSE_EMPEROR_SCORPION
-spider CORPSE_SPIDER
 tarantella CORPSE_TARANTELLA
 jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
@@ -98,6 +95,7 @@ dart_slug CORPSE_DART_SLUG
 killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
 vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
+../meliai CORPSE_MELIAI
 wasp CORPSE_WASP
 hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP
@@ -133,7 +131,6 @@ water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
 sea_snake CORPSE_SEA_SNAKE
 shock_serpent CORPSE_SHOCK_SERPENT
-mana_viper CORPSE_MANA_VIPER
 
 ## Yaks, sheep and elephants ('Y')
 sheep CORPSE_SHEEP
@@ -181,8 +178,6 @@ wind_drake CORPSE_WIND_DRAKE
 ## Merfolk ('m')
 %sdir mon
 merfolk_water CORPSE_MERFOLK
-siren_water CORPSE_SIREN
-merfolk_avatar_water CORPSE_MERFOLK_AVATAR
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
 
@@ -241,6 +236,7 @@ frost_giant CORPSE_FROST_GIANT
 stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 juggernaut CORPSE_JUGGERNAUT
+iron_giant CORPSE_IRON_GIANT
 
 ## Dragons ('D')
 %sdir mon/dragons
@@ -258,19 +254,9 @@ golden_dragon CORPSE_GOLDEN_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
 mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
-## Eyes ('G')
-%sdir mon/eyes
-%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_eyeball CORPSE_GIANT_EYEBALL
-eye_of_devastation CORPSE_EYE_OF_DEVASTATION
-eye_of_draining CORPSE_EYE_OF_DRAINING
-great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
-shining_eye CORPSE_SHINING_EYE
+## Hybrids ('H')
 %sdir mon
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
-
-## Hybrids ('H')
 hippogriff CORPSE_HIPPOGRIFF
 griffon CORPSE_GRIFFON
 manticore CORPSE_MANTICORE
@@ -280,7 +266,8 @@ sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 anubis_guard CORPSE_ANUBIS_GUARD
 unique/arachne_staveless CORPSE_ARACHNE
-mutant_beast CORPSE_MUTANT_BEAST
+%sdir mon/mutantbeast
+base3 CORPSE_MUTANT_BEAST
 
 ## Kobolds ('K')
 %sdir mon/

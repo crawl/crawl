@@ -17,6 +17,7 @@
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "butcher.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -25,6 +26,7 @@
 #include "exercise.h"
 #include "fineff.h"
 #include "food.h"
+#include "godabil.h" // for USKAYAW_DID_DANCE_ACTION
 #include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::convert_orcs
@@ -155,13 +157,11 @@ bool melee_attack::handle_phase_attempted()
                 }
                 else
                     count_action(CACT_MELEE, weapon->sub_type);
-            else if (weapon->base_type == OBJ_RODS)
-                count_action(CACT_MELEE, WPN_ROD);
             else if (weapon->base_type == OBJ_STAVES)
                 count_action(CACT_MELEE, WPN_STAFF);
         }
         else
-            count_action(CACT_MELEE, -1);
+            count_action(CACT_MELEE, -1, -1); // unarmed subtype/auxtype
     }
     else
     {
@@ -265,6 +265,8 @@ bool melee_attack::handle_phase_dodged()
                  attack_strength_punctuation(damage_done).c_str());
         }
     }
+    if (defender->is_player())
+        count_action(CACT_DODGE, DODGE_EVASION);
 
     if (attacker != defender && adjacent(defender->pos(), attack_position))
     {
@@ -297,7 +299,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_SHADOWSTAB
            || flavour == AF_DROWN
            || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
+           || flavour == AF_HUNGER
+           || flavour == AF_MIASMATA;
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -1293,7 +1296,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
 
-    aux_damage  = player_aux_stat_modify_damage(aux_damage);
+    count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
+
+    aux_damage  = player_stat_modify_damage(aux_damage);
 
     aux_damage  = random2(aux_damage);
 
@@ -1343,17 +1348,24 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             const bool spell_user = defender->antimagic_susceptible();
 
             antimagic_affects_defender(damage_done * 32);
-            mprf("You drain %s %s.",
-                 defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                 spell_user ? "magic" : "power");
 
-            if (you.magic_points != you.max_magic_points
+            // MP drain suppressed under Pakellas, but antimagic still applies.
+            if (!have_passive(passive_t::no_mp_regen) || spell_user)
+            {
+                mprf("You %s %s %s.",
+                     have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     spell_user ? "magic" : "power");
+            }
+
+            if (!have_passive(passive_t::no_mp_regen)
+                && you.magic_points != you.max_magic_points
                 && !defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
                 int drain = random2(damage_done * 2) + 1;
-                //Augment mana drain--1.25 "standard" effectiveness at 0 mp,
-                //.25 at mana == max_mana
+                // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
+                // 0.25 at mana == max_mana
                 drain = (int)((1.25 - you.magic_points / you.max_magic_points)
                               * drain);
                 if (drain)
@@ -1433,21 +1445,6 @@ void melee_attack::player_warn_miss()
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 }
 
-int melee_attack::player_aux_stat_modify_damage(int damage)
-{
-    int dammod = 20;
-
-    if (you.strength() > 10)
-        dammod += random2(you.strength() - 9);
-    else if (you.strength() < 10)
-        dammod -= random2(11 - you.strength());
-
-    damage *= dammod;
-    damage /= 20;
-
-    return damage;
-}
-
 // A couple additive modifiers that should be applied to both unarmed and
 // armed attacks.
 int melee_attack::player_apply_misc_modifiers(int damage)
@@ -1504,8 +1501,6 @@ void melee_attack::set_attack_verb(int damage)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
-    else if (weapon->base_type == OBJ_RODS)
-        weap_type = WPN_ROD;
     else if (weapon->base_type == OBJ_WEAPONS
              && !is_range_weapon(*weapon))
     {
@@ -1758,6 +1753,8 @@ void melee_attack::player_exercise_combat_skills()
     // Slow down the practice of low-damage weapons.
     if (x_chance_in_y(damage, 20))
         practise(EX_WILL_HIT, wpn_skill);
+
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /*
@@ -2113,7 +2110,7 @@ void melee_attack::apply_staff_damage()
     if (!weapon)
         return;
 
-    if (player_mutation_level(MUT_NO_ARTIFICE))
+    if (attacker->is_player() && player_mutation_level(MUT_NO_ARTIFICE))
         return;
 
     if (weapon->base_type != OBJ_STAVES)
@@ -2186,6 +2183,9 @@ void melee_attack::apply_staff_damage()
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
             special_damage_flavour = BEAM_FIRE;
+
+            if (defender->is_player())
+                maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         }
         break;
 
@@ -2612,7 +2612,7 @@ void melee_attack::mons_apply_attack_flavour()
     int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
-    if (flavour == AF_CHAOS)
+    if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
 
     // Note that if damage_done == 0 then this code won't be reached
@@ -2873,7 +2873,7 @@ void melee_attack::mons_apply_attack_flavour()
         mons_do_napalm();
         break;
 
-    case AF_CHAOS:
+    case AF_CHAOTIC:
         chaos_affects_defender();
         break;
 
@@ -3071,6 +3071,35 @@ void melee_attack::mons_apply_attack_flavour()
         if (coinflip())
             defender->weaken(attacker, 12);
         break;
+
+    case AF_MIASMATA:
+        if (coinflip())
+            break;
+
+        if (needs_message)
+        {
+            mprf("The air around %s putrefies into miasma!",
+                 defender_name(false).c_str());
+        }
+
+        // Check for valid terrain, allow renewing miasma-only spots,
+        // don't allow clouds over allies unless they're resistant.
+        for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+        {
+            if (cell_is_solid(*ai) ||
+                cloud_at(*ai) && cloud_at(*ai)->type == CLOUD_MIASMA)
+            {
+                continue;
+            }
+
+            const actor* act = actor_at(*ai);
+            if (act && mons_aligned(attacker, act) && act->res_rotting() < 1)
+                continue;
+
+            place_cloud(CLOUD_MIASMA, *ai, 6 + random2(5), attacker);
+        }
+
+        break;
     }
 }
 
@@ -3203,7 +3232,7 @@ void melee_attack::do_spines()
 
         if (mut && attacker->alive() && coinflip())
         {
-            int dmg = roll_dice(1 + mut, 5);
+            int dmg = random_range(mut, you.experience_level + mut);
             int hurt = attacker->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
@@ -3325,7 +3354,7 @@ void melee_attack::do_minotaur_retaliation()
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
-        dmg = player_aux_stat_modify_damage(dmg);
+        dmg = player_stat_modify_damage(dmg);
         dmg = random2(dmg);
         dmg = player_apply_fighting_skill(dmg, true);
         dmg = player_apply_misc_modifiers(dmg);
@@ -3560,30 +3589,12 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();
 
-    int frenzy_degree = -1;
-
     // Berserk/mighted monsters get bonus damage.
-    if (as_mon->has_ench(ENCH_MIGHT)
-        || as_mon->has_ench(ENCH_BERSERK))
-    {
+    if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
-    }
-    else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
-        frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
-    else if (as_mon->has_ench(ENCH_ROUSED))
-        frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
 
-    if (frenzy_degree != -1)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        const int orig_damage = damage;
-#endif
-
-        damage = damage * (115 + frenzy_degree * 15) / 100;
-
-        dprf(DIAG_COMBAT, "%s frenzy damage: %d->%d",
-             attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
-    }
+    if (as_mon->has_ench(ENCH_IDEALISED))
+        damage *= 2; // !
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
@@ -3676,5 +3687,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     return you.species == SP_VAMPIRE
            && you.hunger_state < HS_SATIATED
            && !mon->is_summoned()
-           && mons_has_blood(mon->type);
+           && mons_has_blood(mon->type)
+           && !testbits(mon->flags, MF_SPECTRALISED);
 }

@@ -79,7 +79,7 @@ A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
-A faded altar to an unknown god
+A faded altar of an unknown god
 
 An ancient altar, stripped of all identifying characteristics by the passage of
 aeons. Praying at it will convert you to an unknown god, and the altar's deity
@@ -179,9 +179,21 @@ A granite statue
 
 A stone statue whose features have long since withered away.
 %%%%
+A hazy altar of Hepliaklqana
+
+An altar to Hepliaklqana the Forgotten, shrouded in mist and difficult to make
+out clearly. Something about it seems terribly familiar, but it's impossible to
+say exactly why.
+%%%%
 A hole to the Spider Nest
 
 A passage leading to the Spider Nest.
+%%%%
+A hide-covered altar of Uskayaw
+
+An altar to Uskayaw the Reveler. The altar appears to be hollow and covered in a
+hide, giving it a resonant surface. Carvings on the side depict grouped figures
+that could be dancing or loving or fighting.
 %%%%
 A labyrinth entrance
 
@@ -469,6 +481,9 @@ A web
 
 A spider's web. The spider who left it must have been huge, as it seems to be
 made for trapping {{ return you.genus(true) }} rather than flies.
+
+Any creature caught in it will send out telltale vibrations, alerting and
+attracting spiders nearby.
 %%%%
 An abandoned shop
 
@@ -567,17 +582,20 @@ The floor.
 %%%%
 Some deep water
 
-A pool of deep water. The unexpected end of flight whilst above deep water has
-been the death of many careless adventurers.
+A pool of deep water. Only very large creatures can wade through this, and only
+those well-adapted to water can swim through it; for the rest, the only way
+through is to fly over.
 %%%%
 Some lava
 
 An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
+Nothing but the mythical salamander can cross this without flight.
 %%%%
 Some shallow water
 
 A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
 landlubbers — this is sometimes dangerous, but never directly fatal.
+#TODO: explain naga/grey drac/ogre/troll lack of fumbling penalties
 %%%%
 The open sea
 
@@ -692,7 +710,7 @@ A strange membrane, thin enough to see through.
 %%%%
 The pulsating floor
 
-The floor. It seems to pulse to an unknown beat.
+The floor. It pulses to an unknown beat.
 %%%%
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
@@ -896,7 +914,7 @@ sides of the tunnel, filling the entry.
 %%%%
 A magical portal
 
-A portal leading to a wizard's laboratory. It seems to be fading away.
+A portal leading to a wizard's laboratory. It is fading away.
 %%%%
 ###########
 ### Sprint

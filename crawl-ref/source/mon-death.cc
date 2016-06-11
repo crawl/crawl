@@ -51,6 +51,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
@@ -149,6 +150,18 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     {
         corpse.props[CORPSE_NAME_KEY] = mons_type_name(mtype, DESC_PLAIN);
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
+    }
+
+    // 0 mid indicates this is a dummy monster, such as for kiku corpse drop
+    if (mons_genus(mons.type) == MONS_ORC && mons.mid != 0)
+    {
+        auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
+        saved_mon = mons;
+
+        // Ensure that saved_mon is alive, lest it be cleared on marshall.
+        if (saved_mon.max_hit_points <= 0)
+            saved_mon.max_hit_points = 1;
+        saved_mon.hit_points = saved_mon.max_hit_points;
     }
 
     return true;
@@ -387,7 +400,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
 
-    you.props["gozag_gold_aura_amount"].get_int()++;
+    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
+    if (!x_chance_in_y(chance, chance + 9))
+        ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
 /**
@@ -508,8 +523,11 @@ void record_monster_defeat(const monster* mons, killer_type killer)
         return;
     if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->is_summoned())
         return;
-    if (mons->is_named() && mons->friendly())
+    if (mons->is_named() && mons->friendly()
+        && !mons_is_hepliaklqana_ancestor(mons->type))
+    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
+    }
     else if (mons_is_notable(*mons))
     {
         take_note(Note(NOTE_DEFEAT_MONSTER, mons->type, mons->friendly(),
@@ -563,8 +581,10 @@ int exp_rate(int killer)
 {
     // Damage by the spectral weapon is considered to be the player's damage ---
     // so the player does not lose any exp from dealing damage with a spectral weapon summon
+    // ditto hep ancestors (sigh)
     if (!invalid_monster_index(killer)
-        && menv[killer].type == MONS_SPECTRAL_WEAPON
+        && (menv[killer].type == MONS_SPECTRAL_WEAPON
+            || mons_is_hepliaklqana_ancestor(menv[killer].type))
         && menv[killer].summoner == MID_PLAYER)
     {
         return 2;
@@ -691,7 +711,8 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, true, MON_KILL(killer));
+        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::DEATHBED_FOLLOWER :
+                                                    conv_t::DEATHBED);
         return true;
     }
 
@@ -1167,6 +1188,7 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     beam.colour      = RED;
     beam.ex_size     = (size > SIZE_BIG) ? 2 : 1;
     beam.source_name = origin.name(DESC_A, true);
+    beam.origin_spell = SPELL_INNER_FLAME;
     beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE
                                                      : KILL_MON_MISSILE;
 }
@@ -1485,8 +1507,8 @@ static void _druid_final_boon(const monster* mons)
     for (int i = 0; i < num; ++i)
     {
         simple_monster_message(beasts[i], " seems to grow more fierce.");
-        beasts[i]->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, mons,
-                                        random_range(120, 200)));
+        beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
+                                        random_range(100, 160)));
     }
 }
 
@@ -1573,22 +1595,23 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
                            killer == KILL_YOU_CONF ||
                            killer == KILL_YOU_MISSILE;
     const bool pet_kill = _is_pet_kill(killer, killer_index);
-    const bool your_fault = your_kill && killer_index != YOU_FAULTLESS
-                            || pet_kill;
 
     // Pretend the monster is already dead, so that make_god_gifts_disappear
     // (and similar) don't kill it twice.
     unwind_var<int> fake_hp(mons.hit_points, 0);
 
     // if you or your pets didn't do it, no one cares
-    if (!your_fault)
+    if (!your_kill && !pet_kill)
         return;
 
+    // player gets credit for reflection kills, but not blame
+    const bool blameworthy = god_hates_killing(you.religion, &mons)
+                             && killer_index != YOU_FAULTLESS;
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
     // XXX: this will break holy death curses if they're added back...
     // but tbh that shouldn't really be in conducts anyway
-    if (!maybe_good_kill && !god_hates_killing(you.religion, &mons))
+    if (!maybe_good_kill && !blameworthy)
         return;
 
     mon_holy_type holiness = mons.holiness();
@@ -2065,8 +2088,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             // killing born-friendly monsters.
             if (gives_player_xp
                 && (have_passive(passive_t::restore_hp)
-                    || you_worship(GOD_PAKELLAS)
-                    || you_worship(GOD_VEHUMET)
+                    || have_passive(passive_t::mp_on_kill)
                     || have_passive(passive_t::restore_hp_mp_vs_unholy)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
@@ -2087,16 +2109,18 @@ item_def* monster_die(monster* mons, killer_type killer,
                     mp_heal = random2(2 + mons->get_experience_level() / 3);
                 }
 
-                switch (you.religion)
+                if (have_passive(passive_t::mp_on_kill))
                 {
-                case GOD_VEHUMET:
-                    mp_heal = 1 + random2(mons->get_experience_level() / 2);
-                    break;
-                case GOD_PAKELLAS:
-                    mp_heal = random2(2 + mons->get_experience_level() / 6);
-                    break;
-                default:
-                    break;
+                    switch (you.religion)
+                    {
+                    case GOD_PAKELLAS:
+                        mp_heal = random2(2 + mons->get_experience_level() / 6);
+                        break;
+                    case GOD_VEHUMET:
+                    default:
+                        mp_heal = 1 + random2(mons->get_experience_level() / 2);
+                        break;
+                    }
                 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -2120,7 +2144,9 @@ item_def* monster_die(monster* mons, killer_type killer,
                 }
 
                 // perhaps this should go to its own function
-                if (mp_heal && in_good_standing(GOD_PAKELLAS, 2))
+                if (mp_heal
+                    && have_passive(passive_t::bottle_mp)
+                    && !you_foodless_normally())
                 {
                     simple_god_message(" collects the excess magic power.");
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
@@ -2396,7 +2422,8 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (destroy_tentacles(mons)
             && !in_transit
-            && you.see_cell(mons->pos()))
+            && you.see_cell(mons->pos())
+            && !was_banished)
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
                 mpr("The dead kraken's tentacles slide back into the water.");
@@ -2500,20 +2527,16 @@ item_def* monster_die(monster* mons, killer_type killer,
             || killer == KILL_YOU_CONF
             || pet_kill))
     {
-        // Set duration
-        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
-
-        // avg 10 turns at L1, 20 at L3
-        const int pbd_dur = pbd_level * 5 + roll_dice(2, 4);
-        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
-        if (pbd_dur * BASELINE_DELAY > you.duration[DUR_POWERED_BY_DEATH])
-            you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+        // Enable the status
+        reset_powered_by_death_duration();
 
         // Maybe increase strength. The chance decreases with number
         // of existing stacks.
+        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
+        const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
         if (x_chance_in_y(10 - pbd_str, 10))
         {
-            const int pbd_inc = random_range(1, pbd_level);
+            const int pbd_inc = random2(1 + pbd_level);
             you.props[POWERED_BY_DEATH_KEY] = pbd_str + pbd_inc;
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
@@ -2605,6 +2628,17 @@ item_def* monster_die(monster* mons, killer_type killer,
         && !(mons->flags & MF_BANISHED))
     {
         remove_companion(mons);
+        if (mons_is_hepliaklqana_ancestor(mons->type))
+        {
+            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
+            if (!you.can_see(*mons))
+            {
+                mprf("%s has departed this plane of existence.",
+                     hepliaklqana_ally_name().c_str());
+            }
+            // respawn in ~30-60 turns
+            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+        }
     }
 
     // If we kill an invisible monster reactivate autopickup.
@@ -2612,8 +2646,11 @@ item_def* monster_die(monster* mons, killer_type killer,
     // can see the monster. There are several edge cases where a monster
     // is visible to the player but we still need to turn autopickup
     // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS))
+    if (you.see_cell(mons->pos()) && mons->has_ench(ENCH_INVIS)
+        && !mons->friendly())
+    {
         autotoggle_autopickup(false);
+    }
 
     if (corpse && _reaping(mons))
         corpse = nullptr;

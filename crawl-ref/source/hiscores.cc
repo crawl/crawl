@@ -383,7 +383,7 @@ static void _show_morgue(scorefile_entry& se)
     cols.add_formatted(
             0,
             morgue_text,
-            true, true);
+            true);
 
     vector<formatted_string> blines = cols.formatted_lines();
 
@@ -907,7 +907,7 @@ enum old_species_type
     OLD_SP_SLUDGE_ELF = -7,
     OLD_SP_DJINNI = -8,
     OLD_SP_LAVA_ORC = -9,
-    NUM_OLD_SPECIES = OLD_SP_LAVA_ORC
+    NUM_OLD_SPECIES = -OLD_SP_LAVA_ORC
 };
 
 static string _species_name(int race)
@@ -953,7 +953,7 @@ static int _species_by_name(const string& name)
     if (race != SP_UNKNOWN)
         return race;
 
-    for (race = -1; race >= -NUM_OLD_JOBS; race--)
+    for (race = -1; race >= -NUM_OLD_SPECIES; race--)
         if (name == _species_name(race))
             return race;
 
@@ -1605,6 +1605,9 @@ void scorefile_entry::init(time_t dt)
 
         points = pt;
     }
+    else
+        ASSERT(crawl_state.game_is_sprint());
+        // only sprint should use custom scores
 
     race = you.species;
     job  = you.char_class;
@@ -1690,8 +1693,8 @@ void scorefile_entry::init(time_t dt)
     birth_time = you.birth_time;     // start time of game
     death_time = (dt != 0 ? dt : time(nullptr)); // end time of game
 
-    handle_real_time(death_time);
-    real_time = you.real_time;
+    handle_real_time(chrono::system_clock::from_time_t(death_time));
+    real_time = you.real_time();
 
     num_turns = you.num_turns;
     num_aut = you.elapsed_time;
@@ -1704,7 +1707,8 @@ void scorefile_entry::init(time_t dt)
     zigmax     = you.zig_max;
 
     scrolls_used = 0;
-    pair<caction_type, int> p(CACT_USE, OBJ_SCROLLS);
+    dprf("checking %d", caction_compound(OBJ_SCROLLS));
+    pair<caction_type, int> p(CACT_USE, caction_compound(OBJ_SCROLLS));
 
     const int maxlev = min<int>(you.max_level, 27);
     if (you.action_count.count(p))
@@ -1712,7 +1716,7 @@ void scorefile_entry::init(time_t dt)
             scrolls_used += you.action_count[p][i];
 
     potions_used = 0;
-    p = make_pair(CACT_USE, OBJ_POTIONS);
+    p = make_pair(CACT_USE, caction_compound(OBJ_POTIONS));
     if (you.action_count.count(p))
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
@@ -1856,7 +1860,8 @@ string scorefile_entry::single_cdesc() const
     scname = chop_string(name, 10);
 
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
+                        race_class_name.c_str(), lvl,
+                        (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
 }
 
 static string _append_sentence_delimiter(const string &sentence,
@@ -2203,8 +2208,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (species_is_unbreathing(static_cast<species_type>(race)))
+        else if (race >= 0 && // not a removed race
+                 species_is_unbreathing(static_cast<species_type>(race)))
+        {
             desc += "Forgot to exist";
+        }
         else
             desc += "Forgot to breathe";
         break;
@@ -2651,7 +2659,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    desc += (is_vowel(auxkilldata[0])) ? "... with an "
+                    desc += auxkilldata == "damnation" ? "... with " :
+                            (is_vowel(auxkilldata[0])) ? "... with an "
                                                        : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();

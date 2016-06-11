@@ -51,13 +51,17 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
 #endif
         case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
+#if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
+#endif
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
 
         case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
-        case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:   return TILEP_HAND1_BONE_LANTERN;
+#endif
         case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
         case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
 
@@ -65,13 +69,16 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_DECK_OF_DESTRUCTION:
 #if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_DUNGEONS:
-#endif
         case MISC_DECK_OF_SUMMONING:
         case MISC_DECK_OF_WONDERS:
+#endif
         case MISC_DECK_OF_PUNISHMENT:
         case MISC_DECK_OF_WAR:
+#if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENCE:            return TILEP_HAND1_DECK;
+        case MISC_DECK_OF_DEFENCE:
+#endif
+            return TILEP_HAND1_DECK;
         }
     }
 
@@ -564,7 +571,9 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HUMAN:
         return TILEP_BASE_HUMAN;
     case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
     case SP_SLUDGE_ELF:
+#endif
         return TILEP_BASE_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
@@ -669,7 +678,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     switch (sp)
     {
         case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
         case SP_SLUDGE_ELF:
+#endif
             hair = TILEP_HAIR_ELF_YELLOW;
             break;
         case SP_DEEP_ELF:

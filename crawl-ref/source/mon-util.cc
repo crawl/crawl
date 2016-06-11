@@ -31,6 +31,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -59,6 +60,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed_effects.h"
@@ -73,11 +75,9 @@ struct mon_display
 {
     ucs_t        glyph;
     colour_t     colour;
-    monster_type detected; // What a monster of type "type" is detected as.
 
-    mon_display(unsigned gly = 0, unsigned col = 0,
-                monster_type d = MONS_NO_MONSTER)
-       : glyph(gly), colour(col), detected(d) { }
+    mon_display(unsigned gly = 0, unsigned col = 0)
+       : glyph(gly), colour(col) { }
 };
 
 static mon_display monster_symbols[NUM_MONSTERS];
@@ -269,7 +269,6 @@ void init_monster_symbols()
             auto it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = mc;
-            md.detected = base_mons[md.glyph];
         }
     }
 
@@ -1001,32 +1000,6 @@ bool mons_is_abyssal_only(monster_type mc)
     }
 }
 
-bool mons_is_poisoner(const monster* mon)
-{
-    if (mon->search_slots([] (const mon_spell_slot& slot)
-                             { return slot.flags & MON_SPELL_NATURAL
-                                      && spell_typematch(slot.spell,
-                                                         SPTYP_POISON); } ))
-    {
-        return true;
-    }
-
-    if (mon->has_attack_flavour(AF_POISON)
-        || mon->has_attack_flavour(AF_POISON_STRONG))
-    {
-        return true;
-    }
-
-    if (mon->type == MONS_DANCING_WEAPON
-        && mon->primary_weapon()
-        && get_weapon_brand(*mon->primary_weapon()) == SPWPN_VENOM)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 // Monsters considered as "slime" for Jiyva.
 bool mons_class_is_slime(monster_type mc)
 {
@@ -1120,7 +1093,9 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
  */
 static void _destroy_mimic_feature(const coord_def &pos)
 {
+#if TAG_MAJOR_VERSION == 34
     const dungeon_feature_type feat = grd(pos);
+#endif
 
     unnotice_feature(level_pos(level_id::current(), pos));
     grd(pos) = DNGN_FLOOR;
@@ -1310,8 +1285,8 @@ monster_type mons_species(monster_type mc)
     return me ? me->species : MONS_PROGRAM_BUG;
 }
 
-static monster_type _draco_or_demonspawn_subspecies(monster_type type,
-                                                    monster_type base)
+monster_type draco_or_demonspawn_subspecies(monster_type type,
+                                            monster_type base)
 {
     const monster_type species = mons_species(type);
 
@@ -1335,12 +1310,12 @@ monster_type draco_or_demonspawn_subspecies(const monster* mon)
         return player_species_to_mons_species(mon->ghost->species);
     }
 
-    return _draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
+    return draco_or_demonspawn_subspecies(mon->type, mon->base_monster);
 }
 
 monster_type mons_detected_base(monster_type mc)
 {
-    return monster_symbols[mc].detected;
+    return mons_genus(mc);
 }
 
 /** Does a monster of this type behold opponents like a siren?
@@ -1369,7 +1344,6 @@ int get_shout_noise_level(const shout_type shout)
         return 4;
     case S_SOFT:
         return 6;
-    case S_GURGLE:
     case S_LOUD:
         return 10;
     case S_SHOUT2:
@@ -1519,6 +1493,17 @@ bool mons_is_or_was_unique(const monster& mon)
 }
 
 /**
+ * Is the given type one of Hepliaklqana's granted ancestors?
+ *
+ * @param mc    The type of monster in question.
+ * @return      Whether that monster is a player ancestor.
+ */
+bool mons_is_hepliaklqana_ancestor(monster_type mc)
+{
+    return mons_class_flag(mc, M_ANCESTOR);
+}
+
+/**
  * Can this type of monster be blinded?
  *
  * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
@@ -1651,6 +1636,18 @@ monster_type mons_zombie_base(const monster* mon)
 
 bool mons_class_is_zombified(monster_type mc)
 {
+#if TAG_MAJOR_VERSION == 34
+    switch (mc)
+    {
+        case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
+        case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
+        case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+            return true;
+        default:
+            break;
+    }
+#endif
+
     return mc == MONS_ZOMBIE
         || mc == MONS_SKELETON
         || mc == MONS_SIMULACRUM
@@ -1718,7 +1715,8 @@ bool mons_can_use_stairs(const monster* mon, dungeon_feature_type stair)
         return false;
 
     if (mon->has_ench(ENCH_FRIENDLY_BRIBED)
-        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
+        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)
+            || stair == DNGN_ENTER_HELL || stair == DNGN_EXIT_HELL))
     {
         return false;
     }
@@ -1737,7 +1735,7 @@ bool mons_enslaved_soul(const monster* mon)
     return testbits(mon->flags, MF_ENSLAVED_SOUL);
 }
 
-bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
+void name_zombie(monster* mon, monster_type mc, const string &mon_name)
 {
     mon->mname = mon_name;
 
@@ -1759,6 +1757,8 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
         mon->mname = "Enchantress";
         mon->flags |= MF_NAME_ADJECTIVE;
     }
+    else if (mons_species(mc) == MONS_SERPENT_OF_HELL)
+        mon->mname = "";
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
@@ -1767,14 +1767,12 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     // we still want to allow it if overridden.
     if (!mon->props.exists("dbname"))
         mon->props["dbname"] = mons_class_name(mon->type);
-
-    return true;
 }
 
-bool name_zombie(monster* mon, const monster* orig)
+void name_zombie(monster* mon, const monster* orig)
 {
     if (!mons_is_unique(orig->type) && orig->mname.empty())
-        return false;
+        return;
 
     string name;
 
@@ -1783,7 +1781,10 @@ bool name_zombie(monster* mon, const monster* orig)
     else
         name = mons_type_name(orig->type, DESC_PLAIN);
 
-    return name_zombie(mon, orig->type, name);
+    name_zombie(mon, orig->type, name);
+    mon->flags |= orig->flags & (MF_NAME_SUFFIX
+                                 | MF_NAME_ADJECTIVE
+                                 | MF_NAME_DESCRIPTOR);
 }
 
 // Derived undead deal 80% of the damage of the base form.
@@ -1876,6 +1877,28 @@ static mon_attack_def _mutant_beast_attack(const monster &mon, int attk_number)
     return { };
 }
 
+/**
+ * Get the attack type, attack flavour and damage for the given attack of an
+ * ancestor granted by Hepliaklqana_ancestor_attack.
+ *
+ * @param mon           The monster in question.
+ * @param attk_number   Which attack number to get.
+ * @return              A mon_attack_def for the specified attack.
+ */
+static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
+                                                     int attk_number)
+{
+    if (attk_number != 0)
+        return { };
+
+    const int HD = mon.get_experience_level();
+    const int dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
+    // battlemages do double base melee damage (+25-50% including their weapon)
+    const int dam_mult = mon.type == MONS_ANCESTOR_BATTLEMAGE ? 2 : 1;
+
+    return { AT_HIT, AF_PLAIN, dam * dam_mult };
+}
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -1912,6 +1935,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(*mon, attk_number);
+    else if (mons_is_hepliaklqana_ancestor(mc))
+        return _hepliaklqana_ancestor_attack(*mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
@@ -2062,7 +2087,7 @@ int mons_class_res_magic(monster_type type, monster_type base)
     const monster_type base_type =
         base != MONS_NO_MONSTER &&
         (mons_is_draconian(type) || mons_is_demonspawn(type))
-            ? _draco_or_demonspawn_subspecies(type, base)
+            ? draco_or_demonspawn_subspecies(type, base)
             : type;
 
     const int type_mr = (get_monster_data(base_type))->resist_magic;
@@ -2087,7 +2112,7 @@ bool mons_class_sees_invis(monster_type type, monster_type base)
         return true;
 
     if (base != MONS_NO_MONSTER && mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
-        && mons_class_flag(_draco_or_demonspawn_subspecies(type, base),
+        && mons_class_flag(draco_or_demonspawn_subspecies(type, base),
                            M_SEE_INVIS))
     {
         return true;
@@ -2220,8 +2245,8 @@ int exper_value(const monster* mon, bool real)
             case SPELL_PARALYSE:
             case SPELL_SMITING:
             case SPELL_SUMMON_EYEBALLS:
-            case SPELL_HELLFIRE_BURST:
-            case SPELL_HELLFIRE:
+            case SPELL_CALL_DOWN_DAMNATION:
+            case SPELL_HURL_DAMNATION:
             case SPELL_SYMBOL_OF_TORMENT:
             case SPELL_GLACIATE:
             case SPELL_FIRE_STORM:
@@ -2430,6 +2455,11 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
     case MONS_DEEP_ELF_KNIGHT:
         return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II };
 
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+        return { MST_LICH_I, MST_LICH_II, MST_LICH_III,
+                 MST_LICH_IV, MST_LICH_V, };
+
     default:
         return { static_cast<mon_spellbook_type>(
                      get_monster_data(mon_type)->sec) };
@@ -2468,7 +2498,7 @@ unique_books get_unique_spells(const monster_info &mi,
             if (mspell_list[msidx].type == book)
                 break;
 
-        vector<spell_type> spells;
+        vector<mon_spell_slot> slots;
 
         // Only prepend the first time; might be misleading if a draconian
         // ever gets multiple sets of natural abilities.
@@ -2477,12 +2507,12 @@ unique_books get_unique_spells(const monster_info &mi,
             const mon_spell_slot breath =
                 drac_breath(mi.draco_or_demonspawn_subspecies());
             if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
-                spells.push_back(breath.spell);
+                slots.push_back(breath);
             // No other spells; quit right away.
             if (book == MST_NO_SPELLS)
             {
-                if (spells.size())
-                    result.push_back(spells);
+                if (slots.size())
+                    result.push_back(slots);
                 return result;
             }
         }
@@ -2496,14 +2526,20 @@ unique_books get_unique_spells(const monster_info &mi,
             if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
                 continue;
 
-            if (find(spells.begin(), spells.end(), slot.spell) == spells.end())
-                spells.push_back(slot.spell);
+            if (none_of(slots.begin(), slots.end(),
+                [&](const mon_spell_slot& oldslot)
+                {
+                    return oldslot.spell == slot.spell;
+                }))
+            {
+                slots.push_back(slot);
+            }
         }
 
-        if (spells.size() == 0)
+        if (slots.size() == 0)
             continue;
 
-        result.push_back(spells);
+        result.push_back(slots);
     }
 
     return result;
@@ -2536,240 +2572,6 @@ mon_spell_slot drac_breath(monster_type drac_type)
     return slot;
 }
 
-static const vector<mon_spell_slot> lich_primary_summoner_spells =
-{
-    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
-};
-
-static const vector<mon_spell_slot> lich_primary_conjurer_spells =
-{
-    { SPELL_IOOD, 18, MON_SPELL_WIZARD },
-    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
-    { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
-};
-
-static const vector<mon_spell_slot> lich_secondary_spells =
-{
-    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
-    { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
-    { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
-    { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
-    { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
-    { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
-    { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
-    { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
-    { SPELL_AGONY, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
-    { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-    { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-    { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
-    { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
-    { SPELL_LRD, 12, MON_SPELL_WIZARD },
-    { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
-    { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
-    { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
-    { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
-    { SPELL_SLOW, 12, MON_SPELL_WIZARD },
-    { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
-};
-
-static const vector<mon_spell_slot> lich_buff_spells =
-{
-    { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-    { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-};
-
-static bool _random_caster_spell_is_used(const monster_spells &spells,
-                                         spell_type spell)
-{
-    for (auto slot : spells)
-        if (slot.spell == spell)
-            return true;
-
-    return false;
-}
-
-static bool _random_caster_has_spell_of_school(const monster_spells &spells,
-                                               spschool_flag_type discipline)
-{
-    for (auto slot : spells)
-        if (spell_typematch(slot.spell, discipline))
-            return true;
-
-    return false;
-}
-
-static bool _random_caster_spell_is_good(const monster_spells &spells,
-                                         spell_type spell,
-                                         int *weights, int total_weight,
-                                         bool use_weights, bool force_conj)
-{
-    if (_random_caster_spell_is_used(spells, spell))
-        return false;
-
-    if (force_conj
-        && !_random_caster_has_spell_of_school(spells, SPTYP_CONJURATION))
-    {
-        return spell_typematch(spell, SPTYP_CONJURATION)
-               && spell != SPELL_BATTLESPHERE
-               && spell != SPELL_SPELLFORGED_SERVITOR;
-    }
-
-    if (!use_weights)
-        return true;
-
-    spschools_type disciplines = get_spell_disciplines(spell);
-    int num_disciplines = count_bits(disciplines);
-
-    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-    {
-        const auto bit = spschools_type::exponent(exponent);
-        if (disciplines & bit)
-            if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
-                return true;
-    }
-
-    return false;
-}
-
-static void _calculate_random_caster_spell_weights(const monster_spells &spells,
-                                                   int *weights,
-                                                   int &total_weight)
-{
-    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-        // there are no primary hexes, and hexes are interesting to have on
-        // liches, so give them a slightly higher chance
-        weights[exponent] = (1 << exponent) == SPTYP_HEXES
-        ? SPTYP_LAST_EXPONENT / 4
-        : 1;
-
-    for (auto slot : spells)
-        for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
-        {
-            const auto discipline = spschools_type::exponent(exponent);
-            if (spell_typematch(slot.spell, discipline))
-            {
-                // or else we just get entirely bolts
-                int increment = discipline == SPTYP_CONJURATION
-                ? SPTYP_LAST_EXPONENT / 4
-                : SPTYP_LAST_EXPONENT;
-                weights[exponent] = min(
-                                        weights[exponent] + increment,
-                                        (int)SPTYP_LAST_EXPONENT * 2
-                                        );
-            }
-        }
-
-    total_weight = 0;
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
-        total_weight += weights[i];
-
-}
-
-static void _add_random_caster_spell(monster_spells &spells,
-                                     const vector<mon_spell_slot> *set,
-                                     bool secondary, bool force_conj)
-{
-    int weights[SPTYP_LAST_EXPONENT + 1];
-    int total_weight;
-    const size_t set_len = set->size();
-    _calculate_random_caster_spell_weights(spells, weights, total_weight);
-
-    mon_spell_slot next_spell;
-    do
-    {
-        next_spell = (*set)[random2(set_len)];
-    }
-    while (!_random_caster_spell_is_good(spells, next_spell.spell, weights,
-                                         total_weight, secondary, force_conj));
-
-    next_spell.freq = next_spell.freq - 4 + random2(9);
-    spells.push_back(next_spell);
-}
-
-struct random_caster_spell_def
-{
-    size_t min_spells;
-    size_t max_spells;
-    bool force_second_conj;
-    bool bonus_conj;
-    const vector<mon_spell_slot> *primary_summoner_spells;
-    const vector<mon_spell_slot> *primary_conjurer_spells;
-    const vector<mon_spell_slot> *secondary_spells;
-    const vector<mon_spell_slot> *buff_spells;
-};
-
-static const map<monster_type, random_caster_spell_def> random_caster_spells =
-{
-    {
-      MONS_LICH,
-      {
-        5, 7,
-        true,
-        false,
-        &lich_primary_summoner_spells,
-        &lich_primary_conjurer_spells,
-        &lich_secondary_spells,
-        &lich_buff_spells
-      }
-    },
-    {
-      MONS_ANCIENT_LICH,
-      {
-        5, 7,
-        true,
-        true,
-        &lich_primary_summoner_spells,
-        &lich_primary_conjurer_spells,
-        &lich_secondary_spells,
-        &lich_buff_spells
-      }
-    },
-};
-
-static void _load_random_caster_spells(monster &caster)
-{
-    const auto entry = random_caster_spells.find(caster.type);
-    ASSERT(entry != random_caster_spells.end());
-    const auto def = entry->second;
-
-    const size_t num_spells = random_range(def.min_spells, def.max_spells);
-
-    if (coinflip())
-    {
-        _add_random_caster_spell(caster.spells, def.primary_summoner_spells,
-                                 false, false);
-    }
-    else
-        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
-                                 false, false);
-
-    if (def.bonus_conj && coinflip())
-    {
-        _add_random_caster_spell(caster.spells, def.primary_conjurer_spells,
-                                 false, false);
-    }
-
-    const unsigned int max = def.buff_spells > 0 ? num_spells - 1 : num_spells;
-    bool force_conj = def.force_second_conj;
-    while (caster.spells.size() < max)
-    {
-        _add_random_caster_spell(caster.spells, def.secondary_spells,
-                                 true, force_conj);
-        force_conj = false;
-    }
-
-    if (def.buff_spells)
-    {
-        _add_random_caster_spell(caster.spells, def.buff_spells,
-                                 false, false);
-    }
-
-    normalize_spell_freq(caster.spells, caster.get_experience_level());
-}
-
 void mons_load_spells(monster* mon)
 {
     vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
@@ -2785,8 +2587,6 @@ void mons_load_spells(monster* mon)
         if (breath.spell != SPELL_NO_SPELL)
             mon->spells.push_back(breath);
     }
-    else if (mon->type == MONS_LICH || mon->type == MONS_ANCIENT_LICH)
-        _load_random_caster_spells(*mon);
 
     if (book == MST_NO_SPELLS)
         return;
@@ -3741,86 +3541,55 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
                         100);
 }
 
-static bool _ms_los_spell(spell_type monspell)
-{
-    // True, the tentacles _are_ summoned, but they are restricted to
-    // water just like the kraken is, so it makes more sense not to
-    // count them here.
-    if (monspell == SPELL_CREATE_TENTACLES)
-        return false;
-
-    if (monspell == SPELL_SMITING
-        || monspell == SPELL_AIRSTRIKE
-        || monspell == SPELL_HAUNT
-        || monspell == SPELL_SUMMON_SPECTRAL_ORCS
-        || spell_typematch(monspell, SPTYP_SUMMONING))
-    {
-        return true;
-    }
-
-    return false;
-}
-
+/**
+ * Can monsters use the given spell effectively from range? (If a monster has
+ * the given spell, should it try to keep its distance from its enemies?)
+ *
+ * @param monspell      The spell in question.
+ * @param attack_only   Whether to only count spells which directly harm
+ *                      enemies (damage or stat drain). Overrides ench_too.
+ * @param ench_too      Whether to count temporary debilitating effects (Slow,
+ *                      etc).
+ * @return              Whether the given spell should be considered 'ranged'.
+ */
 static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
                              bool ench_too = true)
 {
-    // Check for Smiting specially, so it's not filtered along
-    // with the summon spells.
-    if (attack_only
-        && (monspell == SPELL_SMITING
-            || monspell == SPELL_AIRSTRIKE
-            || monspell == SPELL_PORTAL_PROJECTILE))
+    // summoning spells are usable from ranged, but not direct attacks.
+    if (spell_typematch(monspell, SPTYP_SUMMONING)
+        || monspell == SPELL_CONJURE_BALL_LIGHTNING)
     {
-        return true;
+        return !attack_only;
     }
 
-    // These spells are ranged, but aren't direct attack spells.
-    if (_ms_los_spell(monspell))
-        return !attack_only;
+    const unsigned int flags = get_spell_flags(monspell);
+
+    // buffs & escape spells aren't considered 'ranged'.
+    if (testbits(flags, SPFLAG_SELFENCH)
+        || spell_typematch(monspell, SPTYP_CHARMS)
+        || testbits(flags, SPFLAG_ESCAPE)
+        || monspell == SPELL_BLINK_OTHER_CLOSE)
+    {
+        return false;
+    }
+
+    // conjurations are attacks.
+    if (spell_typematch(monspell, SPTYP_CONJURATION))
+        return true;
+
+    // hexes that aren't conjurations or summons are enchantments.
+    if (spell_typematch(monspell, SPTYP_HEXES))
+        return !attack_only && ench_too;
 
     switch (monspell)
     {
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
-    case SPELL_HASTE:
-    case SPELL_MIGHT:
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-    case SPELL_TELEPORT_SELF:
-    case SPELL_INVISIBILITY:
-    case SPELL_BLINK:
     case SPELL_BLINK_CLOSE:
-    case SPELL_BLINK_RANGE:
-    case SPELL_BLINK_AWAY:
-    case SPELL_BERSERKER_RAGE:
-    case SPELL_SWIFTNESS:
         return false;
 
-    // The animation spells don't work through transparent walls and
-    // thus are listed here instead of above.
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
-        return !attack_only;
-
-    // XXX: can this list not be hard-coded to prevent problems in the future?
-    case SPELL_CORONA:
-    case SPELL_CONFUSE:
-    case SPELL_SLOW:
-    case SPELL_PARALYSE:
-    case SPELL_SLEEP:
-    case SPELL_HIBERNATION:
-    case SPELL_CAUSE_FEAR:
-    case SPELL_LEDAS_LIQUEFACTION:
-    case SPELL_MESMERISE:
-    case SPELL_MASS_CONFUSION:
-    case SPELL_ENGLACIATION:
-    case SPELL_TELEPORT_OTHER:
-    case SPELL_BLINK_OTHER_CLOSE:
-    case SPELL_BLINK_OTHER:
-        return ench_too;
-
     default:
-        // All conjurations count as ranged spells.
+        // Everything else is probably some kind of attack, hopefully.
         return true;
     }
 }
@@ -4033,7 +3802,7 @@ static const spell_type smitey_spells[] = {
     SPELL_SMITING,
     SPELL_AIRSTRIKE,
     SPELL_SYMBOL_OF_TORMENT,
-    SPELL_HELLFIRE_BURST,
+    SPELL_CALL_DOWN_DAMNATION,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
     SPELL_TORNADO,          // dubious
@@ -4726,6 +4495,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "roars",
         "screams",
         "bellows",
+        "bleats",
         "trumpets",
         "screeches",
         "buzzes",
@@ -4735,7 +4505,9 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "growls",
         "hisses",
         "sneers",       // S_DEMON_TAUNT
+#if TAG_MAJOR_VERSION == 34
         "caws",
+#endif
         "says",         // S_CHERUB -- they just speak normally.
         "rumbles",
         "buggily says", // NUM_SHOUTS
@@ -4779,7 +4551,7 @@ mon_body_shape get_mon_shape(const monster* mon)
 
 /**
  * Get the monster body shape of the given monster type.
- * @param mon  The monster type in question.
+ * @param mc  The monster type in question.
  * @return     The mon_body_shape type of this monster type.
  */
 mon_body_shape get_mon_shape(const monster_type mc)
@@ -4795,6 +4567,47 @@ mon_body_shape get_mon_shape(const monster_type mc)
 }
 
 /**
+ * What's the normal tile for a given monster type?
+ *
+ * @param mc    The monster type in question.
+ * @return      The tile for that monster, or TILEP_MONS_PROGRAM_BUG for mons
+ *              with variable tiles (e.g. merfolk, hydras, slime creatures).
+ */
+tileidx_t get_mon_base_tile(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->tile.base;
+}
+
+/**
+ * How should a given monster type's tile vary?
+ *
+ * @param mc    The monster type in question.
+ * @return      An enum describing how display of the monster should vary
+ *              (by individual monster instance, or whether they're in water,
+ *              etc)
+ */
+mon_type_tile_variation get_mon_tile_variation(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->tile.variation;
+}
+
+/**
+ * What's the normal tile for corpses of a given monster type?
+ *
+ * @param mc    The monster type in question.
+ * @return      The tile for that monster's corpse; may be varied slightly
+ *              further in some special cases (ugly things, klowns).
+ */
+tileidx_t get_mon_base_corpse_tile(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->corpse_tile;
+}
+
+
+/**
  * Get a DB lookup string for the given monster body shape.
  * @param mon  The monster body shape type in question.
  * @return     A DB lookup string for the monster body shape.
@@ -4808,13 +4621,24 @@ string get_mon_shape_str(const mon_body_shape shape)
         "bug", "humanoid", "winged humanoid", "tailed humanoid",
         "winged tailed humanoid", "centaur", "naga",
         "quadruped", "tailless quadruped", "winged quadruped",
-        "bat", "snake", "fish",  "insect", "winged insect",
+        "bat", "bird", "snake", "fish",  "insect", "winged insect",
         "arachnid", "centipede", "snail", "plant", "fungus", "orb",
         "blob", "misc"
     };
 
     COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
     return shape_names[shape];
+}
+
+/** Is this body shape partially humanoid (i.e. does it at least have a
+ *  humanoid upper body)?
+ *  @param shape  The body shape in question.
+ *  @returns      Whether this body shape is partially humanoid.
+ */
+bool mon_shape_is_humanoid(mon_body_shape shape)
+{
+    return shape >= MON_SHAPE_FIRST_HUMANOID
+           && shape <= MON_SHAPE_LAST_HUMANOID;
 }
 
 bool player_or_mon_in_sanct(const monster* mons)
@@ -5022,19 +4846,30 @@ void debug_mondata()
 
         if (md->shape == MON_SHAPE_BUGGY)
             fails += make_stringf("%s has no defined shape\n", name);
+
+        const bool has_corpse_tile = md->corpse_tile
+                                     && md->corpse_tile != TILE_ERROR;
+        if (md->species != mc)
+        {
+            if (has_corpse_tile)
+            {
+                fails +=
+                    make_stringf("%s isn't a species but has a corpse tile\n",
+                                 name);
+            }
+        }
+        else if (md->corpse_thingy == CE_NOCORPSE)
+        {
+            if (has_corpse_tile)
+            {
+                fails += make_stringf("%s has a corpse tile & no corpse\n",
+                                      name);
+            }
+        } else if (!has_corpse_tile)
+            fails += make_stringf("%s has a corpse but no corpse tile\n", name);
     }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("mon-data.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-data errors (dumped to mon-data.out)");
-    }
+    dump_test_fails(fails, "mon-data");
 }
 
 /**
@@ -5167,24 +5002,14 @@ void debug_monspells()
         }
     }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("mon-spell.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-spell errors (dumped to mon-spell.out)");
-    }
+    dump_test_fails(fails, "mon-spell");
 }
 
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.
 void reset_all_monsters()
 {
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately
@@ -5573,6 +5398,7 @@ void init_mutant_beast(monster &mons, short HD, vector<int> beast_facets,
         {
             case BF_BAT:
                 mons.props[MON_SPEED_KEY] = mons.speed * 2;
+                mons.calc_speed();
                 break;
             case BF_FIRE:
                 mons.spells.emplace_back(SPELL_FIRE_BREATH, 60,
@@ -5604,9 +5430,147 @@ int max_mons_charge(monster_type m)
     {
         case MONS_ORB_SPIDER:
             return 1;
-        case MONS_SALAMANDER_STORMCALLER:
+        case MONS_GIANT_EYEBALL:
             return 2;
         default:
             return 0;
+    }
+}
+
+// Deal out damage to nearby pain-bonded monsters based on the distance between them.
+void radiate_pain_bond(const monster* mon, int damage)
+{
+    for (actor_near_iterator ai(mon->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->is_monster())
+            continue;
+
+        monster* target = ai->as_monster();
+
+        if (mon == target) // no self-sharing
+            continue;
+
+        if (mons_intel(target) < I_ANIMAL)
+            continue;
+
+        // Only other pain-bonded monsters are affected.
+        if (!target->has_ench(ENCH_PAIN_BOND))
+            continue;
+
+        int distance = target->pos().distance_from(mon->pos());
+        if (distance > 3)
+            continue;
+
+        damage = max(0, div_rand_round(damage * (4 - distance), 5));
+
+        if (damage > 0)
+        {
+            behaviour_event(target, ME_ANNOY, &you, you.pos());
+            target->hurt(&you, damage, BEAM_SHARED_PAIN);
+        }
+    }
+}
+
+// When a monster explodes violently, add some spice
+void throw_monster_bits(const monster* mon)
+{
+    for (actor_near_iterator ai(mon->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->is_monster())
+            continue;
+
+        monster* target = ai->as_monster();
+
+        if (mon == target) // can't throw chunks of something at itself.
+            continue;
+
+        int distance = target->pos().distance_from(mon->pos());
+        if (!one_chance_in(distance + 4)) // generally gonna miss
+            continue;
+
+        int damage = 1 + random2(mon->get_hit_dice());
+
+        mprf("%s is hit by a flying piece of %s!",
+                target->name(DESC_THE, false).c_str(),
+                mon->name(DESC_THE, false).c_str());
+
+        // Because someone will get a kick out of this some day.
+        if (mons_eats_items(mon))
+            target->corrode_equipment("flying bits", 1);
+
+        behaviour_event(target, ME_ANNOY, &you, you.pos());
+        target->hurt(&you, damage);
+    }
+}
+
+/// What spell should an ancestor have in their customizeable slot?
+static spell_type _ancestor_custom_spell(spell_type default_spell)
+{
+    const int specialization = hepliaklqana_specialization();
+    return specialization ? hepliaklqana_specialization_spell(specialization) :
+                            default_spell;
+}
+
+/// Add an ancestor spell to the given list.
+static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
+{
+    spells.emplace_back(spell, 40, MON_SPELL_WIZARD);
+}
+
+/**
+ * Set the correct spells for a given ancestor, corresponding to their HD and
+ * type.
+ *
+ * @param ancestor      The ancestor in question.
+ * @param notify        Whether to print messages if anything changes.
+ */
+void set_ancestor_spells(monster &ancestor, bool notify)
+{
+    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
+
+    vector<spell_type> old_spells;
+    for (auto spellslot : ancestor.spells)
+        old_spells.emplace_back(spellslot.spell);
+
+    ancestor.spells = {};
+    const int HD = ancestor.get_experience_level();
+    switch (ancestor.type)
+    {
+    case MONS_ANCESTOR_BATTLEMAGE:
+        _add_ancestor_spell(ancestor.spells,
+                            _ancestor_custom_spell(SPELL_THROW_FROST));
+        _add_ancestor_spell(ancestor.spells, HD >= 18 ?
+                                             SPELL_LEHUDIBS_CRYSTAL_SPEAR :
+                                             SPELL_STONE_ARROW);
+        break;
+    case MONS_ANCESTOR_HEXER:
+        _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
+                                                      : SPELL_SLOW);
+        _add_ancestor_spell(ancestor.spells,
+                            _ancestor_custom_spell(SPELL_CONFUSE));
+        break;
+    default:
+        break;
+    }
+
+    if (HD >= 14)
+        ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
+
+    if (ancestor.spells.size())
+        ancestor.props[CUSTOM_SPELLS_KEY] = true;
+
+    if (!notify)
+        return;
+
+    for (auto spellslot : ancestor.spells)
+    {
+        if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
+            == old_spells.end())
+        {
+            mprf("%s regains %s memory of %s.",
+                 ancestor.name(DESC_YOUR, true).c_str(),
+                 ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
+                 spell_title(spellslot.spell));
+        }
     }
 }

@@ -18,11 +18,14 @@
 #include "coordit.h"
 #include "dbg-scan.h"
 #include "delay.h"
+#include "directn.h" // feature_description_at
 #include "dungeon.h"
+#include "english.h" // apostrophise
 #include "evoke.h"
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godabil.h" // GOZAG_GOLD_AURA_KEY
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -409,8 +412,11 @@ static void _maybe_set_patrol_route(monster* mons)
 
 static bool _mons_can_cast_dig(const monster* mons, bool random)
 {
-    if (mons->foe == MHITNOT || !mons->has_spell(SPELL_DIG) || mons->confused())
+    if (mons->foe == MHITNOT || !mons->has_spell(SPELL_DIG) || mons->confused()
+        || mons->berserk_or_insane())
+    {
         return false;
+    }
 
     const bool antimagiced = mons->has_ench(ENCH_ANTIMAGIC)
                       && (random
@@ -430,6 +436,7 @@ static bool _mons_can_zap_dig(const monster* mons)
     return mons->foe != MHITNOT
            && !mons->asleep()
            && !mons->confused() // they don't get here anyway
+           && !mons->berserk_or_insane()
            && !mons->submerged()
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
@@ -789,6 +796,7 @@ static bool _handle_evoke_equipment(monster& mons)
     // TODO: check non-ring, non-amulet equipment
     item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
     if (mons.asleep()
+        || mons_is_confused(&mons)
         || !jewel
         || !one_chance_in(3)
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
@@ -1046,6 +1054,7 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
     beem.thrower      = from.thrower;
     beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
+    beem.origin_spell = from.origin_spell;
     beem.evoked       = true;
     return beem;
 }
@@ -1112,8 +1121,6 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
 static void _rod_fired_pre(monster& mons)
 {
-    make_mons_stop_fleeing(&mons);
-
     if (!simple_monster_message(&mons, " zaps a rod.")
         && !silenced(you.pos()))
     {
@@ -1185,6 +1192,9 @@ static bool _handle_rod(monster &mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_confused(&mons)
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || coinflip()
@@ -1256,14 +1266,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     beem.aux_source =
         rod->name(DESC_QUALNAME, false, true, false, false);
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (mzap == SPELL_THUNDERBOLT)
+    if (mzap == SPELL_THUNDERBOLT)
         zap = _thunderbolt_tracer(mons, power, beem.target);
     else if (mzap == SPELL_CLOUD_CONE)
         zap = mons_should_cloud_cone(&mons, power, beem.target);
@@ -1303,6 +1306,8 @@ static bool _handle_wand(monster& mons, bolt &beem)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
+        || mons_is_fleeing(&mons)
+        || mons.pacified()
         || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
@@ -1405,11 +1410,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
 
     if (niceWand || zap)
     {
-        if (!niceWand)
-            make_mons_stop_fleeing(&mons);
-
         _mons_fire_wand(mons, *wand, beem, was_visible, niceWand);
-
         return true;
     }
 
@@ -1916,7 +1917,7 @@ void handle_monster_move(monster* mons)
         && !mons_is_firewood(mons)
         && !mons->wont_attack())
     {
-        const int gold = you.props["gozag_gold_aura_amount"].get_int();
+        const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
             if (gozag_gold_in_los(mons))
@@ -2582,9 +2583,16 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_WATER_NYMPH)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (can_flood_feature(grd(*ai))
+            if (feat_has_solid_floor(grd(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
+                if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
+                    && you.see_cell(*ai))
+                {
+                    mprf("%s watery aura covers %s",
+                         apostrophise(mons->name(DESC_THE)).c_str(),
+                         feature_description_at(*ai, false, DESC_THE).c_str());
+                }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD);
             }
@@ -2629,7 +2637,7 @@ static void _clear_monster_flags()
     // monsters get their actions in the next round.
     // Also clear one-turn deep sleep flag.
     // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
         mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
 }
 
@@ -2781,7 +2789,7 @@ static bool _monster_eat_item(monster* mons)
         return false;
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons->friendly() && !you_worship(GOD_JIYVA))
+    if (mons->friendly() && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Off-limit squares are off-limit.
@@ -2792,8 +2800,6 @@ static bool _monster_eat_item(monster* mons)
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
     bool shown_msg = false;
-    piety_gain_t gain = PIETY_NONE;
-    int js = JS_NONE;
 
     // Jellies can swim, so don't check water
     for (stack_iterator si(mons->pos());
@@ -2832,13 +2838,7 @@ static bool _monster_eat_item(monster* mons)
         }
 
         if (you_worship(GOD_JIYVA))
-        {
-            gain = sacrifice_item_stack(*si, &js, quant);
-            if (gain > PIETY_NONE)
-                simple_god_message(" appreciates your sacrifice.");
-
-            jiyva_slurp_message(js);
-        }
+            jiyva_slurp_item_stack(*si, quant);
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
@@ -2894,6 +2894,14 @@ static bool _handle_pickup(monster* mons)
     if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
         return false;
 
+    // Keep neutral, charmed, and friendly monsters from
+    // picking up stuff.
+    const bool never_pickup
+        = mons->neutral() || mons->friendly()
+          || you_worship(GOD_JIYVA) && mons_is_slime(mons)
+          || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
+
+
     // Note: Monsters only look at stuff near the top of stacks.
     //
     // XXX: Need to put in something so that monster picks up
@@ -2904,6 +2912,23 @@ static bool _handle_pickup(monster* mons)
     // (jpeg)
     for (stack_iterator si(mons->pos()); si; ++si)
     {
+        if ((never_pickup
+             // Monsters being able to pick up items you've seen encourages
+             // tediously moving everything away from a place where they could
+             // use them. Maurice being able to pick up such items encourages
+             // killing Maurice, since there's just one of him. Usually.
+             || (testbits(si->flags, ISFLAG_SEEN)
+                 && !mons->has_attack_flavour(AF_STEAL)))
+            // ...but it's ok if it dropped the item itself.
+            && !(si->props.exists(DROPPER_MID_KEY)
+                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
+        {
+            // don't pick up any items beneath one that the player's seen,
+            // to prevent seemingly-buggy behavior (monsters picking up items
+            // from the middle of a stack while the player is watching)
+            return false;
+        }
+
         if (si->flags & ISFLAG_NO_PICKUP)
             continue;
 
@@ -3441,26 +3466,18 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
     if (!one_chance_in(4))
         return;
 
-    // try to make a ballistomycete.
-    const beh_type attitude = attitude_creation_behavior(mons.attitude);
+    // Try to make a ballistomycete.
+    beh_type attitude = attitude_creation_behavior(mons.attitude);
+    // Make Fedhas ballistos neutral, so as not to inflict extra piety loss.
+    if (mons_is_god_gift(&mons, GOD_FEDHAS))
+        attitude = BEH_GOOD_NEUTRAL;
+
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
                                               nullptr, 0, 0, position, MHITNOT,
                                               MG_FORCE_PLACE));
 
     if (!plant)
         return;
-
-    if (mons_is_god_gift(&mons, GOD_FEDHAS))
-    {
-        plant->flags |= MF_NO_REWARD; // XXX: is this needed?
-
-        if (attitude == BEH_FRIENDLY)
-        {
-            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-            mons_make_god_gift(plant, GOD_FEDHAS);
-        }
-    }
 
     // Don't leave mold on squares we place ballistos on
     remove_mold(position);
@@ -3680,7 +3697,7 @@ static bool _monster_move(monster* mons)
                 noisy(noise_level, mons->pos(), mons->mid);
             }
             else if (one_chance_in(5))
-                handle_monster_shouts(mons, true);
+                monster_attempt_shout(*mons);
             else
             {
                 // Just be noisy without messaging the player.

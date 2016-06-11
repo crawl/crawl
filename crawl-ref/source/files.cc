@@ -851,13 +851,17 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static bool _grab_follower_at(const coord_def &pos)
+static bool _grab_follower_at(const coord_def &pos, bool can_follow)
 {
     if (pos == you.pos())
         return false;
 
     monster* fol = monster_at(pos);
     if (!fol || !fol->alive())
+        return false;
+
+    // only H's ancestors can follow into portals & similar.
+    if (!can_follow && !mons_is_hepliaklqana_ancestor(fol->type))
         return false;
 
     // The monster has to already be tagged in order to follow.
@@ -947,47 +951,45 @@ static void _grab_followers()
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
-    if (can_follow)
+    if (can_follow && non_stair_using_allies > 0)
     {
-        if (non_stair_using_allies > 0)
+        // Summons won't follow and will time out.
+        if (non_stair_using_summons > 0)
         {
-            // Summons won't follow and will time out.
-            if (non_stair_using_summons > 0)
-            {
-                mprf("Your summoned %s left behind.",
-                     non_stair_using_allies > 1 ? "allies are" : "ally is");
-            }
-            else
-            {
-                // Permanent undead are left behind but stay.
-                mprf("Your mindless thrall%s behind.",
-                     non_stair_using_allies > 1 ? "s stay" : " stays");
-            }
+            mprf("Your summoned %s left behind.",
+                 non_stair_using_allies > 1 ? "allies are" : "ally is");
         }
-        memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        vector<coord_def> places[2] = { { you.pos() }, {} };
-        int place_set = 0;
-        while (!places[place_set].empty())
+        else
         {
-            for (const coord_def p : places[place_set])
-            {
-                for (adjacent_iterator ai(p); ai; ++ai)
-                {
-                    if (travel_point_distance[ai->x][ai->y])
-                        continue;
-
-                    travel_point_distance[ai->x][ai->y] = 1;
-                    if (_grab_follower_at(*ai))
-                        places[!place_set].push_back(*ai);
-                }
-            }
-            places[place_set].clear();
-            place_set = !place_set;
+            // Permanent undead are left behind but stay.
+            mprf("Your mindless thrall%s behind.",
+                 non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
 
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    vector<coord_def> places[2] = { { you.pos() }, {} };
+    int place_set = 0;
+    while (!places[place_set].empty())
+    {
+        for (const coord_def p : places[place_set])
+        {
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if (travel_point_distance[ai->x][ai->y])
+                    continue;
+
+                travel_point_distance[ai->x][ai->y] = 1;
+                if (_grab_follower_at(*ai, can_follow))
+                    places[!place_set].push_back(*ai);
+            }
+        }
+        places[place_set].clear();
+        place_set = !place_set;
+    }
+
     // Clear flags of monsters that didn't follow.
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
     {
         if (!mons.alive())
             continue;
@@ -1324,11 +1326,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
-    if (branch_allows_followers(you.where_are_you)
-        && load_mode == LOAD_ENTER_LEVEL)
-    {
+    if (load_mode == LOAD_ENTER_LEVEL)
         place_followers();
-    }
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
@@ -2280,9 +2279,10 @@ void save_ghost(bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, or the Temple.
+    // No ghosts on D:1, D:2, the Temple, or the Abyss.
     if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)))
+                   || player_in_branch(BRANCH_TEMPLE)
+                   || player_in_branch(BRANCH_ABYSS)))
     {
         return;
     }

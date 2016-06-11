@@ -25,7 +25,6 @@ mon_glyph += elf : red
 mon_glyph += elephant slug : white j
 mon_glyph += felid : blue h
 mon_glyph += fire bat : fire
-mon_glyph += fire drake : red l
 mon_glyph += flayed ghost : red p
 mon_glyph += fungus : lightred f
 mon_glyph += ghost : lightgrey p

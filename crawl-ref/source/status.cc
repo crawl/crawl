@@ -9,6 +9,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemprop.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
@@ -835,11 +836,12 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight();
-    const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool perm      = you.permanent_flight();
+    const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
     const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
-    inf->light_colour = perm ? WHITE : BLUE;
+    inf->light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf->light_text   = "Fly";
     inf->short_text   = "flying" + desc;
     inf->long_text    = "You are flying" + desc + ".";
@@ -954,7 +956,7 @@ static void _describe_missiles(status_info* inf)
 
     if (level > 1)
     {
-        bool perm = false; /* in_good_standing(GOD_QAZLAL, 4) */
+        bool perm = false;
         inf->light_colour = perm ? WHITE : LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
@@ -964,7 +966,7 @@ static void _describe_missiles(status_info* inf)
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.scan_artefacts(ARTP_RMSL)
-                    || in_good_standing(GOD_QAZLAL, 3);
+                    || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
@@ -1033,8 +1035,8 @@ const char *duration_mid_message(duration_type dur)
 }
 
 /**
- * How much should the duration be decreased by when it hits 50% (to fuzz the
- * remaining time), if at all?
+ * How much should the duration be decreased by when it hits the midpoint (to
+ * fuzz the remaining time), if at all?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      A random value to reduce the remaining duration by; may be 0.
@@ -1042,6 +1044,19 @@ const char *duration_mid_message(duration_type dur)
 int duration_mid_offset(duration_type dur)
 {
     return _lookup_duration(dur)->decr.mid_msg.offset();
+}
+
+/**
+ * At what number of turns remaining is the given duration considered to be
+ * 'expiring', for purposes of messaging & status light colouring?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The maximum number of remaining turns at which the duration
+ *              is considered 'expiring'; may be 0.
+ */
+int duration_expire_point(duration_type dur)
+{
+    return _lookup_duration(dur)->expire_threshold * BASELINE_DELAY;
 }
 
 /**

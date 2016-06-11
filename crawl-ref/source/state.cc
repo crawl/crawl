@@ -200,7 +200,6 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     switch (ai)
     {
-    case AI_STATUE:
     case AI_HUNGRY:
     case AI_TELEPORT:
     case AI_FORCE_INTERRUPT:

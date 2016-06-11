@@ -48,7 +48,6 @@
 #include <stdarg.h>
 #include <windows.h>
 #undef max
-#undef AF_CHAOS
 #undef S_NORMAL
 
 // END -- WINDOWS INCLUDES

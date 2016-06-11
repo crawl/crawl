@@ -332,7 +332,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 15;
                 break;
 
-            case SPWPN_EVASION:
             case SPWPN_PROTECTION:
             case SPWPN_VENOM:
                 valued *= 12;
@@ -953,7 +952,6 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case MISC_FAN_OF_GALES:
-        case MISC_STONE_OF_TREMORS:
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LAMP_OF_FIRE:
             valued += 400;
@@ -1254,7 +1252,7 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf("<%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
                             need_cursor ? '[' : ' ',
@@ -1383,11 +1381,14 @@ void ShopMenu::purchase_selected()
         ASSERT(cost == 0);
         buying_from_list = true;
         for (auto item : items)
-            if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(item)->item, &pos))
+        {
+            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
+            if (shopping_list.is_on_list(it, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+                cost += item_price(it, shop);
             }
+        }
     }
     if (selected.empty())
         return;
@@ -1425,6 +1426,12 @@ void ShopMenu::purchase_selected()
          });
     vector<int> bought_indices;
     int outside_items = 0;
+
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items purchased.
+    map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     // Will iterate backwards through the shop (because of the earlier sort).
     // This means we can erase() from shop.stock (since it only invalidates
     // pointers to later elements), but nothing else.
@@ -1447,6 +1454,9 @@ void ShopMenu::purchase_selected()
         bought_indices.push_back(i);
         bought_something = true;
     }
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
@@ -1722,7 +1732,7 @@ string shop_type_name(shop_type type)
     }
 }
 
-static string _shop_type_suffix(shop_type type, const coord_def &where)
+static const char *_shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
@@ -1731,10 +1741,11 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
         return "";
     }
 
-    const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
-    const int temp = (where.x + where.y) % 4;
-
-    return string(suffixnames[temp]);
+    static const char * const suffixnames[] =
+    {
+        "Shoppe", "Boutique", "Emporium", "Shop"
+    };
+    return suffixnames[(where.x + where.y) % ARRAYSZ(suffixnames)];
 }
 
 string shop_name(const shop_struct& shop)
@@ -2026,7 +2037,6 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         // ... and a few of these.
         switch (item.sub_type)
         {
-            case MISC_LANTERN_OF_SHADOWS:
             case MISC_CRYSTAL_BALL_OF_ENERGY:
             case MISC_DISC_OF_STORMS:
                 break;

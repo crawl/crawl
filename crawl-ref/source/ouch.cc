@@ -78,8 +78,7 @@
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
-        || flavour == BEAM_STEAM)
+        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -100,7 +99,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     }
 }
 
-// NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
@@ -153,16 +151,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
-    case BEAM_HELLFIRE:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            hurted = 0;
-            if (doEffects)
-                mpr("You resist completely.");
-        }
-#endif
-        break;
+    case BEAM_DAMNATION:
+        break; // sucks to be you (:
 
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour, hurted);
@@ -338,16 +328,26 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
 /**
  * Handle side-effects for exposure to element other than damage.
+ * Historically this handled item destruction, and melting meltable enchantments. Now it takes care of 3 things:
+ *   - triggering qazlal's elemental adaptations
+ *   - slowing cold-blooded players (draconians, hydra form)
+ *   - putting out fires
+ * This function should be called exactly once any time a player is exposed to the
+ * following elements/beam types: cold, fire, elec, water, steam, lava, BEAM_FRAG. For the sake of Qazlal's
+ * elemental adaptation, it should also be called (exactly once) with BEAM_MISSILE when
+ * receiving physical damage. Hybrid damage (brands) should call it twice with appropriate
+ * flavours.
  *
  * @param flavour The beam type.
- * @param strength The strength, which is interpreted as a number of player turns.
+ * @param strength The strength of the attack. Used in different ways for different side-effects.
+ *     For qazlal_elemental_adapt: (i) it is used for the probability of triggering, and (ii) the resulting length of the effect.
  * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
  *                          is cold-blooded and not cold-resistant, slow the
  *                          player 50% of the time.
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
@@ -742,7 +742,8 @@ static void _maybe_corrode()
 static void _maybe_confuse()
 {
     int confusion_sources = you.scan_artefacts(ARTP_CONFUSE);
-    if (x_chance_in_y(confusion_sources, 100)) {
+    if (x_chance_in_y(confusion_sources, 100))
+    {
         const bool conf = you.confused();
 
         if (confuse_player(5 + random2(3), true))
@@ -805,24 +806,12 @@ static void _wizard_restore_life()
 
 static int _apply_extra_harm(int dam, mid_t source)
 {
-    bool do_extra_harm = you.extra_harm();
-
-    if (!do_extra_harm)
-    {
-        monster* damager = monster_by_mid(source);
-        // Don't check for monster amulet if there source isn't a monster
-        if (!damager)
-            return dam;
-        else
-            do_extra_harm = damager->extra_harm();
-    }
-
-    if (do_extra_harm)
-    {
-        if (you.extra_harm())
-            did_god_conduct(DID_UNHOLY, 1); // The amulet is unholy.
-        return dam * 5 / 4;
-    }
+    monster* damager = monster_by_mid(source);
+    // Don't check for monster amulet if there source isn't a monster
+    if (damager && damager->extra_harm())
+        return dam * 13 / 10; // +30% damage when the opponent has harm
+    else if (you.extra_harm())
+        return dam * 6 / 5; // +20% damage when you have harm
 
     return dam;
 }
@@ -896,7 +885,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Multiply damage if amulet of harm is in play
     if (dam != INSTANT_DEATH)
-        dam = _apply_extra_harm (dam, source);
+        dam = _apply_extra_harm(dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
@@ -972,8 +961,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
-
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
             && !(aux && strstr(aux, "flay_damage")))
         {
@@ -1046,6 +1033,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_spawn_monsters(dam, is_torment, death_type, source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            if (sanguine_armour_valid())
+                activate_sanguine_armour();
             if (death_type != KILLED_BY_POISON)
             {
                 _maybe_corrode();

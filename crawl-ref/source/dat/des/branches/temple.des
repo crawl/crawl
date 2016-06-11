@@ -858,6 +858,25 @@ xxt.txx
  xx+xx
 ENDMAP
 
+# Sometimes you just don't feel like walking all the way downstairs, you know?
+NAME: nicolae_temple_entry_ecumenical
+TAGS: temple_entry uniq_ecumenical_altar
+WEIGHT: 1
+ORIENT: float
+SUBST: c : ct, - : p.
+KMONS: p = plant
+KFEAT: O = enter_temple
+KFEAT: _ = altar_ecumenical
+MAP
+ ccccc...ccccc
+ccccc-...-ccccc
+cc---..T..---cc
+c-...........-c
+c-._..---..O.-c
+c-...-ccc-...-c
+cc---ccccc---cc
+ ccccccccccccc
+ENDMAP
 
 ##############################################################################
 # Temple maps
@@ -875,13 +894,13 @@ ENDMAP
 # See altar.des.
 #
 # There are some main themes for temple maps, and then some sporadic maps.
-# For news maps in a theme, stick to its defining properties (colour, or
+# For new maps in a theme, stick to its defining properties (colour, or
 # shape), unless you know what you are doing. New maps for a theme can be
 # used for variety and (more often) to allow differing numbers of altars.
 
 ##########################################################################
 # Circular temples
-#   Total weight: 80 = 40+10+10+5+5+5+5
+#   Total weight: 90 = 40+10+10+10+5+5+5+5
 #   The classical shape, so highest weight.
 #   Several versions, to accommodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
@@ -993,32 +1012,28 @@ ORIENT:  encompass
 SHUFFLE: AC
 SUBST:   A = B
 NSUBST:  C = 1:{ / *:.
+KPROP: wW = no_tele_into
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
 SUBST:   W : mvbG
 : elseif arnd < 3 then
-SUBST:   W = w
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
 KMONS:   1 = electric eel
 : else
-SUBST:   W = w
-:end
-KPROP: wW1 = no_submerge
-KPROP: wW1 = no_tele_into
-#
-: local brnd = crawl.random2(10)
-: if brnd == 0 then
-SUBST:  w = l
-COLOUR: m = lightred
-COLOUR: c = lightred
-: elseif brnd < 4 then
-SUBST:  m = c
-: else
-COLOUR: m = blue
-COLOUR: c = blue
-:end
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
 MAP
                ccccccccccccc
            ccccc...........ccccc
@@ -1054,32 +1069,28 @@ WEIGHT:  5
 TAGS:    no_rotate no_pool_fixup
 ORIENT:  encompass
 NSUBST:  A = 1:{ / *:.
+KPROP: wW = no_tele_into
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
 SUBST:   W : mvbG
 : elseif arnd < 3 then
-SUBST:   W = w
+SUBST:   mwW = c
+: end
+#
+: local brnd = crawl.random2(10)
+: if brnd == 0 then
+SUBST:   w = l
+COLOUR:  m = lightred
+COLOUR:  c = lightred
+: elseif brnd < 4 then
 NSUBST:  w = 6:1 / *:w
 KFEAT:   1 = w
 KMONS:   1 = electric eel
 : else
-SUBST:   W = w
-:end
-KPROP: wW1 = no_submerge
-KPROP: wW1 = no_tele_into
-#
-: local brnd = crawl.random2(10)
-: if brnd == 0 then
-SUBST:  w = l
-COLOUR: m = lightred
-COLOUR: c = lightred
-: elseif brnd < 4 then
-SUBST:  m = c
-: else
-COLOUR: m = blue
-COLOUR: c = blue
-:end
+COLOUR:  m = blue
+COLOUR:  c = blue
+: end
 MAP
                ccccccccccccc
            ccccc...........ccccc
@@ -1180,6 +1191,39 @@ cc.................T...T.................cc
     ccc..........B...B...B..........ccc
       ccc.........................ccc
         cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
+ENDMAP
+
+# 20 gods
+NAME:   dpeg_circular_temple_20
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc.........B.........cccc
+      ccc........B.......B........ccc
+    ccc......B...............B......ccc
+   cc.................................cc
+  cc......B.....................B......cc
+ cc.....................................cc
+ c.......................................c
+cc......B..........T...T..........B......cc
+c.........................................c
+c.........................................c
+c......B........T....{....T........B......c
+c.........................................c
+c.........................................c
+cc......B..........T...T..........B......cc
+ c.......................................c
+ cc.....................................cc
+  cc......B.....................B......cc
+   cc.................................cc
+    ccc......B...............B......ccc
+      ccc........B.......B........ccc
+        cccc.........B.........cccc
            ccccc...........ccccc
                ccccccccccccc
 ENDMAP
@@ -1593,7 +1637,7 @@ KFEAT:  ~ = floor
 COLOUR: ~ = green
 FTILE:  .BGd = floor_marble
 FTILE:  ~t{ = floor_grass
-FTILE:  c = wall_marble
+TILE:   c = wall_marble
 MAP
 ttttttttttttttttttttt
 twwwwwwwwwwwwwwwwwwwt
@@ -2130,8 +2174,108 @@ xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 11 gods
-NAME:   triangle_lava_temple_11
+# 15 gods
+NAME:   triangle_lava_temple_15
+PLACE:  Temple
+WEIGHT: 5
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll.........llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll.....B.....lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll.................llllllllllllllllllllllx
+xlllllllllllllllllllll.....B.......B.....lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xllllllllllllllllll............B............llllllllllllllllllx
+xlllllllllllllllll.....B...............B.....lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...............................lllllllllllllllx
+xllllllllllllll................{................llllllllllllllx
+xlllllllllllll.....B.......................B.....lllllllllllllx
+xllllllllllll.............B.........B.............llllllllllllx
+xlllllllllll.......................................lllllllllllx
+xllllllllll.........................................llllllllllx
+xlllllllll....B.................................B....lllllllllx
+xllllllll.............B.................B............lllllllllx
+xllllllll......................B.....................lllllllllx
+xlllllllll..........................................llllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 19 gods
+NAME:   triangle_lava_temple_19
+PLACE:  Temple
+WEIGHT: 5
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllx
+xllllllllllllllllllllllllllll.....llllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllx
+xllllllllllllllllllllllllll..B...B..llllllllllllllllllllllllllx
+xlllllllllllllllllllllllll...........lllllllllllllllllllllllllx
+xllllllllllllllllllllllll.............llllllllllllllllllllllllx
+xlllllllllllllllllllllll...............lllllllllllllllllllllllx
+xllllllllllllllllllllll...B.........B...llllllllllllllllllllllx
+xlllllllllllllllllllll...................lllllllllllllllllllllx
+xllllllllllllllllllll.....................llllllllllllllllllllx
+xlllllllllllllllllll...........B...........lllllllllllllllllllx
+xllllllllllllllllll...B.................B...llllllllllllllllllx
+xlllllllllllllllll...........................lllllllllllllllllx
+xllllllllllllllll.............................llllllllllllllllx
+xlllllllllllllll...........B.......B...........lllllllllllllllx
+xllllllllllllll...B.........................B...llllllllllllllx
+xlllllllllllll...................................lllllllllllllx
+xllllllllllll.....................................llllllllllllx
+xlllllllllll.............B.....{.....B.............lllllllllllx
+xllllllllll...B.................................B...llllllllllx
+xlllllllll...........................................lllllllllx
+xllllllll..........B.......................B.........lllllllllx
+xllllllll............................................lllllllllx
+xlllllllll.................B.......B................llllllllllx
+xllllllllllll....................................lllllllllllllx
+xlllllllllllllllllll.......................lllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 10 gods
+NAME:   triangle_lava_temple_10
 PLACE:  Temple
 WEIGHT: 10
 TAGS:   no_rotate

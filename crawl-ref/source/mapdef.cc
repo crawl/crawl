@@ -3633,8 +3633,6 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_NATURAL;
                     if (slot_vals[j] == "magical")
                         cur_spells[i].flags |= MON_SPELL_MAGICAL;
-                    if (slot_vals[j] == "demonic")
-                        cur_spells[i].flags |= MON_SPELL_DEMONIC;
                     if (slot_vals[j] == "wizard")
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
@@ -4183,6 +4181,12 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     trim_string(s);
 
     mons_spec base_monster = mons_by_name(s);
+    if (mons_class_flag(base_monster.type, M_CANT_SPAWN))
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
+
     if (base_monster.type < 0)
         base_monster.type = MONS_PROGRAM_BUG;
 
@@ -4519,24 +4523,24 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
-
-
-    // this is intended for debugging only
-    if (ends_with(name, " mbeast"))
+    const auto m_index = name.find(" mutant beast");
+    if (m_index != string::npos)
     {
         mons_spec spec = MONS_MUTANT_BEAST;
 
-        const vector<string> segments = split_string(" ", name);
-        if (segments.size() > 3)
+        const string trimmed = name.substr(0, m_index);
+        const vector<string> segments = split_string(" ", trimmed);
+        if (segments.size() > 2)
             return MONS_PROGRAM_BUG; // too many words
 
+        const bool fully_specified = segments.size() == 2;
         spec.hd = _mutant_beast_xl(segments[0]);
-        if (spec.hd == 0 && segments.size() == 3)
+        if (spec.hd == 0 && fully_specified)
             return MONS_PROGRAM_BUG; // gave invalid tier spec
 
-        if (spec.hd == 0 || segments.size() == 3)
+        if (spec.hd == 0 || fully_specified)
         {
-            const int seg = segments.size() == 3 ? 1 : 0;
+            const int seg = segments.size() - 1;
             const vector<string> facet_names
                 = split_string("-", segments[seg]);
             for (const string &facet_name : facet_names)
@@ -4866,7 +4870,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "steel",
         "silver",
         "paralysis",
+#if TAG_MAJOR_VERSION == 34
         "slow",
+#endif
         "sleep",
         "confusion",
 #if TAG_MAJOR_VERSION == 34
@@ -5181,8 +5187,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props["ident"].get_int() = id;
     }
 
-    string unrand_str = strip_tag_prefix(s, "unrand:");
-
     if (strip_tag(s, "good_item"))
         result.level = ISPEC_GOOD_ITEM;
     else
@@ -5258,8 +5262,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["make_book_theme_randart"] = true;
-        // make_book_theme_randart requires the following properties:
+        result.props["build_themed_book"] = true;
+        // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
         // spell: <include this spell>, owner:<name of owner>
@@ -5286,16 +5290,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             if (disc2 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
-                return false;
-            }
-        }
-
-        if (disc1 != 0 && disc2 != 0)
-        {
-            if (disciplines_conflict(disc1, disc2))
-            {
-                error = make_stringf("Bad combination of spell schools: %s & %s.",
-                                    st_disc1.c_str(), st_disc2.c_str());
                 return false;
             }
         }
@@ -5358,7 +5352,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[RANDBK_OWNER_KEY] = owner;
 
         result.base_type = OBJ_BOOKS;
-        // This is changed in make_book_theme_randart.
+        // This is changed in build_themed_book().
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
@@ -5444,6 +5438,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         return parse_corpse_spec(result, s);
     }
 
+    const int unrand_id = get_unrandart_num(s.c_str());
+    if (unrand_id)
+    {
+        result.ego = -unrand_id; // lol
+        return true;
+    }
+
     // Check for "any objclass"
     if (starts_with(s, "any "))
         parse_random_by_class(s.substr(4), result);
@@ -5455,18 +5456,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     if (!error.empty())
         return false;
-
-    if (!unrand_str.empty())
-    {
-        result.ego = get_unrandart_num(unrand_str.c_str());
-        if (result.ego == SPWPN_NORMAL)
-        {
-            error = make_stringf("Unknown unrand art: %s", unrand_str.c_str());
-            return false;
-        }
-        result.ego = -result.ego;
-        return true;
-    }
 
     if (ego_str.empty())
         return true;

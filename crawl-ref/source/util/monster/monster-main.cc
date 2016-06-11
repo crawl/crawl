@@ -38,8 +38,6 @@
 #include <set>
 #include <unistd.h>
 
-extern const spell_type serpent_of_hell_breaths[4][3];
-
 const coord_def MONSTER_PLACE(20, 20);
 
 const string CANG = "cang";
@@ -346,6 +344,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         return mi_calc_smiting_damage(monster);
     if (sp == SPELL_AIRSTRIKE)
         return mi_calc_airstrike_damage(monster);
+    if (sp == SPELL_WATERSTRIKE)
+        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
     if (sp == SPELL_GLACIATE)
         return mi_calc_glaciate_damage(monster);
     if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)
@@ -431,21 +431,15 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         spell_type sp = slot.spell;
         if (!ret.empty())
             ret += ", ";
-        if (sp == SPELL_SERPENT_OF_HELL_BREATH)
+        if (spell_is_soh_breath(sp))
         {
-            const int idx =
-                mp->type == MONS_SERPENT_OF_HELL ?              0 :
-                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?  1 :
-                    mp->type == MONS_SERPENT_OF_HELL_DIS ?      2 :
-                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 :
-                                                               -1;
-            ASSERT(idx >= 0 && idx <= 3);
-            ASSERT(mp->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
+            const vector<spell_type> *breaths = soh_breath_spells(sp);
+            ASSERT(breaths);
 
             ret += "{";
             for (unsigned int k = 0; k < mp->number; ++k)
             {
-                const spell_type breath = serpent_of_hell_breaths[idx][k];
+                const spell_type breath = (*breaths)[k];
                 const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)
@@ -894,17 +888,9 @@ int main(int argc, char* argv[])
                 else
                     monsterattacks += ", ";
 
-                int frenzy_degree = -1;
                 short int dam = attk.damage;
                 if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
-                else if (mon.has_ench(ENCH_BATTLE_FRENZY))
-                    frenzy_degree = mon.get_ench(ENCH_BATTLE_FRENZY).degree;
-                else if (mon.has_ench(ENCH_ROUSED))
-                    frenzy_degree = mon.get_ench(ENCH_ROUSED).degree;
-
-                if (frenzy_degree != -1)
-                    dam = dam * (115 + frenzy_degree * 15) / 100;
 
                 if (mon.has_ench(ENCH_WEAK))
                     dam = dam * 2 / 3;
@@ -958,7 +944,7 @@ int main(int argc, char* argv[])
                 case AF_DRAIN_XP:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
                     break;
-                case AF_CHAOS:
+                case AF_CHAOTIC:
                     monsterattacks += colour(LIGHTGREEN, "(chaos)");
                     break;
                 case AF_ELEC:
@@ -999,6 +985,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_ROT:
                     monsterattacks += colour(LIGHTRED, "(rot)");
+                    break;
+                case AF_MIASMATA:
+                    monsterattacks += colour(LIGHTRED, "(miasmata)");
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1058,7 +1047,7 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(BROWN, "(trample)");
                     break;
                 case AF_WEAKNESS:
-                    monsterattacks += colour(LIGHTRED, "(weakness");
+                    monsterattacks += colour(LIGHTRED, "(weakness)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
@@ -1159,11 +1148,8 @@ int main(int argc, char* argv[])
 
         string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
-            || mon.type == MONS_LICH || mon.type == MONS_ANCIENT_LICH
             || mon.type == MONS_CHIMERA
-                   && (mon.base_monster == MONS_PANDEMONIUM_LORD
-                       || mon.base_monster == MONS_LICH
-                       || mon.base_monster == MONS_ANCIENT_LICH))
+                   && (mon.base_monster == MONS_PANDEMONIUM_LORD))
         {
             spell_string = "(random)";
         }
@@ -1216,13 +1202,9 @@ int main(int argc, char* argv[])
         record_resist(c, #x, monsterresistances, monstervulnerabilities, y);   \
     } while (false)
 
-        // Don't record regular rF as hellfire vulnerability.
-        int rfire = get_resist(res, MR_RES_FIRE);
-        bool rhellfire = rfire >= 4;
-        if (rfire > 3)
-            rfire = 3;
-        res2(RED, hellfire, (int)rhellfire);
-        res2(RED, fire, rfire);
+        // Don't record regular rF as damnation vulnerability.
+        res(RED, FIRE);
+        res(RED, DAMNATION);
         res(BLUE, COLD);
         res(CYAN, ELEC);
         res(GREEN, POISON);

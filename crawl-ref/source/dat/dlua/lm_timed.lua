@@ -70,12 +70,12 @@ function TimedMarker:start_short(marker)
   end
 end
 
-function TimedMarker:disappear(marker, affect_player, x, y)
+function TimedMarker:disappear(marker, x, y)
   dgn.remove_listener(marker)
-  self.super.disappear(self, marker, affect_player, x, y)
+  self.super.disappear(self, marker, x, y)
 end
 
-function TimedMarker:timeout(marker, verbose, affect_player)
+function TimedMarker:timeout(marker, verbose)
   local x, y = marker:pos()
   local yx, yy = you.pos()
 
@@ -96,7 +96,7 @@ function TimedMarker:timeout(marker, verbose, affect_player)
     end
   end
 
-  self:disappear(marker, affect_player, x, y)
+  self:disappear(marker, x, y)
 end
 
 function TimedMarker:event(marker, ev)
@@ -114,7 +114,7 @@ function TimedMarker:event(marker, ev)
     self.dur = self.dur - ev:ticks()
     self.msg:event(self, marker, ev)
     if self.dur <= 0 then
-      self:timeout(marker, true, true)
+      self:timeout(marker, true)
       return true
     end
   end

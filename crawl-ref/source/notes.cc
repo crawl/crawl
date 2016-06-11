@@ -88,6 +88,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_GOD_GIFT
         || note.type == NOTE_GET_MUTATION
         || note.type == NOTE_LOSE_MUTATION
+        || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
         || note.type == NOTE_BUY_ITEM
@@ -108,7 +109,9 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_FOCUS_CARD)
+        || note.type == NOTE_ANCESTOR_TYPE
+        || note.type == NOTE_ANCESTOR_DEATH
+        || note.type == NOTE_ANCESTOR_SPECIALIZATION)
     {
         return true;
     }
@@ -351,10 +354,21 @@ string Note::describe(bool when, bool where, bool what) const
                    << spell_title(static_cast<spell_type>(first))
                    << " by Vehumet.";
             break;
-        case NOTE_FOCUS_CARD:
-            result << "Drew Focus: " << name << " increased to " << first << ", "
-                   << desc << " decreased to " << second;
+        case NOTE_ANCESTOR_TYPE:
+            result << "Remembered your ancestor " << hepliaklqana_ally_name()
+                   << " as " << name;
             break;
+        case NOTE_ANCESTOR_SPECIALIZATION:
+            result << "Remembered your ancestor " << hepliaklqana_ally_name()
+                   << " " << name;
+            break;
+#if TAG_MAJOR_VERSION == 34
+        case NOTE_ANCESTOR_DEATH:
+            result << "Remembered your ancestor "
+                   << apostrophise(hepliaklqana_ally_name())
+                   << " " << name << " death";
+            break;
+#endif
         default:
             result << "Buggy note description: unknown note type";
             break;

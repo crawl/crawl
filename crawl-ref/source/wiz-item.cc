@@ -34,6 +34,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
+#include "randbook.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -177,7 +178,10 @@ void wizard_create_spec_object()
         dummy.position = you.pos();
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.num_heads = prompt_for_int("How many heads? ", false);
+        {
+            dummy.num_heads
+                =  max(1, min(27, prompt_for_int("How many heads? ", false)));
+        }
 
         if (!place_monster_corpse(dummy, false, true))
         {
@@ -471,8 +475,8 @@ static bool _make_book_randart(item_def &book)
 
     if (type == 'l')
         return make_book_level_randart(book);
-    else
-        return make_book_theme_randart(book);
+    build_themed_book(book);
+    return true;
 }
 
 void wizard_value_artefact()
@@ -617,7 +621,7 @@ void wizard_make_object_randart()
     if (have_passive(passive_t::want_curses))
         do_curse_item(item, true);
     else
-        do_uncurse_item(item, false);
+        do_uncurse_item(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
@@ -719,6 +723,57 @@ void wizard_list_items()
     }
 }
 
+static int _subtype_index(int acq_type, const item_def &item)
+{
+    // Certain acquirement types can acquire different classes of items than
+    // they claim to, so... pack them in at the end, as a hack.
+    switch (acq_type)
+    {
+        case OBJ_MISCELLANY:
+            if (item.base_type == OBJ_RODS)
+                return NUM_MISCELLANY + item.sub_type;
+            break;
+        case OBJ_STAVES:
+            if (item.base_type == OBJ_WEAPONS) // unrand staff
+                return NUM_STAVES;
+            break;
+        default:
+            break;
+    }
+
+    return item.sub_type;
+}
+
+/// Reverse the _subtype_index() hack.
+static void _fill_item_from_subtype(object_class_type acq_type, int subtype,
+                                    item_def &item)
+{
+    switch (acq_type)
+    {
+        case OBJ_MISCELLANY:
+            if (subtype >= NUM_MISCELLANY)
+            {
+                item.base_type = OBJ_RODS;
+                item.sub_type = subtype - NUM_MISCELLANY;
+                return;
+            }
+            break;
+        case OBJ_STAVES:
+            if (subtype == NUM_STAVES) // unrand staff
+            {
+                item.base_type = OBJ_WEAPONS;
+                item.sub_type = WPN_STAFF;
+                return;
+            }
+            break;
+        default:
+            break;
+    }
+
+    item.base_type = acq_type;
+    item.sub_type = subtype;
+}
+
 static void _debug_acquirement_stats(FILE *ostat)
 {
     int p = get_mitm_slot(11);
@@ -765,6 +820,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
+    int randbook_spells = 0;
 
     int subtype_quants[256];
     int ego_quants[NUM_SPECIAL_WEAPONS];
@@ -795,7 +851,10 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         acq_calls++;
         total_quant += item.quantity;
-        subtype_quants[item.sub_type] += item.quantity;
+        // hack alert: put unrands into the end of staff acq
+        // and rods into the end of misc acq
+        const int subtype_index = _subtype_index(type, item);
+        subtype_quants[subtype_index] += item.quantity;
 
         max_plus    = max(max_plus, item.plus);
         total_plus += item.plus;
@@ -805,6 +864,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             num_arts++;
             if (type == OBJ_BOOKS)
             {
+                randbook_spells += spells_in_book(item).size();
                 if (item.sub_type == BOOK_RANDART_THEME)
                 {
                     const int disc1 = item.plus & 0xFF;
@@ -988,8 +1048,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             "draining",
             "speed",
             "vorpal",
+#if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",
+#endif
             "vampirism",
             "pain",
             "antimagic",
@@ -1009,7 +1071,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
-            "shielding",
 #endif
             "debug randart",
         };
@@ -1118,6 +1179,9 @@ static void _debug_acquirement_stats(FILE *ostat)
                             100.0 * (float) ego_quants[i] / (float) num_arts);
                 }
             }
+
+            fprintf(ostat, "Avg. spells per randbook: %4.3f",
+                    (float)randbook_spells / num_arts);
         }
 
         // Also list skills for manuals.
@@ -1142,8 +1206,6 @@ static void _debug_acquirement_stats(FILE *ostat)
     item.quantity  = 1;
     item.base_type = type;
 
-    const description_level_type desc = (type == OBJ_BOOKS ? DESC_PLAIN
-                                                           : DESC_DBNAME);
     const bool terse = (type == OBJ_BOOKS ? false : true);
 
     // First, get the maximum name length.
@@ -1157,7 +1219,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             continue;
 
         item.sub_type = i;
-        string name = item.name(desc, terse, true);
+        string name = item.name(DESC_DBNAME, terse, true);
 
         max_width = max(max_width, strwidth(name));
     }
@@ -1174,8 +1236,9 @@ static void _debug_acquirement_stats(FILE *ostat)
         if (subtype_quants[i] == 0)
             continue;
 
-        item.sub_type = i;
-        string name = item.name(desc, terse, true);
+        _fill_item_from_subtype(type, i, item);
+
+        const string name = item.name(DESC_DBNAME, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);

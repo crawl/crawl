@@ -39,12 +39,14 @@ enum deck_type
     DECK_OF_DUNGEONS,
 #endif
     DECK_OF_SUMMONING,
+#if TAG_MAJOR_VERSION == 34
     DECK_OF_WONDERS,
+#endif
 };
 
 enum card_flags_type
 {
-    CFLAG_ODDITY     = (1 << 0),
+                      //1 << 0
     CFLAG_SEEN       = (1 << 1),
                       //1 << 2
     CFLAG_PUNISHMENT = (1 << 3),
@@ -62,7 +64,7 @@ enum card_type
 
     CARD_TOMB,                // a ring of rock walls
     CARD_BANSHEE,             // cause fear and drain
-    CARD_DAMNATION,           // banish others, maybe self
+    CARD_EXILE,               // banish others, maybe self
     CARD_SOLITUDE,            // dispersal
     CARD_WARPWRIGHT,          // create teleport trap
     CARD_SHAFT,               // under the user, maybe others
@@ -182,7 +184,5 @@ card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
 const vector<card_type> get_drawn_cards(const item_def& deck);
-// see and mark the first card with a scroll.
-bool deck_identify_first(int slot);
 
 #endif

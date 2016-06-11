@@ -79,12 +79,18 @@ msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 
+# Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
+msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.
+msc += mute:Uskayaw will no longer force your foes to share their pain\.
+
 ## Messages so important to require a --more--
 
 force_more_message += You have reached level
 force_more_message += Your scales start
 force_more_message += You fall through a shaft
-force_more_message += You fall into the
+force_more_message += You fall into the water!
+force_more_message += You fall into the lava!
+force_more_message += You focus on prolonging your flight
 force_more_message += Marking area around .* as unsafe
 force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
@@ -111,13 +117,23 @@ force_more_message += press .* to convert to Beogh
 force_more_message += welcomes you( back)?!
 force_more_message += You have lost your religion
 
+# Dangerous weapons
+force_more_message += is wielding.*distortion
+# dancing weapons require special handling...
+force_more_message += there is a.*distortion
+force_more_message += of distortion comes into view.
+
 # Banishment
 force_more_message += You are cast into the Abyss
 force_more_message += You are cast deeper into the Abyss
 force_more_message += The Abyss bends around you
 
+# Petrification
+force_more_message += You are slowing down
+
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
+force_more_message += a gateway leading .* appears
 force_more_message += Found .* abyssal rune of Zot
 
 # Generally exciting things that are somewhat automated
@@ -133,6 +149,8 @@ force_more_message += With a loud hiss the gate opens wide
 force_more_message += grants you a gift
 force_more_message += offers you knowledge of
 force_more_message += believes you are ready to make a new sacrifice
+force_more_message += may now remember your ancestor
+force_more_message += may now specialize your ancestor
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

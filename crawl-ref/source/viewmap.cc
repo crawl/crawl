@@ -202,12 +202,12 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 
 static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, int *move_x, int *move_y, bool forward)
+                         int ignore_count, int *move_x, int *move_y)
 {
     int cx = anchor_x,
         cy = anchor_y;
 
-    int firstx = -1, firsty = -1, firstmatch = -1;
+    int firstx = -1, firsty = -1;
     int matchcount = 0;
 
     // Find the first occurrence of given glyph, spiralling around (x,y)
@@ -234,22 +234,62 @@ static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
                 if (_is_feature_fudged(glyph, coord_def(x, y)))
                 {
                     ++matchcount;
-                    if (forward? !ignore_count-- : --ignore_count == 1)
+                    if (!ignore_count--)
                     {
                         // We want to cursor to (x,y)
                         *move_x = x - (start_x + curs_x - 1);
                         *move_y = y - (start_y + curs_y - 1);
                         return matchcount;
                     }
-                    else if (!forward || firstx == -1)
+                    else if (firstx == -1)
                     {
                         firstx = x;
                         firsty = y;
-                        firstmatch = matchcount;
                     }
                 }
             }
         }
+
+    // We found something, but ignored it because of an ignorecount
+    if (firstx != -1)
+    {
+        *move_x = firstx - (start_x + curs_x - 1);
+        *move_y = firsty - (start_y + curs_y - 1);
+        return 1;
+    }
+    return 0;
+}
+
+static int _find_feature(const vector<coord_def>& features,
+                         ucs_t feature, int curs_x, int curs_y,
+                         int start_x, int start_y,
+                         int ignore_count,
+                         int *move_x, int *move_y,
+                         bool forward)
+{
+    int firstx = -1, firsty = -1, firstmatch = -1;
+    int matchcount = 0;
+
+    for (coord_def coord : features)
+    {
+        if (_is_feature_fudged(feature, coord))
+        {
+            ++matchcount;
+            if (forward? !ignore_count-- : --ignore_count == 1)
+            {
+                // We want to cursor to (x,y)
+                *move_x = coord.x - (start_x + curs_x - 1);
+                *move_y = coord.y - (start_y + curs_y - 1);
+                return matchcount;
+            }
+            else if (!forward || firstx == -1)
+            {
+                firstx = coord.x;
+                firsty = coord.y;
+                firstmatch = matchcount;
+            }
+        }
+    }
 
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
@@ -1082,11 +1122,23 @@ bool show_map(level_pos &lpos,
                     anchor_x = lpos.pos.x;
                     anchor_y = lpos.pos.y;
                 }
-                search_found = _find_feature(getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             anchor_x, anchor_y,
-                                             search_found,
-                                             &move_x, &move_y, forward);
+                if (travel_mode && !_is_player_defined_feature(getty))
+                {
+                    search_found = _find_feature(features, getty,
+                                                 curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 search_found,
+                                                 &move_x, &move_y,
+                                                 forward);
+                }
+                else
+                {
+                    search_found = _find_feature(getty, curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 anchor_x, anchor_y,
+                                                 search_found,
+                                                 &move_x, &move_y);
+                }
                 break;
             }
 

@@ -251,11 +251,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 switch (eq)
                 {
                 case EQ_WEAPON:
-                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES
-                        || base_type == OBJ_RODS)
-                    {
+                    if (is_weapon(*this))
                         buff << " (weapon)";
-                    }
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
                     else
@@ -412,9 +409,9 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "chaos", "evade",
+    "chaos",
 #if TAG_MAJOR_VERSION == 34
-    "confuse",
+    "evade", "confuse",
 #endif
     "penet", "reap", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
@@ -437,9 +434,9 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "reaching", "returning",
 #endif
-    "chaos", "evasion",
+    "chaos",
 #if TAG_MAJOR_VERSION == 34
-    "confusion",
+    "evasion", "confusion",
 #endif
     "penetration", "reaping", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
@@ -457,6 +454,10 @@ static const char *weapon_brands_verbose[] =
  */
 static const char* _vorpal_brand_name(const item_def &item, bool terse)
 {
+    // Dummy "All Hand Weapons" item from objstat.
+    if (item.sub_type == NUM_WEAPONS)
+        return "vorpal";
+
     if (is_range_weapon(item))
         return "velocity";
 
@@ -896,9 +897,9 @@ static const char* amulet_secondary_string(uint32_t s)
 static const char* amulet_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "zirconium", "sapphire", "golden", "emerald", "garnet", "bronze",
-        "brass", "copper", "ruby", "ivory", "bone", "platinum", "jade",
-        "fluorescent", "crystal", "cameo", "pearl", "blue", "peridot",
+        "sapphire", "zirconium", "golden", "emerald", "garnet", "bronze",
+        "brass", "copper", "ruby", "citrine", "bone", "platinum", "jade",
+        "fluorescent", "amethyst", "cameo", "pearl", "blue", "peridot",
         "jasper", "diamond", "malachite", "steel", "cabochon", "silver",
         "soapstone", "lapis lazuli", "filigree", "beryl"
     };
@@ -966,14 +967,16 @@ static string misc_type_name(int type, bool known)
 #endif
     case MISC_FAN_OF_GALES:              return "fan of gales";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
-    case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
+#endif
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
     case MISC_DISC_OF_STORMS:            return "disc of storms";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
     case MISC_RUNE_OF_ZOT:               return "obsolete rune of zot";
+    case MISC_STONE_OF_TREMORS:          return "removed stone of tremors";
 #endif
-    case MISC_STONE_OF_TREMORS:          return "stone of tremors";
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
@@ -1030,7 +1033,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_ENCHANTMENTS:           return "Enchantments";
     case BOOK_TEMPESTS:               return "the Tempests";
     case BOOK_DEATH:                  return "Death";
-    case BOOK_HINDERANCE:             return "Hinderance";
+    case BOOK_MISFORTUNE:             return "Misfortune";
     case BOOK_CHANGES:                return "Changes";
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
     case BOOK_BATTLE:                 return "Battle";
@@ -1263,8 +1266,8 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
             return "";
     case OBJ_MISSILES:
         // HACKHACKHACK
-        if (item.props.exists(HELLFIRE_BOLT_KEY))
-            return "hellfire";
+        if (item.props.exists(DAMNATION_BOLT_KEY))
+            return "damnation";
         return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
     case OBJ_JEWELLERY:
         return jewellery_effect_name(item.sub_type, terse);
@@ -1579,7 +1582,6 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
         const string short_name
             = curse_prefix + plus_text + get_artefact_base_name(weap, true);
-        dprf("short: %s", short_name.c_str());
         return short_name;
     }
 
@@ -1644,8 +1646,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (!terse && !dbname)
         {
-            if (props.exists(HELLFIRE_BOLT_KEY))
-                buff << "hellfire ";
+            if (props.exists(DAMNATION_BOLT_KEY)) // hack alert
+                buff << "damnation ";
             else if (_missile_brand_is_prefix(msl_brand))
                 buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
@@ -1660,8 +1662,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (terse)
             {
-                if (props.exists(HELLFIRE_BOLT_KEY))
-                    buff << " (hellfire)";
+                if (props.exists(DAMNATION_BOLT_KEY)) // still a hack
+                    buff << " (damnation)";
                 else
                     buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
             }
@@ -1956,14 +1958,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         buff << misc_type_name(item_typ, know_type);
 
-        if ((item_typ == MISC_BOX_OF_BEASTS
-                  || item_typ == MISC_SACK_OF_SPIDERS)
-                    && used_count > 0
-                    && !dbname)
-        {
-            buff << " {used: " << used_count << "}";
-        }
-        else if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
+        if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
             buff << " (inert)";
 
         break;
@@ -1989,18 +1984,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
 
     case OBJ_RODS:
-        if (know_curse && !terse)
-        {
-            if (cursed())
-                buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
-                     && !know_pluses
-                     && (!know_type || !is_artefact(*this)))
-            {
-                buff << "uncursed ";
-            }
-        }
-
         if (!know_type)
         {
             if (!basename)
@@ -2016,6 +1999,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (know_type && know_pluses && !basename && !qualname && !dbname)
                 buff << make_stringf("%+d ", special);
 
+            if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
+                buff << "supercharged ";
+
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
             else if (item_typ == ROD_IRON)
@@ -2023,9 +2009,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }
-
-        if (know_curse && cursed() && terse)
-            buff << " (curse)";
         break;
 
     case OBJ_STAVES:
@@ -2960,7 +2943,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
                 ASSERT(consonant_set.size() > 1);
                 len += consonant_set.size() - 2; // triples increase len
-                name += consonant_set.c_str();
+                name += consonant_set;
             }
             else // Place a single letter instead.
             {
@@ -3406,7 +3389,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case POT_MUTATION:
         case POT_LIGNIFY:
-        case POT_AMBROSIA:
             return true;
         default:
             return false;
@@ -3810,7 +3792,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return item_type_known(item);
 #endif
         // These can always be used.
-        case MISC_LANTERN_OF_SHADOWS:
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:
+#endif
         case MISC_ZIGGURAT:
             return false;
 
@@ -3820,10 +3804,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_HORN_OF_GERYON:
         case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
-                || player_mutation_level(MUT_NO_ARTIFICE);
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         default:
-            return player_mutation_level(MUT_NO_ARTIFICE);
+            return player_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);
         }
 
     case OBJ_BOOKS:
@@ -3930,7 +3914,6 @@ string item_prefix(const item_def &item, bool temp)
         break;
 
     case OBJ_STAVES:
-    case OBJ_RODS:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))
             prefixes.push_back("ranged");

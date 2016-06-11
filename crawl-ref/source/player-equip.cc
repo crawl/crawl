@@ -44,17 +44,7 @@ static void _mark_unseen_monsters();
  */
 static void _calc_hp_artefact()
 {
-    // Rounding must be down or Deep Dwarves would abuse certain values.
-    // We can reduce errors by a factor of 100 by using partial hp we have.
-    int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    set_hp(min(hp / 100, you.hp_max));
-    you.hit_points_regeneration = hp % 100;
+    recalc_and_scale_hp();
     if (you.hp_max <= 0) // Borgnjor's abusers...
         ouch(0, KILLED_BY_DRAINING);
 }
@@ -417,19 +407,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     // And here we finally get to the special effects of wielding. {dlb}
     switch (item.base_type)
     {
-    case OBJ_MISCELLANY:
-    {
-        if (item.sub_type == MISC_LANTERN_OF_SHADOWS)
-        {
-            if (showMsgs)
-                mpr("The area is filled with flickering shadows.");
-
-            you.attribute[ATTR_SHADOWS] = 1;
-            update_vision_range();
-        }
-        break;
-    }
-
     case OBJ_STAVES:
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -487,38 +464,41 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             // message first
             if (showMsgs)
             {
+                const string item_name = item.name(DESC_YOUR);
                 switch (special)
                 {
                 case SPWPN_FLAMING:
-                    mpr("It bursts into flame!");
+                    mprf("%s bursts into flame!", item_name.c_str());
                     break;
 
                 case SPWPN_FREEZING:
-                    mpr(is_range_weapon(item) ? "It is covered in frost."
-                                              : "It glows with a cold blue light!");
+                   mprf("%s %s", item_name.c_str(),
+                        is_range_weapon(item) ?
+                            "is covered in frost." :
+                            "glows with a cold blue light!");
                     break;
 
                 case SPWPN_HOLY_WRATH:
-                    mpr("It softly glows with a divine radiance!");
+                    mprf("%s softly glows with a divine radiance!",
+                         item_name.c_str());
                     break;
 
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.pos()))
-                        mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
+                    {
+                        mprf(MSGCH_SOUND,
+                             "You hear the crackle of electricity.");
+                    }
                     else
                         mpr("You see sparks fly.");
                     break;
 
                 case SPWPN_VENOM:
-                    mpr("It begins to drip with poison!");
+                    mprf("%s begins to drip with poison!", item_name.c_str());
                     break;
 
                 case SPWPN_PROTECTION:
                     mpr("You feel protected!");
-                    break;
-
-                case SPWPN_EVASION:
-                    mpr("You feel nimbler!");
                     break;
 
                 case SPWPN_DRAINING:
@@ -532,7 +512,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_VAMPIRISM:
                     if (you.species == SP_VAMPIRE)
                         mpr("You feel a bloodthirsty glee!");
-                    else if (you.undead_state() == US_ALIVE && !you_foodless())                        mpr("You feel a dreadful hunger.");
+                    else if (you.undead_state() == US_ALIVE && !you_foodless())
+                        mpr("You feel a dreadful hunger.");
                     else
                         mpr("You feel an empty sense of dread.");
                     break;
@@ -543,15 +524,21 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
-                        mprf("Pain shudders through your %s!", your_arm.c_str());
+                    {
+                        mprf("Pain shudders through your %s!",
+                             your_arm.c_str());
+                    }
                     else
-                        mprf("A searing pain shoots up your %s!", your_arm.c_str());
+                    {
+                        mprf("A searing pain shoots up your %s!",
+                             your_arm.c_str());
+                    }
                     break;
                 }
 
                 case SPWPN_CHAOS:
-                    mpr("It is briefly surrounded by a scintillating aura "
-                        "of random colours.");
+                    mprf("%s is briefly surrounded by a scintillating aura of "
+                         "random colours.", item_name.c_str());
                     break;
 
                 case SPWPN_PENETRATION:
@@ -568,7 +555,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 }
 
                 case SPWPN_REAPING:
-                    mpr("It is briefly surrounded by shifting shadows.");
+                    mprf("%s is briefly surrounded by shifting shadows.",
+                         item_name.c_str());
                     break;
 
                 case SPWPN_ANTIMAGIC:
@@ -590,10 +578,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             {
             case SPWPN_PROTECTION:
                 you.redraw_armour_class = true;
-                break;
-
-            case SPWPN_EVASION:
-                you.redraw_evasion = true;
                 break;
 
             case SPWPN_VAMPIRISM:
@@ -649,13 +633,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     if (is_artefact(item))
         _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON);
 
-    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
-    {
-        you.attribute[ATTR_SHADOWS] = 0;
-        update_vision_range();
-        expire_lantern_shadows();
-    }
-    else if (item.base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS)
     {
         const int brand = get_weapon_brand(item);
 
@@ -690,12 +668,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 if (showMsgs)
                     mpr("You feel less protected.");
                 you.redraw_armour_class = true;
-                break;
-
-            case SPWPN_EVASION:
-                if (showMsgs)
-                    mpr("You feel like more of a target.");
-                you.redraw_evasion = true;
                 break;
 
             case SPWPN_VAMPIRISM:
@@ -779,8 +751,12 @@ static void _spirit_shield_message(bool unmeld)
     {
         dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");
-        if (you.species == SP_DEEP_DWARF)
+        if (you.species == SP_DEEP_DWARF
+            && !(have_passive(passive_t::no_mp_regen)
+                 || player_under_penance(GOD_PAKELLAS)))
+        {
             mpr("Now linked to your health, your magic stops regenerating.");
+        }
     }
     else if (!unmeld && player_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel the presence of a powerless spirit.");
@@ -1107,9 +1083,9 @@ static void _remove_amulet_of_faith(item_def &item)
 static void _remove_amulet_of_harm()
 {
     if (you.undead_state() == US_ALIVE)
-        mpr("The amulet rips away your lifeforce as you remove it!");
+        mpr("The amulet drains your life force as you remove it!");
     else
-        mpr("The amulet rips away your animating force as you remove it!");
+        mpr("The amulet drains your animating force as you remove it!");
 
     drain_player(100, false, true);
 }
@@ -1382,7 +1358,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case AMU_GUARDIAN_SPIRIT:
-        if (you.species == SP_DEEP_DWARF)
+        if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
         break;
     }

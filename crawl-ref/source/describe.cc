@@ -16,6 +16,7 @@
 #include <string>
 
 #include "adjust.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
@@ -454,7 +455,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_CORRODE, "It may corrode your equipment when you take damage.", false},
+        { ARTP_CORRODE, "It may corrode you when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
         { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
@@ -542,8 +543,8 @@ static const char *trap_names[] =
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
+    "shadow", "dormant shadow",
 #endif
-     "shadow", "dormant shadow",
 };
 
 string trap_name(trap_type trap)
@@ -601,74 +602,74 @@ static string _describe_demon(const string& name, bool flying)
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
-    const char* body_descs[] =
+    static const char* body_types[] =
     {
-        "armoured ",
-        "vast, spindly ",
-        "fat ",
-        "obese ",
-        "muscular ",
-        "spiked ",
-        "splotchy ",
-        "slender ",
-        "tentacled ",
-        "emaciated ",
-        "bug-like ",
-        "skeletal ",
-        "mantis ",
+        "armoured",
+        "vast, spindly",
+        "fat",
+        "obese",
+        "muscular",
+        "spiked",
+        "splotchy",
+        "slender",
+        "tentacled",
+        "emaciated",
+        "bug-like",
+        "skeletal",
+        "mantis",
     };
 
-    const char* wing_names[] =
+    static const char* wing_names[] =
     {
-        " with small, bat-like wings",
-        " with bony wings",
-        " with sharp, metallic wings",
-        " with the wings of a moth",
-        " with thin, membranous wings",
-        " with dragonfly wings",
-        " with large, powerful wings",
-        " with fluttering wings",
-        " with great, sinister wings",
-        " with hideous, tattered wings",
-        " with sparrow-like wings",
-        " with hooked wings",
-        " with strange knobs attached",
-        " which hovers in mid-air",
-        " with sacs of gas hanging from its back",
+        "with small, bat-like wings",
+        "with bony wings",
+        "with sharp, metallic wings",
+        "with the wings of a moth",
+        "with thin, membranous wings",
+        "with dragonfly wings",
+        "with large, powerful wings",
+        "with fluttering wings",
+        "with great, sinister wings",
+        "with hideous, tattered wings",
+        "with sparrow-like wings",
+        "with hooked wings",
+        "with strange knobs attached",
+        "which hovers in mid-air",
+        "with sacs of gas hanging from its back",
     };
 
     const char* head_names[] =
     {
-        " and a cubic structure in place of a head",
-        " and a brain for a head",
-        " and a hideous tangle of tentacles for a mouth",
-        " and the head of an elephant",
-        " and an eyeball for a head",
-        " and wears a helmet over its head",
-        " and a horn in place of a head",
-        " and a thick, horned head",
-        " and the head of a horse",
-        " and a vicious glare",
-        " and snakes for hair",
-        " and the face of a baboon",
-        " and the head of a mouse",
-        " and a ram's head",
-        " and the head of a rhino",
-        " and eerily human features",
-        " and a gigantic mouth",
-        " and a mass of tentacles growing from its neck",
-        " and a thin, worm-like head",
-        " and huge, compound eyes",
-        " and the head of a frog",
-        " and an insectoid head",
-        " and a great mass of hair",
-        " and a skull for a head",
-        " and a cow's skull for a head",
-        " and the head of a bird",
-        " and a large fungus growing from its neck",
+        "a cubic structure in place of a head",
+        "a brain for a head",
+        "a hideous tangle of tentacles for a mouth",
+        "the head of an elephant",
+        "an eyeball for a head",
+        "wears a helmet over its head",
+        "a horn in place of a head",
+        "a thick, horned head",
+        "the head of a horse",
+        "a vicious glare",
+        "snakes for hair",
+        "the face of a baboon",
+        "the head of a mouse",
+        "a ram's head",
+        "the head of a rhino",
+        "eerily human features",
+        "a gigantic mouth",
+        "a mass of tentacles growing from its neck",
+        "a thin, worm-like head",
+        "huge, compound eyes",
+        "the head of a frog",
+        "an insectoid head",
+        "a great mass of hair",
+        "a skull for a head",
+        "a cow's skull for a head",
+        "the head of a bird",
+        "a large fungus growing from its neck",
     };
 
-    const char* misc_descs[] =
+    static const char* misc_descs[] =
     {
         " It seethes with hatred of the living.",
         " Tiny orange flames dance around it.",
@@ -679,11 +680,12 @@ static string _describe_demon(const string& name, bool flying)
         " It oozes with slime.",
         " It dribbles constantly.",
         " Mould grows all over it.",
+        " Its body is covered in fungus.",
+        " It is covered with lank hair.",
         " It looks diseased.",
         " It looks as frightened of you as you are of it.",
         " It moves in a series of hideous convulsions.",
         " It moves with an unearthly grace.",
-        " It hungers for your soul!",
         " It leaves a glistening oily trail.",
         " It shimmers before your eyes.",
         " It is surrounded by a brilliant glow.",
@@ -694,56 +696,51 @@ static string _describe_demon(const string& name, bool flying)
         " Blue sparks crawl across its body.",
         " It seems uncertain.",
         " A cloud of flies swarms around it.",
-        " The air ripples with heat as it passes.",
+        " The air around it ripples with heat.",
+        " Crystalline structures grow on everything near it.",
         " It appears supremely confident.",
         " Its skin is covered in a network of cracks.",
         " Its skin has a disgusting oily sheen.",
-        " It seems completely insane!",
-        " It seems somehow familiar."
+        " It seems somehow familiar.",
+        " It is somehow always in shadow.",
+        " It is difficult to look away.",
+        " It is constantly speaking in tongues.",
+        " It babbles unendingly.",
+        " Its body is scourged by damnation.",
+        " Its body is extensively scarred.",
+        " You find it difficult to look away.",
+    };
+
+    static const char* smell_descs[] =
+    {
+        " It smells of brimstone.",
+        " It is surrounded by a sickening stench.",
+        " It smells of rotting flesh.",
+        " It stinks of death.",
+        " It stinks of decay.",
+        " It smells delicious!",
     };
 
     ostringstream description;
     description << "One of the many lords of Pandemonium, " << name << " has ";
 
-    const string a_body = HRANDOM_ELEMENT(body_descs, 2);
-    description << article_a(a_body) << "body";
-
-    string head_desc = HRANDOM_ELEMENT(head_names, 1);
+    description << article_a(HRANDOM_ELEMENT(body_types, 2));
+    description << " body ";
 
     if (flying)
     {
         description << HRANDOM_ELEMENT(wing_names, 3);
-        if (starts_with(head_desc, " with"))
-            description << " and";
+        description << " ";
     }
 
-    description << head_desc << ".";
+    description << "and ";
+    description << HRANDOM_ELEMENT(head_names, 1) << ".";
 
-    if (hash_rand(40, seed, 4) < 3)
-    {
-        if (you.can_smell())
-        {
-            switch (hash_rand(4, seed, 5))
-            {
-            case 0:
-                description << " It stinks of brimstone.";
-                break;
-            case 1:
-                description << " It is surrounded by a sickening stench.";
-                break;
-            case 2:
-                description << " It smells delicious!";
-                break;
-            case 3:
-                description << " It smells like rotting flesh"
-                            << (you.species == SP_GHOUL ? " - yum!"
-                                                       : ".");
-                break;
-            }
-        }
-    }
-    else if (hash_rand(2, seed, 6))
-        description << HRANDOM_ELEMENT(misc_descs, 5);
+    if (!hash_rand(5, seed, 4) && you.can_smell()) // 20%
+        description << HRANDOM_ELEMENT(smell_descs, 5);
+
+    if (hash_rand(2, seed, 6)) // 50%
+        description << HRANDOM_ELEMENT(misc_descs, 6);
 
     return description.str();
 }
@@ -760,12 +757,11 @@ static string _describe_mutant_beast_tier(int tier)
 {
     static const string tier_descs[] = {
         "It is of an unusually buggy age.",
-        "It is larval, freshly emerged from its mother's pouch and weak.",
-        "It is a juvenile, out of the larval stage but below its mature "
-        "strength.",
+        "It is larval and weak, freshly emerged from its mother's pouch.",
+        "It is a juvenile, no longer larval but below its mature strength.",
         "It is mature, stronger than a juvenile but weaker than its elders.",
-        "It is an elder, stronger than most mature beasts.",
-        "It is a primal beast, most powerful of its kind.",
+        "It is an elder, stronger than mature beasts.",
+        "It is a primal beast, the most powerful of its kind.",
     };
     COMPILE_CHECK(ARRAYSZ(tier_descs) == NUM_BEAST_TIERS);
 
@@ -1007,9 +1003,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It protects the one who wields it against "
                 "injury (+5 to AC).";
             break;
-        case SPWPN_EVASION:
-            description += "It affects your evasion (+5 to EV).";
-            break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
                 "life of those it strikes.";
@@ -1066,9 +1059,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "animated as a zombie friendly to the killer.";
             break;
         case SPWPN_ANTIMAGIC:
-            description += "It disrupts the flow of magical energy around "
-                    "spellcasters and certain magical creatures (including "
-                    "the wielder).";
+            description += "It reduces the magical energy of the wielder, "
+                    "and disrupts the spells and magical abilities of those "
+                    "hit. Natural abilities and divine invocations are not "
+                    "affected.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
@@ -1258,7 +1252,26 @@ static string _describe_ammo(const item_def &item)
 
     const int dam = property(item, PWPN_DAMAGE);
     if (dam)
-        description += make_stringf("\nBase damage: %d\n", dam);
+    {
+        const int throw_delay = (10 + dam / 2);
+        const string your_skill = crawl_state.need_save ?
+                make_stringf("\n (Your skill: %.1f)",
+                    (float) you.skill(SK_THROWING, 10) / 10)
+                    : "";
+
+        description += make_stringf(
+            "\nBase damage: %d  Base attack delay: %.1f"
+            "\nThis projectile's minimum attack delay (%.1f) "
+                "is reached at skill level %d."
+            "%s",
+            dam,
+            (float) throw_delay / 10,
+            (float) FASTEST_PLAYER_THROWING_SPEED / 10,
+            (throw_delay - FASTEST_PLAYER_THROWING_SPEED) * 2,
+            your_skill.c_str()
+        );
+    }
+
 
     if (ammo_always_destroyed(item))
         description += "\nIt will always be destroyed on impact.";
@@ -1266,6 +1279,15 @@ static string _describe_ammo(const item_def &item)
         description += "\nIt may be destroyed on impact.";
 
     return description;
+}
+
+static string _warlock_mirror_reflect_desc()
+{
+    const int SH = crawl_state.need_save ? player_shield_class() : 0;
+    const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
+    return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
+           "% chance to reflect enchantments and other normally unblockable "
+           "effects.";
 }
 
 static string _describe_armour(const item_def &item, bool verbose)
@@ -1295,6 +1317,9 @@ static string _describe_armour(const item_def &item, bool verbose)
                 else
                     description += "\n";
             }
+
+            if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
+                description += _warlock_mirror_reflect_desc();
         }
         else
         {
@@ -1929,12 +1954,6 @@ string get_item_description(const item_def &item, bool verbose,
                 description << desc;
         }
 
-        {
-            string stats = "\n";
-            _append_weapon_stats(stats, item);
-            description << stats;
-        }
-        description << "\n\nIt falls into the 'Maces & Flails' category.";
         break;
 
     case OBJ_STAVES:
@@ -2327,10 +2346,10 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_EVOKE:            evoke_item(slot);                    break;
     case CMD_EAT:              eat_food(slot);                      break;
-    case CMD_READ:             read(slot);                          break;
+    case CMD_READ:             read(&item);                         break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
-    case CMD_QUAFF:            drink(slot);                         break;
+    case CMD_QUAFF:            drink(&item);                        break;
     case CMD_DROP:             drop_item(slot, item.quantity);      break;
     case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
@@ -2426,22 +2445,16 @@ void inscribe_item(item_def &item)
         return;
     }
 
-    // Strip spaces from the end.
-    for (int i = strlen(buf) - 1; i >= 0; --i)
-    {
-        if (isspace(buf[i]))
-            buf[i] = 0;
-        else
-            break;
-    }
+    string new_inscrip = buf;
+    trim_string_right(new_inscrip);
 
-    if (item.inscription == buf)
+    if (item.inscription == new_inscrip)
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    item.inscription = buf;
+    item.inscription = new_inscrip;
 
     mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
@@ -2515,21 +2528,6 @@ string get_skill_description(skill_type skill, bool need_title)
                 result += "\n";
                 result += "Note that Trog doesn't use Invocations, due to its "
                           "close connection to magic.";
-            }
-            else if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "Note that Nemelex uses Evocations rather than "
-                          "Invocations.";
-            }
-            break;
-
-        case SK_EVOCATIONS:
-            if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "This is the skill all of Nemelex's abilities rely "
-                          "on.";
             }
             break;
 
@@ -2921,6 +2919,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "rotting";
     case MR_RES_NEG:
         return "negative energy";
+    case MR_RES_DAMNATION:
+        return "damnation";
     default:
         return "buggy resistance";
     }
@@ -2965,7 +2965,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_DISTORT:         return "cause wild translocation effects";
     case AF_RAGE:            return "cause berserking";
     case AF_STICKY_FLAME:    return "apply sticky flame";
-    case AF_CHAOS:           return "cause unpredictable effects";
+    case AF_CHAOTIC:         return "cause unpredictable effects";
     case AF_STEAL:           return "steal items";
     case AF_CRUSH:           return "constrict";
     case AF_REACH:           return "deal damage from a distance";
@@ -2984,6 +2984,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_TRAMPLE:         return "knock back the defender";
     case AF_REACH_STING:     return "cause poisoning from a distance";
     case AF_WEAKNESS:        return "cause weakness";
+    case AF_MIASMATA:        return "surround the defender with miasma";
     default:                 return "";
     }
 }
@@ -3021,10 +3022,6 @@ static string _monster_spells_description(const monster_info& mi)
     // Show a generic message for pan lords, since they're secret.
     if (mi.type == MONS_PANDEMONIUM_LORD)
         return "It may possess any of a vast number of diabolical powers.\n";
-
-    // Ditto for (a)liches.
-    if (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH)
-        return "It has mastered any of a vast number of powerful spells.\n";
 
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
@@ -3187,7 +3184,7 @@ static string _monster_stat_description(const monster_info& mi)
     {
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_ROTTING, MR_RES_NEG,
+        MR_RES_ROTTING, MR_RES_NEG,    MR_RES_DAMNATION,
     };
 
     vector<string> extreme_resists;
@@ -3202,6 +3199,8 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
+            if (rflags == MR_RES_DAMNATION)
+                level = 3; // one level is immunity
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
@@ -3280,9 +3279,6 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is cold-blooded and may be "
                                               "slowed by cold attacks.\n";
     }
-
-    if (mons_class_flag(mi.type, M_GLOWS))
-        result << uppercase_first(pronoun) << " is outlined in light.\n";
 
     // Seeing invisible.
     if (mi.can_see_invisible())
@@ -3549,7 +3545,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_MUTANT_BEAST:
-        inf.body << _describe_mutant_beast(mi) << "\n";
+        // vault renames get their own descriptions
+        if (mi.mname.empty() || !mi.is(MB_NAME_REPLACE))
+            inf.body << _describe_mutant_beast(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:
@@ -3722,8 +3720,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "emergency, ";
         if (hspell_pass[i].flags & MON_SPELL_NATURAL)
             inf.body << "natural, ";
-        if (hspell_pass[i].flags & MON_SPELL_DEMONIC)
-            inf.body << "demonic, ";
         if (hspell_pass[i].flags & MON_SPELL_MAGICAL)
             inf.body << "magical, ";
         if (hspell_pass[i].flags & MON_SPELL_WIZARD)

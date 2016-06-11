@@ -367,6 +367,9 @@ the issue.
   // FIXME: implement this for tiles
   void update_monster_pane() {}
 
+Comments should not be used to archive old code. If something is no longer
+needed, do not comment it out, simply remove it.
+
 F) Macro Usage
 --------------------
 

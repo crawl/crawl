@@ -61,9 +61,8 @@ int monster::stealth() const
     if (mons_genus(type) == MONS_ORC)
         actual_stealth--;
 
-    // Not an issue with invisibility, but glowing or haloes make you
-    // unstealthy.
-    if (glows_naturally() || halo_radius() != -1)
+    // Not an issue with invisibility, but haloes make you unstealthy.
+    if (halo_radius() != -1)
         actual_stealth -= 3;
 
     // Having an umbra makes you more stealthy, on the other hand.

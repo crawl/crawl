@@ -100,9 +100,10 @@ natasha MONS_NATASHA
 %rim 1
 %sdir mon/animals
 
-## Bees ('k')
+## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
+../meliai MONS_MELIAI
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -111,7 +112,7 @@ iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
-## Slugs ('j')
+## Slugs ('w')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
 
@@ -129,7 +130,6 @@ quokka MONS_QUOKKA
 ## Spiders and insects ('s')
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
-spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
@@ -147,9 +147,9 @@ death_scarab MONS_DEATH_SCARAB
 crocodile MONS_CROCODILE
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
-snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
+snapping_turtle_shell
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
-alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
+alligator_snapping_turtle_shell
 %rim 0
 fire_crab MONS_FIRE_CRAB
 ghost_crab MONS_GHOST_CRAB
@@ -159,7 +159,7 @@ ghost_crab MONS_GHOST_CRAB
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
-swamp_worm_water MONS_SWAMP_WORM_WATER
+swamp_worm_water
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
@@ -219,7 +219,7 @@ sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
 mana_viper MONS_MANA_VIPER
 
-## Bears ('U')
+## Bears ('h' again)
 black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
@@ -306,7 +306,7 @@ brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
-shadow_fiend MONS_SHADOW_FIEND
+tzitzimitl MONS_TZITZIMITL
 %sdir mon/unique
 ignacio MONS_IGNACIO
 %sdir mon/demons
@@ -382,6 +382,12 @@ azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
 %sdir mon/nonliving
+%rim 0
+ancestor MONS_ANCESTOR
+ancestor_knight MONS_ANCESTOR_KNIGHT
+ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
+ancestor_hexer MONS_ANCESTOR_HEXER
+%rim 1
 
 ## Abominations ('X')
 %sdir mon/demons
@@ -392,6 +398,9 @@ abomination_large3
 abomination_large4
 abomination_large5
 abomination_large6
+abomination_large7
+abomination_large8
+abomination_large9
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 %sdir mon/vault
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
@@ -513,8 +522,6 @@ maud MONS_MAUD
 maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
-%rim 1
-norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
@@ -668,9 +675,57 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
-mutant_beast MONS_MUTANT_BEAST
+%sdir mon/mutantbeast
+%rim 0
+base1 MUTANT_BEAST_BASE
+base2
+base3
+base4
+base5
+bwing1 MUTANT_BEAST_WING_BASE
+bwing2
+bwing3
+bwing4
+bwing5
+fire1 MUTANT_BEAST_FIRE
+fire2
+fire3
+fire4
+fire5
+weird1 MUTANT_BEAST_WEIRD
+weird2
+weird3
+weird4
+weird5
+horn1 MUTANT_BEAST_HORN
+horn2
+horn3
+horn4
+horn5
+ox1 MUTANT_BEAST_OX
+ox2
+ox3
+ox4
+ox5
+shock1 MUTANT_BEAST_SHOCK
+shock2
+shock3
+shock4
+shock5
+sting1 MUTANT_BEAST_STING
+sting2
+sting3
+sting4
+sting5
+twing1 MUTANT_BEAST_WING_TOP
+twing2
+twing3
+twing4
+twing5
 %sdir mon/unique
+%rim 1
 sojobo MONS_SOJOBO
+# staveless must be immediately after the normal tile
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 asterion MONS_ASTERION
@@ -747,7 +802,6 @@ greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
-salamander_stormcaller MONS_SALAMANDER_STORMCALLER
 
 ## Ogres ('O')
 %sdir mon/unique
@@ -838,6 +892,7 @@ orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 nessos MONS_NESSOS
 %sdir mon
 %rim 0
+# 'melee' tiles must be immediately following the normal ones
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
 centaur_warrior MONS_CENTAUR_WARRIOR
@@ -890,7 +945,7 @@ fungus7
 fungus8
 fungus9
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
-active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
+active_ballistomycete
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
@@ -926,6 +981,7 @@ mon/unique/enchantress MONS_THE_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
+# note: water tiles must be immediately after base tiles
 %rim 0
 %sdir mon/unique
 ilsuiw MONS_ILSUIW
@@ -1038,16 +1094,17 @@ tiamat_purple
 tiamat_red
 tiamat_white
 %sdir mon/draco
+# must match monster_type enum order.
 draco-base-brown DRACO_BASE
 draco-base-black
+draco-base-mottle
 draco-base-yellow
 draco-base-green
-draco-base-grey
-draco-base-mottle
-draco-base-pale
 draco-base-purple
 draco-base-red
 draco-base-white
+draco-base-grey
+draco-base-pale
 %rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
 draco-job-caller DRACO_CALLER

@@ -435,8 +435,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_FIRE:
         case BEAM_LAVA:
             return defender->res_fire();
-        case BEAM_HELLFIRE:
-            return defender->res_hellfire();
+        case BEAM_DAMNATION:
+            return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:
@@ -538,7 +538,9 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     // melee weapons yet.
     if (!weapon
         && (you.skill(SK_UNARMED_COMBAT) > 0
-            || !any_of(you.inv.begin(), you.inv.end(), is_melee_weapon)))
+            || !any_of(you.inv.begin(), you.inv.end(),
+                       [](item_def &it)
+                       { return is_melee_weapon(it) && can_wield(&it); })))
     {
         return true;
     }

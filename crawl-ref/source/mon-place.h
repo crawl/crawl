@@ -89,8 +89,6 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
-monster_type summon_any_dragon(dragon_class_type dct);
-
 bool drac_colour_incompatible(int drac, int colour);
 
 bool monster_habitable_grid(const monster* mon,
@@ -116,6 +114,8 @@ monster* get_free_monster();
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap);
 void mons_add_blame(monster* mon, const string &blame_string);
+
+void debug_bands();
 
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;

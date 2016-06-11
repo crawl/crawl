@@ -498,6 +498,7 @@ static bool _boosted_ac()
            || you.duration[DUR_MAGIC_ARMOUR]
            || player_icemail_armour_class()
            || you.duration[DUR_QAZLAL_AC]
+           || sanguine_armour_bonus()
            || you.attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
@@ -870,15 +871,11 @@ static void _print_stats_wp(int y)
     string text;
     if (you.weapon())
     {
-        item_def wpn = *you.weapon();
+        item_def wpn = *you.weapon(); // copy
 
-        if (you.duration[DUR_CORROSION])
-        {
-            if (wpn.base_type == OBJ_RODS)
-                wpn.rod_plus -= 4 * you.props["corrosion_amount"].get_int();
-            else
-                wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
-        }
+        if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
+            wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
+
         text = wpn.name(DESC_PLAIN, true, false, true);
     }
     else
@@ -1954,8 +1951,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
-            const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(col).c_str();
+            string colname = melded ? "darkgrey" : colour_to_str(col);
 
             const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);
@@ -1963,11 +1959,11 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = make_stringf(
                      "<w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
-                     colname,
+                     colname.c_str(),
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
                                  melded ? sw - 43 : sw - 36, false).c_str(),
-                     colname);
+                     colname.c_str());
             equip_chars.push_back(equip_char);
         }
         else if (eqslot == EQ_WEAPON
@@ -2011,7 +2007,7 @@ static string _overview_screen_title(int sw)
 
     handle_real_time();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
-                      + make_time_string(you.real_time, true);
+                      + make_time_string(you.real_time(), true);
 
     const int char_width = strwidth(species_job);
     const int title_width = strwidth(title);
@@ -2645,6 +2641,8 @@ static string _status_mut_abilities(int sw)
 
     if (you.species == SP_OCTOPODE)
     {
+        mutations.push_back(_annotate_form_based("amphibious",
+                                                 !form_likes_water()));
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));
@@ -2653,7 +2651,7 @@ static string _status_mut_abilities(int sw)
             !form_keeps_mutations()));
     }
 
-    if (have_passive(passive_t::water_walk))
+    if (you.can_water_walk())
         mutations.emplace_back("walk on water");
 
     string current;

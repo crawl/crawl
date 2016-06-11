@@ -73,7 +73,6 @@ public:
         int prism_charge;      ///< Turns this prism has existed
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
-        int swift_cooldown;    ///< When alligator last casted Swift
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
@@ -145,7 +144,7 @@ public:
     kill_category kill_alignment() const override;
 
     int  foe_distance() const;
-    bool needs_berserk(bool check_spells = true) const;
+    bool needs_berserk(bool check_spells = true, bool ignore_distance = false) const;
 
     // Has a hydra-like variable number of attacks based on num_heads.
     bool has_hydra_multi_attack() const;
@@ -229,7 +228,6 @@ public:
     void ghost_demon_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
-    void uglything_upgrade();
     void destroy_inventory();
     void load_ghost_spells();
 
@@ -363,7 +361,7 @@ public:
     bool is_artificial(bool temp = true) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
-    bool res_hellfire() const override;
+    bool res_damnation() const override;
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;
@@ -418,7 +416,6 @@ public:
 #if TAG_MAJOR_VERSION == 34
     int heat_radius() const override;
 #endif
-    bool glows_naturally() const override;
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;
@@ -561,6 +558,7 @@ public:
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;
+    bool angered_by_attacks() const;
 
 private:
     int hit_dice;
@@ -575,6 +573,7 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
+    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);

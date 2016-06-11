@@ -83,7 +83,7 @@ void wizard_place_stairs(bool down)
         return;
 
     mprf("Creating %sstairs.", down ? "down" : "up");
-    dungeon_terrain_changed(you.pos(), stairs, false);
+    dungeon_terrain_changed(you.pos(), stairs);
 }
 
 void wizard_level_travel(bool down)
@@ -250,7 +250,7 @@ bool wizard_create_feature(const coord_def& pos)
     env.tile_flv(pos).special = 0;
     env.grid_colours(pos) = 0;
     const dungeon_feature_type old_feat = grd(pos);
-    dungeon_terrain_changed(pos, feat, false);
+    dungeon_terrain_changed(pos, feat, false, false, false, true);
     // Update gate tiles, if existing.
     if (feat_is_door(old_feat) || feat_is_door(feat))
     {

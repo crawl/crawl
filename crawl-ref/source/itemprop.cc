@@ -291,11 +291,10 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
 
 /// brand weights for most ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
-    { SPWPN_NORMAL,   50 },
-    { SPWPN_FLAMING,  24 },
-    { SPWPN_FREEZING, 12 },
-    { SPWPN_EVASION,   8 },
-    { SPWPN_VORPAL,    6 },
+    { SPWPN_NORMAL,   58 },
+    { SPWPN_FLAMING,  16 },
+    { SPWPN_FREEZING, 16 },
+    { SPWPN_VORPAL,   10 },
 };
 
 /// brand weights for holy (TSO-blessed) weapons.
@@ -311,9 +310,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_CLUB,              "club",                5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10, 0, {} },
-    { WPN_ROD,               "rod",                 5,  3, 13,
+#if TAG_MAJOR_VERSION == 34
+    { WPN_SPIKED_FLAIL,      "spiked flail",        5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, {} },
+#endif
     { WPN_WHIP,              "whip",                6,  2, 11,
         SK_MACES_FLAILS, SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 4, 0, {
@@ -557,10 +558,7 @@ static const weapon_def Weapon_prop[] =
     // Range weapons
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,
         SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
-        DAMV_NON_MELEE, 5, 0, {
-            { SPWPN_EVASION,  3 },
-            { SPWPN_NORMAL,  97 },
-        }},
+        DAMV_NON_MELEE, 5, 0, {}, },
 
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,
         SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
@@ -881,23 +879,24 @@ void do_curse_item(item_def &item, bool quiet)
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
-                     bool check_bondage)
+/**
+ * Attempt to un-curse the given item.
+ *
+ * @param item      The item in question.
+ * @param check_bondage     Whether to update the player's Ash bondage status.
+ *                          (Ash ?rc delays this until later.)
+ */
+void do_uncurse_item(item_def &item, bool check_bondage)
 {
+    const bool in_inv = in_inventory(item);
     if (!item.cursed())
     {
-        if (in_inventory(item))
+        if (in_inv)
             item.flags |= ISFLAG_KNOW_CURSE;
         return;
     }
 
-    if (no_ash && have_passive(passive_t::want_curses))
-    {
-        simple_god_message(" preserves the curse.");
-        return;
-    }
-
-    if (in_inventory(item))
+    if (in_inv)
     {
         if (you.equip[EQ_WEAPON] == item.link)
         {
@@ -908,7 +907,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
     item.flags &= (~ISFLAG_CURSED);
 
-    if (check_bondage)
+    if (check_bondage && in_inv)
         ash_check_bondage();
 }
 
@@ -1538,10 +1537,17 @@ bool check_armour_size(const item_def &item, size_type size)
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
-// Returns whether a wand or rod can be charged.
-// If hide_charged is true, wands known to be full will return false.
-// (This distinction is necessary because even full wands/rods give a message.)
-bool item_is_rechargeable(const item_def &it, bool hide_charged)
+/**
+ * Can the given item be recharged?
+ *
+ * @param it            The item in question.
+ * @param hide_charged  Whether wands known to be full should be included.
+ * @param divine        Whether the source of recharging is divine (and so can
+                        only recharge, not increase enchantment on rods).
+ * @return              Whether the item can be recharged.
+ *
+ */
+bool item_is_rechargeable(const item_def &it, bool hide_charged, bool divine)
 {
     // These are obvious...
     if (it.base_type == OBJ_WANDS)
@@ -1564,9 +1570,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
-            return it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                   || it.charges < it.charge_cap
-                   || it.rod_plus < MAX_WPN_ENCHANT;
+            return !divine && (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                               || it.rod_plus < MAX_WPN_ENCHANT)
+                   || it.charges < it.charge_cap;
         }
         return true;
     }
@@ -1669,7 +1675,7 @@ bool is_offensive_wand(const item_def& item)
 
 // Returns whether a piece of armour can be enchanted further.
 // If unknown is true, unidentified armour will return true.
-bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
+bool is_enchantable_armour(const item_def &arm, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
         return false;
@@ -1678,16 +1684,9 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
 
-    // Artefacts or highly enchanted armour cannot be enchanted, only
-    // uncursed.
+    // Artefacts or highly enchanted armour cannot be enchanted.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-    {
-        if (!uncurse || have_passive(passive_t::want_curses))
-            return false;
-        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
-            return true;
-        return arm.cursed();
-    }
+        return false;
 
     return true;
 }
@@ -1716,14 +1715,10 @@ int get_vorpal_type(const item_def &item)
 
 int get_damage_type(const item_def &item)
 {
-    int ret = DAM_BASH;
-
-    if (item.base_type == OBJ_RODS)
-        ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
-        ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
+        return Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK;
 
-    return ret;
+    return DAM_BASH;
 }
 
 static bool _does_damage_type(const item_def &item, int dam_type)
@@ -1757,7 +1752,6 @@ int single_damage_type(const item_def &item)
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
     const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type :
-                         OBJ_RODS == item.base_type    ? WPN_ROD :
                          OBJ_STAVES == item.base_type  ? WPN_STAFF :
                                                          WPN_UNKNOWN;
 
@@ -1831,14 +1825,14 @@ bool is_blessed_weapon_type(int wpn_type)
 
 /**
  * Is the weapon type provided magical (& can't be generated in a usual way)?
- * (I.e., magic staffs & rods.)
+ * (I.e., magic staves.)
  *
  * @param wpn_type  The weapon_type under consideration.
- * @return          Whether it's a magic staff or rod.
+ * @return          Whether it's a magic staff.
  */
 bool is_magic_weapon_type(int wpn_type)
 {
-    return wpn_type == WPN_STAFF || wpn_type == WPN_ROD;
+    return wpn_type == WPN_STAFF;
 }
 
 
@@ -1943,8 +1937,6 @@ skill_type item_attack_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
-    else if (item.base_type == OBJ_RODS)
-        return SK_MACES_FLAILS; // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
     else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
@@ -2056,12 +2048,9 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
-    // Staves and rods are currently wieldable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS
-        || item_attack_skill(item) == SK_STAVES)
-    {
+    // Staves are currently wieldable for everyone just to be nice.
+    if (item.base_type == OBJ_STAVES || item_attack_skill(item) == SK_STAVES)
         return true;
-    }
 
     return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
 }
@@ -2691,8 +2680,7 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
-    case OBJ_RODS:
-        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_ROD : WPN_STAFF;
+        weapon_sub = WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
@@ -2859,7 +2847,7 @@ bool item_is_jelly_edible(const item_def &item)
         return false;
 
     // Don't eat items that the player has seen.
-    if (item.flags & ISFLAG_SEEN && !you_worship(GOD_JIYVA))
+    if (item.flags & ISFLAG_SEEN && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Don't eat artefacts or the horn of Geryon.
@@ -3046,7 +3034,6 @@ void seen_item(const item_def &item)
 static const map<int, const char*> debt_map = {
     { MISC_FAN_OF_GALES,        "fan_debt" },
     { MISC_LAMP_OF_FIRE,        "lamp_debt" },
-    { MISC_STONE_OF_TREMORS,    "stone_debt" },
     { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
     { MISC_HORN_OF_GERYON,      "horn_debt" },
 };

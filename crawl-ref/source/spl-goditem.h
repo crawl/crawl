@@ -38,6 +38,9 @@ const enchant_type dispellable_enchantments[] =
     ENCH_DEFLECT_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
+    ENCH_PAIN_BOND,
+    ENCH_IDEALISED,
+    ENCH_INSANE,
 };
 
 bool player_is_debuffable();
@@ -45,7 +48,6 @@ void debuff_player();
 bool monster_is_debuffable(const monster &mon);
 void debuff_monster(monster &mon);
 
-int detect_traps(int pow);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 bool remove_curse(bool alreadyknown = true, const string &pre_msg = "");
@@ -67,6 +69,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 
 void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker = nullptr);
+void holy_word_player(holy_word_source_type source);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_cell(coord_def where, actor *attacker, torment_source_type taux);

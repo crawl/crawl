@@ -47,7 +47,7 @@ static const pop_entry pop_d[] =
   {  6, 16,  335, SEMI, MONS_WIGHT },
   {  6, 16,  335, SEMI, MONS_NO_MONSTER }, // Old giant spore weight.
   {  7, 14,  415, SEMI, MONS_BIG_KOBOLD },
-  {  7, 14,  500, SEMI, MONS_KILLER_BEE },
+  {  7, 13,  470, SEMI, MONS_KILLER_BEE },
   {  7, 15,   89, PEAK, MONS_STEAM_DRAGON },
   {  7, 17,  515, SEMI, MONS_HIPPOGRIFF },
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
@@ -76,7 +76,8 @@ static const pop_entry pop_d[] =
   { 11, 21,  192, PEAK, MONS_DEATH_KNIGHT },
   { 11, 23,  515, SEMI, MONS_HYDRA },
   { 12, 19,  475, SEMI, MONS_DEEP_ELF_MAGE },
-  { 12, 20,  515, SEMI, MONS_VAMPIRE_MOSQUITO },
+  { 12, 20,  150, SEMI, MONS_MELIAI },
+  { 12, 20,  500, SEMI, MONS_VAMPIRE_MOSQUITO },
   { 12, 22,  440, FALL, MONS_SLIME_CREATURE },
   { 13, 21,   89, PEAK, MONS_RAKSHASA },
   { 13, 17,  925, FLAT, MONS_CENTAUR_WARRIOR },
@@ -87,7 +88,6 @@ static const pop_entry pop_d[] =
   { 13, 23,  675, SEMI, MONS_SHAPESHIFTER },
   { 13, 23,  335, SEMI, MONS_GRIFFON },
   { 13, 27,   89, FALL, MONS_CATOBLEPAS },
-  { 14, 19,  150, RISE, MONS_SALAMANDER_STORMCALLER },
   { 14, 19,  140, FLAT, MONS_WIZARD },
   { 14, 22,  260, SEMI, MONS_FREEZING_WRAITH },
   { 14, 22,  270, SEMI, MONS_SIMULACRUM },
@@ -219,41 +219,41 @@ static const pop_entry pop_blade[] =
 
 static const pop_entry pop_lair[] =
 { // Lair
-  { -4,  6,  825, SEMI, MONS_IGUANA },
-  { -2,  8,  750, SEMI, MONS_RIVER_RAT },
-  { -1,  5,   52, SEMI, MONS_BLACK_BEAR },
-  {  0,  6,   25, PEAK, MONS_SCORPION },
-  {  0,  8,  260, SEMI, MONS_BASILISK },
-  {  0,  8,  260, SEMI, MONS_WOLF },
-  {  1,  7, 1000, FLAT, MONS_GIANT_FROG },
-  {  1,  7, 1000, FLAT, MONS_PORCUPINE },
-  {  1,  8,  880, FLAT, MONS_SPINY_FROG },
-  {  1,  8,  980, FLAT, MONS_CROCODILE },
-  {  1,  8,  980, FLAT, MONS_WATER_MOCCASIN },
-  {  1,  8,  515, FLAT, MONS_HIPPOGRIFF },
-  {  1,  8,  515, FLAT, MONS_KOMODO_DRAGON },
-  {  1,  8,  515, FLAT, MONS_YAK },
-  {  1,  9,  420, SEMI, MONS_BLINK_FROG },
-  {  1,  9,  275, SEMI, MONS_SHEEP },
-  {  1, 11,  515, SEMI, MONS_HYDRA },
-  {  1, 11,  455, SEMI, MONS_BLACK_MAMBA },
-  {  1, 11,  275, PEAK, MONS_RIME_DRAKE },
-  {  2,  6,    8, PEAK, MONS_WASP },
-  {  2,  8,   25, PEAK, MONS_HELL_RAT },
-  {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
-  {  2,  8,   52, SEMI, MONS_POLAR_BEAR },
-  {  2, 10,   89, PEAK, MONS_WYVERN },
-  {  2, 12,  275, PEAK, MONS_ELEPHANT },
-  {  2, 12,  192, PEAK, MONS_GRIFFON },
-  {  3,  8,  192, RISE, MONS_DEATH_YAK },
-  {  3,  9,   80, SEMI, MONS_TORPOR_SNAIL },
-  {  3,  9,   52, SEMI, MONS_CATOBLEPAS },
-  {  3,  9,   25, PEAK, MONS_OKLOB_PLANT },
-  {  4,  8,   89, RISE, MONS_BOULDER_BEETLE },
-  {  4, 10,   52, SEMI, MONS_POLAR_BEAR },
-  {  4, 10,   25, PEAK, MONS_LINDWURM },
-  {  5, 12,   66, RISE, MONS_FIRE_CRAB },
-  {  1,  6, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
+  { -3,  5,  825, SEMI, MONS_IGUANA },
+  { -2,  6,  750, SEMI, MONS_RIVER_RAT },
+  { -1,  4,   52, SEMI, MONS_BLACK_BEAR },
+  {  0,  5,   25, PEAK, MONS_SCORPION },
+  {  0,  6,  260, SEMI, MONS_BASILISK },
+  {  0,  6,  260, SEMI, MONS_WOLF },
+  {  1,  5, 1000, FLAT, MONS_GIANT_FROG },
+  {  1,  5, 1000, FLAT, MONS_PORCUPINE },
+  {  1,  6,  880, FLAT, MONS_SPINY_FROG },
+  {  1,  6,  980, FLAT, MONS_CROCODILE },
+  {  1,  6,  980, FLAT, MONS_WATER_MOCCASIN },
+  {  1,  6,  515, FLAT, MONS_HIPPOGRIFF },
+  {  1,  6,  515, FLAT, MONS_KOMODO_DRAGON },
+  {  1,  6,  515, FLAT, MONS_YAK },
+  {  1,  8,  420, SEMI, MONS_BLINK_FROG },
+  {  1,  8,  275, SEMI, MONS_SHEEP },
+  {  1,  9,  515, SEMI, MONS_HYDRA },
+  {  1,  9,  455, SEMI, MONS_BLACK_MAMBA },
+  {  1,  8,  275, PEAK, MONS_RIME_DRAKE },
+  {  2,  5,    8, PEAK, MONS_WASP },
+  {  2,  6,   25, PEAK, MONS_HELL_RAT },
+  {  2,  6,   25, PEAK, MONS_STEAM_DRAGON },
+  {  2,  6,   52, SEMI, MONS_POLAR_BEAR },
+  {  2,  8,   89, PEAK, MONS_WYVERN },
+  {  2,  9,  275, PEAK, MONS_ELEPHANT },
+  {  2,  9,  192, PEAK, MONS_GRIFFON },
+  {  2,  6,  192, RISE, MONS_DEATH_YAK },
+  {  2,  8,   80, SEMI, MONS_TORPOR_SNAIL },
+  {  2,  8,   52, SEMI, MONS_CATOBLEPAS },
+  {  2,  7,   25, PEAK, MONS_OKLOB_PLANT },
+  {  3,  6,   89, RISE, MONS_BOULDER_BEETLE },
+  {  3,  8,   52, SEMI, MONS_POLAR_BEAR },
+  {  3,  8,   25, PEAK, MONS_LINDWURM },
+  {  4,  9,   66, RISE, MONS_FIRE_CRAB },
+  {  1,  5, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -346,24 +346,25 @@ static const pop_entry pop_spider[] =
   {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
   {  1,  9,  300, SEMI, MONS_ENTROPY_WEAVER },
   {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
+  {  2,  4,   12, FLAT, MONS_MELIAI },
   {  2, 10,  260, PEAK, MONS_SPARK_WASP },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_slime[] =
 { // Slime Pits
-  {  1,  6, 2000, FLAT, MONS_JELLY },
-  {  1,  6, 2000, FLAT, MONS_SLIME_CREATURE },
-  {  1,  6, 1000, FLAT, MONS_ACID_BLOB },
-  {  1,  6,  515, FLAT, MONS_EYE_OF_DRAINING },
-  {  1,  6,  515, FLAT, MONS_AZURE_JELLY },
-  {  1,  6,  515, FLAT, MONS_SHINING_EYE },
-  {  1,  6,  200, FLAT, MONS_GOLDEN_EYE },
-  {  1,  9,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  9,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
-  {  1,  6,  200, RISE, MONS_DEATH_OOZE },
-  {  2,  6,  100, RISE, MONS_GIANT_ORANGE_BRAIN },
-  {  1,  6,  800, FLAT, MONS_NO_MONSTER }, // Old ooze weight
+  {  1,  5, 2000, FLAT, MONS_SLIME_CREATURE },
+  {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
+  {  1,  5,  515, FLAT, MONS_EYE_OF_DRAINING },
+  {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
+  {  1,  5,  515, FLAT, MONS_SHINING_EYE },
+  {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
+  {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
+  {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  5,  200, RISE, MONS_DEATH_OOZE },
+  {  2,  5,  100, RISE, MONS_GIANT_ORANGE_BRAIN },
+  {  2,  8,   50, SEMI, MONS_GIANT_EYEBALL },
+  {  1,  5, 2750, FLAT, MONS_NO_MONSTER }, // Old ooze and jelly weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -415,7 +416,6 @@ static const pop_entry pop_vaults[] =
   {  1, 12,  510, FALL, MONS_VAULT_WARDEN },
   {  1, 12,  415, FALL, MONS_YAKTAUR_CAPTAIN },
   {  2,  6,   32, PEAK, MONS_CRYSTAL_GUARDIAN },
-  {  2, 12,   75, FALL, MONS_SALAMANDER_STORMCALLER },
   {  2, 12,  340, FALL, MONS_STONE_GIANT },
   {  2, 12,  192, PEAK, MONS_ETTIN },
   {  3, 10,   80, FLAT, MONS_DEEP_ELF_MAGE },
@@ -563,8 +563,8 @@ static const pop_entry pop_dis[] =
 
 static const pop_entry pop_geh[] =
 { // Gehenna
-  {  1,  7, 2000, FLAT, MONS_SKELETON },
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
+  {  1,  7, 1950, FLAT, MONS_SKELETON },
+  {  1,  7, 1950, FLAT, MONS_ZOMBIE },
   {  1,  7,  215, FALL, MONS_PHANTOM },
   {  1,  7,  515, FALL, MONS_NECROPHAGE },
   {  1,  7,  690, FALL, MONS_WIGHT },
@@ -579,7 +579,7 @@ static const pop_entry pop_geh[] =
   {  2,  6,  215, FLAT, MONS_EFREET },
   { -1,  7,  515, PEAK, MONS_HELL_KNIGHT },
   {  1,  7,  350, FLAT, MONS_HELL_HOUND },
-  {  1,  7,  192, FLAT, MONS_HELL_HOG },
+  {  1,  7,  300, FLAT, MONS_HELL_HOG },
   {  1,  7,  192, FALL, MONS_CRIMSON_IMP },
   {  1, 12,  690, FALL, MONS_RED_DEVIL },
   { -1,  7,   89, PEAK, MONS_RUST_DEVIL },
@@ -782,8 +782,8 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   63, FLAT, MONS_EFREET },
   {  1,  5,   66, FLAT, MONS_RAKSHASA },
   {  1,  5,   25, FLAT, MONS_DEMONIC_CRAWLER },
-  {  1,  5,   30, FLAT, MONS_HELL_HOUND },
-  {  1,  5,   30, FLAT, MONS_HELL_HOG },
+  {  1,  8,   30, FALL, MONS_HELL_HOUND },
+  {  1, 10,   40, SEMI, MONS_HELL_HOG },
   {  1, 10,   16, SEMI, MONS_HELLEPHANT },
   // Misc Undead
   {  1,  5,  110, FALL, MONS_SKELETON },
@@ -861,7 +861,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    8, FLAT, MONS_HELL_KNIGHT },
   {  1,  5,    8, FLAT, MONS_NECROMANCER },
   {  1,  5,    8, FLAT, MONS_WIZARD },
-  {  1,  5,    8, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
   {  1,  5,    8, FLAT, MONS_OPHAN },
@@ -910,7 +909,7 @@ static const pop_entry pop_pan[] =
   {  1,  1,  335, FLAT, MONS_BRIMSTONE_FIEND },
   {  1,  1,  335, FLAT, MONS_ICE_FIEND },
   {  1,  1,  335, FLAT, MONS_HELL_SENTINEL },
-  {  1,  1,  335, FLAT, MONS_SHADOW_FIEND },
+  {  1,  1,  335, FLAT, MONS_TZITZIMITL },
   {  1,  1,    8, FLAT, MONS_PROFANE_SERVITOR },
   {  1,  1,  200, FLAT, MONS_MONSTROUS_DEMONSPAWN },
   {  1,  1,  200, FLAT, MONS_GELID_DEMONSPAWN },
@@ -995,7 +994,6 @@ static const pop_entry pop_volcano[] =
 { // Volcano
   {  1,  1,  515, FLAT, MONS_SALAMANDER },
   {  1,  1,  515, FLAT, MONS_HELL_HOUND },
-  {  1,  1,  385, FLAT, MONS_HELL_HOG },
   {  1,  1,  385, FLAT, MONS_RED_DEVIL },
   {  1,  1,  515, FLAT, MONS_EFREET },
   {  1,  1,  515, FLAT, MONS_MANTICORE },
@@ -1003,6 +1001,7 @@ static const pop_entry pop_volcano[] =
   {  1,  1,  385, FLAT, MONS_TOENAIL_GOLEM },
   {  1,  1,  515, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  1,  385, FLAT, MONS_GARGOYLE },
+  {  1,  1,  385, FLAT, MONS_MOLTEN_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1049,6 +1048,7 @@ static const pop_entry pop_depths[] =
   {  1, 14,   60, SEMI, MONS_SPHINX },
   {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },
   {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },
+  {  2, 10,   25, FLAT, MONS_GIANT_EYEBALL },
   {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },
   {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },
   {  4, 14,   40, FLAT, MONS_STORM_DRAGON },
@@ -1065,7 +1065,6 @@ static const pop_entry pop_depths[] =
   {  5, 14,   50, FLAT, MONS_JUGGERNAUT },
   {  6, 14,   50, FLAT, MONS_TITAN },
   {  6, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
-  {  6, 14,   25, FLAT, MONS_IRON_GIANT },
   { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1364,7 +1363,6 @@ static const pop_entry pop_lava_snake[] =
   {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
   {  1,   4,  200, FLAT, MONS_SALAMANDER },
   {  0,   6,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
-  {  2,   4,  55,  RISE, MONS_SALAMANDER_STORMCALLER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1376,7 +1374,6 @@ static const pop_entry pop_lava_depths[] =
   {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },
   {  1,  6,  100, FLAT, MONS_SALAMANDER },
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
-  {  3,  6,   55, RISE, MONS_SALAMANDER_STORMCALLER },
   {  1,  6,  400, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1386,7 +1383,6 @@ static const pop_entry pop_lava_hell[] =
   {  1,  8,   300, FALL, MONS_FIRE_ELEMENTAL },
   {  1,  6,    25, FALL, MONS_MOLTEN_GARGOYLE },
   {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },
-  {  1,  7,    75, FLAT, MONS_SALAMANDER_STORMCALLER },
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };

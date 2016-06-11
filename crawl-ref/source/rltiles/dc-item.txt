@@ -668,9 +668,7 @@ ruby
 tiger_eye
 jade
 glass
-###########random
-%rim 0
-agate RING_RANDOM_OFFSET RING_COL_FIRST
+agate
 clay
 diamond
 emerald
@@ -684,11 +682,10 @@ plain_red
 plain_yellow
 plain_black
 bronze
-moonstone RING_COL_LAST
+moonstone
 
 ###########randarts
 %sdir item/ring/randarts
-%rim 0
 four-colour RING_RANDART_OFFSET
 green
 ice
@@ -705,9 +702,8 @@ pink
 bronze-flower
 snake
 
-#########ID-ed
+###########icons
 %sdir item/ring
-%rim 0
 #### These must be in the same order as the enum in itemprop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
 i-protection RING_REGENERATION RING_ID_FIRST
@@ -735,43 +731,52 @@ i-fire RING_FIRE
 i-ice RING_ICE
 # remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
-%rim 1
 
-###amulets
+############amulets
 %sdir item/amulet
-crystal_white AMU_NORMAL_OFFSET UNSEEN_AMULET
-stone3_blue
-face1_gold
-stone3_green
-stone2_red
-eye_magenta
-face2
-penta_orange
-celtic_red
-cameo_blue
-bone_gray
-cylinder_gray
-ring_green
-ring_cyan
-###random
-crystal_green AMU_RANDOM_OFFSET AMU_COL_FIRST
-cameo_orange
-celtic_blue
-eye_cyan
-penta_green
-ring_red
-stone1_cyan
-stone1_pink
-stone2_green
-stone3_magenta
-celtic_yellow
-stone1_green
-stone2_blue
-crystal_red
-eye_green AMU_COL_LAST
+sapphire AMU_NORMAL_OFFSET UNSEEN_AMULET
+zirconium
+golden
+emerald
+garnet
+bronze
+brass
+copper
+ruby
+citrine
+bone
+platinum
+jade
+flourescent
+amethyst
+cameo
+pearl
+blue
+peridot
+jasper
+diamond
+malachite
+steel
+cabochon
+silver
+soapstone
+lapis_lazuli
+filigree
+beryl
 
-%rim 0
-### ID-ed amulet
+###########randarts
+%sdir item/amulet/randarts
+azure AMU_RANDART_OFFSET
+cluster
+drop
+knot
+scarab
+skull
+spider
+sun
+
+###########icons
+%sdir item/amulet
 # These must be in the same order as the enum in itemprop-enum.h!
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
@@ -857,16 +862,15 @@ i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
 
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
-###0paperback / hardback 16
 %sdir item/book
-book_of_the_dead BOOK_PAPER_OFFSET
-dark_blue BOOK_COL_FIRST
+light_gray BOOK_OFFSET UNSEEN_BOOK
+dark_blue
 dark_green
 cyan
 red
 purple
 tan
-light_gray
+book_of_the_dead
 dark_gray
 light_blue
 light_green
@@ -874,26 +878,21 @@ turquoise
 pink
 magenta
 yellow
-white BOOK_COL_LAST
-##########leather 8
-parchment BOOK_LEATHER_OFFSET UNSEEN_BOOK
+white
+parchment
 leather
 tan
 plaid
 light_brown
-light_brown
 dark_brown
-dark_brown
-###########metal 8
-bronze BOOK_METAL_OFFSET
+bronze
 copper
 silver
 gold
 metal_blue
 metal_cyan
 metal_green
-############papyrus 1
-cloth BOOK_PAPYRUS
+cloth
 ############manuals
 manual1 BOOK_MANUAL
 manual2
@@ -979,11 +978,13 @@ misc_fan MISC_FAN_OF_GALES
 misc_fan_inert MISC_FAN_OF_GALES_INERT
 misc_lamp MISC_LAMP_OF_FIRE
 misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
+# Remove stone when TAG_MAJOR_VERSION > 34
 misc_stone MISC_STONE_OF_TREMORS
 misc_stone_inert MISC_STONE_OF_TREMORS_INERT
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 %rim 1
+# Remove when TAG_MAJOR_VERSION > 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
@@ -1001,7 +1002,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_dungeons
@@ -1022,6 +1023,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_changes
@@ -1039,7 +1041,7 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_dungeons
@@ -1060,6 +1062,7 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_changes
@@ -1077,7 +1080,7 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_destruction
 %finish
-# Remove dungeons when TAG_MAJOR_VERSION > 34
+# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_dungeons
@@ -1098,6 +1101,7 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_war
 %finish
+# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_changes
