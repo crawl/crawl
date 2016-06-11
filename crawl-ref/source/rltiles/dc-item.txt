@@ -1002,7 +1002,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_destruction
 %finish
-# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
+# Remove when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_dungeons
@@ -1012,6 +1012,7 @@ misc_deck MISC_DECK
 %compose i-deck_summoning
 %finish
 %start
+# Remove when TAG_MAJOR_VERSION > 34
 %compose misc_deck
 %compose i-deck_wonders
 %finish
@@ -1019,11 +1020,11 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_punishment
 %finish
+# Remove war, changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_war
 %finish
-# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_changes

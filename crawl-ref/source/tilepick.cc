@@ -2337,7 +2337,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
             )
         {
             // NOTE: order of tiles must be identical to order of decks.
-            int offset = item.sub_type - MISC_DECK_OF_ESCAPE + 1;
+            int offset = item.sub_type - MISC_FIRST_DECK + 1;
             ch += offset;
         }
         return ch;

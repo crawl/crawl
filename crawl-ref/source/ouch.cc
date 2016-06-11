@@ -825,21 +825,18 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE];
+    return you.species == SP_DEEP_DWARF;
 }
 
 int do_shave_damage(int dam)
 {
-    if (you.species == SP_DEEP_DWARF)
-    {
-        // Deep Dwarves get to shave any hp loss.
-        int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
-        dprf("HP shaved: %d.", shave);
-        dam -= shave;
-    }
+    if (!can_shave_damage())
+        return dam;
 
-    if (you.duration[DUR_FORTITUDE])
-        dam -= random2(10);
+    // Deep Dwarves get to shave any hp loss.
+    int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
+    dprf("HP shaved: %d.", shave);
+    dam -= shave;
 
     return dam;
 }

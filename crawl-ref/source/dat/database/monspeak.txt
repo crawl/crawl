@@ -1413,8 +1413,6 @@ Nemelex Xobeh player ghost
 @The_monster@ tells you, "The cards don't hold a good future for you."
 
 @The_monster@ says @to_foe@, "I will deal out your death!"
-
-@The_monster@ tells you, "It seems you just drew Damnation."
 %%%%
 Okawaru player ghost
 

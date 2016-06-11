@@ -25,7 +25,6 @@
 #endif
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
-#define MAGIC_ARMOUR_KEY "magic_armour_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"

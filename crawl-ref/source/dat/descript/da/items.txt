@@ -281,9 +281,9 @@ deck of punishment
 
 Et spil magiske kort som hærger brugeren.
 %%%%
-deck of war
+deck of summoning
 
-Et spil magiske kort som er nyttige før og under en kamp.
+Et spil magiske kort som afbilder en lang række sære og underfulde væsener.
 %%%%
 demon blade
 

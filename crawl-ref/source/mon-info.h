@@ -100,7 +100,9 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
+#endif
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,

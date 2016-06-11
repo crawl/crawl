@@ -2445,8 +2445,6 @@ int player_shield_class()
 
         shield += stat;
     }
-    else if (you.duration[DUR_MAGIC_SHIELD])
-        shield += 900 + player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 75));
 
     // mutations
     // +2, +3, +4 (displayed values)
@@ -5760,7 +5758,6 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
-           || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
@@ -6117,9 +6114,6 @@ int player::armour_class(bool /*calc_unid*/) const
 
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
-
-    if (duration[DUR_MAGIC_ARMOUR])
-        AC += 200 + you.props[MAGIC_ARMOUR_KEY].get_int() * 5;
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
