@@ -1039,7 +1039,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_AIRSTRIKE, 32, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_WIZARD },
-       { SPELL_CONTROL_WINDS, 16, MON_SPELL_WIZARD },
        { SPELL_DEFLECT_MISSILES, 16, MON_SPELL_WIZARD },
       }
     },
@@ -1204,7 +1203,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CLOUD_CONE, 40, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 30, MON_SPELL_WIZARD },
-       { SPELL_CONTROL_WINDS, 30, MON_SPELL_WIZARD },
        { SPELL_BLINK_RANGE, 20, MON_SPELL_WIZARD },
       }
     },

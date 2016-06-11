@@ -28,7 +28,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_INJURY_BOND,
     ENCH_DIMENSION_ANCHOR,
-    ENCH_CONTROL_WINDS,
     ENCH_TOXIC_RADIANCE,
     ENCH_AGILE,
     ENCH_BLACK_MARK,

@@ -1186,7 +1186,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHAFT_SELF:
 #endif
     case SPELL_AWAKEN_VINES:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROL_WINDS:
+#endif
     case SPELL_WALL_OF_BRAMBLES:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_HASTE_PLANTS:
@@ -5960,12 +5962,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _awaken_vines(mons);
         return;
 
-    case SPELL_CONTROL_WINDS:
-        if (you.can_see(*mons))
-            mprf("The winds start to flow at %s will.", mons->name(DESC_ITS).c_str());
-        mons->add_ench(mon_enchant(ENCH_CONTROL_WINDS, 1, mons, 200 + random2(150)));
-        return;
-
     case SPELL_WALL_OF_BRAMBLES:
         // If we can't cast this for some reason (can be expensive to determine
         // at every call to _ms_waste_of_time), refund the energy for it so that
@@ -7654,9 +7650,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                    && mon->props["vines_awakened"].get_int() >= 3
                || !_awaken_vines(mon, true);
 
-    case SPELL_CONTROL_WINDS:
-        return mon->has_ench(ENCH_CONTROL_WINDS);
-
     case SPELL_WATERSTRIKE:
         return !foe || !feat_is_watery(grd(foe->pos()));
 
@@ -7994,6 +7987,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONDENSATION_SHIELD:
     case SPELL_STONESKIN:
     case SPELL_HUNTING_CRY:
+    case SPELL_CONTROL_WINDS:
 #endif
     case SPELL_NO_SPELL:
         return true;
