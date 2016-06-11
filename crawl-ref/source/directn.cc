@@ -2403,6 +2403,9 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return beogh_can_gift_items_to(mon);
     case TARG_MOVABLE_OBJECT:
         return false;
+    case TARG_MOBILE_MONSTER:
+        return !(mons_is_tentacle_or_tentacle_segment(mon->type)
+                 || mon->is_stationary());
     case TARG_NUM_MODES:
         break;
     // intentionally no default
