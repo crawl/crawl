@@ -87,7 +87,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_FLAYED,          MB_FLAYED },
     { ENCH_WEAK,            MB_WEAK },
     { ENCH_DIMENSION_ANCHOR, MB_DIMENSION_ANCHOR },
-    { ENCH_CONTROL_WINDS,   MB_CONTROL_WINDS },
     { ENCH_TOXIC_RADIANCE,  MB_TOXIC_RADIANCE },
     { ENCH_GRASPING_ROOTS,  MB_GRASPING_ROOTS },
     { ENCH_FIRE_VULN,       MB_FIRE_VULN },
@@ -1465,8 +1464,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("weak");
     if (is(MB_DIMENSION_ANCHOR))
         v.emplace_back("unable to translocate");
-    if (is(MB_CONTROL_WINDS))
-        v.emplace_back("controlling the winds");
     if (is(MB_TOXIC_RADIANCE))
         v.emplace_back("radiating toxic energy");
     if (is(MB_GRASPING_ROOTS))

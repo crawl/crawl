@@ -839,11 +839,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         unawaken_vines(this, quiet);
         break;
 
-    case ENCH_CONTROL_WINDS:
-        if (!quiet && you.can_see(*this))
-            mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
-        break;
-
     case ENCH_TOXIC_RADIANCE:
         if (!quiet && you.can_see(*this))
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
@@ -1893,11 +1888,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_HAUNTING);
         break;
 
-    case ENCH_CONTROL_WINDS:
-        apply_control_winds(this);
-        decay_enchantment(en);
-        break;
-
     case ENCH_TOXIC_RADIANCE:
         toxic_radiance_effect(this, 1);
         decay_enchantment(en);
@@ -2117,9 +2107,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
-    "weak", "dimension_anchor", "awaken vines", "control_winds",
+    "weak", "dimension_anchor", "awaken vines",
 #if TAG_MAJOR_VERSION == 34
-    "wind_aided",
+    "control_winds", "wind_aided",
 #endif
     "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",

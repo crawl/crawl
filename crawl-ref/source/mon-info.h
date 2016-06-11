@@ -113,8 +113,8 @@ enum monster_info_flags
 #endif
     MB_WEAK,
     MB_DIMENSION_ANCHOR,
-    MB_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
+    MB_CONTROL_WINDS,
     MB_WIND_AIDED,
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
 #endif

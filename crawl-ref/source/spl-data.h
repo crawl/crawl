@@ -2742,6 +2742,7 @@ static const struct spell_desc spelldata[] =
     TILEG_AWAKEN_VINES,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONTROL_WINDS, "Control Winds",
     SPTYP_CHARMS | SPTYP_AIR,
@@ -2750,8 +2751,9 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_CONTROL_WINDS,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_THORN_VOLLEY, "Volley of Thorns",

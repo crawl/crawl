@@ -2071,8 +2071,8 @@ enum enchant_type
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
-    ENCH_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
+    ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
 #endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
@@ -4560,7 +4560,9 @@ enum spell_type
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
     SPELL_AWAKEN_VINES,
+#if TAG_MAJOR_VERSION == 34
     SPELL_CONTROL_WINDS,
+#endif
     SPELL_THORN_VOLLEY,
     SPELL_WALL_OF_BRAMBLES,
     SPELL_WATERSTRIKE,

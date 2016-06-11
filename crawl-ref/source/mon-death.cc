@@ -2746,10 +2746,6 @@ void monster_cleanup(monster* mons)
     if (mons->has_ench(ENCH_AWAKEN_VINES))
         unawaken_vines(mons, false);
 
-    // So that a message is printed for the effect ending
-    if (mons->has_ench(ENCH_CONTROL_WINDS))
-        mons->del_ench(ENCH_CONTROL_WINDS);
-
     // So proper messages are printed
     if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
         mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
