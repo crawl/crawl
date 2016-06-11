@@ -7100,9 +7100,11 @@ static coord_def _get_transference_target()
 {
     dist spd;
 
+    targetter_transference tgt(&you);
     direction_chooser_args args;
+    args.hitfunc = &tgt;
     args.restricts = DIR_TARGET;
-    args.mode = TARG_ANY;
+    args.mode = TARG_MOBILE_MONSTER;
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = true;
@@ -7117,7 +7119,7 @@ static coord_def _get_transference_target()
     return spd.target;
 }
 
-/// Slow any monsters near the destination of Tranferrence.
+/// Slow any monsters near the destination of Tranference.
 static void _transfer_slow_nearby(coord_def destination)
 {
     for (adjacent_iterator it(destination); it; ++it)
@@ -7172,7 +7174,7 @@ spret_type hepliaklqana_transference(bool fail)
 
     if (victim == ancestor)
     {
-        mpr("You can't transfer your ancestor with themself!");
+        mpr("You can't transfer your ancestor with themself.");
         return SPRET_ABORT;
     }
 
@@ -7211,7 +7213,8 @@ spret_type hepliaklqana_transference(bool fail)
     {
         ancestor->move_to_pos(target, true, true);
         victim->move_to_pos(destination, true, true);
-    } else
+    }
+    else
         ancestor->swap_with(victim->as_monster());
 
     mprf("%s swap%s with %s!",

@@ -14,6 +14,7 @@
 #include "libutil.h"
 #include "los_def.h"
 #include "losglobal.h"
+#include "mon-tentacle.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "terrain.h"
@@ -448,6 +449,33 @@ aff_type targetter_smite::is_affected(coord_def loc)
         return AFF_MAYBE;
 
     return AFF_NO;
+}
+
+targetter_transference::targetter_transference(const actor* act) :
+    targetter_smite(act, LOS_RADIUS, 0, 0, false, nullptr)
+{
+}
+
+bool targetter_transference::valid_aim(coord_def a)
+{
+    if (!targetter_smite::valid_aim(a))
+        return false;
+
+    const actor *victim = actor_at(a);
+    if (victim && you.can_see(*victim))
+    {
+        if (mons_is_hepliaklqana_ancestor(victim->type))
+        {
+            return notify_fail("You can't transfer your ancestor with "
+                               "themself.");
+        }
+        if (mons_is_tentacle_or_tentacle_segment(victim->type)
+            || victim->is_stationary())
+        {
+            return notify_fail("You can't transfer that.");
+        }
+    }
+    return true;
 }
 
 targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :

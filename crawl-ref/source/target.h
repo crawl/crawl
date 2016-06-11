@@ -104,6 +104,14 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
+class targetter_transference : public targetter_smite
+{
+public:
+    targetter_transference(const actor *act);
+    bool valid_aim(coord_def a) override;
+};
+
+
 class targetter_fragment : public targetter_smite
 {
 public:

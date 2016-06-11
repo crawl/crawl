@@ -2538,6 +2538,7 @@ enum targ_mode_type
     TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
+    TARG_MOBILE_MONSTER,    // Non-stationary monsters
     TARG_NUM_MODES
 };
 
