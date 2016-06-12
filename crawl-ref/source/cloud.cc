@@ -528,6 +528,8 @@ void manage_clouds()
 
         _dissipate_cloud(cloud);
     }
+
+    update_cloud_knowledge();
 }
 
 static void _maybe_leave_water(const coord_def pos)
