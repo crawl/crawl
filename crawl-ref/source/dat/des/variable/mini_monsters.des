@@ -1055,6 +1055,7 @@ KFEAT:  m = iron_grate
 KITEM:  T = randbook disc:fire, lamp of fire / gold good_item
 KFEAT:  T = <
 NSUBST: 2 = 1:2 / 1:. / * = 2.
+KPROP:  T = no_tele_into
 MAP
 ..xxxxxxx.@
 ..........x
