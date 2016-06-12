@@ -112,6 +112,7 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_SUMMON_ICE_BEAST,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
+    SPELL_INTOXICATE,
     SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
