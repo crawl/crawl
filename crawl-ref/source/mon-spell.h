@@ -1201,9 +1201,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CLOUD_MAGE,
       {
-       { SPELL_CLOUD_CONE, 40, MON_SPELL_WIZARD },
-       { SPELL_AIRSTRIKE, 30, MON_SPELL_WIZARD },
-       { SPELL_BLINK_RANGE, 20, MON_SPELL_WIZARD },
+       { SPELL_TORNADO, 40, MON_SPELL_WIZARD },
+       { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
       }
     },
 
