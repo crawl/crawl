@@ -1655,9 +1655,15 @@ void remove_tornado_clouds(mid_t whose)
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
 
+    // We can't iterate over env.cloud directly because delete_cloud
+    // will remove this cloud and invalidate our iterator.
+    vector<coord_def> tornados;
     for (auto& entry : env.cloud)
         if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
-            delete_cloud(entry.first);
+            tornados.push_back(entry.first);
+
+    for (auto pos : tornados)
+        delete_cloud(pos);
 }
 
 static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
