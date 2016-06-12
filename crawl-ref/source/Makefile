@@ -1256,8 +1256,8 @@ else
 webserver:
 endif
 
-GAME_OBJS=$(EXTRA_OBJECTS) $(OBJECTS) main.o
-MONSTER_OBJS=$(EXTRA_OBJECTS) $(OBJECTS) util/monster/monster-main.o
+GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
+MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1332,10 +1332,10 @@ endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h: $(GAME_OBJS:.o=.cc) util/gen-cflg.pl .cflags
+compflag.h: $(OBJECTS:.o=.cc) main.cc util/gen-cflg.pl .cflags
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
-build.h: $(GAME_OBJS:.o=.cc) util/gen_ver.pl
+build.h: $(OBJECTS:.o=.cc) main.cc util/gen_ver.pl
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.o: build.h compflag.h
@@ -1590,7 +1590,7 @@ endif
 # Plain old compilation
 #
 
-$(GAME_OBJS:%.o=%.cc): $(CONTRIB_LIBS)
+$(OBJECTS:%.o=%.cc) main.cc: $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
