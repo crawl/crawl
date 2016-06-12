@@ -234,7 +234,7 @@ void update_cloud_knowledge()
                 tile_draw_map_cell({x, y}, true);
 #endif
 #ifdef USE_TILE_WEB
-                tiles.mark_for_redraw(gp);
+                tiles.mark_for_redraw({x, y});
 #endif
             }
         }
