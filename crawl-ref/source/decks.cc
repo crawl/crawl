@@ -1562,6 +1562,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 static void _shaft_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
+    bool did_something = false;
 
     if (is_valid_shaft_level())
     {
@@ -1570,6 +1571,7 @@ static void _shaft_card(int power, deck_rarity_type rarity)
             place_specific_trap(you.pos(), TRAP_SHAFT);
             trap_at(you.pos())->reveal();
             mpr("A shaft materialises beneath you!");
+            did_something = true;
         }
 
         for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
@@ -1581,11 +1583,13 @@ static void _shaft_card(int power, deck_rarity_type rarity)
                 && mons_is_threatening(mons)
                 && x_chance_in_y(power_level, 3))
             {
-                mons->do_shaft();
+                if (mons->do_shaft())
+                    did_something = true;
             }
         }
     }
-    else
+
+    if (!did_something)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
