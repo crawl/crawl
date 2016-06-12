@@ -105,7 +105,7 @@ static bool _marker_vetoes_level_change()
 static void _maybe_destroy_shaft(const coord_def &p)
 {
     trap_def* trap = trap_at(p);
-    if (trap && get_trap_type(p) == TRAP_SHAFT)
+    if (trap && trap->type == TRAP_SHAFT)
         trap->destroy(true);
 }
 
