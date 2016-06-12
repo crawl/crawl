@@ -1381,13 +1381,8 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
-        if (have_passive(passive_t::no_haste))
-            simple_god_message(" protects you from inadvertent hurry.");
-        else
-        {
-            you.duration[DUR_SLOW] = 1;
-            did_something = true;
-        }
+        you.duration[DUR_SLOW] = 1;
+        did_something = true;
     }
 
     if (you.duration[DUR_HASTE] && (power_level == 0 && coinflip()))
