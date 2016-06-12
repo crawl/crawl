@@ -16,7 +16,6 @@ env:
     - USE_DGAMELAUNCH=1 WEBTILES=1 EXTERNAL_DEFINES=-UTOURNEY
     - TILES=1 BUILD_ALL=1
     - WEBTILES=1 BUILD_ALL=1
-    - MONSTER=1
 git:
     submodules: false
 install: perl .travis/deps.pl
