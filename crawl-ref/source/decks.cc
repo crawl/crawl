@@ -856,7 +856,7 @@ static bool _card_in_deck(card_type card, const deck_archetype *pdeck)
 string which_decks(card_type card)
 {
     vector<string> decks;
-    string output = "";
+    string output = "\n";
     bool punishment = false;
     for (auto &deck_data : all_decks)
     {
@@ -889,7 +889,7 @@ string which_decks(card_type card)
                   "punishment.";
     }
     else
-        output += " It is normally not part of any deck.";
+        output += "It is normally not part of any deck.";
 
     return output;
 }
