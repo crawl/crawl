@@ -2878,6 +2878,34 @@ static void _xom_blink_monsters(int /*sever*/)
     }
 }
 
+static void _xom_cleaving(int sever)
+{
+    god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
+
+    you.increase_duration(DUR_CLEAVE, 10 + random2(sever) * 10);
+
+    if (const item_def* const weapon = you.weapon())
+    {
+        // FIXME: it's not that odd for a dagger to look sharp...
+        const bool bladed = can_cut_meat(*weapon);
+        const bool axe = item_attack_skill(*weapon) == SK_AXES;
+        mprf(MSGCH_DURATION,
+             "%s %s %ssharp%s", weapon->name(DESC_YOUR).c_str(),
+             conjugate_verb("look", weapon->quantity > 1).c_str(),
+             (bladed) ? "" : "oddly ",
+             (axe) ? " (like it always does)." : ".");
+    }
+    else
+    {
+        // FIXME: no "oddly" for claws?
+        mprf(MSGCH_DURATION, "%s",
+             you.hands_act("look", "oddly sharp.").c_str());
+    }
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cleaving"), true);
+}
+
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation_type orig_form)
@@ -3061,6 +3089,9 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             }
         }
     }
+
+    if (tension > random2(5) && x_chance_in_y(14, sever))
+        return XOM_GOOD_CLEAVING;
 
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
@@ -3707,6 +3738,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_good_enchant_monster }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
+    { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
     { XOM_BAD_MISCAST_HARMLESS, { "harmless miscast",
