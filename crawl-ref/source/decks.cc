@@ -1579,7 +1579,6 @@ static void _shaft_card(int power, deck_rarity_type rarity)
             monster *mons = monster_at(*di);
 
             if (mons && !mons->wont_attack()
-                && grd(mons->pos()) == DNGN_FLOOR
                 && mons_is_threatening(mons)
                 && x_chance_in_y(power_level, 3))
             {

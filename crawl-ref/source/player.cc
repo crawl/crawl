@@ -7550,30 +7550,10 @@ bool player::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the player isn't standing over a shaft.
-    if (get_trap_type(pos()) != TRAP_SHAFT)
+    if (get_trap_type(pos()) != TRAP_SHAFT
+        && !feat_is_shaftable(grd(pos())))
     {
-        switch (grd(pos()))
-        {
-        case DNGN_FLOOR:
-        case DNGN_OPEN_DOOR:
-        // what's the point of this list?
-        case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_TELEPORT:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_TRAP_SHADOW:
-        case DNGN_TRAP_SHADOW_DORMANT:
-#endif
-        case DNGN_TRAP_ALARM:
-        case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_SHAFT:
-        case DNGN_UNDISCOVERED_TRAP:
-        case DNGN_ENTER_SHOP:
-            break;
-
-        default:
-            return false;
-        }
-
+        return false;
     }
 
     down_stairs(DNGN_TRAP_SHAFT);
@@ -7590,19 +7570,17 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    switch (grd(pos()))
+    if (feat_is_shaftable(grd(pos())))
     {
-    case DNGN_FLOOR:
-    case DNGN_OPEN_DOOR:
         if (!is_valid_shaft_level())
         {
             if (!quiet)
                 mpr("You can't shaft yourself on this level.");
             return false;
         }
-        break;
-
-    default:
+    }
+    else
+    {
         if (!quiet)
             mpr("You can't shaft yourself on this terrain.");
         return false;
