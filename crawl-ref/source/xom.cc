@@ -1881,54 +1881,6 @@ static void _xom_fog(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
-static inline dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-        return DNGN_CLEAR_ROCK_WALL;
-    case DNGN_STONE_WALL:
-        return DNGN_CLEAR_STONE_WALL;
-    case DNGN_PERMAROCK_WALL:
-        return DNGN_CLEAR_PERMAROCK_WALL;
-    default:
-        return feat;
-    }
-}
-
-// Returns true if there was a visible change.
-static bool _vitrify_area(int radius, bool test_only = false)
-{
-    if (radius < 2)
-        return false;
-
-    bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
-    {
-        const dungeon_feature_type grid = grd(*ri);
-        const dungeon_feature_type newgrid = _vitrified_feature(grid);
-        if (newgrid != grid)
-        {
-            if (test_only)
-                return true;
-
-            grd(*ri) = newgrid;
-            set_terrain_changed(*ri);
-            something_happened = true;
-        }
-    }
-    return something_happened;
-}
-
-static void _xom_vitrify(int sever)
-{
-    if (_vitrify_area(random2avg(sever / 4, 2) + 1))
-    {
-        god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "vitrification"), true);
-    }
-}
-
 static void _xom_pseudo_miscast(int /*sever*/)
 {
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
@@ -3129,12 +3081,6 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_TELEPORT;
     }
 
-    if (random2(tension) < 5 && x_chance_in_y(18, sever)
-        && _vitrify_area(sever / 4 + 1, true))
-    {
-        return XOM_GOOD_VITRIFY;
-    }
-
     if (random2(tension) < 5 && x_chance_in_y(19, sever)
         && x_chance_in_y(16, how_mutated())
         && you.can_safely_mutate())
@@ -3750,7 +3696,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_ALLIES, { "summon allies", _xom_send_allies }},
     { XOM_GOOD_POLYMORPH, { "good polymorph", _xom_good_polymorph }},
     { XOM_GOOD_TELEPORT, { "good teleportation", _xom_good_teleport }},
-    { XOM_GOOD_VITRIFY, { "vitrification", _xom_vitrify }},
     { XOM_GOOD_MUTATION, { "good mutations", _xom_give_good_mutations }},
     { XOM_GOOD_LIGHTNING, { "lightning", _xom_throw_divine_lightning }},
     { XOM_GOOD_SCENERY, { "change scenery", _xom_change_scenery }},
