@@ -102,10 +102,10 @@ static bool _marker_vetoes_level_change()
     return marker_vetoes_operation("veto_level_change");
 }
 
-static void _maybe_destroy_trap(const coord_def &p)
+static void _maybe_destroy_shaft(const coord_def &p)
 {
     trap_def* trap = trap_at(p);
-    if (trap)
+    if (trap && get_trap_type(p) == TRAP_SHAFT)
         trap->destroy(true);
 }
 
@@ -442,7 +442,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
         {
             if (known_shaft)
                 mpr("The shaft disappears in a puff of logic!");
-            _maybe_destroy_trap(you.pos());
+            _maybe_destroy_shaft(you.pos());
             return dest;
         }
 
@@ -482,7 +482,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
                 mpr("The strain on the space-time continuum destroys the "
                     "shaft!");
             }
-            _maybe_destroy_trap(you.pos());
+            _maybe_destroy_shaft(you.pos());
             return dest;
         }
 
@@ -504,7 +504,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
-        _maybe_destroy_trap(you.pos());
+        _maybe_destroy_shaft(you.pos());
     }
 
     // Maybe perform the entry sequence (we check that they have enough runes

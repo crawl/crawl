@@ -5721,30 +5721,10 @@ bool monster::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (get_trap_type(pos()) != TRAP_SHAFT)
+    if (get_trap_type(pos()) != TRAP_SHAFT
+        && !feat_is_shaftable(grd(pos())))
     {
-        switch (grd(pos()))
-        {
-        case DNGN_FLOOR:
-        case DNGN_OPEN_DOOR:
-        // what's the point of this list?
-        case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_TELEPORT:
-        case DNGN_TRAP_ALARM:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_TRAP_SHADOW:
-        case DNGN_TRAP_SHADOW_DORMANT:
-#endif
-        case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_SHAFT:
-        case DNGN_TRAP_WEB:
-        case DNGN_UNDISCOVERED_TRAP:
-        case DNGN_ENTER_SHOP:
-            break;
-
-        default:
-            return false;
-        }
+        return false;
     }
 
     level_id lev = shaft_dest(false);

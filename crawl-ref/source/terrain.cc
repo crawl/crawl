@@ -631,6 +631,19 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
     return false;
 }
 
+/** Can creatures on this feature be shafted?
+ *
+ * @param feat The feature in question.
+ * @returns Whether creatures standing on this feature can be shafted (by
+ *          magical effects, Formicid digging, etc).
+ */
+bool feat_is_shaftable(dungeon_feature_type feat)
+{
+    return feat_has_dry_floor(feat)
+           && !feat_is_stair(feat)
+           && !feat_is_portal(feat);
+}
+
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
 {
     int count = 0;

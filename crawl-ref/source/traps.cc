@@ -1655,7 +1655,7 @@ bool is_valid_shaft_level(bool known)
 
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 {
-    level_id  lid   = lpos.id;
+    level_id lid = lpos.id;
 
     if (!is_connected_branch(lid))
         return lid;
@@ -1666,7 +1666,6 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     // Shaft traps' behavior depends on whether it is entered intentionally.
     // Knowingly entering one is more likely to drop you 1 level.
     // Falling in unknowingly can drop you 1/2/3 levels with equal chance.
-
     if (known)
     {
         // Chances are 2/3 for 1 level, 1/3 for 2 levels
