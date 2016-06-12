@@ -17,20 +17,18 @@ $ENV{TRAVIS} = 1;
 $ENV{FORCE_CC} = $ENV{CC};
 $ENV{FORCE_CXX} = $ENV{CXX};
 
-if ($ENV{MONSTER}) {
-    try("make -j2 monster");
-    # pick something more exciting here possibly?
-    # or use a variety to touch all the code paths?
-    try("util/monster/monster Orb Guardian");
-}
-elsif ($ENV{FULLDEBUG}) {
-    try("make -j2 debug");
+if ($ENV{FULLDEBUG}) {
+    try("make -j2 debug monster");
 }
 else {
-    try("make -j2");
+    try("make -j2 all monster");
 }
 
 if (!$ENV{TILES}) {
+    # pick something more exciting here possibly?
+    # or use a variety to touch all the code paths?
+    try("util/monster/monster Orb Guardian");
+
     if ($ENV{FULLDEBUG}) {
         try("make test");
     }
