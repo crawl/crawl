@@ -400,9 +400,13 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 {
     int dissipate = you.time_taken;
 
-    // If a player-created cloud is out of LOS, it dissipates much faster.
-    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
-        dissipate *= 4;
+    // Player-created non-opaque clouds vanish instantly when outside LOS.
+    // (Opaque clouds don't to prevent cloud suicide.)
+    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos)
+        && !is_opaque_cloud(cloud.type))
+    {
+        return cloud.decay;
+    }
 
     switch (cloud.type)
     {
@@ -422,7 +426,7 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
         // Ink cloud shouldn't appear outside of water.
         case CLOUD_INK:
             if (!feat_is_watery(grd(cloud.pos)))
-                return dissipate * 40;
+                return cloud.decay;
             break;
         default:
             break;
