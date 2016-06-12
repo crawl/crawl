@@ -1,12 +1,21 @@
-Stone Soup 0.19 (up to 0.19-a0-284-gc035690)
+Stone Soup 0.19 (up to 0.19-a0-606-gee5277e)
 --------------------------------------------
 
 Highlights
 ----------
 * New gods: Ukayaw the Reveler and Hepliaklqana the Forgotten.
 
+Branches, Environment
+---------------------
+* Lair is now six floors (formerly eight).
+* Slime is now five floors (formerly six).
+
 Character
 ---------
+* Flight expiring over deep water or lava no longer causes instant death;
+  instead, it causes heavy drain over time until reaching land.
+* Potions, scrolls and books can be used while still on the floor.
+* Satiated vampires can now berserk and transform; previously required Full.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
 
 Gods
@@ -19,7 +28,7 @@ Gods
   - Solo Time: on reaching 3*, briefly paralyse all visible enemies.
   - Pain Bond: on reaching 4*, all visible enemies begin sharing damage
     taken with each-other.
-  - 5*: Grand Finale: blink into and instantly kill target intelligent monster.
+  - 5*: Grand Finale: blink into and instantly kill target monster.
 * New temple god: Hepliaklqana the Forgotten.
   - Grants a permanent customizeable ally, respawning on a delay after death.
     The ally automatically grows in strength as you level up.
@@ -32,32 +41,69 @@ Gods
         and spellpower dramatically.
   - 5*: Transference slows enemies adjacent to the target.
 * Beogh's water-walking now always lasts until the player is on land.
+* Dithmenos's Shadow Step can no longer be used on allies or while immobile.
+* Nemelex Xobeh's abilities now use invocations, not evocations.
 * Pakellas suppresses Vine Stalker MP drain.
 * Pakellas's wrath no longer drains the player or their items, but instead
   passively blocks all device use for its duration.
 * Many divine abilities have had their hunger costs removed or increased.
 * Gods that hate specific monsters no longer prevent you from enslaving them.
 
+Interface
+---------
+* Most targeters will be more intelligent when trying to maximize enemies hit.
+* In tiles, monster attitude is indicated with colored auras instead of icons.
+
 Items
 -----
-* Firestarter and Frostbite now provide immunity to their cloud types.
-* The Octopus King trident's enchantment bonus for wearing Octopus King rings
-  is now +2 (prev. +1).
-* The Staff of Olgreb now has a fixed +9 enchantment.
-* The Sword of Zonguldrok no longer creates hostile dead or curses itself.
-* The arbalest 'Damnation' doesn't provides resistances, and does more damage.
+* Fixed artefacts:
+  - Firestarter and Frostbite now provide immunity to their cloud types.
+  - The Octopus King trident's enchantment bonus for wearing Octopus King rings
+    is now +2 (prev. +1).
+  - The Staff of Olgreb now has a fixed +9 enchantment.
+  - The Sword of Zonguldrok no longer creates hostile dead or curses itself.
+  - The arbalest 'Damnation' doesn't provides resistances, and does more damage.
+* Evocations:
+  - Wands of random effects can no longer produce digging or disintegration.
+  - Boxes of beasts and sacks of spiders have a fixed chance of destruction
+    per-use, instead of a hidden charge count. They now stack.
+  - Fans of gales & lamps of fire no longer summon elemental allies.
+  - Phials of floods impact damage significantly reduced.
+  - Deck use no longer has a chance of drawing from the deck of oddities.
+  - Identify scrolls can no longer be used on decks.
+* Amulets of harm now increase damage dealt more than damage taken, and are no
+  longer evil.
 * Elemental enhancers no longer penalise spells of the opposite element.
-* The amulet of harm is no longer evil.
-* Wands of random effects can no longer produce digging or disintegration.
+* Jewellery acquirement creates twice as many randarts.
+* Rods are created through misc. acquirement instead of staff acquirement.
+* Removed:
+  - Decks of changes, defense, summoning, and wonders.
+  - Dowsing, Exile, Feast, Focus, Helix, Mercenary and Xom cards.
+  - Stones of tremors.
+  - The evasion weapon ego.
+  - Artefact blowguns.
 
 Monsters
 --------
+* New monsters: Meliai, bee priestesses that sting and smite in trios.
+* Uniques:
+  - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
+  - Xtahua can now roar to cast Paralyse.
+  - Gloorx Vloq can no longer cast Black Mark.
+  - Various uniques have had their genders changed.
+* Blood Saints's Legendary Destruction now casts two spells at a time.
+* Spriggan air mages can no longer cast Control Winds.
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
+* Decayed bog bodies have become bog mummies, which are somewhat weaker.
+* Removed:
+  - Salamander stormcallers.
+  - Norris.
 
 Spells
 ------
 * Cigotuvi's Embrace only degrades over time, not on-hit.
+* Olgreb's Toxic Radiance causes less damage, but doesn't poison the caster.
 * Simulacrum's duration is significantly shorter.
 
 
