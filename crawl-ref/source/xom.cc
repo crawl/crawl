@@ -2615,7 +2615,7 @@ static void _xom_repel_stairs(bool unclimbable)
 }
 
 static void _xom_moving_stairs(int) { _xom_repel_stairs(false); }
-static void _xom_unclimable_stairs(int) { _xom_repel_stairs(true); }
+static void _xom_unclimbable_stairs(int) { _xom_repel_stairs(true); }
 
 static void _xom_cloud_trail(int /*sever*/)
 {
@@ -3725,7 +3725,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_TELEPORT, { "bad teleportation", _xom_bad_teleport, -1}},
     { XOM_BAD_POLYMORPH, { "bad polymorph", _xom_bad_polymorph, 30}},
     { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs, 20}},
-    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimable_stairs,
+    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
                               30}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
