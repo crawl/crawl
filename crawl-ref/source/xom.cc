@@ -3142,7 +3142,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     if (tension > 0 && x_chance_in_y(9, sever))
         return XOM_BAD_CONFUSION;
 
-    if (tension > 0 && x_chance_in_y(14, sever)
+    if (tension > 0 && x_chance_in_y(10, sever)
         && _rearrangeable_pieces().size())
     {
         return XOM_BAD_SWAP_MONSTERS;
