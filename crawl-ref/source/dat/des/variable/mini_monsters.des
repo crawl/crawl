@@ -1047,10 +1047,59 @@ MAP
 ............
 ENDMAP
 
+NAME:   argonaut_fire_from_heaven
+DEPTH:  Depths:2-
+KMONS:  T = titan
+KMONS:  2 = caustic shrike
+KFEAT:  m = iron_grate
+KITEM:  T = randbook disc:fire, lamp of fire / gold good_item
+KFEAT:  T = <
+NSUBST: 2 = 1:2 / 1:. / * = 2.
+MAP
+..xxxxxxx.@
+..........x
+xxxxx2....x
+xcccx...2.x
+xcTm..2..Cx
+xcccx...2.x
+xxxxx2....x
+..........x
+..xxxxxxx.@
+ENDMAP
+
+# Medium trappings still informed by Topsell, I guess.
+NAME:   argonaut_gorgonesque
+TAGS:   no_monster_gen
+DEPTH:  D:12-, Shoals
+MONS:   harpy, basilisk, catoblepas
+KMONS:  P = withered plant
+ITEM:   shield ego:reflection ident:type / \
+        buckler ego:reflection ident:type w:1 / \
+        large shield ego:reflection ident:type w:1
+ITEM:   stone
+NSUBST: H = 4:G / 2:G. / *:e
+MAP
+     xxxxxxx
+   xxxx1x.xxx
+  xxxxxx2xxxxxx
+ xxx.H.....H.xxx
+xxx.....H.....xxx
+x.x.....3.....x1x
+xx2.....H.....2xx
+x1x..H..d..H..x.x
+xxx.....G.....xxx
+ xxx.........xxx
+  xxxxHx.xHxxxx
+   xxxxx.xxxxxx
+    xxx.Gxxxx
+      xxPxx
+       @..
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
-#       Goblins, gnolls, orcs, ogres etc. We include spriggans and centaurs.
+#       Goblins, gnolls, orcs, ogres etc. We include e.g. spriggans, centaurs.
 #
 ###############################################################################
 

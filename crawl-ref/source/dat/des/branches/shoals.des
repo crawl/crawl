@@ -1173,7 +1173,7 @@ KMONS:   b = bush
 KMONS:   p = plant
 ITEM:    any potion, longbow good_item, greatsling good_item
 # Bacchus-approved.
-KFEAT:   6 = altar_uskayaw
+KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
 SUBST:   0 = 24., X : xp.., Y : xp..
 SUBST:   A = x, B : p., F = x, G = p., CHI = .
@@ -1192,6 +1192,39 @@ xxx...IHGFWYWWWYWFGHI..xxx
  ....xxxWW...W...WWxxx....
        xxx...W...xxx
          xxxx@xxxx
+ENDMAP
+
+NAME:   argonaut_golden_fleece
+TAGS:   no_pool_fixup no_trap_gen no_monster_gen no_item_gen
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+# Fudging the myth a bunch, due to it being weak
+# to use only one "drakon" by this branch depth.
+KMONS:  1 = patrolling generate_awake fire dragon / \
+            patrolling generate_awake ice dragon
+KMONS:  BF = bush
+KITEM:  F = animal skin randart good_item, gold, gold
+KFEAT:  F = >
+KFEAT:  X = open_sea
+MAP
+XXXXXXXXXXXXXXXXXXXXX
+Xwwwwwwwwwwwwwwwwwwww
+Xwwwwwwwwwwwwwwwwwwww
+Xwwww11www..wwwwwwwww
+Xwwwww.B.B.wwwwwwwwww
+Xwwww.BB.BB.wwwwwwwwW
+Xwwww...F....BwwwwwwW
+Xwwww.BB.BB.wwwwwwwwW
+Xwwwww.B.B.wwwwwwwww@
+Xwwww..w.w..wwwwwwwwW
+XwwwwwwwBwwwwwwwwwwwW
+Xwwwwwwwwwwwwwwwwwww
+XwwwwwwwwwwwwwwwwwwW
+XwwwwwwwwwwwwwwwwwW
+XwwwwwwwwwwwwwwwwW@
+XwwwwwwwwwwwwwwwW
+Xwwwwwwwwwwwwww
+XwwwwwwwWWW@WW
 ENDMAP
 
 ##############################################################################
