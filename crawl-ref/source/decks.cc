@@ -85,17 +85,6 @@ struct card_with_weights
 
 typedef vector<card_with_weights> deck_archetype;
 
-#if TAG_MAJOR_VERSION == 34
-deck_archetype deck_of_transport =
-{
-    { CARD_WARPWRIGHT, {5, 5, 5} },
-    { CARD_SWAP,       {5, 5, 5} },
-    { CARD_VELOCITY,   {5, 5, 5} },
-    { CARD_SOLITUDE,   {5, 5, 5} },
-    { CARD_SHAFT,      {5, 5, 5} },
-};
-#endif
-
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       {5, 5, 5} },
@@ -116,18 +105,6 @@ deck_archetype deck_of_destruction =
     { CARD_WILD_MAGIC, {5, 5, 5} },
 };
 
-#if TAG_MAJOR_VERSION == 34
-deck_archetype deck_of_battle =
-{
-    { CARD_ELIXIR,        {5, 5, 5} },
-    { CARD_POTION,        {5, 5, 5} },
-    { CARD_HELM,          {5, 5, 5} },
-    { CARD_BLADE,         {5, 5, 5} },
-    { CARD_SHADOW,        {5, 5, 5} },
-    { CARD_FORTITUDE,     {5, 5, 5} },
-};
-#endif
-
 deck_archetype deck_of_summoning =
 {
     { CARD_ELEMENTS,        {5, 5, 5} },
@@ -138,33 +115,6 @@ deck_archetype deck_of_summoning =
     { CARD_ILLUSION,        {5, 5, 5} },
 };
 
-#if TAG_MAJOR_VERSION == 34
-deck_archetype deck_of_wonders =
-{
-    { CARD_WILD_MAGIC,        {5, 5, 5} },
-    { CARD_DOWSING,           {5, 5, 5} },
-    { CARD_ALCHEMIST,         {5, 5, 5} },
-};
-
-deck_archetype deck_of_dungeons =
-{
-    { CARD_WATER,     {5, 5, 5} },
-    { CARD_GLASS,     {5, 5, 5} },
-    { CARD_DOWSING,   {5, 5, 5} },
-    { CARD_TROWEL,    {0, 0, 3} },
-    { CARD_MINEFIELD, {5, 5, 5} },
-};
-
-deck_archetype deck_of_oddities =
-{
-    { CARD_WRATH,   {5, 5, 5} },
-    { CARD_XOM,     {5, 5, 5} },
-    { CARD_FEAST,   {5, 5, 5} },
-    { CARD_FAMINE,  {5, 5, 5} },
-    { CARD_CURSE,   {5, 5, 5} },
-};
-#endif
-
 deck_archetype deck_of_punishment =
 {
     { CARD_WRAITH,     {5, 5, 5} },
@@ -174,62 +124,57 @@ deck_archetype deck_of_punishment =
     { CARD_TORMENT,    {5, 5, 5} },
 };
 
+#if TAG_MAJOR_VERSION == 34
+deck_archetype removed_deck =
+{
+    { CARD_XOM, {5, 5, 5} },
+};
+#endif
+
 struct deck_type_data
 {
     /// The name of the deck. (Doesn't include "deck of ".)
     string name;
-    /// The weight of this deck in non-Nemelex item generation
-    int weight;
-    /// The list of decks this deck contains
-    vector<const deck_archetype *> subdecks;
+    /// The list of cards this deck contains.
+    const deck_archetype* cards;
 };
 
 static map<misc_item_type, deck_type_data> all_decks =
 {
     { MISC_DECK_OF_ESCAPE, {
-        "escape",
-        2, { &deck_of_escape }
+        "escape", &deck_of_escape,
     } },
     { MISC_DECK_OF_DESTRUCTION, {
-        "destruction",
-        1, { &deck_of_destruction }
+        "destruction", &deck_of_destruction,
     } },
 #if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_DUNGEONS, {
-        "dungeons",
-        0, { &deck_of_dungeons }
+        "dungeons", &removed_deck,
     } },
 #endif
     { MISC_DECK_OF_SUMMONING, {
-        "summoning",
-        0, { &deck_of_summoning }
+        "summoning", &deck_of_summoning,
     } },
 #if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_WONDERS, {
-        "wonders",
-        0, { &deck_of_wonders }
+        "wonders", &removed_deck,
     } },
     { MISC_DECK_OF_ODDITIES, {
-        "oddities",
-        0, { &deck_of_oddities }
+        "oddities", &removed_deck,
     } },
 #endif
     { MISC_DECK_OF_PUNISHMENT, {
-        "punishment",
-        0, { &deck_of_punishment }
+        "punishment", &deck_of_punishment,
     } },
 #if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_WAR, {
-        "war",
-        2, { &deck_of_battle, &deck_of_summoning }
+        "war", &removed_deck,
     } },
     { MISC_DECK_OF_CHANGES, {
-        "changes",
-        0, { &deck_of_battle, &deck_of_transport }
+        "changes", &removed_deck,
     } },
     { MISC_DECK_OF_DEFENCE, {
-        "defence",
-        0, { &deck_of_battle, &deck_of_escape }
+        "defence", &removed_deck,
     } },
 #endif
 };
@@ -388,15 +333,15 @@ card_type name_to_card(string name)
     return NUM_CARDS;
 }
 
-static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
+static const deck_archetype* _cards_in_deck(uint8_t deck_type)
 {
     deck_type_data *deck_data = map_find(all_decks, (misc_item_type)deck_type);
 
     if (deck_data)
-        return deck_data->subdecks;
+        return deck_data->cards;
 
 #ifdef ASSERTS
-    die("No subdecks found for %u", unsigned(deck_type));
+    die("No cards found for %u", unsigned(deck_type));
 #endif
     return {};
 }
@@ -409,9 +354,9 @@ const string deck_contents(uint8_t deck_type)
     // that appears in multiple subdecks from showing up twice in the
     // output.
     set<card_type> cards;
-    for (const deck_archetype* pdeck : _subdecks(deck_type))
-        for (const card_with_weights& cww : *pdeck)
-            cards.insert(cww.card);
+    const deck_archetype* pdeck =_cards_in_deck(deck_type);
+    for (const card_with_weights& cww : *pdeck)
+        cards.insert(cww.card);
 
     output += comma_separated_fn(cards.begin(), cards.end(), card_name);
     output += ".";
@@ -419,18 +364,8 @@ const string deck_contents(uint8_t deck_type)
     return output;
 }
 
-static const deck_archetype* _random_sub_deck(uint8_t deck_type)
-{
-    const vector<const deck_archetype *> subdecks = _subdecks(deck_type);
-    const deck_archetype *pdeck = subdecks[random2(subdecks.size())];
-
-    ASSERT(pdeck);
-
-    return pdeck;
-}
-
-static card_type _choose_from_archetype(const deck_archetype* pdeck,
-                                        deck_rarity_type rarity)
+static card_type _choose_from_deck(const deck_archetype* pdeck,
+                                   deck_rarity_type rarity)
 {
     // Random rarity should have been replaced by one of the others by now.
     ASSERT_RANGE(rarity, DECK_RARITY_COMMON, DECK_RARITY_LEGENDARY + 1);
@@ -452,9 +387,9 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
 
 static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity)
 {
-    const deck_archetype *pdeck = _random_sub_deck(deck_type);
+    const deck_archetype *pdeck = _cards_in_deck(deck_type);
 
-    return _choose_from_archetype(pdeck, rarity);
+    return _choose_from_deck(pdeck, rarity);
 }
 
 static card_type _random_card(const item_def& item)
@@ -855,18 +790,13 @@ string which_decks(card_type card)
     for (auto &deck_data : all_decks)
     {
         misc_item_type deck = (misc_item_type)deck_data.first;
-        for (auto &subdeck : deck_data.second.subdecks)
-        {
-            if (!_card_in_deck(card, subdeck))
-                continue;
+        if (!_card_in_deck(card, deck_data.second.cards))
+            continue;
 
-            if (deck == MISC_DECK_OF_PUNISHMENT)
-                punishment = true;
-            else
-                decks.push_back(deck_data.second.name);
-
-            break;
-        }
+        if (deck == MISC_DECK_OF_PUNISHMENT)
+            punishment = true;
+        else
+            decks.push_back(deck_data.second.name);
     }
 
     if (!decks.empty())
@@ -1253,7 +1183,7 @@ void evoke_deck(item_def& deck)
         if (x_chance_in_y(c * you.penance[GOD_NEMELEX_XOBEH], 3000))
         {
             card_type old_card = card;
-            card = _choose_from_archetype(&deck_of_punishment, rarity);
+            card = _choose_from_deck(&deck_of_punishment, rarity);
             if (card != old_card)
             {
                 flags |= CFLAG_PUNISHMENT;
@@ -2381,24 +2311,11 @@ card_type top_card(const item_def &deck)
     return card;
 }
 
-/// Cache deck weights.
-static vector<pair<misc_item_type, int>> _deck_weights()
-{
-    vector<pair<misc_item_type, int>> deck_weights;
-    for (auto &deck_data : all_decks)
-        if (deck_data.second.weight)
-            deck_weights.push_back({deck_data.first, deck_data.second.weight});
-    return deck_weights;
-}
-
-static const vector<pair<misc_item_type, int>> deck_weights = _deck_weights();
-
-
 /**
  * Return the appropriate name for a known deck of the given type.
  *
  * @param sub_type  The type of deck in question.
- * @return          A name, e.g. "deck of war".
+ * @return          A name, e.g. "deck of destruction".
  *                  Does not include rarity.
  *                  If the given type isn't a deck, return "deck of bugginess".
  */
@@ -2413,7 +2330,7 @@ string deck_name(uint8_t sub_type)
 /**
  * Returns the appropriate type for a deck name.
  *
- * @param name      The name in question; e.g. "war", "summonings", etc.
+ * @param name      The name in question; e.g. "destruction", "summonings", etc.
  * @return          The type of the deck, if one is found;
  *                  else, MISC_DECK_UNKNOWN.
  */
@@ -2431,9 +2348,10 @@ uint8_t deck_type_by_name(string name)
  */
 uint8_t random_deck_type()
 {
-    const misc_item_type *deck_type = random_choose_weighted(deck_weights);
-    ASSERT(deck_type);
-    return *deck_type;
+    const misc_item_type deck_type = random_choose(MISC_DECK_OF_ESCAPE,
+                                                   MISC_DECK_OF_DESTRUCTION,
+                                                   MISC_DECK_OF_SUMMONING);
+    return deck_type;
 }
 
 bool is_deck_type(uint8_t sub_type, bool allow_unided)
