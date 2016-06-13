@@ -1510,19 +1510,38 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     const int power_level = _get_power_level(power, rarity);
     const char *participle = dealt ? "dealt" : "drawn";
 
+    bool done_prompt = false;
+    string prompt = make_stringf("You have %s %s.", participle,
+                                 card_name(card));
+
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
-    const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
-    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
-                                     ZAP_IOOD };
+    const zap_type painzaps[2] = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
+    const zap_type acidzaps[3] = { ZAP_BREATHE_ACID, ZAP_CORROSIVE_BOLT,
+                                   ZAP_CORROSIVE_BOLT };
+    const zap_type orbzaps[3]  = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
+                                   ZAP_IOOD };
 
     switch (card)
     {
     case CARD_VITRIOL:
-        if (power_level == 2 || (power_level == 1 && coinflip()))
-            ztype = ZAP_CORROSIVE_BOLT;
-        else
-            ztype = ZAP_BREATHE_ACID;
+        if (power_level == 2)
+        {
+            done_prompt = true;
+            mpr(prompt);
+            mpr("You radiate a wave of entropy!");
+            for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+            {
+                monster *mons = monster_at(*di);
+
+                if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
+                    continue;
+
+                if (coinflip())
+                    mons->corrode_equipment();
+            }
+        }
+        ztype = acidzaps[power_level];
         break;
 
     case CARD_ORB:
@@ -1537,6 +1556,8 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                 _suppressed_card_message(you.religion, DID_NECROMANCY);
                 return;
             }
+
+            mpr(prompt);
 
             if (monster *ghost = _friendly(MONS_FLAYED_GHOST, 3))
             {
@@ -1571,7 +1592,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                     beem.target = mons->pos();
                     ghost->foe = mons->mindex();
                     mons_cast(ghost, beem, SPELL_FLAY,
-                             ghost->spell_slot_flags(SPELL_FLAY), msg);
+                              ghost->spell_slot_flags(SPELL_FLAY), msg);
                     msg = false;
                 }
 
@@ -1588,12 +1609,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         break;
     }
 
-    string prompt = "You have ";
-    prompt += participle;
-    prompt += " ";
-    prompt += card_name(card);
-    prompt += ".";
-
     bolt beam;
     beam.range = LOS_RADIUS;
 
@@ -1605,7 +1620,8 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
-    args.top_prompt = prompt;
+    if (!done_prompt)
+        args.top_prompt = prompt;
     if (spell_direction(target, beam, &args)
         && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
     {
