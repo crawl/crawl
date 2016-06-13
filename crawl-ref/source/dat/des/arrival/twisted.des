@@ -910,7 +910,6 @@ KPROP: u = no_tele_into
 KPROP: Nu = bloody
 SUBST: N = n, u = uU
 KMASK: uU = no_item_gen
-WEIGHT: 10000000
 : local yourcorpse = ""
 : local yourskel = ""
 : local yourname = string.gsub(you.name(), " ", "_")
