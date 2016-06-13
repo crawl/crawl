@@ -2,6 +2,7 @@
 
 #include "map_knowledge.h"
 
+#include "cloud.h"
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
@@ -248,8 +249,9 @@ bool map_cell::update_cloud_state()
     if (visible())
         return false; // we're already up-to-date
 
-    // player clouds vanish instantly out of los
-    if (_cloud && _cloud->killer == KILL_YOU_MISSILE)
+    // player non-opaque clouds vanish instantly out of los
+    if (_cloud && _cloud->killer == KILL_YOU_MISSILE
+        && !is_opaque_cloud(_cloud->type))
     {
         clear_cloud();
         return true;
