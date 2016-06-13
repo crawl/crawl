@@ -441,10 +441,12 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return "You aren't wearing any piece of uncursed armour.";
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
+#endif
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -1006,9 +1008,6 @@ bool item_is_selected(const item_def &i, int selector)
         if (you_worship(GOD_TROG) && item_is_spellbook(i))
             return true;
 
-        if (you.has_spell(SPELL_CORPSE_ROT) && itype == OBJ_CORPSES)
-            return true;
-
         if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
             return false;
 
@@ -1049,11 +1048,13 @@ bool item_is_selected(const item_def &i, int selector)
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
 
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR;
 
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY;
+#endif
 
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
