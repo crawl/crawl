@@ -2409,6 +2409,95 @@ I.HG.LQN..MP.IJKL.
   ...FEDC...
 ENDMAP
 
+# Originally a submitted wizlab of "Nikola's Generator",
+# with random drops of summoned ball lightning.
+# Uncontrolled blinks near the turbines are dangerous!
+NAME:   infiniplex_zot_generator
+TAGS:   no_pool_fixup no_item_gen no_monster_gen no_trap_gen
+DEPTH:  Zot, !Zot:$
+ORIENT: south
+MONS:   shock serpent w:12 / raiju / sixfirhy, black draconian
+MONS:   war gargoyle / dancing weapon ; scimitar good_item / spark wasp w:5
+MONS:   black draconian monk / black draconian shifter / storm dragon
+MONS:   ghost moth / moth of wrath / death cob / \
+        tentacled monstrosity / killer klown w:5
+MONS:   patrolling electric golem
+MONS:   patrolling black draconian annihilator ; cloak good_item . \
+        rapier ego:electrocution
+KMONS:  zZ = ball lightning
+KMONS:  O = diamond obelisk
+KMONS:  S = lightning spire
+ITEM:   lightning rod ident:type / disc of storms, book of the sky
+ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
+        double sword ego:electrocution good_item ident:type w:5 / \
+        executioner's axe ego:electrocution good_item ident:type w:5 / \
+        eveningstar ego:electrocution good_item ident:type w:5 / \
+        bardiche ego:electrocution good_item ident:type w:5 / \
+        lajatang ego:electrocution good_item ident:type w:5 / \
+        rapier ego:electrocution good_item ident:type / \
+        scimitar ego:electrocution good_item ident:type / \
+        dire flail ego:electrocution good_item ident:type / \
+        trident ego:electrocution good_item ident:type / \
+        quarterstaff ego:electrocution good_item ident:type
+ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
+        scroll of teleportation q:1 / scroll of teleportation q:2 / \
+        any scroll good_item / staff of energy ident:type / \
+        wand of lightning ident:type / wand of teleportation ident:type
+KFEAT:  yz = w
+KFEAT:  YZ" = W
+KFEAT:  # = iron_grate
+NSUBST: . = 8:1 / 6:2 / 4 = 12. / *:., ' = 2:3 / 4:4 / 4 = 345 / *:.
+NSUBST: d = 1:d / 1:|ee / *:f, f = 1:f / *:g
+NSUBST: w = 3:z / *:w, W = 2:Z / *:W
+SUBST:  ` = ., ) = )>>
+KPROP:  -_ly"O> = no_tele_into
+MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
+                              pow_max = 100, pow_min = 10, delay = 20, \
+                              size = 1, start_clouds = 5, excl_rad = 0 }
+TILE:   v = dngn_metal_iron
+FTILE:  -_ = floor_pebble_darkgray
+MAP
+                 vvvvvvvvv
+                 vd`d`d`dv
+                 v```7```v         vvvvv
+                 vf``'``fv         vyyyv
+                 v``6`6``v         vyyyv
+                 v```````v         vyyyv
+   vvvvvvvvvvvvvvv###S###v         vyyyv
+   v..............```````v         vyyyv
+   v.S...S...S...S```'```vvvvvvvvvvv###vvv@vvv
+   v...'...'...'..`````````````````#www#.....v
+   v.'...}...)...'```'```````````f`#www#..'..v
+   v..............`````````````````#www#.....v
+   vvvvvvWWvvvvvvvvvvvvvvv##########www#.....v
+   vyywwwWWwwwwwwwwwwwwwwwwwwwwwwwwwwww#..'..v
+ vvvy#ww#WW##########wwwwwwwwwwwwwwwwww#.'.'.v
+ vyyy#yy#...........#w################w#..'..v
+ vyyy#yy#...........#w#..............#w#.....v
+ vyyy#yy#...........#w#..............#w#.....v
+ v__-#yyvvv.........#w#..............#w#..'..v
+vvvvv#yyyyvv....WWvvvwvvvWW..........WWW.....v
+vllll-yy###vvvvvvWWWvwvWWW#########..WWW.....v
+vllll_y##"""""""vvWWvwvWW##"""""""#vvvwvvvv..v
+vvvvvv##"""""""""vvWvwvW##"""""""""vvvwwwwv..v
+xxxxxvv"""""""""""#WWWWW#"""""""""""vvww#wv..v
+    xvv"""""""""""##WWW##"""""""""""vvww#wv..v
+    xv"""""""""""""#WWW#"""""""""""""vyy#wv..v
+    xv>"""""O""""">#WWW#>"""""O""""">vyy#yv..v
+    xv"""""""""""""#WWW#"""""""""""""vyy#y'..v
+    xvv"""""""""""##WWW##"""""""""""vvyy#yY..v
+    xxv"""""""""""#WWWWW#"""""""""""vyyy#yYY.v
+     xvv"""""""""##Wv#vW##"""""""""##yyy#yYYYv
+     xxvv"""""""##vvvyvvv##"""""""##__-_#yYYYv
+      xxvvvvvvvvvvvxvyvxvvvvvvvv###__ll_#-YYYv
+       xxxxxxxxxxxxxvyvxxxxxxxxvvvvvvllvvvvvvv
+        xxxxxxxxxxxxvyvxxxxxxxxxxxxxvllvxxxxxx
+        xxxxxxxxxxxxvyvxxxxxxxxxxxxxvllvx
+        xxxxxxxxxxxxvyvxxxxxxxxxxxxxvvvvx
+        xxxxxxxxxxxxvvvxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
