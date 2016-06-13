@@ -1053,6 +1053,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_MISSILES:
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GOLD:
         flagset = 0;
         break;
     case OBJ_BOOKS:
