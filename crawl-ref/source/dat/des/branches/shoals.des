@@ -1177,11 +1177,11 @@ KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
 SUBST:   0 = 24., X : xp.., Y : xp..
 SUBST:   A = x, B : p., F = x, G = p., CHI = .
-: dgn.delayed_decay(_G, 'h', 'snapping turtle corpse')
+: dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
 : dgn.delayed_decay(_G, 'h', 'griffon corpse')
 MAP
     ccccccxxxxxxxcccccc
-    c3dd*xxx.6.xxx*dd5c
+    c3dd*xxxg_hxxx*dd5c
     c..2xx2.b0b.4xx4..c
     cex+xWWx...xWWx+xfc
     cxx...WW.1.WW...xxc
