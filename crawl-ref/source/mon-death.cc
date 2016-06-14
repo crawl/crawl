@@ -92,7 +92,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     if (mons_genus(mtype) == MONS_DRACONIAN
         || mons_genus(mtype) == MONS_DEMONSPAWN)
     {
-        if (mons.type == MONS_TIAMAT)
+        if (mons.type == MONS_TIAMAT || mons.type == MONS_BAI_SUZHEN)
             corpse_class = MONS_DRACONIAN;
         else
             corpse_class = draco_or_demonspawn_subspecies(&mons);

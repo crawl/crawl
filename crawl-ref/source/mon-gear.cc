@@ -1256,6 +1256,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_SPRIGGAN_DRUID:
+    case MONS_BAI_SUZHEN:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_QUARTERSTAFF;
         break;
@@ -2279,6 +2280,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_BAI_SUZHEN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;

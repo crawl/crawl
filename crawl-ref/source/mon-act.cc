@@ -2615,6 +2615,23 @@ static void _post_monster_move(monster* mons)
         }
     }
 
+    if (mons->type == MONS_BAI_SUZHEN || mons->type == MONS_BAI_SUZHEN_DRAGON)
+    {
+        cloud_type ctype = CLOUD_RAIN;
+
+        if (mons->type == MONS_BAI_SUZHEN_DRAGON)
+            ctype = CLOUD_STORM;
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!cell_is_solid(*ai)
+                && (!cloud_at(*ai)
+                    || cloud_at(*ai)->type == ctype
+                    || cloud_at(*ai)->type == CLOUD_RAIN))
+            {
+                place_cloud(ctype, *ai, 2 + random2(3), mons);
+            }
+    }
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
