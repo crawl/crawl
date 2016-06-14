@@ -1852,6 +1852,51 @@ end
 }}
 ## END Azrael ##
 %%%%
+
+############ BAI SUZHEN ### Dragon-lady of famed tragic folklore
+Bai Suzhen
+
+@Bai Suzhen@
+%%%%
+Bai Suzhen
+
+@_Bai_Suzhen_common_@
+
+w:6
+@_Bai_Suzhen_rare_@
+%%%%
+_Bai_Suzhen_common_
+
+@The_monster@ grumbles, "Damn that jealous turtle monk."
+
+@The_monster@ pines for @possessive@ lost husband.
+
+@The_monster@ roars, "Even the heavens can't seperate us forever!"
+
+@The_monster@ inspects @possessive@ gathered herbal reagents.
+
+@The_monster@ asserts, "Choosing our [truths|lies] is central to humanity, anyway."
+
+VISUAL:@The_monster@ twists and twirls @possessive@ body through the storm.
+%%%%
+_Bai_Suzhen_rare_
+
+@The_monster@ grouses about [the pranks of immortal alchemists|immature sisters].
+
+@The_monster@ hisses, "Days like this make me miss drinking."
+
+@The_monster@ affirms to @possessive@self, "Our love will make it through this."
+
+@The_monster@ wonders wistfully, "Should I have meditated another thousand years?"
+
+w:5
+@The_monster@ whispers to @possessive@self, "Everyone I saved... Everyone I doomed..."
+
+w:5
+VISUAL:@The_monster@'s form shimmers in the rain.
+## END Bai Suzhen ##
+%%%%
+
 ############ BLORK ### In case Blork ends up polymorphed.
 Blork
 

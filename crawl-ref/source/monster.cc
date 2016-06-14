@@ -3762,9 +3762,11 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
-        || type == MONS_KILLER_KLOWN  // For their random attacks.
-        || type == MONS_TIAMAT        // For her colour-changing.
-        || mons_is_demonspawn(type))  // Like player demonspawn
+        || type == MONS_KILLER_KLOWN      // For their random attacks.
+        || type == MONS_TIAMAT            // For her colour-changing.
+        || type == MONS_BAI_SUZHEN
+        || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
+        || mons_is_demonspawn(type))      // Like player demonspawn.
     {
         chaotic++;
     }
@@ -6263,6 +6265,34 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             rakshasa_clone_fineff::schedule(this, pos());
             props["emergency_clone"].get_bool() = true;
+        }
+    }
+
+    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points / 2
+                                     && hit_points - damage > 0)
+    {
+        int old_hp                = hit_points;
+        auto old_flags            = flags;
+        mon_enchant_list old_ench = enchantments;
+        FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
+        int8_t old_ench_countdown = ench_countdown;
+        string old_name = mname;
+
+        monster_drop_things(this, mons_aligned(oppressor, &you));
+
+        type = MONS_BAI_SUZHEN_DRAGON;
+        define_monster(this);
+        hit_points = min(old_hp, hit_points);
+        flags          = old_flags;
+        enchantments   = old_ench;
+        ench_cache     = old_ench_cache;
+        ench_countdown = old_ench_countdown;
+
+        if (observable())
+        {
+            mprf("%s roars in fury and transforms into a fierce dragon!",
+                 name(DESC_THE).c_str());
+            mprf("Her surrounding storm thunders violently.");
         }
     }
 
