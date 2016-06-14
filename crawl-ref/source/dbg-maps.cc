@@ -322,7 +322,7 @@ static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 
 static void _write_map_stats()
 {
-    const char *out_file = "mapstat.log";
+    const char *out_file = make_stringf("mapstat.%d.log", getpid()).c_str();
     FILE *outf = fopen(out_file, "w");
     printf("Writing map stats to %s...", out_file);
     fflush(stdout);
