@@ -1885,12 +1885,12 @@ _Bai_Suzhen_rare_
 
 @The_monster@ hisses, "Days like this make me miss drinking."
 
-@The_monster@ affirms to @possessive@self, "Our love will make it through this."
+@The_monster@ affirms to @reflexive@, "Our love will make it through this."
 
 @The_monster@ wonders wistfully, "Should I have meditated another thousand years?"
 
 w:5
-@The_monster@ whispers to @possessive@self, "Everyone I saved... Everyone I doomed..."
+@The_monster@ whispers to @reflexive@, "Everyone I saved... Everyone I doomed..."
 
 w:5
 VISUAL:@The_monster@'s form shimmers in the rain.
