@@ -898,8 +898,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\n\nIt can be evoked to extend its reach.";
             break;
         case SK_AXES:
-            description += "\n\nIt can hit multiple enemies in an arc"
-                           " around the wielder.";
+            description += "\n\nIt hits all enemies adjacent to the wielder, "
+                           "dealing less damage to those not targeted.";
             break;
         case SK_SHORT_BLADES:
             {
