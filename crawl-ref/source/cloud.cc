@@ -190,7 +190,7 @@ static const cloud_data clouds[] = {
     { "thunder", "a thunderstorm",              // terse, verbose name
       ETC_DARK,                                 // colour
       BEAM_ELECTRICITY,                         // beam_effect
-      60, 46,                                   // base, random expected damage
+      40, 40,                                   // base, random expected damage
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
@@ -779,11 +779,11 @@ static int _cloud_base_damage(const actor *act,
             return _cloud_damage_calc(16, 3, 6, maximum_damage);
 
     case CLOUD_STORM:
-        // Four times the damage, because it's a quarter as often.
+        // Roughly three times the damage, because it's a third as often.
         if (act->is_player())
-            return _cloud_damage_calc(92, 3, 40, maximum_damage);
+            return _cloud_damage_calc(45, 3, 35, maximum_damage);
         else
-            return _cloud_damage_calc(64, 3, 24, maximum_damage);
+            return _cloud_damage_calc(40, 3, 21, maximum_damage);
 
     case CLOUD_MEPHITIC:
         return _cloud_damage_calc(3, 1, 0, maximum_damage);
@@ -1161,7 +1161,7 @@ static int _actor_cloud_damage(const actor *act,
         if (!maximum_damage)
             cloud.announce_actor_engulfed(act);
 
-        const int turns_per_lightning = 4;
+        const int turns_per_lightning = 3;
         const int aut_per_lightning = turns_per_lightning * BASELINE_DELAY;
 
         // if we fail our lightning roll, again, just rain.
