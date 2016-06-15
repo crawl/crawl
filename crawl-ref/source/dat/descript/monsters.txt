@@ -1399,9 +1399,9 @@ A hateful demon, desirous to see all life destroyed by its damnation.
 %%%%
 hellwing
 
-A hideous skeletal demon. It swoops through the air on powerful wings of
-ancient withered skin, taking sadistic joy from harrying those who would try
-to flee its grasp.
+A hideous skeletal demon, known for armouring itself with the remains of its
+victims. It swoops through the air on powerful wings of ancient withered skin,
+taking sadistic joy from harrying those who would try to flee its grasp.
 %%%%
 hexer
 

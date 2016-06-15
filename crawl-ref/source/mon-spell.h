@@ -347,12 +347,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_HELLWING,
-      {
-       { SPELL_CIGOTUVIS_EMBRACE, 28, MON_SPELL_MAGICAL },
-      }
-    },
-
     {  MST_SMOKE_DEMON,
       {
        { SPELL_STICKY_FLAME_RANGE, 19, MON_SPELL_MAGICAL },
