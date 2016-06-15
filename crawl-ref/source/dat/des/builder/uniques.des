@@ -209,6 +209,10 @@ WEIGHT: 7
 TAGS:   uniq_ribbit
 : place_unique(_G, "Prince Ribbit")
 
+NAME:   uniq_zomaka
+DEPTH:  D:5-9
+: place_unique(_G, "Zomaka")
+
 NAME:   uniq_prince_ribbit2
 DEPTH:  Lair:1-3
 WEIGHT: 3

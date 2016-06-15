@@ -1017,6 +1017,8 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     if (projected == LRET_THROWN)
         returning = returning && !teleport;
+    if (mons->type == MONS_ZOMAKA && projected == LRET_LAUNCHED)
+        item.brand = SPMSL_DISPERSAL;
 
     // Identify before throwing, so we don't get different
     // messages for first and subsequent missiles.

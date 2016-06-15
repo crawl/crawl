@@ -873,6 +873,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
+    case MONS_ZOMAKA:
+        level = ISPEC_GOOD_ITEM;
+        // fallthrough to yaktaur arbalests
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         item.base_type = OBJ_WEAPONS;
