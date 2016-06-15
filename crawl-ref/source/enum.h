@@ -3347,8 +3347,8 @@ enum monster_type                      // menv[].type
     MONS_VASHNIA,
     MONS_ROBIN,
     MONS_MOON_TROLL,
-    MONS_BAI_SUZHEN
-    MONS_BAI_SUZHEN_DRAGON
+    MONS_BAI_SUZHEN,
+    MONS_BAI_SUZHEN_DRAGON,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3539,9 +3539,7 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
-#if TAG_MAJOR_VERSION == 34
     MONS_SALAMANDER_STORMCALLER,
-#endif
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
     MONS_MUTANT_BEAST,
