@@ -1026,9 +1026,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
-                description += "Each time it fires, it turns the "
-                    "launched projectile into a different, random type "
-                    "of bolt.";
+                description += "Each projectile launched from it has a "
+                               "different, random effect.";
             }
             else
             {
@@ -1189,7 +1188,7 @@ static string _describe_ammo(const item_def &item)
             if (can_launch)
                 description += "fired from an appropriate launcher, ";
 
-            description += "it turns into a bolt of a random type.";
+            description += "it has a random effect.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
