@@ -998,7 +998,7 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_ARMOUR && item_is_equipped(i);
 
     case OSEL_UNIDENT:
-        return !fully_identified(i);
+        return !fully_identified(i) && itype != OBJ_BOOKS;
 
     case OBJ_MISSILES:
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
