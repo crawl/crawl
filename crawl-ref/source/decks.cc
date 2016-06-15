@@ -2122,10 +2122,17 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                            mons->get_hit_dice()))
         {
+            spschool_flag_type type = random_choose(SPTYP_CONJURATION,
+                                                    SPTYP_FIRE,
+                                                    SPTYP_ICE,
+                                                    SPTYP_EARTH,
+                                                    SPTYP_AIR,
+                                                    SPTYP_POISON);
+
             MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
-                        DECK_MISCAST, SPTYP_RANDOM,
-                        random2(power/15) + 5, random2(power),
-                        "a card of wild magic");
+                          DECK_MISCAST, type,
+                          random2(power/15) + 5, random2(power),
+                          "a card of wild magic");
 
             num_affected++;
         }
