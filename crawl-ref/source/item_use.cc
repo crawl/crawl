@@ -257,37 +257,6 @@ static item_def* _use_an_item(int item_type, operation_types oper,
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
 
-
-/**
- * Check if the given weapon conflicts with a shield the player is wearing.
- * If so, perhaps prompt the player to remove it first.
- *
- * @param weapon        The weapon to be wielded.
- * @param prompt        Whether to prompt the player to remove their shield.
- * @return              Whether the player has resolved any shield conflicts,
- *                      or if there weren't any to begin with.
- */
-static bool _check_shield_removal(const item_def &weapon,
-                                  bool prompt)
-{
-    if (!is_shield_incompatible(weapon))
-        return true;
-
-    // are we already removing our shield?
-    if (current_delay_action() == DELAY_ARMOUR_OFF)
-        return true;
-
-    if (!prompt)
-        return false;
-
-    mpr("You can't wield that with a shield.");
-    if (yesno("Unequip your shield first?", true, 'n', true, false))
-        return takeoff_armour(you.equip[EQ_SHIELD]);
-
-    canned_msg(MSG_OK);
-    return false;
-}
-
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(const item_def *weapon, bool say_reason,
@@ -348,8 +317,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
     // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
     {
-        return ignore_temporary_disability
-               || _check_shield_removal(*weapon, say_reason);
+        if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
+        {
+            SAY(mpr("You can't wield that with a shield."));
+            return false;
+        }
+        else
+            return true;
     }
 
     bool id_brand = false;
@@ -410,9 +384,9 @@ bool can_wield(const item_def *weapon, bool say_reason,
         return false;
     }
 
-    if (!ignore_temporary_disability
-        && !_check_shield_removal(*weapon, say_reason))
+    if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
+        SAY(mpr("You can't wield that with a shield."));
         return false;
     }
 
