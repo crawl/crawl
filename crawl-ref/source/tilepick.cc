@@ -2184,7 +2184,7 @@ static tileidx_t _tileidx_armour(const item_def &item)
 static tileidx_t _tileidx_chunk(const item_def &item)
 {
     if (is_inedible(item))
-        return TILE_FOOD_CHUNK;
+        return TILE_FOOD_CHUNK_ROTTEN;
 
     if (is_mutagenic(item))
         return TILE_FOOD_CHUNK_MUTAGENIC;
