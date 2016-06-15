@@ -101,8 +101,8 @@ deck_archetype deck_of_destruction =
     { CARD_STORM,      {5, 5, 5} },
     { CARD_PAIN,       {5, 5, 3} },
     { CARD_ORB,        {5, 5, 5} },
-    { CARD_DEGEN,      {5, 5, 5} },
-    { CARD_WILD_MAGIC, {5, 5, 5} },
+    { CARD_DEGEN,      {3, 3, 3} },
+    { CARD_WILD_MAGIC, {5, 5, 3} },
 };
 
 deck_archetype deck_of_summoning =
