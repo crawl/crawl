@@ -2427,6 +2427,8 @@ static void _handle_read_book(item_def& book)
     }
 #endif
 
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    mark_had_book(book);
     read_book(book);
 }
 
