@@ -107,8 +107,6 @@ void player::set_position(const coord_def &c)
 
     if (real_move)
     {
-        reset_prev_move();
-
         if (duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
 
