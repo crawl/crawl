@@ -573,8 +573,11 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
             // not quite as interesting on armour, since you swap it less
+            // rings have 2 slots, so little swap pressure
         case ARTP_FRAGILE:
-            return item_class != OBJ_ARMOUR;
+            return item_class != OBJ_ARMOUR
+                   && (item_class != OBJ_JEWELLERY
+                       || jewellery_is_amulet(item));
         default:
             return true;
     }
