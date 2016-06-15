@@ -344,7 +344,6 @@ public:
     // -------------------
     unsigned short prev_targ;
     coord_def      prev_grd_targ;
-    coord_def      prev_move;
 
     // Coordinates of last travel target; note that this is never used by
     // travel itself, only by the level-map to remember the last travel target.
@@ -451,8 +450,6 @@ public:
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false) override;
-
-    void reset_prev_move();
 
     int stat(stat_type stat, bool nonneg = true) const;
     int strength(bool nonneg = true) const;

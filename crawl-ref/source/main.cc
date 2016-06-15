@@ -3204,7 +3204,6 @@ static void _move_player(coord_def move)
         {
             move.x = random2(3) - 1;
             move.y = random2(3) - 1;
-            you.reset_prev_move();
             if (move.origin())
             {
                 mpr("You're too confused to move!");
@@ -3518,7 +3517,6 @@ static void _move_player(coord_def move)
                                  div_round_up(100, you.running.travel_speed));
         }
 
-        you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
@@ -3530,7 +3528,6 @@ static void _move_player(coord_def move)
         && feat_is_closed_door(targ_grid))
     {
         _open_door(move);
-        you.prev_move = move;
     }
     else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY
              && !attacking && !you.is_stationary())
@@ -3541,7 +3538,6 @@ static void _move_player(coord_def move)
             return;
         }
 
-        you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
 

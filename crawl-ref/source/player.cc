@@ -5383,7 +5383,6 @@ player::player()
     // Non-saved UI state:
     prev_targ        = MHITNOT;
     prev_grd_targ.reset();
-    prev_move.reset();
 
     travel_x         = 0;
     travel_y         = 0;
@@ -7421,11 +7420,6 @@ void player::shiftto(const coord_def &c)
     crawl_view.shift_player_to(c);
     set_position(c);
     clear_far_constrictions();
-}
-
-void player::reset_prev_move()
-{
-    prev_move.reset();
 }
 
 bool player::asleep() const
