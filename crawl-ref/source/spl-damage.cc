@@ -71,12 +71,6 @@
 //
 spret_type cast_delayed_fireball(bool fail)
 {
-    if (you.attribute[ATTR_DELAYED_FIREBALL])
-    {
-        mpr("You are already charged.");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     // Okay, this message is weak but functional. - bwr
     mpr("You feel magically charged.");
