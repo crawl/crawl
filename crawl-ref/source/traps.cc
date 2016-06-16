@@ -1705,68 +1705,6 @@ level_id generic_shaft_dest(coord_def pos, bool known = false)
 }
 
 /**
- * When a player falls through a shaft at a location, disperse items on the
- * target level.
- *
- * @param pos The location.
- * @param open_shaft If True and the location was seen, print a shaft opening
- *                   message, otherwise don't.
-*/
-void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
-{
-    if (!is_valid_shaft_level())
-        return;
-
-    level_id dest = generic_shaft_dest(pos);
-
-    if (dest == level_id::current())
-        return;
-
-    int o = igrd(pos);
-
-    if (o == NON_ITEM)
-        return;
-
-    bool need_open_message = env.map_knowledge(pos).seen() && open_shaft;
-
-    while (o != NON_ITEM)
-    {
-        int next = mitm[o].link;
-
-        if (mitm[o].defined() && !item_is_stationary_net(mitm[o]))
-        {
-            if (need_open_message)
-            {
-                mpr("A shaft opens up in the floor!");
-                grd(pos) = DNGN_TRAP_SHAFT;
-                need_open_message = false;
-            }
-
-            if (env.map_knowledge(pos).visible())
-            {
-                mprf("%s fall%s through the shaft.",
-                     mitm[o].name(DESC_INVENTORY).c_str(),
-                     mitm[o].quantity == 1 ? "s" : "");
-
-                env.map_knowledge(pos).clear_item();
-                StashTrack.update_stash(pos);
-            }
-
-            // Item will be randomly placed on the destination level.
-            unlink_item(o);
-            mitm[o].pos = INVALID_COORD;
-            add_item_to_transit(dest, mitm[o]);
-
-            mitm[o].base_type = OBJ_UNASSIGNED;
-            mitm[o].quantity = 0;
-            mitm[o].props.clear();
-        }
-
-        o = next;
-    }
-}
-
-/**
  * Get a number of traps to place on the current level.
  *
  * No traps are placed in either Temple or disconnected branches other than

@@ -37,7 +37,6 @@ trap_type get_trap_type(const coord_def& where);
 // known is relevant only during level-gen
 bool is_valid_shaft_level(bool known = false);
 level_id generic_shaft_dest(coord_def pos, bool known);
-void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 
 int       num_traps_for_place();
 trap_type random_trap_for_place();

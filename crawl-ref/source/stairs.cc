@@ -492,8 +492,6 @@ static level_id _travel_destination(const dungeon_feature_type how,
                                     + shaft_dest.describe() + ".");
         }
 
-        handle_items_on_shaft(you.pos(), false);
-
         string howfar;
         if (shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);

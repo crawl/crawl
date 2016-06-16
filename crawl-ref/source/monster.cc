@@ -5743,7 +5743,6 @@ bool monster::do_shaft()
 
     const bool reveal = simple_monster_message(this, msg.c_str());
 
-    handle_items_on_shaft(pos(), false);
     place_cloud(CLOUD_DUST_TRAIL, pos(), 1 + random2(3), this);
 
     // Monster is no longer on this level.
