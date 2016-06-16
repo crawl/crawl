@@ -75,8 +75,9 @@ other spells are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on the dungeon wearing just a robe and using their
-body. They will gain additional piety with the first god they worship.
+Monks are ready to take on the dungeon with nothing but leather armour and
+basic combat skills. They will gain additional piety with the first god they
+worship.
 %%%%
 Necromancer
 

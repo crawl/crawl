@@ -191,10 +191,9 @@ static const map<job_type, job_def> job_data =
     3, 2, 7,
     { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_GHOUL, SP_MERFOLK,
       SP_VAMPIRE, },
-    { "robe" },
+    { "leather armour" },
     WCHOICE_NONE,
-    { { SK_FIGHTING, 3 }, { SK_UNARMED_COMBAT, 4 }, { SK_DODGING, 3 },
-      { SK_STEALTH, 2 }, },
+    { { SK_FIGHTING, 4 }, { SK_DODGING, 3 }, { SK_ARMOUR, 3 }, },
 } },
 
 { JOB_NECROMANCER, {
