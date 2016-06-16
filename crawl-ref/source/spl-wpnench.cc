@@ -185,22 +185,7 @@ static int _get_brand_duration(brand_type which_brand)
  */
 spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
-    if (!you.weapon())
-    {
-        mpr("You aren't wielding a weapon.");
-        return SPRET_ABORT;
-    }
-
     item_def& weapon = *you.weapon();
-
-    if (!is_brandable_weapon(weapon, true))
-    {
-        if (weapon.base_type != OBJ_WEAPONS)
-            mpr("This isn't a weapon.");
-        else
-            mpr("You cannot enchant this weapon.");
-        return SPRET_ABORT;
-    }
 
     bool has_temp_brand = you.duration[DUR_WEAPON_BRAND];
     // No need to brand with a brand it's already branded with.
