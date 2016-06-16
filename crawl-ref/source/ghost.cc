@@ -40,18 +40,12 @@ static spell_type search_order_aoe_conj[] =
     SPELL_CHAIN_LIGHTNING,
     SPELL_SHATTER,
     SPELL_FREEZING_CLOUD,
-    SPELL_STEAM_BALL,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_MEPHITIC_CLOUD,
-    SPELL_METAL_SPLINTERS,
-    SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
     SPELL_NO_SPELL, // end of list
 };
 
-// Pan lord conjuration spell list.
+// Pan lord basic conjuration spell list.
 static spell_type search_order_conj[] =
 {
     SPELL_CALL_DOWN_DAMNATION,
@@ -59,14 +53,11 @@ static spell_type search_order_conj[] =
     SPELL_CORROSIVE_BOLT,
     SPELL_QUICKSILVER_BOLT,
     SPELL_IOOD,
-    SPELL_ENERGY_BOLT,
-    SPELL_DISINTEGRATE,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
     SPELL_NO_SPELL, // end of list
 };
@@ -87,6 +78,8 @@ static spell_type search_order_selfench[] =
 // Pan lord summoning spell list.
 static spell_type search_order_summon[] =
 {
+    SPELL_SUMMON_DEMON,
+    SPELL_SUMMON_GREATER_DEMON,
     SPELL_HAUNT,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_DRAGON,
@@ -109,7 +102,6 @@ static spell_type search_order_misc[] =
     SPELL_PETRIFY,
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
-    SPELL_SLOW,
     SPELL_NO_SPELL, // end of list
 };
 
@@ -257,26 +249,31 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        // This bit uses the list of player spells to find appropriate
-        // spells for the demon, then converts those spells to the monster
-        // spell indices. Some special monster-only spells are at the end.
-
         ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        if (coinflip())
+        switch (random2(4))
+        {
+        case 0:
+        {
             ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
-        else
+            break;
+        }
+        case 1:
+        {
             ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
-
-        if (coinflip())
+            break;
+        }
+        case 2:
+        {
             ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));
-
-        if (coinflip())
+            break;
+        }
+        case 3:
+        {
             ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
-
-        // Demon-summoning should be fairly common.
-        if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            break;
+        }
+        }
 
         normalize_spell_freq(spells, xl);
     }
