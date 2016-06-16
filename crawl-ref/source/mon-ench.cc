@@ -2133,7 +2133,7 @@ static const char *enchant_names[] =
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
-    "idealised",
+    "idealised", "bound_soul",
     "buggy",
 };
 

@@ -160,6 +160,7 @@ enum monster_info_flags
     MB_GOZAG_INCITED,
     MB_PAIN_BOND,
     MB_IDEALISED,
+    MB_BOUND_SOUL,
     NUM_MB_FLAGS
 };
 

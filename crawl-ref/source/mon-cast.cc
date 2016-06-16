@@ -1254,6 +1254,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DOOM_HOWL:
     case SPELL_AURA_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
+    case SPELL_BIND_SOULS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6337,6 +6338,24 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         aura_of_brilliance(mons);
         return;
 
+    case SPELL_BIND_SOULS:
+        for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (*mi == mons)
+                continue;
+            if (mi->holiness() & MH_NATURAL
+                && mons_can_be_zombified(*mi)
+                && !mi->has_ench(ENCH_BOUND_SOUL))
+            {
+                mprf("%s soul is bound to this world.",
+                    mi->name(DESC_ITS).c_str());
+                mi->add_ench(
+                    mon_enchant(ENCH_BOUND_SOUL, 0, mons, INFINITE_DURATION));
+            }
+        }
+        return;
+
+
     case SPELL_GREATER_SERVANT_MAKHLEB:
     {
         const monster_type servants[] = { MONS_EXECUTIONER, MONS_GREEN_DEATH,
@@ -7967,6 +7986,16 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
             if (_valid_aura_of_brilliance_ally(mon, *mi))
                 return false;
+        return true;
+
+    case SPELL_BIND_SOULS:
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+            if (mi->holiness() & MH_NATURAL
+                && mons_can_be_zombified(*mi)
+                && !mi->has_ench(ENCH_BOUND_SOUL))
+            {
+                return false;
+            }
         return true;
 
 #if TAG_MAJOR_VERSION == 34

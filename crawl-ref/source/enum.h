@@ -2130,7 +2130,8 @@ enum enchant_type
     ENCH_GOZAG_INCITE,
     ENCH_PAIN_BOND, // affected by above
     ENCH_IDEALISED,
-    // Update enchantment names in mon-ench.cc when adding or removing
+    ENCH_BOUND_SOUL,
+    // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
 };
@@ -4695,6 +4696,7 @@ enum spell_type
     SPELL_SERPENT_OF_HELL_COC_BREATH,
     SPELL_SERPENT_OF_HELL_TAR_BREATH,
     SPELL_SERPENT_OF_HELL_DIS_BREATH,
+    SPELL_BIND_SOULS,
     NUM_SPELLS
 };
 
