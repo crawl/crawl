@@ -102,6 +102,14 @@ Berserk Other spell
 Causes a nearby ally to fly into a berserk rage. Going berserk temporarily
 increases health, speed, and damage dealt in melee.
 %%%%
+Bind Souls spell
+
+Bestows an enchantment on other nearby living creatures that may cause them to
+rise as spectral things after being slain.
+
+This magic is more powerful than that used to create a Death Channel, and as
+such the spectre will not be under the control of someone who uses one.
+%%%%
 Black Mark spell
 
 Empowers the caster and any nearby allies to debilitate their foes on a

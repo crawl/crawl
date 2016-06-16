@@ -1417,11 +1417,18 @@ static string _killer_type_name(killer_type killer)
     die("invalid killer type");
 }
 
+/**
+ * Make a spectral thing out of a dying/dead monster.
+ *
+ * @param mons  the monster that died
+ * @param quiet whether to print flavour messages
+ * @param spell the spell used to make the spectre
+ */
 static void _make_spectral_thing(monster* mons, bool quiet)
 {
     if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
-        const monster_type spectre_type = mons_species(mons->type);
+        const bool bound_soul = mons->has_ench(ENCH_BOUND_SOUL);
         enchant_type shapeshift = ENCH_NONE;
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             shapeshift = ENCH_SHAPESHIFTER;
@@ -1430,16 +1437,22 @@ static void _make_spectral_thing(monster* mons, bool quiet)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        mgen_data mg(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                     0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
-                     MG_NONE, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+        mgen_data mg(MONS_SPECTRAL_THING,
+                     bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
+                     bound_soul ? nullptr : &you,
+                     0,
+                     bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
+                     mons->pos(), MHITYOU, MG_NONE,
+                     bound_soul ?
+                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                      mons->type);
-        if (spectre_type == MONS_HYDRA)
+        if (mons->mons_species() == MONS_HYDRA)
         {
             // Headless hydras cannot be made spectral hydras, sorry.
             if (mons->heads() == 0)
             {
-                mpr("A glowing mist gathers momentarily, then fades.");
+                if (!quiet)
+                    mpr("A glowing mist gathers momentarily, then fades.");
                 return;
             }
             else
@@ -2191,8 +2204,11 @@ item_def* monster_die(monster* mons, killer_type killer,
                 bless_follower();
             }
 
-            if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp)
+            if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp
+                && !mons->has_ench(ENCH_BOUND_SOUL))
+            {
                 _make_spectral_thing(mons, !death_message);
+            }
             break;
         }
 
@@ -2251,8 +2267,11 @@ item_def* monster_die(monster* mons, killer_type killer,
             }
 
             // XXX: shouldn't this be considerably earlier...?
-            if (you.duration[DUR_DEATH_CHANNEL] && was_visible)
+            if (you.duration[DUR_DEATH_CHANNEL] && was_visible
+                && !mons->has_ench(ENCH_BOUND_SOUL))
+            {
                 _make_spectral_thing(mons, !death_message);
+            }
 
             break;
         }
@@ -2514,6 +2533,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
+    if (corpse && mons->has_ench(ENCH_BOUND_SOUL))
+        _make_spectral_thing(mons, !death_message);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(mons) : 0;

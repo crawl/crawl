@@ -110,6 +110,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
     { ENCH_IDEALISED,       MB_IDEALISED },
+    { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1525,6 +1526,8 @@ vector<string> monster_info::attributes() const
     }
     if (is(MB_IDEALISED))
         v.emplace_back("idealised");
+    if (is(MB_BOUND_SOUL))
+        v.emplace_back("bound soul");
     return v;
 }
 

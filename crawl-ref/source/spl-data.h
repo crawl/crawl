@@ -3776,6 +3776,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BIND_SOULS, "Bind Souls",
+    SPTYP_NECROMANCY,
+    SPFLAG_AREA | SPFLAG_MONSTER,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_DEATH_CHANNEL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

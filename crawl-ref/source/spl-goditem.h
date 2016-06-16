@@ -40,6 +40,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_PAIN_BOND,
     ENCH_IDEALISED,
     ENCH_INSANE,
+    ENCH_BOUND_SOUL,
 };
 
 bool player_is_debuffable();
