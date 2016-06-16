@@ -1328,7 +1328,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && player_effectively_in_light_armour())
+        if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";
         if (temp && you.form == TRAN_STATUE)
             return "the film of ice won't work on stone.";
