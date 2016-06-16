@@ -1015,7 +1015,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
     bool success = false;
 
-    // First try to pick our previous target.
+    // First try to pick our previous monster target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
@@ -1026,6 +1026,14 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
     if (!success)
     {
+        // If the previous targetted position is at all useful, use it.
+        if (hitfunc && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
+                                          range, hitfunc,
+                                          AFF_YES, AFF_MULTIPLE))
+        {
+            result = you.prev_grd_targ;
+            return true;
+        }
         // The previous target is no good. Try to find one from scratch.
         success = hitfunc && _find_square_wrapper(result, 1,
                                bind(_find_monster_expl,
