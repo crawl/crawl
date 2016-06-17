@@ -1868,21 +1868,25 @@ bool maybe_destroy_web(actor *oaf)
     if (!trap || trap->type != TRAP_WEB)
         return false;
 
-    if (coinflip())
+    if (oaf->is_monster())
     {
-        if (oaf->is_monster())
+        if (coinflip())
+        {
             simple_monster_message(oaf->as_monster(), " pulls away from the web.");
+            return false;
+        }
         else
-            mpr("You disentangle yourself.");
+        {
+            simple_monster_message(oaf->as_monster(), " tears the web.");
+            destroy_trap(oaf->pos());
+            return true;
+        }
+    }
+    else
+    {
+        mpr("You disentangle yourself.");
         return false;
     }
-
-    if (oaf->is_monster())
-        simple_monster_message(oaf->as_monster(), " tears the web.");
-    else
-        mpr("The web tears apart.");
-    destroy_trap(oaf->pos());
-    return true;
 }
 
 bool ensnare(actor *fly)
