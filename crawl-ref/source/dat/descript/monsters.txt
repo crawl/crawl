@@ -1096,8 +1096,8 @@ dangerous, this freakish relative puts it to shame.
 %%%%
 entropy weaver
 
-A gaunt humanoid creature covered in a flaking, pale chitin. Its spindly limbs
-are capable of startlingly quick movement and end in razor-sharp talons.
+A gaunt formicid with flaking, pale chitin. Its spindly limbs are capable of
+startlingly quick movement and end in razor-sharp talons.
 %%%%
 ettin
 
