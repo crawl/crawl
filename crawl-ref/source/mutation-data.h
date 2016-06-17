@@ -198,7 +198,7 @@ static const mutation_def mut_data[] =
   {"You feel less vulnerable to electricity.", "", ""},
 },
 
-{ MUT_REGENERATION, 3, 3, mutflag::GOOD, false,
+{ MUT_REGENERATION, 2, 3, mutflag::GOOD, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
