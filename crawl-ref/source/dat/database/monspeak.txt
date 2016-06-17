@@ -6307,6 +6307,50 @@ _Xtahua_rare_
 @The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
 ## END Xtahua ##
 %%%%
+############ ZOMAKA ### A relatively intelligent ghoul
+Zomaka
+
+@_Zomaka_common_@
+
+w:2
+@_Zomaka_rare_@
+%%%%
+_Zomaka_common_
+
+@The_monster@ yells @at_foe@, "Hold still, I'm trying not to hit the tasty
+bits."
+
+@The_monster@ says @to_foe@, "Calm down! Panicking will make you taste all
+gamey."
+
+@The_monster@'s stomach gurgles loudly.
+
+@The_monster@ asks @foe@, "Feeling dizzy?"
+
+@The_monster@ says @to_foe@, "Watch closely - they don't teach this one at
+school!"
+
+@The_monster@ says, "Killing people is nearly as fun as eating them!"
+
+VISUAL: @The_monster@ suddenly looks worried and begins counting @possessive@
+fingers.
+
+%%%%
+_Zomaka_rare_
+
+VISUAL: One of @the_monster@'s fingers quietly falls off.
+
+@The_monster@ moans, "Braiiinnnnnssss... are my favourite exotic meat!"
+
+@The_monster@ complains, "@player_genus_plural@... all flavor, no filling!"
+
+@The_monster@ says @to_foe@, "You wouldn't have a chance if I still had my old
+splint mail!"
+
+# reference to name's source
+w:5
+@The_monster@ mutters, "I could go for a good renewal about now..."
+
 ##########################################
 # Specific non-unique monsters
 ##########################################

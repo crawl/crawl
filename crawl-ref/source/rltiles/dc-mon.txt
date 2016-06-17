@@ -1008,8 +1008,9 @@ water_nymph MONS_WATER_NYMPH
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
-
 %sdir mon/unique
+zomaka MONS_ZOMAKA
+
 blork_the_orc MONS_BLORK_THE_ORC
 %rim 0
 urug MONS_URUG
