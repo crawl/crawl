@@ -2033,7 +2033,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ENTROPY_WEAVER,
       {
-       { SPELL_ENTROPIC_WEAVE, 50, MON_SPELL_WIZARD },
+       { SPELL_ENTROPIC_WEAVE, 40, MON_SPELL_WIZARD },
       }
     },
 
