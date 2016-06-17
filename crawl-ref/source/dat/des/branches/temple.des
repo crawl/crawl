@@ -900,7 +900,7 @@ ENDMAP
 
 ##########################################################################
 # Circular temples
-#   Total weight: 90 = 40+10+10+10+5+5+5+5
+#   Total weight: 60 = 10+10+10+10+5+5+5+5
 #   The classical shape, so highest weight.
 #   Several versions, to accommodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
@@ -908,7 +908,7 @@ ENDMAP
 # 12 gods
 NAME:   circular_temple_12
 PLACE:  Temple
-WEIGHT: 40
+WEIGHT: 10
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
