@@ -306,11 +306,9 @@ bool ranged_attack::handle_phase_hit()
 
     if (using_weapon() || launch_type == LRET_THROWN)
     {
-        mpr("ho1");
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
         {
-            mpr("ho2");
             return false;
         }
         if (apply_missile_brand())
@@ -640,7 +638,6 @@ bool ranged_attack::apply_missile_brand()
     special_missile_type brand = get_ammo_brand(*projectile);
     if (brand == SPMSL_CHAOS)
         brand = random_chaos_missile_brand();
-    mprf("brand %d", brand);
 
     switch (brand)
     {
@@ -714,10 +711,8 @@ bool ranged_attack::apply_missile_brand()
         chaos_affects_defender();
         break;
     case SPMSL_DISPERSAL:
-            mpr("hi1");
         if (damage_done > 0)
         {
-            mpr("hi2");
             if (defender->no_tele(true, true))
             {
                 if (defender->is_player())
@@ -725,7 +720,6 @@ bool ranged_attack::apply_missile_brand()
             }
             else
             {
-                mpr("hi3");
                 coord_def pos, pos2;
                 const bool no_sanct = defender->kill_alignment() == KC_OTHER;
                 if (random_near_space(defender, defender->pos(), pos, false,
@@ -733,7 +727,6 @@ bool ranged_attack::apply_missile_brand()
                     && random_near_space(defender, defender->pos(), pos2, false,
                                          no_sanct))
                 {
-                    mpr("hi4");
                     const coord_def from = attacker->pos();
                     if (grid_distance(pos2, from) > grid_distance(pos, from))
                         pos = pos2;
