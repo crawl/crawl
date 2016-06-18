@@ -2372,11 +2372,6 @@ int food_turns(const item_def &item)
     return Food_prop[Food_index[item.sub_type]].turns;
 }
 
-bool can_cut_meat(const item_def &item)
-{
-    return _does_damage_type(item, DAM_SLICE);
-}
-
 bool is_fruit(const item_def & item)
 {
     return item.is_type(OBJ_FOOD, FOOD_FRUIT);

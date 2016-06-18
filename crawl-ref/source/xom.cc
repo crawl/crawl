@@ -2886,20 +2886,16 @@ static void _xom_cleaving(int sever)
 
     if (const item_def* const weapon = you.weapon())
     {
-        // FIXME: it's not that odd for a dagger to look sharp...
-        const bool bladed = can_cut_meat(*weapon);
         const bool axe = item_attack_skill(*weapon) == SK_AXES;
         mprf(MSGCH_DURATION,
-             "%s %s %ssharp%s", weapon->name(DESC_YOUR).c_str(),
+             "%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
              conjugate_verb("look", weapon->quantity > 1).c_str(),
-             (bladed) ? "" : "oddly ",
              (axe) ? " (like it always does)." : ".");
     }
     else
     {
-        // FIXME: no "oddly" for claws?
         mprf(MSGCH_DURATION, "%s",
-             you.hands_act("look", "oddly sharp.").c_str());
+             you.hands_act("look", "sharp.").c_str());
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cleaving"), true);
