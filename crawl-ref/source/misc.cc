@@ -752,7 +752,7 @@ void swap_with_monster(monster* mon_to_swap)
         }
         else
         {
-            you.attribute[ATTR_HELD] = 10;
+            you.attribute[ATTR_HELD] = 1;
             if (get_trapping_net(you.pos()) != NON_ITEM)
                 mpr("You become entangled in the net!");
             else

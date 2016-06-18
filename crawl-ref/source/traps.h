@@ -10,6 +10,8 @@
 
 #define NEWLY_TRAPPED_KEY "newly_trapped"
 
+#define NET_MIN_DURABILITY -7
+
 struct bolt;
 class monster;
 struct trap_def;

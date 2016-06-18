@@ -539,16 +539,6 @@ IDEF(is_melded)
     return 1;
 }
 
-IDEF(can_cut_meat)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, can_cut_meat(*item));
-
-    return 1;
-}
-
 IDEF(is_corpse)
 {
     if (!item || !item->defined())
@@ -1306,7 +1296,6 @@ static ItemAccessor item_attrs[] =
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
-    { "can_cut_meat",      l_item_can_cut_meat },
     { "is_skeleton",       l_item_is_skeleton },
     { "is_corpse",         l_item_is_corpse },
     { "has_skeleton",      l_item_has_skeleton },
