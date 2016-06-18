@@ -7899,6 +7899,26 @@ static int _get_device_heal_factor()
     return max(0, factor);
 }
 
+void print_device_heal_message()
+{
+    // Don't give multiple messages in weird cases with both enhanced
+    // and reduced healing.
+    if (_get_device_heal_factor() > 3)
+    {
+        if (player_equip_unrand(UNRAND_KRYIAS))
+        {
+            item_def* item = you.slot_item(EQ_BODY_ARMOUR);
+            mprf("%s enhances the healing.",
+            item->name(DESC_THE, false, false, false).c_str());
+        }
+        else
+            mpr("The healing is enhanced."); // bad message, but this should
+                                             // never be possible anyway
+    }
+    else if (_get_device_heal_factor() < 3)
+        mpr("Your system partially rejects the healing.");
+}
+
 bool player::can_device_heal()
 {
     return _get_device_heal_factor() > 0;
