@@ -128,9 +128,16 @@ public:
 
         if (ddoor)
             mpr("You feel queasy.");
-        else if (you.can_device_heal() || you.duration[DUR_POISONING]
-            || you.duration[DUR_CONF] || unrotted)
+        else if (you.can_device_heal()
+                 || !is_device
+                 || you.duration[DUR_POISONING]
+                 || you.duration[DUR_CONF]
+                 || unrotted)
+        {
+            if (is_device)
+                print_device_heal_message();
             canned_msg(MSG_GAIN_HEALTH);
+        }
         else
             mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
@@ -196,6 +203,8 @@ public:
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
         inc_hp(amount);
+        if (is_device)
+            print_device_heal_message();
         mpr("You feel much better.");
         return true;
     }
