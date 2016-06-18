@@ -76,7 +76,7 @@ The card depicts a dragon whose scales are sloughing off, revealing a sheep
 underneath.
 
 Drawing this card will attempt to polymorph and malmutate nearby enemies into
-weaker forms.
+weaker forms, and will briefly daze those that cannot be polymorphed.
 %%%%
 Wild Magic card
 
