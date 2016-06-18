@@ -1982,12 +1982,8 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
     if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
         return false;
 
-    // you need to have done at least some damage.
-    if (dam <= 0)
-        return false;
-
-    // usually at least 4 damage, unless you are an unlucky vorpal user.
-    if (dam < 4 && wpn_brand != SPWPN_VORPAL && coinflip())
+    // you need to have done at least 4 damage.
+    if (dam < 4)
         return false;
 
     // ok, good enough!
