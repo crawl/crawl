@@ -52,6 +52,7 @@ deaths_door DEATHS_DOOR
 recall RECALL
 drain DRAIN
 idealised IDEALISED
+bound_soul BOUND_SOUL
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

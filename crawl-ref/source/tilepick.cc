@@ -1755,6 +1755,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_DRAIN;
     if (mons.is(MB_IDEALISED))
         ch |= TILE_FLAG_IDEALISED;
+    if (mons.is(MB_BOUND_SOUL))
+       ch |= TILE_FLAG_BOUND_SOUL;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
