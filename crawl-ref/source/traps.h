@@ -44,6 +44,5 @@ trap_type random_vault_trap();
 
 int count_traps(trap_type ttyp);
 void place_webs(int num);
-bool maybe_destroy_web(actor *oaf);
 bool ensnare(actor *fly);
 #endif

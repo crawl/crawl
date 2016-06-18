@@ -1227,8 +1227,7 @@ static void _free_self_from_web()
             return;
         }
 
-        // destroy or escape the web.
-        maybe_destroy_web(&you);
+        mpr("You disentangle yourself.");
     }
 
     // whether or not there was a web trap there, you're free now.
@@ -1859,33 +1858,6 @@ void place_webs(int num)
         if (coinflip())
             ts.reveal();
         env.trap[ts.pos] = ts;
-    }
-}
-
-bool maybe_destroy_web(actor *oaf)
-{
-    trap_def *trap = trap_at(oaf->pos());
-    if (!trap || trap->type != TRAP_WEB)
-        return false;
-
-    if (oaf->is_monster())
-    {
-        if (coinflip())
-        {
-            simple_monster_message(oaf->as_monster(), " pulls away from the web.");
-            return false;
-        }
-        else
-        {
-            simple_monster_message(oaf->as_monster(), " tears the web.");
-            destroy_trap(oaf->pos());
-            return true;
-        }
-    }
-    else
-    {
-        mpr("You disentangle yourself.");
-        return false;
     }
 }
 
