@@ -330,8 +330,8 @@ static monsterentry mondata[] =
 // dummy for recolouring
 {
     MONS_FORMICID, 'a', GREEN, "formicid",
-    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_BURROWS
-        | M_NO_POLY_TO | M_NO_GEN_DERIVED,
+    M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_NO_POLY_TO
+        | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_FORMICID, MONS_FORMICID, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -344,8 +344,7 @@ static monsterentry mondata[] =
 
 {
     MONS_ENTROPY_WEAVER, 'a', LIGHTCYAN, "entropy weaver",
-    M_WARM_BLOOD | M_NO_SKELETON | M_FIGHTER | M_SEE_INVIS | M_SPEAKS
-        | M_BURROWS,
+    M_WARM_BLOOD | M_NO_SKELETON | M_FIGHTER | M_SEE_INVIS | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_FORMICID, MONS_ENTROPY_WEAVER, MH_NATURAL, 60,
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17} },
