@@ -2354,7 +2354,8 @@ void monster::struggle_against_net()
                 }
                 return;
             }
-            maybe_destroy_web(this);
+            simple_monster_message(this, " pulls away from the web.");
+
         }
         del_ench(ENCH_HELD);
         return;
