@@ -1982,8 +1982,8 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
     if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
         return false;
 
-    // you need to have done at least 4 damage.
-    if (dam < 4)
+    // You need to have done at least some damage.
+    if (dam <= 0 || dam < 4 && coinflip())
         return false;
 
     // ok, good enough!
