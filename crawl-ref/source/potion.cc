@@ -485,6 +485,7 @@ public:
         const int ambrosia_turns = 3 + random2(8);
         if (confuse_player(ambrosia_turns, false, true))
         {
+            print_device_heal_message();
             mprf("You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
             you.increase_duration(DUR_AMBROSIA, ambrosia_turns);
