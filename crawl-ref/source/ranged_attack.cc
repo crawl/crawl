@@ -671,8 +671,8 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_POISONED:
         if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
-            && using_weapon()
-            && damage_done > 0
+                && using_weapon()
+                && damage_done > 0
             || !one_chance_in(4))
         {
             int old_poison;
