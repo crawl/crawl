@@ -390,6 +390,11 @@ void debuff_player()
             mprf(MSGCH_DURATION, "You feel limber!");
             you.redraw_evasion = true;
         }
+        else if (duration == DUR_FLAYED)
+        {
+            len = 0;
+            heal_flayed_effect(&you);
+        }
         else if (len > 1)
         {
             len = 1;
