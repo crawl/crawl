@@ -1025,7 +1025,7 @@ void player_reacts()
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
-    if (one_chance_in(10))
+    if (one_chance_in(div_rand_round(100, you.time_taken)))
     {
         const int teleportitis_level = player_teleport();
         // this is instantaneous
