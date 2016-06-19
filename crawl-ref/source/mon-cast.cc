@@ -6339,6 +6339,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BIND_SOULS:
+        simple_monster_message(mons, " binds the souls of nearby monsters.");
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
             if (*mi == mons)
@@ -6347,10 +6348,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 && mons_can_be_zombified(*mi)
                 && !mi->has_ench(ENCH_BOUND_SOUL))
             {
-                mprf("%s soul is bound to this world.",
-                    mi->name(DESC_ITS).c_str());
                 mi->add_ench(
-                    mon_enchant(ENCH_BOUND_SOUL, 0, mons, INFINITE_DURATION));
+                    mon_enchant(ENCH_BOUND_SOUL, 0, mons,
+                                random_range(10, 30) * BASELINE_DELAY));
             }
         }
         return;
