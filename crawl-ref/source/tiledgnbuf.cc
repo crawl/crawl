@@ -485,6 +485,8 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SUMMONED, x, y);
     if (fg & TILE_FLAG_PERM_SUMMON)
         m_buf_icons.add(TILEI_PERM_SUMMON, x, y);
+    if (fg & TILE_FLAG_BOUND_SOUL)
+        m_buf_icons.add(TILEI_BOUND_SOUL)
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         m_buf_icons.add(TILEI_MESH, x, y);

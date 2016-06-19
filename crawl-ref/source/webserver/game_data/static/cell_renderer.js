@@ -899,6 +899,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.SUMMONED, x, y);
             if (fg.PERM_SUMMON)
                 this.draw_icon(icons.PERM_SUMMON, x, y);
+            if (fg.BOUND_SOUL)
+                this.draw_icon(icons.BOUND_SOUL, x, y);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y);
