@@ -106,9 +106,6 @@ Bind Souls spell
 
 Bestows an enchantment on other nearby living creatures that may cause them to
 rise as spectral things after being slain.
-
-This magic is more powerful than that used to create a Death Channel, and as
-such will take precedence.
 %%%%
 Black Mark spell
 
