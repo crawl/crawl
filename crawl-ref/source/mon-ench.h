@@ -2,6 +2,8 @@
 #define MON_ENCH_H
 
 #define INFINITE_DURATION  30000
+#define MAX_ENCH_DEGREE_DEFAULT  4
+#define MAX_ENCH_DEGREE_ABJURATION  6
 
 class actor;
 

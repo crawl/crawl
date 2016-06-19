@@ -2051,13 +2051,20 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     const mon_enchant new_pois = mons->get_ench(ENCH_POISON);
 
     // Actually do the poisoning. The order is important here.
-    if (new_pois.degree > old_pois.degree)
+    if (new_pois.degree > old_pois.degree
+        || new_pois.degree >= MAX_ENCH_DEGREE_DEFAULT)
     {
         if (verbose)
         {
-            simple_monster_message(mons,
-                                   old_pois.degree > 0 ? " looks even sicker."
-                                                       : " is poisoned.");
+            const char* msg;
+            if (new_pois.degree >= MAX_ENCH_DEGREE_DEFAULT)
+                msg = " looks as sick as possible!";
+            else if (old_pois.degree > 0)
+                msg = " looks even sicker.";
+            else
+                msg = " is poisoned.";
+
+            simple_monster_message(mons, msg);
         }
     }
 
