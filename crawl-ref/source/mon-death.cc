@@ -1420,15 +1420,14 @@ static string _killer_type_name(killer_type killer)
 /**
  * Make a spectral thing out of a dying/dead monster.
  *
- * @param mons  the monster that died
- * @param quiet whether to print flavour messages
- * @param spell the spell used to make the spectre
+ * @param mons       the monster that died
+ * @param quiet      whether to print flavour messages
+ * @param bound_soul whether the thing is from Bind Souls (true) or DChan
  */
-static void _make_spectral_thing(monster* mons, bool quiet)
+static void _make_spectral_thing(monster* mons, bool quiet, bool bound_soul)
 {
     if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
-        const bool bound_soul = mons->has_ench(ENCH_BOUND_SOUL);
         enchant_type shapeshift = ENCH_NONE;
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             shapeshift = ENCH_SHAPESHIFTER;
@@ -2204,11 +2203,8 @@ item_def* monster_die(monster* mons, killer_type killer,
                 bless_follower();
             }
 
-            if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp
-                && !mons->has_ench(ENCH_BOUND_SOUL))
-            {
-                _make_spectral_thing(mons, !death_message);
-            }
+            if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp)
+                _make_spectral_thing(mons, !death_message, false);
             break;
         }
 
@@ -2267,11 +2263,8 @@ item_def* monster_die(monster* mons, killer_type killer,
             }
 
             // XXX: shouldn't this be considerably earlier...?
-            if (you.duration[DUR_DEATH_CHANNEL] && was_visible
-                && !mons->has_ench(ENCH_BOUND_SOUL))
-            {
-                _make_spectral_thing(mons, !death_message);
-            }
+            if (you.duration[DUR_DEATH_CHANNEL] && was_visible)
+                _make_spectral_thing(mons, !death_message, false);
 
             break;
         }
@@ -2534,7 +2527,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             corpse = daddy_corpse;
     }
     if (corpse && mons->has_ench(ENCH_BOUND_SOUL))
-        _make_spectral_thing(mons, !death_message);
+        _make_spectral_thing(mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(mons) : 0;
