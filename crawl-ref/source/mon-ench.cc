@@ -938,6 +938,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " loses the glow of perfection.");
         break;
 
+    case ENCH_BOUND_SOUL:
+        if (!quiet && you.can_see(*this))
+            mprf("%s soul is no longer bound.", name(DESC_ITS).c_str());
+        break;
+
     default:
         break;
     }
@@ -1423,6 +1428,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_ANTIMAGIC:
+    case ENCH_BOUND_SOUL:
         decay_enchantment(en);
         break;
 
@@ -2279,6 +2285,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
+    case ENCH_BOUND_SOUL:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
