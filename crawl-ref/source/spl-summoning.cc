@@ -2436,6 +2436,7 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
     mon.set_hit_dice(9 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
                                             // mhp doesn't vary with HD
+    int spell_levels = 0;
 
     for (const spell_type spell : servitor_spells)
     {
@@ -2443,14 +2444,18 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
             && (caster_mon || raw_spell_fail(spell) < 50))
         {
             mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
+            spell_levels += spell_difficulty(spell);
         }
     }
 
-    // Fix up frequencies now that we know the number of spells.
-    const size_t count = mon.spells.size();
+    // Fix up frequencies now that we know the total number of spell levels.
     const int base_freq = caster_mon ? 67 : 200;
     for (auto& slot : mon.spells)
-        slot.freq = base_freq / count;
+    {
+        slot.freq = max(1, div_rand_round(spell_difficulty(slot.spell)
+                                          * base_freq,
+                                          spell_levels));
+    }
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
