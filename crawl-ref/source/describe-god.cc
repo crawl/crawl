@@ -340,11 +340,11 @@ static string _describe_ancestor_upgrades()
                "                        Flail\n"
                "                        Shield\n"
                "                   Splint Mail (+AC)\n"
-               "15 (Option A)    Demon Trident (flame)\n"
-               "15 (Option B)      Broad Axe (flame)\n"
-               "21              Large Shield (reflect)\n"
+               "15                   Taunt ability\n"
+               "21 (Option A)    Demon Trident (flame)\n"
+               "21 (Option B)      Broad Axe (flame)\n"
                "21                      Haste\n"
-               "27                Speed (weapon ego)\n";
+               "27              Large Shield (reflect)\n";
     case MONS_ANCESTOR_BATTLEMAGE:
         return "XL                    Battlemage\n"
                "                     Quarterstaff\n"

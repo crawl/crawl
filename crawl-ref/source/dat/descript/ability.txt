@@ -842,8 +842,9 @@ on Invocations skill.
 %%%%
 Ancestor Life: Knight ability
 
-Remembers your ancestor as a knight, a strong melee combatant with superior
-defenses. This choice is permanent and cannot be undone.
+Remembers your ancestor as a knight, a melee combatant with superior defenses
+and, eventually, the ability to draw enemies' attacks onto itself. This choice
+is permanent and cannot be undone.
 %%%%
 Ancestor Life: Battlemage ability
 

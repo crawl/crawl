@@ -3787,6 +3787,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_TAUNT, "Taunt",
+    SPTYP_HEXES,
+    SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
+    4,
+    0,
+    -1, -1,
+    8, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

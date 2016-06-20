@@ -2133,6 +2133,7 @@ enum enchant_type
     ENCH_PAIN_BOND, // affected by above
     ENCH_IDEALISED,
     ENCH_BOUND_SOUL,
+    ENCH_TAUNTED,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4699,6 +4700,7 @@ enum spell_type
     SPELL_SERPENT_OF_HELL_TAR_BREATH,
     SPELL_SERPENT_OF_HELL_DIS_BREATH,
     SPELL_BIND_SOULS,
+    SPELL_TAUNT,
     NUM_SPELLS
 };
 

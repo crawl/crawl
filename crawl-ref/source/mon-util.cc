@@ -5549,6 +5549,13 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         _add_ancestor_spell(ancestor.spells,
                             _ancestor_custom_spell(SPELL_CONFUSE));
         break;
+    case MONS_ANCESTOR_KNIGHT:
+        if (HD >= 10)
+        {
+            ancestor.spells.emplace_back(SPELL_TAUNT, 30, MON_SPELL_NATURAL
+                                                        | MON_SPELL_NO_SILENT);
+        }
+        break;
     default:
         break;
     }

@@ -1429,6 +1429,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
+    case ENCH_TAUNTED:
         decay_enchantment(en);
         break;
 
@@ -2139,7 +2140,7 @@ static const char *enchant_names[] =
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
-    "idealised", "bound_soul",
+    "idealised", "bound_soul", "taunted",
     "buggy",
 };
 

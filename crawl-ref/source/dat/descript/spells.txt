@@ -1426,6 +1426,11 @@ Calls on the powers of darkness to cause agonising injury to any living thing
 in the caster's vicinity, cutting their resilience in half. This damage is
 never directly lethal.
 %%%%
+Taunt spell
+
+Attempts to draw the attention of nearby enemies, causing them to focus only
+on attacking the caster for the next several turns.
+%%%%
 Teleport Other spell
 
 Randomly translocates a targeted creature.

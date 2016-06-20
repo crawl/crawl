@@ -427,6 +427,7 @@ void handle_behaviour(monster* mon)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_insane()
         && isHealthy
+        && !mon->has_ench(ENCH_TAUNTED)
         && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
