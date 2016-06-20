@@ -584,6 +584,8 @@ static void _hydra_devour(monster &victim)
         // feel free to just use the actual creature name if this has buggy
         // edge cases or such
     }
+    if (victim.has_ench(ENCH_STICKY_FLAME))
+        mprf("Spicy!");
 
     // nutrition (maybe)
     if (filling)
