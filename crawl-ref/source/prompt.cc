@@ -108,8 +108,8 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             tmp = map->find(tmp)->second;
 
         if (safeanswer
-            && (tmp == ' ' || key_is_escape(tmp)
-                || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
+            && (toupper(tmp) != 'N' && toupper(tmp) != 'Y'
+                || crawl_state.seen_hups))
         {
             tmp = safeanswer;
         }
