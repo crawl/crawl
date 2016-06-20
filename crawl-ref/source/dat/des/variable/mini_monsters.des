@@ -201,87 +201,98 @@ YXXXXXXXXY
 YYYYYYYYYY
 ENDMAP
 
-# Anthill
-NAME:  minivault_29
-TAGS:  patrolling uniq_anthill
-DEPTH: D:8-13, Lair, Spider
-MONS:  queen ant, soldier ant, worker ant
-SUBST: 0 = 3.
-: if you.in_branch("Spider") then
-SUBST: 3 = 3332, ' = %
+# Anthill origins
+NAME:   minivault_29
+TAGS:   uniq_anthill
+DEPTH:  D:8-13, Lair:2-, Spider
+MONS:   patrolling worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  0 = 1., ' = .
+: else
+NSUBST: 0 = 2:3 / * = 12
+SUBST:  ' = %
 : end
 MAP
-'3......3..'
+'1......1..'
 ...x.xx.x.2.
 .xxx2xxxxx..
 .xxxx02xxx2.
-.2xx203032x3
-.xx021020xx.
-3xx023202x..
-.x2x3203xxx.
+.2xx201012x1
+.xx024020xx.
+1xx021202x..
+.x2x1201xxx.
 .x2xx02022x.
 ..xxxxxxxx2.
-...x2xxxx3..
-'3.......33'
+...x2xxxx1..
+'1.......11'
 ENDMAP
 
 NAME:   zaba_anthell
 TAGS:   no_rotate uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   queen ant, soldier ant, worker ant
-SUBST:  0 = 233, ? = . x
-: if you.in_branch("Spider") then
-SUBST:  3 = 3332, ' = %
+MONS:   patrolling worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+SUBST:  X = x.
+NSUBST: @ = 1:@ / * = x.
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  1 = 111., 0 = 112, 3' = .
+: else
+SUBST:  1 = 112., 0 = 11122, ' = %
 : end
 MAP
-     ?  ? ? ?  ?
-   ??x?x?x?x?x?x??
-  ??x?3?.?3?.?3?x??
- ??x.?..3.?.3.?.0x??
- ?x?0000?.2?....0?x?
-?x?..?....?'.?2?03?x?
- ?33.0?.'?2?..?.033?
-?x?3?...?212?...?3?x?
- ?330.?..?2?'.?0.33?
-?x?30?2?.'?....?..?x?
- ?x?0....?2.?0000?x?
- ??x0.?.3.?.3..?.x??
-  ??x?3?.?3?.?3?x??
-   ??x?x?x?x?x?x??
-     ?  ? ? ?  ?
+     X  X X X  X
+   XXx@x@x@x@x@xXX
+  X@xX1X.X1X.X1Xx@X
+ XXx.X..1.X.1.X.0xXX
+ XxX0000X.2X....0xxX
+XxX..X....X'.X2X01XxX
+ @11.0X.'X2X3.X.011@
+XxX1X...X242X...X1XxX
+ @110.X.3X2X'.X0.11@
+XxX10X2X.'X....X..XxX
+ XxX0....X2.X0000XxX
+ XXx0.X.1.X.1..X.xXX
+  X@xX1X.X1X.X1Xx@X
+   XXx@x@x@x@x@xXX
+     X  X X X  X
 ENDMAP
 
 NAME:  zaba_antful_of_joy
 TAGS:  no_rotate uniq_anthill
-DEPTH: D:8-13, Lair, Spider
-MONS:  queen ant, soldier ant, worker ant
-KFEAT: ^ = known alarm trap / .
-: if you.in_branch("Spider") then
-SUBST: 3 = 3332., ' = %
+DEPTH: D:8-13, Lair:2-, Spider
+MONS:  patrolling worker ant, soldier ant
+MONS:  entropy weaver, patrolling queen ant
+KFEAT: ^ = known alarm trap
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST: 1 = 11., 2 = 221, 3 = ., ^ = ^.
 : else
-SUBST: 2 = 223, 3 = 33.
+SUBST: 1 = 112., ' = %
 : end
 MAP
     xxxxxxxxxxx
-   xx333xxx333xx
-   x33333x33333x
-  xxx...xxx...xxx
+   xx131xxx131xx
+   x11111x11111x
+  xxx.1.xxx.1.xxx
  xxx..x..x..x..xxx
 xx.2.xxx222xxx.2.xx
-x'333.x32123x.333'x
+x'111.x12421x.111'x
 xx...xxx222xxx...xx
- xxx..x.3x3.x..xxx
+ xxx..x.1x1.x..xxx
   xxx.^.xxx.^.xxx
    x'....x....'x
    xx...xxx...xx
-    xxx33x33xxx
+    xxx11x11xxx
       xx.^.xx
        x+++x
 ENDMAP
 
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen no_pool_fixup
-DEPTH: D:8-, Lair, Spider
+DEPTH: D:8-13, Lair, Spider
 KMONS: 1 = worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
@@ -307,12 +318,16 @@ ENDMAP
 NAME:   minmay_another_anthill
 TAGS:   uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant / nothing, worker ant, soldier ant, patrolling queen ant
-SUBST:  a = 1223........x
-: if you.in_branch("Spider") then
-SUBST:  3 = 3332
-NSUBST: . = 4:% / *:.
+MONS:   patrolling worker ant, worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  ab = 1:5 2:20 3 .:85 x
+: else
+NSUBST: b = 2:4 / 2:* / *:2
+SUBST:  a = 1:10 2:15 3:15 .:80 x
 : end
+validate {{ return has_exit_from_glyph('5') }}
 MAP
   .. .... .. .
  .xx.xxxx.xx.x.
@@ -320,9 +335,9 @@ MAP
 .x..xaaaaxaaaxx.
  .xxaaxaaaaxxax.
 .x.xaaaaaaaaxx.
-.xxaaaaaxaaaaxx.
-.x.xxaa4aaaaax.
-.x.aaaaaaaaax.x.
+.xxaaabbbaaaaxx.
+.x.xxab5baaaax.
+.x.aaabbbaaax.x.
  .xaxaaaxxaaa.x.
 .x.xaaaaaxaaaxx.
  ..xaaxaaaaax.x.

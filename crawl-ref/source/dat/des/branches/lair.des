@@ -1225,10 +1225,17 @@ ENDMAP
 
 NAME:   wad_woods_antlair
 TAGS:   uniq_anthill
-DEPTH:  Lair, Forest
+DEPTH:  Lair:2-, Forest
 : wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
 MONS:   worker ant, soldier ant
+KMONS:  8 = entropy weaver
 KMONS:  Q = queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  8' = .
+: else
+SUBST:  ' = %
+: end
 MAP
 xxxxxxxxxxx1.xxxx
 xxx1xxx1xt.t.txxx
@@ -1240,8 +1247,8 @@ xxxxxx.x.x.1x...t
 xxxx.x.7xxx.xx.xx
 xxx6x.x.xxx.x.xxx
 xxxx.x.6x7..x.x7x
-x.x.x6x.W.x7x%.6x
-x7..x.xWWW.x.6Q*x
+x'x.x6x.W.x7x%86x
+x7.'x.xWWW.x86Q*x
 xx6xxxxxxxx6xx*%x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1461,18 +1468,18 @@ NAME:   wad_woods_minihive
 TAGS:   uniq_beehive
 DEPTH:  D:8-, Lair, Forest
 ORIENT: float
-COLOUR: a = yellow
-TILE:   a = wall_wax
-SUBST:  a = x
-: wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
 MONS:   killer bee, queen bee
 KMONS:  8 = meliai
 KITEM:  8 = %
-: if (you.in_branch("Lair") and you.absdepth() > 14) or
-:     you.absdepth() > 12 then
-NSUBST: 6 = 3:8 / *:6
+KFEAT:  a = x
+: wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  8 = 6
 : end
 KMASK:  W = no_monster_gen
+COLOUR: a = yellow
+TILE:   a = wall_wax
 MAP
         ttttttt..t    tt.
       .ttt.t.tt...t  ttt..
@@ -1480,14 +1487,14 @@ MAP
  t.t1ttt.1..1WW.1t....t1...t...
 t.1t..t.1..tWWW.t.1.1..t.tt..tt.
 ttt.t11.1t...tWW.1t.t1..tt...ttt
-tttt.1..aaaaaaa1Wt.t...t..tt1ttt
+tttt.1..aaamaaa1Wt.t...t..tt1ttt
 t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
-  tt.aa66a7a.a.6aaWtt1t...tt.tt
+  tt.aa86a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
- t1.1aa66a.a.a.6aa.t...t.t.ttttt
+ t1.1aa66a.a.a.8aa.t...t.t.ttttt
 tt.1..aaa.aba6aaa.11.t..tttt%ttt
-t.t.1..aa.6a6.aaWW.t.tt.tt11t
+t.t.1..aa.8a6.aaWW.t.tt.tt11t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
  tt.t111....t1WWwW.....1ttt
   11.t.tt1.tt.tWWt1.1tt...

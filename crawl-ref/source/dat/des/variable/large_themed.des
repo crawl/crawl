@@ -1431,15 +1431,15 @@ ENDMAP
 ################################################################################
 # Based off Zaba's beehive_diamond.
 NAME:    hangedman_what_comes_after_a
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  north
 WEIGHT:  8
 MONS:    killer bee, meliai, queen bee, oklob plant
 KITEM:   | = |
 SUBST:   A = X:3 .:2, z = x..
 NSUBST:  ' = 1:0 / 1:1 / 1:d / 1:% / 12 = .:260 01d% / * = .
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
 KFEAT:   | = >
 SUBST:   9 = 990, 8 = 9
 : else
@@ -1835,7 +1835,7 @@ ENDMAP
 
 # Based off of hive_mumbra_combs, for the old proposed portal.
 NAME:    regret_index_combs_of_tragedy
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  south
 WEIGHT:  8
 MONS:    killer bee, meliai, queen bee
@@ -1850,8 +1850,8 @@ NSUBST:  g = 1:. / *:aa., h = 1:. / *:aa., i = 1:. / *:aa.
 NSUBST:  j = 1:. / *:aa., k = 1:. / *:aa., l = 1:. / *:aa.
 NSUBST:  m = 1:. / *:aa., n = 1:. / *:aa., o = 1:. / *:aa.
 NSUBST:  p = 1:. / *:aa., q = 1:. / *:aa.
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
 SUBST:   9 = 990, 8 = 9
 : else
 NSUBST:  " = 3:2 / *:1
@@ -1901,7 +1901,7 @@ ENDMAP
 # Very loosely based off of linley's beehive.
 NAME:    regret_index_wax_grids
 TAGS:    no_pool_fixup
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  northwest
 WEIGHT:  6
 MONS:    killer bee, meliai, queen bee
@@ -1911,9 +1911,9 @@ NSUBST:  y = 5:x / 1:. / * = x., z = 5:x / 1:. / *:x.
 NSUBST:  Y = 3:x / 1:. / * = x., Z = 3:x / 1:. / *:x.
 SUBST:   D : aaP.., E : aaP.., F : aaP.., G : aaP..
 SUBST:   H : aaP.., I : aP., X = xxP.
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
-SUBST:   9 = 990, 8 = 9
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
 : else
 NSUBST:  ~ = 3:2 / *:1
 :    if you.branch() == "Lair" then
@@ -1960,7 +1960,7 @@ ENDMAP
 
 # Loosely based off of R1's beehive2.
 NAME:    regret_index_bee_streams
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  south
 WEIGHT:  6
 MONS:    killer bee, meliai, queen bee
@@ -1972,9 +1972,9 @@ SUBST:   E : x.., F : xx., G : xx., H : xx.
 SUBST:   I : aa., J : aa., K : aa., L : aa.
 SUBST:   y = xx., z = xx!
 CLEAR:   !
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
-SUBST:   9 = 990, 8 = 9
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
 : else
 NSUBST:  ~ = 3:2 / *:1
 :    if you.branch() == "Lair" then
@@ -2020,7 +2020,7 @@ ENDMAP
 # Very loosely based off of minmay's beehive_corners.
 NAME:    regret_index_harrowing_hell_hive
 TAGS:    no_pool_fixup
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  southwest
 WEIGHT:  4
 MONS:    killer bee, meliai, queen bee, oklob plant
@@ -2030,9 +2030,9 @@ SHUFFLE: ABCD
 SUBST:   A = a, B : aa., C : a.., D = .
 SUBST:   y = xxx., Y = xxw, z = xx!
 CLEAR:   !
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
-SUBST:   9 = 990, 8 = 9
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
 : else
 NSUBST:  ~ = 3:2 / *:1
 :    if you.branch() == "Lair" then
@@ -2055,10 +2055,10 @@ xxy".a'aa.a.....
 xxy...a....aD...
 xxya.A..BC.Da...x
 xxy.............x
-xxy.............xzzzzzzzz
-xxy.W.w.P"w"P.w.xxxxxxxxzz
-xxx.xwwwwwwwwwwwWYYYYYYxxz
-xxxaxwwwwwwwwwWWwwwwwYYYxz
+xxy.............xzzzzzzz
+xxy.W.w.P"w"P.w.xxxxxxxzz
+xxx.xwwwwwwwwwwwWYYYYYxxzz
+xxxaxwwwwwwwwwWWwwwwwYYxxz
 xxxWxwwwwwwwwwWxxwwwwwYYxz
 xxxWxwwwwwwwwWwxxwwwwwwYxz
 xxxWxwwwwxxwWwwwww4*wwwYxz
@@ -2083,9 +2083,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# ...not even recognizable as beehive_tunnels anymore. Oh well.
 NAME:    regret_index_tunnel_blossom
 TAGS:    no_pool_fixup
-DEPTH:   D:12-, Lair, !Lair:$
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  float
 WEIGHT:  6
 MONS:    killer bee, meliai, queen bee
@@ -2094,9 +2095,9 @@ NSUBST:  " = 12:0 / 4 = 001.. / *:.
 SHUFFLE: BCDEFGH
 NSUBST:  A = 1:. / * = a
 SUBST:   B = ., C : a., DEFGH = a, X = xxPw
-: if (you.branch() == "Lair" and you.absdepth() < 15)
-:  or you.absdepth() < 13 then
-SUBST:   9 = 990, 8 = 9
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
 : else
 NSUBST:  ~ = 3:2 / *:1
 :    if you.branch() == "Lair" then
