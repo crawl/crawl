@@ -106,7 +106,7 @@ function sroom_beehive(e)
                       "patrolling queen bee", true)
 
     e.kmons('M = meliai')
-    if level > 12 then
+    if level > 11 then
         e.nsubst('1 = 3:M / *:1')
     end
 

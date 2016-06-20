@@ -1110,7 +1110,7 @@ TAGS: uniq_anthill
 DEPTH: Spider
 NSUBST: % = 1:* / 5:% / 3:$ / *:1
 SUBST: X = xxxx., 1 = 11102.
-MONS: worker ant, soldier ant, queen ant
+MONS: worker ant, soldier ant, entropy weaver, queen ant
 MAP
         xxxx      xxxxx
       xxxXXxxxx xxxxxxxx
@@ -1118,13 +1118,13 @@ MAP
  xxXXxxX..XX.XX%x%XXX%Xxx
 xxX.%xxXX.XX.XxX.X.XX.Xxx
 xX.XXxxX.XX%X.XX.XxXX.Xxx
-xxX..xX.xxxXX.XxX.Xx.xxx
+xxX3.xX.xxxXX.XxX.Xx.xxx
  xxXX..x1.xxx.xxX.xx....
  xX%XXx......xxxxx...1..@
- xX.XXx.3.2.1..xx.......@
+ xX.XXx.4.2.1..xx.......@
 xxxX..x..........1..1xx.
 xxX.Xx.x1.xx.1.1....xxxx
-xxxX.xxxx.xxxx....xx.Xxxx
+xxxX3xxxx.xxxx....xx.Xxxx
  xxxX%XX...XXx.xxxxXX.Xxx
   xxxXX.X.X.XxX.xx%XX.Xxx
    xxxXXX.XXxxXX..XxX%Xxx
