@@ -554,7 +554,7 @@ bool melee_attack::handle_phase_aux()
 }
 
 /**
- * Devour a monster whole!.
+ * Devour a monster whole!
  *
  * @param defender  The monster in question.
  */
@@ -654,12 +654,6 @@ static void _hydra_consider_devouring(monster &defender)
     }
 
     dprf("corpse ok");
-
-    // or monsters as large as you are!
-    if (defender.body_size() >= you.body_size())
-        return;
-
-    dprf("size ok");
 
     // chow down.
     _hydra_devour(defender);
