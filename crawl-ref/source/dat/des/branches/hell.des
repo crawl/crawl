@@ -783,7 +783,7 @@ NAME:   vestibule_tar_nicolae_necropolis
 TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
-KMONS:  z = place:Depths:1 zombie / lost soul
+KMONS:  z = place:Depths:1 zombie
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
            curse skull
 TILE:   c = dngn_stone_dark

@@ -107,8 +107,8 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 MONS:    plant / fungus w:2
 MONS:    wolf / warg / hell hound / raiju w:4
-MONS:    shadow w:20 / wraith w:20 / lost soul w:2 / \
-         shadow wraith / phantasmal warrior / skeletal warrior
+MONS:    shadow w:20 / wraith w:20 / shadow wraith / phantasmal warrior / \
+         skeletal warrior
 MONS:    dancing weapon / war gargoyle w:2
 MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \

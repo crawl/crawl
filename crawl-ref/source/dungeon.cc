@@ -3587,19 +3587,6 @@ static void _place_assorted_zombies()
     }
 }
 
-static void _place_lost_souls()
-{
-    int nsouls = random2avg(you.depth + 2, 3);
-    for (int i = 0; i < nsouls; ++i)
-    {
-        mgen_data mg;
-        mg.cls = MONS_LOST_SOUL;
-        mg.behaviour              = BEH_HOSTILE;
-        mg.preferred_grid_feature = DNGN_FLOOR;
-        place_monster(mg);
-    }
-}
-
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
@@ -3639,10 +3626,7 @@ static void _builder_monsters()
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
     else
-    {
         _place_assorted_zombies();
-        _place_lost_souls();
-    }
 }
 
 /**
