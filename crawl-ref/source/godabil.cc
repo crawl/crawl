@@ -6350,12 +6350,12 @@ bool ru_power_leap()
         else if (you.trans_wall_blocking(beam.target))
         {
             clear_messages();
-            mpr("There's something in the way!");
+            canned_msg(MSG_SOMETHING_IN_WAY);
         }
         else
         {
             clear_messages();
-            mpr("You can only leap to visible locations.");
+            canned_msg(MSG_CANNOT_SEE);
         }
     }
 
@@ -6744,12 +6744,12 @@ bool uskayaw_line_pass()
         else if (you.trans_wall_blocking(beam.target))
         {
             clear_messages();
-            mpr("There's something in the way!");
+            canned_msg(MSG_SOMETHING_IN_WAY);
         }
         else
         {
             clear_messages();
-            mpr("You can only travel to visible locations.");
+            canned_msg(MSG_CANNOT_SEE);
         }
     }
 
@@ -6845,12 +6845,12 @@ bool uskayaw_grand_finale()
         else if (you.trans_wall_blocking(beam.target))
         {
             clear_messages();
-            mpr("There's something in the way!");
+            canned_msg(MSG_SOMETHING_IN_WAY);
         }
         else
         {
             clear_messages();
-            mpr("You can only target visible locations.");
+            canned_msg(MSG_CANNOT_SEE);
         }
     }
 

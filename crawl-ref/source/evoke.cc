@@ -142,7 +142,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (!feat_is_reachable_past(grd(first_middle))
         && !feat_is_reachable_past(grd(second_middle)))
     {
-        mpr("There's a wall in the way.");
+        canned_msg(MSG_SOMETHING_IN_WAY);
         return false;
     }
 

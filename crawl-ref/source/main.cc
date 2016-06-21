@@ -2253,7 +2253,7 @@ void process_command(command_type cmd)
                 if (you.see_cell(dest))
                     full_describe_square(dest);
                 else
-                    mpr("You can't see that place.");
+                    canned_msg(MSG_CANNOT_SEE);
             }
         }
         break;

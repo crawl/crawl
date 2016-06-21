@@ -963,7 +963,7 @@ bool direction_chooser::move_is_ok() const
             if (you.see_cell(target()))
                 mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
             else
-                mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target what you can't see.");
+                mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
             return false;
         }
 
