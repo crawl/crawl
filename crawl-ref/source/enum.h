@@ -1356,51 +1356,6 @@ enum confirm_level_type
     CONFIRM_ALL_EASY,
 };
 
-// When adding new delays, update their names in delay.cc
-enum delay_type
-{
-    DELAY_NOT_DELAYED,
-    DELAY_EAT,
-    DELAY_FEED_VAMPIRE,
-    DELAY_ARMOUR_ON,
-    DELAY_ARMOUR_OFF,
-    DELAY_JEWELLERY_ON,
-    DELAY_MEMORISE,
-    DELAY_BUTCHER,
-    DELAY_BOTTLE_BLOOD,
-#if TAG_MAJOR_VERSION == 34
-    DELAY_WEAPON_SWAP,
-#endif
-    DELAY_PASSWALL,
-    DELAY_DROP_ITEM,
-    DELAY_MULTIDROP,
-    DELAY_ASCENDING_STAIRS,
-    DELAY_DESCENDING_STAIRS,
-#if TAG_MAJOR_VERSION == 34
-    DELAY_UNUSED, // was DELAY_RECITE
-#endif
-
-    // [dshaligram] Shift-running, resting, travel and macros are now
-    // also handled as delays.
-    DELAY_RUN,
-    DELAY_REST,
-    DELAY_TRAVEL,
-
-    DELAY_MACRO,
-
-    // In a macro delay, a stacked delay to tell Crawl to read and act on
-    // one input command.
-    DELAY_MACRO_PROCESS_KEY,
-
-    DELAY_INTERRUPTIBLE,                // simple interruptible delay
-    DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
-
-    DELAY_SHAFT_SELF, // Formicid ability
-    DELAY_BLURRY_SCROLL,
-
-    NUM_DELAYS
-};
-
 enum description_level_type
 {
     DESC_THE,
@@ -3929,6 +3884,7 @@ enum operation_types
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
     OPER_ID       = 'i',
+    OPER_BUTCHER  = 'c',
     OPER_ANY      = 0,
 };
 

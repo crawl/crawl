@@ -44,7 +44,7 @@
 static void _eat_chunk(item_def& food);
 static void _eating(item_def &food);
 static void _describe_food_change(int hunger_increment);
-static bool _vampire_consume_corpse(int slot, bool invent);
+static bool _vampire_consume_corpse(item_def& corpse);
 static void _heal_from_food(int hp_amt);
 
 void make_hungry(int hunger_amount, bool suppress_msg,
@@ -437,7 +437,7 @@ bool eat_item(item_def &food)
         if (you.species != SP_VAMPIRE)
             return false;
 
-        if (_vampire_consume_corpse(link, in_inventory(food)))
+        if (_vampire_consume_corpse(food))
         {
             count_action(CACT_EAT, -1); // subtype Corpse
             you.turn_is_over = true;
@@ -1004,8 +1004,8 @@ static void _eat_chunk(item_def& food)
     if (do_eat)
     {
         dprf("nutrition: %d", nutrition);
-        start_delay(DELAY_EAT, food_turns(food) - 1,
-                    (suppress_msg) ? 0 : nutrition, -1);
+        start_delay<EatDelay>(food_turns(food) - 1, suppress_msg ? 0 : nutrition,
+                              NUM_FOODS);
         lessen_hunger(nutrition, true);
     }
 }
@@ -1018,7 +1018,7 @@ static void _eating(item_def& food)
     int duration = food_turns(food) - 1;
 
     // use delay.parm3 to figure out whether to output "finish eating"
-    start_delay(DELAY_EAT, duration, 0, food.sub_type, duration);
+    start_delay<EatDelay>(duration, 0, food_type(food.sub_type));
 
     lessen_hunger(food_value, true);
 }
@@ -1396,13 +1396,9 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
     return chunktype;
 }
 
-static bool _vampire_consume_corpse(int slot, bool invent)
+static bool _vampire_consume_corpse(item_def& corpse)
 {
     ASSERT(you.species == SP_VAMPIRE);
-
-    item_def &corpse = (invent ? you.inv[slot]
-                               : mitm[slot]);
-
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
 
@@ -1425,7 +1421,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
 
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
-    start_delay(DELAY_FEED_VAMPIRE, duration, invent, slot);
+    start_delay<FeedVampireDelay>(duration, corpse);
 
     return true;
 }
@@ -1473,7 +1469,7 @@ int you_min_hunger()
 void handle_starvation()
 {
     // Don't faint or die while eating.
-    if (current_delay_action() == DELAY_EAT)
+    if (dynamic_cast<EatDelay*>(current_delay().get()))
         return;
 
     if (!you_foodless() && you.hunger <= HUNGER_FAINTING)

@@ -394,7 +394,7 @@ public:
 
     vector<text_pattern> drop_filter;
 
-    FixedVector<FixedBitVector<NUM_AINTERRUPTS>, NUM_DELAYS> activity_interrupts;
+    map<string, FixedBitVector<NUM_AINTERRUPTS>> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
     FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif

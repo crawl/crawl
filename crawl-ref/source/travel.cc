@@ -617,7 +617,7 @@ static void _start_running()
     you.running.init_travel_speed();
 
     if (you.running < 0)
-        start_delay(DELAY_TRAVEL, 1);
+        start_delay<TravelDelay>();
 }
 
 // Stops shift+running and all forms of travel.
@@ -3957,9 +3957,9 @@ void runrest::initialise(int dir, int mode)
     }
 
     if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT_DURATION)
-        start_delay(DELAY_REST, 1);
+        start_delay<RestDelay>();
     else
-        start_delay(DELAY_RUN, 1);
+        start_delay<RunDelay>();
 }
 
 void runrest::init_travel_speed()

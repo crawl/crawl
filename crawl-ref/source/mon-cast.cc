@@ -1327,8 +1327,11 @@ static bool _animate_dead_okay(spell_type spell)
     if (crawl_state.game_is_arena())
         return true;
 
-    if (is_butchering() || is_vampire_feeding())
+    if (you_are_delayed() && current_delay()->is_butcher()
+        || is_vampire_feeding())
+    {
         return false;
+    }
 
     if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
         return false;
@@ -7233,16 +7236,10 @@ static bool _should_siren_sing(monster* mons, bool avatar)
         return false;
 
     // Don't behold player already half down or up the stairs.
-    if (!you.delay_queue.empty())
+    if (player_stair_delay())
     {
-        const delay_queue_item delay = you.delay_queue.front();
-
-        if (delay.type == DELAY_ASCENDING_STAIRS
-            || delay.type == DELAY_DESCENDING_STAIRS)
-        {
-            dprf("Taking stairs, don't mesmerise.");
-            return false;
-        }
+        dprf("Taking stairs, don't mesmerise.");
+        return false;
     }
 
     // Won't sing if either of you silenced, or it's friendly,
