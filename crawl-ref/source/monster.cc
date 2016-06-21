@@ -6287,12 +6287,22 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         ench_cache     = old_ench_cache;
         ench_countdown = old_ench_countdown;
 
+        cloud_type ctype = CLOUD_STORM;
+
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+            if (!cell_is_solid(*ai)
+                && (!cloud_at(*ai)
+                   || cloud_at(*ai)->type == ctype))
+            {
+                place_cloud(ctype, *ai, 2 + random2(3), this);
+            }
+
         if (observable())
         {
             mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
                  name(DESC_THE).c_str());
-            mprf(MSGCH_WARN, "%s surrounding storm thunders violently.",
-                 name(DESC_ITS).c_str());
+            mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
+                 name(DESC_THE).c_str());
         }
     }
 
