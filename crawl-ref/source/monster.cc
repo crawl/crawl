@@ -6289,9 +6289,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         if (observable())
         {
-            mprf("%s roars in fury and transforms into a fierce dragon!",
+            mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
                  name(DESC_THE).c_str());
-            mprf("%s surrounding storm thunders violently.",
+            mprf(MSGCH_WARN, "%s surrounding storm thunders violently.",
                  name(DESC_ITS).c_str());
         }
     }
