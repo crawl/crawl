@@ -1670,7 +1670,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_SHROUD_OF_GOLUBRIA, 11, MON_SPELL_WIZARD },
       }
     },
 
