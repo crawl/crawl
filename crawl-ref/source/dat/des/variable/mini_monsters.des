@@ -1543,24 +1543,25 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 DEPTH:  Depths, Elf, Lair:4-
-: if you.in_branch("Lair") then
-MONS:   patrolling spriggan druid n_adj n_noc name:young hd:8
-: else
-MONS:   patrolling spriggan druid
-: end
 MONS:   black bear / polar bear w:20 / wolf w:20
-FTILE:  .t12%@ = floor_moss
+MONS:   patrolling boggart, patrolling spriggan druid
+: if you.in_branch("Lair") then
+SUBST:  ' = 2, 3 = .
+: else
+SUBST:  ' = .
+: end
+FTILE:  .t123%@ = floor_moss
 MAP
 ttttt       tttt@t
-tttttt tt ttttt2tt
-t2tttttttttttt.ttt
+tttttt tt ttttt1tt
+t1tttttttttttt.ttt
 @t..ttttttttt.tttt
-tttt..t%ttt..tttt
-tttttt.1...ttttt
- ttttt..tttttttt
- tttt.ttttttttt
+tttt.'t%ttt..tttt
+tttttt.3..'ttttt
+ ttttt.'tttttttt
+ tttt'ttttttttt
 tttt.tttttttt
-tttt2tttttt
+tttt1tttttt
  tttt@ttt
 ENDMAP
 
@@ -2385,6 +2386,25 @@ xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   hangedman_tell_no_tales
+DEPTH:  D:9-, !D:$
+TAGS:   no_monster_gen no_item_gen patrolling
+MONS:   spriggan skeleton / centaur skeleton
+MONS:   troll skeleton / hungry ghost
+KMONS:  A = unseen horror
+ITEM:   fruit q:1, royal jelly q:q, bread ration q:1
+SUBST:  D : DDDDE
+NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
+MAP
+ cccccccccc
+ccxx1x1+DDc
+c.x.x..mDDc
+@.d.x2.mDDc
+c.x.x..cc+c
+ccxx1x.c1fc
+ cccccccccc
+ENDMAP
+
 NAME:   hangedman_weighted_door
 TAGS:   extra
 DEPTH:  D:9-, Crypt
@@ -2740,6 +2760,25 @@ ccccccccc.c
 ccccccccc@c
 ENDMAP
 
+NAME:   hangedman_tree_tricks
+DEPTH:  D:8-, !D:$
+TAGS:   extra no_monster_gen
+NSUBST: T = 1:. / 1:t
+KMONS:  1 = oklob plant
+KITEM:  1A_ = fruit q:3
+KFEAT:  _ = altar_fedhas
+MAP
+ tttttttttt
+tttt.ttttttt
+@tt.t.tttttt
+t.tt.t.Tt1tt
+t.t.ttT.A$tt
+tt.ttttA_Att
+t.t.tt1$Attt
+tt.ttttttttt
+ tttttttttt
+ENDMAP
+
 NAME:   disabler_island
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:8-14, Lair
@@ -2788,7 +2827,7 @@ ENDMAP
 # nearby downstairs exit is generated, to provide another option.
 #
 # Monster set: currently only the classical stationary monsters, i.e.
-# statues, oklob plants, burning bush, curse skulls.
+# statues, oklob plants.
 # This could be expanded: pool with electric eel, or monsters behind grates.
 #
 NAME:     dpeg_stationary_puzzle

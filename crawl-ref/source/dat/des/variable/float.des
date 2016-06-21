@@ -1562,21 +1562,21 @@ ENDMAP
 
 ##############################################################################
 # And for now, something woody (1KB)
-NAME:   forest_paths
+NAME:   kb_forest_paths
 DEPTH:  D, Depths, Lair
 ORIENT: float
-FTILE:  .t0@*12345 = floor_moss
 MONS:   spriggan, spriggan rider, spriggan defender
-MONS:   spriggan druid n_adj n_noc name:young hd:8, spriggan druid
+MONS:   boggart, spriggan druid
 : if you.absdepth() < 5 then
 SUBST:  130 = ., 245 = 0
-: elseif you.absdepth() < 14 then
+: elseif you.absdepth() < 13 then
 SUBST:  1 = 1., 2 = 1, 35 = 0.
-: elseif you.absdepth() < 22 or you.in_branch("Lair") then
+: elseif you.absdepth() < 22 then
 SUBST:  3 = 0, 5 = 4
 : else
 SUBST:  2 = 3, 1 = 2
 : end
+FTILE:  .t0@*12345 = floor_moss
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx

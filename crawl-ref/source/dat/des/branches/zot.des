@@ -1065,79 +1065,67 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################
-# Xom's getting in the "make people in Zot scream" bracket, with tricks
-# resembling his overflow altars and effects. Extremely nasty and annoying.
+# A highlight reel of Xom's many altar vault gimmicks.
 NAME:    hangedman_xom_zot_hilarity
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup patrolling transparent
 DEPTH:   Zot, !Zot:$
 WEIGHT:  3
-KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
-        randart great mace ego:chaos | randart battleaxe ego:chaos| \
-        randart great sword ego:chaos | randart glaive ego:chaos | \
-        randart scythe ego:chaos | any weapon randart ego:chaos w:4 | \
-        randart dire flail w:5 | randart great mace w:5 | randart battleaxe w:5 | \
-        randart great sword w:5 | randart glaive w:5 | randart scythe w:5 | \
-        any weapon randart w:2 | dire flail ego:chaos w:5 | great mace ego:chaos w:5 | \
-        great sword ego:chaos w:5 | battleaxe ego:chaos w:5 | glaive ego:chaos w:5 | \
-        scythe ego:chaos w:5 | any weapon ego:chaos w:2 | dire flail w:30 | \
-        great mace w:30 | battleaxe w:30 | great sword w:30 | \
-        scythe w:30 | glaive w:30 | any weapon w:12 . \
-        randart hunting sling ego:chaos | randart shortbow ego:chaos | \
-        randart arbalest ego:chaos | hunting sling | shortbow | arbalest | \
-        nothing w:15 . sling bullet | arrow | bolt . \
-        lightning rod w:7 | rod of shadows w:8 | \
-        iron rod w:7 | wand of hasting w:16 | \
-        wand of confusion | wand of random effects w:6 | \
-        wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
-        scroll of summoning w:45 . randart ring mail | \
-        randart chain mail w:20 | randart scale mail | ring mail | \
-        chain mail w:20 | scale mail | nothing w:20
+# Gifts, too.
+KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
+             randart great mace ego:chaos | randart battleaxe ego:chaos| \
+             randart great sword ego:chaos | randart glaive ego:chaos | \
+             randart scythe ego:chaos | randart dire flail | \
+             randart great mace | randart battleaxe | randart great sword | \
+             randart glaive | randart scythe
+KMONS:   3 = guardian mummy ; randart greatsling ego:chaos . sling bullet / \
+             guardian mummy ; randart longbow ego:chaos . arrow / \
+             guardian mummy ; randart triple crossbow . bolt / \
+             guardian mummy ; randart greatsling . sling bullet / \
+             guardian mummy ; randart longbow . arrow / \
+             guardian mummy ; randart arbalest . bolt
+KMONS:   5 = guardian mummy ; rod of shadows | rod of destruction | \
+             wand of draining | wand of lightning | scroll of summoning w:20
+KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
+             randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   0 = known zot trap
-KFEAT:   ^~ = permanent teleport trap w:45 / zot trap w:4 / . w:1
+KFEAT:   ^~ = known teleport trap
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
-KFEAT:   z = iron_grate
-KPROP:   ^~'"> = no_tele_into
-MARKER:  - = lua:restrict_door()
-COLOUR:  ^~ = warp
-FTILE:   ^' = floor_rough_magenta
-FTILE:   ~" = floor_rough_lightmagenta
-NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9
-NSUBST:  ^ = 1:' / *:^, ~ = 1:" / *:~
-SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 f:3 F:2
-SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
-SHUFFLE: 56, 78, ^' / ~", cm / xn
+KFEAT:   m = iron_grate
+SUBST:   d = tGmcc, y = c`, c = cccccbbvvx, l = wl
+NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / *:>, 9 = 1:0 / *:9
+NSUBST:  ^ = 1:' / *:^, ~ = 1:" / *:~, ` = 2:f / *:.
+SHUFFLE: 12 / 34 / 56 / 78, 56, 78, ^' / ~"
 MARKER:  f = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine { cloud_type = "noxious fumes", pow_max = 17, \
-             delay_min = 350, delay_max = 400, size_min = 2, size_max = 3}
+FTILE:   f = floor_pebble_lightmagenta
 MAP
-        mmmmmmm
-     mmmm2.1.2mmmm
-  @@cmMMmm+m+mmMMmc@@
-  @..clMMl```lMMlc..@
+        ccccccc
+     cccc2.1.2cccc
+  @@ccyycm+m+mcyycc@@
+  @..clyyl```lyylc..@
   c.c.```````````.c.c
- mmc.l````.c.````l.cmm
- mMl``c..`.>.`..c``lMm
- mMM``.>.`d..`d>.``MMm
-mmmM``.d.^~~^`...``Mmmm
-m3ml`````z--zz^````lm6m
-m.+``...^z999-~d..``+.m
-m4m``c>.~-9_9-~.>c``m5m
-m.+``..d~-999z^...``+.m
-m3ml````^zz--z`````lm6m
-mmmM``...`^~~^.d.``Mmmm
- mMM``.>d`..d`.>.``MMm
- mMl``c..`.>.`..c``lMm
- mmc.l````.c.````l.cmm
+ ccc.l````.c.````l.ccc
+ cyl``c..`.>.`..c``lyc
+ cyy``.>.`d..`d>.``yyc
+cccy``.d.^~~^`...``yccc
+c3ml`````m==mm^````lm6c
+c.+``...^m999=~d..``+.c
+c4m``c>.~=9_9=~.>c``m5c
+c.+``..d~=999m^...``+.c
+c3ml````^mm==m`````lm6c
+cccy``...`^~~^.d.``yccc
+ cyy``.>d`..d`.>.``yyc
+ cyl``c..`.>.`..c``lyc
+ ccc.l````.c.````l.ccc
   c.c.```````````.c.c
-  @..clMMl```lMMlc..@
-  @@cmMMmm+m+mmMMmc@@
-     mmmm8.7.8mmmm
-        mmmmmmm
+  @..clyyl```lyylc..@
+  @@ccyycm+m+mcyycc@@
+     cccc8.7.8cccc
+        ccccccc
 ENDMAP
 
 ################################################################################

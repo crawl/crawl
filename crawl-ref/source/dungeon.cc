@@ -5210,7 +5210,7 @@ static dungeon_feature_type _pick_an_altar()
         god = GOD_NO_GOD;
     }
     // Xom can turn up anywhere
-    else if (one_chance_in(20))
+    else if (one_chance_in(27))
         god = GOD_XOM;
     else
     {
@@ -5237,6 +5237,19 @@ static dungeon_feature_type _pick_an_altar()
 
         case BRANCH_TOMB:
             god = GOD_KIKUBAAQUDGHA;
+            break;
+
+        case BRANCH_VESTIBULE:
+        case BRANCH_DIS:
+        case BRANCH_GEHENNA:
+        case BRANCH_COCYTUS:
+        case BRANCH_TARTARUS:
+        case BRANCH_PANDEMONIUM: // particularly destructive / elemental gods
+            if (one_chance_in(3))
+                god = random_choose(GOD_KIKUBAAQUDGHA, GOD_NEMELEX_XOBEH,
+                                    GOD_QAZLAL, GOD_VEHUMET);
+            else
+                god = GOD_MAKHLEB;
             break;
 
         default: // Any god (with exceptions).

@@ -3056,12 +3056,6 @@ A smooth, charming statue of a beautiful merfolk bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
 light, as if sprinkled in actual water.
 %%%%
-young spriggan druid
-
-A junior member of the order of spriggans sworn to protect nature. While less
-dangerous than the elders, this one is perfectly capable of dealing with
-trespassers like you.
-%%%%
 witch
 
 An old and unnaturally ugly human, wearing robes stained with what appears to
