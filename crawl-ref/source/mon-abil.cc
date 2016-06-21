@@ -823,58 +823,6 @@ static bool _lost_soul_affectable(const monster &mons)
     return true;
 }
 
-static bool _lost_soul_teleport(monster* mons)
-{
-    bool seen = you.can_see(*mons);
-
-    typedef pair<monster*, int> mon_quality;
-    vector<mon_quality> candidates;
-
-    // Assemble candidate list and randomize
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (_lost_soul_affectable(**mi) && mons_aligned(mons, *mi))
-        {
-            mon_quality m(*mi, min(mi->get_experience_level(), 18) + random2(8));
-            candidates.push_back(m);
-        }
-    }
-    sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
-
-    for (mon_quality candidate : candidates)
-    {
-        coord_def empty;
-        if (find_habitable_spot_near(candidate.first->pos(), mons_base_type(mons), 3, false, empty)
-            && mons->move_to_pos(empty))
-        {
-            mons->behaviour = BEH_WANDER;
-            mons->foe = MHITNOT;
-            mons->props["band_leader"].get_int() = candidate.first->mid;
-            if (seen)
-            {
-                mprf("%s flickers out of the living world.",
-                        mons->name(DESC_THE, true).c_str());
-            }
-            return true;
-        }
-    }
-
-    // If we can't find anywhere useful to go, flicker away to stop the player
-    // being annoyed chasing after us.
-    if (one_chance_in(3))
-    {
-        if (seen)
-        {
-            mprf("%s flickers out of the living world.",
-                        mons->name(DESC_THE, true).c_str());
-        }
-        monster_die(mons, KILL_MISC, -1, true);
-        return true;
-    }
-
-    return false;
-}
-
 // Is it worth sacrificing ourselves to revive this monster? This is based
 // on monster HD, with a lower chance for weaker monsters so long as other
 // monsters are present, but always true if there are only as many valid
@@ -1190,32 +1138,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             used = true;
         }
         break;
-
-    case MONS_LOST_SOUL:
-    if (one_chance_in(3))
-    {
-        bool see_friend = false;
-        bool see_foe = false;
-
-        for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
-        {
-            if (ai->is_monster() && mons_aligned(*ai, mons))
-            {
-                if (_lost_soul_affectable(*ai->as_monster()))
-                    see_friend = true;
-            }
-            else
-                see_foe = true;
-
-            if (see_friend)
-                break;
-        }
-
-        if (see_foe && !see_friend)
-            if (_lost_soul_teleport(mons))
-                used = true;
-    }
-    break;
 
     case MONS_THORN_HUNTER:
     {
