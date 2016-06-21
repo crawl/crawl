@@ -2046,8 +2046,8 @@ void monster::apply_enchantments()
 static inline int _mod_speed(int val, int speed)
 {
     if (!speed)
-        speed = 10;
-    const int modded = val * 10 / speed;
+        speed = BASELINE_DELAY;
+    const int modded = val * BASELINE_DELAY / speed;
     return modded? modded : 1;
 }
 
