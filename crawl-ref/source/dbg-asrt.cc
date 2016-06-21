@@ -14,6 +14,7 @@
 #include "crash.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
+#include "delay.h"
 #include "directn.h"
 #include "dlua.h"
 #include "env.h"
@@ -184,16 +185,11 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (const delay_queue_item &item : you.delay_queue)
+        for (const auto delay : you.delay_queue)
         {
-            fprintf(file, "    type:     %d", item.type);
-            if (item.type <= DELAY_NOT_DELAYED || item.type >= NUM_DELAYS)
-                fprintf(file, " <invalid>");
+            fprintf(file, "    type:     %s", delay->name());
             fprintf(file, "\n");
-            fprintf(file, "    duration: %d\n", item.duration);
-            fprintf(file, "    parm1:    %d\n", item.parm1);
-            fprintf(file, "    parm2:    %d\n", item.parm2);
-            fprintf(file, "    started:  %d\n\n", (int) item.started);
+            fprintf(file, "    duration: %d\n", delay->duration);
         }
         fprintf(file, "\n");
     }

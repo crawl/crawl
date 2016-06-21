@@ -949,7 +949,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
 bool do_wear_armour(int item, bool quiet)
 {
-    const item_def &invitem = you.inv[item];
+    item_def &invitem = you.inv[item];
     if (!invitem.defined())
     {
         if (!quiet)
@@ -1001,14 +1001,14 @@ bool do_wear_armour(int item, bool quiet)
 
     const int delay = armour_equip_delay(invitem);
     if (delay)
-        start_delay(DELAY_ARMOUR_ON, delay - (swapping ? 0 : 1), item);
+        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), invitem);
 
     return true;
 }
 
 bool takeoff_armour(int item)
 {
-    const item_def& invitem = you.inv[item];
+    item_def& invitem = you.inv[item];
 
     if (invitem.base_type != OBJ_ARMOUR)
     {
@@ -1074,7 +1074,7 @@ bool takeoff_armour(int item)
     you.turn_is_over = true;
 
     const int delay = armour_equip_delay(invitem);
-    start_delay(DELAY_ARMOUR_OFF, delay - 1, item);
+    start_delay<ArmourOffDelay>(delay - 1, invitem);
 
     return true;
 }
@@ -1440,7 +1440,7 @@ static bool _swap_rings(int ring_slot)
     }
 
     // Put on the new ring.
-    start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
+    start_delay<JewelleryOnDelay>(1, you.inv[ring_slot]);
 
     return true;
 }
@@ -1567,7 +1567,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
             return false;
 
         // Put on the new amulet.
-        start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+        start_delay<JewelleryOnDelay>(1, item);
 
         // Assume it's going to succeed.
         return true;
@@ -1597,7 +1597,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
             if (!remove_ring(you.equip[hand_used], false))
                 return false;
 
-            start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+            start_delay<JewelleryOnDelay>(1, item);
             return true;
         }
     }
@@ -2674,8 +2674,7 @@ void read(item_def* scroll)
     {
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
-        const pair<bool, int> item = item_int(*scroll);
-        start_delay(DELAY_BLURRY_SCROLL, turns, item.second, item.first);
+        start_delay<BlurryScrollDelay>(turns, *scroll);
         if (player_mutation_level(MUT_BLURRY_VISION) == 1)
             you.time_taken /= 2;
     }

@@ -532,15 +532,21 @@ void game_options::new_dump_fields(const string &text, bool add, bool prepend)
     }
 }
 
+static string _correct_spelling(const string& str)
+{
+    if (str == "armor_on")
+        return "armour_on";
+    if (str == "armor_off")
+        return "armour_off";
+    if (str == "memorize")
+        return "memorise";
+    if (str == "jewelry_on")
+        return "jewellery_on";
+    return str;
+}
+
 void game_options::set_default_activity_interrupts()
 {
-    for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
-        for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
-        {
-            activity_interrupts[adelay].set(aint,
-                is_delay_interruptible(static_cast<delay_type>(adelay)));
-        }
-
     const char *default_activity_interrupts[] =
     {
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
@@ -563,14 +569,15 @@ void game_options::set_default_activity_interrupts()
         // trash all queued delays, including travel.
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
-        "interrupt_uninterruptible =",
-        "interrupt_weapon_swap =",
-
-        nullptr
+        // These are all totally uninterruptible by default, since it's
+        // impossible for them to be interrupted anyway.
+        "interrupt_eat = ",
+        "interrupt_drop_item = ",
+        "interrupt_jewellery_off =",
     };
 
-    for (int i = 0; default_activity_interrupts[i]; ++i)
-        read_option_line(default_activity_interrupts[i], false);
+    for (const char* line : default_activity_interrupts)
+        read_option_line(line, false);
 }
 
 void game_options::set_activity_interrupt(
@@ -579,13 +586,13 @@ void game_options::set_activity_interrupt(
 {
     if (starts_with(interrupt, interrupt_prefix))
     {
-        string delay_name = interrupt.substr(interrupt_prefix.length());
-        delay_type delay = get_delay(delay_name);
-        if (delay == NUM_DELAYS)
+        string delay_name =
+            _correct_spelling(interrupt.substr(interrupt_prefix.length()));
+        if (!activity_interrupts.count(delay_name))
             return report_error("Unknown delay: %s\n", delay_name.c_str());
 
         FixedBitVector<NUM_AINTERRUPTS> &refints =
-            activity_interrupts[delay];
+            activity_interrupts[delay_name];
 
         eints |= refints;
         return;
@@ -606,12 +613,8 @@ void game_options::set_activity_interrupt(const string &activity_name,
                                           bool append_interrupts,
                                           bool remove_interrupts)
 {
-    const delay_type delay = get_delay(activity_name);
-    if (delay == NUM_DELAYS)
-        return report_error("Unknown delay: %s\n", activity_name.c_str());
-
     vector<string> interrupts = split_string(",", interrupt_names);
-    FixedBitVector<NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
+    auto & eints = activity_interrupts[_correct_spelling(activity_name)];
 
     if (remove_interrupts)
     {

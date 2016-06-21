@@ -63,10 +63,11 @@ static bool _start_butchering(item_def& corpse)
         you.species == SP_VAMPIRE
         && can_bottle_blood_from_corpse(corpse.mon_type);
 
-    const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
-
     // Yes, 0 is correct (no "continue butchering" stage).
-    start_delay(dtype, 0, corpse.index());
+    if (bottle_blood)
+        start_delay<BottleBloodDelay>(0, corpse);
+    else
+        start_delay<ButcherDelay>(0, corpse);
 
     you.turn_is_over = true;
     return true;

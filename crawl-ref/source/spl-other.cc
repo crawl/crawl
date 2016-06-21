@@ -286,7 +286,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         if (check_moveto(dest, "passwall", msg))
         {
             // Passwall delay is reduced, and the delay cannot be interrupted.
-            start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+            start_delay<PasswallDelay>(1 + walls, dest);
         }
     }
     return SPRET_SUCCESS;

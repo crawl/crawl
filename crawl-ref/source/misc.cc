@@ -177,11 +177,11 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
     {
-        bool moving = (!you.delay_queue.empty()
-                          && delay_is_run(you.delay_queue.front().type)
-                          && you.delay_queue.front().type != DELAY_REST
-                       || you.running < RMODE_NOT_RUNNING
-                       || want_move);
+        bool moving = you_are_delayed()
+                       && current_delay()->is_run()
+                       && current_delay()->is_resting()
+                      || you.running < RMODE_NOT_RUNNING
+                      || want_move;
 
         bool result = is_safe;
 

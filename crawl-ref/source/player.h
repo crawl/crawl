@@ -61,6 +61,7 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
 class targetter;
+class Delay;
 
 int check_stealth();
 
@@ -357,7 +358,9 @@ public:
     bool received_noskill_warning;
     bool wizmode_teleported_into_rock;
 
-    delay_queue_type delay_queue;       // pending actions
+    // This should really be unique_ptr, but that causes issues since files.cc
+    // uses the default constructor of `player`.
+    vector<shared_ptr<Delay>> delay_queue; // pending actions
 
     chrono::time_point<chrono::system_clock> last_keypress_time;
 

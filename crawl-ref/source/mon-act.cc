@@ -3880,9 +3880,7 @@ static bool _monster_move(monster* mons)
         // movement is towards the player. -- bwr
         if (testbits(mons->flags, MF_TAKING_STAIRS))
         {
-            const delay_type delay = current_delay_action();
-            if (delay != DELAY_ASCENDING_STAIRS
-                && delay != DELAY_DESCENDING_STAIRS)
+            if (!player_stair_delay())
             {
                 mons->flags &= ~MF_TAKING_STAIRS;
 

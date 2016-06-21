@@ -330,15 +330,15 @@ function process_command() */
 static int crawl_process_command(lua_State *ls)
 {
     const bool will_process =
-        current_delay_action() == DELAY_MACRO || !you_are_delayed();
+        !you_are_delayed() || current_delay()->is_macro();
 
     if (will_process)
     {
         // This should only be called from a macro delay, but run_macro
         // may not have started the macro delay; do so now.
         if (!you_are_delayed())
-            start_delay(DELAY_MACRO, 1);
-        start_delay(DELAY_MACRO_PROCESS_KEY, 1);
+            start_delay<MacroDelay>();
+        start_delay<MacroProcessKeyDelay>();
     }
 
     lua_pushboolean(ls, will_process);
@@ -347,11 +347,11 @@ static int crawl_process_command(lua_State *ls)
 
 static bool _check_can_do_command(lua_State *ls)
 {
-    const delay_type current_delay = current_delay_action();
-    if (current_delay && current_delay != DELAY_MACRO)
+    auto delay = current_delay();
+    if (delay && !delay->is_macro())
     {
         luaL_error(ls, "Cannot currently process new keys (%s delay active)",
-                   delay_name(current_delay));
+                   delay->name());
         return false;
     }
 
