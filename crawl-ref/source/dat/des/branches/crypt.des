@@ -1305,7 +1305,6 @@ NAME:   church_of_pain_bobbens
 ORIENT: northwest
 TAGS:   no_monster_gen no_item_gen layout_city
 PLACE:  Crypt:$
-KMONS:  0 = lost soul / nothing
 # MONSTER LAYOUT
 # boss (1)
 # boss guard (2)
@@ -1361,7 +1360,6 @@ MONS:   flying skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
 NSUBST: / = 1:| / 2:* / *:%
-NSUBST: . = 5:0 / *:.
 NSUBST: %*| = 1:d / 1:h
 : crypt_loot_plus(_G)
 MAP
@@ -1435,7 +1433,6 @@ KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
 KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
-KMONS:  0 = lost soul / nothing
 # red metal walls
 COLOUR: = = red
 SUBST:  = = +
@@ -1444,7 +1441,6 @@ TILE:   r = wall_hell
 SUBST:  r = c
 # emergency exits; most are closed
 NSUBST: ? = 3:+ / *:v
-NSUBST: . = 7:0 / *:.
 # Tomb entrance
 : if crawl.x_chance_in_y(5, 7) then
 SUBST:  O = *
@@ -1582,7 +1578,6 @@ NAME:   quadcrypt_mu
 ORIENT: encompass
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
 PLACE:  Crypt:$
-KMONS:  0 = lost soul / nothing
 ####### chapel garden
 SUBST:  F = f ?
 SUBST:  f = p:1 .:1
@@ -1637,7 +1632,6 @@ KMONS:  X = w:1 curse skull / w:19 hell knight
 NSUBST: K = 1:+ / *:v
 NSUBST: ' = 1:+ / *:v
 NSUBST: " = 1:+ / *:v
-NSUBST: . = 8:0 / *:.
 NSUBST: *| = 1:d / 1:h
 ####### Tomb entrance
 : if crawl.one_chance_in(4) then
@@ -1780,8 +1774,6 @@ KMONS:  C = hellwing
 KMONS:  E = skeleton w:13 / nothing
 KMONS:  F = patrolling reaper
 : end
-KMONS:  S = lost soul / nothing
-NSUBST: . = 8:S / *:.
 SUBST:  n : ncc
 : set_feature_name("granite_statue", "gravestone")
 : set_feature_name("tree", "dead tree")
@@ -1888,8 +1880,6 @@ KFEAT:  YD = closed_door
 KFEAT:  ER = alarm trap
 KFEAT:  CSd = floor
 COLOUR: YsDdE = darkgrey
-NSUBST: . = 3:0 / 2 = 0. / *:.
-KMONS:  0 = lost soul
 : local brnd = crawl.random2(15)
 : if brnd > 10 then
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
@@ -2002,7 +1992,7 @@ KMONS:   A = lich
 KMONS:   C = revenant
 KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
-KMONS:   F = lost soul / small abomination / large abomination w:2
+KMONS:   F = small abomination / large abomination w:5
 KMONS:   H = death knight
 KMONS:   I = death knight w:5 / nothing
 KMONS:   J = profane servitor
