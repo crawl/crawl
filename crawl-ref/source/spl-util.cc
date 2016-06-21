@@ -1261,7 +1261,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
         if (temp
@@ -1272,6 +1271,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you aren't wielding an enchantable weapon.";
         }
         // intentional fallthrough
+    case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
