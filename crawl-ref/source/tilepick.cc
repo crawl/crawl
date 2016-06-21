@@ -155,8 +155,6 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_WALL_PERMAROCK;
     case DNGN_SLIMY_WALL:
         return TILE_WALL_SLIME;
-    case DNGN_OPEN_SEA:
-        return TILE_DNGN_OPEN_SEA;
     case DNGN_RUNED_DOOR:
         return TILE_DNGN_RUNED_DOOR;
     case DNGN_SEALED_DOOR:
@@ -183,13 +181,16 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return player_in_branch(BRANCH_SWAMP) ? TILE_DNGN_MANGROVE : TILE_DNGN_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
-    case DNGN_LAVA_SEA: // FIXME
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
+    case DNGN_LAVA_SEA:
+        return TILE_DNGN_LAVA_SEA;
     case DNGN_DEEP_WATER:
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
         return TILE_DNGN_SHALLOW_WATER;
+    case DNGN_OPEN_SEA:
+        return TILE_DNGN_OPEN_SEA;
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
         return TILE_FLOOR_NORMAL;
