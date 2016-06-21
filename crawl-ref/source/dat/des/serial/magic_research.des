@@ -95,8 +95,8 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
-MONS:   air elemental / raiju / shock serpent
-MONS:   sky beast, ball lightning / lightning spire
+MONS:   air elemental / raiju / sky beast
+MONS:   lightning spire, ball lightning / shock serpent
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan
@@ -157,7 +157,7 @@ ENDMAP
 
 NAME:    hangedman_research_thanatology
 MONS:    macabre mass hd:4 / small abomination
-MONS:    zombie / skeleton, spectral thing, place:Depths:$ simulacrum
+MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }

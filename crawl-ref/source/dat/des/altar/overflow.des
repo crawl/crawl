@@ -90,13 +90,13 @@ end
 
 function species_mock(e)
   if you.race() == "Centaur" then
-    e.kmons("1 = orb spider")
+    e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
     e.kmons("1 = titan simulacrum")
   elseif you.race() == "Demonspawn" then
     e.kmons("1 = hell beast")
   elseif you.race():find("Draconian") then
-    e.kmons("1 = death drake")
+    e.kmons("1 = wyvern")
   elseif you.race() == "Deep Dwarf" then
     e.kmons("1 = deep dwarf zombie")
   elseif you.race() == "Deep Elf" then
@@ -106,7 +106,7 @@ function species_mock(e)
   elseif you.race() == "High Elf" then
     e.kmons("1 = giant orange brain")
   elseif you.race() == "Hill Orc" then
-    e.kmons("1 = goblin ; mundane hand axe")
+    e.kmons("1 = goblin ; mundane hand axe . mundane ring mail")
   elseif you.race() == "Human" then
     e.kmons("1 = killer klown")
   elseif you.race() == "Felid" then
@@ -2343,16 +2343,18 @@ ENDMAP
 NAME:   dancing_weapons_uskayaw
 DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
+MONS:   generate_awake dancing weapon ; dagger | hand axe
 KFEAT:  _ = altar_uskayaw
-NSUBST: X = 2:1 / *:.
-KPROP:  1. = no_tele_into
-KMASK:  1. = no_trap_gen
-MONS:   generate_awake dancing weapon ; dagger
+NSUBST: ' = 2:1 / *:'
+KMASK:  1' = no_monster_gen
+KMASK:  1' = no_item_gen
+KMASK:  1' = no_trap_gen
+KPROP:  1' = no_tele_into
 MAP
 .......
 .mmmmm.
-.mXXXm.
-.mXXXm.
+.m'''m.
+.m'''m.
 .mmmmm.
 .......
 ..._...
@@ -2372,7 +2374,7 @@ MAP
 .G.......G.
 ....def....
 .G..._...G.
-....GGG....
+....ccc....
   .......
 ENDMAP
 
