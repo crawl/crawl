@@ -2055,11 +2055,11 @@ wccw.wccw
 wwww@wwww
 ENDMAP
 
-NAME: lightli_wizard_tower
-TAGS: no_monster_gen
+NAME:  lightli_wizard_tower
+TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS: patrolling wizard, patrolling crimson imp
-ITEM: any book, any scroll
+MONS:  patrolling wizard, patrolling crimson imp
+ITEM:  any book, any scroll
 MAP
    bbbb
   bbdebb
@@ -2071,6 +2071,23 @@ bb......bb
  bb....bb
   bb..bb
    b++b
+ENDMAP
+
+NAME:  minmay_a_box_with_orc_wizards_in_it
+DEPTH: D:4-7
+MONS:  orc wizard, orc priest
+ITEM:  any book
+SUBST: 1 : 1:49 2:1, 1 = 1., 2 = 2.
+MAP
+  .....
+ ..xxx..
+...m1x...
+.mmm1xxm.
+.m11d11m.
+.mxx1mmm.
+...+1m...
+ ..xxx..
+  .....
 ENDMAP
 
 ################################################################################
@@ -5632,6 +5649,238 @@ xc........cx
 xccccccccccx
 xxxxxxxxxxxx
 ENDMAP
+
+NAME:    minmay_checkerbox
+DEPTH:   D:3-
+SHUFFLE: "'
+SUBST:   " = ., ' = x
+SHUFFLE: xxxm
+SUBST:   x : x:40 cvbm
+: if you.absdepth() < 9 then
+SUBST:   9 = 0
+: end
+MAP
+ .......
+."mx0xm".
+.m'...'m.
+.x.xmx.x.
+.m.9|9.m.
+.x.xmx.x.
+.m'...'m.
+."mx0xm".
+ .......
+ENDMAP
+
+NAME:  minmay_bent
+DEPTH: D:4-
+SUBST: " : "'
+SUBST: " : .:100 xcvbnmGTt0
+SUBST: ' : .:100 xcvbnmGt0%
+SUBST: 0 = 00.
+: if you.absdepth() < 9 then
+SUBST: 9 = 0
+: end
+MAP
+     .....
+    ..xxx0
+  ...xx...0.
+  ."0x*.'.x.
+ ..0*x.'..x.
+..xxxx9..xx.
+.xx..9xxxx..
+.x..'.x*0..
+.x.'.*x0".
+.0...xx...
+  0xxx..
+  .....
+ENDMAP
+
+NAME:    minmay_ruined_shrine
+DEPTH:   D:4-
+SUBST:   c = ccc.
+SUBST:   c : c b:2 v:2
+NSUBST:  0 = 2:0 / 6 = 0.. / *:.
+SHUFFLE: '"
+SUBST:   " : 0:75 ':75 xcvbnTG t:5
+SUBST:   ' : 0:75 xcvbnTG t:5
+: if you.absdepth() < 9 then
+SUBST:   9 = 0
+: end
+MAP
+    .......
+   ..ccccc..
+  ..ccccccc..
+ ..ccc9C9ccc..
+..ccc00"00ccc..
+.ccc00'0'00ccc.
+.cc*0000000*cc.
+.cccccc0cccccc.
+.cccccc0cccccc.
+......000......
+ENDMAP
+
+NAME: minmay_checkered_concentric_circles
+DEPTH: D:12-, Depths, Elf
+SHUFFLE: vc / vc / vc / vc / vb / vn / cb / cn
+NSUBST:  8 = 1:8 / 1:. / * = 8.
+NSUBST:  9 = 1:9 / 1:. / * = 9.
+MAP
+     .....
+   ...vcv...
+  ..cvc8cvc..
+ ..cv.9.9.vc..
+ .cv9.....9vc.
+..v...vcv...v..
+.vc8.vc|cv.9cv.
+.c8..+|||c...+.
+.vc8.vc|cv.9cv.
+..v...vcv...v..
+ .cv9.....9vc.
+ ..cv.9.9.vc..
+  ..cvc8cvc..
+   ...vcv...
+     .....
+ENDMAP
+
+NAME:  minmay_tall_x
+DEPTH: D:1-2
+MAP
+.......
+.xx.xx.
+..x0x..
+ .%x%.
+ 0xbx0
+ .%x%.
+..x0x..
+.xx.xx.
+.......
+ENDMAP
+
+NAME:  minmay_split_cup_small
+DEPTH: D:1-2
+MAP
+.......
+.xxxxx.
+.x0x%x.
+.x0.%..
+.x0x%x.
+.xxxxx.
+.......
+ENDMAP
+
+NAME:  minmay_split_cup_large
+DEPTH: D:1-2
+SUBST: b : xcvbmGT%0 .:50
+MAP
+.........
+.xxxxxxx.
+.x0...0x.
+.xx0b0xx.
+.x%%.%%x.
+.xxx.xxx.
+.........
+ENDMAP
+
+NAME:  minmay_tripent
+DEPTH: D:1-2
+MAP
+ .. ...
+..x.xx.
+.xxx0x.
+ .x%x.
+.x0xxx.
+.xx.x..
+... ..
+ENDMAP
+
+NAME:  minmay_tiny_reverse_x
+DEPTH: D:1-2
+MAP
+.. . ..
+.x.x.x.
+ .x%x.
+.x0.0x.
+ .x%x.
+.x.x.x.
+.. . ..
+ENDMAP
+
+NAME:  minmay_small_reverse_x
+DEPTH: D:1-2
+MAP
+........
+.x.xx.x.
+..x0%x..
+.x%bb0x.
+.x0bb%x.
+..x%0x..
+.x.xx.x.
+........
+ENDMAP
+
+NAME:   minmay_guardbox
+DEPTH:  D:2-3
+WEIGHT: 1
+MAP
+0000
+0%%0
+0%%0
+0000
+ENDMAP
+
+NAME:    minmay_randomly_rotated_circles
+DEPTH:   D:2-3
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOP
+SUBST:   AI : ., BCDEFGHJKLMNOP : x
+SUBST:   b : bxcvm 0:5 .:5 %:5
+MAP
+    ........
+  ...BBBCCC...
+ ..BBB....CCC..
+ .AA........CD.
+..A..JJJKKK..D..
+.AA.II...0KL.DD.
+.A..I0.%%.0L..D.
+.A..I.%bb%.L..D.
+.H..P.%bb%.M..E.
+.H..P0.%%..M..E.
+.HH.PO0..0MM.EE.
+..H..OOONNN..E..
+ .HG........EE.
+ ..GGG....FFF..
+  ...GGGFFF...
+    ........
+ENDMAP
+
+NAME:    minmay_swirly_circle
+DEPTH:   Depths
+SUBST:   x : ccvvb
+MAP
+       ........
+    ....xxxxxx....
+   ..xxxx....9xxx..
+  ..xxxx.xxxxxxxxx..
+ ..xx|xx.xx|xxx.8xx..
+ .xx8xxx.xxx8x.xx|xx.
+ .xx.xxx.xxx.x.xxxxx.
+..xxx...x...xx.xxxxx..
+.x9xxxxxxxxx.xx....xx.
+.x.xx8.x.9xx9x.xxxx.x.
+.x.x|xx.xx**xx.xxxx.x.
+.x.xxxx.xx**xx.xx|x.x.
+.x.xxxx.x9xx9.x.8xx.x.
+.xx....xx.xxxxxxxxx9x.
+..xxxxx.xx...x...xxx..
+ .xxxxx.x.xxx.xxx.xx.
+ .xx|xx.x8xxx.xxx8xx.
+ ..xx8.xxx|xx.xx|xx..
+  ..xxxxxxxxx.xxxx..
+   ..xxx9....xxxx..
+    ....xxxxxx....
+       ........
+ENDMAP
+
 
 ################################################################
 #
