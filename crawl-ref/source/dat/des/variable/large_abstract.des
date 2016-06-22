@@ -1614,33 +1614,34 @@ TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
 DEPTH:  D:14-, Depths, !Depths:$
 : ks_random_setup(_G, true)
+SUBST:  X = x
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxx
-xccccccccccccccccccccccccc
-xcwwwwwwwwwwwwwwwwwwwwwwwc
-xcwt9.................*twc
-xcw*xxxxxxxxxxxxxxxxxxx9wc
-xcw.xcccccccccccccccccx.wc
-xcw.xcwwwwwwwwwwwwwwwcx.wc
-xcw.xcwt9.........*twcx.wc
-xcw.xcw*xxxxxxxxxxx9wcx.wc
-xcw.xcw.xcccccccccx.wcx.wc
-xcw.xcw.xcwwwwwwwcx.wcx.wc
-xcw.xcw.xcwt888twcx.wcx.wc
-xcw.xcw.xcw.xxx|wcx.wcx.wc
-xcw.xcw.xcw.xcx|wcx.wcx.wc
-xcw.xcw.xcw.xcx|wcx.wcx.wc
-xcw.xcw.xcw.xcx|wcx.wcx.wc
-xcw.xcw.xcw.xcxwwcx.wcx.wc
-xcw.xcw.xcw.xcccccx.wcx.wc
-xcw.xcw.xcw9xxxxxxx*wcx.wc
-xcw.xcw.xcwt*.....9twcx.wc
-xcw.xcw.xcwwwwwwwwwwwcx.wc
-xcw.xcw.xcccccccccccccx.wc
-xcw.xcw*xxxxxxxxxxxxxxx*wc
-xcw.xcwt9.............9twc
-xcw.xcwwwwwwwwwwwwwwwwwwwc
-xcw@xccccccccccccccccccccc
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+Xccccccccccccccccccccccccc
+Xcwwwwwwwwwwwwwwwwwwwwwwwc
+Xcwt9.................*twc
+Xcw*xxxxxxxxxxxxxxxxxxx9wc
+Xcw.xcccccccccccccccccx.wc
+Xcw.xcwwwwwwwwwwwwwwwcx.wc
+Xcw.xcwt9.........*twcx.wc
+Xcw.xcw*xxxxxxxxxxx9wcx.wc
+Xcw.xcw.xcccccccccx.wcx.wc
+Xcw.xcw.xcwwwwwwwcx.wcx.wc
+Xcw.xcw.xcwt888twcx.wcx.wc
+Xcw.xcw.xcw.xxx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcxwwcx.wcx.wc
+Xcw.xcw.xcw.xcccccx.wcx.wc
+Xcw.xcw.xcw9xxxxxxx*wcx.wc
+Xcw.xcw.xcwt*.....9twcx.wc
+Xcw.xcw.xcwwwwwwwwwwwcx.wc
+Xcw.xcw.xcccccccccccccx.wc
+Xcw.xcw*xxxxxxxxxxxxxxx*wc
+Xcw.xcwt9.............9twc
+Xcw.xcwwwwwwwwwwwwwwwwwwwc
+Xcw@xccccccccccccccccccccc
 ENDMAP
 
 NAME:   minmay_tile_spiral
