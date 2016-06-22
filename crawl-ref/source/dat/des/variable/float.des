@@ -31,6 +31,27 @@ function zot_entry_setup(e)
                  spriggan air mage w:8 / deep troll earth mage w:8 / \
                  tengu reaver / deep elf high priest w:12 / lich w:2")
 end
+
+function minmay_elemental_octagon_setup(e)
+    e.tags('uniq_elemental_octagon no_pool_fixup')
+    e.subst('A : xcvb m:5 .:5')
+    e.subst('B : .:50 c:20 vbm')
+    e.subst('C : .xcvbmGTdE')
+    e.subst('D : .xcvbmGTd1')
+    e.subst('E : .:60 cvbmGT')
+    if you.in_branch('Geh') or you.in_branch('Coc') then
+        e.nsubst('1 = 8:1 / * = 1..')
+        e.nsubst('d = 1:4 / 1:} / *:3')
+        if you.in_branch('Geh') then
+            e.subst('bmT = l')
+        elseif you.in_branch("Coc") then
+            e.subst('bmG = w')
+        end
+    else
+        e.nsubst('1 = 4:1 / 4 = 1.. / *:.')
+        e.nsubst('d = 1:2 / *:d')
+    end
+end
 }}
 
 {{
@@ -3179,6 +3200,148 @@ xxvv.5.bb+c+vv.2.bbxx
    xxvvv$$c$$bbbxx
     xxvvvvcbbbxx
      xx....@.xx
+ENDMAP
+
+################################################################################
+# An octagon series
+#
+# ident:type randarts here are a bit weird, showing the name and the brand
+# only- off aesthetically, but aside from strange user autopickup functions
+# should be fine otherwise.
+#
+NAME:   minmay_shoctagon
+DEPTH:  D:12-, Depths:1-2, Elf
+ORIENT: float
+MONS:   raiju / sixfirhy w:2
+KMONS:  2 = shock serpent / storm dragon
+ITEM:   book of air / book of the sky / manual of air magic / \
+        lightning rod ident:type / staff of air ident:type / \
+        disc of storms / fan of gales / storm dragon armour w:5
+: if you.unrands("arc blade") then
+KITEM:  2 = quick blade ego:electrocution randart ident:type
+: else
+KITEM:  2 = arc_blade
+: end
+: minmay_elemental_octagon_setup(_G)
+MAP
+    xxx@xxx
+   xxB...Bxx
+  xxB..E..Bxx
+ xxB.......Bxx
+xxB...AAA...Bxx
+xB...11111...Bx
+x...A1DdD1A...x
+@.E.A1dCd1A.E.@
+x...A1DdD1A...x
+xB...11111...Bx
+xxB...AAA...Bxx
+ xxB.......Bxx
+  xxB..E..Bxx
+   xxB...Bxx
+    xxx@xxx
+ENDMAP
+
+NAME:   minmay_roctagon
+DEPTH:  D:12-, Depths:1-2, Elf
+ORIENT: float
+MONS:   hill giant / troll
+KMONS:  2 = stone giant / iron dragon
+ITEM:   book of geomancy / book of the earth / manual of earth magic / \
+        iron rod ident:type / staff of earth ident:type / \
+        ring of protection ident:type / wand of disintegration ident:type / \
+        crystal plate armour w:5
+: if you.unrands("devastator") then
+KITEM:  2 = eveningstar randart
+: else
+KITEM:  2 = devastator
+: end
+: minmay_elemental_octagon_setup(_G)
+MAP
+    xxx@xxx
+   xxB...Bxx
+  xxB..E..Bxx
+ xxB.......Bxx
+xxB.A.A.A.A.Bxx
+xB...11111...Bx
+x...A1DdD1A...x
+@.E..1dCd1..E.@
+x...A1DdD1A...x
+xB...11111...Bx
+xxB.A.A.A.A.Bxx
+ xxB.......Bxx
+  xxB..E..Bxx
+   xxB...Bxx
+    xxx@xxx
+ENDMAP
+
+NAME:   minmay_coctagon
+DEPTH:  D:10-, Elf, Coc, !Coc:$
+ORIENT: float
+MONS:   polar bear w:6 / rime drake / ice beast
+KMONS:  23 = frost giant / ice dragon
+KMONS:  4 = ice fiend
+ITEM:   book of frost / book of ice / manual of ice magic / \
+        wand of iceblast ident:type / staff of cold ident:type / \
+        ring of ice ident:type / phial of floods / ice dragon armour w:5
+: if you.unrands("frostbite") then
+KITEM:  2 = executioner's axe ego:freezing randart ident:type / \
+            battleaxe ego:freezing randart ident:type / \
+            broad axe ego:freezing randart ident:type
+: else
+KITEM:  2 = frostbite / \
+            battleaxe ego:freezing randart ident:type / \
+            broad axe ego:freezing randart ident:type
+: end
+: minmay_elemental_octagon_setup(_G)
+MAP
+    xxx@xxx
+   xxB...Bxx
+  xxB..E..Bxx
+ xxB.......Bxx
+xxB..AA.AA..Bxx
+xB..A11111A..Bx
+x...A1DdD1A...x
+@.E..1dCd1..E.@
+x...A1DdD1A...x
+xB..A11111A..Bx
+xxB..AA.AA..Bxx
+ xxB.......Bxx
+  xxB..E..Bxx
+   xxB...Bxx
+    xxx@xxx
+ENDMAP
+
+NAME:   minmay_firetagon
+DEPTH:  D:10-, Elf, Geh, !Geh:$
+ORIENT: float
+MONS:   fire bat
+KMONS:  23 = fire giant / fire dragon
+KMONS:  4 = brimstone fiend
+ITEM:   book of flames / book of fire / manual of fire magic / \
+        rod of ignition ident:type / staff of fire ident:type / \
+        ring of fire ident:type / lamp of fire / fire dragon armour w:5
+: if you.unrands("firestarter") then
+KITEM:  2 = great mace ego:flaming randart ident:type
+: else
+KITEM:  2 = firestarter
+: end
+: minmay_elemental_octagon_setup(_G)
+MAP
+    xxx@xxx
+   xxB...Bxx
+  xxB..E..Bxx
+ xxB.......Bxx
+xxB.AA...AA.Bxx
+xB..A11111A..Bx
+x....1DdD1....x
+@.E..1dCd1..E.@
+x....1DdD1....x
+xB..A11111A..Bx
+xxB.AA...AA.Bxx
+ xxB.......Bxx
+  xxB..E..Bxx
+   xxB...Bxx
+    xxx@xxx
 ENDMAP
 
 ###############################################################################
@@ -6947,4 +7110,371 @@ cccccc.................cccccc
             cc8cc
             c*|*c
             ccccc
+ENDMAP
+
+NAME:    minmay_heptahexagon
+DEPTH:   D:12-, Depths
+ORIENT:  float
+ITEM:    book of debilitation / book of maledictions
+# randomize how open the hexagons are to each other
+SUBST:   M : xx+., N : +@, O : +++.
+# each hex other than the center either has monsters+loot, or nothing
+SHUFFLE: ABCDEF / GHIJKL
+SUBST:   BCDEF = A, HIJKL = G
+SUBST:   A = *, G = 0009, 8 = 998
+# feature randomization
+SUBST:   x : xcvb
+SUBST:   ! : xcvb m:3 G:3 t:3 .:49
+SUBST:   ? : xcvb m:1 t:1 .:44
+SUBST:   " : xcvbTmGt .:80
+SUBST:   ' : xcvbTmGt d:80
+MAP
+          xxxNxxx
+         xxF...Fxx
+         x..L?L..x
+        xx.?...?.xx
+  xxxxxxxF.L.".L.Fxxxxxxx
+ xxE...Exx.?...?.xxA...Axx
+ N..K?K..M..L?L..M..G?G..N
+xx.?...?.xxF...Fxx.?...?.xx
+xE.K.".K.ExxxOxxxA.G.".G.Ax
+xx.?...?.xx|...|xx.?...?.xx
+ x..K?K..O..8!8..O..G?G..x
+ xxE...Exx.!...!.xxA...Axx
+  xxxMxxx|.8.'.8.|xxxMxxx
+ xxD...Dxx.!...!.xxB...Bxx
+ x..J?J..O..8!8..O..H?H..x
+xx.?...?.xx|...|xx.?...?.xx
+xD.J.".J.DxxxOxxxB.H.".H.Bx
+xx.?...?.xxC...Cxx.?...?.xx
+ N..J?J..M..I?I..M..H?H..N
+ xxD...Dxx.?...?.xxB...Bxx
+  xxxxxxxC.I.".I.Cxxxxxxx
+        xx.?...?.xx
+         x..I?I..x
+         xxC...Cxx
+          xxxNxxx
+ENDMAP
+
+NAME:   minmay_box_of_curves
+ORIENT: float
+DEPTH:  D:11-, Depths
+SUBST:  x : cvb, ? : .TGtxcvbm
+SUBST:  ' : '", ' : .:50 xcvbm, " : .:50 xcvbm
+SUBST:  9 = 999., 8 = 888.
+MAP
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+x|8..........x...x..........8|x
+xxxx..."""...x...x...'''...xxxx
+x8.xxx...""..x...x..''...xxx.8x
+x....xx..9".xx...xx.'9..xx....x
+x....|x.....x.."..x.....x|....x
+x..xxxx....xx.."..xx....xxxx..x
+x+xx..+..xxx...""..xxx..+..xx+x
+x.x...xxxx......""...xxxx...x.x
+x.x..9..+..'''.?."""..+..9..x.x
+x.x.....x....''.......x.....x.x
+x.xx...xx+xx..''...xx+xx...xx.x
+x..xxxxx...xx..'..xx...xxxxx..x
+x.....x.....x..'..x.....x.....x
+x..9..+..9..x..?..x..9..+..9..x
+x.....x.....x.."..x.....x.....x
+x..xxxxx...xx.."..xx...xxxxx..x
+x.xx...xx+xx...""..xx+xx...xx.x
+x.x.....x.......""....x.....x.x
+x.x..9..+..'''.?."""..+..9..x.x
+x.x...xxxx...''......xxxx...x.x
+x+xx..+..xxx..''...xxx..+..xx+x
+x..xxxx....xx..'..xx....xxxx..x
+x....|x.....x..'..x.....x|....x
+x....xx..9'.xx...xx."9..xx....x
+x8.xxx...''..x...x..""...xxx.8x
+xxxx...'''...x...x..."""...xxxx
+x|8..........x...x..........8|x
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_ambush_box
+DEPTH:  D:11-, Depths, Elf
+ORIENT: float
+SUBST:  c : cvb
+SUBST:  ' : .xcvb n:2 t:2 G:3 T:3
+MAP
+cccccc@cccccc
+c|.9c...c9.|c
+c.'.c...c.'.c
+c...........c
+c..cnc.cnc..c
+c9..c...c..9c
+ccc.n{([n.ccc
+c9..c...c..9c
+c..cnc.cnc..c
+c...........c
+c.'.c...c.'.c
+c|.9c...c9.|c
+cccccc@cccccc
+ENDMAP
+
+NAME:   minmay_gate_of_8
+DEPTH:  D:8-, Depths
+ORIENT: float
+KMONS:  8 = 8
+KITEM:  8 = |
+SUBST:  c : cvb, x : xcvb
+MAP
+ xxxxxx@xx
+ x...x...x
+ x.xx..x.x
+ x.xxx...x
+ xx.xxx.xx
+ccnn=xxx.x
+c888n.xx.x
+c888nx...x
+cc88cxxxxx
+ cccc
+ENDMAP
+
+NAME:    minmay_shrinking_squares
+DEPTH:   D:9-, Depths
+ORIENT:  float
+NSUBST:  9 = 1:9 / 1:. / * = 9.
+NSUBST:  8 = 1:8 / 1:. / * = 8.
+SUBST:   x : cvb
+MAP
+xxxxxxxxxx
+xT+||x...+
+xxx||x...x
+x..88x...x
+x..88x...x
+x+xxxx...x
+x.....999x
+x.....999x
+x.....999x
+xxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_chopped_fan
+DEPTH:  D:9-, Depths
+ORIENT: float
+SUBST:  x : cvb
+MAP
+           xxx
+           x8x
+           x.xxx
+           x.x0x
+    @xx   xx.x.x@
+  xxx.x   x.x.x.x
+  x0.xxxx x.x.xxx
+xxxxx..9x x.x9x
+x8...xxxxxx.xxx
+xxxxx....|x|x
+    xxxxxxnxxxxxx
+        x|x|....xxxxx
+      xxx.xxxxxx...8x
+      x9x.x x9..xxxxx
+    xxx.x.x xxxx.0x
+    x.x.x.x   x.xxx
+    @x.x.xx   xx@
+     x0x.x
+     xxx.x
+       x8x
+       xxx
+ENDMAP
+
+NAME:   minmay_mutant_horseshoe
+DEPTH:  D:11-, Depths
+ORIENT: float
+SUBST:  x : cvb
+MAP
+ xxxxxxxxx
+xx...x...xx
+x9xxx.xxx9x
+x.x|x.x|x.x
+x.x.x.x.x.x
+x.xx8x8xx.x
+xx.xxxxx.xx
+ @xx   xx@
+ENDMAP
+
+NAME:   minmay_diamond_boxcup
+DEPTH:  D:2-6
+ORIENT: float
+NSUBST: 0 = 4:0 / 8 = 0. / *:.
+SUBST:  x : x:60 cvb
+MAP
+xxxxxxxxxxxxx
+x0x0x...x0x0x
+xx0x..x..x0xx
+x0x..xxx..x0x
+xx..xx0xx..xx
+x..xx0.0xx..x
+x.....*.0xx.@
+x..xx0.0xx..x
+xx..xx0xx..xx
+x0x..xxx..x0x
+xx0x..x..x0xx
+x0x0x...x0x0x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_glassy_protrusions
+DEPTH:  D:11-, Depths
+ORIENT: float
+SUBST:  x : cvb
+MAP
+xxx@xxxxx@xxx
+x..xx*x*xx..x
+x.xn.x8x.nx.x
+xn..xn8nx..nx
+x*nx.x8x.xn*x
+xx9xx*x*xx9xx
+ xxxxx*xxxxx
+     xxx
+ENDMAP
+
+NAME:   minmay_blocky_corners
+DEPTH:  D:7-
+ORIENT: float
+SUBST:  x : cvb, 9 = 99.
+MAP
+xxxxx@xxxxx
+x9|x...x|9x
+x..x...x..x
+x9xx...xx9x
+xx9.xxx.9xx
+ x.9x x9.x
+ xxxx xxxx
+ENDMAP
+
+NAME:   minmay_wonky_spiral
+DEPTH:  D:1-4
+ORIENT: float
+SUBST:  0 = 0.
+MAP
+x@xxxxxxx
+x.x%%x.0x
+x.x%...xx
+x.xx...0x
+x.0x0x.xx
+x.xxxx..x
+x.0x0xx+x
+x.......x
+xxxxxxxxx
+ENDMAP
+
+NAME:   minmay_cornered_nines
+DEPTH:  D:6-13
+ORIENT: float
+SUBST:  x : x:90 cvb
+MAP
+xx@....xx
+xxxxx.xxx
+x*xxx.x*x
+x9xx.x9xx
+xx..xxxxx
+x.x.xxx*x
+x.x..xx.x
+xx.xx.9xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   minmay_sliced_demisemicircle
+DEPTH:  D:9-, Depths
+ORIENT: float
+SUBST:  x : ccvvb
+NSUBST: 8 = 2:8 / 4 = 8. / *:.
+NSUBST: 9 = 2:9 / 8 = 9. / *:.
+MAP
+xxxxxx
+x.9..xxxx
++999...9xxx
+x.9....999xx
+xxxxxxxx+xxxx
+x.8.xxx999x9x
+x888..xx99+9xx
+x.8....xx9x99x
+xx+xxxx.xxx..x
+xb8bbbx..xx..xx
+xb8b|bx..xx...x
+xb8b|bx.8.x.9.x
+xb8||bx888+999x
+xbbbbbx.8.x.9.x
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_roachtagon
+DEPTH:  D:2-3
+ORIENT: float
+MONS:   giant cockroach
+NSUBST: 1 = 5:1 / 10 = 1. / 2:% / 2 = %. / *:.
+SUBST:  " = @x
+MAP
+  xxxx"x
+ xx1111xx
+xx111111xx
+x11111111x
+x11111111x
+x11111111x
+x11111111x
+xx111111xx
+ xx1111xx
+  x@xxxx
+ENDMAP
+
+# The center is always reachable in these two vaults
+# regardless of transformation arrangements.
+NAME:    minmay_bloctagon
+DEPTH:   D:8-, Depths
+ORIENT:  float
+SUBST:   x : x:60 c:15 v b:5
+SHUFFLE: ABCE, 0%
+SUBST:   0 = 0009, % = %%%*
+SUBST:   A : .
+SUBST:   B : .:50 C:52 xcvbm t:2
+SUBST:   C : .:50 E:52 xcvbm t:2
+SUBST:   E : .:102 xcvbm t:2
+SUBST:   D : .:102 xcvbm t:2
+SUBST:   F : .xcvbm G:2 t:2 T:2
+MAP
+    xxxxxxxxxx
+    xxxxxxxxxx
+  xxxx00DD%%xxxx
+  xxxx00DD%%xxxx
+xxxx..CCAABB..xxxx
+xxxx..CCAABB..xxxx
+xx..BBEE%%EECC..xx
+xx..BBEE%%EECC..xx
+..DDAA00FF00AADD.@
+@.DDAA00FF00AADD..
+xx..CCEE%%EEBB..xx
+xx..CCEE%%EEBB..xx
+xxxx..BBAACC..xxxx
+xxxx..BBAACC..xxxx
+  xxxx%%DD00xxxx
+  xxxx%%DD00xxxx
+    xxxxxxxxxx
+    xxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_bloctagon_deflated
+DEPTH:   D:8-, Depths
+ORIENT:  float
+SUBST:   x : x:60 c:15 v b:5
+SHUFFLE: ABCE, 9*
+SUBST:   A : .
+SUBST:   B : .:50 C:52 xcvbm t:2
+SUBST:   C : .:50 E:52 xcvbm t:2
+SUBST:   E : .:102 xcvbm t:2
+SUBST:   D : .:102 xcvbm t:2
+SUBST:   F : .xcvbm G:2 t:2 T:2
+MAP
+  xxxxx
+ xx9D*xx
+xx.CAB.xx
+x.BE*EC.x
+@DA9F9AD@
+x.CE*EB.x
+xx.BAC.xx
+ xx*D9xx
+  xxxxx
 ENDMAP
