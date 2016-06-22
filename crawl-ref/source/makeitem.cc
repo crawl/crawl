@@ -810,7 +810,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       0);
 
     case ARM_HELMET:
-        return coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
+        return SPARM_INTELLIGENCE;
 
     case ARM_GLOVES:
         return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);

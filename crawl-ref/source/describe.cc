@@ -219,7 +219,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_SHIELDING,             PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
-        { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
         { ARTP_STEALTH,               PROPN_SYMBOLIC },
         { ARTP_CURSE,                 PROPN_PLAIN },
         { ARTP_CLARITY,               PROPN_PLAIN },
