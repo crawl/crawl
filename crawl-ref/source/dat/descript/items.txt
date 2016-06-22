@@ -7,9 +7,9 @@ Translocations spells in existence.
 amulet of dismissal
 
 An amulet which generates a field of translocational energy that will teleport
-away creatures that harm you, one time in ten. It takes a few moments to get
-used to the translocational energy field, initially disorienting the wearer for
-a few turns.
+away creatures that seriously harm you, one time in ten. It takes a few moments
+to get used to the translocational energy field, initially disorienting the
+wearer for a few turns.
 %%%%
 amulet of faith
 
