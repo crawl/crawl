@@ -6269,6 +6269,330 @@ ttttttttttttttttttttt
 ttttttttttttttttttttt
 ENDMAP
 
+NAME:    minmay_guarded_unrand_prune
+DEPTH:   D:12-
+MONS:    deep elf mage / ogre mage / wizard / \
+         kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
+NSUBST:  1 = 6:1 / 10=1.... / .
+: if you.unrands("glaive of prune") then
+ITEM:    any weapon good_item randart no_pickup
+: else
+ITEM:    glaive_of_prune no_pickup
+: end
+SUBST:   " : .:50 cvbnG
+SUBST:   ' : .:50 cvbnG
+SUBST:   ? : .:50 cvbnG
+SUBST:   ! : .:60 cvbnGT
+KMASK:   l = no_monster_gen
+MAP
+     ...........
+   ...lvlv1vlvl...
+  ..vlvvvv1vvvvlv..
+ ..lvvvlvl1lvlvvvl..
+ .vvvlv1111111vlvvv.
+..lvl111"'?'"111lvl..
+.lvvv1"'?1"1?'"1vvvl.
+.vvl11'111!111'11lvv.
+.lvv1"?1!111!1111vvl.
+.vvl1'111lvlvlvlvlvv.
+.1111?"!1vvvvvvvvvvl.
+.vvl1'111lvG.G.G.Gvv.
+.lvv1"?1!vv.U...U.vl.
+.vvl11'11lvG.b.b.Gvv.
+.lvvv1"'1.+...d.Gvvl.
+..lvl1111lvG.b.b.vl..
+ .vvvlv11vv.U.G.vvv.
+ ..lvvvlvlvG.Gvvvl..
+  ..vlvvvvvvvvvlv..
+   ...lvlvlvlvl...
+     ...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_variability
+DEPTH:   D:8-
+MONS:    chaos spawn
+KFEAT:   _ = altar_xom
+: if you.unrands("mace of variability") then
+# could be a launcher!
+ITEM:    any weapon good_item randart ego:chaos ident:type no_pickup
+: else
+ITEM:    mace_of_variability no_pickup
+: end
+# walls are carefully placed and guarantee no islands
+SUBST:   x = xcvbmGwWlTUVYt+ <:4 >:4 A:2 1:160
+NSUBST:  1 = 2:1 / 2:% / 3=1%...... / .
+MAP
+...........
+.1xxx11xxx.
+.x1xxxx1xx.
+.xxxxx1xxx.
+.xxxx_xxxx.
+.x1xx1xxx1.
+.1xxxdxx1x.
+.1xx1xxxxx.
+.x11xxxxxx.
+.xxxxxx1xx.
+...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_staff_of_olgreb
+DEPTH:   D:5-10
+MONS:    worker ant / soldier ant
+MONS:    killer bee
+MONS:    adder / water moccasin
+: if you.unrands("staff_of_olgreb") then
+ITEM:    book of envenomations / young poisoner's handbook / \
+         ring of poison resistance ident:type / staff of poison ident:type / \
+         swamp dragon armour / swamp dragon hide
+: else
+ITEM:    staff_of_olgreb no_pickup
+: end
+NSUBST:  1 = 5:1 / 6=1.. / ., 2 = 5:2 / 9=2.. / ., 3 = 5:3 / 6=1.. / .
+MAP
+      ...
+      .b.
+      .b.
+     ..b..
+     .bbb.
+     .ndn.
+    ..b+b..
+    .bb2bb.
+   ..n222n..
+  ..bb222bb..
+ ..bb22222bb..
+..bb2222222bb..
+.bb=bb222bb=bb.
+.n111bbnbb333n.
+.b1111n*n3333b.
+.b1111b*b3333b.
+.n1111===3333n.
+.bb111b.b333bb.
+..bbb1b.b3bbb..
+ ...bnb.bnb...
+   .........
+ENDMAP
+
+
+NAME:    minmay_guarded_unrand_vampires_tooth
+DEPTH:   D:4-6
+MONS:    bat, vampire bat
+: if you.unrands("vampires_tooth") then
+ITEM:    dagger randart no_pickup
+: else
+ITEM:    vampires_tooth no_pickup
+: end
+MAP
+.........
+.ccc.ccc.
+.1c...c1.
+.cc...cc.
+.1c2Y2c1.
+.ccd..cc.
+.1c...c1.
+.ccccccc.
+.........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_wrath_of_trog
+DEPTH:   D:14-, Depths
+MONS:    spriggan berserker
+NSUBST:  1 = 3:1 / 9=1...... / .
+: if you.unrands("wrath_of_trog") then
+ITEM:    executioner's axe randart ego:antimagic ident:type no_pickup
+: else
+ITEM:    wrath_of_trog no_pickup
+: end
+MAP
+    .......
+   .."""""..
+  .."ttttt"..
+ .."tt"""tt"..
+.."tt"111"tt"..
+."tt"11c11"tt".
+."t"1c111c1"t".
+."t"111d111"t".
+."t"1c111c1"t".
+."tt"11c11"tt".
+.."tt"111"tt"..
+ .."".. ..""..
+  ....   ....
+ENDMAP
+
+NAME:    minmay_guarded_unrand_brilliance
+DEPTH:   D:13-, Depths
+MONS:    angel / daeva w:3
+SUBST:   1 = 1.
+: if you.unrands("brilliance") then
+# not_cursed is needed here, the usual check to prevent holy weapons from
+# generating cursed does not run
+ITEM:    eveningstar randart ego:holy_wrath not_cursed ident:type no_pickup
+: else
+ITEM:    brilliance no_pickup
+: end
+MAP
+         ...
+         .c.
+         .n.
+  ...    .c.    ...
+  .c... ..n.. ...c.
+  ..cn...ncn...nc..
+   .ncnc.cdc.cncn.
+   ..n*ncn.ncn*n..
+    .cn.nc.cn.nc.
+   ...cn1n1n1nc...
+....ncncn...ncncn....
+.ncnc*..1...1..*cncn.
+....ncncn...ncncn....
+   ...cn1n1n1nc...
+    .cn.nc.cn.nc.
+   ..n*ncn.ncn*n..
+  ..ncnc.c.c.cncn..
+  .ncn...n=n...ncn.
+ ..cn.. ..... ..nc..
+ .c...   .c.   ...c.
+ ...     .n.     ...
+         .c.
+         ...
+ENDMAP
+
+NAME:    minmay_guarded_unrand_chilly_death
+DEPTH:   D:9-13, Lair
+MONS:    ice beast, rime drake, ice dragon
+: if you.unrands("dagger_of_chilly_death") then
+# note: randart is an especially big nerf here since it means you can't rebrand
+# to something good like pain/distortion/etc. This is intended.
+ITEM:    quick blade randart ego:freezing ident:type no_pickup
+: else
+ITEM:    dagger_of_chilly_death no_pickup
+: end
+NSUBST:  1 = 12:1 / 12=1... / .
+SUBST:   2 = 2., 3 = 3..
+MAP
+      .1.             .1.
+      .x.             .x.
+     .1x..1.       .1..x1.
+   ..1xx..x.       .x..xx1..
+   1xxxxx1x.       .x1xxxxx1
+   ....xxxx.       .xxxx....
+     ..1xxx1.     .1xxx1..
+     1xxxxxx1.....1xxxxxx1
+     ....1xxxxx2xxxxx1....
+   .......1xdxx.xx*x1......
+...1xx....xxx3...3xxx....xx1...
+1xx..xx1..2....x....2..1xx..xx1
+..xx.1xx1xxx.x...x.xxx1xx1.xx..
+..1xxxxxxxx....x....xxxxxxxx1.
+..1xxxxxxxx....x....xxxxxxxx1.
+..xx.1xx1xxx.x...x.xxx1xx1.xx..
+1xx..xx1..2....x....2..1xx..xx1
+...1xx....xxx3...3xxx....xx1...
+   .......1x*xx.xx*x1.......
+     ....1xxxxx2xxxxx1....
+     1xxxxxx1.....1xxxxxx1
+     ..1xxx1.     .1xxx1..
+   ....xxxx.       .xxxx....
+   1xxxxx1x.       .x1xxxxx1
+   ..1xx..x.       .x..xx1..
+     .1x..1.       .1..x1.
+      .x.             .x.
+      .1.             .1.
+ENDMAP
+
+NAME:    minmay_guarded_unrand_skullcrusher
+DEPTH:   D:12-, Crypt
+MONS:    flying skull
+: if you.branch() == "Crypt" then
+MONS:    curse skull
+NSUBST:  d = 1:d / *:*
+: else
+MONS:    death knight
+NSUBST:  d = 1:d / *:%
+: end
+: if you.unrands("skullcrusher") then
+ITEM:    giant club randart ego:speed ident:type no_pickup / \
+         giant spiked club randart no_pickup
+: else
+ITEM:    skullcrusher no_pickup
+: end
+NSUBST:  ' = 12:1 / 14=1...... / .
+SUBST:   " = 1., ! = 2.
+MAP
+     .........
+   ...ccccc.....
+  ..ccc''cc..c...
+ ..cc'''c'ccc..c..
+ .cc'''''c'c.cc.c.
+..c''''c''''ccccc..
+.cc'''''''c''c'c.cc.
+.c''''''''c''''''c.
+.c'''''''''c'''''c.
+.c'ccc'''''''ccc'c.
+.c'ccncc'''ccncc'c.
+.c'nnnnn'''nnnnn'c.
+.c'ccncc'''ccncc'c.
+.c''cnc'''''cnc''c.
+.c'''''''c'''''''c.
+.cc'''''ccc'''''cc.
+..ccc''''c''''ccc..
+ ...cc'''''''cc...
+   ..c!c!c!c!c..
+    .cdcdcdcdc.
+    .cncncncnc.
+    .c"c"c"c"c.
+    .c"c"c"c"c.
+    ...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_finisher
+DEPTH:   D:7-13
+MONS:    wraith
+: if you.unrands("finisher") then
+ITEM:    scythe randart ego:speed ident:type no_pickup
+: else
+ITEM:    finisher no_pickup
+: end
+SUBST:   1 = 1.
+NSUBST:  A = 1:. / *:c, B = 1:. / *:c
+SUBST:   c = c .:2
+MAP
+.............
+.AxxAxAxAxxA.
+.x..xc1cx..x.
+.x.c..x..c.x.
+.Ax.BxBxB.xA.
+.xc.x1c1x.cx.
+.A1xBcdcBx1A.
+.xc.x1c1x.cx.
+.Ax.BxBxB.xA.
+.x.c..x..c.x.
+.x..xc1cx..x.
+.AxxAxAxAxxA.
+.............
+ENDMAP
+
+NAME:    minmay_guarded_unrand_resistance
+DEPTH:   D:9-14
+TAGS:    no_monster_gen
+: if you.unrands("shield_of_resistance") then
+ITEM:    buckler randart no_pickup / shield randart no_pickup / \
+         large shield randart no_pickup
+: else
+ITEM:    shield_of_resistance no_pickup
+: end
+MONS:    fire dragon, ice dragon
+MAP
+...........
+.vnnv=vnnv.
+.n...1nlln.
+.n.T..nlln.
+.v....vnnv.
+.n2..d..1n.
+.vnnv....v.
+.nwwn..V.n.
+.nwwn2...n.
+.vnnv=vnnv.
+...........
+ENDMAP
 
 ###################################################################
 #
