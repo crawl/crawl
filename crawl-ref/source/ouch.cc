@@ -765,9 +765,9 @@ static void _maybe_dismiss(mid_t source, int dam)
 
     ASSERT(you.hp_max > 0);
     // chance to teleport away monsters that harm you:
-    // 0% for hits that do < 10% of player hp, 15% chance otherwise
+    // 0% for hits that do < 10% of player hp, 10% chance otherwise
     if (dam < you.hp_max / 10)
-        return;;
+        return;
 
     if (one_chance_in(10))
     {
