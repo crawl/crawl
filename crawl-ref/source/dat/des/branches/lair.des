@@ -2442,6 +2442,41 @@ PPP'''...xP''.'.''Pxx
              xPx
 ENDMAP
 
+NAME:    minmay_guarded_unrand_snakebite
+DEPTH:   Lair
+TAGS:    ruin
+ORIENT:  southeast
+: if you.unrands("snakebite") then
+# a randart venom demon whip is unlikely to be useful for someone with snakebite
+# so just do this
+ITEM:    demon whip good_item
+: else
+ITEM:    snakebite no_pickup
+: end
+KMONS:   A = adder
+KMONS:   B = water moccasin
+KMONS:   C = black mamba
+SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
+SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
+MAP
+xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx222xxx
+@11xxxxxx222xxx3xx
+xxx1xx112xxxxxxx3x
+xxxx11xxxxxxxxxx3x
+xxxxxxxxxxxxxxxx3x
+xxxxxxxxxx44xxx3xx
+xxxxxxx444xx433xxx
+xxxx554xxxxxxxxxxx
+xxx5xxxxxxxxxxxxxx
+xx5xxxxxxxxxxxxxxx
+xx5xxxxxxxxxx77xxx
+xxx5xxxxxxxx7xx7dx
+xxxx56xxx666xxxxxx
+xxxxxx666xxxxxxxxx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################

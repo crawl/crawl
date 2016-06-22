@@ -1272,3 +1272,62 @@ xxx1...xx
 xPg..1xxx
 xxxxxxxxx
 ENDMAP
+
+NAME:    minmay_guarded_unrand_guard_vaults
+TAGS:    vaults_hard vaults_orient_n
+WEIGHT:  3
+: if you.unrands("glaive_of_the_guard") then
+ITEM:    bardiche randart no_pickup
+: else
+ITEM:    glaive_of_the_guard no_pickup
+: end
+SUBST:   b : bxcmG.T
+NSUBST:  3:9 / 4=9. / ., 8 = 2:8 / 6=8.. / .
+MAP
+vvvvvvv@vvvvvvv
+v...v*v.v*v...v
+v8b8.*n.n*.8b8v
+v.8.v*v.v*v.8.v
+vv.vvvv.vvvv.vv
+v.9.vv.9.vv.9.v
+v.b9..9b9..9b.v
+v.9.vv...vv.9.v
+vv.vvvvnvvvv.vv
+vv.vvv...vvv.vv
+v.8.v..*..v.8.v
+v8b8..*d*..8b8v
+v...v..*..v...v
+vGvGvv...vvGvGv
+vvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    minmay_guarded_unrand_secular_launcher
+TAGS:    vaults_hard vaults_orient_s
+WEIGHT:  3
+: if you.unrands("sniper") and you.unrands("piercer") then
+ITEM:    triple crossbow randart no_pickup / longbow randart no_pickup
+: elseif you.unrands("sniper") then
+ITEM:    piercer no_pickup
+: elseif you.unrands("piercer") then
+ITEM:    sniper no_pickup
+: else
+ITEM:    piercer no_pickup / sniper no_pickup
+: end
+NSUBST:  3:9 / 6=9. / ., 8 = 2:8 / 6=8.. / .
+MAP
+     vvvvv
+   vvv999vvv
+  vv.......vv
+ vv..cc.cc..vv
+ v..cc888cc..v
+vv.cc|...|cc.vv
+v9.c8.bbb.8c.9v
+v9.c8.bdb.8c.9v
+v9.c8.b.b.8c.9v
+vv.cc|...|cc.vv
+ v..cc888cc..v
+ vv..ccncc..vv
+  vv.......vv
+   vvv999vvv
+     vv.vv
+ENDMAP
