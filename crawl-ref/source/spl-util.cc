@@ -1315,18 +1315,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead.";
         break;
 
-    case SPELL_CURE_POISON:
-        // no good for poison-immune species (ghoul, mummy, garg)
-        if (player_res_poison(false, temp, temp) == 3
-            // allow starving vampires to memorize cpois
-            && you.undead_state() != US_SEMI_UNDEAD)
-        {
-            return "you can't be poisoned.";
-        }
-        if (temp && !you.duration[DUR_POISONING])
-            return "you aren't poisoned right now.";
-        break;
-
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";

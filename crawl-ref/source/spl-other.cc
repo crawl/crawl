@@ -25,18 +25,6 @@
 #include "spl-util.h"
 #include "terrain.h"
 
-spret_type cast_cure_poison(int pow, bool fail)
-{
-    fail_check();
-    reduce_player_poison((15 + roll_dice(3, pow / 2)) * 1000);
-
-    // A message is already printed if we removed all of the poison
-    if (you.duration[DUR_POISONING])
-        mpr("The poison in your system diminishes.");
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
     bool success = false;

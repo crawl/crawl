@@ -175,7 +175,6 @@ int book_rarity(book_type which_book)
     case BOOK_FEN:
         return 12;
 
-    case BOOK_ENVENOMATIONS:
     case BOOK_WARP:
     case BOOK_DRAGON:
         return 15;
