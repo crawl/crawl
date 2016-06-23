@@ -286,7 +286,7 @@ You are surrounded by a ring of flame clouds, increasing the power of your fire
 magic and giving protection from fire but also making you much more susceptible
 to cold.
 %%%%
-MR- status
+MR/2 status
 
 You are more vulnerable to hostile enchantments.
 %%%%
