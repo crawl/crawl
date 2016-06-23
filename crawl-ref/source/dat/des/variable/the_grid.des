@@ -576,8 +576,8 @@ MAP
 .0     0.
 ..     ..
 ...   ...
- ...0... 
-  .....  
+ ...0...
+  .....
 ENDMAP
 
 NAME:    minmay_the_grid_diamond_grid
@@ -1098,7 +1098,7 @@ ENDMAP
 
 NAME:  minmay_the_grid_prize_four_corners
 TAGS:  the_grid_prize unrand
-SUBST: Z = .:60 x:40 8Gcvbmt T:3 U:3 V:3 Y:1  
+SUBST: Z = .:60 x:40 8Gcvbmt T:3 U:3 V:3 Y:1
 SUBST: A : +. A:2, B : +. A:2
 SUBST: A = +.W
 MAP
