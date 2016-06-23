@@ -1836,10 +1836,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_shadow_creatures(spell, god, place, fail);
     }
 
-    // Healing.
-    case SPELL_CURE_POISON:
-        return cast_cure_poison(powc, fail);
-
     case SPELL_EXCRUCIATING_WOUNDS:
         return brand_weapon(SPWPN_PAIN, powc, fail);
 
@@ -1992,6 +1988,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_SWARM:
     case SPELL_PHASE_SHIFT:
     case SPELL_MASS_CONFUSION:
+    case SPELL_CURE_POISON:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

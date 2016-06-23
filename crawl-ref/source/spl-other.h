@@ -3,8 +3,6 @@
 
 #include "spl-cast.h"
 
-spret_type cast_cure_poison(int pow, bool fail);
-
 spret_type cast_sublimation_of_blood(int pow, bool fail);
 spret_type cast_death_channel(int pow, god_type god, bool fail);
 

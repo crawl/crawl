@@ -84,9 +84,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_CURE_POISON,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_VENOM_BOLT,
 },
 
