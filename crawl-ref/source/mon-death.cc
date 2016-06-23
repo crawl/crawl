@@ -92,7 +92,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     if (mons_genus(mtype) == MONS_DRACONIAN
         || mons_genus(mtype) == MONS_DEMONSPAWN)
     {
-        if (mons.type == MONS_TIAMAT || mons.type == MONS_BAI_SUZHEN)
+        if (mons.type == MONS_TIAMAT)
             corpse_class = MONS_DRACONIAN;
         else
             corpse_class = draco_or_demonspawn_subspecies(&mons);
@@ -1704,6 +1704,49 @@ item_def* monster_die(monster* mons, const actor *killer, bool silent,
 }
 
 /**
+ * Print messages for dead monsters returning to their 'true form' on death.
+ *
+ * @param mons      The monster currently dying.
+ */
+static void _special_corpse_messaging(monster &mons)
+{
+    if (!mons.props.exists(ORIGINAL_TYPE_KEY) && mons.type != MONS_BAI_SUZHEN)
+        return;
+
+    const monster_type orig
+        = mons.type == MONS_BAI_SUZHEN ? mons.type :
+                (monster_type) mons.props[ORIGINAL_TYPE_KEY].get_int();
+
+    if (orig == MONS_SHAPESHIFTER || orig == MONS_GLOWING_SHAPESHIFTER)
+    {
+        // No message for known shifters, unless they were originally
+        // something else.
+        if (!(mons.flags & MF_KNOWN_SHIFTER))
+        {
+            const string message = "'s shape twists and changes as "
+                                    + mons.pronoun(PRONOUN_SUBJECTIVE)
+                                    + " dies.";
+            simple_monster_message(&mons, message.c_str());
+        }
+
+        return;
+    }
+
+    // Avoid "Sigmund returns to its original shape as it dies.".
+    unwind_var<monster_type> mt(mons.type, orig);
+    const int num = mons.mons_species() == MONS_HYDRA
+                    ? mons.props["old_heads"].get_int()
+                    : mons.number;
+    unwind_var<unsigned int> number(mons.number, num);
+    const string message = " returns to " +
+                            mons.pronoun(PRONOUN_POSSESSIVE) +
+                            " original shape as " +
+                            mons.pronoun(PRONOUN_SUBJECTIVE) +
+                            " dies.";
+    simple_monster_message(&mons, message.c_str());
+}
+
+/**
  * Kill off a monster.
  *
  * @param mons The monster to be killed
@@ -2602,40 +2645,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && leaves_corpse && corpse
-        && mons->props.exists(ORIGINAL_TYPE_KEY))
-    {
-        const monster_type orig =
-            (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
-
-        if (orig == MONS_SHAPESHIFTER || orig == MONS_GLOWING_SHAPESHIFTER)
-        {
-            // No message for known shifters, unless they were originally
-            // something else.
-            if (!(mons->flags & MF_KNOWN_SHIFTER))
-            {
-                const string message = "'s shape twists and changes as "
-                                     + mons->pronoun(PRONOUN_SUBJECTIVE)
-                                     + " dies.";
-                simple_monster_message(mons, message.c_str());
-            }
-        }
-        else
-        {
-            // Avoid "Sigmund returns to its original shape as it dies.".
-            unwind_var<monster_type> mt(mons->type, orig);
-            int num = mons->mons_species() == MONS_HYDRA
-                                        ? mons->props["old_heads"].get_int()
-                                        : mons->number;
-            unwind_var<unsigned int> number(mons->number, num);
-            const string message = " returns to " +
-                                   mons->pronoun(PRONOUN_POSSESSIVE) +
-                                   " original shape as " +
-                                   mons->pronoun(PRONOUN_SUBJECTIVE) +
-                                   " dies.";
-            simple_monster_message(mons, message.c_str());
-        }
-    }
+    if (!silent && !wizard && leaves_corpse && corpse)
+        _special_corpse_messaging(*mons);
 
     if (mons->is_divine_companion()
         && killer != KILL_RESET
