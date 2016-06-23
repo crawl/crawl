@@ -498,20 +498,18 @@ SUBST:   A:AAA+, A=x
 : else
 SUBST:   A:;;;x, a=;
 : end
-# Randomisation 2: Rarely, the cottage will have a door.
-SUBST:   C = +''''
-# Randomisation 3: Plants might be in the way -- Yiuf seems to be a bad
+# Randomisation 2: Plants might be in the way -- Yiuf seems to be a bad
 #                  gardener. Sometimes.
-SUBST:   P:PQ;; , Q=2;
+SUBST:   P:PQQ;;;; , Q=2;
 NSUBST:  P=1:t / *:2;
-# Randomisation 4: Maces. Maces. Maces.
+# Randomisation 3: Maces. Maces. Maces.
 SUBST:   ; : .:100 ;:10 d:2
 SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t="
 : end
 SUBST:   ':.......' , "=' , ':d' , '=..d
-# Randomisation 5: trees or rock
+# Randomisation 4: trees or rock
 SUBST:   t : ttx
 MAP
  xxxxxxxxxxxxxxxx
@@ -519,7 +517,7 @@ MAP
  xxtttttttttttttx
  BAP't'tttccccctx
 ;baPP't''tc'''ctx
-@baPPtttt'C''1ctx
+@baPPtttt'=''1ctx
 ;BAPttttttc''dctx
  xxtttttttccccctx
  xxtttttttttttttx
