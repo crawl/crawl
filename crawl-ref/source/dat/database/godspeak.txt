@@ -247,6 +247,10 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+Xom cleaving
+
+@Xom potion effect@
+%%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 
