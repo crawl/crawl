@@ -2558,7 +2558,6 @@ mon_spell_slot drac_breath(monster_type drac_type)
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
     case MONS_WHITE_DRACONIAN:   sp = SPELL_CHILLING_BREATH; break;
     case MONS_DRACONIAN:
-    case MONS_BAI_SUZHEN:
     case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
     case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
 
@@ -2692,11 +2691,6 @@ void define_monster(monster* mons)
         draconian_change_colour(mons);
         monbase = mons->base_monster;
         col = mons->colour;
-        break;
-
-    case MONS_BAI_SUZHEN:
-        // XXX: A hack to keep her an unknown draconian colour.
-        monbase = MONS_BAI_SUZHEN;
         break;
 
     case MONS_STARCURSED_MASS:
