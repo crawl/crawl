@@ -207,7 +207,7 @@ static const duration_def duration_data[] =
       "liquid flames", "",
       "You are covered in liquid flames.", D_NO_FLAGS},
     { DUR_LOWERED_MR,
-      RED, "MR-",
+      RED, "MR/2",
       "vulnerable", "lowered mr",
       "", D_DISPELLABLE,
       {{ "You feel less vulnerable to hostile enchantments." }}},
