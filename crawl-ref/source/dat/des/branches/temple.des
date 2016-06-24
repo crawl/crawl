@@ -2748,6 +2748,8 @@ WEIGHT: 8
 SUBST:  D = B, E = ., g : Ghhh, h : tTV.....
 : elseif altar_count == "16" then
 SUBST:  E = B, Dgh = .
+: else
+SUBST:  D = B, E = ., g : Ghhh, h : tTV.....
 : end
 SUBST:  C : ccccwl, c : ccccvb
 MAP
@@ -2798,6 +2800,8 @@ SUBST:   'bFGz = x, d = ., e = y
 SUBST:   CD = B, E = .
 :   elseif altar_count == "18" then
 SUBST:   CDE = B
+:   else
+SUBST:   CDE = B
 :   end
 : else
 SUBST:    'e = ., d = y, z : cWwl., bG = B, DE = .
@@ -2805,6 +2809,8 @@ SUBST:    'e = ., d = y, z : cWwl., bG = B, DE = .
 SHUFFLE:  FG
 SUBST:    CF = .
 :   elseif altar_count == "18" then
+SUBST:    CF = B
+:   else
 SUBST:    CF = B
 :   end
 : end
