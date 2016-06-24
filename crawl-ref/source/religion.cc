@@ -513,6 +513,7 @@ void dec_penance(god_type god, int val)
             // redraw the god title.
             you.redraw_title = true;
 
+            // TSO's halo is once more available.
             if (!had_halo && have_passive(passive_t::halo))
             {
                 mprf(MSGCH_GOD, "Your divine halo returns!");
@@ -537,14 +538,6 @@ void dec_penance(god_type god, int val)
                 redraw_screen();
                 notify_stat_change();
             }
-
-            // TSO's halo is once more available.
-            if (have_passive(passive_t::halo))
-            {
-                mprf(MSGCH_GOD, "Your divine halo returns!");
-                invalidate_agrid(true);
-            }
-
             if (have_passive(passive_t::storm_shield))
             {
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
