@@ -370,7 +370,6 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 NAME:    jpeg_temple_clearing_12
-WEIGHT:  2
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -450,7 +449,6 @@ ENDMAP
 NAME:       minmay_temple_forest_path_12
 PLACE:      Temple
 ORIENT:     encompass
-WEIGHT:     5
 # No plants in corners (confuses autoexplore),
 # only fringe the edge of the paths with either (no teleport closets).
 KMONS:      P = plant / bush w:1 / fungus w:1
@@ -1087,7 +1085,6 @@ ENDMAP
 
 NAME:    temple_eino_lava_12
 TAGS:    no_rotate
-WEIGHT:  5
 COLOUR:  c = red
 : temple_compat_setup(_G)
 MAP
@@ -1915,7 +1912,6 @@ NAME:     corrupted_temple
 TAGS:     temple_variable
 TAGS:     temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
 PLACE:    Temple
-WEIGHT:   10
 ORIENT:   encompass
 {{
 local altar_count = get_altar_count(_G, 6)
