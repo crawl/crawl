@@ -65,11 +65,11 @@ public:
     {
         // These must all be the same size!
         unsigned int number;   ///< General purpose number variable
-        int blob_size;         ///< # of slimes/masses in this one
+        int blob_size;         ///< num of slimes/masses in this one
         int num_heads;         ///< Hydra-like head number
         int ballisto_activity; ///< How active is this ballistomycete?
         int spore_cooldown;    ///< Can this make ballistos (if 0)
-        int mangrove_pests;    ///< # of animals in shambling mangrove
+        int mangrove_pests;    ///< num of animals in shambling mangrove
         int prism_charge;      ///< Turns this prism has existed
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
