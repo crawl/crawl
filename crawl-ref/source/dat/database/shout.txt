@@ -190,6 +190,14 @@ __RUMBLE unseen
 
 SOUND:You hear a deep rumbling!
 %%%%
+__LOUD_ROAR unseen
+
+SOUND:You hear a deafening roar!
+%%%%
+__LOUD_ROAR seen
+
+SOUND:@The_monster@ roars deafeningly!
+%%%%
 ############################################
 # End of default shouts
 ############################################

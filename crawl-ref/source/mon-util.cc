@@ -1346,7 +1346,7 @@ int get_shout_noise_level(const shout_type shout)
         return 6;
     case S_LOUD:
         return 10;
-    case S_ROAR:
+    case S_LOUD_ROAR:
     case S_VERY_LOUD:
         return 12;
     case S_RUMBLE:
@@ -4515,6 +4515,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         "says",         // S_CHERUB -- they just speak normally.
         "rumbles",
         "squeals",
+        "roars",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT
