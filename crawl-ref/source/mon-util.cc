@@ -5503,14 +5503,6 @@ void throw_monster_bits(const monster* mon)
     }
 }
 
-/// What spell should an ancestor have in their customizeable slot?
-static spell_type _ancestor_custom_spell(spell_type default_spell)
-{
-    const int specialization = hepliaklqana_specialization();
-    return specialization ? hepliaklqana_specialization_spell(specialization) :
-                            default_spell;
-}
-
 /// Add an ancestor spell to the given list.
 static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
 {
@@ -5537,8 +5529,9 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     switch (ancestor.type)
     {
     case MONS_ANCESTOR_BATTLEMAGE:
-        _add_ancestor_spell(ancestor.spells,
-                            _ancestor_custom_spell(SPELL_THROW_FROST));
+        _add_ancestor_spell(ancestor.spells, HD >= 10 ?
+                                             SPELL_BOLT_OF_MAGMA :
+                                             SPELL_THROW_FROST);
         _add_ancestor_spell(ancestor.spells, HD >= 18 ?
                                              SPELL_LEHUDIBS_CRYSTAL_SPEAR :
                                              SPELL_STONE_ARROW);
@@ -5546,8 +5539,8 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     case MONS_ANCESTOR_HEXER:
         _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
                                                       : SPELL_SLOW);
-        _add_ancestor_spell(ancestor.spells,
-                            _ancestor_custom_spell(SPELL_CONFUSE));
+        _add_ancestor_spell(ancestor.spells, HD >= 14 ? SPELL_MASS_CONFUSION
+                                                      : SPELL_CONFUSE);
         break;
     default:
         break;

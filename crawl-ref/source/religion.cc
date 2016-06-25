@@ -1265,34 +1265,6 @@ string hepliaklqana_ally_name()
 }
 
 /**
- * What specialization has the player chosen for their ancestor, if any?
- *
- * @return  The appropriate ability_type enum (e.g.
- *          ABIL_HEPLIAKLQANA_KNIGHT_REACHING), or 0 if no specialization was
- *          chosen.
- */
-int hepliaklqana_specialization()
-{
-    // sanity & 'save compat' (old hexers specialized at xl 15)
-    if (you.experience_level < hepliaklqana_specialization_level())
-        return 0;
-    // using get_int() without checking for exists would make it exist
-    if (you.props.exists(HEPLIAKLQANA_SPECIALIZATION_KEY))
-        return you.props[HEPLIAKLQANA_SPECIALIZATION_KEY].get_int();
-    return 0;
-}
-
-/// At what level will the player be able to specialize their current ancestor?
-int hepliaklqana_specialization_level()
-{
-    if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
-        return INT_MAX;
-    if (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() == MONS_ANCESTOR_HEXER)
-        return 21;
-    return 15;
-}
-
-/**
  * How much HD should the ally granted by Hepliaklqana have?
  *
  * @return      The player's xl * 2/3.
@@ -1484,53 +1456,6 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
 }
 
 /**
- * For a spellcasting ancestor (e.g. a hexer or battlemage), what spell is
- * granted by a given specialization?
- *
- * @param specialization    The specialization in question; e.g.
- *                          ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION.
- * @return                  The appropriate spell type, e.g. SPELL_ENGLACIATION.
- *                          By default, returns NUM_SPELLS.
- */
-spell_type hepliaklqana_specialization_spell(int specialization)
-{
-    switch (specialization)
-    {
-    case ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE:
-        return SPELL_FORCE_LANCE;
-    case ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA:
-        return SPELL_BOLT_OF_MAGMA;
-    case ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION:
-        return SPELL_MASS_CONFUSION;
-    case ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION:
-        return SPELL_ENGLACIATION;
-    default:
-        return NUM_SPELLS;
-    }
-}
-
-/**
- * For an ancestor knight, what weapon is granted by a given specialization?
- *
- * @param specialization    The specialization in question; e.g.
- *                          ABIL_HEPLIAKLQANA_KNIGHT_REACHING.
- * @return                  The appropriate weapon type, e.g. WPN_BROAD_AXE.
- *                          By default, returns NUM_WEAPONS.
- */
-weapon_type hepliaklqana_specialization_weapon(int specialization)
-{
-    switch (specialization)
-    {
-    case ABIL_HEPLIAKLQANA_KNIGHT_REACHING:
-        return WPN_DEMON_TRIDENT;
-    case ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING:
-        return WPN_BROAD_AXE;
-    default:
-        return NUM_WEAPONS;
-    }
-}
-
-/**
  * What type of weapon should an ancestor of the given HD have?
  *
  * @param mc   The type of ancestor in question.
@@ -1544,12 +1469,7 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
     case MONS_ANCESTOR_HEXER:
         return HD < 18 ? WPN_DAGGER : WPN_QUICK_BLADE;
     case MONS_ANCESTOR_KNIGHT:
-    {
-        const int specialization = hepliaklqana_specialization();
-        return specialization ?
-               hepliaklqana_specialization_weapon(specialization) :
-               WPN_FLAIL;
-    }
+        return HD < 10 ? WPN_FLAIL : WPN_BROAD_AXE;
     case MONS_ANCESTOR_BATTLEMAGE:
         return HD < 14 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
     default:
@@ -1572,9 +1492,9 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
             return HD < 18 ?   SPWPN_DRAINING :
                                SPWPN_ANTIMAGIC;
         case MONS_ANCESTOR_KNIGHT:
-            return !hepliaklqana_specialization() ?   SPWPN_NORMAL :
-                   HD < 18 ?                          SPWPN_FLAMING :
-                                                      SPWPN_SPEED;
+            return HD < 10 ?   SPWPN_NORMAL :
+                   HD < 18 ?   SPWPN_FLAMING :
+                               SPWPN_SPEED;
         case MONS_ANCESTOR_BATTLEMAGE:
             return HD < 14 ?   SPWPN_NORMAL :
                                SPWPN_FREEZING;
@@ -3471,14 +3391,6 @@ static void _join_hepliaklqana()
     simple_god_message(make_stringf(" brings forth the memory of your ancestor,"
                                     " %s!",
                                     mg.mname.c_str()).c_str());
-
-    // no one will ever run into this.
-    if (you.experience_level >= hepliaklqana_specialization_level()
-        && !hepliaklqana_specialization())
-    {
-        // TODO: deduplicate this message
-        god_speaks(you.religion, "You may now specialize your ancestor.");
-    }
 }
 
 /// Setup when joining the gelatinous groupies of Jiyva.

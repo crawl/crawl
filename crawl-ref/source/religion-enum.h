@@ -26,8 +26,6 @@ enum nemelex_gift_types
 #define HEPLIAKLQANA_ALLY_GENDER_KEY "hepliaklqana_ally_gender"
 /// chosen ancestor class (monster_type)
 #define HEPLIAKLQANA_ALLY_TYPE_KEY "hepliaklqana_ally_type"
-/// chosen ancestor specialization (ability_type)
-#define HEPLIAKLQANA_SPECIALIZATION_KEY "hepliaklqana_specialization"
 
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
