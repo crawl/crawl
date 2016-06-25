@@ -150,6 +150,14 @@ __HISS seen
 
 SOUND:@The_monster@ hisses angrily.
 %%%%
+__SQUEAL unseen
+
+SOUND:You hear an angry squeal.
+%%%%
+__SQUEAL seen
+
+SOUND:@The_monster@ squeals angrily.
+%%%%
 __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
