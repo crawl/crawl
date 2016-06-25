@@ -337,23 +337,34 @@ static string mons_human_readable_spell_damage_string(monster* monster,
 {
     bolt spell_beam = mons_spell_beam(
         monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp), false), true);
-    // Fake damage beam
-    if (sp == SPELL_PORTAL_PROJECTILE || sp == SPELL_LRD)
-        return "";
-    if (sp == SPELL_SMITING)
-        return mi_calc_smiting_damage(monster);
-    if (sp == SPELL_AIRSTRIKE)
-        return mi_calc_airstrike_damage(monster);
-    if (sp == SPELL_WATERSTRIKE)
-        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
-    if (sp == SPELL_GLACIATE)
-        return mi_calc_glaciate_damage(monster);
-    if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)
+    switch (sp)
+    {
+        case SPELL_PORTAL_PROJECTILE:
+        case SPELL_LRD:
+            return ""; // Fake damage beam
+        case SPELL_SMITING:
+            return mi_calc_smiting_damage(monster);
+        case SPELL_AIRSTRIKE:
+            return mi_calc_airstrike_damage(monster);
+        case SPELL_GLACIATE:
+            return mi_calc_glaciate_damage(monster);
+        case SPELL_CHAIN_LIGHTNING:
+            return mi_calc_chain_lightning_damage(monster);
+        case SPELL_WATERSTRIKE:
+            spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
+            break;
+        case SPELL_IOOD:
+            spell_beam.damage = mi_calc_iood_damage(monster);
+            break;
+        case SPELL_VAMPIRIC_DRAINING:
+            return mi_calc_vampiric_drain_damage(monster);
+        default:
+            break;
+    }
+
+    if (spell_beam.origin_spell == SPELL_IOOD)
         spell_beam.damage = mi_calc_iood_damage(monster);
-    if (sp == SPELL_CHAIN_LIGHTNING)
-        return mi_calc_chain_lightning_damage(monster);
-    if (sp == SPELL_VAMPIRIC_DRAINING)
-        return mi_calc_vampiric_drain_damage(monster);
+
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
     return "";
@@ -450,25 +461,24 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
             ret += "}";
 
             ret += _spell_flag_string(slot);
+            continue;
         }
-        else
-        {
-            string spell_name = spell_title(sp);
-            spell_name = shorten_spell_name(spell_name);
-            ret += spell_name;
-            ret += _spell_flag_string(slot);
 
-            for (int j = 0; j < 100; j++)
+        string spell_name = spell_title(sp);
+        spell_name = shorten_spell_name(spell_name);
+        ret += spell_name;
+        ret += _spell_flag_string(slot);
+
+        for (int j = 0; j < 100; j++)
+        {
+            string damage =
+            mons_human_readable_spell_damage_string(mp, sp);
+            const auto range = damages.equal_range(spell_name);
+            if (!damage.empty()
+                && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
             {
-                string damage =
-                    mons_human_readable_spell_damage_string(mp, sp);
-                const auto range = damages.equal_range(spell_name);
-                if (!damage.empty()
-                    && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
-                {
-                    // TODO: use emplace once we drop g++ 4.7 support
-                    damages.insert(make_pair(spell_name, damage));
-                }
+                // TODO: use emplace once we drop g++ 4.7 support
+                damages.insert(make_pair(spell_name, damage));
             }
         }
     }
