@@ -125,10 +125,9 @@ bool monster_attempt_shout(monster &mon)
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    // Muted monsters can't shout at all.
+    // Muted & silenced monsters can't shout at all.
     if (shout == S_SILENT && !mon.visible_to(&you)
-        || shout != S_SILENT && (silenced(mon.pos())
-                                 ||mon.has_ench(ENCH_MUTE)))
+        || shout != S_SILENT && mon.is_silenced())
     {
         return false;
     }
