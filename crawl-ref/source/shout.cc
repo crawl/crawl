@@ -55,9 +55,6 @@ static const map<shout_type, string> default_msg_keys = {
     { S_BELLOW,         "__BELLOW" },
     { S_BLEAT,          "__BLEAT" },
     { S_TRUMPET,        "__TRUMPET" },
-#if TAG_MAJOR_VERSION == 34
-    { S_CAW,            "__SCREECH" },
-#endif
     { S_SCREECH,        "__SCREECH" },
     { S_BUZZ,           "__BUZZ" },
     { S_MOAN,           "__MOAN" },
