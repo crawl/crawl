@@ -327,7 +327,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_DRAIN] && !meld)
-        drain_player(100, true, true);
+        drain_player(200, true, true);
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
