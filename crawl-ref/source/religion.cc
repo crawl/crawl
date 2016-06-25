@@ -1467,11 +1467,11 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
     switch (mc)
     {
     case MONS_ANCESTOR_HEXER:
-        return HD < 18 ? WPN_DAGGER : WPN_QUICK_BLADE;
+        return HD < 16 ? WPN_DAGGER : WPN_QUICK_BLADE;
     case MONS_ANCESTOR_KNIGHT:
         return HD < 10 ? WPN_FLAIL : WPN_BROAD_AXE;
     case MONS_ANCESTOR_BATTLEMAGE:
-        return HD < 14 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
+        return HD < 13 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
     default:
         return NUM_WEAPONS; // should never happen
     }
@@ -1489,14 +1489,14 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
     switch (mc)
     {
         case MONS_ANCESTOR_HEXER:
-            return HD < 18 ?   SPWPN_DRAINING :
+            return HD < 16 ?   SPWPN_DRAINING :
                                SPWPN_ANTIMAGIC;
         case MONS_ANCESTOR_KNIGHT:
             return HD < 10 ?   SPWPN_NORMAL :
-                   HD < 18 ?   SPWPN_FLAMING :
+                   HD < 16 ?   SPWPN_FLAMING :
                                SPWPN_SPEED;
         case MONS_ANCESTOR_BATTLEMAGE:
-            return HD < 14 ?   SPWPN_NORMAL :
+            return HD < 13 ?   SPWPN_NORMAL :
                                SPWPN_FREEZING;
         default:
             return SPWPN_NORMAL;
@@ -1538,14 +1538,14 @@ static armour_type _hepliaklqana_shield_type(monster_type mc, int HD)
 {
     if (mc != MONS_ANCESTOR_KNIGHT)
         return NUM_ARMOURS;
-    if (HD < 14)
+    if (HD < 13)
         return ARM_SHIELD;
     return ARM_LARGE_SHIELD;
 }
 
 static special_armour_type _hepliaklqana_shield_ego(int HD)
 {
-    return HD < 14 ? SPARM_NORMAL : SPARM_REFLECTION;
+    return HD < 13 ? SPARM_NORMAL : SPARM_REFLECTION;
 }
 
 /**

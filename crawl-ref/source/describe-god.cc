@@ -341,9 +341,9 @@ static string _describe_ancestor_upgrades()
                "                        Shield\n"
                "                   Splint Mail (+AC)\n"
                "15                 Broad Axe (flame)\n"
-               "21              Large Shield (reflect)\n"
-               "21                      Haste\n"
-               "27                Speed (weapon ego)\n";
+               "19              Large Shield (reflect)\n"
+               "19                      Haste\n"
+               "24                Speed (weapon ego)\n";
     case MONS_ANCESTOR_BATTLEMAGE:
         return "XL                    Battlemage\n"
                "                     Quarterstaff\n"
@@ -351,18 +351,18 @@ static string _describe_ancestor_upgrades()
                "                      Stone Arrow\n"
                "                     +Melee Damage\n"
                "15                    Magma Bolt\n"
-               "21                  Lajatang (freeze)\n"
-               "21                       Haste\n"
-               "27                   Crystal Spear\n";
+               "19                  Lajatang (freeze)\n"
+               "19                       Haste\n"
+               "24                   Crystal Spear\n";
     case MONS_ANCESTOR_HEXER:
         return "XL                       Hexer\n"
                "                     Dagger (drain)\n"
                "                         Slow\n"
                "                        Confuse\n"
                "15                     Paralyse\n"
-               "21                   Mass Confusion\n"
-               "21                       Haste\n"
-               "27                Quickblade (antimagic)\n";
+               "19                   Mass Confusion\n"
+               "19                       Haste\n"
+               "24                Quickblade (antimagic)\n";
     default:
         return "";
     }

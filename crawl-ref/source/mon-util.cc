@@ -5532,21 +5532,21 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         _add_ancestor_spell(ancestor.spells, HD >= 10 ?
                                              SPELL_BOLT_OF_MAGMA :
                                              SPELL_THROW_FROST);
-        _add_ancestor_spell(ancestor.spells, HD >= 18 ?
+        _add_ancestor_spell(ancestor.spells, HD >= 16 ?
                                              SPELL_LEHUDIBS_CRYSTAL_SPEAR :
                                              SPELL_STONE_ARROW);
         break;
     case MONS_ANCESTOR_HEXER:
         _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
                                                       : SPELL_SLOW);
-        _add_ancestor_spell(ancestor.spells, HD >= 14 ? SPELL_MASS_CONFUSION
+        _add_ancestor_spell(ancestor.spells, HD >= 13 ? SPELL_MASS_CONFUSION
                                                       : SPELL_CONFUSE);
         break;
     default:
         break;
     }
 
-    if (HD >= 14)
+    if (HD >= 13)
         ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
 
     if (ancestor.spells.size())
