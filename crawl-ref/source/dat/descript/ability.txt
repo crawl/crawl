@@ -32,7 +32,7 @@ Breathe Fire ability
 %%%%
 Breathe Frost ability
 
-Breathes a blast of frost at a targeted creature.
+<Chilling Breath spell>
 %%%%
 Breathe Poison Gas ability
 
