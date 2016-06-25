@@ -546,7 +546,11 @@ void attack::pain_affects_defender()
     if (defender->res_negative_energy())
         return;
 
-    if (!one_chance_in(attacker->skill_rdiv(SK_NECROMANCY) + 1))
+    actor* user = attacker->type == MONS_SPECTRAL_WEAPON
+                  && attacker->as_monster()->summoner != MID_NOBODY ?
+                     actor_by_mid(attacker->as_monster()->summoner) :
+                     attacker;
+    if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
     {
         if (defender_visible)
         {
@@ -555,10 +559,10 @@ void attack::pain_affects_defender()
                              defender->name(DESC_THE).c_str(),
                              defender->conj_verb("writhe").c_str());
         }
-        special_damage += random2(1 + attacker->skill_rdiv(SK_NECROMANCY));
+        special_damage += random2(1 + user->skill_rdiv(SK_NECROMANCY));
     }
 
-    attacker->god_conduct(DID_NECROMANCY, 4);
+    user->god_conduct(DID_NECROMANCY, 4);
 }
 
 // TODO: Move this somewhere sane
