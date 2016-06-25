@@ -150,7 +150,6 @@ force_more_message += grants you a gift
 force_more_message += offers you knowledge of
 force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor
-force_more_message += may now specialize your ancestor
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

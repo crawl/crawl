@@ -3103,14 +3103,7 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))
-        {
             upgrade_hepliaklqana_ancestor();
-            if (you.experience_level == hepliaklqana_specialization_level())
-            {
-                god_speaks(you.religion,
-                           "You may now specialize your ancestor.");
-            }
-        }
 
         learned_something_new(HINT_NEW_LEVEL);
     }

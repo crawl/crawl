@@ -340,8 +340,7 @@ static string _describe_ancestor_upgrades()
                "                        Flail\n"
                "                        Shield\n"
                "                   Splint Mail (+AC)\n"
-               "15 (Option A)    Demon Trident (flame)\n"
-               "15 (Option B)      Broad Axe (flame)\n"
+               "15                 Broad Axe (flame)\n"
                "21              Large Shield (reflect)\n"
                "21                      Haste\n"
                "27                Speed (weapon ego)\n";
@@ -351,8 +350,7 @@ static string _describe_ancestor_upgrades()
                "                      Throw Frost\n"
                "                      Stone Arrow\n"
                "                     +Melee Damage\n"
-               "15 (Option A)         Magma Bolt\n"
-               "15 (Option B)         Force Lance\n"
+               "15                    Magma Bolt\n"
                "21                  Lajatang (freeze)\n"
                "21                       Haste\n"
                "27                   Crystal Spear\n";
@@ -362,8 +360,7 @@ static string _describe_ancestor_upgrades()
                "                         Slow\n"
                "                        Confuse\n"
                "15                     Paralyse\n"
-               "21 (Option A)    Metabolic Englaciation\n"
-               "21 (Option B)        Mass Confusion\n"
+               "21                   Mass Confusion\n"
                "21                       Haste\n"
                "27                Quickblade (antimagic)\n";
     default:
