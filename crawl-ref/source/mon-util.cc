@@ -1346,7 +1346,6 @@ int get_shout_noise_level(const shout_type shout)
         return 6;
     case S_LOUD:
         return 10;
-    case S_SHOUT2:
     case S_ROAR:
     case S_VERY_LOUD:
         return 12;
