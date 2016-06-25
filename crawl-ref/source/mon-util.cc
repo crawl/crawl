@@ -1411,6 +1411,14 @@ shout_type mons_shouts(monster_type mc, bool demon_shout)
     return u;
 }
 
+/// Is the given monster type ever capable of shouting?
+bool mons_can_shout(monster_type mc)
+{
+    // don't use mons_shouts() to avoid S_RANDOM randomization.
+    ASSERT_smc();
+    return smc->shouts != S_SILENT;
+}
+
 bool mons_is_ghost_demon(monster_type mc)
 {
     return mons_class_flag(mc, M_GHOST_DEMON)

@@ -673,11 +673,8 @@ bool monster::can_speak()
         return true;
 
     // Silent or non-sentient monsters can't use the original speech.
-    if (mons_intel(this) < I_HUMAN
-        || mons_shouts(type) == S_SILENT)
-    {
+    if (mons_intel(this) < I_HUMAN || !mons_can_shout(type))
         return false;
-    }
 
     // Does it have the proper vocal equipment?
     return mon_shape_is_humanoid(get_mon_shape(this));
