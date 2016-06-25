@@ -1041,8 +1041,18 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool fail);
 
+/**
+ * Should this spell be aborted before casting properly starts, either because
+ * it can't legally be cast in this circumstance, or because the player opts
+ * to cancel it in response to a prompt?
+ *
+ * @param spell         The spell to be checked.
+ * @param evoked        Whether the spell is being evoked from a rod.
+ * @param fake_spell    Whether the spell is some other kind of fake spell
+ *                      (such as an innate or divine ability).
+ * @return              Whether the spellcasting should be aborted.
+ */
 static bool _spellcasting_aborted(spell_type spell,
-                                  bool wiz_cast,
                                   bool evoked,
                                   bool fake_spell)
 {
@@ -1060,51 +1070,50 @@ static bool _spellcasting_aborted(spell_type spell,
         msg = spell_uselessness_reason(spell, true, true, evoked, fake_spell);
     }
 
-    bool uncastable = !wiz_cast && msg != "";
-
-    if (uncastable)
-        mpr(msg);
-    else
+    if (msg != "")
     {
-        vector<text_pattern> &actions = Options.confirm_action;
-        if (!actions.empty())
-        {
-            const char* name = spell_title(spell);
-            for (const text_pattern &action : actions)
-            {
-                if (action.matches(name))
-                {
-                    string prompt = "Really cast " + string(name) + "?";
-                    if (!yesno(prompt.c_str(), false, 'n'))
-                    {
-                        canned_msg(MSG_OK);
-                        return true;
-                    }
-                    break;
-                }
-            }
-        }
+        mpr(msg);
+        return true;
+    }
 
-        int severity = fail_severity(spell);
-        if (Options.fail_severity_to_confirm > 0
-            && Options.fail_severity_to_confirm <= severity
-            && !crawl_state.disables[DIS_CONFIRMATIONS]
-            && !evoked && !fake_spell)
+    vector<text_pattern> &actions = Options.confirm_action;
+    if (!actions.empty())
+    {
+        const char* name = spell_title(spell);
+        for (const text_pattern &action : actions)
         {
-            string prompt = make_stringf("The spell is %s to cast%s "
-                                         "Continue anyway?",
-                                         fail_severity_adjs[severity],
-                                         severity > 1 ? "!" : ".");
+            if (!action.matches(name))
+                continue;
 
+            string prompt = "Really cast " + string(name) + "?";
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return true;
             }
+            break;
         }
     }
 
-    return uncastable;
+    const int severity = fail_severity(spell);
+    if (Options.fail_severity_to_confirm > 0
+        && Options.fail_severity_to_confirm <= severity
+        && !crawl_state.disables[DIS_CONFIRMATIONS]
+        && !evoked && !fake_spell)
+    {
+        string prompt = make_stringf("The spell is %s to cast%s "
+                                     "Continue anyway?",
+                                     fail_severity_adjs[severity],
+                                     severity > 1 ? "!" : ".");
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
@@ -1280,7 +1289,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (_spellcasting_aborted(spell, wiz_cast, evoked, fake_spell))
+    if (!wiz_cast && _spellcasting_aborted(spell, evoked, fake_spell))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);
