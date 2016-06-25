@@ -243,8 +243,8 @@ enum class passive_t
     /// Pakellas collects and distills extra MP from your kills
     bottle_mp,
 
-    /// Hep's transfer slows enemies adjacent to the effect's target
-    transfer_slow,
+    /// Hep's transfer drains enemies adjacent to the effect's target
+    transfer_drain,
 };
 
 enum ru_interference
