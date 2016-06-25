@@ -2391,11 +2391,6 @@ void random_uselessness()
         break;
 
     case 6:
-        mprf(MSGCH_SOUND, "You hear the tinkle of a tiny bell.");
-        noisy(2, you.pos());
-        cast_summon_butterflies(100);
-        break;
-
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
         noisy(2, you.pos());
