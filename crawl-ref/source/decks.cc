@@ -1712,7 +1712,8 @@ static void _godly_wrath()
 static void _summon_demon_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    // one demon, and one other demonic creature
+    // one demon (potentially hostile), and one other demonic creature (always
+    // friendly)
     monster_type dct, dct2;
     if (power_level >= 2)
     {
@@ -1749,8 +1750,21 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // will never manage to give a position which isn't (-1,-1)
     // and thus not print the message.
     // This hack appears later in this file as well.
-    if (!_friendly(dct, 5 - power_level))
+
+    const bool friendly = !one_chance_in(power_level + 4);
+
+    if (!create_monster(mgen_data(dct, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                  &you, 5 - power_level, 0, you.pos(), MHITYOU,
+                                  MG_AUTOFOE)))
+    {
         mpr("You see a puff of smoke.");
+    }
+    else if (mons_class_flag(dct, M_INVIS)
+             && !you.can_see_invisible()
+             && !friendly)
+    {
+        mpr("You sense the presence of something unfriendly.");
+    }
 
     _friendly(dct2, 5 - power_level);
 }
