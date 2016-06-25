@@ -332,6 +332,13 @@ static string mi_calc_vampiric_drain_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+static string mi_calc_major_healing(monster* mons)
+{
+    const int min = 50;
+    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10;
+    return make_stringf("%d-%d", min, max);
+}
+
 /**
  * @return e.g.: "2d6", "5-12".
  */
@@ -361,6 +368,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             break;
         case SPELL_VAMPIRIC_DRAINING:
             return mi_calc_vampiric_drain_damage(monster);
+        case SPELL_MAJOR_HEALING:
+            return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
             return dice_def_string(spell_beam.damage) + "+3";
