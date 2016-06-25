@@ -327,7 +327,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_DRAIN] && !meld)
-        drain_player(200, true, true);
+        drain_player(150, true, true);
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
@@ -1087,7 +1087,7 @@ static void _remove_amulet_of_harm()
     else
         mpr("The amulet drains your animating force as you remove it!");
 
-    drain_player(100, false, true);
+    drain_player(150, false, true);
 }
 
 static void _equip_amulet_of_dismissal()
