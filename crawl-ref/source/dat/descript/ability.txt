@@ -837,7 +837,7 @@ Transference ability
 Forces a targeted creature to pass through the realms of memory and exchange
 places with your ancestor.
 
-With great piety, those near the target will be slowed for a duration depending
+With great piety, those near the target will be drained to a degree depending
 on Invocations skill.
 %%%%
 Ancestor Life: Knight ability

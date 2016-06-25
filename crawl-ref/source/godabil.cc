@@ -7028,8 +7028,8 @@ static coord_def _get_transference_target()
     return spd.target;
 }
 
-/// Slow any monsters near the destination of Tranference.
-static void _transfer_slow_nearby(coord_def destination)
+/// Drain any monsters near the destination of Tranference.
+static void _transfer_drain_nearby(coord_def destination)
 {
     for (adjacent_iterator it(destination); it; ++it)
     {
@@ -7037,13 +7037,13 @@ static void _transfer_slow_nearby(coord_def destination)
         if (!mon || mons_is_hepliaklqana_ancestor(mon->type))
             continue;
 
-        // ~3-6 turns at 0 invo, ~6-20 turns at 27 invo
-        const int dur = random_range(30 + you.skill(SK_INVOCATIONS, 1),
-                                     60 + you.skill(SK_INVOCATIONS, 5));
-        // XXX: player_adjust_invoc_power?
-        // XXX: consider adjusting by target HD?
-        if (mon->add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur)))
-            simple_monster_message(mon, " is slowed by nostalgia.");
+        const int dur = random_range(60, 150);
+        // 1-2 at 0 skill, 2-6 at 27 skill.
+        const int degree
+            = random_range(1 + you.skill_rdiv(SK_INVOCATIONS, 1, 27),
+                           2 + you.skill_rdiv(SK_INVOCATIONS, 4, 27));
+        if (mon->add_ench(mon_enchant(ENCH_DRAINED, degree, &you, dur)))
+            simple_monster_message(mon, " is drained by nostalgia.");
     }
 }
 
@@ -7140,8 +7140,8 @@ spret_type hepliaklqana_transference(bool fail)
     ancestor->apply_location_effects(destination);
     victim->apply_location_effects(target);
 
-    if (have_passive(passive_t::transfer_slow))
-        _transfer_slow_nearby(target);
+    if (have_passive(passive_t::transfer_drain))
+        _transfer_drain_nearby(target);
 
     return SPRET_SUCCESS;
 }
