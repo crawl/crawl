@@ -298,6 +298,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
+        || mons->check_clarity(false)
         || monster_resists_this_poison(mons))
     {
         return 0;
@@ -305,8 +306,6 @@ static int _intoxicate_monsters(coord_def where, int pow)
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
-        if (mons->check_clarity(false))
-            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(mons, " looks rather confused.");
         return 1;
