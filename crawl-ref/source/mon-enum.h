@@ -234,7 +234,7 @@ enum shout_type
     S_BARK,                 // bark
     S_HOWL,                 // howl
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
-    S_ROAR,                 // roar
+    S_ROAR,                 // roar. loud!
     S_SCREAM,               // scream
     S_BELLOW,               // bellow (yaks)
     S_BLEAT,                // bleat (sheep)
@@ -245,10 +245,10 @@ enum shout_type
     S_GURGLE,               // gurgle
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
-    S_HISS,                 // for snakes and lizards
+    S_HISS,                 // for reptiles & arachnids. quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CHERUB,               // for cherubs
-    S_RUMBLE,               // for ushabti
+    S_RUMBLE,               // for ushabti. very loud!
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
