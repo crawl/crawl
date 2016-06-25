@@ -4143,7 +4143,7 @@ void bolt::affect_player()
         else
         {
             mprf(MSGCH_WARN, "You are encased in ice.");
-            you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
+            you.duration[DUR_FROZEN] = (2 + random2(3)) * BASELINE_DELAY;
         }
     }
     else if (origin_spell == SPELL_DAZZLING_SPRAY
