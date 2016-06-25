@@ -541,15 +541,28 @@ void attack::antimagic_affects_defender(int pow)
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
 }
 
+/// Whose skill should be used for a pain-weapon effect?
+static actor* _pain_weapon_user(actor* attacker)
+{
+    if (attacker->type != MONS_SPECTRAL_WEAPON)
+        return attacker;
+
+    const mid_t summoner_mid = attacker->as_monster()->summoner;
+    if (summoner_mid == MID_NOBODY)
+        return attacker;
+
+    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
+    if (!summoner || !summoner->alive())
+        return attacker;
+    return summoner;
+}
+
 void attack::pain_affects_defender()
 {
     if (defender->res_negative_energy())
         return;
 
-    actor* user = attacker->type == MONS_SPECTRAL_WEAPON
-                  && attacker->as_monster()->summoner != MID_NOBODY ?
-                     actor_by_mid(attacker->as_monster()->summoner) :
-                     attacker;
+    actor* user = _pain_weapon_user(attacker);
     if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
     {
         if (defender_visible)
