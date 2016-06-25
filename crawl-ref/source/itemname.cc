@@ -3410,8 +3410,7 @@ static bool _invisibility_is_useless(const bool temp)
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:
  * \li The item cannot be used.
- * \li Using the item would have no effect, or would have a negligible effect
- *     such as random uselessness.
+ * \li Using the item would have no effect.
  * \li Using the item would have purely negative effects (<tt>is_bad_item</tt>).
  * \li Using the item is expected to produce no benefit for a player of their
  *     religious standing. For example, magic enhancers for Trog worshippers
