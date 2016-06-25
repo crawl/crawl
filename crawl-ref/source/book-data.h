@@ -208,12 +208,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_FOREST,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
+#endif
 
 {   // Book of Unlife
     SPELL_RECALL,
