@@ -332,8 +332,11 @@ static string mi_calc_vampiric_drain_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+/**
+ * @return e.g.: "2d6", "5-12".
+ */
 static string mons_human_readable_spell_damage_string(monster* monster,
-                                                           spell_type sp)
+                                                      spell_type sp)
 {
     bolt spell_beam = mons_spell_beam(
         monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp), false), true);
@@ -358,6 +361,9 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             break;
         case SPELL_VAMPIRIC_DRAINING:
             return mi_calc_vampiric_drain_damage(monster);
+        case SPELL_MINOR_HEALING:
+        case SPELL_HEAL_OTHER:
+            return dice_def_string(spell_beam.damage) + "+3";
         default:
             break;
     }
