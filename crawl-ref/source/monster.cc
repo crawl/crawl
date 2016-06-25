@@ -4254,6 +4254,9 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     if (has_notele_item(calc_unid))
         return true;
 
+    if (has_ench(ENCH_DIMENSION_ANCHOR))
+        return true;
+
     return false;
 }
 
