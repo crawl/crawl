@@ -2512,7 +2512,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "vicinity, who will come to check out what the commotion "
                     "was about.";
         }
-        else if (mons_shouts(m->type, false) == S_SILENT)
+        else if (!mons_can_shout(m->type))
         {
             text << "Uh-oh, that monster noticed you! Fortunately, it "
                     "didn't make any noise, but many monsters do make "
