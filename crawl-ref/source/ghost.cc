@@ -76,8 +76,6 @@ static spell_type search_order_selfench[] =
 {
     SPELL_HASTE,
     SPELL_SILENCE,
-    SPELL_BATTLESPHERE,
-    SPELL_SPELLFORGED_SERVITOR,
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
@@ -112,8 +110,6 @@ static spell_type search_order_misc[] =
     SPELL_SLOW,
     SPELL_NO_SPELL, // end of list
 };
-
-// Last slot (emergency) can only be Teleport Self or Blink.
 
 ghost_demon::ghost_demon()
 {
@@ -257,10 +253,6 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        // This bit uses the list of player spells to find appropriate
-        // spells for the demon, then converts those spells to the monster
-        // spell indices. Some special monster-only spells are at the end.
-
         ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
         if (coinflip())
