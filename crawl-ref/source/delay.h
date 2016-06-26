@@ -212,26 +212,30 @@ public:
 
 class EatDelay : public Delay
 {
-    int chunk_nutrition;
-    food_type type;
-    bool multiturn;
+    item_def& food;
 
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
     }
 
+    bool should_interrupt() override;
+
     void finish() override;
 public:
-    EatDelay(int dur, int chunk_nutr, food_type ty) :
-             Delay(dur), chunk_nutrition{chunk_nutr}, type{ty}
+    EatDelay(int dur, item_def& item) :
+             Delay(dur), food(item)
     {
-        multiturn = dur > 0;
     }
 
     virtual bool berserk_ok() const
     {
         return true;
+    }
+
+    bool is_being_used(const item_def* item, operation_types oper) const override
+    {
+        return oper == OPER_EAT && (!item || &food == item);
     }
 
     const char* name() const override
