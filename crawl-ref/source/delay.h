@@ -214,6 +214,8 @@ class EatDelay : public Delay
 {
     item_def& food;
 
+    bool invalidated() override;
+
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
