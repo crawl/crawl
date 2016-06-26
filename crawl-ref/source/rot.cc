@@ -248,9 +248,6 @@ static void _compare_stack_quantity(item_def &stack)
  */
 static int _rot_stack(item_def &it, int slot, bool in_inv)
 {
-    if (current_delay() && current_delay()->is_being_used(&it, OPER_EAT))
-        return 0;
-
     ASSERT(it.defined());
     ASSERT(is_perishable_stack(it));
     if (!it.props.exists(TIMER_KEY))
@@ -265,6 +262,11 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     ASSERT(!stack_timer.empty());
 
     _update_freshness(it); // for external consumption
+
+    // after initializing everything, skip the actual decay if we're eating
+    // this stack - this will preserve it a little longer but that's ok.
+    if (current_delay() && current_delay()->is_being_used(&it, OPER_EAT))
+        return 0;
 
     int destroyed_count = 0;    // # of items decayed away entirely
     // will be filled in ascending (reversed) order.
