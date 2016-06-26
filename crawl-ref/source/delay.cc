@@ -651,7 +651,7 @@ bool EatDelay::invalidated()
     // you get polymorphed into a lich, etc.)
     if (food.base_type != OBJ_FOOD
         || !can_eat(food, true)
-        || food.pos != you.pos())
+        || !in_inventory(food) && food.pos != you.pos())
     {
         mpr("You stop eating.");
         return true;
