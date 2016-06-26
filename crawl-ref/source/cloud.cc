@@ -1367,7 +1367,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // XXX: add a param instead?
         const cloud_damage &dam_info = clouds[cloud.type].damage;
         const int damage = _cloud_damage_calc(dam_info.random,
-                                              dam_info.random / 9,
+                                              max(1, dam_info.random / 9),
                                               dam_info.base, false);
         const int hp_threshold = damage * 3;
 
