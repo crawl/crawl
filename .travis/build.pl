@@ -59,7 +59,7 @@ sub try {
 
 sub error {
     my ($exitcode) = @_;
-    my $morguedir = $ENV{USE_DGAMELAUNCH} ? "" : "morgue/"
+    my $morguedir = $ENV{USE_DGAMELAUNCH} ? "" : "morgue/";
     system "cat ${morguedir}crash-*.txt";
     exit $exitcode;
 }
