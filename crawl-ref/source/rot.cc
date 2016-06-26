@@ -276,8 +276,11 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
         if (rot_away_time > you.elapsed_time)
             break;
 
-        stack_timer.pop_back();
-        destroyed_count++;
+        if (!(current_delay() && current_delay()->is_being_used(&it, OPER_EAT)))
+        {
+            stack_timer.pop_back();
+            destroyed_count++;
+        }
     }
 
     if (!destroyed_count)
