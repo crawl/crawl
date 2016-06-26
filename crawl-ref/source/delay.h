@@ -230,7 +230,7 @@ public:
     {
     }
 
-    virtual bool berserk_ok() const
+    bool berserk_ok() const override
     {
         return true;
     }
@@ -393,7 +393,7 @@ public:
         return true;
     }
 
-    virtual bool berserk_ok() const
+    bool berserk_ok() const override
     {
         return true;
     }
@@ -564,7 +564,7 @@ public:
         return true;
     }
 
-    bool is_parent() const
+    bool is_parent() const override
     {
         // Interlevel travel can do upstairs/downstairs delays.
         // Additionally, travel/rest can do autoeat.
