@@ -546,7 +546,7 @@ static void _sdump_notes(dump_params &par)
         return;
 
     text += "Notes\nTurn   | Place    | Note\n";
-    text += "--------------------------------------------------------------\n";
+    text += "-------+----------+-------------------------------------------\n";
     for (const Note &note : note_list)
     {
         if (note.hidden())
