@@ -248,6 +248,9 @@ static void _compare_stack_quantity(item_def &stack)
  */
 static int _rot_stack(item_def &it, int slot, bool in_inv)
 {
+    if (current_delay() && current_delay()->is_being_used(&it, OPER_EAT))
+        return 0;
+
     ASSERT(it.defined());
     ASSERT(is_perishable_stack(it));
     if (!it.props.exists(TIMER_KEY))
@@ -276,11 +279,8 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
         if (rot_away_time > you.elapsed_time)
             break;
 
-        if (!(current_delay() && current_delay()->is_being_used(&it, OPER_EAT)))
-        {
-            stack_timer.pop_back();
-            destroyed_count++;
-        }
+        stack_timer.pop_back();
+        destroyed_count++;
     }
 
     if (!destroyed_count)
