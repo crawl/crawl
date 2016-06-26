@@ -1307,7 +1307,7 @@ static void _update_place_info()
         }
 
         if (!you_are_delayed()
-            || current_delay()->is_resting())
+            || !current_delay()->is_resting())
         {
             prev_was_rest = false;
         }
