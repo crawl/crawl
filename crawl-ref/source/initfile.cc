@@ -552,6 +552,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
+        "interrupt_eat = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
@@ -569,9 +570,8 @@ void game_options::set_default_activity_interrupts()
         // trash all queued delays, including travel.
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
-        // These are all totally uninterruptible by default, since it's
+        // These are totally uninterruptible by default, since it's
         // impossible for them to be interrupted anyway.
-        "interrupt_eat = ",
         "interrupt_drop_item = ",
         "interrupt_jewellery_off =",
     };

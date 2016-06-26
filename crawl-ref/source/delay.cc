@@ -227,6 +227,18 @@ bool FeedVampireDelay::should_interrupt()
     return true;
 }
 
+bool EatDelay::should_interrupt()
+{
+    if (duration > 1
+        && !crawl_state.disables[DIS_CONFIRMATIONS]
+        && !yesno("Keep eating?", false, 0, false))
+    {
+        mpr("You stop eating.");
+        return true;
+    }
+    return false;
+}
+
 bool ArmourOnDelay::should_interrupt()
 {
     if (duration > 1 && !was_prompted)
@@ -842,14 +854,9 @@ void ArmourOffDelay::finish()
 
 void EatDelay::finish()
 {
-    if (multiturn) // If duration was just one turn, don't print.
+    if (food_turns(food) > 1) // If duration was just one turn, don't print.
         mpr("You finish eating.");
-    // For chunks, warn the player if they're not getting much
-    // nutrition. Also, print the other eating messages only now.
-    if (chunk_nutrition)
-        chunk_nutrition_message(chunk_nutrition);
-    else if (type != NUM_FOODS)
-        finished_eating_message(type);
+    finish_eating_item(food);
 }
 
 void FeedVampireDelay::finish()
