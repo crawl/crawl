@@ -102,6 +102,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
 cigotuvis_embrace CIGOTUVIS_EMBRACE
+infestation INFESTATION
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
