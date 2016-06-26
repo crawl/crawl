@@ -229,12 +229,16 @@ bool FeedVampireDelay::should_interrupt()
 
 bool EatDelay::should_interrupt()
 {
-    if (duration > 1
-        && !crawl_state.disables[DIS_CONFIRMATIONS]
-        && !yesno("Keep eating?", false, 0, false))
+    if (duration > 1 && !was_prompted)
     {
-        mpr("You stop eating.");
-        return true;
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep eating?", false, 0, false))
+        {
+            mpr("You stop eating.");
+            return true;
+        }
+        else
+            was_prompted = true;
     }
     return false;
 }

@@ -213,6 +213,7 @@ public:
 class EatDelay : public Delay
 {
     item_def& food;
+    bool was_prompted = false;
 
     bool invalidated() override;
 
