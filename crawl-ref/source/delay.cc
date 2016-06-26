@@ -645,6 +645,21 @@ bool FeedVampireDelay::invalidated()
     return false;
 }
 
+bool EatDelay::invalidated()
+{
+    // Stop eating if something happens (chunk rots, you get teleported,
+    // you get polymorphed into a lich, etc.)
+    if (food.base_type != OBJ_FOOD
+        || !can_eat(food, true)
+        || food.pos != you.pos())
+    {
+        mpr("You stop eating.");
+        return true;
+    }
+
+    return false;
+}
+
 static bool _check_corpse_gone(item_def& item, const char* action)
 {
     // A monster may have raised the corpse you're chopping up! -- bwr
