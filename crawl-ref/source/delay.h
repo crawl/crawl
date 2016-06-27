@@ -657,11 +657,6 @@ public:
     TravelDelay() : BaseRunDelay()
     { }
 
-    bool is_stair_travel() const override
-    {
-        return true;
-    }
-
     const char* name() const override
     {
         return "travel";
