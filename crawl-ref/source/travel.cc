@@ -621,9 +621,9 @@ static void _start_running()
 }
 
 // Stops shift+running and all forms of travel.
-void stop_running()
+void stop_running(bool clear_delays)
 {
-    you.running.stop();
+    you.running.stop(clear_delays);
 }
 
 static bool _is_valid_explore_target(const coord_def& where)
@@ -4052,7 +4052,7 @@ bool runrest::run_should_stop() const
     return false;
 }
 
-void runrest::stop()
+void runrest::stop(bool clear_delays)
 {
     bool need_redraw =
         (runmode > 0 || runmode < 0 && Options.travel_delay == -1);
@@ -4061,7 +4061,8 @@ void runrest::stop()
 
     // Kill the delay; this is fine because it's not possible to stack
     // run/rest/travel on top of other delays.
-    stop_delay();
+    if (clear_delays)
+        stop_delay();
 
 #ifdef USE_TILE_LOCAL
     if (Options.tile_runrest_rate > 0)
