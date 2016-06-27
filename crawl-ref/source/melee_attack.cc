@@ -71,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving)
+    cleaving(is_cleaving), is_riposte(false)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -268,19 +268,32 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    if (attacker != defender && adjacent(defender->pos(), attack_position))
+    if (attacker != defender && adjacent(defender->pos(), attack_position)
+        && attacker->alive() && defender->can_see(*attacker)
+        && !defender->cannot_act() && !defender->confused()
+        && (!defender->is_player() || !you.duration[DUR_LIFESAVING])
+        // Retaliation only works on the first attack in a round.
+        // FIXME: player's attack is -1, even for auxes
+        && effective_attack_number <= 0)
     {
-        if (attacker->alive()
-            && (defender->is_player() ?
-                   you.species == SP_MINOTAUR :
-                   mons_species(mons_base_type(defender->as_monster()))
-                      == MONS_MINOTAUR)
-            && defender->can_see(*attacker)
-            // Retaliation only works on the first attack in a round.
-            // FIXME: player's attack is -1, even for auxes
-            && effective_attack_number <= 0)
+        if (defender->is_player() ?
+                you.species == SP_MINOTAUR :
+                mons_species(mons_base_type(defender->as_monster()))
+                    == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();
+        }
+
+        // Retaliations can kill!
+        if (!attacker->alive())
+            return false;
+
+        if (defender->weapon()
+            && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES
+            && !is_riposte // no long blade ping-pong!
+            && one_chance_in(2))
+        {
+            riposte();
         }
 
         // Retaliations can kill!
@@ -3295,14 +3308,6 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
-    if (defender->cannot_act()
-        || defender->confused()
-        || !attacker->alive()
-        || defender->is_player() && you.duration[DUR_LIFESAVING])
-    {
-        return;
-    }
-
     if (!defender->is_player())
     {
         // monsters have no STR or DEX
@@ -3370,6 +3375,25 @@ void melee_attack::do_minotaur_retaliation()
             attacker->hurt(&you, hurt);
         }
     }
+}
+
+/**
+ * Launch a long blade counterattack against the attacker. No sanity checks;
+ * caller beware!
+ *
+ * XXX: might be wrong for deep elf blademasters with a long blade in only
+ * one hand
+ */
+void melee_attack::riposte()
+{
+    if (you.see_cell(defender->pos()))
+    {
+        mprf("%s riposte%s.", defender->name(DESC_THE).c_str(),
+             defender->is_player() ? "" : "s");
+    }
+    melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
+    attck.is_riposte = true;
+    attck.attack();
 }
 
 bool melee_attack::do_knockback(bool trample)
