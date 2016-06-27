@@ -1,4 +1,4 @@
-Stone Soup 0.19 (up to 0.19-a0-606-gee5277e)
+Stone Soup 0.19 (up to 0.19-a0-810-ge4e7c75)
 --------------------------------------------
 
 Highlights
@@ -9,12 +9,16 @@ Branches, Environment
 ---------------------
 * Lair is now six floors (formerly eight).
 * Slime is now five floors (formerly six).
+* Webs are no longer destroyed after creatures escape from them.
+* Storm cloud damage is more common and much less severe.
+* Non-opaque clouds created by the player vanish instantly when out of LOS.
 
 Character
 ---------
 * Flight expiring over deep water or lava no longer causes instant death;
   instead, it causes heavy drain over time until reaching land.
 * Potions, scrolls and books can be used while still on the floor.
+* Monks can now choose a weapon to start with.
 * Satiated vampires can now berserk and transform; previously required Full.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
 
@@ -34,15 +38,16 @@ Gods
     The ally automatically grows in strength as you level up.
   - Piety granted for exploration.
   - 0*: Recall: interlevel recall for your ally.
-  - 2*: Remember Life: choose between Hexer, Knight or Battlemage classes for
-        your ancestor. At XL 15, further specialization is available.
+  - 2*: Remember Life: permanently make your ancestor a Hexer, Knight or
+        Battlemage.
   - 3*: Transference: swap your ancestor with any creature in LOS, or yourself.
   - 4*: Idealise: heal your ancestor & temporarily increase their AC, damage
         and spellpower dramatically.
-  - 5*: Transference slows enemies adjacent to the target.
+  - 5*: Transference drains enemies adjacent to the target.
 * Beogh's water-walking now always lasts until the player is on land.
 * Dithmenos's Shadow Step can no longer be used on allies or while immobile.
 * Nemelex Xobeh's abilities now use invocations, not evocations.
+* Nemelex Xobeh now gifts decks of escape, destruction & summoning.
 * Pakellas suppresses Vine Stalker MP drain.
 * Pakellas's wrath no longer drains the player or their items, but instead
   passively blocks all device use for its duration.
@@ -77,24 +82,32 @@ Items
 * Jewellery acquirement creates twice as many randarts.
 * Rods are created through misc. acquirement instead of staff acquirement.
 * Removed:
-  - Decks of changes, defense, summoning, and wonders.
-  - Dowsing, Exile, Feast, Focus, Helix, Mercenary and Xom cards.
+  - All decks, except for gifts from Nemelex Xobeh.
+  - Alchemist, Banshee, Blade, Crusade, Dowsing, Exile, Feast, Focus,
+    Fortitude, Hammer, Helix, Helm, Mercenary, Potion, Repulsiveness, Shadow,
+    Solitude, Swap, Water, Venom, and Xom cards.
   - Stones of tremors.
   - The evasion weapon ego.
   - Artefact blowguns.
 
 Monsters
 --------
-* New monsters: Meliai, bee priestesses that sting and smite in trios.
+* New monsters
+  - Bai Suzhen, a late-game draconian unique that casts Summon Hydra. When
+    severely injured, she becomes a dragon ringed by storm clouds.
+  - Meliai, bee priestesses that sting and smite in trios.
 * Uniques:
   - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
   - Xtahua can now roar to cast Paralyse.
   - Gloorx Vloq can no longer cast Black Mark.
   - Various uniques have had their genders changed.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
+* Necromancers gain Bind Soul, reviving slain monsters as spectral things.
+* Obsidian statues can Mesmerise.
 * Spriggan air mages can no longer cast Control Winds.
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
+* Death scarabs no longer trail miasma, but are somewhat tougher.
 * Decayed bog bodies have become bog mummies, which are somewhat weaker.
 * Removed:
   - Salamander stormcallers.
@@ -102,9 +115,14 @@ Monsters
 
 Spells
 ------
+* New spell: Infestation (L8 Necromancy), appearing in the Necronomicon.
+  Applies 'infested' to monsters in a large, smite-targeted area; a friendly
+  death scarab erupts out of the victims when they die.
+* Confusing Touch is level 1 (was level 2).
 * Cigotuvi's Embrace only degrades over time, not on-hit.
 * Olgreb's Toxic Radiance causes less damage, but doesn't poison the caster.
 * Simulacrum's duration is significantly shorter.
+* Removed: Cure Poison.
 
 
 Stone Soup 0.18 (20160504)
