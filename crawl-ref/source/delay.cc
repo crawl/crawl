@@ -111,16 +111,18 @@ static void _pop_delay()
     you.redraw_evasion = true;
 }
 
-static void _clear_pending_delays()
+static void _clear_pending_delays(size_t after_index = 1)
 {
-    while (you.delay_queue.size() > 1)
+    while (you.delay_queue.size() > after_index)
     {
         auto delay = you.delay_queue.back();
 
         you.delay_queue.pop_back();
 
         if (delay->is_run() && you.running)
-            stop_running();
+            // If you got here, you're already clearing the delays and there's
+            // no need to clear them again.
+            stop_running(false);
     }
 }
 
@@ -173,11 +175,8 @@ void BaseRunDelay::try_interrupt()
     _pop_delay();
 
     // Keep things consistent, otherwise disturbing phenomena can occur.
-    // Note that runrest::stop() will turn around and call stop_delay()
-    // again, but that's okay because the delay is already popped off
-    // the queue.
     if (you.running)
-        stop_running();
+        stop_running(false);
     update_turn_count();
 }
 
@@ -1463,7 +1462,7 @@ bool interrupt_activity(activity_interrupt_type ai,
                 if (you.delay_queue[j]->is_run())
                 {
                     _monster_warning(ai, at, you.delay_queue[j], msgs_buf);
-                    stop_delay(ai == AI_TELEPORT);
+                    _clear_pending_delays(i);
                     return true;
                 }
             }

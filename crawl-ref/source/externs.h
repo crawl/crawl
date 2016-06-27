@@ -706,7 +706,7 @@ public:
     void clear();
 
     // Stops running.
-    void stop();
+    void stop(bool clear_delays = true);
 
     // Take one off the rest counter.
     void rest();
