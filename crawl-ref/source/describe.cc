@@ -2115,7 +2115,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         const string cl_desc = getLongDescription(cl_name + " cloud");
         inf.body << "\n\nA cloud of " << cl_name
                  << (cl_desc.empty() ? "." : ".\n\n")
-                 << cl_desc;
+                 << cl_desc << extra_cloud_info(cloud);
     }
 
     inf.quote = getQuoteString(db_name);
@@ -3980,4 +3980,26 @@ void alt_desc_proc::get_string(string &str)
         if (!chop(str))
             break;
     }
+}
+
+/**
+ * Provide auto-generated information about the given cloud type. Describe
+ * opacity & related factors.
+ *
+ * @param cloud_type        The cloud_type in question.
+ * @return e.g. "\nThis cloud is opaque; one tile will not block vision, but
+ *      multiple will. \nClouds of this kind the player makes will vanish very
+ *      quickly once outside the player's sight."
+ */
+string extra_cloud_info(cloud_type cloud_type)
+{
+    const bool opaque = is_opaque_cloud(cloud_type);
+    const string opacity_info = !opaque ? "" :
+        "\nThis cloud is opaque; one tile will not block vision, but "
+        "multiple will.";
+    const string vanish_info
+        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
+                       "%s once outside their sight.",
+                       opaque ? "quickly" : "almost instantly");
+    return opacity_info + vanish_info;
 }
