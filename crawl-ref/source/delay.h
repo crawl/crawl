@@ -180,19 +180,15 @@ public:
     virtual void handle();
 
     /**
-     * Called by try_interrupt to see if it should interrupt the delay.
+     * This is called on the front of the delay queue when stop_delay is called.
      * If the player needs to be notified, it should also print a message.
+     * @return whether to pop the delay.
      */
-    virtual bool should_interrupt()
+    virtual bool try_interrupt()
     {
         // The default is for delays to be uninterruptible once started.
         return false;
     }
-
-    /**
-     * This is called on the front of the delay queue when stop_delay is called.
-     */
-    virtual void try_interrupt();
 
     /**
      *@return true if the delay involves using the item in this way (and
@@ -222,7 +218,7 @@ class EatDelay : public Delay
         mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
     }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     void finish() override;
 public:
@@ -260,7 +256,7 @@ public:
                      Delay(dur), corpse(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_butcher() const override
     {
@@ -297,7 +293,7 @@ public:
                   Delay(dur), armour(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {
@@ -324,7 +320,7 @@ public:
                    Delay(dur), armour(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {
@@ -367,7 +363,7 @@ public:
                   Delay(dur), spell{sp}
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {
@@ -387,7 +383,7 @@ public:
                  Delay(dur), corpse(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_butcher() const override
     {
@@ -422,7 +418,7 @@ public:
                      Delay(dur), corpse(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_butcher() const override
     {
@@ -456,7 +452,7 @@ public:
                   Delay(dur), dest{pos}
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {
@@ -494,7 +490,7 @@ public:
                   Delay(dur), items(vec)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {
@@ -515,7 +511,7 @@ public:
     AscendingStairsDelay(int dur) : Delay(dur)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_stairs() const override
     {
@@ -535,7 +531,7 @@ public:
     DescendingStairsDelay(int dur) : Delay(dur)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_stairs() const override
     {
@@ -572,7 +568,7 @@ public:
         return true;
     }
 
-    void try_interrupt() override;
+    bool try_interrupt() override;
 
     BaseRunDelay() : Delay(1)
     { }
@@ -679,7 +675,7 @@ public:
     MacroDelay() : Delay(1)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_parent() const override
     {
@@ -733,7 +729,7 @@ public:
     ShaftSelfDelay(int dur) : Delay(dur)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     bool is_stair_travel() const override
     {
@@ -765,7 +761,7 @@ public:
                       Delay(dur), scroll(item)
     { }
 
-    bool should_interrupt() override;
+    bool try_interrupt() override;
 
     const char* name() const override
     {

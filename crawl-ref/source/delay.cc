@@ -139,19 +139,19 @@ static void _interrupt_butchering(const char* action)
     mprf("You stop %s the corpse%s.", action, multiple_corpses ? "s" : "");
 }
 
-bool BottleBloodDelay::should_interrupt()
+bool BottleBloodDelay::try_interrupt()
 {
     _interrupt_butchering("bottling blood from");
     return true;
 }
 
-bool ButcherDelay::should_interrupt()
+bool ButcherDelay::try_interrupt()
 {
     _interrupt_butchering("butchering");
     return true;
 }
 
-bool MemoriseDelay::should_interrupt()
+bool MemoriseDelay::try_interrupt()
 {
     // Losing work here is okay... having to start from
     // scratch is a reasonable behaviour. -- bwr
@@ -159,7 +159,7 @@ bool MemoriseDelay::should_interrupt()
     return true;
 }
 
-bool MultidropDelay::should_interrupt()
+bool MultidropDelay::try_interrupt()
 {
     // No work lost
     if (!items.empty())
@@ -167,20 +167,18 @@ bool MultidropDelay::should_interrupt()
     return true;
 }
 
-// We can't use should_interrupt, since the delay has to be popped before
-// stop_running() is called to prevent an infinite loop.
-void BaseRunDelay::try_interrupt()
+bool BaseRunDelay::try_interrupt()
 {
-    // Always interruptible.
-    _pop_delay();
-
     // Keep things consistent, otherwise disturbing phenomena can occur.
     if (you.running)
         stop_running(false);
     update_turn_count();
+
+    // Always interruptible.
+    return true;
 }
 
-bool MacroDelay::should_interrupt()
+bool MacroDelay::try_interrupt()
 {
     // Always interruptible.
     return true;
@@ -220,13 +218,13 @@ static void _interrupt_vampire_feeding(item_def& corpse, int dur)
     }
 }
 
-bool FeedVampireDelay::should_interrupt()
+bool FeedVampireDelay::try_interrupt()
 {
     _interrupt_vampire_feeding(corpse, duration);
     return true;
 }
 
-bool EatDelay::should_interrupt()
+bool EatDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
@@ -242,7 +240,7 @@ bool EatDelay::should_interrupt()
     return false;
 }
 
-bool ArmourOnDelay::should_interrupt()
+bool ArmourOnDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
@@ -258,7 +256,7 @@ bool ArmourOnDelay::should_interrupt()
     return false;
 }
 
-bool ArmourOffDelay::should_interrupt()
+bool ArmourOffDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
@@ -274,7 +272,7 @@ bool ArmourOffDelay::should_interrupt()
     return false;
 }
 
-bool BlurryScrollDelay::should_interrupt()
+bool BlurryScrollDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
@@ -290,34 +288,28 @@ bool BlurryScrollDelay::should_interrupt()
     return false;
 }
 
-bool AscendingStairsDelay::should_interrupt()
+bool AscendingStairsDelay::try_interrupt()
 {
     mpr("You stop ascending the stairs.");
     return true;  // short... and probably what people want
 }
 
-bool DescendingStairsDelay::should_interrupt()
+bool DescendingStairsDelay::try_interrupt()
 {
     mpr("You stop descending the stairs.");
     return true;  // short... and probably what people want
 }
 
-bool PasswallDelay::should_interrupt()
+bool PasswallDelay::try_interrupt()
 {
     mpr("Your meditation is interrupted.");
     return true;
 }
 
-bool ShaftSelfDelay::should_interrupt()
+bool ShaftSelfDelay::try_interrupt()
 {
     mpr("You stop digging.");
     return true;
-}
-
-void Delay::try_interrupt()
-{
-    if (should_interrupt())
-        _pop_delay();
 }
 
 void stop_delay(bool stop_stair_travel)
@@ -342,8 +334,11 @@ void stop_delay(bool stop_stair_travel)
     if (!delay->is_butcher())
         _clear_pending_delays();
 
-    if (!delay->is_stair_travel() || stop_stair_travel)
-        delay->try_interrupt();
+    if ((!delay->is_stair_travel() || stop_stair_travel)
+        && delay->try_interrupt())
+    {
+        _pop_delay();
+    }
 }
 
 bool you_are_delayed()
