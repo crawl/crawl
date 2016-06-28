@@ -352,7 +352,7 @@ static bool _has_melded_armour()
     return false;
 }
 
-static bool _has_tran_unwearable_armour()
+static bool _has_temp_unwearable_armour()
 {
     for (const auto &item : you.inv)
     {
@@ -403,9 +403,8 @@ string no_selectables_message(int item_selector)
     {
         if (_has_melded_armour())
             return "Your armour is currently melded into you.";
-        else if (_has_tran_unwearable_armour())
-            return "You aren't carrying any armour you can wear in your "
-                   "current form.";
+        else if (_has_temp_unwearable_armour())
+            return "You aren't carrying any currently wearable armour.";
         else
             return "You aren't carrying any wearable armour.";
     }
