@@ -5961,11 +5961,6 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
-        && player_equip_unrand(UNRAND_FENCERS))
-    {
-        level = min(level + 4 * scale, 27 * scale);
-    }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     return level;

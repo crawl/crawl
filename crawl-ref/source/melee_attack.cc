@@ -288,13 +288,14 @@ bool melee_attack::handle_phase_dodged()
         if (!attacker->alive())
             return false;
 
-        if (defender->weapon()
-            && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES
-            && !is_riposte // no long blade ping-pong!
-            && one_chance_in(2))
-        {
+        const bool using_lbl = defender->weapon()
+            && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
+        const bool using_fencers
+            = defender->is_player() && player_equip_unrand(UNRAND_FENCERS);
+        const int chance = using_lbl + using_fencers;
+
+        if (x_chance_in_y(chance, 2) && !is_riposte) // no longblade ping-pong!
             riposte();
-        }
 
         // Retaliations can kill!
         if (!attacker->alive())

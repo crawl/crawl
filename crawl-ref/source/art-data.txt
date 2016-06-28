@@ -852,7 +852,7 @@ BOOL:    elec, poison, rMut, rCorr
 
 ENUM:    FENCERS
 NAME:    fencer's gloves
-INSCRIP: LBl+4 SBl+4
+INSCRIP: +Riposte
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
 COLOUR:  WHITE
