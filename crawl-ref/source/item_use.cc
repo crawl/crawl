@@ -647,10 +647,11 @@ static int armour_equip_delay(const item_def &item)
  * @param item The item. Only the base_type and sub_type really should get
  *             checked, since you_can_wear passes in a dummy item.
  * @param verbose Whether to print a message about your inability to wear item.
- * @param ignore_temporary Whether to take into account forms/fishtail. Note
- *                         that no matter what this is set to, all mutations
- *                         will be taken into account, except for Beastly
- *                         Appendage (and then only if this is false).
+ * @param ignore_temporary Whether to take into account forms/fishtail/2handers.
+ *                         Note that no matter what this is set to, all
+ *                         mutations will be taken into account, except for
+ *                         ones from Beastly Appendage, which are only checked
+ *                         if this is false.
  */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
