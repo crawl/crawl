@@ -199,6 +199,43 @@ struct weapon_def
     vector<brand_weight_tuple> brand_weights;
 };
 
+/**
+  * "Why do we have all these ridiculous brand tables?"
+
+  1) The main purpose of weapon brand distribution varying across weapon type
+     is to help to balance the different weapon skills against each other -
+     staves and short blades getting better brands as partial compensation for
+     their other drawbacks, for instance. It is true that we have other knobs
+     that we also use to balance different weapon types, but they don't all
+     affect things in the same way. For instance, lajatangs having very good
+     brands on average partially compensates for the rarity of good staves in a
+     different way from how raising their base damage would - it means that
+     finding a really great staff is of more comparable rarity to finding a
+     really great axe. (This is important because finding a really great weapon
+     like a lajatang of speed or elec or pain is one of the ways that players
+     decide to use a weapon type in the first place.) Having this knob isn't
+     redundant with having base damage and delay to modify - it is similar to
+     being able to adjust the rarity of different base types of weapons.
+
+ 2)  The secondary purpose of varying weapon brand distribution is to give
+     different weapon skills more individual feel. For instance, if you play a
+     lot of maces chars in a row, then you will get used to using a lot of
+     protection weapons and you'll never see vamp except on rare randarts, and
+     then when you switch to axes for a few games you'll actually find vamp
+     axes with some regularity and use them and be excited about that.
+
+     This isn't a particularly strong effect with the current distributions -
+     among the four "normal" weapon skills (axes/maces/polearms/longblades),
+     only the m&f distribution is particularly distinctive. But it is
+     definitely a noticeable effect if you play 5 non-maces games in a row and
+     follow up with 5 maces games, and it contributes to making maces feel more
+     distinct.
+
+     They could probably be simplified to a certain extent (only one set of
+     brands per weapon skill, for example), but there is a reason not to
+     simplify them down to just one table.
+ */
+
 /// brand weights for non-dagger shortblades (short sword & rapier)
 static const vector<brand_weight_tuple> SBL_BRANDS = {
     { SPWPN_NORMAL, 33 },
