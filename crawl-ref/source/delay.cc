@@ -1199,7 +1199,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     if (delay && !delay->is_run() && !delay->is_butcher())
         return false;
-    if (at.context != SC_NEWLY_SEEN && delay)
+    if (at.context != SC_NEWLY_SEEN && !delay)
         return false;
 
     ASSERT(at.apt == AIP_MONSTER);
