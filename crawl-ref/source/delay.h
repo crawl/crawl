@@ -158,6 +158,14 @@ public:
         return false;
     }
 
+    /**
+     * @return whether it's OK to start eating during this delay if hungry.
+     */
+    virtual bool want_autoeat() const
+    {
+        return false;
+    }
+
     virtual bool is_macro() const
     {
         return false;
@@ -551,7 +559,6 @@ class BaseRunDelay : public Delay
     void handle() override;
 
     virtual bool want_move() const = 0;
-    virtual bool want_autoeat() const = 0;
     virtual bool want_clear_messages() const = 0;
     virtual command_type move_cmd() const = 0;
 
@@ -579,11 +586,6 @@ class RunDelay : public BaseRunDelay
     bool want_move() const override
     {
         return true;
-    }
-
-    bool want_autoeat() const override
-    {
-        return false;
     }
 
     bool want_clear_messages() const override
