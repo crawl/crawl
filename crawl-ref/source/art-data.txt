@@ -854,11 +854,10 @@ ENUM:    FENCERS
 NAME:    fencer's gloves
 INSCRIP: +Riposte
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
-PLUS:    +2
+PLUS:    +0
 COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
-EV:      3
 DEX:     6
 
 NAME:     cloak of Starlight
