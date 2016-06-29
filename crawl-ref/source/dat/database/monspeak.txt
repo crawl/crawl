@@ -1648,7 +1648,7 @@ w:5
 %%%%
 _Aizul_common_
 
-VISUAL:@The_monster@ yawns, and then pretends @possessive@ didn't.
+VISUAL:@The_monster@ yawns, and then pretends @subjective@ didn't.
 
 @The_monster@ says, "Feeling sleepy?"
 
