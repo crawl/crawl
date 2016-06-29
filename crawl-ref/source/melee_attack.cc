@@ -824,7 +824,8 @@ bool melee_attack::attack()
         handle_phase_blocked();
     else
     {
-        if (attacker != defender && adjacent(defender->pos(), attack_position))
+        if (attacker != defender && adjacent(defender->pos(), attack_position)
+            && !is_riposte)
         {
             // Check for defender Spines
             do_spines();
@@ -2078,7 +2079,7 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
-    if (!adjacent(attacker->pos(), defender->pos()))
+    if (!adjacent(attacker->pos(), defender->pos()) || is_riposte)
         return;
 
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
