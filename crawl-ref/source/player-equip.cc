@@ -1056,10 +1056,10 @@ static void _remove_amulet_of_faith(item_def &item)
         // next sacrifice is going to be delaaaayed.
         if (you.piety < piety_breakpoint(5))
         {
-            int current_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+            const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
             ru_reject_sacrifices(true);
-            you.props[RU_SACRIFICE_DELAY_KEY] =
-                max(you.props[RU_SACRIFICE_DELAY_KEY].get_int(), current_delay)*2;
+            dprf("prev delay %d, new delay %d", cur_delay,
+                 you.props[RU_SACRIFICE_DELAY_KEY].get_int());
         }
     }
     else if (!you_worship(GOD_NO_GOD)
