@@ -547,13 +547,12 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_aux()
 {
-    if (attacker->is_player())
+    if (attacker->is_player() && !cleaving && !is_riposte)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attack_position)
-            && !cleaving)
+            && adjacent(defender->pos(), attack_position))
         {
             player_aux_unarmed();
         }
@@ -562,7 +561,7 @@ bool melee_attack::handle_phase_aux()
         // DUR_CLEAVE and Gyre/Gimble interact poorly together at the moment,
         // so don't try to skip print_wounds in that case.
         if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
-              && !cleaving && !you.duration[DUR_CLEAVE]))
+              && !you.duration[DUR_CLEAVE]))
         {
             print_wounds(defender->as_monster());
         }
