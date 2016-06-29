@@ -547,7 +547,7 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_aux()
 {
-    if (attacker->is_player() && !cleaving && !is_riposte)
+    if (attacker->is_player() && !cleaving)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
