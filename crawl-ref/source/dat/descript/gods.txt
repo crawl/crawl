@@ -414,6 +414,9 @@ will freeze all foes so that the dancer may take a solo. If the dance continues,
 Uskayaw will link the emotions of foes, forcing them to share their pain. If the
 dance continues, Uskayaw allows you to end it by melding with and then violently
 exploding a foe, killing it instantly.
+
+Uskayaw's passive powers scale in duration with Invocations skill. Uskayaw's
+active powers also depend heavily on Invocations skill.
 %%%%
 Vehumet powers
 
