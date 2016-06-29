@@ -6119,9 +6119,20 @@ bool ru_do_sacrifice(ability_type sac)
     return true;
 }
 
-bool ru_reject_sacrifices(bool skip_prompt)
+/**
+ * If forced_rejection is false, prompt the player if they want to reject the
+ * currently offered sacrifices. If true, or if the prompt is accepted,
+ * remove the currently offered sacrifices & increase the time until the next
+ * sacrifices will be offered.
+ *
+ * @param forced_rejection      Whether the rejection is caused by the removal
+ *                              of an amulet of faith, in which case there's
+ *                              no prompt & an increased sac time penalty.
+ * @return                      Whether the sacrifices were actually rejected.
+ */
+bool ru_reject_sacrifices(bool forced_rejection)
 {
-    if (!skip_prompt &&
+    if (!forced_rejection &&
         !yesno("Do you really want to reject the sacrifices Ru is offering?",
                false, 'n'))
     {
@@ -6129,13 +6140,20 @@ bool ru_reject_sacrifices(bool skip_prompt)
         return false;
     }
 
+    ru_reset_sacrifice_timer(false, true);
     _ru_expire_sacrifices();
-    ru_reset_sacrifice_timer(false);
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
 }
 
-void ru_reset_sacrifice_timer(bool clear_timer)
+/**
+ * Reset the time until the next set of Ru sacrifices are offered.
+ *
+ * @param clear_timer       Whether to reset the timer to the base time-between-
+ *                          sacrifices, rather than adding to it.
+ * @param faith_penalty     Whether this is a penalty for removing "faith.
+ */
+void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 {
     ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
     ASSERT(you.props.exists(RU_SACRIFICE_DELAY_KEY));
@@ -6158,8 +6176,22 @@ void ru_reset_sacrifice_timer(bool clear_timer)
         // based on piety. This extra delay stacks with any added delay for
         // previous rejections.
         added_delay = you.props[RU_SACRIFICE_PENALTY_KEY].get_int();
-        added_delay += (max(100, static_cast<int>(you.piety))) / 3;
-        you.props[RU_SACRIFICE_PENALTY_KEY] = added_delay;
+        const int new_penalty = (max(100, static_cast<int>(you.piety))) / 3;
+        added_delay += new_penalty;
+
+        // longer delay for each real rejection
+        if (!you.props[AVAILABLE_SAC_KEY].get_vector().empty())
+            you.props[RU_SACRIFICE_PENALTY_KEY] = added_delay;
+
+        if (faith_penalty)
+        {
+            // the player will end up waiting longer than they would otherwise,
+            // but multiple removals of the amulet of faith won't stack -
+            // they'll just put the player back to around the same delay
+            // each time.
+            added_delay += new_penalty * 2;
+            delay = base_delay;
+        }
     }
 
     delay = div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
