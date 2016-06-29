@@ -146,7 +146,8 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        you.time_taken = you.attack_delay().roll();
+        if (!is_riposte)
+            you.time_taken = you.attack_delay().roll();
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
