@@ -850,9 +850,33 @@ void fire_monster_death_event(monster* mons,
     }
 }
 
+int mummy_curse_power(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_MENKAURE:
+        case MONS_MUMMY:
+            return 0;
+        case MONS_GUARDIAN_MUMMY:
+            return 3;
+        case MONS_MUMMY_PRIEST:
+            return 8;
+        case MONS_GREATER_MUMMY:
+            return 11;
+        case MONS_KHUFU:
+            return 15;
+        default:
+            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
+            return 0;
+    }
+}
+
 static void _mummy_curse(monster* mons, killer_type killer, int index)
 {
-    int pow;
+    const int pow = mummy_curse_power(mons->type);
+
+    if (pow <= 0);
+        return;
 
     switch (killer)
     {
@@ -867,22 +891,6 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
 
         default:
             break;
-    }
-
-    switch (mons->type)
-    {
-        case MONS_MENKAURE:
-        case MONS_MUMMY:
-            return;
-
-        case MONS_GUARDIAN_MUMMY: pow = 3; break;
-        case MONS_MUMMY_PRIEST:   pow = 8; break;
-        case MONS_GREATER_MUMMY:  pow = 11; break;
-        case MONS_KHUFU:          pow = 15; break;
-
-        default:
-            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
-            return;
     }
 
     actor* target;
