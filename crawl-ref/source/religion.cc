@@ -1797,7 +1797,7 @@ bool do_god_gift(bool forced)
                 if (yred_random_servants(threshold) != -1)
                 {
                     delayed_monster_done(" grants you @an@ undead servant@s@!",
-                                          "", _delayed_gift_callback);
+                                         _delayed_gift_callback);
                     success = true;
                 }
             }
@@ -4444,7 +4444,6 @@ static deque<delayed_callback> _delayed_callbacks;
 static deque<unsigned int>     _delayed_done_trigger_pos;
 static deque<delayed_callback> _delayed_done_callbacks;
 static deque<string>      _delayed_success;
-static deque<string>      _delayed_failure;
 
 void delayed_monster(const mgen_data &mg, delayed_callback callback)
 {
@@ -4452,15 +4451,13 @@ void delayed_monster(const mgen_data &mg, delayed_callback callback)
     _delayed_callbacks.push_back(callback);
 }
 
-void delayed_monster_done(string success, string failure,
-                                  delayed_callback callback)
+void delayed_monster_done(string success, delayed_callback callback)
 {
     const unsigned int size = _delayed_data.size();
     ASSERT(size > 0);
 
     _delayed_done_trigger_pos.push_back(size - 1);
     _delayed_success.push_back(success);
-    _delayed_failure.push_back(failure);
     _delayed_done_callbacks.push_back(callback);
 }
 
@@ -4504,7 +4501,7 @@ static void _place_delayed_monsters()
             if (placed > 0)
                 msg = _delayed_success[0];
             else
-                msg = _delayed_failure[0];
+                msg = "";
 
             if (placed == 1)
             {
@@ -4525,7 +4522,6 @@ static void _place_delayed_monsters()
             prev_god = GOD_NO_GOD;
             _delayed_done_trigger_pos.pop_front();
             _delayed_success.pop_front();
-            _delayed_failure.pop_front();
             _delayed_done_callbacks.pop_front();
 
             if (msg == "")
@@ -4552,7 +4548,6 @@ static void _place_delayed_monsters()
     _delayed_callbacks.clear();
     _delayed_done_trigger_pos.clear();
     _delayed_success.clear();
-    _delayed_failure.clear();
 }
 
 static bool _is_god(god_type god)
