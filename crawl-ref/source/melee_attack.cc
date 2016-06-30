@@ -273,6 +273,7 @@ bool melee_attack::handle_phase_dodged()
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
         && (!defender->is_player() || !you.duration[DUR_LIFESAVING])
+        && !mons_aligned(attacker, defender) // confused friendlies attacking
         // Retaliation only works on the first attack in a round.
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
