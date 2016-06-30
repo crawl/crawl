@@ -733,6 +733,8 @@ void MiscastEffect::_conjuration(int severity)
         switch (random2(num))
         {
         case 0:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Sparks fly from the ground!";
             you_msg      = "Sparks fly from your @hands@!";
             mon_msg_seen = "Sparks fly from @the_monster@'s @hands@!";
             break;
@@ -742,6 +744,8 @@ void MiscastEffect::_conjuration(int severity)
                            "with energy!";
             break;
         case 2:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Wisps of smoke drift around you.";
             you_msg      = "Wisps of smoke drift from your @hands@.";
             mon_msg_seen = "Wisps of smoke drift from @the_monster@'s "
                            "@hands@.";
@@ -794,6 +798,8 @@ void MiscastEffect::_conjuration(int severity)
         switch (random2(2))
         {
         case 0:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Smoke billows around you!";
             you_msg        = "Smoke pours from your @hands@!";
             mon_msg_seen   = "Smoke pours from @the_monster@'s @hands@!";
             mon_msg_unseen = "Smoke appears from out of nowhere!";
@@ -1146,6 +1152,8 @@ void MiscastEffect::_charms(int severity)
                 reroll = false;
                 break;
             case 2:
+                if (special_source == HELL_EFFECT_MISCAST)
+                    all_msg = "Magic is drained from your body!";
                 you_msg        = "Magic surges out from your body!";
                 mon_msg_seen   = "Magic surges out from @the_monster@!";
                 mon_msg_unseen = "Magic surges out from thin air!";
@@ -2190,6 +2198,8 @@ void MiscastEffect::_fire(int severity)
         switch (random2(10))
         {
         case 0:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Sparks fly from the ground!";
             you_msg      = "Sparks fly from your @hands@!";
             mon_msg_seen = "Sparks fly from @the_monster@'s @hands@!";
             break;
@@ -2198,6 +2208,8 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen = "The air around @the_monster@ burns with energy!";
             break;
         case 2:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Wisps of smoke drift around you.";
             you_msg      = "Wisps of smoke drift from your @hands@.";
             mon_msg_seen = "Wisps of smoke drift from @the_monster@'s @hands@.";
             break;
@@ -2251,6 +2263,8 @@ void MiscastEffect::_fire(int severity)
 
             if (success)
             {
+                if (special_source == HELL_EFFECT_MISCAST)
+                    all_msg = "Fire whirls out of nowhere!";
                 you_msg        = "Fire whirls out from your @hands@!";
                 mon_msg_seen   = "Fire whirls out @the_monster@'s @hands@!";
                 mon_msg_unseen = "Fire whirls out of nowhere!";
@@ -2387,6 +2401,8 @@ void MiscastEffect::_ice(int severity)
             // Monster messages needed.
             break;
         case 2:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Wisps of condensation drift around you.";
             you_msg        = "Wisps of condensation drift from your @hands@.";
             mon_msg_seen   = "Wisps of condensation drift from @the_monster@'s "
                              "@hands@.";
@@ -2512,6 +2528,8 @@ void MiscastEffect::_ice(int severity)
 
             break;
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Freezing gases billow around you!";
             you_msg        = "Freezing gases pour from your @hands@!";
             mon_msg_seen   = "Freezing gases pour from @the_monster@'s "
                              "@hands@!";
@@ -2550,6 +2568,8 @@ void MiscastEffect::_earth(int severity)
                              "moment.";
             break;
         case 2:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Sand pours from out of thin air.";
             you_msg        = "Sand pours from your @hands@.";
             mon_msg_seen   = "Sand pours from @the_monster@'s @hands@.";
             mon_msg_unseen = "Sand pours from out of thin air.";
@@ -2698,12 +2718,17 @@ void MiscastEffect::_air(int severity)
             mon_msg_seen = "@The_monster@ bobs in the air for a moment.";
             break;
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Wisps of vapour drift around you.";
             you_msg      = "Wisps of vapour drift from your @hands@.";
             mon_msg_seen = "Wisps of vapour drift from @the_monster@'s "
                            "@hands@.";
             break;
         case 2:
         {
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Sparks of electricity dance around you.";
+
             bool pluralised = true;
             if (!hand_str.empty())
                 pluralised = can_plural_hand;
@@ -2777,7 +2802,7 @@ void MiscastEffect::_air(int severity)
             }
             break;
         case 9:
-            you_msg = "Ouch! You gave yourself an electric shock.";
+            you_msg = "Ouch! You feel a sudden electric shock.";
             // Monster messages needed.
             break;
         case 10:
@@ -2811,6 +2836,8 @@ void MiscastEffect::_air(int severity)
             _ouch(4 + random2avg(9, 2), BEAM_ELECTRICITY);
             break;
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Noxious gases billow around you.";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
@@ -2849,6 +2876,8 @@ void MiscastEffect::_air(int severity)
             _explosion();
             break;
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Venomous gases billow around you!";
             you_msg        = "Venomous gases pour from your @hands@!";
             mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
@@ -2901,6 +2930,8 @@ void MiscastEffect::_poison(int severity)
             mon_msg_seen = "@The_monster@ briefly looks sick.";
             break;
         case 2:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Wisps of poison gas drift around you.";
             you_msg      = "Wisps of poison gas drift from your @hands@.";
             mon_msg_seen = "Wisps of poison gas drift from @the_monster@'s "
                            "@hands@.";
@@ -2955,6 +2986,8 @@ void MiscastEffect::_poison(int severity)
         case 1:
             if (cell_is_solid(target->pos()))
                 break;
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Noxious gases billow around you!";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
@@ -2979,6 +3012,8 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Noxious gases billow around you!";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
@@ -3026,6 +3061,8 @@ void MiscastEffect::_poison(int severity)
             do_msg();
             break;
         case 1:
+            if (special_source == HELL_EFFECT_MISCAST)
+                all_msg = "Venomous gases billow around you!";
             you_msg        = "Venomous gases pour from your @hands@!";
             mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
