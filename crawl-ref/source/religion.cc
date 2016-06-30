@@ -1796,7 +1796,7 @@ bool do_god_gift(bool forced)
 
                 if (yred_random_servants(threshold) != -1)
                 {
-                    delayed_monster_done(" grants you @an@ undead servant@s@!",
+                    delayed_monster_done(" grants you @servant@!",
                                          _delayed_gift_callback);
                     success = true;
                 }
@@ -4503,21 +4503,10 @@ static void _place_delayed_monsters()
             else
                 msg = "";
 
-            if (placed == 1)
-            {
-                msg = replace_all(msg, "@a@", "a");
-                msg = replace_all(msg, "@an@", "an");
-            }
+            if (placed == 1 && mon)
+                msg = replace_all(msg, "@servant@", mon->name(DESC_A));
             else
-            {
-                msg = replace_all(msg, " @a@", "");
-                msg = replace_all(msg, " @an@", "");
-            }
-
-            if (placed == 1)
-                msg = replace_all(msg, "@s@", "");
-            else
-                msg = replace_all(msg, "@s@", "s");
+                msg = replace_all(msg, "@servant@", "undead servants");
 
             prev_god = GOD_NO_GOD;
             _delayed_done_trigger_pos.pop_front();
