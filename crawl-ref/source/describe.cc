@@ -46,6 +46,7 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-cast.h" // mons_spell_range
+#include "mon-death.h"
 #include "mon-tentacle.h"
 #include "options.h"
 #include "output.h"
@@ -3577,6 +3578,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\n" << suffix;
     }
 
+    const int curse_power = mummy_curse_power(mi.type);
+    if (curse_power && !mi.is(MB_SUMMONED))
+    {
+        inf.body << "\n" << It << " will inflict a ";
+        if (curse_power > 10)
+            inf.body << "powerful ";
+        inf.body << "necromantic curse on "
+                 << mi.pronoun(PRONOUN_POSSESSIVE) << " foe when destroyed.\n";
+    }
+
     // Get information on resistances, speed, etc.
     string result = _monster_stat_description(mi);
     if (!result.empty())
@@ -3588,7 +3599,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << It << " is incapable of using stairs.\n";
+        inf.body << It << " is incapable of using stairs.\n";
         stair_use = true;
     }
 
@@ -3626,19 +3637,18 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.is(MB_SUMMONED))
     {
-        inf.body << "\n" << "This monster has been summoned, and is thus only "
-                       "temporary. Killing " << it_o << " yields no "
-                       "experience, nutrition or items";
+        inf.body << "\nThis monster has been summoned, and is thus only "
+                    "temporary. Killing " << it_o << " yields no experience, "
+                    "nutrition or items";
         if (!stair_use)
             inf.body << ", and " << it << " is incapable of using stairs";
         inf.body << ".\n";
     }
     else if (mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\n" << "This monster has been summoned in a durable "
-                    "way, and only partially exists. Killing " << it_o << " "
-                    "yields no experience, nutrition or items. You "
-                    "cannot easily abjure " << it_o << ", though.\n";
+        inf.body << "\nThis monster has been summoned in a durable way. "
+                    "Killing " << it_o << " yields no experience, nutrition "
+                    "or items, but " << it_o << " cannot be abjured.\n";
     }
     else if (mons_class_leaves_hide(mi.type))
     {
@@ -3649,9 +3659,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.is(MB_SUMMONED_CAPPED))
     {
-        inf.body << "\n" << "You have summoned too many monsters of this kind "
-                            "to sustain them all, and thus this one will "
-                            "shortly expire.\n";
+        inf.body << "\nYou have summoned too many monsters of this kind to "
+                    "sustain them all, and thus this one will shortly "
+                    "expire.\n";
     }
 
     if (!inf.quote.empty())
