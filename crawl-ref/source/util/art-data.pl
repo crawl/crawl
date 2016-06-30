@@ -28,14 +28,18 @@ my %field_type = (
     CLARITY  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
+    CONFUSE  => "bool",
     CORPSE_VIOLATING => "bool",
+    CORRODE  => "bool",
     CURSED   => "num",
     DEX      => "num",
+    DRAIN    => "bool",
     ELEC     => "bool",
     EV       => "num",
     EVIL     => "bool",
     FOG      => "bool",
     FIRE     => "num",
+    FRAGILE  => "bool",
     HOLY     => "bool",
     INSCRIP  => "str",
     INT      => "num",
@@ -484,7 +488,7 @@ my @art_order = (
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
-    # Move FOG after FLY, and remove two copies of "unused", when
+    # Move FOG after FLY, and remove three copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
@@ -493,7 +497,7 @@ my @art_order = (
     "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "FOG", "REGEN", "SUSTAT", "NO_UPGRADE", "RCORR", "\n",
-    "RMUT", "\n",
+    "RMUT", "unused", "CORRODE", "DRAIN", "CONFUSE", "FRAGILE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
