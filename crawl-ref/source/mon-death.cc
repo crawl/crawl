@@ -852,11 +852,9 @@ void fire_monster_death_event(monster* mons,
 
 int mummy_curse_power(monster_type type)
 {
+    // Plain mummies (and Menkaure) are too weak to curse you!
     switch (type)
     {
-        case MONS_MENKAURE:
-        case MONS_MUMMY:
-            return 0;
         case MONS_GUARDIAN_MUMMY:
             return 3;
         case MONS_MUMMY_PRIEST:
@@ -866,16 +864,13 @@ int mummy_curse_power(monster_type type)
         case MONS_KHUFU:
             return 15;
         default:
-            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
             return 0;
     }
 }
 
-static void _mummy_curse(monster* mons, killer_type killer, int index)
+static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
 {
-    const int pow = mummy_curse_power(mons->type);
-
-    if (pow <= 0);
+    if (pow <= 0)
         return;
 
     switch (killer)
@@ -2564,11 +2559,8 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         bennu_revive_fineff::schedule(mons->pos(), revives, att, mons->foe);
     }
-    else if (!mons->is_summoned())
-    {
-        if (mons_genus(mons->type) == MONS_MUMMY)
-            _mummy_curse(mons, killer, killer_index);
-    }
+    else if (!mons->is_summoned() && mummy_curse_power(mons->type) > 0)
+        _mummy_curse(mons, mummy_curse_power(mons->type), killer, killer_index);
 
     if (mons->has_ench(ENCH_INFESTATION) && !was_banished && !mons_reset)
         _infestation_create_scarab(mons);
