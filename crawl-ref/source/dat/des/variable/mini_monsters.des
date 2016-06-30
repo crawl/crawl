@@ -6202,42 +6202,6 @@ MAP
  ...............
 ENDMAP
 
-# sword of the Doom Knight
-# A temple to Yredelemnul, with a champion wielding the blade designate.
-NAME:   grunt_unrand_guarded_doom_knight
-TAGS:   no_monster_gen no_item_gen patrolling
-DEPTH:  Depths, Crypt
-WEIGHT: 3
-MONS:   death knight ; \
-        sword_of_the_doom_knight . \
-        chain mail w:7 | \
-        plate armour w:1
-MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   freezing wraith / phantasmal warrior / \
-        jiangshi / flayed ghost / skeletal warrior
-KFEAT:  _ = altar_yredelemnul
-KFEAT:  - = open_door
-MAP
-    ccccc
-    c2_3c
-    c.1.c
-    c465c
-ccccc+++ccccc
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-ccccc+++ccccc
-     .@.
-ENDMAP
-
 # autumn katana
 # An autumnal forest, with warriors paying respect to the last wielder
 NAME:    wheals_unrand_guarded_autumn_katana
@@ -6416,43 +6380,6 @@ MAP
 .."tt"111"tt"..
  .."".. ..""..
   ....   ....
-ENDMAP
-
-NAME:    minmay_guarded_unrand_brilliance
-DEPTH:   D:13-, Depths
-MONS:    angel / daeva w:3
-SUBST:   1 = 1.
-: if you.unrands("brilliance") then
-# not_cursed is needed here, the usual check to prevent holy weapons from
-# generating cursed does not run
-ITEM:    eveningstar randart ego:holy_wrath not_cursed ident:type no_pickup
-: else
-ITEM:    brilliance no_pickup
-: end
-MAP
-         ...
-         .c.
-         .n.
-  ...    .c.    ...
-  .c... ..n.. ...c.
-  ..cn...ncn...nc..
-   .ncnc.cdc.cncn.
-   ..n*ncn.ncn*n..
-    .cn.nc.cn.nc.
-   ...cn1n1n1nc...
-....ncncn...ncncn....
-.ncnc*..1...1..*cncn.
-....ncncn...ncncn....
-   ...cn1n1n1nc...
-    .cn.nc.cn.nc.
-   ..n*ncn.ncn*n..
-  ..ncnc.c.c.cncn..
-  .ncn...n=n...ncn.
- ..cn.. ..... ..nc..
- .c...   .c.   ...c.
- ...     .n.     ...
-         .c.
-         ...
 ENDMAP
 
 NAME:    minmay_guarded_unrand_chilly_death
