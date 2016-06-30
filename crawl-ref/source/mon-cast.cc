@@ -2650,8 +2650,11 @@ static void _corrupting_pulse(monster *mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && !mons_aligned(mons, m))
+        {
             m->corrupt();
+        }
     }
 }
 
