@@ -72,9 +72,13 @@
 # * blink:    Lets wearer evoke the blink ability.
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
+# * confuse:  Randomly causes confusion when taking damage.
+# * corrode:  Randomly causes corrosion when taking damage.
 # * cursed:   Item is generated cursed.
+# * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
+# * fragile:  Is destroyed when unequipped.
 # * fog:      Lets wearer use the evoke fog ability.
 # * unholy:   Is treated as an unholy item.
 # * holy:     Is treated as a holy item.
@@ -357,11 +361,8 @@ COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRISM
-AC:      -2
-EV:      -2
-STR:     -2
-INT:     -2
-DEX:     -2
+AC:      -3
+EV:      -3
 LIFE:     1
 
 NAME:    dagger of Chilly Death
@@ -444,7 +445,6 @@ TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    5
-STEALTH:  -1
 LIFE:     1
 
 NAME:    arbalest "Damnation"
@@ -511,7 +511,6 @@ COLOUR:  WHITE
 TILE:    urand_arga
 TILE_EQ: arga
 BRAND:   SPWPN_SPEED
-STR:     2
 MAGIC:   1
 
 NAME:     Elemental Staff
@@ -568,9 +567,10 @@ PLUS:    +8
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
 TILE_EQ: wyrmbane
-AC:      5
+AC:      3
 FIRE:    1
-BOOL:    poison, berserk, no_upgrade
+COLD:    1
+BOOL:    poison, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -658,8 +658,7 @@ PLUS:    +6
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: lshield_of_ignorance
-AC:      2
-EV:      2
+AC:      4
 INT:     -6
 LIFE:    1
 CURSED:  3
@@ -720,13 +719,10 @@ PLUS:     -5
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
-EV:       -4
-STR:      -2
-INT:      -2
-DEX:      -2
+EV:       -5
 CURSED:   1
 STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate
+BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -801,7 +797,6 @@ TILE:    urand_folly
 TILE_EQ: robe_red2
 BRAND:   SPARM_ARCHMAGI
 INT:     5
-CURSED:  3
 MAGIC:   -2
 
 ENUM:    MAXWELL
@@ -826,13 +821,12 @@ BOOL:    seeinv
 
 NAME:     robe of Night
 OBJ:      OBJ_ARMOUR/ARM_ROBE
-PLUS:     +4
+PLUS:     +5
 COLOUR:   ETC_DARK
 TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    1
-STEALTH:  1
-BOOL:     seeinv, inv
+BOOL:     seeinv
 
 NAME:    armour of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
@@ -866,7 +860,7 @@ DEX:     6
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-PLUS:     +2
+PLUS:     +1
 COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
@@ -906,10 +900,10 @@ BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
 INSCRIP: Umbra
-OBJ:     OBJ_JEWELLERY/RING_LIFE_PROTECTION
+OBJ:     OBJ_JEWELLERY/RING_STEALTH
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
-BOOL:    seeinv, inv
+BOOL:    inv
 
 # TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
@@ -933,8 +927,7 @@ NAME:    necklace of Bloodlust
 OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
-STR:     2
-INT:     -2
+INT:     -3
 MAGIC:   1
 ANGRY:   5
 SLAY:    3
@@ -963,7 +956,7 @@ NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_REFLECTION
 COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
-PLUS:    +8
+PLUS:     +8
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
@@ -994,7 +987,6 @@ TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
-STR:      +3
 BOOL:     unholy, seeinv, fly
 
 NAME:     lightning scales
