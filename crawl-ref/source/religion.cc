@@ -1233,7 +1233,16 @@ static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
     _inc_gift_timeout(4 + random2avg(7, 2));
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    string gift;
+    if (placed == 1)
+        gift = mon->name(DESC_A);
+    else
+    {
+        gift = make_stringf("%d %s", placed,
+                            pluralise(mon->name(DESC_PLAIN)).c_str());
+    }
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, gift));
 }
 
 static bool _jiyva_mutate()
@@ -4503,10 +4512,14 @@ static void _place_delayed_monsters()
             else
                 msg = "";
 
-            if (placed == 1 && mon)
-                msg = replace_all(msg, "@servant@", mon->name(DESC_A));
-            else
-                msg = replace_all(msg, "@servant@", "undead servants");
+            if (mon)
+            {
+                if (placed == 1)
+                    msg = replace_all(msg, "@servant@", mon->name(DESC_A));
+                else
+                    msg = replace_all(msg, "@servant@",
+                                      pluralise(mon->name(DESC_PLAIN)));
+            }
 
             prev_god = GOD_NO_GOD;
             _delayed_done_trigger_pos.pop_front();
