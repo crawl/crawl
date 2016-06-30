@@ -1224,9 +1224,6 @@ bool is_follower(const monster* mon)
 static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
                                    int placed)
 {
-    if (placed <= 0)
-        return;
-
     // Make sure monsters are shown.
     viewwindow();
     more();
@@ -4524,12 +4521,8 @@ static void _place_delayed_monsters()
             _delayed_success.pop_front();
             _delayed_done_callbacks.pop_front();
 
-            if (msg == "")
-            {
-                if (cback)
-                    (*cback)(mg, mon, placed);
+            if (placed <= 0)
                 continue;
-            }
 
             // Fake its coming from simple_god_message().
             if (msg[0] == ' ' || msg[0] == '\'')
