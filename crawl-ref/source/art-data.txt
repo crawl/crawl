@@ -337,6 +337,7 @@ COLD:    -1
 BOOL:    poison, skip_ego
 MAGIC:   1
 
+# TAG_MAJOR_VERSION == 34
 NAME:    eveningstar "Brilliance"
 OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
 PLUS:    +1
@@ -347,6 +348,7 @@ BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
 LIFE:    1
+BOOL:    nogen
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -454,6 +456,7 @@ TILE:    urand_damnation
 TILE_EQ: crossbow_fire
 BOOL:    unholy
 
+# TAG_MAJOR_VERSION == 34
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13
@@ -462,16 +465,17 @@ TILE:    urand_doom_knight
 TILE_EQ: doom_knight
 BRAND:   SPWPN_PAIN
 MAGIC:   1
-BOOL:    nospell
+BOOL:    nospell, nogen
 
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
-PLUS:    +11
+PLUS:    +12
+INSCRIP: Halo
 COLOUR:  ETC_JEWEL
 TILE:    urand_eos
 TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
-BOOL:    elec, seeinv, notelep
+BOOL:    elec
 
 # TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
@@ -907,6 +911,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_shadows
 BOOL:    seeinv, inv
 
+# TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_DISMISSAL
 COLOUR:  ETC_SILVER
@@ -914,7 +919,7 @@ TILE:    urand_cekugob
 AC:      1
 EV:      1
 LIFE:    2
-BOOL:    elec, poison, notelep
+BOOL:    elec, poison, notelep, nogen
 
 NAME:    amulet of the Four Winds
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING

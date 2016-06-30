@@ -104,6 +104,7 @@ scimitar of Flaming Death
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
 %%%%
+# TAG_MAJOR_VERSION == 34
 eveningstar "Brilliance"
 
 A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
@@ -166,6 +167,7 @@ arbalest "Damnation"
 An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
 fires with the raw power of its namesake, irresistible by any mortal armour.
 %%%%
+# TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
@@ -175,7 +177,9 @@ limitations.
 %%%%
 morningstar "Eos"
 
-A jewelled morningstar, glowing with the light of the dawn.
+A jewelled morningstar, glowing brightly with the light of the dawn. It
+illuminates the dungeon's recesses, revealing the machinations of those who
+would prefer to stay invisible.
 %%%%
 # TAG_MAJOR_VERSION == 34
 spear of the Botono
@@ -417,6 +421,7 @@ A black ring that can make its wearer one with the shadows. It creates a dark
 umbra that surrounds the wearer and increases stealth greatly, and reduces the
 accuracy of all those within it.
 %%%%
+# TAG_MAJOR_VERSION == 34
 amulet of Cekugob
 
 A strange-looking piece of crystal on an ordinary-looking string, with an odd
