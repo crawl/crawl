@@ -229,7 +229,7 @@ bool EatDelay::try_interrupt()
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep eating?", false, 0, false))
+            && !yesno("Keep eating?", true, 'N', false))
         {
             mpr("You stop eating.");
             return true;
