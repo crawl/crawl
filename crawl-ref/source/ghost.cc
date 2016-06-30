@@ -48,7 +48,6 @@ static spell_type search_order_aoe_conj[] =
     SPELL_METAL_SPLINTERS,
     SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord conjuration spell list.
@@ -68,7 +67,6 @@ static spell_type search_order_conj[] =
     SPELL_BOLT_OF_DRAINING,
     SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord self-enchantment spell list.
@@ -79,7 +77,6 @@ static spell_type search_order_selfench[] =
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord summoning spell list.
@@ -93,7 +90,6 @@ static spell_type search_order_summon[] =
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
     SPELL_SUMMON_BUTTERFLIES, // funny
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord misc spell list.
@@ -108,7 +104,6 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
-    SPELL_NO_SPELL, // end of list
 };
 
 ghost_demon::ghost_demon()
@@ -253,12 +248,16 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
+        if (!one_chance_in(10))
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
-        else
-            ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        if (!one_chance_in(10))
+        {
+            if (coinflip())
+                ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+            else
+                ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        }
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));
