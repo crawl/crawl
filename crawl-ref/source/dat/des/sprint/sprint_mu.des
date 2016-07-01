@@ -262,7 +262,6 @@ KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KFEAT: G = altar_gozag
-KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
 KFEAT: U = altar_uskayaw
@@ -291,9 +290,9 @@ x..........
 x...xxxxxx+
 x.f.xGlxm..
 x...xNDx...
-x+xxxXJx...
+x+xxxX.x...
 xUs5xMRx..*
-xVSKxQP+..j
+xVSKxQJ+..j
 ENDMAP
 
 ##############################################################################

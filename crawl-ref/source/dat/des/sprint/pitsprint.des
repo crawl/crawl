@@ -696,10 +696,10 @@ MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
-vTvvvvv~vvvv
-vTvUUU+@+adv
-vTvUUUv.vbcv
-vvvvvvv+vvvv
+vTTTTvvvvv~v
+vvvvvvUUUv@v
+vabcd+UUU+.v
+vvvvvvvvvv.v
 v.........G@
 v+vvvvv&vvvv
 v.vZZZZZZZZv
@@ -998,17 +998,15 @@ KFEAT:   s = altar_dithmenos
 KFEAT:   t = altar_gozag
 KFEAT:   u = altar_qazlal
 KFEAT:   v = altar_ru
-KFEAT:   w = altar_pakellas
-KFEAT:   x = altar_uskayaw
+KFEAT:   w = altar_uskayaw
+KFEAT:   x = altar_hepliaklqana
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-hopnlfjida
-gqrmksvebc
-wx
-u
-t
+abcdefghij
+klmnopqrst
+uvwx
 ENDMAP
 
 

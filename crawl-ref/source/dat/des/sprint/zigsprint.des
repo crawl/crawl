@@ -712,9 +712,8 @@ KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
-KFEAT:  w = altar_pakellas
-KFEAT:  x = altar_uskayaw
-KFEAT:  y = altar_hepliaklqana
+KFEAT:  w = altar_uskayaw
+KFEAT:  x = altar_hepliaklqana
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -817,7 +816,7 @@ c......L..O...p
 b...B.{.......q
 ^.............^
 a.............r
-^y^x^w^v^u^t^s^
+^^x^w^v^u^t^s^^
 ENDMAP
 
 NAME:  room_1
