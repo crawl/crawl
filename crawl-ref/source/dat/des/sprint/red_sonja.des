@@ -116,9 +116,8 @@ KFEAT: L = altar_sif_muna
 KFEAT: M = altar_gozag
 KFEAT: N = altar_qazlal
 KFEAT: O = altar_ru
-KFEAT: P = altar_pakellas
-KFEAT: Q = altar_uskayaw
-KFEAT: R = altar_hepliaklqana
+KFEAT: P = altar_uskayaw
+KFEAT: Q = altar_hepliaklqana
 KFEAT: Y = any shop
 MAP
 xxxxx+xxxxx+x
@@ -126,7 +125,7 @@ xxxx$$c$$$c*c
 xAMxxxc$$cc*c
 xBQPOJcc+c..+
 xC.Y..2+...Lc
-xD.R.NccK1x+x
+xD...NccK1x+x
 cEFGHIccx+x*x
 ccccccccx.xxx
 ENDMAP

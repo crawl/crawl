@@ -396,7 +396,14 @@ bool is_unknown_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    return god == GOD_JIYVA && jiyva_is_dead();
+    if (god == GOD_JIYVA && jiyva_is_dead())
+        return true;
+
+    // Disabled, pending a rework.
+    if (god == GOD_PAKELLAS)
+        return true;
+
+    return false;
 }
 
 bool god_has_name(god_type god)
@@ -4567,6 +4574,10 @@ static bool _is_temple_god(god_type god)
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
+        return false;
+
+    // Disabled, pending a rework.
+    case GOD_PAKELLAS:
         return false;
 
     default:

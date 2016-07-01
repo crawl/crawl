@@ -211,7 +211,7 @@ ENDMAP
 
 NAME:   sprint2_temple
 TAGS:   sprint2_temple no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-SHUFFLE: abdefghijklmnopqrstuvw
+SHUFFLE: abdefghijklmnopqrstuvwx
 KFEAT:  a = altar_zin
 KFEAT:  b = altar_the_shining_one
 KFEAT:  d = altar_kikubaaqudgha
@@ -233,9 +233,8 @@ KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
-KFEAT:  w = altar_pakellas
-KFEAT:  x = altar_uskayaw
-KFEAT:  y = altar_hepliaklqana
+KFEAT:  w = altar_uskayaw
+KFEAT:  x = altar_hepliaklqana
 MAP
 ..u.d...
 .t.g.h..
@@ -243,7 +242,7 @@ x.k.l.s.
 .w.o.p.v
 ..a.i.m.
 ...r.q.j
-..y.n.f.
+....n.f.
 .....b.e
 ENDMAP
 

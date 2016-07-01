@@ -199,16 +199,15 @@ KFEAT:    r = altar_dithmenos
 KFEAT:    s = altar_qazlal
 KFEAT:    t = altar_gozag
 KFEAT:    u = altar_ru
-KFEAT:    v = altar_pakellas
-KFEAT:    w = altar_uskayaw
-KFEAT:    y = altar_hepliaklqana
+KFEAT:    v = altar_uskayaw
+KFEAT:    w = altar_hepliaklqana
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrstuvwy
+~abcdefghijklmnopqrstuvw.
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
