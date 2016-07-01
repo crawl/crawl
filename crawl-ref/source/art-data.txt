@@ -822,6 +822,7 @@ BOOL:    seeinv
 NAME:     robe of Night
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +5
+INSCRIP:  Dark
 COLOUR:   ETC_DARK
 TILE:     urand_night
 TILE_EQ:  robe_of_night
