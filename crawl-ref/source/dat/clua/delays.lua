@@ -1,42 +1,34 @@
 ---------------------------------------------------------------------------
--- runrest.lua:
--- Controls shift-running and resting stop conditions.
+-- delays.lua:
+-- Controls delayed actions' stop conditions.
 --
 -- What it does:
 --
 --  * Any message in runrest_ignore_message will *not* stop your run.
 --  * Poison damage will be ignored if it is less than x% of your current
---    hp and y% of your max hp if you have defined runrest_safe_poison = x:y
+--    hp and y% of your max hp if you have defined delay_safe_poison = x:y
 --  * Any monster in runrest_ignore_monster will *not* stop your run
 --    if it's at least the specified distance away.
 --    You can specify this with runrest_ignore_monster = regex:distance.
 ---------------------------------------------------------------------------
 
-g_rr_ignored = { }
-
-chk_interrupt_activity.run = function (iname, cause, extra)
-    if not rr_check_params() then
+chk_interrupt_activities = function (iname, cause, extra)
+    if not delay_check_params() then
         return false
     end
 
-    if iname == 'message' then
-        return rr_handle_message(cause, extra)
-    end
-
     if iname == 'hp_loss' then
-        return rr_handle_hploss(cause, extra)
+        return delay_handle_hploss(cause, extra)
     end
 
     return false
 end
 
-chk_interrupt_activity.butcher = function (iname, cause, extra)
-    if not rr_check_params() then
-        return false
-    end
+g_rr_ignored = { }
 
-    if iname == 'hp_loss' then
-        return rr_handle_hploss(cause, extra)
+chk_interrupt_activity.run = function (iname, cause, extra)
+    if iname == 'message' then
+        return rr_handle_message(cause, extra)
     end
 
     return false
@@ -72,9 +64,9 @@ function rr_split_channel(s)
     return channel, s
 end
 
-function rr_handle_hploss(hplost, source)
+function delay_handle_hploss(hplost, source)
     -- source == 1 for poisoning
-    if not g_rr_pois_curhp_ratio or not g_rr_pois_maxhp_ratio or source ~= 1 then
+    if not g_delay_pois_curhp_ratio or not g_delay_pois_maxhp_ratio or source ~= 1 then
         return false
     end
 
@@ -82,24 +74,24 @@ function rr_handle_hploss(hplost, source)
     -- of both current and maximum hp, ignore
     local hp, mhp = you.hp()
     local poison_damage_prediction = hp - you.poison_survival()
-    if (poison_damage_prediction * 100 / hp) <= g_rr_pois_curhp_ratio
-       and (poison_damage_prediction * 100 / mhp) <= g_rr_pois_maxhp_ratio then
+    if (poison_damage_prediction * 100 / hp) <= g_delay_pois_curhp_ratio
+       and (poison_damage_prediction * 100 / mhp) <= g_delay_pois_maxhp_ratio then
         return nil
     end
 
     return false
 end
 
-function rr_check_params()
-    if (not g_rr_pois_maxhp_ratio or not g_rr_pois_curhp_ratio)
-            and options.runrest_safe_poison
+function delay_check_params()
+    if (not g_delay_pois_maxhp_ratio or not g_delay_pois_curhp_ratio)
+            and (options.delay_safe_poison or options.runrest_safe_poison)
     then
-        local opt = options.runrest_safe_poison
+        local opt = options.delay_safe_poison or options.runrest_safe_poison
         local cur_r, max_r
         _, _, cur_r, max_r = string.find(opt, "(%d+)%s*:%s*(%d+)")
         if cur_r and max_r then
-            g_rr_pois_curhp_ratio = tonumber(cur_r)
-            g_rr_pois_maxhp_ratio = tonumber(max_r)
+            g_delay_pois_curhp_ratio = tonumber(cur_r)
+            g_delay_pois_maxhp_ratio = tonumber(max_r)
         end
     end
     return true
