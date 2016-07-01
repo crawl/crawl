@@ -80,14 +80,10 @@
 
 static int _spell_enhancement(spell_type spell);
 
-void surge_power(const int enhanced, const string adj)
+void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
     {
-        const string surge_power =
-            make_stringf("surge of %s%spower!",
-                         adj.length() ? adj.c_str() : "",
-                         adj.length() ? " " : "");
         const string modifier = (enhanced  < -2) ? "extraordinarily" :
                                 (enhanced == -2) ? "extremely" :
                                 (enhanced ==  2) ? "strong" :
@@ -97,7 +93,7 @@ void surge_power(const int enhanced, const string adj)
              !modifier.length() ? "a"
                                 : article_a(modifier).c_str(),
              (enhanced < 0) ? "numb sensation."
-                            : surge_power.c_str());
+                            : "surge of power!");
     }
 }
 
