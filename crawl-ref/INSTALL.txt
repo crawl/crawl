@@ -248,43 +248,61 @@ to be able to start the MSYS2 shell.
   username. This is the path to your home directory in this new MSYS2
   installation.
 
-* After Step 6, where you update the installed packages, you'll see a message
-  about needing to update the Windows shortcuts used to start MSYS2. To update
-  the shortcut, find the 'Start MSYS2 Shell' shortcut under the MSYS2 group in
-  your Start menu Applications list. Right-click the shortcut, choosing
-  Properties on some systems or More->Open File Location and then
-  right-clicking again to choose Properties on later Windows versions
-  (e.g. Windows 10).
+* After Step 6, where you update the installed packages, you'll see an update
+  message telling you to close the MSYS2 terminal and to update the Windows
+  shortcuts used to start MSYS2. The shortcut you'll use to start MSYS2 will be
+  either 'MinGW-w64 Win64 Shell' (64-bit systems) or 'MinGW-w64 Win32 Shell'
+  (32-bit systems), both of which you can find under the MSYS2 group in your
+  Start menu Applications list.
 
-  From the Properties dialog, update the Target field according to the message
-  you saw in Step 6. The necessary target should look like:
+  You need to change the Target of this shortcut. On some systems you can
+  Right-click the shortcut and choosing Properties, and on later systems
+  (e.g. Windows 10), you Right-click, choose More->Open File Location,
+  right-click the file in the File manager window that appears, and then choose
+  Properties. From the Properties dialog, update the Target field according to
+  the message you saw in Step 6. For 64-bit systems, the necessary Target
+  should look like:
 
-  C:\msys64\msys2_shell.cmd -msys
+  C:\msys64\msys2_shell.cmd -mingw64
 
-  The update message refers to a Target of 'MSYS2_ROOT\msys2_shell.cmd', but
-  the 'MSYS2_ROOT' in this path should be replaced with the directory where you
-  installed MSYS2, which by default is 'C:\msys64'.
+  For 32-bit systems:
 
-  You can also update the other two shortcuts according to the Target values
-  shown in upgrade message, but 'Start MSYS2 Shell' is the only shortcut you
-  need to start MSYS2.
+  C:\msys64\msys2_shell.cmd -mingw32
 
-* After updating the shortcuts above, you must close the MSYS2 shell and
-  restart it from the 'Start MSYS2 Shell' shortcut from under MSYS2 in the
-  Start Applications Menu. Run the final update in step 7 before proceeding to
-  the steps below. You can start the MSYS2 shell at any time using the Start
-  menu shortcut.
+  NOTE: The update message refers to a Target of 'MSYS2_ROOT\msys2_shell.cmd',
+  but the 'MSYS2_ROOT' in this path should be replaced with the directory where
+  you installed MSYS2, which by default is 'C:\msys64'.
+
+* After updating the shortcut above, you must close the MSYS2 shell and restart
+  it from the shortcut you've updated. Run the final update in Step 7 before
+  proceeding to the steps below. You can start the MSYS2 shell at any time
+  using the updated shortcut.
+
+  NOTE: You generally don't want to use the shortcut called 'MSYS2 Shell', as
+  this starts a shell for working with Cygwin-based MSYS2 components. Building
+  crawl in this environment is currently not supported.
 
 Install Git and the development packages, and compile crawl:
 
-* To install git, the development toolchain, and the GCC compiler, run the
-  following command from the MSYS2 shell:
+* To install git and the base development packages, run the following command
+  from the MSYS2 shell:
 
-  pacman -S base-devel gcc git
+  pacman -S base-devel git
 
-  Say yes to any questions about installing packages or removing packages due
-  to conflicts. After the packages are installed, you're ready to compile
-  crawl.
+  Accept the default action to install all packages in base-devel, and say yes
+  to any questions about installing packages or removing packages due to
+  conflicts.
+
+* Install the mingw-w64 gcc toolchain for your system. For a 64-bit system,
+  run:
+
+  pacman -S mingw-w64-x86_64-toolchain
+
+  For a 32-bit system, run:
+
+  pacman -S mingw-w64-i686-toolchain
+
+  After the packages install, you're ready to build crawl!
 
 * To get the crawl source, you can follow the steps in the Source Code Checkout
   section above to clone crawl into your MSYS2 home directory. If you've
