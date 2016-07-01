@@ -1694,15 +1694,8 @@ static bool _incorruptible(monster_type mt)
 // more monsters can fit in.
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
-    const beh_type beh =
-        x_chance_in_y(100,
-                      player_adjust_invoc_power(
-                          200 + you.skill(SK_INVOCATIONS, 25)))
-        ? BEH_HOSTILE : BEH_NEUTRAL;
-
-    // [ds] No longer summon hostiles -- don't create the monster if
-    // it would be hostile.
-    if (beh == BEH_HOSTILE)
+    // Chance to fail to place a monster (but allow continued attempts).
+    if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
         return true;
 
     // Thirty tries for a place.
@@ -1719,7 +1712,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         ASSERT(mons);
         if (!monster_habitable_grid(mons, grd(p)))
             continue;
-        mgen_data mg(mons, beh, 0, 5, 0, p);
+        mgen_data mg(mons, BEH_NEUTRAL, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);

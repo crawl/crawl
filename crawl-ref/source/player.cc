@@ -2079,11 +2079,6 @@ const int player_adjust_evoc_power(const int power, int enhancers)
     return stepdown_spellpower(100 *apply_enhancement(power, total_enhancers));
 }
 
-const int player_adjust_invoc_power(const int power)
-{
-    return apply_enhancement(power, you.spec_invoc());
-}
-
 // This function differs from the above in that it's used to set the
 // initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
