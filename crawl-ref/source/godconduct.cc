@@ -268,23 +268,6 @@ static dislike_response _on_attack_friend(const char* desc)
     };
 }
 
-/// Ely response to a friend dying.
-static dislike_response _on_ely_friend_death(const char* desc)
-{
-    return
-    {
-        desc, false,
-        1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
-            // For everyone but Fedhas, plants are items not creatures,
-            // and animated items are, well, items as well.
-            return victim && !mons_is_object(victim->type)
-                          && !(victim->holiness() & MH_PLANT)
-            // Converted allies (marked as TSOites) can be martyrs.
-                          && victim->god == GOD_SHINING_ONE;
-            }
-    };
-}
-
 /// Fedhas's response to a friend(ly plant) dying.
 static dislike_response _on_fedhas_friend_death(const char* desc)
 {
@@ -429,8 +412,6 @@ static peeve_map divine_peeves[] =
         { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-        { DID_FRIEND_DIED, _on_ely_friend_death("you allow allies to die") },
-        { DID_SOULED_FRIEND_DIED, _on_ely_friend_death(nullptr) },
         { DID_KILL_LIVING, {
             "you kill living things while asking for your life to be spared",
             true,
