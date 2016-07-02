@@ -2,6 +2,7 @@
 
 #include "map_knowledge.h"
 
+#include "cloud.h"
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
@@ -219,4 +220,43 @@ map_feature get_cell_map_feature(const map_cell& cell)
     if (base_feature == MF_SKIP) // can this happen?
         return MF_UNSEEN;
     return base_feature;
+}
+
+/// Iter over all known-but-unseen clouds & remove known-gone clouds.
+void update_cloud_knowledge()
+{
+    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+    {
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        {
+            if (env.map_knowledge[x][y].update_cloud_state())
+            {
+#ifdef USE_TILE
+                tile_draw_map_cell({x, y}, true);
+#endif
+#ifdef USE_TILE_WEB
+                tiles.mark_for_redraw({x, y});
+#endif
+            }
+        }
+    }
+}
+
+/// If there's a cloud in this cell that we know should be gone, remove it.
+/// Returns true if a cloud was removed.
+bool map_cell::update_cloud_state()
+{
+    if (visible())
+        return false; // we're already up-to-date
+
+    // player non-opaque clouds vanish instantly out of los
+    if (_cloud && _cloud->killer == KILL_YOU_MISSILE
+        && !is_opaque_cloud(_cloud->type))
+    {
+        clear_cloud();
+        return true;
+    }
+
+    // TODO: track decay & vanish appropriately (based on some worst case?)
+    return false;
 }

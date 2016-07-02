@@ -71,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving)
+    cleaving(is_cleaving), is_riposte(false)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -146,7 +146,8 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        you.time_taken = you.attack_delay().roll();
+        if (!is_riposte)
+            you.time_taken = you.attack_delay().roll();
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
@@ -268,17 +269,19 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    if (attacker != defender && adjacent(defender->pos(), attack_position))
+    if (attacker != defender && adjacent(defender->pos(), attack_position)
+        && attacker->alive() && defender->can_see(*attacker)
+        && !defender->cannot_act() && !defender->confused()
+        && (!defender->is_player() || !you.duration[DUR_LIFESAVING])
+        && !mons_aligned(attacker, defender) // confused friendlies attacking
+        // Retaliation only works on the first attack in a round.
+        // FIXME: player's attack is -1, even for auxes
+        && effective_attack_number <= 0)
     {
-        if (attacker->alive()
-            && (defender->is_player() ?
-                   you.species == SP_MINOTAUR :
-                   mons_species(mons_base_type(defender->as_monster()))
-                      == MONS_MINOTAUR)
-            && defender->can_see(*attacker)
-            // Retaliation only works on the first attack in a round.
-            // FIXME: player's attack is -1, even for auxes
-            && effective_attack_number <= 0)
+        if (defender->is_player() ?
+                you.species == SP_MINOTAUR :
+                mons_species(mons_base_type(defender->as_monster()))
+                    == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();
         }
@@ -286,6 +289,22 @@ bool melee_attack::handle_phase_dodged()
         // Retaliations can kill!
         if (!attacker->alive())
             return false;
+
+        if (defender->is_player())
+        {
+            const bool using_lbl = defender->weapon()
+                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
+            const bool using_fencers
+                = player_equip_unrand(UNRAND_FENCERS);
+            const int chance = using_lbl + using_fencers;
+
+            if (x_chance_in_y(chance, 2) && !is_riposte) // no ping-pong!
+                riposte();
+
+            // Retaliations can kill!
+            if (!attacker->alive())
+                return false;
+        }
     }
 
     return true;
@@ -529,13 +548,12 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_aux()
 {
-    if (attacker->is_player())
+    if (attacker->is_player() && !cleaving)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attack_position)
-            && !cleaving)
+            && adjacent(defender->pos(), attack_position))
         {
             player_aux_unarmed();
         }
@@ -544,7 +562,7 @@ bool melee_attack::handle_phase_aux()
         // DUR_CLEAVE and Gyre/Gimble interact poorly together at the moment,
         // so don't try to skip print_wounds in that case.
         if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
-              && !cleaving && !you.duration[DUR_CLEAVE]))
+              && !you.duration[DUR_CLEAVE]))
         {
             print_wounds(defender->as_monster());
         }
@@ -554,7 +572,7 @@ bool melee_attack::handle_phase_aux()
 }
 
 /**
- * Devour a monster whole!.
+ * Devour a monster whole!
  *
  * @param defender  The monster in question.
  */
@@ -584,6 +602,8 @@ static void _hydra_devour(monster &victim)
         // feel free to just use the actual creature name if this has buggy
         // edge cases or such
     }
+    if (victim.has_ench(ENCH_STICKY_FLAME))
+        mprf("Spicy!");
 
     // nutrition (maybe)
     if (filling)
@@ -652,12 +672,6 @@ static void _hydra_consider_devouring(monster &defender)
     }
 
     dprf("corpse ok");
-
-    // or monsters as large as you are!
-    if (defender.body_size() >= you.body_size())
-        return;
-
-    dprf("size ok");
 
     // chow down.
     _hydra_devour(defender);
@@ -810,7 +824,8 @@ bool melee_attack::attack()
         handle_phase_blocked();
     else
     {
-        if (attacker != defender && adjacent(defender->pos(), attack_position))
+        if (attacker != defender && adjacent(defender->pos(), attack_position)
+            && !is_riposte)
         {
             // Check for defender Spines
             do_spines();
@@ -1958,6 +1973,10 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
     if (!actor_can_lose_heads(defender))
         return false;
 
+    // no decapitate on riposte (Problematic)
+    if (is_riposte)
+        return false;
+
     // Monster attackers+defenders have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons
@@ -1982,12 +2001,8 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
     if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
         return false;
 
-    // you need to have done at least some damage.
-    if (dam <= 0)
-        return false;
-
-    // usually at least 4 damage, unless you are an unlucky vorpal user.
-    if (dam < 4 && wpn_brand != SPWPN_VORPAL && coinflip())
+    // You need to have done at least some damage.
+    if (dam <= 0 || dam < 4 && coinflip())
         return false;
 
     // ok, good enough!
@@ -2068,7 +2083,7 @@ void melee_attack::attacker_sustain_passive_damage()
     if (attacker->res_acid() >= 3)
         return;
 
-    if (!adjacent(attacker->pos(), defender->pos()))
+    if (!adjacent(attacker->pos(), defender->pos()) || is_riposte)
         return;
 
     const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
@@ -3303,14 +3318,6 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
-    if (defender->cannot_act()
-        || defender->confused()
-        || !attacker->alive()
-        || defender->is_player() && you.duration[DUR_LIFESAVING])
-    {
-        return;
-    }
-
     if (!defender->is_player())
     {
         // monsters have no STR or DEX
@@ -3378,6 +3385,25 @@ void melee_attack::do_minotaur_retaliation()
             attacker->hurt(&you, hurt);
         }
     }
+}
+
+/**
+ * Launch a long blade counterattack against the attacker. No sanity checks;
+ * caller beware!
+ *
+ * XXX: might be wrong for deep elf blademasters with a long blade in only
+ * one hand
+ */
+void melee_attack::riposte()
+{
+    if (you.see_cell(defender->pos()))
+    {
+        mprf("%s riposte%s.", defender->name(DESC_THE).c_str(),
+             defender->is_player() ? "" : "s");
+    }
+    melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
+    attck.is_riposte = true;
+    attck.attack();
 }
 
 bool melee_attack::do_knockback(bool trample)
@@ -3676,8 +3702,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
         lessen_hunger(30 + random2avg(59, 2), false);
-
-    did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
 
     return true;
 }

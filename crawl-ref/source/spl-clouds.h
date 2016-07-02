@@ -23,8 +23,6 @@ void corpse_rot(actor* caster);
 
 void holy_flames(monster* caster, actor* defender);
 
-void apply_control_winds(const monster* mon);
-
 spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail = false);
 #endif

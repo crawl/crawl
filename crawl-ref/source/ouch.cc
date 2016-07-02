@@ -754,20 +754,26 @@ static void _maybe_confuse()
 /**
  * If you have dismissal, consider teleporting away a monster that hurt you.
  **/
-static void _maybe_dismiss(mid_t source)
+static void _maybe_dismiss(mid_t source, int dam)
 {
-    if (you.dismissal(true, true))
+    if (!you.dismissal(true, true))
+        return;
+
+    monster* mon = monster_by_mid(source);
+    if (!mon || mon->no_tele())
+        return;
+
+    ASSERT(you.hp_max > 0);
+    // chance to teleport away monsters that harm you:
+    // 0% for hits that do < 10% of player hp, 10% chance otherwise
+    if (dam < you.hp_max / 10)
+        return;
+
+    if (one_chance_in(10))
     {
-        if (monster* mon = monster_by_mid(source))
-        {
-            // 10% chance to teleport away monsters that harm you
-            if (!mon->no_tele() && one_chance_in(10))
-            {
-                item_def *amulet = you.slot_item(EQ_AMULET);
-                mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
-                teleport_fineff::schedule(mon);
-            }
-        }
+        item_def *amulet = you.slot_item(EQ_AMULET);
+        mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
+        teleport_fineff::schedule(mon);
     }
 }
 
@@ -825,21 +831,18 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF || you.duration[DUR_FORTITUDE];
+    return you.species == SP_DEEP_DWARF;
 }
 
 int do_shave_damage(int dam)
 {
-    if (you.species == SP_DEEP_DWARF)
-    {
-        // Deep Dwarves get to shave any hp loss.
-        int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
-        dprf("HP shaved: %d.", shave);
-        dam -= shave;
-    }
+    if (!can_shave_damage())
+        return dam;
 
-    if (you.duration[DUR_FORTITUDE])
-        dam -= random2(10);
+    // Deep Dwarves get to shave any hp loss.
+    int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
+    dprf("HP shaved: %d.", shave);
+    dam -= shave;
 
     return dam;
 }
@@ -885,7 +888,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Multiply damage if amulet of harm is in play
     if (dam != INSTANT_DEATH)
-        dam = _apply_extra_harm (dam, source);
+        dam = _apply_extra_harm(dam, source);
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
@@ -1042,7 +1045,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
-            _maybe_dismiss(source);
+            _maybe_dismiss(source, dam);
         }
         if (you.hp > 0)
           return;

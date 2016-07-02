@@ -919,7 +919,7 @@ char mlist_index_to_letter(int index)
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (range)
+    if (range && Options.darken_beyond_range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -963,7 +963,7 @@ bool direction_chooser::move_is_ok() const
             if (you.see_cell(target()))
                 mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
             else
-                mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target what you can't see.");
+                mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
             return false;
         }
 
@@ -1006,104 +1006,105 @@ static bool _blocked_ray(const coord_def &where)
     return !exists_ray(you.pos(), where, opc_solid_see);
 }
 
-#ifndef USE_TILE_LOCAL
-
-#endif
-
 // Try to find an enemy monster to target
 bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
-    bool success = false;
-
-    // First try to pick our previous target.
+    // First try to pick our previous monster target.
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
         && in_range(mons_target->pos()))
     {
-        success = true;
         result = mons_target->pos();
+        return true;
     }
-    if (!success)
+    // If the previous targetted position is at all useful, use it.
+    if (hitfunc && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
+                                      range, hitfunc,
+                                      AFF_YES, AFF_MULTIPLE))
     {
-        // The previous target is no good. Try to find one from scratch.
-        success = hitfunc && _find_square_wrapper(result, 1,
+        result = you.prev_grd_targ;
+        return true;
+    }
+    // The previous target is no good. Try to find one from scratch.
+    bool success = hitfunc && _find_square_wrapper(result, 1,
                                bind(_find_monster_expl,
                                     placeholders::_1, mode,
                                     needs_path, range, hitfunc,
                                     // First try to bizap
                                     AFF_MULTIPLE, AFF_YES),
                                hitfunc)
-                  || _find_square_wrapper(result, 1,
-                                       bind(restricts == DIR_SHADOW_STEP ?
-                                            _find_shadow_step_mons : _find_monster,
-                                            placeholders::_1, mode, needs_path,
-                                            range, hitfunc),
+                   || _find_square_wrapper(result, 1,
+                               bind(restricts == DIR_SHADOW_STEP ?
+                                    _find_shadow_step_mons : _find_monster,
+                                    placeholders::_1, mode, needs_path,
+                                    range, hitfunc),
+                               hitfunc);
+
+    // This is used for three things:
+    // * For all LRD targetting
+    // * To aim explosions so they try to miss you
+    // * To hit monsters in LOS that are outside of normal range, but
+    //   inside explosion/cloud range
+    if (hitfunc && hitfunc->can_affect_outside_range()
+        && (!hitfunc->set_aim(result)
+            || hitfunc->is_affected(result) < AFF_YES
+            || hitfunc->is_affected(you.pos()) > AFF_NO))
+    {
+        coord_def old_result;
+        if (success)
+            old_result = result;
+        for (aff_type mon_aff : { AFF_YES, AFF_MAYBE })
+        {
+            for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
+            {
+                success = _find_square_wrapper(result, 1,
+                                       bind(_find_monster_expl,
+                                            placeholders::_1, mode,
+                                            needs_path, range, hitfunc,
+                                            mon_aff, allowed_self_aff),
                                        hitfunc);
-
-        // This is used for three things:
-        // * For all LRD targetting
-        // * To aim explosions so they try to miss you
-        // * To hit monsters in LOS that are outside of normal range, but
-        //   inside explosion/cloud range
-        if (hitfunc && hitfunc->can_affect_outside_range()
-            && (!hitfunc->set_aim(result)
-                || hitfunc->is_affected(result) < AFF_YES
-                || hitfunc->is_affected(you.pos()) > AFF_NO))
-        {
-            coord_def old_result;
-            if (success)
-                old_result = result;
-            for (aff_type mon_aff : { AFF_YES, AFF_MAYBE })
-            {
-                for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
-                {
-                    success = _find_square_wrapper(result, 1,
-                                           bind(_find_monster_expl,
-                                                placeholders::_1, mode,
-                                                needs_path, range, hitfunc,
-                                                mon_aff, allowed_self_aff),
-                                           hitfunc);
-                    if (success)
-                    {
-                        // If we're hitting ourselves anyway, just target the
-                        // monster's position (this looks less strange).
-                        if (allowed_self_aff == AFF_YES && !old_result.origin())
-                            result = old_result;
-                        break;
-                    }
-                }
                 if (success)
+                {
+                    // If we're hitting ourselves anyway, just target the
+                    // monster's position (this looks less strange).
+                    if (allowed_self_aff == AFF_YES && !old_result.origin())
+                        result = old_result;
                     break;
+                }
             }
-        }
-
-        // If we couldn't, maybe it was because of line-of-fire issues.
-        // Check if that's happening, and inform the user (because it's
-        // pretty confusing.)
-        if (!success && needs_path
-            && _find_square_wrapper(result, 1,
-                                    bind(restricts == DIR_SHADOW_STEP ?
-                                         _find_shadow_step_mons : _find_monster,
-                                         placeholders::_1, mode, false,
-                                         range, hitfunc),
-                                   hitfunc))
-        {
-            // Special colouring in tutorial or hints mode.
-            const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
-            mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
-                "All monsters which could be auto-targeted are covered by "
-                "a wall or statue which interrupts your line of fire, even "
-                "though it doesn't interrupt your line of sight.");
-
-            if (need_hint)
-            {
-                mprf(MSGCH_TUTORIAL, "To return to the main mode, press <w>Escape</w>.");
-                Hints.hints_events[HINT_TARGET_NO_FOE] = false;
-            }
+            if (success)
+                break;
         }
     }
-    return success;
+    if (success)
+        return true;
+
+    // If we couldn't, maybe it was because of line-of-fire issues.
+    // Check if that's happening, and inform the user (because it's
+    // pretty confusing.)
+    if (needs_path
+        && _find_square_wrapper(result, 1,
+                                bind(restricts == DIR_SHADOW_STEP ?
+                                     _find_shadow_step_mons : _find_monster,
+                                     placeholders::_1, mode, false,
+                                     range, hitfunc),
+                               hitfunc))
+    {
+        // Special colouring in tutorial or hints mode.
+        const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
+        mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
+            "All monsters which could be auto-targeted are covered by "
+            "a wall or statue which interrupts your line of fire, even "
+            "though it doesn't interrupt your line of sight.");
+
+        if (need_hint)
+        {
+            mprf(MSGCH_TUTORIAL, "To return to the main mode, press <w>Escape</w>.");
+            Hints.hints_events[HINT_TARGET_NO_FOE] = false;
+        }
+    }
+    return false;
 }
 
 // Find a good square to start targeting from.
@@ -2403,6 +2404,9 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return beogh_can_gift_items_to(mon);
     case TARG_MOVABLE_OBJECT:
         return false;
+    case TARG_MOBILE_MONSTER:
+        return !(mons_is_tentacle_or_tentacle_segment(mon->type)
+                 || mon->is_stationary());
     case TARG_NUM_MODES:
         break;
     // intentionally no default

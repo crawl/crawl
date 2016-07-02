@@ -237,53 +237,6 @@ xFFW.W.W.x
 xxxxx@xxxx
 ENDMAP
 
-# 15.3k/34.2k/0
-NAME:   hangedman_tree_tricks
-DEPTH:  D:8-14
-: food_weight(_G, 8)
-WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen
-NSUBST: T = 1:. / 1:t
-KMONS:  1 = oklob sapling
-KITEM:  1A_ = fruit q:3
-KFEAT:  _ = altar_fedhas
-MAP
- tttttttttt
-tttt.ttttttt
-@tt.t.tttttt
-t.tt.t.Tt2tt
-t.t.ttT.A.tt
-t.t.tttA_Att
-t.t.tt2.Attt
-tt.ttttttttt
- tttttttttt
-ENDMAP
-
-# 16.8k/21.3/8k
-NAME:   hangedman_tell_no_tales
-DEPTH:  D:9-14
-: food_weight(_G, 9)
-WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food
-TAGS:   no_monster_gen no_item_gen patrolling
-MONS:   spriggan skeleton / centaur skeleton
-MONS:   troll skeleton / hungry ghost
-KMONS:  A = unseen horror w:16 / nothing w:4
-ITEM:   fruit q:1
-ITEM:   royal jelly q:2
-ITEM:   bread ration q:3
-SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
-MAP
- cccccccccc
-ccxx1x1+DDc
-c.x.x..mDDc
-@.d.x2.mDDc
-c.x.x..cc+c
-ccxx1x.c1fc
- cccccccccc
-ENDMAP
-
 # 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
 DEPTH:   D:10-14

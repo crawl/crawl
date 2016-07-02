@@ -532,20 +532,27 @@ void game_options::new_dump_fields(const string &text, bool add, bool prepend)
     }
 }
 
+static string _correct_spelling(const string& str)
+{
+    if (str == "armor_on")
+        return "armour_on";
+    if (str == "armor_off")
+        return "armour_off";
+    if (str == "memorize")
+        return "memorise";
+    if (str == "jewelry_on")
+        return "jewellery_on";
+    return str;
+}
+
 void game_options::set_default_activity_interrupts()
 {
-    for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
-        for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
-        {
-            activity_interrupts[adelay].set(aint,
-                is_delay_interruptible(static_cast<delay_type>(adelay)));
-        }
-
     const char *default_activity_interrupts[] =
     {
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
+        "interrupt_eat = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
@@ -563,14 +570,14 @@ void game_options::set_default_activity_interrupts()
         // trash all queued delays, including travel.
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
-        "interrupt_uninterruptible =",
-        "interrupt_weapon_swap =",
-
-        nullptr
+        // These are totally uninterruptible by default, since it's
+        // impossible for them to be interrupted anyway.
+        "interrupt_drop_item = ",
+        "interrupt_jewellery_off =",
     };
 
-    for (int i = 0; default_activity_interrupts[i]; ++i)
-        read_option_line(default_activity_interrupts[i], false);
+    for (const char* line : default_activity_interrupts)
+        read_option_line(line, false);
 }
 
 void game_options::set_activity_interrupt(
@@ -579,13 +586,13 @@ void game_options::set_activity_interrupt(
 {
     if (starts_with(interrupt, interrupt_prefix))
     {
-        string delay_name = interrupt.substr(interrupt_prefix.length());
-        delay_type delay = get_delay(delay_name);
-        if (delay == NUM_DELAYS)
+        string delay_name =
+            _correct_spelling(interrupt.substr(interrupt_prefix.length()));
+        if (!activity_interrupts.count(delay_name))
             return report_error("Unknown delay: %s\n", delay_name.c_str());
 
         FixedBitVector<NUM_AINTERRUPTS> &refints =
-            activity_interrupts[delay];
+            activity_interrupts[delay_name];
 
         eints |= refints;
         return;
@@ -606,12 +613,8 @@ void game_options::set_activity_interrupt(const string &activity_name,
                                           bool append_interrupts,
                                           bool remove_interrupts)
 {
-    const delay_type delay = get_delay(activity_name);
-    if (delay == NUM_DELAYS)
-        return report_error("Unknown delay: %s\n", activity_name.c_str());
-
     vector<string> interrupts = split_string(",", interrupt_names);
-    FixedBitVector<NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
+    auto & eints = activity_interrupts[_correct_spelling(activity_name)];
 
     if (remove_interrupts)
     {
@@ -806,6 +809,7 @@ void game_options::reset_options()
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
     cloud_status           = !is_tiles();
+    darken_beyond_range    = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -1517,7 +1521,7 @@ string find_crawlrc()
 static const char* lua_builtins[] =
 {
     "clua/stash.lua",
-    "clua/runrest.lua",
+    "clua/delays.lua",
     "clua/autofight.lua",
     "clua/automagic.lua",
     "clua/kills.lua",
@@ -3628,6 +3632,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(rest_wait_both);
     else INT_OPTION(rest_wait_percent, 0, 100);
     else BOOL_OPTION(cloud_status);
+    else BOOL_OPTION(darken_beyond_range);
     else if (key == "dump_message_count")
     {
         // Capping is implicit

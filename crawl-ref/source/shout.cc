@@ -55,9 +55,6 @@ static const map<shout_type, string> default_msg_keys = {
     { S_BELLOW,         "__BELLOW" },
     { S_BLEAT,          "__BLEAT" },
     { S_TRUMPET,        "__TRUMPET" },
-#if TAG_MAJOR_VERSION == 34
-    { S_CAW,            "__SCREECH" },
-#endif
     { S_SCREECH,        "__SCREECH" },
     { S_BUZZ,           "__BUZZ" },
     { S_MOAN,           "__MOAN" },
@@ -68,6 +65,8 @@ static const map<shout_type, string> default_msg_keys = {
     { S_DEMON_TAUNT,    "__DEMON_TAUNT" },
     { S_CHERUB,         "__CHERUB" },
     { S_RUMBLE,         "__RUMBLE" },
+    { S_SQUEAL,         "__SQUEAL" },
+    { S_LOUD_ROAR,      "__LOUD_ROAR" },
 };
 
 /**
@@ -128,10 +127,9 @@ bool monster_attempt_shout(monster &mon)
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    // Muted monsters can't shout at all.
+    // Muted & silenced monsters can't shout at all.
     if (shout == S_SILENT && !mon.visible_to(&you)
-        || shout != S_SILENT && (silenced(mon.pos())
-                                 ||mon.has_ench(ENCH_MUTE)))
+        || shout != S_SILENT && mon.is_silenced())
     {
         return false;
     }

@@ -100,9 +100,10 @@ natasha MONS_NATASHA
 %rim 1
 %sdir mon/animals
 
-## Bees ('k')
+## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
+../meliai MONS_MELIAI
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -111,7 +112,7 @@ iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
-## Slugs ('j')
+## Slugs ('w')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
 
@@ -218,7 +219,7 @@ sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
 mana_viper MONS_MANA_VIPER
 
-## Bears ('U')
+## Bears ('h' again)
 black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
@@ -521,8 +522,6 @@ maud MONS_MAUD
 maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
-%rim 1
-norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
@@ -1094,6 +1093,8 @@ tiamat_pale
 tiamat_purple
 tiamat_red
 tiamat_white
+bai_suizhen MONS_BAI_SUZHEN
+bai_suizhen_dragon MONS_BAI_SUZHEN_DRAGON
 %sdir mon/draco
 # must match monster_type enum order.
 draco-base-brown DRACO_BASE

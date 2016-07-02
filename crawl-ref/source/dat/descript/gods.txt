@@ -254,8 +254,9 @@ Elyvilon powers
 
 The Healer offers followers means to heal themselves from damage and other ill
 effects. Elyvilon also allows healing of hostile monsters, trying to turn them
-neutral. Elyvilon may directly intervene to save a follower's life, especially
-when called upon; highly pious followers can be sure of such aid.
+neutral. Elyvilon may directly intervene to save a follower's life, and may
+also occasionally protect the follower's allies from death. Especially pious
+followers can be sure of aid when calling upon Elyvilon for protection.
 %%%%
 Fedhas powers
 
@@ -412,10 +413,15 @@ Uskayaw powers
 Uskayaw offers powers that help worshippers continue the dance. Worshippers can
 stomp to damage foes around them and rapidly move through a line of creatures
 while confusing them. When a worshipper's dance reaches a certain point, Uskayaw
-will freeze all foes so that the dancer may take a solo. If the dance continues,
-Uskayaw will link the emotions of foes, forcing them to share their pain. If the
-dance continues, Uskayaw allows you to end it by melding with and then violently
-exploding a foe, killing it instantly.
+will immediately stop all foes so that the dancer may take a solo. If the dance
+continues, Uskayaw will link the emotions of foes, forcing them to share their
+pain. Uskayaw will repeat the stop and shared pain effects at irregular
+intervals as long as the intensity of the dance is sufficient. If the dance
+continues further, Uskayaw allows you to end it by melding with and then
+violently exploding from a foe, killing it instantly.
+
+Uskayaw's passive powers scale in duration with Invocations skill. Uskayaw's
+active powers also depend heavily on Invocations skill.
 %%%%
 Vehumet powers
 

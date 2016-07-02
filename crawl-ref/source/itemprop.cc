@@ -199,6 +199,43 @@ struct weapon_def
     vector<brand_weight_tuple> brand_weights;
 };
 
+/**
+  * "Why do we have all these ridiculous brand tables?"
+
+  1) The main purpose of weapon brand distribution varying across weapon type
+     is to help to balance the different weapon skills against each other -
+     staves and short blades getting better brands as partial compensation for
+     their other drawbacks, for instance. It is true that we have other knobs
+     that we also use to balance different weapon types, but they don't all
+     affect things in the same way. For instance, lajatangs having very good
+     brands on average partially compensates for the rarity of good staves in a
+     different way from how raising their base damage would - it means that
+     finding a really great staff is of more comparable rarity to finding a
+     really great axe. (This is important because finding a really great weapon
+     like a lajatang of speed or elec or pain is one of the ways that players
+     decide to use a weapon type in the first place.) Having this knob isn't
+     redundant with having base damage and delay to modify - it is similar to
+     being able to adjust the rarity of different base types of weapons.
+
+ 2)  The secondary purpose of varying weapon brand distribution is to give
+     different weapon skills more individual feel. For instance, if you play a
+     lot of maces chars in a row, then you will get used to using a lot of
+     protection weapons and you'll never see vamp except on rare randarts, and
+     then when you switch to axes for a few games you'll actually find vamp
+     axes with some regularity and use them and be excited about that.
+
+     This isn't a particularly strong effect with the current distributions -
+     among the four "normal" weapon skills (axes/maces/polearms/longblades),
+     only the m&f distribution is particularly distinctive. But it is
+     definitely a noticeable effect if you play 5 non-maces games in a row and
+     follow up with 5 maces games, and it contributes to making maces feel more
+     distinct.
+
+     They could probably be simplified to a certain extent (only one set of
+     brands per weapon skill, for example), but there is a reason not to
+     simplify them down to just one table.
+ */
+
 /// brand weights for non-dagger shortblades (short sword & rapier)
 static const vector<brand_weight_tuple> SBL_BRANDS = {
     { SPWPN_NORMAL, 33 },
@@ -291,11 +328,10 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
 
 /// brand weights for most ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
-    { SPWPN_NORMAL,   50 },
-    { SPWPN_FLAMING,  24 },
-    { SPWPN_FREEZING, 12 },
-    { SPWPN_EVASION,   8 },
-    { SPWPN_VORPAL,    6 },
+    { SPWPN_NORMAL,   58 },
+    { SPWPN_FLAMING,  16 },
+    { SPWPN_FREEZING, 16 },
+    { SPWPN_VORPAL,   10 },
 };
 
 /// brand weights for holy (TSO-blessed) weapons.
@@ -417,56 +453,56 @@ static const weapon_def Weapon_prop[] =
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_PIERCING, 8, 10, SBL_BRANDS },
-    { WPN_RAPIER,           "rapier",               7,  4, 12,
+    { WPN_RAPIER,           "rapier",               8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_PIERCING, 8, 10, SBL_BRANDS },
-    { WPN_CUTLASS,          "cutlass",              7,  4, 12,
+    { WPN_CUTLASS,          "cutlass",              8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE,  SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 0, 0, {}},
 
 
     // Long Blades
-    { WPN_FALCHION,              "falchion",               8,  2, 13,
+    { WPN_FALCHION,              "falchion",               7,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, LBL_BRANDS }, // DAMV_CHOPPING...?
-    { WPN_LONG_SWORD,            "long sword",            10,  1, 14,
+    { WPN_LONG_SWORD,            "long sword",            9,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 7, 10, LBL_BRANDS },
-    { WPN_SCIMITAR,              "scimitar",              12, -2, 14,
+    { WPN_SCIMITAR,              "scimitar",              11, -2, 14,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 6, 10, LBL_BRANDS },
-    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13,
+    { WPN_DEMON_BLADE,           "demon blade",           12, -1, 13,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 2, DEMON_BRANDS },
-    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12,
+    { WPN_EUDEMON_BLADE,         "eudemon blade",         13, -2, 12,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 0, HOLY_BRANDS },
-    { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15,
+    { WPN_DOUBLE_SWORD,          "double sword",          14, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 2, LBL_BRANDS },
-    { WPN_GREAT_SWORD,           "great sword",           16, -3, 16,
+    { WPN_GREAT_SWORD,           "great sword",           14, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 6, 10, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19,
+    { WPN_TRIPLE_SWORD,          "triple sword",          17, -4, 19,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 2, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_BLESSED_FALCHION,      "old falchion",         8,  2, 13,
+    { WPN_BLESSED_FALCHION,      "old falchion",         7,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, {} },
-    { WPN_BLESSED_LONG_SWORD,    "old long sword",      10,  1, 14,
+    { WPN_BLESSED_LONG_SWORD,    "old long sword",      9,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 0, {} },
-    { WPN_BLESSED_SCIMITAR,      "old scimitar",        12, -2, 14,
+    { WPN_BLESSED_SCIMITAR,      "old scimitar",        11, -2, 14,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0, 0, {} },
-    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     15, -1, 15,
+    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     14, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 0, {} },
-    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     16, -3, 16,
+    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     14, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, {} },
-    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword",19, -4, 19,
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 17, -4, 19,
         SK_LONG_BLADES,  SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, {} },
 #endif
@@ -559,10 +595,7 @@ static const weapon_def Weapon_prop[] =
     // Range weapons
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,
         SK_THROWING,     SIZE_LITTLE,  SIZE_LITTLE, MI_NEEDLE,
-        DAMV_NON_MELEE, 5, 0, {
-            { SPWPN_EVASION,  3 },
-            { SPWPN_NORMAL,  97 },
-        }},
+        DAMV_NON_MELEE, 5, 0, {}, },
 
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,
         SK_SLINGS,       SIZE_LITTLE,  SIZE_LITTLE, MI_STONE,
@@ -708,6 +741,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
+    { OBJ_BOOKS,     BOOK_ENVENOMATIONS },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1057,6 +1091,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_MISSILES:
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GOLD:
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -2006,6 +2041,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
     if (item_is_evokable(item, false, false, true, false, true)
+        && !is_deck(item)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
@@ -2028,6 +2064,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         return !skills.empty();
 
     if (item_is_evokable(item, false, false, false, false, false)
+        && !is_deck(item)
         || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
@@ -2371,11 +2408,6 @@ int food_turns(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
     return Food_prop[Food_index[item.sub_type]].turns;
-}
-
-bool can_cut_meat(const item_def &item)
-{
-    return _does_damage_type(item, DAM_SLICE);
 }
 
 bool is_fruit(const item_def & item)

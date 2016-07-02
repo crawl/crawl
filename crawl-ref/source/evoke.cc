@@ -142,7 +142,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (!feat_is_reachable_past(grd(first_middle))
         && !feat_is_reachable_past(grd(second_middle)))
     {
-        mpr("There's a wall in the way.");
+        canned_msg(MSG_SOMETHING_IN_WAY);
         return false;
     }
 
@@ -661,7 +661,6 @@ void zap_wand(int slot)
 
     dec_mp(mp_cost, false);
     if (wand.sub_type != WAND_HEAL_WOUNDS
-        && wand.sub_type != WAND_DIGGING
         && wand.sub_type != WAND_TELEPORTATION)
     {
         const int surge = pakellas_surge_devices();
@@ -993,21 +992,11 @@ static bool _box_of_beasts(item_def &box)
     surge_power(surge);
     mpr("You open the lid...");
 
-    const int evo_skill = you.skill(SK_EVOCATIONS);
-    const int power = player_adjust_evoc_power(evo_skill, surge);
-
-    if (x_chance_in_y(5, 10 + power))
-    {
-        mpr("...but the box appears empty, and falls apart.");
-        ASSERT(in_inventory(box));
-        dec_inv_item_quantity(box.link, 1);
-        return false;
-    }
-
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
                            player_adjust_evoc_power(
-                               evo_skill + random2(7) - random2(7), surge));
+                               you.skill(SK_EVOCATIONS)
+                               + random2(7) - random2(7), surge));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -1037,6 +1026,14 @@ static bool _box_of_beasts(item_def &box)
     xom_is_stimulated(10); // dubious
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
+    // After unboxing a beast, chance to break.
+    if (one_chance_in(3))
+    {
+        mpr("The now-empty box falls apart.");
+        ASSERT(in_inventory(box));
+        dec_inv_item_quantity(box.link, 1);
+    }
+
     return true;
 }
 
@@ -1057,14 +1054,6 @@ static bool _sack_of_spiders(item_def &sack)
     int count = player_adjust_evoc_power(
             1 + random2(2) + random2(div_rand_round(evo_skill * 10, 30)), surge);
     const int power = player_adjust_evoc_power(evo_skill, surge);
-
-    if (x_chance_in_y(4, 10 + power))
-    {
-        mpr("...but the bag is empty, and unravels at your touch.");
-        ASSERT(in_inventory(sack));
-        dec_inv_item_quantity(sack.link, 1);
-        return false;
-    }
 
     if (x_chance_in_y(5, 10 + power))
     {
@@ -1129,10 +1118,15 @@ static bool _sack_of_spiders(item_def &sack)
                 trap = trap_at((*mi)->pos());
                 trap->trigger(**mi);
             }
+
         }
-        // Decrease charges
-        sack.charges--;
-        sack.used_count++;
+        // After gettin' some bugs, check for destruction.
+        if (one_chance_in(3))
+        {
+            mpr("The now-empty bag unravels in your hand.");
+            ASSERT(in_inventory(sack));
+            dec_inv_item_quantity(sack.link, 1);
+        }
     }
     else
         // Failed to create monster for some reason
@@ -1893,7 +1887,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
         mpr("You can't see any susceptible monsters within range! "
             "(Use <w>V</w> to cast anyway.)");
 
-        if (Options.use_animations & UA_RANGE)
+        if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
             targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);
@@ -2097,8 +2091,8 @@ bool evoke_item(int slot, bool check_range)
         did_work = true; // easier to do it this way for misc items
 
         if ((player_mutation_level(MUT_NO_ARTIFICE)
-             || player_under_penance(GOD_PAKELLAS)
-                && !is_deck(item))
+             || player_under_penance(GOD_PAKELLAS))
+            && !is_deck(item)
             && item.sub_type != MISC_ZIGGURAT)
         {
             if (player_mutation_level(MUT_NO_ARTIFICE))
@@ -2114,7 +2108,7 @@ bool evoke_item(int slot, bool check_range)
         if (is_deck(item))
         {
             evoke_deck(item);
-            pract = 1;
+            practise(EX_DID_USE_DECK);
             count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }

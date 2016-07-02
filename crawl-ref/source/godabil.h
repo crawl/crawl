@@ -159,8 +159,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill = true);
 void ru_offer_new_sacrifices();
 string ru_sac_text(ability_type sac);
 bool ru_do_sacrifice(ability_type sac);
-bool ru_reject_sacrifices(bool skip_prompt = false);
-void ru_reset_sacrifice_timer(bool clear_timer = false);
+bool ru_reject_sacrifices(bool forced_rejection = false);
+void ru_reset_sacrifice_timer(bool clear_timer = false,
+                              bool faith_penalty = false);
 bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
@@ -178,7 +179,6 @@ bool uskayaw_line_pass();
 bool uskayaw_grand_finale();
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
-bool hepliaklqana_specialize_ancestor(int specialization);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();

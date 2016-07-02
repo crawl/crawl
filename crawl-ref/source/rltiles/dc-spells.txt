@@ -102,10 +102,10 @@ symbol_of_torment SYMBOL_OF_TORMENT
 twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
 cigotuvis_embrace CIGOTUVIS_EMBRACE
+infestation INFESTATION
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
-cure_poison CURE_POISON
 mephitic_cloud MEPHITIC_CLOUD
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
@@ -203,7 +203,6 @@ error CHAOS_BREATH
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
-error CONTROL_WINDS
 error CORRUPT_BODY
 error CREATE_TENTACLES
 error CRYSTAL_BOLT

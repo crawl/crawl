@@ -318,7 +318,6 @@ public:
     virtual bool dismissal(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
-    virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
     virtual bool reflection(bool calc_unid = true, bool items = true) const;
     virtual bool extra_harm(bool calc_unid = true, bool items = true) const;

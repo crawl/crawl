@@ -352,7 +352,7 @@ static bool _has_melded_armour()
     return false;
 }
 
-static bool _has_tran_unwearable_armour()
+static bool _has_temp_unwearable_armour()
 {
     for (const auto &item : you.inv)
     {
@@ -403,9 +403,8 @@ string no_selectables_message(int item_selector)
     {
         if (_has_melded_armour())
             return "Your armour is currently melded into you.";
-        else if (_has_tran_unwearable_armour())
-            return "You aren't carrying any armour you can wear in your "
-                   "current form.";
+        else if (_has_temp_unwearable_armour())
+            return "You aren't carrying any currently wearable armour.";
         else
             return "You aren't carrying any wearable armour.";
     }
@@ -441,10 +440,12 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return "You aren't wearing any piece of uncursed armour.";
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
+#endif
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -996,7 +997,7 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_ARMOUR && item_is_equipped(i);
 
     case OSEL_UNIDENT:
-        return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
+        return !fully_identified(i) && itype != OBJ_BOOKS;
 
     case OBJ_MISSILES:
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
@@ -1004,9 +1005,6 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_THROWABLE:
     {
         if (you_worship(GOD_TROG) && item_is_spellbook(i))
-            return true;
-
-        if (you.has_spell(SPELL_CORPSE_ROT) && itype == OBJ_CORPSES)
             return true;
 
         if (itype != OBJ_WEAPONS && itype != OBJ_MISSILES)
@@ -1049,11 +1047,13 @@ bool item_is_selected(const item_def &i, int selector)
         return i.cursed() && item_is_equipped(i)
                && (&i != you.weapon() || is_weapon(i));
 
+#if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR;
 
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY;
+#endif
 
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
@@ -2024,7 +2024,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     if (no_evocables
         && item.base_type != OBJ_WEAPONS // reaching is ok.
         && !(item.base_type == OBJ_MISCELLANY
-             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+             && (item.sub_type == MISC_ZIGGURAT
+                 || is_deck(item)))) // decks and zigfigs are OK.
     {
         // the rest are forbidden under sac evocables.
         if (msg)

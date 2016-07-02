@@ -361,6 +361,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
     { AMU_REFLECTION, { { ARTP_SHIELDING, 0 } } },
+    { AMU_HARM, { { ARTP_DRAIN, 1 } } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
@@ -468,9 +469,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_FREEZING,
             0);
 
-        if (item_type == WPN_BLOWGUN)
-            item_props[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-        else if (item_attack_skill(item) == SK_CROSSBOWS)
+        if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
             // crossbows. This may change in future.
@@ -575,8 +574,11 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class != OBJ_WEAPONS
                    || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
             // not quite as interesting on armour, since you swap it less
+            // rings have 2 slots, so little swap pressure
         case ARTP_FRAGILE:
-            return item_class != OBJ_ARMOUR;
+            return item_class != OBJ_ARMOUR
+                   && (item_class != OBJ_JEWELLERY
+                       || jewellery_is_amulet(item));
         default:
             return true;
     }
@@ -680,7 +682,7 @@ static const artefact_prop_data artp_data[] =
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
-    { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
+    { "MP", ARTP_VAL_ANY, 15,       // ARTP_MAGICAL_POWER,
         _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 0, 0 },
     { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_BASE_DELAY,
     { "HP", ARTP_VAL_ANY, 0,       // ARTP_HP,

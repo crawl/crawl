@@ -38,8 +38,6 @@
 #include <set>
 #include <unistd.h>
 
-extern const spell_type serpent_of_hell_breaths[4][3];
-
 const coord_def MONSTER_PLACE(20, 20);
 
 const string CANG = "cang";
@@ -334,28 +332,54 @@ static string mi_calc_vampiric_drain_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+static string mi_calc_major_healing(monster* mons)
+{
+    const int min = 50;
+    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10;
+    return make_stringf("%d-%d", min, max);
+}
+
+/**
+ * @return e.g.: "2d6", "5-12".
+ */
 static string mons_human_readable_spell_damage_string(monster* monster,
-                                                           spell_type sp)
+                                                      spell_type sp)
 {
     bolt spell_beam = mons_spell_beam(
         monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp), false), true);
-    // Fake damage beam
-    if (sp == SPELL_PORTAL_PROJECTILE || sp == SPELL_LRD)
-        return "";
-    if (sp == SPELL_SMITING)
-        return mi_calc_smiting_damage(monster);
-    if (sp == SPELL_AIRSTRIKE)
-        return mi_calc_airstrike_damage(monster);
-    if (sp == SPELL_WATERSTRIKE)
-        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
-    if (sp == SPELL_GLACIATE)
-        return mi_calc_glaciate_damage(monster);
-    if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)
+    switch (sp)
+    {
+        case SPELL_PORTAL_PROJECTILE:
+        case SPELL_LRD:
+            return ""; // Fake damage beam
+        case SPELL_SMITING:
+            return mi_calc_smiting_damage(monster);
+        case SPELL_AIRSTRIKE:
+            return mi_calc_airstrike_damage(monster);
+        case SPELL_GLACIATE:
+            return mi_calc_glaciate_damage(monster);
+        case SPELL_CHAIN_LIGHTNING:
+            return mi_calc_chain_lightning_damage(monster);
+        case SPELL_WATERSTRIKE:
+            spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
+            break;
+        case SPELL_IOOD:
+            spell_beam.damage = mi_calc_iood_damage(monster);
+            break;
+        case SPELL_VAMPIRIC_DRAINING:
+            return mi_calc_vampiric_drain_damage(monster);
+        case SPELL_MAJOR_HEALING:
+            return mi_calc_major_healing(monster);
+        case SPELL_MINOR_HEALING:
+        case SPELL_HEAL_OTHER:
+            return dice_def_string(spell_beam.damage) + "+3";
+        default:
+            break;
+    }
+
+    if (spell_beam.origin_spell == SPELL_IOOD)
         spell_beam.damage = mi_calc_iood_damage(monster);
-    if (sp == SPELL_CHAIN_LIGHTNING)
-        return mi_calc_chain_lightning_damage(monster);
-    if (sp == SPELL_VAMPIRIC_DRAINING)
-        return mi_calc_vampiric_drain_damage(monster);
+
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
     return "";
@@ -433,21 +457,15 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         spell_type sp = slot.spell;
         if (!ret.empty())
             ret += ", ";
-        if (sp == SPELL_SERPENT_OF_HELL_BREATH)
+        if (spell_is_soh_breath(sp))
         {
-            const int idx =
-                mp->type == MONS_SERPENT_OF_HELL ?              0 :
-                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?  1 :
-                    mp->type == MONS_SERPENT_OF_HELL_DIS ?      2 :
-                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 :
-                                                               -1;
-            ASSERT(idx >= 0 && idx <= 3);
-            ASSERT(mp->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
+            const vector<spell_type> *breaths = soh_breath_spells(sp);
+            ASSERT(breaths);
 
             ret += "{";
             for (unsigned int k = 0; k < mp->number; ++k)
             {
-                const spell_type breath = serpent_of_hell_breaths[idx][k];
+                const spell_type breath = (*breaths)[k];
                 const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)
@@ -458,25 +476,24 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
             ret += "}";
 
             ret += _spell_flag_string(slot);
+            continue;
         }
-        else
-        {
-            string spell_name = spell_title(sp);
-            spell_name = shorten_spell_name(spell_name);
-            ret += spell_name;
-            ret += _spell_flag_string(slot);
 
-            for (int j = 0; j < 100; j++)
+        string spell_name = spell_title(sp);
+        spell_name = shorten_spell_name(spell_name);
+        ret += spell_name;
+        ret += _spell_flag_string(slot);
+
+        for (int j = 0; j < 100; j++)
+        {
+            string damage =
+            mons_human_readable_spell_damage_string(mp, sp);
+            const auto range = damages.equal_range(spell_name);
+            if (!damage.empty()
+                && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
             {
-                string damage =
-                    mons_human_readable_spell_damage_string(mp, sp);
-                const auto range = damages.equal_range(spell_name);
-                if (!damage.empty()
-                    && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
-                {
-                    // TODO: use emplace once we drop g++ 4.7 support
-                    damages.insert(make_pair(spell_name, damage));
-                }
+                // TODO: use emplace once we drop g++ 4.7 support
+                damages.insert(make_pair(spell_name, damage));
             }
         }
     }

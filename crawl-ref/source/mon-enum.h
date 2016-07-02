@@ -245,13 +245,12 @@ enum shout_type
     S_GURGLE,               // gurgle
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
-    S_HISS,                 // for snakes and lizards
+    S_HISS,                 // for reptiles & arachnids. quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
-#if TAG_MAJOR_VERSION == 34
-    S_CAW,                  // for ravens
-#endif
     S_CHERUB,               // for cherubs
-    S_RUMBLE,               // for ushabti
+    S_RUMBLE,               // for ushabti. very loud!
+    S_SQUEAL,               // pigs
+    S_LOUD_ROAR,            // dragons, &c. loud!
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

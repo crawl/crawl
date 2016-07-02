@@ -112,6 +112,7 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_SUMMON_ICE_BEAST,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
+    SPELL_INTOXICATE,
     SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
@@ -1881,54 +1882,6 @@ static void _xom_fog(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
-static inline dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-        return DNGN_CLEAR_ROCK_WALL;
-    case DNGN_STONE_WALL:
-        return DNGN_CLEAR_STONE_WALL;
-    case DNGN_PERMAROCK_WALL:
-        return DNGN_CLEAR_PERMAROCK_WALL;
-    default:
-        return feat;
-    }
-}
-
-// Returns true if there was a visible change.
-static bool _vitrify_area(int radius, bool test_only = false)
-{
-    if (radius < 2)
-        return false;
-
-    bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
-    {
-        const dungeon_feature_type grid = grd(*ri);
-        const dungeon_feature_type newgrid = _vitrified_feature(grid);
-        if (newgrid != grid)
-        {
-            if (test_only)
-                return true;
-
-            grd(*ri) = newgrid;
-            set_terrain_changed(*ri);
-            something_happened = true;
-        }
-    }
-    return something_happened;
-}
-
-static void _xom_vitrify(int sever)
-{
-    if (_vitrify_area(random2avg(sever / 4, 2) + 1))
-    {
-        god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "vitrification"), true);
-    }
-}
-
 static void _xom_pseudo_miscast(int /*sever*/)
 {
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
@@ -2662,7 +2615,7 @@ static void _xom_repel_stairs(bool unclimbable)
 }
 
 static void _xom_moving_stairs(int) { _xom_repel_stairs(false); }
-static void _xom_unclimable_stairs(int) { _xom_repel_stairs(true); }
+static void _xom_unclimbable_stairs(int) { _xom_repel_stairs(true); }
 
 static void _xom_cloud_trail(int /*sever*/)
 {
@@ -2925,6 +2878,30 @@ static void _xom_blink_monsters(int /*sever*/)
     }
 }
 
+static void _xom_cleaving(int sever)
+{
+    god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
+
+    you.increase_duration(DUR_CLEAVE, 10 + random2(sever) * 10);
+
+    if (const item_def* const weapon = you.weapon())
+    {
+        const bool axe = item_attack_skill(*weapon) == SK_AXES;
+        mprf(MSGCH_DURATION,
+             "%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
+             conjugate_verb("look", weapon->quantity > 1).c_str(),
+             (axe) ? " (like it always does)." : ".");
+    }
+    else
+    {
+        mprf(MSGCH_DURATION, "%s",
+             you.hands_act("look", "sharp.").c_str());
+    }
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cleaving"), true);
+}
+
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation_type orig_form)
@@ -3109,6 +3086,9 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
+    if (tension > random2(5) && x_chance_in_y(14, sever))
+        return XOM_GOOD_CLEAVING;
+
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
@@ -3127,12 +3107,6 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         const int explored = _exploration_estimate(true);
         if (explored < 80 || !x_chance_in_y(explored, 120))
             return XOM_GOOD_TELEPORT;
-    }
-
-    if (random2(tension) < 5 && x_chance_in_y(18, sever)
-        && _vitrify_area(sever / 4 + 1, true))
-    {
-        return XOM_GOOD_VITRIFY;
     }
 
     if (random2(tension) < 5 && x_chance_in_y(19, sever)
@@ -3195,7 +3169,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     if (tension > 0 && x_chance_in_y(9, sever))
         return XOM_BAD_CONFUSION;
 
-    if (tension > 0 && x_chance_in_y(14, sever)
+    if (tension > 0 && x_chance_in_y(10, sever)
         && _rearrangeable_pieces().size())
     {
         return XOM_BAD_SWAP_MONSTERS;
@@ -3443,30 +3417,8 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
     }
 #endif
 
-    god_type which_god = GOD_XOM;
-    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM
-        && !_player_is_dead()
-        && !debug)
-    {
-        which_god = crawl_state.which_god_acting();
-
-        if (crawl_state.is_god_retribution())
-        {
-            niceness = false;
-            simple_god_message(" asks Xom for help in punishing you, and "
-                               "Xom happily agrees.", which_god);
-        }
-        else
-        {
-            niceness = true;
-            simple_god_message(" calls in a favour from Xom.", which_god);
-        }
-    }
-
     if (tension == -1)
-        tension = get_tension(which_god);
+        tension = get_tension(GOD_XOM);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
     // No message during heavy-duty wizmode testing:
@@ -3772,7 +3724,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_ALLIES, { "summon allies", _xom_send_allies }},
     { XOM_GOOD_POLYMORPH, { "good polymorph", _xom_good_polymorph }},
     { XOM_GOOD_TELEPORT, { "good teleportation", _xom_good_teleport }},
-    { XOM_GOOD_VITRIFY, { "vitrification", _xom_vitrify }},
     { XOM_GOOD_MUTATION, { "good mutations", _xom_give_good_mutations }},
     { XOM_GOOD_LIGHTNING, { "lightning", _xom_throw_divine_lightning }},
     { XOM_GOOD_SCENERY, { "change scenery", _xom_change_scenery }},
@@ -3783,6 +3734,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_good_enchant_monster }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
+    { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
     { XOM_BAD_MISCAST_HARMLESS, { "harmless miscast",
@@ -3801,7 +3753,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_TELEPORT, { "bad teleportation", _xom_bad_teleport, -1}},
     { XOM_BAD_POLYMORPH, { "bad polymorph", _xom_bad_polymorph, 30}},
     { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs, 20}},
-    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimable_stairs,
+    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
                               30}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},

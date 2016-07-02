@@ -587,8 +587,6 @@ string SkillMenuSwitch::get_help()
             }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
-            if (player_equip_unrand(UNRAND_FENCERS))
-                causes.push_back("the fencer's gloves");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <blue>blue</blue>.";

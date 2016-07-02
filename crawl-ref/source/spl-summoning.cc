@@ -2436,6 +2436,7 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
     mon.set_hit_dice(9 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
                                             // mhp doesn't vary with HD
+    int spell_levels = 0;
 
     for (const spell_type spell : servitor_spells)
     {
@@ -2443,14 +2444,18 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
             && (caster_mon || raw_spell_fail(spell) < 50))
         {
             mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
+            spell_levels += spell_difficulty(spell);
         }
     }
 
-    // Fix up frequencies now that we know the number of spells.
-    const size_t count = mon.spells.size();
+    // Fix up frequencies now that we know the total number of spell levels.
     const int base_freq = caster_mon ? 67 : 200;
     for (auto& slot : mon.spells)
-        slot.freq = base_freq / count;
+    {
+        slot.freq = max(1, div_rand_round(spell_difficulty(slot.spell)
+                                          * base_freq,
+                                          spell_levels));
+    }
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
@@ -3067,7 +3072,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
     if (prism)
     {
-        if (you.can_see(*caster))
+        if (caster->observable())
         {
             mprf("%s %s a prism of explosive energy!",
                  caster->name(DESC_THE).c_str(),
@@ -3278,6 +3283,38 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
     return false;
 }
 
+static void _setup_infestation(bolt &beam, int pow)
+{
+    beam.name         = "infestation";
+    beam.aux_source   = "infestation";
+    beam.flavour      = BEAM_INFESTATION;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour       = GREEN;
+    beam.source_id    = MID_PLAYER;
+    beam.thrower      = KILL_YOU;
+    beam.is_explosion = true;
+    beam.ex_size      = 2;
+    beam.ench_power   = pow;
+    beam.origin_spell = SPELL_INFESTATION;
+}
+
+spret_type cast_infestation(int pow, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_SOMETHING_IN_WAY);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    _setup_infestation(beam, pow);
+    mpr("You call forth a plague of scarabs!");
+    beam.explode();
+
+    return SPRET_SUCCESS;
+}
+
 struct summon_cap
 {
     int type_cap;
@@ -3334,6 +3371,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HOLIES,              { 4, 2 } },
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
+    { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     // Rod specials
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };

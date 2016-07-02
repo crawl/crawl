@@ -40,6 +40,19 @@ cloud_struct* cloud_at(coord_def pos)
     return map_find(env.cloud, pos);
 }
 
+/// damage = base + random2avg(random, random/15 + 1)
+struct cloud_damage
+{
+    int base; ///< Flat damage on every hit, pre-defenses.
+    int random; ///< Damage rolled on hit.
+    bool extra_player_dam; //< HACK: does 4+random2(8) extra damage to players.
+    // Yes, we really hate players, damn their guts.
+};
+
+/// Damage for most damaging clouds.
+static const cloud_damage NORMAL_CLOUD_DAM = { 6, 16, true };
+// 6+r2a(16,2) for monsters, 10+r2a(23,2) for players
+
 /// A portrait of a cloud_type.
 struct cloud_data
 {
@@ -51,10 +64,8 @@ struct cloud_data
     colour_t colour;
     /// The associated "beam" (effect) for this cloud type.
     beam_type beam_effect;
-    /// How much damage a cloud is expected to do in one turn, minimum.
-    int expected_base_damage;
-    /// The amount of additional random damage a cloud is expected to maybe do.
-    int expected_random_damage;
+    /// How much damage the cloud does before defenses & resists.
+    cloud_damage damage;
 };
 
 /// A map from cloud_type to cloud_data.
@@ -66,25 +77,25 @@ static const cloud_data clouds[] = {
     { "flame", "roaring flames",                // terse, verbose name
        COLOUR_UNDEF,                            // colour
        BEAM_FIRE,                               // beam_effect
-       15, 46,                                  // base, expected random damage
+       NORMAL_CLOUD_DAM,                        // base, random damage
     },
     // CLOUD_MEPHITIC,
     { "noxious fumes", nullptr,                 // terse, verbose name
       GREEN,                                    // colour
       BEAM_MEPHITIC,                            // beam_effect
-      0, 19,                                    // base, expected random damage
+      {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
       COLOUR_UNDEF,                             // colour
       BEAM_COLD,                                // beam_effect
-      15, 46,                                   // base, expected random damage
+      NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_POISON,
     { "poison gas", nullptr,                    // terse, verbose name
       LIGHTGREEN,                               // colour
       BEAM_POISON,                              // beam_effect
-      0, 37,                                    // base, expected random damage
+      {0, 10},                                  // base, random damage
     },
     // CLOUD_BLACK_SMOKE,
     { "black smoke",  nullptr,                  // terse, verbose name
@@ -110,13 +121,13 @@ static const cloud_data clouds[] = {
     { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
       BEAM_FIRE,                                // beam_effect
-      15, 46                                    // base, expected random damage
+      NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
       LIGHTGREY,                                // colour
       BEAM_STEAM,                               // beam_effect
-      0, 25,
+      {0, 16},                                  // base, random damage
     },
 #if TAG_MAJOR_VERSION == 34
     // CLOUD_GLOOM,
@@ -138,12 +149,13 @@ static const cloud_data clouds[] = {
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
       BEAM_HOLY_FLAME,                          // beam_effect
-      15, 46,                                   // base, expected random damage
+      NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
       DARKGREY,                                 // colour
       BEAM_MIASMA,                              // beam_effect
+      { 0, 12 },                                // base, random damage
     },
     // CLOUD_MIST,
     { "thin mist", nullptr,                     // terse, verbose name
@@ -157,6 +169,9 @@ static const cloud_data clouds[] = {
     // CLOUD_RAIN,
     { "rain", "the rain",                       // terse, verbose name
       ETC_MIST,                                 // colour
+      BEAM_NONE,                                // unused
+      { 0, 9 },                                 // base, random damage
+                                                // but only for fiery mons
     },
     // CLOUD_MUTAGENIC,
     { "mutagenic fog",  nullptr,                // terse, verbose name
@@ -178,25 +193,25 @@ static const cloud_data clouds[] = {
     { "spectral mist", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
       BEAM_NONE,                                // beam_effect
-      0, 25,                                    // base, expected random damage
+      { 4, 15 },                                // base, random damage
     },
     // CLOUD_ACID,
     { "acidic fog", nullptr,                    // terse, verbose name
       YELLOW,                                   // colour
       BEAM_ACID,                                // beam_effect
-      15, 46,                                   // base, random expected damage
+      NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
       ETC_DARK,                                 // colour
       BEAM_ELECTRICITY,                         // beam_effect
-      60, 46,                                   // base, random expected damage
+      {12, 12},         // fake damage - used only for monster pathing
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
       ETC_INCARNADINE,                          // colour
       BEAM_NEG,                                 // beam_effect
-      15, 46,                                   // base, random expected damage
+      NORMAL_CLOUD_DAM,                         // base, random damage
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -400,9 +415,14 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 {
     int dissipate = you.time_taken;
 
-    // If a player-created cloud is out of LOS, it dissipates much faster.
+    // Player-created non-opaque clouds vanish instantly when outside LOS.
+    // (Opaque clouds don't to prevent cloud suicide.)
     if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
-        dissipate *= 4;
+    {
+        if (!is_opaque_cloud(cloud.type))
+            return cloud.decay;
+        dissipate *= 4; // dubious...
+    }
 
     switch (cloud.type)
     {
@@ -422,7 +442,7 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
         // Ink cloud shouldn't appear outside of water.
         case CLOUD_INK:
             if (!feat_is_watery(grd(cloud.pos)))
-                return dissipate * 40;
+                return cloud.decay;
             break;
         default:
             break;
@@ -524,6 +544,8 @@ void manage_clouds()
 
         _dissipate_cloud(cloud);
     }
+
+    update_cloud_knowledge();
 }
 
 static void _maybe_leave_water(const coord_def pos)
@@ -747,50 +769,17 @@ static int _cloud_damage_calc(int size, int n_average, int extra,
 // Calculates the base damage that the cloud does to an actor without
 // considering resistances and time spent in the cloud.
 static int _cloud_base_damage(const actor *act,
-                              const cloud_struct &cloud,
+                              cloud_type flavour,
                               bool maximum_damage)
 {
-    switch (cloud.type)
-    {
-    case CLOUD_RAIN:
-        // Only applies to fiery actors: see _actor_cloud_resist.
-        return _cloud_damage_calc(9, 1, 0, maximum_damage);
-    case CLOUD_FIRE:
-    case CLOUD_FOREST_FIRE:
-    case CLOUD_COLD:
-    case CLOUD_HOLY_FLAMES:
-    case CLOUD_ACID:
-    case CLOUD_NEGATIVE_ENERGY:
-        // Yes, we really hate players, damn their guts.
-        //
-        // XXX: Some superior way of linking cloud damage to cloud
-        // power would be nice, so we can dispense with these hacky
-        // special cases.
-        if (act->is_player())
-            return _cloud_damage_calc(23, 3, 10, maximum_damage);
-        else
-            return _cloud_damage_calc(16, 3, 6, maximum_damage);
+    const cloud_damage &dam = clouds[flavour].damage;
+    const bool extra_damage = dam.extra_player_dam && act->is_player();
+    const int random_dam = dam.random + (extra_damage ? 7 : 0);
+    const int base_dam = dam.base + (extra_damage ? 4 : 0);
+    const int trials = dam.random/15 + 1;
 
-    case CLOUD_STORM:
-        // Four times the damage, because it's a quarter as often.
-        if (act->is_player())
-            return _cloud_damage_calc(92, 3, 40, maximum_damage);
-        else
-            return _cloud_damage_calc(64, 3, 24, maximum_damage);
+    return _cloud_damage_calc(random_dam, trials, base_dam, maximum_damage);
 
-    case CLOUD_MEPHITIC:
-        return _cloud_damage_calc(3, 1, 0, maximum_damage);
-    case CLOUD_POISON:
-        return _cloud_damage_calc(10, 1, 0, maximum_damage);
-    case CLOUD_MIASMA:
-        return _cloud_damage_calc(12, 3, 0, maximum_damage);
-    case CLOUD_STEAM:
-        return _cloud_damage_calc(16, 2, 0, maximum_damage);
-    case CLOUD_SPECTRAL:
-        return _cloud_damage_calc(15, 3, 4, maximum_damage);
-    default:
-        return 0;
-    }
 }
 
 // Returns true if the actor is immune to cloud damage, inventory item
@@ -867,6 +856,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_negative_energy() >= 3;
     case CLOUD_TORNADO:
         return act->res_wind();
+    case CLOUD_RAIN:
+        return !act->is_fiery();
     default:
         return false;
     }
@@ -1085,7 +1076,7 @@ static int _actor_cloud_base_damage(const actor *act,
         return 0;
 
     const int cloud_raw_base_damage =
-        _cloud_base_damage(act, cloud, maximum_damage);
+        _cloud_base_damage(act, cloud.type, maximum_damage);
     const int cloud_base_damage = (resist == MAG_IMMUNE ?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
@@ -1154,7 +1145,7 @@ static int _actor_cloud_damage(const actor *act,
         if (!maximum_damage)
             cloud.announce_actor_engulfed(act);
 
-        const int turns_per_lightning = 4;
+        const int turns_per_lightning = 3;
         const int aut_per_lightning = turns_per_lightning * BASELINE_DELAY;
 
         // if we fail our lightning roll, again, just rain.
@@ -1371,10 +1362,14 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         if (extra_careful)
             return true;
 
-        const int rand_dam = clouds[cloud.type].expected_random_damage;
-        const int trials = max(1, rand_dam/9);
-        const int hp_threshold = clouds[cloud.type].expected_base_damage +
-                                 random2avg(rand_dam, trials);
+        // calc damage here instead of using _cloud_base_damage() so we can
+        // set our own # of trials, to try to make the AI more consistent
+        // XXX: add a param instead?
+        const cloud_damage &dam_info = clouds[cloud.type].damage;
+        const int damage = _cloud_damage_calc(dam_info.random,
+                                              max(1, dam_info.random / 9),
+                                              dam_info.base, false);
+        const int hp_threshold = damage * 3;
 
         // intelligent monsters want a larger margin of safety
         int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
@@ -1658,9 +1653,15 @@ void remove_tornado_clouds(mid_t whose)
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
 
+    // We can't iterate over env.cloud directly because delete_cloud
+    // will remove this cloud and invalidate our iterator.
+    vector<coord_def> tornados;
     for (auto& entry : env.cloud)
         if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
-            delete_cloud(entry.first);
+            tornados.push_back(entry.first);
+
+    for (auto pos : tornados)
+        delete_cloud(pos);
 }
 
 static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,

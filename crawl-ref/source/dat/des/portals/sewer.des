@@ -1266,7 +1266,7 @@ ENDMAP
 # Kobolds who escaped to the sewers to worship Makhleb in peace
 # The temple has 3 sealed chambers at the end, each with loot and a
 # boss monster.
-# Total loot: 8 ok items (mosty consumables), 4 star items
+# Total loot: 8 ok items (mostly consumables), 4 star items
 NAME:    kennysheep_sewer_church
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
@@ -1285,12 +1285,11 @@ MONS:    kobold w:50 / kobold zombie / ooze / giant cockroach / \
          bat / bat zombie w:3
 SUBST:   . = .:175 2
 # Sub-boss.
-KMONS:   3 = big kobold / quasit / nothing w:5
+KMONS:   3 = big kobold w:15 / nothing w:5
 # Bosses.
 KMONS:   4 = big kobold
 KMONS:   5 = Grinder, shadow imp
-KMONS:   6 = kobold demonologist name:apprentice n_adj n_noc \
-             spells:summon_minor_demon.18.wizard;cantrip.36.wizard
+KMONS:   6 = quasit
 SHUFFLE: 456
 KITEM:   456 = star_item
 KFEAT:   - = deep_water

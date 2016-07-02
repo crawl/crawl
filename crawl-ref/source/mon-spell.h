@@ -196,6 +196,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_COLD, 15, MON_SPELL_WIZARD },
        { SPELL_AGONY, 15, MON_SPELL_WIZARD },
+       { SPELL_BIND_SOULS, 30, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
@@ -204,6 +205,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 15, MON_SPELL_WIZARD },
        { SPELL_AGONY, 15, MON_SPELL_WIZARD },
+       { SPELL_BIND_SOULS, 30, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
@@ -344,12 +346,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALMUTATE, 19, MON_SPELL_MAGICAL },
        { SPELL_BRAIN_FEED, 19, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_HELLWING,
-      {
-       { SPELL_CIGOTUVIS_EMBRACE, 28, MON_SPELL_MAGICAL },
       }
     },
 
@@ -583,10 +579,34 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_SERPENT_OF_HELL,
+    {  MST_SERPENT_OF_HELL_GEH,
       {
-       { SPELL_SERPENT_OF_HELL_BREATH, 35, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                            | MON_SPELL_NOISY },
+       { SPELL_SERPENT_OF_HELL_GEH_BREATH, 35,
+           MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_COC,
+      {
+       { SPELL_SERPENT_OF_HELL_COC_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_DIS,
+      {
+       { SPELL_SERPENT_OF_HELL_DIS_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_SERPENT_OF_HELL_TAR,
+      {
+       { SPELL_SERPENT_OF_HELL_TAR_BREATH, 35,
+         MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
        { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
       }
     },
@@ -616,16 +636,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_METAL_SPLINTERS, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                      | MON_SPELL_NOISY },
-      }
-    },
-
-    {  MST_NORRIS,
-      {
-       { SPELL_BRAIN_FEED, 12, MON_SPELL_PRIEST },
-       { SPELL_SMITING, 12, MON_SPELL_PRIEST },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_PRIEST },
-       { SPELL_CONFUSE, 12, MON_SPELL_PRIEST },
-       { SPELL_PARALYSE, 12, MON_SPELL_PRIEST },
       }
     },
 
@@ -919,7 +929,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SYMBOL_OF_TORMENT, 20, MON_SPELL_MAGICAL },
        { SPELL_DISPEL_UNDEAD, 20, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_EXECUTIONERS, 40, MON_SPELL_MAGICAL },
-       { SPELL_BLACK_MARK, 20, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1026,7 +1035,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_AIRSTRIKE, 32, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_WIZARD },
-       { SPELL_CONTROL_WINDS, 16, MON_SPELL_WIZARD },
        { SPELL_DEFLECT_MISSILES, 16, MON_SPELL_WIZARD },
       }
     },
@@ -1189,10 +1197,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CLOUD_MAGE,
       {
-       { SPELL_CLOUD_CONE, 40, MON_SPELL_WIZARD },
-       { SPELL_AIRSTRIKE, 30, MON_SPELL_WIZARD },
-       { SPELL_CONTROL_WINDS, 30, MON_SPELL_WIZARD },
-       { SPELL_BLINK_RANGE, 20, MON_SPELL_WIZARD },
+       { SPELL_TORNADO, 40, MON_SPELL_WIZARD },
+       { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
       }
     },
 
@@ -1512,7 +1518,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ASTERION,
       {
        { SPELL_MAJOR_DESTRUCTION, 11, MON_SPELL_PRIEST },
-       { SPELL_SPECTRAL_WEAPON, 22, MON_SPELL_PRIEST },
+       { SPELL_GREATER_SERVANT_MAKHLEB, 22, MON_SPELL_PRIEST },
        { SPELL_HASTE, 32, MON_SPELL_PRIEST },
       }
     },
@@ -1613,7 +1619,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEMONSPAWN_BLOOD_SAINT,
       {
-       { SPELL_LEGENDARY_DESTRUCTION, 32, MON_SPELL_PRIEST },
+       { SPELL_LEGENDARY_DESTRUCTION, 48, MON_SPELL_PRIEST },
       }
     },
 
@@ -1664,7 +1670,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_SHROUD_OF_GOLUBRIA, 11, MON_SPELL_WIZARD },
       }
     },
 
@@ -1696,8 +1701,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_OBSIDIAN_STATUE,
       {
-       { SPELL_SUMMON_MINOR_DEMON, 50, MON_SPELL_MAGICAL },
-       { SPELL_SUMMON_DEMON, 50, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_MINOR_DEMON, 33, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DEMON, 33, MON_SPELL_MAGICAL },
+       { SPELL_MESMERISE, 33, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1777,6 +1783,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SEARING_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                     | MON_SPELL_NOISY },
+       { SPELL_PARALYSE, 18, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
       }
     },
 
@@ -2007,8 +2014,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_HOLIES, 50, MON_SPELL_MAGICAL },
        { SPELL_INJURY_BOND, 50, MON_SPELL_MAGICAL },
        { SPELL_CLEANSING_FLAME, 25, MON_SPELL_MAGICAL },
-       { SPELL_SMITING, 13, MON_SPELL_MAGICAL },
-       { SPELL_MINOR_HEALING, 12, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -2027,7 +2032,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ENTROPY_WEAVER,
       {
-       { SPELL_ENTROPIC_WEAVE, 50, MON_SPELL_WIZARD },
+       { SPELL_ENTROPIC_WEAVE, 40, MON_SPELL_WIZARD },
       }
     },
 
@@ -2132,6 +2137,25 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_MELIAI,
+      {
+       { SPELL_SMITING, 18, MON_SPELL_PRIEST },
+       { SPELL_HEAL_OTHER, 18, MON_SPELL_PRIEST },
+      }
+    },
+
+    { MST_BAI_SUZHEN,
+      {
+        { SPELL_SUMMON_HYDRA, 40, MON_SPELL_WIZARD },
+      }
+    },
+
+    { MST_BAI_SUZHEN_DRAGON,
+      {
+        { SPELL_PRIMAL_WAVE, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
 

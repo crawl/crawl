@@ -26,6 +26,7 @@ function abyss_entry(e, glyph)
   e.depth_chance("Depths:1-3", 3333)
   e.depth_chance("Depths:4",   10000)
   e.depth_chance("Depths:5-",  3333)
+-- D:21-27 entries for save compat, remove when TAG_MAJOR_VERSION > 34
   e.depth_chance("D:21-24", 3333)
   e.depth_chance("D:25",    10000)
   e.depth_chance("D:26-",   3333)
@@ -35,7 +36,7 @@ end
 
 ###############################################################################
 # Abyss entries.
-# 1/3 chance to appear on D:21-27, and guaranteed on D:25.
+# 1/3 chance to appear on Depths floors and guaranteed on Depths:4.
 ###############################################################################
 
 default-depth: Depths, D:21-
@@ -304,42 +305,43 @@ MAP
    ebe
 ENDMAP
 
-# Inspired by a bug which turned Lemuel's castle moat into draconians,
-# a little outpost with either easier interior or exterior. ~HangedMan
+# Inspired by a bug which turned Lemuel's castle moat into draconians...
 NAME:   hangedman_abyss_monster_moat
 TAGS:   no_monster_gen patrolling
-MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
+MONS:   fire bat w:12 / bat simulacrum / spectral bat / bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
-MONS:   kobold demonologist, deep elf mage / orc sorcerer w:7
-MONS:   worker ant w:40 / wasp w:20 / vampire mosquito
+MONS:   kobold demonologist, deep elf demonologist
+MONS:   worker ant w:40 / vampire mosquito w:20 / wasp
 KMONS:  8 = demonic crawler
-KMONS:  9 = emperor scorpion
+KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / chaos spawn
 KMONS:  E = ugly thing
-KMONS:  F = large abomination / glowing shapeshifter w:7
+KMONS:  F = very ugly thing / glowing shapeshifter w:7
 SHUFFLE: 123 / 456 / 789 / DEF
 SUBST:  C = xccv, w : w:8 l:1 .:1, W : .:9 W:1
 MAP
  CCCC  CCCCCCCCCC  CCCC
-CC 1cccc+2WWWW2+cccc1 CC
-C 11n|3Wccc++cccW3|n11 C
-C 11c3|3c1WwwW1c3|3c11 C
-C 11ccncc11ww11ccncc11 C
-C  11111111ww11111111  C
-C   111111 ww 111111   C
+CC 1cccc+2WWWW5+cccc4 CC
+C 11n|32ccc++ccc56|n44 C
+C 11c3|3c1WwwW4c6|6c44 C
+C 11ccncc11ww44ccncc44 C
+C  11111111ww44444444  C
+C   111111 ww 444444   C
 .C                   .C.
  .CC .C. CCCCCC .C. CC.
 ENDMAP
 
 NAME:   hangedman_abyss_sting
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen uniq_wasphive
 KMONS:  1 = orange demon
 KMONS:  2 = hornet / wasp / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
-KITEM:  23 = royal jelly / nothing
+KITEM:  3 = royal jelly
+COLOUR: x = yellow
+TILE:   x = wall_wax
 MAP
  xxxxxxx
 xx22222xx
@@ -1454,7 +1456,7 @@ KITEM:   4d = scroll of random uselessness w:15 q:1 / fruit q:1 w:4 / \
          club w:6 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   5 = wand of slowing / wand of confusion / wand of flame w:5 / \
-         plain deck w:5 / whip not_cursed w:2 / hat not_cursed mundane w:5
+         whip not_cursed w:2 / hat not_cursed mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch

@@ -145,8 +145,6 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     const brand_type real_brand = get_weapon_brand(weapon);
     if (real_brand == SPWPN_PROTECTION || temp_effect == SPWPN_PROTECTION)
         you.redraw_armour_class = true;
-    if (real_brand == SPWPN_EVASION || temp_effect == SPWPN_EVASION)
-        you.redraw_evasion = true;
     if (real_brand == SPWPN_ANTIMAGIC || temp_effect == SPWPN_ANTIMAGIC)
         calc_mp();
 }
@@ -187,22 +185,7 @@ static int _get_brand_duration(brand_type which_brand)
  */
 spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
-    if (!you.weapon())
-    {
-        mpr("You aren't wielding a weapon.");
-        return SPRET_ABORT;
-    }
-
     item_def& weapon = *you.weapon();
-
-    if (!is_brandable_weapon(weapon, true))
-    {
-        if (weapon.base_type != OBJ_WEAPONS)
-            mpr("This isn't a weapon.");
-        else
-            mpr("You cannot enchant this weapon.");
-        return SPRET_ABORT;
-    }
 
     bool has_temp_brand = you.duration[DUR_WEAPON_BRAND];
     // No need to brand with a brand it's already branded with.
@@ -289,8 +272,6 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         you.wield_change = true;
         if (orig_brand == SPWPN_PROTECTION || which_brand == SPWPN_PROTECTION)
             you.redraw_armour_class = true;
-        if (orig_brand == SPWPN_EVASION || which_brand == SPWPN_EVASION)
-            you.redraw_evasion = true;
         if (orig_brand == SPWPN_ANTIMAGIC || which_brand == SPWPN_ANTIMAGIC)
             calc_mp();
     }

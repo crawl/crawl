@@ -168,7 +168,7 @@ DEPTH:  D:10-, Orc, Lair:4-, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Josephine band")
 
 NAME:   uniq_kirke
-DEPTH:  D:12-, Lair:5-, Elf:1, Swamp, Snake, Shoals, Spider
+DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
 
 NAME:   uniq_louise
@@ -196,7 +196,7 @@ DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  D:12-, Orc:$, Lair:5-
+DEPTH:  D:12-, Orc:$, Lair:4-
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_pikel
@@ -275,6 +275,9 @@ DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-4, Crypt:1
 WEIGHT: 50(Snake), 10
 : place_unique(_G, "Aizul")
 
+NAME:   uniq_bai_suzhen
+DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt
+: place_unique(_G, "Bai Suzhen")
 
 # Do *not* change the name of this vault (uniq_boris) without changing the
 # relevant section in monstuff.cc:monster_die. If you wish to alter Boris'
@@ -332,10 +335,6 @@ DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 NAME:   uniq_asterion
 DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
-
-NAME:   uniq_norris
-DEPTH:  Depths:1-3, Elf:2-, Snake:2-, Spider:2-, Vaults:1-3
-: place_unique(_G, "Norris")
 
 NAME:   uniq_saint_roka
 DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
@@ -499,20 +498,18 @@ SUBST:   A:AAA+, A=x
 : else
 SUBST:   A:;;;x, a=;
 : end
-# Randomisation 2: Rarely, the cottage will have a door.
-SUBST:   C = +''''
-# Randomisation 3: Plants might be in the way -- Yiuf seems to be a bad
+# Randomisation 2: Plants might be in the way -- Yiuf seems to be a bad
 #                  gardener. Sometimes.
-SUBST:   P:PQ;; , Q=2;
+SUBST:   P:PQQ;;;; , Q=2;
 NSUBST:  P=1:t / *:2;
-# Randomisation 4: Maces. Maces. Maces.
+# Randomisation 3: Maces. Maces. Maces.
 SUBST:   ; : .:100 ;:10 d:2
 SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t="
 : end
 SUBST:   ':.......' , "=' , ':d' , '=..d
-# Randomisation 5: trees or rock
+# Randomisation 4: trees or rock
 SUBST:   t : ttx
 MAP
  xxxxxxxxxxxxxxxx
@@ -520,7 +517,7 @@ MAP
  xxtttttttttttttx
  BAP't'tttccccctx
 ;baPP't''tc'''ctx
-@baPPtttt'C''1ctx
+@baPPtttt'=''1ctx
 ;BAPttttttc''dctx
  xxtttttttccccctx
  xxtttttttttttttx

@@ -7,6 +7,7 @@
 #
 # <<1>>      Generic
 # <<2>>      Themed
+# <<3>>      Untagged
 #
 ###############################################################################
 
@@ -661,4 +662,113 @@ MAP
 .mFFFFFm.
 .mmmmmmm.
 .........
+ENDMAP
+
+###############################################################################
+# <<3>> Multi.
+#       Not tagged shop, and has no threats. Contain pssibly multiple shops in
+#       a somewhat generic theme- kept here for a certain ease of reference.
+#
+
+# 3 shops
+NAME:    minmay_shop_grove
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+MONS:    plant / bush w:2
+KFEAT:   B = gadget shop
+KFEAT:   C = jewellery shop
+SUBST:   1 : 1.
+SUBST:   1 = 1:9 .:1
+SUBST:   x : xc v:2 b:2
+SHUFFLE: BC
+# The empty arch is intentional!
+MAP
+  xxxxxxx
+ xxtttttxx
+xxtt1.1ttxx
+xtt..B..ttx
+xt.C...C.tx
+xt1..T..1tx
+xt11...11tx
+xttttAttttx
+xxxxx@xxxxx
+ENDMAP
+
+# 1 (33%) or 4 (66%) shops
+NAME:    minmay_shop_grid_forest
+DEPTH:   D:4-, Depths, Elf, Snake
+KFEAT:   A = any shop
+SHUFFLE: ABC
+SUBST:   t : t:11 x:1 c:1 b:1 v:1
+SUBST:   B : .:12 C:6 x:1 c:1 b:1 v:1 G:1 T:1
+SUBST:   C : T:12 x:1 c:1 b:1 v:1 G:1 t:1
+MAP
+.........
+.t.t.t.t.
+..B.C.B..
+.t.t.t.t.
+..C.A.C..
+.t.t.t.t.
+..B.C.B..
+.t.t.t.t.
+.........
+ENDMAP
+
+# 1 (25%), 2 (25%), or 3 (50%) shops
+NAME:    minmay_shop_star
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+KFEAT:   A = any shop
+SHUFFLE: AB
+SUBST:   b : x:20 cv b:5 .:5 m:5 G:5 t:5
+SUBST:   A : A:90 .xcvbmGtT
+SUBST:   B = A
+MAP
+       x@x
+       x.x
+      xx.xx
+      x...x
+xxxxxxxb.bxxxxxxx
+@.....b...b.....@
+xxx.....A.....xxx
+  xxx.b...b.xxx
+    xxx.B.xxx
+  xxx.b...b.xxx
+xxx.....A.....xxx
+@.....b...b.....@
+xxxxxxxb.bxxxxxxx
+      x...x
+      xx.xx
+       x.x
+       x@x
+ENDMAP
+
+# 2 (50%) or 4 (50%) shops
+NAME:    minmay_shoptagon
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+KFEAT:   A = any shop
+SUBST:   a : . m:1 G:1
+SUBST:   b : xcvbmGt
+SUBST:   d : .:60 cvbmGt
+SHUFFLE: AB, CD
+SUBST:   C : .:80 xcvbmGtT
+SUBST:   D : .:80 xcvbmGtT
+SUBST:   B : A.
+MAP
+    xxx@xxx
+   xxd...dxx
+  xxd..D..dxx
+ xxd.......dxx
+xxd....B....dxx
+xd...C...C...dx
+x.....aaa.....x
+@.D.A.aba.A.D.@
+x.....aaa.....x
+xd...C...C...dx
+xxd....B....dxx
+ xxd.......dxx
+  xxd..D..dxx
+   xxd...dxx
+    xxx@xxx
 ENDMAP

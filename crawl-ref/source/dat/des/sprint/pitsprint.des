@@ -110,7 +110,7 @@ function base_monster_setup(e)
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
            Maud / Nergalle / Nessos / Ilsuiw band / Arachne /\
            Polyphemus / Rupert / Saint Roka band / Snorg / Wiglaf")
-  e.kmons("K = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
+  e.kmons("K = Louise / Nikola / Frederick / Boris / Margery band /\
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
@@ -141,7 +141,7 @@ function base_monster_setup(e)
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
            lorocyproca / brimstone fiend / ice fiend / tzitzimitl /\
            hell sentinel / executioner")
-  e.kmons("U = place:Slime:6 / slime creature band /\
+  e.kmons("U = place:Slime:$ / slime creature band /\
            death ooze / azure jelly / acid blob /\
            giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
@@ -476,7 +476,7 @@ function coven_setup(e)
         deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
         sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
         naga mage / greater naga / base draconian w:20")
-  e.kmons("9 = Frederick / Margery band / Boris / Norris / Frances")
+  e.kmons("9 = Frederick / Margery band / Boris / Frances")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")
   e.tile("v = wall_emerald")
@@ -2041,7 +2041,7 @@ KMONS:  b = hill giant /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
-KMONS:  C = Frederick, Norris, Louise, Rupert
+KMONS:  C = Frederick, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         vampire / vampire mage / vampire knight / ghoul w:5 /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\

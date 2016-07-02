@@ -2408,7 +2408,7 @@ bool drop_item(int item_dropped, int quant_drop)
         else if (remove_ring(item_dropped, true))
         {
             // The delay handles the case where the item disappeared.
-            start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
+            start_delay<DropItemDelay>(1, item);
             // We didn't actually succeed yet, but remove_ring took time,
             // so return true anyway.
             return true;
@@ -2436,7 +2436,7 @@ bool drop_item(int item_dropped, int quant_drop)
                 if (takeoff_armour(item_dropped))
                 {
                     // The delay handles the case where the item disappeared.
-                    start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
+                    start_delay<DropItemDelay>(1, item);
                     // We didn't actually succeed yet, but takeoff_armour
                     // took a turn to start up, so return true anyway.
                     return true;
@@ -2570,7 +2570,9 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
                s->size() > 1? "s" : "");
 }
 
-vector<SelItem> items_for_multidrop;
+// This has to be of static storage class, so that the value isn't lost when a
+// MultidropDelay is interrupted.
+static vector<SelItem> items_for_multidrop;
 
 // Arrange items that have been selected for multidrop so that
 // equipped items are dropped after other items, and equipped items
@@ -2672,7 +2674,7 @@ static void _multidrop(vector<SelItem> tmp_items)
         items_for_multidrop.clear();
     }
     else
-        start_delay(DELAY_MULTIDROP, items_for_multidrop.size());
+        start_delay<MultidropDelay>(items_for_multidrop.size(), items_for_multidrop);
 }
 
 static void _autoinscribe_item(item_def& item)
@@ -4156,7 +4158,8 @@ static void _deck_from_specs(const char* _specs, item_def &item,
 
     while (item.sub_type == MISC_DECK_UNKNOWN)
     {
-        mprf(MSGCH_PROMPT, "[a] escape [b] destruction [c] war? (ESC to exit)");
+        mprf(MSGCH_PROMPT, "[a] escape [b] destruction [c] summoning? "
+                           "(ESC to exit)");
 
         const int keyin = toalower(get_ch());
 
@@ -4172,7 +4175,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         {
             { 'a', MISC_DECK_OF_ESCAPE },
             { 'b', MISC_DECK_OF_DESTRUCTION },
-            { 'c', MISC_DECK_OF_WAR },
+            { 'c', MISC_DECK_OF_SUMMONING },
         };
 
         const misc_item_type *deck_type = map_find(deckmap, keyin);
@@ -4690,8 +4693,8 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            if (item.sub_type >= MISC_DECK_OF_ESCAPE
-                 && item.sub_type <= MISC_DECK_OF_DEFENCE)
+            if (item.sub_type >= MISC_FIRST_DECK
+                 && item.sub_type <= MISC_LAST_DECK)
             {
                 // Needs to be changed if we add other miscellaneous items
                 // that can be non-identified.

@@ -122,10 +122,6 @@ void vehumet_accept_gift(spell_type spell);
 
 mgen_data hepliaklqana_ancestor_gen_data();
 string hepliaklqana_ally_name();
-int hepliaklqana_specialization();
-int hepliaklqana_specialization_level();
-weapon_type hepliaklqana_specialization_weapon(int specialization);
-spell_type hepliaklqana_specialization_spell(int specialization);
 
 void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
 void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item);
@@ -143,7 +139,7 @@ int get_fuzzied_monster_difficulty(const monster *mons);
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
 void delayed_monster(const mgen_data &mg, delayed_callback callback = nullptr);
-void delayed_monster_done(string success, string failure,
+void delayed_monster_done(string success,
                           delayed_callback callback = nullptr);
 
 bool do_god_gift(bool forced = false);

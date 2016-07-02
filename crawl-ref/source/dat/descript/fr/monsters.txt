@@ -287,12 +287,6 @@ Un brillant scientifique obsédé par l'électricité. Depuis un terrible accide
 survenu lors d'une de ses tentatives pour parfaire son ire s d'électricité, il
 lui arrive de se déphaser de la réalité.
 %%%%
-Norris
-
-Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
-mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — « les deux »
-serait probablement la meilleure option.
-%%%%
 Polyphemus
 
 Un berger cyclope, il protège énormément son troupeau, qu'il regarde d'une

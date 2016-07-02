@@ -216,9 +216,9 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel)
 
     clear_messages();
     if (you.trans_wall_blocking(beam.target))
-        mpr("There's something in the way!");
+        canned_msg(MSG_SOMETHING_IN_WAY);
     else
-        mpr("You can only blink to visible locations.");
+        canned_msg(MSG_CANNOT_SEE);
     return _find_cblink_target(target, safe_cancel);
 }
 
@@ -695,7 +695,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
-        mpr("There's something in the way!");
+        canned_msg(MSG_SOMETHING_IN_WAY);
         return SPRET_ABORT;
     }
 

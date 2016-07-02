@@ -46,6 +46,7 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-cast.h" // mons_spell_range
+#include "mon-death.h"
 #include "mon-tentacle.h"
 #include "options.h"
 #include "output.h"
@@ -129,7 +130,7 @@ const char* jewellery_base_ability_string(int subtype)
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
-    case AMU_HARM:                return "Harm *Drain";
+    case AMU_HARM:                return "Harm";
     case AMU_DISMISSAL:           return "Dismiss";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
@@ -898,8 +899,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\n\nIt can be evoked to extend its reach.";
             break;
         case SK_AXES:
-            description += "\n\nIt can hit multiple enemies in an arc"
-                           " around the wielder.";
+            description += "\n\nIt hits all enemies adjacent to the wielder, "
+                           "dealing less damage to those not targeted.";
+            break;
+        case SK_LONG_BLADES:
+            description += "\n\nIt can be used to riposte, swiftly "
+                           "retaliating against a missed attack.";
             break;
         case SK_SHORT_BLADES:
             {
@@ -1003,9 +1008,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It protects the one who wields it against "
                 "injury (+5 to AC).";
             break;
-        case SPWPN_EVASION:
-            description += "It affects your evasion (+5 to EV).";
-            break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
                 "life of those it strikes.";
@@ -1029,9 +1031,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
-                description += "Each time it fires, it turns the "
-                    "launched projectile into a different, random type "
-                    "of bolt.";
+                description += "Each projectile launched from it has a "
+                               "different, random effect.";
             }
             else
             {
@@ -1192,7 +1193,7 @@ static string _describe_ammo(const item_def &item)
             if (can_launch)
                 description += "fired from an appropriate launcher, ";
 
-            description += "it turns into a bolt of a random type.";
+            description += "it has a random effect.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
@@ -2119,7 +2120,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         const string cl_desc = getLongDescription(cl_name + " cloud");
         inf.body << "\n\nA cloud of " << cl_name
                  << (cl_desc.empty() ? "." : ".\n\n")
-                 << cl_desc;
+                 << cl_desc << extra_cloud_info(cloud);
     }
 
     inf.quote = getQuoteString(db_name);
@@ -2531,21 +2532,6 @@ string get_skill_description(skill_type skill, bool need_title)
                 result += "\n";
                 result += "Note that Trog doesn't use Invocations, due to its "
                           "close connection to magic.";
-            }
-            else if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "Note that Nemelex uses Evocations rather than "
-                          "Invocations.";
-            }
-            break;
-
-        case SK_EVOCATIONS:
-            if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                result += "\n";
-                result += "This is the skill all of Nemelex's abilities rely "
-                          "on.";
             }
             break;
 
@@ -3592,6 +3578,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\n" << suffix;
     }
 
+    const int curse_power = mummy_curse_power(mi.type);
+    if (curse_power && !mi.is(MB_SUMMONED))
+    {
+        inf.body << "\n" << It << " will inflict a ";
+        if (curse_power > 10)
+            inf.body << "powerful ";
+        inf.body << "necromantic curse on "
+                 << mi.pronoun(PRONOUN_POSSESSIVE) << " foe when destroyed.\n";
+    }
+
     // Get information on resistances, speed, etc.
     string result = _monster_stat_description(mi);
     if (!result.empty())
@@ -3603,7 +3599,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << It << " is incapable of using stairs.\n";
+        inf.body << It << " is incapable of using stairs.\n";
         stair_use = true;
     }
 
@@ -3641,19 +3637,18 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.is(MB_SUMMONED))
     {
-        inf.body << "\n" << "This monster has been summoned, and is thus only "
-                       "temporary. Killing " << it_o << " yields no "
-                       "experience, nutrition or items";
+        inf.body << "\nThis monster has been summoned, and is thus only "
+                    "temporary. Killing " << it_o << " yields no experience, "
+                    "nutrition or items";
         if (!stair_use)
             inf.body << ", and " << it << " is incapable of using stairs";
         inf.body << ".\n";
     }
     else if (mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\n" << "This monster has been summoned in a durable "
-                    "way, and only partially exists. Killing " << it_o << " "
-                    "yields no experience, nutrition or items. You "
-                    "cannot easily abjure " << it_o << ", though.\n";
+        inf.body << "\nThis monster has been summoned in a durable way. "
+                    "Killing " << it_o << " yields no experience, nutrition "
+                    "or items, but " << it_o << " cannot be abjured.\n";
     }
     else if (mons_class_leaves_hide(mi.type))
     {
@@ -3664,9 +3659,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.is(MB_SUMMONED_CAPPED))
     {
-        inf.body << "\n" << "You have summoned too many monsters of this kind "
-                            "to sustain them all, and thus this one will "
-                            "shortly expire.\n";
+        inf.body << "\nYou have summoned too many monsters of this kind to "
+                    "sustain them all, and thus this one will shortly "
+                    "expire.\n";
     }
 
     if (!inf.quote.empty())
@@ -3999,4 +3994,26 @@ void alt_desc_proc::get_string(string &str)
         if (!chop(str))
             break;
     }
+}
+
+/**
+ * Provide auto-generated information about the given cloud type. Describe
+ * opacity & related factors.
+ *
+ * @param cloud_type        The cloud_type in question.
+ * @return e.g. "\nThis cloud is opaque; one tile will not block vision, but
+ *      multiple will. \nClouds of this kind the player makes will vanish very
+ *      quickly once outside the player's sight."
+ */
+string extra_cloud_info(cloud_type cloud_type)
+{
+    const bool opaque = is_opaque_cloud(cloud_type);
+    const string opacity_info = !opaque ? "" :
+        "\nThis cloud is opaque; one tile will not block vision, but "
+        "multiple will.";
+    const string vanish_info
+        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
+                       "%s once outside their sight.",
+                       opaque ? "quickly" : "almost instantly");
+    return opacity_info + vanish_info;
 }

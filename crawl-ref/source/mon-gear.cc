@@ -298,7 +298,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_WIGHT:
-    case MONS_NORRIS:
         item.base_type = OBJ_WEAPONS;
 
         if (one_chance_in(6))
@@ -1257,6 +1256,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_SPRIGGAN_DRUID:
+    case MONS_BAI_SUZHEN:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_QUARTERSTAFF;
         break;
@@ -1454,6 +1454,15 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             floor_tile = "wpn_staff_mummy";
             equip_tile = "staff_mummy";
         }
+        break;
+
+    case MONS_MELIAI:
+        // labrys
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(12, WPN_HAND_AXE,
+                                                 7, WPN_WAR_AXE,
+                                                 1, WPN_BROAD_AXE,
+                                                 0);
         break;
 
     case MONS_ANCESTOR_HEXER:
@@ -1850,11 +1859,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_NORRIS:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                              level * 2 + 1, 1);
-        break;
-
     case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, 1);
@@ -2007,6 +2011,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_GNOLL_SHAMAN:
+    case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_ROBE : ARM_LEATHER_ARMOUR;
         break;
@@ -2275,6 +2280,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_BAI_SUZHEN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;

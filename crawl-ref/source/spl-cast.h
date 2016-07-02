@@ -74,7 +74,7 @@ enum spret_type
 
 #define fail_check() if (fail) return SPRET_FAIL
 
-void surge_power(const int enhanced, const string adj = "");
+void surge_power(const int enhanced);
 
 typedef bool (*spell_selector)(spell_type spell);
 

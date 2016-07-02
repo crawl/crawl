@@ -388,7 +388,7 @@ bool player_caught_in_net()
         // Set the attribute after the mpr, otherwise the screen updates
         // and we get a glimpse of a web because there isn't a trapping net
         // item yet
-        you.attribute[ATTR_HELD] = 10;
+        you.attribute[ATTR_HELD] = 1;
 
         stop_delay(true); // even stair delays
         return true;
@@ -433,7 +433,7 @@ static bool _player_caught_in_web()
     if (you.attribute[ATTR_HELD])
         return false;
 
-    you.attribute[ATTR_HELD] = 10;
+    you.attribute[ATTR_HELD] = 1;
 
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
@@ -1128,88 +1128,6 @@ void search_around()
     }
 }
 
-// Decides whether you will try to tear the net (result <= 0)
-// or try to slip out of it (result > 0).
-// Both damage and escape could be 9 (more likely for damage)
-// but are capped at 5 (damage) and 4 (escape).
-static int damage_or_escape_net(int hold)
-{
-    // Spriggan: little (+2)
-    // Halfling, Kobold: small (+1)
-    // Human, Elf, ...: medium (0)
-    // Ogre, Troll, Centaur, Naga: large (-1)
-    // transformations: spider, bat: tiny (+3); ice beast: large (-1)
-    int escape = SIZE_MEDIUM - you.body_size(PSIZE_BODY);
-
-    int damage = -escape;
-
-    // your weapon may damage the net, max. bonus of 2
-    if (you.weapon())
-    {
-        if (can_cut_meat(*you.weapon()))
-            damage++;
-
-        int brand = get_weapon_brand(*you.weapon());
-        if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
-            damage++;
-    }
-    else if (you.form == TRAN_BLADE_HANDS)
-        damage += 2;
-    else if (you.has_usable_claws())
-    {
-        int level = you.has_claws();
-        if (level == 1)
-            damage += coinflip();
-        else
-            damage += level - 1;
-    }
-
-    // Berserkers get a fighting bonus.
-    if (you.berserk())
-        damage += 2;
-
-    // Check stats.
-    if (x_chance_in_y(you.strength(), 18))
-        damage++;
-    if (x_chance_in_y(you.dex(), 12))
-        escape++;
-    if (x_chance_in_y(you.evasion(), 20))
-        escape++;
-
-    // Dangerous monsters around you add urgency.
-    if (there_are_monsters_nearby(true))
-    {
-        damage++;
-        escape++;
-    }
-
-    // Confusion makes the whole thing somewhat harder
-    // (less so for trying to escape).
-    if (you.confused())
-    {
-        if (escape > 1)
-            escape--;
-        else if (damage >= 2)
-            damage -= 2;
-    }
-
-    // Damaged nets are easier to destroy.
-    if (hold < 0)
-    {
-        damage += random2(-hold/3 + 1);
-
-        // ... and easier to slip out of (but only if escape looks feasible).
-        if (you.attribute[ATTR_HELD] < 5 || escape >= damage)
-            escape += random2(-hold/2) + 1;
-    }
-
-    // If undecided, choose damaging approach (it's quicker).
-    if (damage >= escape)
-        return -damage; // negate value
-
-    return escape;
-}
-
 /**
  * Let the player attempt to unstick themself from a web.
  */
@@ -1227,8 +1145,7 @@ static void _free_self_from_web()
             return;
         }
 
-        // destroy or escape the web.
-        maybe_destroy_web(&you);
+        mpr("You disentangle yourself.");
     }
 
     // whether or not there was a web trap there, you're free now.
@@ -1237,9 +1154,6 @@ static void _free_self_from_web()
     you.redraw_evasion = true;
 }
 
-// Calls the above function to decide on how to get free.
-// Note that usually the net will be damaged until trying to slip out
-// becomes feasible (for size etc.), so it may take even longer.
 void free_self_from_net()
 {
     int net = get_trapping_net(you.pos());
@@ -1252,106 +1166,29 @@ void free_self_from_net()
     }
 
     int hold = mitm[net].net_durability;
-    int do_what = damage_or_escape_net(hold);
-    dprf("net.net_durability: %d, ATTR_HELD: %d, do_what: %d",
-         hold, you.attribute[ATTR_HELD], do_what);
+    dprf("net.net_durability: %d", hold);
 
-    if (do_what <= 0) // You try to destroy the net
+    int damage = 1 + random2(4);
+
+    hold -= damage;
+    mitm[net].net_durability = hold;
+
+    if (hold < NET_MIN_DURABILITY)
     {
-        // For previously undamaged nets this takes at least 2 and at most
-        // 8 turns.
-        bool can_slice =
-            (you.form == TRAN_BLADE_HANDS)
-            || (you.weapon() && can_cut_meat(*you.weapon()));
+        mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
 
-        int damage = -do_what;
+        destroy_item(net);
 
-        if (damage < 1)
-            damage = 1;
-
-        if (you.berserk())
-            damage *= 2;
-
-        // Medium sized characters are at a disadvantage and sometimes
-        // get a bonus.
-        if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
-            damage += coinflip();
-
-        if (damage > 5)
-            damage = 5;
-
-        hold -= damage;
-        mitm[net].net_durability = hold;
-
-        if (hold < -7)
-        {
-            mprf("You %s the net and break free!",
-                 can_slice ? (damage >= 4? "slice" : "cut") :
-                             (damage >= 4? "shred" : "rip"));
-
-            destroy_item(net);
-
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
-            you.redraw_evasion = true;
-            return;
-        }
-
-        if (damage >= 4)
-        {
-            mprf("You %s into the net.",
-                 can_slice? "slice" : "tear a large gash");
-        }
-        else
-            mpr("You struggle against the net.");
-
-        // Occasionally decrease duration a bit
-        // (this is so switching from damage to escape does not hurt as much).
-        if (you.attribute[ATTR_HELD] > 1 && coinflip())
-        {
-            you.attribute[ATTR_HELD]--;
-
-            if (you.attribute[ATTR_HELD] > 1 && hold < -random2(5))
-                you.attribute[ATTR_HELD]--;
-        }
+        you.attribute[ATTR_HELD] = 0;
+        you.redraw_quiver = true;
+        you.redraw_evasion = true;
+        return;
     }
+
+    if (damage > 3)
+        mpr("You tear a large gash into the net.");
     else
-    {
-        // You try to escape (takes at least 3 turns, and at most 10).
-        int escape = do_what;
-
-        if (you.duration[DUR_HASTE] || you.duration[DUR_BERSERK]) // extra bonus
-            escape++;
-
-        // Medium sized characters are at a disadvantage and sometimes
-        // get a bonus.
-        if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
-            escape += coinflip();
-
-        if (escape > 4)
-            escape = 4;
-
-        if (escape >= you.attribute[ATTR_HELD])
-        {
-            if (escape >= 3)
-                mpr("You slip out of the net!");
-            else
-                mpr("You break free from the net!");
-
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
-            you.redraw_evasion = true;
-            free_stationary_net(net);
-            return;
-        }
-
-        if (escape >= 3)
-            mpr("You try to slip out of the net.");
-        else
-            mpr("You struggle to escape the net.");
-
-        you.attribute[ATTR_HELD] -= escape;
-    }
+        mpr("You struggle against the net.");
 }
 
 void mons_clear_trapping_net(monster* mon)
@@ -1655,7 +1492,7 @@ bool is_valid_shaft_level(bool known)
 
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 {
-    level_id  lid   = lpos.id;
+    level_id lid = lpos.id;
 
     if (!is_connected_branch(lid))
         return lid;
@@ -1666,7 +1503,6 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     // Shaft traps' behavior depends on whether it is entered intentionally.
     // Knowingly entering one is more likely to drop you 1 level.
     // Falling in unknowingly can drop you 1/2/3 levels with equal chance.
-
     if (known)
     {
         // Chances are 2/3 for 1 level, 1/3 for 2 levels
@@ -1703,68 +1539,6 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 level_id generic_shaft_dest(coord_def pos, bool known = false)
 {
     return _generic_shaft_dest(level_pos(level_id::current(), pos));
-}
-
-/**
- * When a player falls through a shaft at a location, disperse items on the
- * target level.
- *
- * @param pos The location.
- * @param open_shaft If True and the location was seen, print a shaft opening
- *                   message, otherwise don't.
-*/
-void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
-{
-    if (!is_valid_shaft_level())
-        return;
-
-    level_id dest = generic_shaft_dest(pos);
-
-    if (dest == level_id::current())
-        return;
-
-    int o = igrd(pos);
-
-    if (o == NON_ITEM)
-        return;
-
-    bool need_open_message = env.map_knowledge(pos).seen() && open_shaft;
-
-    while (o != NON_ITEM)
-    {
-        int next = mitm[o].link;
-
-        if (mitm[o].defined() && !item_is_stationary_net(mitm[o]))
-        {
-            if (need_open_message)
-            {
-                mpr("A shaft opens up in the floor!");
-                grd(pos) = DNGN_TRAP_SHAFT;
-                need_open_message = false;
-            }
-
-            if (env.map_knowledge(pos).visible())
-            {
-                mprf("%s fall%s through the shaft.",
-                     mitm[o].name(DESC_INVENTORY).c_str(),
-                     mitm[o].quantity == 1 ? "s" : "");
-
-                env.map_knowledge(pos).clear_item();
-                StashTrack.update_stash(pos);
-            }
-
-            // Item will be randomly placed on the destination level.
-            unlink_item(o);
-            mitm[o].pos = INVALID_COORD;
-            add_item_to_transit(dest, mitm[o]);
-
-            mitm[o].base_type = OBJ_UNASSIGNED;
-            mitm[o].quantity = 0;
-            mitm[o].props.clear();
-        }
-
-        o = next;
-    }
 }
 
 /**
@@ -1923,29 +1697,6 @@ void place_webs(int num)
             ts.reveal();
         env.trap[ts.pos] = ts;
     }
-}
-
-bool maybe_destroy_web(actor *oaf)
-{
-    trap_def *trap = trap_at(oaf->pos());
-    if (!trap || trap->type != TRAP_WEB)
-        return false;
-
-    if (coinflip())
-    {
-        if (oaf->is_monster())
-            simple_monster_message(oaf->as_monster(), " pulls away from the web.");
-        else
-            mpr("You disentangle yourself.");
-        return false;
-    }
-
-    if (oaf->is_monster())
-        simple_monster_message(oaf->as_monster(), " tears the web.");
-    else
-        mpr("The web tears apart.");
-    destroy_trap(oaf->pos());
-    return true;
 }
 
 bool ensnare(actor *fly)

@@ -1226,10 +1226,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Save position for hatches to place a marker on the destination level.
     coord_def dest_pos = you.pos();
 
-    // Going up/down stairs, going through a portal, or being banished
-    // means the previous x/y movement direction is no longer valid.
-    you.reset_prev_move();
-
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
 
@@ -2279,9 +2275,10 @@ void save_ghost(bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, or the Temple.
+    // No ghosts on D:1, D:2, the Temple, or the Abyss.
     if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)))
+                   || player_in_branch(BRANCH_TEMPLE)
+                   || player_in_branch(BRANCH_ABYSS)))
     {
         return;
     }

@@ -574,7 +574,7 @@ static void _display_vampire_attributes()
          "Bat form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
 
         {"Other forms and \n"
-         "berserk              ", "yes        ", "yes     ", "no        ", "no       ", "no       ", "no    "}
+         "berserk              ", "yes        ", "yes     ", "yes       ", "no       ", "no       ", "no    "}
     };
 
     int current = 0;

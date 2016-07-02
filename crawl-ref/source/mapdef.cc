@@ -4592,6 +4592,10 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("serpent of hell ") != string::npos)
         return soh_monspec(name);
 
+    // Allow access to her second form, which shares display names.
+    if (name == "bai suzhen dragon")
+        return MONS_BAI_SUZHEN_DRAGON;
+
     return get_monster_by_name(name);
 }
 

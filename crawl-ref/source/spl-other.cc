@@ -25,24 +25,6 @@
 #include "spl-util.h"
 #include "terrain.h"
 
-spret_type cast_cure_poison(int pow, bool fail)
-{
-    if (!you.duration[DUR_POISONING])
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    reduce_player_poison((15 + roll_dice(3, pow / 2)) * 1000);
-
-    // A message is already printed if we removed all of the poison
-    if (you.duration[DUR_POISONING])
-        mpr("The poison in your system diminishes.");
-
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
     bool success = false;
@@ -269,12 +251,6 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    if (you.is_stationary())
-    {
-        canned_msg(MSG_CANNOT_MOVE);
-        return SPRET_ABORT;
-    }
-
     coord_def dest;
     for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
@@ -310,7 +286,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         if (check_moveto(dest, "passwall", msg))
         {
             // Passwall delay is reduced, and the delay cannot be interrupted.
-            start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+            start_delay<PasswallDelay>(1 + walls, dest);
         }
     }
     return SPRET_SUCCESS;
@@ -322,6 +298,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
+        || mons->check_clarity(false)
         || monster_resists_this_poison(mons))
     {
         return 0;
@@ -329,8 +306,6 @@ static int _intoxicate_monsters(coord_def where, int pow)
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
-        if (mons->check_clarity(false))
-            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(mons, " looks rather confused.");
         return 1;
@@ -360,12 +335,6 @@ spret_type cast_intoxicate(int pow, bool fail)
 
 spret_type cast_darkness(int pow, bool fail)
 {
-    if (you.haloed())
-    {
-        mpr("It would have no effect in that bright light!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     if (you.duration[DUR_DARKNESS])
         mprf(MSGCH_DURATION, "It gets a bit darker.");

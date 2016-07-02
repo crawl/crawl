@@ -82,6 +82,7 @@ bool feat_is_reachable_past(dungeon_feature_type feat);
 bool feat_is_critical(dungeon_feature_type feat);
 bool feat_is_valid_border(dungeon_feature_type feat);
 bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
+bool feat_is_shaftable(dungeon_feature_type feat);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 

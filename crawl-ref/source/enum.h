@@ -437,12 +437,14 @@ enum ability_type
 
     ABIL_HEPLIAKLQANA_IDENTITY,
 
+#if TAG_MAJOR_VERSION == 34
     ABIL_HEPLIAKLQANA_KNIGHT_REACHING,
     ABIL_HEPLIAKLQANA_KNIGHT_CLEAVING,
     ABIL_HEPLIAKLQANA_BATTLEMAGE_FORCE_LANCE,
     ABIL_HEPLIAKLQANA_BATTLEMAGE_MAGMA,
     ABIL_HEPLIAKLQANA_HEXER_MASS_CONFUSION,
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
+#endif
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -666,7 +668,8 @@ enum beam_type                  // bolt::flavour
     BEAM_UNRAVELLING,
     BEAM_SHARED_PAIN,
     BEAM_IRRESISTIBLE_CONFUSION,
-    BEAM_LAST_ENCHANTMENT = BEAM_IRRESISTIBLE_CONFUSION,
+    BEAM_INFESTATION,
+    BEAM_LAST_ENCHANTMENT = BEAM_INFESTATION,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -719,7 +722,9 @@ enum book_type
     BOOK_AIR,
     BOOK_SKY,
     BOOK_WARP,
+#if TAG_MAJOR_VERSION == 34
     BOOK_ENVENOMATIONS,
+#endif
     BOOK_UNLIFE,
 #if TAG_MAJOR_VERSION == 34
     BOOK_CONTROL,
@@ -884,6 +889,8 @@ enum canned_message_type
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
     MSG_MAGIC_DRAIN,
+    MSG_SOMETHING_IN_WAY,
+    MSG_CANNOT_SEE,
 };
 
 enum char_set_type
@@ -1299,7 +1306,6 @@ enum conduct_type
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
     DID_SPELL_PRACTISE,
-    DID_DRINK_BLOOD,
     DID_CANNIBALISM,
     DID_DESECRATE_SOULED_BEING,           // Zin
     DID_DELIBERATE_MUTATING,              // Zin
@@ -1347,51 +1353,6 @@ enum confirm_level_type
     CONFIRM_NONE_EASY,
     CONFIRM_SAFE_EASY,
     CONFIRM_ALL_EASY,
-};
-
-// When adding new delays, update their names in delay.cc
-enum delay_type
-{
-    DELAY_NOT_DELAYED,
-    DELAY_EAT,
-    DELAY_FEED_VAMPIRE,
-    DELAY_ARMOUR_ON,
-    DELAY_ARMOUR_OFF,
-    DELAY_JEWELLERY_ON,
-    DELAY_MEMORISE,
-    DELAY_BUTCHER,
-    DELAY_BOTTLE_BLOOD,
-#if TAG_MAJOR_VERSION == 34
-    DELAY_WEAPON_SWAP,
-#endif
-    DELAY_PASSWALL,
-    DELAY_DROP_ITEM,
-    DELAY_MULTIDROP,
-    DELAY_ASCENDING_STAIRS,
-    DELAY_DESCENDING_STAIRS,
-#if TAG_MAJOR_VERSION == 34
-    DELAY_UNUSED, // was DELAY_RECITE
-#endif
-
-    // [dshaligram] Shift-running, resting, travel and macros are now
-    // also handled as delays.
-    DELAY_RUN,
-    DELAY_REST,
-    DELAY_TRAVEL,
-
-    DELAY_MACRO,
-
-    // In a macro delay, a stacked delay to tell Crawl to read and act on
-    // one input command.
-    DELAY_MACRO_PROCESS_KEY,
-
-    DELAY_INTERRUPTIBLE,                // simple interruptible delay
-    DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
-
-    DELAY_SHAFT_SELF, // Formicid ability
-    DELAY_BLURRY_SCROLL,
-
-    NUM_DELAYS
 };
 
 enum description_level_type
@@ -1836,8 +1797,8 @@ enum duration_type
     DUR_SILENCE,
 #if TAG_MAJOR_VERSION == 34
     DUR_CONDENSATION_SHIELD,
-#endif
     DUR_MAGIC_ARMOUR,
+#endif
     DUR_GOURMAND,
 #if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
@@ -1848,9 +1809,13 @@ enum duration_type
     DUR_SLAYING,
 #endif
     DUR_STEALTH,
+#if TAG_MAJOR_VERSION == 34
     DUR_MAGIC_SHIELD,
+#endif
     DUR_SLEEP,
+#if TAG_MAJOR_VERSION == 34
     DUR_TELEPATHY,
+#endif
     DUR_PETRIFIED,
     DUR_LOWERED_MR,
     DUR_REPEL_STAIRS_MOVE,
@@ -1937,7 +1902,9 @@ enum duration_type
     DUR_QAZLAL_ELEC_RES,
     DUR_QAZLAL_AC,
     DUR_CORROSION,
+#if TAG_MAJOR_VERSION == 34
     DUR_FORTITUDE,
+#endif
     DUR_HORROR,
     DUR_NO_SCROLLS,
 #if TAG_MAJOR_VERSION == 34
@@ -2031,7 +1998,9 @@ enum enchant_type
     ENCH_REGENERATION,
     ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
+#if TAG_MAJOR_VERSION == 34
     ENCH_MAGIC_ARMOUR,
+#endif
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
@@ -2071,8 +2040,8 @@ enum enchant_type
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
-    ENCH_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
+    ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,
 #endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
@@ -2124,7 +2093,9 @@ enum enchant_type
     ENCH_GOZAG_INCITE,
     ENCH_PAIN_BOND, // affected by above
     ENCH_IDEALISED,
-    // Update enchantment names in mon-ench.cc when adding or removing
+    ENCH_BOUND_SOUL,
+    ENCH_INFESTATION,
+    // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
 };
@@ -2269,6 +2240,7 @@ enum holy_word_source_type
     HOLY_WORD_SCROLL,
     HOLY_WORD_ZIN,     // sanctuary
     HOLY_WORD_TSO,     // weapon blessing
+    HOLY_WORD_CARD,    // Nemelex wrath
 };
 
 enum hunger_state_t                    // you.hunger_state
@@ -2537,6 +2509,7 @@ enum targ_mode_type
     TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
+    TARG_MOBILE_MONSTER,    // Non-stationary monsters
     TARG_NUM_MODES
 };
 
@@ -2721,6 +2694,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_MELIAI,
+#endif
     MONS_VAMPIRE_MOSQUITO,
 #if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
@@ -3283,7 +3259,9 @@ enum monster_type                      // menv[].type
     MONS_RUPERT,
     MONS_WIGLAF,
     MONS_XTAHUA,
+#if TAG_MAJOR_VERSION == 34
     MONS_NORRIS,
+#endif
     MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,
@@ -3334,6 +3312,8 @@ enum monster_type                      // menv[].type
     MONS_VASHNIA,
     MONS_ROBIN,
     MONS_MOON_TROLL,
+    MONS_BAI_SUZHEN,
+    MONS_BAI_SUZHEN_DRAGON,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3524,9 +3504,7 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
-#if TAG_MAJOR_VERSION == 34
     MONS_SALAMANDER_STORMCALLER,
-#endif
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
     MONS_MUTANT_BEAST,
@@ -3543,6 +3521,9 @@ enum monster_type                      // menv[].type
     MONS_ANCESTOR_KNIGHT,
     MONS_ANCESTOR_BATTLEMAGE,
     MONS_ANCESTOR_HEXER,
+    MONS_MELIAI,
+    MONS_BAI_SUZHEN,
+    MONS_BAI_SUZHEN_DRAGON,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3903,6 +3884,8 @@ enum operation_types
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
+    OPER_ID       = 'i',
+    OPER_BUTCHER  = 'c',
     OPER_ANY      = 0,
 };
 
@@ -4349,9 +4332,7 @@ enum spell_type
 #if TAG_MAJOR_VERSION == 34
     SPELL_FLY,
     SPELL_INSULATION,
-#endif
     SPELL_CURE_POISON,
-#if TAG_MAJOR_VERSION == 34
     SPELL_CONTROL_TELEPORT,
     SPELL_POISON_WEAPON,
 #endif
@@ -4552,7 +4533,9 @@ enum spell_type
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
     SPELL_AWAKEN_VINES,
+#if TAG_MAJOR_VERSION == 34
     SPELL_CONTROL_WINDS,
+#endif
     SPELL_THORN_VOLLEY,
     SPELL_WALL_OF_BRAMBLES,
     SPELL_WATERSTRIKE,
@@ -4620,7 +4603,9 @@ enum spell_type
     SPELL_PHANTOM_MIRROR,
     SPELL_DRAIN_MAGIC,
     SPELL_CORROSIVE_BOLT,
-    SPELL_SERPENT_OF_HELL_BREATH,
+#if TAG_MAJOR_VERSION == 34
+    SPELL_SERPENT_OF_HELL_BREATH_REMOVED,
+#endif
     SPELL_SUMMON_EMPEROR_SCORPIONS,
 #if TAG_MAJOR_VERSION == 34
     SPELL_HYDRA_FORM,
@@ -4669,6 +4654,13 @@ enum spell_type
     SPELL_ICEBLAST,
     SPELL_SLUG_DART,
     SPELL_SPRINT,
+    SPELL_GREATER_SERVANT_MAKHLEB,
+    SPELL_SERPENT_OF_HELL_GEH_BREATH,
+    SPELL_SERPENT_OF_HELL_COC_BREATH,
+    SPELL_SERPENT_OF_HELL_TAR_BREATH,
+    SPELL_SERPENT_OF_HELL_DIS_BREATH,
+    SPELL_BIND_SOULS,
+    SPELL_INFESTATION,
     NUM_SPELLS
 };
 
@@ -5076,6 +5068,7 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_RECALL =     0x4000000000000ULL,
     TILE_FLAG_DRAIN =      0x8000000000000ULL,
     TILE_FLAG_IDEALISED =  0x10000000000000ULL,
+    TILE_FLAG_BOUND_SOUL=  0x20000000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,

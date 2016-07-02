@@ -850,9 +850,28 @@ void fire_monster_death_event(monster* mons,
     }
 }
 
-static void _mummy_curse(monster* mons, killer_type killer, int index)
+int mummy_curse_power(monster_type type)
 {
-    int pow;
+    // Plain mummies (and Menkaure) are too weak to curse you!
+    switch (type)
+    {
+        case MONS_GUARDIAN_MUMMY:
+            return 3;
+        case MONS_MUMMY_PRIEST:
+            return 8;
+        case MONS_GREATER_MUMMY:
+            return 11;
+        case MONS_KHUFU:
+            return 15;
+        default:
+            return 0;
+    }
+}
+
+static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
+{
+    if (pow <= 0)
+        return;
 
     switch (killer)
     {
@@ -867,22 +886,6 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
 
         default:
             break;
-    }
-
-    switch (mons->type)
-    {
-        case MONS_MENKAURE:
-        case MONS_MUMMY:
-            return;
-
-        case MONS_GUARDIAN_MUMMY: pow = 3; break;
-        case MONS_MUMMY_PRIEST:   pow = 8; break;
-        case MONS_GREATER_MUMMY:  pow = 11; break;
-        case MONS_KHUFU:          pow = 15; break;
-
-        default:
-            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
-            return;
     }
 
     actor* target;
@@ -1335,6 +1338,26 @@ static bool _explode_monster(monster* mons, killer_type killer,
     return true;
 }
 
+static void _infestation_create_scarab(monster* mons)
+{
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, &you, 0,
+                                                   SPELL_INFESTATION,
+                                                   mons->pos(), MHITYOU,
+                                                   MG_AUTOFOE),
+                                         false))
+    {
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        if (you.see_cell(mons->pos()) || you.can_see(*scarab))
+        {
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       mons->name(DESC_THE).c_str());
+        }
+        mons->flags |= MF_EXPLODE_KILL;
+    }
+}
+
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
@@ -1417,11 +1440,17 @@ static string _killer_type_name(killer_type killer)
     die("invalid killer type");
 }
 
-static void _make_spectral_thing(monster* mons, bool quiet)
+/**
+ * Make a spectral thing out of a dying/dead monster.
+ *
+ * @param mons       the monster that died
+ * @param quiet      whether to print flavour messages
+ * @param bound_soul whether the thing is from Bind Souls (true) or DChan
+ */
+static void _make_spectral_thing(monster* mons, bool quiet, bool bound_soul)
 {
     if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
-        const monster_type spectre_type = mons_species(mons->type);
         enchant_type shapeshift = ENCH_NONE;
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             shapeshift = ENCH_SHAPESHIFTER;
@@ -1430,16 +1459,22 @@ static void _make_spectral_thing(monster* mons, bool quiet)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        mgen_data mg(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
-                     0, SPELL_DEATH_CHANNEL, mons->pos(), MHITYOU,
-                     MG_NONE, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+        mgen_data mg(MONS_SPECTRAL_THING,
+                     bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
+                     bound_soul ? nullptr : &you,
+                     0,
+                     bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
+                     mons->pos(), MHITYOU, MG_NONE,
+                     bound_soul ?
+                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                      mons->type);
-        if (spectre_type == MONS_HYDRA)
+        if (mons->mons_species() == MONS_HYDRA)
         {
             // Headless hydras cannot be made spectral hydras, sorry.
             if (mons->heads() == 0)
             {
-                mpr("A glowing mist gathers momentarily, then fades.");
+                if (!quiet)
+                    mpr("A glowing mist gathers momentarily, then fades.");
                 return;
             }
             else
@@ -1689,6 +1724,49 @@ item_def* monster_die(monster* mons, const actor *killer, bool silent,
     }
 
     return monster_die(mons, ktype, kindex, silent, wizard, fake);
+}
+
+/**
+ * Print messages for dead monsters returning to their 'true form' on death.
+ *
+ * @param mons      The monster currently dying.
+ */
+static void _special_corpse_messaging(monster &mons)
+{
+    if (!mons.props.exists(ORIGINAL_TYPE_KEY) && mons.type != MONS_BAI_SUZHEN)
+        return;
+
+    const monster_type orig
+        = mons.type == MONS_BAI_SUZHEN ? mons.type :
+                (monster_type) mons.props[ORIGINAL_TYPE_KEY].get_int();
+
+    if (orig == MONS_SHAPESHIFTER || orig == MONS_GLOWING_SHAPESHIFTER)
+    {
+        // No message for known shifters, unless they were originally
+        // something else.
+        if (!(mons.flags & MF_KNOWN_SHIFTER))
+        {
+            const string message = "'s shape twists and changes as "
+                                    + mons.pronoun(PRONOUN_SUBJECTIVE)
+                                    + " dies.";
+            simple_monster_message(&mons, message.c_str());
+        }
+
+        return;
+    }
+
+    // Avoid "Sigmund returns to its original shape as it dies.".
+    unwind_var<monster_type> mt(mons.type, orig);
+    const int num = mons.mons_species() == MONS_HYDRA
+                    ? mons.props["old_heads"].get_int()
+                    : mons.number;
+    unwind_var<unsigned int> number(mons.number, num);
+    const string message = " returns to " +
+                            mons.pronoun(PRONOUN_POSSESSIVE) +
+                            " original shape as " +
+                            mons.pronoun(PRONOUN_SUBJECTIVE) +
+                            " dies.";
+    simple_monster_message(&mons, message.c_str());
 }
 
 /**
@@ -2015,7 +2093,6 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         _druid_final_boon(mons);
     }
-
     else if (mons->type == MONS_ELEMENTAL_WELLSPRING
              && mons->mindex() == killer_index)
     {
@@ -2192,7 +2269,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL] && gives_player_xp)
-                _make_spectral_thing(mons, !death_message);
+                _make_spectral_thing(mons, !death_message, false);
             break;
         }
 
@@ -2252,7 +2329,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             // XXX: shouldn't this be considerably earlier...?
             if (you.duration[DUR_DEATH_CHANNEL] && was_visible)
-                _make_spectral_thing(mons, !death_message);
+                _make_spectral_thing(mons, !death_message, false);
 
             break;
         }
@@ -2270,9 +2347,10 @@ item_def* monster_die(monster* mons, killer_type killer,
                     // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
                         simple_monster_message(mons, " fades into mist!");
-                    // Animate Skeleton/Animate Dead
+                    // Animate Skeleton/Animate Dead/Infestation
                     else if (mons->type == MONS_ZOMBIE
-                             || mons->type == MONS_SKELETON)
+                             || mons->type == MONS_SKELETON
+                             || mons->type == MONS_DEATH_SCARAB)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }
@@ -2481,16 +2559,16 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         bennu_revive_fineff::schedule(mons->pos(), revives, att, mons->foe);
     }
-    else if (!mons->is_summoned())
-    {
-        if (mons_genus(mons->type) == MONS_MUMMY)
-            _mummy_curse(mons, killer, killer_index);
-    }
+    else if (!mons->is_summoned() && mummy_curse_power(mons->type) > 0)
+        _mummy_curse(mons, mummy_curse_power(mons->type), killer, killer_index);
+
+    if (mons->has_ench(ENCH_INFESTATION) && !was_banished && !mons_reset)
+        _infestation_create_scarab(mons);
 
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
         _activate_ballistomycetes(mons, mons->pos(),
-                                 YOU_KILL(killer) || pet_kill);
+                                  YOU_KILL(killer) || pet_kill);
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2514,6 +2592,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
+    if (corpse && mons->has_ench(ENCH_BOUND_SOUL))
+        _make_spectral_thing(mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(mons) : 0;
@@ -2588,40 +2668,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && leaves_corpse && corpse
-        && mons->props.exists(ORIGINAL_TYPE_KEY))
-    {
-        const monster_type orig =
-            (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
-
-        if (orig == MONS_SHAPESHIFTER || orig == MONS_GLOWING_SHAPESHIFTER)
-        {
-            // No message for known shifters, unless they were originally
-            // something else.
-            if (!(mons->flags & MF_KNOWN_SHIFTER))
-            {
-                const string message = "'s shape twists and changes as "
-                                     + mons->pronoun(PRONOUN_SUBJECTIVE)
-                                     + " dies.";
-                simple_monster_message(mons, message.c_str());
-            }
-        }
-        else
-        {
-            // Avoid "Sigmund returns to its original shape as it dies.".
-            unwind_var<monster_type> mt(mons->type, orig);
-            int num = mons->mons_species() == MONS_HYDRA
-                                        ? mons->props["old_heads"].get_int()
-                                        : mons->number;
-            unwind_var<unsigned int> number(mons->number, num);
-            const string message = " returns to " +
-                                   mons->pronoun(PRONOUN_POSSESSIVE) +
-                                   " original shape as " +
-                                   mons->pronoun(PRONOUN_SUBJECTIVE) +
-                                   " dies.";
-            simple_monster_message(mons, message.c_str());
-        }
-    }
+    if (!silent && !wizard && leaves_corpse && corpse)
+        _special_corpse_messaging(*mons);
 
     if (mons->is_divine_companion()
         && killer != KILL_RESET
@@ -2745,10 +2793,6 @@ void monster_cleanup(monster* mons)
 
     if (mons->has_ench(ENCH_AWAKEN_VINES))
         unawaken_vines(mons, false);
-
-    // So that a message is printed for the effect ending
-    if (mons->has_ench(ENCH_CONTROL_WINDS))
-        mons->del_ench(ENCH_CONTROL_WINDS);
 
     // So proper messages are printed
     if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))

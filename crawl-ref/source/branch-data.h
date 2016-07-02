@@ -52,7 +52,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', {}, 0 },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 8, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 6, 10,
       BFLAG_NONE,
       DNGN_ENTER_LAIR, DNGN_EXIT_LAIR, NUM_FEATURES,
       "Lair", "the Lair of Beasts", "Lair",
@@ -60,7 +60,7 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'L', {}, 4 },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SWAMP, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP, NUM_FEATURES,
       "Swamp", "the Swamp", "Swamp",
@@ -68,7 +68,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'S', { RUNE_SWAMP }, 0 },
 
-    { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SHOALS, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS, NUM_FEATURES,
       "Shoals", "the Shoals", "Shoals",
@@ -76,7 +76,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'A', { RUNE_SHOALS }, 3 },
 
-    { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE, NUM_FEATURES,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -84,7 +84,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREEN, YELLOW,
       'P', { RUNE_SNAKE }, 0 },
 
-    { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 4, 15,
+    { BRANCH_SPIDER, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER, NUM_FEATURES,
       "Spider Nest", "the Spider Nest", "Spider",
@@ -92,7 +92,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, YELLOW,
       'N', { RUNE_SPIDER }, 0 },
 
-    { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
+    { BRANCH_SLIME, BRANCH_LAIR, 5, 6, 5, 17,
       BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME, NUM_FEATURES,
       "Slime Pits", "the Pits of Slime", "Slime",

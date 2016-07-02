@@ -8,6 +8,7 @@
 function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
     e.depth_chance("Depths", 10000)
+-- D:21-27 entries for save compat, remove when TAG_MAJOR_VERSION > 34
     e.depth_chance("D:21-", 10000)
     e.kfeat(glyph .. " = enter_hell")
 end
@@ -782,7 +783,7 @@ NAME:   vestibule_tar_nicolae_necropolis
 TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
-KMONS:  z = place:Depths:1 zombie / lost soul
+KMONS:  z = place:Depths:1 zombie
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
            curse skull
 TILE:   c = dngn_stone_dark

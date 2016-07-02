@@ -72,7 +72,7 @@ The contents of this text are:
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
                 view_delay, force_more_message, flash_screen_message,
-                use_animations, cloud_status
+                use_animations, darken_beyond_range, cloud_status
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -864,22 +864,21 @@ runrest_stop_message += <regex>, <regex>, ...
 interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         (List option)
         Use this option to not interrupt a delayed action on a certain trigger.
-        The list of delay types is in delay.cc in the delay_names string array,
-        and the list of interruption types is in activity_interrupt_names.
+        To find the name of a delay type, look for the name() function in
+        delay.h. The list of interruption types is in activity_interrupt_names.
         For example, use
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
 
-runrest_safe_poison = <% of hp>:<% of mhp>
+delay_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
         by less than x% of your current hp and less than y% of your max
-        hp if you have defined runrest_safe_poison = x:y. Running here
-        means shift-running and resting only. Only one runrest_safe_poison
-        line is considered. Note that for this to work, Crawl needs to
-        know to ignore the "You feel sick" messages as well as the
-        damage. For example,
+        hp if you have defined delay_safe_poison = x:y. This applies to all
+        delays. Only one delay_safe_poison line is considered. Note that for
+        this to work with running and resting, Crawl needs to know to ignore
+        the "You feel sick" messages as well as the damage. For example,
              runrest_ignore_message ^= You feel.*sick
-             runrest_safe_poison = 80:100
+             delay_safe_poison = 80:100
         are the defaults.
 
 runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
@@ -1513,6 +1512,11 @@ use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
                              ability or casts a spell.
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
+
+darken_beyond_range = true
+        If set to true, everything beyond range when targeting will be
+        coloured grey. Setting this to false will also disable the "range"
+        category of the use_animations option.
 
 force_more_message += <regex>, <regex>
         (List option)
