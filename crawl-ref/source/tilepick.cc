@@ -3382,7 +3382,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_MAKHLEB_GREATER_SERVANT;
     // Sif Muna
     case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        return TILEG_ERROR:
+        return TILEG_ERROR;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;
     case ABIL_SIF_MUNA_FORGET_SPELL:
