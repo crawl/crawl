@@ -1056,7 +1056,7 @@ static void _remove_amulet_of_faith(item_def &item)
         // next sacrifice is going to be delaaaayed.
         if (you.piety < piety_breakpoint(5))
         {
-#ifdef DEBUG
+#ifdef DEBUG_DIAGNOSTICS
             const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
 #endif
             ru_reject_sacrifices(true);
