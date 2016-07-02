@@ -3703,8 +3703,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     if (you.hunger_state != HS_ENGORGED)
         lessen_hunger(30 + random2avg(59, 2), false);
 
-    did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
-
     return true;
 }
 
