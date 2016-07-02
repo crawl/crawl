@@ -158,7 +158,9 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Sif Muna
-    { { 1, "tap ambient fields to cast spells at low magical energy" },
+    { { 1, ABIL_SIF_MUNA_DIVINE_ENERGY, "request divine energy to cast spells "
+                                        "with insufficient magic",
+           "request divine energy" },
       { 2, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
       { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
@@ -2481,6 +2483,9 @@ void lose_piety(int pgn)
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
                 }
+                // Deactivate the toggle
+                if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
+                    you.attribute[ATTR_DIVINE_ENERGY] = 0;
             }
         }
 #ifdef USE_TILE_LOCAL
@@ -2723,6 +2728,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_SIF_MUNA:
         if (you.duration[DUR_CHANNEL_ENERGY])
             you.duration[DUR_CHANNEL_ENERGY] = 0;
+        if (you.attribute[ATTR_DIVINE_ENERGY])
+            you.attribute[ATTR_DIVINE_ENERGY] = 0;
         _set_penance(old_god, 50);
         break;
 

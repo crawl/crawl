@@ -772,24 +772,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
     int sifcast_amount = 0;
     if (!enough_mp(cost, true))
     {
-        if (have_passive(passive_t::no_mp_casting))
+        if (you.attribute[ATTR_DIVINE_ENERGY])
         {
-            simple_god_message(" offers you divine energy.");
-            string prompt = make_stringf("Temporarily lose access to your "
-                                         "magic to cast %s?",
-                                         spell_title(spell));
-
-            if (!yesno(prompt.c_str(), true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                crawl_state.zero_turns_taken();
-                return false;
-            }
-            else
-            {
-                sifcast_amount = cost - you.magic_points;
-                cost = you.magic_points;
-            }
+            sifcast_amount = cost - you.magic_points;
+            cost = you.magic_points;
         }
         else
         {
@@ -893,6 +879,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     if (sifcast_amount)
     {
+        simple_god_message(" grants you divine energy.");
         mpr("You briefly lose access to your magic!");
         you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
     }

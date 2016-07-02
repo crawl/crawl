@@ -414,6 +414,8 @@ static const ability_def Ability_List[] =
       {FAIL_INVO, 90, 2, 5}, abflag::HOSTILE },
 
     // Sif Muna
+    { ABIL_SIF_MUNA_DIVINE_ENERGY, "Divine Energy",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -1618,6 +1620,7 @@ bool activate_talent(const talent& tal)
         case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
         case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        case ABIL_SIF_MUNA_DIVINE_ENERGY:
             hungerCheck = false;
             break;
         default:
@@ -2441,6 +2444,22 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         summon_berserker(you.piety +
                          random2(you.piety/4) - random2(you.piety/4),
                          &you);
+        break;
+
+    case ABIL_SIF_MUNA_DIVINE_ENERGY:
+        if (!you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            simple_god_message(" will now grant you divine energy when your "
+                               "reserves of magic are depleted.");
+            mpr("You will briefly lose access to your magic after casting a "
+                "spell in this manner.");
+            you.attribute[ATTR_DIVINE_ENERGY] = 1;
+        }
+        else
+        {
+            simple_god_message(" stops granting you divine energy.");
+            you.attribute[ATTR_DIVINE_ENERGY] = 0;
+        }
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
