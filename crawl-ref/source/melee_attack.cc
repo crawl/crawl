@@ -1973,6 +1973,10 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
     if (!actor_can_lose_heads(defender))
         return false;
 
+    // no decapitate on riposte (Problematic)
+    if (is_riposte)
+        return false;
+
     // Monster attackers+defenders have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons
