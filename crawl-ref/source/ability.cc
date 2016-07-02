@@ -2456,6 +2456,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             4 + random2avg(you.skill_rdiv(SK_INVOCATIONS, 2, 3), 2), 100);
         break;
     }
+
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
         if (you.duration[DUR_LIFESAVING])
