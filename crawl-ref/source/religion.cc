@@ -4517,8 +4517,10 @@ static void _place_delayed_monsters()
                 if (placed == 1)
                     msg = replace_all(msg, "@servant@", mon->name(DESC_A));
                 else
+                {
                     msg = replace_all(msg, "@servant@",
                                       pluralise(mon->name(DESC_PLAIN)));
+                }
             }
 
             prev_god = GOD_NO_GOD;
