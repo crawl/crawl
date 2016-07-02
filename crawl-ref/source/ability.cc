@@ -1610,9 +1610,14 @@ bool activate_talent(const talent& tal)
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
         case ABIL_STOP_SINGING:
+        case ABIL_STOP_RECALL:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
+        case ABIL_HEPLIAKLQANA_IDENTITY:
+        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+        case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
             hungerCheck = false;
             break;
         default:
@@ -3028,7 +3033,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HEPLIAKLQANA_IDENTITY:
         hepliaklqana_choose_identity();
-        return SPRET_ABORT; // always free
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
