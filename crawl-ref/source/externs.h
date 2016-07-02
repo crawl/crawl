@@ -720,8 +720,6 @@ private:
     bool run_should_stop() const;
 };
 
-class delay;
-
 enum mon_spell_slot_flag
 {
     MON_SPELL_NO_FLAGS  = 0,
