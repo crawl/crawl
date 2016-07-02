@@ -94,42 +94,59 @@ MAP
 ENDMAP
 
 NAME:    eino_jars
-TAGS:    extra
+TAGS:    patrolling uniq_beehive
 DEPTH:   D:7-14
-SHUFFLE: 11%
-MONS:    killer bee / nothing w:5
-SUBST:   % = %*
+KMONS:   1 = killer bee
+KMONS:   2 = meliai
+KITEM:   1 = %
+KITEM:   2 = *
+: if you.absdepth() < 12 then
+NSUBST:  1 = 1:1 / * = 11.
+: else
+NSUBST:  1 = 1:2 / 2 = 21 / 1:. / * = 11.
+: end
 MAP
-xxxxxx
-x1111x
-x1111x
-x++++x
-@....@
+ xxxxx
+ x111x
+ x1x1x.@.
+ x+++x.x.
+...........
+  .x.x+++x
+  .@.x1x1x
+     x111x
+     xxxxx
 ENDMAP
 
-# Beehive which needs digging to access
+# Beehive which needs digging to access.
 NAME:   hive_lemuel
-TAGS:   uniq_beehive
+TAGS:   no_trap_gen
 DEPTH:  D:9-, Spider
-MONS:   killer bee, wasp, hornet
+MONS:   killer bee, meliai, queen bee, wasp, hornet
 KMONS:  *R = worm
-SUBST:  ? : .w
-SUBST:  1 = 1 a:2, 1 : 1:15 2 3:2
-SUBST:  * : * R:3
 KITEM:  * = *
 KITEM:  R = royal jelly
+SUBST:  ? : .w
+SUBST:  * : * R:3
+# Since one has to dig the bees out, early meliai are fine.
+: if crawl.x_chance_in_y(15, 27) then
+TAGS:   uniq_beehive
+NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
+: else
+TAGS:   uniq_wasphive
+SUBST:  1 : 4 5:4
+: end
 COLOUR: x = yellow
 TILE:   x = wall_wax
 MAP
   ????????
  ??????????
 ???xxxxxx???
-??xmxxxxmx??
+??xmxxxxxx??
 ??xx1111xx??
 ??xx1**1xx??
 ??xx1**1xx??
 ??xx1111xx??
-??xmxxxxmx??
+??xxxxxxmx??
 ???xxxxxx???
  ??????????
   ????????
@@ -137,23 +154,26 @@ ENDMAP
 
 # Beehive minivault
 NAME:   minivault_7
-TAGS:   uniq_beehive
+TAGS:   uniq_beehive patrolling
 DEPTH:  D:9-
-MONS:   patrolling queen bee, patrolling killer bee
+MONS:   queen bee, meliai, killer bee
 KITEM:  R = royal jelly
 COLOUR: x = yellow
 TILE:   x = wall_wax
+: if you.absdepth() < 12 then
+SUBST:  2 = 3
+: end
 MAP
 ............
 ....xxxx....
-..x2x2xxxx..
-..xxRx2x2x..
-.xx2xRx2xxx.
-.x2xRx1xRx2.
-.xx2xRxRx2x.
-.xxx2x2x2xx.
-..x2xRx2xx..
-...xx2xx2x..
+..x3x3xxxx..
+..xxRx3x2x..
+.xx3xRx3xxx.
+.x2xRx1xRx3.
+.xx3xRxRx3x.
+.xxx3x3x3xx.
+..x3xRx3xx..
+...xx2xx3x..
 ....xxxx....
 ............
 ENDMAP
@@ -181,87 +201,98 @@ YXXXXXXXXY
 YYYYYYYYYY
 ENDMAP
 
-# Anthill
-NAME:  minivault_29
-TAGS:  patrolling uniq_anthill
-DEPTH: D:8-13, Lair, Spider
-MONS:  queen ant, soldier ant, worker ant
-SUBST: 0 = 3.
-: if you.in_branch("Spider") then
-SUBST: 3 = 3332, ' = %
+# Anthill origins
+NAME:   minivault_29
+TAGS:   uniq_anthill
+DEPTH:  D:8-13, Lair:2-, Spider
+MONS:   patrolling worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  0 = 1., ' = .
+: else
+NSUBST: 0 = 2:3 / * = 12
+SUBST:  ' = %
 : end
 MAP
-'3......3..'
+'1......1..'
 ...x.xx.x.2.
 .xxx2xxxxx..
 .xxxx02xxx2.
-.2xx203032x3
-.xx021020xx.
-3xx023202x..
-.x2x3203xxx.
+.2xx201012x1
+.xx024020xx.
+1xx021202x..
+.x2x1201xxx.
 .x2xx02022x.
 ..xxxxxxxx2.
-...x2xxxx3..
-'3.......33'
+...x2xxxx1..
+'1.......11'
 ENDMAP
 
 NAME:   zaba_anthell
 TAGS:   no_rotate uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   queen ant, soldier ant, worker ant
-SUBST:  0 = 233, ? = . x
-: if you.in_branch("Spider") then
-SUBST:  3 = 3332, ' = %
+MONS:   patrolling worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+SUBST:  X = x.
+NSUBST: @ = 1:@ / * = x.
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  1 = 111., 0 = 112, 3' = .
+: else
+SUBST:  1 = 112., 0 = 11122, ' = %
 : end
 MAP
-     ?  ? ? ?  ?
-   ??x?x?x?x?x?x??
-  ??x?3?.?3?.?3?x??
- ??x.?..3.?.3.?.0x??
- ?x?0000?.2?....0?x?
-?x?..?....?'.?2?03?x?
- ?33.0?.'?2?..?.033?
-?x?3?...?212?...?3?x?
- ?330.?..?2?'.?0.33?
-?x?30?2?.'?....?..?x?
- ?x?0....?2.?0000?x?
- ??x0.?.3.?.3..?.x??
-  ??x?3?.?3?.?3?x??
-   ??x?x?x?x?x?x??
-     ?  ? ? ?  ?
+     X  X X X  X
+   XXx@x@x@x@x@xXX
+  X@xX1X.X1X.X1Xx@X
+ XXx.X..1.X.1.X.0xXX
+ XxX0000X.2X....0xxX
+XxX..X....X'.X2X01XxX
+ @11.0X.'X2X3.X.011@
+XxX1X...X242X...X1XxX
+ @110.X.3X2X'.X0.11@
+XxX10X2X.'X....X..XxX
+ XxX0....X2.X0000XxX
+ XXx0.X.1.X.1..X.xXX
+  X@xX1X.X1X.X1Xx@X
+   XXx@x@x@x@x@xXX
+     X  X X X  X
 ENDMAP
 
 NAME:  zaba_antful_of_joy
 TAGS:  no_rotate uniq_anthill
-DEPTH: D:8-13, Lair, Spider
-MONS:  queen ant, soldier ant, worker ant
-KFEAT: ^ = known alarm trap / .
-: if you.in_branch("Spider") then
-SUBST: 3 = 3332., ' = %
+DEPTH: D:8-13, Lair:2-, Spider
+MONS:  patrolling worker ant, soldier ant
+MONS:  entropy weaver, patrolling queen ant
+KFEAT: ^ = known alarm trap
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST: 1 = 11., 2 = 221, 3 = ., ^ = ^.
 : else
-SUBST: 2 = 223, 3 = 33.
+SUBST: 1 = 112., ' = %
 : end
 MAP
     xxxxxxxxxxx
-   xx333xxx333xx
-   x33333x33333x
-  xxx...xxx...xxx
+   xx131xxx131xx
+   x11111x11111x
+  xxx.1.xxx.1.xxx
  xxx..x..x..x..xxx
 xx.2.xxx222xxx.2.xx
-x'333.x32123x.333'x
+x'111.x12421x.111'x
 xx...xxx222xxx...xx
- xxx..x.3x3.x..xxx
+ xxx..x.1x1.x..xxx
   xxx.^.xxx.^.xxx
    x'....x....'x
    xx...xxx...xx
-    xxx33x33xxx
+    xxx11x11xxx
       xx.^.xx
        x+++x
 ENDMAP
 
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen no_pool_fixup
-DEPTH: D:8-, Lair, Spider
+DEPTH: D:8-13, Lair, Spider
 KMONS: 1 = worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
@@ -287,12 +318,16 @@ ENDMAP
 NAME:   minmay_another_anthill
 TAGS:   uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant / nothing, worker ant, soldier ant, patrolling queen ant
-SUBST:  a = 1223........x
-: if you.in_branch("Spider") then
-SUBST:  3 = 3332
-NSUBST: . = 4:% / *:.
+MONS:   patrolling worker ant, worker ant, soldier ant
+MONS:   entropy weaver, patrolling queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  ab = 1:5 2:20 3 .:85 x
+: else
+NSUBST: b = 2:4 / 2:* / *:2
+SUBST:  a = 1:10 2:15 3:15 .:80 x
 : end
+validate {{ return has_exit_from_glyph('5') }}
 MAP
   .. .... .. .
  .xx.xxxx.xx.x.
@@ -300,9 +335,9 @@ MAP
 .x..xaaaaxaaaxx.
  .xxaaxaaaaxxax.
 .x.xaaaaaaaaxx.
-.xxaaaaaxaaaaxx.
-.x.xxaa4aaaaax.
-.x.aaaaaaaaax.x.
+.xxaaabbbaaaaxx.
+.x.xxab5baaaax.
+.x.aaabbbaaax.x.
  .xaxaaaxxaaa.x.
 .x.xaaaaaxaaaxx.
  ..xaaxaaaaax.x.
@@ -358,14 +393,19 @@ MAP
 ENDMAP
 
 NAME:   nicolae_looking_at_the_future
-TAGS:   no_monster_gen no_trap_gen uniq_beehive
+TAGS:   no_monster_gen no_trap_gen uniq_beehive patrolling
 DEPTH:  D:8-, Spider
-KMONS:  B = patrolling queen bee
-KMONS:  b = patrolling killer bee
+KMONS:  B = queen bee
+KMONS:  b = killer bee
+KMONS:  M = meliai
 KMONS:  p = plant
-NSUBST: b = 1:B / 1:b / * = bb.
 : if you.in_branch("Spider") then
 SUBST:  + = .
+: end
+: if you.absdepth() > 12 then
+NSUBST: b = 1:B / 3:M / *:b
+: else
+NSUBST: b = 1:B / 1:b / * = bb.
 : end
 MAP
 xxxxx++xxxxx
@@ -1022,10 +1062,60 @@ MAP
 ............
 ENDMAP
 
+NAME:   argonaut_fire_from_heaven
+DEPTH:  Depths:2-
+KMONS:  T = titan
+KMONS:  2 = caustic shrike
+KFEAT:  m = iron_grate
+KITEM:  T = randbook disc:fire, lamp of fire / gold good_item
+KFEAT:  T = <
+NSUBST: 2 = 1:2 / 1:. / * = 2.
+KPROP:  T = no_tele_into
+MAP
+..xxxxxxx.@
+..........x
+xxxxx2....x
+xcccx...2.x
+xcTm..2..Cx
+xcccx...2.x
+xxxxx2....x
+..........x
+..xxxxxxx.@
+ENDMAP
+
+# Medium trappings still informed by Topsell, I guess.
+NAME:   argonaut_gorgonesque
+TAGS:   no_monster_gen
+DEPTH:  D:12-, Shoals
+MONS:   harpy, basilisk, catoblepas
+KMONS:  P = withered plant
+ITEM:   shield ego:reflection ident:type / \
+        buckler ego:reflection ident:type w:1 / \
+        large shield ego:reflection ident:type w:1
+ITEM:   stone
+NSUBST: H = 4:G / 2:G. / *:e
+MAP
+     xxxxxxx
+   xxxx1x.xxx
+  xxxxxx2xxxxxx
+ xxx.H.....H.xxx
+xxx.....H.....xxx
+x.x.....3.....x1x
+xx2.....H.....2xx
+x1x..H..d..H..x.x
+xxx.....G.....xxx
+ xxx.........xxx
+  xxxxHx.xHxxxx
+   xxxxx.xxxxxx
+    xxx.Gxxxx
+      xxPxx
+       @..
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
-#       Goblins, gnolls, orcs, ogres etc. We include spriggans and centaurs.
+#       Goblins, gnolls, orcs, ogres etc. We include e.g. spriggans, centaurs.
 #
 ###############################################################################
 
@@ -1453,24 +1543,25 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 DEPTH:  Depths, Elf, Lair:4-
-: if you.in_branch("Lair") then
-MONS:   patrolling spriggan druid n_adj n_noc name:young hd:8
-: else
-MONS:   patrolling spriggan druid
-: end
 MONS:   black bear / polar bear w:20 / wolf w:20
-FTILE:  .t12%@ = floor_moss
+MONS:   patrolling boggart, patrolling spriggan druid
+: if you.in_branch("Lair") then
+SUBST:  ' = 2, 3 = .
+: else
+SUBST:  ' = .
+: end
+FTILE:  .t123%@ = floor_moss
 MAP
 ttttt       tttt@t
-tttttt tt ttttt2tt
-t2tttttttttttt.ttt
+tttttt tt ttttt1tt
+t1tttttttttttt.ttt
 @t..ttttttttt.tttt
-tttt..t%ttt..tttt
-tttttt.1...ttttt
- ttttt..tttttttt
- tttt.ttttttttt
+tttt.'t%ttt..tttt
+tttttt.3..'ttttt
+ ttttt.'tttttttt
+ tttt'ttttttttt
 tttt.tttttttt
-tttt2tttttt
+tttt1tttttt
  tttt@ttt
 ENDMAP
 
@@ -1964,11 +2055,11 @@ wccw.wccw
 wwww@wwww
 ENDMAP
 
-NAME: lightli_wizard_tower
-TAGS: no_monster_gen
+NAME:  lightli_wizard_tower
+TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS: patrolling wizard, patrolling crimson imp
-ITEM: any book, any scroll
+MONS:  patrolling wizard, patrolling crimson imp
+ITEM:  any book, any scroll
 MAP
    bbbb
   bbdebb
@@ -1982,45 +2073,21 @@ bb......bb
    b++b
 ENDMAP
 
-NAME: amalloy_card_club
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:2-, Orc, Elf
-# a pair of 2s, playing against a pair of either 1(hard) or 3(easy)
-SHUFFLE: 12
-SUBST: 1 : 13
-# We want this vault to be placeable in a large range of depths, but can't just
-# use auto-scaling monster placement because we want:
-# - two pairs of identical monsters (sitting in pairs across the table)
-# - monsters who would plausibly be playing cards (ie, not beetles)
-# So instead we hand-pick monster sets for elf, orc, and early/mid/late D, and
-# scale the deck quality accordingly - it's mostly for theming, but we might as
-# well make it depth-appropriate loot too.
-: if you.in_branch("Elf") then
-MONS: deep elf mage, deep elf mage, deep elf mage
-ITEM: legendary deck
-: elseif you.in_branch("Orc") then
-MONS: orc warrior, orc wizard, orc
-ITEM: ornate deck / w:5 legendary deck
-: elseif you.depth() >= 12 then
-MONS: hill giant, two-headed ogre, ogre
-ITEM: ornate deck
-: elseif you.depth() >= 6 then
-MONS: crimson imp / shadow imp, orc wizard, orc
-ITEM: plain deck / w:5 ornate deck
-: else
-MONS: gnoll, hobgoblin, goblin
-ITEM: plain deck
-: end
-# Occasionally one of them brings a snack to the table.
-NSUBST: . = 1:e
-ITEM: nothing / w:2 bread ration / w:2 meat ration / w:2 fruit q:1\
-      / w:1 potion of ambrosia
+NAME:  minmay_a_box_with_orc_wizards_in_it
+DEPTH: D:4-7
+MONS:  orc wizard, orc priest
+ITEM:  any book
+SUBST: 1 : 1:49 2:1, 1 = 1., 2 = 2.
 MAP
-xx+xx
-x.1.x
-x2d2x
-x.1.x
-xxxxx
+  .....
+ ..xxx..
+...m1x...
+.mmm1xxm.
+.m11d11m.
+.mxx1mmm.
+...+1m...
+ ..xxx..
+  .....
 ENDMAP
 
 ################################################################################
@@ -2203,7 +2270,7 @@ ENDMAP
 # Bad water, a lot of carrion and feeders around, yuck!
 NAME:   roderic_carrion_pond
 TAGS:   no_monster_gen no_trap_gen
-DEPTH:  Lair:2-7, Swamp
+DEPTH:  Lair:2-, !Lair:$, Swamp
 MONS:   necrophage
 SUBST:  ' = 111.
 SUBST:  ? = %%.
@@ -2334,6 +2401,25 @@ xc.....+''''1'''''cx
 xct....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   hangedman_tell_no_tales
+DEPTH:  D:9-, !D:$
+TAGS:   no_monster_gen no_item_gen patrolling
+MONS:   spriggan skeleton / centaur skeleton
+MONS:   troll skeleton / hungry ghost
+KMONS:  A = unseen horror
+ITEM:   fruit q:1, royal jelly q:q, bread ration q:1
+SUBST:  D : DDDDE
+NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
+MAP
+ cccccccccc
+ccxx1x1+DDc
+c.x.x..mDDc
+@.d.x2.mDDc
+c.x.x..cc+c
+ccxx1x.c1fc
+ cccccccccc
 ENDMAP
 
 NAME:   hangedman_weighted_door
@@ -2539,14 +2625,15 @@ DEPTH: D:12-, Depths, !Depths:$, Lair:2-, Coc, !Coc:$
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
 KMONS: 3 = ice devil / ice dragon / freezing wraith
-KMONS: 4 = ice fiend / blizzard demon / shard shrike
+KMONS: 4 = ice fiend / blizzard demon
+KMONS: 5 = shard shrike
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
 SUBST:  3 = 4, 2 = 223
 NSUBST: | = 1:1 / *:|
 : end
 : if you.in_branch("Cocytus") then
-SUBST: | = .
+SUBST:  4 = 445, | = .
 : else
 SUBST: | = ||****%%%%
 SUBST: T = TU
@@ -2690,6 +2777,25 @@ ccccccccc.c
 ccccccccc@c
 ENDMAP
 
+NAME:   hangedman_tree_tricks
+DEPTH:  D:8-, !D:$
+TAGS:   extra no_monster_gen
+NSUBST: T = 1:. / 1:t
+KMONS:  1 = oklob plant
+KITEM:  1A_ = fruit q:3
+KFEAT:  _ = altar_fedhas
+MAP
+ tttttttttt
+tttt.ttttttt
+@tt.t.tttttt
+t.tt.t.Tt1tt
+t.t.ttT.A$tt
+tt.ttttA_Att
+t.t.tt1$Attt
+tt.ttttttttt
+ tttttttttt
+ENDMAP
+
 NAME:   disabler_island
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:8-14, Lair
@@ -2738,7 +2844,7 @@ ENDMAP
 # nearby downstairs exit is generated, to provide another option.
 #
 # Monster set: currently only the classical stationary monsters, i.e.
-# statues, oklob plants, burning bush, curse skulls.
+# statues, oklob plants.
 # This could be expanded: pool with electric eel, or monsters behind grates.
 #
 NAME:     dpeg_stationary_puzzle
@@ -5544,6 +5650,238 @@ xccccccccccx
 xxxxxxxxxxxx
 ENDMAP
 
+NAME:    minmay_checkerbox
+DEPTH:   D:3-
+SHUFFLE: "'
+SUBST:   " = ., ' = x
+SHUFFLE: xxxm
+SUBST:   x : x:40 cvbm
+: if you.absdepth() < 9 then
+SUBST:   9 = 0
+: end
+MAP
+ .......
+."mx0xm".
+.m'...'m.
+.x.xmx.x.
+.m.9|9.m.
+.x.xmx.x.
+.m'...'m.
+."mx0xm".
+ .......
+ENDMAP
+
+NAME:  minmay_bent
+DEPTH: D:4-
+SUBST: " : "'
+SUBST: " : .:100 xcvbnmGTt0
+SUBST: ' : .:100 xcvbnmGt0%
+SUBST: 0 = 00.
+: if you.absdepth() < 9 then
+SUBST: 9 = 0
+: end
+MAP
+     .....
+    ..xxx0
+  ...xx...0.
+  ."0x*.'.x.
+ ..0*x.'..x.
+..xxxx9..xx.
+.xx..9xxxx..
+.x..'.x*0..
+.x.'.*x0".
+.0...xx...
+  0xxx..
+  .....
+ENDMAP
+
+NAME:    minmay_ruined_shrine
+DEPTH:   D:4-
+SUBST:   c = ccc.
+SUBST:   c : c b:2 v:2
+NSUBST:  0 = 2:0 / 6 = 0.. / *:.
+SHUFFLE: '"
+SUBST:   " : 0:75 ':75 xcvbnTG t:5
+SUBST:   ' : 0:75 xcvbnTG t:5
+: if you.absdepth() < 9 then
+SUBST:   9 = 0
+: end
+MAP
+    .......
+   ..ccccc..
+  ..ccccccc..
+ ..ccc9C9ccc..
+..ccc00"00ccc..
+.ccc00'0'00ccc.
+.cc*0000000*cc.
+.cccccc0cccccc.
+.cccccc0cccccc.
+......000......
+ENDMAP
+
+NAME: minmay_checkered_concentric_circles
+DEPTH: D:12-, Depths, Elf
+SHUFFLE: vc / vc / vc / vc / vb / vn / cb / cn
+NSUBST:  8 = 1:8 / 1:. / * = 8.
+NSUBST:  9 = 1:9 / 1:. / * = 9.
+MAP
+     .....
+   ...vcv...
+  ..cvc8cvc..
+ ..cv.9.9.vc..
+ .cv9.....9vc.
+..v...vcv...v..
+.vc8.vc|cv.9cv.
+.c8..+|||c...+.
+.vc8.vc|cv.9cv.
+..v...vcv...v..
+ .cv9.....9vc.
+ ..cv.9.9.vc..
+  ..cvc8cvc..
+   ...vcv...
+     .....
+ENDMAP
+
+NAME:  minmay_tall_x
+DEPTH: D:1-2
+MAP
+.......
+.xx.xx.
+..x0x..
+ .%x%.
+ 0xbx0
+ .%x%.
+..x0x..
+.xx.xx.
+.......
+ENDMAP
+
+NAME:  minmay_split_cup_small
+DEPTH: D:1-2
+MAP
+.......
+.xxxxx.
+.x0x%x.
+.x0.%..
+.x0x%x.
+.xxxxx.
+.......
+ENDMAP
+
+NAME:  minmay_split_cup_large
+DEPTH: D:1-2
+SUBST: b : xcvbmGT%0 .:50
+MAP
+.........
+.xxxxxxx.
+.x0...0x.
+.xx0b0xx.
+.x%%.%%x.
+.xxx.xxx.
+.........
+ENDMAP
+
+NAME:  minmay_tripent
+DEPTH: D:1-2
+MAP
+ .. ...
+..x.xx.
+.xxx0x.
+ .x%x.
+.x0xxx.
+.xx.x..
+... ..
+ENDMAP
+
+NAME:  minmay_tiny_reverse_x
+DEPTH: D:1-2
+MAP
+.. . ..
+.x.x.x.
+ .x%x.
+.x0.0x.
+ .x%x.
+.x.x.x.
+.. . ..
+ENDMAP
+
+NAME:  minmay_small_reverse_x
+DEPTH: D:1-2
+MAP
+........
+.x.xx.x.
+..x0%x..
+.x%bb0x.
+.x0bb%x.
+..x%0x..
+.x.xx.x.
+........
+ENDMAP
+
+NAME:   minmay_guardbox
+DEPTH:  D:2-3
+WEIGHT: 1
+MAP
+0000
+0%%0
+0%%0
+0000
+ENDMAP
+
+NAME:    minmay_randomly_rotated_circles
+DEPTH:   D:2-3
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOP
+SUBST:   AI : ., BCDEFGHJKLMNOP : x
+SUBST:   b : bxcvm 0:5 .:5 %:5
+MAP
+    ........
+  ...BBBCCC...
+ ..BBB....CCC..
+ .AA........CD.
+..A..JJJKKK..D..
+.AA.II...0KL.DD.
+.A..I0.%%.0L..D.
+.A..I.%bb%.L..D.
+.H..P.%bb%.M..E.
+.H..P0.%%..M..E.
+.HH.PO0..0MM.EE.
+..H..OOONNN..E..
+ .HG........EE.
+ ..GGG....FFF..
+  ...GGGFFF...
+    ........
+ENDMAP
+
+NAME:    minmay_swirly_circle
+DEPTH:   Depths
+SUBST:   x : ccvvb
+MAP
+       ........
+    ....xxxxxx....
+   ..xxxx....9xxx..
+  ..xxxx.xxxxxxxxx..
+ ..xx|xx.xx|xxx.8xx..
+ .xx8xxx.xxx8x.xx|xx.
+ .xx.xxx.xxx.x.xxxxx.
+..xxx...x...xx.xxxxx..
+.x9xxxxxxxxx.xx....xx.
+.x.xx8.x.9xx9x.xxxx.x.
+.x.x|xx.xx**xx.xxxx.x.
+.x.xxxx.xx**xx.xx|x.x.
+.x.xxxx.x9xx9.x.8xx.x.
+.xx....xx.xxxxxxxxx9x.
+..xxxxx.xx...x...xxx..
+ .xxxxx.x.xxx.xxx.xx.
+ .xx|xx.x8xxx.xxx8xx.
+ ..xx8.xxx|xx.xx|xx..
+  ..xxxxxxxxx.xxxx..
+   ..xxx9....xxxx..
+    ....xxxxxx....
+       ........
+ENDMAP
+
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
@@ -5864,42 +6202,6 @@ MAP
  ...............
 ENDMAP
 
-# sword of the Doom Knight
-# A temple to Yredelemnul, with a champion wielding the blade designate.
-NAME:   grunt_unrand_guarded_doom_knight
-TAGS:   no_monster_gen no_item_gen patrolling
-DEPTH:  Depths, Crypt
-WEIGHT: 3
-MONS:   death knight ; \
-        sword_of_the_doom_knight . \
-        chain mail w:7 | \
-        plate armour w:1
-MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   freezing wraith / phantasmal warrior / \
-        jiangshi / flayed ghost / skeletal warrior
-KFEAT:  _ = altar_yredelemnul
-KFEAT:  - = open_door
-MAP
-    ccccc
-    c2_3c
-    c.1.c
-    c465c
-ccccc+++ccccc
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-c7-.G...G.-7c
-ccc.......ccc
-ccccc+++ccccc
-     .@.
-ENDMAP
-
 # autumn katana
 # An autumnal forest, with warriors paying respect to the last wielder
 NAME:    wheals_unrand_guarded_autumn_katana
@@ -5931,6 +6233,293 @@ ttttttttttttttttttttt
 ttttttttttttttttttttt
 ENDMAP
 
+NAME:    minmay_guarded_unrand_prune
+DEPTH:   D:12-
+MONS:    deep elf mage / ogre mage / wizard / \
+         kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
+NSUBST:  1 = 6:1 / 10=1.... / .
+: if you.unrands("glaive of prune") then
+ITEM:    any weapon good_item randart no_pickup
+: else
+ITEM:    glaive_of_prune no_pickup
+: end
+SUBST:   " : .:50 cvbnG
+SUBST:   ' : .:50 cvbnG
+SUBST:   ? : .:50 cvbnG
+SUBST:   ! : .:60 cvbnGT
+KMASK:   l = no_monster_gen
+MAP
+     ...........
+   ...lvlv1vlvl...
+  ..vlvvvv1vvvvlv..
+ ..lvvvlvl1lvlvvvl..
+ .vvvlv1111111vlvvv.
+..lvl111"'?'"111lvl..
+.lvvv1"'?1"1?'"1vvvl.
+.vvl11'111!111'11lvv.
+.lvv1"?1!111!1111vvl.
+.vvl1'111lvlvlvlvlvv.
+.1111?"!1vvvvvvvvvvl.
+.vvl1'111lvG.G.G.Gvv.
+.lvv1"?1!vv.U...U.vl.
+.vvl11'11lvG.b.b.Gvv.
+.lvvv1"'1.+...d.Gvvl.
+..lvl1111lvG.b.b.vl..
+ .vvvlv11vv.U.G.vvv.
+ ..lvvvlvlvG.Gvvvl..
+  ..vlvvvvvvvvvlv..
+   ...lvlvlvlvl...
+     ...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_variability
+DEPTH:   D:8-
+MONS:    chaos spawn
+KFEAT:   _ = altar_xom
+: if you.unrands("mace of variability") then
+# could be a launcher!
+ITEM:    any weapon good_item randart ego:chaos ident:type no_pickup
+: else
+ITEM:    mace_of_variability no_pickup
+: end
+# walls are carefully placed and guarantee no islands
+SUBST:   x = xcvbmGwWlTUVYt+ <:4 >:4 A:2 1:160
+NSUBST:  1 = 2:1 / 2:% / 3=1%...... / .
+MAP
+...........
+.1xxx11xxx.
+.x1xxxx1xx.
+.xxxxx1xxx.
+.xxxx_xxxx.
+.x1xx1xxx1.
+.1xxxdxx1x.
+.1xx1xxxxx.
+.x11xxxxxx.
+.xxxxxx1xx.
+...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_staff_of_olgreb
+DEPTH:   D:5-10
+MONS:    worker ant / soldier ant
+MONS:    killer bee
+MONS:    adder / water moccasin
+: if you.unrands("staff_of_olgreb") then
+ITEM:    book of envenomations / young poisoner's handbook / \
+         ring of poison resistance ident:type / staff of poison ident:type / \
+         swamp dragon armour / swamp dragon hide
+: else
+ITEM:    staff_of_olgreb no_pickup
+: end
+NSUBST:  1 = 5:1 / 6=1.. / ., 2 = 5:2 / 9=2.. / ., 3 = 5:3 / 6=1.. / .
+MAP
+      ...
+      .b.
+      .b.
+     ..b..
+     .bbb.
+     .ndn.
+    ..b+b..
+    .bb2bb.
+   ..n222n..
+  ..bb222bb..
+ ..bb22222bb..
+..bb2222222bb..
+.bb=bb222bb=bb.
+.n111bbnbb333n.
+.b1111n*n3333b.
+.b1111b*b3333b.
+.n1111===3333n.
+.bb111b.b333bb.
+..bbb1b.b3bbb..
+ ...bnb.bnb...
+   .........
+ENDMAP
+
+
+NAME:    minmay_guarded_unrand_vampires_tooth
+DEPTH:   D:4-6
+MONS:    bat, vampire bat
+: if you.unrands("vampires_tooth") then
+ITEM:    dagger randart no_pickup
+: else
+ITEM:    vampires_tooth no_pickup
+: end
+MAP
+.........
+.ccc.ccc.
+.1c...c1.
+.cc...cc.
+.1c2Y2c1.
+.ccd..cc.
+.1c...c1.
+.ccccccc.
+.........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_wrath_of_trog
+DEPTH:   D:14-, Depths
+MONS:    spriggan berserker
+NSUBST:  1 = 3:1 / 9=1...... / .
+: if you.unrands("wrath_of_trog") then
+ITEM:    executioner's axe randart ego:antimagic ident:type no_pickup
+: else
+ITEM:    wrath_of_trog no_pickup
+: end
+MAP
+    .......
+   .."""""..
+  .."ttttt"..
+ .."tt"""tt"..
+.."tt"111"tt"..
+."tt"11c11"tt".
+."t"1c111c1"t".
+."t"111d111"t".
+."t"1c111c1"t".
+."tt"11c11"tt".
+.."tt"111"tt"..
+ .."".. ..""..
+  ....   ....
+ENDMAP
+
+NAME:    minmay_guarded_unrand_chilly_death
+DEPTH:   D:9-13, Lair
+MONS:    ice beast, rime drake, ice dragon
+: if you.unrands("dagger_of_chilly_death") then
+# note: randart is an especially big nerf here since it means you can't rebrand
+# to something good like pain/distortion/etc. This is intended.
+ITEM:    quick blade randart ego:freezing ident:type no_pickup
+: else
+ITEM:    dagger_of_chilly_death no_pickup
+: end
+NSUBST:  1 = 12:1 / 12=1... / .
+SUBST:   2 = 2., 3 = 3..
+MAP
+      .1.             .1.
+      .x.             .x.
+     .1x..1.       .1..x1.
+   ..1xx..x.       .x..xx1..
+   1xxxxx1x.       .x1xxxxx1
+   ....xxxx.       .xxxx....
+     ..1xxx1.     .1xxx1..
+     1xxxxxx1.....1xxxxxx1
+     ....1xxxxx2xxxxx1....
+   .......1xdxx.xx*x1......
+...1xx....xxx3...3xxx....xx1...
+1xx..xx1..2....x....2..1xx..xx1
+..xx.1xx1xxx.x...x.xxx1xx1.xx..
+..1xxxxxxxx....x....xxxxxxxx1.
+..1xxxxxxxx....x....xxxxxxxx1.
+..xx.1xx1xxx.x...x.xxx1xx1.xx..
+1xx..xx1..2....x....2..1xx..xx1
+...1xx....xxx3...3xxx....xx1...
+   .......1x*xx.xx*x1.......
+     ....1xxxxx2xxxxx1....
+     1xxxxxx1.....1xxxxxx1
+     ..1xxx1.     .1xxx1..
+   ....xxxx.       .xxxx....
+   1xxxxx1x.       .x1xxxxx1
+   ..1xx..x.       .x..xx1..
+     .1x..1.       .1..x1.
+      .x.             .x.
+      .1.             .1.
+ENDMAP
+
+NAME:    minmay_guarded_unrand_skullcrusher
+DEPTH:   D:12-, Crypt
+MONS:    flying skull
+: if you.branch() == "Crypt" then
+MONS:    curse skull
+NSUBST:  d = 1:d / *:*
+: else
+MONS:    death knight
+NSUBST:  d = 1:d / *:%
+: end
+: if you.unrands("skullcrusher") then
+ITEM:    giant club randart ego:speed ident:type no_pickup / \
+         giant spiked club randart no_pickup
+: else
+ITEM:    skullcrusher no_pickup
+: end
+NSUBST:  ' = 12:1 / 14=1...... / .
+SUBST:   " = 1., ! = 2.
+MAP
+     .........
+   ...ccccc.....
+  ..ccc''cc..c...
+ ..cc'''c'ccc..c..
+ .cc'''''c'c.cc.c.
+..c''''c''''ccccc..
+.cc'''''''c''c'c.cc.
+.c''''''''c''''''c.
+.c'''''''''c'''''c.
+.c'ccc'''''''ccc'c.
+.c'ccncc'''ccncc'c.
+.c'nnnnn'''nnnnn'c.
+.c'ccncc'''ccncc'c.
+.c''cnc'''''cnc''c.
+.c'''''''c'''''''c.
+.cc'''''ccc'''''cc.
+..ccc''''c''''ccc..
+ ...cc'''''''cc...
+   ..c!c!c!c!c..
+    .cdcdcdcdc.
+    .cncncncnc.
+    .c"c"c"c"c.
+    .c"c"c"c"c.
+    ...........
+ENDMAP
+
+NAME:    minmay_guarded_unrand_finisher
+DEPTH:   D:7-13
+MONS:    wraith
+: if you.unrands("finisher") then
+ITEM:    scythe randart ego:speed ident:type no_pickup
+: else
+ITEM:    finisher no_pickup
+: end
+SUBST:   1 = 1.
+NSUBST:  A = 1:. / *:c, B = 1:. / *:c
+SUBST:   c = c .:2
+MAP
+.............
+.AxxAxAxAxxA.
+.x..xc1cx..x.
+.x.c..x..c.x.
+.Ax.BxBxB.xA.
+.xc.x1c1x.cx.
+.A1xBcdcBx1A.
+.xc.x1c1x.cx.
+.Ax.BxBxB.xA.
+.x.c..x..c.x.
+.x..xc1cx..x.
+.AxxAxAxAxxA.
+.............
+ENDMAP
+
+NAME:    minmay_guarded_unrand_resistance
+DEPTH:   D:9-14
+TAGS:    no_monster_gen
+: if you.unrands("shield_of_resistance") then
+ITEM:    buckler randart no_pickup / shield randart no_pickup / \
+         large shield randart no_pickup
+: else
+ITEM:    shield_of_resistance no_pickup
+: end
+MONS:    fire dragon, ice dragon
+MAP
+...........
+.vnnv=vnnv.
+.n...1nlln.
+.n.T..nlln.
+.v....vnnv.
+.n2..d..1n.
+.vnnv....v.
+.nwwn..V.n.
+.nwwn2...n.
+.vnnv=vnnv.
+...........
+ENDMAP
 
 ###################################################################
 #
@@ -6200,13 +6789,14 @@ MAP
 ...........
 ENDMAP
 
-NAME: special_room
-TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
-TAGS: no_monster_gen layout_rooms layout_corridors layout_passages
-TAGS: layout_narrow_caves layout_open_caves
-CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
-DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
-       Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$
+NAME:   special_room
+TAGS:   allow_dup luniq no_item_gen ruin_spider ruin_slime
+TAGS:   no_monster_gen layout_rooms layout_corridors layout_passages
+TAGS:   layout_narrow_caves layout_open_caves
+CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider, Pan), 3%
+DEPTH:  D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
+        Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$, Pan
+KFEAT:  X = slimy_wall
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).
@@ -6231,6 +6821,12 @@ DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
     end
 
     mapgrd[entrance_x][entrance_y] = '@'
+
+    if you.in_branch("Crypt") then
+        subst("x = c")
+    elseif you.in_branch("Slime") then
+        subst("x = X")
+    end
 }}
 MAP
 ENDMAP

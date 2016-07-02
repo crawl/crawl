@@ -140,9 +140,11 @@ struct mgen_data
                || mt == MONS_BATTLESPHERE
                || summon_type == SPELL_STICKS_TO_SNAKES
                || summon_type == SPELL_DEATH_CHANNEL
+               || summon_type == SPELL_BIND_SOULS
                || summon_type == SPELL_SIMULACRUM
                || summon_type == SPELL_AWAKEN_VINES
-               || summon_type == SPELL_FULMINANT_PRISM);
+               || summon_type == SPELL_FULMINANT_PRISM
+               || summon_type == SPELL_INFESTATION);
     }
 
     bool permit_bands() const

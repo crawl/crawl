@@ -7,9 +7,9 @@ Translocations spells in existence.
 amulet of dismissal
 
 An amulet which generates a field of translocational energy that will teleport
-away creatures that harm you, one time in ten. It takes a few moments to get
-used to the translocational energy field, initially disorienting the wearer for
-a few turns.
+away creatures that seriously harm you, one time in ten. It takes a few moments
+to get used to the translocational energy field, initially disorienting the
+wearer for a few turns.
 %%%%
 amulet of faith
 
@@ -292,8 +292,8 @@ box of beasts
 A box filled with the bizarre leftovers of a depraved wizard's magical
 experimentations. Opening it might set loose a friendly mutant beast: bizarre
 creatures, each with their own combination of traits. Increased skill with
-Evocations will allow stronger beasts to be released, and reduce the chances
-of accidentally destroying the box when using it.
+Evocations will allow stronger beasts to be released. There is a one in three
+chance of accidentally destroying the box when using it.
 
 There are six known traits:
  * Bat beasts fly and move very quickly, but erratically.
@@ -378,18 +378,13 @@ deck of escape
 
 A deck of magical cards, mainly dealing with various forms of escape.
 %%%%
-deck of oddities
-
-A deck of magical cards that have the strangest tendency to get mixed in with
-other decks.
-%%%%
 deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 %%%%
-deck of war
+deck of summoning
 
-A deck of magical cards which are useful before and during battle.
+A deck of magical cards, depicting a range of weird and wonderful creatures.
 %%%%
 demon blade
 
@@ -996,8 +991,8 @@ sack of spiders
 
 A woven silk bag. Opening it will release a number of spiders and other
 insects, as well as creating webs nearby. Evocations skill increases its
-effectiveness and reduces the chances of accidentally destroying the bag when
-it is used.
+effectiveness. There is a one in three chance of accidentally destroying the
+sack when using it.
 %%%%
 sacred scourge
 
@@ -1071,8 +1066,6 @@ monsters that are affected.
 scroll of identify
 
 A useful magic scroll which identifies the properties of any unknown object.
-
-If used on a deck of cards, it will also reveal the top card.
 %%%%
 scroll of immolation
 

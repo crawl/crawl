@@ -95,6 +95,7 @@ dart_slug CORPSE_DART_SLUG
 killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
 vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
+../meliai CORPSE_MELIAI
 wasp CORPSE_WASP
 hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP

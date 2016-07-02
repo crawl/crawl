@@ -387,6 +387,48 @@ MAP
          ...
 ENDMAP
 
+NAME:   lightli_tower_of_babel
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Dis, !Dis:$
+ORIENT: float
+MONS:   flying skull
+KMONS:  2 = patrolling iron giant
+KFEAT:  2 = )
+TILE:   c = wall_marble
+MAP
+            vvvvv
+       vvvvvv...vvvvv
+    vvvvv...........vvvvv
+ vvvv........1.1........vvvv
+vv.........c.....c.........vv
+v..2.cc....1..c..1....cc....v
+v....cc.......1.......cc....v
+v......v.............v......v
+v.......v...vv.vv...v.......v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......vvvvv...vvvvv.......v
+v..c1...vvvvvv.vvvvvv...1c..v
+v......vvvvvvv+vvvvvvv......v
+v.1....v...vv...vv...v....1.v
+v...c1......+.(.+......1c...v
+v.1....v...vv...vv...v....1.v
+v......vvvvvvv+vvvvvvv......v
+v..c1...vvvvvv.vvvvvv...1...v
+v.......vvvvv...vvvvv....c..v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......v...vv.vv...v.......v
+v......v.............v......v
+v....cc.......1.......cc....v
+v....cc....1..c..1....cc....v
+vv.........c.....c.........vv
+ vvvv........1.1........vvvv
+    vvvvv...........vvvvv
+        vvvvv...vvvvv
+            vvvvv
+ENDMAP
+
 NAME:    hangedman_dis_decor_blocks_mantle
 TAGS:    extra transparent decor
 SHUFFLE: ABC, DEFG

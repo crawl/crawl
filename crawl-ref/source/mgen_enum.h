@@ -111,8 +111,10 @@ enum band_type
     BAND_SPARK_WASPS,
     BAND_RANDOM_SINGLE,
     BAND_JOSEPHINE,
-    BAND_IRON_GIANT,
+    BAND_STONE_GIANTS,
     BAND_HOWLER_MONKEY,
+    BAND_MELIAI,
+    BAND_ANCIENT_CHAMPIONS,
     NUM_BANDS                   // always last
 };
 

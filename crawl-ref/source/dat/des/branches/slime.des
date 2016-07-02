@@ -251,7 +251,7 @@ ENDMAP
 ################################################################################
 NAME:    hangedman_slime_spill
 TAGS:    no_monster_gen no_trap_gen
-DEPTH:   Slime:1-5
+DEPTH:   Slime, !Slime:$
 WEIGHT:  1
 MONS:    patrolling eye of devastation
 SHUFFLE: yzZ
@@ -273,7 +273,7 @@ ENDMAP
 
 NAME:    hangedman_slime_tunnels
 TAGS:    no_monster_gen no_trap_gen transparent
-DEPTH:   Slime:1-5
+DEPTH:   Slime, !Slime:$
 WEIGHT:  1
 KMONS:   1 = slime creature w:30 / nothing w:2
 KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
@@ -309,7 +309,7 @@ X'xxxxxxxxxxxxxxxx'X
 ENDMAP
 
 NAME: nicolae_slime_pool
-DEPTH: Slime
+DEPTH: Slime, !Slime:$
 TAGS: transparent
 MONS: slime creature
 ORIENT: float
@@ -396,7 +396,7 @@ ENDMAP
 
 NAME: nicolae_slime_welcoming_committee
 TAGS: no_monster_gen no_item_gen no_trap_gen
-DEPTH: Slime:2-5
+DEPTH: Slime:2-, !Slime:$
 SUBST: X = x., { = {[(
 KMONS: 1 : jelly w:20 / ooze / slime creature w:30 / \
    acid blob w:5 / death ooze w:5 / azure jelly w:5
@@ -415,7 +415,7 @@ xxxXX.....1.@
 ENDMAP
 
 NAME: nicolae_slime_phagocytosis
-DEPTH: Slime
+DEPTH: Slime, !Slime:$
 TAGS: transparent
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
 NSUBST: W = 4:1 / *:W
@@ -446,7 +446,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_slime_round_cave
-DEPTH: Slime, !Slime:1, !Slime:$
+DEPTH: Slime:2-, !Slime:$
 TAGS: no_monster_gen
 SHUFFLE: {}/()/[]
 NSUBST: a = X / .
@@ -481,7 +481,7 @@ zzX..0..XXxx.xxXX.....Xzz
 ENDMAP
 
 NAME: nicolae_slime_ancient_tower_intersection
-DEPTH: Slime
+DEPTH: Slime, !Slime:$
 WEIGHT: 2
 TAGS: extra decor transparent
 SUBST: c = ccc., X = x_, V = V..

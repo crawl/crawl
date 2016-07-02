@@ -399,14 +399,20 @@ static void _handle_uskayaw_piety(int time_taken)
         // to lose piety proportional to the time since the last time we took
         // a dance action and hurt a monster.
         int time_since_gain = you.props[USKAYAW_AUT_SINCE_PIETY_GAIN].get_int();
+        time_since_gain += time_taken;
 
-        int piety_lost = min(you.piety - piety_breakpoint(0),
-                div_rand_round(time_since_gain, 10));
+        // Only start losing piety if it's been a few turns since we gained
+        // piety, in order to give more tolerance for missing in combat.
+        if (time_since_gain > 30)
+        {
+            int piety_lost = min(you.piety - piety_breakpoint(0),
+                    div_rand_round(time_since_gain, 10));
 
-        if (piety_lost > 0)
-            lose_piety(piety_lost);
+            if (piety_lost > 0)
+                lose_piety(piety_lost);
 
-        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain + time_taken;
+        }
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain;
     }
 
     // Re-initialize Uskayaw piety variables
@@ -459,12 +465,6 @@ void player_reacts_to_monsters()
 
     if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
-
-    if (you.duration[DUR_TELEPATHY])
-    {
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
-                         (2 * BASELINE_DELAY), true);
-    }
 
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
@@ -971,7 +971,7 @@ static void _regenerate_hp_and_mp(int delay)
         if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
         if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
-            mp_regen_countup += 20;
+            mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
 
         you.magic_points_regeneration += mp_regen_countup;
     }
@@ -1026,7 +1026,7 @@ void player_reacts()
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
-    if (one_chance_in(10))
+    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
         const int teleportitis_level = player_teleport();
         // this is instantaneous
@@ -1056,7 +1056,7 @@ void player_reacts()
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
-        maybe_melt_player_enchantments(BEAM_FIRE, 10);
+        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     // Handle starvation before subtracting hunger for this turn (including
     // hunger from the berserk duration) and before monsters react, so you

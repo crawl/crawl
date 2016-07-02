@@ -21,6 +21,7 @@
 #include "env.h"
 #include "godpassive.h"
 #include "godabil.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
@@ -1196,8 +1197,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SWIFTNESS:
-        if (temp && !prevent)
+        if (temp)
         {
+            if (you.duration[DUR_SWIFTNESS])
+                return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already traveling as fast as you can.";
             if (you.is_stationary())
@@ -1212,16 +1215,23 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
-        if (!prevent && temp && (you.haloed() || have_passive(passive_t::halo)))
+        if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
         break;
 
     case SPELL_REPEL_MISSILES:
         if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                        || you.scan_artefacts(ARTP_RMSL, true)))
+                     || you.scan_artefacts(ARTP_RMSL, true)
+                     || you.attribute[ATTR_REPEL_MISSILES]
+                     || you.attribute[ATTR_DEFLECT_MISSILES]))
         {
             return "you're already repelling missiles.";
         }
+        break;
+
+    case SPELL_DEFLECT_MISSILES:
+        if (temp && you.attribute[ATTR_DEFLECT_MISSILES])
+            return "you're already deflecting missiles.";
         break;
 
     case SPELL_STATUE_FORM:
@@ -1251,9 +1261,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
+        if (temp
+            && (!you.weapon()
+                || you.weapon()->base_type != OBJ_WEAPONS
+                || !is_brandable_weapon(*you.weapon(), true)))
+        {
+            return "you aren't wielding an enchantable weapon.";
+        }
+        // intentional fallthrough
+    case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
@@ -1261,8 +1279,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (temp && (!you.stand_on_solid_ground()
-                        || you.duration[DUR_LIQUEFYING]
-                        || liquefied(you.pos())))
+                     || you.duration[DUR_LIQUEFYING]
+                     || liquefied(you.pos())))
         {
             return "you must stand on solid ground to cast this.";
         }
@@ -1274,7 +1292,19 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_BORGNJORS_REVIVIFICATION:
+        if (temp && you.hp == you.hp_max)
+            return "you cannot be healed further.";
+        if (temp && you.hp_max < 21)
+            return "you lack the resilience to cast this spell.";
+        // Prohibited to all undead.
+        if (you.undead_state(temp))
+            return "you're too dead.";
+        break;
     case SPELL_DEATHS_DOOR:
+        if (temp && you.duration[DUR_EXHAUSTED])
+            return "you are too exhausted to enter Death's door!";
+        if (temp && you.duration[DUR_DEATHS_DOOR])
+            return "your appeal for an extension has been denied.";
         // Prohibited to all undead.
         if (you.undead_state(temp))
             return "you're too dead.";
@@ -1285,14 +1315,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead.";
         break;
 
-    case SPELL_CURE_POISON:
-        // no good for poison-immune species (ghoul, mummy, garg)
-        if (player_res_poison(false, temp, temp) == 3
-            // allow starving vampires to memorize cpois
-            && you.undead_state() != US_SEMI_UNDEAD)
-        {
-            return "you can't be poisoned.";
-        }
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (temp && !player_effectively_in_light_armour())
+            return "your body armour is too heavy.";
+        if (temp && you.form == TRAN_STATUE)
+            return "the film of ice won't work on stone.";
+        if (temp && you.duration[DUR_FIRE_SHIELD])
+            return "your ring of flames would instantly melt the ice.";
+        break;
+
+    case SPELL_CIGOTUVIS_EMBRACE:
+        if (temp && you.form == TRAN_STATUE)
+            return "the corpses won't embrace your stony flesh.";
+        if (temp && you.duration[DUR_ICY_ARMOUR])
+            return "the corpses won't embrace your icy flesh.";
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
@@ -1329,12 +1365,18 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can only summon one forest at a time.";
         break;
 
+    case SPELL_PASSWALL:
+        if (temp && you.is_stationary())
+            return "you can't move";
+        break;
+
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_CONTROL_UNDEAD:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
+    case SPELL_INFESTATION:
         if (player_mutation_level(MUT_NO_LOVE))
             return "you cannot coerce anything to obey you.";
         break;
@@ -1563,4 +1605,36 @@ skill_type arcane_mutation_to_skill(mutation_type mutation)
         if (arcana_sacrifice_map[exp] == mutation)
             return spell_type2skill(spschools_type::exponent(exp));
     return SK_NONE;
+}
+
+bool spell_is_soh_breath(spell_type spell)
+{
+    return spell == SPELL_SERPENT_OF_HELL_GEH_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_COC_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_DIS_BREATH
+        || spell == SPELL_SERPENT_OF_HELL_TAR_BREATH;
+}
+
+const vector<spell_type> *soh_breath_spells(spell_type spell)
+{
+    static const map<spell_type, vector<spell_type>> soh_breaths = {
+        { SPELL_SERPENT_OF_HELL_GEH_BREATH,
+            { SPELL_FIRE_BREATH,
+              SPELL_FLAMING_CLOUD,
+              SPELL_FIREBALL } },
+        { SPELL_SERPENT_OF_HELL_COC_BREATH,
+            { SPELL_COLD_BREATH,
+              SPELL_FREEZING_CLOUD,
+              SPELL_FLASH_FREEZE } },
+        { SPELL_SERPENT_OF_HELL_DIS_BREATH,
+            { SPELL_METAL_SPLINTERS,
+              SPELL_QUICKSILVER_BOLT,
+              SPELL_LEHUDIBS_CRYSTAL_SPEAR } },
+        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
+            { SPELL_BOLT_OF_DRAINING,
+              SPELL_MIASMA_BREATH,
+              SPELL_CORROSIVE_BOLT } },
+    };
+
+    return map_find(soh_breaths, spell);
 }

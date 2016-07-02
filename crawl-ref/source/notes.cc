@@ -109,9 +109,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_ANCESTOR_TYPE
-        || note.type == NOTE_ANCESTOR_DEATH
-        || note.type == NOTE_ANCESTOR_SPECIALIZATION)
+        || note.type == NOTE_ANCESTOR_TYPE)
     {
         return true;
     }
@@ -358,11 +356,11 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Remembered your ancestor " << hepliaklqana_ally_name()
                    << " as " << name;
             break;
+#if TAG_MAJOR_VERSION == 34
         case NOTE_ANCESTOR_SPECIALIZATION:
             result << "Remembered your ancestor " << hepliaklqana_ally_name()
                    << " " << name;
             break;
-#if TAG_MAJOR_VERSION == 34
         case NOTE_ANCESTOR_DEATH:
             result << "Remembered your ancestor "
                    << apostrophise(hepliaklqana_ally_name())

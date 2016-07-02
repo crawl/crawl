@@ -287,7 +287,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Hepliaklqana
-    { },
+    { {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" }, },
 };
 
 bool have_passive(passive_t passive)
@@ -593,10 +593,11 @@ string ash_describe_bondage(int flags, bool level)
         && you.bondage[ET_ARMOUR] == you.bondage[ET_JEWELS]
         && you.bondage[ET_ARMOUR] != -1)
     {
-        desc += make_stringf("You are %s bound in armour and magic.\n",
+        desc += make_stringf("You are %s bound in armour %s jewellery.\n",
                              you.bondage[ET_ARMOUR] == 0 ? "not" :
                              you.bondage[ET_ARMOUR] == 1 ? "partially"
-                                                         : "fully");
+                                                         : "fully",
+                             you.bondage[ET_ARMOUR] == 0 ? "or" : "and");
     }
     else
     {
@@ -610,7 +611,7 @@ string ash_describe_bondage(int flags, bool level)
 
         if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
         {
-            desc += make_stringf("You are %s bound in magic.\n",
+            desc += make_stringf("You are %s bound in jewellery.\n",
                                  you.bondage[ET_JEWELS] == 0 ? "not" :
                                  you.bondage[ET_JEWELS] == 1 ? "partially"
                                                              : "fully");
@@ -1444,9 +1445,9 @@ static int _bond_audience(coord_def where)
 
     monster* mons = monster_at(where);
 
-    int power = you.skill(SK_INVOCATIONS, 5) + you.experience_level
+    int power = you.skill(SK_INVOCATIONS, 7) + you.experience_level
                  - mons->get_hit_dice();
-    int duration = 10 + random2(power);
+    int duration = 20 + random2avg(power, 2);
     mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
 
     return 1;

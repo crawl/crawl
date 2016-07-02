@@ -223,6 +223,7 @@ bool mons_can_be_dazzled(monster_type mc);
 
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
+bool mons_can_shout(monster_type mclass);
 
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);

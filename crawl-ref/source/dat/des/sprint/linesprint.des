@@ -96,7 +96,7 @@ KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
                Maud / Nergalle / Nessos / Rupert / Saint Roka band / Snorg /\
                Wiglaf
 NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1
-KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
+KMONS:     c = Louise / Nikola / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
 NSUBST:    c = 2:c. / 2:cb. / 2:cb.. / 2:cbb.. / * = .:69 c:2
 MAP
@@ -303,8 +303,8 @@ ENDMAP
 NAME:     lair_1
 TAGS:     lair_1
 KMONS:    1 = place:Lair:1
-KMONS:    2 = place:Lair:4
-KMONS:    3 = place:Lair:7
+KMONS:    2 = place:Lair:3
+KMONS:    3 = place:Lair:5
 COLOUR:   123 = green
 : line_setup(_G)
 : general_item_setup(_G)
@@ -332,7 +332,7 @@ SHUFFLE:  123456
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Lair:8",
+:           door_description_suffix=" to Lair:6",
 :           })
 MAP
 xxxxxxxxxxxxx
@@ -551,7 +551,7 @@ ENDMAP
 NAME:     d_20
 TAGS:     d_20
 KMONS:    1 = place:Depths:2
-KMONS:    2 = place:Depths:5
+KMONS:    2 = place:Depths:4
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -669,7 +669,7 @@ KITEM:    2 = decaying rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Swamp:5",
+:           door_description_suffix=" to Swamp:4",
 :           })
 MAP
 tttttttttttttt
@@ -688,7 +688,7 @@ KITEM:    2 = barnacled rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Shoals:5",
+:           door_description_suffix=" to Shoals:4",
 :           })
 MAP
 xxxxxxxxxxxxxx
@@ -708,7 +708,7 @@ KITEM:    2 = gossamer rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Spider:5",
+:           door_description_suffix=" to Spider:4",
 :           })
 MAP
 xxxxxxxxxxxxxx
@@ -728,7 +728,7 @@ COLOUR:   # = yellow
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Snake:5",
+:           door_description_suffix=" to Snake:4",
 :           })
 MAP
 ##############
@@ -766,7 +766,7 @@ ENDMAP
 
 NAME:     d_27
 TAGS:     d_27
-KMONS:    1 = place:D:$
+KMONS:    1 = place:Depths:$
 KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
               bone dragon / golden dragon / mottled dragon
 KMONS:    3 = base draconian

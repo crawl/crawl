@@ -327,7 +327,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_DRAIN] && !meld)
-        drain_player(100, true, true);
+        drain_player(150, true, true);
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
@@ -501,10 +501,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     mpr("You feel protected!");
                     break;
 
-                case SPWPN_EVASION:
-                    mpr("You feel nimbler!");
-                    break;
-
                 case SPWPN_DRAINING:
                     mpr("You sense an unholy aura.");
                     break;
@@ -582,10 +578,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             {
             case SPWPN_PROTECTION:
                 you.redraw_armour_class = true;
-                break;
-
-            case SPWPN_EVASION:
-                you.redraw_evasion = true;
                 break;
 
             case SPWPN_VAMPIRISM:
@@ -676,12 +668,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 if (showMsgs)
                     mpr("You feel less protected.");
                 you.redraw_armour_class = true;
-                break;
-
-            case SPWPN_EVASION:
-                if (showMsgs)
-                    mpr("You feel like more of a target.");
-                you.redraw_evasion = true;
                 break;
 
             case SPWPN_VAMPIRISM:
@@ -1070,10 +1056,12 @@ static void _remove_amulet_of_faith(item_def &item)
         // next sacrifice is going to be delaaaayed.
         if (you.piety < piety_breakpoint(5))
         {
-            int current_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+#ifdef DEBUG
+            const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+#endif
             ru_reject_sacrifices(true);
-            you.props[RU_SACRIFICE_DELAY_KEY] =
-                max(you.props[RU_SACRIFICE_DELAY_KEY].get_int(), current_delay)*2;
+            dprf("prev delay %d, new delay %d", cur_delay,
+                 you.props[RU_SACRIFICE_DELAY_KEY].get_int());
         }
     }
     else if (!you_worship(GOD_NO_GOD)
@@ -1101,7 +1089,7 @@ static void _remove_amulet_of_harm()
     else
         mpr("The amulet drains your animating force as you remove it!");
 
-    drain_player(100, false, true);
+    drain_player(150, false, true);
 }
 
 static void _equip_amulet_of_dismissal()

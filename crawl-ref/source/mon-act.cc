@@ -2354,113 +2354,45 @@ void monster::struggle_against_net()
                 }
                 return;
             }
-            maybe_destroy_web(this);
+            simple_monster_message(this, " pulls away from the web.");
+
         }
         del_ench(ENCH_HELD);
         return;
     }
 
-    // The more corroded the net gets, the more easily it will break.
-    const int hold = mitm[net].net_durability; // This will usually be negative.
-    const int mon_size = body_size(PSIZE_BODY);
+    if (you.see_cell(pos()))
+    {
+        if (!visible_to(&you))
+            mpr("Something wriggles in the net.");
+        else
+            simple_monster_message(this, " struggles against the net.");
+    }
 
-    // Smaller monsters can escape more quickly.
-    if (mon_size < random2(SIZE_BIG)  // BIG = 5
-        && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
+    int damage = 1 + random2(2);
+
+    // Faster monsters can damage the net more often per
+    // time period.
+    if (speed != 0)
+        damage = div_rand_round(damage * speed, 10);
+
+    mitm[net].net_durability -= damage;
+
+    if (mitm[net].net_durability < NET_MIN_DURABILITY)
     {
         if (you.see_cell(pos()))
         {
-            if (!visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles to escape the net.");
-        }
-
-        // Confused monsters have trouble finding the exit.
-        if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
-            return;
-
-        decay_enchantment(ENCH_HELD, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
-
-        // Frayed nets are easier to escape.
-        if (mon_size <= -(hold-1)/2)
-            decay_enchantment(ENCH_HELD, (NUM_SIZE_LEVELS - mon_size));
-    }
-    else // Large (and above) monsters always thrash the net and destroy it
-    {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
-
-        if (you.see_cell(pos()))
-        {
-            if (!visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles against the net.");
-        }
-
-        // Confused monsters more likely to struggle without result.
-        if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
-            return;
-
-        // Nets get destroyed more quickly for larger monsters
-        // and if already strongly frayed.
-        int damage = 0;
-
-        // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
-        if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
-            damage++;
-
-        // Handled specially to make up for its small size.
-        if (type == MONS_DANCING_WEAPON)
-        {
-            damage += one_chance_in(3);
-
-            if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
-                damage++;
-        }
-
-        // Extra damage for large (50%) and big (always).
-        if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
-            damage++;
-
-        // overall damage per struggle:
-        // tiny   -> 1/6
-        // little -> 2/5
-        // small  -> 3/4
-        // medium -> 1
-        // large  -> 1,5
-        // big    -> 2
-
-        // extra damage if already damaged
-        if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
-            damage++;
-
-        // Berserking doubles damage dealt.
-        if (berserk())
-            damage *= 2;
-
-        // Faster monsters can damage the net more often per
-        // time period.
-        if (speed != 0)
-            damage = div_rand_round(damage * speed, 10);
-
-        mitm[net].net_durability -= damage;
-
-        if (mitm[net].net_durability < -7)
-        {
-            if (you.see_cell(pos()))
+            if (visible_to(&you))
             {
-                if (visible_to(&you))
-                {
-                    mprf("The net rips apart, and %s comes free!",
-                         name(DESC_THE).c_str());
-                }
-                else
-                    mpr("All of a sudden the net rips apart!");
+                mprf("The net rips apart, and %s comes free!",
+                     name(DESC_THE).c_str());
             }
-            destroy_item(net);
-
-            del_ench(ENCH_HELD, true);
+            else
+                mpr("All of a sudden the net rips apart!");
         }
+        destroy_item(net);
+
+        del_ench(ENCH_HELD, true);
     }
 }
 
@@ -2613,6 +2545,19 @@ static void _post_monster_move(monster* mons)
             if (mi->type == MONS_RAKSHASA && mi->summoner == mons->mid)
                 mi->del_ench(ENCH_ABJ);
         }
+    }
+
+    if (mons->type == MONS_BAI_SUZHEN_DRAGON)
+    {
+        cloud_type ctype = CLOUD_STORM;
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!cell_is_solid(*ai)
+                && (!cloud_at(*ai)
+                    || cloud_at(*ai)->type == ctype))
+            {
+                place_cloud(ctype, *ai, 2 + random2(3), mons);
+            }
     }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
@@ -3935,9 +3880,7 @@ static bool _monster_move(monster* mons)
         // movement is towards the player. -- bwr
         if (testbits(mons->flags, MF_TAKING_STAIRS))
         {
-            const delay_type delay = current_delay_action();
-            if (delay != DELAY_ASCENDING_STAIRS
-                && delay != DELAY_DESCENDING_STAIRS)
+            if (!player_stair_delay())
             {
                 mons->flags &= ~MF_TAKING_STAIRS;
 
@@ -3987,7 +3930,7 @@ static bool _monster_move(monster* mons)
             place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
-        if (mons->type == MONS_CURSE_TOE || mons->type == MONS_DEATH_SCARAB)
+        if (mons->type == MONS_CURSE_TOE)
             place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
     }
     else

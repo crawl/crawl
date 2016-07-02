@@ -29,7 +29,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true), launch_type(LRET_FUMBLED)
+      should_alert_defender(true), launch_type(LRET_BUGGY)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -67,6 +67,10 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
 int ranged_attack::calc_to_hit(bool random)
 {
     orig_to_hit = attack::calc_to_hit(random);
+
+    if (orig_to_hit == AUTOMATIC_HIT)
+        return AUTOMATIC_HIT;
+
     if (teleport)
     {
         orig_to_hit +=
@@ -324,7 +328,9 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon && launch_type == LRET_LAUNCHED;
+    return weapon && (launch_type == LRET_LAUNCHED
+                     || launch_type == LRET_BUGGY // not initialized
+                         && is_launched(attacker, weapon, *projectile));
 }
 
 int ranged_attack::weapon_damage()
@@ -665,8 +671,8 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_POISONED:
         if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
-            && using_weapon()
-            && damage_done > 0
+                && using_weapon()
+                && damage_done > 0
             || !one_chance_in(4))
         {
             int old_poison;

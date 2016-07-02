@@ -217,8 +217,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                 return true;
         }
 
-        // Small clubs are never randarts.
-        if (item.sub_type == WPN_CLUB)
+        // Clubs and blowguns are never randarts.
+        if (item.sub_type == WPN_CLUB || item.sub_type == WPN_BLOWGUN)
             return false;
 
         // Mean enchantment +6.
@@ -296,18 +296,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
 
     if (type == WPN_BLOWGUN)
-    {
-        switch ((brand_type)brand)
-        {
-        case SPWPN_NORMAL:
-        case SPWPN_PROTECTION:
-        case SPWPN_SPEED:
-        case SPWPN_EVASION:
-            return true;
-        default:
-            return false;
-        }
-    }
+        return false;
 
     switch ((brand_type)brand)
     {
@@ -337,7 +326,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
 
     // Ranged-only brands.
     case SPWPN_PENETRATION:
-    case SPWPN_EVASION:
         if (!is_range_weapon(item))
             return false;
         break;
@@ -350,6 +338,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_FLAME:
     case SPWPN_FROST:
     case SPWPN_DRAGON_SLAYING:
+    case SPWPN_EVASION:
         return false;
 #endif
 

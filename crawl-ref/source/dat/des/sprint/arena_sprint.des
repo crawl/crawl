@@ -286,7 +286,7 @@ function arena_sprint_get_monster_set(round, boss)
                     orc priest / orc high priest w:3 / orc sorcerer w:2 /\
                     orc warlord w:1 / urug w:2",
                 "place:Elf",
-                "place:Lair:5 w:30 / rupert w:1",
+                "place:Lair:4 w:30 / rupert w:1",
                 "place:Shoals",
                 "place:Swamp",
                 "place:Spider",

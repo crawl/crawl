@@ -188,6 +188,8 @@ define(function () {
     fg_flags.flags.DEATHS_DOOR  = [0, 0x20000];
     fg_flags.flags.RECALL       = [0, 0x40000];
     fg_flags.flags.DRAIN        = [0, 0x80000];
+    fg_flags.flags.IDEALISED    = [0, 0x100000];
+    fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

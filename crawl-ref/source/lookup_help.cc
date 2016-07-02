@@ -1020,17 +1020,12 @@ static int _describe_card(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_cloud(const string &key, const string &suffix,
-                          string footer)
+                           string footer)
 {
     const string cloud_name = key.substr(0, key.size() - suffix.size());
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
-
-    const string extra_info = is_opaque_cloud(cloud) ?
-        "\nThis cloud is opaque; one tile will not block vision, but "
-        "multiple will."
-        : "";
-    return _describe_key(key, suffix, footer, extra_info);
+    return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
 }
 
 

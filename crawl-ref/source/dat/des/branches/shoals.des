@@ -1163,6 +1163,70 @@ WWWWWWWWWWWWWW
    WWWWWWWW
 ENDMAP
 
+NAME:    regret_index_shoals_crete
+TAGS:    no_monster_gen
+DEPTH:   Shoals
+MONS:    snapping turtle / griffon / elephant w:4
+MONS:    faun, satyr, meliai, minotaur
+KMONS:   _ = merfolk javelineer
+KMONS:   b = bush
+KMONS:   p = plant
+ITEM:    any potion, longbow good_item, greatsling good_item
+# Bacchus-approved.
+KFEAT:   _ = altar_uskayaw
+SHUFFLE: 35, ABC, FGHI
+SUBST:   0 = 24., X : xp.., Y : xp..
+SUBST:   A = x, B : p., F = x, G = p., CHI = .
+: dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
+: dgn.delayed_decay(_G, 'h', 'griffon corpse')
+MAP
+    ccccccxxxxxxxcccccc
+    c3dd*xxxg_hxxx*dd5c
+    c..2xx2.b0b.4xx4..c
+    cex+xWWx...xWWx+xfc
+    cxx...WW.1.WW...xxc
+   xxx2.CBAWX.XWABC.4xxx
+  xx...1..WWW1WWW..1...xx
+xxx...IHGFWYWWWYWFGHI..xxx
+.........WW..W..WW........
+ ....xxxWW...W...WWxxx....
+       xxx...W...xxx
+         xxxx@xxxx
+ENDMAP
+
+NAME:   argonaut_golden_fleece
+TAGS:   no_pool_fixup no_trap_gen no_monster_gen no_item_gen
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+# Fudging the myth a bunch, due to it being weak
+# to use only one "drakon" by this branch depth.
+KMONS:  1 = patrolling generate_awake fire dragon / \
+            patrolling generate_awake ice dragon
+KMONS:  BF = bush
+KITEM:  F = animal skin randart good_item, gold, gold
+KFEAT:  F = >
+KFEAT:  X = open_sea
+MAP
+XXXXXXXXXXXXXXXXXXXXX
+Xwwwwwwwwwwwwwwwwwwww
+Xwwwwwwwwwwwwwwwwwwww
+Xwwww11www..wwwwwwwww
+Xwwwww.B.B.wwwwwwwwww
+Xwwww.BB.BB.wwwwwwwwW
+Xwwww...F....BwwwwwwW
+Xwwww.BB.BB.wwwwwwwwW
+Xwwwww.B.B.wwwwwwwww@
+Xwwww..w.w..wwwwwwwwW
+XwwwwwwwBwwwwwwwwwwwW
+Xwwwwwwwwwwwwwwwwwww
+XwwwwwwwwwwwwwwwwwwW
+XwwwwwwwwwwwwwwwwwW
+XwwwwwwwwwwwwwwwwW@
+XwwwwwwwwwwwwwwwW
+Xwwwwwwwwwwwwww
+XwwwwwwwWWW@WW
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map, by placing many

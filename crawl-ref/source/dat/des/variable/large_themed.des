@@ -9,6 +9,32 @@
 # vaults.des.
 ###############################################################################
 
+{{
+function grandhive_vaults(e, hivewallglyph)
+    e.tags('uniq_greathive no_monster_gen no_item_gen')
+    e.kmons('P = plant')
+    e.item('royal jelly')
+    e.kitem('% = % no_pickup')
+    e.kitem('* = * no_pickup')
+    e.kfeat(hivewallglyph .. ' = x')
+    e.tile(hivewallglyph .. ' = wall_wax')
+    e.colour(hivewallglyph .. ' = yellow')
+    -- Lair has lots of randomization and thin scaling in its
+    -- monster set, so specify some monsters for Lair. Also,
+    -- avoid wasps and bears, because nature or whatever.
+    if you.branch() == "Lair" then
+        e.kmons('0 = yak / hippogriff / sheep w:2 / wolf w:8 / \
+                     water moccasin w:8 / wyvern w:8 / basilisk w:8 / \
+                     crocodile / river rat w:2 / steam dragon w:2')
+        e.kmons('9 = elephant / spiny frog / rime drake / \
+                     blink frog w:8 / griffon w:6 / hell rat w:4')
+        e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
+                     black mamba / lindwurm w:8 / torpor snail w:4 / \
+                     boulder beetle w:2 / catoblepas w:2')
+    end
+end
+}}
+
 default-depth: D:12-, !D:$, Depths, !Depths:$
 # be careful to adapt these numbers for new vaults (using DEPTH)
 
@@ -173,11 +199,11 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-, Orc, Depths:2-
+DEPTH:   D:11-, Orc, Depths:2-, !Depths:$
 ORIENT:  north
 SUBST:   ; = .'
 : if you.branch() == "Depths" then
-MONS:    patrolling iron giant, nothing, nothing
+MONS:    patrolling juggernaut, nothing, nothing
 MONS:    ettin, stone giant w:40 / fire giant / frost giant
 MONS:    ogre mage band / deep troll shaman band w:5 / \
          deep troll earth mage band w:5
@@ -516,8 +542,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 WEIGHT:  6
-ITEM:    ring of flight / potion of flight / nothing
-ITEM:    potion of flight / nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
+ITEM:    potion of flight ident:type / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -547,8 +573,8 @@ DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 WEIGHT:  4
-ITEM:    ring of flight / potion of flight / nothing
-ITEM:    potion of flight, nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
+ITEM:    potion of flight ident:type, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
@@ -1402,36 +1428,39 @@ xbbbbbbb...bbb...bbbbbbbx
 xxxxxxxx.@.xxx.@.xxxxxxxx
 ENDMAP
 
+################################################################################
 # Based off Zaba's beehive_diamond.
-# Hopefully the changes for it to fit in D make it more interesting than Hive.
 NAME:    hangedman_what_comes_after_a
-TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:12-
+DEPTH:   D:11-, Lair:2-, !Lair:$
 ORIENT:  north
-MONS:    killer bee, queen bee, oklob plant
-KFEAT:   X = x
-ITEM:    royal jelly
+WEIGHT:  8
+MONS:    killer bee, meliai, queen bee, oklob plant
 KITEM:   | = |
-SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
-: if you.absdepth() > 14 then
-KFEAT:   | = <
-SUBST:   " = 1
-: else
+SUBST:   A = X:3 .:2, z = x..
+NSUBST:  ' = 1:0 / 1:1 / 1:d / 1:% / 12 = .:260 01d% / * = .
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
 KFEAT:   | = >
-SUBST:   8 = 9, " = '
+SUBST:   9 = 990, 8 = 9
+: else
+KFEAT:   | = <
+NSUBST:  " = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
 : end
-TILE:    X = wall_wax
-COLOUR:  X = yellow
+: grandhive_vaults(_G, 'X')
 MAP
              xxxxxxxxxxxxxxx
+             xxxxxxxxxxxxxxx
              xxxxxcccccxxxxx
-             xxxccc*e*cccxxx
-              xxc3%e|e%3cxx
-               xcc3*e*3ccx
+             xxxccc*d*cccxxx
+              xxc4%d|d%4cxx
+               xcc4*d*4ccx
                xxcccmcccxx
-             xxxxx18281xxxxx
+             xxxxx18381xxxxx
            xxxxxd1911191dxxxxx
-          xxxxx'"X"eAe"X"'xxxxx
+          xxxxx'"X"dAd"X"'xxxxx
          xxxx'''XXX"""XXX'''xxxx
         xxxx''X''X''X''X''X''xxxx
       xxxx'''XXX'''XXX'''XXX'''xxxx
@@ -1439,9 +1468,9 @@ MAP
     xxx'''XXX90'XXX'0'XXX'09XXX'''xxx
  xxxxx.'X''X'1X1'X''X''X'1X1'X''X'.xxxxx
 xxzx...XXX'''XXX'''XXX'''XXX'''XXX...xzxx
-x.x..A.'X''X''X''X'1X1'X''X''X''X'.A..x.x
-x.x.AAA'''XXX'0'XXX'9'XXX'0'XXX'''AAA.x.x
-.x...A.'X'1X''X''X'1X1'X''X''X1'X'.A...x.
+xzx..A.'X''X''X''X''X''X''X''X''X'.A..xzx
+x.x.AAA'''XXX'0'XXX191XXX'0'XXX'''AAA.x.x
+.x...A.'X'1X''X''X''X''X''X''X1'X'.A...x.
 x.x....XXX010XXX'''XXX'''XXX010XXX....x.x
 x.x..A.'X'1X1'X''X''X''X''X'1X1'X'.A..x.x
 .x..AAA'''XXX'''XXX'''XXX'''XXX'''AAA..x.
@@ -1799,4 +1828,426 @@ xxxxww.1.wwxx.1.....1xx
   xxxxxxxxxxxxx.....xxx
     xxxxxxxxxxxx....xx
               xxx@.xx
+ENDMAP
+
+###############################################################################
+# Vaults inspired by old hive ends. Mixes standard bee grids with floor spawns.
+
+# Based off of hive_mumbra_combs, for the old proposed portal.
+NAME:    regret_index_combs_of_tragedy
+DEPTH:   D:11-, Lair:2-, !Lair:$
+ORIENT:  south
+WEIGHT:  8
+MONS:    killer bee, meliai, queen bee
+NSUBST:  . = 3 = 001. / *:.
+NSUBST:   1 = 8 = 1. / * = 1 .:2
+NSUBST:  X = 4:d / 4:% / * = aa.
+# Guaranteed randomized access between combs.
+SHUFFLE: bc / de
+SUBST:   ce = a
+NSUBST:  b = 1:. / *:aa., d = 1:. / *:aa., f = 1:. / *:aa.
+NSUBST:  g = 1:. / *:aa., h = 1:. / *:aa., i = 1:. / *:aa.
+NSUBST:  j = 1:. / *:aa., k = 1:. / *:aa., l = 1:. / *:aa.
+NSUBST:  m = 1:. / *:aa., n = 1:. / *:aa., o = 1:. / *:aa.
+NSUBST:  p = 1:. / *:aa., q = 1:. / *:aa.
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9
+: else
+NSUBST:  " = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
+: end
+: grandhive_vaults(_G, 'a', true)
+MAP
+            xxaaaaa@...@aaaaaxx
+           xxaa.............aaxx
+          xxaa.....aaaaa.....aaxx
+        xxxaa......"aaa"......aaxxx
+       xxaaaaa.....aaaaa.....aaaaaxx
+      xxaa...bb...cc...dd...ee...aaxx
+     xxaa.....aaaaa.....aaaaa.....aaxx
+   xxxaa1..X..1aaa1..X..1aaa1..X..1aaxxx
+  xxaaaaa.....aaaaa.....aaaaa.....aaaaaxx
+ xxaa...ff.0.ff...gg.0.gg...hh.0.hh...aaxx
+xxaa.....aaaaa.....aaaaa.....aaaaa.....aaxx
+xaa...X..1aaa1..X..1aaa1..X..1aaa1..X...aax
+xaa1.....aaaaa.....aaaaa.....aaaaa.....1aax
+xxaaa.0.ii.9.jj.0.jj.9.kk.0.kk.9.ll.0.aaaxx
+ xxxaaaaa.....aaaaa.....aaaaa.....aaaaaxxx
+   xxaaa1..X..1aaa1..X..1aaa1..X..1aaaxx
+    xxxaa.....aaaaa.....aaaaa.....aaxxx
+      xxaa.0.mm.".nn.".nn.".oo.0.aaxx
+       xxaaaaa.....aaaaa.....aaaaaxx
+        xxxaa1..X..1aaa1..X..1aaxxx
+          xxaa.....aaaaa.....aaxx
+           xxaa.1.ppd|dqq.1.aaxx
+            xxaaaaa.""".aaaaaxx
+             xxxaa1191911aaxxx
+               xxaa18381aaxx
+                xxaa***aaxx
+                 xxaaaaaxx
+                  xxxxxxx
+                   xxxxx
+                    xxx
+ENDMAP
+
+# The rest of the hive layouts were very generic messy grids with simple
+# structural tweaks as encompass vaults, which makes them much less
+# interesting to split off. The following vaults are merely interpretations
+# of the other old four ends.
+
+# Very loosely based off of linley's beehive.
+NAME:    regret_index_wax_grids
+TAGS:    no_pool_fixup
+DEPTH:   D:11-, Lair:2-, !Lair:$
+ORIENT:  northwest
+WEIGHT:  6
+MONS:    killer bee, meliai, queen bee
+NSUBST:  ' = 18:1 / 4 = 01... / *:.
+NSUBST:  " = 10:0 / 4 = 001.. / *:.
+NSUBST:  y = 5:x / 1:. / * = x., z = 5:x / 1:. / *:x.
+NSUBST:  Y = 3:x / 1:. / * = x., Z = 3:x / 1:. / *:x.
+SUBST:   D : aaP.., E : aaP.., F : aaP.., G : aaP..
+SUBST:   H : aaP.., I : aP., X = xxP.
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
+: else
+NSUBST:  ~ = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
+: end
+: grandhive_vaults(_G, 'a', true)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxaaaaaaaaaaaaaaaaaaaaxXXXXXXXx
+xxawwwwwwwww........'ax........
+xxaw|*www..'"~a~...P.9x........
+xxaw*311~1wwaaaa.a.P.'x...yyy..
+xxaww189dwwaa%..a..E.xx..yyy.....
+xxaww198wwaa'.D.a..."x..yyy......
+xxaww~dwwaad.a.a'a..xx......."x...
+xxaw.1wwaa"'.a.a'aE.x..P....xxx...
+xxaw.wwaa"'"a.a.a.a.xx"...xxx.....
+xxaw'waad'"a'.a.a.aFaxx.xxx...Y...
+xxa."aa'..a'aaDa.a."aaxxx....YY.V.
+xxa.~a%.aa..aa.a.a.F"F....a...Y...
+xxa.aa.D..aaD...a....aa....a....Y.
+xxa.~a..aa..aa.'a'.aa..aa..a.I.YY.
+xxa...aa''aa..aa9aa..aaG'aa.....Y.
+xxa..a..aa..aa.'a'.aa..aa..a......
+xxa......Eaa....a...Iaa...G.HH.x..
+xxa.PPE....F"F.a.a.aa..aa....aax..
+xxa'..."xxxaa".a.aIaa"a...aa.axx..
+xxaa9'xxx.xxaFa.a.a."a'a.aa."ax...
+xxxxxxx..."xx.a.a.a.a'aa....aax...
+xxX......P..x..aGa.a.aa'aa.aaxx..
+xxX....z...xx..a'a.a...aa'%axx...
+xxX...zz...x....a....a.a'"aax..
+xxX..zzz..xx.a..a.G.aa..%aaxx..
+xxX..zz...x...aa.a..a..aaaxx...
+xxX..z...xx.......H.."aaxxx..
+xxX....."x..Z..I..Haaaaxx...
+xxx.....xx.ZZZ.....axxxx....
+      .........Z..xxx....
+      ......V.ZZZ........
+        ...............
+ENDMAP
+
+# Loosely based off of R1's beehive2.
+NAME:    regret_index_bee_streams
+DEPTH:   D:11-, Lair:2-, !Lair:$
+ORIENT:  south
+WEIGHT:  6
+MONS:    killer bee, meliai, queen bee
+NSUBST:  ` = 10:1 / 2 = 01... / *:.
+NSUBST:  ' = 10:1 / 2 = 01... / *:.
+NSUBST:  " = 12:0 / 4 = 001.. / *:.
+SUBST:   A : xx., B : xx., C : xx., D : xx.
+SUBST:   E : x.., F : xx., G : xx., H : xx.
+SUBST:   I : aa., J : aa., K : aa., L : aa.
+SUBST:   y = xx., z = xx!
+CLEAR:   !
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
+: else
+NSUBST:  ~ = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
+: end
+: grandhive_vaults(_G, 'a', true)
+MAP
+           ..P......P...P......P..
+           ....xx.B.......x.xx....
+           ...x..x.A.....A.x..x...
+           ..x.aa"x.B...x.x"aa.x..
+   ...P......x.aaa`x.....x`aaa.x......P...
+   ...........x"aaa.x...x.aaa"x...........
+ ....B.xx.....x`aaa.x...x.aaa`x.....xx.B....
+ ...A.x..x...x.aaa.x.....x.aaa.x...x..x.A...
+ ..B.x.aa"x..x.aaa`x.....x`aaa.x..x"aa.x.B..
+ ...x.aaa`x...x"aaa`x...x`aaa"x...x`aaa.x...
+ ..x.aaa.x...C.x`aa.x...x.aa`x.C...x.aaa.x..
+ ..x.aaa.x....D.x%.x.....x.%x.D....x.aaa.x..
+ ...x"aaa"x..E.C.xx.......xx.C.E..x"aaa"x...
+ ..F.x`aa`x.........aa.aa.........x`aa`x.F..
+ x..G.x.%x........aaa...aaa........x%.x.G..x
+zxx..F.xx.E.....aaa...a...aaa.....E.xx.F..xxz
+zxy............aaa'a.a.a.a'aaa............yxz
+zxy...........aaa'a...I...a'aaa...........yxz
+zxyy........aaa".....ada....."aaa........yyxz
+zxyy.......aaaa..aJ".'I'."Ja..aaaa.......yyxz
+zxy.......aaa'~..Jaa.a*a.aaJ..~'aaa.......yxz
+zxyy...H.aa"..K..aaa."a".aaa..K.."aa.H...yyxz
+zxyy.....aa.a..K.daa.a*a.aad.K..a.aa.....yyxz
+zxy...aa.a....a%a.da.'a'.ad.a%a....a.aa...yxz
+zxyy..aa.....a.a%a...a|a...a%a.a.....aa..yyxz
+zxyy.aaa.LaL....a.a..1a1..a.a....LaL.aaa.yyxz
+zxy..aa.....aaa."..a~a1a~a..".aaa.....aa..yxz
+zxy.aaa...a....aaa.~a1a1a~.aaa....a...aaa.yxz
+zxy.aa''a"...a..9.da18381ad.9..aa.."a''aa.yxz
+xxxyxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaxyxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Very loosely based off of minmay's beehive_corners.
+NAME:    regret_index_harrowing_hell_hive
+TAGS:    no_pool_fixup
+DEPTH:   D:11-, Lair:2-, !Lair:$
+ORIENT:  southwest
+WEIGHT:  4
+MONS:    killer bee, meliai, queen bee, oklob plant
+NSUBST:  ' = 18:1 / 4 = 01''' / * = .
+NSUBST:  " = 12:0 / 4 = 001'' / * = .
+SHUFFLE: ABCD
+SUBST:   A = a, B : aa., C : a.., D = .
+SUBST:   y = xxx., Y = xxw, z = xx!
+CLEAR:   !
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
+: else
+NSUBST:  ~ = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
+: end
+: grandhive_vaults(_G, 'a', true)
+MAP
+xxxzzzzzzzzzzzzz
+xxxxxxxxxxxxxxxx
+xxxyyyyyyyyyyyyx
+xxyadaa$%a".a..x
+xxyda1'.a.......
+xxya1a"...a.A..@
+xxya'"a.a.'a....
+xxy$...a..a.....
+xxy%a.a.a'a.B...
+xxya....'a..C...
+xxy".a'aa.a.....
+xxy...a....aD...
+xxya.A..BC.Da...x
+xxy.............x
+xxy.............xzzzzzzz
+xxy.W.w.P"w"P.w.xxxxxxxzz
+xxx.xwwwwwwwwwwwWYYYYYxxzz
+xxxaxwwwwwwwwwWWwwwwwYYxxz
+xxxWxwwwwwwwwwWxxwwwwwYYxz
+xxxWxwwwwwwwwWwxxwwwwwwYxz
+xxxWxwwwwxxwWwwwww4*wwwYxz
+xxxWxwwwwxxWwwwwwW*4wwwYxz
+xxxWxwwwwwWWwwwwWwWwwwwYxz
+xxxWxwwwwWwwwwwWwWwwxxwWxxxx
+xxxW'P.w.w.w.P~wWwwwxxWw..........@..xxz
+xxx'.........".~wwwwwWWww............yxz
+xxxa.......ACB"PwwwwWwww.............yxz
+xxx'.a....D".C..wwwWwwwwP..aD.AB..C.ayxz
+xxaa.......B"A.wwWWwwwww"..Da....a...yxz
+xxy9a..~....D...wWxxwwwww....a.aa'a."yxz
+xxaa".a.*......wWwxxwwww"..A..a'....ayxz
+xxydaa..a*......wwwwwwwwP..B.a'a.a.a%yxz
+xxa~1..a..~....wwwwwwwww.....a..a...$yxz
+xxy%a1a..a......wwwwwwwww...a'.a.a"'ayxz
+xxa8131.a...a..Pwwwwwwww...C.a..."a1ayxz
+xxy*a1a1a"a....'xxxxxxxxW......a.'1adyxz
+xxxa*8%~da9a'a'WWWWWWWa....a."a%$aadayxz
+xxxxyayayayayaxxxxxxxxxxyyyyyyyyyyyyyxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# ...not even recognizable as beehive_tunnels anymore. Oh well.
+NAME:    regret_index_tunnel_blossom
+TAGS:    no_pool_fixup
+DEPTH:   D:11-, Lair:2-, !Lair:$
+ORIENT:  float
+WEIGHT:  6
+MONS:    killer bee, meliai, queen bee
+NSUBST:  ' = 18:1 / 4 = 01... / *:.
+NSUBST:  " = 12:0 / 4 = 001.. / *:.
+SHUFFLE: BCDEFGH
+NSUBST:  A = 1:. / * = a
+SUBST:   B = ., C : a., DEFGH = a, X = xxPw
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:   9 = 990, 8 = 9, ~ = .
+: else
+NSUBST:  ~ = 3:2 / *:1
+:    if you.branch() == "Lair" then
+SUBST:   9 = 998, 0 = 009
+:    end
+: end
+: grandhive_vaults(_G, 'a', true)
+MAP
+      .@.xx.@.......@.xx.@.
+      ...xx.X.......X.xx...
+    ...X.xx...xx.xx...xx.X...
+    .X...xxxxx..x..xxxxx...X.
+  .....xxxx...........xxxx.....
+  .X...xxxxxx'.X.X.'xxxxxx...X.
+......x....xxx.."..xxx....x......
+@.X.xx..X..'xHBBCCDDx'..X..xx.X.@
+....xx...".GH...'...EE."...xx....
+xxxxxx....FG.a.aaa.a.FF....xxxxxx
+xxxxxxxx'EF.a%''""'%a.GG'xxxxxxxx
+.X..x.xxxE.a%aaaAaaa%a.Hxxx.x..X.
+...x..'xD..'aa9"~**aad..Bx'..x...
+..x..X..C.a"a8a11da~a'a.B..X..x..
+@.x...."C'a"A~'131'~A"a'C"....x.@
+..x..X..B.a'a~ad11a8a"a.C..X..x..
+...x..'xB..daa**~"9aa'..Dx'..x...
+.X..x.xxxH.a%aaaAaaa%a.Exxx.x..X.
+xxxxxxxx'GG.a%'""''%a.FE'xxxxxxxx
+xxxxxx....FF.a.aaa.a.GF....xxxxxx
+....xx...".EE...'...HG."...xx....
+@.X.xx..X..'xDDCCBBHx'..X..xx.X.@
+......x....xxx.."..xxx....x......
+  .X...xxxxxx'.X.X.'xxxxxx...X.
+  .....xxxx...........xxxx.....
+    .X...xxxxx..x..xxxxx...X.
+    ...X.xx...xx.xx...xx.X...
+      ...xx.X.......X.xx...
+      .@.xx.@.......@.xx.@.
+ENDMAP
+
+###############################################################################
+
+NAME:    regret_index_dithmenos_brocken_genspenst
+TAGS:    no_monster_gen no_item_gen no_rotate patrolling
+DEPTH:   Depths, !Depths:$, Tar, !Tar:$
+ORIENT:  south
+MONS:    shadow, boggart, rakshasa, shadow wraith
+MONS:    vampire knight, shadow demon, shadow dragon
+KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
+KMONS:   8 = bone dragon / reaper / doom hound
+KMONS:   _ = tzitzimitl
+KFEAT:   _ = altar_dithmenos
+ITEM:    robe_of_night, ring_of_shadows
+ITEM:    cloak_of_the_thief, boots_of_the_assassin
+ITEM:    shadow dragon armour randart, ring of stealth randart
+ITEM:    phantom mirror, potion of invisibility ident:type q:2
+KFEAT:   F = floor
+SHUFFLE: 56, defghi, jk|
+: if you.in_branch("Tar") then
+SUBST:   02 = 00014, 9k = 8, d = }, e = ), f = ], ghij = .
+: else
+SUBST:   0 = 11112234
+: end
+MARKER:  F = lua:fog_machine { cloud_type = "black smoke", pow_min = 75, \
+                               pow_max = 100, delay_min = 50, delay_max = 75, \
+                               size = 1, walk_dist = 0, spread_rate = 5 }
+TILE:    c = dngn_stone_dark
+FTILE:   F = floor_pebble_darkgray
+COLOUR:  m = lightmagenta
+TILE:    m = dngn_transparent_wall_darkgray
+MAP
+         cc..c.c..cc
+         cc.......cc
+        cc..c...c..cc
+       ccc..c...c..ccc
+       ccc..c.3.c..ccc
+       cc1.m..c..m.1cc
+      ccc1.F.2c2.F.1ccc
+      ccc..m.4c4.m..ccc
+      cc..c..ccc..c..cc
+     ccc..c..ccc..c..ccc
+     ccc..c..ccc..c..ccc
+     cc..m..cc5cc..m..cc
+    ccc..F..++5++..F..ccc
+    ccc..m.6++.++6.m..ccc
+    cc..c..ccc.ccc..c..cc
+    cc..c..ccc.ccc..c..cc
+   ccc..c..cc...cc..c..ccc
+   cc..m..ccc...ccc..m..cc
+   cc..F..ccc...ccc..F..cc
+  ccc..m.0cc0...0cc0.m..ccc
+  cc5....ccc0.d.0ccc....6cc
+  cc..c..++..*e*..++..c..cc
+  cc9...7++.jk_kj.++7...9cc
+ ccccccccccccmFmcccccccccccc
+ ccccccccccccccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   argonaut_augean_stables
+TAGS:   no_pool_fixup
+DEPTH:  D:8-
+ORIENT: south
+KMONS:  12 = yak
+KMONS:  34 = death yak
+KITEM:  24 = *, $
+KFEAT:  _ = open_door
+: if you.absdepth() < 12 then
+NSUBST: Y = 1:42 / 1:2 / * = 1:50 .
+SUBST:  - = .:30 +, ~ = W:40 w
+: else
+NSUBST: Y = 2:4 / * = 1:50 3 .
+SUBST:  - = _:30 ., ~ = W:20 w
+: end
+SUBST:  ' : '., " : '.
+CLEAR:  '
+MAP
+    ...........
+    .....w.....
+  @....~www.....@
+  ....~wwww~.....
+  '....wwww~....'
+  '....wwww.....'
+ .......www.......
+ ........w........
+ ".......w......."
+ ".......~......."
+....cccc+++cccc....
+....cYY-.~.-Y.c....
+....cccc.~.cccc....
+....c.Y-.~.-YYc....
+....cccc.W.cccc....
+'...cYY-.W.-Y.c...'
+....cccc.~.cccc....
+....c.Y-.~.-YYc....
+....cccc.~.cccc....
+....cYY-.w.-Y.c....
+....cccccwccccc....
+ "....cccwccc...."
+ "......ww~......"
+ .......ww........
+ ......ww.........
+  '.....~w......'
+  '.....~ww.....'
+  ......ww.......
+  .....ww........
+xxxxxxwwwxxxxxxxxxx
+xxxxxxxwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
 ENDMAP

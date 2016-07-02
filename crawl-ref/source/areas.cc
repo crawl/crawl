@@ -566,7 +566,7 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_BRILLIANCE))
+    if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
 
     return size;
@@ -603,7 +603,7 @@ int monster::halo_radius() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
+    if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
     if (!(holiness() & MH_HOLY))

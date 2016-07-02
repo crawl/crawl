@@ -102,6 +102,11 @@ Berserk Other spell
 Causes a nearby ally to fly into a berserk rage. Going berserk temporarily
 increases health, speed, and damage dealt in melee.
 %%%%
+Bind Souls spell
+
+Bestows an enchantment on other nearby living creatures that may cause them to
+rise as spectral things after being slain.
+%%%%
 Black Mark spell
 
 Empowers the caster and any nearby allies to debilitate their foes on a
@@ -683,6 +688,12 @@ Converts all nearby poison into liquid flame, burning poisoned creatures from
 within. It also turns clouds of poison and mephitic gases into flame. The
 caster is not affected directly.
 %%%%
+Infestation spell
+
+Calls forth a plague of scarabs, infesting affected creatures for a duration
+depending on power and causing death scarabs to grow and burst from them upon
+death.
+%%%%
 Infusion spell
 
 Infuses the caster's melee attacks with magic, drawing from their reserves of
@@ -769,9 +780,8 @@ destroyed at any power level.
 %%%%
 Legendary Destruction spell
 
-Conjures forth one of several powerful magical effects. It may have the effects
-of Orb of Electricity, Lehudib's Crystal Spear, Orb of Destruction, Ghostly
-Fireball, Fireball, or Flash Freeze.
+Conjures two explosive magical effects in instant succession. The effects can
+be any mix of Fireball, Iceblast, and Ghostly Fireball.
 %%%%
 Lehudib's Crystal Spear spell
 

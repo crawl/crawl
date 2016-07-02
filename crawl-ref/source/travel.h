@@ -53,7 +53,7 @@ enum run_mode_type
 /* ***********************************************************************
  * Initialises the travel subsystem.
  */
-void stop_running();
+void stop_running(bool clear_delays = true);
 void travel_init_load_level();
 void travel_init_new_level();
 

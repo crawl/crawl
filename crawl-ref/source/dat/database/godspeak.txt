@@ -247,6 +247,10 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+Xom cleaving
+
+@Xom potion effect@
+%%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 
@@ -271,17 +275,6 @@ Xom colour smoke trail
 "Go forth and redecorate, my child!"
 
 "This place needs a little more atmosphere."
-%%%%
-# turns walls into glass
-Xom vitrification
-
-You feel watched.
-
-Everything around you seems to assume a strange transparency.
-
-The walls suddenly lose part of their structure.
-
-Xom alters the dungeon around you.
 %%%%
 # strengthens friendlies, weakens hostiles
 Xom good monster polymorph

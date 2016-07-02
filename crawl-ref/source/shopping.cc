@@ -332,7 +332,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 15;
                 break;
 
-            case SPWPN_EVASION:
             case SPWPN_PROTECTION:
             case SPWPN_VENOM:
                 valued *= 12;
@@ -1344,11 +1343,32 @@ int ShopMenu::selected_cost() const
 
 void ShopMenu::update_help()
 {
-    set_more(formatted_string::parse_string(make_stringf(
+    string top_line = make_stringf("<yellow>You have %d gold piece%s.",
+                                   you.gold,
+                                   you.gold != 1 ? "s" : "");
+    const int total_cost = selected_cost();
+    if (total_cost > you.gold)
+    {
+        top_line += "<lightred>";
+        top_line +=
+            make_stringf(" You are short %d gold piece%s for the purchase.",
+                         total_cost - you.gold,
+                         (total_cost - you.gold != 1) ? "s" : "");
+        top_line += "</lightred>";
+    }
+    else if (total_cost)
+    {
+        top_line +=
+            make_stringf(" After the purchase, you will have %d gold piece%s.",
+                         you.gold - total_cost,
+                         (you.gold - total_cost != 1) ? "s" : "");
+    }
+    top_line += "</yellow>\n";
+
+    set_more(formatted_string::parse_string(top_line + make_stringf(
         //You have 0 gold pieces.
         //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
         //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-        "<yellow>You have %d gold piece%s.</yellow>\n"
 #if defined(USE_TILE) && !defined(TOUCH_UI)
         "[<w>Esc</w>/<w>R-Click</w>] exit  "
 #else
@@ -1357,8 +1377,6 @@ void ShopMenu::update_help()
 #endif
         "%s  [%s] %s\n"
         "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
-        you.gold,
-        you.gold == 1 ? "" : "s",
         !can_purchase ? " " " "  "  " "       "  "          " :
         looking       ? "[<w>!</w>] buy|<w>examine</w> items" :
                         "[<w>!</w>] <w>buy</w>|examine items",
@@ -1620,7 +1638,15 @@ bool ShopMenu::process_key(int keyin)
         return true;
     }
 
-    return InvMenu::process_key(keyin);
+    auto old_selected = selected_entries();
+    bool ret = InvMenu::process_key(keyin);
+    if (old_selected != selected_entries())
+    {
+        // Update the footer to display the new $$$ info.
+        update_help();
+        draw_menu();
+    }
+    return ret;
 }
 
 void shop()

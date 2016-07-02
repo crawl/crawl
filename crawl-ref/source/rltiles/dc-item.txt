@@ -578,15 +578,11 @@ bone3
 bone4
 %rim 1
 chunk FOOD_CHUNK
-chunk_rotten FOOD_CHUNK_ROTTEN
 %back chunk
 chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
-%back chunk_rotten
-chunk_brands/i-mutation FOOD_CHUNK_ROTTEN_MUTAGENIC
-chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
-chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
+chunk_brands/i-inedible FOOD_CHUNK_INEDIBLE
 %back none
 chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
@@ -1002,7 +998,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_destruction
 %finish
-# Remove dungeons, summoning and wonders when TAG_MAJOR_VERSION > 34
+# Remove when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_dungeons
@@ -1012,6 +1008,7 @@ misc_deck MISC_DECK
 %compose i-deck_summoning
 %finish
 %start
+# Remove when TAG_MAJOR_VERSION > 34
 %compose misc_deck
 %compose i-deck_wonders
 %finish
@@ -1019,11 +1016,11 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_punishment
 %finish
+# Remove war, changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_war
 %finish
-# Remove changes and defense when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_changes

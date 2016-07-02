@@ -2079,11 +2079,6 @@ const int player_adjust_evoc_power(const int power, int enhancers)
     return stepdown_spellpower(100 *apply_enhancement(power, total_enhancers));
 }
 
-const int player_adjust_invoc_power(const int power)
-{
-    return apply_enhancement(power, you.spec_invoc());
-}
-
 // This function differs from the above in that it's used to set the
 // initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
@@ -2250,9 +2245,6 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
         evbonus += AGILITY_BONUS;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
-
-    if (you.wearing_ego(EQ_WEAPON, SPWPN_EVASION))
-        evbonus += 5;
 
     evbonus += you.scan_artefacts(ARTP_EVASION);
 
@@ -2448,8 +2440,6 @@ int player_shield_class()
 
         shield += stat;
     }
-    else if (you.duration[DUR_MAGIC_SHIELD])
-        shield += 900 + player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 75));
 
     // mutations
     // +2, +3, +4 (displayed values)
@@ -3108,14 +3098,7 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))
-        {
             upgrade_hepliaklqana_ancestor();
-            if (you.experience_level == hepliaklqana_specialization_level())
-            {
-                god_speaks(you.religion,
-                           "You may now specialize your ancestor.");
-            }
-        }
 
         learned_something_new(HINT_NEW_LEVEL);
     }
@@ -4526,7 +4509,8 @@ void handle_player_poison(int delay)
     // If Cheibriados has slowed your life processes, poison affects you less
     // quickly (you take the same total damage, but spread out over a longer
     // period of time).
-    const double delay_scaling = (GOD_CHEIBRIADOS == you.religion && you.piety >= piety_breakpoint(0)) ? 2.0 / 3.0 : 1.0;
+    const double delay_scaling = have_passive(passive_t::slow_metabolism)
+                               ? 2.0 / 3.0 : 1.0;
 
     const double new_aut = cur_aut - ((double) delay) * delay_scaling;
     const double new_dur = _poison_aut_to_dur(new_aut);
@@ -5405,7 +5389,6 @@ player::player()
     // Non-saved UI state:
     prev_targ        = MHITNOT;
     prev_grd_targ.reset();
-    prev_move.reset();
 
     travel_x         = 0;
     travel_y         = 0;
@@ -5780,7 +5763,6 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
-           || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
@@ -5991,11 +5973,6 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
-    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
-        && player_equip_unrand(UNRAND_FENCERS))
-    {
-        level = min(level + 4 * scale, 27 * scale);
-    }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     return level;
@@ -6137,9 +6114,6 @@ int player::armour_class(bool /*calc_unid*/) const
 
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
-
-    if (duration[DUR_MAGIC_ARMOUR])
-        AC += 200 + you.props[MAGIC_ARMOUR_KEY].get_int() * 5;
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -7335,7 +7309,7 @@ bool player::can_safely_mutate(bool temp) const
 bool player::is_lifeless_undead(bool temp) const
 {
     if (undead_state() == US_SEMI_UNDEAD)
-        return temp ? hunger_state <= HS_SATIATED : false;
+        return temp ? hunger_state < HS_SATIATED : false;
     else
         return undead_state() != US_ALIVE;
 }
@@ -7447,11 +7421,6 @@ void player::shiftto(const coord_def &c)
     crawl_view.shift_player_to(c);
     set_position(c);
     clear_far_constrictions();
-}
-
-void player::reset_prev_move()
-{
-    prev_move.reset();
 }
 
 bool player::asleep() const
@@ -7570,30 +7539,10 @@ bool player::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the player isn't standing over a shaft.
-    if (get_trap_type(pos()) != TRAP_SHAFT)
+    if (get_trap_type(pos()) != TRAP_SHAFT
+        && !feat_is_shaftable(grd(pos())))
     {
-        switch (grd(pos()))
-        {
-        case DNGN_FLOOR:
-        case DNGN_OPEN_DOOR:
-        // what's the point of this list?
-        case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_TELEPORT:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_TRAP_SHADOW:
-        case DNGN_TRAP_SHADOW_DORMANT:
-#endif
-        case DNGN_TRAP_ALARM:
-        case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_SHAFT:
-        case DNGN_UNDISCOVERED_TRAP:
-        case DNGN_ENTER_SHOP:
-            break;
-
-        default:
-            return false;
-        }
-
+        return false;
     }
 
     down_stairs(DNGN_TRAP_SHAFT);
@@ -7610,19 +7559,17 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    switch (grd(pos()))
+    if (feat_is_shaftable(grd(pos())))
     {
-    case DNGN_FLOOR:
-    case DNGN_OPEN_DOOR:
         if (!is_valid_shaft_level())
         {
             if (!quiet)
                 mpr("You can't shaft yourself on this level.");
             return false;
         }
-        break;
-
-    default:
+    }
+    else
+    {
         if (!quiet)
             mpr("You can't shaft yourself on this terrain.");
         return false;
@@ -7951,6 +7898,26 @@ static int _get_device_heal_factor()
 
     // make sure we don't turn healing negative.
     return max(0, factor);
+}
+
+void print_device_heal_message()
+{
+    // Don't give multiple messages in weird cases with both enhanced
+    // and reduced healing.
+    if (_get_device_heal_factor() > 3)
+    {
+        if (player_equip_unrand(UNRAND_KRYIAS))
+        {
+            item_def* item = you.slot_item(EQ_BODY_ARMOUR);
+            mprf("%s enhances the healing.",
+            item->name(DESC_THE, false, false, false).c_str());
+        }
+        else
+            mpr("The healing is enhanced."); // bad message, but this should
+                                             // never be possible anyway
+    }
+    else if (_get_device_heal_factor() < 3)
+        mpr("Your system partially rejects the healing.");
 }
 
 bool player::can_device_heal()

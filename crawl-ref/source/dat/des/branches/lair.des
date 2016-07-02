@@ -38,7 +38,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         end
     end
 
-    e.ftile(".t+%*|q01234567COGTU = floor_grass")
+    e.ftile(".t+%*|q012345678COGTU = floor_grass")
 
     e.kfeat("O = shallow_water")
     if mist then
@@ -525,7 +525,7 @@ ENDMAP
 #
 NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
-DEPTH:   Lair:3-7
+DEPTH:   Lair:3-, !Lair:$
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
@@ -762,7 +762,7 @@ ENDMAP
 #
 NAME:   pf_torpor_hydra
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  Lair:3-7
+DEPTH:  Lair:3-, !Lair:$
 MONS:   torpor snail, hydra
 # A decent item visible from the door, a superb item not visible, and a couple
 # of floor items anywhere
@@ -931,7 +931,7 @@ ENDMAP
 ###############################################################################
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type
-DEPTH: Lair:6-
+DEPTH: Lair:4-
 TAGS: extra no_pool_fixup
 MONS: w:1 generate_awake patrolling catoblepas / w:4 nothing
 SUBST: a = w W .
@@ -979,7 +979,7 @@ ENDMAP
 # A polar bear lost in the jungle, how odd
 NAME:  roderic_lost_polar_bear
 TAGS:  no_monster_gen
-DEPTH: Lair:3-7
+DEPTH: Lair:3-, !Lair:$
 MONS:  plant, polar_bear, bush
 SUBST: ? = 1t
 SUBST: ' = .:80 1 3:3
@@ -1225,10 +1225,17 @@ ENDMAP
 
 NAME:   wad_woods_antlair
 TAGS:   uniq_anthill
-DEPTH:  Lair, Forest
+DEPTH:  Lair:2-, Forest
 : wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
 MONS:   worker ant, soldier ant
+KMONS:  8 = entropy weaver
 KMONS:  Q = queen ant
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  8' = .
+: else
+SUBST:  ' = %
+: end
 MAP
 xxxxxxxxxxx1.xxxx
 xxx1xxx1xt.t.txxx
@@ -1240,8 +1247,8 @@ xxxxxx.x.x.1x...t
 xxxx.x.7xxx.xx.xx
 xxx6x.x.xxx.x.xxx
 xxxx.x.6x7..x.x7x
-x.x.x6x.W.x7x%.6x
-x7..x.xWWW.x.6Q*x
+x'x.x6x.W.x7x%86x
+x7.'x.xWWW.x86Q*x
 xx6xxxxxxxx6xx*%x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1461,12 +1468,18 @@ NAME:   wad_woods_minihive
 TAGS:   uniq_beehive
 DEPTH:  D:8-, Lair, Forest
 ORIENT: float
+MONS:   killer bee, queen bee
+KMONS:  8 = meliai
+KITEM:  8 = %
+KFEAT:  a = x
+: wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
+: if (you.branch() == "Lair" and you.absdepth() < 14)
+:  or you.absdepth() < 12 then
+SUBST:  8 = 6
+: end
+KMASK:  W = no_monster_gen
 COLOUR: a = yellow
 TILE:   a = wall_wax
-SUBST:  a = x
-: wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
-MONS:   killer bee, queen bee
-KMASK:  W = no_monster_gen
 MAP
         ttttttt..t    tt.
       .ttt.t.tt...t  ttt..
@@ -1474,14 +1487,14 @@ MAP
  t.t1ttt.1..1WW.1t....t1...t...
 t.1t..t.1..tWWW.t.1.1..t.tt..tt.
 ttt.t11.1t...tWW.1t.t1..tt...ttt
-tttt.1..aaaaaaa1Wt.t...t..tt1ttt
+tttt.1..aaamaaa1Wt.t...t..tt1ttt
 t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
-  tt.aa66a7a.a.6aaWtt1t...tt.tt
+  tt.aa86a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
- t1.1aa66a.a.a.6aa.t...t.t.ttttt
+ t1.1aa66a.a.a.8aa.t...t.t.ttttt
 tt.1..aaa.aba6aaa.11.t..tttt%ttt
-t.t.1..aa.6a6.aaWW.t.tt.tt11t
+t.t.1..aa.8a6.aaWW.t.tt.tt11t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
  tt.t111....t1WWwW.....1ttt
   11.t.tt1.tt.tWWt1.1tt...
@@ -1579,7 +1592,7 @@ ENDMAP
 # contains one catoblepas, three other monsters and four items
 # the walls are usually thick enough to make this only accessible from the floor below
 NAME: kennysheep_catoblepas_arena
-DEPTH: Lair:5-7
+DEPTH: Lair:4-, !Lair:$
 TAGS:  no_monster_gen ruin
 MONS:  catoblepas
 NSUBST: d = 4=%* / 3:0 / *:.
@@ -1673,7 +1686,7 @@ ENDMAP
 
 ## A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
-DEPTH:  Lair:3-7
+DEPTH:  Lair:3-, !Lair:$
 ORIENT: north
 TAGS:   no_pool_fixup no_rotate patrolling
 SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
@@ -1830,7 +1843,7 @@ __________________
 ENDMAP
 
 NAME: nicolae_lair_yak_garden
-DEPTH: Lair:6-
+DEPTH: Lair:4-
 TAGS: no_monster_gen no_item_gen no_trap_gen
 SUBST: P = P.
 NSUBST: D = 1:D / *:.
@@ -2429,6 +2442,41 @@ PPP'''...xP''.'.''Pxx
              xPx
 ENDMAP
 
+NAME:    minmay_guarded_unrand_snakebite
+DEPTH:   Lair
+TAGS:    ruin
+ORIENT:  southeast
+: if you.unrands("snakebite") then
+# a randart venom demon whip is unlikely to be useful for someone with snakebite
+# so just do this
+ITEM:    demon whip good_item
+: else
+ITEM:    snakebite no_pickup
+: end
+KMONS:   A = adder
+KMONS:   B = water moccasin
+KMONS:   C = black mamba
+SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
+SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
+MAP
+xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx222xxx
+@11xxxxxx222xxx3xx
+xxx1xx112xxxxxxx3x
+xxxx11xxxxxxxxxx3x
+xxxxxxxxxxxxxxxx3x
+xxxxxxxxxx44xxx3xx
+xxxxxxx444xx433xxx
+xxxx554xxxxxxxxxxx
+xxx5xxxxxxxxxxxxxx
+xx5xxxxxxxxxxxxxxx
+xx5xxxxxxxxxx77xxx
+xxx5xxxxxxxx7xx7dx
+xxxx56xxx666xxxxxx
+xxxxxx666xxxxxxxxx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################
@@ -2648,17 +2696,20 @@ NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
 WEIGHT: 5
-MONS:   giant frog w:38 / spiny frog w:28 / vampire mosquito
-MONS:   blink frog
-MONS:   komodo dragon / hydra
-KMONS:  4 = patrolling giant leech
+MONS:   giant frog, spiny frog, vampire mosquito
+MONS:   blink frog, komodo dragon / hydra
+KMONS:  6 = patrolling giant leech
 KMONS:  p = plant
 ITEM:   any good_item
 KFEAT:  4p = W
-SUBST:  X = x:80 W:20 1:5 p:10
-SUBST:  W = W:75 w:25 1:5 p:10
-SUBST:  . = .:80 W:20 1:5 p:10
-NSUBST: % = 1:d / 1:* / * = %%*|, W = 3 = 44W / *:W, 5 = 1:3 / *:2.
+# Previously 11.6 giant frogs, 16.6 spiny frogs,
+# and 7.1 vampire mosquitoes on average.
+NSUBST: XW. = 6:1 / 8:2 / 4:3 / 12 = 11... / 16 = 22... / 8 = 44...
+NSUBST: W = 3 = 66w / *:W, 5 = 1:5 / *:4
+NSUBST: % = 1:d / 1:* / * = %%*|
+SUBST:  X = x:80 W:20 .:5 p:10
+SUBST:  W = W:80 w:25 p:10
+SUBST:  . = .:85 W:20 p:10
 MAP
           ............xxx
        .................xxx
@@ -2669,13 +2720,13 @@ MAP
  x..WWWWWWWWWWWWWWWWWWWWWWWW....
 xxxxxWWWWWWWWWWWWWWWWWWWWWWW....
 x.XXxxxxWWWWWWWWWWWWWWWWWWWWW...
-x.WWXXXxxxxxxxpp2WWWWWWWWWWWW...
-..WWWWWXXXxxppppp3WWWWWWWWWWW...
-..WWWWWWWW2pp%%%pp2WWWWWWWWWW...
-..WWWWWWWW1pp%%%%pp5WWWWWWWWWW..
-..WWWWWWWW2ppp%%%pp2WWWWWWWWWW..
-.WWWWWWWWWW3ppppppxxXXWWWWWWWW..
-.WWWWWWWWWWW25ppxxxxxxXXXWWWWW..
+x.WWXXXxxxxxxxpp4WWWWWWWWWWWW...
+..WWWWWXXXxxppppp5WWWWWWWWWWW...
+..WWWWWWWW4pp%%%pp4WWWWWWWWWW...
+..WWWWWWWW6pp%%%%pp6WWWWWWWWWW..
+..WWWWWWWW4ppp%%%pp4WWWWWWWWWW..
+.WWWWWWWWWW4ppppppxxXXWWWWWWWW..
+.WWWWWWWWWWW54ppxxxxxxXXXWWWWW..
 .WWWWWWWWWWWWWWWWWWWWxxxxXXXWW.x
 .WWWWWWWWWWWWWWWWWWWWWWWxxxxXX.x
 ..WWWWWWWWWWWWWWWWWWWWWWWWWxxxxx
@@ -2694,36 +2745,36 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / polar bear w:12, wolf, redback w:9 / wasp w:1
-MONS:   spriggan, spriggan rider, spriggan druid n_adj n_noc name:young hd:8
-SUBST:  T : T:20 .:1 t:1
-SUBST:  T = tt..., E = t_
-CLEAR:  _
-SUBST:  2 = 2., 4 = 4., . = .:185 1 3:5
-NSUBST: 5 = 1:5 / *:4, 6 = 1 = 6:9 5:1 / 1 = 6:4 5:6 / *:5
+MONS:   black bear / polar bear w:12, wolf, redback / wasp w:20
+MONS:   spriggan, spriggan rider, boggart
 KITEM:  * = gold no_pickup, star_item no_pickup, star_item no_pickup
 KITEM:  | = gold no_pickup, superb_item no_pickup, star_item no_pickup
 KITEM:  $ = gold no_pickup, star_item no_pickup
+SUBST:  T : T:20 .:1 t:1, T = tt..., E = t_
+CLEAR:  _
+NSUBST: . = 4:1 / 4 = 1. / 1:3 / 3 = 3.. / *:.
+NSUBST: 2 = 8:2 / 20 = 2. / *:., 4 = 4:4 / 8 = 4. / *:.
+NSUBST: 5 = 1:5 / *:4, 6 = 2:6 / 2 = 56 / *:4
 NSUBST: * = 1:| / *:*
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttT*G*Ttttttt....ttttttttt.....ttTTtttttTT
-ttttttttt4.*..TTT....ttT5..TTT....ttT.2222TTtt..@
+ttttttttt4.*.6TTT....ttT5..TTT....ttT.2222TTtt..@
 tttttttTT.4.4....TTttttttT..4...TttttttTT222..ttT
 tttttT.....6..4TtttttttttT4...4ttttttttt22ttttttt
 ttttt..ttT4.4.TtttttttttT....4.tttttttt..tttttttE
 tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt
 tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt
 ttT22tttT.6TtttttttT....tttttttttTTttttttt..ttE
-tt22ttt$.4..tttttt..TTT.ttttttttttttttttttt.tt
-tt22tttT..4.ttttT5Tttttt.22tttttttttttttttT.tt
+tt22ttt$.4..tttttt5.TTT.ttttttttttttttttttt.tt
+tt22tttT6.4.ttttT.Tttttt.22tttttttttttttttT.tt
 tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt
 tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt
 tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttE
 ttT.tttt.....TTT222TttttttttttT...TT...TttttE
 ttt..tt...TTttttttt..TTttttttttt..4...Tttttt
-tttT....TtttttttttttT@   EEttttt46.4.ttttttE
+tttT....TtttttttttttT@   EEttttt46.46ttttttE
 ttttT..tttttttttttttE      EEttttT.$tttttE
 ttttT..TtttttttttttE          ttttttttt
 ttttt...ttttttttttE            ttttttt
@@ -2808,8 +2859,8 @@ SUBST:  ? = 145*
 MAP
 @..@..@..xxxxxxxxxxxxxxxxx
 x3WW-3.xxxxttttttttttxxxxx
-xttWW-tttt.ttt3WW-..ttxxxx
-x3ttW-tt.ttt--WwwW3..ttxxx
+xttWW-tttttttt3WW-..ttxxxx
+xtttW-tt.tttt-WwwW3..ttxxx
 xtttWWtt...t--WwwwW-.tttxx
 xtt1Wttt1.tt.WWtt3WW..tttx
 xttWw-t3.t..Wttt--WWW.tttx

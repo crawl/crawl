@@ -40,15 +40,10 @@ static spell_type search_order_aoe_conj[] =
     SPELL_CHAIN_LIGHTNING,
     SPELL_SHATTER,
     SPELL_FREEZING_CLOUD,
-    SPELL_STEAM_BALL,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_METAL_SPLINTERS,
     SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord conjuration spell list.
@@ -66,9 +61,7 @@ static spell_type search_order_conj[] =
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord self-enchantment spell list.
@@ -76,12 +69,9 @@ static spell_type search_order_selfench[] =
 {
     SPELL_HASTE,
     SPELL_SILENCE,
-    SPELL_BATTLESPHERE,
-    SPELL_SPELLFORGED_SERVITOR,
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord summoning spell list.
@@ -95,7 +85,6 @@ static spell_type search_order_summon[] =
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
     SPELL_SUMMON_BUTTERFLIES, // funny
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord misc spell list.
@@ -110,10 +99,7 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
-    SPELL_NO_SPELL, // end of list
 };
-
-// Last slot (emergency) can only be Teleport Self or Blink.
 
 ghost_demon::ghost_demon()
 {
@@ -257,16 +243,16 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        // This bit uses the list of player spells to find appropriate
-        // spells for the demon, then converts those spells to the monster
-        // spell indices. Some special monster-only spells are at the end.
+        if (!one_chance_in(10))
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
-
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
-        else
-            ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        if (!one_chance_in(10))
+        {
+            if (coinflip())
+                ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+            else
+                ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        }
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));

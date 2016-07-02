@@ -84,9 +84,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_CURE_POISON,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_VENOM_BOLT,
 },
 
@@ -208,12 +208,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_FOREST,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
+#endif
 
 {   // Book of Unlife
     SPELL_RECALL,
@@ -276,7 +278,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CORONA,
+    SPELL_CONFUSING_TOUCH,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -365,6 +367,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
+    SPELL_INFESTATION,
     SPELL_NECROMUTATION,
 },
 

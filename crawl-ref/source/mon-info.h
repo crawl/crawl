@@ -100,7 +100,9 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
+#endif
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
@@ -113,8 +115,8 @@ enum monster_info_flags
 #endif
     MB_WEAK,
     MB_DIMENSION_ANCHOR,
-    MB_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
+    MB_CONTROL_WINDS,
     MB_WIND_AIDED,
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
 #endif
@@ -158,6 +160,8 @@ enum monster_info_flags
     MB_GOZAG_INCITED,
     MB_PAIN_BOND,
     MB_IDEALISED,
+    MB_BOUND_SOUL,
+    MB_INFESTATION,
     NUM_MB_FLAGS
 };
 

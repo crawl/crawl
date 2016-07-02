@@ -28,10 +28,10 @@ there. Underestimate her at your peril!
 %%%%
 Aizul
 
-Once the primary guardian serpent of a legendary treasure hoard, he was
-disgraced after thieves looted it while he slept. He now slithers about the
-dungeon, seeking vengeance against all would-be looters. He is an accomplished
-spellcaster, but no more deadly in melee combat than others of his kind.
+Once the primary guardian serpent of a legendary treasure hoard, she was
+disgraced after thieves looted it while she slept. She now slithers about the
+dungeon, seeking vengeance against all would-be looters. She is an accomplished
+spellcaster, but no more deadly in melee combat than others of her kind.
 %%%%
 Antaeus
 
@@ -62,6 +62,14 @@ Azrael
 
 A powerful, belligerent efreet. (Is there any other kind?)
 %%%%
+Bai Suzhen
+
+A weary draconian with foreign and watery scales. She has come to the Dungeon
+in hopes of resurrecting her mortal husband; a noble cause, for a being once
+known for quarreling with saints and flooding unfortunate temples. If pressed
+to her limits, she will reveal her true form, the mere sight of which struck
+her husband dead. Adventurers may wish they were so lucky!
+%%%%
 Blork the orc
 
 A particularly fat and ugly orc. He's scavenged a pair of rainbow-coloured
@@ -74,7 +82,7 @@ regenerate his desiccated skeletal remains even if completely disintegrated.
 %%%%
 Cerebov
 
-A violent and wrathful demon, Cerebov appears as a giant human covered in
+A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
 shining golden armour and wielding a huge twisted sword.
 %%%%
 Chuck
@@ -196,7 +204,7 @@ A shadowy figure clothed in profound darkness.
 Grinder
 
 An inefficient shadow imp previously employed as a torturer in one of the lower
-circles of Hell. He has a tendency to complain and make inane statements.
+circles of Hell. She has a tendency to complain and make inane statements.
 %%%%
 Grum
 
@@ -220,7 +228,7 @@ test its edge.
 %%%%
 Ijyb
 
-A small and twisted goblin, wearing some ugly blue rags. He claims dominion
+A small and twisted goblin, wearing some ugly blue rags. She claims dominion
 over this level of the dungeon; the punishment for trespassing is death.
 %%%%
 Ilsuiw
@@ -273,11 +281,11 @@ for prey to slake its bottomless appetite.
 %%%%
 Lom Lobon
 
-Stoic and inscrutable, Lom Lobon is an ancient demon infamous for his mastery
-of magic. Rumoured to be the most learned being in the halls of Pandemonium, he
-is at times sought out by mortal wizards who offer their souls in exchange for
-the secrets of the arcane. Lacking the terrible wrath present in most demons,
-Lom Lobon's single eye instead hides a cold, impartial cruelty.
+Stoic and inscrutable, Lom Lobon is an ancient demon infamous for its mastery
+of magic. Rumoured to be the most learned being in the halls of Pandemonium,
+it is at times sought out by mortal wizards who offer their souls in exchange
+for the secrets of the arcane. Lacking the terrible wrath present in most
+demons, Lom Lobon's single eye instead hides a cold, impartial cruelty.
 %%%%
 Louise
 
@@ -370,12 +378,6 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 %%%%
-Norris
-
-A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or he who dies — “both” would probably be the
-best option.
-%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
@@ -440,7 +442,7 @@ that is, easy meals — it attracts.
 %%%%
 Sojobo
 
-King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
+Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
 Sonja
 
@@ -460,12 +462,12 @@ draconian warrior. Her scales seem to shimmer and change colour as you watch.
 %%%%
 Urug
 
-A coarse and lanky orc. Urug lost his eye in a fight with a harpy, and has
-sworn to slay every last one of them. Unfortunately, the vision in his
-remaining eye is not very good, and he has mistaken you for one.
+A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
+sworn to slay every last one of them. Unfortunately, the vision in her
+remaining eye is not very good, and she has mistaken you for one.
 {{
     if you.can_smell() then
-        return "He smells terrible."
+        return "She smells terrible."
     end
 }}
 %%%%
@@ -1093,8 +1095,8 @@ dangerous, this freakish relative puts it to shame.
 %%%%
 entropy weaver
 
-A gaunt humanoid creature covered in a flaking, pale chitin. Its spindly limbs
-are capable of startlingly quick movement and end in razor-sharp talons.
+A gaunt formicid with flaking, pale chitin. Its spindly limbs are capable of
+startlingly quick movement and end in razor-sharp talons.
 %%%%
 ettin
 
@@ -1396,9 +1398,9 @@ A hateful demon, desirous to see all life destroyed by its damnation.
 %%%%
 hellwing
 
-A hideous skeletal demon. It swoops through the air on powerful wings of
-ancient withered skin, taking sadistic joy from harrying those who would try
-to flee its grasp.
+A hideous skeletal demon, known for armouring itself with the remains of its
+victims. It swoops through the air on powerful wings of ancient withered skin,
+taking sadistic joy from harrying those who would try to flee its grasp.
 %%%%
 hexer
 
@@ -1678,6 +1680,12 @@ manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
+%%%%
+meliai
+
+A nymphal hybrid, with a winged torso of a human ontop of the stinging abdomen
+of a bee. The meliai serve under many roles: priestesses of nature, nurses to
+the divine, and warrior-champions for their hives.
 %%%%
 merfolk
 
@@ -3046,12 +3054,6 @@ water elementalist statue
 A smooth, charming statue of a beautiful merfolk bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
 light, as if sprinkled in actual water.
-%%%%
-young spriggan druid
-
-A junior member of the order of spriggans sworn to protect nature. While less
-dangerous than the elders, this one is perfectly capable of dealing with
-trespassers like you.
 %%%%
 witch
 

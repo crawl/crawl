@@ -175,7 +175,6 @@ int book_rarity(book_type which_book)
     case BOOK_FEN:
         return 12;
 
-    case BOOK_ENVENOMATIONS:
     case BOOK_WARP:
     case BOOK_DRAGON:
         return 15;
@@ -896,7 +895,8 @@ bool learn_spell(spell_type specspell, bool wizard)
         add_spell_to_memory(specspell);
     else
     {
-        start_delay(DELAY_MEMORISE, spell_difficulty(specspell), specspell);
+        if (!already_learning_spell(specspell))
+            start_delay<MemoriseDelay>(spell_difficulty(specspell), specspell);
         you.turn_is_over = true;
 
         did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));

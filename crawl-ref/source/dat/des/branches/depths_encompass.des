@@ -107,8 +107,8 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 MONS:    plant / fungus w:2
 MONS:    wolf / warg / hell hound / raiju w:4
-MONS:    shadow w:20 / wraith w:20 / lost soul w:2 / \
-         shadow wraith / phantasmal warrior / skeletal warrior
+MONS:    shadow w:20 / wraith w:20 / shadow wraith / phantasmal warrior / \
+         skeletal warrior
 MONS:    dancing weapon / war gargoyle w:2
 MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \
@@ -882,7 +882,7 @@ MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          deep elf blademaster / deep elf master archer / \
          draconian monk / draconian annihilator / draconian knight / \
-         juggernaut w:20 / iron giant w:20
+         juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator
 KFEAT:   z^ = known zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot

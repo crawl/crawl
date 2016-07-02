@@ -646,8 +646,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
         if (coinflip())
             _beogh_blessing_reinforcements();
 
-        delayed_monster_done("Beogh blesses you with "
-                              "reinforcements.", "");
+        delayed_monster_done("Beogh blesses you with reinforcements.");
 
         // Return true, even though the reinforcements might
         // not be placed.

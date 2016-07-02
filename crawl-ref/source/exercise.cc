@@ -271,6 +271,11 @@ void practise(exer_type ex, int param1)
     case EX_WAIT:
         _exercise_passive();
         break;
+
+    case EX_DID_USE_DECK:
+        exercise(SK_INVOCATIONS, 1);
+        break;
+
     default:
         break;
     }
@@ -284,6 +289,7 @@ void practise(exer_type ex, int param1)
     {
         case EX_DID_ZAP_WAND:
         case EX_DID_EVOKE_ITEM:
+        case EX_DID_USE_DECK:
         case EX_DID_CAST:
         case EX_USED_ABIL:
         case EX_WILL_THROW_WEAPON:

@@ -186,12 +186,17 @@ bool UseItemMenu::process_key(int key)
  * @param item_type The object_class_type or OSEL_* of items to list.
  * @param oper The operation being done to the selected item.
  * @param prompt The prompt on the menu title
+ * @param allowcancel If the user tries to cancel out of the prompt, run this
+ *                    function. If it returns false, continue the prompt rather
+ *                    than returning null.
  *
  * @return a pointer to the chosen item, or nullptr if none was chosen.
  */
 
 static item_def* _use_an_item(int item_type, operation_types oper,
-                              const char* prompt)
+                              const char* prompt,
+                              function<bool ()> allowcancel = []()
+                              { return true; })
 {
     item_def* target = nullptr;
 
@@ -217,19 +222,17 @@ static item_def* _use_an_item(int item_type, operation_types oper,
         // Handle inscribed item keys
         if (isadigit(keyin))
         {
-            int idx = digit_inscription_to_inv_index(keyin, oper);
-            // No such item.
-            if (idx < 0)
-                break;
-
-            target = &item_from_int(true, idx);
+            const int idx = digit_inscription_to_inv_index(keyin, oper);
+            if (idx >= 0)
+                target = &item_from_int(true, idx);
         }
-        else if (keyin == '\\')
-            check_item_knowledge();
         // TODO: handle * key
-        else if (sel.empty())
-            break;
-        else
+        else if (keyin == '\\')
+        {
+            check_item_knowledge();
+            continue;
+        }
+        else if (!sel.empty())
         {
             ASSERT(sel.size() == 1);
 
@@ -237,17 +240,18 @@ static item_def* _use_an_item(int item_type, operation_types oper,
             target = const_cast<item_def*>(ie->item);
         }
 
+        if (target && !check_warning_inscriptions(*target, oper))
+            target = nullptr;
         if (target)
+            return target;
+        else if (allowcancel())
         {
-            if (!check_warning_inscriptions(*target, oper))
-                target = nullptr;
-            break;
+            prompt_failed(PROMPT_ABORT);
+            return nullptr;
         }
+        else
+            continue;
     }
-
-    if (!target)
-        prompt_failed(PROMPT_ABORT);
-    return target;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -643,10 +647,11 @@ static int armour_equip_delay(const item_def &item)
  * @param item The item. Only the base_type and sub_type really should get
  *             checked, since you_can_wear passes in a dummy item.
  * @param verbose Whether to print a message about your inability to wear item.
- * @param ignore_temporary Whether to take into account forms/fishtail. Note
- *                         that no matter what this is set to, all mutations
- *                         will be taken into account, except for Beastly
- *                         Appendage (and then only if this is false).
+ * @param ignore_temporary Whether to take into account forms/fishtail/2handers.
+ *                         Note that no matter what this is set to, all
+ *                         mutations will be taken into account, except for
+ *                         ones from Beastly Appendage, which are only checked
+ *                         if this is false.
  */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
@@ -945,7 +950,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
 bool do_wear_armour(int item, bool quiet)
 {
-    const item_def &invitem = you.inv[item];
+    item_def &invitem = you.inv[item];
     if (!invitem.defined())
     {
         if (!quiet)
@@ -997,14 +1002,14 @@ bool do_wear_armour(int item, bool quiet)
 
     const int delay = armour_equip_delay(invitem);
     if (delay)
-        start_delay(DELAY_ARMOUR_ON, delay - (swapping ? 0 : 1), item);
+        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), invitem);
 
     return true;
 }
 
 bool takeoff_armour(int item)
 {
-    const item_def& invitem = you.inv[item];
+    item_def& invitem = you.inv[item];
 
     if (invitem.base_type != OBJ_ARMOUR)
     {
@@ -1070,7 +1075,7 @@ bool takeoff_armour(int item)
     you.turn_is_over = true;
 
     const int delay = armour_equip_delay(invitem);
-    start_delay(DELAY_ARMOUR_OFF, delay - 1, item);
+    start_delay<ArmourOffDelay>(delay - 1, invitem);
 
     return true;
 }
@@ -1436,7 +1441,7 @@ static bool _swap_rings(int ring_slot)
     }
 
     // Put on the new ring.
-    start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
+    start_delay<JewelleryOnDelay>(1, you.inv[ring_slot]);
 
     return true;
 }
@@ -1563,7 +1568,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
             return false;
 
         // Put on the new amulet.
-        start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+        start_delay<JewelleryOnDelay>(1, item);
 
         // Assume it's going to succeed.
         return true;
@@ -1593,7 +1598,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
             if (!remove_ring(you.equip[hand_used], false))
                 return false;
 
-            start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+            start_delay<JewelleryOnDelay>(1, item);
             return true;
         }
     }
@@ -1983,11 +1988,10 @@ static void _rebrand_weapon(item_def& wpn)
         if (is_range_weapon(wpn))
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAMING,
-                                    30, SPWPN_FREEZING,
-                                    20, SPWPN_VENOM,
-                                    20, SPWPN_VORPAL,
-                                    12, SPWPN_EVASION,
+                                    33, SPWPN_FLAMING,
+                                    33, SPWPN_FREEZING,
+                                    23, SPWPN_VENOM,
+                                    23, SPWPN_VORPAL,
                                     5, SPWPN_ELECTROCUTION,
                                     3, SPWPN_CHAOS,
                                     0);
@@ -2033,11 +2037,6 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_PROTECTION:
         flash_colour = YELLOW;
         mprf("%s projects an invisible shield of force!",itname.c_str());
-        break;
-
-    case SPWPN_EVASION:
-        flash_colour = YELLOW;
-        mprf("%s emits a repelling force!",itname.c_str());
         break;
 
     case SPWPN_FLAMING:
@@ -2193,70 +2192,42 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    int item_slot = -1;
-    while (true)
+    item_def* itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
+                        "Identify which item? (\\ to view known items)",
+                        [=]()
+                        {
+                            return alreadyknown
+                                   || crawl_state.seen_hups
+                                   || yesno("Really abort (and waste the scroll)?", false, 0);
+                        });
+
+    if (!itemp)
+        return !alreadyknown;
+
+    item_def& item = *itemp;
+    if (alreadyknown)
+        mpr(pre_msg);
+
+    set_ident_type(item, true);
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Output identified item.
+    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (in_inventory(item))
     {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item(
-                "Identify which item? (\\ to view known items)",
-                MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
-                -1, nullptr, OPER_ANY, true);
-        }
-
-        if (item_slot == PROMPT_NOTHING)
-            return !alreadyknown;
-
-        if (item_slot == PROMPT_ABORT)
-        {
-            if (alreadyknown
-                || crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0))
-            {
-                canned_msg(MSG_OK);
-                return !alreadyknown;
-            }
-            else
-            {
-                item_slot = -1;
-                continue;
-            }
-        }
-
-        item_def& item(you.inv[item_slot]);
-        if (fully_identified(item)
-            && (!is_deck(item) || top_card_is_known(item)))
-        {
-            mpr("Choose an unidentified item, or Esc to abort.");
-            more();
-            item_slot = -1;
-            continue;
-        }
-
-        if (alreadyknown)
-            mpr(pre_msg);
-
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-        if (is_deck(item) && !top_card_is_known(item))
-            deck_identify_first(item_slot);
-
-        // Output identified item.
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        if (item_slot == you.equip[EQ_WEAPON])
+        if (item.link == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
         if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item_slot == you.equip[EQ_AMULET]
+            && item.link == you.equip[EQ_AMULET]
             && !item_known_cursed(item))
         {
             learned_something_new(HINT_INACCURACY);
         }
 
         auto_assign_item_slot(item);
-        return true;
     }
+    return true;
 }
 
 static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
@@ -2421,11 +2392,6 @@ void random_uselessness()
         break;
 
     case 6:
-        mprf(MSGCH_SOUND, "You hear the tinkle of a tiny bell.");
-        noisy(2, you.pos());
-        cast_summon_butterflies(100);
-        break;
-
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
         noisy(2, you.pos());
@@ -2457,6 +2423,8 @@ static void _handle_read_book(item_def& book)
     }
 #endif
 
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    mark_had_book(book);
     read_book(book);
 }
 
@@ -2534,9 +2502,9 @@ bool player_can_read()
  * response to print. Otherwise, if they do have such items, return the empty
  * string.
  */
-static string _no_items_reason(object_selector type)
+static string _no_items_reason(object_selector type, bool check_floor = false)
 {
-    if (!any_items_of_type(type))
+    if (!any_items_of_type(type, -1, check_floor))
         return no_selectables_message(type);
     return "";
 }
@@ -2618,7 +2586,7 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
 
         case SCR_IDENTIFY:
-            return _no_items_reason(OSEL_UNIDENT);
+            return _no_items_reason(OSEL_UNIDENT, true);
 
         case SCR_RECHARGING:
             return _no_items_reason(OSEL_RECHARGE);
@@ -2707,8 +2675,7 @@ void read(item_def* scroll)
     {
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
-        const pair<bool, int> item = item_int(*scroll);
-        start_delay(DELAY_BLURRY_SCROLL, turns, item.second, item.first);
+        start_delay<BlurryScrollDelay>(turns, *scroll);
         if (player_mutation_level(MUT_BLURRY_VISION) == 1)
             you.time_taken /= 2;
     }

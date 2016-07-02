@@ -1353,7 +1353,7 @@ int acquirement_create_item(object_class_type class_wanted,
             && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
             && !is_unrandom_artefact(acq_item))
         {
-            // ... but he loves the antimagic brand specially.
+            // ... but Trog loves the antimagic brand specially.
             set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 

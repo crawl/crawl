@@ -409,9 +409,9 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "chaos", "evade",
+    "chaos",
 #if TAG_MAJOR_VERSION == 34
-    "confuse",
+    "evade", "confuse",
 #endif
     "penet", "reap", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
@@ -434,9 +434,9 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "reaching", "returning",
 #endif
-    "chaos", "evasion",
+    "chaos",
 #if TAG_MAJOR_VERSION == 34
-    "confusion",
+    "evasion", "confusion",
 #endif
     "penetration", "reaping", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
@@ -1044,7 +1044,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
     case BOOK_WARP:                   return "the Warp";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_ENVENOMATIONS:          return "Envenomations";
+#endif
     case BOOK_ANNIHILATIONS:          return "Annihilations";
     case BOOK_UNLIFE:                 return "Unlife";
 #if TAG_MAJOR_VERSION == 34
@@ -3410,8 +3412,7 @@ static bool _invisibility_is_useless(const bool temp)
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:
  * \li The item cannot be used.
- * \li Using the item would have no effect, or would have a negligible effect
- *     such as random uselessness.
+ * \li Using the item would have no effect.
  * \li Using the item would have purely negative effects (<tt>is_bad_item</tt>).
  * \li Using the item is expected to produce no benefit for a player of their
  *     religious standing. For example, magic enhancers for Trog worshippers
@@ -3592,7 +3593,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_BERSERK_RAGE:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state <= HS_SATIATED)
+                       || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID;
         case POT_HASTE:
             return you.species == SP_FORMICID;
@@ -3610,7 +3611,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_LIGNIFY:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state <= HS_SATIATED);
+                       || temp && you.hunger_state < HS_SATIATED);
 
         case POT_FLIGHT:
             return you.permanent_flight();
@@ -3657,7 +3658,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_RAGE:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state <= HS_SATIATED)
+                       || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3804,10 +3805,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_HORN_OF_GERYON:
         case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
-                || player_mutation_level(MUT_NO_ARTIFICE);
+                   || player_mutation_level(MUT_NO_ARTIFICE);
 
         default:
-            return player_mutation_level(MUT_NO_ARTIFICE);
+            return player_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);
         }
 
     case OBJ_BOOKS:

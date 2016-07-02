@@ -433,14 +433,11 @@ bool mons_speaks(monster* mons)
             return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
-        // unless they're normally silent (S_SILENT). Use
-        // get_monster_data(mons->type) to bypass mon_shouts()
-        // replacing S_RANDOM with a random value.
-        if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
-            && get_monster_data(mons->type)->shouts != S_SILENT)
+        // unless they're normally silent (S_SILENT).
+        if (mons->is_silenced() && mons_can_shout(mons->type)
+            && !one_chance_in(3))
         {
-            if (!one_chance_in(3))
-                return false;
+            return false;
         }
 
         // Berserk monsters just want your hide.

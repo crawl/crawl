@@ -1529,6 +1529,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props["dbname"] = mons_class_name(mon->type);
     }
 
+    if (mon->type == MONS_HELLBINDER || mon->type == MONS_CLOUD_MAGE)
+    {
+        mon->props[MON_GENDER_KEY] = random_choose(GENDER_FEMALE, GENDER_MALE,
+                                                   GENDER_NEUTER);
+    }
+
     if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
     {
         const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
@@ -2255,7 +2261,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DEATH_SCARAB,    { {}, {{ BAND_DEATH_SCARABS, {3, 6} }}}},
     { MONS_ANUBIS_GUARD,    { {2}, {{ BAND_ANUBIS_GUARD, {1, 2} }}}},
     { MONS_SERAPH,          { {}, {{ BAND_HOLIES, {1, 4}, true }}}},
-    { MONS_IRON_GIANT,      { {}, {{ BAND_IRON_GIANT, {2, 5}, true }}}},
+    { MONS_IRON_GIANT,      { {}, {{ BAND_STONE_GIANTS, {2, 3}, true },
+                                   { BAND_ANCIENT_CHAMPIONS, {2, 3}, true }}}},
     { MONS_SPARK_WASP,      { {0, 0, []() {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
@@ -2268,7 +2275,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
-
+    { MONS_MELIAI,          { {}, {{ BAND_MELIAI, {2, 3} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2405,6 +2412,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_JACKALS,             {{{MONS_JACKAL, 1}}}},
     { BAND_KOBOLDS,             {{{MONS_KOBOLD, 1}}}},
     { BAND_JOSEPHINE,           {{{MONS_WRAITH, 1}}}},
+    { BAND_MELIAI,              {{{MONS_MELIAI, 1}}}},
     { BAND_BOGGARTS,            {{{MONS_BOGGART, 1}}}},
     { BAND_CENTAURS,            {{{MONS_CENTAUR, 1}}}},
     { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
@@ -2425,6 +2433,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
     { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
+    { BAND_STONE_GIANTS,        {{{MONS_STONE_GIANT, 1}}}},
     { BAND_ANUBIS_GUARD,        {{{MONS_ANUBIS_GUARD, 1}}}},
     { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
     { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
@@ -2438,6 +2447,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
+    { BAND_ANCIENT_CHAMPIONS,   {{{MONS_ANCIENT_CHAMPION, 1}}}},
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_INSUBSTANTIAL_WISPS, {{{MONS_INSUBSTANTIAL_WISP, 1}}}},
@@ -2634,10 +2644,6 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_CHERUB, 80},
                                   {MONS_DAEVA, 50},
                                   {MONS_OPHAN, 1}}}}, // !?
-
-    { BAND_IRON_GIANT,          {{{MONS_STONE_GIANT, 10},
-                                  {MONS_FIRE_GIANT, 1},
-                                  {MONS_FROST_GIANT, 1}}}},
 };
 
 /**

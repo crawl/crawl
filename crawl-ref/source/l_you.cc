@@ -176,9 +176,7 @@ LUARET1(you_depth_fraction, number,
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
 LUARET1(you_absdepth, number, env.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
-LUARET1(you_taking_stairs, boolean,
-        current_delay_action() == DELAY_ASCENDING_STAIRS
-        || current_delay_action() == DELAY_DESCENDING_STAIRS)
+LUARET1(you_taking_stairs, boolean, player_stair_delay())
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_spell_levels, number, player_spell_levels())

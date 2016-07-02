@@ -177,11 +177,11 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
     {
-        bool moving = (!you.delay_queue.empty()
-                          && delay_is_run(you.delay_queue.front().type)
-                          && you.delay_queue.front().type != DELAY_REST
-                       || you.running < RMODE_NOT_RUNNING
-                       || want_move);
+        bool moving = you_are_delayed()
+                       && current_delay()->is_run()
+                       && current_delay()->is_resting()
+                      || you.running < RMODE_NOT_RUNNING
+                      || want_move;
 
         bool result = is_safe;
 
@@ -467,6 +467,8 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
+    you.props["corrosion_amount"] = 0;
+
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);
@@ -750,7 +752,7 @@ void swap_with_monster(monster* mon_to_swap)
         }
         else
         {
-            you.attribute[ATTR_HELD] = 10;
+            you.attribute[ATTR_HELD] = 1;
             if (get_trapping_net(you.pos()) != NON_ITEM)
                 mpr("You become entangled in the net!");
             else
