@@ -1010,7 +1010,9 @@ static like_map divine_likes[] =
     },
     // GOD_USKAYAW
     {
-        { DID_HURT_FOE, { "you hurt your foes", 1, 1, 1, 0, nullptr, [] (int &piety, int &denom, const monster* /*victim*/)
+        { DID_HURT_FOE, {
+            "you hurt your foes", true, 1, 1, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 denom = 1;
             }
