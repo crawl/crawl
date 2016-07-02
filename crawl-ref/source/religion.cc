@@ -1226,6 +1226,7 @@ static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
 {
     if (placed <= 0)
         return;
+    ASSERT(mon);
 
     // Make sure monsters are shown.
     viewwindow();
@@ -4472,8 +4473,11 @@ void delayed_monster_done(string success, delayed_callback callback)
 
 static void _place_delayed_monsters()
 {
+    // Last monster that was successfully placed (so far).
+    monster *lastmon  = nullptr;
     int      placed   = 0;
     god_type prev_god = GOD_NO_GOD;
+
     for (unsigned int i = 0; i < _delayed_data.size(); i++)
     {
         mgen_data &mg          = _delayed_data[i];
@@ -4481,6 +4485,7 @@ static void _place_delayed_monsters()
 
         if (prev_god != mg.god)
         {
+            lastmon  = nullptr;
             placed   = 0;
             prev_god = mg.god;
         }
@@ -4498,6 +4503,7 @@ static void _place_delayed_monsters()
             {
                 add_companion(mon);
             }
+            lastmon = mon;
             placed++;
         }
 
@@ -4507,21 +4513,16 @@ static void _place_delayed_monsters()
             cback = _delayed_done_callbacks[0];
 
             string msg;
-            if (placed > 0)
-                msg = _delayed_success[0];
-            else
-                msg = "";
-
-            if (mon)
+            if (lastmon)
             {
-                if (placed == 1)
-                    msg = replace_all(msg, "@servant@", mon->name(DESC_A));
-                else
-                {
-                    msg = replace_all(msg, "@servant@",
-                                      pluralise(mon->name(DESC_PLAIN)));
-                }
+                ASSERT(placed > 0);
+                msg = replace_all(_delayed_success[0], "@servant@",
+                                  placed == 1
+                                      ? lastmon->name(DESC_A)
+                                      : pluralise(lastmon->name(DESC_PLAIN)));
             }
+            else
+                ASSERT(placed == 0);
 
             prev_god = GOD_NO_GOD;
             _delayed_done_trigger_pos.pop_front();
@@ -4531,7 +4532,7 @@ static void _place_delayed_monsters()
             if (msg == "")
             {
                 if (cback)
-                    (*cback)(mg, mon, placed);
+                    (*cback)(mg, lastmon, placed);
                 continue;
             }
 
@@ -4544,7 +4545,7 @@ static void _place_delayed_monsters()
             god_speaks(mg.god, msg.c_str());
 
             if (cback)
-                (*cback)(mg, mon, placed);
+                (*cback)(mg, lastmon, placed);
         }
     }
 
