@@ -5230,8 +5230,10 @@ static dungeon_feature_type _pick_an_altar()
         case BRANCH_TARTARUS:
         case BRANCH_PANDEMONIUM: // particularly destructive / elemental gods
             if (one_chance_in(3))
+            {
                 god = random_choose(GOD_KIKUBAAQUDGHA, GOD_NEMELEX_XOBEH,
                                     GOD_QAZLAL, GOD_VEHUMET);
+            }
             else
                 god = GOD_MAKHLEB;
             break;
