@@ -534,9 +534,6 @@ static const duration_def duration_data[] =
       "sanguine armour", "",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
-    { DUR_NO_CAST, RED, "-Cast", "no casting", "",
-      "You are unable to cast spells.", D_NO_FLAGS,
-      {{ "You regain access to your magic." }, {}, true }},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -584,6 +581,8 @@ static const duration_def duration_data[] =
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
+    { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
+      {{ "You regain access to your magic." }, {}, true }},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

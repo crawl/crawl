@@ -303,6 +303,13 @@ Summons a major demon. Failing to use this ability correctly will turn the
 demon hostile.
 %%%%
 # Sif Muna
+Divine Energy ability
+
+Calls on Sif Muna for divine energy, or stops requesting divine energy if
+already doing so. While active, Sif Muna will allow you to cast spells even with
+insufficient reserves of magic. Doing so will cause you to briefly lose access
+to your magic after the spell is cast.
+%%%%
 Channel Energy ability
 
 Replenishes your magical reservoir by an amount depending on Invocations skill.
