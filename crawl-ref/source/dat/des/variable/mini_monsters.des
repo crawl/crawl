@@ -6789,13 +6789,14 @@ MAP
 ...........
 ENDMAP
 
-NAME: special_room
-TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
-TAGS: no_monster_gen layout_rooms layout_corridors layout_passages
-TAGS: layout_narrow_caves layout_open_caves
-CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
-DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
-       Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$
+NAME:   special_room
+TAGS:   allow_dup luniq no_item_gen ruin_spider ruin_slime
+TAGS:   no_monster_gen layout_rooms layout_corridors layout_passages
+TAGS:   layout_narrow_caves layout_open_caves
+CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider, Pan), 3%
+DEPTH:  D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
+        Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$, Pan
+KFEAT:  X = slimy_wall
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).
@@ -6820,6 +6821,12 @@ DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
     end
 
     mapgrd[entrance_x][entrance_y] = '@'
+
+    if you.in_branch("Crypt") then
+        subst("x = c")
+    elseif you.in_branch("Slime") then
+        subst("x = X")
+    end
 }}
 MAP
 ENDMAP
