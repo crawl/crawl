@@ -63,7 +63,7 @@ static const char *conducts[] =
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
     "Kill Holy", "Kill Fast", "Banishment",
     "Spell Memorise", "Spell Cast", "Spell Practise",
-    "Drink Blood", "Cannibalism","Eat Souled Being",
+    "Cannibalism","Eat Souled Being",
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
     "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
@@ -212,14 +212,6 @@ struct dislike_response
     }
 };
 
-
-
-/// Good gods' reaction to drinking blood.
-static const dislike_response GOOD_BLOOD_RESPONSE = {
-    "you drink blood", false,
-    2, 1, " forgives your inadvertent blood-drinking, just this once."
-};
-
 /// Good gods', and Beogh's, response to cannibalism.
 static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
     "you perform cannibalism", true,
@@ -316,7 +308,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_ZIN,
     {
-        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
@@ -353,7 +344,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_SHINING_ONE,
     {
-        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
             "you attack non-hostile holy beings", true,
@@ -431,7 +421,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_ELYVILON,
     {
-        { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },

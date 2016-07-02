@@ -220,17 +220,6 @@ static string _blood_flavour_message()
     return "Yuck - this tastes like blood.";
 }
 
-static bool _prompt_quaff_blood()
-{
-    if (is_good_god(you.religion)
-        && !yesno("Really drink that potion of blood?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    return true;
-}
-
 class PotionBlood : public PotionEffect
 {
 private:
@@ -268,11 +257,10 @@ public:
 
     bool quaff(bool was_known) const override
     {
-        if (was_known && (!check_known_quaff() || !_prompt_quaff_blood()))
+        if (was_known && !check_known_quaff())
             return false;
 
-        effect(was_known, 1040);
-        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
+        effect(was_known, 1000);
         return true;
     }
 };
@@ -1007,11 +995,10 @@ public:
 
     bool quaff(bool was_known) const override
     {
-        if (was_known && (!check_known_quaff() || !_prompt_quaff_blood()))
+        if (was_known && !check_known_quaff())
             return false;
 
         effect(was_known, 840);
-        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         return true;
     }
 };

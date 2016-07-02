@@ -190,8 +190,6 @@ static void _interrupt_vampire_feeding(item_def& corpse, int dur)
 {
     mpr("You stop draining the corpse.");
 
-    did_god_conduct(DID_DRINK_BLOOD, 8);
-
     _xom_check_corpse_waste();
 
     // Don't skeletonize a corpse if it's no longer there!
@@ -875,8 +873,6 @@ void EatDelay::finish()
 void FeedVampireDelay::finish()
 {
     mpr("You finish drinking.");
-
-    did_god_conduct(DID_DRINK_BLOOD, 8);
 
     vampire_nutrition_per_turn(corpse, 1);
 
