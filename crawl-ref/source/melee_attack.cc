@@ -1779,17 +1779,10 @@ void melee_attack::player_exercise_combat_skills()
  */
 void melee_attack::player_weapon_upsets_god()
 {
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
+    if (weapon && weapon->base_type == OBJ_WEAPONS
+        && god_hates_item_handling(*weapon))
     {
-        if (is_holy_item(*weapon))
-            did_god_conduct(DID_HOLY, 1);
-        else if (is_demonic(*weapon))
-            did_god_conduct(DID_UNHOLY, 1);
-        else if (get_weapon_brand(*weapon) == SPWPN_SPEED
-                || weapon->sub_type == WPN_QUICK_BLADE)
-        {
-            did_god_conduct(DID_HASTY, 1);
-        }
+        did_god_conduct(god_hates_item_handling(*weapon), 1);
     }
     else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
         did_god_conduct(DID_FIRE, 1);
