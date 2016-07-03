@@ -1293,7 +1293,6 @@ enum conduct_type
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
-    DID_KILL_NATURAL_UNHOLY,              // TSO
     DID_KILL_NATURAL_EVIL,                // TSO
     DID_KILL_UNCLEAN,                     // Zin
     DID_KILL_CHAOTIC,                     // Zin

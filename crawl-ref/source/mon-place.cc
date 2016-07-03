@@ -3188,7 +3188,7 @@ conduct_type player_will_anger_monster(const monster &mon)
         return DID_SACRIFICE_LOVE;
     }
 
-    if (is_good_god(you.religion) && (mon.is_unholy() || mon.is_evil()))
+    if (is_good_god(you.religion) && mon.evil())
         return DID_EVIL;
 
     if (you_worship(GOD_FEDHAS)

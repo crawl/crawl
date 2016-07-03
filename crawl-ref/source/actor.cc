@@ -906,3 +906,9 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
 }
+
+/// Is this creature despised by the so-called 'good gods'?
+bool actor::evil() const
+{
+    return bool(holiness() & (MH_UNDEAD | MH_EVIL | MH_DEMONIC | MH_UNHOLY));
+}

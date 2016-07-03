@@ -90,11 +90,11 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
         { -1, passive_t::abjuration_protection_hd,
               "GOD protects your summons from abjuration" },
-        { -1, passive_t::bless_followers_vs_unholy,
-              "GOD blesses your followers when they kill evil or unholy beings"
+        { -1, passive_t::bless_followers_vs_evil,
+              "GOD blesses your followers when they kill evil beings"
         },
-        { -1, passive_t::restore_hp_mp_vs_unholy,
-              "gain health and magic from killing evil or unholy beings" },
+        { -1, passive_t::restore_hp_mp_vs_evil,
+              "gain health and magic from killing evil beings" },
         {  0, passive_t::halo, "are surrounded by divine halo" },
     },
 

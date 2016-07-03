@@ -84,7 +84,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_ALLY_HOLY:
         return mon->wont_attack() && is_good_god(mon->god);
     case DACT_ALLY_UNHOLY_EVIL:
-        return mon->wont_attack() && (mon->is_unholy() || mon->is_evil());
+        return mon->wont_attack() && mon->evil();
     case DACT_ALLY_UNCLEAN_CHAOTIC:
         return mon->wont_attack() && (mon->how_unclean() || mon->how_chaotic());
     case DACT_ALLY_SPELLCASTER:

@@ -62,8 +62,8 @@ enum class passive_t
     /// Your god blesses your followers.
     bless_followers,
 
-    /// Your god blesses your followers when they kill evil or unholy things.
-    bless_followers_vs_unholy,
+    /// Your god blesses your followers when they kill evil things.
+    bless_followers_vs_evil,
 
     /// You receive a bonus to armour class.
     bonus_ac,
@@ -129,8 +129,8 @@ enum class passive_t
     /// Gain HP when killing monsters.
     restore_hp,
 
-    /// Gain HP and MP when killing evil or unholy monsters.
-    restore_hp_mp_vs_unholy,
+    /// Gain HP and MP when killing evil monsters.
+    restore_hp_mp_vs_evil,
 
     /// Mutation resistance increasing with piety.
     resist_mutation,
