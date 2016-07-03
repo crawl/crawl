@@ -73,9 +73,6 @@
 
 class UseItemMenu : public InvMenu
 {
-    vector<const item_def*> item_inv;
-    vector<const item_def*> item_floor;
-
     bool is_inventory = true;
 
     void populate_list(int item_type);
@@ -83,6 +80,9 @@ class UseItemMenu : public InvMenu
     bool process_key(int key) override;
 
 public:
+    vector<const item_def*> item_inv;
+    vector<const item_def*> item_floor;
+
     // Constructor
     // Requires int for item filter.
     // Accepts:
@@ -249,8 +249,13 @@ static item_def* _use_an_item(int item_type, operation_types oper,
         // TODO: handle * key
         else if (keyin == ',')
         {
-            menu.toggle();
-            continue;
+            if (Options.easy_floor_use && menu.item_floor.size() == 1)
+                target = const_cast<item_def*>(menu.item_floor[0]);
+            else
+            {
+                menu.toggle();
+                continue;
+            }
         }
         else if (keyin == '\\')
         {
