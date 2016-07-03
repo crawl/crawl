@@ -574,8 +574,6 @@ void attack::pain_affects_defender()
         }
         special_damage += random2(1 + user->skill_rdiv(SK_NECROMANCY));
     }
-
-    user->god_conduct(DID_NECROMANCY, 4);
 }
 
 // TODO: Move this somewhere sane
@@ -1021,8 +1019,6 @@ void attack::drain_defender()
                     attacker->conj_verb("drain").c_str(),
                     defender_name(true).c_str());
         }
-
-        attacker->god_conduct(DID_NECROMANCY, 2);
     }
 }
 
@@ -1731,8 +1727,6 @@ bool attack::apply_damage_brand(const char *what)
         dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
              damage_done, hp_boost);
         attacker->heal(hp_boost);
-
-        attacker->god_conduct(DID_NECROMANCY, 2);
         break;
     }
     case SPWPN_PAIN:
