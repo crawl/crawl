@@ -1800,7 +1800,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
             defender->expose_to_element(BEAM_DAMNATION);
-            attacker->god_conduct(DID_UNHOLY, 2 + random2(3));
+            attacker->god_conduct(DID_EVIL, 2 + random2(3));
         }
         break;
     }

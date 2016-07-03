@@ -56,7 +56,7 @@ god_conduct_trigger::~god_conduct_trigger()
 static const char *conducts[] =
 {
     "",
-    "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
+    "Evil", "Holy", "Attack Holy", "Attack Neutral",
     "Attack Friend", "Friend Died", "Unchivalric Attack",
     "Poison", "Kill Living", "Kill Undead",
     "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
@@ -224,15 +224,9 @@ static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
     1, 1, nullptr, " expects more respect for holy creatures!"
 };
 
-/// Zin and Ely's responses to unholy actions.
-static const dislike_response GOOD_UNHOLY_RESPONSE = {
-    "you use unholy magic or items", true,
-    1, 1, " forgives your inadvertent unholy act, just this once."
-};
-
-/// Zin and Ely's responses to necromancy.
+/// Zin and Ely's responses to evil actions. TODO: parameterize & merge w/TSO
 static const dislike_response GOOD_EVIL_RESPONSE = {
-    "you use necromancy", true,
+    "you use evil magic or items", true,
     1, 1, " forgives your inadvertent evil act, just this once."
 };
 
@@ -295,8 +289,7 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
-        { DID_NECROMANCY, GOOD_EVIL_RESPONSE },
-        { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
+        { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_ATTACK_NEUTRAL, {
             "you attack neutral beings", false,
@@ -337,13 +330,9 @@ static peeve_map divine_peeves[] =
             "you desecrate holy remains", true,
             1, 2, nullptr, " expects more respect for holy creatures!"
         } },
-        { DID_NECROMANCY, {
-            "you use necromancy", true,
+        { DID_EVIL, {
+            "you use evil magic or items", true,
             1, 2, " forgives your inadvertent evil act, just this once."
-        } },
-        { DID_UNHOLY, {
-            "you use unholy magic or items", true,
-            1, 2, " forgives your inadvertent unholy act, just this once."
         } },
         { DID_UNCHIVALRIC_ATTACK, {
             "you attack intelligent monsters in an unchivalric manner", true,
@@ -408,8 +397,7 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
-        { DID_NECROMANCY, GOOD_EVIL_RESPONSE },
-        { DID_UNHOLY, GOOD_UNHOLY_RESPONSE },
+        { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_KILL_LIVING, {
@@ -1251,10 +1239,10 @@ bool god_punishes_spell(spell_type spell, god_type god)
     if (god_loathes_spell(spell, god))
         return true;
 
-    if (map_find(divine_peeves[god], DID_NECROMANCY) && is_evil_spell(spell))
+    if (map_find(divine_peeves[god], DID_EVIL) && is_evil_spell(spell))
         return true;
 
-    if (map_find(divine_peeves[god], DID_UNHOLY)
+    if (map_find(divine_peeves[god], DID_EVIL)
         && (is_unholy_spell(spell)
             || you.spellcasting_unholy()))
     {

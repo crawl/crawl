@@ -702,7 +702,7 @@ void bolt::apply_beam_conducts()
         switch (flavour)
         {
         case BEAM_DAMNATION:
-            did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
+            did_god_conduct(DID_EVIL, 2 + random2(3), god_cares());
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
@@ -1641,7 +1641,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             mons->drain_exp(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_NECROMANCY, 2, pbolt.god_cares());
+                did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
         }
         break;
 
@@ -2092,7 +2092,7 @@ bool miasma_monster(monster* mons, const actor* who)
         && is_good_god(you.religion)
         && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
     {
-        did_god_conduct(DID_NECROMANCY, 5 + random2(3));
+        did_god_conduct(DID_EVIL, 5 + random2(3));
     }
 
     if (mons->max_hit_points > 4 && coinflip())

@@ -80,7 +80,7 @@
 # * evil:     Is treated as an evil item.
 # * fragile:  Is destroyed when unequipped.
 # * fog:      Lets wearer use the evoke fog ability.
-# * unholy:   Is treated as an unholy item.
+# * evil:     Is treated as an evil item (hated by good gods).
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
@@ -251,7 +251,6 @@ TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
 CURSED:  3
-BOOL:    evil
 
 NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -284,7 +283,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    unholy, nogen
+BOOL:    evil, nogen
 
 NAME:    staff of Dispater
 APPEAR:  golden staff
@@ -294,7 +293,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    unholy, nogen
+BOOL:    evil, nogen
 
 NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -304,7 +303,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    unholy, nogen
+BOOL:    evil, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -454,7 +453,7 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_damnation
 TILE_EQ: crossbow_fire
-BOOL:    unholy
+BOOL:    evil
 
 # TAG_MAJOR_VERSION == 34
 NAME:    sword of the Doom Knight
@@ -988,7 +987,7 @@ TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
-BOOL:     unholy, seeinv, fly
+BOOL:     evil, seeinv, fly
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1188,7 +1187,6 @@ TILE_EQ: majin
 MP:      6
 INT:     6
 BRAND:   SPWPN_VAMPIRISM
-BOOL:    unholy
 
 ENUM:    GYRE
 NAME:    pair of quick blades "Gyre" and "Gimble"

@@ -2222,7 +2222,7 @@ void melee_attack::apply_staff_damage()
                     defender->name(DESC_THE).c_str(),
                     defender->is_player() ? "" : "s");
 
-            attacker->god_conduct(DID_NECROMANCY, 4);
+            attacker->god_conduct(DID_EVIL, 4);
         }
         break;
 
