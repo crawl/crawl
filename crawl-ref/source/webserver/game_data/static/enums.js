@@ -190,6 +190,7 @@ define(function () {
     fg_flags.flags.DRAIN        = [0, 0x80000];
     fg_flags.flags.IDEALISED    = [0, 0x100000];
     fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
+    fg_flags.flags.INFESTED     = [0, 0x400000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

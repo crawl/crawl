@@ -53,6 +53,7 @@ recall RECALL
 drain DRAIN
 idealised IDEALISED
 bound_soul BOUND_SOUL
+infested INFESTED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
