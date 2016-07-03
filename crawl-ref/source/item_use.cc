@@ -76,6 +76,8 @@ class UseItemMenu : public InvMenu
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
+    bool is_inventory = true;
+
     void populate_list(int item_type);
     void populate_menu();
     bool process_key(int key) override;
@@ -87,6 +89,8 @@ public:
     //      OBJ_POTIONS
     //      OBJ_SCROLLS
     UseItemMenu(int selector, const char* prompt);
+
+    void toggle();
 };
 
 UseItemMenu::UseItemMenu(int item_type, const char* prompt)
@@ -104,7 +108,7 @@ void UseItemMenu::populate_list(int item_type)
     {
         // Populate the vector with filter
         if (item.defined() && item_is_selected(item, item_type))
-                item_inv.push_back(&item);
+            item_inv.push_back(&item);
     }
     // Load floor items
     item_floor = item_list_on_square(you.visible_igrd(you.pos()));
@@ -117,57 +121,74 @@ void UseItemMenu::populate_list(int item_type)
 
 void UseItemMenu::populate_menu()
 {
-    // Need a tracker for inv item hotkeys and floor item hotkeys
-    set<char> used_keys;
+    if (item_inv.empty())
+        is_inventory = false;
+    else if (item_floor.empty())
+        is_inventory = true;
 
-    // Load the inv items first, they have a hotkey
     if (!item_inv.empty())
     {
-        auto subtitle = new MenuEntry("Inventory Items", MEL_TITLE);
-        subtitle->colour = LIGHTGREY;
-        add_entry(subtitle);
+        // Only clarify that these are inventory items if there are also floor
+        // items.
+        if (!item_floor.empty())
+        {
+            string subtitle_text = "Inventory Items";
+            if (!is_inventory)
+                subtitle_text += " (',' to select)";
+            auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
+            subtitle->colour = LIGHTGREY;
+            add_entry(subtitle);
+        }
 
-        load_items(item_inv,
-                   [&](MenuEntry* entry) -> MenuEntry*
-                   {
-                       // Remove inventory item hotkeys from the tracker
-                       if (!entry->hotkeys.empty())
-                           used_keys.insert(char(entry->hotkeys[0]));
-                       return entry;
-                   });
+        // nullptr means using the items' normal hotkeys
+        if (is_inventory)
+            load_items(item_inv);
+        else
+        {
+            load_items(item_inv,
+                        [&](MenuEntry* entry) -> MenuEntry*
+                        {
+                            entry->hotkeys.clear();
+                            return entry;
+                        });
+        }
     }
 
     if (!item_floor.empty())
     {
         // Load floor items to menu
-        auto subtitle = new MenuEntry("Floor Items", MEL_TITLE);
+        string subtitle_text = "Floor Items";
+        if (is_inventory)
+            subtitle_text += " (',' to select)";
+        auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
 
-        menu_letter hotkey;
-        load_items(item_floor,
-                    [&](MenuEntry* entry) -> MenuEntry*
-                    {
-                        if (!entry->hotkeys.empty())
+        // nullptr means using a-zA-Z
+        if (is_inventory)
+        {
+            load_items(item_floor,
+                        [&](MenuEntry* entry) -> MenuEntry*
                         {
-                            while (used_keys.count(hotkey))
-                            {
-                                // Remove it from used_keys, so the second time
-                                // through we re-use all letters, inventory or
-                                // not.
-                                used_keys.erase(hotkey);
-                                ++hotkey;
-                            }
-                            entry->hotkeys[0] = hotkey++;
-                        }
-                        return entry;
-                    });
+                            entry->hotkeys.clear();
+                            return entry;
+                        });
+        }
+        else
+            load_items(item_floor);
     }
+}
+
+void UseItemMenu::toggle()
+{
+    is_inventory = !is_inventory;
+    deleteAll(items);
+    populate_menu();
 }
 
 bool UseItemMenu::process_key(int key)
 {
-    if (isadigit(key) || key == '*' || key == '\\')
+    if (isadigit(key) || key == '*' || key == '\\' || key == ',')
     {
         lastch = key;
         return false;
@@ -211,13 +232,12 @@ static item_def* _use_an_item(int item_type, operation_types oper,
     }
 
     // Init the menu
-    UseItemMenu menu (item_type, prompt);
+    UseItemMenu menu(item_type, prompt);
 
     while (true)
     {
         vector<MenuEntry*> sel = menu.show(true);
         int keyin = menu.getkey();
-        redraw_screen();
 
         // Handle inscribed item keys
         if (isadigit(keyin))
@@ -227,6 +247,11 @@ static item_def* _use_an_item(int item_type, operation_types oper,
                 target = &item_from_int(true, idx);
         }
         // TODO: handle * key
+        else if (keyin == ',')
+        {
+            menu.toggle();
+            continue;
+        }
         else if (keyin == '\\')
         {
             check_item_knowledge();
@@ -240,6 +265,7 @@ static item_def* _use_an_item(int item_type, operation_types oper,
             target = const_cast<item_def*>(ie->item);
         }
 
+        redraw_screen();
         if (target && !check_warning_inscriptions(*target, oper))
             target = nullptr;
         if (target)

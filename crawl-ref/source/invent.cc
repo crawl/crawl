@@ -883,7 +883,8 @@ int InvMenu::getkey() const
         return mkey;
 
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
-        && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
+        && mkey != '*' && !key_is_escape(mkey) && mkey != '\\'
+        && mkey != ',')
     {
         mkey = ' ';
     }
