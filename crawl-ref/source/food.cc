@@ -24,6 +24,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -156,43 +157,24 @@ bool you_foodless_normally()
         ;
 }
 
-bool prompt_eat_inventory_item(int slot)
+bool prompt_eat_item(int slot)
 {
-    // There's nothing in inventory that a vampire can 'e'.
+    // There's nothing in inventory that a vampire can 'e', and floor corpses
+    // are handled by prompt_eat_chunks.
     if (you.species == SP_VAMPIRE)
         return false;
 
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return false;
-    }
-
-    int which_inventory_slot = slot;
-
+    item_def* item = nullptr;
     if (slot == -1)
     {
-        which_inventory_slot = prompt_invent_item("Eat which item?",
-                                                  MT_INVLIST, OBJ_FOOD,
-                                                  true, true, true, 0, -1,
-                                                  nullptr, OPER_EAT);
-
-        if (prompt_failed(which_inventory_slot))
+        item = use_an_item(OBJ_FOOD, OPER_EAT, "Eat which item?");
+        if (!item)
             return false;
     }
+    else
+        item = &you.inv[slot];
 
-    item_def &item(you.inv[which_inventory_slot]);
-    if (item.base_type != OBJ_FOOD)
-    {
-        mpr("You can't eat that!");
-        return false;
-    }
-
-    if (!can_eat(item, false))
-        return false;
-
-    eat_item(item);
-    you.turn_is_over = true;
+    eat_item(*item);
 
     return true;
 }
@@ -235,26 +217,16 @@ bool eat_food(int slot)
     if (slot == -1)
     {
         int result = prompt_eat_chunks();
-        if (result == 1 || result == -1)
-            return result > 0;
-
-        if (result != -2) // else skip ahead to inventory
-        {
-            if (you.visible_igrd(you.pos()) != NON_ITEM)
-            {
-                result = eat_from_floor(true);
-                if (result == 1)
-                    return true;
-                if (result == -1)
-                    return false;
-            }
-        }
+        if (result == 1)
+            return true;
+        else if (result == -1)
+            return false;
     }
 
     if (you.species == SP_VAMPIRE)
         mpr("There's nothing here to drain!");
 
-    return prompt_eat_inventory_item(slot);
+    return prompt_eat_item(slot);
 }
 
 static string _how_hungry()
@@ -585,249 +557,11 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
     return food1->freshness < food2->freshness;
 }
 
-#ifdef TOUCH_UI
-static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
-{
-    return oldt;
-}
-#endif
-
-// Returns -1 for cancel, 1 for eaten, 0 for not eaten.
-int eat_from_floor(bool skip_chunks)
-{
-    if (!_eat_check())
-        return false;
-
-    // Corpses should have been handled before.
-    if (you.species == SP_VAMPIRE)
-        return 0;
-
-    bool need_more = false;
-    int inedible_food = 0;
-    item_def wonteat;
-    bool found_valid = false;
-
-#ifdef TOUCH_UI
-    vector<const item_def*> food_items;
-#else
-    vector<item_def*> food_items;
-#endif
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type != OBJ_FOOD)
-            continue;
-
-        // Chunks should have been handled before.
-        if (skip_chunks && si->sub_type == FOOD_CHUNK)
-            continue;
-
-        if (is_bad_food(*si))
-            continue;
-
-        if (!can_eat(*si, true))
-        {
-            if (!inedible_food)
-            {
-                wonteat = *si;
-                inedible_food++;
-            }
-            else
-            {
-                // Increase only if we're dealing with different subtypes.
-                // FIXME: Use a common check for herbivorous/carnivorous
-                //        dislikes, for e.g. "Blech! You need blood!"
-                ASSERT(wonteat.defined());
-                if (wonteat.sub_type != si->sub_type)
-                    inedible_food++;
-            }
-
-            continue;
-        }
-
-        found_valid = true;
-        food_items.push_back(&(*si));
-    }
-
-    if (found_valid)
-    {
-#ifdef TOUCH_UI
-        redraw_screen();
-        for (SelItem &sel : select_items(food_items, "Eat", false, MT_SELONE,
-                                         _floor_eat_menu_title))
-        {
-            item_def *item = const_cast<item_def *>(sel.item);
-            if (!check_warning_inscriptions(*item, OPER_EAT))
-                break;
-
-            if (can_eat(*item, false))
-                return eat_item(*item);
-        }
-#else
-        sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (item_def *item : food_items)
-        {
-            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
-
-            mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
-                 "Eat",
-                 ((item->quantity > 1) ? "one of " : ""),
-                 item_name.c_str());
-
-            int keyin = toalower(getchm(KMC_CONFIRM));
-            switch (keyin)
-            {
-            case 'q':
-            CASE_ESCAPE
-                canned_msg(MSG_OK);
-                return -1;
-            case 'e':
-            case 'y':
-                if (!check_warning_inscriptions(*item, OPER_EAT))
-                    break;
-
-                if (can_eat(*item, false))
-                    return eat_item(*item);
-                need_more = true;
-                break;
-            case 'i':
-            case '?':
-                // Directly skip ahead to inventory.
-                return 0;
-            default:
-                // Else no: try next one.
-                break;
-            }
-        }
-#endif
-    }
-    else if (inedible_food)
-    {
-        if (inedible_food == 1)
-        {
-            ASSERT(wonteat.defined());
-            // Use the normal cannot ingest message.
-            if (can_eat(wonteat, false))
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                     wonteat.name(DESC_PLAIN).c_str());
-            }
-        }
-        else // Several different food items.
-            mpr("You refuse to eat these food items.");
-        need_more = true;
-    }
-
-    if (need_more)
-        more();
-
-    return 0;
-}
-
-bool eat_from_inventory()
-{
-    if (!_eat_check())
-        return false;
-
-    // Corpses should have been handled before.
-    if (you.species == SP_VAMPIRE)
-        return 0;
-
-    int inedible_food = 0;
-    item_def *wonteat = nullptr;
-    bool found_valid = false;
-
-    vector<item_def *> food_items;
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        // Chunks should have been handled before.
-        if (item.base_type != OBJ_FOOD || item.sub_type == FOOD_CHUNK)
-            continue;
-
-        if (is_bad_food(item))
-            continue;
-
-        if (!can_eat(item, true))
-        {
-            if (!inedible_food)
-            {
-                wonteat = &item;
-                inedible_food++;
-            }
-            else
-            {
-                // Increase only if we're dealing with different subtypes.
-                // FIXME: Use a common check for herbivorous/carnivorous
-                //        dislikes, for e.g. "Blech! You need blood!"
-                ASSERT(wonteat->defined());
-                if (wonteat->sub_type != item.sub_type)
-                    inedible_food++;
-            }
-            continue;
-        }
-
-        found_valid = true;
-        food_items.push_back(&item);
-    }
-
-    if (found_valid)
-    {
-        sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (item_def *item : food_items)
-        {
-            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
-
-            mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
-                 "Eat",
-                 ((item->quantity > 1) ? "one of " : ""),
-                 item_name.c_str());
-
-            int keyin = toalower(getchm(KMC_CONFIRM));
-            switch (keyin)
-            {
-            case 'q':
-            CASE_ESCAPE
-                canned_msg(MSG_OK);
-                return false;
-            case 'e':
-            case 'y':
-                if (can_eat(*item, false))
-                    return eat_item(*item);
-                break;
-            default:
-                // Else no: try next one.
-                break;
-            }
-        }
-    }
-    else if (inedible_food)
-    {
-        if (inedible_food == 1)
-        {
-            ASSERT(wonteat->defined());
-            // Use the normal cannot ingest message.
-            if (can_eat(*wonteat, false))
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Error: Can eat %s after all?",
-                    wonteat->name(DESC_PLAIN).c_str());
-            }
-        }
-        else // Several different food items.
-            mpr("You refuse to eat these food items.");
-    }
-
-    return false;
-}
-
-
 /** Make the prompt for chunk eating/corpse draining.
  *
  *  @param only_auto Don't actually make a prompt: if there are
  *                   things to auto_eat, eat them, and exit otherwise.
  *  @returns -1 for cancel, 1 for eaten, 0 for not eaten,
- *           -2 for skip to inventory.
  */
 int prompt_eat_chunks(bool only_auto)
 {
@@ -913,7 +647,7 @@ int prompt_eat_chunks(bool only_auto)
                 return 0;
             else
             {
-                mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
+                mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
                      (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
                      ((item->quantity > 1) ? "one of " : ""),
                      item_name.c_str());
@@ -929,7 +663,7 @@ int prompt_eat_chunks(bool only_auto)
             case 'i':
             case '?':
                 // Skip ahead to the inventory.
-                return -2;
+                return 0;
             case 'e':
             case 'y':
                 if (can_eat(*item, false))
