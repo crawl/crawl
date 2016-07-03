@@ -82,37 +82,6 @@ bool is_holy_item(const item_def& item)
     return retval;
 }
 
-bool is_unholy_item(const item_def& item)
-{
-    bool retval = false;
-
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
-
-        if (entry->flags & UNRAND_FLAG_EVIL)
-            return true;
-    }
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        retval = is_demonic(item);
-        break;
-    case OBJ_BOOKS:
-    case OBJ_RODS:
-        retval = _is_bookrod_type(item, is_unholy_spell);
-        break;
-    case OBJ_MISCELLANY:
-        retval = item.sub_type == MISC_HORN_OF_GERYON;
-        break;
-    default:
-        break;
-    }
-
-    return retval;
-}
-
 bool is_potentially_evil_item(const item_def& item)
 {
     switch (item.base_type)
@@ -178,6 +147,12 @@ bool is_corpse_violating_item(const item_def& item)
     return retval;
 }
 
+/**
+ * Do good gods always hate use of this item?
+ *
+ * @param item      The item in question.
+ * @return          Whether the Good Gods will always frown on this item's use.
+ */
 bool is_evil_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
@@ -191,6 +166,8 @@ bool is_evil_item(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (is_demonic(item))
+            return true;
         {
         const int item_brand = get_weapon_brand(item);
         return item_brand == SPWPN_DRAINING
@@ -208,6 +185,8 @@ bool is_evil_item(const item_def& item)
     case OBJ_BOOKS:
     case OBJ_RODS:
         return _is_bookrod_type(item, is_evil_spell);
+    case OBJ_MISCELLANY:
+        return item.sub_type == MISC_HORN_OF_GERYON;
     default:
         return false;
     }
@@ -459,14 +438,6 @@ bool is_channeling_item(const item_def& item)
               && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY;
 }
 
-// TODO: merge with is_evil_spell()
-bool is_unholy_spell(spell_type spell)
-{
-    unsigned int flags = get_spell_flags(spell);
-
-    return flags & SPFLAG_UNHOLY;
-}
-
 bool is_corpse_violating_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
@@ -474,11 +445,19 @@ bool is_corpse_violating_spell(spell_type spell)
     return flags & SPFLAG_CORPSE_VIOLATING;
 }
 
+/**
+ * Do the good gods hate use of this spell?
+ *
+ * @param spell     The spell in question; e.g. SPELL_CORPSE_ROT.
+ * @return          Whether the Good Gods hate this spell.
+ */
 bool is_evil_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
     unsigned int flags = get_spell_flags(spell);
 
+    if (flags & SPFLAG_UNHOLY)
+        return true;
     return bool(disciplines & SPTYP_NECROMANCY)
            && !bool(flags & SPFLAG_NOT_EVIL);
 }
@@ -533,7 +512,7 @@ static bool item_handling_is_evil(const item_def &item)
         return true;
 
     if ((item_type_known(item) || is_unrandom_artefact(item))
-        && (is_evil_item(item) || is_unholy_item(item)))
+        && is_evil_item(item))
     {
         return true;
     }
