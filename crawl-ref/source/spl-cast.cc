@@ -623,13 +623,18 @@ static bool _can_cast()
         return false;
     }
 
+    if (you.duration[DUR_NO_CAST])
+    {
+        mpr("You are unable to access your magic!");
+        return false;
+    }
+
     if (!you.undead_state() && !you_foodless()
         && you.hunger_state <= HS_STARVING)
     {
         canned_msg(MSG_NO_ENERGY);
         return false;
     }
-
 
     return true;
 }
@@ -763,12 +768,21 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    const int cost = spell_mana(spell);
+    int cost = spell_mana(spell);
+    int sifcast_amount = 0;
     if (!enough_mp(cost, true))
     {
-        mpr("You don't have enough magic to cast that spell.");
-        crawl_state.zero_turns_taken();
-        return false;
+        if (you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            sifcast_amount = cost - you.magic_points;
+            cost = you.magic_points;
+        }
+        else
+        {
+            mpr("You don't have enough magic to cast that spell.");
+            crawl_state.zero_turns_taken();
+            return false;
+        }
     }
 
     if (check_range && spell_no_hostile_in_range(spell))
@@ -861,6 +875,13 @@ bool cast_a_spell(bool check_range, spell_type spell)
             make_hungry(spellh, true, true);
             learned_something_new(HINT_SPELL_HUNGER);
         }
+    }
+
+    if (sifcast_amount)
+    {
+        simple_god_message(" grants you divine energy.");
+        mpr("You briefly lose access to your magic!");
+        you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
     }
 
     you.turn_is_over = true;

@@ -414,10 +414,12 @@ static const ability_def Ability_List[] =
       {FAIL_INVO, 90, 2, 5}, abflag::HOSTILE },
 
     // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
-      0, 0, 100, 0, {FAIL_INVO, 40, 2, 20}, abflag::NONE },
+    { ABIL_SIF_MUNA_DIVINE_ENERGY, "Divine Energy",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
+      0, 0, 200, 2, {FAIL_INVO, 60, 4, 25}, abflag::NONE },
 
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
@@ -1618,6 +1620,7 @@ bool activate_talent(const talent& tal)
         case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
         case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        case ABIL_SIF_MUNA_DIVINE_ENERGY:
             hungerCheck = false;
             break;
         default:
@@ -2310,18 +2313,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, nullptr, fail);
     }
 
-    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-        if (you.magic_points >= you.max_magic_points)
-        {
-            mpr("Your reserves of magic are already full.");
-            return SPRET_ABORT;
-        }
-        fail_check();
-        mpr("You channel some magical energy.");
-
-        inc_mp(1 + random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4) + 2));
-        break;
-
     case ABIL_OKAWARU_HEROISM:
         fail_check();
         mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
@@ -2455,11 +2446,35 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                          &you);
         break;
 
+    case ABIL_SIF_MUNA_DIVINE_ENERGY:
+        if (!you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            simple_god_message(" will now grant you divine energy when your "
+                               "reserves of magic are depleted.");
+            mpr("You will briefly lose access to your magic after casting a "
+                "spell in this manner.");
+            you.attribute[ATTR_DIVINE_ENERGY] = 1;
+        }
+        else
+        {
+            simple_god_message(" stops granting you divine energy.");
+            you.attribute[ATTR_DIVINE_ENERGY] = 0;
+        }
+        break;
+
     case ABIL_SIF_MUNA_FORGET_SPELL:
         fail_check();
         if (cast_selective_amnesia() <= 0)
             return SPRET_ABORT;
         break;
+
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+    {
+        fail_check();
+        you.increase_duration(DUR_CHANNEL_ENERGY,
+            4 + random2avg(you.skill_rdiv(SK_INVOCATIONS, 2, 3), 2), 100);
+        break;
+    }
 
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
