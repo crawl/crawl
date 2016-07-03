@@ -3473,6 +3473,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(ability_menu);
+    else BOOL_OPTION(easy_floor_use);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());

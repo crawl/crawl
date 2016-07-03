@@ -999,6 +999,14 @@ ability_menu = true
 
         Setting this option to false has no effect in Android tiles builds.
 
+easy_floor_use = true
+        If set to true, item interaction menus that allow using items from the
+        ground will respond to switching from inventory items to floor items by
+        pressing ',' whenever there is only one floor item, by selecting that
+        item rather than toggling the menu. For example, 'r,' will read the
+        scroll on the ground, if there is only one. This will work even if
+        there are no matching items in your inventory.
+
 sort_menus = [menu:](true | false | auto:X)[:sort_order]
         Controls if and how items are sorted in inventory and pickup
         menus.
