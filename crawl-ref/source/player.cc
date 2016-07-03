@@ -6267,16 +6267,6 @@ bool player::is_holy(bool check_spells) const
     return bool(holiness() & MH_HOLY);
 }
 
-bool player::is_unholy(bool check_spells) const
-{
-    return bool(holiness() & (MH_DEMONIC | MH_UNHOLY));
-}
-
-bool player::is_evil(bool check_spells) const
-{
-    return bool(holiness() & (MH_UNDEAD | MH_EVIL));
-}
-
 // This is a stub. Check is used only for silver damage. Worship of chaotic
 // gods should probably be checked in the non-existing player::is_unclean,
 // which could be used for something Zin-related (such as a priestly monster).
@@ -6405,7 +6395,7 @@ int player::res_holy_energy(const actor *attacker) const
     if (undead_or_demonic())
         return -2;
 
-    if (is_evil())
+    if (evil()) // following evil god
         return -1;
 
     if (is_holy())

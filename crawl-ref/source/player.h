@@ -695,8 +695,6 @@ public:
     bool undead_or_demonic() const override;
     bool holy_wrath_susceptible() const override;
     bool is_holy(bool spells = true) const override;
-    bool is_unholy(bool spells = true) const override;
-    bool is_evil(bool spells = true) const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_artificial(bool temp = true) const override;
     bool is_unbreathing() const override;

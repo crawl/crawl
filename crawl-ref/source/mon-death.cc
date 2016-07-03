@@ -1608,8 +1608,8 @@ static bool _god_will_bless_follower(monster* victim)
 {
     return have_passive(passive_t::bless_followers)
            && random2(you.piety) >= piety_breakpoint(2)
-           || have_passive(passive_t::bless_followers_vs_unholy)
-              && (victim->is_evil() || victim->is_unholy())
+           || have_passive(passive_t::bless_followers_vs_evil)
+              && victim->evil()
               && random2(you.piety) >= piety_breakpoint(0);
 }
 
@@ -1658,9 +1658,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_LIVING, mons);
 
         // TSO hates natural evil and unholy beings.
-        if (mons.is_unholy())
-            did_kill_conduct(DID_KILL_NATURAL_UNHOLY, mons);
-        else if (mons.is_evil())
+        if (mons.evil())
             did_kill_conduct(DID_KILL_NATURAL_EVIL, mons);
     }
     else if (holiness & MH_UNDEAD)
@@ -2166,8 +2164,8 @@ item_def* monster_die(monster* mons, killer_type killer,
             if (gives_player_xp
                 && (have_passive(passive_t::restore_hp)
                     || have_passive(passive_t::mp_on_kill)
-                    || have_passive(passive_t::restore_hp_mp_vs_unholy)
-                       && (mons->is_evil() || mons->is_unholy()))
+                    || have_passive(passive_t::restore_hp_mp_vs_evil)
+                       && mons->evil())
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
                 && (you_worship(GOD_PAKELLAS)
@@ -2180,7 +2178,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                     hp_heal = mons->get_experience_level()
                         + random2(mons->get_experience_level());
                 }
-                if (have_passive(passive_t::restore_hp_mp_vs_unholy))
+                if (have_passive(passive_t::restore_hp_mp_vs_evil))
                 {
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
                     mp_heal = random2(2 + mons->get_experience_level() / 3);

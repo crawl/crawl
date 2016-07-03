@@ -3676,16 +3676,6 @@ bool monster::is_holy(bool check_spells) const
     return bool(holiness() & MH_HOLY);
 }
 
-bool monster::is_unholy(bool check_spells) const
-{
-    return bool(holiness() & (MH_DEMONIC | MH_UNHOLY));
-}
-
-bool monster::is_evil(bool check_spells) const
-{
-    return bool(holiness() & (MH_UNDEAD | MH_EVIL));
-}
-
 /** Is the monster considered unclean by Zin?
  *
  *  If not 0, then Zin won't let you have it as an ally, and gives
@@ -4071,7 +4061,7 @@ int monster::res_holy_energy(const actor *attacker) const
     if (undead_or_demonic())
         return -2;
 
-    if (is_evil())
+    if (holiness() & MH_EVIL)
         return -1;
 
     if (is_holy()
