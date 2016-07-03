@@ -1794,7 +1794,7 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
 
-    if (player_will_anger_monster(victim))
+    if (player_will_anger_monster(*victim))
     {
         if (player_mutation_level(MUT_NO_LOVE))
             mpr("The reflection would only feel hate for you!");

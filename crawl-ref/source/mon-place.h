@@ -80,7 +80,7 @@ monster_type pick_random_monster(level_id place,
                                  bool allow_ood = true);
 
 conduct_type player_will_anger_monster(monster_type type);
-conduct_type player_will_anger_monster(monster* mon);
+conduct_type player_will_anger_monster(const monster &mon);
 bool player_angers_monster(monster* mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
