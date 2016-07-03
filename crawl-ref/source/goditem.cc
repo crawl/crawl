@@ -90,7 +90,7 @@ bool is_unholy_item(const item_def& item)
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->flags & UNRAND_FLAG_UNHOLY)
+        if (entry->flags & UNRAND_FLAG_EVIL)
             return true;
     }
 
@@ -459,6 +459,7 @@ bool is_channeling_item(const item_def& item)
               && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY;
 }
 
+// TODO: merge with is_evil_spell()
 bool is_unholy_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
@@ -524,23 +525,20 @@ static bool _your_god_hates_rod_spell(spell_type spell)
  * Do the good gods dislike players using this item? If so, why?
  *
  * @param item  The item in question.
- * @return      The conduct associated with using this item (e.g. DID_UNHOLY
- *              for demon weapons), or DID_NOTHING if there's no issue.
+ * @return      Whether using the item counts as DID_EVIL.
  */
-static conduct_type good_god_hates_item_handling(const item_def &item)
+static bool item_handling_is_evil(const item_def &item)
 {
-    if (item_type_known(item) || is_unrandom_artefact(item))
+    if (is_demonic(item))
+        return true;
+
+    if ((item_type_known(item) || is_unrandom_artefact(item))
+        && (is_evil_item(item) || is_unholy_item(item)))
     {
-        if (is_evil_item(item))
-            return DID_NECROMANCY;
-        else if (is_unholy_item(item))
-            return DID_UNHOLY;
+        return true;
     }
 
-    if (is_demonic(item))
-        return DID_UNHOLY;
-
-    return DID_NOTHING;
+    return false;
 }
 
 /**
@@ -556,11 +554,8 @@ static conduct_type good_god_hates_item_handling(const item_def &item)
  */
 conduct_type god_hates_item_handling(const item_def &item)
 {
-    if (is_good_god(you.religion)
-        && good_god_hates_item_handling(item) != DID_NOTHING)
-    {
-        return good_god_hates_item_handling(item);
-    }
+    if (is_good_god(you.religion) && item_handling_is_evil(item))
+        return DID_EVIL;
 
     switch (you.religion)
     {
@@ -643,7 +638,7 @@ conduct_type god_hates_item_handling(const item_def &item)
     if (item_type_known(item) && is_potentially_evil_item(item)
         && is_good_god(you.religion))
     {
-        return DID_NECROMANCY;
+        return DID_EVIL;
     }
 
     if (item_type_known(item) && _is_bookrod_type(item,

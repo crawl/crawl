@@ -237,7 +237,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
-    did_god_conduct(DID_UNHOLY, 3);
+    did_god_conduct(DID_EVIL, 3);
     int num = 1;
     const int adjusted_power =
         player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);

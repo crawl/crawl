@@ -1055,7 +1055,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         if (act->drain_exp(agent))
         {
             if (cloud.whose == KC_YOU)
-                did_god_conduct(DID_NECROMANCY, 5 + random2(3));
+                did_god_conduct(DID_EVIL, 5 + random2(3));
             return true;
         }
         break;

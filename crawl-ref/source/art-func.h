@@ -90,7 +90,7 @@ static bool _evoke_sceptre_of_asmodeus()
     if (m)
     {
         mpr("The sceptre summons one of its servants.");
-        did_god_conduct(DID_UNHOLY, 3);
+        did_god_conduct(DID_EVIL, 3);
 
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
 
@@ -169,7 +169,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
-        did_god_conduct(DID_NECROMANCY, 3);
+        did_god_conduct(DID_EVIL, 3);
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
@@ -394,7 +394,7 @@ static void _TORMENT_world_reacts(item_def *item)
     if (one_chance_in(200))
     {
         torment(&you, TORMENT_SCEPTRE, you.pos());
-        did_god_conduct(DID_NECROMANCY, 1);
+        did_god_conduct(DID_EVIL, 1);
     }
 }
 
@@ -511,7 +511,7 @@ static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
 {
     if (attacker->is_player())
     {
-        did_god_conduct(DID_NECROMANCY, 3);
+        did_god_conduct(DID_EVIL, 3);
         did_god_conduct(DID_CORPSE_VIOLATION, 3);
     }
 }
@@ -807,7 +807,7 @@ static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
 static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
 {
     if (one_chance_in(10))
-        did_god_conduct(DID_NECROMANCY, 1);
+        did_god_conduct(DID_EVIL, 1);
 }
 
 ///////////////////////////////////////////////////
@@ -1312,7 +1312,7 @@ static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _ETERNAL_TORMENT_world_reacts(item_def *item)
 {
     if (one_chance_in(10))
-        did_god_conduct(DID_NECROMANCY, 1);
+        did_god_conduct(DID_EVIL, 1);
 }
 
 

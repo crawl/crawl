@@ -2806,7 +2806,7 @@ void read_scroll(item_def& scroll)
         torment(&you, TORMENT_SCROLL, you.pos());
 
         // This is only naughty if you know you're doing it.
-        did_god_conduct(DID_NECROMANCY, 10, item_type_known(scroll));
+        did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
         bad_effect = true;
         break;
 

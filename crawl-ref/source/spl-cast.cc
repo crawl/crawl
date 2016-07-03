@@ -883,8 +883,11 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     const int conduct_level = 10 + spell_difficulty(spell);
 
-    if (is_unholy_spell(spell) || you.spellcasting_unholy())
-        did_god_conduct(DID_UNHOLY, conduct_level);
+    if (is_unholy_spell(spell) || is_evil_spell(spell)
+        || you.spellcasting_unholy())
+    {
+        did_god_conduct(DID_EVIL, conduct_level);
+    }
 
     if (is_unclean_spell(spell))
         did_god_conduct(DID_UNCLEAN, conduct_level);
@@ -894,9 +897,6 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     if (is_corpse_violating_spell(spell))
         did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
-
-    if (is_evil_spell(spell))
-        did_god_conduct(DID_NECROMANCY, conduct_level);
 
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)

@@ -1282,9 +1282,8 @@ enum command_type
 enum conduct_type
 {
     DID_NOTHING,
-    DID_NECROMANCY,                       // vamp/drain/pain/reap, Zong/Curses
+    DID_EVIL,                             // hated by good gods
     DID_HOLY,                             // holy wrath, holy word scrolls
-    DID_UNHOLY,                           // demon weapons, demon spells
     DID_ATTACK_HOLY,
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,

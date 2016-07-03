@@ -3169,6 +3169,18 @@ conduct_type player_will_anger_monster(monster_type type)
     return player_will_anger_monster(&dummy);
 }
 
+/**
+ * Does the player's current religion conflict with the given monster? If so,
+ * why?
+ *
+ * XXX: this should ideally return a list of conducts that can be filtered by
+ *      callers by god; we're duplicating godconduct.cc right now.
+ *
+ * @param mon   The monster in question.
+ *              TODO: make this a const reference instead of a pointer
+ * @return      The reason the player's religion conflicts with the monster
+ *              (e.g. DID_EVIL for evil monsters), or DID_NOTHING.
+ */
 conduct_type player_will_anger_monster(monster* mon)
 {
     if (player_mutation_level(MUT_NO_LOVE)
@@ -3177,10 +3189,8 @@ conduct_type player_will_anger_monster(monster* mon)
         // Player angers all real monsters
         return DID_SACRIFICE_LOVE;
     }
-    if (is_good_god(you.religion) && mon->is_unholy())
-        return DID_UNHOLY;
-    if (is_good_god(you.religion) && mon->is_evil())
-        return DID_NECROMANCY;
+    if (is_good_god(you.religion) && (mon->is_unholy() || mon->is_evil()))
+        return DID_EVIL;
     if (you_worship(GOD_FEDHAS)
         && ((mon->holiness() & MH_UNDEAD && !mon->is_insubstantial())
             || mon->has_corpse_violating_spell()))
@@ -3222,8 +3232,7 @@ bool player_angers_monster(monster* mon)
 
             switch (why)
             {
-            case DID_UNHOLY:
-            case DID_NECROMANCY:
+            case DID_EVIL:
                 mprf("%s is enraged by your holy aura!", mname.c_str());
                 break;
             case DID_CORPSE_VIOLATION:
