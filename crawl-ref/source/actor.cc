@@ -910,5 +910,5 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {
-    return bool(holiness() & (MH_UNDEAD | MH_EVIL | MH_DEMONIC | MH_UNHOLY));
+    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
 }

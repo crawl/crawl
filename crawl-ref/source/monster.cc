@@ -4061,7 +4061,7 @@ int monster::res_holy_energy(const actor *attacker) const
     if (undead_or_demonic())
         return -2;
 
-    if (holiness() & MH_EVIL)
+    if (evil())
         return -1;
 
     if (is_holy()

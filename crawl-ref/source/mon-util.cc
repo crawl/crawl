@@ -637,8 +637,6 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
         return "plant";
     case MH_EVIL:
         return "evil";
-    case MH_UNHOLY:
-        return "unholy";
     default:
         return "bug";
     }
