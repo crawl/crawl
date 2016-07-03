@@ -891,6 +891,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0);
                 status_shift += 6;
             }
+            if (fg.BOUND_SOUL)
+            {
+                this.draw_icon(icons.INFESTED, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
             if (fg.RECALL)
             {
                 this.draw_icon(icons.RECALL, x, y, -status_shift, 0);
