@@ -1232,7 +1232,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
             // In the rare cases that a specific spell set of a monster will
             // cause anger, even if others do not, try rerolling
             int tries = 0;
-            while (player_will_anger_monster(mons) && ++tries <= 20)
+            while (player_will_anger_monster(*mons) && ++tries <= 20)
             {
                 // Save the enchantments, particularly ENCH_SUMMON etc.
                 mon_enchant_list ench = mons->enchantments;
@@ -1274,7 +1274,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                 if (testbits(mi->flags, MF_BAND_MEMBER)
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
-                    if (player_will_anger_monster(*mi))
+                    if (player_will_anger_monster(**mi))
                         monster_die(*mi, KILL_RESET, NON_MONSTER);
 
                     mi->props["summon_id"].get_int() = mons->mid;
