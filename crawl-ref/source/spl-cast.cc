@@ -883,11 +883,8 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     const int conduct_level = 10 + spell_difficulty(spell);
 
-    if (is_unholy_spell(spell) || is_evil_spell(spell)
-        || you.spellcasting_unholy())
-    {
+    if (is_evil_spell(spell) || you.spellcasting_unholy())
         did_god_conduct(DID_EVIL, conduct_level);
-    }
 
     if (is_unclean_spell(spell))
         did_god_conduct(DID_UNCLEAN, conduct_level);

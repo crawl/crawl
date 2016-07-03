@@ -604,11 +604,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
             return false;
         }
 
-        // Holy monsters and monsters that are gifts/worshippers of good
-        // gods won't use unholy weapons.
-        if ((is_holy() || is_good_god(god)) && is_unholy_item(item))
-            return false;
-
         // Holy monsters that aren't gifts/worshippers of chaotic gods
         // and monsters that are gifts/worshippers of good gods won't
         // use potentially evil weapons.
@@ -621,11 +616,8 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters and monsters that are gifts/worshippers of good
         // gods won't use evil weapons.
-        if (((is_holy() || is_good_god(god)))
-            && is_evil_item(item))
-        {
+        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
             return false;
-        }
 
         // Monsters that are gifts/worshippers of Fedhas won't use
         // corpse-violating weapons.
@@ -2987,16 +2979,6 @@ mon_spell_slot_flags monster::spell_slot_flags(spell_type spell) const
             slot_flags |= slot.flags;
 
     return slot_flags;
-}
-
-bool monster::has_unholy_spell() const
-{
-    return search_spells(is_unholy_spell);
-}
-
-bool monster::has_evil_spell() const
-{
-    return search_spells(is_evil_spell);
 }
 
 bool monster::has_unclean_spell() const
