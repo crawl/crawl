@@ -67,13 +67,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  * Unrand functions.
  *******************/
 
-static void _ASMODEUS_melee_effects(item_def* weapon, actor* attacker,
-                                    actor* defender, bool mondied, int dam)
-{
-    if (attacker->is_player())
-        did_god_conduct(DID_UNHOLY, 3);
-}
-
 static bool _evoke_sceptre_of_asmodeus()
 {
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
@@ -127,9 +120,6 @@ static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
 static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (attacker->is_player())
-        did_god_conduct(DID_UNHOLY, 3);
-
     if (dam)
     {
         if (defender->is_player()
@@ -189,13 +179,6 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 }
 
 /////////////////////////////////////////////////////
-
-static void _DISPATER_melee_effects(item_def* weapon, actor* attacker,
-                                    actor* defender, bool mondied, int dam)
-{
-    if (attacker->is_player())
-        did_god_conduct(DID_UNHOLY, 3);
-}
 
 static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
@@ -411,7 +394,7 @@ static void _TORMENT_world_reacts(item_def *item)
     if (one_chance_in(200))
     {
         torment(&you, TORMENT_SCEPTRE, you.pos());
-        did_god_conduct(DID_UNHOLY, 1);
+        did_god_conduct(DID_NECROMANCY, 1);
     }
 }
 
@@ -419,10 +402,7 @@ static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
     if (coinflip())
-        return;
-    torment(attacker, TORMENT_SCEPTRE, attacker->pos());
-    if (attacker->is_player())
-        did_god_conduct(DID_UNHOLY, 5);
+        torment(attacker, TORMENT_SCEPTRE, attacker->pos());
 }
 
 /////////////////////////////////////////////////////
@@ -601,9 +581,6 @@ static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
         else
             cast_summon_demon(50+random2(100));
     }
-
-    if (attacker->is_player())
-        did_god_conduct(DID_UNHOLY, 3);
 }
 
 static monster* _find_nearest_possible_beholder()

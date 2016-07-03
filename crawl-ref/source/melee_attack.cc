@@ -1782,7 +1782,7 @@ void melee_attack::player_weapon_upsets_god()
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && god_hates_item_handling(*weapon))
     {
-        did_god_conduct(god_hates_item_handling(*weapon), 1);
+        did_god_conduct(god_hates_item_handling(*weapon), 2);
     }
     else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
         did_god_conduct(DID_FIRE, 1);
