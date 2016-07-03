@@ -30,29 +30,11 @@ static int food_prompt_eat_chunks(lua_State *ls)
     return 1;
 }
 
-static int food_prompt_floor(lua_State *ls)
-{
-    int eaten = 0;
-    if (!you.turn_is_over)
-        eaten = eat_from_floor();
-    lua_pushboolean(ls, (eaten != 0));
-    return 1;
-}
-
-static int food_prompt_inventory(lua_State *ls)
-{
-    bool eaten = false;
-    if (!you.turn_is_over)
-        eaten = eat_from_inventory();
-    lua_pushboolean(ls, eaten);
-    return 1;
-}
-
 static int food_prompt_inventory_menu(lua_State *ls)
 {
     bool eaten = false;
     if (!you.turn_is_over)
-        eaten = prompt_eat_inventory_item();
+        eaten = prompt_eat_item();
     lua_pushboolean(ls, eaten);
     return 1;
 }
@@ -143,8 +125,6 @@ static const struct luaL_reg food_lib[] =
 {
     { "do_eat",            food_do_eat },
     { "prompt_eat_chunks", food_prompt_eat_chunks },
-    { "prompt_floor",      food_prompt_floor },
-    { "prompt_inventory",  food_prompt_inventory },
     { "prompt_inv_menu",   food_prompt_inventory_menu },
     { "can_eat",           food_can_eat },
     { "eat",               food_eat },

@@ -196,7 +196,7 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-/*
+/**
  * Prompt use of a consumable from either player inventory or the floor.
  *
  * This function generates a menu containing type_expect items based on the
@@ -213,11 +213,8 @@ bool UseItemMenu::process_key(int key)
  *
  * @return a pointer to the chosen item, or nullptr if none was chosen.
  */
-
-static item_def* _use_an_item(int item_type, operation_types oper,
-                              const char* prompt,
-                              function<bool ()> allowcancel = []()
-                              { return true; })
+item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
+                      function<bool ()> allowcancel)
 {
     item_def* target = nullptr;
 
@@ -1908,7 +1905,7 @@ void drink(item_def* potion)
 
     if (!potion)
     {
-        potion = _use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
+        potion = use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
 
         if (!potion)
         {
@@ -2223,14 +2220,14 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    item_def* itemp = _use_an_item(OSEL_UNIDENT, OPER_ID,
-                        "Identify which item? (\\ to view known items)",
-                        [=]()
-                        {
-                            return alreadyknown
-                                   || crawl_state.seen_hups
-                                   || yesno("Really abort (and waste the scroll)?", false, 0);
-                        });
+    item_def* itemp = use_an_item(OSEL_UNIDENT, OPER_ID,
+                       "Identify which item? (\\ to view known items)",
+                       [=]()
+                       {
+                           return alreadyknown
+                                  || crawl_state.seen_hups
+                                  || yesno("Really abort (and waste the scroll)?", false, 0);
+                       });
 
     if (!itemp)
         return !alreadyknown;
@@ -2653,7 +2650,7 @@ void read(item_def* scroll)
 
     if (!scroll)
     {
-        scroll = _use_an_item(OBJ_SCROLLS, OPER_READ, "Read which item?");
+        scroll = use_an_item(OBJ_SCROLLS, OPER_READ, "Read which item?");
         if (!scroll)
             return;
     }
