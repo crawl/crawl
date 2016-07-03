@@ -520,19 +520,20 @@ static bool _your_god_hates_rod_spell(spell_type spell)
     return god_hates_spell(spell, you.religion, true);
 }
 
+/**
+ * Do the good gods dislike players using this item? If so, why?
+ *
+ * @param item  The item in question.
+ * @return      The conduct associated with using this item (e.g. DID_UNHOLY
+ *              for demon weapons), or DID_NOTHING if there's no issue.
+ */
 static conduct_type good_god_hates_item_handling(const item_def &item)
 {
-    if (!is_good_god(you.religion)
-        || (!is_unholy_item(item) && !is_evil_item(item)))
-    {
-        return DID_NOTHING;
-    }
-
     if (item_type_known(item) || is_unrandom_artefact(item))
     {
         if (is_evil_item(item))
             return DID_NECROMANCY;
-        else
+        else if (is_unholy_item(item))
             return DID_UNHOLY;
     }
 
@@ -542,10 +543,24 @@ static conduct_type good_god_hates_item_handling(const item_def &item)
     return DID_NOTHING;
 }
 
+/**
+ * Does the player's god hate them using the given item? If so, why?
+ *
+ * XXX: We should really be returning a list of all possible conducts for the
+ * item and potentially letting callers filter them by the current god; this
+ * is duplicating godconduct.cc otherwise.
+ *
+ * @param item  The item in question.
+ * @return      Why the player's god hates the item, e.g. DID_HOLY for holy
+ *              wrath items under Yredremnul; else DID_NOTHING.
+ */
 conduct_type god_hates_item_handling(const item_def &item)
 {
-    if (good_god_hates_item_handling(item) != DID_NOTHING)
+    if (is_good_god(you.religion)
+        && good_god_hates_item_handling(item) != DID_NOTHING)
+    {
         return good_god_hates_item_handling(item);
+    }
 
     switch (you.religion)
     {
