@@ -484,3 +484,11 @@ Blood status
 Your body is covered in congealed blood, serving as armour for as long as you
 remain seriously injured.
 %%%%
+-Cast status
+
+You are unable to cast spells.
+%%%%
+Channel
+
+You are channeling magical energy.
+%%%%

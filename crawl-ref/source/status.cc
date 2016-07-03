@@ -178,6 +178,23 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_DIVINE_ENERGY:
+        if (you.duration[DUR_NO_CAST])
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "-Cast";
+            inf->short_text   = "no casting";
+            inf->long_text    = "You are unable to cast spells.";
+        }
+        else if (you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "+Cast";
+            inf->short_text   = "divine energy";
+            inf->long_text    = "You are calling on Sif Muna for divine "
+                                "energy.";
+        }
+        break;
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",

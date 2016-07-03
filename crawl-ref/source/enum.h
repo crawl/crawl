@@ -321,6 +321,7 @@ enum ability_type
     // Sif Muna
     ABIL_SIF_MUNA_CHANNEL_ENERGY = 1070,
     ABIL_SIF_MUNA_FORGET_SPELL,
+    ABIL_SIF_MUNA_DIVINE_ENERGY,
     // Trog
     ABIL_TROG_BURN_SPELLBOOKS = 1080,
     ABIL_TROG_BERSERK,
@@ -567,6 +568,7 @@ enum attribute_type
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.
 #endif
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
+    ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
     NUM_ATTRIBUTES
 };
 
@@ -1921,6 +1923,8 @@ enum duration_type
     DUR_VERTIGO,
     DUR_ANCESTOR_DELAY,
     DUR_SANGUINE_ARMOUR,
+    DUR_NO_CAST,
+    DUR_CHANNEL_ENERGY,
     NUM_DURATIONS
 };
 

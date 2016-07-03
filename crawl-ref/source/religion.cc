@@ -158,9 +158,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Sif Muna
-    { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY, "tap ambient magical fields" },
+    { { 1, ABIL_SIF_MUNA_DIVINE_ENERGY, "request divine energy to cast spells "
+                                        "with insufficient magic",
+           "request divine energy" },
       { 2, "Sif Muna is protecting you from the effects of miscast magic.",
            "Sif Muna no longer protects you from the effects of miscast magic." },
+      { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
       { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
           "forget spells at will" },
     },
@@ -751,6 +754,11 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DEVICE_SURGE])
                 you.duration[DUR_DEVICE_SURGE] = 0;
+        }
+        else if (god == GOD_SIF_MUNA)
+        {
+            if (you.duration[DUR_CHANNEL_ENERGY])
+                you.duration[DUR_CHANNEL_ENERGY] = 0;
         }
 
         if (you_worship(god))
@@ -2475,6 +2483,9 @@ void lose_piety(int pgn)
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
                 }
+                // Deactivate the toggle
+                if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
+                    you.attribute[ATTR_DIVINE_ENERGY] = 0;
             }
         }
 #ifdef USE_TILE_LOCAL
@@ -2715,6 +2726,10 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_SIF_MUNA:
+        if (you.duration[DUR_CHANNEL_ENERGY])
+            you.duration[DUR_CHANNEL_ENERGY] = 0;
+        if (you.attribute[ATTR_DIVINE_ENERGY])
+            you.attribute[ATTR_DIVINE_ENERGY] = 0;
         _set_penance(old_god, 50);
         break;
 
@@ -4021,6 +4036,7 @@ void handle_god_time(int /*time_delta*/)
                 lose_piety(1);
             break;
 
+        case GOD_SIF_MUNA:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
@@ -4030,11 +4046,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_ELYVILON:
         case GOD_HEPLIAKLQANA:
             if (one_chance_in(50))
-                lose_piety(1);
-            break;
-
-        case GOD_SIF_MUNA:
-            if (one_chance_in(100))
                 lose_piety(1);
             break;
 
