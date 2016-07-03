@@ -1156,8 +1156,7 @@ int main(int argc, char* argv[])
         mons_check_flag(me->habitat == HT_AMPHIBIOUS, monsterflags,
                         "amphibious");
 
-        mons_check_flag(mon.is_evil(), monsterflags, "evil");
-        mons_check_flag(mon.is_unholy(), monsterflags, "unholy");
+        mons_check_flag(mon.evil(), monsterflags, "evil");
         mons_check_flag(mon.is_actual_spellcaster(), monsterflags,
                         "spellcaster");
         mons_check_flag(bool(me->bitfields & M_COLD_BLOOD), monsterflags,
