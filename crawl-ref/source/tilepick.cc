@@ -3385,6 +3385,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Sif Muna
     case ABIL_SIF_MUNA_DIVINE_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_DIVINE_ENERGY;
+    case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
+        return TILEG_ABILITY_SIF_MUNA_STOP_DIVINE_ENERGY;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;
     case ABIL_SIF_MUNA_FORGET_SPELL:
