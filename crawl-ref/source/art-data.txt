@@ -468,7 +468,7 @@ BOOL:    nospell, nogen
 
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
-PLUS:    +12
+PLUS:    +10
 INSCRIP: Halo
 COLOUR:  ETC_JEWEL
 TILE:    urand_eos
