@@ -219,7 +219,7 @@ NORETURN void screen_end_game(string text)
     game_ended();
 }
 
-NORETURN void end_game(scorefile_entry &se)
+NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 {
     for (auto &item : you.inv)
         if (item.defined() && item_type_unknown(item))
@@ -366,7 +366,8 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5);
+    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+                        hiscore_index);
 
 #ifndef DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",
