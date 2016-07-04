@@ -3,7 +3,7 @@ TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmi
 DESC:   Sprint IV: "Fedhas' Mad Dash"
 ORDER:  4
 ORIENT: encompass
-SUBVAULT: o : temple
+SUBVAULT: o : fedhas_sprint_temple
 KMONS:  A = fungus
 KMONS:  B = spriggan hd:3
 KMONS:  C = oklob sapling hp:7
@@ -97,7 +97,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   sprint_temple
-TAGS:   temple no_rotate no_hmirror no_vmirror
+TAGS:   fedhas_sprint_temple no_rotate no_hmirror no_vmirror
 KFEAT:  A = altar_cheibriados
 KFEAT:  B = altar_zin
 KFEAT:  C = altar_elyvilon
