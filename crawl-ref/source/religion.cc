@@ -2244,22 +2244,11 @@ static void _gain_piety_point()
     }
 
     // slow down gain at upper levels of piety
-    if (!you_worship(GOD_SIF_MUNA) && !you_worship(GOD_RU))
+    if (!you_worship(GOD_RU))
     {
         if (you.piety >= MAX_PIETY
             || you.piety >= piety_breakpoint(5) && one_chance_in(3)
             || you.piety >= piety_breakpoint(3) && one_chance_in(3))
-        {
-            do_god_gift();
-            return;
-        }
-    }
-    else if (you_worship(GOD_SIF_MUNA))
-    {
-        // Sif Muna has a gentler taper off because training becomes
-        // naturally slower as the player gains in spell skills.
-        if (you.piety >= MAX_PIETY
-            || you.piety >= piety_breakpoint(5) && one_chance_in(5))
         {
             do_god_gift();
             return;
@@ -2386,8 +2375,7 @@ static void _gain_piety_point()
  *
  * @param original_gain The numerator of the nominal piety gain.
  * @param denominator The denominator of the nominal piety gain.
- * @param should_scale_piety Should the piety gain be scaled by faith,
- *   forlorn, and Sprint?
+ * @param should_scale_piety Should the piety gain be scaled by faith/Sprint?
  * @return True if something happened, or if another call with the same
  *   arguments might cause something to happen (because of random number
  *   rolls).
