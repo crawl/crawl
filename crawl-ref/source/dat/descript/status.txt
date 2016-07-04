@@ -487,3 +487,8 @@ Channel status
 
 You are channeling magical energy.
 %%%%
++Cast status
+
+You may cast spells with insufficient reserves of magic, but doing so will
+cause you to briefly lose access to your magic after the spell is cast.
+%%%%
