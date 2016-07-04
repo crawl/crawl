@@ -14,7 +14,7 @@ void set_all_manual_charges(const vector<int> &charges);
 string manual_skill_names(bool short_text=false);
 
 int recharge_wand(bool known = true, const string &pre_msg = "",
-                  int charge_num = 0, int charge_den = 0);
+                  int charge_num = -1, int charge_den = -1);
 
 void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 
