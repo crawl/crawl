@@ -2352,7 +2352,7 @@ static void _bindkey(string field)
             return;
         }
 
-        key = CONTROL(wchars[0]);
+        key = CONTROL(wchars[1]);
     }
     else
     {
