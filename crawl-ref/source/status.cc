@@ -156,6 +156,22 @@ static void _describe_terrain(status_info* inf);
 static void _describe_missiles(status_info* inf);
 static void _describe_invisible(status_info* inf);
 
+/// Return the mana cost of the player's largest spell.
+static int _largest_mana_cost()
+{
+    int cost = 0;
+    for (auto spell : you.spells)
+    {
+        if (spell != SPELL_NO_SPELL)
+        {
+            const int mana = spell_mana(spell);
+            if (mana > cost)
+                cost = mana;
+        }
+    }
+    return cost;
+}
+
 bool fill_status_info(int status, status_info* inf)
 {
     _reset_status_info(inf);
@@ -186,7 +202,8 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text   = "no casting";
             inf->long_text    = "You are unable to cast spells.";
         }
-        else if (you.attribute[ATTR_DIVINE_ENERGY])
+        else if (you.attribute[ATTR_DIVINE_ENERGY]
+                 && you.magic_points < _largest_mana_cost())
         {
             inf->light_colour = WHITE;
             inf->light_text   = "+Cast";
