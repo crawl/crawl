@@ -50,27 +50,3 @@ function ready()
   end
 end
 }
-
-######################################################################
-# For mummies who want to channel whenever possible, add this to your
-# rcfile and macro . or s to ===channel_or_rest. If you remapped the
-# ability menu to a different key, change the "a" to the proper one.
-{
-function channel_or_rest()
-  local mp, mmp = you.mp()
-  local key = ""
-  if mp < mmp then
-    for hotkey, abil in pairs(you.ability_table()) do
-      if abil == "Channel Energy" then
-        key = hotkey
-      end
-    end
-    if key ~= "" then
-      crawl.process_keys("a" .. key)
-      return
-    end
-  end
-
-  crawl.do_commands({"CMD_WAIT"})
-end
-}
