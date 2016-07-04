@@ -631,7 +631,7 @@ static void _god_greeting_message(bool game_start)
         ;
     else if (game_start)
         msg = " newgame";
-    else if (you_worship(GOD_XOM) && you.gift_timeout <= 1)
+    else if (you_worship(GOD_XOM) && you.xom_boredom <= 1)
         msg = " bored";
     else if (player_under_penance())
         msg = " penance";

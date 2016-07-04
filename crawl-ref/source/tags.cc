@@ -1519,6 +1519,9 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.piety_max[*it]);
 
     marshallByte(th, you.gift_timeout);
+    marshallByte(th, you.xom_gift_niceness);
+    marshallByte(th, you.xom_gift_sever);
+    marshallByte(th, you.xom_boredom);
     marshallUByte(th, you.saved_good_god_piety);
     marshallByte(th, you.previous_good_god);
 
@@ -3079,6 +3082,9 @@ static void tag_read_you(reader &th)
 #endif
 
     you.gift_timeout   = unmarshallByte(th);
+    you.xom_gift_niceness   = unmarshallByte(th);
+    you.xom_gift_sever   = unmarshallByte(th);
+    you.xom_boredom   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_SAVED_PIETY)
     {

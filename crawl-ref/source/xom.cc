@@ -198,7 +198,7 @@ const string describe_xom_favour()
     string favour;
     if (!you_worship(GOD_XOM))
         favour = "a very buggy toy of Xom.";
-    else if (you.gift_timeout < 1)
+    else if (you.xom_boredom < 1)
         favour = "a BORING thing.";
     else
         favour = describe_xom_mood();
@@ -222,7 +222,7 @@ static string _get_xom_speech(const string &key)
 
 static bool _xom_is_bored()
 {
-    return you_worship(GOD_XOM) && !you.gift_timeout;
+    return you_worship(GOD_XOM) && !you.xom_boredom;
 }
 
 static bool _xom_feels_nasty()
@@ -239,8 +239,8 @@ bool xom_is_nice(int tension)
 
     if (you_worship(GOD_XOM))
     {
-        // If you.gift_timeout is 0, then Xom is BORED. He HATES that.
-        if (!you.gift_timeout)
+        // If you.xom_boredom is 0, then Xom is BORED. He HATES that.
+        if (!you.xom_boredom)
             return false;
 
         // At high tension Xom is more likely to be nice, at zero
@@ -286,14 +286,14 @@ static void _xom_is_stimulated(int maxinterestingness,
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
-         "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
-         you.gift_timeout, maxinterestingness, interestingness);
+         "Xom: xom_boredom: %d, maxinterestingness = %d, interestingness = %d",
+         you.xom_boredom, maxinterestingness, interestingness);
 #endif
 
     bool was_stimulated = false;
-    if (interestingness > you.gift_timeout && interestingness >= 10)
+    if (interestingness > you.xom_boredom && interestingness >= 10)
     {
-        you.gift_timeout = interestingness;
+        you.xom_boredom = interestingness;
         was_stimulated = true;
     }
 
@@ -332,7 +332,33 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
     _xom_is_stimulated(maxinterestingness, message_array, force_message);
 }
 
+void _xom_tick_about_to_act();
+void _xom_tick_everyday();
+
 void xom_tick()
+{
+  // If Xom already decided to act:
+  if (you.gift_timeout > 0)
+    _xom_tick_about_to_act();
+  else
+    _xom_tick_everyday();
+}
+
+void _xom_tick_about_to_act()
+{
+  ASSERT(you.gift_timeout > 0);
+
+  you.gift_timeout--;
+  if (you.gift_timeout == 0) {
+    const xom_event_type action = xom_choose_action(you.xom_gift_niceness, you.xom_gift_sever, get_tension(GOD_XOM));
+    xom_take_action(action, you.xom_gift_sever);
+    
+    you.xom_gift_niceness = 0;
+    you.xom_gift_sever = 0;
+  }
+}
+
+void _xom_tick_everyday()
 {
     // Xom now ticks every action, not every 20 turns.
     if (one_chance_in(20))
@@ -372,8 +398,8 @@ void xom_tick()
 #endif
 
         // ...but he gets bored...
-        if (you.gift_timeout > 0 && coinflip())
-           you.gift_timeout--;
+        if (you.xom_boredom > 0 && coinflip())
+           you.xom_boredom--;
 
         new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
@@ -382,7 +408,7 @@ void xom_tick()
             god_speaks(you.religion, msg.c_str());
         }
 
-        if (you.gift_timeout == 1)
+        if (you.xom_boredom == 1)
             simple_god_message(" is getting BORED.");
     }
 
@@ -396,12 +422,12 @@ void xom_tick()
                                           : 5);
 
         // If Xom is bored, the chances for Xom acting are sort of reversed.
-        if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
+        if (!you.xom_boredom && x_chance_in_y(25 - chance*chance, 100))
         {
             xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
             return;
         }
-        else if (you.gift_timeout <= 1 && chance > 0
+        else if (you.xom_boredom <= 1 && chance > 0
                  && x_chance_in_y(chance - 1, 80))
         {
             // During tension, Xom may briefly forget about being bored.
@@ -413,18 +439,18 @@ void xom_tick()
                 else
                     simple_god_message(" is intrigued.");
 
-                you.gift_timeout += interest;
+                you.xom_boredom += interest;
                 //updating piety status line
                 you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
                 mprf(MSGCH_DIAGNOSTICS,
                      "tension %d (chance: %d) -> increase interest to %d",
-                     tension, chance, you.gift_timeout);
+                     tension, chance, you.xom_boredom);
 #endif
             }
         }
 
-        if (x_chance_in_y(chance*chance, 100))
+        if (x_chance_in_y(chance*chance, 90))
             xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
     }
 }
@@ -3347,12 +3373,12 @@ void xom_take_action(xom_event_type action, int sever)
     {
         const int badness = _xom_event_badness(action);
         const int interest = random2avg(badness * 60, 2);
-        you.gift_timeout   = min(interest, 255);
+        you.xom_boredom   = min(interest, 255);
         //updating piety status line
         you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
-             badness, you.gift_timeout);
+             badness, you.xom_boredom);
 #endif
     }
 
@@ -3408,7 +3434,7 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 
         // these numbers (sever, tension) may be modified later...
         mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
-             niceness, sever, tension, you.piety, you.gift_timeout);
+             niceness, sever, tension, you.piety, you.xom_boredom);
 
         static char xom_buf[100];
         snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
@@ -3427,11 +3453,17 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
         mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
-    const xom_event_type action = xom_choose_action(niceness, sever, tension);
-    if (!debug)
-        xom_take_action(action, sever);
+    god_speaks(you.religion, "You feel Xom's attention focusing on you...");
+    you.gift_timeout = 3;
+    you.xom_gift_niceness = niceness;
+    you.xom_gift_sever = sever;
 
-    return action;
+    if (debug) {
+      const xom_event_type action = xom_choose_action(niceness, sever, tension);
+      return action;
+    } else {
+      return XOM_DID_NOTHING;
+    }
 }
 
 void xom_check_lost_item(const item_def& item)
@@ -3583,8 +3615,8 @@ bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
     take_note(Note(NOTE_XOM_REVIVAL));
 
     // Make sure Xom doesn't get bored within the next couple of turns.
-    if (you.gift_timeout < 10)
-        you.gift_timeout = 10;
+    if (you.xom_boredom < 10)
+        you.xom_boredom = 10;
 
     return true;
 }

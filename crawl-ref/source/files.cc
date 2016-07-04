@@ -2042,6 +2042,9 @@ bool get_save_version(reader &file, int &major, int &minor)
     major = buf[0];
     minor = buf[1];
 
+    //string msg = "vers " + to_string(major) + " -- " + to_string(minor) + "\n";
+    //const char *cmsg = msg.c_str();
+    //fail(cmsg);
     return true;
 }
 
