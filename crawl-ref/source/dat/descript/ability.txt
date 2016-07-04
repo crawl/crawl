@@ -310,9 +310,10 @@ already doing so. While active, Sif Muna will allow you to cast spells even with
 insufficient reserves of magic. Doing so will cause you to briefly lose access
 to your magic after the spell is cast.
 %%%%
-Channel Energy ability
+Channel Magic ability
 
-Replenishes your magical reservoir by an amount depending on Invocations skill.
+Invokes a magical power regeneration ability for a duration that depends on
+Invocations skill.
 %%%%
 Forget Spell ability
 
