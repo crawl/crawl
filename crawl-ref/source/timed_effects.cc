@@ -813,19 +813,6 @@ static void _handle_magic_contamination(int /*time_delta*/)
     }
 }
 
-// Adjust the player's stats if diseased.
-static void _handle_sickness(int /*time_delta*/)
-{
-    // If Cheibriados has slowed your biology, disease might
-    // not actually do anything.
-    if (you.disease && one_chance_in(30)
-        && !(have_passive(passive_t::slow_metabolism) && coinflip()))
-    {
-        mprf(MSGCH_WARN, "Your disease is taking its toll.");
-        lose_stat(STAT_RANDOM, 1);
-    }
-}
-
 // Exercise armour *xor* stealth skill: {dlb}
 static void _wait_practice(int /*time_delta*/)
 {
@@ -957,7 +944,9 @@ static struct timed_effect timed_effects[] =
 {
     { rot_floor_items,               200,   200, true  },
     { _hell_effects,                 200,   600, false },
-    { _handle_sickness,              100,   300, false },
+#if TAG_MAJOR_VERSION == 34
+    { nullptr,                         0,     0, false },
+#endif
     { _handle_magic_contamination,   200,   600, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
