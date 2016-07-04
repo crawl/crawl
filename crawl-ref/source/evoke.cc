@@ -729,7 +729,7 @@ void zap_wand(int slot)
 int recharge_wand(bool known, const string &pre_msg, int num, int den)
 {
     int item_slot = -1;
-    bool divine = num > 0 && den > 0;
+    bool divine = num >= 0 && den >= 0;
     do
     {
         if (item_slot == -1)
