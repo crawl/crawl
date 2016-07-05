@@ -345,7 +345,7 @@ ENDMAP
 
 NAME:   special_room_orc
 DEPTH:  D:8-, Orc, !Orc:$, Elf, Vaults
-TAGS:   special_room unrand
+TAGS:   special_room allow_dup unrand
 WEIGHT: 59 (D:8-12, Orc), 40 (D:13-, Elf:1), 32
 : sroom_orc_lair(_G)
 MAP
