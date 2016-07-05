@@ -522,7 +522,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(item_def *weapon, bool no_message)
+bool wielded_weapon_check(item_def *weapon)
 {
     bool penance = false;
     if (you.received_weapon_warning
@@ -544,9 +544,6 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     {
         return true;
     }
-
-    if (no_message)
-        return false;
 
     string prompt;
     if (weapon)
