@@ -1739,6 +1739,20 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_MEPHITIC:
+        if (mons->res_poison())
+        {
+            if (doFlavouredEffects)
+            {
+                simple_monster_message(mons,
+                                        hurted ? " completely resists."
+                                               : " appears unharmed.");
+            }
+
+            hurted = 0;
+        }
+        break;
+
     case BEAM_SPORE:
         if (mons->type == MONS_BALLISTOMYCETE)
             hurted = 0;
