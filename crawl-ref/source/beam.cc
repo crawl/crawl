@@ -4608,7 +4608,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             mon->put_to_sleep(agent(), 0);
     }
 
-    if (YOU_KILL(thrower) && !mon->wont_attack())
+    if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(mon))
         you.pet_target = mon->mindex();
 
     // Sticky flame.
