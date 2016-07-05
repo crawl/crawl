@@ -475,6 +475,13 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                         mpr("...and don't expect to remain undetected.");
                 }
             }
+
+            if (you.species == SP_OCTOPODE
+                && !feat_is_water(old_feat)
+                && you.invisible())
+            {
+                mpr("Don't expect to remain undetected while in the water.");
+            }
         }
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
