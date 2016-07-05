@@ -583,6 +583,13 @@ static monster* get_avatar(god_type god)
     return avatar;
 }
 
+/// Cleanup a temporary 'avatar' monster.
+static void _reset_avatar(monster &avatar)
+{
+    env.mid_cache.erase(avatar.mid);
+    shadow_monster_reset(&avatar);
+}
+
 /**
  * Rain down Makhleb's destruction upon the player!
  *
@@ -602,7 +609,7 @@ static bool _makhleb_call_down_destruction()
     }
 
     _spell_retribution(avatar, _makhleb_destruction_type(), god);
-    shadow_monster_reset(avatar);
+    _reset_avatar(*avatar);
     return true;
 }
 
@@ -1273,12 +1280,12 @@ static bool _vehumet_retribution()
     if (spell == SPELL_NO_SPELL)
     {
         simple_god_message(" has no time to deal with you just now.", god);
-        shadow_monster_reset(avatar);
+        _reset_avatar(*avatar);
         return false;
     }
 
     _spell_retribution(avatar, spell, god);
-    shadow_monster_reset(avatar);
+    _reset_avatar(*avatar);
     return true;
 }
 
