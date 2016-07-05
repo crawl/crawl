@@ -76,8 +76,8 @@ static god_type _altar_identify_ecumenical_altar()
 
 static bool _pray_ecumenical_altar()
 {
-    if (yesno("This altar will convert you to a god. You cannot discern "
-              "which. Do you pray?", false, 'n'))
+    if (yesno("You cannot tell which god this altar belongs to. Convert to "
+              "them anyway?", false, 'n'))
     {
         {
             // Don't check for or charge a Gozag service fee.
