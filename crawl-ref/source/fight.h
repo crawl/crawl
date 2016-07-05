@@ -30,7 +30,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int rawdamage);
 
-bool wielded_weapon_check(item_def *weapon, bool no_message = false);
+bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
