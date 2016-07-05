@@ -1435,6 +1435,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
+    case ENCH_BLACK_MARK:
         decay_enchantment(en);
         break;
 
