@@ -47,6 +47,7 @@
 #include "terrain.h"
 #include "timed_effects.h"
 #include "traps.h"
+#include "unwind.h"
 #include "view.h"
 #include "xom.h"
 
@@ -237,6 +238,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                 target = you.pos();
             else if (foe != MHITNOT)
                 target = menv[source_actor->as_monster()->foe].pos();
+        }
+
+        if (type == MONS_FLAYED_GHOST)
+        {
+            // temporarly change our attitude back (XXX: scary code...)
+            unwind_var<mon_enchant_list> enchants(enchantments, {});
+            unwind_var<FixedBitVector<NUM_ENCHANTMENTS>> ecache(ench_cache, {});
+            end_flayed_effect(this);
         }
 
         if (is_patrolling())
