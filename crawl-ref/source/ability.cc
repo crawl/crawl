@@ -1821,6 +1821,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         // Only one allowed, since this is instantaneous. - bwr
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+        viewwindow();
         break;
     }
 
