@@ -872,6 +872,7 @@ void game_options::reset_options()
 
     easy_exit_menu         = false;
     ability_menu           = true;
+    easy_floor_use         = true;
     dos_use_background_intensity = true;
 
     assign_item_slot       = SS_FORWARD;
