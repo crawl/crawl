@@ -2798,13 +2798,24 @@ void monster_cleanup(monster* mons)
     if (mons_is_tentacle_head(mons_base_type(mons)))
         destroy_tentacles(mons);
 
-    env.mid_cache.erase(mons->mid);
+    const mid_t mid = mons->mid;
+    env.mid_cache.erase(mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
 
     for (monster_iterator mi; mi; ++mi)
+    {
         if (mi->foe == monster_killed)
             mi->foe = MHITNOT;
+
+        int sumtype = 0;
+        if (mi->summoner == mid
+            && (mi->is_summoned(nullptr, &sumtype)
+                || sumtype == MON_SUMM_CLONE))
+        {
+            mi->del_ench(ENCH_ABJ);
+        }
+    }
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
