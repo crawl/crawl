@@ -3431,7 +3431,9 @@ bool melee_attack::do_knockback(bool trample)
 
     if (needs_message)
     {
-        const string verb = defender->airborne() ? "are shoved" : "stumble";
+        const bool can_stumble = !defender->airborne()
+                                  && !defender->incapacitated();
+        const string verb = can_stumble ? "stumble" : "are shoved";
         mprf("%s %s backwards!",
              defender_name(false).c_str(),
              defender->conj_verb(verb).c_str());
