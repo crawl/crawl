@@ -200,16 +200,20 @@ ch. 2
 %%%%
 A portal to a secret trove of treasure
 
-“‘Stop thief! Stop thief!’ There is a magic in the sound. The tradesman leaves
-his counter, and the car-man his waggon; the butcher throws down his tray; the
-baker his basket; the milkman his pail; the errand-boy his parcels; the
-school-boy his marbles; the paviour his pickaxe; the child his battledore. Away
-they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
-knocking down the passengers as they turn the corners, rousing up the dogs, and
-astonishing the fowls: and streets, squares, and courts, re-echo with the
-sound.”
-    -Charles Dickens, _Oliver Twist; or, The parish boy's progress_, ch. X.
-1838.
+“He saw a large cavern and a vaulted [roof], in height equalling the stature
+of a full-grown man and it was hewn in the live stone and lighted up with
+light that came through air-holes and bullseyes in the upper surface of the
+rock which formed the roof. He had expected to find naught save outer gloom
+in this robbers' den, and he was surprised to see the whole room filled
+with bales of all manner stuffs, and heaped up from sole to ceiling with
+camel-loads of silks and brocades and embroidered cloths and mounds on
+mounds of vari-colored carpetings; besides which he espied coins golden and
+silvern without measure or account, some piled upon the ground and others
+bound in leathern bags and sacks. Seeing these goods and moneys in such
+abundance, Ali Baba determined in his mind that not during a few years only
+but for many generations thieves must have stored their gains and spoils in
+this place.”
+    -_The Arabian Nights_. trans. Sir Richard F. Burton, 1885.
 %%%%
 A rock wall
 
