@@ -1574,7 +1574,12 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
         return false;
 
     if (tracer)
+    {
+        // players just care if igniteable clouds exist
+        if (agent && agent->is_player())
+            return 1;
         return _ignite_tracer_cloud_value(where, agent);
+    }
 
     cloud->type = CLOUD_FIRE;
     cloud->decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
@@ -1631,7 +1636,12 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     mon->expose_to_element(BEAM_FIRE, damage);
 
     if (tracer)
+    {
+        // players don't care about magnitude, just care if enemies exist
+        if (agent && agent->is_player())
+            return mons_aligned(mon, agent) ? 0 : 1;
         return mons_aligned(mon, agent) ? -1 * damage : damage;
+    }
 
     simple_monster_message(mon, " seems to burn from within!");
 
@@ -1792,26 +1802,17 @@ bool ignite_poison_affects(const actor* act)
  * @param fail          If it's a player spell, whether the spell fail chance
  *                      was hit (whether the spell will fail as soon as the
  *                      player chooses not to abort the casting)
- * @param mon_tracer    If it's a monster spell, whether the 'casting' is just
- *                      a tracer (a check to see if it's worth actually casting)
+ * @param mon_tracer    Whether the 'casting' is just a tracer (a check to see
+ *                      if it's worth actually casting)
  * @return              If it's a tracer, SPRET_SUCCESS if the spell should
- *                      be cast & SPRET_SUCCESS otherwise.
+ *                      be cast & SPRET_ABORT otherwise.
  *                      If it's a real spell, SPRET_ABORT if the player chose
  *                      to abort the spell, SPRET_FAIL if they failed the cast
  *                      chance, and SPRET_SUCCESS otherwise.
  */
-spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
+spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
 {
-    if (agent->is_player())
-    {
-        if (maybe_abort_ignite())
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-        fail_check();
-    }
-    else if (mon_tracer)
+    if (tracer)
     {
         // Estimate how much useful effect we'd get if we cast the spell now
         const int work = apply_area_visible([agent] (coord_def where) {
@@ -1821,6 +1822,16 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
         }, agent->pos());
 
         return work > 0 ? SPRET_SUCCESS : SPRET_ABORT;
+    }
+
+    if (agent->is_player())
+    {
+        if (maybe_abort_ignite())
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+        fail_check();
     }
 
     targetter_los hitfunc(agent, LOS_NO_TRANS);
