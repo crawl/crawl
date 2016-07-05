@@ -120,8 +120,8 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_WARP_BRAND,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
     SPELL_DISPERSAL,
+    SPELL_HYDRA_FORM,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
@@ -198,7 +198,7 @@ const string describe_xom_favour()
     string favour;
     if (!you_worship(GOD_XOM))
         favour = "a very buggy toy of Xom.";
-    else if (you.xom_boredom < 1)
+    else if (you.xom_entertainedness < 1)
         favour = "a BORING thing.";
     else
         favour = describe_xom_mood();
@@ -222,7 +222,7 @@ static string _get_xom_speech(const string &key)
 
 static bool _xom_is_bored()
 {
-    return you_worship(GOD_XOM) && !you.xom_boredom;
+    return you_worship(GOD_XOM) && !you.xom_entertainedness;
 }
 
 static bool _xom_feels_nasty()
@@ -235,13 +235,13 @@ static bool _xom_feels_nasty()
 bool xom_is_nice(int tension)
 {
     if (player_under_penance(GOD_XOM))
-        return false;
+        return x_chance_in_y(1, 10);
 
     if (you_worship(GOD_XOM))
     {
-        // If you.xom_boredom is 0, then Xom is BORED. He HATES that.
-        if (!you.xom_boredom)
-            return false;
+        // If you.xom_entertainedness is 0, then Xom is BORED. He HATES that.
+        if (_xom_is_bored())
+	    return false;
 
         // At high tension Xom is more likely to be nice, at zero
         // tension the opposite.
@@ -276,24 +276,20 @@ static void _xom_is_stimulated(int maxinterestingness,
     if (!you_worship(GOD_XOM) || maxinterestingness <= 0)
         return;
 
-    // Xom is not directly stimulated by his own acts.
-    if (crawl_state.which_god_acting() == GOD_XOM)
-        return;
-
     int interestingness = random2(piety_scale(maxinterestingness));
 
     interestingness = min(200, interestingness);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
-         "Xom: xom_boredom: %d, maxinterestingness = %d, interestingness = %d",
-         you.xom_boredom, maxinterestingness, interestingness);
+         "Xom: xom_entertainedness: %d, maxinterestingness = %d, interestingness = %d",
+         you.xom_entertainedness, maxinterestingness, interestingness);
 #endif
 
     bool was_stimulated = false;
-    if (interestingness > you.xom_boredom && interestingness >= 10)
+    if (interestingness > you.xom_entertainedness && interestingness >= 10)
     {
-        you.xom_boredom = interestingness;
+        you.xom_entertainedness = interestingness;
         was_stimulated = true;
     }
 
@@ -350,8 +346,7 @@ void _xom_tick_about_to_act()
 
   you.gift_timeout--;
   if (you.gift_timeout == 0) {
-    const xom_event_type action = xom_choose_action(you.xom_gift_niceness, you.xom_gift_sever, get_tension(GOD_XOM));
-    xom_take_action(action, you.xom_gift_sever);
+    xom_act();
     
     you.xom_gift_niceness = 0;
     you.xom_gift_sever = 0;
@@ -398,8 +393,8 @@ void _xom_tick_everyday()
 #endif
 
         // ...but he gets bored...
-        if (you.xom_boredom > 0 && coinflip())
-           you.xom_boredom--;
+        if (you.xom_entertainedness > 0 && coinflip())
+           you.xom_entertainedness--;
 
         new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
@@ -408,7 +403,7 @@ void _xom_tick_everyday()
             god_speaks(you.religion, msg.c_str());
         }
 
-        if (you.xom_boredom == 1)
+        if (you.xom_entertainedness == 1)
             simple_god_message(" is getting BORED.");
     }
 
@@ -421,37 +416,35 @@ void _xom_tick_everyday()
                             tension <= 20 ? 4
                                           : 5);
 
-        // If Xom is bored, the chances for Xom acting are sort of reversed.
-        if (!you.xom_boredom && x_chance_in_y(25 - chance*chance, 100))
-        {
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
-            return;
-        }
-        else if (you.xom_boredom <= 1 && chance > 0
-                 && x_chance_in_y(chance - 1, 80))
-        {
-            // During tension, Xom may briefly forget about being bored.
-            const int interest = random2(chance * 15);
-            if (interest > 0)
-            {
-                if (interest < 25)
-                    simple_god_message(" is interested.");
-                else
-                    simple_god_message(" is intrigued.");
-
-                you.xom_boredom += interest;
-                //updating piety status line
-                you.redraw_title = true;
+	// During tension, Xom may briefly forget about being bored.
+	const int interest = random2(chance * 15);
+	if (interest > you.xom_entertainedness)
+	  {
+	    if (interest < 25)
+	      simple_god_message(" is interested.");
+	    else
+	      simple_god_message(" is intrigued.");
+	    
+	    you.xom_entertainedness = interest;
+	    //updating piety status line
+	    you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-                mprf(MSGCH_DIAGNOSTICS,
-                     "tension %d (chance: %d) -> increase interest to %d",
-                     tension, chance, you.xom_boredom);
+	    mprf(MSGCH_DIAGNOSTICS,
+		 "tension %d (chance: %d) -> increase interest to %d",
+		 tension, chance, you.xom_entertainedness);
 #endif
-            }
-        }
+	  }
 
-        if (x_chance_in_y(chance*chance, 90))
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
+        // If Xom is bored, he's more active when there is low tension.
+	// (But he's never nice.)
+        if (_xom_is_bored() && x_chance_in_y(25 - chance*chance, 100))
+	  {
+            xom_consider_acting();
+	  }
+	else if (x_chance_in_y(chance*chance, 90))
+	  {
+            xom_consider_acting();
+	  }
     }
 }
 
@@ -1028,7 +1021,6 @@ static void _note_potion_effect(potion_type pot)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg), true);
 }
 
-
 /// Feed the player a notionally-good potion effect.
 static void _xom_do_potion(int /*sever*/)
 {
@@ -1044,7 +1036,6 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
                                      10, POT_BERSERK_RAGE,
-                                     1,  POT_EXPERIENCE,
                                      0);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
@@ -1868,7 +1859,6 @@ static void _xom_enchant_monster(bool helpful)
             BEAM_PETRIFY,
             BEAM_SLOW,
             BEAM_PARALYSIS,
-            BEAM_ENSLAVE,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }
@@ -1885,7 +1875,7 @@ static void _xom_enchant_monster(bool helpful)
         ench = RANDOM_ELEMENT(enchantments);
     }
 
-    enchant_actor_with_flavour(mon, 0, ench);
+    enchant_actor_with_flavour(mon, 0, ench, 128);
 
     // Take a note.
     const string note = make_stringf("enchant monster %s",
@@ -1898,6 +1888,23 @@ static void _xom_good_enchant_monster(int /*sever*/) {
 }
 static void _xom_bad_enchant_monster(int /*sever*/) {
     _xom_enchant_monster(false);
+}
+
+static void _xom_good_enslave_monster(int /*sever*/) {
+    monster* mon = choose_random_nearby_monster(0, _choose_enchantable_monster);
+    if (!mon)
+        return;
+
+    god_speaks(GOD_XOM,
+               _get_xom_speech("good enchant monster").c_str());
+
+    beam_type ench = BEAM_ENSLAVE;
+
+    enchant_actor_with_flavour(mon, 0, ench, 128);
+
+    // Take a note.
+    const string note = make_stringf("enslave monster good");
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
 /// Toss some fog around the player. Helping...?
@@ -3017,7 +3024,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (tension > random2(3) && x_chance_in_y(2, sever))
         return XOM_GOOD_POTION;
 
-    if (x_chance_in_y(3, sever))
+    if (x_chance_in_y(2, sever))
     {
         const xom_event_type divination
             = random_choose(XOM_GOOD_MAGIC_MAPPING,
@@ -3036,13 +3043,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return divination;
     }
 
-    if (x_chance_in_y(4, sever) && (tension > 0 || one_chance_in(3))
+    if (x_chance_in_y(3, sever) && (tension > 0 || one_chance_in(3))
         && _choose_random_spell(sever, tension > 0) != SPELL_NO_SPELL)
     {
         return tension > 0 ? XOM_GOOD_SPELL_TENSION : XOM_GOOD_SPELL_CALM;
     }
 
-    if (tension <= 0 && x_chance_in_y(5, sever)
+    if (x_chance_in_y(5, sever)
         && !you.duration[DUR_CLOUD_TRAIL])
     {
         return XOM_GOOD_CLOUD_TRAIL;
@@ -3118,13 +3125,17 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
-    if (random2(tension) < 15 && x_chance_in_y(16, sever))
+    if (tension > 0 && x_chance_in_y(16, sever)
+        && mon_nearby(_choose_enchantable_monster))
+        return XOM_GOOD_ENSLAVE_MONSTER;
+
+    if (x_chance_in_y(17, sever))
     {
         return x_chance_in_y(sever, 201) ? XOM_GOOD_ACQUIREMENT
                                          : XOM_GOOD_RANDOM_ITEM;
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(17, sever)
+    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(18, sever)
         && _teleportation_check())
     {
         // This is not very interesting if the level is already fully
@@ -3142,7 +3153,12 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_MUTATION;
     }
 
-    if (tension > 0 && x_chance_in_y(20, sever)
+    if (random2(tension) < 5 && x_chance_in_y(20, sever) && you.experience_level < 27)
+    {
+      return XOM_GOOD_POTION_OF_EXPERIENCE;
+    }
+
+    if (tension > 0 && x_chance_in_y(21, sever)
         && player_in_a_dangerous_place())
     {
         // Make sure there's at least one enemy within the lightning radius.
@@ -3278,7 +3294,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
  * @param tension       How much danger we think the player's currently in.
  * @return              An bad action for Xom to take, e.g. XOM_DID_NOTHING.
  */
-xom_event_type xom_choose_action(bool niceness, int sever, int tension)
+xom_event_type _xom_choose_action(bool niceness, int sever, int tension)
 {
     sever = max(1, sever);
 
@@ -3299,6 +3315,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
     {
         // Make good acts at zero tension less likely, especially if Xom
         // is in a bad mood.
+      // XXX Move any "decide not to do anything" decisions over to "xom_consider_acting()" instead of in here!
         if (tension == 0
             && you_worship(GOD_XOM) && !x_chance_in_y(you.piety, MAX_PIETY))
         {
@@ -3346,10 +3363,9 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 /**
  * Execute the specified Xom Action.
  *
- * @param action        The action type in question; e.g. XOM_BAD_NOISE.
- * @param sever         The severity of the action.
+ * @param sever         The intended magnitude of the action.
  */
-void xom_take_action(xom_event_type action, int sever)
+void _xom_perform_action(xom_event_type action, int sever)
 {
     const int  orig_hp       = you.hp;
     const transformation_type orig_form = you.form;
@@ -3367,18 +3383,15 @@ void xom_take_action(xom_event_type action, int sever)
         _do_xom_event(action, sever);
     }
 
-    // If we got here because Xom was bored, reset gift timeout according
+    // If we got here because Xom was bored, reset Xom's entertainedness according
     // to the badness of the effect.
     if (bad_effect && _xom_is_bored())
     {
         const int badness = _xom_event_badness(action);
-        const int interest = random2avg(badness * 60, 2);
-        you.xom_boredom   = min(interest, 255);
-        //updating piety status line
-        you.redraw_title = true;
+	xom_is_stimulated(badness * 60);
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
-             badness, you.xom_boredom);
+             badness, you.xom_entertainedness);
 #endif
     }
 
@@ -3410,60 +3423,46 @@ void xom_take_action(xom_event_type action, int sever)
     }
 }
 
-/**
- * Let Xom take an action, probably.
- *
- * @param sever         The intended magnitude of the action.
- * @param nice          Whether the action should be 'good' for the player.
- *                      If MB_MAYBE, determined by xom's whim.
- *                      May be overridden.
- * @param tension       How much danger we think the player's currently in.
- * @return              Whichever action Xom took, or XOM_DID_NOTHING.
- */
-xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
+void xom_act()
 {
-    bool niceness = tobool(nice, xom_is_nice(tension));
+  _xom_perform_action(_xom_choose_action(you.xom_gift_niceness, you.xom_gift_sever, get_tension(GOD_XOM)), you.xom_gift_sever);
+}
+
+/**
+ * Xom decides if he is going to act.
+ */
+void xom_consider_acting()
+{
+    int sever = abs(you.piety - HALF_MAX_PIETY);
+    int tension = get_tension(GOD_XOM);
+    bool niceness = xom_is_nice(tension);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-    if (!debug)
-    {
         // This probably seems a bit odd, but we really don't want to display
         // these when doing a heavy-duty wiz-mode debug test: just ends up
         // as message spam and the player doesn't get any further information
         // anyway. (jpeg)
 
         // these numbers (sever, tension) may be modified later...
-        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
-             niceness, sever, tension, you.piety, you.xom_boredom);
+        mprf(MSGCH_DIAGNOSTICS, "xom_consider_acting(%u, %d); piety: %u, interest: %u; niceness: %d",
+             sever, tension, you.piety, you.xom_entertainedness, niceness);
 
         static char xom_buf[100];
-        snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
-                 (niceness ? "true" : "false"), sever, tension, you.piety);
+        snprintf(xom_buf, sizeof(xom_buf), "xom_consider_acting(%s, %d), mood: %d; niceness: %s", sever, tension, you.piety, (niceness ? "true" : "false"));
         take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
-    }
 #endif
-
-    if (tension == -1)
-        tension = get_tension(GOD_XOM);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
     // No message during heavy-duty wizmode testing:
     // Instead all results are written into xom_debug.stat.
-    if (!debug)
-        mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
+    mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
-    god_speaks(you.religion, "You feel Xom's attention focusing on you...");
+    if (sever > 64)
+      god_speaks(you.religion, "You feel Xom's attention focusing on you...");
     you.gift_timeout = 3;
     you.xom_gift_niceness = niceness;
     you.xom_gift_sever = sever;
-
-    if (debug) {
-      const xom_event_type action = xom_choose_action(niceness, sever, tension);
-      return action;
-    } else {
-      return XOM_DID_NOTHING;
-    }
 }
 
 void xom_check_lost_item(const item_def& item)
@@ -3615,8 +3614,8 @@ bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
     take_note(Note(NOTE_XOM_REVIVAL));
 
     // Make sure Xom doesn't get bored within the next couple of turns.
-    if (you.xom_boredom < 10)
-        you.xom_boredom = 10;
+    if (you.xom_entertainedness < 10)
+        you.xom_entertainedness = 10;
 
     return true;
 }
@@ -3717,6 +3716,19 @@ static void _xom_chaos_cloud(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
+static void _xom_do_potion_of_experience(int sever)
+{
+    potion_type pot = POT_EXPERIENCE;
+
+    god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
+
+    _note_potion_effect(pot);
+
+    get_potion_effect(pot)->effect(true, 150);
+
+    level_change(); // need this for !xp - see mantis #3245
+}
+
 struct xom_effect_count
 {
     string effect;
@@ -3764,9 +3776,12 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
+    { XOM_GOOD_ENSLAVE_MONSTER, { "good enslave monster",
+                                  _xom_good_enslave_monster }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
+    { XOM_GOOD_POTION_OF_EXPERIENCE, { "experience", _xom_do_potion_of_experience }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
     { XOM_BAD_MISCAST_HARMLESS, { "harmless miscast",
@@ -3889,7 +3904,7 @@ static string _list_exploration_estimate()
                         mapped, explored);
 }
 
-// Loops over the entire piety spectrum and calls xom_acts() multiple
+// Loops over the entire piety spectrum and calls _xom_choose_action() multiple
 // times for each value, then prints the results into a file.
 // TODO: Allow specification of niceness, tension, and boredness.
 void debug_xom_effects()
@@ -3966,8 +3981,7 @@ void debug_xom_effects()
         // Repeat N times.
         for (int i = 0; i < N; ++i)
         {
-            const xom_event_type result = xom_acts(sever, MB_MAYBE, tension,
-                                                   true);
+	  xom_event_type result = _xom_choose_action(you.piety > HALF_MAX_PIETY, sever, tension);
 
             mood_effects.push_back(result);
             all_effects[0].push_back(result);

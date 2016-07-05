@@ -3289,7 +3289,7 @@ static void _set_initial_god_piety()
         you.gift_timeout = 0;
         you.xom_gift_niceness = 0;
         you.xom_gift_sever = 0;
-        you.xom_boredom = random2(40) + random2(40);
+        you.xom_entertainedness = random2(40) + random2(40);
         break;
 
     case GOD_RU:

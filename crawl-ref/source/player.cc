@@ -5325,7 +5325,7 @@ player::player()
     gift_timeout     = 0;
     xom_gift_niceness = 0;
     xom_gift_sever   = 0;
-    xom_boredom      = 0;
+    xom_entertainedness = 0;
     saved_good_god_piety = 0;
     previous_good_god = GOD_NO_GOD;
     penance.init(0);

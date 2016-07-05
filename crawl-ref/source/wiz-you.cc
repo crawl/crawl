@@ -1122,19 +1122,10 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = you_worship(GOD_XOM) ? abs(you.piety - HALF_MAX_PIETY)
-                                              : random_range(0, HALF_MAX_PIETY);
-
     if (specs[0] == '\0')
     {
-        const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
-                                frombool(coinflip());
-        const xom_event_type result = xom_acts(severity, nice);
-        dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
-#ifndef DEBUG_DIAGNOSTICS
-        UNUSED(result);
-#endif
-        return;
+      xom_act();
+      return;
     }
 
     xom_event_type event = _find_xom_event_from_string(specs);
@@ -1145,6 +1136,6 @@ void wizard_xom_acts()
     }
 
     dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
-    xom_take_action(event, severity);
+    _xom_perform_action(event, abs(you.piety - HALF_MAX_PIETY));
 }
 #endif
