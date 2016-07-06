@@ -90,6 +90,9 @@ TilesFramework::~TilesFramework()
 
 void TilesFramework::shutdown()
 {
+    if (m_sock_name.empty())
+        return;
+
     close(m_sock);
     remove(m_sock_name.c_str());
 }
@@ -100,6 +103,16 @@ void TilesFramework::draw_doll_edit()
 
 bool TilesFramework::initialise()
 {
+    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
+    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
+    m_cursor[CURSOR_MAP] = NO_CURSOR;
+
+    // Initially, switch to CRT.
+    cgotoxy(1, 1, GOTO_CRT);
+
+    if (m_sock_name.empty())
+        return true;
+
     // Init socket
     m_sock = socket(PF_UNIX, SOCK_DGRAM, 0);
     if (m_sock < 0)
@@ -130,13 +143,6 @@ bool TilesFramework::initialise()
     _send_options();
     _send_layout();
 
-    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
-    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
-    m_cursor[CURSOR_MAP] = NO_CURSOR;
-
-    // Initially, switch to CRT.
-    cgotoxy(1, 1, GOTO_CRT);
-
     return true;
 }
 
@@ -165,6 +171,12 @@ void TilesFramework::finish_message()
 {
     if (m_msg_buf.size() == 0)
         return;
+
+    if (m_sock_name.empty())
+    {
+        m_msg_buf.clear();
+        return;
+    }
 
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
@@ -252,12 +264,18 @@ void TilesFramework::flush_messages()
 
 void TilesFramework::_await_connection()
 {
+    if (m_sock_name.empty())
+        return;
+
     while (m_dest_addrs.size() == 0)
         _receive_control_message();
 }
 
 wint_t TilesFramework::_receive_control_message()
 {
+    if (m_sock_name.empty())
+        return 0;
+
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
@@ -353,7 +371,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
 {
     int result;
     fd_set fds;
-    int maxfd = m_sock;
+    int maxfd = m_sock_name.empty() ? STDIN_FILENO : m_sock;
 
     while (true)
     {
@@ -361,7 +379,8 @@ bool TilesFramework::await_input(wint_t& c, bool block)
         {
             FD_ZERO(&fds);
             FD_SET(STDIN_FILENO, &fds);
-            FD_SET(m_sock, &fds);
+            if (!m_sock_name.empty())
+                FD_SET(m_sock, &fds);
 
             if (block)
             {
@@ -383,7 +402,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         else if (result > 0)
         {
-            if (FD_ISSET(m_sock, &fds))
+            if (!m_sock_name.empty() && FD_ISSET(m_sock, &fds))
             {
                 c = _receive_control_message();
 
