@@ -1252,6 +1252,8 @@ static int l_item_shop_inventory(lua_State *ls)
         lua_rawseti(ls, -2, 1);
         lua_pushnumber(ls, item_price(item, *shop));
         lua_rawseti(ls, -2, 2);
+        lua_pushboolean(ls, shopping_list.is_on_list(item));
+        lua_rawseti(ls, -2, 3);
         lua_rawseti(ls, -2, ++index);
     }
 
