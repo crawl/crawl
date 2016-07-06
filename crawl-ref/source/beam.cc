@@ -1740,7 +1740,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MEPHITIC:
-        if (mons->res_poison())
+        if (mons->res_poison() > 0)
         {
             if (doFlavouredEffects)
             {
