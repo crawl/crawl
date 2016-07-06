@@ -503,7 +503,7 @@ static const mutation_def mut_data[] =
    "You often lose your temper in combat.",
    "You have an uncontrollable temper."},
 
-  {"You feel a little pissed off.",
+  {"You feel a little annoyed.",
    "You feel angry.",
    "You feel extremely angry at everything!"},
 
