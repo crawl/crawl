@@ -459,7 +459,12 @@ pakellas1
 pakellas2
 pakellas3
 uskayaw DNGN_ALTAR_USKAYAW
-hep DNGN_ALTAR_HEPLIAKLQANA
+hep0 DNGN_ALTAR_HEPLIAKLQANA
+hep1
+hep2
+hep3
+hep4
+hep5
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
