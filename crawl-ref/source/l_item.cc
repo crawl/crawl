@@ -28,6 +28,7 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
@@ -1257,6 +1258,28 @@ static int l_item_shop_inventory(lua_State *ls)
     return 1;
 }
 
+static int l_item_shopping_list(lua_State *ls)
+{
+    if (shopping_list.empty())
+        return 0;
+
+    lua_newtable(ls);
+
+    const vector<shoplist_entry> items = shopping_list.entries();
+    int index = 0;
+    for (const auto &item : items)
+    {
+        lua_newtable(ls);
+        lua_pushstring(ls, item.first.c_str());
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, item.second);
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1355,6 +1378,7 @@ static const struct luaL_reg item_lib[] =
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
     { "shop_inventory",    l_item_shop_inventory },
+    { "shopping_list",     l_item_shopping_list },
     { nullptr, nullptr },
 };
 

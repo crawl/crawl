@@ -2278,6 +2278,21 @@ void ShoppingList::remove_dead_shops()
     refresh();
 }
 
+vector<shoplist_entry> ShoppingList::entries()
+{
+    ASSERT(list);
+
+    vector<shoplist_entry> list_entries;
+    for (const CrawlHashTable &entry : *list)
+    {
+        list_entries.push_back(
+            make_pair(name_thing(entry), thing_cost(entry))
+        );
+    }
+
+    return list_entries;
+}
+
 int ShoppingList::size() const
 {
     ASSERT(list);
