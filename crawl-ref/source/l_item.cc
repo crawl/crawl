@@ -13,7 +13,6 @@
 #include "adjust.h"
 #include "artefact.h"
 #include "cluautil.h"
-#include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
 #include "enum.h"
