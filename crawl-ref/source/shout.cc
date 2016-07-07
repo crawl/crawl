@@ -727,8 +727,6 @@ void yell(const actor* mon)
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
-
-    noisy(noise_level, you.pos());
 }
 
 void apply_noises()
