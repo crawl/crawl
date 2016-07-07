@@ -43,6 +43,16 @@ zombie_lernaean_hydra07
 zombie_lernaean_hydra08
 zombie_lernaean_hydra09
 zombie_lernaean_hydra10
+zombie_elf MONS_ZOMBIE_ELF
+zombie_fawn MONS_ZOMBIE_FAUN
+zombie_guardian_serpent MONS_ZOMBIE_GUARDIAN_SERPENT
+zombie_lindwurm MONS_ZOMBIE_LINDWURM
+zombie_merfolk MONS_ZOMBIE_MERFOLK
+zombie_minotaur MONS_ZOMBIE_MINOTAUR
+zombie_salamander MONS_ZOMBIE_SALAMANDER
+zombie_spriggan MONS_ZOMBIE_SPRIGGAN
+zombie_wyvern MONS_ZOMBIE_WYVERN
+zombie_yaktaur MONS_ZOMBIE_YAKTAUR
 %rim 0
 zombie_ugly_thing MONS_ZOMBIE_UGLY_THING
 zombie_turtle MONS_ZOMBIE_TURTLE
