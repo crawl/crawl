@@ -3965,8 +3965,9 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
     if (!_mons_can_open_doors(mon))
         return false;
 
-    // Creatures allied with the player can't open sealed doors either
-    if (mon->friendly() && grd(pos) == DNGN_SEALED_DOOR)
+    // Creatures allied with the player can't open doors.
+    // (to prevent sabotaging the player accidentally.)
+    if (mon->friendly())
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
