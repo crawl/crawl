@@ -2510,6 +2510,12 @@ static void _print_resist_messages(actor* defender, int base_damage,
 
 bool melee_attack::mons_attack_effects()
 {
+    // may have died earlier, due to e.g. pain bond
+    // we could continue with the rest of their attack, but it's a minefield
+    // of potential crashes. so, let's not.
+    if (attacker->is_monster() && invalid_monster(attacker->as_monster()))
+        return false;
+
     // Monsters attacking themselves don't get attack flavour.
     // The message sequences look too weird. Also, stealing
     // attacks aren't handled until after the damage msg. Also,
