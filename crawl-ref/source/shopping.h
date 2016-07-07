@@ -43,6 +43,7 @@ void list_shop_types();
 struct level_pos;
 class  Menu;
 
+typedef pair<string, int> shoplist_entry;
 class ShoppingList
 {
 public:
@@ -76,6 +77,8 @@ public:
 
     bool empty() const { return !list || list->empty(); };
     int size() const;
+
+    vector<shoplist_entry> entries();
 
     static bool items_are_same(const item_def& item_a,
                                const item_def& item_b);
