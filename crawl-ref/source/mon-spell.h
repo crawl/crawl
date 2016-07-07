@@ -755,14 +755,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_ANCIENT_CHAMPION_III,
-      {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 21, MON_SPELL_WIZARD },
-       { SPELL_SLOW, 21, MON_SPELL_WIZARD },
-       { SPELL_HASTE, 21, MON_SPELL_WIZARD },
-      }
-    },
-
     {  MST_CURSE_SKULL,
       {
        { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
@@ -2035,9 +2027,8 @@ static const mon_spellbook mspell_list[] =
     // ('1') Greater demons.
     {  MST_IGNACIO,
       {
-       { SPELL_AGONY, 17, MON_SPELL_MAGICAL },
-       { SPELL_PAIN, 17, MON_SPELL_MAGICAL },
-       { SPELL_HASTE, 34, MON_SPELL_MAGICAL },
+       { SPELL_AGONY, 21, MON_SPELL_MAGICAL },
+       { SPELL_HASTE, 41, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2116,9 +2107,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PORKALATOR, 22, MON_SPELL_WIZARD },
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_MONSTROUS_MENAGERIE, 11, MON_SPELL_WIZARD },
-       { SPELL_CORONA, 11, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
       }
     },
 
