@@ -2329,7 +2329,7 @@ SHUFFLE: CDEF
 # Altar rings and stairs, different in each setting.
 : local altar_count = get_altar_count(_G, 21)
 : if altar_count == "10" then
-SUBST:      CD = B, E = G, HIJ = .
+SUBST:      C = B, E = G, DH<IJ = .
 NSUBST:     F = 1:{ / *:.
 : elseif altar_count == "14" then
 SUBST:      CDEF = B, CHIJ = ., < = {
@@ -2359,6 +2359,7 @@ COLOUR:  m = lightred
 COLOUR:  c = red
 :   end
 : end
+SUBST:   <[ = {
 NSUBST:  { = 1:{ / *:.
 KPROP:   wl1 = no_tele_into
 MAP
