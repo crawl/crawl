@@ -3567,6 +3567,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HEP_BATTLEMAGE;
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         return TILEG_ABILITY_HEP_HEXER;
+    // usk
+   case ABIL_USKAYAW_STOMP:
+        return TILEG_ABILITY_USKAYAW_STOMP;
+   case ABIL_USKAYAW_LINE_PASS:
+        return TILEG_ABILITY_USKAYAW_LINE_PASS;
+   case ABIL_USKAYAW_GRAND_FINALE:
+        return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
