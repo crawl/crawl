@@ -540,6 +540,9 @@ static int _issue_orders_prompt()
     }
     mpr(" Anything else - Cancel.");
 
+    if (you.berserk())
+        flush_prev_message(); // buffer doesn't get flushed otherwise
+
     const int keyn = get_ch();
     clear_messages();
     return keyn;
