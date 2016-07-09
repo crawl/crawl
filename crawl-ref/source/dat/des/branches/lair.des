@@ -2600,13 +2600,13 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    torpor snail, worm, worm / giant leech
+MONS:    torpor snail, giant leech / nothing
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
-KMONS:   8 = wasp
+KMONS:   7 = wasp
 SHUFFLE: ABC
 SUBST:   P = 11.
-NSUBST:  A = 3:8 / 1:65 / * = 33338, B = 3:4 / 1:24 / * = 33334
-NSUBST:  C = 1:6 / 1:5 / 1:2 / *:3, 5 = 2:5 / 2 = 5.. / *:.
+NSUBST:  A = 3:7 / 1:54 / * = ....7, B = 3:3 / 1:23 / * = ....3
+NSUBST:  C = 1:5 / 1:4 / 1:2 / *:., 5 = 2:4 / 2 = 4.. / *:.
 SUBST:   X = x., z = x'
 CLEAR:   '
 NSUBST:  " = 1:GU / *:.
@@ -2617,22 +2617,22 @@ MAP
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  ..PP.XX..Px..xxxxxxxxxxxxxxxxxXAxxxxxxx
  ..PP.XX..PPxxxxxxxxXXBBXxxxxxA*..xxxxxx
- ...x.....PPP.xxxxxP5B..BXxxxXAA.%Xxxxxx
- ..XxX..X.....xxxxxXB....Bxxx5AA..xxxxxx
- .Pxxxxx.x...xxxxxxx%...*XxxxxX31..xxxxx
+ ...x.....PPP.xxxxxP4B..BXxxxXAA.%Xxxxxx
+ ..XxX..X.....xxxxxXB....Bxxx4AA..xxxxxx
+ .Pxxxxx.x...xxxxxxx%...*XxxxxX.1..xxxxx
  xxccccxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
 zxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
 zxc$$$$ccxxx...Xxxxxxx2..x.xxxx..2xxxxxx
-xxc$$$$$cxxx..xxxxxxxXx3..xXxx..3xxxxxxx
-xxcc$7$$cxx..xxxxxxxxxxx.P..X...xXxxxxxx
-xxxcc$$ccxX..Xxxxxxxxxxx....3.xxxxxxxxxx
+xxc$$$$$cxxx..xxxxxxxXx...xXxx...xxxxxxx
+xxcc$6$$cxx..xxxxxxxxxxx.P..X...xXxxxxxx
+xxxcc$$ccxX..Xxxxxxxxxxx......xxxxxxxxxx
 xxxxccc=c"..xxxxxxxxxXx...P.xxxxCCCxxxxx
-xxxxxxxc1".xxxxxxxxxXx...XxxXxx5CCC*xxxx
-xxxxxxx"""xxXxxxxXxx...3xxxxxxx*333xxxxx
+xxxxxxxc1".xxxxxxxxxXx...XxxXxx4CCC*xxxx
+xxxxxxx"""xxXxxxxXxx....xxxxxxx*...xxxxx
 xxxxxxxxX.2.xxxxxx....x..xxxxxxxx..xxxxx
-xxxxxxxxxX...xXx...3Xxx2...1xxxx...xxxxx
+xxxxxxxxxX...xXx....Xxx2...1xxxx...xxxxx
 xxxxxxxxxxx.......Xxxxxx..........xxxxxx
-xxxxxxxxxxXxx31.xxXxxxxxxxxx....xxxxxxxx
+xxxxxxxxxxXxx.1.xxXxxxxxxxxx....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2644,16 +2644,16 @@ NAME:    hangedman_lair_caniforms_friends
 PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
 ORIENT:  southwest
-MONS:    jackal, hound, wolf, warg, hell hound, raiju
-KMONS:   7 = black bear
-KMONS:   8 = polar bear
+MONS:    hound, wolf, warg, hell hound, raiju
+KMONS:   6 = black bear
+KMONS:   7 = polar bear
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
 KITEM:   $ = any, any w:1 / nothing w:5, beef jerky q:3
 KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
-NSUBST:  4 = 1:5 / 1:6 / 2 : 4:4 5:3 6:1 / *:4
+NSUBST:  3 = 1:4 / 1:5 / 2 : 3:4 4:3 5:1 / *:3
 SHUFFLE: %'*" / '$"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:2 6:1, p = PP.
 CLEAR:   `
@@ -2663,28 +2663,28 @@ xxxxxxxxxxxxxxxxxxxxzzz  @  @  @
 xxxxxxxxxxxxxxxxxxxxxxxxxp..p..
 xxxxxxxxxxxxxxxxxxxxxxxxxxp..p.
 xxxxxxXxxxxxxxxxxxxxxxxxxxx....
-xx%'78xxxxXXxxxxxxxxxxxxxxxP..p@
-xx8..78xXx77xPxxxxxxxxxx...xP..
-xxx...xxx%...xPxx2x.x2x.11..xP.
-xxXx4..xxx...Px7x.......111..xp@
+xx%'67xxxxXXxxxxxxxxxxxxxxxP..p@
+xx7..67xXx66xPxxxxxxxxxx...xP..
+xxx...xxx%...xPxx1x.x1x..1..xP.
+xxXx3..xxx...Px6x.........1..xp@
 xxxxxx.......Px........x...xxxx
-xxxxX0.xx...7xP7..x2..x2xxxxxxx
-xxxxxx30xx.%XXxx..xxxxxxxxxxxxxz
-xxxxx"x.8..xxxxx..xx3x2xx.xxxxxz
-xxxxXx....7Xxxxx....x.x....x2xxz
+xxxxX0.xx...6xP6..x1..x1xxxxxxx
+xxxxxx20xx.%XXxx..xxxxxxxxxxxxxz
+xxxxx"x.7..xxxxx..xx2x1xx.xxxxxz
+xxxxXx....6Xxxxx....x.x....x1xxz
 xxxxx%....xxxxxxx.............xz
-xxxxx7....7xXxxxxx............xz
-xxxxXx7....8xxxxxxxx3x...x4x..xx
-xxxxxxP8.%8xXxxxxxxxxxx.xxxxx..x
-xxxxxPxPxPxxxxxxxxxxxxxxxxxxx.2x
-xxxxxx8x7xxxxx3'xxxxxx..x.x...xx
-xxxxx..7xxxxxx..x.x3x...44....xz
-xx*x3.....'xx222...x....3....xxz
-xxx4.......2x..2..........4..xxx
-xx0.5.3.xx....xx.....xx....xxxxx
-xxx6.4'xxxx..xxx....x.xx3x3xxxxx
-xxx.0.xxxxxx4xxxx'.xxxxxxxxxxxxx
-xxx'.%xxxxxxxxxxxx4xxxxxxxxxxxxx
+xxxxx6....6xXxxxxx............xz
+xxxxXx6....7xxxxxxxx2x...x3x..xx
+xxxxxxP7.%7xXxxxxxxxxxx.xxxxx..x
+xxxxxPxPxPxxxxxxxxxxxxxxxxxxx.1x
+xxxxxx7x6xxxxx2'xxxxxx..x.x...xx
+xxxxx..6xxxxxx..x.x2x...33....xz
+xx*x2.....'xx111...x....2....xxz
+xxx3.......1x..1..........3..xxx
+xx0.4.2.xx....xx.....xx....xxxxx
+xxx5.3'xxxx..xxx....x.xx2x2xxxxx
+xxx.0.xxxxxx3xxxx'.xxxxxxxxxxxxx
+xxx'.%xxxxxxxxxxxx3xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
