@@ -1882,7 +1882,7 @@ bool do_god_gift(bool forced)
                     gift = BOOK_DEATH;
                 }
             }
-            else if (forced || you.piety >= piety_breakpoint(5)
+            else if (forced || you.piety >= piety_breakpoint(4)
                                && random2(you.piety) > 100)
             {
                 // Sif Muna special: Keep quiet if acquirement fails
