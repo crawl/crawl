@@ -113,7 +113,7 @@ enum class passive_t
     /// Potentially save allies from death. Holy or natural, in LOS.
     protect_ally,
 
-    /// Chance to nullify a deadly blow, dependant on piety.
+    /// Chance to nullify a deadly blow, dependent on piety.
     protect_from_harm,
 
     /// Divine halo around the player, size increases with piety.
@@ -144,19 +144,16 @@ enum class passive_t
     /// Warning about shapeshifters when they come to view.
     warn_shapeshifter,
 
-    /// Torment resistance, piety dependant.
+    /// Torment resistance, piety dependent.
     resist_torment,
 
-    /// You are left with more HP when using Death's Door, piety dependant.
-    deaths_door_hp_boost,
-
-    /// Protection against miscasts. Piety dependant.
+    /// Protection against miscasts. Piety dependent.
     miscast_protection,
 
     /// Protection against necromancy miscasts and mummy death curses.
     miscast_protection_necromancy,
 
-    /// Chance to extend berserk duration and avoid paralysis, piety dependant.
+    /// Chance to extend berserk duration and avoid paralysis, piety dependent.
     extend_berserk,
 
     /// Gold aura that distracts enemies.
