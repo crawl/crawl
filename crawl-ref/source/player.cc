@@ -7910,6 +7910,8 @@ void print_device_heal_message()
             mpr("The healing is enhanced."); // bad message, but this should
                                              // never be possible anyway
     }
+    else if (_get_device_heal_factor() == 0)
+        mpr("Your system rejects the healing.");
     else if (_get_device_heal_factor() < 3)
         mpr("Your system partially rejects the healing.");
 }
