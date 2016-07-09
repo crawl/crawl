@@ -403,7 +403,6 @@ static const pop_entry pop_vaults[] =
   {  1,  3,  440, FALL, MONS_SLIME_CREATURE },
   {  1,  3,   96, FALL, MONS_VAMPIRE_MOSQUITO },
   {  1,  3,   89, FLAT, MONS_WIZARD },
-  {  1,  3,   89, FLAT, MONS_KOBOLD_DEMONOLOGIST },
   {  1,  4,  440, FALL, MONS_UGLY_THING },
   {  1,  4,  440, FALL, MONS_CENTAUR_WARRIOR },
   {  1,  5,   89, FLAT, MONS_NECROMANCER },
