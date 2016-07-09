@@ -504,6 +504,10 @@ basilisk cast targeted
 
 @giant eyeball cast targeted@
 %%%%
+basilisk cast
+
+@giant eyeball cast@
+%%%%
 wretched star cast
 
 @The_monster@ glows turbulently.
