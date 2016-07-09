@@ -2159,7 +2159,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
             thing[REPLACE_PROMPTED_KEY] = (bool) true;
 
             string prompt =
-                make_stringf("Shopping-list: replace %dgp %s with cheaper "
+                make_stringf("Shopping list: replace %dgp %s with cheaper "
                              "one? (Y/n)", list_cost,
                              describe_thing(thing).c_str());
 
@@ -2179,13 +2179,13 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
                 continue;
             thing[REMOVE_PROMPTED_KEY] = (bool) true;
 
-            string prompt = make_stringf("Shopping-list: remove %s? (Y/n)",
+            string prompt = make_stringf("Shopping list: remove %s? (Y/n)",
                                          describe_thing(thing, DESC_A).c_str());
 
             if (yesno(prompt.c_str(), true, 'y', false))
             {
                 to_del.push_back(listed);
-                mprf("Shopping-list: removing %s",
+                mprf("Shopping list: removing %s",
                      describe_thing(thing, DESC_A).c_str());
             }
             else
@@ -2193,7 +2193,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         }
         else
         {
-            mprf("Shopping-list: removing %s",
+            mprf("Shopping list: removing %s",
                  describe_thing(thing, DESC_A).c_str());
             to_del.push_back(listed);
         }
