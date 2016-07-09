@@ -100,8 +100,6 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Kikubaaqudgha
     {
-        {  0, passive_t::deaths_door_hp_boost,
-              "can retain more of your health when standing in Death's Door" },
         {  2, passive_t::miscast_protection_necromancy,
               "GOD protects you from necromancy miscasts and mummy death curses"
         },

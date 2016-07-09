@@ -34,9 +34,6 @@ int allowed_deaths_door_hp()
 {
     int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
 
-    if (have_passive(passive_t::deaths_door_hp_boost))
-        hp += you.piety / 15;
-
     return max(hp, 1);
 }
 
