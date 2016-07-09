@@ -661,7 +661,7 @@ bool player::fumbles_attack()
     // Fumbling in shallow water.
     if (floundering() || liquefied_ground())
     {
-        if (x_chance_in_y(4, dex()) || one_chance_in(5))
+        if (one_chance_in(4))
         {
             mpr("Your unstable footing causes you to fumble your attack.");
             did_fumble = true;
