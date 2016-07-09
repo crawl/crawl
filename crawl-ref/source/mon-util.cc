@@ -2426,12 +2426,10 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 
     case MONS_WIZARD:
     case MONS_EROLCHA:
-        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III, MST_WIZARD_IV,
-                 MST_WIZARD_V };
+        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III };
 
     case MONS_OGRE_MAGE:
-        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III,
-                 MST_OGRE_MAGE_IV, MST_OGRE_MAGE_V };
+        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III };
 
     case MONS_ANCIENT_CHAMPION:
         return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II };

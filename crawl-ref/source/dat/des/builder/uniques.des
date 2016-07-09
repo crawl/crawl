@@ -119,7 +119,7 @@ DEPTH:  D:8-11, Orc:1, Lair:1-2
 : place_unique(_G, "Erica")
 
 NAME:   uniq_erolcha
-DEPTH:  D:8-13, Orc, !Orc:$
+DEPTH:  D:9-13, Orc
 : place_unique(_G, "Erolcha")
 
 NAME:   uniq_eustachio
