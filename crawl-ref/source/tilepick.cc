@@ -1788,8 +1788,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_SUMMONED;
     if (mons.is(MB_PERM_SUMMON))
         ch |= TILE_FLAG_PERM_SUMMON;
-    if (mons.is(MB_DEATHS_DOOR))
-        ch |= TILE_FLAG_DEATHS_DOOR;
     if (mons.is(MB_WORD_OF_RECALL))
         ch |= TILE_FLAG_RECALL;
     if (mons.is(MB_LIGHTLY_DRAINED) || mons.is(MB_HEAVILY_DRAINED))

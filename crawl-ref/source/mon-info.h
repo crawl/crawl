@@ -89,7 +89,9 @@ enum monster_info_flags
     MB_OLD_ROUSED,
 #endif
     MB_BREATH_WEAPON,
+#if TAG_MAJOR_VERSION == 34
     MB_DEATHS_DOOR,
+#endif
     MB_FIREWOOD,
     MB_TWO_WEAPONS,
     MB_NO_REGEN,

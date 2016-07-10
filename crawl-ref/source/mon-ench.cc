@@ -798,11 +798,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_DEATHS_DOOR:
-        if (!quiet)
-            simple_monster_message(this, " is no longer invulnerable.");
-        break;
-
     case ENCH_REGENERATION:
         if (!quiet)
             simple_monster_message(this, " is no longer regenerating.");
@@ -1924,14 +1919,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_DEATHS_DOOR:
-        if (decay_enchantment(en))
-        {
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0,
-                                 (10 + random2(20)) * BASELINE_DELAY));
-        }
-        break;
-
     case ENCH_MERFOLK_AVATAR_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
@@ -2118,9 +2105,12 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "roused",
 #endif
-    "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting",
+    "breath timer",
+#if TAG_MAJOR_VERSION == 34
+    "deaths_door",
+#endif
+    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
@@ -2310,7 +2300,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
-    case ENCH_DEATHS_DOOR:
     case ENCH_SAP_MAGIC:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;

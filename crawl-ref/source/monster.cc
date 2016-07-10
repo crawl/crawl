@@ -3566,9 +3566,6 @@ bool monster::heal(int amount)
     if (!mons_can_display_wounds(this))
         return false;
 
-    if (has_ench(ENCH_DEATHS_DOOR))
-        return false;
-
     if (amount < 1)
         return false;
     else if (hit_points == max_hit_points)
@@ -4495,9 +4492,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (amount != INSTANT_DEATH)
         {
-            if (has_ench(ENCH_DEATHS_DOOR))
-                return 0;
-            else if (petrified())
+            if (petrified())
                 amount /= 2;
             else if (petrifying())
                 amount = amount * 2 / 3;
@@ -5913,14 +5908,12 @@ bool monster::should_drink_potion(potion_type ptype) const
     switch (ptype)
     {
     case POT_CURING:
-        return !has_ench(ENCH_DEATHS_DOOR)
-               && hit_points <= max_hit_points / 2
+        return hit_points <= max_hit_points / 2
                || has_ench(ENCH_POISON)
                || has_ench(ENCH_SICK)
                || has_ench(ENCH_CONFUSION);
     case POT_HEAL_WOUNDS:
-        return !has_ench(ENCH_DEATHS_DOOR)
-               && hit_points <= max_hit_points / 2;
+        return hit_points <= max_hit_points / 2;
     case POT_BLOOD:
 #if TAG_MAJOR_VERSION == 34
     case POT_BLOOD_COAGULATED:
