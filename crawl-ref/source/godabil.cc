@@ -1465,6 +1465,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         || spell == SPELL_OLGREBS_TOXIC_RADIANCE
+        || spell == SPELL_VIOLENT_UNRAVELLING
         || spell == SPELL_INNER_FLAME)
     {
         return true;
