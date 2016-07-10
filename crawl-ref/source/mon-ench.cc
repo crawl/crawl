@@ -1784,9 +1784,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             monster_teleport(this, true);
         break;
 
-    case ENCH_EAT_ITEMS:
-        break;
-
     case ENCH_AWAKEN_FOREST:
         forest_damage(this);
         decay_enchantment(en);
@@ -2074,7 +2071,10 @@ static const char *enchant_names[] =
      "battle_frenzy", "temp_pacif",
 #endif
     "petrifying",
-    "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
+    "petrified", "lowered_mr", "soul_ripe", "slowly_dying",
+#if TAG_MAJOR_VERSION == 34
+    "eat_items",
+#endif
     "aquatic_land", "spore_production",
 #if TAG_MAJOR_VERSION == 34
     "slouch",
