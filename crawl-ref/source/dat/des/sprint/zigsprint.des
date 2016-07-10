@@ -410,8 +410,8 @@ function choose_mset_3(e)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf")
 -- Holy
@@ -544,8 +544,8 @@ local rnd = crawl.random2(142)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\

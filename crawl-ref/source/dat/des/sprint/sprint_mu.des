@@ -522,7 +522,7 @@ KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
  w:1 wand of disintegration
 KITEM: % = fruit q:6
 KFEAT: _ = altar_fedhas
-KMONS: s = patrolling maud
+KMONS: s = patrolling Urug
 KMONS: u = death drake
 KFEAT: = = closed_door
 MARKER: = = lua:restrict_door()

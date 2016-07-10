@@ -6119,16 +6119,14 @@ KMONS:   F = Joseph / orc knight ; long sword | scimitar . chain mail . shield, 
 KMONS:   G = Erica / wizard ; long sword . robe | leather armour . shield, \
                      wizard ; long sword . robe | leather armour . shield / nothing
 KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
-KMONS:   I = Maud / ironheart preserver ; great mace . robe | leather armour, \
-                    ironheart preserver ; great mace . robe | leather armour / nothing
-KMONS:   J = Donald / orc warlord, orc warlord / nothing
-KMONS:   K = Louise / hell knight, hell knight / nothing
-KMONS:   L = Frances / hell knight, hell knight / nothing
-KMONS:   M = Agnes / spriggan defender, spriggan defender / nothing
-KMONS:   N = Rupert / vampire knight, vampire knight / nothing
-KMONS:   O = Wiglaf / ancient champion, ancient champion / nothing
-KMONS:   P = Frederick / draconian knight, draconian knight / nothing
-KMONS:   Q = Sojobo / tengu reaver, tengu reaver / nothing
+KMONS:   I = Donald / orc warlord, orc warlord / nothing
+KMONS:   J = Louise / hell knight, hell knight / nothing
+KMONS:   K = Frances / hell knight, hell knight / nothing
+KMONS:   L = Agnes / spriggan defender, spriggan defender / nothing
+KMONS:   M = Rupert / vampire knight, vampire knight / nothing
+KMONS:   N = Wiglaf / ancient champion, ancient champion / nothing
+KMONS:   O = Frederick / draconian knight, draconian knight / nothing
+KMONS:   P = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
                               demon blade good_item | triple sword good_item | \
                               double sword good_item
@@ -6151,10 +6149,8 @@ SUBST:   k = CDEFGH
 SUBST:   k = EFGHIJ
 : elseif you.absdepth() < 19 then
 SUBST:   k = HIJKL
-: elseif you.absdepth() < 22 then
-SUBST:   k = KLMNO
 : else
-SUBST:   k = LMNOPQ
+SUBST:   k = LMNOP
 : end
 MAP
 kkkkkkk

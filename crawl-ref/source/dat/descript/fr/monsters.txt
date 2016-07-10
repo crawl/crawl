@@ -240,12 +240,6 @@ Une agile lanceuse de sorts. Elle est légèrement vêtue, mais cependant, le pe
 qu'elle porte semble être une armure de dragon d'une qualité rare, garantissant
 une assez bonne protection. Et distraire les hommes au combat est une qualité.
 %%%%
-Maud
-
-Une mystérieuse princesse guerrière d'un royaume lointain, dans sa quête pour
-retrouver l'épée légendaire “Entarex”. Nombreux sont ses admirateurs qui,
-pensant à Maud, oublient tout autre chose.
-%%%%
 Maurice
 
 Un voleur sournois et connivent. En sa profession, Maurice est considéré comme

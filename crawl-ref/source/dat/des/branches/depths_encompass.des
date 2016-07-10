@@ -118,8 +118,7 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
 MONS:    ancient lich w:20 / tzitzimitl
-KMONS:   8 = Maud, patrolling giant orange brain
-KMONS:   9 = patrolling giant orange brain
+KMONS:   89 = patrolling giant orange brain
 KMONS:   0 = orange crystal statue
 KMONS:   B = giant eyeball
 KMONS:   C = 0 band
@@ -135,7 +134,7 @@ KITEM:   0 = potion of brilliance ident:type
 KFEAT:   8e = >
 KFEAT:   W = w
 NSUBST:  h = 1:+ / *:x, H = 1:+ / *:x
-SHUFFLE: dD/eE/fF/gG
+SHUFFLE: dD / eE / fF / gG
 SUBST:   D = +, EFG = x
 NSUBST:  e = 1:e / 1:* / *:%, f = 1:e / *:%, g = 1:e / *:%
 SUBST:   | = |*

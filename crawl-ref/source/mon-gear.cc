@@ -687,8 +687,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             break;
         }
         // deliberate fall-through
-
-    case MONS_URUG:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
@@ -1018,7 +1016,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_FREDERICK:
-    case MONS_MAUD:
+    case MONS_URUG:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(5, WPN_HALBERD,
                                                5, WPN_GLAIVE,
@@ -2035,6 +2033,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_TERENCE:
+    case MONS_URUG:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(1, ARM_RING_MAIL,
                                                 3, ARM_SCALE_MAIL,
@@ -2049,7 +2048,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
 
-    case MONS_URUG:
     case MONS_ASTERION:
     case MONS_EDMUND:
     case MONS_FRANCES:
@@ -2096,7 +2094,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_DONALD:
-    case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
     case MONS_FREDERICK:

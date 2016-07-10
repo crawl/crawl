@@ -208,12 +208,6 @@ Una grácil y flexible hechicera. Apenas está vestida, aunque lo poco que lleva
 parece armadura de dragón de la más alta calidad, garantizando alta protección.
 Y distraer a humanoides masculinos también tiene su valor en combate, además.
 %%%%
-Maud
-
-Una misteriosa princesa guerrera de un reino muy lejano, en pos de recuperar la
-legendaria espada “Entarex”. Incontables han sido los admiradores que, pensando
-en Maud, olvidaron todo lo demás.
-%%%%
 Maurice
 
 Un astuto y conspirador ladrón.
