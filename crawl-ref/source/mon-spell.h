@@ -1730,7 +1730,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_SUMMON_SPECTRAL_ORCS, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
-       { SPELL_DEATHS_DOOR, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 

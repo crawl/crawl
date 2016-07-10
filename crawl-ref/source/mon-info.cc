@@ -76,7 +76,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
-    { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
     { ENCH_ROLLING,         MB_ROLLING },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
@@ -1441,8 +1440,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("stupefied");
     if (is(MB_MAD))
         v.emplace_back("lost in madness");
-    if (is(MB_DEATHS_DOOR))
-        v.emplace_back("standing in death's doorway");
     if (is(MB_REGENERATION))
         v.emplace_back("regenerating");
     if (is(MB_ROLLING))

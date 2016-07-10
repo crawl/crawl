@@ -1166,7 +1166,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DEATHS_DOOR:
+#endif
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -2184,7 +2186,6 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     case SPELL_INVISIBILITY:
     case SPELL_TELEPORT_SELF:
     case SPELL_HASTE:
-    case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
     case SPELL_MIGHT:
     case SPELL_WIND_BLAST:
@@ -5886,18 +5887,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_DEATHS_DOOR:
-        if (!mons->has_ench(ENCH_DEATHS_DOOR))
-        {
-            const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
-            simple_monster_message(mons,
-                                   " stands defiantly in death's doorway!");
-            mons->hit_points = max(min(mons->hit_points,
-                                       mons->skill(SK_NECROMANCY)), 1);
-            mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
-        }
-        return;
-
     case SPELL_REGENERATION:
     {
         simple_monster_message(mons,
@@ -7511,8 +7500,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->has_ench(ENCH_SWIFT);
 
     case SPELL_REGENERATION:
-        return mon->has_ench(ENCH_REGENERATION)
-               || mon->has_ench(ENCH_DEATHS_DOOR);
+        return mon->has_ench(ENCH_REGENERATION);
 
     case SPELL_INJURY_MIRROR:
         return mon->has_ench(ENCH_MIRROR_DAMAGE)
@@ -7621,14 +7609,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->has_ench(ENCH_AWAKEN_FOREST)
                || env.forest_awoken_until > you.elapsed_time
                || !forest_near_enemy(mon);
-
-    case SPELL_DEATHS_DOOR:
-        // The caster may be an (undead) enslaved soul.
-        return mon->holiness() & MH_UNDEAD
-               || mon->has_ench(ENCH_DEATHS_DOOR)
-               || mon->has_ench(ENCH_FATIGUE)
-               || !foe || !mon->see_cell_no_trans(foe->pos())
-               || !mon->can_see(*foe);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
@@ -8021,6 +8001,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_STONESKIN:
     case SPELL_HUNTING_CRY:
     case SPELL_CONTROL_WINDS:
+    case SPELL_DEATHS_DOOR:
 #endif
     case SPELL_NO_SPELL:
         return true;

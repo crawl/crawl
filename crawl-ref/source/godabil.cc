@@ -6817,13 +6817,6 @@ bool uskayaw_grand_finale()
             continue;
         }
 
-        if (mons->has_ench(ENCH_DEATHS_DOOR))
-        {
-            clear_messages();
-            mpr("The target is shielded from death!");
-            continue;
-        }
-
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
