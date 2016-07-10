@@ -370,11 +370,10 @@ static const pop_entry pop_slime[] =
 
 static const pop_entry pop_vaults[] =
 { // Vaults (OOD cap: 12)
-  { -7,  3,  515, SEMI, MONS_VAMPIRE_MOSQUITO },
   { -6,  4,  675, SEMI, MONS_SHAPESHIFTER },
   { -6,  4,  335, SEMI, MONS_GRIFFON },
   { -5,  3,  270, SEMI, MONS_SIMULACRUM },
-  { -5,  3,  136, SEMI, MONS_BOGGART },
+  { -5,  3,  178, SEMI, MONS_BOGGART },
   { -5,  5,  192, PEAK, MONS_FIRE_DRAGON },
   { -4,  6,  420, SEMI, MONS_OGRE_MAGE },
   { -4,  6,  335, SEMI, MONS_YAKTAUR },
@@ -382,15 +381,14 @@ static const pop_entry pop_vaults[] =
   { -2,  6,  136, SEMI, MONS_HORNET },
   { -2,  6,  136, SEMI, MONS_DEEP_ELF_KNIGHT },
   { -2,  6,  136, SEMI, MONS_DEEP_ELF_ARCHER },
-  { -2,  6,   89, PEAK, MONS_ICE_DRAGON },
+  { -2,  6,  178, PEAK, MONS_ICE_DRAGON },
   { -2,  6,   89, PEAK, MONS_HARPY },
-  { -2,  6,   89, PEAK, MONS_FIRE_CRAB },
   { -2,  8,  245, PEAK, MONS_BOULDER_BEETLE },
   { -1,  5,   89, PEAK, MONS_GIANT_ORANGE_BRAIN },
   { -1,  9,  260, PEAK, MONS_FREEZING_WRAITH },
   { -1,  9,   89, PEAK, MONS_SHADOW_WRAITH },
   { -1,  9,   60, PEAK, MONS_FLAYED_GHOST },
-  {  0,  8,   89, PEAK, MONS_REDBACK },
+  {  0,  8,   89, PEAK, MONS_ENTROPY_WEAVER },
   {  0, 12,   89, PEAK, MONS_SPHINX },
   {  0, 12,   89, PEAK, MONS_VERY_UGLY_THING },
   {  1,  1,  440, FLAT, MONS_HILL_GIANT },
@@ -399,10 +397,9 @@ static const pop_entry pop_vaults[] =
   {  1,  2,  415, FLAT, MONS_CYCLOPS },
   {  1,  2,  165, FLAT, MONS_MOTTLED_DRAGON },
   {  1,  2,   89, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  2,   89, FLAT, MONS_RAKSHASA },
+  {  1,  3,  136, FLAT, MONS_RAKSHASA },
   {  1,  3,  440, FALL, MONS_SLIME_CREATURE },
-  {  1,  3,   96, FALL, MONS_VAMPIRE_MOSQUITO },
-  {  1,  3,   89, FLAT, MONS_WIZARD },
+  {  1,  3,  222, FLAT, MONS_WIZARD },
   {  1,  4,  440, FALL, MONS_UGLY_THING },
   {  1,  4,  440, FALL, MONS_CENTAUR_WARRIOR },
   {  1,  5,   89, FLAT, MONS_NECROMANCER },
@@ -447,7 +444,7 @@ static const pop_entry pop_vaults[] =
 };
 
 static const pop_entry pop_crypt[] =
-{ // Crypt
+{ // Crypt (OOD cap: 5)
   { -3,  3,   70, PEAK, MONS_SHADOW },
   { -3,  3,   40, PEAK, MONS_WIGHT },
   { -3,  3,   45, PEAK, MONS_FLYING_SKULL },
