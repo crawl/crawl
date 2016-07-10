@@ -2701,14 +2701,10 @@ static bool _jelly_divide(monster& parent)
     return true;
 }
 
-// XXX: This function assumes that only jellies eat items.
+// Only Jiyva jellies eat items.
 static bool _monster_eat_item(monster* mons)
 {
     if (!mons_eats_items(mons))
-        return false;
-
-    // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons->friendly() && !have_passive(passive_t::jelly_eating))
         return false;
 
     // Off-limit squares are off-limit.

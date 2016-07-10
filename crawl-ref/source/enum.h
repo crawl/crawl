@@ -1970,7 +1970,9 @@ enum enchant_type
     ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
+#if TAG_MAJOR_VERSION == 34
     ENCH_EAT_ITEMS,
+#endif
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
 #if TAG_MAJOR_VERSION == 34
