@@ -4034,6 +4034,8 @@ void handle_god_time(int /*time_delta*/)
                 lose_piety(1);
             break;
 
+        case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
         case GOD_SIF_MUNA:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
@@ -4066,9 +4068,6 @@ void handle_god_time(int /*time_delta*/)
 
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-            // These gods do not lose piety over time.
         case GOD_GOZAG:
         case GOD_XOM:
             // Gods without normal piety do nothing each tick.
