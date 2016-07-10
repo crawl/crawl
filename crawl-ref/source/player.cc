@@ -2484,20 +2484,6 @@ bool player_omnireflects()
     return player_equip_unrand(UNRAND_WARLOCK_MIRROR);
 }
 
-/**
- * Does the player take halved ability damage?
- *
- * @param calc_unid     Whether to include properties of worn but unidentified
- *                      items in the calculation. (Probably irrelevant.)
- * @return              Whether the player has SustAt.
- */
-bool player_sust_attr(bool calc_unid)
-{
-    return you.wearing(EQ_RINGS, RING_SUSTAIN_ATTRIBUTES, calc_unid)
-           || you.scan_artefacts(ARTP_SUSTAT)
-           || player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
-}
-
 void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());

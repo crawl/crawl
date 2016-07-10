@@ -789,10 +789,6 @@ ring of strength
 Cet anneau augmente ou diminue la force physique de son porteur, en fonction de
 son degré d'enchantement.
 %%%%
-ring of sustain attributes
-
-Cet anneau protège son porteur des pertes de force, dextérité, ou intelligence.
-%%%%
 ring of teleportation
 
 Cet anneau déclenche son pouvoir de temps en temps en téléportant son porteur à

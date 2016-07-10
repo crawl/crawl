@@ -480,10 +480,6 @@ ring of strength
 
 这个戒指能改变佩戴者的物理力量。至于是加强还是弱化，就要看它上面附着的魔法了。
 %%%%
-ring of sustain attributes
-
-这个戒指保护其佩戴者的力量、敏捷和智力不受伤害。
-%%%%
 ring of teleportation
 
 这个戒指不时会放出其中的魔力，将佩戴者传送到别的地方去。

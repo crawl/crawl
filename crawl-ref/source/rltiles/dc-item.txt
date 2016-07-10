@@ -716,6 +716,7 @@ i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
+# Remove sustat when TAG_MAJOR_VERSION > 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY

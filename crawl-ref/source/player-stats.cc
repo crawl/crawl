@@ -510,11 +510,12 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
+    if (stat_loss <= 0)
+        return false;
+
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_attr() - right-shift
-    // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
@@ -523,28 +524,16 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
                  _stat_name(which_stat).c_str());
             return false;
         }
-
-        int sust = player_sust_attr();
-        stat_loss >>= sust;
     }
 
-    mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
-         "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
-         stat_desc(which_stat, SD_LOSS),
-         stat_loss > 0 ? "" : " for a moment");
+    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
 
-    if (stat_loss > 0)
-    {
-        you.stat_loss[which_stat] = min<int>(100,
-                                        you.stat_loss[which_stat] + stat_loss);
-        if (!you.attribute[ATTR_STAT_LOSS_XP])
-            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-        _handle_stat_change(which_stat);
-        return true;
-    }
-    else
-        return false;
+    you.stat_loss[which_stat] = min<int>(100,
+                                         you.stat_loss[which_stat] + stat_loss);
+    if (!you.attribute[ATTR_STAT_LOSS_XP])
+        you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
+    _handle_stat_change(which_stat);
+    return true;
 }
 
 stat_type random_lost_stat()

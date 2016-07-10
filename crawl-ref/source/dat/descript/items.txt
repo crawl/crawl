@@ -941,11 +941,6 @@ ring of strength
 A ring that increases or decreases the physical strength of its wearer,
 depending on its degree of enchantment.
 %%%%
-ring of sustain attributes
-
-A ring that protects its wearer from loss of strength, dexterity and
-intelligence.
-%%%%
 ring of teleportation
 
 A ring that occasionally exerts its power to teleport its wearer next to

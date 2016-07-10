@@ -119,7 +119,6 @@ LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
 LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
-LUARET1(you_res_statdrain, boolean, player_sust_attr(false))
 LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 // Returning a number so as not to break existing scripts.
@@ -576,7 +575,6 @@ static const struct luaL_reg you_clib[] =
     { "res_cold"    , you_res_cold   },
     { "res_draining", you_res_draining },
     { "res_shock"   , you_res_shock },
-    { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },

@@ -2363,10 +2363,6 @@ ring of strength
 
 <ring>
 %%%%
-ring of sustain attributes
-
-<ring>
-%%%%
 ring of stealth
 
 <ring>

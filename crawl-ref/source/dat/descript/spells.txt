@@ -196,7 +196,7 @@ undead.
 Brain Feed spell
 
 Drains a portion of a visible enemy's intelligence. Such a loss is only
-temporary, and can be prevented or reduced by having sustained attributes.
+temporary, and can be recovered by gaining experience.
 %%%%
 Brothers in Arms spell
 

@@ -121,7 +121,9 @@ const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES: return "SustAt";
+#endif
     case RING_WIZARDRY:           return "Wiz";
     case RING_FIRE:               return "Fire";
     case RING_ICE:                return "Ice";
@@ -225,7 +227,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CURSE,                 PROPN_PLAIN },
         { ARTP_CLARITY,               PROPN_PLAIN },
         { ARTP_RMSL,                  PROPN_PLAIN },
-        { ARTP_SUSTAT,                PROPN_PLAIN },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -364,8 +365,10 @@ static const char* _jewellery_base_ability_description(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
         return "It sustains your strength, intelligence and dexterity.";
+#endif
     case RING_WIZARDRY:
         return "It improves your spell success rate.";
     case RING_FIRE:
@@ -432,7 +435,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_SUSTAT, "It sustains your strength, intelligence and dexterity.", false},
         { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
                                  "enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},

@@ -617,10 +617,6 @@ ring of strength
 Denne ring øger eller mindsker sin bærers fysiske styrke, alt efter hvor
 fortryllet den er.
 %%%%
-ring of sustain attributes
-
-Denne ring beskytter sin bærer mod tab af styrke, behændighed og intelligens.
-%%%%
 ring of teleportation
 
 Denne ring translokerer lejlighedsvis bæreren til et tilfældigt sted og kan
