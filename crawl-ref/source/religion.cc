@@ -4011,41 +4011,25 @@ void handle_god_time(int /*time_delta*/)
         case GOD_LUGONU:
         case GOD_DITHMENOS:
         case GOD_QAZLAL:
-            if (one_chance_in(16))
-                lose_piety(1);
-            break;
-
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
+        case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
 
-        case GOD_JIYVA:
-            if (one_chance_in(20))
-                lose_piety(1);
-            break;
-
         case GOD_ASHENZARI:
-            if (one_chance_in(25))
-                lose_piety(1);
-            break;
-
+        case GOD_ELYVILON:
+        case GOD_HEPLIAKLQANA:
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
         case GOD_SIF_MUNA:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
-                lose_piety(1);
-            break;
-
-        case GOD_ELYVILON:
-        case GOD_HEPLIAKLQANA:
-            if (one_chance_in(50))
                 lose_piety(1);
             break;
 
