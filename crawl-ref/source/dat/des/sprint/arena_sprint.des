@@ -329,7 +329,7 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
                 -- Hive, Crypt, Pan, Tomb
-                "place:D:$ w:24 / w:1 louise / w:1 norris / w:1 donald / w:1 maud",
+                "place:D:$ w:24 / w:1 louise / w:1 norris / w:1 donald / w:1 kirke",
                 "w:20 place:Orc:$ / orc wizard / orc sorcerer w:3 / orc warrior / orc knight /\
                     orc warlord w:3 / orc priest / orc high priest w:4 / urug w:3",
                 "place:Elf:$",
@@ -357,7 +357,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
-                "w:15 ugly thing / w:1 kirke",
+                "w:15 ugly thing / w:1 very ugly thing",
                 "vampire mosquito / hornet w:5 / wasp",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
@@ -413,7 +413,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",
-                "ugly thing w:15 / w:1 kirke",
+                "ugly thing w:14 / w:1 very ugly thing / w:1 wretched star",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
                 "hill giant / stone giant / w:5 frost giant / w:5 fire giant /\

@@ -5056,53 +5056,6 @@ VISUAL:@The_monster@ looks very self-confident.
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
 ## END Margery
 %%%%
-############ MAUD ### A warrior princess looking for the sword "Entarex".
-Maud
-
-@_Maud_common_@
-
-w:5
-@_Maud_rare_@
-%%%%
-_Maud_common_
-
-VISUAL:@The_monster@ frowns.
-
-VISUAL:@The_monster@ looks upset.
-
-@The_monster@ screams @at_foe@, "'Entarex' is mine!"
-
-@The_monster@ screams @at_foe@, "You can't face my power!"
-
-@The_monster@ screams @at_foe@, "Give me that sword! Immediately!"
-
-@The_monster@ screams @at_foe@, "Your life or 'Entarex'! You must choose!"
-
-@The_monster@ screams @at_foe@, "I want it!"
-
-@The_monster@ screams @at_foe@, "Die, you thief!"
-%%%%
-_Maud_rare_
-
-@The_monster@ screams @at_foe@, "Submit or die!"
-
-@The_monster@ screams @at_foe@, "Give me 'Entarex'!"
-
-@The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
-
-@The_monster@ asks @foe,@ "Will you think of me as you die?"
-%%%%
-confused Maud
-
-@The_monster@ thinks out loud, "I seem to be forgetting something..."
-
-@The_monster@ asks @foe,@ "What was I looking for, again?"
-
-@The_monster@ thinks out loud, "Enter... Enterror?"
-
-@The_monster@ wonders, "Who am I anyway?"
-## END Maud ##
-%%%%
 ############ MAURICE ### A thief.
 Maurice
 
