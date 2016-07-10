@@ -97,6 +97,7 @@ static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
+static bool _mons_can_bind_soul(monster* binder, monster* bound);
 
 void init_mons_spells()
 {
@@ -1315,6 +1316,15 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
      }
 
     return true;
+}
+
+/// Can 'binder' bind 'bound's soul with BIND_SOUL?
+static bool _mons_can_bind_soul(monster* binder, monster* bound)
+{
+    return bound->holiness() & MH_NATURAL
+            && mons_can_be_zombified(bound)
+            && !bound->has_ench(ENCH_BOUND_SOUL)
+            && mons_aligned(binder, bound);
 }
 
 // Function should return false if friendlies shouldn't animate any dead.
@@ -6350,9 +6360,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             if (*mi == mons)
                 continue;
-            if (mi->holiness() & MH_NATURAL
-                && mons_can_be_zombified(*mi)
-                && !mi->has_ench(ENCH_BOUND_SOUL))
+            if (_mons_can_bind_soul(mons, *mi))
             {
                 mi->add_ench(
                     mon_enchant(ENCH_BOUND_SOUL, 0, mons,
@@ -7990,12 +7998,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_BIND_SOULS:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (mi->holiness() & MH_NATURAL
-                && mons_can_be_zombified(*mi)
-                && !mi->has_ench(ENCH_BOUND_SOUL))
-            {
+            if (_mons_can_bind_soul(mon, *mi))
                 return false;
-            }
         return true;
 
 #if TAG_MAJOR_VERSION == 34
