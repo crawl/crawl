@@ -747,7 +747,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_LOUDNESS:              return "loudness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
+#if TAG_MAJOR_VERSION == 34
         case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
+#endif
         case RING_STEALTH:               return "stealth";
         case RING_DEXTERITY:             return "dexterity";
         case RING_INTELLIGENCE:          return "intelligence";
@@ -3711,9 +3713,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_STEALTH:
             return player_mutation_level(MUT_NO_STEALTH);
-
-        case RING_SUSTAIN_ATTRIBUTES:
-            return player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
 
         default:
             return false;

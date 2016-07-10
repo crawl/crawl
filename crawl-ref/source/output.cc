@@ -2380,9 +2380,6 @@ static vector<formatted_string> _get_overview_resistances(
     if (rmuta)
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
-    const int rsust = player_sust_attr(calc_unid);
-    out += _resist_composer("SustAt", cwidth, rsust) + "\n";
-
     const int rmagi = player_res_magic(calc_unid) / MR_PIP;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 

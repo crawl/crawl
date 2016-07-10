@@ -3783,10 +3783,6 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_FREEZING_CLOUD_IMMUNITY,
     MUT_FLAME_CLOUD_IMMUNITY,
-#else
-    MUT_SUSTAIN_ATTRIBUTES,
-#endif
-#if TAG_MAJOR_VERSION == 34
     MUT_FORLORN,
 #endif
     MUT_SUBDUED_MAGIC,
@@ -4040,7 +4036,9 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+#if TAG_MAJOR_VERSION == 34
     ARTP_SUSTAT,
+#endif
     ARTP_NO_UPGRADE,
     ARTP_RCORR,
     ARTP_RMUT,

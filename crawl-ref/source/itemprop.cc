@@ -724,6 +724,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
     { OBJ_JEWELLERY, AMU_CONSERVATION },
     { OBJ_JEWELLERY, RING_REGENERATION },
+    { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELING },
@@ -2818,7 +2819,6 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_POISON_RESISTANCE
                 || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_SEE_INVISIBLE
-                || item.sub_type == RING_SUSTAIN_ATTRIBUTES
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_PROTECTION_FROM_MAGIC
                 || item.sub_type == RING_FIRE

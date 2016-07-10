@@ -2949,6 +2949,8 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_MUMMY_RESTORATION])
             you.mutation[MUT_MUMMY_RESTORATION] = 0;
+        if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
+            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
     }
 
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
