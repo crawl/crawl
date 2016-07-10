@@ -5452,9 +5452,6 @@ void radiate_pain_bond(const monster* mon, int damage)
         if (mon == target) // no self-sharing
             continue;
 
-        if (mons_intel(target) < I_ANIMAL)
-            continue;
-
         // Only other pain-bonded monsters are affected.
         if (!target->has_ench(ENCH_PAIN_BOND))
             continue;
