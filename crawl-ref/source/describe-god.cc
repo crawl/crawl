@@ -73,6 +73,16 @@ static int _invocations_level()
                         : 1;
 }
 
+int god_favour_rank(god_type which_god)
+{
+    if (which_god == GOD_GOZAG)
+        return _gold_level();
+    else if (which_god == GOD_USKAYAW)
+        return _invocations_level();
+    else
+        return _piety_level(you.piety);
+}
+
 static string _describe_favour(god_type which_god)
 {
     if (player_under_penance())
@@ -87,12 +97,9 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
-    const int rank = which_god == GOD_GOZAG ? _gold_level() :
-                     which_god == GOD_USKAYAW ? _invocations_level() :
-                     _piety_level(you.piety);
 
     const string godname = god_name(which_god);
-    switch (rank)
+    switch (god_favour_rank(which_god))
     {
         case 7:  return "A prized avatar of " + godname;
         case 6:  return "A favoured servant of " + godname + ".";
@@ -110,8 +117,8 @@ static string _describe_favour(god_type which_god)
             else
                 return "A rising star in the eyes of " + godname + ".";
 
-        case 3:  return uppercase_first(godname) + " is most pleased with you.";
-        case 2:  return uppercase_first(godname) + " is pleased with you.";
+        case 3:  return uppercase_first(godname) + " is pleased with you.";
+        case 2:  return uppercase_first(godname) + " is aware of your devotion.";
         default: return uppercase_first(godname) + " is noncommittal.";
     }
 }
