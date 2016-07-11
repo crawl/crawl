@@ -8,6 +8,7 @@
 #include "butcher.h"
 #include "coordit.h"
 #include "database.h"
+#include "describe-god.h"
 #include "english.h"
 #include "env.h"
 #include "food.h"
@@ -37,18 +38,19 @@
 string god_prayer_reaction()
 {
     string result = uppercase_first(god_name(you.religion));
+    const int rank = god_favour_rank(you.religion);
     if (crawl_state.player_is_dead())
         result += " was ";
     else
         result += " is ";
     result +=
-        (you.piety >= piety_breakpoint(5)) ? "exalted by your worship" :
-        (you.piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
-        (you.piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
-        (you.piety >= piety_breakpoint(2)) ? "most pleased with you" :
-        (you.piety >= piety_breakpoint(1)) ? "pleased with you" :
-        (you.piety >= piety_breakpoint(0)) ? "aware of your devotion"
-                                           : "noncommittal";
+        (rank == 7) ? "exalted by your worship" :
+        (rank == 6) ? "extremely pleased with you" :
+        (rank == 5) ? "greatly pleased with you" :
+        (rank == 4) ? "most pleased with you" :
+        (rank == 3) ? "pleased with you" :
+        (rank == 2) ? "aware of your devotion"
+                    : "noncommittal";
     result += ".";
 
     return result;
