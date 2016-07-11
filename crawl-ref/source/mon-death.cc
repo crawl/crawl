@@ -836,6 +836,23 @@ void fire_monster_death_event(monster* mons,
                       mons->mid, killer));
     }
 
+    bool terrain_changed = false;
+
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->mon_num != 0 && monster_by_mid(marker->mon_num) == mons)
+        {
+            terrain_changed = true;
+            marker->duration = 0;
+        }
+    }
+
+    if (terrain_changed)
+        timeout_terrain_changes(0, true);
+
     if (killer == KILL_BANISHED)
         return;
 
@@ -2524,8 +2541,6 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons_is_elven_twin(mons))
         elven_twin_died(mons, in_transit, killer, killer_index);
-    else if (mons->type == MONS_VAULT_WARDEN)
-        timeout_terrain_changes(0, true);
     else if (mons->type == MONS_FLAYED_GHOST)
         end_flayed_effect(mons);
     // Give the treant a last chance to release its wasps if it is killed in a

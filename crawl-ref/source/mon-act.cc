@@ -2517,7 +2517,7 @@ static void _post_monster_move(monster* mons)
                          feature_description_at(*ai, false, DESC_THE).c_str());
                 }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
-                                    TERRAIN_CHANGE_FLOOD);
+                                    TERRAIN_CHANGE_FLOOD, mons);
             }
     }
 
