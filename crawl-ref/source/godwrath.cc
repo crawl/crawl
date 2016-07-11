@@ -862,7 +862,7 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            you.rot(nullptr, 0, 3 + random2(3));
+            you.rot(nullptr, 3 + random2(3));
             break;
 
         case 1:
