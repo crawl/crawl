@@ -1129,73 +1129,68 @@ ENDMAP
 ################################################################################
 # Okawaru armoury
 #
-NAME:   evilmike_iron_armoury
-ORIENT: southeast
-TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-, Depths
-KFEAT:  _ = altar_okawaru
-SUBST:  = = nv
-FTILE:  '+Gvc12345_defghijk = floor_hall
+NAME:    evilmike_iron_armoury
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  southeast
+DEPTH:   D:11-, Depths
 : if you.absdepth() < 16 then
-MONS:   deep elf knight w:1 / deep elf archer w:1 / orc warrior
-MONS:   w:20 orc warrior / centaur warrior
-MONS:   orc warrior
-MONS:   w:8 patrolling orc knight / w:2 patrolling orc warlord
+MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
+MONS:    orc warrior w:20 / centaur warrior
+MONS:    orc warrior, patrolling orc knight w:8 / patrolling orc warlord w:2
 : elseif you.absdepth() < 21 then
-MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc warrior / \
-        w:4 centaur warrior
-MONS:   w:12 orc knight / w:3 deep elf knight / w:3 deep elf archer / \
-        w:4 centaur warrior / w:2 yaktaur captain
-MONS:   orc knight
-KMONS:  4 = patrolling Wiglaf, patrolling orc warlord
+MONS:    orc warrior w:8 / deep elf knight w:1 / deep elf archer w:1 / \
+         centaur warrior w:4
+MONS:    orc knight w:12 / deep elf knight w:3 / deep elf archer w:3 / \
+         centaur warrior w:4 / yaktaur captain w:2
+MONS:    orc knight, patrolling orc warlord
 : elseif you.absdepth() < 26 then
-MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc knight / \
-        w:4 centaur warrior / w:2 yaktaur captain
-MONS:   w:8 orc knight / w:1 deep elf knight / w:1 deep elf archer / \
-        w:6 yaktaur captain
-MONS:   orc warlord
-KMONS:  4 = patrolling Wiglaf, patrolling deep elf blademaster
+MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
+         centaur warrior w:4 / yaktaur captain w:2
+MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
+         yaktaur captain w:6
+MONS:    orc warlord, patrolling deep elf blademaster
 : else
-MONS:   w:1 deep elf knight / w:1 deep elf archer / w:8 orc knight / \
-        w:6 yaktaur captain
-MONS:   w:4 orc warlord / w:1 deep elf blademaster / w:3 deep elf master archer
-MONS:   deep elf blademaster
-KMONS:  4 = patrolling Wiglaf, patrolling draconian knight
+MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
+         yaktaur captain w:6
+MONS:    orc warlord w:4 / deep elf blademaster w:1 / \
+         deep elf master archer w:3
+MONS:    deep elf blademaster, patrolling draconian knight
 : end
-SUBST:  5 = 2221'
-# Lots of loot in this one. In true okawaru fashion, most of it is junk!
-ITEM:   any armour, any armour good_item / acquire armour
-ITEM:   any weapon, any weapon good_item / acquire weapon
-ITEM:   arrow, bolt, sling bullet, gold
+KFEAT:   _ = altar_okawaru
+# Lots of loot in this one. In true Okawaru fashion, most of it is junk!
+ITEM:    any armour, any armour good_item / acquire armour
+ITEM:    any weapon, any weapon good_item / acquire weapon
+ITEM:    arrow, bolt, sling bullet, gold
 SHUFFLE: df, hi, jk, eg
-NSUBST: d = 1:e / *:d
-NSUBST: f = 1:g / *:f
-SUBST:  ' = .
+NSUBST:  d = 1:e / *:d, f = 1:g / *:f
+SUBST:   n = nv, 5 = 2221'
+FTILE:   '+Gvcn1234_defghijk = floor_hall
 MAP
-.................................x
-.....v...........................x
-.......vvvvvvvvvvvvvv......wwww..x
-.....vvvvdd'ddvff'ffvvv.....www..x
-.....viivdd'ddvff'ffvvvvv....ww..x
-.....viivvv+vvvvv+vvvkkvvvv...w..x
-.....v''+''5'''1'5''vkkveevv.....x
-.....viiv'cc'''''cc'+''vv+vvv....x
-..v.vviiv'ccc'''ccc'vkkv'5''vv...x
-....vvvvv''cc'''cc'2vvvv'''''vv..x
-..v.v'1vG'''''''5'''Gv''''''3'vv.x
-....+''+''''''''2'''1+'''''4_''=.x
-..v.v'1vG'''''''5'''Gv''''''3'vv.x
-....vvvvv''cc'''cc'2vvvv'''''vv..x
-..v.vvhhv'ccc'''ccc'vjjv'5''vv...x
-.....vhhv'cc'''''cc'+''vv+vvv....x
-.....v''+''5'''1'5''vjjvggvv.....x
-.....vhhvvv+vvvvv+vvvjjvvvv...w..x
-.....vhhvff'ffvdd'ddvvvvv....ww..x
-.....vvvvff'ffvdd'ddvvv.....www..x
-.......vvvvvvvvvvvvvv......wwww..x
-.....v...........................x
-.................................x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.................................xx
+.....v...........................xx
+.......vvvvvvvvvvvvvv......wwww..xx
+.....vvvvdd'ddvff'ffvvv.....www..xx
+.....viivdd'ddvff'ffvvvvv....ww..xx
+.....viivvv+vvvvv+vvvkkvvvv...w..xx
+.....v''+''5'''1'5''vkkveevv.....xx
+.....viiv'cc'''''cc'+''vv+vvv....xx
+..v.vviiv'ccc'''ccc'vkkv'5''vv...xx
+....vvvvv''cc'''cc'2vvvv'''''vv..xx
+..v.v'1vG'''''''5'''Gv''''''3'vv.xx
+....+''+''''''''2'''1+'''''4_''n.xx
+..v.v'1vG'''''''5'''Gv''''''3'vv.xx
+....vvvvv''cc'''cc'2vvvv'''''vv..xx
+..v.vvhhv'ccc'''ccc'vjjv'5''vv...xx
+.....vhhv'cc'''''cc'+''vv+vvv....xx
+.....v''+''5'''1'5''vjjvggvv.....xx
+.....vhhvvv+vvvvv+vvvjjvvvv...w..xx
+.....vhhvff'ffvdd'ddvvvvv....ww..xx
+.....vvvvff'ffvdd'ddvvv.....www..xx
+.......vvvvvvvvvvvvvv......wwww..xx
+.....v...........................xx
+.................................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################

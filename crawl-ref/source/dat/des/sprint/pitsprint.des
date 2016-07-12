@@ -109,7 +109,7 @@ function base_monster_setup(e)
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
            Nergalle / Nessos / Ilsuiw band / Arachne / Polyphemus / Rupert /\
-           Saint Roka band / Snorg / Wiglaf")
+           Saint Roka band / Snorg")
   e.kmons("K = Louise / Nikola / Frederick / Boris / Margery band /\
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\

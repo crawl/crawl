@@ -208,7 +208,7 @@ glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
 ## Dwarves ('q')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-unique/wiglaf CORPSE_DWARF
+dwarf CORPSE_DWARF
 deep_dwarf CORPSE_DEEP_DWARF
 
 ## Ugly things ('u')

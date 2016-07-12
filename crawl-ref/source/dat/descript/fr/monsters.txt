@@ -347,14 +347,6 @@ de ces créatures.
     end
 }}
 %%%%
-Wiglaf
-
-Un nain obèse qui porte un chapeau stupide. {{
-    if you.can_smell() then
-        return "Il empeste l'alcool. "
-    end
-}}
-%%%%
 Xtahua
 
 Un ancien dragon puissant.

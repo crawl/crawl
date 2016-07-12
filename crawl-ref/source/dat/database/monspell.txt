@@ -381,22 +381,6 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
-Wiglaf cast
-
-@The_monster@ raises a hand and says an invocation.
-
-@The_monster@'s eyes glow as he invokes the power of @possessive_God@.
-
-@The_monster@ prays in loud words.
-%%%%
-unseen Wiglaf cast
-
-You hear an invocation said in the dwarven tongue.
-
-You see a slight glow in a spot of thin air.
-
-Someone prays in loud words.
-%%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
 

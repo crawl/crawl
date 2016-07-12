@@ -255,7 +255,7 @@ possessions.
 %%%%
 Joseph
 
-Looks like a mercenary.
+Looks like a mercenary in a stupid-looking hat.
 %%%%
 Josephine
 
@@ -469,14 +469,6 @@ Vashnia
 
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
-%%%%
-Wiglaf
-
-A fat dwarf wearing a stupid-looking hat. {{
-    if you.can_smell() then
-        return "He reeks of alcohol. "
-    end
-}}
 %%%%
 Xtahua
 

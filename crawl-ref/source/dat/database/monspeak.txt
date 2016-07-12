@@ -2918,29 +2918,6 @@ w:50
 
 @The_monster@ says, "All these vampires have me hopping mad!"
 %%%%
-Lab Donald
-
-w:50
-@_generic_Donald_@
-
-@The_monster@ says, "Spare a ration?"
-
-@The_monster@ says, "I'm as lost as you are, buddy."
-
-@The_monster@ says, "I hate being hungry."
-
-@The_monster@ says, "I had breadcrumbs, but I ate them."
-
-@The_monster@ says, "I tried to follow the left wall; it didn't work."
-
-@The_monster@ says, "What do you think the minotaur eats?"
-
-@The_monster@ says, "So who maintains these gears?"
-
-@The_monster@ says, "What a crowded place."
-
-@The_monster@ says, "Mazes, puzzles. I hate puzzles."
-%%%%
 Abyss Donald
 
 w:50
@@ -6160,69 +6137,6 @@ _Vashnia_nonnaga_
 
 @The_monster@ says to @possessive@ squad, "Do not let the @foe_genus@ escape!"
 ## END Vashnia ##
-%%%%
-############ WIGLAF ### A dwarf. Nuff said.
-Wiglaf
-
-@_Wiglaf_common_@
-
-w:5
-@_Wiglaf_rare_@
-
-@_Wiglaf_nondwarf_@
-%%%%
-related Wiglaf
-
-@_Wiglaf_common_@
-
-w:5
-@_Wiglaf_rare_@
-%%%%
-_Wiglaf_common_
-
-@The_monster@ says @to_foe@, "Ma axe will split yer heid!"
-
-@The_monster@ says @to_foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
-
-@The_monster@ yells out a battle-cry.
-%%%%
-_Wiglaf_rare_
-
-VISUAL:@The_monster@ eyes you carefully - or perhaps drunkenly.
-
-@The_monster@ says, "This cannae be beer, 'tis yak urine! I want ma dwarven ale!"
-
-@The_monster@ says, "Good veins're in thae mountains, nae this deep doon!"
-
-@The_monster@ says, "All thae talk aboot mithril tae mine, an' none's tae be seen."
-
-@The_monster@ says, "Aye, ma liver's dead parched."
-
-@The_monster@ says, "Och nae, elf-lovers an' halflin'-fanciers!"
-
-@The_monster@ says, "Haw, ya cannae be tha' daft tae fight me!"
-
-@The_monster@ says @to_foe@, "Ye've the look of an eejit tae ye."
-
-@The_monster@ says, "Have ya seen ma piece?"
-
-w:1
-@The_monster@ says, "Dae ya ken?"
-
-w:1
-@The_monster@ says, "I'm nae pished! Nae yet."
-%%%%
-_Wiglaf_nondwarf_
-
-w:5
-@The_monster@ says, "Orcs, orcs, elves an' a glaikit @player_genus@." @player_only@
-
-@The_monster@ says @to_foe@, "Thae axes o' dwarves be upon ye!"
-
-@The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
-
-@The_monster@ says @to_foe@, "Have ye nae fought a dwarf yet?"
-## END Wiglaf ##
 %%%%
 ############ XTAHUA ### An ancient fire dragon
 Xtahua

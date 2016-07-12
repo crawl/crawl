@@ -6112,10 +6112,10 @@ KMONS:   C = Blork the orc / orc warrior ; great sword . chain mail | plate armo
                              orc warrior ; great sword . chain mail | plate armour / nothing
 KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . shield, \
                          orc warrior ; long sword | falchion . chain mail . shield / nothing
-KMONS:   E = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
-                    orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
-KMONS:   F = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
+KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
                       orc knight ; long sword | scimitar . chain mail . shield / nothing
+KMONS:   F = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
+                    orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
 KMONS:   G = Erica / wizard ; long sword . robe | leather armour . shield, \
                      wizard ; long sword . robe | leather armour . shield / nothing
 KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
@@ -6124,7 +6124,7 @@ KMONS:   J = Louise / hell knight, hell knight / nothing
 KMONS:   K = Frances / hell knight, hell knight / nothing
 KMONS:   L = Agnes / spriggan defender, spriggan defender / nothing
 KMONS:   M = Rupert / vampire knight, vampire knight / nothing
-KMONS:   N = Wiglaf / ancient champion, ancient champion / nothing
+KMONS:   N = Asterion / ancient champion, ancient champion / nothing
 KMONS:   O = Frederick / draconian knight, draconian knight / nothing
 KMONS:   P = Sojobo / tengu reaver, tengu reaver / nothing
 KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
@@ -6138,15 +6138,15 @@ NSUBST:  k = 4:k / 2 = k. / *:.
 SHUFFLE: bm
 SUBST:   b = cccvvb
 : if you.in_branch("Orc") then
-NSUBST:  k = 1:A / 1:C / *:o
+NSUBST:  k = 1:A / 1 = CF / *:o
 : elseif you.in_branch("Elf") then
-NSUBST:  k = 2 = EFIJ / *:e
+NSUBST:  k = 2 = IJKL / *:e
 : elseif you.absdepth() < 10 then
 SUBST:   k = ABCD, S = s
 : elseif you.absdepth() < 13 then
-SUBST:   k = CDEFGH
+SUBST:   k = EFGH
 : elseif you.absdepth() < 16 then
-SUBST:   k = EFGHIJ
+SUBST:   k = FGHJ
 : elseif you.absdepth() < 19 then
 SUBST:   k = HIJKL
 : else

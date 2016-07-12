@@ -527,7 +527,6 @@ rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 %rim 1
 terence MONS_TERENCE
-wiglaf MONS_WIGLAF
 
 %sdir mon
 %rim 0

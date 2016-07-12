@@ -97,6 +97,8 @@ Monsters
     severely injured, she becomes a dragon ringed by storm clouds.
   - Meliai, bee priestesses that sting and smite in trios.
 * Uniques:
+  - Urug's weapons are now much nastier for their depth.
+  - Donald can now cast Haste and Might.
   - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
   - Xtahua can now roar to cast Paralyse.
   - Gloorx Vloq can no longer cast Black Mark.
@@ -104,14 +106,18 @@ Monsters
 * Blood Saints's Legendary Destruction now casts two spells at a time.
 * Necromancers gain Bind Soul, reviving slain monsters as spectral things.
 * Obsidian statues can Mesmerise.
+* Wizards and Ogre Mages have split up and re-arranged  their many spell sets
+  to arrive at three sets each, with minimal overlap.
 * Spriggan air mages can no longer cast Control Winds.
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
 * Death scarabs no longer trail miasma, but are somewhat tougher.
 * Decayed bog bodies have become bog mummies, which are somewhat weaker.
-* Removed:
+* Removed monsters:
   - Salamander stormcallers.
   - Norris.
+  - Maud.
+  - Wiglaf.
 
 Spells
 ------

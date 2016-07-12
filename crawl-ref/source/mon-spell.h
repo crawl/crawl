@@ -1675,13 +1675,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_WIGLAF,
-      {
-       { SPELL_MIGHT, 34, MON_SPELL_PRIEST },
-       { SPELL_HASTE, 34, MON_SPELL_PRIEST },
-      }
-    },
-
     {  MST_JORGRUN,
       {
        { SPELL_LRD, 16, MON_SPELL_WIZARD },
@@ -2082,6 +2075,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_MONSTROUS_MENAGERIE, 11, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_DONALD,
+      {
+       { SPELL_MIGHT, 34, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 34, MON_SPELL_WIZARD },
       }
     },
 

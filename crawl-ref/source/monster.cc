@@ -1376,9 +1376,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         if (mons->type == MONS_PIKEL)
             return get_vorpal_type(weapon) == DVORP_SLASHING;
 
-        if (mons->type == MONS_WIGLAF)
-            return item_attack_skill(weapon) == SK_AXES;
-
         if (mons->type == MONS_NIKOLA)
             return get_weapon_brand(weapon) == SPWPN_ELECTROCUTION;
 
