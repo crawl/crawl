@@ -3029,11 +3029,6 @@ sickly siren
 This young merfolk looks quite sick, but its voice still has the power to
 mesmerize its victims.
 %%%%
-skeletal archer
-
-The vicious and heavily armed skeleton of a humanoid creature, animated by
-unholy power. It wields a bow, and fires with deadly accuracy.
-%%%%
 skeletal bat
 
 A bat skeleton without the decency to lie unmoving like dead bats are supposed

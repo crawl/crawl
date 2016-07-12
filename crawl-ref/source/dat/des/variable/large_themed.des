@@ -1496,26 +1496,26 @@ DEPTH:  Depths:2-
 MONS:   common demon, hell knight
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
-NSUBST: . = 7:1 / 7:2
-FTILE:  .|#+G123- = floor_pebble_darkgray
+NSUBST: . = 7:1 / 7:2 / *:.
+FTILE:  .|#+G123 = floor_pebble_darkgray
 KPROP:  1Y = no_tele_into
 KFEAT:  # = iron_grate
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxvvvvvvvvxxxxxx
-vvvvvvvvvxxv||v.3.vxxxxxx
-v1v1v1v1vxxv||+...vxxxxxx
-v#v#v#v#vvvvvvv...vxxxxxx
-v.........llllv...vvvvvvv
-v#v#v#v#vl..l.+...+.....v
-v1v1v1v1vl....vvvvv.GlG.v
-vvvvvvvvv.l.........lYl.v
-v1v1v1v1v.ll........GlG.v
-v#v#v#v#v.lll.v---v.....v
-v..........l..v   vvvvvvv
-v#v#v#v#vvvvvvv
-v1v1v1v1v
-vvvvvvvvv
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxvvvvvvvvxxxxxx
+xxxvvvvvvvvvxxv||v.3.vxxxxxx
+xxxv1v1v1v1vxxv||+.3.vxxxxxx
+xvvv#v#v#v#vvvvvvv...vxxxxxx
+xv*+.........llllv...vvvvvvv
+xvvv#v#v#v#vl..l.+...+.....v
+xxxv1v1v1v1vl....vvvvv.GlG.v
+xxxvvvvvvvvv.l.........lYl.v
+xxxv1v1v1v1v.ll........GlG.v
+xvvv#v#v#v#v.lll.v---v.....v
+xv*+..........l..v   vvvvvvv
+xvvv#v#v#v#vvvvvvv
+xxxv1v1v1v1v
+xxxvvvvvvvvv
 ENDMAP
 
 NAME:   kennysheep_seaside_town
@@ -2148,25 +2148,25 @@ MONS:    vampire knight, shadow demon, shadow dragon
 KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
 KMONS:   8 = bone dragon / reaper / doom hound
 KMONS:   _ = tzitzimitl
-KFEAT:   _ = altar_dithmenos
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, boots_of_the_assassin
 ITEM:    shadow dragon armour randart, ring of stealth randart
 ITEM:    phantom mirror, potion of invisibility ident:type q:2
 KFEAT:   F = floor
+KFEAT:   _ = altar_dithmenos
 SHUFFLE: 56, defghi, jk|
 : if you.in_branch("Tar") then
-SUBST:   02 = 00014, 9k = 8, d = }, e = ), f = ], ghij = .
+SUBST:   02 = 00014, 9j = 8, d = }, e = ), f = ], ghik*| = .
 : else
 SUBST:   0 = 11112234
 : end
 MARKER:  F = lua:fog_machine { cloud_type = "black smoke", pow_min = 75, \
                                pow_max = 100, delay_min = 50, delay_max = 75, \
                                size = 1, walk_dist = 0, spread_rate = 5 }
-TILE:    c = dngn_stone_dark
-FTILE:   F = floor_pebble_darkgray
 COLOUR:  m = lightmagenta
+TILE:    c = dngn_stone_dark
 TILE:    m = dngn_transparent_wall_darkgray
+FTILE:   F = floor_pebble_darkgray
 MAP
          cc..c.c..cc
          cc.......cc
