@@ -178,6 +178,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             else
                 tile_item_use(idx);
         }
+        update();
         return CK_MOUSE_CMD;
     }
     else if (event.button == MouseEvent::RIGHT)
