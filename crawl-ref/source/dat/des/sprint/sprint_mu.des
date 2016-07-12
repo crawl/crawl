@@ -831,9 +831,9 @@ KMONS: a = patrolling Harold hd:15 hp:100 \
 KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
  . blowgun . needle ego:curare q:7
 : else
-# changed Francis to Wiglaf for now
-KMONS: a = patrolling Wiglaf hp:100 ; war axe ego:holy_wrath
-KMONS: b = patrolling Frances hp:150 ; war axe ego:holy_wrath \
+KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
+ . shield ego:reflection
+KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
  . blowgun . needle ego:curare q:7
 :end
 KITEM: & = lamp of fire, scroll of acquirement q:1 ident:all, \

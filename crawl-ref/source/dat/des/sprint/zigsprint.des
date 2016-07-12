@@ -413,7 +413,7 @@ function choose_mset_3(e)
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf")
+               Rupert / Saint Roka / Snorg")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -547,10 +547,10 @@ local rnd = crawl.random2(142)
                Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
+               Rupert / Saint Roka / Snorg / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
-               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
-               Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
+               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory / Khufu /\
+               Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray / Sojobo /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
                the Royal Jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy

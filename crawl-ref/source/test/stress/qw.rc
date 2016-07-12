@@ -1120,7 +1120,6 @@ local scary_monsters = {
   {20, "greater naga"},
   {20, "naga sharpshooter"},
   {20, "emperor scorpion"},
-  {20, "Wiglaf"},
   {20, "Rupert"},
   {20, "Aizul"},
   {20, "desc", "hydra"},

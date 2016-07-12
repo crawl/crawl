@@ -965,8 +965,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(12, WPN_SCIMITAR,
                                                10, WPN_LONG_SWORD,
-                                               4, WPN_WAR_AXE,
-                                               7, WPN_BROAD_AXE,
+                                               3, WPN_WAR_AXE,
+                                               9, WPN_BROAD_AXE,
                                                7, WPN_EVENINGSTAR,
                                                7, WPN_DOUBLE_SWORD,
                                                7, WPN_DEMON_TRIDENT,
@@ -1857,11 +1857,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_WIGLAF:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
-                              level * 2 + 1, 1);
-        break;
-
     case MONS_LOUISE:
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                                        level * 2 + 1, 1);
@@ -2059,12 +2054,12 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
     }
 
-    case MONS_WIGLAF:
+    case MONS_DONALD:
         if (one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(8, ARM_CHAIN_MAIL,
-                                               10, ARM_PLATE_ARMOUR,
+        item.sub_type = random_choose_weighted(10, ARM_CHAIN_MAIL,
+                                               9, ARM_PLATE_ARMOUR,
                                                1, ARM_CRYSTAL_PLATE_ARMOUR,
                                                0);
         break;
@@ -2093,7 +2088,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_ORC_WARRIOR:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
-    case MONS_DONALD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
     case MONS_FREDERICK:
