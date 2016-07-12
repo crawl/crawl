@@ -43,16 +43,16 @@ function sroom_kobold_lair(e)
     -- Return early if we're being called during map validation.
     if e.is_validating() then return end
 
-    local level_mons = 3
+    local level_mons = 6
 
     if level < 6 then
-        level_mons = 1
-    elseif level < 9 then
         level_mons = 2
+    elseif level < 9 then
+        level_mons = 4
     end
 
     local big_freq   = 3 + level_mons
-    local small_freq = 10 - big_freq
+    local small_freq = 12 - big_freq
     local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
 
     lord_mon = "kobold demonologist"
@@ -70,14 +70,14 @@ function sroom_orc_lair(e)
 
     if level > 20 or you.in_branch("Elf") then
         mon = "orc priest w:7 / orc warrior w:12 / orc knight w:8 / "
-              .. " orc high priest w:1 / ogre w:1 / troll w:1"
-        lord_mon = "orc warlord w:9 / orc high priest w:1"
+              .. " orc high priest w:2 / hill giant w:1"
+        lord_mon = "orc warlord"
     elseif level > 14 or you.in_branch("Orc") then
-        mon = "orc w:8 / orc warrior w:6 / orc priest w:2 /  "
-              .. "orc knight w:3 / ogre w:1 "
+        mon = "orc w:6 / orc warrior w:8 / orc priest w:2 /  "
+              .. "orc knight w:3 / troll w:1 "
         lord_mon = "orc knight / orc high priest w:6 / orc warlord w:4"
     elseif level > 9 then
-        mon = "orc w:35 / orc warrior / orc priest w:3 / ogre w:2"
+        mon = "orc w:25 / orc warrior / orc priest w:3 / ogre w:2"
         lord_mon = "orc priest w:7 / orc knight w:3"
     else
         mon = "orc w:44 / orc warrior w:5 / ogre w:1"
@@ -131,12 +131,12 @@ function sroom_morgue(e)
 
     local mons = {}
 
-    mons[1] = "zombie w:14 / skeleton w:5 / spectral thing w:1"
-    mons[2] = "shadow wraith w:2 / soul eater w:2 / vampire mage w:2 / "
-              .. "flayed ghost w:2 / death knight w:2"
+    mons[1] = "zombie w:9 / skeleton w:5 / spectral thing w:1"
+    mons[2] = "shadow wraith w:3 / soul eater w:4 / vampire mage w:3 / "
+              .. "flayed ghost w:4 / death knight w:1"
     mons[3] = "skeletal warrior w:15 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
-    mons[4] = "vampire knight w:5 ; great mace" .. weap
+    mons[4] = "vampire knight ; chain mail . great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     if you.in_branch("Geh") then
         mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
@@ -177,7 +177,7 @@ function sroom_morgue(e)
     end
 
     if you.absdepth() > 27 then
-        mons[7] = "reaper w:12 / bone dragon w:3"
+        mons[7] = "reaper w:16 / bone dragon w:4"
     end
 
     if you.absdepth() > 24 or crawl.x_chance_in_y(you.absdepth() - 20, 5) then
@@ -218,13 +218,13 @@ function sroom_jelly_pit(e)
 
     local mons = {}
 
-    mons[1] = "ooze w:" .. math.max(72 - level, 1)
+    mons[1] = "ooze w:" .. math.max(72 - level * 2, 1)
     mons[2] = "jelly w:54"
     mons[3] = "great orb of eyes w:" .. (1 + level)
     mons[4] = "large slime creature w:" .. (2 + level)
     mons[5] = "death ooze w:" .. (9 + level * 2)
-    mons[6] = "azure jelly w:" .. (level - 3)
-    mons[7] = "acid blob w:" .. (level - 6)
+    mons[6] = "azure jelly w:" .. math.max(level * 2 - 13, 1)
+    mons[7] = "acid blob w:" .. math.max(level * 2 - 16, 1)
 
     lord_mon = "death ooze w:6 / azure jelly / acid blob"
 
@@ -266,7 +266,7 @@ function sroom_mythical_zoo(e)
     end
     if Z >= 19 then
         mons[10] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[11] = "sphinx w:" .. (Z - 18)
+        mons[11] = "sphinx w:" .. (Z - 16)
     end
 
     if Z >= 21 then

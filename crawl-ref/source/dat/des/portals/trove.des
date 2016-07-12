@@ -923,7 +923,7 @@ KFEAT:  _ = altar_pakellas
 FTILE:  'T_ : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   acquire misc / any rod w:4
+ITEM:   any misc / any rod w:4
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
 ITEM:   scroll of recharging / scroll of recharging q:3 w:5
 : trove.setup_features(_G)

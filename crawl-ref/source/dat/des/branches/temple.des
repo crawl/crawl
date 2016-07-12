@@ -830,7 +830,7 @@ ORIENT:  encompass
 WEIGHT:  10
 MONS:    bush, plant
 SUBST:   W = W:30 w, ~ = ':20 W
-NSUBST:  ' = 5:t / 7:1 / 4:2 / .
+NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
 NSUBST:  A = 1:{ / *:'
 COLOUR:  ' = green / brown w:2
 FTILE:   'A12 = floor_grass
@@ -2359,8 +2359,7 @@ COLOUR:  m = lightred
 COLOUR:  c = red
 :   end
 : end
-SUBST:   <[ = {
-NSUBST:  { = 1:{ / *:.
+NSUBST:  <[{ = 1:{ / *:.
 KPROP:   wl1 = no_tele_into
 MAP
                ccccccccccccc

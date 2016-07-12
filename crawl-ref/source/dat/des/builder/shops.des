@@ -666,12 +666,13 @@ ENDMAP
 
 ###############################################################################
 # <<3>> Multi.
-#       Not tagged shop, and has no threats. Contain pssibly multiple shops in
-#       a somewhat generic theme- kept here for a certain ease of reference.
+#       Not tagged shop, and has no threats. Contain possibly multiple shops
+#       in a somewhat generic theme- kept here for a certain ease of reference.
 #
 
 # 3 shops
 NAME:    minmay_shop_grove
+TAGS:    extra luniq_floating_shops
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
@@ -696,6 +697,7 @@ ENDMAP
 
 # 1 (33%) or 4 (66%) shops
 NAME:    minmay_shop_grid_forest
+TAGS:    extra luniq_floating_shops
 DEPTH:   D:4-, Depths, Elf, Snake
 KFEAT:   A = any shop
 SHUFFLE: ABC
@@ -716,6 +718,7 @@ ENDMAP
 
 # 1 (25%), 2 (25%), or 3 (50%) shops
 NAME:    minmay_shop_star
+TAGS:    extra luniq_floating_shops
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -745,6 +748,7 @@ ENDMAP
 
 # 2 (50%) or 4 (50%) shops
 NAME:    minmay_shoptagon
+TAGS:    extra luniq_floating_shops
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop

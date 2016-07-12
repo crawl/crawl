@@ -2075,9 +2075,9 @@ ENDMAP
 # The Elephants' Graveyard (by Mu.)
 #
 NAME:   mu_elephants_graveyard
-ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror no_pool_fixup
-DEPTH:  Depths, Lair, !Lair:$
+DEPTH:  Depths, Lair:2-, !Lair:$
+ORIENT: float
   # we generate more dire elephants and deeper water at greater depths
 : if you.in_branch("Lair") then
 MONS:   elephant, dire elephant, spriggan
@@ -2130,26 +2130,27 @@ ENDMAP
 ##############################################################################
 
 NAME:    hangedman_screamer
-ORIENT:  float
 TAGS:    no_monster_gen
 DEPTH:   D:9-, Depths, Crypt
+ORIENT:  float
 MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / jiangshi / flayed ghost
-KMONS:   4 = Boris / lich / revenant
-KMONS:   5 = lich / revenant
+MONS:    lich / revenant
+KMONS:   5 = Boris / lich / revenant, lich / revenant
 : elseif you.absdepth() > 13 then
 MONS:    phantasmal warrior / skeletal warrior / eidolon
-KMONS:   4 = Frances / vampire mage / death knight
-KMONS:   5 = vampire mage / death knight
+MONS:    vampire mage / death knight
+KMONS:   5 = Frances / vampire mage / death knight, vampire mage / death knight
 : else
 MONS:    wight / wraith / shadow
-KMONS:   4 = Josephine / skeletal warrior / necromancer
-KMONS:   5 = skeletal warrior / necromancer
+MONS:    skeletal warrior / necromancer
+KMONS:   5 = Josephine / skeletal warrior / necromancer, \
+             skeletal warrior / necromancer
 : end
-SHUFFLE: Aa / Bb / Cc / Dd / Ee
-SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
+SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff
+SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, EeFf = x
 : if you.in_branch("Crypt") then
 SUBST:   x = c
 : end
@@ -2158,12 +2159,12 @@ MAP
    xx2233322xx
 xaaxx22x5x22xxccx
 xAAx.x2x+x2x.xCCx
-xAAxx.xx1xx.xxCCx
+xAAxx.xx*xx.xxCCx
 xAAxxx.x*x.xxxCCx
-x...............x
-x...............x
+x...1...1.......x
+x.......1...1...x
 xBBxxx.x*x.xxxDDx
-xBBxx.xx1xx.xxDDx
+xBBxx.xx*xx.xxDDx
 xBBx.x2x+x2x.xDDx
 xbbxx22x4x22xxddx
    xx2233322xx
