@@ -1826,8 +1826,9 @@ MARKER: * = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "black smoke" \
             }
 KMONS:  1 = fire elemental
-NSUBST: ; = 3:2 / *=.ll
+NSUBST: ; = 3:2 / *=l
 KMONS:  2 = molten gargoyle
+KFEAT:  2 = l
 KMONS:  e = earth elemental
 SUBST:  E = exxx....
 NSUBST: ' = 2:3 / 3:W / *:.
@@ -1868,14 +1869,14 @@ MAP
       ccE+'''cwcc
      ccEEc'''cwwcc
     ccEEEc'''cwwwcc
-   ccEEEEc'''cwwwwcc
+   ccEEEEc'<'cwwwwcc
   ccEEEEEc'''cwwwwwcc
  ccEEEEEEc''Wcwwwwwwcc
 ccEEEEEEEc'WW+wwwwwwwcc
 cEEEEEEEEcccccwwwwwwwwc
 ccccccc+ccB|Bcccccccc+c
 c;;;;;;;c$...$c"""""""c
-c;;;;;;;c$.Z.$c""?"?""c
+c;;;;;;;c$.Z.$c""?<?""c
 c;;;;;;;c$...$c"""""""c
 c+cccccccc...cc+ccccccc
 c........c+++c........c
