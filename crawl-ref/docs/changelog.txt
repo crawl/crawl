@@ -1,9 +1,10 @@
-Stone Soup 0.19 (up to 0.19-a0-810-ge4e7c75)
+Stone Soup 0.19 (up to 0.19-a0-975-gfff5315)
 --------------------------------------------
 
 Highlights
 ----------
 * New gods: Ukayaw the Reveler and Hepliaklqana the Forgotten.
+* TODO: decide what else qualifies before release!
 
 Branches, Environment
 ---------------------
@@ -21,6 +22,8 @@ Character
 * Monks can now choose a weapon to start with.
 * Satiated vampires can now berserk and transform; previously required Full.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
+* Sickness no longer has a chance of damaging stats.
+* Issuing orders to allies no longer makes noise.
 
 Gods
 ----
@@ -44,6 +47,12 @@ Gods
   - 4*: Idealise: heal your ancestor & temporarily increase their AC, damage
         and spellpower dramatically.
   - 5*: Transference drains enemies adjacent to the target.
+* Sif Muna changes:
+  - The 1* Channel Energy ability is replaced with Divine Energy, which allows
+    the player to cast with insufficient mp, causing temporary -Cast.
+  - At 3*, grants "Channel Magic", trading piety for a fast MP regen status.
+  - Book gifts now begin at 5*, instead of 6*.
+  - Sif grants piety for both learning magic and killing enemies.
 * Beogh's water-walking now always lasts until the player is on land.
 * Dithmenos's Shadow Step can no longer be used on allies or while immobile.
 * Nemelex Xobeh's abilities now use invocations, not evocations.
@@ -68,6 +77,10 @@ Items
   - The Staff of Olgreb now has a fixed +9 enchantment.
   - The Sword of Zonguldrok no longer creates hostile dead or curses itself.
   - The arbalest 'Damnation' doesn't provides resistances, and does more damage.
+  - The morningstar Eos takes Brilliance's halo, and no longer has -Tele.
+  - Fencer's Gloves no longer increase Sbl/Lbl skill or provide +EV/AC, but let
+    the player riposte with any weapon (details below).
+  - Wyrmbane now has rC+ instead of +Rage.
 * Evocations:
   - Wands of random effects can no longer produce digging or disintegration.
   - Boxes of beasts and sacks of spiders have a fixed chance of destruction
@@ -76,16 +89,20 @@ Items
   - Phials of floods impact damage significantly reduced.
   - Deck use no longer has a chance of drawing from the deck of oddities.
   - Identify scrolls can no longer be used on decks.
+* Players using long blades sometimes riposte when dodging attacks, launching
+  instant, automatic counterattacks.
 * Amulets of harm now increase damage dealt more than damage taken, and are no
   longer evil.
 * Elemental enhancers no longer penalise spells of the opposite element.
 * Jewellery acquirement creates twice as many randarts.
 * Rods are created through misc. acquirement instead of staff acquirement.
+* It's no longer possible to acquire ammunition.
 * Removed:
   - All decks, except for gifts from Nemelex Xobeh.
   - Alchemist, Banshee, Blade, Crusade, Dowsing, Exile, Feast, Focus,
     Fortitude, Hammer, Helix, Helm, Mercenary, Potion, Repulsiveness, Shadow,
     Solitude, Swap, Water, Venom, and Xom cards.
+  - Sword of the Doom Knight, Amulet of Cekugob, and "Brilliance".
   - Stones of tremors.
   - The evasion weapon ego.
   - Artefact blowguns.
@@ -101,18 +118,20 @@ Monsters
   - Donald can now cast Haste and Might.
   - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
   - Xtahua can now roar to cast Paralyse.
+  - Nergalle can no longer enter Death's Door.
   - Gloorx Vloq can no longer cast Black Mark.
   - Various uniques have had their genders changed.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
 * Necromancers gain Bind Soul, reviving slain monsters as spectral things.
 * Obsidian statues can Mesmerise.
-* Wizards and Ogre Mages have split up and re-arranged  their many spell sets
+* Wizards and Ogre Mages have split up and re-arranged their many spell sets
   to arrive at three sets each, with minimal overlap.
 * Spriggan air mages can no longer cast Control Winds.
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
 * Death scarabs no longer trail miasma, but are somewhat tougher.
 * Decayed bog bodies have become bog mummies, which are somewhat weaker.
+* Friendly monsters will no longer open doors.
 * Removed monsters:
   - Salamander stormcallers.
   - Norris.
