@@ -138,10 +138,9 @@ static int _pacifiable_hp(const monster &mon, int healing)
     const int base_hp = you.skill(SK_INVOCATIONS, healing) + healing;
     const int hp = heal_mult * base_hp / heal_div;
 
-    dprf("pacifying %s? mon hp: %d, factor: %d, Inv: %d, healed: %d, "
-         "pacify hp pre-roll %d",
-         mon.name(DESC_PLAIN).c_str(), mon.max_hit_points, heal_mult,
-         you.skill(SK_INVOCATIONS), healing, hp);
+    dprf("pacifying %s? factor: %d, Inv: %d, healed: %d, pacify hp pre-roll %d",
+         mon.name(DESC_PLAIN).c_str(), heal_mult, you.skill(SK_INVOCATIONS),
+         healing, hp);
 
     return hp;
 }
@@ -176,13 +175,14 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     if (_pacifiable_hp(mon, max_healed) < mon_hp)
     {
         // monster mhp too high to ever be pacified with your invo skill.
+        dprf("mon hp %d", mon_hp);
         mprf("%s is completely unfazed by your meager offer of peace.",
              mon.name(DESC_THE).c_str());
         return SPRET_SUCCESS;
     }
 
     const int pacified_hp = random2(_pacifiable_hp(mon, healed));
-    dprf("pacified hp: %d", pacified_hp);
+    dprf("pacified hp: %d, mon hp %d", pacified_hp, mon_hp);
     if (pacified_hp * 23 / 20 < mon_hp)
     {
         // not even close.
