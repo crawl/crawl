@@ -1840,6 +1840,7 @@ NSUBST: " = 3:5 / *:.
 KMONS:  5 = wind drake
 KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
+KFEAT:  Z = <
 #
 : if you.in_branch("elf") then
 KMONS:  Z = deep elf elementalist ; \
@@ -1876,7 +1877,7 @@ ccEEEEEEEc'WW+wwwwwwwcc
 cEEEEEEEEcccccwwwwwwwwc
 ccccccc+ccB|Bcccccccc+c
 c;;;;;;;c$...$c"""""""c
-c;;;;;;;c$.Z.$c""?<?""c
+c;;;;;;;c$.Z.$c""?"?""c
 c;;;;;;;c$...$c"""""""c
 c+cccccccc...cc+ccccccc
 c........c+++c........c
