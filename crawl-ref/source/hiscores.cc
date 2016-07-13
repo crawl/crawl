@@ -1332,7 +1332,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         death_source_name = mons->name(desc, death);
 
         if (death || you.can_see(*mons))
-            death_source_name = mons->full_name(desc, true);
+            death_source_name = mons->full_name(desc);
 
         if (mons_is_player_shadow(mons))
             death_source_name = "their own shadow"; // heh

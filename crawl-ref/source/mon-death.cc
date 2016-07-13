@@ -1458,13 +1458,13 @@ static string _killer_type_name(killer_type killer)
 }
 
 /**
- * Make a spectral thing out of a dying/dead monster.
+ * Make a spectral thing or simulacrum out of a dying/dead monster.
  *
  * @param mons       the monster that died
  * @param quiet      whether to print flavour messages
- * @param bound_soul whether the thing is from Bind Souls (true) or DChan
+ * @param bound_soul whether the undead is from Bind Souls (true) or DChan
  */
-static void _make_spectral_thing(monster* mons, bool quiet, bool bound_soul)
+static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
     if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
@@ -1476,8 +1476,10 @@ static void _make_spectral_thing(monster* mons, bool quiet, bool bound_soul)
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
-        mgen_data mg(MONS_SPECTRAL_THING,
+        mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
                      bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
+                     // Simulacra aren't summons, and we want them to stick
+                     // around even after killing the necromancer.
                      bound_soul ? nullptr : &you,
                      0,
                      bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
@@ -1487,36 +1489,51 @@ static void _make_spectral_thing(monster* mons, bool quiet, bool bound_soul)
                      mons->type);
         if (mons->mons_species() == MONS_HYDRA)
         {
-            // Headless hydras cannot be made spectral hydras, sorry.
+            // No undead 0-headed hydras, sorry.
             if (mons->heads() == 0)
             {
                 if (!quiet)
-                    mpr("A glowing mist gathers momentarily, then fades.");
+                {
+                    mprf("A %s mist gathers momentarily, then fades.",
+                         bound_soul ? "freezing" : "glowing");
+                }
                 return;
             }
             else
                 mg.props[MGEN_NUM_HEADS] = mons->heads();
         }
 
-        if (monster *spectre = create_monster(mg))
+        if (monster *undead = create_monster(mg))
         {
             if (!quiet)
-                mpr("A glowing mist starts to gather...");
+            {
+                mprf("A %s mist starts to gather...",
+                     bound_soul ? "freezing" : "glowing");
+            }
 
             // If the original monster has been levelled up, its HD might be
             // different from its class HD, in which case its HP should be
             // rerolled to match.
-            if (spectre->get_experience_level() != mons->get_experience_level())
+            if (undead->get_experience_level() != mons->get_experience_level())
             {
-                spectre->set_hit_dice(max(mons->get_experience_level(), 1));
-                roll_zombie_hp(spectre);
+                undead->set_hit_dice(max(mons->get_experience_level(), 1));
+                roll_zombie_hp(undead);
             }
 
-            name_zombie(spectre, mons);
+            name_zombie(undead, mons);
 
-            spectre->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            if (bound_soul)
+            {
+                const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
+                if (agent)
+                {
+                    mons_add_blame(undead,
+                        "animated by " + agent->as_monster()->full_name(DESC_A));
+                }
+            }
             if (shapeshift)
-                spectre->add_ench(shapeshift);
+                undead->add_ench(shapeshift);
         }
     }
 }
@@ -2598,9 +2615,9 @@ item_def* monster_die(monster* mons, killer_type killer,
             corpse = daddy_corpse;
     }
     if (corpse && mons->has_ench(ENCH_BOUND_SOUL))
-        _make_spectral_thing(mons, !death_message, true);
+        _make_derived_undead(mons, !death_message, true);
     if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
-        _make_spectral_thing(mons, !death_message, false);
+        _make_derived_undead(mons, !death_message, false);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(mons) : 0;

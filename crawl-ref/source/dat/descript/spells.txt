@@ -105,7 +105,7 @@ increases health, speed, and damage dealt in melee.
 Bind Souls spell
 
 Bestows an enchantment on other nearby living creatures that may cause them to
-rise as spectral things after being slain.
+rise as simulacra after being slain.
 %%%%
 Black Mark spell
 

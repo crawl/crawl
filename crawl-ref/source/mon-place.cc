@@ -1729,7 +1729,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             const monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
-                                 + sum->full_name(DESC_A, true)));
+                                 + sum->full_name(DESC_A)));
             if (sum->props.exists("blame"))
             {
                 const CrawlVector& oldblame = sum->props["blame"].get_vector();

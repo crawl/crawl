@@ -1126,7 +1126,7 @@ void arena_placed_monster(monster* mons)
 
 #ifdef ARENA_VERBOSE
     mprf("%s %s!",
-         mons->full_name(DESC_A, true).c_str(),
+         mons->full_name(DESC_A).c_str(),
          arena::is_respawning                ? "respawns" :
          (summoned && ! arena::real_summons) ? "is summoned"
                                              : "enters the arena");

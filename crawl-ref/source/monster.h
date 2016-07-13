@@ -314,7 +314,7 @@ public:
                      bool force_visible = false) const;
     // Full name of the monster. For an orc priest named Arbolt, full_name()
     // will return "Arbolt the orc priest".
-    string full_name(description_level_type type, bool use_comma = false) const;
+    string full_name(description_level_type type) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const override;
     string conj_verb(const string &verb) const override;
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
