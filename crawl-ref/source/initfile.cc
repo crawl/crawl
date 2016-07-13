@@ -1693,12 +1693,9 @@ void write_newgame_options_file(const newgame_def& prefs)
 void save_player_name()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
-    if (!Options.remember_name)
-        return ;
-
     // Read other preferences
     newgame_def prefs = read_startup_prefs();
-    prefs.name = you.your_name;
+    prefs.name = Options.remember_name ? you.your_name : "";
 
     // And save
     write_newgame_options_file(prefs);
