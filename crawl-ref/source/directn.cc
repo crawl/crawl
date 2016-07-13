@@ -2397,7 +2397,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         if (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY)
             return true;
         return !mon->wont_attack() && !mon->neutral()
-            && is_pacifiable(mon) >= 0;
+            && unpacifiable_reason(*mon).empty();
     case TARG_EVOLVABLE_PLANTS:
         return mons_is_evolvable(mon);
     case TARG_BEOGH_GIFTABLE:

@@ -30,6 +30,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "traps.h"
@@ -37,7 +38,7 @@
 #include "viewchar.h"
 
 static void _print_holy_pacification_speech(const string &key,
-                                            monster* mon,
+                                            const monster &mon,
                                             msg_channel_type channel)
 {
     string full_key = "holy_being_pacification";
@@ -47,7 +48,7 @@ static void _print_holy_pacification_speech(const string &key,
 
     if (!msg.empty())
     {
-        msg = do_mon_str_replacements(msg, mon);
+        msg = do_mon_str_replacements(msg, &mon);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
@@ -59,94 +60,173 @@ static bool _mons_hostile(const monster* mon)
     return !mon->wont_attack() && !mon->neutral();
 }
 
-// Check whether it is possible at all to pacify this monster.
-// Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep).
-// Returns 0, if it's possible to pacify this monster.
-int is_pacifiable(const monster* mon)
+/**
+ * Is it possible for the player to pacify this monster, independent of their
+ * total 'heal power'? If not, why not?
+ *
+ * @param mon   The monster to be checked for pacifiability.
+ * @return      A description of why the monster can't be pacified, if it can't;
+ *              e.g. "You cannot pacify this monster while she is sleeping!"
+ *              If the monster *can* be pacified, returns the empty string.
+ */
+string unpacifiable_reason(const monster &mon)
 {
-    if (!you_worship(GOD_ELYVILON))
-        return -1;
+    // XXX: be more specific?
+    const string generic_reason = "You cannot pacify this monster!";
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
-        || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
+    if (mons_intel(&mon) <= I_BRAINLESS // no self-awareness
+        || mons_is_tentacle_or_tentacle_segment(mon.type)) // body part
     {
-        return -1;
+        return generic_reason;
     }
 
-    const mon_holy_type holiness = mon->holiness();
+    const mon_holy_type holiness = mon.holiness();
 
     if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-        return -1;
+        return generic_reason;
 
-    if (mon->is_stationary()) // not able to leave the level
-        return -1;
+    if (mon.is_stationary()) // not able to leave the level
+        return generic_reason;
 
-    if (mon->asleep()) // not aware of what is happening
-        return -2;
-
-    return 0;
-}
-
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
-// Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep).
-// Returns -3, if monster can be pacified but the attempt narrowly failed.
-// Returns -4, if monster can currently not be pacified (too much hp).
-static int _can_pacify_monster(const monster* mon, const int healed,
-                               const int max_healed)
-{
-    int pacifiable = is_pacifiable(mon);
-    if (pacifiable < 0)
-        return pacifiable;
-
-    if (healed < 1)
-        return 0;
-
-    const int factor = (mons_intel(mon) < I_HUMAN) ? 3  // animals
-                                                   : 1; // other
-
-    int divisor = 3;
-
-    const mon_holy_type holiness = mon->holiness();
-    if (mon->is_holy())
-        divisor--;
-    else if (holiness & MH_UNDEAD)
-        divisor++;
-    else if (holiness & MH_DEMONIC)
-        divisor += 2;
-
-    if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
-                                         + max_healed) / divisor))
+    if (mon.asleep()) // not aware of what is happening
     {
-        return -4;
+        return make_stringf("You cannot pacify this monster while %s is "
+                            "sleeping!",
+                            mon.pronoun(PRONOUN_SUBJECTIVE).c_str());
     }
 
-    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
-                                / divisor);
-
-    dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
-         mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skill(SK_INVOCATIONS), healed, random_factor);
-
-    if (mon->max_hit_points < factor * random_factor)
-        return 1;
-    if (mon->max_hit_points < factor * random_factor * 1.15)
-        return -3;
-
-    return 0;
+    // pacifiable, maybe!
+    return "";
 }
 
-static vector<string> _desc_mindless(const monster_info& mi)
+/**
+ * By what factor should a monster of the given holiness have healing divided,
+ * when calculating its vulnerability to Elyvilon's pacification?
+ * A larger divisor means the monster is less vulnerable.
+ *
+ * @param holiness  The holiness of the mon to be pacified; e.g. MH_UNDEAD.
+ * @return          A value to divide the healing the player does against the
+ *                  monster by; e.g. 3.
+ */
+static int _pacification_heal_div(mon_holy_type holiness)
 {
-    if (mi.intel() <= I_BRAINLESS)
-        return { "mindless" };
+    if (holiness & MH_HOLY)
+        return 2;
+    if (holiness & MH_UNDEAD)
+        return 4;
+    if (holiness & MH_DEMONIC)
+        return 5;
+    return 3;
+}
+
+/**
+ * What's the highest MHP version of the given monster that the player can
+ * potentially pacify, with the given 'healing' roll?
+ *
+ * @param mon       The monster in question.
+ * @param healing   The player's 'healing' roll.
+ * @return          How much HP the player can pacify in the best case.
+ */
+static int _pacifiable_hp(const monster &mon, int healing)
+{
+    const int heal_mult = (mons_intel(&mon) < I_HUMAN) ? 3  // animals
+                                                      : 1; // other
+    const int heal_div = _pacification_heal_div(mon.holiness());
+    // ignoring monster holiness & int
+    const int base_hp = you.skill(SK_INVOCATIONS, healing) + healing;
+    const int hp = heal_mult * base_hp / heal_div;
+
+    dprf("pacifying %s? mon hp: %d, factor: %d, Inv: %d, healed: %d, "
+         "pacify hp pre-roll %d",
+         mon.name(DESC_PLAIN).c_str(), mon.max_hit_points, heal_mult,
+         you.skill(SK_INVOCATIONS), healing, hp);
+
+    return hp;
+}
+
+/**
+ * Try to pacify the given monster. Aborts if that's clearly impossible.
+ *
+ * @param mon           The monster to be pacified, potentially.
+ * @param healed        The amount of healing the pacification attempt uses.
+ * @param max_healed    The most healing the player could have rolled.
+ * @param fail          Whether the healing invocation has failed (and will
+ *                      return SPRET_FAILED after targeting checks finish).
+ * @return              Whether the pacification effect was aborted
+ *                      (SPRET_ABORT) or the invocation failed (SPRET_FAIL);
+ *                      returns SPRET_SUCCESS otherwise, regardless of whether
+ *                      the target was actually pacified.
+ */
+static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
+                                 bool fail)
+{
+    const string illegal_reason = unpacifiable_reason(mon);
+    if (!illegal_reason.empty())
+    {
+        mpr(illegal_reason);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const int mon_hp = mon.max_hit_points;
+
+    if (_pacifiable_hp(mon, max_healed) < mon_hp)
+    {
+        // monster mhp too high to ever be pacified with your invo skill.
+        mprf("%s is completely unfazed by your meager offer of peace.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    const int pacified_hp = random2(_pacifiable_hp(mon, healed));
+    dprf("pacified hp: %d", pacified_hp);
+    if (pacified_hp * 23 / 20 < mon_hp)
+    {
+        // not even close.
+        mprf("The light of Elyvilon fails to reach %s.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    if (pacified_hp < mon_hp)
+    {
+        // closer! ...but not quite.
+        mprf("The light of Elyvilon almost touches upon %s.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    // we did it!
+    // let the player know.
+    if (mon.is_holy())
+    {
+        string key;
+
+        // Quadrupeds can't salute, etc.
+        if (mon_shape_is_humanoid(get_mon_shape(&mon)))
+            key = "_humanoid";
+
+        _print_holy_pacification_speech(key, mon,
+                                        MSGCH_FRIEND_ENCHANT);
+
+        if (!one_chance_in(3)
+            && mon.can_speak()
+            && mon.type != MONS_MENNAS) // Mennas is mute and only has visual speech
+        {
+            _print_holy_pacification_speech("_speech", mon, MSGCH_TALK);
+        }
+    }
     else
-        return {};
+        simple_monster_message(&mon, " turns neutral.");
+
+    record_monster_defeat(&mon, KILL_PACIFIED);
+    mons_pacify(&mon, ATT_NEUTRAL);
+
+    heal_monster(mon, healed);
+    return SPRET_SUCCESS;
 }
 
 /**
@@ -170,6 +250,15 @@ bool heal_monster(monster& patient, int amount)
         print_wounds(&patient);
 
     return true;
+}
+
+
+static vector<string> _desc_mindless(const monster_info& mi)
+{
+    if (mi.intel() <= I_BRAINLESS)
+        return { "mindless" };
+    else
+        return {};
 }
 
 spret_type cast_healing(int pow, int max_pow, bool fail)
@@ -206,83 +295,13 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
         return SPRET_SUCCESS;
     }
 
-    bool did_something = false;
-
     if (_mons_hostile(mons))
-    {
-        const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-        if (can_pacify == -1)
-        {
-            mpr("You cannot pacify this monster!");
-            return SPRET_ABORT;
-        }
-        if (can_pacify == -2)
-        {
-            mprf("You cannot pacify this monster while %s is sleeping!",
-                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-            return SPRET_ABORT;
-        }
-        fail_check();
-
-        switch (can_pacify)
-        {
-        case 0:
-            mprf("The light of Elyvilon fails to reach %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case -3:
-            mprf("The light of Elyvilon almost touches upon %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case -4:
-            mprf("%s is completely unfazed by your meager offer of peace.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case 1:
-            did_something = true;
-
-            if (mons->is_holy())
-            {
-                string key;
-
-                // Quadrupeds can't salute, etc.
-                if (mon_shape_is_humanoid(get_mon_shape(mons)))
-                    key = "_humanoid";
-
-                _print_holy_pacification_speech(key, mons,
-                                                MSGCH_FRIEND_ENCHANT);
-
-                if (!one_chance_in(3)
-                    && mons->can_speak()
-                    && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
-                {
-                    _print_holy_pacification_speech("_speech", mons, MSGCH_TALK);
-                }
-            }
-            else
-                simple_monster_message(mons, " turns neutral.");
-
-            record_monster_defeat(mons, KILL_PACIFIED);
-            mons_pacify(mons, ATT_NEUTRAL);
-            break;
-
-        default:
-            die("bad _can_pacify_monster return type %d", can_pacify);
-        }
-    }
+        return _try_to_pacify(*mons, healed, max_healed, fail);
 
     fail_check();
-    if (heal_monster(*mons, healed))
-        did_something = true;
 
-    if (!did_something)
-    {
+    if (!heal_monster(*mons, healed))
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_SUCCESS;
-    }
 
     return SPRET_SUCCESS;
 }
