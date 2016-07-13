@@ -1684,52 +1684,52 @@ EttxxxxxttttttttttttttttE
 EEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
 
-## A hidden river runs under a mountain, feeding into an enchanted lake.
+# A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
-TAGS:   no_pool_fixup no_rotate patrolling
-DEPTH:  Lair:3-, !Lair:$
+TAGS:   no_pool_fixup
+DEPTH:  Lair:2-, !Lair:$
 ORIENT: north
-KMONS:  p = plant / bush / fungus
-KMONS:  P = plant / fungus
-KMONS:  1 = electric eel
+KMONS:  p = plant / fungus / toadstool
+KMONS:  q = plant / fungus / toadstool
+KMONS:  1 = electric eel / rime drake / elephant / griffon
 KMONS:  2 = lindwurm / dire elephant / catoblepas
-KFEAT:  P = W
+KFEAT:  q = W
 KFEAT:  1 = w
-NSUBST: 0 = 2:9 / *:0
-SUBST:  1 = 1:20 w:30, * = *:30 ||:20
-SUBST:  p = p:30 ., P = P:30 W, R = tx, E = tE
+SUBST:  p = p., q = qW, r = tx, E = tE, * = *|, 1 = 11www
+NSUBST: . = 2:9 / 3:0 / .
 CLEAR:  E
 KMASK:  Ww = no_monster_gen
-FTILE:  _|*2 = floor_pebble_brown
+COLOUR: -|*2 = brown
+FTILE:  -|*2> = floor_pebble_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
-Etc*_WWWWWw1xxwWW1xxx1w1ctE
-Etc*2_WWxWWxxwWWwWWxxwwwctE
-Etc*2_wxxWWxWWWxxwwWWwWWctE
-Etc*_wwxxxWWW1xxxx1wWWWWctE
-Etcccccccccccccccccccc.PxtE
-EtxxxxxxxxxxxxxxxxxxxxxWxtE
-EttttxRRRRRRRRRRRRRRtt>WttE
-Ettttt.PWPWWttPWtwwwPWWwttE
-Ettt...PWwwwWwWwWwwwWwwwttE
-Ettp..PWwwwPwWwwwWWWwwwtttE
-Ettp..WwwwwttwwtttPPtttttE
-Ettp..WwwwwttttttttttttttE
-Ettp..PWwwwwWPPPttttttttE
-Ett.....WwwwwPP...ttttttE
-Ettt.....PWwwwWP....ttttE
-Ettt..0....WwwWW....tttttE
-Etttp.....WWwwWW..0..ptttE
+Etc*-WWWWWw1xxwWW1xxxww1ctE
+Etc*2-WWxWWxxwWWwWWxxwwwctE
+Etc*2-wxxWWxWWWxxwwWWwWWctE
+Etc*-wwxxxWWW1xxxx1wWWWwctE
+EtccccccccccccccccccccWqxtE
+Etxxxxxxxxxxxxxxxxxxxxx>xtE
+EttttxrrrrrrrrrrrrrrttWWttE
+Ettttt.qWWwWttqWtwwwqWWwttE
+Ettt...qWwWwWwWwWwwwWwwwttE
+Ettp..WWwwwqqWwqqWWWqqqtttE
+Ettp..WqwwwttqqtttqqtttttE
+Ettp..WqwwwttttttttttttttE
+Ettp...WwwwwWqqqttttttttE
+Ett.....Wwwwwqq..pttttttE
+Etttp....qWwwwWq..ppttttE
+Etttp......WwwWW...ptttttE
+Etttp.....WWwwWW....pptttE
 Ettttp...WWWwwwWW....ptttE
-Etttt....WWwwwwWW..0..pttE
-Ettttt.0.WWwwwwWW....ptttE
- Ettttp...WWwwWWW..0.ptttE
-  Etttt...WWWWWW....ttttE
-  Ettttt...WWWW....pttttE
+Ettttp...WWwwwwWW.....pttE
+Ettttt...WWwwwwWW....ptttE
+ Ettttp...WWwwWWW...pptttE
+  Ettttp..WWWWWW...pttttE
+  Etttttp..WWWW....pttttE
    Ettttp.........ptttEE
     Etttt........tttttE
-     EEEE...@@...EEEEE
+     EEEE..@@@@..EEEEE
 ENDMAP
 
 ####
