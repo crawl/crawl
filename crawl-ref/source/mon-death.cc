@@ -1468,12 +1468,6 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
     if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
-        enchant_type shapeshift = ENCH_NONE;
-        if (mons->has_ench(ENCH_SHAPESHIFTER))
-            shapeshift = ENCH_SHAPESHIFTER;
-        else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-            shapeshift = ENCH_GLOWING_SHAPESHIFTER;
-
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
         mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
@@ -1532,8 +1526,6 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                         "animated by " + agent->as_monster()->full_name(DESC_A));
                 }
             }
-            if (shapeshift)
-                undead->add_ench(shapeshift);
         }
     }
 }
