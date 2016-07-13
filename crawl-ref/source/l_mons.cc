@@ -64,7 +64,7 @@ MDEF(base_name)
 
 MDEF(full_name)
 {
-    PLUARET(string, mons->full_name(DESC_PLAIN, true).c_str());
+    PLUARET(string, mons->full_name(DESC_PLAIN).c_str());
 }
 
 MDEF(db_name)
@@ -140,7 +140,7 @@ MDEFN(add_energy, add_energy)
     MDEFN(name, name##_fn)                        \
 
 LUANAMEFN(mname, mons->name(dtype, true))
-LUANAMEFN(mfull_name, mons->full_name(dtype, true))
+LUANAMEFN(mfull_name, mons->full_name(dtype))
 LUANAMEFN(mbase_name, mons->base_name(dtype, true))
 
 MDEF(hd)

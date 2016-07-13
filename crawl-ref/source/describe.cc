@@ -3431,7 +3431,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (inf.title.empty())
         inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
     if (inf.title.empty())
-        inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
+        inf.title = uppercase_first(mi.full_name(DESC_A)) + ".";
 
     string db_name;
 
@@ -3440,7 +3440,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     else if (mi.mname.empty())
         db_name = mi.db_name();
     else
-        db_name = mi.full_name(DESC_PLAIN, true);
+        db_name = mi.full_name(DESC_PLAIN);
 
     if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
         db_name += " " + _serpent_of_hell_flavour(mi.type);

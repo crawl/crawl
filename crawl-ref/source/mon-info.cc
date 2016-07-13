@@ -1048,14 +1048,14 @@ string monster_info::proper_name(description_level_type desc) const
         return common_name(desc);
 }
 
-string monster_info::full_name(description_level_type desc, bool use_comma) const
+string monster_info::full_name(description_level_type desc) const
 {
     if (desc == DESC_NONE)
         return "";
 
     if (has_proper_name())
     {
-        string s = mname + (use_comma ? ", the " : " the ") + common_name();
+        string s = mname + " the " + common_name();
         if (desc == DESC_ITS)
             s = apostrophise(s);
         return s;

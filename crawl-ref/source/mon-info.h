@@ -289,7 +289,7 @@ struct monster_info : public monster_info_base
     string pluralised_name(bool fullname = true) const;
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
-    string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
+    string full_name(description_level_type desc = DESC_PLAIN) const;
 
     vector<string> attributes() const;
 

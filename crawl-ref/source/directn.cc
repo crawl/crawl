@@ -2149,7 +2149,7 @@ string get_terse_square_desc(const coord_def &gc)
             desc = unseen_desc;
     }
     else if (monster_at(gc) && you.can_see(*monster_at(gc)))
-            desc = monster_at(gc)->full_name(DESC_PLAIN, true);
+            desc = monster_at(gc)->full_name(DESC_PLAIN);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
         if (mitm[you.visible_igrd(gc)].defined())

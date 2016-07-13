@@ -3779,7 +3779,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BIND_SOULS, "Bind Souls",
-    SPTYP_NECROMANCY,
+    SPTYP_NECROMANCY | SPTYP_ICE,
     SPFLAG_AREA | SPFLAG_MONSTER,
     6,
     200,

@@ -2393,7 +2393,7 @@ string monster::base_name(description_level_type desc, bool force_vis) const
     return mi.common_name(desc);
 }
 
-string monster::full_name(description_level_type desc, bool use_comma) const
+string monster::full_name(description_level_type desc) const
 {
     string s = _mon_special_name(*this, desc, true);
     if (!s.empty() || desc == DESC_NONE)
