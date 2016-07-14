@@ -536,7 +536,7 @@ static int _issue_orders_prompt()
 
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
         mpr("                   r - Retreat!             s - Stop attacking.");
-        mpr("                   w - Wait here.           f - Follow me.");
+        mpr("                   g - Guard the area.      f - Follow me.");
     }
     mpr(" Anything else - Cancel.");
 
@@ -581,7 +581,8 @@ static bool _issue_order(int keyn, int &mons_targd)
             break;
 
         case 'w':
-            mpr("Wait here!");
+        case 'g'
+            mpr("Guard this area!");
             mons_targd = MHITNOT;
             _set_allies_patrol_point();
             break;
