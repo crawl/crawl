@@ -3409,7 +3409,7 @@ static string _monster_stat_description(const monster_info& mi)
     return result.str();
 }
 
-static string _serpent_of_hell_flavour(monster_type m)
+string serpent_of_hell_flavour(monster_type m)
 {
     switch (m)
     {
@@ -3443,7 +3443,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         db_name = mi.full_name(DESC_PLAIN);
 
     if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
-        db_name += " " + _serpent_of_hell_flavour(mi.type);
+        db_name += " " + serpent_of_hell_flavour(mi.type);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
