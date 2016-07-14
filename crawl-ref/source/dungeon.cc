@@ -101,8 +101,8 @@ static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
 
-static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
-                              int clump_radius = 4);
+static void _add_plant_clumps(int rarity, int clump_sparseness,
+                              int clump_radius);
 
 static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
@@ -5757,9 +5757,16 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     env.trap[where] = t;
 }
 
-static void _add_plant_clumps(int frequency /* = 10 */,
-                              int clump_density /* = 12 */,
-                              int clump_radius /* = 4 */)
+/**
+ * Sprinkle plants around the level.
+ *
+ * @param rarity            1/chance of placing clumps in any given place.
+ * @param clump_density     1/chance of placing more plants within a clump.
+ * @param clump_raidus      Radius of plant clumps.
+ */
+static void _add_plant_clumps(int rarity,
+                              int clump_sparseness,
+                              int clump_radius)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -5772,7 +5779,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             if ((type == MONS_PLANT
                      || type == MONS_FUNGUS
                      || type == MONS_BUSH)
-                 && one_chance_in(frequency))
+                 && one_chance_in(rarity))
             {
                 mg.cls = type;
             }
@@ -5800,7 +5807,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                     // only place plants next to previously placed plants
                     if (abs(rad->x - c.x) <= 1 && abs(rad->y - c.y) <= 1)
                     {
-                        if (one_chance_in(clump_density))
+                        if (one_chance_in(clump_sparseness))
                             more_to_place.push_back(*rad);
                     }
                 }
