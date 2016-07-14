@@ -938,6 +938,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (one_chance_in(4))
             break;
 
+        {
+        // keep this for messaging purposes
+        const bool triggerer_seen = you.can_see(triggerer);
+
         // Fire away!
         triggerer.do_shaft();
 
@@ -947,10 +951,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             if (in_sight)
             {
-                mpr("The shaft crumbles and collapses.");
+                mprf("%s shaft crumbles and collapses.",
+                     triggerer_seen ? "The" : "A");
                 know_trap_destroyed = true;
             }
             trap_destroyed = true;
+        }
         }
         break;
 
