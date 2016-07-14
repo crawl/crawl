@@ -700,24 +700,15 @@ bool mons_gives_xp(const monster* victim, const actor* agent)
 {
     ASSERT(victim && agent);
 
-    // Either the player killed a monster that's no reward (created friendly or
-    // the Royal Jelly spawns), or a monster killed an aligned monster, or a
-    // friendly monster killed a no-reward monster.
-    bool killed_friend;
-    if (agent->is_player())
-        killed_friend = testbits(victim->flags, MF_NO_REWARD);
-    else
-    {
-        killed_friend = mons_aligned(victim, agent)
-            || testbits(victim->flags, MF_NO_REWARD)
-            && mons_aligned(&you, agent);
-    }
+    const bool mon_killed_friend
+        = agent->is_monster() && mons_aligned(victim, agent);
     return !victim->is_summoned()                   // no summons
         && !victim->has_ench(ENCH_ABJ)              // not-really-summons
         && !victim->has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
         && mons_class_gives_xp(victim->type)        // class must reward xp
         && !testbits(victim->flags, MF_WAS_NEUTRAL) // no neutral monsters
-        && !killed_friend;
+        && !testbits(victim->flags, MF_NO_REWARD)   // no reward for no_reward
+        && !mon_killed_friend;
 }
 
 bool mons_class_is_threatening(monster_type mo)
