@@ -2208,7 +2208,7 @@ static void _post_vault_build()
                     20 - depth, depth / 2 + 4, 1 + (depth / 3));
         do
         {
-            _add_plant_clumps(3, 10, 6);
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
             depth -= 3;
         } while (depth > 0);
     }
@@ -5824,11 +5824,6 @@ static void _add_plant_clumps(int rarity,
                 continue;
             mg.pos = c;
             mons_place(mgen_data(mg));
-            if (grd(c) != DNGN_FLOOR)
-            {
-                dprf("placing %s on %s", mons_type_name(mg.cls, DESC_A).c_str(),
-                     feature_description_at(c, false).c_str());
-            }
         }
     }
 }
