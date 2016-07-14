@@ -581,7 +581,7 @@ static bool _issue_order(int keyn, int &mons_targd)
             break;
 
         case 'w':
-        case 'g'
+        case 'g':
             mpr("Guard this area!");
             mons_targd = MHITNOT;
             _set_allies_patrol_point();
