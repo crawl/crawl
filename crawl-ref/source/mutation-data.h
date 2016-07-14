@@ -1156,9 +1156,9 @@ static const mutation_def mut_data[] =
 { MUT_EYEBALLS, 0, 3, mutflag::GOOD | mutflag::JIYVA, true,
   "eyeballs",
 
-  {"Your body is partially covered in golden eyeballs. (Acc +3)",
-   "Your body is mostly covered in golden eyeballs. (Acc +5)",
-   "Your body is completely covered in golden eyeballs. (Acc +7, SInv)"},
+  {"Your body is partially covered in golden eyeballs. (Acc +3, Confuse)",
+   "Your body is mostly covered in golden eyeballs. (Acc +5, Confuse)",
+   "Your body is completely covered in golden eyeballs. (Acc +7, Confuse, SInv)"},
 
   {"Eyeballs grow over part of your body.",
    "Eyeballs cover a large portion of your body.",
