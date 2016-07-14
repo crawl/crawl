@@ -16,6 +16,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dungeon.h"
+#include "english.h"
 #include "godconduct.h"
 #include "godpassive.h"
 #include "libutil.h" // testbits
@@ -1241,13 +1242,17 @@ int actor_apply_cloud(actor *act)
 
     if (final_damage)
     {
-        dprf("%s %s %d damage from cloud: %s.",
+        actor *oppressor = cloud.agent();
+        const string oppr_name =
+            oppressor ? " "+apostrophise(oppressor->name(DESC_THE))
+                      : "";
+        dprf("%s %s %d damage from%s cloud: %s.",
              act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
+             oppr_name.c_str(),
              cloud.cloud_name().c_str());
 
-        actor *oppressor = cloud.agent();
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
                   KILLED_BY_CLOUD, "", cloud.cloud_name(true));
     }
