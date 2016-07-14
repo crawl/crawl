@@ -150,6 +150,38 @@ private:
 
 
 
+/**
+ * What monster enum corresponds to the given Serpent of Hell name?
+ *
+ * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
+ * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
+ */
+static monster_type _soh_type(string soh_name)
+{
+    // trying to minimize code duplication...
+    static const vector<monster_type> soh_types = {
+        MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL_DIS,
+        MONS_SERPENT_OF_HELL_COCYTUS, MONS_SERPENT_OF_HELL_TARTARUS,
+    };
+
+    // grab 'cocytus' etc
+    const string flavour_name
+        = soh_name.substr(lowercase(soh_name).find("hell") + 5);
+    for (monster_type mtype : soh_types)
+        if (serpent_of_hell_flavour(mtype) == flavour_name)
+            return mtype;
+    return MONS_PROGRAM_BUG;
+}
+
+const bool _is_soh(string name)
+{
+    return starts_with(lowercase(name), "the serpent of hell");
+}
+
+static monster_type _mon_by_name(string name)
+{
+    return _is_soh(name) ? _soh_type(name) : get_monster_by_name(name);
+}
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
@@ -362,7 +394,7 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key);
+    const monster_type mon_num = _mon_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
@@ -429,7 +461,7 @@ static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
-        if (!starts_with(keys[i], "the Serpent of Hell"))
+        if (!_is_soh(keys[i]))
         {
             monster_type type = get_monster_by_name(keys[i]);
             keys[i] = mons_type_name(type, DESC_PLAIN);
@@ -593,28 +625,6 @@ static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
 }
 
 /**
- * What monster enum corresponds to the given Serpent of Hell name?
- *
- * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
- * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
- */
-static monster_type _soh_type(string soh_name)
-{
-    // trying to minimize code duplication...
-    static const vector<monster_type> soh_types = {
-        MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL_DIS,
-        MONS_SERPENT_OF_HELL_COCYTUS, MONS_SERPENT_OF_HELL_TARTARUS,
-    };
-
-    // grab 'cocytus' etc
-    const string flavour_name = soh_name.substr(soh_name.find("Hell") + 5);
-    for (monster_type mtype : soh_types)
-        if (serpent_of_hell_flavour(mtype) == flavour_name)
-            return mtype;
-    return MONS_PROGRAM_BUG;
-}
-
-/**
  * Generate a ?/M entry.
  *
  * @param letter      The letter for the entry. (E.g. 'e' for the fifth entry.)
@@ -625,11 +635,10 @@ static monster_type _soh_type(string soh_name)
 static MenuEntry* _monster_menu_gen(char letter, const string &str,
                                     monster_info &mslot)
 {
-    const bool is_soh = starts_with(str, "The Serpent of Hell");
     // Create and store fake monsters, so the menu code will
     // have something valid to refer to.
-    monster_type m_type = is_soh ? _soh_type(str) : get_monster_by_name(str);
-    const string name = is_soh ? "The Serpent of Hell" : str;
+    monster_type m_type = _mon_by_name(str);
+    const string name = _is_soh(str) ? "The Serpent of Hell" : str;
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
@@ -1000,9 +1009,7 @@ static int _describe_generic(const string &key, const string &suffix,
 static int _describe_monster(const string &key, const string &suffix,
                              string footer)
 {
-    const bool is_soh = starts_with(key, "the Serpent of Hell");
-    const monster_type mon_num = is_soh ? _soh_type(key)
-                                        : get_monster_by_name(key);
+    const monster_type mon_num = _mon_by_name(key);
     ASSERT(mon_num != MONS_PROGRAM_BUG);
     // Don't attempt to get more information on ghost demon
     // monsters, as the ghost struct has not been initialised, which
