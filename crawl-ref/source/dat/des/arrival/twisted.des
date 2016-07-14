@@ -910,25 +910,23 @@ KPROP: u = no_tele_into
 KPROP: Nu = bloody
 SUBST: N = n, u = uU
 KMASK: uU = no_item_gen
-: local yourcorpse = ""
-: local yourskel = ""
+: local race = you.race()
+: local mons = you.monster()
+: local skeltype = "skeleton"
 : local yourname = string.gsub(you.name(), " ", "_")
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or you.race() == "Vampire"
-:     or you.race() == "Mummy" or you.race() == "Ghoul"
-:     or you.race() == "Gargoyle" or you.race() == "Vine Stalker"
-:     or you.race() == "Yak" then
-:   yourcorpse = "human corpse"
-:   yourskel = "human skeleton"
-: elseif you.race() == "Formicid" or you.race() == "Octopode" then
-:   yourcorpse = you.monster() .. " name:" .. yourname .. " corpse"
-:   yourskel = you.monster() .. " name:" .. yourname .. " corpse"
-: else
-:   yourcorpse = you.monster() .. " name:" .. yourname .. " corpse"
-:   yourskel = you.monster() .. " name:" .. yourname .. " skeleton"
+: if (not crawl.game_started()) or race == "Vampire"
+:     or race == "Mummy" or race == "Ghoul"
+:     or race == "Gargoyle" or race == "Vine Stalker"
+:     or race == "Yak" then
+:   mons = "human"
 : end
-: dgn.delayed_decay(_G, 'u', yourcorpse )
-: dgn.delayed_decay(_G, 'U', yourskel )
+: if you.race() == "Formicid" or you.race() == "Octopode" then
+:   skeltype = "corpse"
+: end
+:
+: dgn.delayed_decay(_G, 'u', mons .. " name:" .. yourname .. " corpse")
+: dgn.delayed_decay(_G, 'U', mons .. " name:" .. yourname .. " " .. skeltype )
 MAP
 xxxxxxxxxxx
 x.........x
