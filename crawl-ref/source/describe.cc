@@ -3650,6 +3650,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                     "Killing " << it_o << " yields no experience, nutrition "
                     "or items, but " << it_o << " cannot be abjured.\n";
     }
+    else if (mi.is(MB_NO_REWARD))
+    {
+        inf.body << "\nKilling this monster yields no experience, nutrition or"
+                    " items.";
+    }
     else if (mons_class_leaves_hide(mi.type))
     {
         inf.body << "\nIf " << it << " is slain and butchered, it may be "
