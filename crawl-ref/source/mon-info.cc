@@ -470,7 +470,7 @@ monster_info::monster_info(const monster* m, int milev)
     }
     else if (m->is_perm_summoned())
         mb.set(MB_PERM_SUMMON);
-    else if (m->flags & MF_NO_REWARD
+    else if (testbits(m->flags, MF_NO_REWARD)
              && mons_class_gives_xp(m->type, true))
     {
         mb.set(MB_NO_REWARD);
