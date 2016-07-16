@@ -832,10 +832,15 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             }
             if (!unmeld)
             {
+                if (player_mutation_level(MUT_NO_ARTIFICE))
+                    mpr("Take it off to stop flying.");
+                else
+                {
                 mprf("(use the <w>%s</w>bility menu to %s flying)",
                      command_to_string(CMD_USE_ABILITY).c_str(),
                      you.attribute[ATTR_LAST_FLIGHT_STATUS]
                          ? "stop or start" : "start or stop");
+                }
             }
 
             break;
