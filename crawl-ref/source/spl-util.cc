@@ -1446,6 +1446,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
+    case SPELL_INTOXICATE:
         return minRange > LOS_RADIUS;
 
     // Special handling for cloud spells.
