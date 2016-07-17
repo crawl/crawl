@@ -817,7 +817,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_FLYING:
             // If you weren't flying when you took off the boots, don't restart.
-            if (you.attribute[ATTR_LAST_FLIGHT_STATUS])
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                || player_mutation_level(MUT_NO_ARTIFICE))
             {
                 if (you.airborne())
                 {
