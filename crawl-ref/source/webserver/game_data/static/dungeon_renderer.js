@@ -111,7 +111,6 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
                 }
                 else if (ev.type === "mousedown")
                 {
-                    log("click " + loc.x + "/" + loc.y);
                     var new_ev = $.extend({}, ev, {
                         type: "cell_click",
                         cell: loc

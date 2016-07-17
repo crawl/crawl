@@ -83,21 +83,8 @@ function ($, comm, dr, gui, map_knowledge, enums) {
     {
         var map_cell = map_knowledge.get(ev.cell.x, ev.cell.y);
 
-        var c = map_cell.x + "/" + map_cell.y + "<br>";
-
-        var mf = "undefined";
-
-        for (var entry in enums.map_feature)
-        {
-            if (enums.map_feature[entry] == map_cell.mf)
-            {
-                mf = entry;
-                break;
-            }
-        }
-        c += "MF: " + mf + "<br>";
-
-        show_tooltip(c, ev.pageX + 10, ev.pageY + 10);
+        if (map_cell.mon)
+            show_tooltip(map_cell.mon.name, ev.pageX + 10, ev.pageY + 10);
     }
 
 
