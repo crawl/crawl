@@ -241,27 +241,6 @@ body {
 }
 
 
-#context_menu {
-    position: absolute;
-    background: black;
-    color: white;
-    margin: 0;
-    padding: 3px;
-    border: 1px solid lightgray;
- }
-
-#context_menu ol {
-    list-style: none;
-    padding: 0;
-    margin: 2px;
-}
-
-#context_menu li:hover {
-    outline: 1px solid lightgray;
-    cursor: default;
-}
-
-
 #tooltip {
     position: absolute;
     background: rgba(40, 40, 40, 0.5);

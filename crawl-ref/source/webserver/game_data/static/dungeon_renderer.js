@@ -60,7 +60,7 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
         {
             var renderer = this;
             $(element)
-                .off("update_cells mousemove mouseleave mousedown contextmenu")
+                .off("update_cells mousemove mouseleave mousedown")
                 .on("update_cells", function (ev, cells) {
                     $.each(cells, function (i, loc) {
                         renderer.render_loc(loc.x, loc.y);
@@ -69,7 +69,6 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
                 .on("mousemove mouseleave mousedown", function (ev) {
                     renderer.handle_mouse(ev);
                 })
-                .on("contextmenu", function (ev) { ev.preventDefault(); });
 
             cr.DungeonCellRenderer.prototype.init.call(this, element);
         },
