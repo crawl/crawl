@@ -376,7 +376,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
         c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
         if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
             process_command((command_type) c);
+        }
         c = CK_MOUSE_CMD;
     }
 
