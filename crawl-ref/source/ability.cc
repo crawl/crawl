@@ -1339,7 +1339,7 @@ static bool _check_ability_possible(const ability_def& abil,
                 if (result == 0)
                     mpr("There's no appreciative audience!");
                 else if (result == -1)
-                    mpr("Your audience would ignore the recitation!");
+                    mpr("You are not zealous enough to affect this audience!");
             }
             return false;
         }
