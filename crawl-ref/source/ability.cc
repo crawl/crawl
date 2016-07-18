@@ -1331,10 +1331,16 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        if (zin_check_recite_to_monsters(quiet) != 1)
+        int result = zin_check_recite_to_monsters(quiet);
+        if (result != 1)
         {
             if (!quiet)
-                mpr("There's no appreciative audience!");
+            {
+                if (result == 0)
+                    mpr("There's no appreciative audience!");
+                else if (result == -1)
+                    mpr("Your audience would ignore the recitation!");
+            }
             return false;
         }
         return true;

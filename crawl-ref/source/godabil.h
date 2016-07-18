@@ -52,11 +52,16 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 struct bolt;
 class stack_iterator;
 
+typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
+
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
 bool zin_donate_gold();
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
+recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
+                                                  recite_counts &eligibility,
+                                                  bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
