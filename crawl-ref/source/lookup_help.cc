@@ -173,7 +173,7 @@ static monster_type _soh_type(string soh_name)
     return MONS_PROGRAM_BUG;
 }
 
-const bool _is_soh(string name)
+static bool _is_soh(string name)
 {
     return starts_with(lowercase(name), "the serpent of hell");
 }
