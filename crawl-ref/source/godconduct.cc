@@ -649,7 +649,7 @@ static const like_response KILL_LIVING_RESPONSE =
 
 /// Response for non-good gods that like killing (?) undead.
 static const like_response KILL_UNDEAD_RESPONSE =
-    _on_kill("you kill the undead", MH_UNDEAD);
+    _on_kill("you destroy the undead", MH_UNDEAD);
 
 /// Response for non-good gods that like killing (?) demons.
 static const like_response KILL_DEMON_RESPONSE =
@@ -661,7 +661,7 @@ static const like_response KILL_HOLY_RESPONSE =
 
 /// Response for non-good gods that like killing (?) nonliving enemies.
 static const like_response KILL_NONLIVING_RESPONSE =
-    _on_kill("you kill artificial beings", MH_NONLIVING);
+    _on_kill("you destroy nonliving beings", MH_NONLIVING);
 
 // Note that holy deaths are special - they're always noticed...
 // If you or any friendly kills one, you'll get the credit/blame.
@@ -727,7 +727,7 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
     {
@@ -741,8 +741,8 @@ static like_map divine_likes[] =
             },
             true
         ) },
-        { DID_KILL_ARTIFICIAL, {
-            "you kill artificial beings", true, 3, 18, 2, " accepts your kill."
+        { DID_KILL_NONLIVING, {
+            "you destroy nonliving beings", true, 3, 18, 2, " accepts your kill."
         } },
     },
     // GOD_XOM,
@@ -753,7 +753,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_OKAWARU,
     {
@@ -761,7 +761,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, okawaru_kill("you destroy the undead") },
         { DID_KILL_DEMON, okawaru_kill("you kill demons") },
         { DID_KILL_HOLY, okawaru_kill("you kill holy beings") },
-        { DID_KILL_ARTIFICIAL, okawaru_kill("you destroy artificial beings") },
+        { DID_KILL_NONLIVING, okawaru_kill("you destroy nonliving beings") },
     },
     // GOD_MAKHLEB,
     {
@@ -769,7 +769,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_SIF_MUNA,
     {
@@ -801,9 +801,10 @@ static like_map divine_likes[] =
                 denom *= 3;
             }
         ) },
-        { DID_KILL_ARTIFICIAL, _on_kill("you destroy artificial beings", MH_HOLY, false,
-                                        [](int &piety, int &denom,
-                                           const monster* victim)
+        { DID_KILL_NONLIVING, _on_kill("you destroy nonliving beings",
+                                       MH_NONLIVING, false,
+                                       [](int &piety, int &denom,
+                                          const monster* victim)
             {
                 denom *= 3;
             }
@@ -823,7 +824,7 @@ static like_map divine_likes[] =
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_KILL_WIZARD, {
             "you kill wizards and other users of magic", true,
             -6, 10, 0, " appreciates your killing of a magic user."
@@ -859,7 +860,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_BANISH, {
             "you banish creatures to the Abyss", false,
             -6, 18, 2, " claims a new guest."
@@ -871,7 +872,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_KILL_PRIEST, {
             "you kill the priests of other religions", true,
             -6, 18, 0, " appreciates your killing of a heretic priest."
@@ -925,7 +926,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_KILL_FIERY, {
             "you kill beings that bring fire to the dungeon", true,
             -6, 10, 0, " appreciates your extinguishing a source of fire."
@@ -939,7 +940,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_RU,
     {
@@ -970,7 +971,7 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_USKAYAW
     {

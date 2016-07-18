@@ -3005,7 +3005,7 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.undead_or_demonic())
         return false;
 
-    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
+    if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))

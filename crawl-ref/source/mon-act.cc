@@ -536,7 +536,7 @@ static void _handle_movement(monster* mons)
         // Nonliving and berserking monsters always stop immediately,
         // since they're only being forced out rather than actually
         // scared.
-        if (mons->holiness() & MH_NONLIVING
+        if (mons->is_nonliving()
             || mons->berserk()
             || mons->has_ench(ENCH_INSANE)
             || x_chance_in_y(2, 5))
