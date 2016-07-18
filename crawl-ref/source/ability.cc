@@ -523,9 +523,9 @@ static const ability_def Ability_List[] =
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
-      4, 0, 0, 4, {FAIL_INVO, 30, 6, 20}, abflag::NONE },
+      4, 0, 0, 5, {FAIL_INVO, 30, 6, 20}, abflag::NONE },
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
-      9, 0, 0, 10, {FAIL_INVO, 80, 4, 25}, abflag::SKILL_DRAIN },
+      9, 0, 0, 12, {FAIL_INVO, 80, 4, 25}, abflag::SKILL_DRAIN },
 
     // Ru
     { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power", 0, 0, 0, 0,
