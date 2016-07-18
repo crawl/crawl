@@ -650,39 +650,30 @@ static int _heretic_recite_weakness(const monster *mon)
     return degree;
 }
 
-typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 /** Check whether this monster might be influenced by Recite.
  *
  * @param[in] mon The monster to check.
  * @param[out] eligibility A vector, indexed by recite_type, that indicates
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
- *             by RECITE_FOO. Only modified if the function returns 0 or 1.
+ *             by RECITE_FOO.
  * @param quiet[in]     Whether to suppress messaging.
- * @return  -1 if the monster is already affected. The eligibility vector
- *          is unchanged.
- * @return  0 if the monster is otherwise ineligible for recite. The
- *          eligibility vector is filled with zeros.
- * @return  1 if the monster is eligible for recite. The eligibility vector
- *          indicates which types of recitation it is vulnerable to.
+ * @returns Whether the monster is eligible for recite. If the monster can be
+ *          recited to, the eligibility vector indicates the valid types of
+ *          recite.
  */
-static int _zin_check_recite_to_single_monster(const monster *mon,
-                                               recite_counts &eligibility,
-                                               bool quiet = false)
+recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
+                                                  recite_counts &eligibility,
+                                                  bool quiet)
 {
     ASSERT(mon);
 
-    // Can't recite if they were recently recited to.
+    // Can't recite anyway if they were recently recited to.
     if (mon->has_ench(ENCH_RECITE_TIMER))
-        return -1;
+        return RE_RECITE_TIMER;
 
     const mon_holy_type holiness = mon->holiness();
-
     eligibility.init(0);
-
-    // Too high HD to ever be affected.
-    if (mon->get_hit_dice() >= zin_recite_power())
-        return 0;
 
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
     eligibility[RECITE_CHAOTIC] = mon->how_chaotic(true);
@@ -711,12 +702,21 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     }
 #endif
 
+    bool maybe_eligible = false;
     // Checking to see whether they were eligible for anything at all.
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
         if (eligibility[i] > 0)
-            return 1;
+            maybe_eligible = true;
 
-    return 0;
+    if (maybe_eligible)
+    {
+        // Too high HD to be affected at current power.
+        if (mon->get_hit_dice() >= zin_recite_power())
+            return RE_TOO_STRONG;
+        return RE_ELIGIBLE;
+    }
+
+    return RE_INELIGIBLE;
 }
 
 int zin_recite_power()
@@ -762,16 +762,15 @@ bool zin_check_able_to_recite(bool quiet)
  * Otherwise we're actually reciting, and may need to present a menu.
  *
  * @param quiet     Whether to suppress messages.
- * @return  0 if no monsters were found, or if all the found monsters returned
- *          zero from _zin_check_recite_to_single_monster().
+ * @return  0 if no eligible monsters were found.
  * @return  1 if an eligible audience was found.
- * @return  -1 if only an ineligible audience was found: no eligibile
- *          monsters, and at least one returned -1 from
- *          _zin_check_recite_to_single_monster().
+ * @return  -1 if the only monsters found cannot currently be affected (either
+ *          due to lack of recite power, or already having been affected)
+ *
  */
 int zin_check_recite_to_monsters(bool quiet)
 {
-    bool found_ineligible = false;
+    bool found_temp_ineligible = false;
     bool found_eligible = false;
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
@@ -781,27 +780,27 @@ int zin_check_recite_to_monsters(bool quiet)
             continue;
 
         recite_counts retval;
-        switch (_zin_check_recite_to_single_monster(mon, retval, quiet))
+        switch (zin_check_recite_to_single_monster(mon, retval, quiet))
         {
-        case -1:
-            found_ineligible = true;
+        case RE_TOO_STRONG:
+        case RE_RECITE_TIMER:
+            found_temp_ineligible = true;
         // Intentional fallthrough
-        case 0:
+        case RE_INELIGIBLE:
             continue;
-        }
 
-        for (int i = 0; i < NUM_RECITE_TYPES; i++)
-            if (retval[i] > 0)
-                found_eligible = true;
+        case RE_ELIGIBLE:
+            found_eligible = true;
+        }
     }
 
-    if (!found_eligible && !found_ineligible)
+    if (!found_eligible && !found_temp_ineligible)
     {
         if (!quiet)
             dprf("No audience found!");
         return 0;
     }
-    else if (!found_eligible && found_ineligible)
+    else if (!found_eligible && found_temp_ineligible)
     {
         if (!quiet)
             dprf("No sensible audience found!");
@@ -844,7 +843,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     recite_counts eligibility;
     bool affected = false;
 
-    if (_zin_check_recite_to_single_monster(mon, eligibility) < 1)
+    if (zin_check_recite_to_single_monster(mon, eligibility) != RE_ELIGIBLE)
         return false;
 
     recite_type prayertype = RECITE_HERETIC;

@@ -3909,6 +3909,15 @@ enum recite_type
     NUM_RECITE_TYPES
 };
 
+// How eligible is a given single monster to recite?
+enum recite_eligibility
+{
+    RE_INELIGIBLE,      // Can never be recited to.
+    RE_TOO_STRONG,      // Could be recited to at higher power.
+    RE_RECITE_TIMER,    // Already affected by ongoing recitation.
+    RE_ELIGIBLE,        // Can be recited to.
+};
+
 enum size_part_type
 {
     PSIZE_BODY,         // entire body size -- used for EV/size of target
