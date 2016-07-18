@@ -3649,6 +3649,11 @@ bool monster::is_holy(bool check_spells) const
     return bool(holiness() & MH_HOLY);
 }
 
+bool monster::is_nonliving(bool /*temp*/) const
+{
+    return bool(holiness() & MH_NONLIVING);
+}
+
 /** Is the monster considered unclean by Zin?
  *
  *  If not 0, then Zin won't let you have it as an ally, and gives
@@ -3773,11 +3778,6 @@ int monster::how_chaotic(bool check_spells_god) const
         return known_chaos(check_spells_god);
     else
         return is_shapeshifter() + known_chaos(check_spells_god);
-}
-
-bool monster::is_artificial(bool temp) const
-{
-    return mons_class_flag(type, M_ARTIFICIAL);
 }
 
 bool monster::is_unbreathing() const
@@ -4015,7 +4015,7 @@ int monster::res_rotting(bool /*temp*/) const
         res = 0; // was 1 for plants before. Gardening shows it should be -1
     else if (holi & (MH_HOLY | MH_DEMONIC))
         res = 1;
-    else if (holi & MH_NONLIVING)
+    else if (is_nonliving())
         res = 3;
 
     if (is_insubstantial())

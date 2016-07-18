@@ -1677,7 +1677,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             break;
     }
 
-    if (you.is_artificial(temp)
+    if (you.is_nonliving(temp)
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -4516,7 +4516,7 @@ void handle_player_poison(int delay)
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
     // Hungry vampires are less affected by poison (not at all when bloodless).
-    if (you.is_artificial() || you.undead_state()
+    if (you.is_nonliving() || you.undead_state()
         && (you.undead_state() != US_SEMI_UNDEAD
             || x_chance_in_y(4 - you.hunger_state, 4)))
     {
@@ -6291,24 +6291,17 @@ bool player::is_holy(bool check_spells) const
     return bool(holiness() & MH_HOLY);
 }
 
+bool player::is_nonliving(bool temp) const
+{
+    return bool(holiness(temp) & MH_NONLIVING);
+}
+
 // This is a stub. Check is used only for silver damage. Worship of chaotic
 // gods should probably be checked in the non-existing player::is_unclean,
 // which could be used for something Zin-related (such as a priestly monster).
 int player::how_chaotic(bool /*check_spells_god*/) const
 {
     return 0;
-}
-
-/**
- * Is the player currently 'artificial' (nonliving holiness)?
- *
- * @param temp  Whether to consider temporary effects (forms, status effects)
- * @return      Whether the player should be considered an artificial lifeform.
- */
-bool player::is_artificial(bool temp) const
-{
-    return species == SP_GARGOYLE
-           || temp && (form == TRAN_STATUE || petrified());
 }
 
 /**
@@ -6385,7 +6378,8 @@ int player::res_poison(bool temp) const
 int player::res_rotting(bool temp) const
 {
     if (player_mutation_level(MUT_ROT_IMMUNITY)
-        || temp && (is_artificial() || get_form()->res_rot()))
+        || is_nonliving(temp)
+        || temp && get_form()->res_rot())
     {
         return 3;
     }
@@ -7326,7 +7320,7 @@ bool player::can_bleed(bool allow_tran) const
 #if TAG_MAJOR_VERSION == 34
         || species == SP_DJINNI
 #endif
-        || holiness() & MH_NONLIVING)
+        || is_nonliving())
     {   // demonspawn and demigods have a mere drop of taint
         return false;
     }
