@@ -1519,6 +1519,12 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             update_vision_range();
             break;
 
+        case MUT_BIG_WINGS:
+#ifdef USE_TILE
+            init_player_doll();
+#endif
+            break;
+
         default:
             break;
         }
