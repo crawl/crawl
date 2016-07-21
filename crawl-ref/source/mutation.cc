@@ -1523,7 +1523,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #ifdef USE_TILE
             init_player_doll();
 #endif
-                break;
+            break;
 
         default:
             break;
