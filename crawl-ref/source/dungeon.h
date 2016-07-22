@@ -224,6 +224,7 @@ void run_map_epilogues();
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;
+bool can_place_more_shops();
 void place_spec_shop(const coord_def& where, shop_type force_type);
 void place_spec_shop(const coord_def& where, shop_spec &spec);
 int greed_for_shop_type(shop_type shop, int level_number);

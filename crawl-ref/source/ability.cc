@@ -2698,6 +2698,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_GOZAG_CALL_MERCHANT:
+        if (!can_place_more_shops())
+        {
+            mpr("There are too many active shops on this level already!");
+            return SPRET_ABORT;
+        }
         fail_check();
         run_uncancel(UNC_CALL_MERCHANT, 0);
         break;

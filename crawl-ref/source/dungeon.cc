@@ -5246,6 +5246,17 @@ static int _get_free_shop_index()
 }
 
 /**
+ * Is it possible to place another shop on the current level, or all shop
+ * slots already taken?
+ *
+ * @return      Whether env.shop has unused space remaining.
+ */
+bool can_place_more_shops()
+{
+    return _get_free_shop_index() != MAX_SHOPS;
+}
+
+/**
  * How greedy should a given shop be? (Applies a multiplier to prices.)
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
