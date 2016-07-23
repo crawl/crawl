@@ -2091,7 +2091,7 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 
     const int subtype = OBJ_STAVES == item.base_type ? WPN_STAFF
                                                      : item.sub_type;
-    return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
+    return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
 
 //
