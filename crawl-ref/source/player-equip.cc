@@ -831,7 +831,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
                     float_player();
                 }
             }
-            if (!unmeld)
+            if (!unmeld && !player_mutation_level(MUT_NO_ARTIFICE))
             {
                 if (player_mutation_level(MUT_NO_ARTIFICE))
                     mpr("Take it off to stop flying.");
