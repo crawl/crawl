@@ -984,6 +984,13 @@ void check_grasping_roots(actor* act, bool quiet)
                 mpr("You escape the reach of the grasping roots.");
             you.duration[DUR_GRASPING_ROOTS] = 0;
             you.redraw_evasion = true;
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                && (you.racial_permanent_flight()
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)))
+           {
+                you.attribute[ATTR_PERM_FLIGHT] = 1;
+                float_player();
+           }
         }
         else
             act->as_monster()->del_ench(ENCH_GRASPING_ROOTS);

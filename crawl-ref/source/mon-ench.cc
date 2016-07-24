@@ -1096,8 +1096,10 @@ static void _entangle_actor(actor* act)
     {
         you.duration[DUR_GRASPING_ROOTS] = 10;
         you.redraw_evasion = true;
-        if (you.duration[DUR_FLIGHT] ||  you.attribute[ATTR_PERM_FLIGHT])
+        if (you.duration[DUR_FLIGHT] || you.attribute[ATTR_PERM_FLIGHT])
         {
+            you.attribute[ATTR_LAST_FLIGHT_STATUS] =
+                you.attribute[ATTR_PERM_FLIGHT];
             you.duration[DUR_FLIGHT] = 0;
             you.attribute[ATTR_PERM_FLIGHT] = 0;
             land_player(true);
