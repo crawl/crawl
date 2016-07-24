@@ -4768,56 +4768,52 @@ bool bolt::god_cares() const
 bool bolt::attempt_block(monster* mon)
 {
     const int shield_block = mon->shield_bonus();
-    bool rc = false;
-    if (shield_block > 0)
+    if (shield_block <= 0)
+        return false;
+
+    const int sh_hit = random2(hit * 130 / 100 + mon->shield_block_penalty());
+    if (sh_hit >= shield_block)
+        return false;
+
+    item_def *shield = mon->mslot_item(MSLOT_SHIELD);
+    if (is_reflectable(*mon))
     {
-        const int ht = random2(hit * 130 / 100 + mon->shield_block_penalty());
-        if (ht < shield_block)
+        if (mon->observable())
         {
-            rc = true;
-            item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-            if (is_reflectable(*mon))
+            if (shield && is_shield(*shield) && shield_reflects(*shield))
             {
-                if (mon->observable())
-                {
-                    if (shield && is_shield(*shield)
-                        && shield_reflects(*shield))
-                    {
-                        mprf("%s reflects the %s off %s %s!",
-                             mon->name(DESC_THE).c_str(),
-                             name.c_str(),
-                             mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                             shield->name(DESC_PLAIN).c_str());
-                        ident_reflector(shield);
-                    }
-                    else
-                    {
-                        mprf("The %s bounces off an invisible shield around %s!",
-                            name.c_str(),
-                            mon->name(DESC_THE).c_str());
-
-                        item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
-                        if (amulet)
-                            ident_reflector(amulet);
-                    }
-                }
-                else if (you.see_cell(pos()))
-                    mprf("The %s bounces off of thin air!", name.c_str());
-
-                reflect();
+                mprf("%s reflects the %s off %s %s!",
+                     mon->name(DESC_THE).c_str(),
+                     name.c_str(),
+                     mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     shield->name(DESC_PLAIN).c_str());
+                ident_reflector(shield);
             }
-            else if (you.see_cell(pos()))
+            else
             {
-                mprf("%s blocks the %s.",
-                     mon->name(DESC_THE).c_str(), name.c_str());
-                finish_beam();
-            }
+                mprf("The %s bounces off an invisible shield around %s!",
+                     name.c_str(),
+                     mon->name(DESC_THE).c_str());
 
-            mon->shield_block_succeeded(agent());
+                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
+                if (amulet)
+                    ident_reflector(amulet);
+            }
         }
+        else if (you.see_cell(pos()))
+            mprf("The %s bounces off of thin air!", name.c_str());
+
+        reflect();
+    }
+    else if (you.see_cell(pos()))
+    {
+        mprf("%s blocks the %s.",
+             mon->name(DESC_THE).c_str(), name.c_str());
+        finish_beam();
     }
 
-    return rc;
+    mon->shield_block_succeeded(agent());
+    return true;
 }
 
 /// Is the given monster a bush or bush-like 'monster', and can the given beam
