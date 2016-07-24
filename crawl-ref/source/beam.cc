@@ -3335,12 +3335,6 @@ void bolt::tracer_affect_player()
         _explosive_bolt_explode(this, you.pos());
 }
 
-// Magical penetrating projectiles should pass through shields.
-bool bolt::pierces_shields() const
-{
-    return range_used_on_hit() == 0;
-}
-
 bool bolt::misses_player()
 {
     if (flavour == BEAM_VISUAL)
@@ -3420,14 +3414,6 @@ bool bolt::misses_player()
                             refl_name.c_str());
                 }
                 reflect();
-            }
-            else if (pierces_shields())
-            {
-                penet = true;
-                mprf("The %s pierces through your %s!",
-                      refl_name.c_str(),
-                      shield ? shield->name(DESC_PLAIN).c_str()
-                             : "shielding");
             }
             else
             {
@@ -4819,15 +4805,6 @@ bool bolt::attempt_block(monster* mon)
                     mprf("The %s bounces off of thin air!", name.c_str());
 
                 reflect();
-            }
-            else if (pierces_shields())
-            {
-                rc = false;
-                mprf("The %s pierces through %s %s!",
-                      name.c_str(),
-                      apostrophise(mon->name(DESC_THE)).c_str(),
-                      shield ? shield->name(DESC_PLAIN).c_str()
-                             : "shielding");
             }
             else if (you.see_cell(pos()))
             {
