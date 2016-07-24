@@ -551,6 +551,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "preservation";
 #endif
         case SPARM_REFLECTION:        return "reflection";
+        case SPARM_ADAMANT:           return "adamant";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
         default:                      return "bugginess";
@@ -583,6 +584,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "obsolete";
 #endif
         case SPARM_REFLECTION:        return "reflect";
+        case SPARM_ADAMANT:           return "adamant";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_ARCHERY:           return "archery";
         default:                      return "buggy";

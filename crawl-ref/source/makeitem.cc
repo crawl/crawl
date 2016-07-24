@@ -792,7 +792,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       120, SPARM_COLD_RESISTANCE,
                                       120, SPARM_POISON_RESISTANCE,
                                       120, SPARM_POSITIVE_ENERGY,
-                                      240, SPARM_REFLECTION,
+                                      120, SPARM_REFLECTION,
+                                      120, SPARM_ADAMANT,
                                       480, SPARM_PROTECTION,
                                       0);
 
@@ -929,6 +930,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return slot == EQ_CLOAK;
 
     case SPARM_REFLECTION:
+    case SPARM_ADAMANT:
     case SPARM_PROTECTION:
         return slot == EQ_SHIELD;
 

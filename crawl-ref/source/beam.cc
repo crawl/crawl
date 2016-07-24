@@ -111,12 +111,19 @@ const tracer_info& tracer_info::operator+=(const tracer_info &other)
     return *this;
 }
 
+/// Can this be blocked by normal shields or shield-like effects?
 bool bolt::is_blockable() const
+{
+    return !pierce && is_adamant_blockable();
+}
+
+/// Can this be blocked by SPARM_ADAMANT shields?
+bool bolt::is_adamant_blockable() const
 {
     // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return !pierce && !is_explosion && flavour != BEAM_ELECTRICITY
+    return !is_explosion && flavour != BEAM_ELECTRICITY
            && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
 }
 
@@ -125,6 +132,19 @@ bool bolt::is_omnireflectable() const
 {
     return !is_explosion && flavour != BEAM_VISUAL
             && origin_spell != SPELL_GLACIATE;
+}
+
+/// Can this beam be potentially blocked by the given actor?
+bool bolt::is_blockable_by(const actor &whom) const
+{
+    if (whom.is_player() && player_omnireflects())
+        return is_omnireflectable();
+
+    const item_def *sh = whom.shield();
+    if (sh && is_shield(*sh) && shield_is_adamant(*sh))
+        return is_adamant_blockable();
+
+    return is_blockable();
 }
 
 void bolt::emit_message(const char* m)
@@ -3231,9 +3251,14 @@ bool bolt::harmless_to_player() const
     }
 }
 
+/// If the given actor blocks this beam, can they reflect it?
 bool bolt::is_reflectable(const actor &whom) const
 {
     if (range_used() > range)
+        return false;
+
+    // don't let "reflect + adamant shields reflect piercing beams
+    if (!is_blockable() && (!whom.is_player() || !player_omnireflects()))
         return false;
 
     const item_def *it = whom.shield();
@@ -3378,8 +3403,7 @@ bool bolt::misses_player()
     bool train_shields_more = false;
 
     const int SH = player_shield_class();
-    if ((player_omnireflects() && is_omnireflectable()
-         || is_blockable())
+    if (is_blockable_by(you)
         && you.shielded()
         && !aimed_at_feet
         && SH > 0)
@@ -5017,7 +5041,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     // The monster may block the beam.
-    if (!engulfs && is_blockable() && attempt_block(mon))
+    if (!engulfs && is_blockable_by(*mon) && attempt_block(mon))
         return;
 
     defer_rand r;

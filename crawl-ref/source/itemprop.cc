@@ -2958,6 +2958,13 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return hand == HANDS_TWO;
 }
 
+bool shield_is_adamant(const item_def &shield)
+{
+    ASSERT(is_shield(shield));
+
+    return get_armour_ego_type(shield) == SPARM_ADAMANT;
+}
+
 bool shield_reflects(const item_def &shield)
 {
     ASSERT(is_shield(shield));
