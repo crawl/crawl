@@ -2316,6 +2316,8 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_ADJUST_INVENTORY, '=' },
     };
 
+    key = tolower(key);
+
     for (auto cmd : actions)
         if (key == act_key.at(cmd))
             return cmd;
