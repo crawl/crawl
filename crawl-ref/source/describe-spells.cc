@@ -542,13 +542,11 @@ bool spell_scroller::process_key(int keyin)
     const spell_type chosen_spell = flat_spells[spell_index];
     describe_spell(chosen_spell, mon_owner, source_item);
 
-    const bool used_amnesia = source_item && !source_item->is_valid();
-    const bool memorized = already_learning_spell();
-    const bool exit_menu = used_amnesia || memorized;
+    if (already_learning_spell()) // player began (M)emorizing
+        return false; // time to leave the menu
 
-    if (!exit_menu)
-        draw_menu();
-    return !exit_menu;
+    draw_menu();
+    return true; // loop
 }
 
 spell_scroller::~spell_scroller() { }
