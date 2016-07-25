@@ -1428,19 +1428,20 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight:    784  if depth_mod < 4
-            //                  903  otherwise
+            // total weight:    789  if depth_mod < 4
+            //                  908  otherwise
             //                 -112  in sprint
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
                  80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
+
+                 45, SCR_AMNESIA,
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
                  40, SCR_RECHARGING,
                  40, SCR_MAGIC_MAPPING,
-                 40, SCR_AMNESIA,
                  32, SCR_FEAR,
                  32, SCR_FOG,
                  32, SCR_RANDOM_USELESSNESS,
