@@ -23,7 +23,7 @@ enum stab_type
     STAB_PARALYSED,
     STAB_SLEEPING,
     STAB_ALLY,
-    NUM_STAB
+    NUM_STABS
 };
 
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,

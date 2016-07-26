@@ -1180,8 +1180,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     case CACT_USE:
         return uppercase_first(base_type_string((object_class_type)subtype));
     case CACT_STAB:
-        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STAB);
-        ASSERT_RANGE(subtype, 1, NUM_STAB);
+        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
+        ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
     case CACT_EAT:
         return subtype >= 0 ? uppercase_first(food_type_name(subtype))

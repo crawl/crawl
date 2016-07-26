@@ -1937,6 +1937,7 @@ int attack::player_stab(int damage)
  */
 void attack::player_stab_check()
 {
+    // XXX: move into find_stab_type?
     if (you.duration[DUR_CLUMSY] || you.confused())
     {
         stab_attempt = false;
@@ -1945,22 +1946,16 @@ void attack::player_stab_check()
     }
 
     const stab_type st = find_stab_type(&you, *defender);
-    stab_attempt = (st != STAB_NO_STAB);
-    const bool roll_needed = (st != STAB_SLEEPING && st != STAB_PARALYSED);
-
-    int roll = 100;
-    if (st == STAB_INVISIBLE)
-        roll -= 10;
-
+    stab_attempt = st != STAB_NO_STAB;
     stab_bonus = stab_bonus_denom(st);
 
     // See if we need to roll against dexterity / stabbing.
-    if (stab_attempt && roll_needed)
+    if (stab_attempt && stab_bonus > 1)
     {
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
                                      + you.dex() + 1,
-                                     roll);
+                                     100);
     }
 
     if (stab_attempt)
