@@ -1944,7 +1944,7 @@ void attack::player_stab_check()
         return;
     }
 
-    const stab_type st = find_stab_type(&you, defender);
+    const stab_type st = find_stab_type(&you, *defender);
     stab_attempt = (st != STAB_NO_STAB);
     const bool roll_needed = (st != STAB_SLEEPING && st != STAB_PARALYSED);
 

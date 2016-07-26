@@ -414,6 +414,7 @@ static description_level_type _article_for(const actor* a)
 
 monster_info::monster_info(const monster* m, int milev)
 {
+    ASSERT(m); // TODO: change to const monster &mon
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = m->pos();
@@ -625,7 +626,7 @@ monster_info::monster_info(const monster* m, int milev)
     case ATT_HOSTILE:
         if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
-            && find_stab_type(&you, m) != STAB_NO_STAB)
+            && find_stab_type(&you, *m) != STAB_NO_STAB)
         {
             mb.set(MB_EVIL_ATTACK);
         }

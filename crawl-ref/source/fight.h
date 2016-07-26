@@ -33,7 +33,7 @@ int resist_adjust_damage(const actor *defender, beam_type flavour,
 bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
-                         const actor *defender);
+                         const actor &defender);
 
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);

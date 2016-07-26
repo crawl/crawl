@@ -323,18 +323,61 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     return true;
 }
 
+/**
+ * If the given attacker attacks the given defender right now, what kind of
+ * extra-damage "stab" attack can the attacker perform, if any?
+ *
+ * @param attacker  The attacker; may be null.
+ * @param defender  The defender.
+ * @return          The best (most damaging) kind of stab available to the
+ *                  attacker against this defender, or STAB_NO_STAB.
+ */
 stab_type find_stab_type(const actor *attacker,
-                         const actor *defender)
+                         const actor &defender)
 {
-    ASSERT(defender); // XXX: change to const actor &defender
-    const monster* def = defender->as_monster();
-    stab_type unchivalric = STAB_NO_STAB;
+    const monster* def = defender.as_monster();
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(*defender)))
-        return unchivalric;
+    if (defender.cannot_fight() || (attacker && !attacker->can_see(defender)))
+        return STAB_NO_STAB;
+
+    // sleeping
+    if (defender.asleep())
+        return STAB_SLEEPING;
+
+    // paralysed
+    if (defender.paralysed())
+        return STAB_PARALYSED;
+
+    // petrified
+    if (defender.petrified())
+        return STAB_PETRIFIED;
+
+    // petrifying
+    if (def && def->petrifying())
+        return STAB_PETRIFYING;
+
+    // held in a net
+    if (def && def->caught())
+        return STAB_HELD_IN_NET;
+
+    // invisible
+    if (attacker && !attacker->visible_to(&defender))
+        return STAB_INVISIBLE;
+
+    // fleeing
+    if (def && mons_is_fleeing(def))
+        return STAB_FLEEING;
+
+    // allies
+    if (def && def->friendly())
+        return STAB_ALLY;
+
+    // confused (but not perma-confused)
+    if (def && mons_is_confused(def, false))
+        return STAB_CONFUSED;
 
     // Distracted (but not batty); this only applies to players.
     // Under TSO, monsters are never distracted by your allies.
@@ -342,46 +385,10 @@ stab_type find_stab_type(const actor *attacker,
         && def && def->foe != MHITYOU && !mons_is_batty(def)
         && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
     {
-        unchivalric = STAB_DISTRACTED;
+        return STAB_DISTRACTED;
     }
 
-    // confused (but not perma-confused)
-    if (def && mons_is_confused(def, false))
-        unchivalric = STAB_CONFUSED;
-
-    // allies
-    if (def && def->friendly())
-        unchivalric = STAB_ALLY;
-
-    // fleeing
-    if (def && mons_is_fleeing(def))
-        unchivalric = STAB_FLEEING;
-
-    // invisible
-    if (attacker && !attacker->visible_to(defender))
-        unchivalric = STAB_INVISIBLE;
-
-    // held in a net
-    if (def && def->caught())
-        unchivalric = STAB_HELD_IN_NET;
-
-    // petrifying
-    if (def && def->petrifying())
-        unchivalric = STAB_PETRIFYING;
-
-    // petrified
-    if (defender->petrified())
-        unchivalric = STAB_PETRIFIED;
-
-    // paralysed
-    if (defender->paralysed())
-        unchivalric = STAB_PARALYSED;
-
-    // sleeping
-    if (defender->asleep())
-        unchivalric = STAB_SLEEPING;
-
-    return unchivalric;
+    return STAB_NO_STAB;
 }
 
 static bool is_boolean_resist(beam_type flavour)
