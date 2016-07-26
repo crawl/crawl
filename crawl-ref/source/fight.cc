@@ -408,23 +408,14 @@ int stab_bonus_denom(stab_type stab)
     switch (stab)
     {
         case STAB_NO_STAB:
-        case NUM_STAB:
-        default:
+        case NUM_STABS:
             return 0;
         case STAB_SLEEPING:
         case STAB_PARALYSED:
-            return 1;
-        case STAB_HELD_IN_NET:
-        case STAB_PETRIFYING:
         case STAB_PETRIFIED:
-            return 2;
-        case STAB_INVISIBLE:
-        case STAB_CONFUSED:
-        case STAB_FLEEING:
-        case STAB_ALLY:
+            return 1;
+        default:
             return 4;
-        case STAB_DISTRACTED:
-            return 6;
     }
 }
 
