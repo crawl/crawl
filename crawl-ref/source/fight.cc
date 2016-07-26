@@ -391,6 +391,40 @@ stab_type find_stab_type(const actor *attacker,
     return STAB_NO_STAB;
 }
 
+/**
+ * What bonus does this type of stab give the player when attacking?
+ *
+ * @param   The type of stab in question; e.g. STAB_SLEEPING.
+ * @return  The bonus the stab gives. Note that this is used as a divisor for
+ *          damage, so the larger the value we return here, the less bonus
+ *          damage will be done.
+ */
+int stab_bonus_denom(stab_type stab)
+{
+    // XXX: if we don't get rid of this logic, turn it into a static array.
+    switch (stab)
+    {
+        case STAB_NO_STAB:
+        case NUM_STAB:
+        default:
+            return 0;
+        case STAB_SLEEPING:
+        case STAB_PARALYSED:
+            return 1;
+        case STAB_HELD_IN_NET:
+        case STAB_PETRIFYING:
+        case STAB_PETRIFIED:
+            return 2;
+        case STAB_INVISIBLE:
+        case STAB_CONFUSED:
+        case STAB_FLEEING:
+        case STAB_ALLY:
+            return 4;
+        case STAB_DISTRACTED:
+            return 6;
+    }
+}
+
 static bool is_boolean_resist(beam_type flavour)
 {
     switch (flavour)

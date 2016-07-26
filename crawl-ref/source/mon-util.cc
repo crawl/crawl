@@ -3343,9 +3343,7 @@ bool mons_looks_stabbable(const monster* m)
 {
     ASSERT(m); // TODO: should be const monster &m
     const stab_type st = find_stab_type(&you, *m);
-    return !m->friendly()
-           && (st == STAB_PARALYSED || st == STAB_SLEEPING);
-    // TODO: deduplicate this list
+    return !m->friendly() && stab_bonus_denom(st) == 1; // top-tier stab
 }
 
 bool mons_looks_distracted(const monster* m)
