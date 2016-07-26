@@ -34,6 +34,7 @@ bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
                          const actor &defender);
+int stab_bonus_denom(stab_type stab);
 
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
