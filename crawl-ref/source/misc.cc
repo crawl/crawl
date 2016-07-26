@@ -552,7 +552,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (find_stab_type(&you, mon) != STAB_NO_STAB
+    if (find_stab_type(&you, *mon) != STAB_NO_STAB
         && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {

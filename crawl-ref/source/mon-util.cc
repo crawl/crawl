@@ -3341,18 +3341,20 @@ bool mons_is_batty(const monster* m)
 
 bool mons_looks_stabbable(const monster* m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    ASSERT(m); // TODO: should be const monster &m
+    const stab_type st = find_stab_type(&you, *m);
     return !m->friendly()
            && (st == STAB_PARALYSED || st == STAB_SLEEPING);
+    // TODO: deduplicate this list
 }
 
 bool mons_looks_distracted(const monster* m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    ASSERT(m); // TODO: should be const monster &m
+    const stab_type st = find_stab_type(&you, *m);
     return !m->friendly()
            && st != STAB_NO_STAB
-           && st != STAB_PARALYSED
-           && st != STAB_SLEEPING;
+           && !mons_looks_stabbable(m);
 }
 
 void mons_start_fleeing_from_sanctuary(monster* mons)
