@@ -2044,11 +2044,16 @@ static void _rebrand_weapon(item_def& wpn)
     convert2bad(wpn);
 }
 
+static string _item_name(item_def &item) {
+    return item.name(in_inventory(item) ? DESC_YOUR
+                                        : DESC_THE);
+}
+
 static void _brand_weapon(item_def &wpn)
 {
     you.wield_change = true;
 
-    const string itname = wpn.name(DESC_YOUR);
+    const string itname = _item_name(wpn);
 
     _rebrand_weapon(wpn);
 
@@ -2123,6 +2128,22 @@ static void _brand_weapon(item_def &wpn)
     return;
 }
 
+static item_def* _choose_target_item_for_scroll(bool scroll_known, object_selector selector,
+                                                const char* prompt)
+{
+    return use_an_item(selector, OPER_ANY, prompt,
+                       [=]()
+                       {
+                           if (scroll_known
+                               || crawl_state.seen_hups
+                               || yesno("Really abort (and waste the scroll)?", false, 0))
+                           {
+                               return true;
+                           }
+                           return false;
+                       });
+}
+
 static object_selector _enchant_selector(scroll_type scroll)
 {
     if (scroll == SCR_BRAND_WEAPON)
@@ -2136,46 +2157,18 @@ static object_selector _enchant_selector(scroll_type scroll)
 static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll)
 {
-    int item_slot;
     const bool branding = scroll == SCR_BRAND_WEAPON;
-    const object_selector selector = _enchant_selector(scroll);
 
-    while (true)
-    {
-        item_slot = prompt_invent_item(branding ? "Brand which weapon?"
-                                                : "Enchant which weapon?",
-                                       MT_INVLIST, selector,
-                                       true, true, false);
-        // The scroll is used up if we didn't know what it was originally.
-        if (item_slot == PROMPT_NOTHING)
-            return nullptr;
+    item_def* target = _choose_target_item_for_scroll(alreadyknown, _enchant_selector(scroll),
+                                                      branding ? "Brand which weapon?"
+                                                               : "Enchant which weapon?");
+    if (!target)
+        return target;
 
-        if (item_slot == PROMPT_ABORT)
-        {
-            if (alreadyknown
-                || crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0))
-            {
-                canned_msg(MSG_OK);
-                return nullptr;
-            }
-            else
-                continue;
-        }
+    if (alreadyknown)
+        mpr(pre_msg);
 
-        item_def* wpn = &you.inv[item_slot];
-        if (!item_is_selected(*wpn, selector))
-        {
-            mpr("Choose a valid weapon, or Esc to abort.");
-            more();
-            continue;
-        }
-
-        // Now we're definitely using up the scroll.
-        if (alreadyknown)
-            mpr(pre_msg);
-        return wpn;
-    }
+    return target;
 }
 
 // Returns true if the scroll is used up.
@@ -2195,7 +2188,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     bool success = false;
 
     // Get item name now before changing enchantment.
-    string iname = wpn.name(DESC_YOUR);
+    string iname = _item_name(wpn);
 
     if (is_weapon(wpn)
         && !is_artefact(wpn)
@@ -2220,14 +2213,8 @@ bool enchant_weapon(item_def &wpn, bool quiet)
 // Returns true if the scroll is used up.
 static bool _identify(bool alreadyknown, const string &pre_msg)
 {
-    item_def* itemp = use_an_item(OSEL_UNIDENT, OPER_ID,
-                       "Identify which item? (\\ to view known items)",
-                       [=]()
-                       {
-                           return alreadyknown
-                                  || crawl_state.seen_hups
-                                  || yesno("Really abort (and waste the scroll)?", false, 0);
-                       });
+    item_def* itemp = _choose_target_item_for_scroll(alreadyknown, OSEL_UNIDENT,
+                       "Identify which item? (\\ to view known items)");
 
     if (!itemp)
         return !alreadyknown;
@@ -2292,7 +2279,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         if (!quiet)
         {
             mprf("%s glows purple and changes!",
-                 arm.name(DESC_YOUR).c_str());
+                 _item_name(arm).c_str());
         }
 
         ac_change = property(arm, PARM_AC);
@@ -2307,7 +2294,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     if (!quiet)
     {
         mprf("%s glows green for a moment.",
-             arm.name(DESC_YOUR).c_str());
+             _item_name(arm).c_str());
     }
 
     arm.plus++;
@@ -2318,60 +2305,23 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
 static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
-    int item_slot = -1;
-    do
-    {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item("Enchant which item?", MT_INVLIST,
-                                           OSEL_ENCHANTABLE_ARMOUR, true, true, false);
-        }
+    item_def* target = _choose_target_item_for_scroll(alreadyknown, OSEL_ENCHANTABLE_ARMOUR,
+                                                      "Enchant which item?");
 
-        if (item_slot == PROMPT_NOTHING)
-            return alreadyknown ? -1 : 0;
+    if (!target)
+        return alreadyknown ? -1 : 0;
 
-        if (item_slot == PROMPT_ABORT)
-        {
-            if (alreadyknown
-                || crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0))
-            {
-                canned_msg(MSG_OK);
-                return alreadyknown ? -1 : 0;
-            }
-            else
-            {
-                item_slot = -1;
-                continue;
-            }
-        }
+    // Okay, we may actually (attempt to) enchant something.
+    if (alreadyknown)
+        mpr(pre_msg);
 
-        item_def& arm(you.inv[item_slot]);
+    int ac_change;
+    bool result = enchant_armour(ac_change, false, *target);
 
-        if (!is_enchantable_armour(arm, true))
-        {
-            mpr("Choose some type of armour to enchant, or Esc to abort.");
-            more();
+    if (ac_change)
+        you.redraw_armour_class = true;
 
-            item_slot = -1;
-            continue;
-        }
-
-        // Okay, we may actually (attempt to) enchant something.
-        if (alreadyknown)
-            mpr(pre_msg);
-
-        int ac_change;
-        bool result = enchant_armour(ac_change, false, arm);
-
-        if (ac_change)
-            you.redraw_armour_class = true;
-
-        return result ? 1 : 0;
-    }
-    while (true);
-
-    return 0;
+    return result ? 1 : 0;
 }
 
 void random_uselessness()
@@ -2608,10 +2558,10 @@ string cannot_read_item_reason(const item_def &item)
 #endif
 
         case SCR_ENCHANT_ARMOUR:
-            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR);
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
 
         case SCR_ENCHANT_WEAPON:
-            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
             return _no_items_reason(OSEL_UNIDENT, true);
