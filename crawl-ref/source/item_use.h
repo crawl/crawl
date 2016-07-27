@@ -9,10 +9,10 @@
 #include <string>
 
 #include "enum.h"
+#include "libutil.h" // For always_true<>
 
 item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
-                      function<bool ()> allowcancel = []()
-                      { return true; });
+                      function<bool ()> allowcancel = always_true<>);
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
