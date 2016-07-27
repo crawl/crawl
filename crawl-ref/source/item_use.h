@@ -9,10 +9,10 @@
 #include <string>
 
 #include "enum.h"
-#include "libutil.h" // For always_true<>
 
 item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
-                      function<bool ()> allowcancel = always_true<>);
+                      function<bool ()> allowcancel = [](){ return true; });
+// Change the lambda to always_true<> when g++ 4.7 support is dropped.
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
