@@ -2324,7 +2324,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
         if (item_slot == -1)
         {
             item_slot = prompt_invent_item("Enchant which item?", MT_INVLIST,
-                                           OSEL_ENCH_ARM, true, true, false);
+                                           OSEL_ENCHANTABLE_ARMOUR, true, true, false);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -2608,7 +2608,7 @@ string cannot_read_item_reason(const item_def &item)
 #endif
 
         case SCR_ENCHANT_ARMOUR:
-            return _no_items_reason(OSEL_ENCH_ARM);
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR);
 
         case SCR_ENCHANT_WEAPON:
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
