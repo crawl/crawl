@@ -52,7 +52,7 @@ static void _calc_hp_artefact()
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
 {
-    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(you.equip[slot] == -1);
     ASSERT(!you.melded[slot]);
 
@@ -67,7 +67,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 // Clear an equipment slot (possibly melded).
 bool unequip_item(equipment_type slot, bool msg)
 {
-    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     const int item_slot = you.equip[slot];
@@ -91,7 +91,7 @@ bool unequip_item(equipment_type slot, bool msg)
 // you should call all unequip effects after all melding is done)
 bool meld_slot(equipment_type slot, bool msg)
 {
-    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     if (you.equip[slot] != -1 && !you.melded[slot])
@@ -106,7 +106,7 @@ bool meld_slot(equipment_type slot, bool msg)
 // you should call all equip effects after all unmelding is done)
 bool unmeld_slot(equipment_type slot, bool msg)
 {
-    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     if (you.equip[slot] != -1 && you.melded[slot])
@@ -164,7 +164,7 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld, slot);
-    else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
+    else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _equip_jewellery_effect(item, unmeld, slot);
 }
 
@@ -182,7 +182,7 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld, slot);
-    else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
+    else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
 }
 

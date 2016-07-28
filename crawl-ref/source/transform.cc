@@ -1218,8 +1218,10 @@ _init_equipment_removal(transformation_type form)
     if (form == TRAN_LICH && you.weapon() && is_holy_item(*you.weapon()))
         result.insert(EQ_WEAPON);
 
-    for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
+        if (i == EQ_WEAPON)
+            continue;
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
 

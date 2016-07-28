@@ -2119,14 +2119,15 @@ enum equipment_type
     EQ_NONE = -1,
 
     EQ_WEAPON,
+    EQ_FIRST_EQUIP = EQ_WEAPON,
     EQ_CLOAK,
     EQ_HELMET,
     EQ_GLOVES,
     EQ_BOOTS,
     EQ_SHIELD,
     EQ_BODY_ARMOUR,
-    //Everything beyond here is jewellery
-    EQ_LEFT_RING,
+    EQ_FIRST_JEWELLERY,
+    EQ_LEFT_RING = EQ_FIRST_JEWELLERY,
     EQ_RIGHT_RING,
     EQ_AMULET,
     //Octopodes don't have left and right rings. They have eight rings, instead.
@@ -2140,6 +2141,7 @@ enum equipment_type
     EQ_RING_EIGHT,
     // Finger amulet provides an extra ring slot
     EQ_RING_AMULET,
+    EQ_LAST_JEWELLERY = EQ_RING_AMULET,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
