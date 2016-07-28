@@ -280,8 +280,8 @@ void jiyva_stat_action()
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true);
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true);
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, false);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, false);
     }
 }
 
