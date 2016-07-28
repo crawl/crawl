@@ -157,7 +157,7 @@ bool InvEntry::is_equipped() const
     if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
         return false;
 
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
             return true;
 
@@ -1699,7 +1699,7 @@ bool check_warning_inscriptions(const item_def& item,
             }
             else
             {
-                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
                 {
                     if (slots == EQ_AMULET)
                         continue;

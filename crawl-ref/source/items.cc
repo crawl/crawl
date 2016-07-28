@@ -414,7 +414,7 @@ bool dec_inv_item_quantity(int obj, int amount)
 
     if (you.inv[obj].quantity <= amount)
     {
-        for (int i = 0; i < NUM_EQUIP; i++)
+        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
         {
             if (you.equip[i] == obj)
             {
@@ -2516,7 +2516,7 @@ int get_equip_slot(const item_def *item)
     int worn = -1;
     if (item && in_inventory(*item))
     {
-        for (int i = 0; i < NUM_EQUIP; ++i)
+        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         {
             if (you.equip[i] == item->link)
             {
@@ -3212,7 +3212,7 @@ equipment_type item_equip_slot(const item_def& item)
     if (!in_inventory(item))
         return EQ_NONE;
 
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
         if (item.link == you.equip[i])
             return static_cast<equipment_type>(i);
 

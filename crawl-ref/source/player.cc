@@ -891,7 +891,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
 
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
+        for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
             if (slots == EQ_AMULET)
                 continue;
@@ -912,7 +912,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     default:
-        if (! (slot > EQ_NONE && slot < NUM_EQUIP))
+        if (! (slot >= EQ_FIRST_EQUIP && slot < NUM_EQUIP))
             die("invalid slot");
         if ((item = slot_item(slot))
             && item->sub_type == sub_type
@@ -1010,7 +1010,7 @@ bool player_equip_unrand(int unrand_index)
         break;
 
     case EQ_RINGS:
-        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+        for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
             if (slots == EQ_AMULET)
                 continue;
@@ -3771,7 +3771,7 @@ int player::scan_artefacts(artefact_prop_type which_property,
 {
     int retval = 0;
 
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         if (melded[i] || equip[i] == -1)
             continue;
