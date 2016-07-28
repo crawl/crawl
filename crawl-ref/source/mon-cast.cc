@@ -135,6 +135,17 @@ bool is_valid_mon_spell(spell_type spell)
     return _valid_mon_spells[spell];
 }
 
+/// Is the current spell being cast via player wizmode &z by a dummy mons?
+static bool _is_wiz_cast()
+{
+#ifdef WIZARD
+    // iffy logic but might be right enough
+    return crawl_state.prev_cmd == CMD_WIZARD;
+#else
+    return false;
+#endif
+}
+
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 {
     switch (flavour)
@@ -1282,16 +1293,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     else
         pbolt.aux_source.clear();
 
-#ifdef WIZARD
-    // make auto-targeting for your dummy monster work
-    const bool wiz_cast = crawl_state.prev_cmd == CMD_WIZARD;
-#else
-    const bool wiz_cast = false;
-#endif
-
     // Your shadow can target these spells at other monsters;
     // other monsters can't.
-    if (mons->mid != MID_PLAYER || wiz_cast)
+    if (mons->mid != MID_PLAYER || _is_wiz_cast())
     {
         if (spell_cast == SPELL_HASTE
             || spell_cast == SPELL_MIGHT
@@ -2377,6 +2381,12 @@ static bool _valid_vine_spot(coord_def p)
 
 static bool _awaken_vines(monster* mon, bool test_only = false)
 {
+    if (_is_wiz_cast())
+    {
+        mprf("Sorry, this spell isn't supported for dummies!"); //mons dummy
+        return false;
+    }
+
     vector<coord_def> spots;
     for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
     {
