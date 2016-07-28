@@ -331,7 +331,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
 // eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT_RANGE(eq, EQ_WEAPON, NUM_EQUIP);
+    ASSERT_RANGE(eq, EQ_FIRST_EQUIP, NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])

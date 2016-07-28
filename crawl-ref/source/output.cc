@@ -1814,9 +1814,7 @@ const char *equip_slot_to_name(int equip)
     COMPILE_CHECK(ARRAYSZ(s_equip_slot_names) == NUM_EQUIP);
 
     if (equip == EQ_RINGS
-        || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT
-        || equip == EQ_RING_AMULET)
+        || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && equip != EQ_AMULET)
     {
         return "Ring";
     }
@@ -1827,7 +1825,7 @@ const char *equip_slot_to_name(int equip)
         return "Barding";
     }
 
-    if (equip < 0 || equip >= NUM_EQUIP)
+    if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
         return "";
 
     return s_equip_slot_names[equip];
@@ -1835,7 +1833,7 @@ const char *equip_slot_to_name(int equip)
 
 int equip_name_to_slot(const char *s)
 {
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         if (!strcasecmp(s_equip_slot_names[i], s))
             return i;
 
