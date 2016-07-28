@@ -3560,9 +3560,6 @@ bool monster::heal(int amount)
     if (mons_is_statue(type))
         return false;
 
-    if (!mons_can_display_wounds(this))
-        return false;
-
     if (amount < 1)
         return false;
     else if (hit_points == max_hit_points)

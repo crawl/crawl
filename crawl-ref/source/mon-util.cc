@@ -5211,11 +5211,9 @@ void normalize_spell_freq(monster_spells &spells, int hd)
     }
 }
 
+/// Rounded to player-visible approximations, how hurt is this monster?
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
-    if (!mons_can_display_wounds(mons))
-        return MDAM_OKAY;
-
     if (mons->hit_points <= mons->max_hit_points / 5)
         return MDAM_ALMOST_DEAD;
     else if (mons->hit_points <= mons->max_hit_points * 2 / 5)
@@ -5265,9 +5263,6 @@ void print_wounds(const monster* mons)
     if (!mons->alive() || mons->hit_points == mons->max_hit_points)
         return;
 
-    if (!mons_can_display_wounds(mons))
-        return;
-
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
     string desc = get_damage_level_string(mons->holiness(), dam_level);
 
@@ -5283,23 +5278,6 @@ bool wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
     return bool(holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT));
-}
-
-bool mons_class_can_display_wounds(monster_type mc)
-{
-    // Zombified monsters other than spectral things don't show
-    // wounds.
-    if (mons_class_is_zombified(mc) && mc != MONS_SPECTRAL_THING)
-        return false;
-
-    return true;
-}
-
-bool mons_can_display_wounds(const monster* mon)
-{
-    get_tentacle_head(mon);
-
-    return mons_class_can_display_wounds(mon->type);
 }
 
 // Is this monster interesting enough to make notes about?

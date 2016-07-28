@@ -421,8 +421,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     attitude = mons_attitude(m);
 
-    bool nomsg_wounds = false;
-
     type = m->type;
     threat = mons_threat_level(m);
 
@@ -440,12 +438,6 @@ monster_info::monster_info(const monster* m, int milev)
     {
         _translate_tentacle_ref(*this, m, "inwards");
         _translate_tentacle_ref(*this, m, "outwards");
-    }
-
-    if (!mons_can_display_wounds(m)
-        || !mons_class_can_display_wounds(type))
-    {
-        nomsg_wounds = true;
     }
 
     base_type = m->base_monster;
@@ -574,10 +566,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(m);
-
-    // If no messages about wounds, don't display damage level either.
-    if (nomsg_wounds)
-        dam = MDAM_OKAY;
 
     if (mons_is_threatening(m)) // Firewood, butterflies, etc.
     {
