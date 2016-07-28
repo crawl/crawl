@@ -695,7 +695,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
     if (!mondied)
     {
-        mprf("<grey>%s %s!</grey>",
+        mprf("%s %s!",
             defender->name(DESC_THE).c_str(),
             defender->conj_verb("convulse").c_str());
 
