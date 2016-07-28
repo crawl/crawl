@@ -2387,6 +2387,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     shuffle_array(spots);
 
     actor* foe = mon->get_foe();
+    ASSERT(foe);
 
     int num_vines = 1 + random2(3);
     if (mon->props.exists("vines_awakened"))
