@@ -1282,9 +1282,16 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     else
         pbolt.aux_source.clear();
 
+#ifdef WIZARD
+    // make auto-targeting for your dummy monster work
+    const bool wiz_cast = crawl_state.prev_cmd == CMD_WIZARD;
+#else
+    const bool wiz_cast = false;
+#endif
+
     // Your shadow can target these spells at other monsters;
     // other monsters can't.
-    if (mons->mid != MID_PLAYER)
+    if (mons->mid != MID_PLAYER || wiz_cast)
     {
         if (spell_cast == SPELL_HASTE
             || spell_cast == SPELL_MIGHT
