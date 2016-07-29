@@ -187,7 +187,7 @@ static int l_item_do_remove(lua_State *ls)
     }
 
     int eq = get_equip_slot(item);
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
     {
         mpr("Item is not equipped");
         return 0;
@@ -196,7 +196,7 @@ static int l_item_do_remove(lua_State *ls)
     bool result = false;
     if (eq == EQ_WEAPON)
         result = wield_weapon(true, SLOT_BARE_HANDS);
-    else if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP)
+    else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
         result = takeoff_armour(item->link);
@@ -217,7 +217,7 @@ static int l_item_do_drop(lua_State *ls)
         return 0;
 
     int eq = get_equip_slot(item);
-    if (eq >= 0 && eq < NUM_EQUIP)
+    if (eq >= EQ_FIRST_EQUIP && eq < NUM_EQUIP)
     {
         lua_pushboolean(ls, false);
         lua_pushstring(ls, "Can't drop worn items");
@@ -243,7 +243,7 @@ IDEF(equipped)
         lua_pushboolean(ls, false);
 
     int eq = get_equip_slot(item);
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
         lua_pushboolean(ls, false);
     else
         lua_pushboolean(ls, true);
@@ -1173,7 +1173,7 @@ static int l_item_equipped_at(lua_State *ls)
         eq = equip_name_to_slot(eqname);
     }
 
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
         return 0;
 
     if (you.equip[eq] != -1)

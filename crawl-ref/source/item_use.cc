@@ -1534,7 +1534,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 {
     item_def& item = you.inv[item_slot];
 
-    for (int eq = EQ_LEFT_RING; eq < NUM_EQUIP; eq++)
+    for (int eq = EQ_FIRST_JEWELLERY; eq <= EQ_LAST_JEWELLERY; eq++)
         if (item_slot == you.equip[eq])
         {
             // "Putting on" an equipped item means taking it off.
@@ -3073,7 +3073,7 @@ void tile_item_use(int idx)
     // Equipped?
     bool equipped = false;
     bool equipped_weapon = false;
-    for (unsigned int i = 0; i < NUM_EQUIP; i++)
+    for (unsigned int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
     {
         if (you.equip[i] == idx)
         {

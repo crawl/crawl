@@ -730,7 +730,7 @@ void InventoryRegion::update()
             _fill_item_info(desc, get_item_info(you.inv[i]));
             desc.idx = i;
 
-            for (int eq = 0; eq < NUM_EQUIP; ++eq)
+            for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
             {
                 if (you.equip[eq] == i)
                 {
