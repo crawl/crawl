@@ -622,13 +622,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = ISPEC_GOOD_ITEM;
         break;
 
-    case MONS_WIGLAF:
-        item.base_type = OBJ_WEAPONS;
-        // speech references an axe
-        item.sub_type  = random_choose(WPN_WAR_AXE, WPN_BROAD_AXE,
-                                       WPN_BATTLEAXE);
-        break;
-
     case MONS_JORGRUN:
         force_item = true;
         if (one_chance_in(3))
