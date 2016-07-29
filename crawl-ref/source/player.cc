@@ -5965,7 +5965,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         return level;
     if (drained && you.attribute[ATTR_XP_DRAIN])
     {
-        // skill = (base * (3000 - drain) / 3000 - drain / 100
+        // skill = base * (3000 - drain) / 3000  - drain / 100
         //         base - ((drain * base / 3000) + drain / 100)
         int drain_scale = max(0, (30 * 100 - you.attribute[ATTR_XP_DRAIN]) * scale);
         level = skill(sk, drain_scale, real, false);
