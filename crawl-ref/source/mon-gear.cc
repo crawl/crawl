@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h" // map_find
 #include "mon-place.h"
 #include "randbook.h" // roxanne, roxanne...
 #include "religion.h" // upgrade_hepliaklqana_weapon
@@ -209,9 +210,694 @@ static item_def* make_item_for_monster(
     int allow_uniques = 0,
     iflags_t flags = 0);
 
+typedef vector<pair<weapon_type, int>> weapon_list;
+struct plus_range
+{
+    int odds; ///<1/x chance of getting +[min,max] to weapon plus
+    int min, max;
+    int nrolls; ///< min 1
+};
+struct mon_weapon_spec {
+    /// weighted list of weapon types; NUM_WEAPONS -> no weapon
+    weapon_list types;
+    /// extra added weapon plusses; if nonzero, sets force_item
+    plus_range bonus_plus;
+    /// weighted brand list; NUM_BRANDS -> no forced brand
+    vector<pair<brand_type, int>> brands;
+    /// extra 1/x chance to generate as ISPEC_GOOD_ITEM
+    int good_chance;
+};
+
 static void _give_weapon(monster* mon, int level, bool melee_only = false,
                          bool give_aux_melee = true, bool spectral_orcs = false)
 {
+    static const weapon_list GOBLIN_WEAPONS = // total 10
+    {   { WPN_DAGGER,           3 },
+        { WPN_CLUB,             3 },
+        { NUM_WEAPONS,          4 }, };   // 60% chance of weapon
+    static const weapon_list GNOLL_WEAPONS = // total 30
+    {   { WPN_SPEAR,            8 },
+        { WPN_HALBERD,          4 },
+        { WPN_CLUB,             4 },
+        { WPN_WHIP,             4 },
+        { WPN_FLAIL,            4 },
+        { NUM_WEAPONS,          6 } };    // 80% chance of weapon
+    static const weapon_list ORC_WEAPONS = // total 525 (!)
+    {   { WPN_CLUB,             70 },
+        { WPN_DAGGER,           60 },
+        { WPN_FLAIL,            60 },
+        { WPN_HAND_AXE,         60 },
+        { WPN_SHORT_SWORD,      40 },
+        { WPN_MACE,             40 },
+        { WPN_WHIP,             30 },
+        { WPN_TRIDENT,          20 },
+        { WPN_FALCHION,         20 },
+        { WPN_WAR_AXE,          14 },
+        { WPN_MORNINGSTAR,      6 },
+        { NUM_WEAPONS,          105 } }; // 80% chance of weapon
+    static const weapon_list DE_KNIGHT_WEAPONS = // total 83 (?)
+    {   { WPN_LONG_SWORD,       22 },
+        { WPN_SHORT_SWORD,      22 },
+        { WPN_SCIMITAR,         17 },
+        { WPN_SHORTBOW,         17 },
+        { WPN_LONGBOW,          5 }, };
+    static const weapon_list DE_MAGE_WEAPONS =
+    {   { WPN_LONG_SWORD,       2 },
+        { WPN_SHORT_SWORD,      1 },
+        { WPN_RAPIER,           1 },
+        { WPN_DAGGER,           1 }, };
+    static const weapon_list DRAC_MAGE_WEAPONS = // XXX: merge with DE? ^
+    {   { WPN_LONG_SWORD,       2 },
+        { WPN_SHORT_SWORD,      1 },
+        { WPN_RAPIER,           1 },
+        { WPN_DAGGER,           1 },
+        { WPN_WHIP,             1 }, };
+    static const weapon_list NAGA_WEAPONS = // total 120
+    {   { WPN_LONG_SWORD,       10 },
+        { WPN_SHORT_SWORD,      10 },
+        { WPN_SCIMITAR,         10 },
+        { WPN_BATTLEAXE,        10 },
+        { WPN_HAND_AXE,         10 },
+        { WPN_HALBERD,          10 },
+        { WPN_GLAIVE,           10 },
+        { WPN_MACE,             10 },
+        { WPN_DIRE_FLAIL,       10 },
+        { WPN_TRIDENT,          10 },
+        { WPN_WAR_AXE,          9 },
+        { WPN_FLAIL,            9 },
+        { WPN_BROAD_AXE,        1 },
+        { WPN_MORNINGSTAR,      1 }, };
+    static const weapon_list ORC_KNIGHT_WEAPONS =
+    {   { WPN_GREAT_SWORD,      4 },
+        { WPN_LONG_SWORD,       4 },
+        { WPN_BATTLEAXE,        4 },
+        { WPN_WAR_AXE,          4 },
+        { WPN_GREAT_MACE,       3 },
+        { WPN_DIRE_FLAIL,       2 },
+        { WPN_BARDICHE,         1 },
+        { WPN_GLAIVE,           1 },
+        { WPN_BROAD_AXE,        1 },
+        { WPN_HALBERD,          1 }, };
+    static const mon_weapon_spec ORC_KNIGHT_WSPEC =
+        { ORC_KNIGHT_WEAPONS, {4, 1, 3} };
+    static const mon_weapon_spec ORC_WARLORD_WSPEC =
+        { ORC_KNIGHT_WEAPONS, {4, 1, 3}, {}, 3 };
+    static const weapon_list IRON_WEAPONS =
+    {   { WPN_GREAT_MACE,       3 },
+        { WPN_DIRE_FLAIL,       2 },
+        { WPN_FLAIL,            2 },
+        { WPN_MORNINGSTAR,      2 },
+        { WPN_MACE,             1 }, };
+    static const weapon_list OGRE_WEAPONS =
+    {   { WPN_GIANT_CLUB,        2 },
+        { WPN_GIANT_SPIKED_CLUB, 1 }, };
+    static const weapon_list DOUBLE_OGRE_WEAPONS = // total 100
+    {   { WPN_GIANT_CLUB,        60 },
+        { WPN_GIANT_SPIKED_CLUB, 30 },
+        { WPN_DIRE_FLAIL,        9 },
+        { WPN_GREAT_MACE,        1 }, };
+    static const weapon_list FAUN_WEAPONS =
+    {   { WPN_SPEAR,            2 },
+        { WPN_CLUB,             1 },
+        { WPN_QUARTERSTAFF,     1 }, };
+    static const mon_weapon_spec EFREET_WSPEC =
+    { { { WPN_SCIMITAR,         1 } },
+      { 1, 0, 4 },
+      { { SPWPN_FLAMING, 1 } } };
+    static const mon_weapon_spec DAEVA_WSPEC =
+    { { { WPN_EUDEMON_BLADE,    1 },
+        { WPN_SCIMITAR,         2 },
+        { WPN_LONG_SWORD,       1 } },
+      { 1, 2, 5 },
+      { { SPWPN_HOLY_WRATH,     1 } } };
+    static const vector<pair<brand_type, int>> HELL_KNIGHT_BRANDS = // sum 45
+    {   { SPWPN_FLAMING,        13 },
+        { SPWPN_DRAINING,       4 },
+        { SPWPN_VORPAL,         4 },
+        { SPWPN_DISTORTION,     2 },
+        { SPWPN_PAIN,           2 },
+        { NUM_SPECIAL_WEAPONS,  20 }, // 5/9 chance of brand
+    };
+    static const weapon_list URUG_WEAPONS =
+    {   { WPN_HALBERD,          5 },
+        { WPN_GLAIVE,           5 },
+        { WPN_WAR_AXE,          6 },
+        { WPN_GREAT_MACE,       6 },
+        { WPN_BATTLEAXE,        7 },
+        { WPN_LONG_SWORD,       8 },
+        { WPN_SCIMITAR,         8 },
+        { WPN_GREAT_SWORD,      8 },
+        { WPN_BROAD_AXE,        9 },
+        { WPN_DOUBLE_SWORD,     10 },
+        { WPN_EVENINGSTAR,      13 },
+        { WPN_DEMON_TRIDENT,    14 }, };
+    static const weapon_list SP_DEFENDER_WEAPONS =
+    {   { WPN_LAJATANG,         1 },
+        { WPN_QUICK_BLADE,      1 },
+        { WPN_RAPIER,           1 },
+        { WPN_DEMON_WHIP,       1 },
+        { WPN_FLAIL,            1 } };
+    // Demonspawn probably want to use weapons close to the "natural"
+    // demon weapons - demon blades, demon whips, and demon tridents.
+    // So pick from a selection of good weapons from those classes
+    // with about a 1/4 chance in each category of having the demon
+    // weapon.
+    // XXX: this is so ridiculously overengineered
+    static const weapon_list DS_WEAPONS =
+    {   { WPN_LONG_SWORD,       10 },
+        { WPN_SCIMITAR,         10 },
+        { WPN_GREAT_SWORD,      10 },
+        { WPN_DEMON_BLADE,      10 },
+        { WPN_MACE,             10 },
+        { WPN_MORNINGSTAR,      8 },
+        { WPN_EVENINGSTAR,      2 },
+        { WPN_DIRE_FLAIL,       10 },
+        { WPN_DEMON_WHIP,       10 },
+        { WPN_TRIDENT,          10 },
+        { WPN_HALBERD,          10 },
+        { WPN_GLAIVE,           10 },
+        { WPN_DEMON_TRIDENT,    10 } };
+    static const weapon_list GARGOYLE_WEAPONS =
+    {   { WPN_MACE,             15 },
+        { WPN_FLAIL,            10 },
+        { WPN_MORNINGSTAR,      5 },
+        { WPN_DIRE_FLAIL,       2 }, };
+
+    static const map<monster_type, mon_weapon_spec> primary_weapon_specs = {
+        { MONS_HOBGOBLIN,
+            { { { WPN_CLUB,             3 },
+                { NUM_WEAPONS,          2 },
+        } } },
+        { MONS_ROBIN,
+            { { { WPN_CLUB,             35 },
+                { WPN_DAGGER,           30 },
+                { WPN_SPEAR,            30 },
+                { WPN_SHORT_SWORD,      20 },
+                { WPN_MACE,             20 },
+                { WPN_WHIP,             15 },
+                { WPN_TRIDENT,          10 },
+                { WPN_FALCHION,         10 },
+        } } },
+        { MONS_GOBLIN,                  { GOBLIN_WEAPONS } },
+        { MONS_JESSICA,                 { GOBLIN_WEAPONS } },
+        { MONS_IJYB,                    { GOBLIN_WEAPONS } },
+        { MONS_WIGHT,
+            { { { WPN_MORNINGSTAR,      4 },
+                { WPN_DIRE_FLAIL,       4 },
+                { WPN_WAR_AXE,          4 },
+                { WPN_TRIDENT,          4 },
+                { WPN_MACE,             7 },
+                { WPN_FLAIL,            7 },
+                { WPN_FALCHION,         7 },
+                { WPN_DAGGER,           7 },
+                { WPN_SHORT_SWORD,      7 },
+                { WPN_LONG_SWORD,       7 },
+                { WPN_SCIMITAR,         7 },
+                { WPN_GREAT_SWORD,      7 },
+                { WPN_HAND_AXE,         7 },
+                { WPN_BATTLEAXE,        7 },
+                { WPN_SPEAR,            7 },
+                { WPN_HALBERD,          7 },
+            } } },
+        { MONS_EDMUND,
+            { { { WPN_DIRE_FLAIL,       1 },
+                { WPN_FLAIL,            2 },
+        }, {}, {}, 1 } },
+        { MONS_DEATH_KNIGHT,
+            { { { WPN_MORNINGSTAR,      5 },
+                { WPN_GREAT_MACE,       5 },
+                { WPN_HALBERD,          5 },
+                { WPN_GREAT_SWORD,      5 },
+                { WPN_GLAIVE,           8 },
+                { WPN_BROAD_AXE,        10 },
+                { WPN_BATTLEAXE,        15 },
+        }, {2, 1, 4} } },
+        { MONS_GNOLL,                   { GNOLL_WEAPONS } },
+        { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
+        { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
+        { MONS_GREATER_NAGA,            { GNOLL_WEAPONS } },
+        { MONS_GNOLL_SHAMAN,
+            { { { WPN_CLUB,             1 },
+                { WPN_WHIP,             1 },
+        } } },
+        { MONS_GNOLL_SERGEANT,
+            { { { WPN_SPEAR,            2 },
+                { WPN_TRIDENT,          1 },
+        }, {}, {}, 3 } },
+        { MONS_PIKEL, { { { WPN_WHIP, 1 } }, { 1, 0, 2 }, {
+            { SPWPN_FLAMING, 2 },
+            { SPWPN_FREEZING, 2 },
+            { SPWPN_ELECTROCUTION, 1 },
+        } } },
+        { MONS_GRUM,
+            { { { WPN_SPEAR,            3 },
+                { WPN_HALBERD,          1 },
+                { WPN_GLAIVE,           1 },
+        }, { 1, -2, 1 } } },
+        { MONS_CRAZY_YIUF,
+            { { { WPN_QUARTERSTAFF, 1 } },
+            { 1, 2, 4 },
+            { { SPWPN_CHAOS, 1 } } } },
+        { MONS_JOSEPH, { { { WPN_QUARTERSTAFF, 1 } } } },
+        { MONS_SPRIGGAN_DRUID, { { { WPN_QUARTERSTAFF, 1 } } } },
+        { MONS_BAI_SUZHEN, { { { WPN_QUARTERSTAFF, 1 } } } },
+        { MONS_ORC,                     { ORC_WEAPONS } },
+        { MONS_ORC_PRIEST,              { ORC_WEAPONS } },
+        { MONS_DRACONIAN,               { ORC_WEAPONS } },
+        { MONS_DRACONIAN_ZEALOT,        { ORC_WEAPONS } },
+        { MONS_TERENCE,
+            { { { WPN_FLAIL,            30 },
+                { WPN_HAND_AXE,         20 },
+                { WPN_SHORT_SWORD,      20 },
+                { WPN_MACE,             20 },
+                { WPN_TRIDENT,          10 },
+                { WPN_FALCHION,         10 },
+                { WPN_MORNINGSTAR,      3 },
+        } } },
+        { MONS_DUVESSA,
+            { { { WPN_SHORT_SWORD,      3 },
+                { WPN_RAPIER,           1 },
+        } } },
+        { MONS_ASTERION, {
+            { { WPN_DEMON_WHIP,         1 },
+              { WPN_DEMON_BLADE,        1 },
+              { WPN_DEMON_TRIDENT,      1 },
+              { WPN_MORNINGSTAR,        1 },
+              { WPN_BROAD_AXE,          1 }, },
+            {}, {}, 1,
+        } },
+        { MONS_MARA,
+            { { { WPN_DEMON_WHIP,       1 },
+                { WPN_DEMON_TRIDENT,    1 },
+                { WPN_DEMON_BLADE,      1 },
+        }, {}, {}, 1 } },
+        { MONS_RAKSHASA,
+            { { { WPN_WHIP,             1 },
+                { WPN_TRIDENT,          1 },
+                { WPN_LONG_SWORD,       1 },
+        } } },
+        { MONS_DEEP_ELF_KNIGHT,         { DE_KNIGHT_WEAPONS } },
+        { MONS_DEEP_ELF_HIGH_PRIEST,    { DE_KNIGHT_WEAPONS } },
+        { MONS_DEEP_ELF_BLADEMASTER,
+            { { { WPN_RAPIER,           20 },
+                { WPN_SHORT_SWORD,      5 },
+                { WPN_QUICK_BLADE,      1 },
+        } } },
+        { MONS_DEEP_ELF_ARCHER,
+            { { { WPN_SHORT_SWORD,      1 },
+                { WPN_DAGGER,           1 },
+        } } },
+        { MONS_DEEP_ELF_MASTER_ARCHER, { { { WPN_LONGBOW, 1 } } } },
+        { MONS_DEEP_ELF_MAGE,           { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_ANNIHILATOR,    { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_DEATH_MAGE,     { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_DEMONOLOGIST,   { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_SORCERER,       { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_ELEMENTALIST,   { DE_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_SHIFTER,       { DRAC_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_SCORCHER,      { DRAC_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_ANNIHILATOR,   { DRAC_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_CALLER,        { DRAC_MAGE_WEAPONS } },
+        { MONS_VASHNIA,                 { NAGA_WEAPONS, {}, {}, 1 } },
+        { MONS_NAGA_SHARPSHOOTER,       { NAGA_WEAPONS } },
+        { MONS_NAGA,                    { NAGA_WEAPONS } },
+        { MONS_NAGA_WARRIOR,            { NAGA_WEAPONS } },
+        { MONS_ORC_WARRIOR,             { NAGA_WEAPONS } },
+        { MONS_ORC_HIGH_PRIEST,         { NAGA_WEAPONS } },
+        { MONS_BLORK_THE_ORC,           { NAGA_WEAPONS } },
+        { MONS_DANCING_WEAPON,          { NAGA_WEAPONS, {}, {}, 1 } },
+        { MONS_SPECTRAL_WEAPON,         { NAGA_WEAPONS } }, // for mspec placement
+        { MONS_FRANCES,                 { NAGA_WEAPONS } },
+        { MONS_HAROLD,                  { NAGA_WEAPONS } },
+        { MONS_LOUISE,                  { NAGA_WEAPONS } },
+        { MONS_SKELETAL_WARRIOR,        { NAGA_WEAPONS } },
+        { MONS_PALE_DRACONIAN,          { NAGA_WEAPONS } },
+        { MONS_RED_DRACONIAN,           { NAGA_WEAPONS } },
+        { MONS_WHITE_DRACONIAN,         { NAGA_WEAPONS } },
+        { MONS_GREEN_DRACONIAN,         { NAGA_WEAPONS } },
+        { MONS_MOTTLED_DRACONIAN,       { NAGA_WEAPONS } },
+        { MONS_BLACK_DRACONIAN,         { NAGA_WEAPONS } },
+        { MONS_YELLOW_DRACONIAN,        { NAGA_WEAPONS } },
+        { MONS_PURPLE_DRACONIAN,        { NAGA_WEAPONS } },
+        { MONS_GREY_DRACONIAN,          { NAGA_WEAPONS } },
+        { MONS_TENGU,                   { NAGA_WEAPONS } },
+        { MONS_NAGA_RITUALIST,
+            { { { WPN_DAGGER,           12 },
+                { WPN_SCIMITAR,         5 },
+        }, { 2, 1, 4 }, { { SPWPN_VENOM, 1 } } } },
+        { MONS_TIAMAT,
+            { { { WPN_BARDICHE,         1 },
+                { WPN_DEMON_TRIDENT,    1 },
+                { WPN_GLAIVE,           1 },
+        }, {}, {}, 1 } },
+        { MONS_RUPERT,
+            // Rupert favours big two-handers with visceral up-close
+            // effects, i.e. no polearms.
+            { { { WPN_GREAT_MACE,       10 },
+                { WPN_GREAT_SWORD,      6 },
+                { WPN_TRIPLE_SWORD,     2 },
+                { WPN_BATTLEAXE,        8 },
+                { WPN_EXECUTIONERS_AXE, 2 },
+        }, {}, {}, 1 } },
+        { MONS_TENGU_REAVER,            ORC_WARLORD_WSPEC },
+        { MONS_VAULT_WARDEN,            ORC_WARLORD_WSPEC },
+        { MONS_ORC_WARLORD,             ORC_WARLORD_WSPEC },
+        { MONS_SAINT_ROKA,              ORC_WARLORD_WSPEC },
+        { MONS_DRACONIAN_KNIGHT,        ORC_WARLORD_WSPEC },
+        { MONS_ORC_KNIGHT,              ORC_KNIGHT_WSPEC },
+        { MONS_TENGU_WARRIOR,           ORC_KNIGHT_WSPEC },
+        { MONS_VAULT_GUARD,             ORC_KNIGHT_WSPEC },
+        { MONS_VAMPIRE_KNIGHT,          ORC_KNIGHT_WSPEC },
+        { MONS_JORY,                    ORC_KNIGHT_WSPEC },
+        { MONS_VAULT_SENTINEL,
+            { { { WPN_LONG_SWORD,       5 },
+                { WPN_FALCHION,         4 },
+                { WPN_WAR_AXE,          3 },
+                { WPN_MORNINGSTAR,      3 },
+        } } },
+        { MONS_IRONBRAND_CONVOKER,      { IRON_WEAPONS } },
+        { MONS_IRONHEART_PRESERVER,     { IRON_WEAPONS } },
+        { MONS_SIGMUND, { { { WPN_SCYTHE, 1 } } } },
+        { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
+        { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
+        { MONS_RED_DEVIL,
+            { { { WPN_TRIDENT,          4 },
+                { WPN_DEMON_TRIDENT,    1 },
+        } } },
+        { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
+        { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
+        { MONS_ETTIN,
+            { { { WPN_DIRE_FLAIL,       9 },
+                { WPN_GREAT_MACE,       1 },
+        } } },
+        { MONS_OGRE,                    { OGRE_WEAPONS } },
+        { MONS_HILL_GIANT,              { OGRE_WEAPONS } },
+        { MONS_EROLCHA,                 { OGRE_WEAPONS } },
+        { MONS_ILSUIW, {
+            { { WPN_TRIDENT,            1 } },
+            { 1, -1, 6, 2 },
+            { { SPWPN_FREEZING, 1 } }
+        } },
+        { MONS_MERFOLK_IMPALER,
+            { { { WPN_TRIDENT,          20 },
+                { WPN_DEMON_TRIDENT,    3 },
+        } } },
+        { MONS_MERFOLK_AQUAMANCER, { { { WPN_RAPIER, 1 } }, {}, {}, 2 } },
+        { MONS_MERFOLK_JAVELINEER, { { { WPN_SPEAR, 1 } } } },
+        { MONS_SPRIGGAN_RIDER, { { { WPN_SPEAR, 1 } } } },
+        { MONS_MERFOLK, { { { WPN_TRIDENT, 1 } } } },
+        { MONS_SIREN,
+            { { { WPN_TRIDENT,          1 },
+                { WPN_SPEAR,            2 },
+        } } },
+        { MONS_CENTAUR, { { { WPN_SHORTBOW, 1 } } } },
+        { MONS_CENTAUR_WARRIOR,
+            { { { WPN_SHORTBOW,         2 },
+                { WPN_LONGBOW,          1 },
+        } } },
+        { MONS_FAUN,                    { FAUN_WEAPONS } },
+        { MONS_SATYR,                   { FAUN_WEAPONS } },
+        { MONS_NESSOS, {
+            { { WPN_LONGBOW,            1 } },
+            { 1, 1, 3 },
+            { { SPWPN_FLAMING, 1 } }
+        } },
+        { MONS_YAKTAUR, { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR_CAPTAIN, { { { WPN_ARBALEST, 1 } } } },
+        { MONS_EFREET,                  EFREET_WSPEC },
+        { MONS_ERICA,                   EFREET_WSPEC },
+        { MONS_AZRAEL,                  EFREET_WSPEC },
+        { MONS_ANGEL, {
+            { { WPN_WHIP,               3 },
+              { WPN_SACRED_SCOURGE,     1 }, },
+            { 1, 1, 3 },
+            { { SPWPN_HOLY_WRATH, 1 } },
+        } },
+        { MONS_CHERUB,
+            { { { WPN_FLAIL,            1 },
+                { WPN_LONG_SWORD,       1 },
+                { WPN_SCIMITAR,         1 },
+                { WPN_FALCHION,         1 }, },
+            { 1, 0, 4 },
+            { { SPWPN_FLAMING, 1 } },
+        } },
+        { MONS_SERAPH, {
+            { { WPN_GREAT_SWORD,        1 } },
+            { 1, 3, 8 }, // highly enchanted, we're top rank
+            { { SPWPN_FLAMING, 1 } },
+        } },
+        { MONS_DAEVA,                   DAEVA_WSPEC },
+        { MONS_MENNAS,                  DAEVA_WSPEC },
+        { MONS_PROFANE_SERVITOR,
+            { { { WPN_DEMON_WHIP,       1 },
+                { WPN_WHIP,             3 }, },
+              { 1, 1, 3 },
+        } },
+        { MONS_DONALD,
+            { { { WPN_SCIMITAR,         12 },
+                { WPN_LONG_SWORD,       10 },
+                { WPN_BROAD_AXE,        9 },
+                { WPN_EVENINGSTAR,      7 },
+                { WPN_DOUBLE_SWORD,     7 },
+                { WPN_DEMON_TRIDENT,    7 },
+                { WPN_WAR_AXE,          3 },
+        } } },
+        { MONS_HELL_KNIGHT,
+            { { { WPN_DEMON_WHIP,       1 },
+                { WPN_DEMON_BLADE,      1 },
+                { WPN_DEMON_TRIDENT,    1 },
+                { WPN_HALBERD,          1 },
+                { WPN_GLAIVE,           1 },
+                { WPN_WAR_AXE,          1 },
+                { WPN_GREAT_MACE,       1 },
+                { WPN_BATTLEAXE,        1 },
+                { WPN_LONG_SWORD,       1 },
+                { WPN_SCIMITAR,         1 },
+                { WPN_GREAT_SWORD,      1 },
+                { WPN_BROAD_AXE,        1 }, },
+              { 1, 0, 5 },
+              HELL_KNIGHT_BRANDS
+        } },
+        { MONS_MARGERY,
+            { { { WPN_DEMON_WHIP,       2 },
+                { WPN_DEMON_BLADE,      2 },
+                { WPN_DEMON_TRIDENT,    2 },
+                { WPN_HALBERD,          1 },
+                { WPN_GLAIVE,           1 },
+                { WPN_WAR_AXE,          1 },
+                { WPN_GREAT_MACE,       1 },
+                { WPN_BATTLEAXE,        1 },
+                { WPN_LONG_SWORD,       1 },
+                { WPN_SCIMITAR,         1 },
+                { WPN_GREAT_SWORD,      1 },
+                { WPN_BROAD_AXE,        1 }, },
+              { 1, 0, 5 },
+              HELL_KNIGHT_BRANDS
+        } },
+        { MONS_URUG,                    { URUG_WEAPONS } },
+        { MONS_FREDERICK,               { URUG_WEAPONS } },
+        { MONS_FIRE_GIANT, {
+            { { WPN_GREAT_SWORD,        1 } }, {},
+            { { SPWPN_FLAMING, 1 } },
+        } },
+        { MONS_FROST_GIANT, {
+            { { WPN_BATTLEAXE,          1 } }, {},
+            { { SPWPN_FREEZING, 1 } },
+        } },
+        { MONS_ORC_WIZARD,      { { { WPN_DAGGER, 1 } } } },
+        { MONS_ORC_SORCERER,    { { { WPN_DAGGER, 1 } } } },
+        { MONS_NERGALLE,        { { { WPN_DAGGER, 1 } } } },
+        { MONS_DOWAN,           { { { WPN_DAGGER, 1 } } } },
+        { MONS_KOBOLD_DEMONOLOGIST, { { { WPN_DAGGER, 1 } } } },
+        { MONS_NECROMANCER,      { { { WPN_DAGGER, 1 } } } },
+        { MONS_WIZARD,          { { { WPN_DAGGER, 1 } } } },
+        { MONS_JOSEPHINE,       { { { WPN_DAGGER, 1 } } } },
+        { MONS_PSYCHE, {
+            { { WPN_DAGGER,             1 }, },
+            { 1, 0, 4 },
+            { { SPWPN_CHAOS, 3 },
+              { SPWPN_DISTORTION, 1 } },
+        } },
+        { MONS_AGNES,       { { { WPN_LAJATANG, 1 } } } },
+        { MONS_SONJA, {
+            { { WPN_DAGGER,             1 },
+              { WPN_SHORT_SWORD,        1 }, }, {},
+            { { SPWPN_DISTORTION,       3 },
+              { SPWPN_VENOM,            2 },
+              { SPWPN_DRAINING,         1 } },
+        } },
+        { MONS_MAURICE,
+            { { { WPN_DAGGER,           1 },
+                { WPN_SHORT_SWORD,      1 },
+        } } },
+        { MONS_EUSTACHIO,
+            { { { WPN_FALCHION,         1 },
+                { WPN_RAPIER,           2 },
+        } } },
+        { MONS_NIKOLA, {
+            { { WPN_RAPIER,             1 } },
+            { 1, 0, 4 },
+            { { SPWPN_ELECTROCUTION, 1 } },
+        } },
+        { MONS_SALAMANDER_MYSTIC,
+            { { { WPN_QUARTERSTAFF,     10 },
+                { WPN_DAGGER,           5 },
+                { WPN_SCIMITAR,         2 },
+        } } },
+        { MONS_SPRIGGAN,
+            { { { WPN_DAGGER,           1 },
+                { WPN_SHORT_SWORD,      1 },
+                { WPN_RAPIER,           1 },
+        } } },
+        { MONS_SPRIGGAN_BERSERKER, {
+            { { WPN_QUARTERSTAFF,       10 },
+              { WPN_HAND_AXE,           9 },
+              { WPN_WAR_AXE,            12 },
+              { WPN_BROAD_AXE,          5 },
+              { WPN_FLAIL,              5 },
+              { WPN_RAPIER,             10 }, }, {},
+            { { SPWPN_ANTIMAGIC, 1 },
+              { NUM_SPECIAL_WEAPONS, 3 } },
+        } },
+        { MONS_SPRIGGAN_DEFENDER, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
+        { MONS_THE_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
+        { MONS_HELLBINDER, { { { WPN_DEMON_BLADE, 1 } } } },
+        { MONS_IGNACIO, {
+            { { WPN_EXECUTIONERS_AXE, 1 } },
+            { 1, 2, 8 },
+            { { SPWPN_PAIN, 1 } },
+        } },
+        { MONS_ANCIENT_CHAMPION, {
+            { { WPN_GREAT_MACE,         1 },
+              { WPN_BATTLEAXE,          1 },
+              { WPN_GREAT_SWORD,        1 }, },
+            { 1, 0, 3 },
+            { { SPWPN_DRAINING,      13 }, // total 45
+              { SPWPN_VORPAL,        7 },
+              { SPWPN_FREEZING,      4 },
+              { SPWPN_FLAMING,       4 },
+              { SPWPN_PAIN,          2 },
+              { NUM_SPECIAL_WEAPONS, 15 } }, // 2/3 chance of brand
+        } },
+        { MONS_SOJOBO, {
+            { { WPN_TRIPLE_SWORD,       1 },
+              { WPN_GREAT_SWORD,        5 } }, {},
+            { { SPWPN_ELECTROCUTION, 2 },
+              { NUM_SPECIAL_WEAPONS, 1 } },
+            1,
+        } },
+        { MONS_INFERNAL_DEMONSPAWN,     { DS_WEAPONS } },
+        { MONS_GELID_DEMONSPAWN,        { DS_WEAPONS } },
+        { MONS_PUTRID_DEMONSPAWN,       { DS_WEAPONS } },
+        { MONS_TORTUROUS_DEMONSPAWN,    { DS_WEAPONS } },
+        { MONS_CORRUPTER,               { DS_WEAPONS } },
+        { MONS_BLACK_SUN,               { DS_WEAPONS } },
+        { MONS_BLOOD_SAINT, {
+            { { WPN_DAGGER,             4 },
+              { WPN_QUARTERSTAFF,       1 } },
+        } },
+        { MONS_WARMONGER, {
+            { { WPN_DEMON_BLADE,        10 },
+              { WPN_DEMON_WHIP,         10 },
+              { WPN_DEMON_TRIDENT,      10 },
+              { WPN_BATTLEAXE,          7 },
+              { WPN_GREAT_SWORD,        5 },
+              { WPN_DOUBLE_SWORD,       2 },
+              { WPN_DIRE_FLAIL,         5 },
+              { WPN_GREAT_MACE,         2 },
+              { WPN_GLAIVE,             5 },
+              { WPN_BARDICHE,           2 },
+              { WPN_LAJATANG,           1 }, },
+           {}, {}, 1,
+        } },
+        { MONS_GARGOYLE,                { GARGOYLE_WEAPONS } },
+        { MONS_MOLTEN_GARGOYLE,         { GARGOYLE_WEAPONS } },
+        { MONS_WAR_GARGOYLE, {
+            { { WPN_MORNINGSTAR,        10 },
+              { WPN_FLAIL,              10 },
+              { WPN_DIRE_FLAIL,         5 },
+              { WPN_GREAT_MACE,         5 },
+              { WPN_LAJATANG,           1 } },
+            {}, {}, 4,
+        } },
+        { MONS_ANUBIS_GUARD, { // crook and flail
+           { { WPN_FLAIL,               10 },
+             { WPN_DIRE_FLAIL,          5 },
+             { WPN_QUARTERSTAFF,        15 } },
+        } },
+        { MONS_MELIAI, { // labrys
+            { { WPN_HAND_AXE,           12 },
+              { WPN_WAR_AXE,            7 },
+              { WPN_BROAD_AXE,          1 }, },
+        } },
+    };
+
+    static const weapon_list ORC_KNIGHT_BOWS =
+    {   { WPN_ARBALEST,                 1 },
+        { NUM_WEAPONS,                  8 }, }; // 1/9 chance of ranged weapon
+
+    static const map<monster_type, mon_weapon_spec> secondary_weapon_specs = {
+        { MONS_JOSEPH, { { { WPN_HUNTING_SLING, 1 } } } },
+        { MONS_DEEP_ELF_ARCHER, // XXX: merge w/centaur warrior primary?
+            { { { WPN_SHORTBOW,         2 },
+                { WPN_LONGBOW,          1 },
+        } } },
+        { MONS_VASHNIA,
+            { { { WPN_LONGBOW,          1 },
+                { WPN_ARBALEST,         1 },
+        } } },
+        { MONS_NAGA_SHARPSHOOTER,
+            { { { WPN_ARBALEST,         3 },
+                { WPN_SHORTBOW,         2 },
+                { WPN_LONGBOW,          1 }
+        } } },
+        { MONS_VAULT_WARDEN,            { ORC_KNIGHT_BOWS } },
+        { MONS_ORC_WARLORD,             { ORC_KNIGHT_BOWS } },
+        { MONS_SAINT_ROKA,              { ORC_KNIGHT_BOWS } },
+        { MONS_ORC_KNIGHT,              { ORC_KNIGHT_BOWS } },
+        { MONS_TENGU_WARRIOR,
+            { { { WPN_LONGBOW,                  1 },
+                { WPN_ARBALEST,                 1 },
+                { NUM_WEAPONS,                  16 }, // 1/9 chance of weap
+        } } },
+        { MONS_VAULT_SENTINEL,
+            { { { WPN_ARBALEST,                 1 },
+                { NUM_WEAPONS,                  2 },
+        } } },
+        { MONS_FAUN, { { { WPN_HUNTING_SLING, 1 } } } },
+        { MONS_SATYR,
+            { { { WPN_GREATSLING,               1 },
+                { WPN_LONGBOW,                  2 },
+        } } },
+        { MONS_CHERUB,
+            { { { WPN_HUNTING_SLING,            1 },
+                { WPN_GREATSLING,               1 },
+                { WPN_SHORTBOW,                 1 },
+                { WPN_LONGBOW,                  1 },
+        } } },
+        { MONS_SONJA, { { { WPN_BLOWGUN, 1 } } } },
+        // salamanders only have secondary weapons; melee or bow, not both
+        { MONS_SALAMANDER, {
+            { { WPN_HALBERD,                    5 },
+              { WPN_TRIDENT,                    5 },
+              { WPN_SPEAR,                      3 },
+              { WPN_GLAIVE,                     2 },
+              { WPN_SHORTBOW,                   5 }, },
+            { 4, 0, 4 },
+        } },
+        { MONS_SPRIGGAN_RIDER, {
+            { { WPN_BLOWGUN,                    1 },
+              { NUM_WEAPONS,                    14 }, },
+        } },
+        { MONS_WARMONGER, {
+            { { WPN_LONGBOW,                    10 }, // total 60
+              { WPN_ARBALEST,                   9 },
+              { WPN_TRIPLE_CROSSBOW,            1 },
+              { NUM_WEAPONS,                    40 }, }, // 1/3 odds of weap
+            {}, {}, 1,
+        } },
+    };
+
     bool force_item = false;
     bool force_uncursed = false;
 
@@ -219,18 +905,49 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     string equip_tile = "";
 
     item_def item;
-    monster_type type = mon->type;
-
     item.base_type = OBJ_UNASSIGNED;
-
-    if (type == MONS_DANCING_WEAPON)
-        level = ISPEC_GOOD_ITEM;
-
-    // moved setting of quantity here to keep it in mind {dlb}
     item.quantity = 1;
 
-    if (spectral_orcs)
-        type = mon->base_monster;
+    monster_type type = spectral_orcs ? mon->base_monster : mon->type;
+
+    const mon_weapon_spec *weapon_spec =
+        !melee_only && secondary_weapon_specs.count(type) ?
+            map_find(secondary_weapon_specs, type) :
+            map_find(primary_weapon_specs, type);
+    if (weapon_spec)
+    {
+        const weapon_type *wpn_type
+            = random_choose_weighted(weapon_spec->types);
+        ASSERT(wpn_type);
+        if (*wpn_type != NUM_WEAPONS)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = *wpn_type;
+
+            if (weapon_spec->bonus_plus.odds
+                && one_chance_in(weapon_spec->bonus_plus.odds))
+            {
+                const int rolls = max(1, weapon_spec->bonus_plus.nrolls);
+                item.plus += random_range(weapon_spec->bonus_plus.min,
+                                          weapon_spec->bonus_plus.max,
+                                          rolls);
+                force_item = true;
+            }
+
+            if (weapon_spec->good_chance
+                && one_chance_in(weapon_spec->good_chance))
+            {
+                level = ISPEC_GOOD_ITEM;
+            }
+
+            const brand_type *brand = random_choose_weighted(weapon_spec->brands);
+            if (brand && *brand != NUM_SPECIAL_WEAPONS)
+            {
+                set_item_ego_type(item, OBJ_WEAPONS, *brand);
+                force_item = true;
+            }
+        }
+    }
 
     switch (type)
     {
@@ -259,27 +976,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
-    case MONS_HOBGOBLIN:
-        if (x_chance_in_y(3, 5))     // give hand weapon
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CLUB;
-        }
-        break;
-
-    case MONS_ROBIN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(35, WPN_CLUB,
-                                                30, WPN_DAGGER,
-                                                30, WPN_SPEAR,
-                                                20, WPN_SHORT_SWORD,
-                                                20, WPN_MACE,
-                                                15, WPN_WHIP,
-                                                10, WPN_TRIDENT,
-                                                10, WPN_FALCHION,
-                                                0);
-        break;
-
     case MONS_GOBLIN:
         if (!melee_only && one_chance_in(12) && level)
         {
@@ -287,33 +983,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type  = WPN_HUNTING_SLING;
             break;
         }
-        // deliberate fall through {dlb}
-    case MONS_JESSICA:
-    case MONS_IJYB:
-        if (x_chance_in_y(3, 5))     // give hand weapon
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = coinflip() ? WPN_DAGGER : WPN_CLUB;
-        }
         break;
 
     case MONS_WIGHT:
-        item.base_type = OBJ_WEAPONS;
-
-        if (one_chance_in(6))
-        {   // 4.1% each
-            item.sub_type = random_choose(WPN_MORNINGSTAR, WPN_DIRE_FLAIL,
-                                          WPN_WAR_AXE,     WPN_TRIDENT);
-        }
-        else
-        {   // 7% each
-            item.sub_type = random_choose(
-                WPN_MACE,      WPN_FLAIL,       WPN_FALCHION,
-                WPN_DAGGER,    WPN_SHORT_SWORD, WPN_LONG_SWORD,
-                WPN_SCIMITAR,  WPN_GREAT_SWORD, WPN_HAND_AXE,
-                WPN_BATTLEAXE, WPN_SPEAR,       WPN_HALBERD);
-        }
-
         if (coinflip())
         {
             force_item = true;
@@ -327,299 +999,23 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             do_curse_item(item);
         break;
 
-    case MONS_EDMUND:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(3) ? WPN_DIRE_FLAIL : WPN_FLAIL;
-        // "expensive" flail. {due}
-        if (item.sub_type == WPN_FLAIL)
-            level = ISPEC_GOOD_ITEM;
-
-        break;
-
-    case MONS_DEATH_KNIGHT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
-                                               5, WPN_HALBERD,     8, WPN_GLAIVE,
-                                               5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
-                                               15, WPN_BATTLEAXE, 0);
-        if (coinflip())
-        {
-            force_item = true;
-            item.plus += 1 + random2(4);
-        }
-        break;
-
-    case MONS_GNOLL:
-    case MONS_OGRE_MAGE:
-    case MONS_NAGA_MAGE:
-    case MONS_GREATER_NAGA:
-        if (!one_chance_in(5))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_SPEAR, WPN_SPEAR, WPN_HALBERD,
-                                           WPN_CLUB,  WPN_WHIP,  WPN_FLAIL);
-        }
-        break;
-
-    case MONS_GNOLL_SHAMAN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = coinflip() ? WPN_CLUB : WPN_WHIP;
-        break;
-
-    case MONS_GNOLL_SERGEANT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
-        if (one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_PIKEL:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_WHIP;
-        set_item_ego_type(item, OBJ_WEAPONS,
-                          random_choose_weighted(2, SPWPN_FLAMING,
-                                                 2, SPWPN_FREEZING,
-                                                 1, SPWPN_ELECTROCUTION,
-                                                 0));
-        item.plus += random2(3);
-        break;
-
-    case MONS_GRUM:
-        force_item = true; // guaranteed reaching
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(3, WPN_SPEAR,
-                                                1, WPN_HALBERD,
-                                                1, WPN_GLAIVE,
-                                                0);
-        item.plus += -2 + random2(4);
-        break;
-
-    case MONS_CRAZY_YIUF:
-        force_item        = true; // guaranteed chaos
-        item.base_type    = OBJ_WEAPONS;
-        item.sub_type     = WPN_QUARTERSTAFF;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
-        item.plus        += 2 + random2(3);
-        item.flags       |= ISFLAG_KNOW_TYPE;
-        break;
-
-    case MONS_JOSEPH:
-        if (!melee_only)
-        {
-            item.base_type  = OBJ_WEAPONS;
-            item.sub_type   = WPN_HUNTING_SLING;
-            break;
-        }
-        item.base_type      = OBJ_WEAPONS;
-        item.sub_type       = WPN_QUARTERSTAFF;
-        break;
-
-    case MONS_ORC:
-    case MONS_ORC_PRIEST:
-        // deliberate fall through {gdl}
-    case MONS_DRACONIAN:
-    case MONS_DRACONIAN_ZEALOT:
-        if (!one_chance_in(5))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose_weighted(
-                35, WPN_CLUB,        30, WPN_DAGGER,
-                30, WPN_FLAIL,       30, WPN_HAND_AXE,
-                20, WPN_SHORT_SWORD,
-                20, WPN_MACE,        15, WPN_WHIP,
-                10, WPN_TRIDENT,     10, WPN_FALCHION,
-                6, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
-                0);
-        }
-        break;
-
-    case MONS_TERENCE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(30, WPN_FLAIL,
-                                                20, WPN_HAND_AXE,
-                                                20, WPN_SHORT_SWORD,
-                                                20, WPN_MACE,
-                                                10, WPN_TRIDENT,
-                                                10, WPN_FALCHION,
-                                                3, WPN_MORNINGSTAR,
-                                                0);
-        break;
-
-    case MONS_DUVESSA:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(30, WPN_SHORT_SWORD,
-                                               10, WPN_RAPIER,
-                                               0);
-        break;
-
-    case MONS_MARA:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_DEMON_BLADE, WPN_DEMON_TRIDENT,
-                                      WPN_DEMON_WHIP);
-        level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_RAKSHASA:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_WHIP, WPN_LONG_SWORD,
-                                       WPN_TRIDENT);
-        break;
-
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-    case MONS_DEEP_ELF_KNIGHT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(
-            22, WPN_LONG_SWORD, 22, WPN_SHORT_SWORD, 17, WPN_SCIMITAR,
-            17, WPN_SHORTBOW,   5,  WPN_LONGBOW,
-            0);
-        break;
-
     case MONS_DEEP_ELF_BLADEMASTER:
     {
-        item.base_type = OBJ_WEAPONS;
-
+        ASSERT(item.base_type == OBJ_WEAPONS);
         // If the blademaster already has a weapon, give him the exact same
         // sub_type to match.
-
         const item_def *weap = mon->mslot_item(MSLOT_WEAPON);
         if (weap && weap->base_type == OBJ_WEAPONS)
             item.sub_type = weap->sub_type;
-        else
-        {
-            item.sub_type = random_choose_weighted(40, WPN_RAPIER,
-                                                   10, WPN_SHORT_SWORD,
-                                                   2,  WPN_QUICK_BLADE,
-                                                   0);
-        }
         break;
     }
 
     case MONS_DEEP_ELF_ARCHER:
-        force_uncursed = true;
-        item.base_type = OBJ_WEAPONS;
-        if (!melee_only)
-        {
-            item.sub_type  = random_choose_weighted(2, WPN_SHORTBOW,
-                                                    1, WPN_LONGBOW,
-                                                    0);
-            break;
-        }
-        item.sub_type  = random_choose(WPN_SHORT_SWORD, WPN_DAGGER);
-        break;
-
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_LONGBOW;
-        break;
-
-    case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_DEATH_MAGE:
-    case MONS_DEEP_ELF_DEMONOLOGIST:
-    case MONS_DEEP_ELF_MAGE:
-    case MONS_DEEP_ELF_SORCERER:
-    case MONS_DEEP_ELF_ELEMENTALIST:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_RAPIER,
-                                       WPN_DAGGER);
-        break;
-
-    case MONS_DRACONIAN_SHIFTER:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_CALLER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_RAPIER,
-                                       WPN_DAGGER,      WPN_WHIP);
-        break;
-
     case MONS_VASHNIA:
-        level = ISPEC_GOOD_ITEM;
-        // deliberate fall-through
-
     case MONS_NAGA_SHARPSHOOTER:
+    case MONS_SATYR:
+    case MONS_SONJA:
         force_uncursed = true;
-        if (!melee_only)
-        {
-            item.base_type = OBJ_WEAPONS;
-            if (type == MONS_VASHNIA)
-                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_ARBALEST;
-            else
-            {
-                item.sub_type = random_choose_weighted(3, WPN_ARBALEST,
-                                                       2, WPN_SHORTBOW,
-                                                       1, WPN_LONGBOW,
-                                                       0);
-            }
-            break;
-        }
-        // deliberate fall-through
-
-    case MONS_NAGA:
-    case MONS_NAGA_WARRIOR:
-    case MONS_ORC_WARRIOR:
-    case MONS_ORC_HIGH_PRIEST:
-    case MONS_BLORK_THE_ORC:
-    case MONS_DANCING_WEAPON:   // give_level may have been adjusted above
-    case MONS_SPECTRAL_WEAPON:  // Necessary for placement by mons spec
-    case MONS_FRANCES:
-    case MONS_HAROLD:
-    case MONS_LOUISE:
-    case MONS_SKELETAL_WARRIOR:
-    case MONS_PALE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_GREY_DRACONIAN:
-    case MONS_TENGU:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(
-            10, WPN_LONG_SWORD, 10, WPN_SHORT_SWORD,
-            10, WPN_SCIMITAR,   10, WPN_BATTLEAXE,
-            10, WPN_HAND_AXE,   10, WPN_HALBERD,
-            10, WPN_GLAIVE,     10, WPN_MACE,
-            10, WPN_DIRE_FLAIL, 10, WPN_TRIDENT,
-            9,  WPN_WAR_AXE,    9, WPN_FLAIL,
-            1,  WPN_BROAD_AXE,  1, WPN_MORNINGSTAR,
-            0);
-        break;
-
-    case MONS_NAGA_RITUALIST:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(12, WPN_DAGGER,
-                                                 5, WPN_SCIMITAR,
-                                                 0);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        if (coinflip())
-            item.plus = 1 + random2(4);
-        break;
-
-    case MONS_TIAMAT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_BARDICHE, WPN_DEMON_TRIDENT,
-                                      WPN_GLAIVE);
-        level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_RUPERT:
-        item.base_type = OBJ_WEAPONS;
-        // Rupert favours big two-handers with visceral up-close
-        // effects, i.e. no polearms.
-        item.sub_type = random_choose_weighted(10, WPN_GREAT_MACE,
-                                               6, WPN_GREAT_SWORD,
-                                               2, WPN_TRIPLE_SWORD,
-                                               8, WPN_BATTLEAXE,
-                                               2, WPN_EXECUTIONERS_AXE,
-                                               0);
-        level = ISPEC_GOOD_ITEM;
         break;
 
     case MONS_JORGRUN:
@@ -638,169 +1034,15 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
-    case MONS_MINOTAUR:
-        // Don't pre-equip the Lab minotaur.
-        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
-            break;
-        // Otherwise, give them Lab-ish equipment.
-        if (one_chance_in(25))
-        {
-            item.base_type = OBJ_RODS;
-            do
-            {
-                item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
-            }
-            while (item_type_removed(OBJ_RODS, item.sub_type));
-            break;
-        }
-        // deliberate fall-through
-
-    case MONS_TENGU_REAVER:
-    case MONS_VAULT_WARDEN:
-    case MONS_ORC_WARLORD:
-    case MONS_SAINT_ROKA:
-    case MONS_DRACONIAN_KNIGHT:
-        // being at the top has its privileges
-        if (one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        // deliberate fall-through
-
-    case MONS_ORC_KNIGHT:
-    case MONS_TENGU_WARRIOR:
-        // Occasionally get crossbows, or a longbow for tengu and minotaurs.
-        if (!melee_only && type != MONS_TENGU_REAVER
-            && type != MONS_DRACONIAN_KNIGHT && one_chance_in(9))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = ((type == MONS_TENGU_WARRIOR
-                               || type == MONS_MINOTAUR)
-                              && coinflip())
-                             ? WPN_LONGBOW
-                             : WPN_ARBALEST;
-            break;
-        }
-        // deliberate fall-through
-    case MONS_VAULT_GUARD:
-    case MONS_VAMPIRE_KNIGHT:
-    case MONS_JORY:
-    {
-        item.base_type = OBJ_WEAPONS;
-
-        item.sub_type = random_choose_weighted(
-            4, WPN_GREAT_SWORD, 4, WPN_LONG_SWORD,
-            4, WPN_BATTLEAXE,   4, WPN_WAR_AXE,
-            3, WPN_GREAT_MACE,  2, WPN_DIRE_FLAIL,
-            1, WPN_BARDICHE,    1, WPN_GLAIVE,
-            1, WPN_BROAD_AXE,   1, WPN_HALBERD,
-            0);
-
-        if (one_chance_in(4))
-            item.plus += 1 + random2(3);
-        break;
-    }
-
-    case MONS_VAULT_SENTINEL:
-        if (!melee_only && one_chance_in(3))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_ARBALEST;
-            break;
-        }
-
-        item.base_type = OBJ_WEAPONS;
-
-        item.sub_type = random_choose_weighted(
-            5, WPN_LONG_SWORD,   4, WPN_FALCHION,
-            3, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
-            0);
-
-        break;
-
-    case MONS_IRONBRAND_CONVOKER:
-    case MONS_IRONHEART_PRESERVER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(
-            3, WPN_GREAT_MACE,  2, WPN_DIRE_FLAIL,
-            2, WPN_FLAIL,       2, WPN_MORNINGSTAR,
-            1, WPN_MACE,
-            0);
-        break;
-
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
         item.base_type = OBJ_MISSILES;
         item.sub_type  = MI_LARGE_ROCK;
         break;
 
-    case MONS_TWO_HEADED_OGRE:
-    case MONS_ETTIN:
-    case MONS_IRON_GIANT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
-                                          : WPN_GIANT_CLUB;
-
-        if (one_chance_in(10) || type == MONS_ETTIN)
-        {
-            item.sub_type = one_chance_in(10) ? WPN_GREAT_MACE
-                                              : WPN_DIRE_FLAIL;
-        }
-        break;
-
-    case MONS_REAPER:
-        level = ISPEC_GOOD_ITEM;
-        // intentional fall-through...
-    case MONS_SIGMUND:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SCYTHE;
-        break;
-
-    case MONS_BALRUG:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_DEMON_WHIP;
-        break;
-
-    case MONS_RED_DEVIL:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(5) ? WPN_DEMON_TRIDENT
-                                           : WPN_TRIDENT);
-        break;
-
-    case MONS_OGRE:
-    case MONS_HILL_GIANT:
-    case MONS_EROLCHA:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
-                                           : WPN_GIANT_CLUB);
-        break;
-
-    case MONS_ILSUIW:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_TRIDENT;
-        item.plus      = random_range(-1, 6, 2);
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
-        break;
-
     case MONS_MERFOLK_IMPALER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
-                                               15, WPN_DEMON_TRIDENT,
-                                               0);
-        if (!one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_MERFOLK_AQUAMANCER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_RAPIER;
-        if (coinflip())
-            level = ISPEC_GOOD_ITEM;
-        break;
-
     case MONS_MERFOLK_JAVELINEER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_SPEAR;
+    case MONS_AGNES:
         if (!one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         break;
@@ -814,249 +1056,26 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                     5, WPN_HALBERD,
                                                     5, WPN_GLAIVE,
                                                     0);
-            break;
         }
-        else
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_TRIDENT;
-            break;
-        }
-
-    case MONS_SIREN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
-        break;
-
-    case MONS_CENTAUR:
-    case MONS_CENTAUR_WARRIOR:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SHORTBOW;
-        if (type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
-            item.sub_type = WPN_LONGBOW;
-        break;
-
-    case MONS_SATYR:
-        force_uncursed = true;
-    case MONS_FAUN:
-        item.base_type = OBJ_WEAPONS;
-        if (!melee_only)
-        {
-            item.sub_type = (type == MONS_FAUN ? WPN_HUNTING_SLING :
-                              one_chance_in(3) ? WPN_GREATSLING:
-                                                 WPN_LONGBOW);
-        }
-        else
-        {
-            item.sub_type = random_choose_weighted(2, WPN_SPEAR,
-                                                   1, WPN_CLUB,
-                                                   2, WPN_QUARTERSTAFF,
-                                                   0);
-        }
-        break;
-
-    case MONS_NESSOS:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_LONGBOW;
-        item.plus     += 1 + random2(3);
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
-        break;
-
-    case MONS_YAKTAUR:
-    case MONS_YAKTAUR_CAPTAIN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_ARBALEST;
-        break;
-
-    case MONS_EFREET:
-    case MONS_ERICA:
-    case MONS_AZRAEL:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SCIMITAR;
-        item.plus      = random2(5);
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
     case MONS_ANGEL:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-
-        item.sub_type  = (one_chance_in(4) ? WPN_SACRED_SCOURGE
-                                           : WPN_WHIP);
-
-        set_equip_desc(item, ISFLAG_GLOWING);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-        item.plus   = 1 + random2(3);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        break;
-
-    case MONS_CHERUB:
-        if (!melee_only)
-        {
-            item.base_type  = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_HUNTING_SLING,
-                                           WPN_GREATSLING,
-                                           WPN_SHORTBOW,
-                                           WPN_LONGBOW);
-            break;
-        }
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_FLAIL,
-                                       WPN_LONG_SWORD,
-                                       WPN_SCIMITAR,
-                                       WPN_FALCHION);
-        item.plus   = random2(5);
-        // flaming instead of holy wrath
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        break;
-
-    case MONS_SERAPH:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_GREAT_SWORD;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
-        // highly enchanted, we're top rank
-        item.plus   = 3 + random2(6);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        break;
-
     case MONS_DAEVA:
     case MONS_MENNAS:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-
-        item.sub_type  = random_choose(WPN_EUDEMON_BLADE,
-                                       WPN_SCIMITAR,
-                                       WPN_SCIMITAR,
-                                       WPN_LONG_SWORD);
-
-        set_equip_desc(item, ISFLAG_GLOWING);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-        item.plus   = 2 + random2(4);
-        item.flags |= ISFLAG_KNOW_TYPE;
-        break;
-
     case MONS_PROFANE_SERVITOR:
-        force_item     = true;
-        item.base_type = OBJ_WEAPONS;
-
-        item.sub_type  = (one_chance_in(4) ? WPN_DEMON_WHIP
-                                           : WPN_WHIP);
-
-        set_equip_desc(item, ISFLAG_GLOWING);
-        item.plus   = 1 + random2(3);
-        item.flags |= ISFLAG_KNOW_TYPE;
+        set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
         break;
 
     case MONS_DONALD:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(12, WPN_SCIMITAR,
-                                               10, WPN_LONG_SWORD,
-                                               3, WPN_WAR_AXE,
-                                               9, WPN_BROAD_AXE,
-                                               7, WPN_EVENINGSTAR,
-                                               7, WPN_DOUBLE_SWORD,
-                                               7, WPN_DEMON_TRIDENT,
-                                               0);
-        if (x_chance_in_y(5, 9))
-            level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_MARGERY:
-    case MONS_HELL_KNIGHT:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-
-        if (type == MONS_MARGERY && one_chance_in(5))
-        {
-            item.sub_type = random_choose(WPN_DEMON_WHIP, WPN_DEMON_BLADE,
-                                          WPN_DEMON_TRIDENT);
-        }
-        else
-        {
-            item.sub_type = random_choose(WPN_DEMON_WHIP,
-                                          WPN_DEMON_BLADE,
-                                          WPN_DEMON_TRIDENT,
-                                          WPN_HALBERD,
-                                          WPN_GLAIVE,
-                                          WPN_WAR_AXE,
-                                          WPN_GREAT_MACE,
-                                          WPN_BATTLEAXE,
-                                          WPN_LONG_SWORD,
-                                          WPN_SCIMITAR,
-                                          WPN_GREAT_SWORD,
-                                          WPN_BROAD_AXE);
-        }
-
-        if (x_chance_in_y(5, 9))
-        {
-            set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(13, SPWPN_FLAMING,
-                                                     4, SPWPN_DRAINING,
-                                                     4, SPWPN_VORPAL,
-                                                     2, SPWPN_DISTORTION,
-                                                     2, SPWPN_PAIN,
-                                                     0));
-        }
-
-        item.plus += random2(6);
-        break;
-
     case MONS_FREDERICK:
     case MONS_URUG:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(5, WPN_HALBERD,
-                                               5, WPN_GLAIVE,
-                                               6, WPN_WAR_AXE,
-                                               6, WPN_GREAT_MACE,
-                                               7, WPN_BATTLEAXE,
-                                               8, WPN_LONG_SWORD,
-                                               8, WPN_SCIMITAR,
-                                               8, WPN_GREAT_SWORD,
-                                               9, WPN_BROAD_AXE,
-                                               10, WPN_DOUBLE_SWORD,
-                                               13, WPN_EVENINGSTAR,
-                                               14, WPN_DEMON_TRIDENT,
-                                               0);
         if (x_chance_in_y(5, 9))
             level = ISPEC_GOOD_ITEM;
-        else
+        else if (type != MONS_DONALD)
         {
             item.plus += random2(6);
             force_item = true;
         }
-        break;
-
-    case MONS_FIRE_GIANT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_GREAT_SWORD;
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        item.brand     = SPWPN_FLAMING;
-        break;
-
-    case MONS_FROST_GIANT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_BATTLEAXE;
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        item.brand     = SPWPN_FREEZING;
-        break;
-
-    case MONS_ORC_WIZARD:
-    case MONS_ORC_SORCERER:
-    case MONS_NERGALLE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_DAGGER;
-        break;
-
-    case MONS_DOWAN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_DAGGER;
         break;
 
     case MONS_FANNAR:
@@ -1078,67 +1097,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
-    case MONS_KOBOLD_DEMONOLOGIST:
-    case MONS_NECROMANCER:
-    case MONS_WIZARD:
-    case MONS_PSYCHE:
-    case MONS_JOSEPHINE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_DAGGER;
-
-        if (type == MONS_PSYCHE)
-        {
-            force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(3, SPWPN_CHAOS,
-                                                     1, SPWPN_DISTORTION,
-                                                     0));
-            item.plus = random2(5);
-        }
-        break;
-
-    case MONS_AGNES:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_LAJATANG;
-        if (!one_chance_in(3))
-            level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_SONJA:
-        if (!melee_only)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_BLOWGUN;
-            break;
-        }
-        force_item = true;
-        force_uncursed = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
-        set_item_ego_type(item, OBJ_WEAPONS,
-                          random_choose_weighted(3, SPWPN_DISTORTION,
-                                                 2, SPWPN_VENOM,
-                                                 1, SPWPN_DRAINING,
-                                                 0));
-        break;
-
-    case MONS_MAURICE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
-        break;
-
-    case MONS_EUSTACHIO:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_RAPIER);
-        break;
-
     case MONS_NIKOLA:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_RAPIER;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-        item.plus      = random2(5);
-        item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_ARC_BLADE))
             make_item_unrandart(item, UNRAND_ARC_BLADE);
         break;
@@ -1172,184 +1131,23 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // worth it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
-        // Don't attempt to give the horn again.
-        give_aux_melee = false;
         break;
 
     case MONS_SALAMANDER:
-    {
-        // Give out EITHER a bow or a melee weapon, not both
-        // (and so bail if we've already been given something)
-        if (melee_only)
-            break;
-
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(5, WPN_HALBERD,
-                                                5, WPN_TRIDENT,
-                                                3, WPN_SPEAR,
-                                                2, WPN_GLAIVE,
-                                                5, WPN_SHORTBOW,
-                                                0);
-
         if (is_range_weapon(item))
         {
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
-            item.flags |= ISFLAG_KNOW_TYPE;
-        }
-
-        if (one_chance_in(4))
-            item.plus = random2(5);
-    }
-    break;
-
-    case MONS_SALAMANDER_MYSTIC:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(10, WPN_QUARTERSTAFF,
-                                                 5, WPN_DAGGER,
-                                                 2, WPN_SCIMITAR,
-                                                 0);
-        break;
-
-    case MONS_SPRIGGAN:
-        item.base_type = OBJ_WEAPONS;
-        // no quick blades for mooks
-        item.sub_type  = random_choose(WPN_DAGGER, WPN_SHORT_SWORD,
-                                       WPN_RAPIER);
-        break;
-
-    case MONS_SPRIGGAN_RIDER:
-        if (!melee_only && one_chance_in(15))
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_BLOWGUN;
-            break;
-        }
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SPEAR;
-        break;
-
-    case MONS_SPRIGGAN_BERSERKER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(10, WPN_QUARTERSTAFF,
-                                                 9, WPN_HAND_AXE,
-                                                12, WPN_WAR_AXE,
-                                                 5, WPN_BROAD_AXE,
-                                                 8, WPN_FLAIL,
-                                                10, WPN_RAPIER,
-                                                 0);
-        if (one_chance_in(4))
-        {
             force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
-
         break;
 
-    case MONS_SPRIGGAN_DRUID:
-    case MONS_BAI_SUZHEN:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_QUARTERSTAFF;
-        break;
-
-    case MONS_SPRIGGAN_DEFENDER:
     case MONS_THE_ENCHANTRESS:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_LAJATANG,
-                                       WPN_QUICK_BLADE,
-                                       WPN_RAPIER,
-                                       WPN_DEMON_WHIP,
-                                       WPN_FLAIL);
-        level = ISPEC_GOOD_ITEM;
-        if (type == MONS_THE_ENCHANTRESS && one_chance_in(6))
+        if (one_chance_in(6))
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
             item.plus  = random2(5);
         }
-        break;
-
-    case MONS_IGNACIO:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_EXECUTIONERS_AXE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
-        item.plus      = 2 + random2(7);
-        item.flags    |= ISFLAG_KNOW_TYPE;
-        break;
-
-    case MONS_HELLBINDER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_DEMON_BLADE;
-        break;
-
-    case MONS_ANCIENT_CHAMPION:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_GREAT_MACE,
-                                      WPN_BATTLEAXE,
-                                      WPN_GREAT_SWORD);
-
-        if (x_chance_in_y(2, 3))
-        {
-            set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(12, SPWPN_DRAINING,
-                                                      7, SPWPN_VORPAL,
-                                                      4, SPWPN_FREEZING,
-                                                      4, SPWPN_FLAMING,
-                                                      2, SPWPN_PAIN,
-                                                      0));
-        }
-
-        item.plus += random2(4);
-        break;
-
-    case MONS_SOJOBO:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(6) ? WPN_TRIPLE_SWORD
-                                         : WPN_GREAT_SWORD;
-        if (x_chance_in_y(2, 3))
-        {
-            force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-        }
-        level = ISPEC_GOOD_ITEM;
-        break;
-
-    // case MONS_MONSTROUS_DEMONSPAWN: - they use claws instead
-    case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_GELID_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
-    case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
-        item.base_type = OBJ_WEAPONS;
-        // Demonspawn probably want to use weapons close to the "natural"
-        // demon weapons - demon blades, demon whips, and demon tridents.
-        // So pick from a selection of good weapons from those classes
-        // with about a 1/4 chance in each category of having the demon
-        // weapon.
-        item.sub_type  = random_choose_weighted(10, WPN_LONG_SWORD,
-                                                10, WPN_SCIMITAR,
-                                                10, WPN_GREAT_SWORD,
-                                                10, WPN_DEMON_BLADE,
-                                                10, WPN_MACE,
-                                                 8, WPN_MORNINGSTAR,
-                                                 2, WPN_EVENINGSTAR,
-                                                10, WPN_DIRE_FLAIL,
-                                                10, WPN_DEMON_WHIP,
-                                                10, WPN_TRIDENT,
-                                                10, WPN_HALBERD,
-                                                10, WPN_GLAIVE,
-                                                10, WPN_DEMON_TRIDENT,
-                                                 0);
-        break;
-
-    case MONS_BLOOD_SAINT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(4, WPN_DAGGER,
-                                                1, WPN_QUARTERSTAFF,
-                                                0);
         break;
 
     case MONS_CHAOS_CHAMPION:
@@ -1374,86 +1172,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             level = random2(300);
         break;
 
-    case MONS_WARMONGER:
-        level = ISPEC_GOOD_ITEM;
-        item.base_type = OBJ_WEAPONS;
-        if (!melee_only && one_chance_in(3))
-        {
-            item.sub_type = random_choose_weighted(10, WPN_LONGBOW,
-                                                   9, WPN_ARBALEST,
-                                                   1, WPN_TRIPLE_CROSSBOW,
-                                                   0);
-        }
-        else
-        {
-            item.sub_type = random_choose_weighted(10, WPN_DEMON_BLADE,
-                                                   10, WPN_DEMON_WHIP,
-                                                   10, WPN_DEMON_TRIDENT,
-                                                    7, WPN_BATTLEAXE,
-                                                    5, WPN_GREAT_SWORD,
-                                                    2, WPN_DOUBLE_SWORD,
-                                                    5, WPN_DIRE_FLAIL,
-                                                    2, WPN_GREAT_MACE,
-                                                    5, WPN_GLAIVE,
-                                                    2, WPN_BARDICHE,
-                                                    1, WPN_LAJATANG,
-                                                    0);
-        }
-        break;
-
-    case MONS_ASTERION:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_DEMON_WHIP,
-                                      WPN_DEMON_BLADE,
-                                      WPN_DEMON_TRIDENT,
-                                      WPN_MORNINGSTAR,
-                                      WPN_BROAD_AXE);
-        level = ISPEC_GOOD_ITEM;
-        break;
-
-    case MONS_GARGOYLE:
-    case MONS_MOLTEN_GARGOYLE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(15, WPN_MACE,
-                                               10, WPN_FLAIL,
-                                                5, WPN_MORNINGSTAR,
-                                                2, WPN_DIRE_FLAIL,
-                                                0);
-        break;
-
-    case MONS_WAR_GARGOYLE:
-        item.base_type = OBJ_WEAPONS;
-        if (one_chance_in(4))
-            level = ISPEC_GOOD_ITEM;
-        item.sub_type = random_choose_weighted(10, WPN_MORNINGSTAR,
-                                               10, WPN_FLAIL,
-                                               5, WPN_DIRE_FLAIL,
-                                               5, WPN_GREAT_MACE,
-                                               1, WPN_LAJATANG,
-                                               0);
-        break;
-
     case MONS_ANUBIS_GUARD:
-        // crook and flail
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(10, WPN_FLAIL,
-                                               5, WPN_DIRE_FLAIL,
-                                               15, WPN_QUARTERSTAFF,
-                                               0);
         if (item.sub_type == WPN_QUARTERSTAFF)
         {
             floor_tile = "wpn_staff_mummy";
             equip_tile = "staff_mummy";
         }
-        break;
-
-    case MONS_MELIAI:
-        // labrys
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(12, WPN_HAND_AXE,
-                                                 7, WPN_WAR_AXE,
-                                                 1, WPN_BROAD_AXE,
-                                                 0);
         break;
 
     case MONS_ANCESTOR_HEXER:
@@ -1523,7 +1247,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     _give_monster_item(mon, thing_created, force_item);
 
     if (give_aux_melee &&
-        ((i.base_type != OBJ_WEAPONS && i.base_type != OBJ_STAVES)
+        ((i.base_type != OBJ_WEAPONS && i.base_type != OBJ_STAVES
+          && i.base_type != OBJ_MISCELLANY) // don't double-gift geryon horn
         || is_range_weapon(i)))
     {
         _give_weapon(mon, level, true, false);
