@@ -1234,7 +1234,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item_set_appearance(i);
 
     if (force_uncursed)
+    {
         do_uncurse_item(i);
+        set_ident_flags(i, ISFLAG_KNOW_CURSE); // despoiler
+    }
 
     if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
     {
