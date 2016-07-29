@@ -1728,7 +1728,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     // Dithmenos hates sources of fire.
     // (This is *after* the holy so that the right order of
     //  messages appears.)
-    if (mons_is_fiery(&mons))
+    if ((mons_is_fiery(&mons)) || (mi->mname = "flaming"))
         did_kill_conduct(DID_KILL_FIERY, mons);
 }
 
