@@ -1140,9 +1140,9 @@ static const mutation_def mut_data[] =
 { MUT_GELATINOUS_BODY, 0, 3, mutflag::GOOD | mutflag::JIYVA, true,
   "gelatinous body",
 
-  {"Your rubbery body absorbs attacks. (AC +1)",
-   "Your pliable body absorbs attacks. (AC +1, EV +1)",
-   "Your gelatinous body deflects attacks. (AC +2, EV +2)"},
+  {"Your rubbery body absorbs attacks. (AC +1, EV +1)",
+   "Your pliable body absorbs attacks. (AC +2, EV +2)",
+   "Your gelatinous body deflects attacks. (AC +3, EV +3)"},
 
   {"Your body becomes stretchy.",
    "Your body becomes more malleable.",
@@ -1156,9 +1156,9 @@ static const mutation_def mut_data[] =
 { MUT_EYEBALLS, 0, 3, mutflag::GOOD | mutflag::JIYVA, true,
   "eyeballs",
 
-  {"Your body is partially covered in golden eyeballs. (Acc +3, Confuse)",
-   "Your body is mostly covered in golden eyeballs. (Acc +5, Confuse)",
-   "Your body is completely covered in golden eyeballs. (Acc +7, Confuse, SInv)"},
+  {"Your body has grown golden eyes which may confuse attackers. (Acc +3)",
+   "Your body has grown many golden eyes which may confuse attackers. (Acc +5)",
+   "Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)"},
 
   {"Eyeballs grow over part of your body.",
    "Eyeballs cover a large portion of your body.",
@@ -1172,9 +1172,9 @@ static const mutation_def mut_data[] =
 { MUT_TRANSLUCENT_SKIN, 0, 3, mutflag::GOOD | mutflag::JIYVA, true,
   "translucent skin",
 
-  {"Your skin is partially translucent. (Stealth, -foe acc)",
-   "Your skin is mostly translucent. (Stealth, -foe acc)",
-   "Your skin is entirely transparent. (Stealth, -foe acc)"},
+  {"Your translucent skin slightly reduces your foes' accuracy. (Stealth)",
+   "Your translucent skin reduces your foes' accuracy. (Stealth)",
+   "Your transparent skin significantly reduces your foes' accuracy. (Stealth)"},
 
   {"Your skin becomes partially translucent.",
    "Your skin becomes more translucent.",
@@ -1263,9 +1263,9 @@ static const mutation_def mut_data[] =
 { MUT_ICY_BLUE_SCALES, 2, 3, mutflag::GOOD, true,
   "icy blue scales",
 
-  {"You are partially covered in icy blue scales. (AC +1)",
-   "You are mostly covered in icy blue scales. (AC +3, EV -1)",
-   "You are completely covered in icy blue scales. (AC +4, EV -1, rC+)"},
+  {"You are partially covered in icy blue scales. (AC +2)",
+   "You are mostly covered in icy blue scales. (AC +3)",
+   "You are completely covered in icy blue scales. (AC +4, rC+)"},
 
   {"Icy blue scales grow over part of your body.",
    "Icy blue scales spread over more of your body.",
@@ -1279,9 +1279,9 @@ static const mutation_def mut_data[] =
 { MUT_IRIDESCENT_SCALES, 2, 3, mutflag::GOOD, true,
   "iridescent scales",
 
-  {"You are partially covered in iridescent scales. (AC +4)",
-   "You are mostly covered in iridescent scales. (AC +6)",
-   "You are completely covered in iridescent scales. (AC +8)"},
+  {"You are partially covered in iridescent scales. (AC +2)",
+   "You are mostly covered in iridescent scales. (AC +4)",
+   "You are completely covered in iridescent scales. (AC +6)"},
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",
@@ -1311,9 +1311,9 @@ static const mutation_def mut_data[] =
 { MUT_MOLTEN_SCALES, 2, 3, mutflag::GOOD, true,
   "molten scales",
 
-  {"You are partially covered in molten scales. (AC +1)",
-   "You are mostly covered in molten scales. (AC +3, EV -1)",
-   "You are completely covered in molten scales. (AC +4, EV -1, rF+)"},
+  {"You are partially covered in molten scales. (AC +2)",
+   "You are mostly covered in molten scales. (AC +3)",
+   "You are completely covered in molten scales. (AC +4, rF+)"},
 
   {"Molten scales grow over part of your body.",
    "Molten scales spread over more of your body.",
@@ -1327,9 +1327,9 @@ static const mutation_def mut_data[] =
 { MUT_ROUGH_BLACK_SCALES, 2, 3, mutflag::GOOD, true,
   "rough black scales",
 
-  {"You are partially covered in rough black scales. (AC +4, Dex -1)",
-   "You are mostly covered in rough black scales. (AC +7, Dex -2)",
-   "You are completely covered in rough black scales. (AC +10, Dex -3)"},
+  {"You are partially covered in rough black scales. (AC +2, Dex -1)",
+   "You are mostly covered in rough black scales. (AC +5, Dex -2)",
+   "You are completely covered in rough black scales. (AC +8, Dex -3)"},
 
   {"Rough black scales grow over part of your body.",
    "Rough black scales spread over more of your body.",
