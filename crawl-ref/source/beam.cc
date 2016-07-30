@@ -5239,6 +5239,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = mon->can_mutate();
         break;
 
+    case BEAM_SLOW:
+    case BEAM_HASTE:
+    case BEAM_PARALYSIS:
+        rc = !mon->stasis();
+        break;
+
     case BEAM_POLYMORPH:
         rc = mon->can_polymorph();
         break;
@@ -6342,6 +6348,9 @@ bool bolt::nasty_to(const monster* mon) const
     // sleep
     if (flavour == BEAM_HIBERNATION)
         return mon->can_hibernate();
+
+    if (flavour == BEAM_SLOW || flavour == BEAM_PARALYSIS)
+        return !mon->stasis();
 
     // dispel undead
     if (flavour == BEAM_DISPEL_UNDEAD)
