@@ -228,6 +228,52 @@ struct mon_weapon_spec {
     int good_chance;
 };
 
+/**
+ * Try to apply the given weapon spec to the given base item & generation
+ * parameters; randomly choose a weapon type and, possibly, change other fields.
+ *
+ * @param spec              How to choose weapon type, plusses, brands, etc.
+ * @param item[out]         An item to be populated with subtype and other
+ *                          fields, before or instead of a call to items().
+ * @param force_item[out]   Have we set something (plus, brand) that requires
+ *                          us to skip items()?
+ * @param level[out]        The item's quality level, if we want to override it.
+ * @return                  Did we choose a weapon type?
+ */
+static bool _apply_weapon_spec(const mon_weapon_spec &spec, item_def &item,
+                               bool &force_item, int &level)
+{
+
+    const weapon_type *wpn_type
+        = random_choose_weighted(spec.types);
+    ASSERT(wpn_type);
+    if (*wpn_type == NUM_WEAPONS)
+        return false;
+
+    item.base_type = OBJ_WEAPONS;
+    item.sub_type = *wpn_type;
+
+    if (spec.bonus_plus.odds && one_chance_in(spec.bonus_plus.odds))
+    {
+        const int rolls = max(1, spec.bonus_plus.nrolls);
+        item.plus += random_range(spec.bonus_plus.min, spec.bonus_plus.max,
+                                  rolls);
+        force_item = true;
+    }
+
+    if (spec.good_chance && one_chance_in(spec.good_chance))
+        level = ISPEC_GOOD_ITEM;
+
+    const brand_type *brand = random_choose_weighted(spec.brands);
+    if (brand && *brand != NUM_SPECIAL_WEAPONS)
+    {
+        set_item_ego_type(item, OBJ_WEAPONS, *brand);
+        force_item = true;
+    }
+
+    return true;
+}
+
 static void _give_weapon(monster* mon, int level, bool melee_only = false,
                          bool give_aux_melee = true, bool spectral_orcs = false)
 {
@@ -910,45 +956,22 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     monster_type type = spectral_orcs ? mon->base_monster : mon->type;
 
-    const mon_weapon_spec *weapon_spec =
-        !melee_only && secondary_weapon_specs.count(type) ?
-            map_find(secondary_weapon_specs, type) :
-            map_find(primary_weapon_specs, type);
-    if (weapon_spec)
+    // do we have a secondary weapon to give the monster? (usually ranged)
+    const mon_weapon_spec *secondary_spec = map_find(secondary_weapon_specs,
+                                                     type);
+    if (!secondary_spec || melee_only ||
+        !_apply_weapon_spec(*secondary_spec, item, force_item, level))
     {
-        const weapon_type *wpn_type
-            = random_choose_weighted(weapon_spec->types);
-        ASSERT(wpn_type);
-        if (*wpn_type != NUM_WEAPONS)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type = *wpn_type;
-
-            if (weapon_spec->bonus_plus.odds
-                && one_chance_in(weapon_spec->bonus_plus.odds))
-            {
-                const int rolls = max(1, weapon_spec->bonus_plus.nrolls);
-                item.plus += random_range(weapon_spec->bonus_plus.min,
-                                          weapon_spec->bonus_plus.max,
-                                          rolls);
-                force_item = true;
-            }
-
-            if (weapon_spec->good_chance
-                && one_chance_in(weapon_spec->good_chance))
-            {
-                level = ISPEC_GOOD_ITEM;
-            }
-
-            const brand_type *brand = random_choose_weighted(weapon_spec->brands);
-            if (brand && *brand != NUM_SPECIAL_WEAPONS)
-            {
-                set_item_ego_type(item, OBJ_WEAPONS, *brand);
-                force_item = true;
-            }
-        }
+        // either we're just giving only giving out primary weapons in this
+        // call, or we didn't find a secondary weapon to give. either way,
+        // try to give the monster a primary weapon. (may be its second!)
+        const mon_weapon_spec *primary_spec = map_find(primary_weapon_specs,
+                                                       type);
+        if (primary_spec)
+            _apply_weapon_spec(*primary_spec, item, force_item, level);
     }
 
+    // special cases.
     switch (type)
     {
     case MONS_KOBOLD:
