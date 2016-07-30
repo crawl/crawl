@@ -2573,7 +2573,7 @@ int hex_chance(const spell_type spell, const int hd)
  * Describe mostly non-numeric player-specific information about a spell.
  *
  * (E.g., your god's opinion of it, whether it's in a high-level book that
- * you can't memorize from, whether it's currently useless for whatever
+ * you can't memorise from, whether it's currently useless for whatever
  * reason...)
  *
  * @param spell     The spell in question.
@@ -2644,14 +2644,14 @@ string player_spell_desc(spell_type spell, const item_def* item)
 /**
  * Examine a given spell. Set the given string to its description, stats, &c.
  * If it's a book in a spell that the player is holding, mention the option to
- * memorize it.
+ * memorise it.
  *
  * @param spell         The spell in question.
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
  * @param item          The item (book or rod) holding the spell, if any.
- * @return              Whether you can memorize the spell.
+ * @return              Whether you can memorise the spell.
  */
 static bool _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,

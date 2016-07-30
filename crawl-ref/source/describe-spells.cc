@@ -493,7 +493,7 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc)
 {
-    const bool can_memorize = source_item
+    const bool can_memorise = source_item
                               && source_item->base_type == OBJ_BOOKS
                               && in_inventory(*source_item);
 
@@ -503,8 +503,8 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
     description.textcolour(LIGHTGREY);
 
     description.cprintf("Select a spell to read its description");
-    if (can_memorize)
-        description.cprintf(" or to to memorize it");
+    if (can_memorise)
+        description.cprintf(" or to to memorise it");
     description.cprintf(".\n");
 
     spell_scroller ssc(spells, mon_owner, source_item);
