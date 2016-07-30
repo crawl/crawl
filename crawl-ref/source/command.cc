@@ -1177,7 +1177,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL,
                          CMD_DISPLAY_SPELLS, 0);
     _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a new spell", 2);
-    _add_command(cols, 0, CMD_READ, "read a book to forget a spell", 2);
+    _add_command(cols, 0, CMD_READ, "read a book to see spell descriptions", 2);
 
     // Second column.
     cols.add_formatted(
