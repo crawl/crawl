@@ -590,7 +590,7 @@ The details screen shows:
   * Divine abilities call upon the monster's god for a magical effect.
     They are prevented by silence, but not affected by antimagic.
 
-  * Spells are cast using memorized magical words. They are both
+  * Spells are cast using memorised magical words. They are both
     prevented by silence and affected by antimagic.
 
 ****************************************

@@ -545,7 +545,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (offering_a != offering_b)
         return offering_a;
 
-    // List spells we can memorize right away first.
+    // List spells we can memorise right away first.
     if (player_spell_levels() >= spell_levels_required(a)
         && player_spell_levels() < spell_levels_required(b))
     {
@@ -789,11 +789,11 @@ bool learn_spell()
 }
 
 /**
- * Why can't the player memorize the given spell?
+ * Why can't the player memorise the given spell?
  *
  * @param spell     The spell in question.
  * @return          A string describing (one of) the reason(s) the player
- *                  can't memorize this spell.
+ *                  can't memorise this spell.
  */
 string desc_cannot_memorise_reason(spell_type spell)
 {
