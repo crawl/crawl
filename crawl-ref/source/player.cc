@@ -2256,11 +2256,7 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     evbonus += you.scan_artefacts(ARTP_EVASION);
 
     // mutations
-    if (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1)
-        evbonus--;
-    if (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1)
-        evbonus--;
-    evbonus += max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
+    evbonus += player_mutation_level(MUT_GELATINOUS_BODY);
 
     // transformation penalties/bonuses not covered by size alone:
     if (player_mutation_level(MUT_SLOW_REFLEXES))
@@ -6143,30 +6139,42 @@ int player::armour_class(bool /*calc_unid*/) const
     // Scale mutations, etc. Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
     AC += player_mutation_level(MUT_TOUGH_SKIN)
-          ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                   // +1, +2, +3
+          ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;
+              // +1, +2, +3
     AC += player_mutation_level(MUT_SHAGGY_FUR)
-          ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                   // +1, +2, +3
+          ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;
+              // +1, +2, +3
     AC += player_mutation_level(MUT_GELATINOUS_BODY)
-          ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0; // +1, +1, +2
-    AC += _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL)
-          ? 200 + _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL) * 200 : 0;    // +4, +6, +8
+          ? player_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
+              // +1, +2, +3
+    AC += _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL) * 200;
+              // +2, +4, +6
     AC += _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL) * 100 : 0;    // +2, +3, +4
+          ? 100 + _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
     AC += _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;   // +4, +7, +10
-    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) * 100;              // +1, +2, +3
-    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 +
-          (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1 ? 100 : 0);        // +1, +3, +4
-    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 +
-          (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1 ? 100 : 0);          // +1, +3, +4
+          ? -100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;
+              // +2, +5, +8
+    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) * 100;
+              // +1, +2, +3
+    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL)
+          ? 100 + _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
+    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL)
+          ? 100 + _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
     AC += _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;   // +2, +3, +4
+          ? 100 + _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
     AC += _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
+          ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
+          ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;
+              // +2, +3, +4
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;       // +3, +6, +9
+          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;
+              // +3, +6, +9
     return AC / 100;
 }
  /**
