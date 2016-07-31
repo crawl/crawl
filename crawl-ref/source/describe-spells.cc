@@ -117,6 +117,37 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
                         vulnerabilities.c_str());
 }
 
+static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
+{
+    // XXX: i'm 90% sure there's a neater way to do this (std something?)
+    for (mon_spell_slot slot : book)
+        if (slot.spell == spell)
+            return true;
+    return false;
+}
+
+/**
+ * Is it possible that the given monster could be using the given book, from
+ * what the player knows about each?
+ *
+ * @param book          A list of spells.
+ * @param mon_owner     The monster being examined.
+ * @return              Whether it's possible for the given monster to
+ */
+static bool _book_valid(const vector<mon_spell_slot> &book,
+                        const monster_info &mi)
+{
+    if (!mi.props.exists(SEEN_SPELLS_KEY))
+        return true;
+
+    // assumption: any monster with multiple true spellbooks will only ever
+    // use one of them
+    for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
+        if (!_spell_in_book((spell_type)spell, book))
+            return false;
+    return true;
+}
+
 /**
  * Append all spells of a given type that a given monster may know to the
  * provided vector.
@@ -138,10 +169,16 @@ static void _monster_spellbooks(const monster_info &mi,
 
     const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
 
-    // Loop through books and display spells/abilities for each of them
+    // filter out books we know this monster can't cast (conflicting books)
+    std::vector<size_t> valid_books;
     for (size_t i = 0; i < num_books; ++i)
+       if (num_books <= 1 || _book_valid(books[i], mi))
+           valid_books.emplace_back(i);
+
+    // Loop through books and display spells/abilities for each of them
+    for (size_t i = 0; i < valid_books.size(); ++i)
     {
-        const vector<mon_spell_slot> &book_slots = books[i];
+        const vector<mon_spell_slot> &book_slots = books[valid_books[i]];
         spellbook_contents output_book;
 
         const bool has_silencable = any_of(begin(book_slots), end(book_slots),
@@ -157,9 +194,9 @@ static void _monster_spellbooks(const monster_info &mi,
                 "\n" +
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
-                _booktype_header(type, num_books, has_silencable);
+                _booktype_header(type, valid_books.size(), has_silencable);
         }
-        if (num_books > 1)
+        if (valid_books.size() > 1)
         {
             output_book.label += make_stringf("\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
@@ -188,8 +225,6 @@ static void _monster_spellbooks(const monster_info &mi,
         if (mons_abjure)
             output_book.spells.emplace_back(SPELL_ABJURATION);
 
-        // XXX: it seems like we should be able to just place this in the
-        // vector at the start, without having to copy it in now...?
         all_books.emplace_back(output_book);
     }
 }
