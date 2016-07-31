@@ -17,6 +17,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
+#include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
@@ -216,8 +217,19 @@ spellset monster_spellset(const monster_info &mi)
 
     spellset books;
 
-    for (auto book_flag : book_flags)
-        _monster_spellbooks(mi, book_flag, books);
+    if (mi.type != MONS_PANDEMONIUM_LORD)
+        for (auto book_flag : book_flags)
+            _monster_spellbooks(mi, book_flag, books);
+    else if (mi.props.exists(SEEN_SPELLS_KEY))
+    {
+        spellbook_contents output_book;
+        output_book.label
+          = make_stringf("You have seen %s using the following:",
+                         mi.pronoun(PRONOUN_SUBJECTIVE));
+        for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
+            output_book.spells.emplace_back((spell_type)spell);
+        books.emplace_back(output_book);
+    }
 
     ASSERT(books.size());
     return books;
