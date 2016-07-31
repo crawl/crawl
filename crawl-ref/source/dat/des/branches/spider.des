@@ -1211,34 +1211,6 @@ xxxxcccccccccccccccccccccc+ccx
 xxxxxxxxxxxxxxxxxxxxxxxxx.@.xx
 ENDMAP
 
-NAME: cheibrodos_spider_creepycove
-DEPTH: Spider, !Spider:$
-TAGS: no_item_gen no_monster_gen patrolling
-ORIENT: float
-MONS: necromancer
-KFEAT: ^ = known web trap
-NSUBST: - = 5:defg / 3:^ / *:.
-: dgn.delayed_decay(_G, 'd', 'wolf spider corpse')
-: dgn.delayed_decay(_G, 'e', 'redback corpse')
-: dgn.delayed_decay(_G, 'f', 'jumping spider corpse')
-: dgn.delayed_decay(_G, 'g', 'tarantella corpse')
-MAP
-      xxxxxx
-     xxxxxxxx
-    xx--1--xx
- ...xx-----xx
-@WWWxx-----xxx
-WWWWxx-----xxx
-xWWxxx--W--xx
-xxWxxxxWWWxxx
-xxWWxxxxWxxx
-xxWWxxxWWxx
-xxWWWxxWxxx
- xxWWWWWxx
- xxxxxxxxx
-  xxxxxxx
-ENDMAP
-
 NAME:   hangedman_spider_mandibles
 TAGS:   extra transparent decor
 DEPTH:  Spider
