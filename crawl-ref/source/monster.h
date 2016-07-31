@@ -13,6 +13,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 #define MON_SPEED_KEY "speed"
 #define CUSTOM_SPELLS_KEY "custom_spells"
+#define SEEN_SPELLS_KEY "seen_spells"
 
 #define FAKE_BLINK_KEY "fake_blink"
 
@@ -549,6 +550,7 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void align_avatars(bool force_friendly = false);
     void remove_avatars();
+    void note_spell_cast(spell_type spell);
 
     bool clear_far_engulf() override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
