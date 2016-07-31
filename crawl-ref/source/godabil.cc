@@ -3308,11 +3308,13 @@ int fedhas_check_corpse_spores(bool quiet)
 #endif
     }
 
-    if (yesno("Will you create these spores?", true, 'y'))
-        return count;
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    {
+        viewwindow(false);
+        return -1;
+    }
 
-    viewwindow(false);
-    return -1;
+    return count;
 }
 
 // Destroy corpses in the player's LOS (first corpse on a stack only)
