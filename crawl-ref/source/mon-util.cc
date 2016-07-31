@@ -2390,7 +2390,7 @@ monster_type random_demonspawn_monster_species()
 // spellbooks a given monster can get here should produce the same
 // return values in the following:
 //
-//     (is_unholy_spell() || is_evil_spell())
+//     is_evil_spell()
 //
 //     (is_unclean_spell() || is_chaotic_spell())
 //
