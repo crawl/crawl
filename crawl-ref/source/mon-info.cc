@@ -192,7 +192,8 @@ static bool _is_public_key(string key)
      || key == MUTANT_BEAST_FACETS
      || key == MUTANT_BEAST_TIER
      || key == DOOM_HOUND_HOWLED_KEY
-     || key == MON_GENDER_KEY)
+     || key == MON_GENDER_KEY
+     || key == SEEN_SPELLS_KEY)
     {
         return true;
     }

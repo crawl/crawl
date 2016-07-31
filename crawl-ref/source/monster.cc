@@ -6717,6 +6717,27 @@ int monster::spell_hd(spell_type spell) const
     return hd;
 }
 
+/**
+ * For pandemonium lords & monsters with random spellbooks, track which spells
+ * the player has seen this monster cast.
+ *
+ * @param spell     The spell the player just saw the monster cast.
+ */
+void monster::note_spell_cast(spell_type spell)
+{
+    const monster_info mi(this);
+    if (type != MONS_PANDEMONIUM_LORD && get_spellbooks(mi).size() <= 1)
+        return;
+
+    for (int old_spell : props[SEEN_SPELLS_KEY].get_vector())
+        if (old_spell == spell)
+            return;
+
+    dprf("tracking seen spell %s for %s",
+         spell_title(spell), name(DESC_A, true).c_str());
+    props[SEEN_SPELLS_KEY].get_vector().push_back(spell);
+}
+
 void monster::align_avatars(bool force_friendly)
 {
     mon_attitude_type new_att = (force_friendly ? ATT_FRIENDLY
