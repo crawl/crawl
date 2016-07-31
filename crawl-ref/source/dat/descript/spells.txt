@@ -621,6 +621,10 @@ caster. Those hit by the blast are encased in ice, slowing their movement, and
 those killed by the blast may be frozen into solid blocks of ice. A significant
 portion of its damage bypasses cold resistance.
 %%%%
+Greater Servant of Makhleb spell
+
+<Greater Servant of Makhleb ability>
+%%%%
 Haste Other spell
 
 Speeds the actions of a nearby ally.
