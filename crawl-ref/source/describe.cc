@@ -369,9 +369,9 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_WIZARDRY:
         return "It improves your spell success rate.";
     case RING_FIRE:
-        return "It enhances your fire magic, and weakens your ice magic.";
+        return "It enhances your fire magic.";
     case RING_ICE:
-        return "It enhances your ice magic, and weakens your fire magic.";
+        return "It enhances your ice magic.";
     case RING_TELEPORTATION:
         return "It may teleport you next to monsters.";
 #if TAG_MAJOR_VERSION == 34
