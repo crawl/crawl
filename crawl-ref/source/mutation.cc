@@ -851,9 +851,9 @@ static mutation_type _delete_random_slime_mutation()
     return mutat;
 }
 
-static bool _is_slime_mutation(mutation_type m)
+bool is_slime_mutation(mutation_type mut)
 {
-    return _mut_has_use(mut_data[mut_index[m]], mutflag::JIYVA);
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::JIYVA);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -1706,7 +1706,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
 
             if (which_mutation == RANDOM_NON_SLIME_MUTATION
-                && _is_slime_mutation(mutat))
+                && is_slime_mutation(mutat))
             {
                 continue;
             }
@@ -1720,7 +1720,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
             const mutation_def& mdef = _get_mutation_def(mutat);
 
-            if (random2(10) >= mdef.weight && !_is_slime_mutation(mutat))
+            if (random2(10) >= mdef.weight && !is_slime_mutation(mutat))
                 continue;
 
             const bool mismatch =
@@ -1930,7 +1930,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             colourname = "brown";
         else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
             colourname = "lightgreen";
-        else if (_is_slime_mutation(mut))
+        else if (is_slime_mutation(mut))
             colourname = "green";
         else if (temporary)
             colourname = (you.mutation[mut] > you.temp_mutation[mut]) ?
