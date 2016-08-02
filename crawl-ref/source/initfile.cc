@@ -139,6 +139,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
+        new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
         new BoolGameOption(easy_quit_item_prompts,
                            { "easy_quit_item_prompts", "easy_quit_item_lists" },
                            true),

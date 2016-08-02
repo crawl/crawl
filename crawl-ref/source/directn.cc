@@ -1019,34 +1019,49 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         return true;
     }
     // If the previous targetted position is at all useful, use it.
-    if (hitfunc && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
-                                      range, hitfunc,
-                                      AFF_YES, AFF_MULTIPLE))
+    if (!Options.simple_targeting && hitfunc
+        && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
+                              range, hitfunc, AFF_YES, AFF_MULTIPLE))
     {
         result = you.prev_grd_targ;
         return true;
     }
     // The previous target is no good. Try to find one from scratch.
-    bool success = hitfunc && _find_square_wrapper(result, 1,
-                               bind(_find_monster_expl,
-                                    placeholders::_1, mode,
-                                    needs_path, range, hitfunc,
-                                    // First try to bizap
-                                    AFF_MULTIPLE, AFF_YES),
-                               hitfunc)
-                   || _find_square_wrapper(result, 1,
-                               bind(restricts == DIR_SHADOW_STEP ?
-                                    _find_shadow_step_mons : _find_monster,
-                                    placeholders::_1, mode, needs_path,
-                                    range, hitfunc),
-                               hitfunc);
+    bool success = false;
+
+    if (Options.simple_targeting)
+    {
+        success = _find_square_wrapper(result, 1,
+                                       bind(_find_monster, placeholders::_1,
+                                            mode, needs_path, range, hitfunc),
+                                       hitfunc);
+    }
+    else
+    {
+        success = hitfunc && _find_square_wrapper(result, 1,
+                                                  bind(_find_monster_expl,
+                                                       placeholders::_1, mode,
+                                                       needs_path, range,
+                                                       hitfunc,
+                                                       // First try to bizap
+                                                       AFF_MULTIPLE, AFF_YES),
+                                                  hitfunc)
+                  || _find_square_wrapper(result, 1,
+                                          bind(restricts == DIR_SHADOW_STEP ?
+                                               _find_shadow_step_mons :
+                                               _find_monster,
+                                               placeholders::_1, mode,
+                                               needs_path, range, hitfunc),
+                                          hitfunc);
+    }
 
     // This is used for three things:
     // * For all LRD targetting
     // * To aim explosions so they try to miss you
     // * To hit monsters in LOS that are outside of normal range, but
     //   inside explosion/cloud range
-    if (hitfunc && hitfunc->can_affect_outside_range()
+    if (!Options.simple_targeting && hitfunc
+        && hitfunc->can_affect_outside_range()
         && (!hitfunc->set_aim(result)
             || hitfunc->is_affected(result) < AFF_YES
             || hitfunc->is_affected(you.pos()) > AFF_NO))
