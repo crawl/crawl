@@ -1416,7 +1416,7 @@ static bool _jiyva_retribution()
 
     if (you.can_safely_mutate() && one_chance_in(7))
         _jiyva_mutate_player();
-    else if (one_chance_in(3))
+    else if (one_chance_in(3) && !you.transform_uncancellable)
         _jiyva_transform();
     else if (!one_chance_in(3) || you_worship(god))
         _jiyva_contaminate();
