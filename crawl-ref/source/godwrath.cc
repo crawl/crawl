@@ -277,9 +277,10 @@ static void _zin_remove_good_mutations()
     if (!how_mutated())
         return;
 
+    const god_type god = GOD_ZIN;
     bool success = false;
 
-    simple_god_message(" draws some chaos from your body!", GOD_ZIN);
+    simple_god_message(" draws some chaos from your body!", god);
 
     bool failMsg = true;
 
@@ -287,7 +288,7 @@ static void _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, "Zin's wrath",
+            && delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
                                failMsg, false, true, true))
         {
             success = true;
@@ -298,8 +299,8 @@ static void _zin_remove_good_mutations()
 
     if (success && !how_mutated())
     {
-        simple_god_message(" rids your body of chaos!", GOD_ZIN);
-        dec_penance(GOD_ZIN, 1);
+        simple_god_message(" rids your body of chaos!", god);
+        dec_penance(god, 1);
     }
 }
 
