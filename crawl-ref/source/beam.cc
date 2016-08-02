@@ -1781,29 +1781,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             ensnare(mons);
         break;
 
-    case BEAM_GHOSTLY_FLAME:
-        if (mons->holiness() & MH_UNDEAD)
-            hurted = 0;
-        else
-        {
-            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
-
-            if (!doFlavouredEffects)
-                break;
-
-            if (!hurted)
-            {
-                simple_monster_message(mons,
-                                       (original > 0) ? " completely resists."
-                                                      : " appears unharmed.");
-            }
-            else if (hurted < original)
-                simple_monster_message(mons, " partially resists.");
-            else if (hurted > original)
-                simple_monster_message(mons, " is drained terribly!");
-        }
-        break;
-
     default:
         break;
     }
@@ -3154,9 +3131,6 @@ bool bolt::is_harmless(const monster* mon) const
 
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->is_unbreathing();
-
-    case BEAM_GHOSTLY_FLAME:
-        return bool(mon->holiness() & MH_UNDEAD);
 
     default:
         return false;
@@ -4661,12 +4635,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             simple_monster_message(mon, " is flash-frozen.");
             mon->add_ench(ENCH_FROZEN);
         }
-    }
-
-    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() & MH_UNDEAD)
-    {
-        if (mon->heal(roll_dice(3, 10)))
-            simple_monster_message(mon, " is bolstered by the flame.");
     }
 
     if (origin_spell == SPELL_THROW_BARBS && dmg > 0
@@ -6361,9 +6329,6 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_PAIN)
         return !mon->res_negative_energy();
 
-    if (flavour == BEAM_GHOSTLY_FLAME)
-        return !(mon->holiness() & MH_UNDEAD);
-
     if (flavour == BEAM_TUKIMAS_DANCE)
         return tukima_affects(*mon);
 
@@ -6396,9 +6361,6 @@ bool bolt::nice_to(const monster_info& mi) const
     {
         return true;
     }
-
-    if (flavour == BEAM_GHOSTLY_FLAME && mi.holi & MH_UNDEAD)
-        return true;
 
     return false;
 }
@@ -6584,7 +6546,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
-    case BEAM_GHOSTLY_FLAME:         return "ghostly flame";
     case BEAM_SLOW:                  return "slow";
     case BEAM_HASTE:                 return "haste";
     case BEAM_MIGHT:                 return "might";
