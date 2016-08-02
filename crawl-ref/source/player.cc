@@ -491,7 +491,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     // (But not when losing flight - i.e., moving into the same tile)
     trap_def* ptrap = trap_at(you.pos());
     if (ptrap && old_pos != you.pos())
-        ptrap->trigger(you, !stepped); // blinking makes it hard to evade
+        ptrap->trigger(you);
 
     if (stepped)
         _moveto_maybe_repel_stairs();
