@@ -203,7 +203,8 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel)
     }
 
     monster* target_mons = monster_at(beam.target);
-    if (target_mons && you.can_see(*target_mons)) {
+    if (target_mons && you.can_see(*target_mons))
+    {
         mprf("You can't blink onto %s!", target_mons->name(DESC_THE).c_str());
         return _find_cblink_target(target, safe_cancel);
     }
