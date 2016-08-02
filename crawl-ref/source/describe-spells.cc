@@ -78,7 +78,7 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
     const bool antimagicable
         = type == MON_SPELL_WIZARD || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(" (which are affected by%s%s%s)",
+    return make_stringf(", which are affected by%s%s%s",
                         silencable ? " silence" : "",
                         silencable && antimagicable ? " and" : "",
                         antimagicable ? " antimagic" : "");
@@ -92,29 +92,37 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  * @param num_books         The number of books in the set.
  * @param has_silencable    Whether any of the spells are subject to Silence
  *                          despite being non-wizardly and non-priestly.
+ * @param has_filtered      Whether any spellbooks have been filtered out due
+ *                          to the spells you've seen the monster cast.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable)
+                               bool has_silencable, bool has_filtered)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("has mastered %s%s:",
+        return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            vulnerabilities.c_str());
+                            vulnerabilities.c_str(),
+                            has_filtered ? " (based on the spells you have"
+                                           " seen cast)"
+                                         : "");
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("possesses the following %s abilities%s:",
+    return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        vulnerabilities.c_str());
+                        vulnerabilities.c_str(),
+                        has_filtered ? " (based on the abilities you have"
+                                       " seen used)"
+                                     : "");
 }
 
 static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
@@ -171,9 +179,14 @@ static void _monster_spellbooks(const monster_info &mi,
 
     // filter out books we know this monster can't cast (conflicting books)
     std::vector<size_t> valid_books;
+    bool filtered_books = false;
     for (size_t i = 0; i < num_books; ++i)
-       if (num_books <= 1 || _book_valid(books[i], mi))
-           valid_books.emplace_back(i);
+    {
+        if (num_books <= 1 || _book_valid(books[i], mi))
+            valid_books.emplace_back(i);
+        else if (!_book_valid(books[i], mi))
+            filtered_books = true;
+    }
 
     // Loop through books and display spells/abilities for each of them
     for (size_t i = 0; i < valid_books.size(); ++i)
@@ -194,7 +207,8 @@ static void _monster_spellbooks(const monster_info &mi,
                 "\n" +
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
-                _booktype_header(type, valid_books.size(), has_silencable);
+                _booktype_header(type, valid_books.size(), has_silencable,
+                                 filtered_books);
         }
         if (valid_books.size() > 1)
         {
