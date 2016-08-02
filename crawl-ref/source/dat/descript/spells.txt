@@ -604,9 +604,8 @@ point – typically colliding with each other, or with a victim standing there.
 %%%%
 Ghostly Fireball spell
 
-Hurls an exploding ball of necromantic energy. Any undead creatures in the area
-of effect will be healed, and other creatures will be damaged. A small portion
-of its damage bypasses resistance to negative energy.
+Hurls an exploding ball of negative energy which drains any living creature
+it engulfs.
 %%%%
 Throw Ally spell
 

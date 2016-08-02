@@ -908,9 +908,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_GHOSTLY_FIREBALL:
         beam.colour   = CYAN;
         beam.name     = "ghostly fireball";
-        beam.damage   = dice_def(3, 7 + power / 13);
+        beam.damage   = dice_def(3, 6 + power / 13);
         beam.hit      = 40;
-        beam.flavour  = BEAM_GHOSTLY_FLAME;
+        beam.flavour  = BEAM_NEG;
         beam.is_explosion = true;
         break;
 
@@ -7484,6 +7484,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_MALIGN_OFFERING:
+    case SPELL_GHOSTLY_FIREBALL:
         return !foe || _foe_should_res_negative_energy(foe);
 
     case SPELL_MIASMA_BREATH:
@@ -7659,9 +7660,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             }
         }
         return true;
-
-    case SPELL_GHOSTLY_FIREBALL:
-        return !foe || foe->holiness() & MH_UNDEAD;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         if (!foe || !mon->see_cell_no_trans(foe->pos()) || !mon->can_see(*foe))

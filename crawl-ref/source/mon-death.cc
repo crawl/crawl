@@ -1187,7 +1187,7 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
-    beam.flavour = BEAM_GHOSTLY_FLAME;
+    beam.flavour = BEAM_NEG;
     beam.damage  = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
     beam.name    = "pyre of ghostly fire";
     beam.explode_noise_msg = "You hear an otherworldly crackling!";

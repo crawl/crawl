@@ -464,7 +464,6 @@ static inline int get_resistible_fraction(beam_type flavour)
         return 55;
 
     case BEAM_POISON_ARROW:
-    case BEAM_GHOSTLY_FLAME:
         return 70;
 
     default:
@@ -491,7 +490,6 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_ELECTRICITY:
             return defender->res_elec();
         case BEAM_NEG:
-        case BEAM_GHOSTLY_FLAME:
         case BEAM_MALIGN_OFFERING:
             return defender->res_negative_energy();
         case BEAM_ACID:
