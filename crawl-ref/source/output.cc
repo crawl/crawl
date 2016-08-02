@@ -2530,32 +2530,6 @@ void print_overview_screen()
     redraw_screen();
 }
 
-static const char* stealth_words[11] =
-{
-    "extremely un", "very un", "un", "fairly ", "", "quite ", "very ",
-    "extremely ", "extraordinarily ", "incredibly ", "uncannily "
-};
-
-string stealth_desc(int stealth)
-{
-    return make_stringf("%sstealthy", stealth_words[_stealth_breakpoint(stealth)]);
-}
-
-string magic_res_adjective(int mr)
-{
-    if (mr == MAG_IMMUNE)
-        return "immune";
-
-    string prefix =
-            (mr <  40) ? "not" :
-            (mr <  80) ? "somewhat" :
-            (mr < 120) ? "very" :
-            (mr < 160) ? "extremely" :
-            (mr < 200) ? "incredibly"
-                       : "almost entirely";
-    return prefix + " resistant";
-}
-
 static string _annotate_form_based(string desc, bool suppressed)
 {
     if (suppressed)
@@ -2594,12 +2568,6 @@ static string _status_mut_abilities(int sw)
                                              : "very slow";
         status.emplace_back(help);
     }
-
-    status.push_back(magic_res_adjective(player_res_magic(false))
-                     + " to hostile enchantments");
-
-    // character evaluates their ability to sneak around:
-    status.push_back(stealth_desc(check_stealth()));
 
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
     text += "\n";

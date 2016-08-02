@@ -3623,16 +3623,6 @@ void display_char_status()
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
-
-    // magic resistance
-    _display_char_status(you.res_magic(),
-                         "You are %s to hostile enchantments",
-                         magic_res_adjective(player_res_magic(false)).c_str());
-
-    // character evaluates their ability to sneak around:
-    _display_char_status(check_stealth(),
-                         "You are %s",
-                         stealth_desc(check_stealth()).c_str());
 }
 
 bool player::clarity(bool calc_unid, bool items) const
