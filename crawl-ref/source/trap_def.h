@@ -16,7 +16,7 @@ struct trap_def
     string name(description_level_type desc = DESC_PLAIN) const;
     bool is_known(const actor* act = 0) const;
     bool is_safe(actor* act = 0) const;
-    void trigger(actor& triggerer, bool flat_footed = false);
+    void trigger(actor& triggerer);
     void destroy(bool known = false);
     void hide();
     void reveal();

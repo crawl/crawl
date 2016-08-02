@@ -492,10 +492,10 @@ static string _direction_string(coord_def pos, bool fuzz)
     return string(ns) + ew;
 }
 
-void trap_def::trigger(actor& triggerer, bool flat_footed)
+void trap_def::trigger(actor& triggerer)
 {
     const bool you_know = is_known();
-    const bool trig_knows = !flat_footed && is_known(&triggerer);
+    const bool trig_knows = is_known(&triggerer);
 
     const bool you_trigger = triggerer.is_player();
     const bool in_sight = you.see_cell(pos);
