@@ -223,7 +223,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     }
 }
 
-void update_item_at(const coord_def &gp, bool detected)
+void update_item_at(const coord_def &gp, bool detected, bool wizard)
 {
     if (!in_bounds(gp))
         return;
@@ -231,18 +231,21 @@ void update_item_at(const coord_def &gp, bool detected)
     item_def eitem;
     bool more_items = false;
 
-    if (you.see_cell(gp))
+    if (you.see_cell(gp) || wizard)
     {
-        if (you.visible_igrd(gp) != NON_ITEM)
-            eitem = mitm[you.visible_igrd(gp)];
-        else
+        const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
+        if (item_grid == NON_ITEM)
             return;
+        eitem = mitm[item_grid];
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem.link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+        if (eitem.link > NON_ITEM)
             more_items = true;
         else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
             more_items = true;
+
+        if (wizard)
+            StashTrack.add_stash(gp);
     }
     else
     {
