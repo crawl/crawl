@@ -33,21 +33,6 @@
 #include "menu.h"
 #endif
 
-static bool _should_butcher(const item_def& corpse)
-{
-    if (is_forbidden_food(corpse)
-        && (Options.confirm_butcher == CONFIRM_NEVER
-            || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
-                      false, 'n', true, false)))
-    {
-        if (Options.confirm_butcher != CONFIRM_NEVER)
-            canned_msg(MSG_OK);
-        return false;
-    }
-
-    return true;
-}
-
 /**
  * Start butchering a corpse.
  *
@@ -56,12 +41,16 @@ static bool _should_butcher(const item_def& corpse)
  */
 static bool _start_butchering(item_def& corpse)
 {
-    if (!_should_butcher(corpse))
-        return false;
-
     const bool bottle_blood =
         you.species == SP_VAMPIRE
         && can_bottle_blood_from_corpse(corpse.mon_type);
+
+    if (is_forbidden_food(corpse))
+    {
+        mprf("It would be a sin to %sbutcher this!",
+             bottle_blood ? "bottle or " : "");
+        return false;
+    }
 
     // Yes, 0 is correct (no "continue butchering" stage).
     if (bottle_blood)
@@ -187,14 +176,6 @@ void butchery(item_def* specific_corpse)
         || corpses.size() == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
         || Options.confirm_butcher == CONFIRM_NEVER)
     {
-        if (Options.confirm_butcher == CONFIRM_NEVER
-            && !_should_butcher(*corpses[0].first))
-        {
-            mprf("It would be a sin to %sbutcher this!",
-                 bottle_blood ? "bottle or " : "");
-            return;
-        }
-
         //XXX: this assumes that we're not being called from a delay ourselves.
         if (_start_butchering(*corpses[0].first))
             handle_delay();
