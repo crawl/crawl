@@ -360,7 +360,14 @@ void wizard_map_level()
 
     mpr("Mapping level.");
     magic_mapping(1000, 100, true, true);
-    detect_items(1000);
+
+    for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+    {
+        update_item_at(*ri, false, true);
+#ifdef USE_TILE
+        tiles.update_minimap(*ri);
+#endif
+    }
 }
 
 bool debug_make_trap(const coord_def& pos)
