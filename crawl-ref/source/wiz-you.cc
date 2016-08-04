@@ -203,7 +203,7 @@ void wizard_change_species_to(species_type sp)
 
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
             && you.equip[i] != -1)
         {

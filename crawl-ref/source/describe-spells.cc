@@ -17,6 +17,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
+#include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
@@ -77,7 +78,7 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
     const bool antimagicable
         = type == MON_SPELL_WIZARD || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(" (which are affected by%s%s%s)",
+    return make_stringf(", which are affected by%s%s%s",
                         silencable ? " silence" : "",
                         silencable && antimagicable ? " and" : "",
                         antimagicable ? " antimagic" : "");
@@ -91,29 +92,68 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  * @param num_books         The number of books in the set.
  * @param has_silencable    Whether any of the spells are subject to Silence
  *                          despite being non-wizardly and non-priestly.
+ * @param has_filtered      Whether any spellbooks have been filtered out due
+ *                          to the spells you've seen the monster cast.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable)
+                               bool has_silencable, bool has_filtered)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("has mastered %s%s:",
+        return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            vulnerabilities.c_str());
+                            vulnerabilities.c_str(),
+                            has_filtered ? " (based on the spells you have"
+                                           " seen cast)"
+                                         : "");
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("possesses the following %s abilities%s:",
+    return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        vulnerabilities.c_str());
+                        vulnerabilities.c_str(),
+                        has_filtered ? " (based on the abilities you have"
+                                       " seen used)"
+                                     : "");
+}
+
+static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
+{
+    // XXX: i'm 90% sure there's a neater way to do this (std something?)
+    for (mon_spell_slot slot : book)
+        if (slot.spell == spell)
+            return true;
+    return false;
+}
+
+/**
+ * Is it possible that the given monster could be using the given book, from
+ * what the player knows about each?
+ *
+ * @param book          A list of spells.
+ * @param mon_owner     The monster being examined.
+ * @return              Whether it's possible for the given monster to
+ */
+static bool _book_valid(const vector<mon_spell_slot> &book,
+                        const monster_info &mi)
+{
+    if (!mi.props.exists(SEEN_SPELLS_KEY))
+        return true;
+
+    // assumption: any monster with multiple true spellbooks will only ever
+    // use one of them
+    for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
+        if (!_spell_in_book((spell_type)spell, book))
+            return false;
+    return true;
 }
 
 /**
@@ -137,10 +177,21 @@ static void _monster_spellbooks(const monster_info &mi,
 
     const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
 
-    // Loop through books and display spells/abilities for each of them
+    // filter out books we know this monster can't cast (conflicting books)
+    std::vector<size_t> valid_books;
+    bool filtered_books = false;
     for (size_t i = 0; i < num_books; ++i)
     {
-        const vector<mon_spell_slot> &book_slots = books[i];
+        if (num_books <= 1 || _book_valid(books[i], mi))
+            valid_books.emplace_back(i);
+        else if (!_book_valid(books[i], mi))
+            filtered_books = true;
+    }
+
+    // Loop through books and display spells/abilities for each of them
+    for (size_t i = 0; i < valid_books.size(); ++i)
+    {
+        const vector<mon_spell_slot> &book_slots = books[valid_books[i]];
         spellbook_contents output_book;
 
         const bool has_silencable = any_of(begin(book_slots), end(book_slots),
@@ -156,9 +207,10 @@ static void _monster_spellbooks(const monster_info &mi,
                 "\n" +
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
-                _booktype_header(type, num_books, has_silencable);
+                _booktype_header(type, valid_books.size(), has_silencable,
+                                 filtered_books);
         }
-        if (num_books > 1)
+        if (valid_books.size() > 1)
         {
             output_book.label += make_stringf("\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
@@ -187,8 +239,6 @@ static void _monster_spellbooks(const monster_info &mi,
         if (mons_abjure)
             output_book.spells.emplace_back(SPELL_ABJURATION);
 
-        // XXX: it seems like we should be able to just place this in the
-        // vector at the start, without having to copy it in now...?
         all_books.emplace_back(output_book);
     }
 }
@@ -216,8 +266,19 @@ spellset monster_spellset(const monster_info &mi)
 
     spellset books;
 
-    for (auto book_flag : book_flags)
-        _monster_spellbooks(mi, book_flag, books);
+    if (mi.type != MONS_PANDEMONIUM_LORD)
+        for (auto book_flag : book_flags)
+            _monster_spellbooks(mi, book_flag, books);
+    else if (mi.props.exists(SEEN_SPELLS_KEY))
+    {
+        spellbook_contents output_book;
+        output_book.label
+          = make_stringf("You have seen %s using the following:",
+                         mi.pronoun(PRONOUN_SUBJECTIVE));
+        for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
+            output_book.spells.emplace_back((spell_type)spell);
+        books.emplace_back(output_book);
+    }
 
     ASSERT(books.size());
     return books;
@@ -493,7 +554,7 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc)
 {
-    const bool can_memorize = source_item
+    const bool can_memorise = source_item
                               && source_item->base_type == OBJ_BOOKS
                               && in_inventory(*source_item);
 
@@ -503,8 +564,8 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
     description.textcolour(LIGHTGREY);
 
     description.cprintf("Select a spell to read its description");
-    if (can_memorize)
-        description.cprintf(", to memorize it or to forget it");
+    if (can_memorise)
+        description.cprintf(" or to to memorise it");
     description.cprintf(".\n");
 
     spell_scroller ssc(spells, mon_owner, source_item);
@@ -542,13 +603,11 @@ bool spell_scroller::process_key(int keyin)
     const spell_type chosen_spell = flat_spells[spell_index];
     describe_spell(chosen_spell, mon_owner, source_item);
 
-    const bool used_amnesia = source_item && !source_item->is_valid();
-    const bool memorized = already_learning_spell();
-    const bool exit_menu = used_amnesia || memorized;
+    if (already_learning_spell()) // player began (M)emorizing
+        return false; // time to leave the menu
 
-    if (!exit_menu)
-        draw_menu();
-    return !exit_menu;
+    draw_menu();
+    return true; // loop
 }
 
 spell_scroller::~spell_scroller() { }

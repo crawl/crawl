@@ -309,9 +309,6 @@ static int _etc_orb_glow(int, const coord_def& loc)
 
 int dam_colour(const monster_info& mi)
 {
-    if (!mons_class_can_display_wounds(mi.type))
-        return Options.enemy_hp_colour[6]; // undead and whatnot
-
     switch (mi.dam)
     {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];

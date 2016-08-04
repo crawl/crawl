@@ -545,7 +545,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (offering_a != offering_b)
         return offering_a;
 
-    // List spells we can memorize right away first.
+    // List spells we can memorise right away first.
     if (player_spell_levels() >= spell_levels_required(a)
         && player_spell_levels() < spell_levels_required(b))
     {
@@ -789,11 +789,11 @@ bool learn_spell()
 }
 
 /**
- * Why can't the player memorize the given spell?
+ * Why can't the player memorise the given spell?
  *
  * @param spell     The spell in question.
  * @return          A string describing (one of) the reason(s) the player
- *                  can't memorize this spell.
+ *                  can't memorise this spell.
  */
 string desc_cannot_memorise_reason(spell_type spell)
 {
@@ -905,43 +905,6 @@ bool learn_spell(spell_type specspell, bool wizard)
     return true;
 }
 
-bool forget_spell_from_book(spell_type spell, const item_def* book)
-{
-    string prompt;
-
-    prompt += make_stringf("Forgetting %s from %s will destroy the book%s! "
-                           "Are you sure?",
-                           spell_title(spell),
-                           book->name(DESC_THE).c_str(),
-                           you_worship(GOD_SIF_MUNA)
-                               ? " and put you under penance" : "");
-
-    // Deactivate choice from tile inventory.
-    mouse_control mc(MOUSE_MODE_MORE);
-    if (!yesno(prompt.c_str(), false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    mprf("As you tear out the page describing %s, the book crumbles to dust.",
-        spell_title(spell));
-
-    if (del_spell_from_memory(spell))
-    {
-        item_was_destroyed(*book);
-        destroy_spellbook(*book);
-        dec_inv_item_quantity(book->link, 1);
-        you.turn_is_over = true;
-        return true;
-    }
-    else
-    {
-        // This shouldn't happen.
-        mprf("A bug prevents you from forgetting %s.", spell_title(spell));
-        return false;
-    }
-}
-
 bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
@@ -958,6 +921,4 @@ void destroy_spellbook(const item_def &book)
     int maxlevel = 0;
     for (spell_type stype : spells_in_book(book))
         maxlevel = max(maxlevel, spell_difficulty(stype));
-
-    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5);
 }

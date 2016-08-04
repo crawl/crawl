@@ -67,8 +67,7 @@ static const char *conducts[] =
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
     "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
-    "Souled Friend Died", "Attack In Sanctuary",
-    "Kill Artificial", "Destroy Spellbook",
+    "Souled Friend Died", "Attack In Sanctuary", "Kill Artificial",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
     "Fire", "Kill Fiery", "Sacrificed Love", "Channel", "Hurt Foe",
 };
@@ -371,9 +370,7 @@ static peeve_map divine_peeves[] =
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
-    {
-        { DID_DESTROY_SPELLBOOK, { "you destroy spellbooks", true, 1, 2 } },
-    },
+    peeve_map(),
     // GOD_TROG,
     {
         { DID_SPELL_MEMORISE, {
@@ -1098,6 +1095,7 @@ void god_conduct_turn_start()
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known)
 {
+    ASSERT(mon);  // TODO: change to const monster &mon
     const mid_t mid = mon->mid;
 
     if (mon->friendly())
@@ -1113,7 +1111,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
     else if (mon->neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
-    if (find_stab_type(&you, mon) != STAB_NO_STAB
+    if (find_stab_type(&you, *mon) != STAB_NO_STAB
         && (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
             || _first_attack_was_unchivalric.find(mid)
                != _first_attack_was_unchivalric.end()))

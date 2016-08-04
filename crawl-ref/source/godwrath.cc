@@ -277,9 +277,10 @@ static void _zin_remove_good_mutations()
     if (!how_mutated())
         return;
 
+    const god_type god = GOD_ZIN;
     bool success = false;
 
-    simple_god_message(" draws some chaos from your body!", GOD_ZIN);
+    simple_god_message(" draws some chaos from your body!", god);
 
     bool failMsg = true;
 
@@ -287,7 +288,7 @@ static void _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, "Zin's wrath",
+            && delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
                                failMsg, false, true, true))
         {
             success = true;
@@ -298,8 +299,8 @@ static void _zin_remove_good_mutations()
 
     if (success && !how_mutated())
     {
-        simple_god_message(" rids your body of chaos!", GOD_ZIN);
-        dec_penance(GOD_ZIN, 1);
+        simple_god_message(" rids your body of chaos!", god);
+        dec_penance(god, 1);
     }
 }
 
@@ -1304,55 +1305,61 @@ static bool _nemelex_retribution()
  */
 static void _jiyva_mutate_player()
 {
-    god_speaks(GOD_JIYVA, "You feel Jiyva alter your body.");
+    const god_type god = GOD_JIYVA;
+    god_speaks(god, "You feel Jiyva alter your body.");
 
     const int mutations = 1 + random2(3);
     for (int i = 0; i < mutations; ++i)
-        mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
+        mutate(RANDOM_BAD_MUTATION, _god_wrath_name(god), true, false, true);
 }
 
-static bool _choose_slimify_target(const monster* mon)
+static void _jiyva_remove_slime_mutation()
 {
-    return mon_can_be_slimified(mon) && mon->attitude == ATT_HOSTILE;
+    bool slimy = false;
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (is_slime_mutation(static_cast<mutation_type>(i))
+            && you.mutation[i] > 0)
+        {
+            slimy = true;
+        }
+    }
+
+    if (!slimy)
+        return;
+
+    const god_type god = GOD_JIYVA;
+    simple_god_message("'s gift of slime is revoked.", god);
+    delete_mutation(RANDOM_SLIME_MUTATION, _god_wrath_name(god),
+                    true, false, true);
 }
 
 /**
- * Make Jiyva slimify a nearby enemy.
+ * Make Jiyva polymorph the player into a bad form.
  */
-static bool _jiyva_slimify()
+static void _jiyva_transform()
 {
-    monster* mon = nullptr;
-    mon = choose_random_nearby_monster(0, _choose_slimify_target);
+    const god_type god = GOD_JIYVA;
+    god_speaks(god, "Mutagenic energy floods into your body!");
 
-    if (!mon)
-        return false;
+    const transformation_type form = random_choose(TRAN_BAT,
+                                                   TRAN_FUNGUS,
+                                                   TRAN_PIG,
+                                                   TRAN_TREE,
+                                                   TRAN_PORCUPINE,
+                                                   TRAN_WISP);
 
-    simple_god_message(make_stringf("'s putrescence saturates %s!",
-                                    mon->name(DESC_THE).c_str()).c_str(),
-                       GOD_JIYVA);
-    slimify_monster(mon, true);
-    return true;
+    if (transform(random2(you.penance[god]) * 2, form, true))
+        you.transform_uncancellable = true;
 }
-
 /**
- * Transmutation-miscast-themed wrath; make Jiyva contaminate tha player,
- * and possibly polymorph them into a bad (?) form.
+ * Make Jiyva contaminate tha player.
  */
-static void _jiyva_tmut()
+static void _jiyva_contaminate()
 {
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
     contaminate_player(random2(you.penance[god] * 500));
-
-    if (coinflip())
-        return;
-
-    // XXX: someone should probably rethink this list...
-    const transformation_type form = random_choose(TRAN_BAT, TRAN_STATUE,
-                                                   TRAN_SPIDER);
-
-    if (transform(random2(you.penance[god]) * 2, form, true))
-        you.transform_uncancellable = true;
 }
 
 static void _jiyva_summon_slimes()
@@ -1409,17 +1416,15 @@ static bool _jiyva_retribution()
 
     if (you.can_safely_mutate() && one_chance_in(7))
         _jiyva_mutate_player();
-    // Don't create hostile slimes while under penance.
-    else if (!you_worship(god)
-             && coinflip()
-             && _jiyva_slimify())
-    {
-        return true;
-    }
+    else if (one_chance_in(3) && !you.transform_uncancellable)
+        _jiyva_transform();
     else if (!one_chance_in(3) || you_worship(god))
-        _jiyva_tmut();
+        _jiyva_contaminate();
     else
         _jiyva_summon_slimes();
+
+    if (coinflip())
+        _jiyva_remove_slime_mutation();
 
     return true;
 }

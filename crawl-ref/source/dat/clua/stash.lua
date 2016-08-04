@@ -71,10 +71,8 @@ function ch_stash_search_annotate_item(it)
          or it.ego_type_terse == "EV" or it.ego_type_terse == "AC" then
         if it.plus == nil then
           annot = annot .. "+"
-        elseif it.plus < 0 then
-          annot = annot .. "-" .. it.plus
         else
-          annot = annot .. "+" .. it.plus
+          annot = annot .. string.format("%+d", it.plus)
         end
       end
       annot = annot .. "} "

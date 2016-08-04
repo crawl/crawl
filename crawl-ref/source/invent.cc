@@ -157,7 +157,7 @@ bool InvEntry::is_equipped() const
     if (item->link == -1 || item->pos != ITEM_IN_INVENTORY)
         return false;
 
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
             return true;
 
@@ -414,7 +414,7 @@ string no_selectables_message(int item_selector)
     case OSEL_DIVINE_RECHARGE:
     case OSEL_SUPERCHARGE:
         return "You aren't carrying any rechargeable items.";
-    case OSEL_ENCH_ARM:
+    case OSEL_ENCHANTABLE_ARMOUR:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
         return "You don't have any corpses.";
@@ -1035,7 +1035,7 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true, true);
 
-    case OSEL_ENCH_ARM:
+    case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
 
     case OBJ_FOOD:
@@ -1699,7 +1699,7 @@ bool check_warning_inscriptions(const item_def& item,
             }
             else
             {
-                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
                 {
                     if (slots == EQ_AMULET)
                         continue;

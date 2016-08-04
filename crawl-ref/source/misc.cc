@@ -223,7 +223,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -552,7 +552,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (find_stab_type(&you, mon) != STAB_NO_STAB
+    if (find_stab_type(&you, *mon) != STAB_NO_STAB
         && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {

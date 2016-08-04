@@ -537,10 +537,9 @@ tutorial4 undead
 
 # TODO: This is more like hints mode stuff. Not sure if there's any harm though,
 #       and the mouse interface hint is good.
-Unlike most monsters, zombies and skeletons do not regenerate health and it is
-impossible to tell how wounded they are.<localtiles> Incidentally, you can also
-cast spells by pressing <input>Ctrl+leftclick</input> on the
-monster.</localtiles>
+Unlike most monsters, zombies and skeletons do not regenerate health.
+<localtiles> Incidentally, you can also cast spells by pressing
+<input>Ctrl+leftclick</input> on the monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
@@ -640,7 +639,7 @@ tutorial4 exit
   You can also learn new spells via the <w>memorisation tab</w>.
   You can cast memorised spells via <input>leftclick</input>, and read their descriptions and check your spell proficiency by <input>mouseover</input> or <input>rightclick</input></localtiles>
 
-  <input>$cmd[CMD_READ]</input>  read a book, for descriptions or to forget a spell
+  <input>$cmd[CMD_READ]</input>  read a book to see spell descriptions
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
   <input>$cmd[CMD_REMOVE_ARMOUR]</input>  take off armour

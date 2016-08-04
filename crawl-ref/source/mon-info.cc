@@ -192,7 +192,8 @@ static bool _is_public_key(string key)
      || key == MUTANT_BEAST_FACETS
      || key == MUTANT_BEAST_TIER
      || key == DOOM_HOUND_HOWLED_KEY
-     || key == MON_GENDER_KEY)
+     || key == MON_GENDER_KEY
+     || key == SEEN_SPELLS_KEY)
     {
         return true;
     }
@@ -414,13 +415,12 @@ static description_level_type _article_for(const actor* a)
 
 monster_info::monster_info(const monster* m, int milev)
 {
+    ASSERT(m); // TODO: change to const monster &mon
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = m->pos();
 
     attitude = mons_attitude(m);
-
-    bool nomsg_wounds = false;
 
     type = m->type;
     threat = mons_threat_level(m);
@@ -439,12 +439,6 @@ monster_info::monster_info(const monster* m, int milev)
     {
         _translate_tentacle_ref(*this, m, "inwards");
         _translate_tentacle_ref(*this, m, "outwards");
-    }
-
-    if (!mons_can_display_wounds(m)
-        || !mons_class_can_display_wounds(type))
-    {
-        nomsg_wounds = true;
     }
 
     base_type = m->base_monster;
@@ -574,10 +568,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     dam = mons_get_damage_level(m);
 
-    // If no messages about wounds, don't display damage level either.
-    if (nomsg_wounds)
-        dam = MDAM_OKAY;
-
     if (mons_is_threatening(m)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
@@ -625,7 +615,7 @@ monster_info::monster_info(const monster* m, int milev)
     case ATT_HOSTILE:
         if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
-            && find_stab_type(&you, m) != STAB_NO_STAB)
+            && find_stab_type(&you, *m) != STAB_NO_STAB)
         {
             mb.set(MB_EVIL_ATTACK);
         }
@@ -1712,6 +1702,9 @@ bool monster_info::has_spells() const
     // Some monsters have a special book but may not have any spells anyways.
     if (props.exists(CUSTOM_SPELLS_KEY))
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
+
+    if (props.exists(SEEN_SPELLS_KEY))
+        return true;
 
     // Almost all draconians have breath spells.
     if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN

@@ -942,7 +942,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     };
 
     bool naked = true;
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
     {
         int eqslot = e_order[i];
 

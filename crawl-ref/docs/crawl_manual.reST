@@ -590,7 +590,7 @@ The details screen shows:
   * Divine abilities call upon the monster's god for a magical effect.
     They are prevented by silence, but not affected by antimagic.
 
-  * Spells are cast using memorized magical words. They are both
+  * Spells are cast using memorised magical words. They are both
     prevented by silence and affected by antimagic.
 
 ****************************************
@@ -887,8 +887,7 @@ recharging) and your Evocations skill.
 
 Most books contain magical spells which your character may be able to learn. You
 can read a book with the 'r' command, which lets you access a description of
-each spell, memorise spells from it with the 'M' command, or forget a spell with
-the 'F' command, destroying the book in the process.
+each spell or memorise spells from it with the 'M' command.
 
 Occasionally you will find manuals of some skill. Carrying these will cause your
 experience to have twice the effect as usual when used for training that skill.
@@ -956,12 +955,8 @@ you to read the individual spells' descriptions. In order to memorise a certain
 spell, use the 'M' command.
 
 In addition to picking up new spells, your character may also wish to get rid of
-old ones. The most convenient way to do so is by reading a scroll of amnesia,
-which will let you pick a spell to forget. However, should you happen to have a
-shortage of such scrolls, you can also forget a spell by 'r'eading a book
-containing that spell, selecting the spell and 'f'orgetting it by tearing out the
-pages. Unfortunately, this violent procedure will inevitably consume the whole
-book.
+old ones by reading a scroll of amnesia, which will let you pick a spell to
+forget.
 
 Each spell has a level. A spell's level denotes the amount of skill required to
 use it and indicates how powerful it may be. You can only memorise a certain
@@ -1590,9 +1585,8 @@ Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
   generations made them turn pale and lose all ability to regenerate on their
-  own (nor are they receptive to any effects which merely hasten regeneration),
-  as well as all ability to recover from losses to their primary attributes over
-  time. On the other hand, Deep Dwarves have developed the ability to instantly
+  own, nor are they receptive to any effects which merely hasten regeneration.
+  On the other hand, Deep Dwarves have developed the ability to instantly
   counteract small doses of damage. Their empathy with the earth makes them
   sense their surroundings; this ability increases in power as they gain
   experience levels.
@@ -2425,8 +2419,7 @@ e
   synonymous to y.
 
 r
-  Read a scroll or book. When reading a book, you may destroy the book in order
-  to forget a spell, with F.
+  Read a scroll or book.
 
 M
   Memorise a spell from a book.

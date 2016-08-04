@@ -353,7 +353,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "\n");
 
     fprintf(file, "Equipment:\n");
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         int8_t eq = you.equip[i];
 

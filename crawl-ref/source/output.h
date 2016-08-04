@@ -28,7 +28,4 @@ void print_overview_screen();
 
 string dump_overview_screen(bool full_id);
 
-string magic_res_adjective(int mr);
-string stealth_desc(int stealth);
-
 #endif

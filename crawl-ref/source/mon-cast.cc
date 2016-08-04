@@ -135,6 +135,17 @@ bool is_valid_mon_spell(spell_type spell)
     return _valid_mon_spells[spell];
 }
 
+/// Is the current spell being cast via player wizmode &z by a dummy mons?
+static bool _is_wiz_cast()
+{
+#ifdef WIZARD
+    // iffy logic but might be right enough
+    return crawl_state.prev_cmd == CMD_WIZARD;
+#else
+    return false;
+#endif
+}
+
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 {
     switch (flavour)
@@ -1284,7 +1295,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     // Your shadow can target these spells at other monsters;
     // other monsters can't.
-    if (mons->mid != MID_PLAYER)
+    if (mons->mid != MID_PLAYER || _is_wiz_cast())
     {
         if (spell_cast == SPELL_HASTE
             || spell_cast == SPELL_MIGHT
@@ -2370,6 +2381,12 @@ static bool _valid_vine_spot(coord_def p)
 
 static bool _awaken_vines(monster* mon, bool test_only = false)
 {
+    if (_is_wiz_cast())
+    {
+        mprf("Sorry, this spell isn't supported for dummies!"); //mons dummy
+        return false;
+    }
+
     vector<coord_def> spots;
     for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
     {
@@ -2380,6 +2397,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     shuffle_array(spots);
 
     actor* foe = mon->get_foe();
+    ASSERT(foe);
 
     int num_vines = 1 + random2(3);
     if (mon->props.exists("vines_awakened"))
@@ -3534,7 +3552,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     // Don't allow TSO-worshipping daevas to make
                     // unchivalric magic attacks, except against
                     // appropriate monsters.
-                    if (find_stab_type(mons, foe) != STAB_NO_STAB
+                    if (find_stab_type(mons, *foe) != STAB_NO_STAB
                         && !tso_unchivalric_attack_safe_monster(foe->as_monster()))
                     {
                         spellOK = false;
@@ -3597,7 +3615,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         if (battlesphere)
             aim_battlesphere(mons, spell_cast, beem.ench_power, beem);
+        const bool was_visible = you.can_see(*mons);
         mons_cast(mons, beem, spell_cast, flags);
+        if ((was_visible || you.can_see(*mons)) && mons->alive())
+            mons->note_spell_cast(spell_cast);
         if (battlesphere)
             trigger_battlesphere(mons, beem);
         if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))

@@ -3560,9 +3560,6 @@ bool monster::heal(int amount)
     if (mons_is_statue(type))
         return false;
 
-    if (!mons_can_display_wounds(this))
-        return false;
-
     if (amount < 1)
         return false;
     else if (hit_points == max_hit_points)
@@ -4043,7 +4040,7 @@ int monster::res_holy_energy(const actor *attacker) const
     if (is_holy()
         || is_good_god(god)
         || neutral()
-        || find_stab_type(attacker, this) != STAB_NO_STAB
+        || find_stab_type(attacker, *this) != STAB_NO_STAB
         || is_good_god(you.religion) && is_follower(this))
     {
         return 1;
@@ -6718,6 +6715,27 @@ int monster::spell_hd(spell_type spell) const
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
     return hd;
+}
+
+/**
+ * For pandemonium lords & monsters with random spellbooks, track which spells
+ * the player has seen this monster cast.
+ *
+ * @param spell     The spell the player just saw the monster cast.
+ */
+void monster::note_spell_cast(spell_type spell)
+{
+    const monster_info mi(this);
+    if (type != MONS_PANDEMONIUM_LORD && get_spellbooks(mi).size() <= 1)
+        return;
+
+    for (int old_spell : props[SEEN_SPELLS_KEY].get_vector())
+        if (old_spell == spell)
+            return;
+
+    dprf("tracking seen spell %s for %s",
+         spell_title(spell), name(DESC_A, true).c_str());
+    props[SEEN_SPELLS_KEY].get_vector().push_back(spell);
 }
 
 void monster::align_avatars(bool force_friendly)

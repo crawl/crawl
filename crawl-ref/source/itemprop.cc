@@ -563,10 +563,10 @@ static const weapon_def Weapon_prop[] =
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
     { WPN_STAFF,             "staff",               5,  5, 12,
-        SK_STAVES,       SIZE_LITTLE,  SIZE_MEDIUM, MI_NONE,
+        SK_STAVES,       SIZE_TINY,  SIZE_MEDIUM, MI_NONE,
         DAMV_CRUSHING, 0, 0, {} },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13,
-        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        SK_STAVES,       SIZE_TINY,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CRUSHING, 8, 10, {
             { SPWPN_NORMAL,     50 },
             { SPWPN_PROTECTION, 18 },
@@ -579,7 +579,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_ANTIMAGIC,   2 },
         }},
     { WPN_LAJATANG,          "lajatang",            16,-3, 14,
-        SK_STAVES,       SIZE_MEDIUM,  NUM_SIZE_LEVELS,  MI_NONE,
+        SK_STAVES,       SIZE_TINY,  NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 2, 2, {
             { SPWPN_NORMAL,         34 },
             { SPWPN_SPEED,          12 },
@@ -2089,11 +2089,9 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
-    // Staves are currently wieldable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || item_attack_skill(item) == SK_STAVES)
-        return true;
-
-    return Weapon_prop[Weapon_index[item.sub_type]].min_2h_size <= size;
+    const int subtype = OBJ_STAVES == item.base_type ? WPN_STAFF
+                                                     : item.sub_type;
+    return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
 
 //

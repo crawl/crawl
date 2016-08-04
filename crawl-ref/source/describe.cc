@@ -369,9 +369,9 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_WIZARDRY:
         return "It improves your spell success rate.";
     case RING_FIRE:
-        return "It enhances your fire magic, and weakens your ice magic.";
+        return "It enhances your fire magic.";
     case RING_ICE:
-        return "It enhances your ice magic, and weakens your fire magic.";
+        return "It enhances your ice magic.";
     case RING_TELEPORTATION:
         return "It may teleport you next to monsters.";
 #if TAG_MAJOR_VERSION == 34
@@ -2316,6 +2316,8 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_ADJUST_INVENTORY, '=' },
     };
 
+    key = tolower(key);
+
     for (auto cmd : actions)
         if (key == act_key.at(cmd))
             return cmd;
@@ -2571,7 +2573,7 @@ int hex_chance(const spell_type spell, const int hd)
  * Describe mostly non-numeric player-specific information about a spell.
  *
  * (E.g., your god's opinion of it, whether it's in a high-level book that
- * you can't memorize from, whether it's currently useless for whatever
+ * you can't memorise from, whether it's currently useless for whatever
  * reason...)
  *
  * @param spell     The spell in question.
@@ -2642,18 +2644,16 @@ string player_spell_desc(spell_type spell, const item_def* item)
 /**
  * Examine a given spell. Set the given string to its description, stats, &c.
  * If it's a book in a spell that the player is holding, mention the option to
- * memorize or forget it.
+ * memorise it.
  *
  * @param spell         The spell in question.
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
  * @param item          The item (book or rod) holding the spell, if any.
- * @return              BOOK_MEM if you can memorise the spell
- *                      BOOK_FORGET if you can forget it
- *                      BOOK_NEITHER if you can do neither.
+ * @return              Whether you can memorise the spell.
  */
-static int _get_spell_description(const spell_type spell,
+static bool _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,
                                   string &description,
                                   const item_def* item = nullptr)
@@ -2697,32 +2697,23 @@ static int _get_spell_description(const spell_type spell,
     else
         description += player_spell_desc(spell, item);
 
-    // Don't allow memorization or amnesia after death.
+    // Don't allow memorization after death.
     // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
-        return BOOK_NEITHER;
+        return false;
 
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+        && !you.has_spell(spell) && you_can_memorise(spell))
     {
-        if (you.has_spell(spell))
-        {
-            description += "\n(F)orget this spell by destroying the book.\n";
-            if (you_worship(GOD_SIF_MUNA))
-                description +="Sif Muna frowns upon the destroying of books.\n";
-            return BOOK_FORGET;
-        }
-        else if (you_can_memorise(spell))
-        {
-            description += "\n(M)emorise this spell.\n";
-            return BOOK_MEM;
-        }
+        description += "\n(M)emorise this spell.\n";
+        return true;
     }
 
-    return BOOK_NEITHER;
+    return false;
 }
 
 /**
@@ -2742,8 +2733,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 
 /**
  * Examine a given spell. List its description and details, and handle
- * memorizing or forgetting the spell in question, if the player is able to
- * do so & chooses to.
+ * memorizing the spell in question, if the player is able & chooses to do so.
  *
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
@@ -2758,8 +2748,7 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
 #endif
 
     string desc;
-    const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
-                                                     item);
+    const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -2767,17 +2756,10 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
+    if (can_mem && toupper(ch) == 'M')
     {
         redraw_screen();
         if (!learn_spell(spelled) || !you.turn_is_over)
-            more();
-        redraw_screen();
-    }
-    else if (mem_or_forget == BOOK_FORGET && toupper(ch) == 'F')
-    {
-        redraw_screen();
-        if (!forget_spell_from_book(spelled, item) || !you.turn_is_over)
             more();
         redraw_screen();
     }
@@ -3023,15 +3005,20 @@ static string _monster_attacks_description(const monster_info& mi)
 
 static string _monster_spells_description(const monster_info& mi)
 {
+    static const string panlord_desc =
+        "It may possess any of a vast number of diabolical powers.\n";
+
     // Show a generic message for pan lords, since they're secret.
-    if (mi.type == MONS_PANDEMONIUM_LORD)
-        return "It may possess any of a vast number of diabolical powers.\n";
+    if (mi.type == MONS_PANDEMONIUM_LORD && !mi.props.exists(SEEN_SPELLS_KEY))
+        return panlord_desc;
 
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
         return "";
 
     formatted_string description;
+    if (mi.type == MONS_PANDEMONIUM_LORD)
+        description.cprintf("%s", panlord_desc.c_str());
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("To read a description, press the key listed above.\n");
     return description.tostring();

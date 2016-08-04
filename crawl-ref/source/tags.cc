@@ -1361,10 +1361,10 @@ static void tag_construct_you(writer &th)
     CANARY;
 
     // how many you.equip?
-    marshallByte(th, NUM_EQUIP);
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    marshallByte(th, NUM_EQUIP - EQ_FIRST_EQUIP);
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         marshallByte(th, you.equip[i]);
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         marshallBoolean(th, you.melded[i]);
 
     ASSERT_RANGE(you.magic_points, 0, you.max_magic_points + 1);
@@ -2313,7 +2313,7 @@ static void tag_read_you(reader &th)
     // How many you.equip?
     count = unmarshallByte(th);
     ASSERT(count <= NUM_EQUIP);
-    for (int i = 0; i < count; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
         ASSERT_RANGE(you.equip[i], -1, ENDOFPACK);
@@ -3478,7 +3478,7 @@ static void tag_read_you_items(reader &th)
 #endif
 
     // Initialize cache of equipped unrand functions
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         const item_def *item = you.slot_item(static_cast<equipment_type>(i));
 

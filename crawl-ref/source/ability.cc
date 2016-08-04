@@ -419,7 +419,7 @@ static const ability_def Ability_List[] =
     { ABIL_SIF_MUNA_STOP_DIVINE_ENERGY, "Stop Divine Energy",
       0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
-      5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
+      0, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
       0, 0, 200, 2, {FAIL_INVO, 60, 4, 25}, abflag::NONE },
 

@@ -1944,7 +1944,7 @@ void attack::player_stab_check()
         return;
     }
 
-    const stab_type st = find_stab_type(&you, defender);
+    const stab_type st = find_stab_type(&you, *defender);
     stab_attempt = (st != STAB_NO_STAB);
     const bool roll_needed = (st != STAB_SLEEPING && st != STAB_PARALYSED);
 
@@ -1952,31 +1952,7 @@ void attack::player_stab_check()
     if (st == STAB_INVISIBLE)
         roll -= 10;
 
-    switch (st)
-    {
-    case STAB_NO_STAB:
-    case NUM_STAB:
-        stab_bonus = 0;
-        break;
-    case STAB_SLEEPING:
-    case STAB_PARALYSED:
-        stab_bonus = 1;
-        break;
-    case STAB_HELD_IN_NET:
-    case STAB_PETRIFYING:
-    case STAB_PETRIFIED:
-        stab_bonus = 2;
-        break;
-    case STAB_INVISIBLE:
-    case STAB_CONFUSED:
-    case STAB_FLEEING:
-    case STAB_ALLY:
-        stab_bonus = 4;
-        break;
-    case STAB_DISTRACTED:
-        stab_bonus = 6;
-        break;
-    }
+    stab_bonus = stab_bonus_denom(st);
 
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)

@@ -87,11 +87,11 @@ void play_sound(const char *file);
 
 string unwrap_desc(string desc);
 
-/** Ignore an argument and return true.
+/** Ignore any number of arguments and return true.
  *
  * @return true
  */
-template<class T> bool always_true(T) { return true; }
+template<class ... Ts> bool always_true(Ts ...) { return true; }
 
 /** Remove an element from a vector without preserving order.
  *  The indicated element is replaced by the last element of the vector.

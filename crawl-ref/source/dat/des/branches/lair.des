@@ -3057,3 +3057,65 @@ PP.xx....xx....xx....xx.PP
    PPPP.z..P  P..z.PPPP
       PPcPP    PPcPP
 ENDMAP
+
+# An ancient temple flooded with waters brought forth by a mystic avatar.
+NAME:    gammafunk_lair_ancient_temple
+PLACE:   Lair:$
+TAGS:    patrolling no_pool_fixup no_monster_gen
+ORIENT:  float
+KMONS:   ~ = plant
+KMONS:   1 = water moccasin / crocodile / wasp / wyvern / spiny frog
+KMONS:   2 = elephant / komodo dragon / griffon / polar bear / rime drake
+KMONS:   3 = sea snake / manticore / hydra / wind drake / harpy
+KMONS:   4 = dire elephant
+KMONS:   5 = merfolk avatar
+KFEAT:   ~12345%*|! = W
+KITEM:   % = any no_pickup
+KITEM:   * = star_item no_pickup
+KITEM:   | = superb_item no_pickup
+KITEM:   ! = any good_item no_pickup
+# Two of three locations will be collapsed wall openings, and the remaining one
+# will be a closed wall. Each opening will have 1-4 wall tiles replaced with
+# land, with the corresponding walls tiles having been moved nearby.
+SHUFFLE: defghijkopqr / suyzABCDEFHI / JKLMNOPQRSTU
+SHUFFLE: def / pqr, ghi / jko, suy / FHI, zAB / CDE
+SHUFFLE: defghijkopqr / defghijkoVYY / defghiVYYVYY / defVYYVYYVYY
+SUBST:   KLNOQRTUY = -, JMPSV = c
+SHUFFLE: suyzABCDEFHI / suyzABCDEVYY / suyzABVYYVYY / suyVYYVYYVYY
+SUBST:   dgjpszCF = `, ehkquADHY = -, V = c, a = ccc-, G = GGGW`, " = .-
+NSUBST:  f = 1:c / -, i = 1:c / -, o = 1:c / -, r = 1:c / -
+NSUBST:  y = 1:c / -, B = 1:c / -, E = 1:c / -, I = 1:c / -
+NSUBST:  - = 10:1 / 6:2 / 8 = 12WW / 4 = 3W / W
+NSUBST:  ' = 4:2 / 4 = 23W / 3 = 33334 / 1:5 / W, % = 1:! / 1:* / %%*|
+SUBST:   W = W:125 ~:10
+COLOUR:  c = white
+MAP
+""""""""""""""""""""""""
+"aa--aa--aa--aa--aa--aa"
+"aa--aa--aa--aa--aa--aa"
+"----------------------"
+"----aa---a--a---aa----"
+"aa--c------------c--aa"
+"aa--c----yBDI----c--aa"
+"----cG---uBEH---Gc----"
+"----cccccszCFccccc----"
+"aa--cG'''uADH'''Gc--aa"
+"aa--c''''yAEI''''c--aa"
+"----c''''''''''''c----"
+"---edeff'%%%%'LLKJK---"
+"aa-ighhi'%ww%'ONNMO-aa"
+"aa-ojkok'%ww%'QRQPR-aa"
+"---qpqrr'%%%%'UUTST---"
+"----c''''''''''''c----"
+"aa--c''''''''''''c--aa"
+"aa--cG''''''''''Gc--aa"
+"----ccccc----ccccc----"
+"----cG----------Gc----"
+"aa--c-----GG-----c--aa"
+"aa--c------------c--aa"
+"----aa-aaa--aaa-aa----"
+"----------------------"
+"aa--aa--aa--aa--aa--aa"
+"aa--aa--aa--aa--aa--aa"
+""""""""""""""""""""""""
+ENDMAP

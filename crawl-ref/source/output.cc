@@ -1814,9 +1814,7 @@ const char *equip_slot_to_name(int equip)
     COMPILE_CHECK(ARRAYSZ(s_equip_slot_names) == NUM_EQUIP);
 
     if (equip == EQ_RINGS
-        || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT
-        || equip == EQ_RING_AMULET)
+        || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && equip != EQ_AMULET)
     {
         return "Ring";
     }
@@ -1827,7 +1825,7 @@ const char *equip_slot_to_name(int equip)
         return "Barding";
     }
 
-    if (equip < 0 || equip >= NUM_EQUIP)
+    if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
         return "";
 
     return s_equip_slot_names[equip];
@@ -1835,7 +1833,7 @@ const char *equip_slot_to_name(int equip)
 
 int equip_name_to_slot(const char *s)
 {
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         if (!strcasecmp(s_equip_slot_names[i], s))
             return i;
 
@@ -2532,32 +2530,6 @@ void print_overview_screen()
     redraw_screen();
 }
 
-static const char* stealth_words[11] =
-{
-    "extremely un", "very un", "un", "fairly ", "", "quite ", "very ",
-    "extremely ", "extraordinarily ", "incredibly ", "uncannily "
-};
-
-string stealth_desc(int stealth)
-{
-    return make_stringf("%sstealthy", stealth_words[_stealth_breakpoint(stealth)]);
-}
-
-string magic_res_adjective(int mr)
-{
-    if (mr == MAG_IMMUNE)
-        return "immune";
-
-    string prefix =
-            (mr <  40) ? "not" :
-            (mr <  80) ? "somewhat" :
-            (mr < 120) ? "very" :
-            (mr < 160) ? "extremely" :
-            (mr < 200) ? "incredibly"
-                       : "almost entirely";
-    return prefix + " resistant";
-}
-
 static string _annotate_form_based(string desc, bool suppressed)
 {
     if (suppressed)
@@ -2596,12 +2568,6 @@ static string _status_mut_abilities(int sw)
                                              : "very slow";
         status.emplace_back(help);
     }
-
-    status.push_back(magic_res_adjective(player_res_magic(false))
-                     + " to hostile enchantments");
-
-    // character evaluates their ability to sneak around:
-    status.push_back(stealth_desc(check_stealth()));
 
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
     text += "\n";
