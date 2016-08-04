@@ -3917,8 +3917,7 @@ ENDMAP
 # This level has a lot of open space where it mostly is up to the RNG to place
 # monsters.
 #
-# Four exits are given, with one placed randomly and the others in a room safe
-# to teleport into.
+# Four exits are given, with one placed randomly and the others in a room.
 #
 # My opinion is that in the long term this concept would work better as a
 # portal vault (for pan, even).
