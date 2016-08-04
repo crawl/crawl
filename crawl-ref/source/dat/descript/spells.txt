@@ -654,7 +654,7 @@ unscathed by damnation.
 %%%%
 Hurl Damnation spell
 
-<Damnation ability>
+<Hurl Damnation ability>
 %%%%
 Holy Breath spell
 
