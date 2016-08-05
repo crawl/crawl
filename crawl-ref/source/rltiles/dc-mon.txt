@@ -1159,4 +1159,12 @@ error ERROR
 
 ## for tile_player_tile
 %sdir mon/player
+giaggostuono MONS_GIAGGOSTUONO
+jormungandr MONS_JORMUNGANDR
+lamia MONS_LAMIA
+maud MONS_MAUD
+old-serpent-coc MONS_PLAYER_SERPENT_COC
+old-serpent-dis MONS_PLAYER_SERPENT_DIS
+old-serpent-geh MONS_PLAYER_SERPENT_GEH
+old-serpent-tar MONS_PLAYER_SERPENT_TAR
 wiglaf MONS_WIGLAF
