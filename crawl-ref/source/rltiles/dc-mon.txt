@@ -605,10 +605,6 @@ rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
-## For tile_player_tile
-%sdir mon/unique
-jormungandr MONS_JORMUNGANDR
-giaggostuono MONS_GIAGGOSTUONO
 
 
 ## Dragons ('D')
@@ -788,8 +784,6 @@ mummy_priest MONS_MUMMY_PRIEST
 %sdir mon/unique
 aizul MONS_AIZUL
 vashnia MONS_VASHNIA
-# No longer exists, but a nice tile for players to use.
-lamia MONS_LAMIA
 %sdir mon
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
@@ -1162,3 +1156,7 @@ unseen_monster MONS_UNKNOWN
 unseen_monster MCACHE_START
 todo TODO
 error ERROR
+
+## for tile_player_tile
+%sdir mon/player
+wiglaf MONS_WIGLAF
