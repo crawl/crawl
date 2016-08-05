@@ -21,6 +21,7 @@
 #include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h" // passive_t::no_haste
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -106,8 +107,7 @@ void player::set_position(const coord_def &c)
 
     if (real_move)
     {
-        reset_prev_move();
-
+        prev_grd_targ.reset();
         if (duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
 
@@ -144,9 +144,7 @@ bool player::extra_balanced() const
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && (form == TRAN_LICH || form == TRAN_STATUE
-                      || form == TRAN_SHADOW
-                      || !form_changed_physiology());
+                  && form_keeps_mutations();
 }
 
 int player::get_hit_dice() const
@@ -244,110 +242,96 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with the provided weapon & projectile.
+ * Return the delay caused by attacking with your weapon and this projectile.
  *
- * @param weap          The weapon to be used; may be null.
- * @param projectile    The projectile to be fired/thrown; may be null.
- * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display (the worst-case scenario).
- * @param scaled        Whether to apply special delay modifiers (finesse)
- * @param do_shield     Whether to apply shield slowdown and speed brand.
- * @return              The time taken by an attack with the given weapon &
- *                      projectile, in aut.
+ * @param projectile  The projectile to be fired/thrown, if any.
+ * @param rescale     Whether to re-scale the time to account for the fact that
+ *                    finesse doesn't stack with haste.
+ * @return            A random_var representing the range of possible values of
+ *                    attack delay. It can be casted to an int, in which case
+ *                    its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *weap,
-                                const item_def *projectile, bool random,
-                                bool scaled, bool do_shield) const
+random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    random_var attk_delay = constant(15);
+    const item_def* weap = weapon();
+    random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    bool check_weapon = (!projectile && !!weap)
-                        || projectile
-                            && (is_launched(this, weap, *projectile)
-                                != LRET_THROWN);
-
-    if (!check_weapon)
+    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN)
     {
-        if (form_uses_xl())
-        {
-            attk_delay =
-                constant(10)
-                - div_rand_round(constant(you.experience_level * 10), 54);
-        }
-        else
-        {
-            // UC/throwing attacks are sped up by skill
-            // (min delay (10 - 270/54) = 5)
-            const skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
-            attk_delay = constant(10)
-                         - div_rand_round(constant(you.skill(sk, 10)), 54);
+        // Thrown weapons use 10 + projectile damage to determine base delay.
+        const skill_type wpn_skill = SK_THROWING;
+        const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
+        attk_delay = random_var(projectile_delay);
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+                                     DELAY_SCALE);
 
-            // Bats are faster (for whatever good it does them).
-            if (you.form == TRAN_BAT && !projectile)
-                attk_delay = div_rand_round(attk_delay * constant(3), 5);
-        }
+        // apply minimum to weapon skill modification
+        attk_delay = rv::max(attk_delay,
+                random_var(FASTEST_PLAYER_THROWING_SPEED));
     }
-    else
+    else if (!weap)
     {
-        if (weap && is_weapon(*weap)
-            && (!projectile && !is_range_weapon(*weap)
-                || projectile
-                   && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
-        {
-            const skill_type wpn_skill = item_attack_skill(*weap);
-            attk_delay = constant(property(*weap, PWPN_SPEED));
-            attk_delay -=
-                div_rand_round(constant(you.skill(wpn_skill, 10)),
-                               DELAY_SCALE);
+        int sk = form_uses_xl() ? experience_level * 10 :
+                                  skill(SK_UNARMED_COMBAT, 10);
+        attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
 
-            // apply minimum to weapon skill modification
-            attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
+        // Bats are faster (for whatever good it does them).
+        if (you.form == TRAN_BAT && !projectile)
+            attk_delay = div_rand_round(attk_delay * 3, 5);
+    }
+    else if (weap &&
+             (projectile ? projectile->launched_by(*weap)
+                         : is_melee_weapon(*weap)))
+    {
+        const skill_type wpn_skill = item_attack_skill(*weap);
+        // Cap skill contribution to mindelay skill, so that rounding
+        // doesn't make speed brand benefit from higher skill.
+        const int wpn_sklev = min(you.skill(wpn_skill, 10),
+                                  10 * weapon_min_delay_skill(*weap));
 
-            if (weap->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*weap) == SPWPN_SPEED
-                && do_shield)
-            {
-                attk_delay = div_rand_round(constant(2) * attk_delay, 3);
-            }
-        }
+        attk_delay = random_var(property(*weap, PWPN_SPEED));
+        attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
+        if (get_weapon_brand(*weap) == SPWPN_SPEED)
+            attk_delay = div_rand_round(attk_delay * 2, 3);
     }
 
     // At the moment it never gets this low anyway.
-    attk_delay = rv::max(attk_delay, constant(3));
+    attk_delay = rv::max(attk_delay, random_var(3));
 
-    // Calculate this separately to avoid overflowing the weights in
-    // the random_var.
-    random_var shield_penalty = constant(0);
     if (base_shield_penalty)
     {
-        shield_penalty =
+        // Calculate this separately to avoid overflowing the weights in
+        // the random_var.
+        random_var shield_penalty =
             div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
                                    rv::roll_dice(1, base_shield_penalty)),
                            DELAY_SCALE);
+        attk_delay += shield_penalty;
     }
 
-    if (!do_shield)
-        shield_penalty = constant(0);
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Finesse shouldn't stack with Haste, so we make this attack take
+        // longer so when Haste speeds it up, only Finesse will apply.
+        if (you.duration[DUR_HASTE] && rescale)
+            attk_delay = haste_mul(attk_delay);
+        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
+    }
 
-    int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.max() + shield_penalty.max();
-    // Stop here if we just want the unmodified value.
-    if (!scaled)
-        return final_delay;
-
-    const int scaling = finesse_adjust_delay(you.time_taken);
-    return max(2, div_rand_round(scaling * final_delay, 10));
+    // see comment on player.cc:player_speed
+    return div_rand_round(attk_delay * you.time_taken, 10);
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
 // eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT_RANGE(eq, EQ_WEAPON, NUM_EQUIP);
+    ASSERT_RANGE(eq, EQ_FIRST_EQUIP, NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -365,12 +349,12 @@ item_def *player::weapon(int /* which_attack */) const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type player::hands_reqd(const item_def &item) const
+hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
     if (species == SP_FORMICID)
         return HANDS_ONE;
     else
-        return actor::hands_reqd(item);
+        return actor::hands_reqd(item, base);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -419,7 +403,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
     // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item))
+    if (!is_weapon(item) && item.base_type != OBJ_RODS)
     {
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
@@ -433,9 +417,14 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-            mpr("You can't use weapons.");
+        {
+            mprf("You can't use %s.",
+                 item.base_type == OBJ_RODS ? "rods" : "weapons");
+        }
         return false;
     }
+    else if (item.base_type == OBJ_RODS)
+        return true;
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
@@ -672,7 +661,7 @@ bool player::fumbles_attack()
     // Fumbling in shallow water.
     if (floundering() || liquefied_ground())
     {
-        if (x_chance_in_y(4, dex()) || one_chance_in(5))
+        if (x_chance_in_y(3, 8))
         {
             mpr("Your unstable footing causes you to fumble your attack.");
             did_fumble = true;
@@ -716,9 +705,11 @@ void player::attacking(actor *other, bool ranged)
  *                    messages can be printed if we can't berserk.
  * @return            True if Chei will slow the player, false otherwise.
  */
-static bool _chei_prevents_berserk_haste(bool intentional)
+static bool _god_prevents_berserk_haste(bool intentional)
 {
-    if (!you_worship(GOD_CHEIBRIADOS))
+    const god_type old_religion = you.religion;
+
+    if (!have_passive(passive_t::no_haste))
         return false;
 
     // Chei makes berserk not speed you up.
@@ -734,7 +725,7 @@ static bool _chei_prevents_berserk_haste(bool intentional)
 
     did_god_conduct(DID_HASTY, 8);
     // Let's see if you've lost your religion...
-    if (!you_worship(GOD_CHEIBRIADOS))
+    if (!you_worship(old_religion))
         return false;
 
     simple_god_message(" forces you to slow down.");
@@ -757,13 +748,8 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (stasis_blocks_effect(true,
-                             "%s thrums violently and saps your rage.",
-                             3,
-                             "%s vibrates violently and saps your rage."))
-    {
+    if (check_stasis())
         return false;
-    }
 
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
@@ -776,7 +762,7 @@ bool player::go_berserk(bool intentional, bool potion)
         mpr("Your finesse ends abruptly.");
     }
 
-    if (!_chei_prevents_berserk_haste(intentional))
+    if (!_god_prevents_berserk_haste(intentional))
         mpr("You feel yourself moving faster!");
 
     mpr("You feel mighty!");
@@ -833,7 +819,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
     else if (duration[DUR_EXHAUSTED])
          msg = "You're too exhausted to go berserk.";
     else if (duration[DUR_DEATHS_DOOR])
-        msg = "Your body is effectively dead and in no shape for a blood rage.";
+        msg = "You can't enter a blood rage from death's door.";
     else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
         msg = "You are too mesmerised to rage.";
     else if (afraid())

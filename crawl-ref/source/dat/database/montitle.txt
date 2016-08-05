@@ -31,6 +31,10 @@ Azrael title
 
 Azrael the Boundless Flame
 %%%%
+Bai Suzhen title
+
+Bai Suzhen, Madame White Snake
+%%%%
 Boris title
 
 Boris, Master of Life and Death
@@ -219,10 +223,6 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
-Norris title
-
-Norris the Nihilist
-%%%%
 Pikel title
 
 Pikel the Slaver
@@ -265,7 +265,7 @@ Snorg the Insatiable
 %%%%
 Sojobo title
 
-Sojobo, King of Tengu
+Sojobo, Queen of Tengu
 %%%%
 Sonja title
 
@@ -286,10 +286,6 @@ Urug the Orcish Ballista
 Vashnia title
 
 Vashnia the Elite Marksnaga
-%%%%
-Wiglaf title
-
-Wiglaf the Dwarf
 %%%%
 Xtahua title
 

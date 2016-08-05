@@ -21,7 +21,7 @@ void opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
-    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2014 Crawl DevTeam\n"
+    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2016 Crawl DevTeam\n"
     "Read the instructions for legal details.</brown> ";
 
 
@@ -64,7 +64,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name) ");
 
     textcolour(LIGHTGREY);
 }

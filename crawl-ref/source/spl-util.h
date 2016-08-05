@@ -35,6 +35,7 @@ COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
 
 struct bolt;
 class dist;
+struct direction_chooser_args;
 
 enum spell_highlight_colours
 {
@@ -70,6 +71,7 @@ int spell_noise(spell_type spell);
 int spell_effect_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);
+tileidx_t get_spell_tile(spell_type which_spell);
 
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
@@ -80,7 +82,6 @@ unsigned int get_spell_flags(spell_type which_spell);
 
 bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc);
 spschools_type get_spell_disciplines(spell_type which_spell);
-bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
 int count_bits(uint64_t bits);
 
 template <class E, int Exp>
@@ -115,17 +116,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict = DIR_NONE,
-                      targ_mode_type mode = TARG_HOSTILE,
-                      // pbolt.range if applicable, otherwise LOS_RADIUS
-                      int range = 0,
-                      bool needs_path = true, bool may_target_monster = true,
-                      bool may_target_self = false,
-                      const char *target_prefix = nullptr,
-                      const char *prompt = nullptr,
-                      bool cancel_at_self = false,
-                      targetter *hitfunc = nullptr,
-                      desc_filter get_desc_func = nullptr);
+                     direction_chooser_args *args = nullptr);
 
 skill_type spell_type2skill(spschool_flag_type spelltype);
 spschool_flag_type skill2spell_type(skill_type spell_skill);
@@ -136,14 +127,19 @@ bool cannot_use_schools(spschools_type schools);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,
-                      bool prevent = false, bool evoked = false) PURE;
+                      bool prevent = false, bool evoked = false,
+                      bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
-                                bool prevent = false, bool evoked = false) PURE;
+                                bool prevent = false, bool evoked = false,
+                                bool fake_spell = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_colour = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
 bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
+
+bool spell_is_soh_breath(spell_type spell);
+const vector<spell_type> *soh_breath_spells(spell_type spell);
 
 #endif

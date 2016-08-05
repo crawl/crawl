@@ -81,11 +81,13 @@ phase_bat MONS_PHASE_BAT
 jackal MONS_JACKAL
 %rim 1
 hound MONS_HOUND
+howler MONS_HOWLER_MONKEY
 warg MONS_WARG
 wolf MONS_WOLF
 raiju MONS_RAIJU
 hell_hound MONS_HELL_HOUND
 %rim 0
+doom_hound MONS_DOOM_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
 holy_swine MONS_HOLY_SWINE
@@ -98,9 +100,10 @@ natasha MONS_NATASHA
 %rim 1
 %sdir mon/animals
 
-## Bees ('k')
+## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
+../meliai MONS_MELIAI
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -109,7 +112,7 @@ iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
-## Slugs ('j')
+## Slugs ('w')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
 
@@ -127,11 +130,9 @@ quokka MONS_QUOKKA
 ## Spiders and insects ('s')
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
-spider MONS_SPIDER
 tarantella MONS_TARANTELLA
 jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
-trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
 %sdir mon/demons
@@ -146,9 +147,9 @@ death_scarab MONS_DEATH_SCARAB
 crocodile MONS_CROCODILE
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
-snapping_turtle_shell MONS_SNAPPING_TURTLE_SHELL
+snapping_turtle_shell
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
-alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
+alligator_snapping_turtle_shell
 %rim 0
 fire_crab MONS_FIRE_CRAB
 ghost_crab MONS_GHOST_CRAB
@@ -158,19 +159,21 @@ ghost_crab MONS_GHOST_CRAB
 %sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
+swamp_worm_water
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
-brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
+dart_slug MONS_DART_SLUG
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
 %rim 1
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
-yellow_wasp MONS_WASP
-red_wasp MONS_HORNET
+wasp MONS_WASP
+hornet MONS_HORNET
+spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 %rim 0
@@ -216,7 +219,7 @@ sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
 mana_viper MONS_MANA_VIPER
 
-## Bears ('U')
+## Bears ('h' again)
 black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
@@ -303,7 +306,7 @@ brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
-shadow_fiend MONS_SHADOW_FIEND
+tzitzimitl MONS_TZITZIMITL
 %sdir mon/unique
 ignacio MONS_IGNACIO
 %sdir mon/demons
@@ -317,7 +320,6 @@ soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON
 
 # type '3' demons
-blue_devil MONS_BLUE_DEVIL
 chaos_spawn1 MONS_CHAOS_SPAWN
 chaos_spawn2
 chaos_spawn3
@@ -380,6 +382,12 @@ azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
 %sdir mon/nonliving
+%rim 0
+ancestor MONS_ANCESTOR
+ancestor_knight MONS_ANCESTOR_KNIGHT
+ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
+ancestor_hexer MONS_ANCESTOR_HEXER
+%rim 1
 
 ## Abominations ('X')
 %sdir mon/demons
@@ -390,6 +398,9 @@ abomination_large3
 abomination_large4
 abomination_large5
 abomination_large6
+abomination_large7
+abomination_large8
+abomination_large9
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 %sdir mon/vault
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
@@ -417,7 +428,6 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
-octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
 %rim 0
@@ -468,15 +478,6 @@ overlay_whip MONS_STATUE_WHIP
 %back none
 
 %rim 0
-guardian-eyeopen-flame1 MONS_STATUE_GUARDIAN
-guardian-eyeopen-flame2
-guardian-eyeopen-flame3
-guardian-eyeopen-flame4
-guardian-eyeclosed-flame1
-guardian-eyeclosed-flame2
-guardian-eyeclosed-flame3
-guardian-eyeclosed-flame4
-
 firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
 lightning_spire MONS_LIGHTNING_SPIRE
@@ -517,19 +518,15 @@ josephine MONS_JOSEPHINE
 kirke MONS_KIRKE
 louise MONS_LOUISE
 margery MONS_MARGERY
-maud MONS_MAUD
 maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
-%rim 1
-norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 %rim 1
 terence MONS_TERENCE
-wiglaf MONS_WIGLAF
 
 %sdir mon
 %rim 0
@@ -589,7 +586,6 @@ mennas MONS_MENNAS
 %rim 0
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
-iron_giant MONS_IRON_GIANT
 %sdir mon
 hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
@@ -599,12 +595,13 @@ frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
 juggernaut MONS_JUGGERNAUT
+iron_giant MONS_IRON_GIANT
 %rim 1
 
 ## Drakes (also 'l')
 %sdir mon/dragons
 swamp_drake MONS_SWAMP_DRAKE
-fire_drake MONS_FIRE_DRAKE
+rime_drake MONS_RIME_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
@@ -676,9 +673,57 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
-mutant_beast MONS_MUTANT_BEAST
+%sdir mon/mutantbeast
+%rim 0
+base1 MUTANT_BEAST_BASE
+base2
+base3
+base4
+base5
+bwing1 MUTANT_BEAST_WING_BASE
+bwing2
+bwing3
+bwing4
+bwing5
+fire1 MUTANT_BEAST_FIRE
+fire2
+fire3
+fire4
+fire5
+weird1 MUTANT_BEAST_WEIRD
+weird2
+weird3
+weird4
+weird5
+horn1 MUTANT_BEAST_HORN
+horn2
+horn3
+horn4
+horn5
+ox1 MUTANT_BEAST_OX
+ox2
+ox3
+ox4
+ox5
+shock1 MUTANT_BEAST_SHOCK
+shock2
+shock3
+shock4
+shock5
+sting1 MUTANT_BEAST_STING
+sting2
+sting3
+sting4
+sting5
+twing1 MUTANT_BEAST_WING_TOP
+twing2
+twing3
+twing4
+twing5
 %sdir mon/unique
+%rim 1
 sojobo MONS_SOJOBO
+# staveless must be immediately after the normal tile
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 asterion MONS_ASTERION
@@ -755,8 +800,6 @@ greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
-salamander_firebrand MONS_SALAMANDER_FIREBRAND
-salamander_stormcaller MONS_SALAMANDER_STORMCALLER
 
 ## Ogres ('O')
 %sdir mon/unique
@@ -847,6 +890,7 @@ orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 nessos MONS_NESSOS
 %sdir mon
 %rim 0
+# 'melee' tiles must be immediately following the normal ones
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
 centaur_warrior MONS_CENTAUR_WARRIOR
@@ -868,23 +912,21 @@ fannar MONS_FANNAR
 %rim 1
 %sdir mon
 elf MONS_ELF
-deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
+%rim 0
+deep_elf_archer MONS_DEEP_ELF_ARCHER
+%rim 1
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
-deep_elf_conjurer MONS_DEEP_ELF_CONJURER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
 deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST
-deep_elf_summoner MONS_DEEP_ELF_SUMMONER
 deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR
-deep_elf_priest MONS_DEEP_ELF_PRIEST
 deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 ## From the Cigotuvi wizlab
 vault/deformed_elf MONS_DEFORMED_ELF
-## From a floating vault (mu_elemental_laboratory)
-vault/deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
+deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
 
 ## Fungi ('f')
 %sdir mon/fungi_plants
@@ -901,7 +943,7 @@ fungus7
 fungus8
 fungus9
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
-active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
+active_ballistomycete
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
@@ -937,6 +979,7 @@ mon/unique/enchantress MONS_THE_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
 
 ## Merfolk ('m')
+# note: water tiles must be immediately after base tiles
 %rim 0
 %sdir mon/unique
 ilsuiw MONS_ILSUIW
@@ -1020,8 +1063,8 @@ ancient_champion MONS_ANCIENT_CHAMPION
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
-%rim 1
 flying_skull MONS_FLYING_SKULL
+%rim 1
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
@@ -1048,17 +1091,20 @@ tiamat_pale
 tiamat_purple
 tiamat_red
 tiamat_white
+bai_suizhen MONS_BAI_SUZHEN
+bai_suizhen_dragon MONS_BAI_SUZHEN_DRAGON
 %sdir mon/draco
+# must match monster_type enum order.
 draco-base-brown DRACO_BASE
 draco-base-black
+draco-base-mottle
 draco-base-yellow
 draco-base-green
-draco-base-grey
-draco-base-mottle
-draco-base-pale
 draco-base-purple
 draco-base-red
 draco-base-white
+draco-base-grey
+draco-base-pale
 %rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
 draco-job-caller DRACO_CALLER

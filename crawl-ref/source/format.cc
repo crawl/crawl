@@ -26,6 +26,12 @@ formatted_string::formatted_string(const string &s, int init_colour)
     cprintf(s);
 }
 
+/**
+ * For a given tag, return the corresponding colour.
+ *
+ * @param tag       The tag: e.g. "red", "lightblue", "h", "w".
+ * @return          The corresponding colour (e.g. RED), or LIGHTGREY.
+ */
 int formatted_string::get_colour(const string &tag)
 {
     if (tag == "h")
@@ -34,8 +40,7 @@ int formatted_string::get_colour(const string &tag)
     if (tag == "w")
         return WHITE;
 
-    const int colour = str_to_colour(tag);
-    return colour != -1? colour : LIGHTGREY;
+    return str_to_colour(tag);
 }
 
 // Display a formatted string without printing literal \n.
@@ -59,9 +64,14 @@ void display_tagged_block(const string &s)
     }
 }
 
+/**
+ * Take a string and turn it into a formatted_string.
+ *
+ * @param s             The input string: e.g. "<red>foo</red>".
+ * @param main_colour   The initial & default text colour.
+ * @return          A formatted string corresponding to the input.
+ */
 formatted_string formatted_string::parse_string(const string &s,
-                                                bool eot_ends_format,
-                                                bool (*process)(const string &tag),
                                                 int main_colour)
 {
     // main_colour will usually be LIGHTGREY (default).
@@ -69,12 +79,9 @@ formatted_string formatted_string::parse_string(const string &s,
 
     formatted_string fs;
 
-    parse_string1(s, fs, colour_stack, process);
-    if (eot_ends_format)
-    {
-        if (colour_stack.back() != colour_stack.front())
-            fs.textcolour(colour_stack.front());
-    }
+    parse_string1(s, fs, colour_stack);
+    if (colour_stack.back() != colour_stack.front())
+        fs.textcolour(colour_stack.front()); // XXX: this does nothing
     return fs;
 }
 
@@ -104,16 +111,15 @@ void formatted_string::parse_string_to_multiple(const string &s,
         out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
-        parse_string1(line, fs, colour_stack, nullptr);
+        parse_string1(line, fs, colour_stack);
         if (colour_stack.back() != colour_stack.front())
-            fs.textcolour(colour_stack.front());
+            fs.textcolour(colour_stack.front()); // XXX: this does nothing
     }
 }
 
 // Helper for the other parse_ methods.
 void formatted_string::parse_string1(const string &s, formatted_string &fs,
-                                     vector<int> &colour_stack,
-                                     bool (*process)(const string &tag))
+                                     vector<int> &colour_stack)
 {
     // FIXME: This is a lame mess, just good enough for the task on hand
     // (keyboard help).
@@ -121,7 +127,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
     string::size_type length = s.length();
 
     string currs;
-    bool masked = false;
 
     for (tag = 0; tag < length; ++tag)
     {
@@ -150,16 +155,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
 
         if (s[tag] != '<' || tag >= length - 1)
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
         // Is this a << escape?
         if (s[tag + 1] == '<')
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             tag++;
             continue;
         }
@@ -168,16 +171,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
         // No closing >?
         if (endpos == string::npos)
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
         string tagtext = s.substr(tag + 1, endpos - tag - 1);
         if (tagtext.empty() || tagtext == "/")
         {
-            if (!masked)
-                currs += s[tag];
+            currs += s[tag];
             continue;
         }
 
@@ -186,17 +187,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             revert_colour = true;
             tagtext = tagtext.substr(1);
             tag++;
-        }
-
-        if (tagtext[0] == '?')
-        {
-            if (tagtext.length() == 1)
-                masked = false;
-            else if (process && !process(tagtext.substr(1)))
-                masked = true;
-
-            tag += tagtext.length() + 1;
-            continue;
         }
 
         if (!currs.empty())
@@ -220,7 +210,16 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             }
         }
         else
-            colour_stack.push_back(get_colour(tagtext));
+        {
+            const int colour = get_colour(tagtext);
+            if (colour == -1)
+            {
+                fs.textcolour(LIGHTRED);
+                fs.cprintf("<%s>", tagtext.c_str());
+            }
+            else
+                colour_stack.push_back(colour);
+        }
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
         fs.textcolour(colour_stack.back());
@@ -231,6 +230,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
         fs.cprintf(currs);
 }
 
+/// Return a plaintext version of this string, sans tags, colours, etc.
 formatted_string::operator string() const
 {
     string s;
@@ -456,7 +456,7 @@ void formatted_string::add_glyph(cglyph_t g)
 void formatted_string::textcolour(int colour)
 {
     if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
-        ops.erase(ops.end() - 1);
+        ops.pop_back();
 
     ops.push_back(colour);
 }
@@ -489,7 +489,10 @@ void formatted_string::fs_op::display() const
     switch (type)
     {
     case FSOP_COLOUR:
-        ::textcolour(x);
+#ifndef USE_TILE_LOCAL
+        if (x < MAX_TERM_COLOUR)
+#endif
+            ::textcolour(x);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());

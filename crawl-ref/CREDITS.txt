@@ -33,7 +33,7 @@
     Jan Anders Bremer (crawl.lantea.net)
     Rax E. Dillon (crawl.akrasiac.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
-    Alex 'chequers' Jurkiewicz (crawl.project357.org)
+    Alex Jurkiewicz (crawl.project357.org)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
     Neil Moore (crawl.s-z.org)
     Marc H. Thoben (crawl.develz.org)
@@ -114,6 +114,7 @@
     Paul Dejean
     Denzi
     Lothar Dierkes
+    Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
     Mike Drinen
@@ -124,9 +125,11 @@
     Micha Elsner
     Carl-Oscar Erneholm
     Christopher Evenstar
+    Floodkiller
     Brett Foster
     Kyle Fox
     Chris Galardi
+    Benoît Giannangeli
     Ben Goetter
     Ed Gonzalez
     Rob Grant
@@ -162,6 +165,7 @@
     Ilkka Koskela
     infiniplex
     Vambola Kotkas
+    Roma Kovalev
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
@@ -171,21 +175,24 @@
     Jordan Lewis
     Sami Liedes
     Dom 'Bodrick' Light
+    Mark Lodato
     Rob Lund
+    Lynn
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
     Markus Maier
     MainiacJoe
     Arien Malec
-    Alan Malloy
     Paul Maloney
     Wille Mäntylä
     James 'Eronarn' Meickle
     mikee
     Andrew Minton
+    Yer Mivvaggah
     Shawn M Moore
     Akinori Musha
+    Mushboom
     Eva Myers
     nagdon
     Naruni
@@ -198,6 +205,7 @@
     John Olender
     Aaron Olowin
     Yuuma Oohara
+    Julian Ospald
     Malwyn P
     William Parker
     Pedro
@@ -225,6 +233,7 @@
     Robert Shimmin
     Sigurd
     Edgar Simo
+    Skrybe
     Alex Smith
     Keanan Smith
     Richard Soderberg
@@ -247,7 +256,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    Mauris Van Hauwe
     Mikko Vepsäläinen
     waylon531
     Steven Wheeler
@@ -284,6 +292,7 @@ The Dungeon Crawl Stone Soup development team is:
     Raphaël Langella
     Nat Lanza
     Jesse Luehrs
+    Alan Malloy
     Shmuale Mark
     John McCartney
     Steve Melenchuk

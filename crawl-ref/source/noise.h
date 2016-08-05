@@ -29,7 +29,6 @@ enum noise_flag_type
     NF_NONE    = 0,
     NF_SIREN   = 0x1,
     NF_MESSAGE_IF_UNSEEN = 0x2,
-    NF_HUNTING_CRY = 0x4,
 };
 
 struct noise_t

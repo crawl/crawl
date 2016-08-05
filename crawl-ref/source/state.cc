@@ -200,7 +200,6 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     switch (ai)
     {
-    case AI_STATUE:
     case AI_HUNGRY:
     case AI_TELEPORT:
     case AI_FORCE_INTERRUPT:
@@ -279,7 +278,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         // when the only monsters around are 0xp.
         const monster* mon = at.mons_data;
 
-        if (!mons_class_gives_xp(mon->type) && mon->visible_to(&you))
+        if (!mons_is_threatening(mon) && mon->visible_to(&you))
             return false;
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");

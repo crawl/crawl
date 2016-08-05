@@ -332,8 +332,11 @@ static string _get_speak_string(const vector<string> &prefixes,
     return msg;
 }
 
-// Returns true if the monster did speak, false otherwise.
-// Maybe monsters will speak!
+/**
+ * Rolls a chance for a monster to speak, and calls mons_speaks as necessary.
+ *
+ * @param mons The monster in question.
+ */
 void maybe_mons_speaks(monster* mons)
 {
     // Very fast wandering/patrolling monsters might, in one monster turn,
@@ -346,6 +349,10 @@ void maybe_mons_speaks(monster* mons)
 
     // per ef44f8a14, this seems to be handled elsewhere?
     if (mons->attitude == ATT_NEUTRAL)
+        return;
+
+    // too annoying for a permanent companion without more thought put into it
+    if (mons_is_hepliaklqana_ancestor(mons->type))
         return;
 
     int chance = 21; // this is a very old number; no idea why it was chosen
@@ -426,14 +433,11 @@ bool mons_speaks(monster* mons)
             return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
-        // unless they're normally silent (S_SILENT). Use
-        // get_monster_data(mons->type) to bypass mon_shouts()
-        // replacing S_RANDOM with a random value.
-        if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
-            && get_monster_data(mons->type)->shouts != S_SILENT)
+        // unless they're normally silent (S_SILENT).
+        if (mons->is_silenced() && mons_can_shout(mons->type)
+            && !one_chance_in(3))
         {
-            if (!one_chance_in(3))
-                return false;
+            return false;
         }
 
         // Berserk monsters just want your hide.
@@ -442,11 +446,6 @@ bool mons_speaks(monster* mons)
 
         // Rolling beetles shouldn't twitch antennae
         if (mons->rolling())
-            return false;
-
-        // Monsters in a battle frenzy are likewise occupied.
-        // But roused holy creatures are not.
-        if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
             return false;
 
         // Charmed monsters aren't too expressive.
@@ -542,6 +541,10 @@ bool mons_speaks(monster* mons)
     // Include our current branch, too. It can make speech vary by branch for
     // uniques and other monsters! Specifically, Donald.
     prefixes.emplace_back(branches[you.where_are_you].abbrevname);
+
+    // Include a prefix for the orb run.
+    if (player_has_orb())
+        prefixes.emplace_back("orb");
 
 #ifdef DEBUG_MONSPEAK
     {
@@ -708,10 +711,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // If we failed to get a message with a winged or tailed humanoid,
-    // or a naga or centaur, try moving closer to plain humanoid.
-    if ((msg.empty() || msg == "__NEXT") && shape > MON_SHAPE_HUMANOID
-        && shape <= MON_SHAPE_NAGA)
+    // If we failed to get a message with a partial/hybrid humanoid, try moving
+    // closer to plain humanoid.
+    if ((msg.empty() || msg == "__NEXT") && mon_shape_is_humanoid(shape)
+        && shape != MON_SHAPE_HUMANOID)
     {
         // If a humanoid monster has both wings and a tail, try removing
         // one and then the other to see if we get any results.
@@ -777,7 +780,7 @@ bool mons_speaks(monster* mons)
 bool mons_speaks_msg(monster* mons, const string &msg,
                      const msg_channel_type def_chan, bool silence)
 {
-    if (!mons_near(mons))
+    if (!you.see_cell(mons->pos()))
         return false;
 
     mon_acting mact(mons);
@@ -819,9 +822,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
 
-        if (line == "__MORE" && !silence)
-            more();
-        else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
+        if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
         {

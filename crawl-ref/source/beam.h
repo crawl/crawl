@@ -76,8 +76,10 @@ struct bolt
                                   // "engulfs" if an explosion or cloud
                                   // and "hits" otherwise.
     int    loudness = 0;          // Noise level on hitting or exploding.
-    string noise_msg = "";        // Message to give player if the hit
-                                  // or explosion isn't in view.
+    string hit_noise_msg = "";    // Message to give player for each hit
+                                  // monster that isn't in view.
+    string explode_noise_msg = "";  // Message to give player if the explosion
+                                    // isn't in view.
     bool   pierce = false;        // Can the beam pass through a target and
                                   // hit another target behind the first?
     bool   is_explosion = false;
@@ -85,7 +87,6 @@ struct bolt
     string aux_source = "";       // source of KILL_MISC beams
 
     bool   affects_nothing = false; // should not hit monsters or features
-    bool   affects_items = true;    // hits items on ground/inventory
 
     bool   effect_known = true;   // did we _know_ this would happen?
     bool   effect_wanton = false; // could we have guessed it would happen?
@@ -134,6 +135,7 @@ struct bolt
     bool chose_ray = false;       // do we want a specific ray?
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
+    bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
 
     int       bounces = 0;        // # times beam bounced off walls
     coord_def bounce_pos = {0,0}; // position of latest wall bounce,
@@ -182,6 +184,10 @@ public:
     bool ignores_monster(const monster* mon) const;
     bool can_knockback(const actor *act = nullptr, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
+    bool is_harmless(const monster* mon) const;
+    bool nasty_to(const monster* mon) const;
+    bool nice_to(const monster_info& mi) const;
+    bool has_saving_throw() const;
 
     void draw(const coord_def& p);
     void drop_object();
@@ -209,21 +215,18 @@ private:
     int get_cloud_pow() const;
     int get_cloud_size(bool min = false, bool max = false) const;
     bool is_blockable() const;
+    bool is_omnireflectable() const;
     bool is_fiery() const;
-    bool is_superhot() const;
+    bool can_burn_trees() const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
-    bool has_saving_throw() const;
-    bool is_harmless(const monster* mon) const;
     bool harmless_to_player() const;
-    bool is_reflectable(const item_def *item) const;
-    bool nasty_to(const monster* mon) const;
-    bool nice_to(const monster* mon) const;
+    bool is_reflectable(const actor &whom) const;
     bool found_player() const;
     bool need_regress() const;
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
-    bool pierces_shields() const;
+    bool bush_immune(const monster &mons) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -247,7 +250,6 @@ private:
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
-    bool hit_wall();
     int range_used(bool leg_only = false) const;
     void finish_beam();
 
@@ -277,7 +279,6 @@ public:
 private:
     void internal_ouch(int dam);
     // for both
-    void hit_shield(actor* victim) const;
     void knockback_actor(actor *act, int dam);
 
     // tracers
@@ -298,7 +299,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 // Return whether the effect was visible.
-bool enchant_actor_with_flavour(actor* victim, actor *atk,
+bool enchant_actor_with_flavour(actor* victim, const actor *atk,
                                 beam_type flavour, int powc = 0);
 
 bool enchant_monster_invisible(monster* mon, const string &how);
@@ -332,11 +333,13 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
-int zap_ench_power(zap_type z_type, int pow);
-void zappy(zap_type z_type, int power, bolt &pbolt);
+int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
 
 bool shoot_through_monster(const bolt& beam, const monster* victim);
+
+int omnireflect_chance_denom(int SH);
 #endif

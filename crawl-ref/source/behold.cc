@@ -126,7 +126,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
     if (loudness >= 20 && beheld())
     {
-        mpr("For a moment, your mind becomes perfectly clear!");
+        mpr("Jolted by the loud noise, you snap out of your trance!");
         clear_beholders();
         _removed_beholder();
     }
@@ -263,8 +263,8 @@ bool player::possible_beholder(const monster* mon) const
         && !mon->wont_attack() && !mon->pacified()
         && ((mons_is_siren_beholder(mon->type)
              || mon->has_spell(SPELL_MESMERISE))
-            && !silenced(pos()) && !silenced(mon->pos())
-            && !mon->has_ench(ENCH_MUTE)
+            && !silenced(pos())
+            && !mon->is_silenced()
             && !mon->confused()
             && !mon->asleep() && !mon->cannot_move()
             && !mon->berserk_or_insane()

@@ -14,6 +14,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "command.h"
 #include "coord.h"
 #include "directn.h"
 #include "english.h"
@@ -90,6 +91,9 @@ TilesFramework::~TilesFramework()
 
 void TilesFramework::shutdown()
 {
+    if (m_sock_name.empty())
+        return;
+
     close(m_sock);
     remove(m_sock_name.c_str());
 }
@@ -100,6 +104,16 @@ void TilesFramework::draw_doll_edit()
 
 bool TilesFramework::initialise()
 {
+    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
+    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
+    m_cursor[CURSOR_MAP] = NO_CURSOR;
+
+    // Initially, switch to CRT.
+    cgotoxy(1, 1, GOTO_CRT);
+
+    if (m_sock_name.empty())
+        return true;
+
     // Init socket
     m_sock = socket(PF_UNIX, SOCK_DGRAM, 0);
     if (m_sock < 0)
@@ -128,13 +142,7 @@ bool TilesFramework::initialise()
     _send_version();
     send_exit_reason("unknown");
     _send_options();
-
-    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
-    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
-    m_cursor[CURSOR_MAP] = NO_CURSOR;
-
-    // Initially, switch to CRT.
-    cgotoxy(1, 1, GOTO_CRT);
+    _send_layout();
 
     return true;
 }
@@ -164,6 +172,12 @@ void TilesFramework::finish_message()
 {
     if (m_msg_buf.size() == 0)
         return;
+
+    if (m_sock_name.empty())
+    {
+        m_msg_buf.clear();
+        return;
+    }
 
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
@@ -251,12 +265,18 @@ void TilesFramework::flush_messages()
 
 void TilesFramework::_await_connection()
 {
+    if (m_sock_name.empty())
+        return;
+
     while (m_dest_addrs.size() == 0)
         _receive_control_message();
 }
 
 wint_t TilesFramework::_receive_control_message()
 {
+    if (m_sock_name.empty())
+        return 0;
+
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
@@ -344,6 +364,24 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         if (Options.note_chat_messages)
             take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
     }
+    else if (msgtype == "click_travel" &&
+             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        JsonWrapper force = json_find_member(obj.node, "force");
+
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
+        if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
+            process_command((command_type) c);
+        }
+        c = CK_MOUSE_CMD;
+    }
 
     return c;
 }
@@ -352,7 +390,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
 {
     int result;
     fd_set fds;
-    int maxfd = m_sock;
+    int maxfd = m_sock_name.empty() ? STDIN_FILENO : m_sock;
 
     while (true)
     {
@@ -360,7 +398,8 @@ bool TilesFramework::await_input(wint_t& c, bool block)
         {
             FD_ZERO(&fds);
             FD_SET(STDIN_FILENO, &fds);
-            FD_SET(m_sock, &fds);
+            if (!m_sock_name.empty())
+                FD_SET(m_sock, &fds);
 
             if (block)
             {
@@ -382,7 +421,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         else if (result > 0)
         {
-            if (FD_ISSET(m_sock, &fds))
+            if (!m_sock_name.empty() && FD_ISSET(m_sock, &fds))
             {
                 c = _receive_control_message();
 
@@ -464,6 +503,18 @@ void TilesFramework::_send_options()
     finish_message();
 }
 
+void TilesFramework::_send_layout()
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+    tiles.json_open_object("message_pane");
+    tiles.json_write_int("height", crawl_view.msgsz.y);
+    tiles.json_write_bool("small_more", Options.small_more);
+    tiles.json_close_object();
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+
 void TilesFramework::push_menu(Menu* m)
 {
     MenuInfo mi;
@@ -510,6 +561,19 @@ void TilesFramework::close_all_menus()
 {
     while (m_menu_stack.size())
         pop_menu();
+}
+
+static void _send_text_cursor(bool enabled)
+{
+    tiles.send_message("{\"msg\":\"text_cursor\",\"enabled\":%s}",
+                       enabled ? "true" : "false");
+}
+
+void TilesFramework::set_text_cursor(bool enabled)
+{
+    if (m_text_cursor == enabled) return;
+
+    m_text_cursor = enabled;
 }
 
 static void _send_ui_state(WebtilesUIState state)
@@ -577,7 +641,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
+        if (status == DUR_DIVINE_SHIELD)
         {
             if (!you.duration[status])
                 continue;
@@ -796,7 +860,7 @@ void TilesFramework::_send_player(bool force_full)
     json_close_object(true);
 
     json_open_object("equip");
-    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+    for (unsigned int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
         _update_int(force_full, c.equip[i], equip, to_string(i));
@@ -1564,6 +1628,9 @@ void TilesFramework::_send_everything()
 {
     _send_version();
     _send_options();
+    _send_layout();
+
+    _send_text_cursor(m_text_cursor);
 
     // UI State
     _send_ui_state(m_ui_state);
@@ -1620,6 +1687,11 @@ void TilesFramework::clrscr()
     set_need_redraw();
 }
 
+void TilesFramework::layout_reset()
+{
+    m_layout_reset = true;
+}
+
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
@@ -1663,6 +1735,18 @@ void TilesFramework::redraw()
             m_mcache_ref_done = false;
         }
         return;
+    }
+
+    if (m_layout_reset)
+    {
+        _send_layout();
+        m_layout_reset = false;
+    }
+
+    if (m_last_text_cursor != m_text_cursor)
+    {
+        _send_text_cursor(m_text_cursor);
+        m_last_text_cursor = m_text_cursor;
     }
 
     if (m_last_ui_state != m_ui_state)

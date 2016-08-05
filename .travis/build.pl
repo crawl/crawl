@@ -18,17 +18,21 @@ $ENV{FORCE_CC} = $ENV{CC};
 $ENV{FORCE_CXX} = $ENV{CXX};
 
 if ($ENV{FULLDEBUG}) {
-    try("make -j2 debug");
+    try("make -j2 debug monster");
 }
 else {
-    try("make -j2");
+    try("make -j2 all monster");
 }
 
 if (!$ENV{TILES}) {
+    # pick something more exciting here possibly?
+    # or use a variety to touch all the code paths?
+    try("util/monster/monster Orb Guardian");
+
     if ($ENV{FULLDEBUG}) {
         try("make test");
     }
-    else {
+    elsif (!$ENV{MONSTER}) {
         try("make nondebugtest");
     }
 }
@@ -55,6 +59,7 @@ sub try {
 
 sub error {
     my ($exitcode) = @_;
-    system "cat morgue/crash-*.txt";
+    my $morguedir = $ENV{USE_DGAMELAUNCH} ? "" : "morgue/";
+    system "cat ${morguedir}crash-*.txt";
     exit $exitcode;
 }

@@ -89,8 +89,7 @@ map_marker *map_marker::read_marker(reader &inf)
     return readers[mtype]? (*readers[mtype])(inf, mtype) : nullptr;
 }
 
-map_marker *map_marker::parse_marker(const string &s,
-                                     const string &ctx) throw (string)
+map_marker *map_marker::parse_marker(const string &s, const string &ctx)
 {
     for (int i = 0; i < NUM_MAP_MARKER_TYPES; ++i)
     {
@@ -143,10 +142,9 @@ map_marker *map_feature_marker::read(reader &inf, map_marker_type)
     return mapf;
 }
 
-map_marker *map_feature_marker::parse(const string &s,
-                                      const string &) throw (string)
+map_marker *map_feature_marker::parse(const string &s, const string &)
 {
-    if (s.find("feat:") != 0)
+    if (!starts_with(s, "feat:"))
         return nullptr;
     string raw = s;
     strip_tag(raw, "feat:", true);
@@ -154,8 +152,8 @@ map_marker *map_feature_marker::parse(const string &s,
     const dungeon_feature_type ft = dungeon_feature_by_name(raw);
     if (ft == DNGN_UNSEEN)
     {
-        throw make_stringf("Bad feature marker: %s (unknown feature '%s')",
-                           s.c_str(), raw.c_str());
+        throw bad_map_marker_f("Bad feature marker: %s (unknown feature '%s')",
+                               s.c_str(), raw.c_str());
     }
     return new map_feature_marker(coord_def(0, 0), ft);
 }
@@ -418,15 +416,14 @@ string map_lua_marker::debug_to_string() const
     return result;
 }
 
-map_marker *map_lua_marker::parse(const string &s,
-                                  const string &ctx) throw (string)
+map_marker *map_lua_marker::parse(const string &s, const string &ctx)
 {
     string raw           = s;
     bool   mapdef_marker = true;
 
-    if (s.find("lua:") == 0)
+    if (starts_with(s, "lua:"))
         strip_tag(raw, "lua:", true);
-    else if (s.find("lua_mapless:") == 0)
+    else if (starts_with(s, "lua_mapless:"))
     {
         strip_tag(raw, "lua_mapless:", true);
         mapdef_marker = false;
@@ -438,8 +435,8 @@ map_marker *map_lua_marker::parse(const string &s,
     if (!mark->initialised)
     {
         delete mark;
-        throw make_stringf("Unable to initialise Lua marker from '%s'",
-                           raw.c_str());
+        throw bad_map_marker_f("Unable to initialise Lua marker from '%s'",
+                               raw.c_str());
     }
     return mark;
 }
@@ -551,9 +548,8 @@ map_marker *map_wiz_props_marker::read(reader &inf, map_marker_type)
 }
 
 map_marker *map_wiz_props_marker::parse(const string &s, const string &)
-    throw (string)
 {
-    throw make_stringf("map_wiz_props_marker::parse() not implemented");
+    throw bad_map_marker("map_wiz_props_marker::parse() not implemented");
 }
 
 string map_wiz_props_marker::debug_describe() const

@@ -48,7 +48,7 @@ end
 
 function callback.make_hatch(data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("hatch", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false, false)
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false)
         dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
     end
     crawl.mpr("<magenta>An exit appears before you!</magenta>")
@@ -147,7 +147,7 @@ function choose_mset_1(e)
     e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:3")
 -- Fire
   elseif rnd < 83 then
-    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental")
+    e.kmons("1 = fire vortex / hell hound / fire elemental w:15")
 -- Ice
   elseif rnd < 85 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum")
@@ -159,7 +159,7 @@ function choose_mset_1(e)
     e.kmons("1 = toenail golem")
 -- Dragon
   elseif rnd < 91 then
-    e.kmons("1 = swamp drake / fire drake / steam dragon")
+    e.kmons("1 = swamp drake / rime drake / steam dragon")
 -- Ranged
   elseif rnd < 93 then
     e.kmons("1 = centaur / yaktaur")
@@ -240,11 +240,11 @@ function choose_mset_2(e)
 -- Fire
   elseif rnd < 84 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               fire drake / efreet")
+               efreet")
 -- Ice
   elseif rnd < 86 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
-               freezing wraith / blue devil")
+               rime drake / freezing wraith / ice devil")
 -- Air
   elseif rnd < 88 then
     e.kmons("1 = insubstantial wisp / air elemental / wind drake w:5")
@@ -253,7 +253,7 @@ function choose_mset_2(e)
     e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
-    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon / wyvern")
+    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon / wyvern")
 -- Ranged
   elseif rnd < 94 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:3 /\
@@ -309,7 +309,7 @@ function choose_mset_3(e)
                anaconda w:5 / guardian serpent")
 -- Lair
   elseif rnd < 19 then
-    e.kmons("1 =  place:Lair:2 / place:Lair:5 / place:Lair:8 w:5")
+    e.kmons("1 =  place:Lair:2 / place:Lair:4 / place:Lair:$ w:5")
 -- Spider
   elseif rnd < 24 then
     e.kmons("1 = place:Spider:$ w:70 / wasp / hornet")
@@ -352,10 +352,10 @@ function choose_mset_3(e)
 -- Fire
   elseif rnd < 73 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               fire drake / efreet / fire dragon / fire giant")
+               efreet / fire dragon / fire giant")
 -- Ice
   elseif rnd < 75 then
-    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\
                freezing wraith / ice devil / ice dragon / frost giant /\
                blizzard demon")
 -- Air
@@ -369,7 +369,7 @@ function choose_mset_3(e)
                quicksilver dragon w:5")
 -- Dragon
   elseif rnd < 81 then
-    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
                hydra")
 -- Ranged
@@ -386,7 +386,7 @@ function choose_mset_3(e)
     e.kmons("1 = common demon / place:Pan / pandemonium lord w:5")
 -- Tomb
   elseif rnd < 93 then
-    e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
 -- Elf
   elseif rnd < 98 then
     e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
@@ -410,10 +410,10 @@ function choose_mset_3(e)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf")
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -474,7 +474,7 @@ local rnd = crawl.random2(142)
 -- Tartarus
   elseif rnd < 67 then
     e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:5 /\
-                 shadow fiend w:1 / spectral thing place:Tar:$ / ghoul w:5")
+                 tzitzimitl w:1 / spectral thing place:Tar:$ / ghoul w:5")
 -- Dis
   elseif rnd < 72 then
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
@@ -485,11 +485,10 @@ local rnd = crawl.random2(142)
 -- Fire
   elseif rnd < 78 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               fire drake / efreet / fire dragon / fire giant / orb of fire w:5 /\
-               balrug")
+               efreet / fire dragon / fire giant / orb of fire w:5 / balrug")
 -- Ice
   elseif rnd < 81 then
-    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\
                freezing wraith / ice devil / ice dragon / frost giant /\
                ice fiend w:5 / blizzard demon")
 -- Air
@@ -503,7 +502,7 @@ local rnd = crawl.random2(142)
                quicksilver dragon")
 -- Dragon
   elseif rnd < 90 then
-    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
                golden dragon / wyvern / hydra")
@@ -545,15 +544,15 @@ local rnd = crawl.random2(142)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
-               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
-               Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
+               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory / Khufu /\
+               Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray / Sojobo /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
-               the royal jelly / Tiamat / Xtahua / Nellie / Chuck / the iron giant")
+               the Royal Jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -628,9 +627,9 @@ xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxxxxxxxxxxxxxxxxxxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
-xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxSSSSSSSSSSSSSxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxxxxxxxxxxxxxxxxxSSSSSSSSSSSSSxOOOOOOOOOOOxxxxxxxxxxxxxxxxxxxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
@@ -647,8 +646,8 @@ xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxxxxxxxxxxxxxxxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xxxxxxxxxxxxxxxxxxxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xZZZZZZZZZZZZZZZZZxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
@@ -713,6 +712,9 @@ KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
 KFEAT:  v = altar_ru
+KFEAT:  w = altar_pakellas
+KFEAT:  x = altar_uskayaw
+KFEAT:  y = altar_hepliaklqana
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -770,9 +772,9 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
               scroll of recharging q:3 ident:all, \
           scroll of amnesia q:4 ident:all
 KITEM:    M = meat ration q:4, bread ration q:4, fruit q:42
-KITEM:    N = wand of draining ident:all charges:5, \
-              wand of cold ident:all charges:5, \
-              wand of fire ident:all charges:5, \
+KITEM:    N = wand of acid ident:all charges:5, \
+              wand of lightning ident:all charges:5, \
+              wand of iceblast ident:all charges:5, \
           wand of disintegration ident:all charges:7
 KITEM:    O = crystal ball of energy ident:all, staff of energy not_cursed ident:all
 KITEM:    P = ring of strength not_cursed ident:all plus:6, \
@@ -782,38 +784,40 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
               ring of dexterity not_cursed ident:all plus:6, \
           ring of flight not_cursed ident:all
-KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
-              shield unrand:shield_of_the_gong ident:all, \
-              plate armour unrand:maxwells_patent_armour ident:all, \
-              great mace unrand:dark_maul ident:all, \
-              triple crossbow unrand:sniper ident:all, \
-              quarterstaff unrand:majin-bo ident:all
-KITEM:    T = longbow unrand:piercer ident:all, \
-              long sword unrand:singing_sword ident:all, \
-              great mace unrand:mace_of_variability ident:all, \
-              great sword unrand:sword_of_power ident:all, \
-              scythe unrand:scythe_of_curses ident:all, \
-              double sword unrand:sword_of_zonguldrok ident:all, \
-              spear unrand:wyrmbane ident:all, \
-              triple sword unrand:plutonium_sword ident:all, \
-              club unrand:devastator ident:all, \
-              great mace unrand:firestarter ident:all
+KITEM:    R = obsidian_axe ident:all, \
+              shield_of_the_gong ident:all, \
+              maxwells_patent_armour ident:all, \
+              dark_maul ident:all, \
+              sniper ident:all, \
+              majin-bo ident:all
+KITEM:    T = piercer ident:all, \
+              singing_sword ident:all, \
+              mace_of_variability ident:all, \
+              sword_of_power ident:all, \
+              scythe_of_curses ident:all, \
+              sword_of_zonguldrok ident:all, \
+              wyrmbane ident:all, \
+              plutonium_sword ident:all, \
+              devastator ident:all, \
+              firestarter ident:all
 KITEM:    S = disc of storms ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
-f^g^h^&A&^i^j^k
+^g^h^i&A&j^k^l^
+f.............m
 ^.........RT..^
-e..HG.........l
+e..HG.........n
 ^..IF.........^
-d..JE.....S...m
+d..JE.....S...o
 ^...D..M..P...^
-c......L..O...n
+c......L..O...p
 ^...C..K..N...^
-b...B.{.......o
+b...B.{.......q
 ^.............^
-a^r^t^v^u^s^q^p
+a.............r
+^y^x^w^v^u^t^s^
 ENDMAP
 
 NAME:  room_1
@@ -1153,7 +1157,6 @@ MAP
 .................
 .................
 .................
-.................
 ...z.........z...
 ..zZz.......zZz..
 ...z.........z...
@@ -1168,7 +1171,6 @@ MAP
 ..1111111111111..
 ..1111111111111..
 ..1111111111111..
-.................
 .................
 .................
 .................

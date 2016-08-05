@@ -48,11 +48,10 @@ void init_pandemonium()
         env.mons_alloc[pc] = random_choose_weighted(5, MONS_SMOKE_DEMON,
                                                     5, MONS_YNOXINUL,
                                                     5, MONS_ABOMINATION_LARGE,
-                                                    5, MONS_ICE_DEVIL,
                                                     5, MONS_SOUL_EATER,
                                                     5, MONS_DEMONIC_CRAWLER,
                                                     5, MONS_SUN_DEMON,
-                                                    5, MONS_NEQOXEC,
+                                                    2, MONS_NEQOXEC,
                                                     5, MONS_CHAOS_SPAWN,
                                                     1, MONS_SHADOW_DEMON,
                                                     1, MONS_LOROCYPROCA,
@@ -87,7 +86,7 @@ void init_pandemonium()
         env.mons_alloc[7 + random2(3)] = MONS_ICE_FIEND;
 
     if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_SHADOW_FIEND;
+        env.mons_alloc[7 + random2(3)] = MONS_TZITZIMITL;
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;

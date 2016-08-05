@@ -11,7 +11,6 @@
 #include "message.h"
 #include "output.h"
 #include "process_desc.h"
-#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -161,25 +160,7 @@ void AbilityRegion::pack_buffers()
     if (m_items.size() == 0)
         return;
 
-    const int max_spells = get_max_slots();
-
-    // Pack base separately, as it comes from a different texture...
     int i = 0;
-    for (int y = 0; y < my; y++)
-    {
-        if (i >= max_spells)
-            break;
-
-        for (int x = 0; x < mx; x++)
-        {
-            if (i++ >= max_spells)
-                break;
-
-            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
-        }
-    }
-
-    i = 0;
     for (int y = 0; y < my; y++)
     {
         if (i >= (int)m_items.size())

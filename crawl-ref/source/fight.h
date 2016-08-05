@@ -30,10 +30,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int rawdamage);
 
-bool wielded_weapon_check(item_def *weapon, bool no_message = false);
+bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
-                         const actor *defender);
+                         const actor &defender);
+int stab_bonus_denom(stab_type stab);
 
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
@@ -42,8 +43,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int effective_attack_number = 0);
 
 int weapon_min_delay_skill(const item_def &weapon);
-int weapon_min_delay(const item_def &weapon);
-int finesse_adjust_delay(int delay);
+int weapon_min_delay(const item_def &weapon, bool check_speed = true);
 
 int mons_weapon_damage_rating(const item_def &launcher);
 int mons_missile_damage(monster* mons, const item_def *launch,

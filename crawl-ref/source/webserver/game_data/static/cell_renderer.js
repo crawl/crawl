@@ -164,6 +164,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.render_glyph(x, y, map_cell);
 
                 this.render_cursors(cx, cy, x, y);
+                this.draw_ray(x, y, cell);
                 return;
             }
 
@@ -545,6 +546,25 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
+        draw_ray: function(x, y, cell)
+        {
+            var bg = cell.bg;
+            var bg_idx = cell.bg.value;
+            var renderer = this;
+
+            if (bg_idx > dngn.DNGN_UNSEEN)
+            {
+                if (bg.RAY)
+                    this.draw_dngn(dngn.RAY, x, y);
+                else if (bg.RAY_OOR)
+                    this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
+                else if (bg.LANDING)
+                    this.draw_dngn(dngn.LANDING, x, y);
+                else if (bg.RAY_MULTI)
+                    this.draw_dngn(dngn.RAY_MULTI, x, y);
+            }
+        },
+
         draw_background: function(x, y, cell)
         {
             var bg = cell.bg;
@@ -644,9 +664,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.ELDRITCH_OVERLAY_SW, x, y);
                 }
 
-                if (cell.halo == enums.HALO_MONSTER)
-                    this.draw_dngn(dngn.HALO, x, y);
-
                 if (!bg.UNSEEN)
                 {
                     if (cell.sanctuary)
@@ -667,6 +684,18 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     if (cell.disjunct)
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
 
+                    if (cell.fg)
+                    {
+                        var fg = cell.fg;
+                        if (fg.PET)
+                            this.draw_dngn(dngn.HALO_FRIENDLY, x, y);
+                        else if (fg.GD_NEUTRAL)
+                            this.draw_dngn(dngn.HALO_GD_NEUTRAL, x, y);
+                        else if (fg.NEUTRAL)
+                            this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
+                    }
+
+
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible. It will be applied later if the cell is unseen.
                     if (bg.EXCL_CTR)
@@ -674,15 +703,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     else if (bg.TRAV_EXCL)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
-
-                if (bg.RAY)
-                    this.draw_dngn(dngn.RAY, x, y);
-                else if (bg.RAY_OOR)
-                    this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
-                else if (bg.LANDING)
-                    this.draw_dngn(dngn.LANDING, x, y);
-
             }
+
+            this.draw_ray(x, y, cell);
         },
 
         draw_foreground: function(x, y, map_cell)
@@ -742,6 +765,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             else if (options.get("tile_display_mode") == "hybrid")
             {
                 this.render_glyph(x, y, map_cell, true);
+                this.draw_ray(x, y, cell);
             }
 
             if (fg.NET)
@@ -753,7 +777,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y);
 
-            var status_shift = 0;
             if (fg.MIMIC_INEPT)
                 this.draw_icon(icons.INEPT_MIMIC, x, y);
             else if (fg.MIMIC)
@@ -761,29 +784,22 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             else if (fg.MIMIC_RAVEN)
                 this.draw_icon(icons.RAVENOUS_MIMIC, x, y);
 
-            //The berserk icon is in the lower right, so status_shift doesn't need changing.
-            if (fg.BERSERK)
-            {
-                this.draw_icon(icons.BERSERK, x, y);
-            }
-
             // Pet mark
             if (fg.PET)
-            {
-                this.draw_icon(icons.HEART, x, y);
-                status_shift += 10;
-            }
+                this.draw_icon(icons.FRIENDLY, x, y);
             else if (fg.GD_NEUTRAL)
-            {
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y);
-                status_shift += 7;
-            }
             else if (fg.NEUTRAL)
-            {
                 this.draw_icon(icons.NEUTRAL, x, y);
-                status_shift += 7;
-            }
 
+            //These icons are in the lower right, so status_shift doesn't need changing.
+            if (fg.BERSERK)
+                this.draw_icon(icons.BERSERK, x, y);
+            if (fg.IDEALISED)
+                this.draw_icon(icons.IDEALISED, x, y);
+
+
+            var status_shift = 0;
             if (fg.STAB)
             {
                 this.draw_icon(icons.STAB_BRAND, x, y);
@@ -868,6 +884,16 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.DEATHS_DOOR)
             {
                 this.draw_icon(icons.DEATHS_DOOR, x, y, -status_shift, 0);
+                status_shift += 10;
+            }
+            if (fg.BOUND_SOUL)
+            {
+                this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
+            if (fg.INFESTED)
+            {
+                this.draw_icon(icons.INFESTED, x, y, -status_shift, 0);
                 status_shift += 6;
             }
             if (fg.RECALL)

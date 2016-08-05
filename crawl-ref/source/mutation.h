@@ -30,6 +30,7 @@ enum mutation_permanence_class
 void init_mut_index();
 
 bool is_body_facet(mutation_type mut);
+bool is_slime_mutation(mutation_type mut);
 bool undead_mutation_rot();
 
 bool mutate(mutation_type which_mutation, const string &reason,
@@ -52,7 +53,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 bool delete_all_mutations(const string &reason);
 
 const char* mutation_name(mutation_type mut);
-const char* mutation_desc_for_text(mutation_type mut);
+string mut_upgrade_summary(mutation_type mut);
 int mutation_max_levels(mutation_type mut);
 string mutation_desc(mutation_type which_mutat, int level = -1,
                           bool colour = false, bool is_sacrifice = false);
@@ -69,6 +70,7 @@ void check_monster_detect();
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
+void reset_powered_by_death_duration();
 
 bool delete_temp_mutation();
 

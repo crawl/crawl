@@ -204,19 +204,19 @@ bool attribute_increase()
 */
 void jiyva_stat_action()
 {
-    int cur_stat[3];
+    int cur_stat[NUM_STATS];
     int stat_total = 0;
-    int target_stat[3];
-    for (int x = 0; x < 3; ++x)
+    int target_stat[NUM_STATS];
+    for (int x = 0; x < NUM_STATS; ++x)
     {
         cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
         stat_total += cur_stat[x];
     }
 
     int evp = you.unadjusted_body_armour_penalty();
-    target_stat[0] = max(9, evp);
-    target_stat[1] = 9;
-    target_stat[2] = 9;
+    target_stat[STAT_STR] = max(9, evp);
+    target_stat[STAT_INT] = 9;
+    target_stat[STAT_DEX] = 9;
     int remaining = stat_total - 18 - target_stat[0];
 
     // Divide up the remaining stat points between Int and either Str or Dex,
@@ -242,7 +242,7 @@ void jiyva_stat_action()
         magic_weights = div_rand_round(remaining * magic_weights,
                                        magic_weights + other_weights);
         other_weights = remaining - magic_weights;
-        target_stat[1] += magic_weights;
+        target_stat[STAT_INT] += magic_weights;
 
         // Heavy armour weights towards Str, Dodging skill towards Dex.
         int str_weight = 10 * evp;
@@ -251,37 +251,37 @@ void jiyva_stat_action()
         // Now apply the Str and Dex weighting.
         const int str_adj = div_rand_round(other_weights * str_weight,
                                            str_weight + dex_weight);
-        target_stat[0] += str_adj;
-        target_stat[2] += (other_weights - str_adj);
+        target_stat[STAT_STR] += str_adj;
+        target_stat[STAT_DEX] += (other_weights - str_adj);
     }
     // Add a little fuzz to the target.
-    for (int x = 0; x < 3; ++x)
+    for (int x = 0; x < NUM_STATS; ++x)
         target_stat[x] += random2(5) - 2;
     int choices = 0;
     int stat_up_choice = 0;
     int stat_down_choice = 0;
     // Choose a random stat shuffle that doesn't increase the l^2 distance to
     // the (fuzzed) target.
-    for (int x = 0; x < 3; ++x)
-        for (int y = 0; y < 3; ++y)
+    for (int gain = 0; gain < NUM_STATS; ++gain)
+        for (int lose = 0; lose < NUM_STATS; ++lose)
         {
-            if (x != y && cur_stat[y] > 1
-                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y]
-                && cur_stat[x] < MAX_STAT_VALUE)
+            if (gain != lose && cur_stat[lose] > 1
+                && target_stat[gain] - cur_stat[gain] > target_stat[lose] - cur_stat[lose]
+                && cur_stat[gain] < MAX_STAT_VALUE && you.base_stats[lose] > 1)
             {
                 choices++;
                 if (one_chance_in(choices))
                 {
-                    stat_up_choice = x;
-                    stat_down_choice = y;
+                    stat_up_choice = gain;
+                    stat_down_choice = lose;
                 }
             }
         }
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true);
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true);
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, false);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, false);
     }
 }
 
@@ -368,9 +368,6 @@ static int _strength_modifier(bool innate_only)
     {
         if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
             result += 5;
-
-        if (you.duration[DUR_FORTITUDE])
-            result += 10;
 
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];

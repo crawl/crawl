@@ -13,10 +13,6 @@ extern "C" {
 #include <set>
 #include <string>
 
-#ifndef CLUA_MAX_MEMORY_USE
-#define CLUA_MAX_MEMORY_USE (6 * 1024)
-#endif
-
 class CLua;
 
 class lua_stack_cleaner
@@ -218,6 +214,7 @@ public:
 
     bool valid() const override;
     bool matches(const string &s) const override;
+    pattern_match match_location(const string &s) const override;
     const string &tostring() const override { return pattern; }
 
     static bool is_lua_pattern(const string &s);

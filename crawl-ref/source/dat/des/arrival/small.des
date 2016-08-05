@@ -2473,7 +2473,7 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
-MONS:    brain worm / worm / giant leech
+MONS:    worm / giant leech
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else
@@ -2483,7 +2483,7 @@ MONS:    hog / jackal / wolf / hound
 MONS:    giant cockroach / worker ant / butterfly / killer bee /\
          redback
 MONS:    swamp worm / lindwurm / worm
-MONS:    swamp drake / hydra / wyvern / fire drake
+MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander
 : end
@@ -3187,4 +3187,23 @@ c...w...c
 ccc...ccc
   cc{cc
    ccc
+ENDMAP
+
+NAME:   kennysheep_arrival_forest
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: south
+FTILE:  t'G = floor_grass
+COLOUR: ' = green
+MAP
+        xx+++xx
+       xxG...Gxx
+xxx   xx''...''xx   xxx
+xtxxxxx'''...'''xxxxxtx
+xt'''''''G...G'''''''tx
+xtt'''''''...'''''''ttx
+xtt'''''''...''''''tttx
+xtttttt''G.{.G''''ttttx
+xtttttttt'...'''ttttttx
+xtttttttttt.ttttttttttx
+xtttttttttttttttttttttx
 ENDMAP

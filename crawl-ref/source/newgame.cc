@@ -410,9 +410,19 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     const newgame_def ng_reset = ng;
 
     if (ng.type == GAME_TYPE_TUTORIAL)
+    {
         choose_tutorial_character(choice);
+        choice.allowed_jobs.clear();
+        choice.allowed_species.clear();
+        choice.allowed_weapons.clear();
+    }
     else if (ng.type == GAME_TYPE_HINTS)
+    {
         pick_hints(choice);
+        choice.allowed_jobs.clear();
+        choice.allowed_species.clear();
+        choice.allowed_weapons.clear();
+    }
 
 #if defined(DGAMELAUNCH) && defined(TOURNEY)
     // Apologies to non-public servers.
@@ -827,7 +837,7 @@ static void _construct_species_menu(const newgame_def& ng,
     if (_char_defined(defaults))
     {
         string tmp_string = "Tab - ";
-        tmp_string += _char_description(defaults).c_str();
+        tmp_string += _char_description(defaults);
         // Adjust the end marker to aling the - because
         // Tab text is longer by 2
         tmp = new TextItem();
@@ -1104,8 +1114,16 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
                                         MenuFreeform* menu)
 {
     menu_letter letter = 'a';
+    // Add entries for any job groups with at least one playable background.
     for (job_group& group : jobs_order)
-        group.attach(ng, defaults, menu, letter);
+    {
+        if (ng.species == SP_UNKNOWN
+            || any_of(begin(group.jobs), end(group.jobs), [&ng](job_type job)
+                      { return job_allowed(ng.species, job) != CC_BANNED; }))
+        {
+            group.attach(ng, defaults, menu, letter);
+        }
+    }
 
     // Add all the special button entries
     TextItem* tmp = new TextItem();
@@ -1769,9 +1787,9 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
     }
     else
     {
-        weapon_type startwep[7] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                    WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
-                                    WPN_QUARTERSTAFF};
+        weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
+                                    WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
+                                    WPN_UNARMED };
         for (int i = 0; i < 7; ++i)
         {
             weapon_choice wp;

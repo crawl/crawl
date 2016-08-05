@@ -241,6 +241,14 @@ body {
 }
 
 
+#tooltip {
+    position: absolute;
+    background: rgba(40, 40, 40, 0.5);
+    padding: 5px;
+    border: 1px solid lightgray;
+}
+
+
 /* monster list */
 #monster_list {
     display: inline-block;
@@ -281,6 +289,34 @@ body {
 #monster_list .neutral,
 #monster_list .strict_neutral {
     color: #8f5902; /* brown */
+}
+
+#monster_list .health {
+    display: inline-block;
+}
+
+#monster_list .uninjured {
+    background-color: #4e9a06; /* green */
+}
+
+#monster_list .lightly_damaged {
+    background-color: #4e9a06; /* green */
+}
+
+#monster_list .moderately_damaged {
+    background-color: #8f5902; /* brown */
+}
+
+#monster_list .heavily_damaged {
+    background-color: #8f5902; /* brown */
+}
+
+#monster_list .severely_damaged {
+    background-color: #5c3566; /* magenta */
+}
+
+#monster_list .almost_dead {
+    background-color: #a40000; /* red */
 }
 
 #monster_list .ellipse {

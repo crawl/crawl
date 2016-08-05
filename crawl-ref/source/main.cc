@@ -164,7 +164,7 @@
 #include "wiz-item.h"
 #include "wiz-mon.h"
 #include "wiz-you.h"
-#include "xom.h"
+#include "xom.h" // debug_xom_effects()
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -391,7 +391,7 @@ static void _launch_game_loop()
         }
         catch (ext_fail_exception &fe)
         {
-            end(1, false, "%s", fe.msg.c_str());
+            end(1, false, "%s", fe.what());
         }
         catch (short_read_exception &E)
         {
@@ -837,19 +837,7 @@ static void _do_wizard_command(int wiz_command)
         you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change();
         break;
-    case 'X':
-    {
-        int result = 0;
-        do
-        {
-            if (you_worship(GOD_XOM))
-                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
-            else
-                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
-        }
-        while (result == 0);
-        break;
-    }
+    case 'X': wizard_xom_acts(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
     case 'y': wizard_identify_all_items(); break;
@@ -1301,8 +1289,8 @@ static void _update_place_info()
         // as a resting turn, rather than "other".
         static bool prev_was_rest = false;
 
-        if (!you.delay_queue.empty()
-            && you.delay_queue.front().type == DELAY_REST)
+        if (you_are_delayed()
+            && current_delay()->is_resting())
         {
             prev_was_rest = true;
         }
@@ -1318,8 +1306,8 @@ static void _update_place_info()
             delta.elapsed_other += you.time_taken;
         }
 
-        if (you.delay_queue.empty()
-            || you.delay_queue.front().type != DELAY_REST)
+        if (!you_are_delayed()
+            || !current_delay()->is_resting())
         {
             prev_was_rest = false;
         }
@@ -1418,7 +1406,8 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
-    if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
+    if (you_are_delayed()
+        && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
         end_searing_ray();
         handle_delay();
@@ -1528,8 +1517,10 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
+#ifdef WIZARD
     if (you.props.exists(FREEZE_TIME_KEY))
         you.turn_is_over = false;
+#endif
 
     if (you.turn_is_over)
     {
@@ -1659,7 +1650,7 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:
-        return yesno("If you enter this portal you will not be able to return "
+        return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
 
     case DNGN_MALIGN_GATEWAY:
@@ -1785,7 +1776,7 @@ static void _take_stairs(bool down)
     you.stop_being_constricted();
 
     if (shaft)
-        start_delay(DELAY_DESCENDING_STAIRS, 0);
+        start_delay<DescendingStairsDelay>(0);
     else if (get_trap_type(you.pos()) == TRAP_GOLUBRIA)
     {
         coord_def old_pos = you.pos();
@@ -1799,7 +1790,10 @@ static void _take_stairs(bool down)
     else
     {
         tag_followers(); // Only those beside us right now can follow.
-        start_delay(down ? DELAY_DESCENDING_STAIRS : DELAY_ASCENDING_STAIRS, 1);
+        if (down)
+            start_delay<DescendingStairsDelay>(1);
+        else
+            start_delay<AscendingStairsDelay>(1);
     }
 }
 
@@ -1843,7 +1837,7 @@ static void _experience_check()
     }
 
     handle_real_time();
-    msg::stream << "Play time: " << make_time_string(you.real_time)
+    msg::stream << "Play time: " << make_time_string(you.real_time())
                 << " (" << you.num_turns << " turns)"
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
@@ -1899,11 +1893,9 @@ static void _do_rest()
 
     if (i_feel_safe())
     {
-        if ((you.hp == you.hp_max
-                || player_mutation_level(MUT_SLOW_REGENERATION) == 3
-                || (you.species == SP_VAMPIRE
-                    && you.hunger_state <= HS_STARVING))
-            && you.magic_points == you.max_magic_points)
+        if ((you.hp == you.hp_max || !player_regenerates_hp())
+            && (you.magic_points == you.max_magic_points
+                || !player_regenerates_mp()))
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
@@ -2049,13 +2041,23 @@ void process_command(command_type cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
-        if (!clua.callfn("hit_closest", 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-        break;
     case CMD_AUTOFIGHT_NOMOVE:
-        if (!clua.callfn("hit_closest_nomove", 0, 0))
+    {
+        const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
+                                                         : "hit_closest_nomove";
+        if (Options.autofight_warning > 0
+            && !is_processing_macro()
+            && you.real_time_delta
+               <= chrono::milliseconds(Options.autofight_warning)
+            && (crawl_state.prev_cmd == CMD_AUTOFIGHT
+                || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        {
+            mprf(MSGCH_DANGER, "You should not fight recklessly!");
+        }
+        else if (!clua.callfn(fnname, 0, 0))
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
+    }
 #endif
     case CMD_REST:            _do_rest(); break;
 
@@ -2083,8 +2085,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
-    case CMD_TOGGLE_VIEWPORT_WEAPONS: toggle_viewport_weapons(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
@@ -2141,7 +2141,7 @@ void process_command(command_type cmd)
     case CMD_READ:                 read();                   break;
     case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
-    case CMD_SHOUT:                yell();                   break;
+    case CMD_SHOUT:                issue_orders();           break;
     case CMD_THROW_ITEM_NO_QUIVER: throw_item_no_quiver();   break;
     case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
     case CMD_WEAR_ARMOUR:          wear_armour();            break;
@@ -2257,7 +2257,7 @@ void process_command(command_type cmd)
                 if (you.see_cell(dest))
                     full_describe_square(dest);
                 else
-                    mpr("You can't see that place.");
+                    canned_msg(MSG_CANNOT_SEE);
             }
         }
         break;
@@ -2297,7 +2297,9 @@ void process_command(command_type cmd)
             = (Options.restart_after_game && Options.restart_after_save)
               ? "Save game and return to main menu?"
               : "Save game and exit?";
-        if (yesno(prompt, true, 'n'))
+        explicit_keymap map;
+        map['S'] = 'y';
+        if (yesno(prompt, true, 'n', true, true, false, &map))
             save_game(true);
         else
             canned_msg(MSG_OK);
@@ -2340,6 +2342,7 @@ void process_command(command_type cmd)
 
         break;
     }
+
 }
 
 static void _prep_input()
@@ -2350,7 +2353,7 @@ static void _prep_input()
 
     textcolour(LIGHTGREY);
 
-    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_status_lights = true;
     if (!player_stair_delay())
         print_stats();
 
@@ -2361,7 +2364,7 @@ static void _prep_input()
 
     if (you.seen_portals)
     {
-        ASSERT(you_worship(GOD_ASHENZARI));
+        ASSERT(have_passive(passive_t::detect_portals));
         if (you.seen_portals == 1)
             mprf(MSGCH_GOD, "You have a vision of a gate.");
         else
@@ -2369,14 +2372,6 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
-    if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
-    {
-        mpr_nojoin(MSGCH_GOD,
-                   you.props[GOZAG_ANNOUNCE_SHOP_KEY].get_string().c_str());
-        you.props.erase(GOZAG_ANNOUNCE_SHOP_KEY);
-    }
-    if (you.seen_invis)
-        you.seen_invis = false;
 }
 
 static void _check_banished()
@@ -2391,23 +2386,8 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
-        more();
-        banished(you.banished_by);
-    }
-}
-
-static void _check_shafts()
-{
-    for (int i = 0; i < MAX_TRAPS; ++i)
-    {
-        trap_def &trap = env.trap[i];
-
-        if (trap.type != TRAP_SHAFT)
-            continue;
-
-        ASSERT_IN_BOUNDS(trap.pos);
-
-        handle_items_on_shaft(trap.pos, true);
+        // these are included in default force_more_message
+        banished(you.banished_by, you.banished_power);
     }
 }
 
@@ -2471,7 +2451,7 @@ static void _update_golubria_traps()
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
     {
-        trap_def *trap = find_trap(c);
+        trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
             if (--trap->ammo_qty <= 0)
@@ -2525,7 +2505,6 @@ void world_reacts()
 #endif
 
     _check_banished();
-    _check_shafts();
     _check_sanctuary();
 
     run_environment_effects();
@@ -2738,7 +2717,8 @@ static bool _cancel_confused_move(bool stationary)
                 && (stationary
                     || !(is_sanctuary(you.pos()) && is_sanctuary(mons->pos()))
                        && !fedhas_passthrough(mons))
-                && bad_attack(mons, adj, suffix, penance))
+                && bad_attack(mons, adj, suffix, penance)
+                && mons->angered_by_attacks())
             {
                 bad_mons = mons;
                 bad_suff = suffix;
@@ -2765,9 +2745,9 @@ static bool _cancel_confused_move(bool stationary)
         else
         {
             string name = bad_mons->name(DESC_PLAIN);
-            if (name.find("the ") == 0)
+            if (starts_with(name, "the "))
                name.erase(0, 4);
-            if (bad_adj.find("your") != 0)
+            if (!starts_with(bad_adj, "your"))
                bad_adj = "the " + bad_adj;
             prompt += bad_adj + name + bad_suff;
         }
@@ -2856,7 +2836,7 @@ static void _swing_at_target(coord_def move)
             mpr("You swing at nothing.");
         make_hungry(3, true);
         // Take the usual attack delay.
-        you.time_taken = you.attack_delay(you.weapon());
+        you.time_taken = you.attack_delay().roll();
     }
     you.turn_is_over = true;
     return;
@@ -3060,8 +3040,7 @@ static void _close_door(coord_def move)
 static void _do_berserk_no_combat_penalty()
 {
     // Butchering/eating a corpse will maintain a blood rage.
-    const int delay = current_delay_action();
-    if (delay == DELAY_BUTCHER || delay == DELAY_EAT)
+    if (you_are_delayed() && current_delay()->berserk_ok())
         return;
 
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
@@ -3182,7 +3161,7 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    int additional_time_taken = 0; // Extra time independant of movement speed
+    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
@@ -3214,7 +3193,6 @@ static void _move_player(coord_def move)
         {
             move.x = random2(3) - 1;
             move.y = random2(3) - 1;
-            you.reset_prev_move();
             if (move.origin())
             {
                 mpr("You're too confused to move!");
@@ -3471,20 +3449,24 @@ static void _move_player(coord_def move)
 
         if (swap)
             _swap_places(targ_monst, mon_swap_dest);
-        else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
+        else if (you.duration[DUR_CLOUD_TRAIL])
         {
             if (cell_is_solid(you.pos()))
                 ASSERT(you.wizmode_teleported_into_rock);
             else
             {
-                check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
-                                  random_range(3, 10), &you, 0, ETC_RANDOM);
+                auto cloud = static_cast<cloud_type>(
+                    you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+                ASSERT(cloud != CLOUD_NONE);
+                check_place_cloud(cloud,you.pos(), random_range(3, 10), &you,
+                                  0, -1);
             }
         }
 
-        if (delay_is_run(current_delay_action()) && env.travel_trail.empty())
+        const bool running = you_are_delayed() && current_delay()->is_run();
+        if (running && env.travel_trail.empty())
             env.travel_trail.push_back(you.pos());
-        else if (!delay_is_run(current_delay_action()))
+        else if (!running)
             clear_travel_trail();
 
         // clear constriction data
@@ -3512,7 +3494,7 @@ static void _move_player(coord_def move)
                 extract_manticore_spikes("The manticore spikes snap loose.");
         }
 
-        if (delay_is_run(current_delay_action()))
+        if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
         you.time_taken *= player_movement_speed();
@@ -3525,7 +3507,6 @@ static void _move_player(coord_def move)
                                  div_round_up(100, you.running.travel_speed));
         }
 
-        you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
@@ -3537,7 +3518,6 @@ static void _move_player(coord_def move)
         && feat_is_closed_door(targ_grid))
     {
         _open_door(move);
-        you.prev_move = move;
     }
     else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY
              && !attacking && !you.is_stationary())
@@ -3548,7 +3528,6 @@ static void _move_player(coord_def move)
             return;
         }
 
-        you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
 

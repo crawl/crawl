@@ -116,6 +116,9 @@ Xom's power touches on you.
 Xom giggles.
 
 w:1
+"This scratches an itch."
+
+w:1
 "Running a series of toy crash tests now."
 %%%%
 Xom rearrange the pieces
@@ -125,6 +128,8 @@ Xom decides to rearrange the pieces.
 "First here, now there."
 
 "This might be better!"
+
+"This is how I like it!"
 %%%%
 Xom teleportation journey
 
@@ -187,7 +192,7 @@ Xom revert own banishment
 w:30
 "Kidding!"
 
-"On second thought, though..."
+"On second thoughts, though..."
 
 "No, I've changed my mind."
 
@@ -242,6 +247,10 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+Xom cleaving
+
+@Xom potion effect@
+%%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 
@@ -266,17 +275,6 @@ Xom colour smoke trail
 "Go forth and redecorate, my child!"
 
 "This place needs a little more atmosphere."
-%%%%
-# turns walls into glass
-Xom vitrification
-
-You feel watched.
-
-Everything around seems to assume a strange transparency.
-
-The walls suddenly lose part of their structure.
-
-Xom alters the dungeon around you.
 %%%%
 # strengthens friendlies, weakens hostiles
 Xom good monster polymorph
@@ -349,11 +347,11 @@ w:1
 %%%%
 Xom accidental homicide
 
-"Oops, I didn't mean to do *that*!"
+"Oops, I didn't mean to do that!"
 %%%%
 Xom weird death
 
-"How'd *that* happen? Weird."
+"How'd that happen? Weird."
 %%%%
 Xom resurrection
 
@@ -368,6 +366,11 @@ Xom's power revives you.
 Xom brings you back to life.
 
 Xom smiles on you.
+
+"Toy, don't you die on me yet!"
+
+w:1
+"One more [life|try|go]."
 %%%%
 Xom repel stairs
 
@@ -528,45 +531,6 @@ Beogh curses everyone not orcish, especially @player_genus_plural@.
 
 Beogh swears eternal hatred towards @player_god@.
 %%%%
-#################################################
-# The Shining One rants on killing a holy being #
-#################################################
-# an evil worshipper has killed a holy being
-the Shining One holy evil
-
-The Shining One thunders, "Cease your foul attacks on the divine!"
-
-The Shining One shouts, "That base death shall not go unavenged!"
-
-The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
-
-The Shining One whispers, "The forces of light will burn you to a crisp."
-%%%%
-# a non-good worshipper or atheist has killed a holy being
-the Shining One holy other
-
-The Shining One says, "As holy lives are taken, so shall yours be."
-
-The Shining One warns, "Defile yourself no further with such kills."
-
-The Shining One demands, "It is time to choose between the fair and the foul."
-
-The Shining One says, "Martyrs are remembered forever."
-
-w:1
-The Shining One says, "An eye for an eye, a tooth for a tooth."
-%%%%
-##########################################
-# Elyvilon hates you killing her animals #
-##########################################
-Elyvilon holy
-
-Elyvilon hisses: "You foul beast! How dare you!"
-
-Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
-
-Elyvilon whispers: "No one should ever harm others. Ever!"
-%%%%
 recite_closure
 
 "Amen!"
@@ -578,6 +542,16 @@ recite_closure
 "So sayeth Zin."
 
 "Purity be upon you all."
+
+"Written in blood; sealed by your death."
+
+"From Zin's mouth, by Zin's hand."
+
+w:5
+"Thus shall it ever be."
+
+w:3
+"In fire! In pain!"
 %%%%
 ##########################
 # Xom's response to prayer
@@ -597,6 +571,9 @@ You feel someone pinching you. As you turn, you see no one.
 
 w:1
 Xom says: Amen!
+
+w:1
+Xom says: Aww... shucks!
 %%%%
 _trout_species_
 
@@ -633,6 +610,12 @@ a prohibited
 
 a challenging
 
+a delicious
+
+a moldy
+
+a fake
+
 w:2
 a kilgore
 %%%%
@@ -661,8 +644,6 @@ naughty
 ############################
 Gozag prayer
 
-Gozag says: Don't bother me unless you have something to purchase.
-
 Gozag says: Bring me some gold!
 
 Gozag says: Wasting time is wasting money!
@@ -675,14 +656,7 @@ Gozag says: A full purse beats having friends.
 
 Gozag says: The world belongs to the rich.
 
-w:4
-Gozag says: Eat the poor!
-
-w:3
-Gozag says: Kill the poor!
-
-w:3
-Gozag says: Defeat the poor!
+Gozag says: [Eat|Kill|Defeat|Leverage|Tread upon] the poor!
 
 Gozag says: No better sound than the ting-a-ling of coins.
 
@@ -704,20 +678,25 @@ Gozag says: Money talks!
 
 Gozag says: Cash is king!
 
+Gozag says: I have no interest in the poor.
+
+w:5
+Gozag says: I guarantee the gold standard.
+
 w:5
 Gozag says: Gold! Gold! Gold!
 
-w:1
-Gozag says: Your prayer is important. Please continue to hold.
+w:5
+Gozag says: Don't bother me unless you have something to purchase.
+
+w:5
+Gozag says: Only money gets you out of stagnation and depression.
 
 w:1
-Gozag says: Please join the back of the queue.
+Gozag says: Let them eat cake!
 
 w:1
-Gozag says: This prayer may be monitored for quality assurance.
-
-w:1
-Gozag says: For potions, speak 1 now.
+Gozag says: I want my money back!
 %%%%
 ######################################
 # Welcome messages on game restoration
@@ -806,6 +785,49 @@ Okawaru says: Regain your honour in battle!
 Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
+%%%%
+Pakellas penance
+
+Pakellas says: That's one approach which won't work here.
+
+Pakellas says: Disappointing results so far.
+
+Pakellas says: We may have to discontinue the experiment at this rate.
+
+Pakellas says: Do not stand in the way of progress!
+%%%%
+Pakellas welcome
+
+Pakellas says: Time to continue the experiment.
+
+Pakellas says: Time to find some more test subjects.
+
+Pakellas says: Ready to try out some more devices?
+
+Pakellas says: This is producing some very interesting results.
+
+Pakellas says: What solutions will you come up with next?
+
+Pakellas says: Progress or perish!
+
+# nicolae-
+w:5
+Pakellas says: No one tells a god not to play god!
+
+w:1
+Pakellas says: They called me mad... well, we'll show them!
+%%%%
+Pakellas death
+
+Pakellas says: Back to the drawing board!
+
+Pakellas says: Good help is so hard to find these days!
+
+Pakellas says: Time to find a new assistant...
+
+Pakellas says: That's one more possible approach eliminated.
+
+Pakellas says: Time to start the next experiment...
 %%%%
 Qazlal penance
 

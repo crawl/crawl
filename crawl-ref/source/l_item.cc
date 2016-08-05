@@ -13,7 +13,6 @@
 #include "adjust.h"
 #include "artefact.h"
 #include "cluautil.h"
-#include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
 #include "enum.h"
@@ -29,6 +28,7 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
@@ -187,7 +187,7 @@ static int l_item_do_remove(lua_State *ls)
     }
 
     int eq = get_equip_slot(item);
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
     {
         mpr("Item is not equipped");
         return 0;
@@ -196,7 +196,7 @@ static int l_item_do_remove(lua_State *ls)
     bool result = false;
     if (eq == EQ_WEAPON)
         result = wield_weapon(true, SLOT_BARE_HANDS);
-    else if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP)
+    else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
         result = takeoff_armour(item->link);
@@ -217,7 +217,7 @@ static int l_item_do_drop(lua_State *ls)
         return 0;
 
     int eq = get_equip_slot(item);
-    if (eq >= 0 && eq < NUM_EQUIP)
+    if (eq >= EQ_FIRST_EQUIP && eq < NUM_EQUIP)
     {
         lua_pushboolean(ls, false);
         lua_pushstring(ls, "Can't drop worn items");
@@ -243,7 +243,7 @@ IDEF(equipped)
         lua_pushboolean(ls, false);
 
     int eq = get_equip_slot(item);
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
         lua_pushboolean(ls, false);
     else
         lua_pushboolean(ls, true);
@@ -318,16 +318,17 @@ static int l_item_do_ego(lua_State *ls)
     if (lua_isboolean(ls, 1))
         terse = lua_toboolean(ls, 1);
 
-    const char *s = nullptr;
-
     if (item_type_known(*item) || item->base_type == OBJ_MISSILES)
-        s = ego_type_string(*item, terse).c_str();
+    {
+        const string s = ego_type_string(*item, terse);
+        if (!s.empty())
+        {
+            lua_pushstring(ls, s.c_str());
+            return 1;
+        }
+    }
 
-    if (s && *s)
-        lua_pushstring(ls, s);
-    else
-        lua_pushnil(ls);
-
+    lua_pushnil(ls);
     return 1;
 }
 
@@ -538,16 +539,6 @@ IDEF(is_melded)
     return 1;
 }
 
-IDEF(can_cut_meat)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, can_cut_meat(*item));
-
-    return 1;
-}
-
 IDEF(is_corpse)
 {
     if (!item || !item->defined())
@@ -658,7 +649,7 @@ IDEF(god_gift)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushboolean(ls, origin_is_god_gift(*item));
+    lua_pushboolean(ls, origin_as_god_gift(*item) != GOD_NO_GOD);
 
     return 1;
 }
@@ -687,7 +678,8 @@ IDEF(plus)
                    || item->sub_type == RING_SLAYING
                    || item->sub_type == RING_EVASION
                    || item->sub_type == RING_DEXTERITY
-                   || item->sub_type == RING_INTELLIGENCE)))
+                   || item->sub_type == RING_INTELLIGENCE
+                   || item->sub_type == AMU_REFLECTION)))
     {
         lua_pushnumber(ls, item->plus);
     }
@@ -753,8 +745,8 @@ IDEF(damage)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
-        || item->base_type == OBJ_RODS || item->base_type == OBJ_MISSILES)
+    if (is_weapon(*item)
+        || item->base_type == OBJ_MISSILES)
     {
         lua_pushnumber(ls, property(*item, PWPN_DAMAGE));
     }
@@ -769,11 +761,8 @@ IDEF(accuracy)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
-        || item->base_type == OBJ_RODS)
-    {
+    if (is_weapon(*item))
         lua_pushnumber(ls, property(*item, PWPN_HIT));
-    }
     else
         lua_pushnil(ls);
 
@@ -785,11 +774,8 @@ IDEF(delay)
     if (!item || !item->defined())
         return 0;
 
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES
-        || item->base_type == OBJ_RODS)
-    {
+    if (is_weapon(*item))
         lua_pushnumber(ls, property(*item, PWPN_SPEED));
-    }
     else
         lua_pushnil(ls);
 
@@ -818,6 +804,16 @@ IDEF(encumbrance)
         lua_pushnumber(ls, -property(*item, PARM_EVASION) / 10);
     else
         lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(is_in_shop)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_shop_item(*item));
 
     return 1;
 }
@@ -1177,7 +1173,7 @@ static int l_item_equipped_at(lua_State *ls)
         eq = equip_name_to_slot(eqname);
     }
 
-    if (eq < 0 || eq >= NUM_EQUIP)
+    if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
         return 0;
 
     if (you.equip[eq] != -1)
@@ -1239,6 +1235,53 @@ static int l_item_get_items_at(lua_State *ls)
     return 1;
 }
 
+static int l_item_shop_inventory(lua_State *ls)
+{
+    shop_struct *shop = shop_at(you.pos());
+    if (!shop)
+        return 0;
+
+    lua_newtable(ls);
+
+    const vector<item_def> items = shop->stock;
+    int index = 0;
+    for (const auto &item : items)
+    {
+        lua_newtable(ls);
+        _clua_push_item_temp(ls, item);
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, item_price(item, *shop));
+        lua_rawseti(ls, -2, 2);
+        lua_pushboolean(ls, shopping_list.is_on_list(item));
+        lua_rawseti(ls, -2, 3);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
+static int l_item_shopping_list(lua_State *ls)
+{
+    if (shopping_list.empty())
+        return 0;
+
+    lua_newtable(ls);
+
+    const vector<shoplist_entry> items = shopping_list.entries();
+    int index = 0;
+    for (const auto &item : items)
+    {
+        lua_newtable(ls);
+        lua_pushstring(ls, item.first.c_str());
+        lua_rawseti(ls, -2, 1);
+        lua_pushnumber(ls, item.second);
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1277,7 +1320,6 @@ static ItemAccessor item_attrs[] =
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
-    { "can_cut_meat",      l_item_can_cut_meat },
     { "is_skeleton",       l_item_is_skeleton },
     { "is_corpse",         l_item_is_corpse },
     { "has_skeleton",      l_item_has_skeleton },
@@ -1292,6 +1334,7 @@ static ItemAccessor item_attrs[] =
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },
     { "encumbrance",       l_item_encumbrance },
+    { "is_in_shop",        l_item_is_in_shop },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },
@@ -1336,6 +1379,8 @@ static const struct luaL_reg item_lib[] =
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
+    { "shop_inventory",    l_item_shop_inventory },
+    { "shopping_list",     l_item_shopping_list },
     { nullptr, nullptr },
 };
 

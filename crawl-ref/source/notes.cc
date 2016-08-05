@@ -88,6 +88,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_GOD_GIFT
         || note.type == NOTE_GET_MUTATION
         || note.type == NOTE_LOSE_MUTATION
+        || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
         || note.type == NOTE_BUY_ITEM
@@ -108,7 +109,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_FOCUS_CARD)
+        || note.type == NOTE_ANCESTOR_TYPE)
     {
         return true;
     }
@@ -132,18 +133,11 @@ static bool _is_noteworthy(const Note& note)
         return false;
     }
 
-    // Skills are noteworthy if in the skill value list or if
-    // it's a new maximal skill (depending on options).
+    // Skills are always noteworthy in order to construct the skill_gains table
+    // in the chardump. The options to control display are used in
+    // Note::hidden().
     if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
-    {
-        if (Options.note_all_skill_levels
-            || note.second <= 27 && Options.note_skill_levels[note.second]
-            || Options.note_skill_max && _is_highest_skill(note.first))
-        {
-            return true;
-        }
-        return false;
-    }
+        return true;
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.place);
@@ -358,10 +352,21 @@ string Note::describe(bool when, bool where, bool what) const
                    << spell_title(static_cast<spell_type>(first))
                    << " by Vehumet.";
             break;
-        case NOTE_FOCUS_CARD:
-            result << "Drew Focus: " << name << " increased to " << first << ", "
-                   << desc << " decreased to " << second;
+        case NOTE_ANCESTOR_TYPE:
+            result << "Remembered your ancestor " << hepliaklqana_ally_name()
+                   << " as " << name;
             break;
+#if TAG_MAJOR_VERSION == 34
+        case NOTE_ANCESTOR_SPECIALIZATION:
+            result << "Remembered your ancestor " << hepliaklqana_ally_name()
+                   << " " << name;
+            break;
+        case NOTE_ANCESTOR_DEATH:
+            result << "Remembered your ancestor "
+                   << apostrophise(hepliaklqana_ally_name())
+                   << " " << name << " death";
+            break;
+#endif
         default:
             result << "Buggy note description: unknown note type";
             break;
@@ -374,6 +379,18 @@ string Note::describe(bool when, bool where, bool what) const
             result << " the pandemonium lord";
     }
     return result.str();
+}
+
+bool Note::hidden() const
+{
+    // Hide skill gains that are not enabled by options.
+    if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
+    {
+        return !(Options.note_all_skill_levels
+                 || second <= 27 && Options.note_skill_levels[second]
+                 || Options.note_skill_max && _is_highest_skill(first));
+    }
+    return false;
 }
 
 void Note::check_milestone() const
@@ -392,7 +409,7 @@ void Note::check_milestone() const
             ASSERT_RANGE(br, 0, NUM_BRANCHES);
             string branch = place.describe(true, false);
 
-            if (branch.find("The ") == 0)
+            if (starts_with(branch, "The "))
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
@@ -404,7 +421,7 @@ void Note::check_milestone() const
                      || br == BRANCH_ZIGGURAT)
             {
                 string level = place.describe(true, true);
-                if (level.find("Level ") == 0)
+                if (starts_with(level, "Level "))
                     level[0] = tolower(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",

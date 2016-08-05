@@ -223,7 +223,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || !mons_class_gives_xp(mon->type))
+        if (mon == nullptr || !mons_is_threatening(mon))
             continue;
 
         dprf("Dismissing %s",
@@ -307,7 +307,7 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.last_keypress_time = time(nullptr);
+    you.last_keypress_time = chrono::system_clock::now();
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
@@ -350,7 +350,7 @@ static void _post_init(bool newc)
     // This just puts the view up for the first turn.
     you.redraw_title = true;
     textcolour(LIGHTGREY);
-    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    you.redraw_status_lights = true;
     print_stats();
     viewwindow();
 
@@ -951,7 +951,7 @@ static void _choose_arena_teams(newgame_def& choice,
     cprintf("\n");
     cprintf("Examples:\n");
     cprintf("  Sigmund v Jessica\n");
-    cprintf("  99 orc v the royal jelly\n");
+    cprintf("  99 orc v the Royal Jelly\n");
     cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming\n");
     cgotoxy(1, 2);
 
@@ -965,8 +965,6 @@ static void _choose_arena_teams(newgame_def& choice,
 
 bool startup_step()
 {
-    string name;
-
     _initialize();
 
     newgame_def choice   = Options.game;

@@ -206,6 +206,8 @@ the Morning
 the Evening
 
 the Equinox
+
+the Everdark
 %%%%
 _sky_colour_name_
 
@@ -247,6 +249,8 @@ the Heavens
 
 the Skies Above
 
+the Endless Expanse
+
 the @_sky_colour_name_@ Skies
 %%%%
 _virtue_or_vice_
@@ -283,6 +287,22 @@ Charity
 Patience
 
 Modesty
+
+Discretion
+
+Wisdom
+
+Wariness
+
+Thoughtfulness
+
+Kindness
+
+Generosity
+
+Compassion
+
+Understanding
 %%%%
 _vice_name_
 
@@ -319,6 +339,12 @@ Amorality
 Untruth
 
 Spite
+
+Youthful Indiscretion
+
+Foolhardiness
+
+Recklessness
 %%%%
 _destiny_name_
 
@@ -414,6 +440,48 @@ the Peculiar
 the Special
 
 the First
+
+the Neverending
+
+the Endless
+
+the Lumpy
+
+the Disturbing
+
+the Secret
+
+the Wary
+
+the Crushed
+
+the Battered
+
+the Bruised
+
+the Unstoppable
+
+the Immovable
+
+the Foremost
+
+the Curious
+
+the Insatiable
+
+the Bouncing
+
+the Thirsty
+
+the Tired
+
+the Ageless
+
+the Aged
+
+the Inquisitive
+
+the Thoughtful
 %%%%
 _thing_names_
 

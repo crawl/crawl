@@ -93,7 +93,7 @@ searing_ray3
 searing_ray4 BOLT_SEARING_RAY_III
 searing_ray5
 
-hellfire BOLT_HELLFIRE
+damnation BOLT_DAMNATION
 
 irradiate0 BOLT_IRRADIATE
 irradiate1
@@ -133,7 +133,9 @@ cloud_yellow_smoke CLOUD_YELLOW_SMOKE
 %repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
 %resetcol
 
-cloud_miasma CLOUD_MIASMA
+cloud_miasma0 CLOUD_MIASMA_0
+cloud_miasma1 CLOUD_MIASMA_1
+cloud_miasma2 CLOUD_MIASMA_2
 cloud_tloc_energy CLOUD_TLOC_ENERGY
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
 cloud_mutagenic_small2
@@ -216,6 +218,7 @@ unseen_monster UNSEEN_CORPSE
 %corpse 0
 %back none
 
+slot ITEM_SLOT
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED

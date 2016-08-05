@@ -102,6 +102,9 @@ static int _get_initial_stack_longevity(const item_def &stack)
  * Initialise a stack of perishable items with a vector of timers, representing
  * the time at which each item in the stack will rot.
  *
+ * If the stack has CORPSE_NEVER_DECAYS marked, we won't actually initialize
+ * the stack, since we don't want its rot timer to start yet.
+ *
  * @param stack     The stack of items to be initialized.
  * @param age       The age for which the stack will last before rotting.
  * (If -1, will be initialized to a default value.)
@@ -113,9 +116,10 @@ void init_perishable_stack(item_def &stack, int age)
     CrawlHashTable &props = stack.props;
     const bool never_decay = props.exists(CORPSE_NEVER_DECAYS)
                              && props[CORPSE_NEVER_DECAYS].get_bool();
-    props.clear(); // sanity measure
     if (never_decay)
-        props[CORPSE_NEVER_DECAYS] = true;
+        return; // don't start rotting yet!
+
+    props.clear(); // sanity measure
     props[TIMER_KEY].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer = props[TIMER_KEY].get_vector();
 
@@ -249,6 +253,8 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     if (!it.props.exists(TIMER_KEY))
         init_perishable_stack(it);
 
+    // we should have already checked that this isn't never_decay
+    // so init should've gone through
     ASSERT(it.props.exists(TIMER_KEY));
 
     CrawlVector &stack_timer = it.props[TIMER_KEY].get_vector();
@@ -256,6 +262,11 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     ASSERT(!stack_timer.empty());
 
     _update_freshness(it); // for external consumption
+
+    // after initializing everything, skip the actual decay if we're eating
+    // this stack - this will preserve it a little longer but that's ok.
+    if (current_delay() && current_delay()->is_being_used(&it, OPER_EAT))
+        return 0;
 
     int destroyed_count = 0;    // # of items decayed away entirely
     // will be filled in ascending (reversed) order.
@@ -411,6 +422,9 @@ int remove_oldest_perishable_item(item_def &stack)
     ASSERT(is_perishable_stack(stack));
 
     CrawlHashTable &props = stack.props;
+    if (props.exists(CORPSE_NEVER_DECAYS))
+        return -1; // it's not rotting, so we don't care about the rest
+
     if (!props.exists(TIMER_KEY))
         init_perishable_stack(stack);
     ASSERT(props.exists(TIMER_KEY));
@@ -441,6 +455,9 @@ void remove_newest_perishable_item(item_def &stack, int quant)
     ASSERT(is_perishable_stack(stack));
 
     CrawlHashTable &props = stack.props;
+    if (props.exists(CORPSE_NEVER_DECAYS))
+        return; // it's not rotting, so we don't care about the rest
+
     if (!props.exists(TIMER_KEY))
         init_perishable_stack(stack);
     ASSERT(props.exists(TIMER_KEY));
@@ -486,8 +503,18 @@ void merge_perishable_stacks(const item_def &source, item_def &dest, int quant)
     ASSERT(_is_chunk(source) == _is_chunk(dest));
 
     const CrawlHashTable &props = source.props;
-
     CrawlHashTable &props2 = dest.props;
+    if (props2.exists(CORPSE_NEVER_DECAYS))
+    {
+        // if both are unrotting, there's no timers to set.
+        if (props.exists(CORPSE_NEVER_DECAYS))
+            return;
+
+        // otherwise, the destination should start rotting after rotting chunks
+        // are merged in (this should never happen anyway)
+        props2.erase(CORPSE_NEVER_DECAYS);
+    }
+
     if (!props2.exists(TIMER_KEY))
         init_perishable_stack(dest);
     ASSERT(props2.exists(TIMER_KEY));

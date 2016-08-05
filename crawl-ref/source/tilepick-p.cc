@@ -51,13 +51,17 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
 #endif
         case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
+#if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
+#endif
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
 
         case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
-        case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:   return TILEP_HAND1_BONE_LANTERN;
+#endif
         case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
         case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
 
@@ -67,11 +71,16 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_DECK_OF_DUNGEONS:
 #endif
         case MISC_DECK_OF_SUMMONING:
+#if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_WONDERS:
+#endif
         case MISC_DECK_OF_PUNISHMENT:
+#if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_WAR:
         case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENCE:            return TILEP_HAND1_DECK;
+        case MISC_DECK_OF_DEFENCE:
+#endif
+            return TILEP_HAND1_DECK;
         }
     }
 
@@ -452,50 +461,50 @@ tileidx_t tileidx_player()
     // Handle shapechange first
     switch (you.form)
     {
-        // equipment-using forms are handled regularly
-        case TRAN_STATUE:
-        case TRAN_LICH:
-        case TRAN_TREE:
-            break;
-        // animals
-        case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
-        case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
-        case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
-        case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
-        // non-animals
-        case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
-        case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
+    // equipment-using forms are handled regularly
+    case TRAN_STATUE:
+    case TRAN_LICH:
+    case TRAN_TREE:
+        break;
+    // animals
+    case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
+    case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
+    case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
+    case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
+    // non-animals
+    case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
+    case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
-        case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
+    case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
 #endif
-        case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
-        case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
-        case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
-                                                    you.heads() - 1);
-                             break;
-        case TRAN_DRAGON:
+    case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
+    case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
+    case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
+                                                you.heads() - 1);
+                         break;
+    case TRAN_DRAGON:
+    {
+        switch (you.species)
         {
-            switch (you.species)
-            {
-            case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
-            case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
-            case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
-            case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
-            case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
-            case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
-            case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
-            case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
-            case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
-            default:                   ch = TILEP_TRAN_DRAGON;         break;
-            }
-            break;
+        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
+        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
+        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
+        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
+        case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
+        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
+        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
+        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
+        case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+        default:                   ch = TILEP_TRAN_DRAGON;         break;
         }
-        // no special tile
-        case TRAN_BLADE_HANDS:
-        case TRAN_APPENDAGE:
-        case TRAN_NONE:
-        default:
-            break;
+        break;
+    }
+    // no special tile
+    case TRAN_BLADE_HANDS:
+    case TRAN_APPENDAGE:
+    case TRAN_NONE:
+    default:
+        break;
     }
 
     // Currently, the flying flag is only used for not drawing the tile in the
@@ -564,7 +573,9 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HUMAN:
         return TILEP_BASE_HUMAN;
     case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
     case SP_SLUDGE_ELF:
+#endif
         return TILEP_BASE_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
@@ -669,7 +680,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     switch (sp)
     {
         case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
         case SP_SLUDGE_ELF:
+#endif
             hair = TILEP_HAIR_ELF_YELLOW;
             break;
         case SP_DEEP_ELF:
@@ -1087,10 +1100,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }
     if (is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT)
-        && (!is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+        && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                            TILEP_BASE_FELID)
+            && (!is_player_tile(doll.parts[TILEP_PART_BASE],
+                                TILEP_TRAN_STATUE_FELID)
             // Every felid tile has its own horns.
             || doll.parts[TILEP_PART_BASE] - TILEP_BASE_FELID
-               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT))
+               != doll.parts[TILEP_PART_HELM] - TILEP_HELM_HORNS_CAT)))
     {
         flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
     }

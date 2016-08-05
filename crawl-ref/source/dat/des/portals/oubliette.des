@@ -196,7 +196,7 @@ end
   brands_list = {
     { weight = 10, brand = "freezing"      },
     { weight = 10, brand = "venom"         },
-    { weight = 10, brand = "fire"          },
+    { weight = 10, brand = "flaming"       },
     { weight = 3,  brand = "pain"          },
     { weight = 3,  brand = "draining"      },
     { weight = 3,  brand = "distortion"    },

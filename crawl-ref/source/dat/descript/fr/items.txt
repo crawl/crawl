@@ -406,11 +406,6 @@ decaying skeleton
 
 Un squelette en décomposition.
 %%%%
-deck of defence
-
-Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
-dangers par divers moyens.
-%%%%
 deck of destruction
 
 Un paquet de cartes magiques, dont la plupart provoque la mort et la
@@ -420,19 +415,10 @@ deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
 %%%%
-deck of summonings
+deck of summoning
 
 Un paquet de cartes magiques, représentant un éventail de créatures étranges et
 merveilleux.
-%%%%
-deck of war
-
-Un paquet de cartes magiques, utile avant et pendant la bataille.
-%%%%
-deck of wonders
-
-Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
-l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
 %%%%
 demon blade
 
@@ -728,21 +714,9 @@ potion of mutation
 
 Une potion qui vous fait des choses vraiment étranges.
 %%%%
-potion of poison
-
-Un atroce liquide empoisonné.
-%%%%
-potion of porridge
-
-Une potion nourrissante et pâteuse, riches en fibres de céréales.
-%%%%
 potion of resistance
 
 Une potion qui vous donne une résistance temporaire aux éléments et au poison.
-%%%%
-potion of slowing
-
-Une potion qui ralentit vos actions.
 %%%%
 potion of haste
 
@@ -834,11 +808,6 @@ Ce sceptre permet à son utilisateur de libérer un cône de différents gaz
 destructeurs. Leur dangerosité augmente avec les capacités d’évocation de
 l'utilisateur.
 %%%%
-rod of destruction
-
-Ce sceptre contient un ensemble varié de sorts de destruction et
-d'extermination.
-%%%%
 rod of inaccuracy
 
 Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,
@@ -847,10 +816,6 @@ mais de façon très imprécise.
 rod of shadows
 
 Ce sceptre tire des créatures des ombres et de l’éther.
-%%%%
-rod of the swarm
-
-Ce sceptre permet à son porteur de convoquer un essaim d'insectes.
 %%%%
 royal jelly
 
@@ -1031,15 +996,6 @@ stone
 
 Un petit morceau d'un minéral naturel dense.. Elle peut être jetée à la main ou
 lancée avec une fronde.
-%%%%
-stone of tremors
-
-Une pierre polie habitée par de bienveillants esprits de la terre. La tenir en
-l'air enverra de puissantes ondes de choc dans le donjon pendant que les
-esprits cherchent une forme solide à l'intérieur de sa roche. Les créatures se
-tenant près des murs seront bombardés avec des chutes de gravats que la surface
-rocheuse laisse s'écrouler, tandis que d'autres peuvent être avalés par des
-fissures dans la terre elle-même.
 %%%%
 storm dragon armour
 

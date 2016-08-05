@@ -53,7 +53,6 @@
 #include "mapdef.h" // MON_NO_STAIR_KEY
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h" // today_is_halloween()
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -91,7 +90,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -101,15 +100,13 @@ const int GHOST_LIMIT = 27; // max number of ghost files per level
 
 static void _redraw_all()
 {
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    you.redraw_hit_points    = true;
+    you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-
-    you.redraw_status_flags =
-        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_armour_class  = true;
+    you.redraw_evasion       = true;
+    you.redraw_experience    = true;
+    you.redraw_status_lights = true;
 }
 
 static bool is_save_file_name(const string &name)
@@ -319,7 +316,7 @@ static bool _create_dirs(const string &dir)
 {
     string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    vector<string> segments = split_string(sep.c_str(), dir, false, false);
+    vector<string> segments = split_string(sep, dir, false, false);
 
     string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
@@ -342,23 +339,23 @@ static bool _create_dirs(const string &dir)
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const string &path) throw (string)
+void assert_read_safe_path(const string &path)
 {
     // Check for rank tomfoolery first:
     if (path.empty())
-        throw "Empty file name.";
+        throw unsafe_path("Empty file name.");
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-        throw make_stringf("\"%s\" contains bad characters.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains bad characters.", path.c_str());
 #endif
 
 #ifdef DATA_DIR_PATH
     if (is_absolute_path(path))
-        throw make_stringf("\"%s\" is an absolute path.", path.c_str());
+        throw unsafe_path_f("\"%s\" is an absolute path.", path.c_str());
 
     if (path.find("..") != string::npos)
-        throw make_stringf("\"%s\" contains \"..\" sequences.", path.c_str());
+        throw unsafe_path_f("\"%s\" contains \"..\" sequences.", path.c_str());
 #endif
 
     // Path is okay.
@@ -642,9 +639,6 @@ static vector<player_save_info> _find_saved_characters()
 
     for (const string &filename : get_dir_files(searchpath))
     {
-        string::size_type point_pos = filename.find_first_of('.');
-        string basename = filename.substr(0, point_pos);
-
         if (is_save_file_name(filename))
         {
             try
@@ -663,7 +657,7 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
-                dprf("%s: %s", filename.c_str(), E.msg.c_str());
+                dprf("%s: %s", filename.c_str(), E.what());
             }
         }
 
@@ -810,7 +804,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_exit(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->exit_stairs == stair_taken)
                 return it->entry_stairs;
         die("entrance corresponding to exit %d not found", stair_taken);
@@ -818,7 +812,7 @@ static int _get_dest_stair_type(branch_type old_branch,
 
     if (feat_is_branch_entrance(stair_taken))
     {
-        for (branch_iterator it; it; it++)
+        for (branch_iterator it; it; ++it)
             if (it->entry_stairs == stair_taken)
                 return it->exit_stairs;
         die("return corresponding to entry %d not found", stair_taken);
@@ -858,20 +852,17 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static void _clear_clouds()
-{
-    for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-        delete_cloud(clouty);
-    env.cgrid.init(EMPTY_CLOUD);
-}
-
-static bool _grab_follower_at(const coord_def &pos)
+static bool _grab_follower_at(const coord_def &pos, bool can_follow)
 {
     if (pos == you.pos())
         return false;
 
     monster* fol = monster_at(pos);
     if (!fol || !fol->alive())
+        return false;
+
+    // only H's ancestors can follow into portals & similar.
+    if (!can_follow && !mons_is_hepliaklqana_ancestor(fol->type))
         return false;
 
     // The monster has to already be tagged in order to follow.
@@ -963,48 +954,52 @@ static void _grab_followers()
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
-    if (can_follow)
+    if (can_follow && non_stair_using_allies > 0)
     {
-        if (non_stair_using_allies > 0)
+        // TODO: refactor this, support mixes of types left behind?
+        if (non_stair_vault_mons > 0)
+        {
+            // Oubliette monsters remain in their home... forever.
+            mprf("Your %s left behind.",
+                 non_stair_using_allies > 1 ? "allies are" : "ally is");
+        }
+        else if (non_stair_using_summons > 0)
         {
             // Summons won't follow and will time out.
-            if (non_stair_using_summons + non_stair_vault_mons > 0)
-            {
-                mprf("Your %s%s left behind.",
-                     non_stair_using_summons > 1 ? "summoned " : "",
-                     non_stair_using_allies > 1 ? "allies are" : "ally is");
-            }
-            else
-            {
-                // Permanent undead are left behind but stay.
-                mprf("Your mindless thrall%s behind.",
-                     non_stair_using_allies > 1 ? "s stay" : " stays");
-            }
+            mprf("Your summoned %s left behind.",
+                 non_stair_using_allies > 1 ? "allies are" : "ally is");
         }
-        memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        vector<coord_def> places[2] = { { you.pos() }, {} };
-        int place_set = 0;
-        while (!places[place_set].empty())
+        else
         {
-            for (const coord_def p : places[place_set])
-            {
-                for (adjacent_iterator ai(p); ai; ++ai)
-                {
-                    if (travel_point_distance[ai->x][ai->y])
-                        continue;
-
-                    travel_point_distance[ai->x][ai->y] = 1;
-                    if (_grab_follower_at(*ai))
-                        places[!place_set].push_back(*ai);
-                }
-            }
-            places[place_set].clear();
-            place_set = !place_set;
+            // Permanent undead are left behind but stay.
+            mprf("Your mindless thrall%s behind.",
+                 non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
 
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    vector<coord_def> places[2] = { { you.pos() }, {} };
+    int place_set = 0;
+    while (!places[place_set].empty())
+    {
+        for (const coord_def p : places[place_set])
+        {
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if (travel_point_distance[ai->x][ai->y])
+                    continue;
+
+                travel_point_distance[ai->x][ai->y] = 1;
+                if (_grab_follower_at(*ai, can_follow))
+                    places[!place_set].push_back(*ai);
+            }
+        }
+        places[place_set].clear();
+        place_set = !place_set;
+    }
+
     // Clear flags of monsters that didn't follow.
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
     {
         if (!mons.alive())
             continue;
@@ -1098,26 +1093,6 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
-/**
- * Warn the player that two ghost files have been loaded into the current
- * level, resulting in somewhere between two and twenty ghosts being present.
- *
- * Warnings may be more spooky than actually useful.
- *
- * @return  A message that will send shivers down players' spines, assuming
- *          they aren't in wisp form!
- */
-static const char* _double_ghost_spookmessage()
-{
-    static const char* spookmessages[] = {
-        "You are filled with an overwhelming sense of foreboding!",
-        "You feel a terrible frisson of fear!",
-        "You are flooded with an inexplicable sense of dread!",
-        "You feel that you have entered a very terrible place...",
-        "There is something very spooky about this place!"
-    };
-    return RANDOM_ELEMENT(spookmessages);
-}
 
 /**
  * Generate a new level.
@@ -1157,25 +1132,13 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
-    const bool is_halloween = today_is_halloween();
-
     if (!crawl_state.game_is_tutorial()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(is_halloween ? 2 : 3))
+        && one_chance_in(3))
     {
-        // are we loading more than one ghost? (or trying, anyway)
-        bool doubleghost = is_halloween && coinflip();
-        if (doubleghost)
-            doubleghost = load_ghost(true);
-
-        const bool delete_ghost = !is_halloween;
-        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
-
-        // did we actually manage to load more than one ghost (file)?
-        if (doubleghost)
-            mpr(_double_ghost_spookmessage());
+        load_ghost(true);
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1273,17 +1236,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Save position for hatches to place a marker on the destination level.
     coord_def dest_pos = you.pos();
 
-    // Going up/down stairs, going through a portal, or being banished
-    // means the previous x/y movement direction is no longer valid.
-    you.reset_prev_move();
-
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
 
     // We clear twice - on save and on load.
     // Once would be enough...
     if (make_changes)
-        _clear_clouds();
+        delete_all_clouds();
 
     // Lose all listeners.
     dungeon_events.clear();
@@ -1365,7 +1324,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
-        _clear_clouds();
+        delete_all_clouds();
 
         _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
     }
@@ -1373,11 +1332,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
-    if (branch_allows_followers(you.where_are_you)
-        && load_mode == LOAD_ENTER_LEVEL)
-    {
+    if (load_mode == LOAD_ENTER_LEVEL)
         place_followers();
-    }
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
@@ -1527,6 +1483,22 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // exited it, have monsters lose track of where they are
     if (you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
+
+#if TAG_MAJOR_VERSION == 34
+    if (make_changes && you.props.exists("zig-fixup")
+        && you.where_are_you == BRANCH_TOMB
+        && you.depth == brdepth[BRANCH_TOMB])
+    {
+        if (!just_created_level)
+        {
+            int obj = items(false, OBJ_MISCELLANY, MISC_ZIGGURAT, 0);
+            ASSERT(obj != NON_ITEM);
+            bool success = move_item_to_grid(&obj, you.pos(), true);
+            ASSERT(success);
+        }
+        you.props.erase("zig-fixup");
+    }
+#endif
 
     return just_created_level;
 }
@@ -1728,10 +1700,9 @@ static string _find_ghost_file()
  * Attempt to load one or more ghosts into the level.
  *
  * @param creating_level    Whether a level is currently being generated.
- * @param delete_file       Whether to delete the ghost file after loading it.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level, bool delete_file)
+bool load_ghost(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1792,11 +1763,8 @@ bool load_ghost(bool creating_level, bool delete_file)
     }
     inf.close();
 
-    if (delete_file)
-    {
-        // Remove bones file - ghosts are hardly permanent.
-        unlink(ghost_filename.c_str());
-    }
+    // Remove bones file - ghosts are hardly permanent.
+    unlink(ghost_filename.c_str());
 
     if (!debug_check_ghosts())
     {
@@ -1834,8 +1802,6 @@ bool load_ghost(bool creating_level, bool delete_file)
         mons->bind_melee_flags();
         if (mons->has_spells())
             mons->bind_spell_flags();
-        mark_interesting_monst(mons,
-                               attitude_creation_behavior(mons->attitude));
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
@@ -1980,7 +1946,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)
@@ -2187,7 +2153,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const string name,
+static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);
@@ -2319,9 +2285,10 @@ void save_ghost(bool force)
         return;
     }
 
-    // No ghosts on D:1, D:2, or the Temple.
+    // No ghosts on D:1, D:2, the Temple, or the Abyss.
     if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)))
+                   || player_in_branch(BRANCH_TEMPLE)
+                   || player_in_branch(BRANCH_ABYSS)))
     {
         return;
     }

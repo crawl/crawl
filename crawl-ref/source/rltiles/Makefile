@@ -10,6 +10,7 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
+PKGCONFIG = pkg-config
 CFLAGS := -O2 $(STDFLAG) -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
 ifdef ANDROID
@@ -20,8 +21,8 @@ endif
 
 ifdef TILES
   ifndef NO_PKGCONFIG
-    PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
-    PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
+    PNG_INCLUDE := $(shell $(PKGCONFIG) libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
+    PNG_LIB := $(shell $(PKGCONFIG) libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
   else
     PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a

@@ -53,7 +53,7 @@ enum run_mode_type
 /* ***********************************************************************
  * Initialises the travel subsystem.
  */
-void stop_running();
+void stop_running(bool clear_delays = true);
 void travel_init_load_level();
 void travel_init_new_level();
 
@@ -190,9 +190,6 @@ enum explore_stop_type
     ES_RUNE                      = 0x2000,
     ES_BRANCH                    = 0x4000,
     ES_RUNED_DOOR                = 0x8000,
-
-    // Explored into view of an item which can be sacrificed
-    ES_GREEDY_SACRIFICEABLE      = 0x10000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -227,7 +224,6 @@ private:
     };
 
     bool can_autopickup;
-    bool sacrifice;
     int es_flags;
     const LevelStashes *current_level;
     vector< named_thing<item_def> > items;
@@ -259,6 +255,7 @@ public:
     {
         PHYSICAL,
         PLACEHOLDER,
+        MAPPED,
     };
 
 public:
@@ -284,7 +281,7 @@ public:
 
     string describe() const;
 
-    bool can_travel() const { return type == PHYSICAL; }
+    bool can_travel() const { return type != PLACEHOLDER; }
 };
 
 // Information on a level that interlevel travel needs.
@@ -391,7 +388,7 @@ public:
         levels.erase(lev);
     }
 
-    bool know_stair(const coord_def &c) const;
+    bool know_stair(const coord_def &c);
     bool know_level(const level_id &lev) const
     {
         return levels.count(lev);
@@ -427,6 +424,7 @@ public:
     void clear_daction_counter(daction_type c);
 
 private:
+    void update_stone_stair(const coord_def &c);
     void fixup_levels();
 
 private:
@@ -543,9 +541,6 @@ protected:
 
     // Can we autopickup?
     bool autopickup;
-
-    // Does god wants sacrifices?
-    bool sacrifice;
 
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;

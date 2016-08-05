@@ -10,7 +10,8 @@
 #include "itemprop-enum.h" // brand_type
 #include "spl-cast.h"
 
-#define BEOGH_WPN_GIFT_KEY "given beogh weapon"
+#define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
+#define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
@@ -23,6 +24,7 @@
 #define RU_SACRIFICE_PROGRESS_KEY "ru_progress_to_next_sacrifice"
 #define RU_SACRIFICE_DELAY_KEY "ru_sacrifice_delay"
 #define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
+#define RU_SAC_XP_LEVELS 2
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -32,6 +34,7 @@ const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
+#define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
 #define GOZAG_POTION_PETITION_AMOUNT 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
@@ -39,20 +42,28 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
-#define RU_SAC_XP_LEVELS 2
+#define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
+#define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
+#define USKAYAW_DID_DANCE_ACTION "uskayaw_did_dance_action"
+#define USKAYAW_NUM_MONSTERS_HURT "uskayaw_num_monsters_hurt"
+#define USKAYAW_MONSTER_HURT_VALUE "uskayaw_monster_hurt_value"
+#define USKAYAW_AUT_SINCE_PIETY_GAIN "uskayaw_aut_since_piety_gain"
 
 struct bolt;
 class stack_iterator;
-class dist;
+
+typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
 bool zin_donate_gold();
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
+recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
+                                                  recite_counts &eligibility,
+                                                  bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
-void zin_recite_interrupt();
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
@@ -68,6 +79,8 @@ void elyvilon_remove_divine_vigour();
 
 bool vehumet_supports_spell(spell_type spell);
 
+void sif_do_channel_energy(int pow);
+
 bool trog_burn_spellbooks();
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
@@ -75,9 +88,9 @@ void trog_remove_trogs_hand();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
-bool beogh_water_walk();
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
+bool beogh_resurrect();
 
 bool yred_injury_mirror();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
@@ -121,16 +134,12 @@ bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();
 bool ashenzari_end_transfer(bool finished = false, bool force = false);
+bool ashenzari_curse_item(int num_rc);
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
-monster* shadow_monster(bool equip = true);
-void shadow_monster_reset(monster *mon);
-void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(const dist &d, const item_def &item);
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
@@ -147,18 +156,35 @@ bool gozag_bribe_branch();
 
 spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);
-void qazlal_elemental_force();
+spret_type qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 
 void init_sac_index();
+int get_sacrifice_piety(ability_type sac, bool include_skill = true);
 void ru_offer_new_sacrifices();
 string ru_sac_text(ability_type sac);
 bool ru_do_sacrifice(ability_type sac);
-bool ru_reject_sacrifices(bool skip_prompt = false);
-void ru_reset_sacrifice_timer(bool clear_timer = false);
+bool ru_reject_sacrifices(bool forced_rejection = false);
+void ru_reset_sacrifice_timer(bool clear_timer = false,
+                              bool faith_penalty = false);
 bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
+int cell_has_valid_target(coord_def where);
 bool ru_apocalypse();
+string ru_sacrifice_vector(ability_type sac);
+
+bool pakellas_check_quick_charge(bool quiet);
+int pakellas_effective_hex_power(int pow);
+int pakellas_surge_devices();
+
+bool uskayaw_stomp();
+bool uskayaw_line_pass();
+bool uskayaw_grand_finale();
+
+bool hepliaklqana_choose_ancestor_type(int ancestor_type);
+spret_type hepliaklqana_idealise(bool fail);
+spret_type hepliaklqana_transference(bool fail);
+void hepliaklqana_choose_identity();
 #endif

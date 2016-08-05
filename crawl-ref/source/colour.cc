@@ -309,9 +309,6 @@ static int _etc_orb_glow(int, const coord_def& loc)
 
 int dam_colour(const monster_info& mi)
 {
-    if (!mons_class_can_display_wounds(mi.type))
-        return Options.enemy_hp_colour[6]; // undead and whatnot
-
     switch (mi.dam)
     {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
@@ -566,13 +563,6 @@ void init_element_colours()
                             15,  LIGHTRED,
                             15,  RED,
                         0));
-    add_element_colour(_create_random_element_colour_calc(
-                            ETC_KRAKEN, "kraken",
-                            30,  LIGHTGREEN,
-                            30,  LIGHTBLUE,
-                            30,  RED,
-                            30,  LIGHTMAGENTA,
-                        0));
     add_element_colour(new element_colour_calc(
                             ETC_FLOOR, "floor", _etc_floor
                        ));
@@ -653,6 +643,12 @@ void init_element_colours()
                             ETC_INCARNADINE, "incarnadine",
                             60,  MAGENTA,
                             60,  RED,
+                        0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_PAKELLAS, "pakellas",
+                            40,  LIGHTGREEN,
+                            40,  LIGHTMAGENTA,
+                            40,  LIGHTCYAN,
                         0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(

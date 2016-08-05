@@ -79,7 +79,7 @@ A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
-A faded altar to an unknown god
+A faded altar of an unknown god
 
 An ancient altar, stripped of all identifying characteristics by the passage of
 aeons. Praying at it will convert you to an unknown god, and the altar's deity
@@ -179,9 +179,21 @@ A granite statue
 
 A stone statue whose features have long since withered away.
 %%%%
+A hazy altar of Hepliaklqana
+
+An altar to Hepliaklqana the Forgotten, shrouded in mist and difficult to make
+out clearly. Something about it seems terribly familiar, but it's impossible to
+say exactly why.
+%%%%
 A hole to the Spider Nest
 
 A passage leading to the Spider Nest.
+%%%%
+A hide-covered altar of Uskayaw
+
+An altar to Uskayaw the Reveler. The altar appears to be hollow and covered in a
+hide, giving it a resonant surface. Carvings on the side depict grouped figures
+that could be dancing or loving or fighting.
 %%%%
 A labyrinth entrance
 
@@ -469,6 +481,9 @@ A web
 
 A spider's web. The spider who left it must have been huge, as it seems to be
 made for trapping {{ return you.genus(true) }} rather than flies.
+
+Any creature caught in it will send out telltale vibrations, alerting and
+attracting spiders nearby.
 %%%%
 An abandoned shop
 
@@ -518,7 +533,7 @@ An idol of Beogh
     else
       return "A crude statue depicting Beogh, the god of the primitive orcs "
           .. "living here. Their religion calls for the murder of all "
-          .. "non-believers. Beogh is known to be vengeful to those who dare
+          .. "non-believers. Beogh is known to be vengeful to those who dare "
           .. "damage such idols.";
   end
 }}
@@ -532,6 +547,12 @@ An iron grate
 
 A rusted iron grate, brittle enough to be disrupted with a spell or a wand
 quite easily. It is too strong to be breakable by hand, however.
+%%%%
+An oddly glowing altar of Pakellas
+
+Strange half-completed devices, tools beyond your comprehension, and a
+persistent light glowing in odd colours all adorn this altar to Pakellas the
+Inventive.
 %%%%
 An open door
 
@@ -561,17 +582,20 @@ The floor.
 %%%%
 Some deep water
 
-A pool of deep water. The unexpected end of flight whilst above deep water has
-been the death of many careless adventurers.
+A pool of deep water. Only very large creatures can wade through this, and only
+those well-adapted to water can swim through it; for the rest, the only way
+through is to fly over.
 %%%%
 Some lava
 
 An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
+Nothing but the mythical salamander can cross this without flight.
 %%%%
 Some shallow water
 
 A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
 landlubbers — this is sometimes dangerous, but never directly fatal.
+#TODO: explain naga/grey drac/ogre/troll lack of fumbling penalties
 %%%%
 The open sea
 
@@ -686,7 +710,7 @@ A strange membrane, thin enough to see through.
 %%%%
 The pulsating floor
 
-The floor. It seems to pulse to an unknown beat.
+The floor. It pulses to an unknown beat.
 %%%%
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
@@ -772,7 +796,7 @@ A wall made of pure silver.
 A rune carved stone wall
 
 A strangely slime-free stone wall, carved all over with countless mystical
-runes. One often repeated set of runes seems to refer to 'the royal jelly.'
+runes. One often repeated set of runes seems to refer to 'the Royal Jelly.'
 %%%%
 # Tomb:1
 A sarcophagus
@@ -890,7 +914,7 @@ sides of the tunnel, filling the entry.
 %%%%
 A magical portal
 
-A portal leading to a wizard's laboratory. It seems to be fading away.
+A portal leading to a wizard's laboratory. It is fading away.
 %%%%
 ###########
 ### Sprint
@@ -915,169 +939,4 @@ An entrance that the opposition may appear from.
 An exit from the tutorial
 
 A way out of the dungeon, letting you finish this lesson.
-%%%%
-############
-### Clouds
-### TODO: move this to its own file!
-############
-flame cloud
-
-A cloud of raging fire. Any creature not entirely immune to fire will be hurt
-by time spent in the flames.
-
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
-
-If placed near water, the heat will generate steam nearby. If placed directly
-over water, the cloud will dissipate much more quickly.
-%%%%
-noxious fumes cloud
-
-A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming confused by the gasses, unless resistant to poison.
-Tougher, more experienced creatures are less likely to be affected.
-%%%%
-freezing vapour cloud
-
-A cloud of freezing air. Any creature not entirely immune to cold will be hurt
-by time spent inside.
-
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
-
-If placed over lava, the cloud will dissipate much more quickly.
-%%%%
-poison gas cloud
-
-A cloud of deadly poison. Any creature without resistance to poison will be
-both poisoned and directly harmed by time spent in it.
-%%%%
-_smoke_cloud_
-
-A cloud of coloured smoke. Harmless, except to the asthmatic.
-%%%%
-black smoke cloud
-
-<_smoke_cloud_>
-%%%%
-grey smoke cloud
-
-<_smoke_cloud_>
-%%%%
-blue smoke cloud
-
-<_smoke_cloud_>
-%%%%
-purple smoke cloud
-
-<_smoke_cloud_>
-%%%%
-translocational energy cloud
-
-The remnant of some creature that was recently here but is no longer, banished
-nearby, across the level, or out of reality itself, all the way into the Abyss.
-Some wizards say these are a kind of "allergic reaction" the universe
-produces, in response to magic that warps space in impossible ways; a cosmic
-sneeze. Perhaps metaphysically gross, but otherwise harmless.
-%%%%
-spreading flames cloud
-
-A raging forest fire. Any creature not entirely immune to fire will be hurt by
-time spent in the flames. The flames will intermittently flare up and fill
-their surroundings with lesser fires. Any trees unfortunate enough to be nearby
-will often find themselves transformed into more kindling for the fire.
-
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
-
-If placed near water, the heat will generate steam nearby. If placed directly
-over water, the cloud will dissipate much more quickly.
-%%%%
-steam cloud
-
-A cloud of scalding steam. Creatures caught within will be mildly injured,
-and fire resistance will further reduce the damage.
-%%%%
-ink cloud
-
-A cloud of ink, completely filling the water.
-%%%%
-calcifying dust cloud
-
-A petrifying cloud. Creatures caught in the cloud for any length of time will
-find themselves turning to stone, though more experienced creatures may be able
-to resist the effects.
-%%%%
-blessed fire cloud
-
-A cloud of divine fire, imbued with holy power. Those in the service of one of
-the good gods will be unaffected by it. All others will take substantial
-damage, with fire resistance offering no protection. Those following evil gods
-will take increased damage, and the undead and demonic even more.
-%%%%
-foul pestilence cloud
-
-# XXX: clarify vine stalkers, gargoyles
-A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves poisoned, and may also find their movements slowing and
-their flesh rotting away.
-%%%%
-thin mist cloud
-
-A cloud of thin mist. Atmospheric, but harmless.
-%%%%
-seething chaos cloud
-
-A cloud of seething chaos. A wide variety of unpredictable effects apply to
-those within the clouds, ranging from invisibility to berserk rage to complete
-paralysis.
-%%%%
-rain cloud
-
-An extremely localized rainstorm. It may produce pools of shallow water, or
-temporarily deepen existing pools. Beings made entirely out of fire are averse
-to spending much time in the rain.
-
-If placed over lava, the cloud will dissipate much more quickly.
-%%%%
-mutagenic fog cloud
-
-A cloud of pure, unstructured magic, condensed into a scintilliating mist;
-essentially toxic magical waste. Creatures venturing within will find
-themselves increasingly contaminated with magical radiation, sufficient amounts
-of which will inflict negative mutations when dissipating.
-%%%%
-magical condensation cloud
-
-The wake of some highly concentrated magical energy, itself entirely harmless.
-%%%%
-raging winds cloud
-
-The winds of a raging tornado. It will deal severe damage to anyone within it.
-%%%%
-sparse dust cloud
-
-A cloud of sparse dust. Atmospheric, but harmless.
-%%%%
-spectral mist cloud
-
-A cloud of spectral mist. It causes minor damage to all creatures other than
-the undead. Dangerous but short-lived spectral undead creatures will coalesce
-from the mist over time.
-%%%%
-acidic fog cloud
-
-A cloud of flesh-searing acid, which will deal damage and apply corrosion to
-those within it. Resistance to corrosion will provide immunity to its effects.
-%%%%
-thunder cloud
-
-A dark storm cloud. It will intermittently strike those within with lightning,
-dealing severe damage to those without resistance to electricity.
-%%%%
-negative energy cloud
-
-A cloud of necromantic energy. Living creatures trapped within will find
-themselves drained of their life energies, though protection from negative
-energy will mitigate the effects.
 %%%%

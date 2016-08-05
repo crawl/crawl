@@ -95,8 +95,8 @@ static bool _mon_tries_regain_los(monster* mon)
         return false;
     }
 
-    // Randomize it a bit to make it less predictable.
-    return !one_chance_in(10);
+    // Randomize it to make it less predictable, and reduce flip-flopping.
+    return !one_chance_in(3);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -232,13 +232,9 @@ static bool _monster_guesses_invis_player(const monster &mon)
     return false;
 }
 
-//---------------------------------------------------------------
-//
-// handle_behaviour
-//
-// 1. Evaluates current AI state
-// 2. Sets monster target x,y based on current foe
-//---------------------------------------------------------------
+/**
+ * Evaluates the monster's AI state, and sets its target based on its foe.
+ */
 void handle_behaviour(monster* mon)
 {
     // Test spawners should always be BEH_SEEK against a foe, since
@@ -451,7 +447,7 @@ void handle_behaviour(monster* mon)
 
     while (changed)
     {
-        actor* afoe = mon->get_foe();
+        const actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(*afoe);
 
         if (mon->foe == MHITYOU)
@@ -483,13 +479,6 @@ void handle_behaviour(monster* mon)
             new_foe = MHITNOT;
             break;
 
-        case BEH_LURK:
-            // Make sure trapdoor spiders are not hiding in plain sight
-            if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
-                mon->add_ench(ENCH_SUBMERGED);
-
-            // Fall through to get a target, but don't change to wandering.
-
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
@@ -501,8 +490,7 @@ void handle_behaviour(monster* mon)
                     || mon->type == MONS_GIANT_SPORE
                     || mon->type == MONS_BALL_LIGHTNING)
                 {
-                    if (mon->behaviour != BEH_LURK)
-                        new_beh = BEH_WANDER;
+                    new_beh = BEH_WANDER;
                 }
                 else
                 {
@@ -511,6 +499,13 @@ void handle_behaviour(monster* mon)
                 }
                 break;
             }
+
+            // just because a move takes us closer to the target doesn't mean
+            // that the move will stay in los of the target, and if it leaves
+            // los of the target, it's possible for just naively moving toward
+            // the target will not let us reach it (due to walls or whatever)
+            if (!mon->see_cell(mon->target))
+                try_pathfind(mon);
 
             // Foe gone out of LOS?
             if (!proxFoe
@@ -569,8 +564,13 @@ void handle_behaviour(monster* mon)
                     // If the player can see the target location, do not reset
                     // our target, even if this monster cannot (we'll assume
                     // the player passes along this information to allies)
-                    else if (!foepos.origin() && you.see_cell(foepos))
+                    // EXCEPTION: invisible enemies for allies without sinv
+                    // (otherwise your allies get stuck doing nothing)
+                    else if (!foepos.origin() && you.see_cell(foepos)
+                             && afoe->visible_to(mon))
+                    {
                         try_pathfind(mon);
+                    }
                     else
                     {
                         new_foe = MHITYOU;
@@ -625,6 +625,8 @@ void handle_behaviour(monster* mon)
                 {
                     _set_firing_pos(mon, you.pos());
                 }
+                else //
+                    mon->firing_pos.reset();
 
                 if (!isFriendly)
                     break;
@@ -998,14 +1000,16 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
     }
 }
 
-//-----------------------------------------------------------------
-//
-// behaviour_event
-//
-// 1. Change any of: monster state, foe, and attitude
-// 2. Call handle_behaviour to re-evaluate AI state and target x, y
-//
-//-----------------------------------------------------------------
+/**
+ * Make a monster react to an event, possibly re-evaluating its attitude,
+ * foe, AI state, or target.
+ *
+ * @param mon the monster getting updated
+ * @param event what it's reacting to
+ * @param src who did it
+ * @param src_pos and where
+ * @param allow_shout whether the monster can shout in reaction.
+ */
 void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                      coord_def src_pos, bool allow_shout)
 {
@@ -1046,7 +1050,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_WANDER;
 
-            if (mons_near(mon))
+            if (you.can_see(*mon))
                 remove_auto_exclude(mon, true);
         }
 
@@ -1084,7 +1088,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (!mons_class_gives_xp(mon->type)
+        if (!mons_is_threatening(mon)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {
@@ -1093,7 +1097,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         mon->foe = src_idx;
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
@@ -1122,10 +1126,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         else if (!mons_is_fleeing(mon))
             mon->behaviour = BEH_SEEK;
 
-        if (src == &you
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type)
-            && mon->type != MONS_SPELLFORGED_SERVITOR)
+        if (src == &you && mon->angered_by_attacks())
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
@@ -1174,7 +1175,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        if (mon->asleep() && mons_near(mon))
+        if (mon->asleep() && you.can_see(*mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
@@ -1214,8 +1215,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
 
         // Neither do plants or nonliving beings.
-        if (mon->holiness() == MH_PLANT
-            || mon->holiness() == MH_NONLIVING)
+        if (mon->holiness() & (MH_PLANT | MH_NONLIVING))
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
@@ -1284,9 +1284,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player()
-            && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type))
+        if (src->is_player() && mon->angered_by_attacks())
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
@@ -1317,28 +1315,20 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it was unaware of you and you're its new foe, it might shout.
-    if (was_unaware && !mon->asleep() && allow_shout
+    if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
-        handle_monster_shouts(mon);
+        monster_consider_shouting(*mon);
     }
 
-    const bool wasLurking =
-        (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
     const bool isPacified = mon->pacified();
 
-    if ((wasLurking || isPacified)
+    if (isPacified
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
     {
-        // Lurking monsters or pacified monsters leaving the level won't
-        // stop doing so just because they noticed something.
+        // Pacified monsters leaving the level won't stop doing so just because
+        // they noticed something.
         mon->behaviour = old_behaviour;
-    }
-    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
-    {
-        // The same goes for submerged monsters, if they can't
-        // unsubmerge.
-        mon->behaviour = BEH_LURK;
     }
 
     // mons_speaks_msg already handles the LOS check.
@@ -1493,7 +1483,10 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
-    return crawl_state.game_is_arena() || !mons->friendly() || !mons->is_summoned()
+    return crawl_state.game_is_arena()
+           || !mons->friendly()
+           || !mons->is_summoned()
+              && !mons_is_hepliaklqana_ancestor(mons->type)
            || you.see_cell_no_trans(mons->pos());
 }
 
@@ -1515,8 +1508,11 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         return false;
     }
 
-    if (!mons->friendly() || !mons->is_summoned())
+    if (!mons->friendly()
+        || !mons->is_summoned() && !mons_is_hepliaklqana_ancestor(mons->type))
+    {
         return true;
+    }
 
     return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
 }

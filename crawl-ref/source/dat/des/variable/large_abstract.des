@@ -21,9 +21,9 @@ NAME:   minmay_octagon_city
 TAGS:   no_rotate
 ORIENT: north
 DEPTH:  Depths, !Depths:$
-NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:cccc+
-NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:cccc+
-NSUBST: H = 1:+ / *:cccc+, I = 1:+ / *:cccc+, J = 1:+ / *:cccc+
+NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:xxxx+
+NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:xxxx+
+NSUBST: H = 1:+ / *:xxxx+, I = 1:+ / *:xxxx+, J = 1:+ / *:xxxx+
 SUBST:  d : *., e : *., f : *., g : *., h : *., i : *.
 MAP
                                xxxxxxx
@@ -31,30 +31,30 @@ MAP
                               cceeeeecc
                              cc9.....9cc
                             cc.........cc
-           ccccccc         cc.0.......0.cc  xxxxxx
-          cc.....cc       cc.............ccxx||||xx                    xxxxxx
-         cc.......cc xxxxxc0.............0cx.8..9.xx        ccccccc   xxffffxx
-  xxxxx cc.........ccx|||xc......0.0......c........x       cciiiiicc xx......xx
- xxdddxxc...........c.....c.......G.......H...8....xxxxxx cc.......ccx..0..0..x
-xx.....xc....0.0....J..8..J......0.0......c....9...xx...xcc.........cc....9...x
-x..0.0..c.....9.....c.....c0.............0c........H.0.0.c...9...9...I...9....x
-x...9...F....0.0....cx9.9xcc.............ccx.9..8.xx..9..+...........c..0..0..xx
-x..0.0..c...........cxxxxx.cc.0.......0.cc.xx****xxx.0.0.c.....8.....cx......xxx
-xx.....xcc.........cc.......cc.........cc...xxxxxx.xx...xc...........cxx....xx.x
-xxx...xx.cc.......cc.........cc.......cc............xxxxxc...9...9...c.xx++xx..x
-x.xx+xx...cc.....cc...xxExx...cc.....cc...cccCccc........cc.........cc.........x
-x..........cccFccc...xx...xx...ccc+ccc...cc.....cc........cc.......cc..........x
-x....................x.9.9.x............cc.......cc........cc.....cc..xxxxxx...x
-x.............xxxxxx.E..8..E..xxBxx....cc.........cc........cccIccc..xx9..9xx..x
-x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...c...0...0...c..xxDxx.........xx......xx.x
-x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...c....9h9....c.xx...xx........x9......9x.x
+           ccccccc         cc.0.......0.cc  cccccc
+          cc.....cc       cc.............cccc||||cc                    cccccc
+         cc.......cc cccccc0.............0cc.8..9.cc        ccccccc   ccffffcc
+  ccccc cc.........ccc|||cc......0.0......c........c       cciiiiicc cc......cc
+ ccdddccc...........c.....c.......G.......H...8....cccccc cc.......ccc..0..0..c
+xc.....cc....0.0....J..8..J......0.0......c....9...cc...ccc.........cc....9...c
+x..0.0..c.....9.....c.....c0.............0c........H.0.0.c...9...9...I...9....c
+x...9...F....0.0....cc9.9ccc.............ccc.9..8.cc..9..+...........c..0..0..cx
+x..0.0..c...........cccccc.cc.0.......0.cc.cc****ccc.0.0.c.....8.....cc......ccx
+xc.....ccc.........cc.......cc.........cc...cccccc.cc...cc...........ccc....cc.x
+xcc...cc.cc.......cc.........cc.......cc............cccccc...9...9...c.cc++cc..x
+x.cc+cc...cc.....cc...xxExx...cc.....cc...xxxCxxx........cc.........cc.........x
+x..........cccFccc...xx...xx...ccc+ccc...xx.....xx........cc.......cc..........x
+x....................x.9.9.x............xx.......xx........cc.....cc..xxxxxx...x
+x.............xxxxxx.E..8..E..xxBxx....xx.........xx........cccIccc..xx9..9xx..x
+x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...x...0...0...x..xxDxx.........xx......xx.x
+x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...x....9h9....x.xx...xx........x9......9x.x
 x...x.0.0.x.x$$$$$$$$xxxExx..B..9..B...C....hhh....C.x.0.0.x........x...gg...x.x
-x...A..9..A.x$$$$$$$$x.......x.0.0.x...c....9h9....c.D..9..D........x...gg...x.x
-x...x.0.0.x.x$$$$$$$$x.......xx...xx...c...0...0...c.x.0.0.x........x........x.x
-x...xx...xx.x$$$$$$$$x........xxBxx....cc.........cc.xx...xx........xx......xx.x
-x....xxAxx..xx$$$$$$xx..................cc.......cc...xxDxx..........xx....xx..x
-x............xx$$$$xx....................cc.....cc....................xx++xx...x
-x.............xxxxxx......      ..........cccCccc............    ..............x
+x...A..9..A.x$$$$$$$$x.......x.0.0.x...x....9h9....x.D..9..D........x...gg...x.x
+x...x.0.0.x.x$$$$$$$$x.......xx...xx...x...0...0...x.x.0.0.x........x........x.x
+x...xx...xx.x$$$$$$$$x........xxBxx....xx.........xx.xx...xx........xx......xx.x
+x....xxAxx..xx$$$$$$xx..................xx.......xx...xxDxx..........xx....xx..x
+x............xx$$$$xx....................xx.....xx....................xx++xx...x
+x.............xxxxxx......      ..........xxxCxxx............    ..............x
         .................         ..................                   ........x
 ENDMAP
 
@@ -90,12 +90,12 @@ NAME:    vault_1
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
 MONS:    shapeshifter, shapeshifter, glowing shapeshifter
-MONS:    obsidian statue, nothing
+MONS:    orange crystal statue / obsidian statue
 SUBST:   E=E.
-SHUFFLE: abcd, $*, |ABCDE, nm, 45
+SHUFFLE: abcd, $*, |ABCDE, nm, 4'
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
 SUBST:   a = + x:8, b = + x:30, c=x, d=x
-SUBST:   * = * |:1
+SUBST:   * = * |:1, ' = .
 SHUFFLE: opq
 SUBST:   o=+
 SHUFFLE: pqrs
@@ -491,7 +491,7 @@ ENDMAP
 #
 NAME:   mludivico_vault
 ORIENT: southwest
-DEPTH:  Depths, !Depths:$
+DEPTH:  D:12-, !D:$
 MONS:   hell hound, necromancer, wizard, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
 MAP
@@ -525,8 +525,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   kennysheep_water_balloons
+TAGS:   no_pool_fixup
 ORIENT: northwest
-DEPTH:  D:15-, Depths
+DEPTH:  D:14-, Depths
 NSUBST: % = 5:|
 SUBST:  % : %$
 MAP
@@ -538,18 +539,18 @@ c..wwwwwwwww..ccccc...cc
 c.wwww%%%wwww.cccccc+cc
 c.www%9%8%www.ccccc...cc
 c.www%%G%%www.cccc..w..cc
-c.www%8%9%www.ccc..www..c
+c.www%8%9%www.ccc..wwW..c
 c.wwww%%%wwww.ccc.ww9ww.c
-c..wwwwwwwww..ccc..www..c
-cc..wwwwwww..ccccc..w..cc
+c..wwWwwwwww..ccc..www..c
+cc..Wwwwwww..ccccc..w..cc
 ccc..wwwww..cc...+c...cc
 cccc.......cc..w..ccccc
-cccccccccccc..www..c
+cccccccccccc..wwW..c
 cccccccccccc.ww9ww.c
 cccccccccccc..www..c
 c..ccccc...cc..w..cc
 cw..ccc..w..+c...cc
-cww..c..www..ccccc
+cww..c..wwW..ccccc
 cGww.+.ww9ww.c
 cww..c..www..c
 cw..ccc..w..cc
@@ -767,32 +768,34 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KPROP:  .089 = no_tele_into
-SUBST:  c : cv
-KMONS:  0 = 0
+KMONS:  01 = 0
 KMONS:  8 = 8
-KMONS:  9 = 9
-KITEM:  0 = %
+KMONS:  92 = 9
+KITEM:  01 = %
 KITEM:  8 = |
-KITEM:  9 = *
+KITEM:  92 = *
+SUBST:  c : cv
+KPROP:  .089 = no_tele_into
 MAP
-@cccccccccccccccc
-c+..ccccccccccccc
-c...0cccccccccccc
-c...9cccccccccccc
-cc09=xccccccccccc
-ccccxx...cccccccc
-ccccc....0ccccccc
-ccccc...09ccccccc
-ccccc..098ccccccc
-cccccc098=xcccccc
-cccccccccxx....cc
-cccccccccc.....0c
-cccccccccc....09c
-cccccccccc...098c
-cccccccccc..0988c
-ccccccccccc0988cc
-ccccccccccccccccc
+@cccccccccccccccccx
+c+''ccccccccccccccx
+c'''1cccccccccccccx
+c'''2cccccccccccccx
+cc12mmccccccccccccx
+ccccmm...cccccccccx
+ccccc....0ccccccccx
+ccccc...09ccccccccx
+ccccc..098ccccccccx
+cccccc098mmcccccccx
+cccccccccmm....cccx
+cccccccccc.....0ccx
+cccccccccc....09ccx
+cccccccccc...098ccx
+cccccccccc..0988ccx
+ccccccccccc0988cccx
+ccccccccccccccccccx
+ccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_box_of_statues
@@ -1022,22 +1025,29 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:400 / deep elf mage w:50 / orc wizard / deep elf conjurer / \
-        deep elf summoner / orc sorcerer / ogre mage / nothing w:500
+MONS:   wizard w:300 / deep elf mage w:120 / orc wizard / \
+        orc sorcerer w:35 / ogre mage w:35 / nothing w:500
+MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
         any randart armour w:3 / any rod w:3
+: if you.absdepth() > 18 then
+NSUBST: 2 = 2:2 / 2 = 21 / *:1
+: else
+SUBST:  2 = 1
+: end
 KPROP:  d = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.xx
 x...................................................................x
-xx........x....xx......xx1..................xx.........xx..........xx
+xx........x....xx......xx2..................xx.........xx..........xx
 x........xx....xxx......xxxxxx.............xx..........xxx..........x
-xx......1xx....xxxx......xxxx............1xxx...........xxx1..xxxx.xx
-x.....xxxxx.....xxxx......x1...........xxmxx.........xx..xxmxxxxxx..x
-xx...xxxxxx1....xxxx.....xx..........xxxxdm1........xxx..1mdmxxx...xx
-x.........xx.....xxxx1...xx............1mxxx........xxx...xxx1......x
+xx......2xx....xxxx......xxxx............2xxx...........xxx2..xxxx.xx
+x.....xxxxx.....xxxx......x2...........xxmxx.........xx..xxmxxxxxx..x
+xx...xxxxxx2....xxxx.....xx..........xxxxdm2........xxx..2mdmxxx...xx
+x.........xx.....xxxx1...xx............2mxxx........xxx...xxx2......x
 xx.........x.....xxxxmx1..................xxx......xxxx...xx.......xx
 x..xx............1xxxmxxxxxxxx.............xx......xxx...xxx........x
 xx..xxx......xxx..mmdxxxxxxxxxx........xx...x.....xxxx...xxx.......xx
@@ -1602,32 +1612,118 @@ ENDMAP
 NAME:   kennysheep_large_spiral
 TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 : ks_random_setup(_G, true)
+SUBST:  X = x
 MAP
-ccccccccccccccccccccccccc
-cwwwwwwwwwwwwwwwwwwwwwwwc
-cwt9.................*twc
-cw*xxxxxxxxxxxxxxxxxxx9wc
-cw.xcccccccccccccccccx.wc
-cw.xcwwwwwwwwwwwwwwwcx.wc
-cw.xcwt9.........*twcx.wc
-cw.xcw*xxxxxxxxxxx9wcx.wc
-cw.xcw.xcccccccccx.wcx.wc
-cw.xcw.xcwwwwwwwcx.wcx.wc
-cw.xcw.xcwt888twcx.wcx.wc
-cw.xcw.xcw.xxx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcxwwcx.wcx.wc
-cw.xcw.xcw.xcccccx.wcx.wc
-cw.xcw.xcw9xxxxxxx*wcx.wc
-cw.xcw.xcwt*.....9twcx.wc
-cw.xcw.xcwwwwwwwwwwwcx.wc
-cw.xcw.xcccccccccccccx.wc
-cw.xcw*xxxxxxxxxxxxxxx*wc
-cw.xcwt9.............9twc
-cw.xcwwwwwwwwwwwwwwwwwwwc
-cw@xccccccccccccccccccccc
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+Xccccccccccccccccccccccccc
+Xcwwwwwwwwwwwwwwwwwwwwwwwc
+Xcwt9.................*twc
+Xcw*xxxxxxxxxxxxxxxxxxx9wc
+Xcw.xcccccccccccccccccx.wc
+Xcw.xcwwwwwwwwwwwwwwwcx.wc
+Xcw.xcwt9.........*twcx.wc
+Xcw.xcw*xxxxxxxxxxx9wcx.wc
+Xcw.xcw.xcccccccccx.wcx.wc
+Xcw.xcw.xcwwwwwwwcx.wcx.wc
+Xcw.xcw.xcwt888twcx.wcx.wc
+Xcw.xcw.xcw.xxx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcxwwcx.wcx.wc
+Xcw.xcw.xcw.xcccccx.wcx.wc
+Xcw.xcw.xcw9xxxxxxx*wcx.wc
+Xcw.xcw.xcwt*.....9twcx.wc
+Xcw.xcw.xcwwwwwwwwwwwcx.wc
+Xcw.xcw.xcccccccccccccx.wc
+Xcw.xcw*xxxxxxxxxxxxxxx*wc
+Xcw.xcwt9.............9twc
+Xcw.xcwwwwwwwwwwwwwwwwwwwc
+Xcw@xccccccccccccccccccccc
+ENDMAP
+
+NAME:   minmay_tile_spiral
+DEPTH:  D:11-, Depths
+ORIENT: southwest
+SUBST:  x : cvb, z : cvb, y : cvbnTUVtG8|, X = x
+: if you.absdepth() < 16 then
+NSUBST:  8 = 2:8 / 8 = 8. / *:.
+NSUBST:  9 = 2:9 / 4 = 9. / *:.
+NSUBST:  0 = 3:9 / 6 = 9. / *:.
+: else
+NSUBST:  8 = 4:8 / 10 = 8. / *:.
+NSUBST:  9 = 4:9 / 8 = 9. / *:.
+NSUBST:  0 = 4:9 / 6 = 9. / *:.
+: end
+MAP
+Xxxxxxxxxzxxxxxxxzxxxxxxxz
+Xxxxxxxx..x..9..x..0...0..
+Xxxxxx....0..x..0..xx9xx..
+Xxxxx.....0.xxx.0..xx*xx..
+Xxxx...xxnxxxxxxxnxxxxxxx@
+Xxx...xx..0.xxx.0..xx*xx..
+Xxx..xx...0..x..0..xx9xx..
+Xx...x....x..9..x..0...0..
+Xz...n...zxxxxxxxzxxxxxxxz
+Xx..xxx..xxxx88.9..xxxxxxx
+Xxx00x00xxx|888.9....xxxxx
+Xx...x...xx|888.x.....xxxx
+Xx99xxx99x||8y8xxnxx...xxx
+Xx...x...xx|888.x..xx...xx
+Xxx00x00xxx|888.9...xx..xx
+Xx..xxx..xxxx88.9....x...x
+Xz...n...zxxxxxxxz...n...z
+Xx...x....0988890....x...x
+Xxx..xx...xx8y8xx...xx..xx
+Xxx...xx...x***x...xx...xx
+Xxxx...xxnxxxxxxxnxx...xxx
+Xxxxx......x***x......xxxx
+Xxxxxx....xx8y8xx....xxxxx
+Xxxxxxxx..0988890..xxxxxxx
+Xxxxxxxxxzxxxxxxxzxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    minmay_tearing_corner
+DEPTH:   D:11-, Depths
+ORIENT:  northeast
+SUBST:   x : ccvvb, X = x
+: if you.absdepth() < 16 then
+NSUBST:  8 = 4:8 / 8 = 8. / *:.
+NSUBST:  9 = 6:9 / 12 = 9. / *:.
+: else
+NSUBST:  8 = 4:8 / 10 = 8. / *:.
+NSUBST:  9 = 6:9 / 18 = 9. / *:.
+: end
+MAP
+         XXXXXXXXX
+         xxxxxxxxx
+         x9x....9x
+         x9x..xx.x
+         xx.x...9x
+          x.xx..xx
+          x.x8..8x
+          x.xx..xx
+         xx.x8||8x
+        xx..xxxxxxx
+xxxxxxxxx.x9..99x.xx
+x9.9x8x8xx9x...x9x.xxxxxx
+x.x....|x9x.x.x.x9......xxxX
+x.x....|x9.x.x.x..xxxxxx..xX
+x...x8x8x...x.x...x8x8x...xX
+x9.xxxxxx..x.x.x.9x|....x.xX
+xxx......9x.x.x.x9x|....x.xX
+x9.xxxxx.x9x...x9xx8x8x9.9xX
+xxx.....x.x99..9x.xxxxxxxxxX
+x9.xxx.x.xxxxxx..xx
+xxx...x.xx8||8x.xx
+x9.x.x.x.xx..xx.x
+xxx.x.x..x8..8x.x
+x..x.x.x.xx..xx.x
+x.x.x..x.x9...x.xx
+xx.xx..x.x.xx..x9x
+@.x.x99x9x9....x9x
+xxxxxxxxxxxxxxxxxx
 ENDMAP

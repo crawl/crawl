@@ -17,30 +17,13 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "place.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
-
-spret_type cast_cure_poison(int pow, bool fail)
-{
-    if (!you.duration[DUR_POISONING])
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    reduce_player_poison((15 + roll_dice(3, pow / 2)) * 1000);
-
-    // A message is already printed if we removed all of the poison
-    if (you.duration[DUR_POISONING])
-        mpr("The poison in your system diminishes.");
-
-    return SPRET_SUCCESS;
-}
 
 spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -126,7 +109,7 @@ void start_recall(recall_t type)
 
         if (type == RECALL_YRED)
         {
-            if (mi->holiness() != MH_UNDEAD)
+            if (!(mi->holiness() & MH_UNDEAD))
                 continue;
         }
         else if (type == RECALL_BEOGH)
@@ -182,7 +165,7 @@ void recall_orders(monster *mons)
 
 // Attempt to recall a single monster by mid, which might be either on or off
 // our current level. Returns whether this monster was successfully recalled.
-static bool _try_recall(mid_t mid)
+bool try_recall(mid_t mid)
 {
     monster* mons = monster_by_mid(mid);
     // Either it's dead or off-level.
@@ -226,7 +209,7 @@ void do_recall(int time)
         // Try to recall an ally.
         mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
         you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (_try_recall(mid))
+        if (try_recall(mid))
         {
             time -= you.attribute[ATTR_NEXT_RECALL_TIME];
             you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
@@ -251,26 +234,6 @@ void end_recall()
     you.recall_list.clear();
 }
 
-// Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
-spret_type cast_phase_shift(int pow, bool fail)
-{
-    if (you.duration[DUR_DIMENSION_ANCHOR])
-    {
-        mpr("You are anchored firmly to the material plane!");
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    if (!you.duration[DUR_PHASE_SHIFT])
-        mpr("You feel the strange sensation of being on two planes at once.");
-    else
-        mpr("You feel the material plane grow further away.");
-
-    you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
-    you.redraw_evasion = true;
-    return SPRET_SUCCESS;
-}
-
 static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Worked stone walls are out, they're not diggable and
@@ -288,10 +251,6 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    int shallow = 1 + min(pow / 30, 3);      // minimum penetrable depth
-    int range = shallow + random2(pow) / 25; // penetrable depth for this cast
-    int maxrange = shallow + pow / 25;       // max penetrable depth
-
     coord_def dest;
     for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
@@ -308,16 +267,14 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     fail_check();
 
     // Below here, failing to cast yields information to the
-    // player, so we don't make the spell abort (return true).
-    monster *mon = monster_at(dest);
+    // player, so we don't make the spell abort (return SPRET_SUCCESS).
+    const monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
     else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
         mpr("Something is blocking your path through the rock.");
-    else if (walls > maxrange)
+    else if (walls > spell_range(SPELL_PASSWALL, pow))
         mpr("This rock feels extremely deep.");
-    else if (walls > range)
-        mpr("You fail to penetrate the rock.");
     else
     {
         string msg;
@@ -329,7 +286,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         if (check_moveto(dest, "passwall", msg))
         {
             // Passwall delay is reduced, and the delay cannot be interrupted.
-            start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+            start_delay<PasswallDelay>(1 + walls, dest);
         }
     }
     return SPRET_SUCCESS;
@@ -340,16 +297,15 @@ static int _intoxicate_monsters(coord_def where, int pow)
     monster* mons = monster_at(where);
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
-        || mons->holiness() != MH_NATURAL
-        || mons->res_poison() > 0)
+        || !(mons->holiness() & MH_NATURAL)
+        || mons->check_clarity(false)
+        || monster_resists_this_poison(mons))
     {
         return 0;
     }
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
-        if (mons->check_clarity(false))
-            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(mons, " looks rather confused.");
         return 1;
@@ -360,110 +316,25 @@ static int _intoxicate_monsters(coord_def where, int pow)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
-    mpr("You radiate an intoxicating aura.");
-    if (x_chance_in_y(60 - pow/3, 100))
-        confuse_player(3+random2(10 + (100 - pow) / 10));
-
-    if (one_chance_in(20) && lose_stat(STAT_INT, 1 + random2(3)))
-        mpr("Your head spins!");
-
-    apply_area_visible([pow] (coord_def where) {
+    mpr("You attempt to intoxicate your foes!");
+    int count = apply_area_visible([pow] (coord_def where) {
         return _intoxicate_monsters(where, pow);
     }, you.pos());
-    return SPRET_SUCCESS;
-}
-
-void remove_condensation_shield()
-{
-    mprf(MSGCH_DURATION, "Your icy shield evaporates.");
-    you.duration[DUR_CONDENSATION_SHIELD] = 0;
-    you.redraw_armour_class = true;
-}
-
-spret_type cast_condensation_shield(int pow, bool fail)
-{
-    if (you.shield())
+    if (count > 0)
     {
-        mpr("You can't cast this spell while wearing a shield.");
-        return SPRET_ABORT;
+        if (x_chance_in_y(60 - pow/3, 100))
+        {
+            mprf(MSGCH_WARN, "The world spins around you!");
+            you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
+            you.redraw_evasion = true;
+        }
     }
-
-    if (you.duration[DUR_FIRE_SHIELD])
-    {
-        mpr("Your ring of flames would instantly melt the ice.");
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        mpr("The disc of vapour around you crackles some more.");
-    else
-        mpr("A crackling disc of dense vapour forms in the air!");
-    you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
-    you.props[CONDENSATION_SHIELD_KEY] = pow;
-    you.redraw_armour_class = true;
-
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_stoneskin(int pow, bool fail)
-{
-    if (you.form != TRAN_NONE
-        && you.form != TRAN_APPENDAGE
-        && you.form != TRAN_STATUE
-        && you.form != TRAN_BLADE_HANDS)
-    {
-        mpr("This spell does not affect your current form.");
-        return SPRET_ABORT;
-    }
-
-    if (you.duration[DUR_ICY_ARMOUR])
-    {
-        mpr("Turning your skin into stone would shatter your icy armour.");
-        return SPRET_ABORT;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        // We can't get here from normal casting, and probably don't want
-        // a message from the Helm card.
-        // mpr("Your skin is naturally stony.");
-        return SPRET_ABORT;
-    }
-#endif
-
-    fail_check();
-
-    if (you.duration[DUR_STONESKIN])
-        mpr("Your skin feels harder.");
-    else if (you.form == TRAN_STATUE)
-        mpr("Your stone body feels more resilient.");
-    else
-        mpr("Your skin hardens.");
-
-    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
-    {
-        you.attribute[ATTR_BONE_ARMOUR] = 0;
-        mpr("Your corpse armour falls away.");
-    }
-
-    you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
-    you.props[STONESKIN_KEY] = pow;
-    you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;
 }
 
 spret_type cast_darkness(int pow, bool fail)
 {
-    if (you.haloed())
-    {
-        mpr("It would have no effect in that bright light!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     if (you.duration[DUR_DARKNESS])
         mprf(MSGCH_DURATION, "It gets a bit darker.");

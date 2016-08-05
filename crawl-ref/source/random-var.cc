@@ -129,11 +129,6 @@ double random_var::expected() const
 
 //////////////////////////////////
 
-random_var constant(int n)
-{
-    return random_var(n);
-}
-
 random_var operator+(const random_var& x, const random_var& y)
 {
     const int start = x.min() + y.min();
@@ -202,16 +197,22 @@ random_var operator*(const random_var& x, int d)
 
 random_var div_rand_round(const random_var& x, int d)
 {
-    const int start = x.min() / d;
-    const int end = (x.max() + d - 1) / d + 1;
+    // The rest is much simpler if we can assume d is positive.
+    if (d < 0)
+        return ::negate(div_rand_round(x, -d));
+    ASSERT(d != 0);
+
+    // Round start down and end up, not both towards zero.
+    const int start = (x.min() - (x.min() < 0 ? d - 1 : 0)) / d;
+    const int end   = (x.max() + (x.max() > 0 ? d - 1 : 0)) / d + 1;
     vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
     {
-        int rem = v % d;
+        const int rem = abs(v % d);
         weights[v / d - start] += x.weight(v) * (d - rem);
-        if (rem > 0)
-            weights[v / d + 1 - start] += x.weight(v) * rem;
+        if (rem != 0) // guarantees sgn(v) != 0 too
+            weights[v / d + sgn(v) - start] += x.weight(v) * rem;
     }
 
     return random_var(start, end, weights);
@@ -246,8 +247,8 @@ random_var rv::min(const random_var& x, const random_var& y)
 random_var rv::roll_dice(int d, int n)
 {
     if (n <= 0)
-        return constant(0);
-    random_var x = constant(0);
+        return random_var(0);
+    random_var x(0);
     for (int i = 0; i < d; ++i)
         x += random_var(1, n+1);
     return x;
@@ -255,5 +256,5 @@ random_var rv::roll_dice(int d, int n)
 
 random_var rv::random2(int n)
 {
-    return random_var(0, max(n, 1));
+    return random_var(0, std::max(n, 1));
 }

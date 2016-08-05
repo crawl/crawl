@@ -15,7 +15,7 @@
 size_t strlcpy(char *dst, const char *src, size_t n);
 #endif
 
-string lowercase_string(const string s);
+string lowercase_string(const string &s);
 string &lowercase(string &s);
 string &uppercase(string &s);
 string uppercase_string(string s);
@@ -243,7 +243,9 @@ string make_file_time(time_t when);
 // support for long double, which will enable std::to_string in libstdc++.
 //
 // See http://permalink.gmane.org/gmane.os.cygwin/150485 for more info.
-#ifdef TARGET_COMPILER_CYGWIN
+// Disable this workaround under MSYS2, which is based on CYGWIN but has
+// std::to_string.
+#if defined(TARGET_COMPILER_CYGWIN) && !defined(__MSYS__)
 // Injecting into std:: because we sometimes use std::to_string to
 // disambiguate.
 namespace std

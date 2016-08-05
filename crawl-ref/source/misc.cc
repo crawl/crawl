@@ -177,11 +177,11 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
     {
-        bool moving = (!you.delay_queue.empty()
-                          && delay_is_run(you.delay_queue.front().type)
-                          && you.delay_queue.front().type != DELAY_REST
-                       || you.running < RMODE_NOT_RUNNING
-                       || want_move);
+        bool moving = you_are_delayed()
+                       && current_delay()->is_run()
+                       && current_delay()->is_resting()
+                      || you.running < RMODE_NOT_RUNNING
+                      || want_move;
 
         bool result = is_safe;
 
@@ -223,7 +223,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
@@ -245,7 +245,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
 
 static bool _exposed_monsters_nearby(bool want_move)
 {
-    const int radius = want_move ? LOS_RADIUS : 2;
+    const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
         if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return true;
@@ -400,7 +400,7 @@ void bring_to_safety()
         pos.y = random2(GYM);
         if (!in_bounds(pos)
             || grd(pos) != DNGN_FLOOR
-            || env.cgrid(pos) != EMPTY_CLOUD
+            || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
@@ -467,6 +467,8 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
+    you.props["corrosion_amount"] = 0;
+
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);
@@ -484,7 +486,7 @@ void revive()
     }
 
     mpr("You rejoin the land of the living...");
-    more();
+    // included in default force_more_message
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
@@ -550,7 +552,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (find_stab_type(&you, mon) != STAB_NO_STAB
+    if (find_stab_type(&you, *mon) != STAB_NO_STAB
         && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {
@@ -575,9 +577,8 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first,
-                        bool *prompted, coord_def attack_pos,
-                        bool check_landing_only)
+                        coord_def beam_target, bool *prompted,
+                        coord_def attack_pos, bool check_landing_only)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
@@ -597,9 +598,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = mon->name(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
-        mon_name.erase(0, 4);
-    if (adj.find("your"))
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
     string verb;
@@ -608,17 +609,11 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         verb = "fire ";
         if (beam_target == mon->pos())
             verb += "at ";
-        else if (you.pos() < beam_target && beam_target < mon->pos()
-                 || you.pos() > beam_target && beam_target > mon->pos())
+        else
         {
-            if (autohit_first)
-                return false;
-
             verb += "in " + apostrophise(mon_name) + " direction";
             mon_name = "";
         }
-        else
-            verb += "through ";
     }
     else
         verb = "attack ";
@@ -680,9 +675,9 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = victims.describe(DESC_PLAIN);
-    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
-        mon_name.erase(0, 4);
-    if (adj.find("your"))
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
 
@@ -709,11 +704,8 @@ void swap_with_monster(monster* mon_to_swap)
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
-    if (stasis_blocks_effect(true, "%s emits a piercing whistle.",
-                             20, "%s makes your neck tingle."))
-    {
+    if (check_stasis())
         return;
-    }
 
     // Be nice: no swapping into uninhabitable environments.
     if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))
@@ -760,7 +752,7 @@ void swap_with_monster(monster* mon_to_swap)
         }
         else
         {
-            you.attribute[ATTR_HELD] = 10;
+            you.attribute[ATTR_HELD] = 1;
             if (get_trapping_net(you.pos()) != NON_ITEM)
                 mpr("You become entangled in the net!");
             else
@@ -800,10 +792,15 @@ int apply_chunked_AC(int dam, int ac)
     return hurt;
 }
 
-void handle_real_time(time_t t)
+void handle_real_time(chrono::time_point<chrono::system_clock> now)
 {
-    you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);
-    you.last_keypress_time = t;
+    const chrono::milliseconds elapsed =
+     chrono::duration_cast<chrono::milliseconds>(now - you.last_keypress_time);
+    you.real_time_delta = min<chrono::milliseconds>(
+      elapsed,
+      (chrono::milliseconds)(IDLE_TIME_CLAMP * 1000));
+    you.real_time_ms += you.real_time_delta;
+    you.last_keypress_time = now;
 }
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],
@@ -899,4 +896,9 @@ bool tobool(maybe_bool mb, bool def)
     default:
         return def;
     }
+}
+
+maybe_bool frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
 }

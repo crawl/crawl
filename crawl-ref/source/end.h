@@ -9,7 +9,7 @@
 #include "hiscores.h" // scorefile_entry
 
 NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = nullptr));
-NORETURN void end_game(scorefile_entry &se);
+NORETURN void end_game(scorefile_entry &se, int hiscore_index = -1);
 NORETURN void game_ended();
 NORETURN void game_ended_with_error(const string &message);
 NORETURN void screen_end_game(string text);

@@ -1,3 +1,4 @@
+// This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
 
@@ -35,16 +36,15 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
-    SPELL_CONDENSATION_SHIELD,
 },
 
 {   // Book of Summonings
     SPELL_RECALL,
     SPELL_AURA_OF_ABJURATION,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Fire
@@ -75,6 +75,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Enchantments
     SPELL_CAUSE_FEAR,
+    SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
@@ -83,9 +84,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_CURE_POISON,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_VENOM_BOLT,
 },
 
@@ -106,12 +107,13 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOLT_OF_DRAINING,
 },
 
-{   // Book of Hinderance
+{   // Book of Misfortune
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
+    SPELL_VIOLENT_UNRAVELLING,
 },
 
 {   // Book of Changes
@@ -123,7 +125,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transfigurations
-    SPELL_STONESKIN,
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -203,17 +204,18 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
-    SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
-    SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_INTOXICATE,
     SPELL_POISONOUS_CLOUD,
 },
+#endif
 
 {   // Book of Unlife
     SPELL_RECALL,
@@ -228,7 +230,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_CONTROL_UNDEAD,
     SPELL_ENGLACIATION,
-    SPELL_MASS_CONFUSION,
 },
 
 {   // Book of Battle (replacing Morphology)
@@ -242,7 +243,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
-    SPELL_STONESKIN,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,
@@ -278,7 +278,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CORONA,
+    SPELL_CONFUSING_TOUCH,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -327,19 +327,16 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_PHASE_SHIFT,
-    SPELL_SHADOW_CREATURES,
     SPELL_SILENCE,
     SPELL_DARKNESS,
-    SPELL_MASS_CONFUSION,
+    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
-    SPELL_INTOXICATE,
-    SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
+    SPELL_INTOXICATE,
     SPELL_IRRADIATE,
 },
 
@@ -370,7 +367,10 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
+    SPELL_INFESTATION,
     SPELL_NECROMUTATION,
 },
 
 };
+
+COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

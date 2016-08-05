@@ -11,7 +11,6 @@
 #include "mapdef.h"
 #include "unwind.h"
 
-struct level_range;
 class map_def;
 struct map_file_place;
 struct vault_placement;
@@ -51,9 +50,9 @@ void add_parsed_map(const map_def &md);
 
 vector<string> find_map_matches(const string &name);
 
-mapref_vector find_maps_for_tag (const string tag,
-                                 bool check_depth = false,
-                                 bool check_used = true);
+mapref_vector find_maps_for_tag(const string &tag,
+                                bool check_depth = false,
+                                bool check_used = true);
 
 void read_maps();
 void reread_maps();
@@ -67,7 +66,6 @@ typedef map<string, map_file_place> map_load_info_t;
 extern map_load_info_t lc_loaded_maps;
 extern string          lc_desfile;
 extern map_def         lc_map;
-extern level_range     lc_range;
 extern depth_ranges    lc_default_depths;
 extern dlua_chunk      lc_global_prelude;
 extern bool            lc_run_global_prelude;

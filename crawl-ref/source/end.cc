@@ -16,6 +16,7 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -91,7 +92,7 @@ static bool _print_error_screen(const char *message, ...)
 
     // And finally output the message.
     clrscr();
-    formatted_string::parse_string(error_msg, false).display();
+    formatted_string::parse_string(error_msg).display();
     getchm();
     return true;
 }
@@ -199,6 +200,9 @@ static void _delete_files()
 
 NORETURN void screen_end_game(string text)
 {
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("quit");
+#endif
     crawl_state.cancel_cmd_all();
     _delete_files();
 
@@ -215,7 +219,7 @@ NORETURN void screen_end_game(string text)
     game_ended();
 }
 
-NORETURN void end_game(scorefile_entry &se)
+NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 {
     for (auto &item : you.inv)
         if (item.defined() && item_type_unknown(item))
@@ -235,66 +239,72 @@ NORETURN void end_game(scorefile_entry &se)
 
         switch (you.religion)
         {
-            case GOD_FEDHAS:
-                simple_god_message(" appreciates your contribution to the "
-                                   "ecosystem.");
-                break;
+        case GOD_FEDHAS:
+            simple_god_message(" appreciates your contribution to the "
+                               "ecosystem.");
+            break;
 
-            case GOD_NEMELEX_XOBEH:
-                nemelex_death_message();
-                break;
+        case GOD_NEMELEX_XOBEH:
+            nemelex_death_message();
+            break;
 
-            case GOD_KIKUBAAQUDGHA:
+        case GOD_KIKUBAAQUDGHA:
+        {
+            const mon_holy_type holi = you.holiness();
+
+            if (holi & (MH_NONLIVING | MH_UNDEAD))
             {
-                const mon_holy_type holi = you.holiness();
-
-                if (holi == MH_NONLIVING || holi == MH_UNDEAD)
-                {
-                    simple_god_message(" rasps: \"You have failed me! "
-                                       "Welcome... oblivion!\"");
-                }
-                else
-                {
-                    simple_god_message(" rasps: \"You have failed me! "
-                                       "Welcome... death!\"");
-                }
-                break;
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... oblivion!\"");
             }
+            else
+            {
+                simple_god_message(" rasps: \"You have failed me! "
+                                   "Welcome... death!\"");
+            }
+            break;
+        }
 
-            case GOD_YREDELEMNUL:
-                if (you.undead_state() != US_ALIVE)
-                    simple_god_message(" claims you as an undead slave.");
-                else if (se.get_death_type() != KILLED_BY_DISINT
-                         && se.get_death_type() != KILLED_BY_LAVA)
+        case GOD_YREDELEMNUL:
+            if (you.undead_state() != US_ALIVE)
+                simple_god_message(" claims you as an undead slave.");
+            else if (se.get_death_type() != KILLED_BY_DISINT
+                     && se.get_death_type() != KILLED_BY_LAVA)
+            {
+                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
+                     "zombie.");
+            }
+            // No message if you're not undead and your corpse is lost.
+            break;
+
+        case GOD_BEOGH:
+            if (actor* killer = se.killer())
+            {
+                if (killer->is_monster() && killer->deity() == GOD_BEOGH)
                 {
-                    mprf(MSGCH_GOD, "Your body rises from the dead as a mindless zombie.");
+                    const string msg = " appreciates "
+                        + killer->name(DESC_ITS)
+                        + " killing of a heretic priest.";
+                    simple_god_message(msg.c_str());
                 }
-                // No message if you're not undead and your corpse is lost.
-                break;
+            }
+            break;
 
-            case GOD_GOZAG:
-                if (se.get_death_type() != KILLED_BY_DISINT
-                    && se.get_death_type() != KILLED_BY_LAVA)
-                {
-                    mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-                }
-                break;
+        case GOD_PAKELLAS:
+        {
+            const string result = getSpeakString("Pakellas death");
+            god_speaks(GOD_PAKELLAS, result.c_str());
+            break;
+        }
 
-            case GOD_BEOGH:
-               if (actor* killer = se.killer())
-               {
-                    if (killer->is_monster() && killer->deity() == GOD_BEOGH)
-                    {
-                        const string msg = " appreciates "
-                                           + killer->name(DESC_ITS)
-                                           + " killing of a heretic priest.";
-                        simple_god_message(msg.c_str());
-                    }
-               }
-               break;
-
-            default:
-                break;
+        default:
+            if (will_have_passive(passive_t::goldify_corpses)
+                && se.get_death_type() != KILLED_BY_DISINT
+                && se.get_death_type() != KILLED_BY_LAVA)
+            {
+                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+            }
+            break;
         }
 
         flush_prev_message();
@@ -356,7 +366,8 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5);
+    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+                        hiscore_index);
 
 #ifndef DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",

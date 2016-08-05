@@ -29,6 +29,9 @@ enum item_source_type
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
 
+pair<bool, int> item_int(item_def &item);
+item_def& item_from_int(bool, int);
+
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
@@ -46,7 +49,6 @@ bool move_item_to_inv(item_def& item);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
 item_def* auto_assign_item_slot(item_def& item);
 void mark_items_non_pickup_at(const coord_def &pos);
-void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
@@ -78,7 +80,7 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-void item_list_on_square(vector<const item_def*>& items, int obj);
+vector<const item_def*> item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default
@@ -117,11 +119,11 @@ void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
-bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
+god_type origin_as_god_gift(const item_def& item);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = nullptr);
 
-bool item_needs_autopickup(const item_def &);
+bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();
@@ -171,4 +173,24 @@ private:
     int next_link;
 };
 
+class mon_inv_iterator : public iterator<forward_iterator_tag, item_def>
+{
+public:
+    explicit mon_inv_iterator(monster& _mon);
+
+    mon_inv_type slot() const
+    {
+        return type;
+    }
+
+    operator bool() const;
+    item_def& operator *() const;
+    item_def* operator->() const;
+
+    mon_inv_iterator& operator ++ ();
+    mon_inv_iterator operator ++ (int);
+private:
+    monster& mon;
+    mon_inv_type type;
+};
 #endif

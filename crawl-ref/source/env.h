@@ -31,9 +31,7 @@ struct crawl_environment
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
-    FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
-    FixedArray< unsigned short, GXM, GYM >   tgrid; // traps, shops
 
     map_mask                                 level_map_mask;
     map_mask                                 level_map_ids;
@@ -73,11 +71,10 @@ struct crawl_environment
     tile_flavour tile_default;
     vector<string> tile_names;
 
-    FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
-    short cloud_no;
+    map<coord_def, cloud_struct> cloud;
 
-    FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
-    FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
+    map<coord_def, shop_struct> shop; // shop list
+    map<coord_def, trap_def> trap; // trap list
 
     FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;
     map_markers                              markers;
@@ -112,7 +109,7 @@ struct crawl_environment
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
 
-    //------------------------------------------------------------------------
+    // Remaining fields not marshalled:
 
     // Volatile level flags, not saved.
     uint32_t level_state;
@@ -140,5 +137,18 @@ struct crawl_environment
 #define env (*real_env)
 #endif
 extern struct crawl_environment env;
+
+/**
+ * Range proxy to iterate over only "real" menv slots, skipping anon slots.
+ *
+ * Use as the range expression in a for loop:
+ *     for (auto &mons : menv_real)
+ */
+static const struct menv_range_proxy
+{
+    menv_range_proxy() {}
+    monster *begin() const { return &menv[0]; }
+    monster *end()   const { return &menv[MAX_MONSTERS]; }
+} menv_real;
 
 #endif

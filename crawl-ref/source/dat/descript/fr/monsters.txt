@@ -240,12 +240,6 @@ Une agile lanceuse de sorts. Elle est légèrement vêtue, mais cependant, le pe
 qu'elle porte semble être une armure de dragon d'une qualité rare, garantissant
 une assez bonne protection. Et distraire les hommes au combat est une qualité.
 %%%%
-Maud
-
-Une mystérieuse princesse guerrière d'un royaume lointain, dans sa quête pour
-retrouver l'épée légendaire “Entarex”. Nombreux sont ses admirateurs qui,
-pensant à Maud, oublient tout autre chose.
-%%%%
 Maurice
 
 Un voleur sournois et connivent. En sa profession, Maurice est considéré comme
@@ -286,12 +280,6 @@ Nikola
 Un brillant scientifique obsédé par l'électricité. Depuis un terrible accident
 survenu lors d'une de ses tentatives pour parfaire son ire s d'électricité, il
 lui arrive de se déphaser de la réalité.
-%%%%
-Norris
-
-Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
-mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — « les deux »
-serait probablement la meilleure option.
 %%%%
 Polyphemus
 
@@ -356,14 +344,6 @@ de ces créatures.
 {{
     if you.can_smell() then
         return "Il pue horriblement."
-    end
-}}
-%%%%
-Wiglaf
-
-Un nain obèse qui porte un chapeau stupide. {{
-    if you.can_smell() then
-        return "Il empeste l'alcool. "
     end
 }}
 %%%%
@@ -713,12 +693,6 @@ deep elf priest
 
 Cet elfe profond est un serviteur de l'ancien dieu sombre des elfes profond, et
 a été mis au commandement des énergies tortueuse de son seigneur énigmatique.
-%%%%
-deep elf sorcerer
-
-Un lanceur de sorts puissant qui tient ses pouvoirs des Enfers, et qui possède
-les capacités arcaniques mortelles de la destruction, de la convocation et du
-bannissement.
 %%%%
 deep elf summoner
 
@@ -1706,12 +1680,6 @@ Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle s
 déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant
 infailliblement depuis l'angle mort de ceux qui ne peuvent la voir.
 %%%%
-Shadow Fiend
-
-Un être horrible qui apparaît sous forme d'une grosse masse d'ombres distordues
-et qui révèlent parfois un énorme squelette cornu. C'est l'un des plus terrible
-habitants des Enfers.
-%%%%
 shapeshifter
 
 Une créature dérangeante qui à le pouvoir de changer de forme. Elle est très
@@ -1976,11 +1944,6 @@ téméraires pour s'y frotter.
 training dummy
 
 Un mannequin utilisé pour l'entrainement au combat.
-%%%%
-trapdoor spider
-
-Un arachnide rapide qui à la fois surprend ses proies et fait fuir ses ennemis
-en s'occultant lui-même dans les recoins du sol du donjon.
 %%%%
 troll
 

@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "misc.h"
 #include "mutation.h"
@@ -86,6 +87,11 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Has the [player's] current god's one-time ability been used? (if any)
+function one_time_ability_used() */
+LUARET1(you_one_time_ability_used, boolean,
+        you.one_time_ability_used[you.religion])
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
@@ -148,14 +154,15 @@ LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
 LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
-LUARET1(you_phase_shifted, boolean, you.duration[DUR_PHASE_SHIFT])
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
 LUARET1(you_contaminated, number, get_contamination_level())
 LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
+#if TAG_MAJOR_VERSION == 34
 LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
+#endif
 
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
@@ -169,9 +176,7 @@ LUARET1(you_depth_fraction, number,
 // [1KB] FIXME: eventually eliminate the notion of absolute depth at all.
 LUARET1(you_absdepth, number, env.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
-LUARET1(you_taking_stairs, boolean,
-        current_delay_action() == DELAY_ASCENDING_STAIRS
-        || current_delay_action() == DELAY_DESCENDING_STAIRS)
+LUARET1(you_taking_stairs, boolean, player_stair_delay())
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_spell_levels, number, player_spell_levels())
@@ -182,6 +187,16 @@ LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
 LUARET1(you_see_cell_no_trans_rel, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+LUARET1(you_see_cell_solid_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID))
+LUARET1(you_see_cell_solid_see_rel, boolean,
+        cell_see_cell(you.pos(),
+                      (coord_def(luaL_checkint(ls, 1),
+                                 luaL_checkint(ls, 2)) + you.pos()),
+                      LOS_SOLID_SEE))
 LUARET1(you_piety_rank, number, piety_rank())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
@@ -437,9 +452,9 @@ LUAFN(you_is_level_on_stack)
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const string &err)
+    catch (const bad_level_id &err)
     {
-        return luaL_argerror(ls, 1, err.c_str());
+        return luaL_argerror(ls, 1, err.what());
     }
 
     PLUARET(boolean, is_level_on_stack(lev));
@@ -464,11 +479,25 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && you.can_train[sk])
     {
-        you.train[sk] = min(max(luaL_checkint(ls, 2), 0), 2);
+        you.train[sk] = min(max((training_status)luaL_checkint(ls, 2),
+                                                 TRAINING_DISABLED),
+                                             TRAINING_FOCUSED);
         reset_training();
     }
 
     PLUARET(number, you.train[sk]);
+}
+
+LUAFN(you_skill_cost)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    float cost = scaled_skill_cost(sk);
+    if (cost == 0)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    PLUARET(number, max(1, (int)(10.0 * cost + 0.5)) * 0.1);
 }
 
 LUAFN(you_status)
@@ -524,6 +553,7 @@ static const struct luaL_reg you_clib[] =
     { "gold"        , you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
+    { "one_time_ability_used" , you_one_time_ability_used },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
@@ -539,6 +569,7 @@ static const struct luaL_reg you_clib[] =
     { "can_train_skill", you_can_train_skill },
     { "best_skill",   you_best_skill },
     { "train_skill",  you_train_skill },
+    { "skill_cost"  , you_skill_cost },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
@@ -559,7 +590,6 @@ static const struct luaL_reg you_clib[] =
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
     { "shrouded",     you_shrouded },
-    { "phase_shifted", you_phase_shifted },
     { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },
@@ -592,7 +622,9 @@ static const struct luaL_reg you_clib[] =
     { "piety_rank",   you_piety_rank },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
+#if TAG_MAJOR_VERSION == 34
     { "antimagic",    you_antimagic },
+#endif
     { "status",       you_status },
 
     { "can_consume_corpses",      you_can_consume_corpses },
@@ -614,6 +646,8 @@ static const struct luaL_reg you_clib[] =
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
+    { "see_cell_solid",    you_see_cell_solid_rel },
+    { "see_cell_solid_see",you_see_cell_solid_see_rel },
 
     { "mutation",          you_mutation },
     { "temp_mutation",     you_temp_mutation },
@@ -770,38 +804,6 @@ LUAFN(you_in_branch)
     PLUARET(boolean, in_branch);
 }
 
-LUAFN(_you_shopping_list_has)
-{
-    const char *thing = luaL_checkstring(ls, 1);
-    MAPMARKER(ls, 2, mark);
-
-    level_pos pos(level_id::current(), mark->pos);
-    bool has = shopping_list.is_on_list(thing, &pos);
-    PLUARET(boolean, has);
-}
-
-LUAFN(_you_shopping_list_add)
-{
-    const char *thing = luaL_checkstring(ls, 1);
-    const char *verb  = luaL_checkstring(ls, 2);
-    const int  cost   = luaL_checkint(ls, 3);
-    MAPMARKER(ls, 4, mark);
-
-    level_pos pos(level_id::current(), mark->pos);
-    bool added = shopping_list.add_thing(thing, verb, cost, &pos);
-    PLUARET(boolean, added);
-}
-
-LUAFN(_you_shopping_list_del)
-{
-    const char *thing = luaL_checkstring(ls, 1);
-    MAPMARKER(ls, 2, mark);
-
-    level_pos pos(level_id::current(), mark->pos);
-    bool deleted = shopping_list.del_thing(thing, &pos);
-    PLUARET(boolean, deleted);
-}
-
 LUAFN(_you_at_branch_bottom)
 {
     PLUARET(boolean, at_branch_bottom());
@@ -856,9 +858,6 @@ static const struct luaL_reg you_dlib[] =
 { "dock_piety",         you_dock_piety },
 { "lose_piety",         you_lose_piety },
 { "in_branch",          you_in_branch },
-{ "shopping_list_has",  _you_shopping_list_has },
-{ "shopping_list_add",  _you_shopping_list_add },
-{ "shopping_list_del",  _you_shopping_list_del },
 { "stop_running",       you_stop_running },
 { "at_branch_bottom",   _you_at_branch_bottom },
 { "gain_exp",           you_gain_exp },

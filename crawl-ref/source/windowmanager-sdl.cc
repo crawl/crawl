@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
+#include "unicode.h"
 #include "version.h"
 #include "windowmanager.h"
 
@@ -464,9 +465,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     m_windowsz->x = x;
     m_windowsz->y = y;
 #ifdef __ANDROID__
-  #ifndef TOUCH_UI
+# ifndef TOUCH_UI
     SDL_StartTextInput();
-  #endif
+# endif
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
 #endif
 
@@ -684,10 +685,14 @@ int SDLWrapper::wait_event(wm_event *event)
 
         break;
     case SDL_TEXTINPUT:
+    {
         event->type = WME_KEYPRESS;
         // XXX: handle multiple keys?
-        event->key.keysym.sym = sdlevent.text.text[0];
+        ucs_t wc;
+        utf8towc(&wc, sdlevent.text.text);
+        event->key.keysym.sym = wc;
         break;
+    }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);

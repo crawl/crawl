@@ -10,11 +10,15 @@
 
 #include "enum.h"
 
+item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
+                      function<bool ()> allowcancel = [](){ return true; });
+// Change the lambda to always_true<> when g++ 4.7 support is dropped.
+
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
 bool takeoff_armour(int index);
 
-void drink(int slot = -1);
+void drink(item_def* potion = nullptr);
 
 bool god_hates_brand(const int brand);
 
@@ -22,8 +26,8 @@ bool safe_to_remove(const item_def &item, bool quiet = false);
 
 bool puton_ring(int slot = -1, bool allow_prompt = true);
 
-void read(int slot = -1);
-void read_scroll(int slot);
+void read(item_def* scroll = nullptr);
+void read_scroll(item_def& scroll);
 bool player_can_read();
 string cannot_read_item_reason(const item_def &item);
 
@@ -53,10 +57,10 @@ void random_uselessness();
 
 void prompt_inscribe_item();
 
-bool stasis_blocks_effect(bool calc_unid,
-                          const char *msg, int noise = 0,
-                          const char *silenced_msg = nullptr,
-                          const char *formicid_msg = nullptr);
+#define STASIS_STABILITY_MSG "Your stasis keeps you stable."
+#define NO_HASTE_MSG "You cannot haste."
+
+bool check_stasis(const char *msg = STASIS_STABILITY_MSG);
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

@@ -328,7 +328,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
             // Adding to an existing abomination.
-            const int hp_gain = hit_points(addhd, 2, 5);
+            const int hp_gain = hit_points(addhd * 45); // 4.5 avg hp/hd
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
             hp += hp/10;
@@ -346,7 +346,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         else
         {
             // Making a new abomination.
-            hp = mhp = hit_points(newhd, 2, 5);
+            hp = mhp = hit_points(newhd * 45); // 4.5 avg hp/hd
         }
     }
 
@@ -799,7 +799,7 @@ static bool _lost_soul_affectable(const monster &mons)
         return false;
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck
-    if (mons.holiness() != MH_UNDEAD && mons.holiness() != MH_NATURAL)
+    if (!(mons.holiness() & (MH_UNDEAD | MH_NATURAL)))
         return false;
 
     // already been revived once
@@ -821,59 +821,6 @@ static bool _lost_soul_affectable(const monster &mons)
         return false;
 
     return true;
-}
-
-static bool _lost_soul_teleport(monster* mons)
-{
-    bool seen = you.can_see(*mons);
-
-    typedef pair<monster*, int> mon_quality;
-    vector<mon_quality> candidates;
-
-    // Assemble candidate list and randomize
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (_lost_soul_affectable(**mi) && mons_aligned(mons, *mi))
-        {
-            mon_quality m(*mi, min(mi->get_experience_level(), 18) + random2(8));
-            candidates.push_back(m);
-        }
-    }
-    sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
-
-    for (mon_quality candidate : candidates)
-    {
-        coord_def empty;
-        if (find_habitable_spot_near(candidate.first->pos(), mons_base_type(mons), 3, false, empty)
-            && mons->move_to_pos(empty))
-        {
-            mons->add_ench(ENCH_SUBMERGED);
-            mons->behaviour = BEH_WANDER;
-            mons->foe = MHITNOT;
-            mons->props["band_leader"].get_int() = candidate.first->mid;
-            if (seen)
-            {
-                mprf("%s flickers out of the living world.",
-                        mons->name(DESC_THE, true).c_str());
-            }
-            return true;
-        }
-    }
-
-    // If we can't find anywhere useful to go, flicker away to stop the player
-    // being annoyed chasing after us
-    if (one_chance_in(3))
-    {
-        if (seen)
-        {
-            mprf("%s flickers out of the living world.",
-                        mons->name(DESC_THE, true).c_str());
-        }
-        monster_die(mons, KILL_MISC, -1, true);
-        return true;
-    }
-
-    return false;
 }
 
 // Is it worth sacrificing ourselves to revive this monster? This is based
@@ -927,7 +874,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
 
         // save this before we revive it
         const string revivee_name = mons->name(DESC_THE);
-        const bool was_alive = mons->holiness() == MH_NATURAL;
+        const bool was_alive = bool(mons->holiness() & MH_NATURAL);
 
         // In this case the old monster will be replaced by
         // a ghostly version, so we should record defeat now.
@@ -1037,6 +984,13 @@ void check_grasping_roots(actor* act, bool quiet)
                 mpr("You escape the reach of the grasping roots.");
             you.duration[DUR_GRASPING_ROOTS] = 0;
             you.redraw_evasion = true;
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                && (you.racial_permanent_flight()
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)))
+           {
+                you.attribute[ATTR_PERM_FLIGHT] = 1;
+                float_player();
+           }
         }
         else
             act->as_monster()->del_ench(ENCH_GRASPING_ROOTS);
@@ -1049,11 +1003,6 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
     mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
 }
 
-//---------------------------------------------------------------
-//
-// mon_special_ability
-//
-//---------------------------------------------------------------
 bool mon_special_ability(monster* mons, bolt & beem)
 {
     bool used = false;
@@ -1196,32 +1145,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             used = true;
         }
         break;
-
-    case MONS_LOST_SOUL:
-    if (one_chance_in(3))
-    {
-        bool see_friend = false;
-        bool see_foe = false;
-
-        for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
-        {
-            if (ai->is_monster() && mons_aligned(*ai, mons))
-            {
-                if (_lost_soul_affectable(*ai->as_monster()))
-                    see_friend = true;
-            }
-            else
-                see_foe = true;
-
-            if (see_friend)
-                break;
-        }
-
-        if (see_foe && !see_friend)
-            if (_lost_soul_teleport(mons))
-                used = true;
-    }
-    break;
 
     case MONS_THORN_HUNTER:
     {

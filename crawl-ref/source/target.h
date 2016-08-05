@@ -12,6 +12,7 @@ enum aff_type // sign and non-zeroness matters
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
+    AFF_MULTIPLE,    // Passes through multiple times
 };
 
 class targetter
@@ -27,10 +28,10 @@ public:
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
     virtual bool can_affect_outside_range();
-    virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool has_additional_sites(coord_def a);
+    virtual bool affects_monster(const monster_info& mon);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -45,13 +46,23 @@ public:
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
+    virtual bool affects_monster(const monster_info& mon) override;
 protected:
     vector<coord_def> path_taken; // Path beam took.
+    void set_explosion_aim(bolt tempbeam);
+    void set_explosion_target(bolt &tempbeam);
+    int min_expl_rad, max_expl_rad;
 private:
     bool penetrates_targets;
     int range;
-    int min_expl_rad, max_expl_rad;
     explosion_map exp_map_min, exp_map_max;
+};
+
+class targetter_unravelling : public targetter_beam
+{
+public:
+    targetter_unravelling(const actor *act, int range, int pow);
+    bool set_aim(coord_def a) override;
 };
 
 class targetter_imb : public targetter_beam
@@ -93,13 +104,20 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
+class targetter_transference : public targetter_smite
+{
+public:
+    targetter_transference(const actor *act);
+    bool valid_aim(coord_def a) override;
+};
+
+
 class targetter_fragment : public targetter_smite
 {
 public:
     targetter_fragment(const actor *act, int power, int range = LOS_RADIUS);
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
-    bool can_affect_walls() override;
 private:
     int pow;
 };
@@ -261,14 +279,14 @@ private:
     int range;
 };
 
-class targetter_list : public targetter
+class targetter_monster_sequence : public targetter_beam
 {
 public:
-    targetter_list(vector<coord_def> targets, coord_def center);
-    aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def a) override;
+    targetter_monster_sequence(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
 private:
-    vector<coord_def> targets;
+    explosion_map exp_map;
 };
-
 #endif

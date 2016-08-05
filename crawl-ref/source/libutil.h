@@ -64,7 +64,7 @@ static inline int toalower(int c)
 }
 
 int numcmp(const char *a, const char *b, int limit = 0);
-bool numcmpstr(string a, string b);
+bool numcmpstr(const string &a, const string &b);
 
 bool version_is_stable(const char *ver);
 
@@ -87,11 +87,11 @@ void play_sound(const char *file);
 
 string unwrap_desc(string desc);
 
-/** Ignore an argument and return true.
+/** Ignore any number of arguments and return true.
  *
  * @return true
  */
-template<class T> bool always_true(T) { return true; }
+template<class ... Ts> bool always_true(Ts ...) { return true; }
 
 /** Remove an element from a vector without preserving order.
  *  The indicated element is replaced by the last element of the vector.
@@ -172,6 +172,13 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
 {
     auto it = map.find(key);
     return it == map.end() ? unfound : it->second;
+}
+
+// Delete when we upgrade to C++14!
+template<typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... args)
+{
+    return unique_ptr<T>(new T(forward<Args>(args)...));
 }
 
 static inline int sqr(int x)

@@ -22,8 +22,8 @@ bool get_tentacle_head(const monster*& mon);
 
 void move_solo_tentacle(monster* tentacle);
 void move_child_tentacles(monster * kraken);
-int destroy_tentacles(monster* head);
-int destroy_tentacle(monster* head);
+bool destroy_tentacles(monster* head);
+bool destroy_tentacle(monster* head);
 
 int mons_available_tentacles(monster* head);
 void mons_create_tentacles(monster* head);

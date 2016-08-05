@@ -27,6 +27,7 @@
 #include <csignal>
 #endif
 
+#include "abyss.h" // abyss_maybe_spawn_xp_exit
 #include "act-iter.h"
 #include "areas.h"
 #include "beam.h"
@@ -83,7 +84,7 @@
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-transit.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -107,11 +108,12 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "stairs.h"
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
@@ -164,12 +166,12 @@ static bool _decrement_a_duration(duration_type dur, int delay,
         return false;
 
     ASSERT(!midloss || midmsg != nullptr);
-    const int midpoint = get_expiration_threshold(dur);
+    const int midpoint = duration_expire_point(dur);
     ASSERTM(!midloss || midloss * BASELINE_DELAY < midpoint,
             "midpoint delay loss %d not less than duration midpoint %d",
             midloss * BASELINE_DELAY, midpoint);
 
-    int old_dur = you.duration[dur];
+    const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
     // If we cross the midpoint, handle midloss and print the midpoint message.
@@ -192,7 +194,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] <= 0)
     {
         you.duration[dur] = 0;
-        if (endmsg)
+        if (endmsg && *endmsg != '\0')
             mprf(chan, "%s", endmsg);
         return true;
     }
@@ -256,31 +258,19 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
- * Check whether the player's ice (ozocubu's) armour and/or condensation shield
- * were melted this turn; if so, print the appropriate message.
+ * Check whether the player's ice (Ozocubu's) armour was melted this turn.
+ * If so, print the appropriate message and clear the flag.
  */
 static void _maybe_melt_armour()
 {
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
-    string what;
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
-        what = "armour";
         you.props.erase(MELT_ARMOUR_KEY);
+        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
     }
-
-    if (you.props.exists(MELT_SHIELD_KEY))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase(MELT_SHIELD_KEY);
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
 }
 
 /**
@@ -303,7 +293,7 @@ static int _current_horror_level()
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || mons_is_firewood(mon)
+            || !mons_is_threatening(mon)
             || !you.can_see(*mon))
         {
             continue;
@@ -389,6 +379,76 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+// Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
+// Using Uskayaw abilities can still take you under *.
+static void _handle_uskayaw_piety(int time_taken)
+{
+    if (you.props[USKAYAW_DID_DANCE_ACTION].get_bool()
+            && you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
+    {
+        int num_hurt = you.props[USKAYAW_NUM_MONSTERS_HURT];
+        int hurt_val = you.props[USKAYAW_MONSTER_HURT_VALUE];
+        int piety_gain = max(num_hurt, stepdown_value(hurt_val, 5, 10, 20, 40));
+
+        gain_piety(piety_gain);
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = 0;
+    }
+    else if (you.piety > piety_breakpoint(0))
+    {
+        // If we didn't do a dance action and we can lose piety, we're going
+        // to lose piety proportional to the time since the last time we took
+        // a dance action and hurt a monster.
+        int time_since_gain = you.props[USKAYAW_AUT_SINCE_PIETY_GAIN].get_int();
+        time_since_gain += time_taken;
+
+        // Only start losing piety if it's been a few turns since we gained
+        // piety, in order to give more tolerance for missing in combat.
+        if (time_since_gain > 30)
+        {
+            int piety_lost = min(you.piety - piety_breakpoint(0),
+                    div_rand_round(time_since_gain, 10));
+
+            if (piety_lost > 0)
+                lose_piety(piety_lost);
+
+        }
+        you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = time_since_gain;
+    }
+
+    // Re-initialize Uskayaw piety variables
+    you.props[USKAYAW_DID_DANCE_ACTION] = false;
+    you.props[USKAYAW_NUM_MONSTERS_HURT] = 0;
+    you.props[USKAYAW_MONSTER_HURT_VALUE] = 0;
+}
+
+static void _handle_uskayaw_time(int time_taken)
+{
+    _handle_uskayaw_piety(time_taken);
+
+    int audience_timer = you.props[USKAYAW_AUDIENCE_TIMER].get_int();
+    int bond_timer = you.props[USKAYAW_BOND_TIMER].get_int();
+
+    // For the timered abilities, if we set the timer to -1, that means we
+    // need to trigger the abilities this turn. Otherwise we'll decrement the
+    // timer down to a minimum of 0, at which point it becomes eligible to
+    // trigger again.
+    if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
+            && x_chance_in_y(time_taken, time_taken * 10 + audience_timer)))
+    {
+        uskayaw_prepares_audience();
+    }
+    else
+        you.props[USKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
+
+    if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
+            && x_chance_in_y(time_taken, time_taken * 10 + bond_timer)))
+    {
+        uskayaw_bonds_audience();
+    }
+    else
+        you.props[USKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -403,14 +463,8 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
+    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
-
-    if (you.duration[DUR_TELEPATHY])
-    {
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
-                         (2 * BASELINE_DELAY), true);
-    }
 
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
@@ -418,19 +472,21 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
+    if (you_worship(GOD_USKAYAW))
+        _handle_uskayaw_time(you.time_taken);
 }
 
 static bool _check_recite()
 {
-    if (you.hp*2 < you.attribute[ATTR_RECITE_HP]
-        || silenced(you.pos())
+    if (silenced(you.pos())
         || you.paralysed()
         || you.confused()
         || you.asleep()
         || you.petrified()
         || you.berserk())
     {
-        zin_recite_interrupt();
+        mprf(MSGCH_DURATION, "Your recitation is interrupted.");
+        you.duration[DUR_RECITE] = 0;
         return false;
     }
     return true;
@@ -468,22 +524,52 @@ static void _handle_recitation(int step)
             }
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
-        mpr("You feel short of breath.");
-        you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
+    }
+}
+
+/**
+ * Try to respawn the player's ancestor, if possible.
+ */
+static void _try_to_respawn_ancestor()
+{
+     monster *ancestor = create_monster(hepliaklqana_ancestor_gen_data());
+     if (!ancestor)
+         return;
+
+    mprf("%s emerges from the mists of memory!",
+         ancestor->name(DESC_YOUR).c_str());
+    add_companion(ancestor);
+    check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
+                      ancestor); // ;)
+}
+
+
+/**
+ * Take a 'simple' duration, decrement it, and print messages as appropriate
+ * when it hits 50% and 0% remaining.
+ *
+ * @param dur       The duration in question.
+ * @param delay     How much to decrement the duration by.
+ */
+static void _decrement_simple_duration(duration_type dur, int delay)
+{
+    if (_decrement_a_duration(dur, delay, duration_end_message(dur),
+                             duration_mid_offset(dur),
+                             duration_mid_message(dur),
+                             duration_mid_chan(dur)))
+    {
+        duration_end_effect(dur);
     }
 }
 
 
-//  Perhaps we should write functions like: update_liquid_flames(), etc.
-//  Even better, we could have a vector of callback functions (or
-//  objects) which get installed at some point.
 
 /**
  * Decrement player durations based on how long the player's turn lasted in aut.
  */
 static void _decrement_durations()
 {
-    int delay = you.time_taken;
+    const int delay = you.time_taken;
 
     if (you.gourmand())
     {
@@ -495,27 +581,6 @@ static void _decrement_durations()
     }
     else
         you.duration[DUR_GOURMAND] = 0;
-
-    if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
-    {
-        if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
-            you.duration[DUR_ICEMAIL_DEPLETED] = 0;
-        else
-            you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
-
-        if (!you.duration[DUR_ICEMAIL_DEPLETED])
-            mprf(MSGCH_DURATION, "Your icy envelope is restored.");
-
-        you.redraw_armour_class = true;
-    }
-
-    if (you.duration[DUR_DEMONIC_GUARDIAN] > 0)
-    {
-        if (delay > you.duration[DUR_DEMONIC_GUARDIAN])
-            you.duration[DUR_DEMONIC_GUARDIAN] = 0;
-        else
-            you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
-    }
 
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
@@ -538,22 +603,6 @@ static void _decrement_durations()
     // and liquefying radius.
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
-
-    _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
-
-    if (_decrement_a_duration(DUR_TROGS_HAND, delay,
-                              nullptr, coinflip(),
-                              "You feel the effects of Trog's Hand fading."))
-    {
-        trog_remove_trogs_hand();
-    }
-
-    _decrement_a_duration(DUR_REGENERATION, delay,
-                          "Your skin stops crawling.",
-                          coinflip(),
-                          "Your skin is crawling a little less now.");
-
-    _decrement_a_duration(DUR_VEHUMET_GIFT, delay);
 
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
@@ -578,19 +627,6 @@ static void _decrement_durations()
         }
     }
 
-    //jmf: More flexible weapon branding code.
-    if (you.duration[DUR_WEAPON_BRAND] > 0)
-    {
-        you.duration[DUR_WEAPON_BRAND] -= delay;
-
-        if (you.duration[DUR_WEAPON_BRAND] <= 0)
-        {
-            you.duration[DUR_WEAPON_BRAND] = 1;
-            ASSERT(you.weapon());
-            end_weapon_brand(*you.weapon(), true);
-        }
-    }
-
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
         && you.form != TRAN_NONE)
@@ -610,11 +646,6 @@ static void _decrement_durations()
             untransform();
         }
     }
-
-    // Must come after transformation duration.
-    _decrement_a_duration(DUR_BREATH_WEAPON, delay,
-                          "You have got your breath back.", 0, nullptr,
-                          MSGCH_RECOVERY);
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
     {
@@ -637,164 +668,22 @@ static void _decrement_durations()
         }
     }
 
-    _decrement_a_duration(DUR_RESISTANCE, delay,
-                          "Your resistance to elements expires.", coinflip(),
-                          "You start to feel less resistant.");
-
-    if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
-                              "You are firmly grounded in the material plane once more.",
-                              coinflip(),
-                              "You feel closer to the material plane."))
-    {
-        you.redraw_evasion = true;
-    }
-
-    // Handle Powered By Death strength and duration
+    // Decrement Powered By Death strength
     int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
-    if (pbd_str > 1)
+    if (pbd_str > 0 && _decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
     {
-        // Roll to decrement (on average) 1 per-10 aut.
-        const int decrement_rolls = div_rand_round(delay, 10);
-        const int dec = binomial(decrement_rolls, 1, 4);
-
-        // We don't want to accidentally terminate the effect after slow actions
-        pbd_str = max(pbd_str - dec, 1);
-        you.props[POWERED_BY_DEATH_KEY] = pbd_str;
-        if (dec > 0)
-            dprf("Decrementing Powered by Death strength to %d", pbd_str);
-    }
-    if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
-    {
-        if (pbd_str > 0)
-        {
-            mprf(MSGCH_DURATION, "You feel less regenerative.");
-            you.props[POWERED_BY_DEATH_KEY] = 0;
-        }
+        you.props[POWERED_BY_DEATH_KEY] = pbd_str - 1;
+        reset_powered_by_death_duration();
     }
 
-    _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
-
-    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay,
-                              "Your icy shield evaporates.",
-                              coinflip(),
-                              "Your icy shield starts to melt."))
-    {
-        if (you.props.exists(CONDENSATION_SHIELD_KEY))
-            you.props.erase(CONDENSATION_SHIELD_KEY);
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
-                              "Your magical shield disappears."))
-    {
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
-    {
-        if (you.props.exists(STONESKIN_KEY))
-            you.props.erase(STONESKIN_KEY);
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_TELEPORT, delay))
-    {
-        you_teleport_now();
-        untag_followers();
-    }
-
-    if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
-                              "Your unholy channel expires.", coinflip(),
-                              "Your unholy channel is weakening."))
-    {
-        you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-    }
-
-    _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
-
-    if (_decrement_a_duration(DUR_INVIS, delay, nullptr,
-                              coinflip(), "You flicker for a moment."))
-    {
-        if (you.invisible())
-            mprf(MSGCH_DURATION, "You feel more conspicuous.");
-        else
-            mprf(MSGCH_DURATION, "You flicker back into view.");
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    }
-
-    // Decrement ambrosia before confusion, otherwise confusion ending
-    // will cancel ambrosia early. Might be a bad coupling, but ambrosia
-    // needs to use DUR_CONF otherwise it won't behave right if a player
-    // gets confused after eating ambrosia.
     dec_ambrosia_player(delay);
-    _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
-    _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
-    _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
-                          coinflip(), "Your slime is starting to congeal.");
-    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
-                              "Quad Damage is wearing off."))
-    {
-        invalidate_agrid(true);
-    }
-    _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
-                          "Your dark mirror aura disappears.");
-    if (_decrement_a_duration(DUR_HEROISM, delay,
-                              "You feel like a meek peon again."))
-    {
-        you.redraw_evasion      = true;
-        you.redraw_armour_class = true;
-    }
-
-    _decrement_a_duration(DUR_FINESSE, delay,
-                          you.hands_act("slow", "down.").c_str());
-
-    _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
-                          you.hands_act("stop", "glowing.").c_str());
-
-    _decrement_a_duration(DUR_FORESTED, delay,
-                          "Space becomes stable.");
-
-    if (_decrement_a_duration(DUR_MESMERISED, delay,
-                              "You break out of your daze.",
-                              0, nullptr, MSGCH_RECOVERY))
-    {
-        you.clear_beholders();
-    }
-
-    _decrement_a_duration(DUR_MESMERISE_IMMUNE, delay);
-
-    if (_decrement_a_duration(DUR_AFRAID, delay,
-                              "Your fear fades away.",
-                              0, nullptr, MSGCH_RECOVERY))
-    {
-        you.clear_fearmongers();
-    }
-
-    _decrement_a_duration(DUR_FROZEN, delay,
-                          "The ice encasing you melts away.",
-                          0, nullptr, MSGCH_RECOVERY);
-
-    _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          you_foodless(true) ? nullptr
-                                             : "You can drink potions again.",
-                          0, nullptr, MSGCH_RECOVERY);
-
-    _decrement_a_duration(DUR_NO_SCROLLS, delay,
-                          "You can read scrolls again.",
-                          0, nullptr, MSGCH_RECOVERY);
-
+    dec_channel_player(delay);
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
 
     if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
         you.duration[DUR_LIQUEFYING] = 1;
-
-    if (_decrement_a_duration(DUR_LIQUEFYING, delay,
-                              "The ground is no longer liquid beneath you."))
-    {
-        invalidate_agrid();
-    }
 
     for (int i = 0; i < NUM_STATS; ++i)
     {
@@ -807,101 +696,12 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_FORTITUDE, delay,
-                              "Your fortitude fades away."))
-    {
-        notify_stat_change(STAT_STR, -10, true);
-    }
-
-
-    if (_decrement_a_duration(DUR_MIGHT, delay,
-                              "You feel a little less mighty now."))
-    {
-        notify_stat_change(STAT_STR, -5, true);
-    }
-
-    if (_decrement_a_duration(DUR_AGILITY, delay,
-                              "You feel a little less agile now."))
-    {
-        notify_stat_change(STAT_DEX, -5, true);
-    }
-
-    if (_decrement_a_duration(DUR_BRILLIANCE, delay,
-                              "You feel a little less clever now."))
-    {
-        notify_stat_change(STAT_INT, -5, true);
-    }
 
     if (you.duration[DUR_BERSERK]
-        && (_decrement_a_duration(DUR_BERSERK, delay)
-            || you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION))
+        && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
     {
-        mpr("You are no longer berserk.");
-        you.duration[DUR_BERSERK] = 0;
-
-        // Sometimes berserk leaves us physically drained.
-        //
-        // Chance of passing out:
-        //     - mutation gives a large plus in order to try and
-        //       avoid the mutation being a "death sentence" to
-        //       certain characters.
-
-        if (you.berserk_penalty != NO_BERSERK_PENALTY
-            && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
-        {
-            // Note the beauty of Trog!  They get an extra save that's at
-            // the very least 20% and goes up to 100%.
-            if (in_good_standing(GOD_TROG)
-                && x_chance_in_y(you.piety, piety_breakpoint(5)))
-            {
-                mpr("Trog's vigour flows through your veins.");
-            }
-            else
-            {
-                mprf(MSGCH_WARN, "You pass out from exhaustion.");
-                you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
-                you.stop_constricting_all();
-            }
-        }
-
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-            mprf(MSGCH_WARN, "You are exhausted.");
-
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC)
-            mpr("You feel less hot-headed.");
-#endif
-
-        // This resets from an actual penalty or from NO_BERSERK_PENALTY.
-        you.berserk_penalty = 0;
-
-        int dur = 12 + roll_dice(2, 12);
-        // For consistency with slow give exhaustion 2 times the nominal
-        // duration.
-        you.increase_duration(DUR_EXHAUSTED, dur * 2);
-
-        notify_stat_change(STAT_STR, -5, true);
-
-        // Don't trigger too many hints mode messages.
-        const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
-        Hints.hints_events[HINT_YOU_ENCHANTED] = false;
-
-        slow_player(dur);
-
-        make_hungry(BERSERK_NUTRITION, true);
-        you.hunger = max(HUNGER_STARVING - 100, you.hunger);
-
-        // 1KB: No berserk healing.
-        set_hp((you.hp + 1) * 2 / 3);
-        calc_hp();
-
-        learned_something_new(HINT_POSTBERSERK);
-        Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
-        you.redraw_quiver = true; // Can throw again.
+        you.duration[DUR_BERSERK] = 1; // end
     }
-
-    if (_decrement_a_duration(DUR_CORONA, delay) && !you.backlit())
-        mprf(MSGCH_DURATION, "You are no longer glowing.");
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
@@ -923,27 +723,17 @@ static void _decrement_durations()
     }
 
     if (you.duration[DUR_DISJUNCTION])
-    {
         disjunction();
-        _decrement_a_duration(DUR_DISJUNCTION, delay,
-                              "The translocation energy dissipates.");
-        if (!you.duration[DUR_DISJUNCTION])
-            invalidate_agrid(true);
-    }
 
-    if (_decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
-                              "The winds around you calm down."))
-    {
-        remove_tornado_clouds(MID_PLAYER);
-    }
     // Should expire before flight.
     if (you.duration[DUR_TORNADO])
     {
         tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        _decrement_a_duration(DUR_TORNADO, delay,
-                              "The winds around you start to calm down.");
-        if (!you.duration[DUR_TORNADO])
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
+        if (_decrement_a_duration(DUR_TORNADO, delay,
+                                  "The winds around you start to calm down."))
+        {
+            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+        }
     }
 
     if (you.duration[DUR_FLIGHT])
@@ -955,133 +745,40 @@ static void _decrement_durations()
             {
                 land_player();
             }
+            else
+            {
+                // Disable emergency flight if it was active
+                you.props.erase(EMERGENCY_FLIGHT_KEY);
+            }
         }
         else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
             you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             you.duration[DUR_FLIGHT] = 0;
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
     }
 
-    if (you.species == SP_GHOUL)
+    if (you.duration[DUR_DEATHS_DOOR] && you.hp > allowed_deaths_door_hp())
     {
-        int resilience = 400;
-
-        if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-            resilience = resilience * 3 / 2;
-
-        // Faster rotting when hungry.
-        if (you.hunger_state < HS_SATIATED)
-            resilience >>= HS_SATIATED - you.hunger_state;
-
-        if (one_chance_in(resilience))
-        {
-            dprf("rot rate: 1/%d", resilience);
-            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-            rot_hp(1);
-        }
+        set_hp(allowed_deaths_door_hp());
+        you.redraw_hit_points = true;
     }
 
-    if (you.duration[DUR_DEATHS_DOOR])
+    if (_decrement_a_duration(DUR_CLOUD_TRAIL, delay,
+            "Your trail of clouds dissipates."))
     {
-        if (you.hp > allowed_deaths_door_hp())
-        {
-            set_hp(allowed_deaths_door_hp());
-            you.redraw_hit_points = true;
-        }
-
-        if (_decrement_a_duration(DUR_DEATHS_DOOR, delay,
-                                  "Your life is in your own hands again!",
-                                  random2(6),
-                                  "Your time is quickly running out!"))
-        {
-            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
-        }
+        you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
     }
 
-    if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
-        zin_remove_divine_stamina();
-
-    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
-        elyvilon_remove_divine_vigour();
-
-    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, delay);
-    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, delay);
-
-    _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
-
-    if (_decrement_a_duration(DUR_SCRYING, delay,
-                              "Your astral sight fades away."))
+    if (you.duration[DUR_DARKNESS] && you.haloed())
     {
-        you.xray_vision = false;
-    }
-
-    _decrement_a_duration(DUR_LIFESAVING, delay,
-                          "Your divine protection fades away.");
-
-    if (_decrement_a_duration(DUR_DARKNESS, delay,
-                              "The ambient light returns to normal.")
-        || (you.duration[DUR_DARKNESS] && you.haloed()))
-    {
-        if (you.duration[DUR_DARKNESS])
-        {
-            you.duration[DUR_DARKNESS] = 0;
-            mpr("The divine light dispels your darkness!");
-        }
+        you.duration[DUR_DARKNESS] = 0;
+        mpr("The divine light dispels your darkness!");
         update_vision_range();
     }
 
-    _decrement_a_duration(DUR_SHROUD_OF_GOLUBRIA, delay,
-                          "Your shroud unravels.",
-                          0,
-                          "Your shroud begins to fray at the edges.");
-
-    _decrement_a_duration(DUR_INFUSION, delay,
-                          "You are no longer magically infusing your attacks.",
-                          0,
-                          "Your magical infusion is running out.");
-
-    _decrement_a_duration(DUR_SONG_OF_SLAYING, delay,
-                          "Your song has ended.",
-                          0,
-                          "Your song is almost over.");
-
-    _decrement_a_duration(DUR_SENTINEL_MARK, delay,
-                          "The sentinel's mark upon you fades away.");
-
-    _decrement_a_duration(DUR_WEAK, delay,
-                          "Your attacks no longer feel as feeble.");
-
-    _decrement_a_duration(DUR_DIMENSION_ANCHOR, delay,
-                          "You are no longer firmly anchored in space.");
-
-    _decrement_a_duration(DUR_SICKENING, delay);
-
-    _decrement_a_duration(DUR_SAP_MAGIC, delay,
-                          "Your magic seems less tainted.");
-
-    _decrement_a_duration(DUR_CLEAVE, delay,
-                          "Your cleaving frenzy subsides.");
-
-    if (_decrement_a_duration(DUR_CORROSION, delay,
-                          "You are no longer corroded."))
-    {
-        you.props["corrosion_amount"] = 0;
-        you.redraw_armour_class = true;
-        you.wield_change = true;
-    }
-
-    if (!you.duration[DUR_SAP_MAGIC])
-    {
-        _decrement_a_duration(DUR_MAGIC_SAPPED, delay,
-                              "You feel more in control of your magic.");
-    }
-
-    _decrement_a_duration(DUR_ANTIMAGIC, delay,
-                          "You regain control over your magic.");
-
-    _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 
@@ -1108,20 +805,18 @@ static void _decrement_durations()
 
     if (you.duration[DUR_TOXIC_RADIANCE])
     {
-        int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)
-        - ((you.duration[DUR_TOXIC_RADIANCE] - delay) / 10);
+        const int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)
+                          - ((you.duration[DUR_TOXIC_RADIANCE] - delay) / 10);
         toxic_radiance_effect(&you, ticks);
-        _decrement_a_duration(DUR_TOXIC_RADIANCE, delay,
-                              "Your toxic aura wanes.");
     }
 
     if (you.duration[DUR_RECITE] && _check_recite())
     {
         const int old_recite =
-        (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
         _decrement_a_duration(DUR_RECITE, delay);
         const int new_recite =
-        (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
         if (old_recite != new_recite)
             _handle_recitation(new_recite);
     }
@@ -1132,69 +827,38 @@ static void _decrement_durations()
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
-    _decrement_a_duration(DUR_SLEEP_IMMUNITY, delay);
-
-    _decrement_a_duration(DUR_FIRE_VULN, delay,
-                          "You feel less vulnerable to fire.");
-
-    _decrement_a_duration(DUR_POISON_VULN, delay,
-                          "You feel less vulnerable to poison.");
-
-    if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
-                              "You are no longer teleporting projectiles to their destination."))
-    {
-        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
-    }
-
-    _decrement_a_duration(DUR_DRAGON_CALL_COOLDOWN, delay,
-                          "You can once more reach out to the dragon horde.");
-
     if (you.duration[DUR_DRAGON_CALL])
-    {
         do_dragon_call(delay);
-        if (_decrement_a_duration(DUR_DRAGON_CALL, delay,
-                                  "The roar of the dragon horde subsides."))
-        {
-            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
-        }
-
-    }
 
     if (you.duration[DUR_ABJURATION_AURA])
-    {
         do_aura_of_abjuration(delay);
-        _decrement_a_duration(DUR_ABJURATION_AURA, delay,
-                              "Your aura of abjuration expires.");
-    }
 
-    _decrement_a_duration(DUR_QAZLAL_FIRE_RES, delay,
-                          "You feel less protected from fire.",
-                          coinflip(), "Your protection from fire is fading.");
-    _decrement_a_duration(DUR_QAZLAL_COLD_RES, delay,
-                          "You feel less protected from cold.",
-                          coinflip(), "Your protection from cold is fading.");
-    _decrement_a_duration(DUR_QAZLAL_ELEC_RES, delay,
-                          "You feel less protected from electricity.",
-                          coinflip(),
-                          "Your protection from electricity is fading.");
-    if (_decrement_a_duration(DUR_QAZLAL_AC, delay,
-                              "You feel less protected from physical attacks.",
-                              coinflip(),
-                              "Your protection from physical attacks is fading."))
-    {
-        you.redraw_armour_class = true;
-    }
-
-    if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
-        you.props["gozag_gold_aura_amount"] = 0;
+    if (you.duration[DUR_DOOM_HOWL])
+        doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
-
-    for (int i = 0; i < delay; ++i)
-        you.maybe_degrade_bone_armour(1);
+    you.maybe_degrade_bone_armour(delay);
 
     if (!env.sunlight.empty())
         process_sunlights();
+
+    if (!you.duration[DUR_ANCESTOR_DELAY]
+        && in_good_standing(GOD_HEPLIAKLQANA)
+        && hepliaklqana_ancestor() == MID_NOBODY)
+    {
+        _try_to_respawn_ancestor();
+    }
+
+    const bool sanguine_armour_is_valid = sanguine_armour_valid();
+    if (sanguine_armour_is_valid)
+        activate_sanguine_armour();
+    else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
+        you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+
+    // these should be after decr_ambrosia, transforms, liquefying, etc.
+    for (int i = 0; i < NUM_DURATIONS; ++i)
+        if (duration_decrements_normally((duration_type) i))
+            _decrement_simple_duration((duration_type) i, delay);
 }
 
 
@@ -1219,6 +883,47 @@ static void _check_equipment_conducts()
     }
 }
 
+/**
+ * Handles player ghoul rotting over time.
+ */
+static void _rot_ghoul_players()
+{
+    if (you.species != SP_GHOUL)
+        return;
+
+    int resilience = 400;
+    if (have_passive(passive_t::slow_metabolism))
+        resilience = resilience * 3 / 2;
+
+
+    // Faster rotting when hungry.
+    if (you.hunger_state < HS_SATIATED)
+        resilience >>= HS_SATIATED - you.hunger_state;
+
+    if (one_chance_in(resilience))
+    {
+        dprf("rot rate: 1/%d", resilience);
+        mprf(MSGCH_WARN, "You feel your flesh rotting away.");
+        rot_hp(1);
+    }
+}
+
+static void _handle_emergency_flight()
+{
+    ASSERT(you.props[EMERGENCY_FLIGHT_KEY].get_bool());
+
+    if (!is_feat_dangerous(orig_terrain(you.pos()), true, false))
+    {
+        mpr("You float gracefully downwards.");
+        land_player();
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+    else
+    {
+        const int drain = div_rand_round(15 * you.time_taken, BASELINE_DELAY);
+        drain_player(drain, true, true);
+    }
+}
 
 // cjo: Handles player hp and mp regeneration. If the counter
 // you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
@@ -1241,7 +946,7 @@ static void _regenerate_hp_and_mp(int delay)
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
-        if (you.mutation[MUT_MANA_LINK]
+        if (player_mutation_level(MUT_MANA_LINK)
             && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
@@ -1253,17 +958,21 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    // Don't let DD use guardian spirit for free HP, since their
-    // damage shaving is enough. (due, dpeg)
-    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
+    update_regen_amulet_attunement();
+
+    if (!player_regenerates_mp())
         return;
 
     if (you.magic_points < you.max_magic_points)
     {
         const int base_val = 7 + you.max_magic_points / 2;
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
-        if (you.mutation[MUT_MANA_REGENERATION])
+
+        if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
+        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
+            mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
+
         you.magic_points_regeneration += mp_regen_countup;
     }
 
@@ -1274,6 +983,8 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
+
+    update_mana_regen_amulet_attunement();
 }
 
 void player_reacts()
@@ -1287,9 +998,6 @@ void player_reacts()
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
-
-    if (you.attribute[ATTR_SHADOWS])
-        shadow_lantern_effect();
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
@@ -1318,7 +1026,7 @@ void player_reacts()
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
-    if (one_chance_in(10))
+    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
         const int teleportitis_level = player_teleport();
         // this is instantaneous
@@ -1339,6 +1047,8 @@ void player_reacts()
             uncontrolled_blink();
     }
 
+    abyss_maybe_spawn_xp_exit();
+
     actor_apply_cloud(&you);
 
     if (env.level_state & LSTATE_SLIMY_WALL)
@@ -1346,7 +1056,7 @@ void player_reacts()
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
+        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     // Handle starvation before subtracting hunger for this turn (including
     // hunger from the berserk duration) and before monsters react, so you
@@ -1355,6 +1065,7 @@ void player_reacts()
     handle_starvation();
 
     _decrement_durations();
+    _rot_ghoul_players();
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should
@@ -1392,6 +1103,9 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+
+    if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
+        _handle_emergency_flight();
 }
 
 void extract_manticore_spikes(const char* endmsg)

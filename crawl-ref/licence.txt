@@ -17,9 +17,11 @@ These include:
 * zlib: webserver/static/scripts/contrib/inflate.js
 * Apache v2: pcg.cc
 
-While a majority of the tiles are in the Public Domain, there is no accurate
-list. To err on the side of caution, please refer to Chris Hamons'
-collection at http://code.google.com/p/crawl-tiles/
+The majority of Crawl's tiles and artwork are released under the CC0 license
+(https://creativecommons.org/publicdomain/zero/1.0/), and new submissions are
+under this license unless otherwise specified. However, the licensing situation
+may be complex, especially for older pieces. For information regarding the
+licenses of our tiles and artwork, see https://github.com/crawl/tiles
 
 *&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*
 

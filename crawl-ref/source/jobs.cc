@@ -163,17 +163,7 @@ void debug_jobdata()
                 fails += error + "\n";
         }
 
-    if (!fails.empty())
-    {
-        fprintf(stderr, "%s", fails.c_str());
-
-        FILE *f = fopen("job-data.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("job-data errors (dumped to job-data.out)");
-    }
+    dump_test_fails(fails, "job-data");
 }
 
 bool job_recommends_species(job_type job, species_type species)

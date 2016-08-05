@@ -28,6 +28,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, ZAP_LEHUDIBS_CRYSTAL_SPEAR },
     { SPELL_FIREBALL, ZAP_FIREBALL },
     { SPELL_MEPHITIC_CLOUD, ZAP_MEPHITIC },
+    { SPELL_VIOLENT_UNRAVELLING, ZAP_UNRAVELLING },
     { SPELL_BOLT_OF_INACCURACY, ZAP_BOLT_OF_INACCURACY },
     { SPELL_DISPEL_UNDEAD, ZAP_DISPEL_UNDEAD },
     { SPELL_ISKENDERUNS_MYSTIC_BLAST, ZAP_ISKENDERUNS_MYSTIC_BLAST },
@@ -38,9 +39,10 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_PORKALATOR, ZAP_PORKALATOR },
     // Should only be available from Staff of Dispater and Sceptre
     // of Asmodeus.
-    { SPELL_HELLFIRE, ZAP_HELLFIRE },
+    { SPELL_HURL_DAMNATION, ZAP_DAMNATION },
     { SPELL_CORONA, ZAP_CORONA },
     { SPELL_ENSLAVEMENT, ZAP_ENSLAVEMENT },
+    { SPELL_BANISHMENT, ZAP_BANISHMENT },
     { SPELL_SLOW, ZAP_SLOW },
     { SPELL_CONFUSE, ZAP_CONFUSE },
     { SPELL_HIBERNATION, ZAP_HIBERNATION },
@@ -59,6 +61,9 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_CORROSIVE_BOLT, ZAP_CORROSIVE_BOLT },
     { SPELL_DEBUGGING_RAY, ZAP_DEBUGGING_RAY },
 
+    // monster-specific
+    { SPELL_SLUG_DART, ZAP_SLUG_DART },
+
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
     { SPELL_QUICKSILVER_BOLT, ZAP_BREATHE_POWER },
@@ -70,6 +75,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_ORB_OF_ELECTRICITY, ZAP_ORB_OF_ELECTRICITY },
     { SPELL_CHILLING_BREATH, ZAP_BREATHE_FROST },
     { SPELL_MINOR_HEALING, ZAP_HEAL_WOUNDS },
+    { SPELL_ICEBLAST, ZAP_ICEBLAST },
 };
 
 zap_type spell_to_zap(spell_type spell)

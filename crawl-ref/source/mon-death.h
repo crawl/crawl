@@ -16,6 +16,8 @@
 
 #define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
 
+#define ORC_CORPSE_KEY "orc_corpse"
+
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
@@ -43,8 +45,9 @@ item_def* place_monster_corpse(const monster& mons, bool silent,
 
 void monster_cleanup(monster* mons);
 void setup_spore_explosion(bolt & beam, const monster& origin);
-void record_monster_defeat(monster* mons, killer_type killer);
+void record_monster_defeat(const monster* mons, killer_type killer);
 void unawaken_vines(const monster* mons, bool quiet);
+int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
 void end_flayed_effect(monster* ghost);

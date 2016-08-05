@@ -15,7 +15,7 @@ struct skill_state
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
     FixedVector<int, NUM_SKILLS>          changed_skills; // scaled by 10.
-    FixedVector<int8_t, NUM_SKILLS>       train;
+    FixedVector<training_status, NUM_SKILLS>       train;
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
@@ -37,6 +37,7 @@ string skill_names(const skill_set &skills);
 
 int skill_cost_baseline();
 int one_level_cost(skill_type sk);
+float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
@@ -86,10 +87,11 @@ void init_skill_order();
 
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
-bool all_skills_maxed(bool inc_harmful = false);
+bool all_skills_maxed(bool really_all = false);
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
+float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
 

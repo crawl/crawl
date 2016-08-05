@@ -46,7 +46,7 @@ public:
 
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
- private:
+private:
     string prompt;
 
 public:
@@ -86,11 +86,10 @@ struct direction_chooser_args
     bool just_looking;
     bool needs_path;
     bool may_target_monster;
-    bool may_target_self;
+    confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
     targeting_behaviour *behaviour;
-    bool cancel_at_self;
     bool show_floor_desc;
     desc_filter get_desc_func;
     coord_def default_place;
@@ -103,10 +102,9 @@ struct direction_chooser_args
         just_looking(false),
         needs_path(true),
         may_target_monster(true),
-        may_target_self(false),
+        self(CONFIRM_PROMPT),
         target_prefix(nullptr),
         behaviour(nullptr),
-        cancel_at_self(false),
         show_floor_desc(false),
         get_desc_func(nullptr),
         default_place(0, 0) {}
@@ -120,6 +118,7 @@ public:
 
 private:
     bool targets_objects() const;
+    bool targets_enemies() const;
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();
@@ -243,11 +242,10 @@ private:
     bool just_looking;
     bool needs_path;            // Determine a ray while we're at it?
     bool may_target_monster;
-    bool may_target_self;       // If true then player won't be prompted
+    confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be nullptr for default
-    bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
@@ -269,6 +267,13 @@ private:
     bool need_all_redraw;       // All of the above.
 
     bool show_items_once;       // Should we show items this time?
+#ifndef USE_TILE_LOCAL
+    void update_mlist(bool enable);
+
+    bool mlist_full_info;
+    vector<monster_info> mlist;
+#endif
+
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 };
@@ -279,6 +284,7 @@ enum mons_equip_desc_level_type
     DESC_WEAPON,
     DESC_FULL,
     DESC_IDENTIFIED,
+    DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
 #ifndef USE_TILE_LOCAL
