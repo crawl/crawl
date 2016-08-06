@@ -2093,10 +2093,10 @@ MONS:   giant gecko / rat / giant newt / quokka
 }}
 : else
 MONS:   orc warrior ; war axe . animal skin
-MONS:   sheep / iguana / worker ant
+MONS:   iguana / worker ant
 {{
   dgn.delayed_decay(_G, 'd',
-                    'sheep chunk q:1 / iguana chunk q:1 / ' ..
+                    'yak chunk q:1 / iguana chunk q:1 / ' ..
                     'worker ant chunk q:1')
 }}
 : end

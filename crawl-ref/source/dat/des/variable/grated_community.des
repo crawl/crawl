@@ -168,7 +168,7 @@ SUBST: * = *:35 -:1
 KITEM: - = animal skin
 : dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
 :                            elf skeleton / kobold skeleton /\
-:                            elephant skeleton / sheep skeleton /\
+:                            elephant skeleton / dream sheep skeleton /\
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor

@@ -786,6 +786,117 @@ static bool _will_starcursed_scream(monster* mon)
     return one_chance_in(n);
 }
 
+
+/**
+* Handles messaging to the player of what happens when dream sheep
+* use their dream sleep. Mostly flavor: more sheep / stronger sleep will
+* trigger different messages. Also informs the player when they are unaffected.
+*
+* @param num_sheep  Amount of sheep in the herd
+* @param sleep_pow  Duration of the sleep
+*/
+static void _sheep_message(int num_sheep, int sleep_pow, actor *target)
+{
+    string message = "";
+
+    // Determine messaging based on sleep strength.
+    if (sleep_pow >= 125)
+        message = "You are overwhelmed by glittering dream dust!";
+    else if (sleep_pow >= 75)
+        message = "The dream sheep are wreathed in dream dust.";
+    else if (sleep_pow >= 25)
+    {
+        message = make_stringf("The%s dream sheep shake%s wool and sparkle%s.",
+                               num_sheep == 1 ? "" : " herd of",
+                               num_sheep == 1 ? "s its" : " their",
+                               num_sheep == 1 ? "s": "");
+    }
+    else // if sleep fails
+    {
+        message = make_stringf("The dream sheep ruffle%s wool and motes of "
+                               "dream dust sparkle, to no effect.",
+                               num_sheep == 1 ? "s its" : " their");
+    }
+
+    if (!target->is_player()) // Messaging for non-player targets
+    {
+        if (you.see_cell(target->pos()) && sleep_pow)
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "As the sheep sparkle%s and sway%s, %s falls asleep.",
+                 num_sheep == 1 ? "s": "",
+                 num_sheep == 1 ? "s": "",
+                 target->name(DESC_THE).c_str());
+        }
+        else // if dust strength failure for non-player
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "The dream sheep attempt%s to lull %s to sleep.",
+                 num_sheep == 1 ? "s" : "",
+                 target->name(DESC_THE).c_str());
+            mprf("%s is unaffected.", target->name(DESC_THE).c_str());
+        }
+    }
+    else
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(),
+             sleep_pow ? " You feel drowsy..." : "");
+        // player::put_to_sleep will then add "You fall asleep."
+    }
+}
+
+/**
+* Counts each dream sheep in the dream herd, adjusts effect duration accordingly
+* This *does not* check foe's magic resistance.
+* Cooldown on this ability is roughly 8 turns. Dream sheep will only
+* use this ability when the player is susceptible.
+*
+* @param mons       The sheep initiating the herd sleep
+* @param target     Its target
+*/
+static void _dream_sheep_sleep(monster *mons, actor *target)
+{
+    if (!target || !target->alive())
+        return;
+
+    // Shepherd the dream sheep
+    vector<monster*> dream_herd;
+    for (monster_near_iterator mi(target->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->type == MONS_DREAM_SHEEP)
+            dream_herd.push_back(*mi);
+    }
+    const int num_sheep = dream_herd.size();
+    dprf("Dream herd size: %d", num_sheep);
+
+    // Sleep duration depends on how many dream sheep are available to combine
+    // their strength. The correlation between amount of sheep and duration of
+    // sleep is randomised somewhat, but has a minimum of 5 turns and max of 20.
+    // More dream sheep are both more likely to succeed and more likely to have
+    // a stronger effect.
+    int sleep_pow = min(150, random2(num_sheep * 25) + 1);
+    if (sleep_pow < 25)
+        sleep_pow = 0; // Weak attempts should not succeed.
+                       // Single sheep have a 1 in 25 chance to sleep.
+
+    // Communicate to the player.
+    _sheep_message(num_sheep, sleep_pow, target);
+
+    // This takes the results generated above and applies a sleep duration and
+    // sleep immunity duration (if player).
+    // Sleep duration is 5 to 20 turns, depending on strength.
+    // Immunity is 4 to 8 turns regardless of duration of sleep.
+    if (sleep_pow)
+    {
+        target->put_to_sleep(mons, sleep_pow, false);
+        if (target->is_player())
+            you.set_duration(DUR_SLEEP_IMMUNITY, random_range(4, 8));
+    }
+}
+
+
 /**
  * Can a lost soul revive the given monster, assuming one is nearby?
  *
@@ -1148,6 +1259,23 @@ bool mon_special_ability(monster* mons)
             used = true;
         }
         break;
+
+    // If the dream sheep is not confused or panicked, it/its target is not
+    // in a sanctuary, the foe is awake and not immune to sleep,
+    // then they have a 20% chance to attempt to inflict sleep.
+    case MONS_DREAM_SHEEP:
+    {
+        actor *foe = mons->get_foe();
+        if (!mons_is_confused(mons) && !mons_is_fleeing(mons)
+            && !is_sanctuary(mons->pos()) && !is_sanctuary(foe->pos())
+            && foe && foe->can_sleep() && !foe->asleep()
+            && one_chance_in(5))
+        {
+            _dream_sheep_sleep(mons, foe);
+            used = true;
+        }
+        break;
+    }
 
     case MONS_THORN_HUNTER:
     {

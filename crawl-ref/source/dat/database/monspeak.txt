@@ -6283,6 +6283,13 @@ deep elf sorcerer
 
 @_wizard_@
 %%%%
+################## Dream sheep ###################################
+dream sheep
+
+@The_monster@ "Baaaas" balefully.
+
+@The_monster@ "Baaaas" sleepily.
+%%%%
 ################## Electric golem ##########################
 default electric golem
 
@@ -6419,11 +6426,6 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 default obsidian statue
 
 VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
-%%%%
-################## Sheep ###################################
-sheep
-
-@The_monster@ "Baaaas" balefully.
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre

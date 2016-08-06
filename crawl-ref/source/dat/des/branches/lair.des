@@ -167,7 +167,7 @@ ENDMAP
 # This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, nothing
+MONS:    crocodile / iguana, nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -212,7 +212,7 @@ ENDMAP
 NAME:    dpeg_lair_monsters
 TAGS:    lair_entry
 ORIENT:  float
-MONS:    w:100 nothing / w:40 yak / sheep / death yak
+MONS:    w:100 nothing / w:40 yak / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    river rat / porcupine / hell rat / quokka / rat
@@ -269,7 +269,7 @@ ORIENT: float
 MONS:   plant / bush w:2 / fungus w:2
 MONS:   crocodile / basilisk w:5
 MONS:   yak
-MONS:   sheep
+MONS:   iguana
 MONS:   rat w:2 / porcupine / river rat / quokka w:1
 SUBST:  . = .:400 tt111123355
 SUBST:  ' = .:200 tt111123355
@@ -2803,7 +2803,7 @@ COLOUR: d|*$1c- = lightgrey
 ITEM:   acquire any
 MONS:   patrolling catoblepas
 MONS:   death yak / w:5 yak, death yak w:5 / yak
-MONS:   sheep / yak / death yak
+MONS:   yak / death yak
 NSUBST: 3 = 1:1 / *:2
 # These are still living plants for all intents and purposes...
 MONS:   plant perm_ench:petrified dbname:petrified_plant col:lightgrey tile:mons_withered_plant / nothing
@@ -2910,10 +2910,10 @@ KMONS:   D = torpor snail
 KMONS:   E = boulder beetle
 KMONS:   F = lindwurm
 # yaks & pals
-KMONS:   G = sheep
-KMONS:   H = yak
-KMONS:   I = elephant
-KMONS:   J = death yak
+KMONS:   G = yak
+KMONS:   H = elephant
+KMONS:   I = death yak
+KMONS:   J = dream sheep
 # some non-set monsters right outside the vault
 # to make sure you don't miss that there's a vault here maybe
 KMONS:   K = crocodile

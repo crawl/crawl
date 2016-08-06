@@ -66,7 +66,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("titan")
             e.mons("nothing")
             e.mons("cyclops")
-            e.mons("sheep / yak w:5 / death yak w:5")
+            e.mons("yak / death yak w:5")
             e.mons("plant / w:1 bush")
          else
             e.subst("* = *$")

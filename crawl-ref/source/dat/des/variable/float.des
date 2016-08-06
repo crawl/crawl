@@ -1127,7 +1127,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:7-11
 ORIENT: float
 WEIGHT: 5
-MONS:   jackal / hound, sheep, human
+MONS:   jackal / hound, yak, human
 # XXX: Use some function to cover for used uniques,
 # like in kennysheep_goblin_castle.
 MONS:   Edmund / Jessica / Sigmund, Ijyb / Psyche
@@ -1315,7 +1315,7 @@ ORIENT: float
 DEPTH:  D:7-
 MONS:   black bear / polar bear
 MONS:   hippogriff / griffon
-MONS:   yak / sheep / weight:3 death yak
+MONS:   yak / dream sheep w:5 / death yak w:3
 MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
 MAP
@@ -1555,7 +1555,7 @@ MARKER: F = lua:fog_machine { \
                 size = 4, size_buildup_amnt = 4, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   death yak w:5 / sheep w:3 / yak w:7
+MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
 ITEM:   meat ration w:5 / beef jerky / nothing
