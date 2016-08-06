@@ -1190,6 +1190,10 @@ void torment_player(actor *attacker, torment_source_type taux)
         aux = "Symbol of Torment";
         break;
 
+    case TORMENT_AGONY:
+        aux = "Agony";
+        break;
+
     case TORMENT_SCEPTRE:
         aux = "sceptre of Torment";
         break;

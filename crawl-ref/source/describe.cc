@@ -2946,7 +2946,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_POISON:          return "cause poisoning";
     case AF_POISON_STRONG:   return "cause strong poisoning";
     case AF_ROT:             return "cause rotting";
-    case AF_VAMPIRIC:        return "drain health";
+    case AF_VAMPIRIC:        return "drain health from the living";
     case AF_KLOWN:           return "cause random powerful effects";
     case AF_DISTORT:         return "cause wild translocation effects";
     case AF_RAGE:            return "cause berserking";

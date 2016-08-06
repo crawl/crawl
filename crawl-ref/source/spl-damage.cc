@@ -503,7 +503,7 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (act->res_negative_energy())
+    if (act->res_negative_energy() >= 3)
         return false;
 
     if (!agent)
@@ -525,39 +525,46 @@ static bool _drain_lifeable_hitfunc(const actor* act)
 static int _drain_player(actor* agent, int pow, int avg,
                          bool actual, bool added_effects)
 {
+    const int hurted = resist_adjust_damage(&you, BEAM_NEG, avg);
     if (actual)
     {
         monster* mons = agent ? agent->as_monster() : 0;
-        ouch(avg, KILLED_BY_BEAM, mons ? mons->mid : MID_NOBODY,
+        ouch(hurted, KILLED_BY_BEAM, mons ? mons->mid : MID_NOBODY,
              "by drain life");
     }
 
-    return avg;
+    return hurted;
 }
 
 static int _drain_monster(actor* agent, monster* target, int pow, int avg,
                           bool actual, bool added_effects)
 {
     ASSERT(target); // XXX: change to monster &target
+    int hurted = resist_adjust_damage(target, BEAM_NEG, avg);
     if (actual)
     {
-        if (agent && agent->is_player())
+        if (hurted)
         {
-            mprf("You draw life from %s.",
-                 target->name(DESC_THE).c_str());
+            if (agent && agent->is_player())
+            {
+                mprf("You draw life from %s.",
+                     target->name(DESC_THE).c_str());
+            }
+            target->hurt(agent, hurted);
         }
 
-        behaviour_event(target, ME_ANNOY, agent,
-                        agent ? agent->pos() : coord_def(0, 0));
-
-        target->hurt(agent, avg);
+        if (target->alive())
+        {
+            behaviour_event(target, ME_ANNOY, agent,
+                            agent ? agent->pos() : coord_def(0, 0));
+        }
 
         if (target->alive() && you.can_see(*target))
             print_wounds(target);
     }
 
     if (!target->is_summoned())
-        return avg;
+        return hurted;
 
     return 0;
 }
@@ -861,17 +868,13 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (mons->res_negative_energy())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_SUCCESS;
-    }
-
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
     hp_gain = min(mons->hit_points, hp_gain);
     hp_gain = min(you.hp_max - you.hp, hp_gain);
+
+    hp_gain = resist_adjust_damage(mons, BEAM_NEG, hp_gain);
 
     if (!hp_gain)
     {

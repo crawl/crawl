@@ -671,7 +671,8 @@ enum beam_type                  // bolt::flavour
     BEAM_SHARED_PAIN,
     BEAM_IRRESISTIBLE_CONFUSION,
     BEAM_INFESTATION,
-    BEAM_LAST_ENCHANTMENT = BEAM_INFESTATION,
+    BEAM_AGONY,
+    BEAM_LAST_ENCHANTMENT = BEAM_AGONY,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -4714,6 +4715,7 @@ enum torment_source_type
     TORMENT_XOM           = -6,   // Xom effect
     TORMENT_KIKUBAAQUDGHA = -7,   // Kikubaaqudgha effect
     TORMENT_MISCAST       = -8,
+    TORMENT_AGONY         = -9,   // SPELL_AGONY
 };
 
 enum trap_type
