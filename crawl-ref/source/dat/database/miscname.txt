@@ -105,68 +105,9 @@ yellow
 %%%%
 # "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
 # If a language needs these keys split, please say so.
-#
-# Also used by Tome of Destruction below.
 glowing_colour_name
 
 @_glowing_adj_@ @_colour_name_@
-%%%%
-_writing_adj_
-
-angular
-
-blocky
-
-bold
-
-faded
-
-flowing
-
-glowing
-
-shifting
-
-sinuous
-
-spidery
-
-writhing
-%%%%
-_writing_noun_
-
-binary code
-
-figures
-
-glyphs
-
-hieroglyphics
-
-print-out
-
-runes
-
-scrawl
-
-sigils
-
-symbols
-
-text
-
-writing
-%%%%
-# Tome of Destruction: "The book opens to a page covered in XXX."
-writing_name
-
-@_colour_name_@ @_writing_noun_@
-
-@glowing_colour_name@ @_writing_noun_@
-
-@_writing_adj_@ @_colour_name_@ @_writing_noun_@
-
-@_writing_adj_@ @_writing_noun_@
 %%%%
 # random uselessness: "You smell XXX."
 smell_name
