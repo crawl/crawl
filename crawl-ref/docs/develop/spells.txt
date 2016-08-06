@@ -33,6 +33,10 @@ This does not include: transmutations (creating something from something else),
 summoning (calling in a pre-existing entity), or spells that are specifically
 flavoured so as not to be conjurations. (Whatever those are.)
 
+Conjurations are always damage spells; this extends to the creation of
+damaging clouds, but anything more indirect is probably out of the school's
+scope.
+
 Hexes
 =====
 
@@ -161,9 +165,9 @@ portals.
 
 This includes teleportation, the indirect movement from one place to another, and
 blinking, which is the same but for shorter distances. It also includes the
-creation of portals of any description, portal to the Abyss), Malign Gateway
-(the creation of a portal to an undefined location), and Portal Projectile
-(the creation of a portal to a specific, nearby location).
+creation of portals of any description, such as Malign Gateway (the creation of a
+portal to an undefined location) or Portal Projectile (the creation of a portal
+to a specific, nearby location).
 
 This also specifically includes spells which cause things to be continuously
 moved from one location to another, such as Apportation or Gell's Gravitas.
