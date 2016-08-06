@@ -26,10 +26,10 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-tentacle.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"

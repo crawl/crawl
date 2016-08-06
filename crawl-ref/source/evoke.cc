@@ -47,6 +47,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "nearby-danger.h"
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"

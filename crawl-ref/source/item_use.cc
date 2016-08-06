@@ -41,6 +41,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"

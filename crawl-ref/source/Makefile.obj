@@ -163,6 +163,7 @@ mon-transit.o \
 mon-util.o \
 monster.o \
 mutation.o \
+nearby-danger.o \
 newgame.o \
 ng-init.o \
 ng-input.o \

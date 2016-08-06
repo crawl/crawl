@@ -802,6 +802,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mpr.h" />
     <ClInclude Include="..\msvc.h" />
     <ClInclude Include="..\mutation.h" />
+    <ClInclude Include="..\nearby-danger.h" />
     <ClInclude Include="..\newgame.h" />
     <ClInclude Include="..\ng-init.h" />
     <ClInclude Include="..\ng-input.h" />

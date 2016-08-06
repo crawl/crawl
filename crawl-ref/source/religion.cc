@@ -49,10 +49,10 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-gear.h" // give_shield
 #include "mon-place.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
 #include "player-stats.h"

@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #include "coord.h"
-#include "misc.h" // erase_val
+#include "libutil.h" // erase_val
 
 dgn_event_dispatcher dungeon_events;
 
