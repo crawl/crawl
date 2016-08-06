@@ -17,6 +17,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
@@ -195,6 +196,16 @@ bool UseItemMenu::process_key(int key)
         return false;
     }
     return Menu::process_key(key);
+}
+
+static string _weird_smell()
+{
+    return getMiscString("smell_name");
+}
+
+static string _weird_sound()
+{
+    return getMiscString("sound_name");
 }
 
 /**
@@ -2354,7 +2365,7 @@ void random_uselessness()
         if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
         else // if (you.can_smell())
-            mprf("You smell %s.", weird_smell().c_str());
+            mprf("You smell %s.", _weird_smell().c_str());
         break;
 
     case 4:
@@ -2372,7 +2383,7 @@ void random_uselessness()
 
     case 6:
     case 7:
-        mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
+        mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
         noisy(2, you.pos());
         break;
     }

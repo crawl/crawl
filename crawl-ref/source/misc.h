@@ -7,32 +7,11 @@
 #define MISC_H
 
 #include "coord.h"
-#include "target.h"
 
 #include <algorithm>
 #include <chrono>
 
 string weird_glowing_colour();
-
-string weird_writing();
-
-string weird_smell();
-
-string weird_sound();
-
-bool bad_attack(const monster *mon, string& adj, string& suffix,
-                bool& would_cause_penance,
-                coord_def attack_pos = coord_def(0, 0),
-                bool check_landing_only = false);
-
-bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool *prompted = nullptr,
-                        coord_def attack_pos = coord_def(0, 0),
-                        bool check_landing_only = false);
-
-bool stop_attack_prompt(targetter &hitfunc, const char* verb,
-                        bool (*affects)(const actor *victim) = 0,
-                        bool *prompted = nullptr);
 
 void swap_with_monster(monster *mon_to_swap);
 

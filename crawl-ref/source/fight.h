@@ -8,6 +8,8 @@
 
 #include <list>
 
+#include "target.h"
+
 enum stab_type
 {
     STAB_NO_STAB,                    //    0
@@ -51,5 +53,19 @@ int mons_weapon_damage_rating(const item_def &launcher);
 int mons_missile_damage(monster* mons, const item_def *launch,
                         const item_def *missile);
 int mons_usable_missile(monster* mons, item_def **launcher);
+
+bool bad_attack(const monster *mon, string& adj, string& suffix,
+                bool& would_cause_penance,
+                coord_def attack_pos = coord_def(0, 0),
+                bool check_landing_only = false);
+
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
+                        coord_def beam_target, bool *prompted = nullptr,
+                        coord_def attack_pos = coord_def(0, 0),
+                        bool check_landing_only = false);
+
+bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+                        bool (*affects)(const actor *victim) = 0,
+                        bool *prompted = nullptr);
 
 #endif

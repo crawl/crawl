@@ -27,6 +27,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "format.h" // formatted_string
@@ -46,7 +47,6 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
