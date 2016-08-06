@@ -49,10 +49,16 @@ struct Branch
     int ambient_noise;           // affects noise loudness and player stealth
 };
 
+enum branch_iterator_type
+{
+    BRANCH_ITER_LOGICAL,
+    BRANCH_ITER_DANGER,
+};
+
 class branch_iterator
 {
 public:
-    branch_iterator();
+    branch_iterator(branch_iterator_type type = BRANCH_ITER_LOGICAL);
 
     operator bool() const;
     const Branch* operator*() const;
@@ -60,7 +66,11 @@ public:
     branch_iterator& operator++();
     branch_iterator operator++(int);
 
-protected:
+private:
+    const branch_type* branch_order() const;
+
+private:
+    branch_iterator_type iter_type;
     int i;
 };
 
