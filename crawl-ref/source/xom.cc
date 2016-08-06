@@ -40,6 +40,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
 #include "player-equip.h"

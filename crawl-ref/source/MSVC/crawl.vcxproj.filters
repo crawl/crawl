@@ -180,6 +180,7 @@
     <ClCompile Include="..\mon-util.cc" />
     <ClCompile Include="..\monster.cc" />
     <ClCompile Include="..\mutation.cc" />
+    <ClCompile Include="..\nearby-danger.cc" />
     <ClCompile Include="..\newgame.cc" />
     <ClCompile Include="..\ng-init.cc" />
     <ClCompile Include="..\ng-input.cc" />

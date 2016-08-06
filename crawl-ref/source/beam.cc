@@ -49,6 +49,7 @@
 #include "mon-poly.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "potion.h"
 #include "prompt.h"
 #include "ranged_attack.h"

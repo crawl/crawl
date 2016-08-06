@@ -13,7 +13,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
-#include "misc.h"
+#include "nearby-danger.h"
 #include "process_desc.h"
 #include "process_desc.h"
 #include "religion.h"

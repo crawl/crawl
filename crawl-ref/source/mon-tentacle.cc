@@ -15,9 +15,9 @@
 #include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen_data.h"
-#include "misc.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "nearby-danger.h"
 #include "terrain.h"
 #include "view.h"
 
