@@ -17,6 +17,7 @@
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
+#include "fight.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h" // passive_t::shadow_attacks
@@ -27,7 +28,6 @@
 #include "item_use.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
