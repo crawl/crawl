@@ -81,8 +81,8 @@ static vector<bool> vault_mon_bands;
 
 static monster_type _band_member(band_type band, int which,
                                  level_id parent_place, bool allow_ood);
-static band_type _choose_band(monster_type mon_type, int &band_size,
-                              bool& natural_leader);
+static band_type _choose_band(monster_type mon_type, int *band_size_p = nullptr,
+                              bool *natural_leader_p = nullptr);
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
@@ -445,9 +445,7 @@ static bool _is_incompatible_monster(monster_type mt)
 
 static bool _is_banded_monster(monster_type mt)
 {
-    int idummy;
-    bool bdummy;
-    return _choose_band(mt, idummy, bdummy) != BAND_NO_BAND;
+    return _choose_band(mt) != BAND_NO_BAND;
 }
 
 // Caller must use !invalid_monster_type to check if the return value
@@ -904,7 +902,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Choose band members...");
 #endif
-        band = _choose_band(mg.cls, band_size, leader);
+        band = _choose_band(mg.cls, &band_size, &leader);
         band_size++;
         for (int i = 1; i < band_size; ++i)
         {
@@ -2279,12 +2277,16 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
 };
 
-static band_type _choose_band(monster_type mon_type, int &band_size,
-                              bool &natural_leader)
+static band_type _choose_band(monster_type mon_type, int *band_size_p,
+                              bool *natural_leader_p)
 {
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in _choose_band()");
 #endif
+    // Access outparameters by reference, or local dummies if they were null.
+    int bs, &band_size = band_size_p ? *band_size_p : bs;
+    bool nl, &natural_leader = natural_leader_p ? *natural_leader_p : nl;
+
     // Band size describes the number of monsters in addition to
     // the band leader.
     band_size = 0; // Single monster, no band.
