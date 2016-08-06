@@ -1097,6 +1097,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(mons, " withdraws into its shell!");
+            return true;
         }
         break;
 
