@@ -7,6 +7,7 @@
 #define NEARBY_DANGER_H
 
 #include "coord.h"
+#include "random.h" // shuffle_array
 
 #include <numeric> // iota
 #include <queue>
