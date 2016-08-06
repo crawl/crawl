@@ -1280,20 +1280,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         switch (mutclass)
         {
         case MUTCLASS_TEMPORARY:
-            lose_stat(STAT_RANDOM, 1);
-            return true;
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
-
-            if (coinflip())
-                lose_stat(STAT_RANDOM, 1);
-            else
-            {
-                ouch(3, KILLED_BY_ROTTING, MID_NOBODY, reason.c_str());
-                rot_hp(roll_dice(1, 3));
-            }
-
-            xom_is_stimulated(50);
+            lose_stat(STAT_RANDOM, 1);
             return true;
         case MUTCLASS_INNATE:
             // You can't miss out on innate mutations just because you're
@@ -1306,7 +1295,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     if (mutclass == MUTCLASS_NORMAL
-        && (which_mutation == RANDOM_MUTATION || which_mutation == RANDOM_XOM_MUTATION)
+        && (which_mutation == RANDOM_MUTATION
+            || which_mutation == RANDOM_XOM_MUTATION)
         && x_chance_in_y(how_mutated(false, true), 15))
     {
         // God gifts override mutation loss due to being heavily
