@@ -200,6 +200,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     case BEAM_INFESTATION:
     case BEAM_PAIN:
+    case BEAM_AGONY:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -2428,7 +2429,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
-    damage = victim->hurt(agent, damage, BEAM_NEG, KILLED_BY_BEAM,
+    damage = victim->hurt(agent, damage, BEAM_MALIGN_OFFERING, KILLED_BY_BEAM,
                           "", "by a malign offering");
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
@@ -3621,34 +3622,24 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_PAIN:
-        if (player_res_torment())
-        {
-            canned_msg(MSG_YOU_UNAFFECTED);
-            break;
-        }
-
+    {
         if (aux_source.empty())
             aux_source = "by nerve-wracking pain";
 
-        if (origin_spell == SPELL_AGONY)
-        {
-            if (you.res_negative_energy()) // Agony has no effect with rN.
-            {
-                canned_msg(MSG_YOU_UNAFFECTED);
-                break;
-            }
-
-            mpr("Your body is wracked with pain!");
-
-            // On the player, Agony acts like single-target torment.
-            internal_ouch(max(0, you.hp / 2 - 1));
-        }
-        else
+        const int dam = resist_adjust_damage(&you, flavour, damage.roll());
+        if (dam)
         {
             mpr("Pain shoots through your body!");
-
-            internal_ouch(damage.roll());
+            internal_ouch(dam);
+            obvious_effect = true;
         }
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
+
+    case BEAM_AGONY:
+        torment_player(agent(), TORMENT_AGONY);
         obvious_effect = true;
         break;
 
@@ -3740,7 +3731,6 @@ void bolt::affect_player_enchantment(bool resistible)
     }
 
     case BEAM_VIRULENCE:
-
         // Those completely immune cannot be made more susceptible this way
         if (you.res_poison(false) >= 3)
         {
@@ -5234,7 +5224,11 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_PAIN:
-        rc = !mon->res_negative_energy(intrinsic_only);
+        rc = mon->res_negative_energy(intrinsic_only) < 3;
+        break;
+
+    case BEAM_AGONY:
+        rc = !mon->res_torment();
         break;
 
     case BEAM_HIBERNATION:
@@ -5436,14 +5430,22 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
-    case BEAM_PAIN:             // pain/agony
-        if (simple_monster_message(mon, " convulses in agony!"))
-            obvious_effect = true;
+    case BEAM_PAIN:
+    {
+        const int dam = resist_adjust_damage(mon, flavour, damage.roll());
+        if (dam)
+        {
+            if (simple_monster_message(mon, " writhes in agony!"))
+                obvious_effect = true;
+            mon->hurt(agent(), dam, flavour);
+            return MON_AFFECTED;
+        }
+        return MON_UNAFFECTED;
+    }
 
-        if (origin_spell == SPELL_AGONY)
-            mon->hurt(agent(), min((mon->hit_points+1)/2, mon->hit_points-1), BEAM_TORMENT_DAMAGE);
-        else                    // pain
-            mon->hurt(agent(), damage.roll(), flavour);
+    case BEAM_AGONY:
+        torment_cell(mon->pos(), agent(), TORMENT_AGONY);
+        obvious_effect = you.can_see(*mon);
         return MON_AFFECTED;
 
     case BEAM_DISINTEGRATION:   // disrupt/disintegrate
@@ -6325,9 +6327,11 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_DISPEL_UNDEAD)
         return bool(mon->holiness() & MH_UNDEAD);
 
-    // pain / agony
     if (flavour == BEAM_PAIN)
-        return !mon->res_negative_energy();
+        return mon->res_negative_energy() < 3;
+
+    if (flavour == BEAM_AGONY)
+        return !mon->res_torment();
 
     if (flavour == BEAM_TUKIMAS_DANCE)
         return tukima_affects(*mon);
@@ -6561,6 +6565,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BANISH:                return "banishment";
     case BEAM_ENSLAVE_SOUL:          return "enslave soul";
     case BEAM_PAIN:                  return "pain";
+    case BEAM_AGONY:                 return "agony";
     case BEAM_DISPEL_UNDEAD:         return "dispel undead";
     case BEAM_DISINTEGRATION:        return "disintegration";
     case BEAM_BLINK:                 return "blink";

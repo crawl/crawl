@@ -830,7 +830,7 @@ static const zap_info zap_data[] =
     new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
-    BEAM_PAIN,
+    BEAM_AGONY,
     NUM_DCHAR_TYPES,
     false,
     false,

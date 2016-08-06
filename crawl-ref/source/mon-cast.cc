@@ -1060,8 +1060,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     {
         beam.hit = AUTOMATIC_HIT;
         beam.glyph = 0;
-        if (spell_cast != SPELL_AGONY)
-            beam.name = "";
+        beam.name = "";
     }
 
     return beam;
@@ -3907,8 +3906,8 @@ static bool _mons_vampiric_drain(monster *mons)
 
     hp_cost = min(hp_cost, target->stat_hp());
     hp_cost = min(hp_cost, mons->max_hit_points - mons->hit_points);
-    if (target->res_negative_energy())
-        hp_cost = 0;
+
+    hp_cost = resist_adjust_damage(target, BEAM_NEG, hp_cost);
 
     if (!hp_cost)
     {
@@ -7482,10 +7481,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         }
     // fall through
     case SPELL_BOLT_OF_DRAINING:
-    case SPELL_AGONY:
     case SPELL_MALIGN_OFFERING:
     case SPELL_GHOSTLY_FIREBALL:
         return !foe || _foe_should_res_negative_energy(foe);
+
+    case SPELL_AGONY:
+        return !foe || !_torment_vulnerable(foe);
 
     case SPELL_MIASMA_BREATH:
         return !foe || foe->res_rotting();

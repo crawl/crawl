@@ -481,6 +481,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_ELECTRICITY:
             return defender->res_elec();
         case BEAM_NEG:
+        case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
             return defender->res_negative_energy();
         case BEAM_ACID:
@@ -527,6 +528,8 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
     {
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
+                                     || flavour == BEAM_PAIN
+                                     || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;
@@ -541,8 +544,12 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
             // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
-            else if (flavour == BEAM_NEG)
+            else if (flavour == BEAM_NEG
+                     || flavour == BEAM_PAIN
+                     || flavour == BEAM_MALIGN_OFFERING)
+            {
                 resistible /= res * 2;
+            }
             else
                 resistible /= (3 * res + 1) / 2 + bonus_res;
         }

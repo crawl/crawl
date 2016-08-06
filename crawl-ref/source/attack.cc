@@ -559,20 +559,19 @@ static actor* _pain_weapon_user(actor* attacker)
 
 void attack::pain_affects_defender()
 {
-    if (defender->res_negative_energy())
-        return;
-
     actor* user = _pain_weapon_user(attacker);
     if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
     {
-        if (defender_visible)
+        special_damage += resist_adjust_damage(defender, BEAM_NEG,
+                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+
+        if (special_damage && defender_visible)
         {
             special_damage_message =
                 make_stringf("%s %s in agony.",
                              defender->name(DESC_THE).c_str(),
                              defender->conj_verb("writhe").c_str());
         }
-        special_damage += random2(1 + user->skill_rdiv(SK_NECROMANCY));
     }
 }
 
@@ -1687,7 +1686,6 @@ bool attack::apply_damage_brand(const char *what)
     {
         if (!weapon
             || !(defender->holiness() & MH_NATURAL)
-            || defender->res_negative_energy()
             || damage_done < 1
             || attacker->stat_hp() == attacker->stat_maxhp()
             || !defender->is_player()
@@ -1698,33 +1696,34 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
-        obvious_effect = true;
-
-        // Handle weapon effects.
-        // We only get here if we've done base damage, so no
-        // worries on that score.
-        if (attacker->is_player())
-            canned_msg(MSG_GAIN_HEALTH);
-        else if (attacker_visible)
-        {
-            if (defender->is_player())
-            {
-                mprf("%s draws strength from your injuries!",
-                     attacker->name(DESC_THE).c_str());
-            }
-            else
-            {
-                mprf("%s is healed.",
-                     attacker->name(DESC_THE).c_str());
-            }
-        }
-
         int hp_boost = is_unrandom_artefact(*weapon, UNRAND_VAMPIRES_TOOTH)
                        ? damage_done : 1 + random2(damage_done);
+        hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
 
-        dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
-             damage_done, hp_boost);
-        attacker->heal(hp_boost);
+        if (hp_boost)
+        {
+            obvious_effect = true;
+
+            if (attacker->is_player())
+                canned_msg(MSG_GAIN_HEALTH);
+            else if (attacker_visible)
+            {
+                if (defender->is_player())
+                {
+                    mprf("%s draws strength from your injuries!",
+                         attacker->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s is healed.",
+                         attacker->name(DESC_THE).c_str());
+                }
+            }
+
+            dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
+                 damage_done, hp_boost);
+            attacker->heal(hp_boost);
+        }
         break;
     }
     case SPWPN_PAIN:
