@@ -234,6 +234,7 @@
     Sigurd
     Edgar Simo
     Skrybe
+    Isaac Sloat
     Alex Smith
     Keanan Smith
     Richard Soderberg
