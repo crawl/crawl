@@ -173,7 +173,7 @@ static bool _okawaru_random_servant()
                                            true, 0, 0, you.pos(), MG_NONE,
                                            GOD_OKAWARU);
 
-    // Don't send sheep into battle, but otherwise let bands in.
+    // Don't send dream sheep into battle, but otherwise let bands in.
     // This makes sure you get multiple orcs/gnolls early on.
     if (mon_type != MONS_CYCLOPS)
         temp.flags |= MG_PERMIT_BANDS;

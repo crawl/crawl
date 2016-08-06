@@ -532,6 +532,10 @@ Sleep satyr cast
 
 @The_monster@ plays a lulling melody on his pipes!
 %%%%
+Sleep dream sheep cast
+
+@The_monster@ suddenly materializes a large amount of dream dust! 
+%%%%
 Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.

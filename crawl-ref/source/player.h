@@ -763,6 +763,7 @@ public:
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
+    bool can_sleep(bool holi_only = false) const override;
 
     int racial_ac(bool temp) const;
     int armour_class(bool /*calc_unid*/ = true) const override;
