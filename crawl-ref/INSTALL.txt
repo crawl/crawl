@@ -1,12 +1,12 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
 
-Getting DCSS to run
--------------------
+Getting Crawl to run
+--------------------
 
-This file describes how to compile a runtime executable of DCSS from the source
-code. If you're trying to compile Crawl yourself, skip ahead to the next
-section, "Building Dungeon Crawl Stone Soup".
+This file describes how to compile a runtime executable of Crawl from the
+source code. If you're trying to compile Crawl yourself, skip ahead to the next
+section, "Building Crawl".
 
 If, however, you're having trouble getting a precompiled binary to run:
 
@@ -35,10 +35,10 @@ error messages you're getting.
 The rest of the file deals with compiling from the source.
 
 
-Building Dungeon Crawl Stone Soup
----------------------------------
+Building Crawl
+--------------
 
-Crawl Stone Soup is known to run on the following platforms as of version 0.16:
+Crawl is known to run on the following platforms:
 
 - Any Unix with GNU or BSD userland.
 - Mac OS X.
@@ -84,19 +84,18 @@ Crawl can be built with some optional features:
 * Sounds
 * User Lua scripts
 
-Crawl Stone Soup also uses a level compiler to compile special level
-definitions; to make changes to the level compiler, you'll need the flex and
-bison/byacc tools (Other lex/yaccs may also work). More details are available
-below.
+Crawl also uses a level compiler to compile special level definitions; to make
+changes to the level compiler, you'll need the flex and bison/byacc tools
+(Other lex/yaccs may also work). More details are available below.
 
 Sound can be provided by SDL2_mixer (the default), by WINMM on Windows (defined
 by WINMM_PLAY_SOUNDS in AppHdr.h), or by an external command on Unix systems
 (SOUND_PLAY_COMMAND in AppHdr.h). To enable this, append SOUND=y to the make
 invocation.
 
-Stone Soup 0.6+ includes Lua 5.1.4 in its submodules. Crawl uses Lua for
-dungeon generation. In addition, Crawl has a (rudimentary) Lua interface for
-users to run scripts which can do things such as conditionalise parts of the
+Crawl includes Lua 5.1.4 in its submodules. Crawl uses Lua for dungeon
+generation. In addition, Crawl has a (rudimentary) Lua interface for users to
+run scripts which can do things such as conditionalise parts of the
 .crawlrc/init.txt. Such user Lua scripts are enabled by default, but can be
 turned off by appending NO_LUA_BINDINGS=y to the make invocation.
 
@@ -280,7 +279,7 @@ to be able to start the MSYS2 shell.
 
   NOTE: You generally don't want to use the shortcut called 'MSYS2 Shell', as
   this starts a shell for working with Cygwin-based MSYS2 components. Building
-  crawl in this environment is currently not supported.
+  Crawl in this environment is currently not supported.
 
 Install Git and the development packages, and compile crawl:
 
@@ -304,10 +303,10 @@ Install Git and the development packages, and compile crawl:
 
   After the packages install, you're ready to build crawl!
 
-* To get the crawl source, you can follow the steps in the Source Code Checkout
-  section above to clone crawl into your MSYS2 home directory. If you've
+* To get the Crawl source, you can follow the steps in the Source Code Checkout
+  section above to clone Crawl into your MSYS2 home directory. If you've
   downloaded the source elsewhere, cd to that Crawl source directory. For
-  instance, if you have the crawl sources in c:\crawl\source, you would type
+  instance, if you have the Crawl sources in c:\crawl\source, you would type
   'cd /c/crawl/source'.
 
 * Build Crawl by running 'make'. If you want a graphical build, you will need
@@ -347,7 +346,7 @@ Building on Windows (Cygwin)
 * Once Cygwin is installed, open a Cygwin bash shell (use the Start menu or
   desktop icon, do not double-click bash.exe in Explorer).
 
-* cd to the the Crawl source directory. For instance, if you have the crawl
+* cd to the the Crawl source directory. For instance, if you have the Crawl
   sources in c:\crawl\source, you would type 'cd /cygdrive/c/crawl/source'.
 
 * Follow the Linux build instructions to build Crawl.
@@ -367,7 +366,7 @@ Building on Windows (MSVC)
   have modified tile data or unrandarts).
 
 * The first time you compile, you need to build the Contribs solution. This
-  compiles various libraries which crawl itself needs to build. This only needs
+  compiles various libraries which Crawl itself needs to build. This only needs
   to be performed the first time you build, or if the contribs are ever updated
   (extremely rare). To do this open and compile Contribs.sln in source/contrib.
 
