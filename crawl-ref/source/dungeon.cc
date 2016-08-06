@@ -1448,19 +1448,10 @@ static void _fixup_branch_stairs()
     }
 }
 
-static bool _fixup_stone_stairs(bool preserve_vault_stairs)
+/// List all stone stairs of the indicated type.
+list<coord_def> _find_stone_stairs(bool up_stairs)
 {
-    // This function ensures that there is exactly one each up and down
-    // stone stairs I, II, and III. More than three stairs will result in
-    // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity). Fewer than three stone stairs will result in
-    // random placement of new stairs.
-
-    const unsigned int max_stairs = 20;
-    FixedVector<coord_def, max_stairs> up_stairs;
-    FixedVector<coord_def, max_stairs> down_stairs;
-    unsigned int num_up_stairs   = 0;
-    unsigned int num_down_stairs = 0;
+    list<coord_def> stairs;
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -1468,198 +1459,267 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (feature_mimic_at(c))
             continue;
 
-        if (feat_is_stone_stair_down(grd(c))
-            && num_down_stairs < max_stairs)
+        const dungeon_feature_type feat = grd(c);
+        if (feat_is_stone_stair(feat)
+            && up_stairs == feat_is_stone_stair_up(feat))
         {
-            down_stairs[num_down_stairs++] = c;
-        }
-        else if (feat_is_stone_stair_up(grd(c))
-                 && num_up_stairs < max_stairs)
-        {
-            up_stairs[num_up_stairs++] = c;
+            stairs.push_back(c);
         }
     }
 
-    bool success = true;
+    return stairs;
+}
 
-    for (unsigned int i = 0; i < 2; i++)
+/**
+ * Try to turn excess stairs into hatches.
+ *
+ * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
+ *                          are turned into hatches will be removed.
+ * @param needed_stairs     The desired number of stairs.
+ * @param preserve_vault_stairs    Don't trapdoorify stairs that are in vaults.
+ * @param hatch_type        What sort of hatch to turn excess stairs into.
+ */
+static void _stairs_into_hatches(list<coord_def> &stairs,
+                                 unsigned int needed_stairs,
+                                 bool preserve_vault_stairs,
+                                 dungeon_feature_type hatch_type)
+{
+    // we're going to iterate over the list, looking for redundant stairs.
+    // (redundant = can walk from one to the other.) For each of
+    // those iterations, we'll iterate over the remaining list checking for
+    // stairs redundant with the outer iteration, and hatchify + remove from
+    // the stair list any redundant stairs we find.
+
+    for (auto iter1 = stairs.begin();
+         iter1 != stairs.end() && stairs.size() <= needed_stairs;
+         ++iter1)
     {
-        FixedVector<coord_def, max_stairs>& stair_list = (i == 0 ? up_stairs
-                                                                 : down_stairs);
+        const coord_def s1_loc = *iter1;
+        // Ensure we don't search for the feature at s1. XXX: unwind_var?
+        const dungeon_feature_type saved_feat = grd(s1_loc);
+        grd(s1_loc) = DNGN_FLOOR;
 
-        unsigned int num_stairs, needed_stairs;
-        dungeon_feature_type base;
-        dungeon_feature_type replace;
-        if (i == 0)
+        auto iter2 = iter1;
+        ++iter2;
+        while (iter2 != stairs.end() && stairs.size() > needed_stairs)
         {
-            num_stairs = num_up_stairs;
-            replace = DNGN_FLOOR;
-            base = DNGN_STONE_STAIRS_UP_I;
-            // Pan abuses stair placement for transits, as we want connectivity
-            // checks.
-            needed_stairs = you.depth == 1
-                            && !player_in_branch(BRANCH_PANDEMONIUM)
-                            ? 1 : 3;
-        }
-        else
-        {
-            num_stairs = num_down_stairs;
-            replace = DNGN_FLOOR;
-            base = DNGN_STONE_STAIRS_DOWN_I;
+            const coord_def s2_loc = *iter2;
+            auto being_examined = iter2;
+            ++iter2;
 
-            if (at_branch_bottom())
-                needed_stairs = 0;
-            else
-                needed_stairs = 3;
-        }
-
-        // In Zot, don't create extra escape hatches, in order to force
-        // the player through vaults that use all three down stone stairs.
-        if (player_in_branch(BRANCH_ZOT))
-            replace = DNGN_GRANITE_STATUE;
-
-        dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
-             num_stairs, needed_stairs, i ? "down" : "up");
-
-        if (num_stairs > needed_stairs)
-        {
-            // Find pairwise stairs that are connected and turn one of them
-            // into an escape hatch of the appropriate type.
-            for (unsigned int s1 = 0; s1 < num_stairs; s1++)
-            {
-                if (num_stairs <= needed_stairs)
-                    break;
-
-                for (unsigned int s2 = s1 + 1; s2 < num_stairs; s2++)
-                {
-                    if (num_stairs <= needed_stairs)
-                        break;
-
-                    if (preserve_vault_stairs
-                        && map_masked(stair_list[s2], MMT_VAULT))
-                    {
-                        continue;
-                    }
-
-                    flood_find<feature_grid, coord_predicate> ff(env.grid,
-                                                                 in_bounds);
-
-                    ff.add_feat(grd(stair_list[s2]));
-
-                    // Ensure we're not searching for the feature at s1.
-                    dungeon_feature_type save = grd(stair_list[s1]);
-                    grd(stair_list[s1]) = DNGN_FLOOR;
-
-                    const coord_def where =
-                        ff.find_first_from(stair_list[s1],
-                                           env.level_map_mask);
-                    if (where.x)
-                    {
-                        dprf(DIAG_DNGN, "Too many stairs -- removing one"
-                                        " of a connected pair.");
-                        grd(stair_list[s2]) = replace;
-                        num_stairs--;
-                        stair_list[s2] = stair_list[num_stairs];
-                        s2--;
-                    }
-
-                    grd(stair_list[s1]) = save;
-                }
-            }
-
-            // If that doesn't work, remove random stairs.
-            while (num_stairs > needed_stairs)
-            {
-                int remove = random2(num_stairs);
-                if (preserve_vault_stairs)
-                {
-                    int tries;
-                    for (tries = num_stairs; tries > 0; tries--)
-                    {
-                        if (!map_masked(stair_list[remove], MMT_VAULT))
-                            break;
-                        remove = (remove + 1) % num_stairs;
-                    }
-
-                    // If we looped through all possibilities, then it
-                    // means that there are more than 3 stairs in vaults and
-                    // we can't preserve vault stairs.
-                    if (!tries)
-                    {
-                        dprf(DIAG_DNGN, "Too many stairs inside vaults!");
-                        break;
-                    }
-                }
-                dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
-                _set_grd(stair_list[remove], replace);
-
-                stair_list[remove] = stair_list[--num_stairs];
-            }
-        }
-
-        // FIXME: stairs that generate inside random vaults are still
-        // protected, resulting in superfluoes ones.
-        dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
-             num_stairs, needed_stairs, i ? "down" : "up");
-
-        if (num_stairs > needed_stairs && preserve_vault_stairs
-            && (i || you.depth != 1 || !player_in_branch(root_branch)))
-        {
-            success = false;
-            continue;
-        }
-
-        // If there are no stairs, it's either a branch entrance or exit.
-        // If we somehow have ended up in a catastrophic "no stairs" state,
-        // the level will not be validated, so we do not need to catch it here.
-        if (num_stairs == 0)
-            continue;
-
-        // Add extra stairs to get to exactly three.
-        for (unsigned int s = num_stairs; s < needed_stairs; s++)
-        {
-            const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
-            coord_def gc = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
-
-            if (!gc.origin())
-            {
-                dprf(DIAG_DNGN, "Adding stair %d at (%d,%d)", s, gc.x, gc.y);
-                // base gets fixed up to be the right stone stair below...
-                _set_grd(gc, base);
-                stair_list[num_stairs++] = gc;
-            }
-            else
-                success = false;
-        }
-
-        // If we only need one stone stair, make sure it's _I.
-        if (i == 0 && needed_stairs == 1)
-        {
-            ASSERT(num_stairs == 1 || player_in_branch(root_branch));
-            if (num_stairs == 1)
-            {
-                grd(stair_list[0]) = DNGN_STONE_STAIRS_UP_I;
+            if (preserve_vault_stairs && map_masked(s2_loc, MMT_VAULT))
                 continue;
-            }
+
+            flood_find<feature_grid, coord_predicate> ff(env.grid,
+                                                         in_bounds);
+            ff.add_feat(grd(s2_loc));
+            const coord_def where =
+                ff.find_first_from(s1_loc, env.level_map_mask);
+            if (!where.x) // these stairs aren't in the same zone
+                continue;
+
+            dprf(DIAG_DNGN,
+                 "Too many stairs -- removing one of a connected pair.");
+            grd(s2_loc) = hatch_type;
+            stairs.erase(being_examined);
         }
 
-        // Ensure uniqueness of three stairs.
-        for (int s = 0; s < 4; s++)
+        grd(s1_loc) = saved_feat;
+    }
+}
+
+/**
+ * Trapdoorify stairs at random, until we reach the specified number.
+ * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
+ *                          are turned into hatches will be removed. Order not
+ *                          preserved.
+ * @param needed_stairs     The desired number of stairs.
+ * @param preserve_vault_stairs    Don't remove stairs that are in vaults.
+ * @param hatch_type        What sort of hatch to turn excess stairs into.
+ */
+static void _cull_excess_stairs(list<coord_def> &stairs,
+                                unsigned int needed_stairs,
+                                bool preserve_vault_stairs,
+                                dungeon_feature_type hatch_type)
+{
+    while (stairs.size() > needed_stairs)
+    {
+        const int remove_index = random2(stairs.size());
+        // rotate the list until the desired element is in front
+        for (int i = 0; i < remove_index; ++i)
         {
-            int s1 = s % num_stairs;
-            int s2 = (s1 + 1) % num_stairs;
-            ASSERT(grd(stair_list[s2]) >= base
-                   && grd(stair_list[s2]) < base + 3);
+            stairs.push_back(stairs.front());
+            stairs.pop_front();
+        }
 
-            if (grd(stair_list[s1]) == grd(stair_list[s2]))
+        if (preserve_vault_stairs)
+        {
+            // try to rotate a non-vault stair to the front, if possible.
+            for (size_t i = 0; i < stairs.size(); ++i)
             {
-                _set_grd(stair_list[s2], (dungeon_feature_type)
-                    (base + (grd(stair_list[s2])-base+1) % 3));
+                if (map_masked(stairs.front(), MMT_VAULT))
+                {
+                    stairs.push_back(stairs.front());
+                    stairs.pop_front();
+                }
+            }
+
+            // If we looped through all possibilities, then it
+            // means that there are more than 3 stairs in vaults and
+            // we can't preserve vault stairs.
+            if (map_masked(stairs.front(), MMT_VAULT))
+            {
+                dprf(DIAG_DNGN, "Too many stairs inside vaults!");
+                return;
             }
         }
+
+        dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
+        _set_grd(stairs.front(), hatch_type);
+        stairs.pop_front();
+    }
+}
+
+/**
+ * Ensure that there is only the correct number of each type of 'stone'
+ * (permanent, intra-branch, non-trapdoor) stair on the current level.
+ *
+ * @param preserve_vault_stairs     Don't delete or trapdoorify stairs that are
+ *                                  in vaults.
+ * @param checking_up_stairs        Whether we're looking at stairs that lead
+ *                                  up. If false, we're looking at down-stairs.
+ * @return                          Whether we successfully set the right # of
+ *                                  stairs for the level.
+ */
+static bool _fixup_stone_stairs(bool preserve_vault_stairs,
+                                bool checking_up_stairs)
+{
+    list<coord_def> stairs = _find_stone_stairs(checking_up_stairs);
+
+    unsigned int needed_stairs;
+    dungeon_feature_type base;
+    dungeon_feature_type replace;
+    if (checking_up_stairs)
+    {
+        replace = DNGN_FLOOR;
+        base = DNGN_STONE_STAIRS_UP_I;
+        // Pan abuses stair placement for transits, as we want connectivity
+        // checks.
+        needed_stairs = you.depth == 1
+                        && !player_in_branch(BRANCH_PANDEMONIUM)
+                        ? 1 : 3;
+    }
+    else
+    {
+        replace = DNGN_FLOOR;
+        base = DNGN_STONE_STAIRS_DOWN_I;
+
+        if (at_branch_bottom())
+            needed_stairs = 0;
+        else
+            needed_stairs = 3;
     }
 
-    return success;
+    // In Zot, don't create extra escape hatches, in order to force
+    // the player through vaults that use all three down stone stairs.
+    if (player_in_branch(BRANCH_ZOT))
+        replace = DNGN_GRANITE_STATUE;
+
+    dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
+         (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
+
+    if (stairs.size() > needed_stairs)
+    {
+        // Find pairwise stairs that are connected and turn one of them
+        // into an escape hatch of the appropriate type.
+        _stairs_into_hatches(stairs, needed_stairs,
+                             preserve_vault_stairs, replace);
+    }
+
+    // If that doesn't work, remove random stairs.
+    if (stairs.size() > needed_stairs)
+    {
+        _cull_excess_stairs(stairs, needed_stairs,
+                            preserve_vault_stairs, replace);
+    }
+
+    // FIXME: stairs that generate inside random vaults are still
+    // protected, resulting in superfluous ones.
+    dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
+         (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
+
+    if (stairs.size() > needed_stairs && preserve_vault_stairs
+        && (!checking_up_stairs || you.depth != 1
+            || !player_in_branch(root_branch)))
+    {
+        return false;
+    }
+
+    // If there are no stairs, it's either a branch entrance or exit.
+    // If we somehow have ended up in a catastrophic "no stairs" state,
+    // the level will not be validated, so we do not need to catch it here.
+    if (stairs.size() == 0)
+        return true;
+
+    // Add extra stairs to get to exactly three.
+    for (unsigned int s = stairs.size(); s < needed_stairs; s++)
+    {
+        const uint32_t mask = preserve_vault_stairs ? MMT_VAULT : 0;
+        const coord_def gc
+            = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_UNSEEN);
+
+        if (gc.origin())
+            return false;
+
+        dprf(DIAG_DNGN, "Adding stair %d at (%d,%d)", s, gc.x, gc.y);
+        // base gets fixed up to be the right stone stair below...
+        _set_grd(gc, base);
+        stairs.push_back(gc);
+    }
+
+    // If we only need one stone stair, make sure it's _I.
+    if (needed_stairs != 3)
+    {
+        ASSERT(checking_up_stairs);
+        ASSERT(needed_stairs == 1);
+        ASSERT(stairs.size() == 1 || player_in_branch(root_branch));
+        if (stairs.size() == 1)
+            grd(stairs.front()) = DNGN_STONE_STAIRS_UP_I;
+
+        return true;
+    }
+
+    // Ensure uniqueness of three stairs.
+    ASSERT(needed_stairs == 3);
+    for (size_t s = 0; s < needed_stairs + 1; s++)
+    {
+        const coord_def s1_loc = stairs.front();
+        const coord_def s2_loc = stairs.back();
+        if (grd(s1_loc) == grd(s2_loc))
+        {
+            _set_grd(s2_loc, (dungeon_feature_type)
+                     (base + (grd(s2_loc)-base+1) % needed_stairs));
+        }
+
+        stairs.push_back(stairs.front());
+        stairs.pop_front();
+    }
+
+    return true;
+}
+
+static bool _fixup_stone_stairs(bool preserve_vault_stairs)
+{
+    // This function ensures that there is exactly one each up and down
+    // stone stairs I, II, and III. More than three stairs will result in
+    // turning additional stairs into escape hatches (with an attempt to keep
+    // level connectivity). Fewer than three stone stairs will result in
+    // random placement of new stairs.
+    const bool upstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
+                                                    true);
+    const bool downstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
+                                                      false);
+    return upstairs_fixed && downstairs_fixed;
 }
 
 static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
