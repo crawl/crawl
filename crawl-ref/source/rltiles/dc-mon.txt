@@ -876,7 +876,6 @@ eidolon MONS_EIDOLON
 %sdir mon
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN
-orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 
 ## Centaurs ('c')
 %rim 1
@@ -1157,14 +1156,15 @@ unseen_monster MCACHE_START
 todo TODO
 error ERROR
 
-## for tile_player_tile
+# Old monster tiles for use with the tile_player_tile option.
 %sdir mon/player
 giaggostuono MONS_GIAGGOSTUONO
 jormungandr MONS_JORMUNGANDR
 lamia MONS_LAMIA
 maud MONS_MAUD
-old-serpent-coc MONS_PLAYER_SERPENT_COC
-old-serpent-dis MONS_PLAYER_SERPENT_DIS
-old-serpent-geh MONS_PLAYER_SERPENT_GEH
-old-serpent-tar MONS_PLAYER_SERPENT_TAR
+old-serpent-coc MONS_OLD_SERPENT_COC
+old-serpent-dis MONS_OLD_SERPENT_DIS
+old-serpent-geh MONS_OLD_SERPENT_GEH
+old-serpent-tar MONS_OLD_SERPENT_TAR
 wiglaf MONS_WIGLAF
+orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
