@@ -173,6 +173,10 @@ Druid's Call cast
 
 @The_monster@ calls out to the beasts of the wild!
 %%%%
+Summon Dream Sheep cast
+
+@The_monster@ materializes a new companion out of dream dust! 
+%%%%
 Legendary Destruction cast
 
 @Major Destruction cast@

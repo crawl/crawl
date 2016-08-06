@@ -1546,12 +1546,13 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(this, " burns!");
             dprf("sticky flame damage: %d", dam);
 
-            if (type == MONS_SHEEP)
+            if (mons_genus(type) == MONS_SHEEP)
             {
                 for (adjacent_iterator ai(pos()); ai; ++ai)
                 {
                     monster *mon = monster_at(*ai);
-                    if (mon && mon->type == MONS_SHEEP
+                    if (mon 
+                        && (mons_genus(mon->type) == MONS_SHEEP)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {
@@ -2108,7 +2109,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "deaths_door",
 #endif
-    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall", 
     "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",

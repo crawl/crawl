@@ -786,6 +786,150 @@ static bool _will_starcursed_scream(monster* mon)
     return one_chance_in(n);
 }
 
+
+/** 
+* Handles messaging to the player of what happens when dream sheep
+* use their dream sleep. Mostly flavor: more sheep / stronger sleep will 
+* trigger different messages. Also informs the player when they are unaffected.
+*
+* @param num_sheep  Amount of sheep in the herd
+* @param sleep_pow  Duration of the sleep
+*/ 
+static void _sheep_message(int num_sheep, int sleep_pow, actor *target)
+{
+    string message = "";
+
+    // Determine messaging based on sleep strength.
+    if (sleep_pow >= 125) 
+        message = "You are overwhelmed by glittering dream dust!";
+    else if (sleep_pow >= 75) 
+        message = "The dream sheep are wreathed in dream dust.";
+    else if (sleep_pow >= 25) 
+    {
+        message = make_stringf("The%s dream sheep shake%s wool and sparkle%s.",
+                                num_sheep == 1 ? "" : " herd of",
+                                num_sheep == 1 ? "s its" : " their",
+                                num_sheep == 1 ? "s": "");
+    }
+    else // if sleep fails
+    {
+        message = make_stringf("The dream sheep ruffle%s wool and motes" 
+                                " of dream dust sparkle then fade.", 
+                                num_sheep == 1 ? "s its" : " their");
+    }
+
+    // Messaging for non-player targets
+    if (!target->is_player()) 
+    {
+        if (you.see_cell(target->pos()) && !target->clarity()
+            && sleep_pow >= 25)
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "%s's eyes droop closed as the sheep sparkle and sway.",
+                 target->name(DESC_THE).c_str());
+        }
+        else // if Clarity or dust strength failure
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "The dream sheep attempt%s to lull %s to sleep.",
+                 num_sheep == 1 ? "s" : "",
+                 target->name(DESC_THE).c_str());
+            mprf("%s is unaffected.", target->name(DESC_THE).c_str());
+        }
+    }
+    else if (target->clarity()) 
+    {
+        mprf(MSGCH_MONSTER_SPELL, "The dream sheep attempt to lull you to"
+             " sleep.");
+        canned_msg(MSG_YOU_UNAFFECTED);
+    }
+    else
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(), 
+             sleep_pow > 0 ? " You feel drowsy..." : "");
+        // player::put_to_sleep will then add "You fall asleep."
+    }
+}
+
+/**
+* Counts each dream sheep in the dream herd, adjusts effect duration accordingly
+* Currently this *does not* check foe's magic resistance, just clarity.
+* If this turns out to be too strong, it probably should check MR.
+* Cooldown on this ability is roughly 8 turns. Dream sheep will only
+* use this ability when all dream sheep are able to use this ability (that is,
+* no dream sheep visible has ENCH_BREATH_WEAPON status). 
+*
+* @param mons       The sheep initiating the herd sleep
+* @param target     Its target
+*/
+static void _dream_sheep_sleep(monster *mons, actor *target)
+{
+    if (!target || !target->alive())
+        return;
+
+    // Shepherd the dream sheep
+    vector<monster*> dream_herd;
+    for (monster_near_iterator mi(target->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->type == MONS_DREAM_SHEEP)
+            dream_herd.push_back(*mi);
+    }
+    const int num_sheep = dream_herd.size();
+    dprf("Dream herd size: %d", num_sheep);
+
+    // Sleep duration depends on how many dream sheep are available to combine
+    // their strength. The correlation between amount of sheep and duration of 
+    // sleep is randomised somewhat, but has a minimum of 5 turns and max of 20.
+    // More dream sheep are both more likely to succeed and more likely to have
+    // a stronger effect. 
+    int sleep_pow = min(150, random2(num_sheep * 25) + 1);
+    if (sleep_pow < 25)
+        sleep_pow = 0; // Weak attempts should not succeed. 
+
+    // Communicate to the player.
+    _sheep_message(num_sheep, sleep_pow, target);
+
+    // This takes the results generated above and places a sleep duration on 
+    // the target. Sleep duration is 5 to 20 turns, depending on strength.
+    if (sleep_pow && !target->clarity())
+        target->put_to_sleep(mons, sleep_pow, false);
+
+    // On average 8 turns cooling down before they can again attempt to sleep.
+    const int cooldown = random_range(60, 100);
+    for (monster *sheep : dream_herd)
+        sheep->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, sheep, cooldown));
+}
+
+/**
+* Checks to see whether all visible dream sheep are unified in action.
+* If they are not, then the dream sheep will *not* attempt to put its target
+* to sleep.
+*
+* @param mon        The monster 
+*/
+static bool _will_sheep_sleep(monster *mons)
+{
+    int n = 0;
+
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->type != MONS_DREAM_SHEEP)
+            continue;
+
+        // Don't sleep if any part of the herd has a sleep timeout
+        // This prevents it being staggered into a bunch of mini-sleeps
+        if (mi->has_ench(ENCH_BREATH_WEAPON))
+            return false;
+        else
+            n++;
+    }
+
+    return one_chance_in(n);
+}
+
+
 /**
  * Can a lost soul revive the given monster, assuming one is nearby?
  *
@@ -1149,6 +1293,24 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
+    // If the dream sheep is not confused, it/its target is not in a sanctuary,
+    // its herd is available to use the sleep ability, and the foe is awake,
+    // then they have a 50% chance to attempt to inflict sleep. 
+    case MONS_DREAM_SHEEP:
+    {
+        actor *foe = mons->get_foe();
+        if (!mons_is_confused(mons)
+            && !is_sanctuary(mons->pos()) && !is_sanctuary(foe->pos())
+            && _will_sheep_sleep(mons)
+            && foe && foe->can_sleep() && !foe->asleep()
+            && coinflip())
+        {
+            _dream_sheep_sleep(mons, foe);
+            used = true;
+        }
+        break;
+    }
+    
     case MONS_THORN_HUNTER:
     {
         // If we would try to move into a briar (that we might have just created

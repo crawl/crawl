@@ -2498,6 +2498,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_DREAM_SHEEP, "Summon Dream Sheep",
+    SPTYP_SUMMONING,
+    SPFLAG_MONSTER | SPFLAG_EMERGENCY,
+    3,
+    0,
+    -1, -1,
+    2, 0,
+    TILEG_SUMMON_DREAM_SHEEP,
+},
+
+{
     SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria",
     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
     SPFLAG_SELFENCH,

@@ -134,6 +134,7 @@ shock_serpent CORPSE_SHOCK_SERPENT
 
 ## Yaks, sheep and elephants ('Y')
 sheep CORPSE_SHEEP
+dream_sheep CORPSE_DREAM_SHEEP
 yak CORPSE_YAK
 death_yak CORPSE_DEATH_YAK
 elephant CORPSE_ELEPHANT

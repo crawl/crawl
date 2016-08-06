@@ -252,6 +252,7 @@ static const pop_entry pop_lair[] =
   {  3,  6,   89, RISE, MONS_BOULDER_BEETLE },
   {  3,  8,   52, SEMI, MONS_POLAR_BEAR },
   {  3,  8,   25, PEAK, MONS_LINDWURM },
+  {  4,  7,  144, PEAK, MONS_DREAM_SHEEP }, 
   {  4,  9,   66, RISE, MONS_FIRE_CRAB },
   {  1,  5, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }

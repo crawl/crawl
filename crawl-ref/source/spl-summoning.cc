@@ -3338,6 +3338,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_UNDEAD,              { 8, 2 } },
     { SPELL_SUMMON_DRAKES,              { 4, 2 } },
     { SPELL_SUMMON_MUSHROOMS,           { 8, 2 } },
+    { SPELL_SUMMON_DREAM_SHEEP,         { 6, 2 } },
     { SPELL_SUMMON_EYEBALLS,            { 4, 2 } },
     { SPELL_WATER_ELEMENTALS,           { 3, 2 } },
     { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },

@@ -225,6 +225,7 @@ polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
+dream_sheep MONS_DREAM_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
 catoblepas MONS_CATOBLEPAS
