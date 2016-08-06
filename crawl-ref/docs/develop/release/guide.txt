@@ -69,25 +69,20 @@ for those the list begins with step 3.
        * accessing all help screens (including the ? submenus)
 
 
-5. Sync the documentation
+5. Update documentation files
 
-   Update the release date in the changelog. In major releases (not point
-   ones!), use "make rest" to fetch the the manual from the wiki
-   (https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest). Remember that
-   after the release the wiki refers to the next major version, so any further
-   changes need to be done in the git tree directly. Commit.
+   Update the release date in the changelog. This is a good time to make a
+   final check of the Crawl manual to make sure it's updated for any relevant
+   changes.
 
-
-6. Update and commit the Debian changelog
-
-   In the debian.txt guide in this directory, see the step "0.2
-   Release Prerequisites" to update `source/debian/changelog` for the
-   new version. You don't have to test or prepare the debian packages
-   at this stage, but it's ideal that you make the commit updating the
-   Debian changelog before tagging the release.
+   It's ideal if you can also update the Debian changelog file before tagging
+   the release, but this can be done later by the person preparing the debian
+   packages. In the debian.txt guide in this directory, see the step "0.2
+   Release Prerequisites" to update `source/debian/changelog` for the new
+   version.
 
 
-7. Tag the release
+6. Tag the release
 
    In the branch you're about to tag:
    git tag -a 0.X.y
@@ -95,7 +90,7 @@ for those the list begins with step 3.
    Don't push the tag yet so you can make final amendments.
 
 
-8. Package the source tarball, produce final builds and Debian packages
+7. Package the source tarball, produce final builds and Debian packages
 
    "make package-source" will create three source tar/zipballs.
 
@@ -124,7 +119,7 @@ for those the list begins with step 3.
    repository, see the debian.txt guide in this directory.
 
 
-9. Push the tag
+8. Push the tag
 
    Until the moment you push it to the official repository, you can delete it
    and re-tag:
@@ -136,7 +131,7 @@ for those the list begins with step 3.
    changes make it into the next minor version.
 
 
-10. Upload the files to CDO
+9. Upload the files to CDO
 
    Use the crawl login on CDO to upload the binaries to ~/website/release/ over
    scp or sftp. The links on the download page currently at
@@ -156,7 +151,7 @@ for those the list begins with step 3.
    Building and installing the Debian packages is covered in the debian.txt
    guide in this directory.
 
-11. Update Sourceforge
+10. Update Sourceforge
 
     We currently use Sourceforge only for the CRD mailing list. Until CRD is
     moved somewhere else, we want to keep the Sourceforge release binaries
@@ -168,12 +163,12 @@ for those the list begins with step 3.
     most, .exe installer for Windows).
 
 
-12. Announce the release
+11. Announce the release
 
     Post a release announcement to the CDO blog and send an email over
     crawl-ref-discuss. If you want you can also write a news item on
     Sourceforge.
 
 
-13. Lean back and enjoy the excitement
+12. Lean back and enjoy the excitement
     ...until the first bug reports roll in. ;)
