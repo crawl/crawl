@@ -267,6 +267,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_NORRIS)
     AXED_MON(MONS_MAUD)
     AXED_MON(MONS_WIGLAF)
+    AXED_MON(MONS_SHEEP)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -4748,16 +4749,16 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
 
 // yaks, sheep, elephants, and other beasts ('Y')
 {
-    MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
+    MONS_DREAM_SHEEP, 'Y', CYAN, "dream sheep",
     M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
-    10, MONS_SHEEP, MONS_SHEEP, MH_NATURAL, 10,
+    10, MONS_SHEEP, MONS_DREAM_SHEEP, MH_NATURAL, 30,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    3, 165,
-    2, 7, MST_NO_SPELLS, CE_CLEAN, S_BLEAT,
+    9, 220,
+    2, 10, MST_DREAM_SHEEP, CE_CLEAN, S_BLEAT,
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS,
-    {TILEP_MONS_SHEEP}, TILE_CORPSE_SHEEP
+    {TILEP_MONS_DREAM_SHEEP}, TILE_CORPSE_DREAM_SHEEP,
 },
 
 {

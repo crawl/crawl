@@ -5,7 +5,7 @@
 # 'cornered' is when they realize they have nowhere to go.
 #########
 %%%%
-sheep flee
+dream sheep flee
 
 w:30
 @The_monster@ bleats in terror.

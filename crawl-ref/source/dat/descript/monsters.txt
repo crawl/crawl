@@ -955,6 +955,13 @@ draconian zealot
 A draconian deriving its hellish powers and demonic allies from the worship of
 some unknown dark god.
 %%%%
+dream sheep
+
+A drowsy, fluffy ovine that emanates sparkling motes of dust from its coat.
+When a herd of dream sheep gather, this dream dust overwhelms and puts their
+victims to sleep. When threatened, individual dream sheep may muster a large
+amount of dream dust. It looks quite flammable.
+%%%%
 drowned soul
 
 A cold and hollow apparition of the drowned dead, chained by some lingering
@@ -2115,12 +2122,6 @@ shard shrike
 An incredibly fast-moving bird, known for impaling its prey on shards of ice
 before tearing them to pieces. They have acclimated to the desolate wastes of
 Cocytus, and its accursed chill now envelops them.
-%%%%
-sheep
-
-A dim-witted, fluffy ovine, better known for its woolly hide than its
-ferocity. Dungeon sheep are nevertheless far more murderous than their
-surface brethren. It looks quite flammable.
 %%%%
 shining eye
 

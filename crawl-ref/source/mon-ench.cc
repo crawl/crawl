@@ -1556,12 +1556,13 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(this, " burns!");
             dprf("sticky flame damage: %d", dam);
 
-            if (type == MONS_SHEEP)
+            if (mons_genus(type) == MONS_SHEEP)
             {
                 for (adjacent_iterator ai(pos()); ai; ++ai)
                 {
                     monster *mon = monster_at(*ai);
-                    if (mon && mon->type == MONS_SHEEP
+                    if (mon
+                        && (mons_genus(mon->type) == MONS_SHEEP)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {

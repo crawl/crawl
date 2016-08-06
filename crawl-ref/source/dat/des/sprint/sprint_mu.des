@@ -642,7 +642,7 @@ ENDMAP
 # Shoals 1, archipelago
 NAME: sprint_mu_shoals_archi
 TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
-MONS: Polyphemus, sheep, sea snake, Ilsuiw, merfolk javelineer
+MONS: Polyphemus, dream sheep, sea snake, Ilsuiw, merfolk javelineer
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
 KFEAT: B = book shop / jewellery shop / gadget shop
