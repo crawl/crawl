@@ -313,8 +313,6 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
-    { ABIL_MUMMY_RESTORATION, "Self-Restoration",
-      1, 0, 0, 0, {}, abflag::PERMANENT_MP },
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
@@ -1389,18 +1387,6 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
-    case ABIL_MUMMY_RESTORATION:
-        if (you.strength(false) == you.max_strength()
-            && you.intel(false) == you.max_intel()
-            && you.dex(false) == you.max_dex()
-            && !player_rotted())
-        {
-            if (!quiet)
-                mpr("You don't need to restore your attributes or health!");
-            return false;
-        }
-        return true;
-
     case ABIL_LUGONU_ABYSS_EXIT:
         if (!player_in_branch(BRANCH_ABYSS))
         {
@@ -1631,7 +1617,6 @@ bool activate_talent(const talent& tal)
         case ABIL_DELAYED_FIREBALL:
         case ABIL_STOP_SINGING:
         case ABIL_STOP_RECALL:
-        case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
         case ABIL_HEPLIAKLQANA_IDENTITY:
@@ -1757,27 +1742,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
-    case ABIL_MUMMY_RESTORATION:
-    {
-        fail_check();
-        mpr("You infuse your body with magical energy.");
-        bool did_restore = restore_stat(STAT_ALL, 0, false);
-
-        const int oldhpmax = you.hp_max;
-        unrot_hp(9999);
-        if (you.hp_max > oldhpmax)
-            did_restore = true;
-
-        // If nothing happened, don't take one max MP, don't use a turn.
-        if (!did_restore)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return SPRET_ABORT;
-        }
-
-        break;
-    }
-
     case ABIL_RECHARGING:
         fail_check();
         if (recharge_wand() <= 0)
@@ -3327,9 +3291,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     vector<talent> talents;
 
     // Species-based abilities.
-    if (player_mutation_level(MUT_MUMMY_RESTORATION))
-        _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
-
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
 
