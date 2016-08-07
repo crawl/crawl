@@ -663,8 +663,11 @@ bool god_id_item(item_def& item, bool silent)
             item.props["needs_autopickup"] = true;
         }
 
-        if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
+        if (is_weapon(item) || item.base_type == OBJ_RODS
+            || item.base_type == OBJ_ARMOUR)
+        {
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
+        }
 
         if (item.base_type == OBJ_JEWELLERY)
             ided |= ISFLAG_IDENT_MASK;
@@ -716,15 +719,12 @@ void ash_id_monster_equipment(monster* mon)
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
-        // Wielded weapon brands are IDed for everyone already.
-        if (i == MSLOT_WEAPON)
-            continue;
         if (mon->inv[i] == NON_ITEM)
             continue;
 
         item_def &item = mitm[mon->inv[i]];
         if ((i != MSLOT_WAND || !is_offensive_wand(item))
-            && !item_is_branded(item))
+            && !item_is_branded(item) && item.base_type != OBJ_RODS)
         {
             continue;
         }
