@@ -227,6 +227,7 @@ vector<SelItem> prompt_invent_items(
 void display_inventory();
 
 bool in_inventory(const item_def &i);
+bool item_accessible(const item_def &i);
 void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);

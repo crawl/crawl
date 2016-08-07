@@ -406,6 +406,12 @@ static bool _get_mem_list(spell_list &mem_spells,
       available_spells.insert(gift);
     }
 
+    // Handle spells stored in library
+    for (auto lib_spell : you.library_spells)
+    {
+      available_spells.insert(lib_spell);
+    }
+
     if (book_errors)
         more();
 
@@ -414,13 +420,13 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!just_check)
         {
             if (num_unknown > 1)
-                mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
+                mprf(MSGCH_PROMPT, "You must read or pickup those books before memorising spells.");
             else if (num_unknown == 1)
-                mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
+                mprf(MSGCH_PROMPT, "You must read or pickup that book before memorising spells");
             else if (book_errors)
                 mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
             else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks and your library is empty.");
         }
         return false;
     }
@@ -892,4 +898,19 @@ void destroy_spellbook(const item_def &book)
     int maxlevel = 0;
     for (spell_type stype : spells_in_book(book))
         maxlevel = max(maxlevel, spell_difficulty(stype));
+}
+
+void copy_spell_to_library(spell_type spell, bool silent)
+{
+    auto iter = you.library_spells.find(spell);
+
+    if (iter == you.library_spells.end())
+    {
+        start_delay<LibraryDelay>(spell_difficulty(spell), spell);
+        you.turn_is_over = true;
+    }
+    else if (!silent)
+    {
+        mprf(MSGCH_PLAIN, "%s is already in your library!", spell_title(spell));
+    }
 }
