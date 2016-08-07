@@ -631,34 +631,38 @@ ifndef BUILD_LUA
     BUILD_LUA = yes
   endif
 endif
-ifndef BUILD_LUA
-  ifneq ($(USE_LUAJIT),)
-    ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
-      LUA_PACKAGE = luajit
-    else
-      BUILD_LUA = yes
-    endif
-  else
-    ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-      ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
-        ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
-          ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-            BUILD_LUA = yes
-          else
-            ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
-              LUA_PACKAGE = lua
-            else
-              BUILD_LUA = yes
-            endif
-          endif
-        else
-          LUA_PACKAGE = lua51
-        endif
+# You can override the Lua package search with "make LUA_PACKAGE=lua-5-1".
+# pkg-config is still required.
+ifndef LUA_PACKAGE
+  ifndef BUILD_LUA
+    ifneq ($(USE_LUAJIT),)
+      ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
+        LUA_PACKAGE = luajit
       else
-        LUA_PACKAGE = lua-5.1
+        BUILD_LUA = yes
       endif
     else
-      LUA_PACKAGE = lua5.1
+      ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+        ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
+          ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
+            ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+              BUILD_LUA = yes
+            else
+              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+                LUA_PACKAGE = lua
+              else
+                BUILD_LUA = yes
+              endif
+            endif
+          else
+            LUA_PACKAGE = lua51
+          endif
+        else
+          LUA_PACKAGE = lua-5.1
+        endif
+      else
+        LUA_PACKAGE = lua5.1
+      endif
     endif
   endif
 endif
