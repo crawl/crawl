@@ -4241,7 +4241,7 @@ enum species_type
     SP_VIABLE   = 102,
 };
 
-enum spell_type
+enum spell_type : int
 {
     SPELL_NO_SPELL,
     SPELL_TELEPORT_SELF,
