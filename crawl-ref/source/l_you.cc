@@ -294,8 +294,7 @@ static int l_you_mem_spells(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    vector<int> books;
-    vector<spell_type> mem_spells = get_mem_spell_list(books);
+    vector<spell_type> mem_spells = get_mem_spell_list();
 
     for (size_t i = 0; i < mem_spells.size(); ++i)
     {
