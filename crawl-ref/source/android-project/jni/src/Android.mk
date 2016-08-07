@@ -183,6 +183,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-util.cc \
     $(CRAWL_PATH)/monster.cc \
     $(CRAWL_PATH)/mutation.cc \
+    $(CRAWL_PATH)/nearby-danger.cc \
     $(CRAWL_PATH)/newgame.cc \
     $(CRAWL_PATH)/ng-init.cc \
     $(CRAWL_PATH)/ng-input.cc \
