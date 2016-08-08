@@ -42,6 +42,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "items.h"
 #include "item_use.h"
 #include "kills.h"
 #include "libutil.h"
@@ -486,6 +487,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
     }
+
+    id_floor_books();
 
     // Traps go off.
     // (But not when losing flight - i.e., moving into the same tile)

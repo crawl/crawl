@@ -118,6 +118,7 @@ item_def& item_from_int(bool inv, int number)
     return inv ? you.inv[number] : mitm[number];
 }
 
+static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
@@ -929,6 +930,22 @@ void item_check()
                 learned_something_new(HINT_MULTI_PICKUP);
                 break;
             }
+        }
+    }
+}
+
+/// Auto-ID whatever spellbooks the player stands on.
+void id_floor_books()
+{
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_BOOKS && si->sub_type != BOOK_MANUAL)
+        {
+            // fix autopickup for previously-unknown books (hack)
+            if (item_needs_autopickup(*si))
+                si->props["needs_autopickup"] = true;
+            set_ident_flags(*si, ISFLAG_IDENT_MASK);
+            mark_had_book(*si);
         }
     }
 }
