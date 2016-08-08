@@ -2706,10 +2706,11 @@ static bool _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+    if (item && item->base_type == OBJ_BOOKS && item_accessible(*item)
         && !you.has_spell(spell) && you_can_memorise(spell))
     {
         description += "\n(M)emorise this spell.\n";
+        description += "(C)opy this spell to your library.\n";
         return true;
     }
 
@@ -2756,13 +2757,21 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
     if ((ch = getchm()) == 0)
         ch = getchm();
 
-    if (can_mem && toupper(ch) == 'M')
+    if (!can_mem) return;
+
+    ch = toupper(ch);
+
+    redraw_screen();
+    if (ch == 'M')
     {
-        redraw_screen();
         if (!learn_spell(spelled) || !you.turn_is_over)
             more();
-        redraw_screen();
     }
+    else if (ch == 'C')
+    {
+        copy_spell_to_library(spelled);
+    }
+    redraw_screen();
 }
 
 static string _describe_draconian(const monster_info& mi)

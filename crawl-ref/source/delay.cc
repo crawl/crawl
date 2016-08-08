@@ -159,6 +159,12 @@ bool MemoriseDelay::try_interrupt()
     return true;
 }
 
+bool LibraryDelay::try_interrupt()
+{
+  mpr("Your copying is interrupted.");
+  return true;
+}
+
 bool MultidropDelay::try_interrupt()
 {
     // No work lost
@@ -408,6 +414,16 @@ bool already_learning_spell(int spell)
     return false;
 }
 
+bool already_copying_spell()
+{
+    for (const auto delay : you.delay_queue)
+    {
+        if (dynamic_cast<LibraryDelay*>(delay.get()))
+            return true;
+    }
+    return false;
+}
+
 static command_type _get_running_command()
 {
     if (Options.travel_key_stop && kbhit()
@@ -510,6 +526,12 @@ void MemoriseDelay::start()
         simple_god_message(message.c_str());
     }
     mprf(MSGCH_MULTITURN_ACTION, "You start memorising the spell.");
+}
+
+void LibraryDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You start copying %s to your library.",
+         spell_title(spell));
 }
 
 void PasswallDelay::start()
@@ -899,6 +921,12 @@ void MemoriseDelay::finish()
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
+}
+
+void LibraryDelay::finish()
+{
+  mpr("You finish copying.");
+  add_spell_to_library(spell);
 }
 
 void PasswallDelay::finish()

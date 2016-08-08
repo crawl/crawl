@@ -43,7 +43,9 @@ vector<spell_type> spells_in_book(const item_def &book);
 bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true,
                             spell_type current_spell = SPELL_NO_SPELL);
-vector<spell_type> get_mem_spell_list(vector<int> &books);
+vector<spell_type> get_mem_spell_list();
 
 void destroy_spellbook(const item_def &book);
+
+void copy_spell_to_library(spell_type spell, bool silent = false);
 #endif

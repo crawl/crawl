@@ -1421,6 +1421,10 @@ static void tag_construct_you(writer &th)
     for (auto spell : you.vehumet_gifts)
         marshallShort(th, spell);
 
+    marshallUByte(th, you.library_spells.size());
+    for (auto spell : you.library_spells)
+        marshallShort(th, spell);
+
     CANARY;
 
     // how many skills?
@@ -2518,6 +2522,16 @@ static void tag_read_you(reader &th)
                 you.vehumet_gifts.insert(unmarshallSpellType(th));
 #if TAG_MAJOR_VERSION == 34
         }
+    }
+#endif
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_SPELL_LIBRARY)
+    {
+#endif
+        count = unmarshallUByte(th);
+        for (int i = 0; i < count; ++i)
+            you.library_spells.insert(unmarshallSpellType(th));
+#if TAG_MAJOR_VERSION == 34
     }
 #endif
     EAT_CANARY;

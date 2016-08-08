@@ -898,6 +898,11 @@ bool in_inventory(const item_def &i)
     return i.pos == ITEM_IN_INVENTORY;
 }
 
+bool item_accessible(const item_def &i)
+{
+    return in_inventory(i) || i.pos == you.pos();
+}
+
 const char *item_class_name(int type, bool terse)
 {
     if (terse)

@@ -379,6 +379,31 @@ public:
     }
 };
 
+class LibraryDelay : public Delay
+{
+    void start() override;
+
+    void tick() override
+    {
+        mprf(MSGCH_MULTITURN_ACTION, "You continue copying.");
+    }
+
+    void finish() override;
+public:
+    spell_type spell;
+
+    LibraryDelay(int dur, spell_type sp) :
+                 Delay(dur), spell{sp}
+    {}
+
+    bool try_interrupt() override;
+
+    const char* name() const override
+    {
+        return "library";
+    }
+};
+
 class ButcherDelay : public Delay
 {
     item_def& corpse;
@@ -786,6 +811,7 @@ bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding();
 bool player_stair_delay();
 bool already_learning_spell(int spell = -1);
+bool already_copying_spell();
 
 void clear_macro_process_key_delay();
 
