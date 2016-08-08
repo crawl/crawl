@@ -194,6 +194,7 @@ enum tag_minor_version
     TAG_MINOR_MUMMY_RESTORATION,   // remove mummy self-restoration ability
     TAG_MINOR_DECUSTOM_CLOUDS,     // remove support for custom clouds
     TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
+    TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

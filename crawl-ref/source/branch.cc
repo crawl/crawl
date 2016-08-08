@@ -13,7 +13,7 @@ FixedVector<int, NUM_BRANCHES> brdepth;
 FixedVector<int, NUM_BRANCHES> branch_bribe;
 branch_type root_branch;
 
-/// A basic ordering for branches.
+/// A save-compat ordering for branches.
 static const branch_type logical_branch_order[] = {
     BRANCH_DUNGEON,
     BRANCH_TEMPLE,

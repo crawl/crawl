@@ -272,6 +272,7 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         return;
 
     case NUM_BRANCHES:
+    case GLOBAL_BRANCH_INFO:
         break;
     }
 }
