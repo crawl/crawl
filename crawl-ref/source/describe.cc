@@ -2408,9 +2408,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     {
         formatted_string fdesc(formatted_string::parse_string(desc));
         list_spellset(item_spellset(item), nullptr, &item, fdesc);
-        // only continue the inventory loop if we didn't start memorizing a
-        // spell & didn't destroy the item for amnesia.
-        return !already_learning_spell() && item.is_valid();
+        return true;
     }
     else
     {
@@ -2653,10 +2651,10 @@ string player_spell_desc(spell_type spell, const item_def* item)
  * @param item          The item (book or rod) holding the spell, if any.
  * @return              Whether you can memorise the spell.
  */
-static bool _get_spell_description(const spell_type spell,
-                                  const monster_info *mon_owner,
-                                  string &description,
-                                  const item_def* item = nullptr)
+static void _get_spell_description(const spell_type spell,
+                                   const monster_info *mon_owner,
+                                   string &description,
+                                   const item_def* item = nullptr)
 {
     description.reserve(500);
 
@@ -2697,23 +2695,9 @@ static bool _get_spell_description(const spell_type spell,
     else
         description += player_spell_desc(spell, item);
 
-    // Don't allow memorization after death.
-    // (In the post-game inventory screen.)
-    if (crawl_state.player_is_dead())
-        return false;
-
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
-
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
-        && !you.has_spell(spell) && you_can_memorise(spell))
-    {
-        description += "\n(M)emorise this spell.\n";
-        return true;
-    }
-
-    return false;
 }
 
 /**
@@ -2732,8 +2716,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 
 
 /**
- * Examine a given spell. List its description and details, and handle
- * memorizing the spell in question, if the player is able & chooses to do so.
+ * Examine a given spell. List its description and details.
  *
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
@@ -2748,21 +2731,13 @@ void describe_spell(spell_type spelled, const monster_info *mon_owner,
 #endif
 
     string desc;
-    const bool can_mem = _get_spell_description(spelled, mon_owner, desc, item);
+    _get_spell_description(spelled, mon_owner, desc, item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
     char ch;
     if ((ch = getchm()) == 0)
         ch = getchm();
-
-    if (can_mem && toupper(ch) == 'M')
-    {
-        redraw_screen();
-        if (!learn_spell(spelled) || !you.turn_is_over)
-            more();
-        redraw_screen();
-    }
 }
 
 static string _describe_draconian(const monster_info& mi)

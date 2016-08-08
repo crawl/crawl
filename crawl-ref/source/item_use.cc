@@ -2391,6 +2391,12 @@ void random_uselessness()
 
 static void _handle_read_book(item_def& book)
 {
+    if (you_worship(GOD_TROG))
+    {
+        mprf(MSGCH_WARN, "Trog does not allow his worshippers to read spellbooks!");
+        return;
+    }
+
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2413,9 +2419,44 @@ static void _handle_read_book(item_def& book)
     }
 #endif
 
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    const bool alreadyknown = item_type_known(book);
+
+    you.turn_is_over = true;
+
     mark_had_book(book);
-    read_book(book);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
+
+    string book_name = book.name(DESC_A, false, true);
+
+    if (!alreadyknown)
+    {
+        mprf("This is %s!", book_name.c_str());
+    }
+    mprf("Copying spells from %s to your library:", book_name.c_str());
+
+    vector<spell_type> new_spells = read_book(book);
+
+    if (new_spells.size() == 0)
+    {
+        mpr("All the spells from this book were already in your library.");
+        return;
+    }
+
+    string copy_desc = "Copied ";
+    for (unsigned i = 0; i < new_spells.size(); i++)
+    {
+        string prefix;
+        if (i == new_spells.size() - 1)
+            prefix = ", and ";
+        else if (i > 0)
+            prefix = ", ";
+
+        copy_desc += prefix;
+        copy_desc += spell_title(new_spells[i]);
+    }
+    mprf("%s.", copy_desc.c_str());
+    mprf("After copying the last spell, the book crumbles to dust.");
 }
 
 static void _vulnerability_scroll()
