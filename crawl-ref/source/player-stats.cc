@@ -100,13 +100,16 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
+    const string stat_gain_message = make_stringf("Your experience leads to a%s "
+                                                  "increase in your attributes!",
+                                                  you.species == SP_DEMIGOD ? 
+                                                  " divine" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Popup *pop = new Popup("Increase Attributes");
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry("Your experience leads to an increase in "
-                                  "your attributes! Increase:", MEL_TITLE));
+    pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
     me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
@@ -118,7 +121,7 @@ bool attribute_increase()
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
 #else
-    mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
+    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
