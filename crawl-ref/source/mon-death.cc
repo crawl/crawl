@@ -1896,7 +1896,8 @@ item_def* monster_die(monster* mons, killer_type killer,
     const bool mons_reset    = (killer == KILL_RESET
                                 || killer == KILL_DISMISSED);
     const bool leaves_corpse = !summoned && !fake_abjure && !timeout
-                               && !mons_reset;
+                               && !mons_reset
+                               && !mons_is_tentacle_segment(mons->type);
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
