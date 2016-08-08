@@ -857,7 +857,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
         return false;
 
     monster* fol = monster_at(pos);
-    if (!fol || !fol->alive())
+    if (!fol || !fol->alive() || fol->incapacitated())
         return false;
 
     // only H's ancestors can follow into portals & similar.
