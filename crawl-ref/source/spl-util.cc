@@ -404,6 +404,12 @@ bool del_spell_from_memory(spell_type spell)
         return del_spell_from_memory_by_slot(i);
 }
 
+bool add_spell_to_library(spell_type spell)
+{
+    auto result = you.library_spells.insert(spell);
+    return result.second;
+}
+
 int spell_hunger(spell_type which_spell, bool rod)
 {
     if (player_energy())

@@ -27,7 +27,7 @@ void mark_had_book(const item_def &book);
 void mark_had_book(book_type booktype);
 bool book_has_title(const item_def &book);
 
-void read_book(item_def &item);
+vector<spell_type> read_book(item_def &book);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);

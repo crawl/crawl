@@ -11,6 +11,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 #include "actor.h"
 #include "beam.h"
@@ -157,6 +158,7 @@ public:
 
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
+    unordered_set<spell_type, hash<int>> library_spells;
 
     uint8_t spell_no;
     game_chapter chapter;

@@ -554,19 +554,12 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc)
 {
-    const bool can_memorise = source_item
-                              && source_item->base_type == OBJ_BOOKS
-                              && in_inventory(*source_item);
-
     formatted_string &description = initial_desc;
     describe_spellset(spells, source_item, description, mon_owner);
 
     description.textcolour(LIGHTGREY);
 
-    description.cprintf("Select a spell to read its description");
-    if (can_memorise)
-        description.cprintf(" or to to memorise it");
-    description.cprintf(".\n");
+    description.cprintf("Select a spell to read its description.\n");
 
     spell_scroller ssc(spells, mon_owner, source_item);
     ssc.wrap_formatted_string(description);
@@ -602,9 +595,6 @@ bool spell_scroller::process_key(int keyin)
 
     const spell_type chosen_spell = flat_spells[spell_index];
     describe_spell(chosen_spell, mon_owner, source_item);
-
-    if (already_learning_spell()) // player began (M)emorizing
-        return false; // time to leave the menu
 
     draw_menu();
     return true; // loop

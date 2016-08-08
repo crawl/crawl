@@ -49,6 +49,9 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
+typedef vector<spell_type>                     spell_list;
+typedef unordered_set<spell_type, hash<int>>   spell_set;
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -300,11 +303,31 @@ void mark_had_book(book_type booktype)
     you.had_book.set(booktype);
 }
 
-void read_book(item_def &book)
+vector<spell_type> read_book(item_def &book)
 {
-    clrscr();
-    describe_item(book);
-    redraw_screen();
+    int num_spells = 0;
+    spell_list new_spells;
+
+    for (spell_type spell : spells_in_book(book))
+    {
+        num_spells++;
+        bool is_new = add_spell_to_library(spell);
+        if (is_new)
+            new_spells.push_back(spell);
+    }
+
+    if (num_spells == 0)
+    {
+        mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
+             "file a bug report.", book.name(DESC_PLAIN).c_str());
+    }
+
+    if (in_inventory(book))
+        dec_inv_item_quantity(book.link, 1);
+    else
+        dec_mitm_item_quantity(book.index(), 1);
+
+    return new_spells;
 }
 
 /**
@@ -338,9 +361,6 @@ bool player_can_memorise(const item_def &book)
     }
     return false;
 }
-
-typedef vector<spell_type>                     spell_list;
-typedef unordered_set<spell_type, hash<int>>   spell_set;
 
 static void _get_book_spells(item_def& book, spell_set &spells,
                              bool &book_errors)
@@ -406,6 +426,12 @@ static bool _get_mem_list(spell_list &mem_spells,
       available_spells.insert(gift);
     }
 
+    // Handle spells stored in library
+    for (auto lib_spell : you.library_spells)
+    {
+      available_spells.insert(lib_spell);
+    }
+
     if (book_errors)
         more();
 
@@ -414,13 +440,13 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!just_check)
         {
             if (num_unknown > 1)
-                mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
+                mprf(MSGCH_PROMPT, "You must read or pickup those books before memorising spells.");
             else if (num_unknown == 1)
-                mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
+                mprf(MSGCH_PROMPT, "You must read or pickup that book before memorising spells");
             else if (book_errors)
                 mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
             else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks and your library is empty.");
         }
         return false;
     }
