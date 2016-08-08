@@ -820,7 +820,9 @@ enum branch_type                // you.where_are_you
 #if TAG_MAJOR_VERSION == 34
     BRANCH_DEPTHS,
 #endif
-    NUM_BRANCHES
+    NUM_BRANCHES,
+
+    GLOBAL_BRANCH_INFO = 127,
 };
 
 enum caction_type    // Primary categorization of counted actions.

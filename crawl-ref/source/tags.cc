@@ -3702,6 +3702,8 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     if (br == -1)
         br = NUM_BRANCHES;
     ASSERT(br >= 0);
+    if (th.getMinorVersion() < TAG_MINOR_GLOBAL_BR_INFO && br == BRANCH_DEPTHS+1)
+        br = GLOBAL_BRANCH_INFO;                             // was NUM_BRANCHES
     place_info.branch      = static_cast<branch_type>(br);
 #else
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
@@ -3803,6 +3805,14 @@ static void tag_read_you_dungeon(reader &th)
 #endif
         branch_bribe[j] = unmarshallInt(th);
     }
+    // Initialize data for any branches added after this save version.
+    for (int j = count; j < NUM_BRANCHES; ++j)
+    {
+        brdepth[j] = branches[j].numlevels;
+        brentry[j] = level_id(branches[j].parent_branch, branches[j].mindepth);
+        branch_bribe[j] = 0;
+    }
+
 #if TAG_MAJOR_VERSION == 34
     // Deepen the Abyss; this is okay since new abyssal stairs will be
     // generated as the place shifts.
