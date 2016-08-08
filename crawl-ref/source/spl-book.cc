@@ -402,9 +402,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
-    {
       available_spells.insert(gift);
-    }
 
     if (book_errors)
         more();
