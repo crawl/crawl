@@ -342,8 +342,15 @@ bool player_can_memorise(const item_def &book)
 typedef vector<spell_type>                     spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
 
-static void _get_book_spells(item_def& book, spell_set &spells,
-                             bool &book_errors)
+/**
+ * Read the given book, identifying it and marking it as owned if necessary,
+ * and then list all spells in the book.
+ *
+ * @param book      The book to be read.
+ * @param spells    The list of spells to populate. Doesn't have to be empty.
+ * @return          Whether the given book is invalid (empty).
+ */
+static bool _get_book_spells(item_def& book, spell_set &spells)
 {
     mark_had_book(book);
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
@@ -360,8 +367,10 @@ static void _get_book_spells(item_def& book, spell_set &spells,
     {
         mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
              "file a bug report.", book.name(DESC_PLAIN).c_str());
-        book_errors = true;
+        return true;
     }
+
+    return false;
 }
 
 static bool _get_mem_list(spell_list &mem_spells,
@@ -379,7 +388,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!book.defined() || !item_is_spellbook(book))
             continue;
 
-        _get_book_spells(book, available_spells, book_errors);
+        book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
     // We also check the ground
@@ -397,7 +406,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             continue;
         }
 
-        _get_book_spells(book, available_spells, book_errors);
+        book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
     // Handle Vehumet gifts
