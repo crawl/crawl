@@ -231,6 +231,7 @@
     Brennan Shacklett
     ShadyAmish
     Evan Shaw
+    Aditya Shevade
     Robert Shimmin
     Sigurd
     Edgar Simo
