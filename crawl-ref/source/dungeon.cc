@@ -1479,10 +1479,10 @@ list<coord_def> _find_stone_stairs(bool up_stairs)
  * @param preserve_vault_stairs    Don't trapdoorify stairs that are in vaults.
  * @param hatch_type        What sort of hatch to turn excess stairs into.
  */
-static void _stairs_into_hatches(list<coord_def> &stairs,
-                                 unsigned int needed_stairs,
-                                 bool preserve_vault_stairs,
-                                 dungeon_feature_type hatch_type)
+static void _cull_redundant_stairs(list<coord_def> &stairs,
+                                   unsigned int needed_stairs,
+                                   bool preserve_vault_stairs,
+                                   dungeon_feature_type hatch_type)
 {
     // we're going to iterate over the list, looking for redundant stairs.
     // (redundant = can walk from one to the other.) For each of
@@ -1537,7 +1537,7 @@ static void _stairs_into_hatches(list<coord_def> &stairs,
  * @param preserve_vault_stairs    Don't remove stairs that are in vaults.
  * @param hatch_type        What sort of hatch to turn excess stairs into.
  */
-static void _cull_excess_stairs(list<coord_def> &stairs,
+static void _cull_random_stairs(list<coord_def> &stairs,
                                 unsigned int needed_stairs,
                                 bool preserve_vault_stairs,
                                 dungeon_feature_type hatch_type)
@@ -1628,18 +1628,18 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
+    // Find pairwise stairs that are connected and turn one of them
+    // into an escape hatch of the appropriate type.
     if (stairs.size() > needed_stairs)
     {
-        // Find pairwise stairs that are connected and turn one of them
-        // into an escape hatch of the appropriate type.
-        _stairs_into_hatches(stairs, needed_stairs,
-                             preserve_vault_stairs, replace);
+        _cull_redundant_stairs(stairs, needed_stairs,
+                               preserve_vault_stairs, replace);
     }
 
     // If that doesn't work, remove random stairs.
     if (stairs.size() > needed_stairs)
     {
-        _cull_excess_stairs(stairs, needed_stairs,
+        _cull_random_stairs(stairs, needed_stairs,
                             preserve_vault_stairs, replace);
     }
 
@@ -1648,6 +1648,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
+    // XXX: this logic is exceptionally shady & should be reviewed
     if (stairs.size() > needed_stairs && preserve_vault_stairs
         && (!checking_up_stairs || you.depth != 1
             || !player_in_branch(root_branch)))
