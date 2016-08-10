@@ -1822,11 +1822,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WORD_OF_RECALL:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
-        if (silenced(pos()) || paralysed() || petrified()
-            || confused() || asleep() || has_ench(ENCH_FEAR)
-            || has_ench(ENCH_BREATH_WEAPON)
-            || has_ench(ENCH_WATER_HOLD) && !res_water_drowning()
-            || has_ench(ENCH_MUTE))
+        if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
+            || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             speed_increment += me.duration;
             del_ench(en, true, false);

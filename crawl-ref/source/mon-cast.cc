@@ -1588,7 +1588,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
     }
 
     // Don't try to make noise when silent.
-    if (silenced(chief.pos()) || chief.has_ench(ENCH_MUTE))
+    if (chief.is_silenced())
         return false;
 
     const battlecry_type type = _get_cry_type(chief);
