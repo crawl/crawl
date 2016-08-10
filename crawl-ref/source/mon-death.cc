@@ -1679,7 +1679,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     if (holiness == MH_DEMONIC)
         did_kill_conduct(DID_KILL_DEMON, mons);
-    else if (holiness & MH_NATURAL)
+    else if (holiness & (MH_NATURAL | MH_PLANT))
     {
         did_kill_conduct(DID_KILL_LIVING, mons);
 
