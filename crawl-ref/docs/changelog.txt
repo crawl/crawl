@@ -1,4 +1,4 @@
-Stone Soup 0.19 (up to 0.19-a0-975-gfff5315)
+Stone Soup 0.19 (up to 0.19-a0-1124-g3d89a69)
 --------------------------------------------
 
 Highlights
@@ -19,6 +19,8 @@ Character
 * Flight expiring over deep water or lava no longer causes instant death;
   instead, it causes heavy drain over time until reaching land.
 * Potions, scrolls and books can be used while still on the floor.
+* Resistances granted by rN (to e.g. Pain effects) now scale with rN, only
+  reaching full immunity at rN+++ (instead of at rN+).
 * Monks can now choose a weapon to start with.
 * Satiated vampires can now berserk and transform; previously required Full.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
@@ -67,6 +69,8 @@ Interface
 ---------
 * Most targeters will be more intelligent when trying to maximize enemies hit.
 * In tiles, monster attitude is indicated with colored auras instead of icons.
+* Descriptions of monsters with multiple spellsets show which spells you've
+  seen them cast.
 
 Items
 -----
@@ -95,6 +99,7 @@ Items
   longer evil.
 * Elemental enhancers no longer penalise spells of the opposite element.
 * Jewellery acquirement creates twice as many randarts.
+* Books can no longer be destroyed to forget spells.
 * Rods are created through misc. acquirement instead of staff acquirement.
 * It's no longer possible to acquire ammunition.
 * Removed:
@@ -121,8 +126,11 @@ Monsters
   - Nergalle can no longer enter Death's Door.
   - Gloorx Vloq can no longer cast Black Mark.
   - Various uniques have had their genders changed.
+* Zombies, skeletons, and simulacrula no longer hide damage taken, and display
+  the full names of the monster they were created from.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
-* Necromancers gain Bind Soul, reviving slain monsters as spectral things.
+* Necromancers gain Bind Soul, reviving slain monsters as simulacrula.
+* Ghostly Fireball is now completely resistable by rN and causes draining.
 * Obsidian statues can Mesmerise.
 * Wizards and Ogre Mages have split up and re-arranged their many spell sets
   to arrive at three sets each, with minimal overlap.
