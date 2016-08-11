@@ -88,6 +88,7 @@ static void _ench_animation(int flavour, const monster* mon = nullptr,
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
 static void _explosive_bolt_explode(bolt *parent, coord_def pos);
+int _ench_pow_to_dur(int pow);
 
 tracer_info::tracer_info()
 {
@@ -1946,7 +1947,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
     }
 
     mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, agent(),
-                               ench_power * BASELINE_DELAY));
+                               _ench_pow_to_dur(ench_power)));
 }
 
 // Petrification works in two stages. First the monster is slowed down in
@@ -5565,7 +5566,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
                 dur = max(10, dur - mon->get_hit_dice());
             else
-                dur *= BASELINE_DELAY; // regular confusion is 10x longer
+                dur = _ench_pow_to_dur(dur);
 
             if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
             {
@@ -6653,6 +6654,13 @@ void clear_zap_info_on_exit()
 int ench_power_stepdown(int pow)
 {
     return stepdown_value(pow, 30, 40, 100, 120);
+}
+
+/// Translate a given ench power to a duration, in aut.
+int _ench_pow_to_dur(int pow)
+{
+    // ~15 turns at 25 pow, ~21 turns at 50 pow, ~27 turns at 100 pow
+    return stepdown(pow * BASELINE_DELAY, 70);
 }
 
 // Can a particular beam go through a particular monster?
