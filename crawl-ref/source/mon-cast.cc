@@ -3288,6 +3288,65 @@ static spell_type _find_spell_prospect(const monster &mons,
 }
 
 /**
+ * Would it be a good idea for the given monster to cast the given spell?
+ *
+ * @param mons      The monster casting the spell.
+ * @param spell     The spell in question; e.g. SPELL_FIREBALL.
+ * @param beem      A beam with the spell loaded into it; used as a tracer.
+ * @param ignore_good_idea      Whether to be almost completely indiscriminate
+ *                              with beam spells. XXX: refactor this out?
+ */
+static bool _should_cast_spell(const monster &mons, spell_type spell,
+                               bolt &beem, bool ignore_good_idea)
+{
+    // beam-type spells requiring tracers
+    if (get_spell_flags(spell) & SPFLAG_NEEDS_TRACER)
+    {
+        const bool explode = spell_is_direct_explosion(spell);
+        fire_tracer(&mons, beem, explode);
+        // Good idea?
+        return mons_should_fire(beem, ignore_good_idea);
+    }
+
+    // All direct-effect/summoning/self-enchantments/etc.
+    const actor *foe = mons.get_foe();
+    if (_ms_direct_nasty(spell)
+        && mons_aligned(&mons, (mons.foe == MHITYOU) ?
+                        &you : foe)) // foe=get_foe() is nullptr for friendlies
+    {                                // targeting you, which is bad here.
+        return false;
+    }
+
+    if (mons.foe == MHITYOU || mons.foe == MHITNOT)
+    {
+        // XXX: Note the crude hack so that monsters can
+        // use ME_ALERT to target (we should really have
+        // a measure of time instead of peeking to see
+        // if the player is still there). -- bwr
+        return you.visible_to(&mons)
+               || mons.target == you.pos() && coinflip();
+    }
+
+    ASSERT(foe);
+    if (!mons.can_see(*foe))
+        return false;
+
+    if (mons.type == MONS_DAEVA && mons.god == GOD_SHINING_ONE)
+    {
+        // Don't allow TSO-worshipping daevas to make unchivalric magic
+        // attacks, except against appropriate monsters.
+        // lmao {pf}
+        if (find_stab_type(&mons, *foe) != STAB_NO_STAB
+            && !tso_unchivalric_attack_safe_monster(foe->as_monster()))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Give a monster a chance to cast a spell.
  *
  * @param mons the monster that might cast.
@@ -3470,7 +3529,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             beem = orig_beem;
-            bool spellOK = false;
 
             // Setup the spell.
             if (spell_cast != SPELL_NO_SPELL)
@@ -3529,56 +3587,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 continue;
             }
 
-            // beam-type spells requiring tracers
-            if (get_spell_flags(spell_cast) & SPFLAG_NEEDS_TRACER)
-            {
-                const bool explode =
-                    spell_is_direct_explosion(spell_cast);
-                fire_tracer(mons, beem, explode);
-                // Good idea?
-                if (mons_should_fire(beem, ignore_good_idea))
-                    spellOK = true;
-            }
-            else
-            {
-                // All direct-effect/summoning/self-enchantments/etc.
-                spellOK = true;
-
-                if (_ms_direct_nasty(spell_cast)
-                    && mons_aligned(mons, (mons->foe == MHITYOU) ?
-                       &you : foe)) // foe=get_foe() is nullptr for friendlies
-                {                   // targeting you, which is bad here.
-                    spellOK = false;
-                }
-                else if (mons->foe == MHITYOU || mons->foe == MHITNOT)
-                {
-                    // XXX: Note the crude hack so that monsters can
-                    // use ME_ALERT to target (we should really have
-                    // a measure of time instead of peeking to see
-                    // if the player is still there). -- bwr
-                    if (!you.visible_to(mons)
-                        && (mons->target != you.pos() || coinflip()))
-                    {
-                        spellOK = false;
-                    }
-                }
-                else if (!mons->can_see(*foe))
-                    spellOK = false;
-                else if (mons->type == MONS_DAEVA
-                         && mons->god == GOD_SHINING_ONE)
-                {
-                    // Don't allow TSO-worshipping daevas to make
-                    // unchivalric magic attacks, except against
-                    // appropriate monsters.
-                    if (find_stab_type(mons, *foe) != STAB_NO_STAB
-                        && !tso_unchivalric_attack_safe_monster(foe->as_monster()))
-                    {
-                        spellOK = false;
-                    }
-                }
-            }
-
-            if (!spellOK)
+            if (!_should_cast_spell(*mons, spell_cast, beem, ignore_good_idea))
                 spell_cast = SPELL_NO_SPELL;
 
             if (spell_cast != SPELL_NO_SPELL)
