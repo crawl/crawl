@@ -3346,6 +3346,16 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     return true;
 }
 
+/// How does Ru describe stopping the given monster casting a spell?
+static string _ru_spell_stop_desc(monster &mons)
+{
+    if (mons.is_actual_spellcaster())
+        return "cast a spell";
+    if (mons.is_priest())
+        return "pray";
+    return "attack";
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -3438,28 +3448,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         ru_interference interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)
         {
-            if (mons->is_actual_spellcaster())
-            {
-                simple_monster_message(mons,
-                    " begins to cast a spell, but is stunned by your will!",
-                    MSGCH_GOD);
-            }
-            else if (mons->is_priest())
-            {
-                simple_monster_message(mons,
-                    " begins to pray, but is stunned by your will!",
-                    MSGCH_GOD);
-            }
-            else
-            {
-                simple_monster_message(mons,
-                    " begins to attack, but is stunned by your will!",
-                    MSGCH_GOD);
-            }
+            const string message
+                = make_stringf(" begins to %s, but is stunned by your will!",
+                               _ru_spell_stop_desc(*mons).c_str());
+            simple_monster_message(mons, message.c_str(), MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
             return true;
         }
-        else if (interference == DO_REDIRECT_ATTACK)
+        if (interference == DO_REDIRECT_ATTACK)
         {
             mprf(MSGCH_GOD, "You redirect %s's attack!",
                     mons->name(DESC_THE).c_str());
