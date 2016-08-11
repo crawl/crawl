@@ -109,20 +109,20 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
         return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            vulnerabilities.c_str(),
-                            has_filtered ? " (based on the spells you have"
-                                           " seen cast)"
-                                         : "");
+                            has_filtered ? " (judging by the spells you have"
+                                           " seen them cast)"
+                                         : "",
+                            vulnerabilities.c_str());
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
     return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        vulnerabilities.c_str(),
-                        has_filtered ? " (based on the abilities you have"
-                                       " seen used)"
-                                     : "");
+                        has_filtered ? " (judging by the abilities you have"
+                                       " seen them use)"
+                                     : "",
+                        vulnerabilities.c_str());
 }
 
 static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
