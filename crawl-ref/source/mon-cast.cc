@@ -3350,6 +3350,31 @@ static string _ru_spell_stop_desc(monster &mons)
     return "attack";
 }
 
+/// What spells can the given monster currently use?
+static monster_spells _find_usable_spells(monster &mons)
+{
+    // TODO: make mons param const (requires waste_of_time param to be const)
+
+    monster_spells hspell_pass(mons.spells);
+
+    if (mons.is_silenced() || mons.is_shapeshifter())
+    {
+        erase_if(hspell_pass, [](const mon_spell_slot &t) {
+            return t.flags & MON_SPELL_SILENCE_MASK;
+        });
+    }
+
+    // Remove currently useless spells.
+    erase_if(hspell_pass, [&](const mon_spell_slot &t) {
+        return _ms_waste_of_time(&mons, t)
+        // Should monster not have selected dig by now,
+        // it never will.
+        || t.spell == SPELL_DIG;
+    });
+
+    return hspell_pass;
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -3361,6 +3386,7 @@ static string _ru_spell_stop_desc(monster &mons)
  */
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
+    ASSERT(mons);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     bool reroll        = mons->has_ench(ENCH_EMPOWERED_SPELLS);
     const actor *foe = mons->get_foe();
@@ -3383,22 +3409,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     mon_spell_slot_flags flags = MON_SPELL_NO_FLAGS;
     spell_type spell_cast = SPELL_NO_SPELL;
 
-    monster_spells hspell_pass(mons->spells);
-
-    if (mons->is_silenced() || mons->is_shapeshifter())
-    {
-        erase_if(hspell_pass, [](const mon_spell_slot &t) {
-            return t.flags & MON_SPELL_SILENCE_MASK;
-        });
-    }
-
-    // Remove currently useless spells.
-    erase_if(hspell_pass, [&](const mon_spell_slot &t) {
-        return _ms_waste_of_time(mons, t)
-        // Should monster not have selected dig by now,
-        // it never will.
-        || t.spell == SPELL_DIG;
-    });
+    const monster_spells hspell_pass = _find_usable_spells(*mons);
 
     // If no useful spells... cast no spell.
     if (!hspell_pass.size())
