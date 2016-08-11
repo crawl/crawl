@@ -3211,6 +3211,82 @@ static bool _long_target_range(const monster *mons)
               > LOS_RADIUS / 2;
 }
 
+/// Does the given monster think it's in an emergency situation?
+static bool _mons_in_emergency(const monster &mons)
+{
+    return mons.hit_points < mons.max_hit_points / 3;
+}
+
+/**
+ * Choose a spell for the given monster to consider casting.
+ *
+ * @param mons              The monster considering casting a spell/
+ * @param hspell_pass       The set of spells to choose from.
+ * @param flags[out]        A set of spell flags to be set, matching the spell
+ *                          to be cast. XXX: wrap up in a struct & return?
+ * @param prefer_selfench   Whether to prefer self-enchantment spells, which
+ *                          are more likely to be castable.
+ * @return                  A spell to cast, or SPELL_NO_SPELL.
+ */
+static spell_type _find_spell_prospect(const monster &mons,
+                                       const monster_spells &hspell_pass,
+                                       mon_spell_slot_flags &flags,
+                                       bool prefer_selfench)
+{
+
+    // Setup spell.
+    // If we didn't find a spell on the first pass, try a
+    // self-enchantment.
+    if (prefer_selfench)
+        return _pick_spell_from_list(hspell_pass, SPFLAG_SELFENCH, flags);
+
+    // Monsters that are fleeing or pacified and leaving the
+    // level will always try to choose an emergency spell.
+    if (mons_is_fleeing(&mons) || mons.pacified())
+    {
+        const spell_type spell = _pick_spell_from_list(hspell_pass,
+                                                       SPFLAG_EMERGENCY,
+                                                       flags);
+        // Pacified monsters leaving the level will only
+        // try and cast escape spells.
+        if (spell != SPELL_NO_SPELL
+            && mons.pacified()
+            && !testbits(get_spell_flags(spell), SPFLAG_ESCAPE))
+        {
+            return SPELL_NO_SPELL;
+        }
+
+        return spell;
+    }
+
+    unsigned what = random2(200);
+    unsigned int i = 0;
+    for (; i < hspell_pass.size(); i++)
+    {
+        if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
+             && !_mons_in_emergency(mons))
+            || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
+                && !_short_target_range(&mons))
+            || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
+                && !_long_target_range(&mons)))
+        {
+            continue;
+        }
+
+        if (hspell_pass[i].freq >= what)
+            break;
+        what -= hspell_pass[i].freq;
+    }
+
+    // If we roll above the weight of the spell list,
+    // don't cast a spell at all.
+    if (i == hspell_pass.size())
+        return SPELL_NO_SPELL;
+
+    flags = hspell_pass[i].flags;
+    return hspell_pass[i].spell;
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -3273,7 +3349,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
     }
 
-    const bool emergency = mons->hit_points < mons->max_hit_points / 3;
+    const bool emergency = _mons_in_emergency(*mons);
 
     // Promote the casting of useful spells for low-HP monsters.
     // (kraken should always cast their escape spell of inky).
@@ -3381,77 +3457,20 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         for (int attempt = 0; attempt < 2; attempt++)
         {
+            const bool prefer_selfench = attempt > 0 && coinflip();
+            spell_cast = _find_spell_prospect(*mons, hspell_pass, flags,
+                                              prefer_selfench);
+
+            // aura of brilliance gives monsters a bonus cast chance.
+            if (spell_cast == SPELL_NO_SPELL && reroll)
+            {
+                spell_cast = _find_spell_prospect(*mons, hspell_pass, flags,
+                                                  prefer_selfench);
+                reroll = false;
+            }
+
             beem = orig_beem;
-
             bool spellOK = false;
-
-            // Setup spell.
-            // If we didn't find a spell on the first pass, try a
-            // self-enchantment.
-            if (attempt > 0 && coinflip())
-            {
-                spell_cast = _pick_spell_from_list(hspell_pass,
-                                                   SPFLAG_SELFENCH,
-                                                   flags);
-            }
-            // Monsters that are fleeing or pacified and leaving the
-            // level will always try to choose an emergency spell.
-            else if (mons_is_fleeing(mons) || mons->pacified())
-            {
-                spell_cast = _pick_spell_from_list(hspell_pass,
-                                                   SPFLAG_EMERGENCY,
-                                                   flags);
-
-                // Pacified monsters leaving the level will only
-                // try and cast escape spells.
-                if (spell_cast != SPELL_NO_SPELL
-                    && mons->pacified()
-                    && !testbits(get_spell_flags(spell_cast), SPFLAG_ESCAPE))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                }
-            }
-            else
-            {
-                spell_cast = SPELL_NO_SPELL;
-
-                unsigned what = random2(200);
-                unsigned int i = 0;
-                for (; i < hspell_pass.size(); i++)
-                {
-                    if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
-                         && !emergency)
-                        || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
-                            && !_short_target_range(mons))
-                        || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
-                            && !_long_target_range(mons)))
-                    {
-                        continue;
-                    }
-
-                    if (hspell_pass[i].freq >= what)
-                        break;
-                    what -= hspell_pass[i].freq;
-                }
-
-                // If we roll above the weight of the spell list,
-                // don't cast a spell at all.
-                if (i == hspell_pass.size())
-                {
-                    // Aura of Brilliance forces a reroll if the monster
-                    // otherwise would not have cast a spell.
-                    if (reroll)
-                    {
-                        reroll = false;
-                        attempt--;
-                        continue;
-                    }
-                    return false;
-                }
-
-                spell_cast = hspell_pass[i].spell;
-                flags = hspell_pass[i].flags;
-            }
 
             // Setup the spell.
             if (spell_cast != SPELL_NO_SPELL)
