@@ -3457,8 +3457,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         if (interference == DO_REDIRECT_ATTACK)
         {
-            mprf(MSGCH_GOD, "You redirect %s's attack!",
-                    mons->name(DESC_THE).c_str());
             int pfound = 0;
             for (radius_iterator ri(you.pos(),
                 LOS_DEFAULT); ri; ++ri)
@@ -3482,6 +3480,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     beem.target = mons->target;
                     ignore_good_idea = true;
                 }
+            }
+
+            if (ignore_good_idea)
+            {
+                mprf(MSGCH_GOD, "You redirect %s's attack!",
+                     mons->name(DESC_THE).c_str());
             }
         }
     }
