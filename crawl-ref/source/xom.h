@@ -45,9 +45,12 @@ enum xom_event_type
     XOM_GOOD_DESTRUCTION,
     XOM_GOOD_FAKE_DESTRUCTION,
     XOM_GOOD_ENCHANT_MONSTER,
+    XOM_GOOD_ENSLAVE_MONSTER,
     XOM_GOOD_FOG,
     XOM_GOOD_CLOUD_TRAIL,
     XOM_GOOD_CLEAVING,
+    XOM_GOOD_POTION_OF_EXPERIENCE,
+
     XOM_LAST_GOOD_ACT = XOM_GOOD_CLEAVING,
 
     // bad acts
@@ -74,6 +77,7 @@ enum xom_event_type
     XOM_BAD_BLINK_MONSTERS,
     XOM_BAD_CHAOS_CLOUD,
     XOM_BAD_SWAP_MONSTERS,
+
     XOM_LAST_BAD_ACT = XOM_BAD_SWAP_MONSTERS,
     XOM_LAST_REAL_ACT = XOM_LAST_BAD_ACT,
 
@@ -91,10 +95,10 @@ bool xom_is_nice(int tension = -1);
 const string describe_xom_favour();
 int xom_favour_rank();
 
-xom_event_type xom_acts(int sever, maybe_bool niceness = MB_MAYBE,
-                        int tension = -1, bool debug = false);
-xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
-void xom_take_action(xom_event_type action, int sever);
+void xom_consider_acting();
+xom_event_type _xom_choose_action(bool niceness, int sever, int tension);
+void _xom_perform_action(xom_event_type action, int sever);
+void xom_act();
 
 xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
                                             bool debug = false);

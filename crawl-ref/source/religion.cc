@@ -2393,9 +2393,8 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
     if (original_gain <= 0)
         return false;
 
-    // Xom uses piety differently; Gozag doesn't at all.
+    // Gozag doesn't at all.
     if (you_worship(GOD_NO_GOD)
-        || you_worship(GOD_XOM)
         || you_worship(GOD_GOZAG))
     {
         return false;
@@ -3295,7 +3294,10 @@ static void _set_initial_god_piety()
     case GOD_XOM:
         // Xom uses piety and gift_timeout differently.
         you.piety = HALF_MAX_PIETY;
-        you.gift_timeout = random2(40) + random2(40);
+        you.gift_timeout = 0;
+        you.xom_gift_niceness = 0;
+        you.xom_gift_sever = 0;
+        you.xom_entertainedness = random2(40) + random2(40);
         break;
 
     case GOD_RU:
