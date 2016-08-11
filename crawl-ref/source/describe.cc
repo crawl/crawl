@@ -2553,15 +2553,21 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
+/// How much power do we think the given monster casts this spell with?
+static int _hex_pow(const spell_type spell, const int hd)
+{
+    const int cap = 200;
+    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    return min(cap, pow);
+}
+
 /**
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
 int hex_chance(const spell_type spell, const int hd)
 {
-    const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
-    const int capped_pow = min(cap, pow);
+    const int capped_pow = _hex_pow(spell, hd);
     const int chance = hex_success_chance(you.res_magic(), capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_RESISTANCE)
@@ -2689,8 +2695,14 @@ static bool _get_spell_description(const spell_type spell,
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
-            description += make_stringf("Chance to beat your MR: %d%%\n",
-                                        hex_chance(spell, hd));
+            string wiz_info;
+#ifdef WIZARD
+            if (you.wizard)
+                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+#endif
+            description += make_stringf("Chance to beat your MR: %d%%%s\n",
+                                        hex_chance(spell, hd),
+                                        wiz_info.c_str());
         }
 
     }
