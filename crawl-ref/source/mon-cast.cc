@@ -3374,14 +3374,15 @@ static monster_spells _find_usable_spells(monster &mons)
  * @param mons          The monster doing the casting, potentially.
  *                      TODO: should be const (requires _ms_low_hitpoint_cast
                         param to be const)
- * @param orig_beem     A beam. XXX: what's already in here?
+ * @param orig_beem[in,out]     A beam. XXX: what's already in here?
+ *                      TODO: split out targeting into another func
  * @param hspell_pass   A list of valid spells to consider casting.
  * @param ignore_good_idea      Whether to be almost completely indiscriminate
  *                              with beam spells. XXX: refactor this out?
  * @return              A spell to cast, or SPELL_NO_SPELL.
  */
 static mon_spell_slot _choose_spell_to_cast(monster &mons,
-                                            const bolt &orig_beem,
+                                            bolt &beem,
                                             const monster_spells &hspell_pass,
                                             bool ignore_good_idea)
 {
@@ -3421,6 +3422,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
         return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 
+    bolt orig_beem = beem;
+
     bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS);
     for (int attempt = 0; attempt < 2; attempt++)
     {
@@ -3439,8 +3442,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         if (chosen_slot.spell == SPELL_NO_SPELL)
             continue;
 
-        // make a copy of the beam, for use as a tracer
-        bolt beem = orig_beem;
+        // reset the beam
+        beem = orig_beem;
 
         // Setup the spell.
         setup_mons_cast(&mons, beem, chosen_slot.spell);
