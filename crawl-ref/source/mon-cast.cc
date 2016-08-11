@@ -2235,7 +2235,7 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
 
 // Spells for a quick get-away.
 // Currently only used to get out of a net.
-static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
+static bool _ms_quick_get_away(spell_type monspell)
 {
     switch (monspell)
     {
@@ -3149,16 +3149,14 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
  *
  *  @param[in]  spells     the monster spell list to search
  *  @param[in]  flag       what SPFLAG_ the spell should match
- *  @param[out] slot_flags the flags of the slot the spell was found in.
- *
- *  @return The spell chosen, or SPELL_NO_SPELL if no matching spell was
- *          found. In the latter case, slot_flags is not assigned to.
+ *  @return The spell chosen, or a slot containing SPELL_NO_SPELL and
+ *          MON_SPELL_NO_FLAGS if no spell was chosen.
  */
-static spell_type _pick_spell_from_list(const monster_spells &spells,
-                                        int flag,
-                                        mon_spell_slot_flags &slot_flags)
+static mon_spell_slot _pick_spell_from_list(const monster_spells &spells,
+                                            int flag)
 {
     spell_type spell_cast = SPELL_NO_SPELL;
+    mon_spell_slot_flags slot_flags = MON_SPELL_NO_FLAGS;
     int weight = 0;
     for (const mon_spell_slot &slot : spells)
     {
@@ -3174,7 +3172,7 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
         }
     }
 
-    return spell_cast;
+    return { spell_cast, 0, slot_flags };
 }
 
 /**
@@ -3216,38 +3214,34 @@ static bool _mons_in_emergency(const monster &mons)
  *
  * @param mons              The monster considering casting a spell/
  * @param hspell_pass       The set of spells to choose from.
- * @param flags[out]        A set of spell flags to be set, matching the spell
- *                          to be cast. XXX: wrap up in a struct & return?
  * @param prefer_selfench   Whether to prefer self-enchantment spells, which
  *                          are more likely to be castable.
- * @return                  A spell to cast, or SPELL_NO_SPELL.
+ * @return                  A spell to cast, or { SPELL_NO_SPELL }.
  */
-static spell_type _find_spell_prospect(const monster &mons,
-                                       const monster_spells &hspell_pass,
-                                       mon_spell_slot_flags &flags,
-                                       bool prefer_selfench)
+static mon_spell_slot _find_spell_prospect(const monster &mons,
+                                           const monster_spells &hspell_pass,
+                                           bool prefer_selfench)
 {
 
     // Setup spell.
     // If we didn't find a spell on the first pass, try a
     // self-enchantment.
     if (prefer_selfench)
-        return _pick_spell_from_list(hspell_pass, SPFLAG_SELFENCH, flags);
+        return _pick_spell_from_list(hspell_pass, SPFLAG_SELFENCH);
 
     // Monsters that are fleeing or pacified and leaving the
     // level will always try to choose an emergency spell.
     if (mons_is_fleeing(&mons) || mons.pacified())
     {
-        const spell_type spell = _pick_spell_from_list(hspell_pass,
-                                                       SPFLAG_EMERGENCY,
-                                                       flags);
+        const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
+                                                           SPFLAG_EMERGENCY);
         // Pacified monsters leaving the level will only
         // try and cast escape spells.
-        if (spell != SPELL_NO_SPELL
+        if (spell.spell != SPELL_NO_SPELL
             && mons.pacified()
-            && !testbits(get_spell_flags(spell), SPFLAG_ESCAPE))
+            && !testbits(get_spell_flags(spell.spell), SPFLAG_ESCAPE))
         {
-            return SPELL_NO_SPELL;
+            return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
         }
 
         return spell;
@@ -3275,10 +3269,9 @@ static spell_type _find_spell_prospect(const monster &mons,
     // If we roll above the weight of the spell list,
     // don't cast a spell at all.
     if (i == hspell_pass.size())
-        return SPELL_NO_SPELL;
+        return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 
-    flags = hspell_pass[i].flags;
-    return hspell_pass[i].spell;
+    return hspell_pass[i];
 }
 
 /**
@@ -3376,6 +3369,142 @@ static monster_spells _find_usable_spells(monster &mons)
 }
 
 /**
+ * Let a monster choose a spell to cast; may be SPELL_NO_SPELL.
+ *
+ * @param mons          The monster doing the casting, potentially.
+ *                      TODO: should be const (requires _ms_low_hitpoint_cast
+                        param to be const)
+ * @param orig_beem     A beam. XXX: what's already in here?
+ * @param hspell_pass   A list of valid spells to consider casting.
+ * @param ignore_good_idea      Whether to be almost completely indiscriminate
+ *                              with beam spells. XXX: refactor this out?
+ * @return              A spell to cast, or SPELL_NO_SPELL.
+ */
+static mon_spell_slot _choose_spell_to_cast(monster &mons,
+                                            const bolt &orig_beem,
+                                            const monster_spells &hspell_pass,
+                                            bool ignore_good_idea)
+{
+    // Monsters caught in a net try to get away.
+    // This is only urgent if enemies are around.
+    if (mon_enemies_around(&mons) && mons.caught() && one_chance_in(15))
+        for (const mon_spell_slot &slot : hspell_pass)
+            if (_ms_quick_get_away(slot.spell))
+                return slot;
+
+    // Promote the casting of useful spells for low-HP monsters.
+    // (kraken should always cast their escape spell of inky).
+    if (_mons_in_emergency(mons)
+        && one_chance_in(mons.type == MONS_KRAKEN ? 4 : 8))
+    {
+        // Note: There should always be at least some chance we don't
+        // get here... even if the monster is on its last HP. That
+        // way we don't have to worry about monsters infinitely casting
+        // Healing on themselves (e.g. orc high priests).
+        int found_spell = 0;
+        mon_spell_slot chosen_slot = { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
+        for (const mon_spell_slot &slot : hspell_pass)
+        {
+            if (_ms_low_hitpoint_cast(&mons, slot)
+                && one_chance_in(++found_spell))
+            {
+                chosen_slot = slot;
+            }
+        }
+
+        if (chosen_slot.spell != SPELL_NO_SPELL)
+            return chosen_slot;
+    }
+
+    // If nothing found by now, safe friendlies and good
+    // neutrals will rarely cast.
+    if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
+        return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
+
+    bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS);
+    for (int attempt = 0; attempt < 2; attempt++)
+    {
+        const bool prefer_selfench = attempt > 0 && coinflip();
+        mon_spell_slot chosen_slot
+            = _find_spell_prospect(mons, hspell_pass, prefer_selfench);
+
+        // aura of brilliance gives monsters a bonus cast chance.
+        if (chosen_slot.spell == SPELL_NO_SPELL && reroll)
+        {
+            chosen_slot = _find_spell_prospect(mons, hspell_pass,
+                                               prefer_selfench);
+            reroll = false;
+        }
+
+        if (chosen_slot.spell == SPELL_NO_SPELL)
+            continue;
+
+        // make a copy of the beam, for use as a tracer
+        bolt beem = orig_beem;
+
+        // Setup the spell.
+        setup_mons_cast(&mons, beem, chosen_slot.spell);
+
+        // Try to find a nearby ally to haste, heal, might,
+        // or make invisible.
+        if ((chosen_slot.spell == SPELL_HASTE_OTHER
+             || chosen_slot.spell == SPELL_HEAL_OTHER
+             || chosen_slot.spell == SPELL_MIGHT_OTHER
+             || chosen_slot.spell == SPELL_INVISIBILITY_OTHER)
+            && !_set_allied_target(&mons, beem,
+                                   mons.type == MONS_IRONBRAND_CONVOKER))
+        {
+            continue;
+        }
+
+        // Try to find an ally of the player to hex if we are
+        // hexing the player.
+        if (chosen_slot.spell == SPELL_ENSLAVEMENT
+            && mons.foe == MHITYOU
+            && !_set_hex_target(&mons, beem))
+        {
+            continue;
+        }
+
+        // Don't knockback something we're trying to constrict.
+        const actor *victim = actor_at(beem.target);
+        if (victim &&
+            beem.can_knockback(victim)
+            && mons.is_constricting()
+            && mons.constricting->count(victim->mid))
+        {
+            continue;
+        }
+
+        if ((chosen_slot.spell == SPELL_LRD
+             || chosen_slot.spell == SPELL_CONJURE_FLAME
+             || chosen_slot.spell == SPELL_FULMINANT_PRISM
+             || chosen_slot.spell == SPELL_AWAKEN_EARTH)
+            && !in_bounds(beem.target))
+        {
+            continue;
+        }
+
+        if (chosen_slot.spell == SPELL_DAZZLING_SPRAY
+            && (!mons.get_foe()
+                || !_spray_tracer(&mons, _mons_spellpower(chosen_slot.spell,
+                                                          mons),
+                                  beem, chosen_slot.spell)))
+        {
+            continue;
+        }
+
+        if (!_should_cast_spell(mons, chosen_slot.spell, beem, ignore_good_idea))
+            continue;
+
+        ASSERT(chosen_slot.spell != SPELL_NO_SPELL);
+        return chosen_slot;
+    }
+
+    return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
+}
+
+/**
  * Give a monster a chance to cast a spell.
  *
  * @param mons the monster that might cast.
@@ -3387,9 +3516,6 @@ static monster_spells _find_usable_spells(monster &mons)
 bool handle_mon_spell(monster* mons, bolt &beem)
 {
     ASSERT(mons);
-    bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
-    bool reroll        = mons->has_ench(ENCH_EMPOWERED_SPELLS);
-    const actor *foe = mons->get_foe();
 
     if (is_sanctuary(mons->pos()) && !mons->wont_attack())
         return false;
@@ -3406,55 +3532,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return false;
     }
 
-    mon_spell_slot_flags flags = MON_SPELL_NO_FLAGS;
-    spell_type spell_cast = SPELL_NO_SPELL;
-
     const monster_spells hspell_pass = _find_usable_spells(*mons);
 
     // If no useful spells... cast no spell.
     if (!hspell_pass.size())
         return false;
-
-    // Monsters caught in a net try to get away.
-    // This is only urgent if enemies are around.
-    if (!finalAnswer && mon_enemies_around(mons)
-        && mons->caught() && one_chance_in(15))
-    {
-        for (const mon_spell_slot &slot : hspell_pass)
-        {
-            if (_ms_quick_get_away(mons, slot.spell))
-            {
-                spell_cast = slot.spell;
-                flags = slot.flags;
-                finalAnswer = true;
-                break;
-            }
-        }
-    }
-
-    const bool emergency = _mons_in_emergency(*mons);
-
-    // Promote the casting of useful spells for low-HP monsters.
-    // (kraken should always cast their escape spell of inky).
-    if (!finalAnswer && emergency
-        && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
-    {
-        // Note: There should always be at least some chance we don't
-        // get here... even if the monster is on its last HP. That
-        // way we don't have to worry about monsters infinitely casting
-        // Healing on themselves (e.g. orc high priests).
-        int found_spell = 0;
-        for (const mon_spell_slot &slot : hspell_pass)
-        {
-            if (_ms_low_hitpoint_cast(mons, slot)
-                && one_chance_in(++found_spell))
-            {
-                spell_cast = slot.spell;
-                flags = slot.flags;
-                finalAnswer = true;
-            }
-        }
-    }
 
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(mons))
@@ -3473,7 +3555,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             int pfound = 0;
             for (radius_iterator ri(you.pos(),
-                LOS_DEFAULT); ri; ++ri)
+                                    LOS_DEFAULT); ri; ++ri)
             {
                 monster* new_target = monster_at(*ri);
 
@@ -3504,98 +3586,10 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
     }
 
-    if (!finalAnswer)
-    {
-        // If nothing found by now, safe friendlies and good
-        // neutrals will rarely cast.
-        if (mons->wont_attack() && !mon_enemies_around(mons)
-            && !one_chance_in(10))
-        {
-            return false;
-        }
-
-        const bolt orig_beem = beem;
-
-        for (int attempt = 0; attempt < 2; attempt++)
-        {
-            const bool prefer_selfench = attempt > 0 && coinflip();
-            spell_cast = _find_spell_prospect(*mons, hspell_pass, flags,
-                                              prefer_selfench);
-
-            // aura of brilliance gives monsters a bonus cast chance.
-            if (spell_cast == SPELL_NO_SPELL && reroll)
-            {
-                spell_cast = _find_spell_prospect(*mons, hspell_pass, flags,
-                                                  prefer_selfench);
-                reroll = false;
-            }
-
-            beem = orig_beem;
-
-            // Setup the spell.
-            if (spell_cast != SPELL_NO_SPELL)
-                setup_mons_cast(mons, beem, spell_cast);
-
-            // Try to find a nearby ally to haste, heal, might,
-            // or make invisible.
-            if ((spell_cast == SPELL_HASTE_OTHER
-                 || spell_cast == SPELL_HEAL_OTHER
-                 || spell_cast == SPELL_MIGHT_OTHER
-                 || spell_cast == SPELL_INVISIBILITY_OTHER)
-                    && !_set_allied_target(mons, beem,
-                           mons->type == MONS_IRONBRAND_CONVOKER))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
-            // Try to find an ally of the player to hex if we are
-            // hexing the player.
-            if (spell_cast == SPELL_ENSLAVEMENT
-                && mons->foe == MHITYOU
-                && !_set_hex_target(mons, beem))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
-            // Don't knockback something we're trying to constrict.
-            const actor *victim = actor_at(beem.target);
-            if (victim &&
-                beem.can_knockback(victim)
-                && mons->is_constricting()
-                && mons->constricting->count(victim->mid))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
-            if ((spell_cast == SPELL_LRD
-                 || spell_cast == SPELL_CONJURE_FLAME
-                 || spell_cast == SPELL_FULMINANT_PRISM
-                 || spell_cast == SPELL_AWAKEN_EARTH)
-                && !in_bounds(beem.target))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
-            if (spell_cast == SPELL_DAZZLING_SPRAY
-                && (!foe
-                    || !_spray_tracer(mons, _mons_spellpower(spell_cast, *mons),
-                                      beem, spell_cast)))
-            {
-                spell_cast = SPELL_NO_SPELL;
-                continue;
-            }
-
-            if (!_should_cast_spell(*mons, spell_cast, beem, ignore_good_idea))
-                spell_cast = SPELL_NO_SPELL;
-
-            if (spell_cast != SPELL_NO_SPELL)
-                break;
-        }
-    }
+    const mon_spell_slot spell_slot
+        = _choose_spell_to_cast(*mons, beem, hspell_pass, ignore_good_idea);
+    const spell_type spell_cast = spell_slot.spell;
+    const mon_spell_slot_flags flags = spell_slot.flags;
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
     if (spell_cast == SPELL_NO_SPELL)
