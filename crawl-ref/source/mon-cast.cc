@@ -2154,8 +2154,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
 static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
 {
     spell_type monspell = slot.spell;
-    if (_ms_waste_of_time(mon, slot))
-        return false;
 
     bool targ_adj       = false;
     bool targ_sanct     = false;
@@ -2242,10 +2240,6 @@ static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
     switch (monspell)
     {
     case SPELL_TELEPORT_SELF:
-        // Don't cast again if already about to teleport.
-        if (mon->has_ench(ENCH_TP))
-            return false;
-        // intentional fall-through
     case SPELL_BLINK:
         return true;
     default:
@@ -3398,6 +3392,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         });
     }
 
+    // Remove currently useless spells.
+    erase_if(hspell_pass, [&](const mon_spell_slot &t) {
+        return _ms_waste_of_time(mons, t)
+        // Should monster not have selected dig by now,
+        // it never will.
+        || t.spell == SPELL_DIG;
+    });
+
+    // If no useful spells... cast no spell.
     if (!hspell_pass.size())
         return false;
 
@@ -3499,18 +3502,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             return false;
         }
-
-        // Remove healing/invis/haste if we don't need them.
-        erase_if(hspell_pass, [&](const mon_spell_slot &t) {
-            return _ms_waste_of_time(mons, t)
-                // Should monster not have selected dig by now,
-                // it never will.
-                || t.spell == SPELL_DIG;
-        });
-
-        // If no useful spells... cast no spell.
-        if (!hspell_pass.size())
-            return false;
 
         const bolt orig_beem = beem;
 
