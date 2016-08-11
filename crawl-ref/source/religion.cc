@@ -571,7 +571,8 @@ void dec_penance(god_type god, int val)
                 // Penance just ended w/o worshipping Pakellas;
                 // notify the player that MP regeneration will start again.
                 mprf(MSGCH_GOD, god, "You begin regenerating magic.");
-            } else if (god == GOD_HEPLIAKLQANA)
+            }
+            else if (god == GOD_HEPLIAKLQANA)
             {
                 calc_hp(); // frailty ends
                 mprf(MSGCH_GOD, god, "Your full life essence returns.");
