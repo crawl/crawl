@@ -4138,12 +4138,16 @@ int get_real_hp(bool trans, bool rotted)
     hitp *= 10 + species_hp_modifier(you.species);
     hitp /= 10;
 
+    const bool hep_frail = have_passive(passive_t::frail)
+                          || player_under_penance(GOD_HEPLIAKLQANA);
+
     // Mutations that increase HP by a percentage
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
-                - (player_mutation_level(MUT_FRAIL) * 10);
+                - (player_mutation_level(MUT_FRAIL) * 10)
+                - (hep_frail ? 10 : 0);
 
     hitp /= 100;
 
