@@ -3439,8 +3439,10 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
             reroll = false;
         }
 
+        // if we didn't roll a spell, don't make another attempt; bail.
+        // (only give multiple attempts for targetting issues.)
         if (chosen_slot.spell == SPELL_NO_SPELL)
-            continue;
+            return chosen_slot;
 
         // reset the beam
         beem = orig_beem;
