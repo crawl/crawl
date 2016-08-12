@@ -1003,7 +1003,7 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
     mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
 }
 
-bool mon_special_ability(monster* mons, bolt & beem)
+bool mon_special_ability(monster* mons)
 {
     bool used = false;
 
@@ -1108,6 +1108,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (!mons->has_ench(ENCH_ROLLING)
             && !feat_is_water(grd(mons->pos())))
         {
+            bolt beem = setup_targetting_beam(*mons);
+
             // Fleeing check
             if (mons_is_fleeing(mons))
             {
@@ -1138,11 +1140,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
 
         if (!mons_is_confused(mons)
-                && !is_sanctuary(mons->pos()) && !is_sanctuary(beem.target)
+                && !is_sanctuary(mons->pos()) && !is_sanctuary(mons->target)
                 && _will_starcursed_scream(mons)
                 && coinflip())
         {
-            _starcursed_scream(mons, actor_at(beem.target));
+            _starcursed_scream(mons, actor_at(mons->target));
             used = true;
         }
         break;
@@ -1158,6 +1160,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             actor *foe = mons->get_foe();
             if (foe && mons->can_see(*foe))
             {
+                bolt beem = setup_targetting_beam(*mons);
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 
@@ -1188,6 +1191,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
             if (briar_count < 4) // Probably no solid wall here
             {
+                bolt beem; // unused
                 _mons_cast_abil(mons, beem, SPELL_WALL_OF_BRAMBLES);
                 used = true;
             }

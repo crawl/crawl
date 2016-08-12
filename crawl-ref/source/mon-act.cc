@@ -2042,22 +2042,7 @@ void handle_monster_move(monster* mons)
         // Slime creatures can split while wandering or resting.
         || mons->type == MONS_SLIME_CREATURE)
     {
-        bolt beem;
-
-        beem.source    = mons->pos();
-        beem.target    = mons->target;
-        beem.source_id = mons->mid;
-
-        // XXX: Otherwise perma-confused monsters can almost never properly
-        // aim spells, since their target is constantly randomized.
-        // This does make them automatically aware of the player in several
-        // situations they otherwise would not, however.
-        if (mons_class_flag(mons->type, M_CONFUSED))
-        {
-            actor* foe = mons->get_foe();
-            if (foe && mons->can_see(*foe))
-                beem.target = foe->pos();
-        }
+        bolt beem = setup_targetting_beam(*mons);
 
         // Prevents unfriendlies from nuking you from offscreen.
         // How nice!
@@ -2078,10 +2063,10 @@ void handle_monster_move(monster* mons)
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both. This aims
             // to give them both roughly the same weight.
-            if (coinflip() ? mon_special_ability(mons, beem)
+            if (coinflip() ? mon_special_ability(mons)
                              || _do_mon_spell(mons, beem)
                            : _do_mon_spell(mons, beem)
-                             || mon_special_ability(mons, beem))
+                             || mon_special_ability(mons))
             {
                 DEBUG_ENERGY_USE("spell or special");
                 mmov.reset();
