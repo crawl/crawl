@@ -3318,18 +3318,6 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     if (!mons.can_see(*foe))
         return false;
 
-    if (mons.type == MONS_DAEVA && mons.god == GOD_SHINING_ONE)
-    {
-        // Don't allow TSO-worshipping daevas to make unchivalric magic
-        // attacks, except against appropriate monsters.
-        // lmao {pf}
-        if (find_stab_type(&mons, *foe) != STAB_NO_STAB
-            && !tso_unchivalric_attack_safe_monster(foe->as_monster()))
-        {
-            return false;
-        }
-    }
-
     return true;
 }
 
