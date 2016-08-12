@@ -197,11 +197,10 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 Yredelemnul
 
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the undead. Followers, who must oppose all things holy, can raise legions
-of servile undead, and gain a number of other useful (if unpleasant) powers.
-Yredelemnul appreciates killing living and holy creatures. Destroying
-artificial beings is also appreciated, as they are neither truly alive nor
-subject to death or undeath.
+and the undead. Followers can raise legions of servile undead, and gain a
+number of other useful (if unpleasant) powers. Yredelemnul especially favours
+those who would destroy holy creatures, which oppose the realm of undeath, and
+the nonliving, which exist outside of it.
 %%%%
 Zin
 

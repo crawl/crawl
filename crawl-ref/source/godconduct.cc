@@ -733,6 +733,8 @@ static like_map divine_likes[] =
     // GOD_YREDELEMNUL,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
                                   [](int &piety, int &denom,
                                      const monster* victim)
