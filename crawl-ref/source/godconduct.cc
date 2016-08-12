@@ -538,21 +538,6 @@ string get_god_dislikes(god_type which_god)
     return text;
 }
 
-
-/**
- * Handle Dithmenos's piety scaling based on piety rank.
- *
- * @param[in,out] piety    Piety gain is modified & output into this.
- * @param[in,out] denom    Piety gain denominator is modified & output here.
- * @param victim           Unused.
- */
-static void _dithmenos_kill(int &piety, int &denom, const monster* /*victim*/)
-{
-    // Full gains at full piety down to 3/4 at 6* piety.
-    piety *= 24 - piety_rank();
-    denom *= 24;
-}
-
 /// A definition of the way in which a god likes a conduct being taken.
 struct like_response
 {
@@ -780,14 +765,7 @@ static like_map divine_likes[] =
     },
     // GOD_MAKHLEB,
     {
-        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                piety *= 4;
-                denom *= 3;
-            }
-        ) },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
@@ -842,14 +820,7 @@ static like_map divine_likes[] =
     },
     // GOD_TROG,
     {
-        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                piety *= 7;
-                denom *= 6;
-            }
-        ) },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
@@ -884,14 +855,7 @@ static like_map divine_likes[] =
     },
     // GOD_LUGONU,
     {
-        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                piety *= 7;
-                denom *= 6;
-            }
-        ) },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
@@ -957,16 +921,11 @@ static like_map divine_likes[] =
     },
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, _on_kill("you kill living beings",
-                                    MH_NATURAL, false, _dithmenos_kill) },
-        { DID_KILL_UNDEAD, _on_kill("you destroy the undead",
-                                    MH_UNDEAD, false, _dithmenos_kill) },
-        { DID_KILL_DEMON, _on_kill("you kill demons",
-                                   MH_DEMONIC, false, _dithmenos_kill) },
-        { DID_KILL_HOLY, _on_kill("you kill holy beings",
-                                  MH_HOLY, false, _dithmenos_kill) },
-        { DID_KILL_ARTIFICIAL, _on_kill("you destroy artifical beings",
-                                  MH_NONLIVING, false, _dithmenos_kill) },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_ARTIFICIAL, KILL_NONLIVING_RESPONSE },
         { DID_KILL_FIERY, {
             "you kill beings that bring fire to the dungeon", true,
             -6, 10, 0, " appreciates your extinguishing a source of fire."
