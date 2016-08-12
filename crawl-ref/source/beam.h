@@ -342,4 +342,6 @@ int explosion_noise(int rad);
 bool shoot_through_monster(const bolt& beam, const monster* victim);
 
 int omnireflect_chance_denom(int SH);
+
+bolt setup_targetting_beam(const monster &mons);
 #endif
