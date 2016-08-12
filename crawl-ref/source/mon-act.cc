@@ -2052,8 +2052,6 @@ void handle_monster_move(monster* mons)
             || mons->type == MONS_TEST_SPAWNER
             // Slime creatures can split when offscreen.
             || mons->type == MONS_SLIME_CREATURE
-            // Lost souls can flicker away at any time they're isolated
-            || mons->type == MONS_LOST_SOUL
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG)
             // Let monsters who have Awaken Earth use it off-screen.
