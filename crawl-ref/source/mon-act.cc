@@ -253,9 +253,9 @@ static bool _swap_monsters(monster& mover, monster& moved)
     return true;
 }
 
-static bool _do_mon_spell(monster* mons, bolt &beem)
+static bool _do_mon_spell(monster* mons)
 {
-    if (handle_mon_spell(mons, beem))
+    if (handle_mon_spell(mons))
     {
         // If a Pan lord/pghost is known to be a spellcaster, it's safer
         // to assume it has ranged spells too. For others, it'd just
@@ -1185,7 +1185,7 @@ static bool _thunderbolt_tracer(monster &caster, int pow, coord_def aim)
 // notes:
 // shamelessly repurposing handle_wand code
 // not one word about the name of this function!
-static bool _handle_rod(monster &mons, bolt &beem)
+static bool _handle_rod(monster &mons)
 {
     item_def* rod = mons.mslot_item(MSLOT_WEAPON);
     // FIXME: monsters should be able to use rods
@@ -1212,6 +1212,8 @@ static bool _handle_rod(monster &mons, bolt &beem)
 
     if (rod->charges < rate)
         return false;
+
+    bolt beem = setup_targetting_beam(mons);
 
     // XXX: There should be a better way to do this than hardcoding
     // monster-castable rod spells!
@@ -1298,7 +1300,7 @@ static bool _handle_rod(monster &mons, bolt &beem)
     return false;
 }
 
-static bool _handle_wand(monster& mons, bolt &beem)
+static bool _handle_wand(monster& mons)
 {
     item_def *wand = mons.mslot_item(MSLOT_WAND);
     // Yes, there is a logic to this ordering {dlb}:
@@ -1336,6 +1338,7 @@ static bool _handle_wand(monster& mons, bolt &beem)
     bool niceWand    = false;
     bool zap         = false;
     bool was_visible = you.can_see(mons);
+    bolt beem = setup_targetting_beam(mons);
 
     if (!_setup_wand_beam(beem, mons, *wand))
         return false;
@@ -2042,8 +2045,6 @@ void handle_monster_move(monster* mons)
         // Slime creatures can split while wandering or resting.
         || mons->type == MONS_SLIME_CREATURE)
     {
-        bolt beem = setup_targetting_beam(*mons);
-
         // Prevents unfriendlies from nuking you from offscreen.
         // How nice!
         const bool friendly_or_near =
@@ -2061,10 +2062,8 @@ void handle_monster_move(monster* mons)
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both. This aims
             // to give them both roughly the same weight.
-            if (coinflip() ? mon_special_ability(mons)
-                             || _do_mon_spell(mons, beem)
-                           : _do_mon_spell(mons, beem)
-                             || mon_special_ability(mons))
+            if (coinflip() ? mon_special_ability(mons) || _do_mon_spell(mons)
+                           : _do_mon_spell(mons) || mon_special_ability(mons))
             {
                 DEBUG_ENERGY_USE("spell or special");
                 mmov.reset();
@@ -2092,13 +2091,13 @@ void handle_monster_move(monster* mons)
                 return;
             }
 
-            if (_handle_rod(*mons, beem))
+            if (_handle_rod(*mons))
             {
                 DEBUG_ENERGY_USE("_handle_rod()");
                 return;
             }
 
-            if (_handle_wand(*mons, beem))
+            if (_handle_wand(*mons))
             {
                 DEBUG_ENERGY_USE("_handle_wand()");
                 return;
@@ -2117,6 +2116,7 @@ void handle_monster_move(monster* mons)
             }
         }
 
+        bolt beem = setup_targetting_beam(*mons);
         if (handle_throw(mons, beem, false, false))
         {
             DEBUG_ENERGY_USE("_handle_throw()");
