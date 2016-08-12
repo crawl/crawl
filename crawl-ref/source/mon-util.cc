@@ -33,6 +33,7 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1021,8 +1022,7 @@ bool mons_is_plant(const monster* mon)
 
 bool mons_eats_items(const monster* mon)
 {
-    return mons_class_flag(mon->type, M_EAT_ITEMS)
-           || mon->has_ench(ENCH_EAT_ITEMS);
+    return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
 }
 
 bool invalid_monster(const monster* mon)
@@ -3965,16 +3965,13 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
     return true;
 }
 
-// Monsters that eat items (currently only jellies) also eat doors.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
-    if (!mons_eats_items(mon))
-        return false;
-
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;
 
-    return true;
+    return mons_eats_items(mon)
+           || mons_class_flag(mons_base_type(mon), M_EAT_DOORS);
 }
 
 bool mons_can_destroy_door(const monster* mon, const coord_def& pos)
@@ -5463,7 +5460,7 @@ void throw_monster_bits(const monster* mon)
                 mon->name(DESC_THE, false).c_str());
 
         // Because someone will get a kick out of this some day.
-        if (mons_eats_items(mon))
+        if (mons_class_flag(mons_base_type(mon), M_ACID_SPLASH))
             target->corrode_equipment("flying bits", 1);
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());

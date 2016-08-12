@@ -1449,7 +1449,7 @@ static void _fixup_branch_stairs()
 }
 
 /// List all stone stairs of the indicated type.
-list<coord_def> _find_stone_stairs(bool up_stairs)
+static list<coord_def> _find_stone_stairs(bool up_stairs)
 {
     list<coord_def> stairs;
 

@@ -724,6 +724,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
     { OBJ_JEWELLERY, AMU_CONSERVATION },
     { OBJ_JEWELLERY, RING_REGENERATION },
+    { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELING },
@@ -2818,7 +2819,6 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_POISON_RESISTANCE
                 || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_SEE_INVISIBLE
-                || item.sub_type == RING_SUSTAIN_ATTRIBUTES
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_PROTECTION_FROM_MAGIC
                 || item.sub_type == RING_FIRE
@@ -2880,15 +2880,11 @@ bool item_is_jelly_edible(const item_def &item)
     if (item_is_stationary_net(item))
         return false;
 
-    // Don't eat items that the player has seen.
-    if (item.flags & ISFLAG_SEEN && !have_passive(passive_t::jelly_eating))
-        return false;
-
     // Don't eat artefacts or the horn of Geryon.
     if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;
 
-    // Don't eat zigfigs. (They're artefact-like, and jiyvaites shouldn't worry
+    // Don't eat zigfigs. (They're artefact-like, and Jiyvaites shouldn't worry
     // about losing them.)
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_ZIGGURAT)
         return false;
@@ -2896,14 +2892,6 @@ bool item_is_jelly_edible(const item_def &item)
     // Don't eat mimics.
     if (item.flags & ISFLAG_MIMIC)
         return false;
-
-    // Shouldn't eat stone things
-    //   - but what about wands and rings?
-    if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
-    {
-        return false;
-    }
 
     // Don't eat special game items.
     if (item_is_orb(item) || item.base_type == OBJ_RUNES)

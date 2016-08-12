@@ -102,7 +102,6 @@
 #             an INSCRIP: entry.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
-# * sustat:   Provides sustain attributes.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
 
@@ -1174,7 +1173,7 @@ TILE_EQ:  orange_crystal
 PLUS:     8
 INT:      3
 BRAND:    SPARM_ARCHMAGI
-BOOL:     clarity, sustat
+BOOL:     clarity
 
 ENUM:    MAJIN
 NAME:    Majin-Bo

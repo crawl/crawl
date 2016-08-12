@@ -389,14 +389,6 @@ static void _jiyva_convert_slime(monster* slime)
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
-    if (!mons_eats_items(slime))
-    {
-        slime->add_ench(ENCH_EAT_ITEMS);
-
-        mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
-             slime->name(DESC_THE).c_str());
-    }
-
     mons_make_god_gift(slime, GOD_JIYVA);
 
     mons_att_changed(slime);

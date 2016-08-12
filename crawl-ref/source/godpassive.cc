@@ -183,7 +183,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     {
         { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
         { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
-        { -1, passive_t::jelly_eating, "GOD allows jellies to devour more items" },
+        { -1, passive_t::jelly_eating, "GOD allows jellies to devour items" },
         { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
         {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
         {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
@@ -283,7 +283,10 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     { },
 
     // Hepliaklqana
-    { {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" }, },
+    {
+        { -1, passive_t::frail, "GOD siphons a part of your essence into your ancestor" },
+        {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" },
+    },
 };
 
 bool have_passive(passive_t passive)

@@ -62,11 +62,11 @@ afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
 Hepliaklqana
 
 Hepliaklqana the Forgotten accepts the worship of those who would remember
-their forebears, and fight alongside the greatest of them all. Hepliaklqana
-demands only that followers explore and form new experiences; as they advance
-in this service, they will find themselves able to shape and control their
-ancestor's memory, eventually bringing them into the ranks of the mythical
-heroes.
+their forebears, and fight alongside the greatest of them all. Acolytes of
+Hepliaklqana sacrifice a small part of their life essence to manifest their
+ancestor into the world; as they explore and form new experiences, they will
+find themselves able to shape and control their ancestor's memory, eventually
+bringing them into the ranks of the mythical heroes.
 %%%%
 Jiyva
 
@@ -279,14 +279,15 @@ entire branches.
 %%%%
 Hepliaklqana powers
 
-Hepliaklqana's worshippers are served by a guardian formed from their memories
-of their greatest ancestor. This ancestor is at first remembered as they were
-at the start of their fabled adventures, but will advance in skill as their
-descendant does. Hepliaklqana always allows followers to recall their ancestor
-to their side, and, even if the ancestor is destroyed, Hepliaklqana will call
-it forth again not long after. Further advancement in Hepliaklqana's service
-allows worshippers to restore and strengthen their ancestor, to swap them with
-other creatures, and to choose how to remember their life's talents.
+Hepliaklqana's worshippers are served by a guardian formed a part of their life
+essence, in the shape of their greatest ancestor. This ancestor is at first
+remembered as they were at the start of their fabled adventures, but will
+advance in skill as their descendant does. Hepliaklqana always allows followers
+to recall their ancestor to their side, and, even if the ancestor is destroyed,
+Hepliaklqana will call it forth again not long after. Further advancement in
+Hepliaklqana's service allows worshippers to restore and strengthen their
+ancestor, to swap them with other creatures, and to choose how to remember
+their life's talents.
 %%%%
 Jiyva powers
 
@@ -511,8 +512,9 @@ Hepliaklqana wrath
 Hepliaklqana believes that the only reasonable punishment for turning one's
 back on the path of memory is to be denied its use. All new experience is
 denied to the unfortunate apostate, until Hepliaklqana decides they have
-been punished enough. This will not be quick: unlike some, Hepliaklqana has
-a long memory...
+been punished enough. The life essence sacrificed to manifest an ancestor will
+not be returned until Hepliaklqana is mollified, and this will not be quick:
+unlike some, Hepliaklqana has a long memory.
 %%%%
 Gozag wrath
 

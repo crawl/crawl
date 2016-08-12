@@ -188,6 +188,8 @@ i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
+# Remove the BRAND_FLAME and BRAND_FROST line s(but not the tiles, which are
+# still used for melee weapons) when TAG_MAJOR_VERSION > 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
 i-vampirism BRAND_VAMPIRISM
@@ -714,6 +716,7 @@ i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
+# Remove sustat when TAG_MAJOR_VERSION > 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY

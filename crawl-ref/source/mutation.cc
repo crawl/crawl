@@ -140,7 +140,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_SUSTAIN_ATTRIBUTES,  MUT_DETERIORATION,         -1},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -1280,20 +1279,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         switch (mutclass)
         {
         case MUTCLASS_TEMPORARY:
-            lose_stat(STAT_RANDOM, 1);
-            return true;
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
-
-            if (coinflip())
-                lose_stat(STAT_RANDOM, 1);
-            else
-            {
-                ouch(3, KILLED_BY_ROTTING, MID_NOBODY, reason.c_str());
-                rot_hp(roll_dice(1, 3));
-            }
-
-            xom_is_stimulated(50);
+            lose_stat(STAT_RANDOM, 1);
             return true;
         case MUTCLASS_INNATE:
             // You can't miss out on innate mutations just because you're
@@ -1306,7 +1294,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     if (mutclass == MUTCLASS_NORMAL
-        && (which_mutation == RANDOM_MUTATION || which_mutation == RANDOM_XOM_MUTATION)
+        && (which_mutation == RANDOM_MUTATION
+            || which_mutation == RANDOM_XOM_MUTATION)
         && x_chance_in_y(how_mutated(false, true), 15))
     {
         // God gifts override mutation loss due to being heavily

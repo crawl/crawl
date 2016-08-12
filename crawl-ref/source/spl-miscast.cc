@@ -1668,7 +1668,7 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (lose_stat(STAT_INT, 3 + random2(3)))
+            if (lose_stat(STAT_INT, 1 + random2avg(5, 2)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1977,7 +1977,7 @@ void MiscastEffect::_necromancy(int severity)
                 break;
 
         case 5:
-            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;
@@ -3288,7 +3288,7 @@ void MiscastEffect::_zot()
                 do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
             break;
         case 11:
-            lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         case 12:
             mpr("An unnatural silence engulfs you.");

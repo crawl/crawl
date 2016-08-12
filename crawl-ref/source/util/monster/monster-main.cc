@@ -1136,8 +1136,8 @@ int main(int argc, char* argv[])
             break;
         }
 
-        mons_check_flag(bool(me->bitfields & M_EAT_ITEMS), monsterflags,
-                        colour(LIGHTRED, "eats items"));
+        mons_check_flag(bool(me->bitfields & M_EAT_DOORS), monsterflags,
+                        colour(LIGHTRED, "eats doors"));
         mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags,
                         colour(LIGHTRED, "breaks doors"));
 

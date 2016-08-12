@@ -2484,20 +2484,6 @@ bool player_omnireflects()
     return player_equip_unrand(UNRAND_WARLOCK_MIRROR);
 }
 
-/**
- * Does the player take halved ability damage?
- *
- * @param calc_unid     Whether to include properties of worn but unidentified
- *                      items in the calculation. (Probably irrelevant.)
- * @return              Whether the player has SustAt.
- */
-bool player_sust_attr(bool calc_unid)
-{
-    return you.wearing(EQ_RINGS, RING_SUSTAIN_ATTRIBUTES, calc_unid)
-           || you.scan_artefacts(ARTP_SUSTAT)
-           || player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
-}
-
 void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -4138,12 +4124,16 @@ int get_real_hp(bool trans, bool rotted)
     hitp *= 10 + species_hp_modifier(you.species);
     hitp /= 10;
 
+    const bool hep_frail = have_passive(passive_t::frail)
+                          || player_under_penance(GOD_HEPLIAKLQANA);
+
     // Mutations that increase HP by a percentage
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
-                - (player_mutation_level(MUT_FRAIL) * 10);
+                - (player_mutation_level(MUT_FRAIL) * 10)
+                - (hep_frail ? 10 : 0);
 
     hitp /= 100;
 
@@ -6229,12 +6219,7 @@ int player::evasion(ev_ignore_type evit, const actor* act) const
     const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
                               10 : 0;
 
-    const int stairs_penalty = player_stair_delay()
-                                && !(evit & EV_IGNORE_HELPLESS) ?
-                                    5 :
-                                    0;
-
-    return base_evasion - constrict_penalty - invis_penalty - stairs_penalty;
+    return base_evasion - constrict_penalty - invis_penalty;
 }
 
 bool player::heal(int amount)

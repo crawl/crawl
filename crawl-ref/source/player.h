@@ -987,8 +987,6 @@ int player_speed();
 
 int player_spell_levels();
 
-bool player_sust_attr(bool calc_unid = true);
-
 int player_teleport(bool calc_unid = true);
 
 int player_monster_detect_radius();

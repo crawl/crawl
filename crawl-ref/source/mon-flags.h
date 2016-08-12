@@ -8,8 +8,8 @@ enum monclass_flag_type : uint64_t
 {
     M_NO_FLAGS = 0,
 
-    /// monster eats items off the floor
-    M_EAT_ITEMS         = BIT(0),
+    /// monster eats doors
+    M_EAT_DOORS         = BIT(0),
 
     /// monster crashes through doors rather than opening
     M_CRASH_DOORS       = BIT(1),

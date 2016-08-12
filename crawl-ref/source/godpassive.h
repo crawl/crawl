@@ -242,6 +242,9 @@ enum class passive_t
 
     /// Hep's transfer drains enemies adjacent to the effect's target
     transfer_drain,
+
+    /// Hep reduces your max HP
+    frail,
 };
 
 enum ru_interference

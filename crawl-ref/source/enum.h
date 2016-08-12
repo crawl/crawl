@@ -945,9 +945,6 @@ enum cloud_type
     CLOUD_NEGATIVE_ENERGY,
     NUM_CLOUD_TYPES,
 
-    CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_HOLY_FLAMES,
-
     // Random per-square.
     CLOUD_RANDOM_SMOKE = 97,
     CLOUD_RANDOM,
@@ -1973,7 +1970,9 @@ enum enchant_type
     ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
+#if TAG_MAJOR_VERSION == 34
     ENCH_EAT_ITEMS,
+#endif
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
 #if TAG_MAJOR_VERSION == 34
@@ -3786,10 +3785,6 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_FREEZING_CLOUD_IMMUNITY,
     MUT_FLAME_CLOUD_IMMUNITY,
-#else
-    MUT_SUSTAIN_ATTRIBUTES,
-#endif
-#if TAG_MAJOR_VERSION == 34
     MUT_FORLORN,
 #endif
     MUT_SUBDUED_MAGIC,
@@ -3827,7 +3822,9 @@ enum mutation_type
     MUT_INEXPERIENCED,
     MUT_PAWS,
     MUT_NECRO_ENHANCER,
+#if TAG_MAJOR_VERSION == 34
     MUT_MUMMY_RESTORATION,
+#endif
     MUT_CONSTRICTING_TAIL,
     MUT_TENGU_FLIGHT,
     MUT_MISSING_EYE,
@@ -4041,7 +4038,9 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+#if TAG_MAJOR_VERSION == 34
     ARTP_SUSTAT,
+#endif
     ARTP_NO_UPGRADE,
     ARTP_RCORR,
     ARTP_RMUT,

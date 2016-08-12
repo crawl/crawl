@@ -121,7 +121,9 @@ const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES: return "SustAt";
+#endif
     case RING_WIZARDRY:           return "Wiz";
     case RING_FIRE:               return "Fire";
     case RING_ICE:                return "Ice";
@@ -225,7 +227,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CURSE,                 PROPN_PLAIN },
         { ARTP_CLARITY,               PROPN_PLAIN },
         { ARTP_RMSL,                  PROPN_PLAIN },
-        { ARTP_SUSTAT,                PROPN_PLAIN },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -364,8 +365,10 @@ static const char* _jewellery_base_ability_description(int subtype)
 {
     switch (subtype)
     {
+#if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
         return "It sustains your strength, intelligence and dexterity.";
+#endif
     case RING_WIZARDRY:
         return "It improves your spell success rate.";
     case RING_FIRE:
@@ -432,7 +435,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_SUSTAT, "It sustains your strength, intelligence and dexterity.", false},
         { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
                                  "enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
@@ -1167,6 +1169,7 @@ static string _describe_ammo(const item_def &item)
 
         switch (item.brand)
         {
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_FLAME:
             description += "It burns those it strikes, causing extra injury "
                     "to most foes and up to half again as much damage against "
@@ -1180,6 +1183,7 @@ static string _describe_ammo(const item_def &item)
                     "cold-blooded creatures. Compared to normal ammo, it is "
                     "twice as likely to be destroyed on impact.";
             break;
+#endif
         case SPMSL_CHAOS:
             description += "When ";
 
@@ -2553,15 +2557,21 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
+/// How much power do we think the given monster casts this spell with?
+static int _hex_pow(const spell_type spell, const int hd)
+{
+    const int cap = 200;
+    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    return min(cap, pow);
+}
+
 /**
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
 int hex_chance(const spell_type spell, const int hd)
 {
-    const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
-    const int capped_pow = min(cap, pow);
+    const int capped_pow = _hex_pow(spell, hd);
     const int chance = hex_success_chance(you.res_magic(), capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_RESISTANCE)
@@ -2687,10 +2697,17 @@ static bool _get_spell_description(const spell_type spell,
                        + "\n";
 
         // only display this if the player exists (not in the main menu)
-        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
+            && mon_owner->attitude != ATT_FRIENDLY)
         {
-            description += make_stringf("Chance to beat your MR: %d%%\n",
-                                        hex_chance(spell, hd));
+            string wiz_info;
+#ifdef WIZARD
+            if (you.wizard)
+                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+#endif
+            description += make_stringf("Chance to beat your MR: %d%%%s\n",
+                                        hex_chance(spell, hd),
+                                        wiz_info.c_str());
         }
 
     }

@@ -1454,7 +1454,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FOG",
 #endif
         "ARTP_REGENERATION",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_SUSTAT",
+#endif
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",

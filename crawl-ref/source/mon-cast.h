@@ -25,7 +25,7 @@ void aura_of_brilliance(monster* agent);
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
-bool handle_mon_spell(monster* mons, bolt &beem);
+bool handle_mon_spell(monster* mons);
 
 static const int ENCH_POW_FACTOR = 3;
 int mons_power_for_hd(spell_type spell, int hd, bool random = true);
