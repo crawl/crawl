@@ -67,6 +67,8 @@ struct cloud_data
     beam_type beam_effect;
     /// How much damage the cloud does before defenses & resists.
     cloud_damage damage;
+    /// Do multiple squares of this cloud block LOS?
+    bool opaque;
 };
 
 /// A map from cloud_type to cloud_data.
@@ -101,34 +103,46 @@ static const cloud_data clouds[] = {
     // CLOUD_BLACK_SMOKE,
     { "black smoke",  nullptr,                  // terse, verbose name
       DARKGREY,                                 // colour
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_GREY_SMOKE,
     { "grey smoke",  nullptr,                   // terse, verbose name
       LIGHTGREY,                                // colour
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_BLUE_SMOKE,
     { "blue smoke",  nullptr,                   // terse, verbose name
       LIGHTBLUE,                                // colour
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_PURPLE_SMOKE,
     { "purple smoke",  nullptr,                 // terse, verbose name
       MAGENTA,                                  // colour
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_TLOC_ENERGY,
     { "translocational energy",  nullptr,       // terse, verbose name
       MAGENTA,                                  // colour
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_FOREST_FIRE,
     { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
       BEAM_FIRE,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
+      true,                                     // opacity
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
       LIGHTGREY,                                // colour
       BEAM_STEAM,                               // beam_effect
       {0, 16},                                  // base, random damage
+      true,                                     // opacity
     },
 #if TAG_MAJOR_VERSION == 34
     // CLOUD_GLOOM,
@@ -139,18 +153,21 @@ static const cloud_data clouds[] = {
     // CLOUD_INK,
     { "ink",  nullptr,                          // terse, verbose name
       DARKGREY,                                 // colour
-      BEAM_INK,                                 // beam_effect
+      BEAM_INK, {},                             // beam_effect & damage
+      true,                                     // opacity
     },
     // CLOUD_PETRIFY,
     { "calcifying dust",  nullptr,              // terse, verbose name
       WHITE,                                    // colour
-      BEAM_PETRIFYING_CLOUD,                    // beam_effect
+      BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
+      true,                                     // opacity
     },
     // CLOUD_HOLY_FLAMES,
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
       BEAM_HOLY_FLAME,                          // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
+      true,                                     // opacity
     },
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
@@ -714,7 +731,8 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
 bool is_opaque_cloud(cloud_type ctype)
 {
-    return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
+    return ctype >= CLOUD_NONE && ctype < NUM_CLOUD_TYPES
+           && clouds[ctype].opaque;
 }
 
 cloud_type cloud_type_at(const coord_def &c)
