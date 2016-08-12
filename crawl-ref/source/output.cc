@@ -2569,7 +2569,10 @@ static string _status_mut_abilities(int sw)
         status.emplace_back(help);
     }
 
-    text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
+    if (status.empty())
+        text += "no status effects";
+    else
+        text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
     text += "\n";
 
     // print mutation information
