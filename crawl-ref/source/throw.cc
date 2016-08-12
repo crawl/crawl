@@ -1139,14 +1139,8 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     const int mult = 2;
     int chance = base_chance * mult;
 
-    switch (brand)
-    {
-        case SPMSL_FLAME:
-        case SPMSL_FROST:
-        case SPMSL_CURARE:
-            chance /= 2;
-            break;
-    }
+    if (brand == SPMSL_CURARE)
+        chance /= 2;
 
     dprf("mulch chance: %d in %d", mult, chance);
 

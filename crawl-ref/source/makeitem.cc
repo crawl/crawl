@@ -567,6 +567,10 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
         return false;
     }
 
+    // Never generates, only used for chaos-branded missiles.
+    if (brand == SPMSL_FLAME || brand == SPMSL_FROST)
+        return false;
+
     // In contrast, needles should always be branded.
     // And all of these brands save poison are unique to needles.
     switch (brand)
@@ -615,9 +619,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     // Specifics
     switch (brand)
     {
-    case SPMSL_FLAME:
-    case SPMSL_FROST:
-        return false;
     case SPMSL_POISONED:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_RETURNING:

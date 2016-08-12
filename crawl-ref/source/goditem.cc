@@ -394,6 +394,7 @@ bool is_fiery_item(const item_def& item)
             return true;
         }
         break;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
@@ -401,6 +402,7 @@ bool is_fiery_item(const item_def& item)
             return true;
         }
         break;
+#endif
     case OBJ_WANDS:
         if (item.sub_type == WAND_FLAME)
             return true;

@@ -410,8 +410,10 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 30;
                 break;
 
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
+#endif
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
                 valued *= 25;

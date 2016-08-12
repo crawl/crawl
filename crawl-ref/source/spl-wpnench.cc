@@ -17,47 +17,13 @@
 #include "shout.h"
 #include "spl-miscast.h"
 
-// We need to know what brands equate with what missile brands to know if
-// we should disallow temporary branding or not.
-static special_missile_type _convert_to_missile(brand_type which_brand)
-{
-    switch (which_brand)
-    {
-    case SPWPN_NORMAL: return SPMSL_NORMAL;
-    case SPWPN_FLAMING: return SPMSL_FLAME;
-    case SPWPN_FREEZING: return SPMSL_FROST;
-    case SPWPN_VENOM: return SPMSL_POISONED;
-    case SPWPN_CHAOS: return SPMSL_CHAOS;
-    default: return SPMSL_NORMAL; // there are no equivalents for the rest
-                                  // of the ammo brands.
-    }
-}
-
-static bool _ok_for_launchers(brand_type which_brand)
-{
-    switch (which_brand)
-    {
-    case SPWPN_NORMAL:
-    case SPWPN_FREEZING:
-    case SPWPN_FLAMING:
-    case SPWPN_VENOM:
-    //case SPWPN_PAIN: -- no pain missile type yet
-    case SPWPN_CHAOS:
-    case SPWPN_VORPAL:
-        return true;
-    default:
-        return false;
-    }
-}
-
 /**
  * Gets the message for when a weapon is branded.
  *
  * @param which_brand       The type of brand.
- * @param is_range_weapon   Whether the weapon is ranged.
  * @return                  The message for the brand being applied.
  */
-static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
+static string _get_brand_msg(brand_type which_brand)
 {
     string msg; // for distortion
     switch (which_brand)
@@ -65,7 +31,7 @@ static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
     case SPWPN_FLAMING:
         return " bursts into flame!";
     case SPWPN_FREEZING:
-        return is_range_weapon ? " frosts over!" : " glows blue.";
+        return " glows blue.";
     case SPWPN_VENOM:
         return " starts dripping with poison.";
     case SPWPN_DRAINING:
@@ -187,38 +153,19 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
     item_def& weapon = *you.weapon();
 
+    // Can only brand melee weapons.
+    if (is_range_weapon(weapon))
+    {
+        mpr("You cannot enchant ranged weapons with this spell.");
+        return SPRET_ABORT;
+    }
+
     bool has_temp_brand = you.duration[DUR_WEAPON_BRAND];
     // No need to brand with a brand it's already branded with.
     if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
     {
         mpr("This weapon is already enchanted with that brand.");
         return SPRET_ABORT;
-    }
-
-    // Can only brand launchers with sensible brands.
-    if (is_range_weapon(weapon))
-    {
-        // If the new missile type wouldn't match the launcher, say no.
-        missile_type missile = fires_ammo_type(weapon);
-
-        // XXX: To deal with the fact that is_missile_brand_ok will be
-        // unhappy if we attempt to brand stones, tell it we're using
-        // sling bullets instead.
-        if (item_attack_skill(weapon) == SK_SLINGS)
-            missile = MI_SLING_BULLET;
-
-        if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
-        {
-            mpr("You cannot enchant this weapon with this spell.");
-            return SPRET_ABORT;
-        }
-
-        // If the brand isn't appropriate for that launcher, also say no.
-        if (!_ok_for_launchers(which_brand))
-        {
-            mpr("You cannot enchant this weapon with this spell.");
-            return SPRET_ABORT;
-        }
     }
 
     const brand_type orig_brand = get_weapon_brand(weapon);
@@ -251,7 +198,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     bool extending = has_temp_brand && orig_brand == which_brand;
     bool emit_special_message = !extending;
     int duration_affected = _get_brand_duration(which_brand);
-    msg += _get_brand_msg(which_brand, is_range_weapon(weapon));
+    msg += _get_brand_msg(which_brand);
 
     if (which_brand == SPWPN_DISTORTION)
         power /= 2;
