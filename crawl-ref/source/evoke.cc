@@ -1172,7 +1172,7 @@ static bool _ball_of_energy()
                                        surge);
 
     if (use < 2)
-        lose_stat(STAT_INT, 1 + random2avg(7, 2));
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
     else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");

@@ -1250,35 +1250,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     return true;
 }
 
-// We don't want monsters to pick up ammunition that is identical to the
-// launcher brand, in hope of another monster wandering by who may want to
-// use the ammo in question.
-static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
-                                             const item_def *ammo)
-{
-    // If the monster has no ammo then there's no redundancy problems
-    // to check.
-    if (ammo == nullptr)
-        return true;
-
-    const int bow_brand  = get_weapon_brand(*launcher);
-    const int ammo_brand = get_ammo_brand(*ammo);
-
-    switch (ammo_brand)
-    {
-    case SPMSL_FLAME:
-        return bow_brand != SPWPN_FLAMING;
-    case SPMSL_FROST:
-        return bow_brand != SPWPN_FREEZING;
-    case SPMSL_CHAOS:
-        return bow_brand != SPWPN_CHAOS;
-    case SPMSL_PENETRATION:
-        return bow_brand != SPWPN_PENETRATION;
-    default:
-        return true;
-    }
-}
-
 bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 {
     // Don't allow monsters to pick up launchers that would also
@@ -1306,9 +1277,7 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
                    && (mons_weapon_damage_rating(*elaunch) < mdam_rating
                        || mons_weapon_damage_rating(*elaunch) == mdam_rating
                           && get_weapon_brand(*elaunch) == SPWPN_NORMAL
-                          && get_weapon_brand(launch) != SPWPN_NORMAL
-                          && _nonredundant_launcher_ammo_brands(&launch,
-                                                                missiles()))
+                          && get_weapon_brand(launch) != SPWPN_NORMAL)
                    && drop_item(slot, msg) && pickup(launch, slot, msg);
         }
         else
@@ -2012,8 +1981,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
                         || item.sub_type == MI_SLING_BULLET
                            && miss->sub_type == MI_STONE
                         || get_ammo_brand(*miss) == SPMSL_NORMAL
-                           && item_brand != SPMSL_NORMAL
-                           && _nonredundant_launcher_ammo_brands(launch, miss))
+                           && item_brand != SPMSL_NORMAL)
                     && item.quantity * 2 > miss->quantity)
                 {
                     if (!drop_item(MSLOT_MISSILE, msg))

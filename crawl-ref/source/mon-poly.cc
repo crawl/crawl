@@ -623,9 +623,6 @@ void slimify_monster(monster* mon, bool hostile)
 
     monster_polymorph(mon, target);
 
-    if (!mons_eats_items(mon))
-        mon->add_ench(ENCH_EAT_ITEMS);
-
     if (!hostile)
         mon->attitude = ATT_STRICT_NEUTRAL;
     else

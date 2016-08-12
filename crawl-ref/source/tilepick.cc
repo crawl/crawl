@@ -3643,10 +3643,12 @@ tileidx_t tileidx_known_brand(const item_def &item)
     {
         switch (get_ammo_brand(item))
         {
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_FLAME:
             return TILE_BRAND_FLAME;
         case SPMSL_FROST:
             return TILE_BRAND_FROST;
+#endif
         case SPMSL_POISONED:
             return TILE_BRAND_POISONED;
         case SPMSL_CURARE:

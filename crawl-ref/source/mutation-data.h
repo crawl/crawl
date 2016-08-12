@@ -639,6 +639,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_MUMMY_RESTORATION, 0, 1, mutflag::GOOD, false,
   "restore body",
 
@@ -652,6 +653,7 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
+#endif
 
 { MUT_NECRO_ENHANCER, 0, 2, mutflag::GOOD, false,
   "in touch with death",
@@ -1596,6 +1598,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_SUSTAIN_ATTRIBUTES, 0, 1, mutflag::GOOD, false,
     "sustain attributes",
 
@@ -1603,6 +1606,7 @@ static const mutation_def mut_data[] =
     {"", "", ""},
     {"", "", ""},
 },
+#endif
 
 { MUT_NO_DRINK, 0, 1, mutflag::BAD, false,
   "inability to drink while threatened",

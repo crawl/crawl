@@ -410,8 +410,10 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 30;
                 break;
 
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
+#endif
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
                 valued *= 25;
@@ -905,7 +907,6 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 200;
                     break;
 
-                case RING_SUSTAIN_ATTRIBUTES:
                 case RING_STEALTH:
                 case RING_FLIGHT:
                     valued += 175;

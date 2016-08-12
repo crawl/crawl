@@ -2945,6 +2945,14 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_BLINK] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_MUMMY_RESTORATION)
+    {
+        if (you.mutation[MUT_MUMMY_RESTORATION])
+            you.mutation[MUT_MUMMY_RESTORATION] = 0;
+        if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
+            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+    }
+
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.
     const int xl_remaining = you.get_max_xl() - you.experience_level;
