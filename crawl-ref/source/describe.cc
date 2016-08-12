@@ -1167,6 +1167,7 @@ static string _describe_ammo(const item_def &item)
 
         switch (item.brand)
         {
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_FLAME:
             description += "It burns those it strikes, causing extra injury "
                     "to most foes and up to half again as much damage against "
@@ -1180,6 +1181,7 @@ static string _describe_ammo(const item_def &item)
                     "cold-blooded creatures. Compared to normal ammo, it is "
                     "twice as likely to be destroyed on impact.";
             break;
+#endif
         case SPMSL_CHAOS:
             description += "When ";
 

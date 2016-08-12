@@ -346,10 +346,12 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         = static_cast<special_missile_type>(item.brand);
     switch (brand)
     {
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_FLAME:
         return "flame";
     case SPMSL_FROST:
         return "frost";
+#endif
     case SPMSL_POISONED:
         return t == MBN_NAME ? "poisoned" : "poison";
     case SPMSL_CURARE:
