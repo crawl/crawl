@@ -3513,12 +3513,9 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
  * Give a monster a chance to cast a spell.
  *
  * @param mons the monster that might cast.
- * @param beem[in,out] Contains some basic information like who the monster
- *                     is attacking; filled out with more information about
- *                     the attack.
  * @param return whether a spell was cast.
  */
-bool handle_mon_spell(monster* mons, bolt &beem)
+bool handle_mon_spell(monster* mons)
 {
     ASSERT(mons);
 
@@ -3542,6 +3539,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     // If no useful spells... cast no spell.
     if (!hspell_pass.size())
         return false;
+
+    bolt beem = setup_targetting_beam(*mons);
 
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(mons))
