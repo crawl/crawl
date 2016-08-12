@@ -2984,6 +2984,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     case TRAN_LICH:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
     case TRAN_STATUE:
+    case TRAN_WISP:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;
