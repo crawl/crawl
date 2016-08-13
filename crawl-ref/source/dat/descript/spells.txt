@@ -1530,12 +1530,6 @@ Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
 %%%%
-Warp Weapon spell
-
-Temporarily binds a localized warp field to the caster's weapon. Unlike a
-permanently distortion-branded weapon, the affected weapon may still be safely
-unwielded. It will not affect artefact weapons.
-%%%%
 Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.

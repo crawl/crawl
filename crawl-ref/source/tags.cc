@@ -3440,7 +3440,7 @@ static void tag_read_you(reader &th)
             you.props["sticky_flame_aux"] = you.props["napalm_aux"];
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists(ORIGINAL_BRAND_KEY))
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
         you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
 
     // Both saves prior to TAG_MINOR_RU_DELAY_STACKING, and saves transferred

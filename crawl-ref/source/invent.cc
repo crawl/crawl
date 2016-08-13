@@ -1591,8 +1591,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !have_passive(passive_t::safe_distortion)
-            && !you.duration[DUR_WEAPON_BRAND])
+            && !have_passive(passive_t::safe_distortion))
         {
             return true;
         }

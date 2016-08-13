@@ -691,7 +691,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 // int effect = 9 -
                 //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
 
-                if (you.duration[DUR_WEAPON_BRAND] == 0 && !meld)
+                if (!meld)
                 {
                     if (have_passive(passive_t::safe_distortion))
                     {
@@ -718,12 +718,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 // effect in brand weapon scroll effect in read_scroll.
             }
 
-            if (you.duration[DUR_WEAPON_BRAND])
+            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             {
                 ASSERT(real_item.defined());
-                end_weapon_brand(real_item);
-                // We're letting this through even if hiding messages.
-                mpr("Your temporary branding evaporates.");
+                end_weapon_brand(real_item, true);
             }
         }
     }

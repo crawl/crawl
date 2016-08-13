@@ -1790,7 +1790,7 @@ enum duration_type
     DUR_PHASE_SHIFT,
     DUR_SEE_INVISIBLE,
 #endif
-    DUR_WEAPON_BRAND,           // general "branding" spell counter
+    DUR_EXCRUCIATING_WOUNDS,
     DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
@@ -4391,7 +4391,9 @@ enum spell_type : int
     SPELL_PHASE_SHIFT,
 #endif
     SPELL_SUMMON_BUTTERFLIES,
+#if TAG_MAJOR_VERSION == 34
     SPELL_WARP_BRAND,
+#endif
     SPELL_SILENCE,
     SPELL_SHATTER,
     SPELL_DISPERSAL,

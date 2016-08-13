@@ -1079,7 +1079,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] && &item == you.weapon())
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually a";
         if ((int) you.props[ORIGINAL_BRAND_KEY] == SPWPN_NORMAL)
