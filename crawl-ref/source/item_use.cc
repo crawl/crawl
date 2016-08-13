@@ -2017,7 +2017,7 @@ bool god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
-    if (&wpn == you.weapon() && you.duration[DUR_WEAPON_BRAND])
+    if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
     int old_brand = get_weapon_brand(wpn);
     int new_brand = old_brand;

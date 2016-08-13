@@ -118,7 +118,6 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
     SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -491,21 +490,6 @@ static int _exploration_estimate(bool seen_only = false)
     return seen;
 }
 
-static bool _spell_weapon_check(const spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_WARP_BRAND:
-    {
-        const item_def* weapon = you.weapon();
-        return weapon && !is_artefact(*weapon) && is_melee_weapon(*weapon);
-    }
-    default:
-        return true;
-    }
-}
-
 static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 {
     if (crawl_state.game_is_sprint())
@@ -570,8 +554,7 @@ static spell_type _choose_random_spell(int sever, int tense)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (_spell_weapon_check(spell)
-            && !spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, false, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);

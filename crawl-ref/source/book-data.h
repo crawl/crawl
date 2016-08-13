@@ -204,7 +204,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
-    SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
 },
 

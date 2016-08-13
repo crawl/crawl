@@ -1436,6 +1436,7 @@ static const struct spell_desc spelldata[] =
     TILEG_SUMMON_BUTTERFLIES,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_WARP_BRAND, "Warp Weapon",
     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
@@ -1444,8 +1445,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_WARP_WEAPON,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_SILENCE, "Silence",

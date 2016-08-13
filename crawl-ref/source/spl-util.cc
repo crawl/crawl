@@ -1259,14 +1259,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
         if (temp
             && (!you.weapon()
                 || you.weapon()->base_type != OBJ_WEAPONS
                 || !is_brandable_weapon(*you.weapon(), true)))
         {
-            return "you aren't wielding an enchantable weapon.";
+            return "you aren't wielding a brandable weapon.";
         }
         // intentional fallthrough
     case SPELL_PORTAL_PROJECTILE:
