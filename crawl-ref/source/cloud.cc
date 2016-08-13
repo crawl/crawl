@@ -326,24 +326,15 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 }
 
 cloud_struct::cloud_struct(coord_def p, cloud_type c, int d, int spread,
-                           kill_category kc, killer_type kt, mid_t src, int clr,
-                           string name_, string tile_, int excl)
+                           kill_category kc, killer_type kt, mid_t src,
+                           int excl)
     : pos(p), type(c), decay(d), spread_rate(spread), whose(kc), killer(kt),
-      source(src), colour(clr), name(name_), tile(tile_), excl_rad(excl)
+      source(src), excl_rad(excl)
 {
     ASSERT(_killer_whose_match(whose, killer));
 
     if (type == CLOUD_RANDOM_SMOKE)
         type = random_smoke_type();
-    if (!tile.empty())
-    {
-        tileidx_t index;
-        if (!tile_main_index(tile.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", tile.c_str());
-            tile = "";
-        }
-    }
     _los_cloud_changed(pos, type);
 }
 
@@ -446,7 +437,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
         {
             env.cloud[p] = cloud_struct(p, CLOUD_STEAM, cloud.decay / 2 + 1,
                                         22, cloud.whose, cloud.killer,
-                                        cloud.source, -1, "", "", -1);
+                                        cloud.source, -1);
         }
     }
 }
@@ -698,14 +689,12 @@ void swap_clouds(coord_def p1, coord_def p2)
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                       const actor *agent, int spread_rate, int colour,
-                       string name, string tile, int excl_rad)
+                       const actor *agent, int spread_rate, int excl_rad)
 {
     if (!in_bounds(p) || cloud_at(p))
         return;
 
-    place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile,
-                excl_rad);
+    place_cloud(cl_type, p, lifetime, agent, spread_rate, excl_rad);
 }
 
 static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
@@ -720,8 +709,7 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 //   Places a cloud with the given stats. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 const actor *agent, int _spread_rate, int colour,
-                 string name, string tile, int excl_rad)
+                 const actor *agent, int _spread_rate, int excl_rad)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -755,7 +743,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     env.cloud[ctarget] = cloud_struct(ctarget, cl_type, cl_range * 10,
                                       spread_rate, whose, killer, source,
-                                      colour, name, tile, excl_rad);
+                                      excl_rad);
 }
 
 bool is_opaque_cloud(cloud_type ctype)
@@ -1596,7 +1584,7 @@ actor *cloud_struct::agent() const
 
 string cloud_struct::cloud_name(bool terse) const
 {
-    return !name.empty() ? name : cloud_type_name(type, terse);
+    return cloud_type_name(type, terse);
 }
 
 void cloud_struct::announce_actor_engulfed(const actor *act,
@@ -1610,9 +1598,7 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
         return;
 
     // Normal clouds. (Unmodified rain clouds have a different message.)
-    const bool raincloud = type == CLOUD_RAIN || type == CLOUD_STORM;
-    const bool unmodified = cloud_name() == cloud_type_name(type, false);
-    if (!raincloud || !unmodified)
+    if (type != CLOUD_RAIN && type != CLOUD_STORM)
     {
         mprf("%s %s in %s.",
              act->name(DESC_THE).c_str(),
@@ -1643,10 +1629,6 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
  */
 colour_t get_cloud_colour(const cloud_struct &cloud)
 {
-    // if the cloud has a set custom colour, use that.
-    if (cloud.colour != -1)
-        return cloud.colour;
-
     // if we have the colour in data, use that.
     if (clouds[cloud.type].colour)
         return clouds[cloud.type].colour;

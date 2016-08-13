@@ -1525,8 +1525,7 @@ kmons ("    6 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wi
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 4, \
-                size_buildup_time = 25, cloud_type = "grey smoke", \
-                colour = "white", name = "white fluffiness" \
+                size_buildup_time = 25, cloud_type = "grey smoke" \
             }
 ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
             potion of resistance / gold / potion of agility / potion of brilliance
