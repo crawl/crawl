@@ -120,8 +120,7 @@ enum monclass_flag_type : uint64_t
     /// mostly doesn't try to melee
     M_DONT_MELEE        = BIT(37),
 
-    /// is an artificial being
-    M_ARTIFICIAL        = BIT(38),
+                        //BIT(38), // was M_ARTIFICIAL
 
     /// can survive without breathing; immune to asphyxiation and Mephitic Cloud
     M_UNBREATHING       = BIT(39),

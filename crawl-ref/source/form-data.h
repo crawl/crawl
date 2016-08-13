@@ -186,8 +186,8 @@ static const form_entry formdata[] =
     TRAN_WISP, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",
     "an insubstantial wisp.",
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
-             | MR_RES_POISON     | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3)
-             | MR_RES_ROTTING    | MR_RES_ACID         | MR_RES_PETRIFY,
+             | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ACID
+             | MR_RES_PETRIFY,
     BAD_DURATION, 0, 0, SIZE_TINY, 10, 21,
     5, 0, 50, false, 0, 10, 5,
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "hit",

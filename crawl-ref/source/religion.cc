@@ -2984,6 +2984,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     case TRAN_LICH:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
     case TRAN_STATUE:
+    case TRAN_WISP:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;
@@ -3013,7 +3014,7 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.undead_or_demonic())
         return false;
 
-    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
+    if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))

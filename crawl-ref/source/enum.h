@@ -1319,7 +1319,7 @@ enum conduct_type
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
-    DID_KILL_ARTIFICIAL,                  // Yredelemnul
+    DID_KILL_NONLIVING,
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
