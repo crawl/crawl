@@ -273,6 +273,13 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
       // TODO: another tile?
     },
+    // CLOUD_SALT,
+    { "salt",  nullptr,                           // terse, verbose name
+      ETC_AIR,                                    // colour
+      { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },    // tile
+      BEAM_NONE, {},                              // beam & damage
+      true,                                       // opacity
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
