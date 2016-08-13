@@ -2756,52 +2756,36 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
 
 tileidx_t tileidx_cloud(const cloud_info &cl)
 {
-    int type  = cl.type;
-    int colour = cl.colour;
+    const cloud_type type  = cl.type;
+    const int colour = cl.colour;
+    const unsigned int dur = cl.duration;
 
     tileidx_t ch = cl.tile;
-    int dur = cl.duration;
-
-    if (type != CLOUD_MAGIC_TRAIL && dur > 2)
-        dur = 2;
 
     if (ch == 0)
     {
+        const cloud_tile_info &tile_info = cloud_type_tile_info(type);
+
+        switch (tile_info.variation)
+        {
+            case CTVARY_NONE:
+                ch = tile_info.base;
+                break;
+            case CTVARY_DUR:
+                ch = tile_info.base + min(dur,
+                                          tile_main_count(tile_info.base) - 1);
+                break;
+            case CTVARY_RANDOM:
+                ch = tile_info.base
+                     + ui_random(tile_main_count(tile_info.base));
+                break;
+        }
+
+        if (!ch || ch == TILE_ERROR)
+            ch = TILE_CLOUD_GREY_SMOKE;
+
         switch (type)
         {
-            case CLOUD_FIRE:
-                ch = TILE_CLOUD_FIRE_0 + dur;
-                break;
-
-            case CLOUD_COLD:
-                ch = TILE_CLOUD_COLD_0 + dur;
-                break;
-
-            case CLOUD_POISON:
-                ch = TILE_CLOUD_POISON_0 + dur;
-                break;
-
-            case CLOUD_MEPHITIC:
-                ch = TILE_CLOUD_MEPHITIC_0 + dur;
-                break;
-
-            case CLOUD_BLUE_SMOKE:
-                ch = TILE_CLOUD_BLUE_SMOKE;
-                break;
-
-            case CLOUD_PURPLE_SMOKE:
-            case CLOUD_TLOC_ENERGY:
-                ch = TILE_CLOUD_TLOC_ENERGY;
-                break;
-
-            case CLOUD_MIASMA:
-                ch = TILE_CLOUD_MIASMA_0 + dur;
-                break;
-
-            case CLOUD_BLACK_SMOKE:
-                ch = TILE_CLOUD_BLACK_SMOKE;
-                break;
-
             case CLOUD_MUTAGENIC:
                 ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
                       dur == 1 ? TILE_CLOUD_MUTAGENIC_1
@@ -2809,74 +2793,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                 ch += ui_random(tile_main_count(ch));
                 break;
 
-            case CLOUD_MIST:
-                ch = TILE_CLOUD_MIST;
-                break;
-
-            case CLOUD_RAIN:
-                ch = TILE_CLOUD_RAIN + ui_random(tile_main_count(TILE_CLOUD_RAIN));
-                break;
-
-            case CLOUD_MAGIC_TRAIL:
-                ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
-                break;
-
-            case CLOUD_DUST_TRAIL:
-                ch = TILE_CLOUD_DUST_TRAIL_0 + dur;
-                break;
-
-            case CLOUD_INK:
-                ch = TILE_CLOUD_INK;
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case CLOUD_GLOOM:
-                ch = TILE_CLOUD_GLOOM;
-                break;
-#endif
-
             case CLOUD_TORNADO:
                 ch = get_tornado_phase(cl.pos) ? TILE_CLOUD_RAGING_WINDS_0
                                                : TILE_CLOUD_RAGING_WINDS_1;
                 break;
 
-            case CLOUD_HOLY_FLAMES:
-                ch = TILE_CLOUD_YELLOW_SMOKE;
-                break;
-
-            case CLOUD_PETRIFY:
-                ch = TILE_CLOUD_PETRIFY;
-                ch += ui_random(tile_main_count(ch));
-                break;
-
-            case CLOUD_CHAOS:
-                ch = TILE_CLOUD_CHAOS;
-                ch += ui_random(tile_main_count(ch));
-                break;
-
-            case CLOUD_FOREST_FIRE:
-                ch = TILE_CLOUD_FOREST_FIRE;
-                break;
-
-            case CLOUD_SPECTRAL:
-                ch = TILE_CLOUD_SPECTRAL_0 + dur;
-                break;
-
-            case CLOUD_ACID:
-                ch = TILE_CLOUD_ACID_0 + dur;
-                break;
-
-            case CLOUD_STORM:
-                ch = TILE_CLOUD_STORM
-                     + ui_random(tile_main_count(TILE_CLOUD_STORM));
-                break;
-
-            case CLOUD_NEGATIVE_ENERGY:
-                ch = TILE_CLOUD_NEG_0 + dur;
-                break;
-
             default:
-                ch = TILE_CLOUD_GREY_SMOKE;
                 break;
         }
     }
