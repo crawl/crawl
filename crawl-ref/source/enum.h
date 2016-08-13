@@ -943,6 +943,8 @@ enum cloud_type
     CLOUD_ACID,
     CLOUD_STORM,
     CLOUD_NEGATIVE_ENERGY,
+    CLOUD_FLUFFY,
+    CLOUD_XOM_TRAIL,
     NUM_CLOUD_TYPES,
 
     // Random per-square.
