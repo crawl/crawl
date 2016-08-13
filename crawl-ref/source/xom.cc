@@ -2691,7 +2691,7 @@ static void _xom_summon_hostiles(int sever)
     if (shadow_creatures)
     {
         // Small number of shadow creatures.
-        int count = 2 + random2(4);
+        int count = 1 + random2(4);
         for (int i = 0; i < count; ++i)
         {
             if (create_monster(
