@@ -80,11 +80,11 @@ attributes and mutations shift around under Jiyva's influence.
 Kikubaaqudgha
 
 Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
-the powers of death. An evil god, Kikubaaqudgha requires the deaths of living
-creatures and demons as often as possible. In exchange, Kikubaaqudgha offers
-great assistance to the aspiring necromancer: spellbooks filled with dark
-magic, protection against necromantic backlash, and an endless supply of bodies
-taken from Kikubaaqudgha's vast mausoleum.
+the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
+the death and destruction of as many creatures as possible. In exchange,
+Kikubaaqudgha offers great assistance to the aspiring necromancer: spellbooks
+filled with dark magic, protection against necromantic backlash, and an endless
+supply of bodies taken from Kikubaaqudgha's vast mausoleum.
 %%%%
 Lugonu
 
@@ -98,8 +98,7 @@ Makhleb
 
 Makhleb the Destroyer is a fearsome deity of bloodshed and mortification of the
 flesh. Followers are expected to cleanse others by inflicting suffering and
-death on them in Makhleb's name, particularly if they kill natural creatures
-which require blood to survive. Dedicated followers may also access the raw
+death on them in Makhleb's name. Dedicated followers may also access the raw
 energies and hell-spawned servants of chaos, so that they may better break the
 impure world and its false laws for their evil god's glory.
 %%%%
@@ -198,11 +197,10 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 Yredelemnul
 
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the undead. Followers, who must oppose all things holy, can raise legions
-of servile undead, and gain a number of other useful (if unpleasant) powers.
-Yredelemnul appreciates killing living and holy creatures. Destroying
-artificial beings is also appreciated, as they are neither truly alive nor
-subject to death or undeath.
+and the undead. Followers can raise legions of servile undead, and gain a
+number of other useful (if unpleasant) powers. Yredelemnul especially favours
+those who would destroy holy creatures, which oppose the realm of undeath, and
+the nonliving, which exist outside of it.
 %%%%
 Zin
 

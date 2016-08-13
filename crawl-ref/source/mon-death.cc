@@ -1679,7 +1679,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     if (holiness == MH_DEMONIC)
         did_kill_conduct(DID_KILL_DEMON, mons);
-    else if (holiness & MH_NATURAL)
+    else if (holiness & (MH_NATURAL | MH_PLANT))
     {
         did_kill_conduct(DID_KILL_LIVING, mons);
 
@@ -1689,6 +1689,8 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     }
     else if (holiness & MH_UNDEAD)
         did_kill_conduct(DID_KILL_UNDEAD, mons);
+    else if (holiness & MH_NONLIVING)
+        did_kill_conduct(DID_KILL_NONLIVING, mons);
 
     // Zin hates unclean and chaotic beings.
     if (mons.how_unclean())
@@ -1720,10 +1722,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(&mons) && !mons.cannot_move())
         did_kill_conduct(DID_KILL_FAST, mons);
-
-    // Yredelemnul hates artificial beings.
-    if (mons.is_artificial())
-        did_kill_conduct(DID_KILL_ARTIFICIAL, mons);
 
     // Dithmenos hates sources of fire.
     // (This is *after* the holy so that the right order of
