@@ -3954,9 +3954,6 @@ static void tag_construct_level(writer &th)
         marshallByte(th, cloud.whose);
         marshallByte(th, cloud.killer);
         marshallInt(th, cloud.source);
-        marshallShort(th, cloud.colour);
-        marshallString(th, cloud.name);
-        marshallString(th, cloud.tile);
         marshallInt(th, cloud.excl_rad);
     }
 
@@ -5381,9 +5378,14 @@ static void tag_read_level(reader &th)
         cloud.whose = static_cast<kill_category>(unmarshallUByte(th));
         cloud.killer = static_cast<killer_type>(unmarshallUByte(th));
         cloud.source = unmarshallInt(th);
-        cloud.colour = unmarshallShort(th);
-        cloud.name   = unmarshallString(th);
-        cloud.tile   = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_DECUSTOM_CLOUDS)
+        {
+            unmarshallShort(th); // was cloud.colour
+            unmarshallString(th); // was cloud.name
+            unmarshallString(th); // was cloud.tile
+        }
+#endif
         cloud.excl_rad = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34

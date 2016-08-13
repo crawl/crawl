@@ -738,9 +738,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       const actor *agent,
-                       int spread_rate, int colour, string name,
-                       string tile, int excl_rad)
+                       const actor *agent, int spread_rate, int excl_rad)
 {
     if (number <= 0)
         return;
@@ -762,7 +760,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 
         if (place.seen[c] <= 0 || cell_is_solid(c))
             continue;
-        func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
+        func(c, pow, spread_rate, ctype, agent, excl_rad);
         number--;
     }
 }

@@ -32,13 +32,10 @@ void swap_clouds(coord_def p1, coord_def p2);
 
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate = -1,
-                       int colour = -1,
-                       string name = "", string tile = "",
                        int excl_rad = -1);
 void place_cloud(cloud_type cl_type, const coord_def& ctarget,
                  int cl_range, const actor *agent,
-                 int spread_rate = -1, int colour = -1, string name = "",
-                 string tile = "", int excl_rad = -1);
+                 int spread_rate = -1, int excl_rad = -1);
 
 void manage_clouds();
 void run_cloud_spreaders(int dur);

@@ -52,10 +52,6 @@
 -- start_clouds: The number of clouds to lay when the level containing
 --     the cloud machine is entered. This is necessary since clouds
 --     are cleared when the player leaves a level.
--- colour: A string value with which to recolour the cloud.
--- name: A string value with which to rebrand (specifically, rename) the
---     cloud in question.
--- tile: A string value with which to retile the cloud.
 -- listener: A table with a function field called 'func'. Will be called
 --     whenever the countdown is activated, and whenever the fog
 --     machine is reset. It will be called with a reference to the table,
@@ -108,9 +104,6 @@ function FogMachine:new(pars)
   m.size_max     = pars.size_max     or pars.size
   m.spread_rate  = pars.spread_rate  or -1
   m.start_clouds = pars.start_clouds or 1
-  m.colour       = pars.colour       or ""
-  m.name         = pars.name         or ""
-  m.tile         = pars.tile         or ""
   m.excl_rad     = pars.excl_rad     or 1
 
   m.size_buildup_amnt   = pars.size_buildup_amnt   or 0
@@ -137,10 +130,9 @@ function FogMachine:new(pars)
 end
 
 function FogMachine:apply_cloud(point, pow_min, pow_max, pow_rolls,
-                                size, cloud_type, kill_cat, spread, colour,
-                                name, tile, excl_rad)
+                                size, cloud_type, kill_cat, spread, excl_rad)
   dgn.apply_area_cloud(point.x, point.y, pow_min, pow_max, pow_rolls, size,
-                       cloud_type, kill_cat, spread, colour, name, tile, excl_rad)
+                       cloud_type, kill_cat, spread, excl_rad)
 end
 
 function FogMachine:do_fog(point)
@@ -178,8 +170,7 @@ function FogMachine:do_fog(point)
 
   self:apply_cloud(p, self.pow_min, self.pow_max, self.pow_rolls,
                    crawl.random_range(size_min, size_max, 1),
-                   self.cloud_type, self.kill_cat, spread, self.colour,
-                   self.name, self.tile, self.excl_rad)
+                   self.cloud_type, self.kill_cat, spread, self.excl_rad)
 end
 
 function FogMachine:do_trigger(triggerer, marker, ev)
@@ -239,9 +230,6 @@ function FogMachine:write(marker, th)
   file.marshall(th, self.spread_buildup_amnt)
   file.marshall(th, self.spread_buildup_time)
   file.marshall(th, self.buildup_turns)
-  file.marshall(th, self.colour)
-  file.marshall(th, self.name)
-  file.marshall(th, self.tile)
   file.marshall(th, self.excl_rad)
 end
 
@@ -263,9 +251,11 @@ function FogMachine:read(marker, th)
   self.spread_buildup_amnt = file.unmarshall_number(th)
   self.spread_buildup_time = file.unmarshall_number(th)
   self.buildup_turns       = file.unmarshall_number(th)
-  self.colour              = file.unmarshall_string(th)
-  self.name                = file.unmarshall_string(th)
-  self.tile                = file.unmarshall_string(th)
+  if tags.major_version() == 34 and file.minor_version(th) < tags.TAG_MINOR_DECUSTOM_CLOUDS then
+                             file.unmarshall_string(th)
+                             file.unmarshall_string(th)
+                             file.unmarshall_string(th)
+  end
   self.excl_rad            = file.unmarshall_number(th)
 
   setmetatable(self, FogMachine)
