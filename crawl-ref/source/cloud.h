@@ -6,6 +6,19 @@
 #ifndef CLOUD_H
 #define CLOUD_H
 
+enum cloud_tile_variation
+{
+    CTVARY_NONE,     ///< fixed tile (or special case)
+    CTVARY_DUR,      ///< tile based on remaining cloud duration
+    CTVARY_RANDOM,   ///< choose a random tile in set with every redraw
+};
+
+struct cloud_tile_info
+{
+    tileidx_t base;                  ///< The base tile for the cloud type.
+    cloud_tile_variation variation;  ///< How (and if) the tile should vary.
+};
+
 cloud_struct* cloud_at(coord_def pos);
 
 cloud_type cloud_type_at(const coord_def &pos);
@@ -44,5 +57,6 @@ bool is_opaque_cloud(cloud_type ctype);
 string cloud_type_name(cloud_type type, bool terse = true);
 cloud_type random_smoke_type();
 cloud_type cloud_name_to_type(const string &name);
+const cloud_tile_info& cloud_type_tile_info(cloud_type type);
 
 #endif

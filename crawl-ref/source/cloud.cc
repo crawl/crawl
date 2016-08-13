@@ -63,6 +63,8 @@ struct cloud_data
     const char* verbose_name;
     /// The colour of the cloud in console.
     colour_t colour;
+    /// Info for calculating cloud tiles.
+    cloud_tile_info tile_info;
     /// The associated "beam" (effect) for this cloud type.
     beam_type beam_effect;
     /// How much damage the cloud does before defenses & resists.
@@ -79,60 +81,70 @@ static const cloud_data clouds[] = {
     // CLOUD_FIRE,
     { "flame", "roaring flames",                // terse, verbose name
        COLOUR_UNDEF,                            // colour
+       { TILE_CLOUD_FIRE, CTVARY_DUR },         // tile
        BEAM_FIRE,                               // beam_effect
        NORMAL_CLOUD_DAM,                        // base, random damage
     },
     // CLOUD_MEPHITIC,
     { "noxious fumes", nullptr,                 // terse, verbose name
       GREEN,                                    // colour
+      { TILE_CLOUD_MEPHITIC, CTVARY_DUR },      // tile
       BEAM_MEPHITIC,                            // beam_effect
       {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
       COLOUR_UNDEF,                             // colour
+      { TILE_CLOUD_COLD, CTVARY_DUR },          // tile
       BEAM_COLD,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_POISON,
     { "poison gas", nullptr,                    // terse, verbose name
       LIGHTGREEN,                               // colour
+      { TILE_CLOUD_POISON, CTVARY_DUR },        // tile
       BEAM_POISON,                              // beam_effect
       {0, 10},                                  // base, random damage
     },
     // CLOUD_BLACK_SMOKE,
     { "black smoke",  nullptr,                  // terse, verbose name
       DARKGREY,                                 // colour
+      { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },  // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
     // CLOUD_GREY_SMOKE,
     { "grey smoke",  nullptr,                   // terse, verbose name
       LIGHTGREY,                                // colour
+      { TILE_CLOUD_GREY_SMOKE, CTVARY_NONE },   // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
     // CLOUD_BLUE_SMOKE,
     { "blue smoke",  nullptr,                   // terse, verbose name
       LIGHTBLUE,                                // colour
+      { CLOUD_BLUE_SMOKE, CTVARY_NONE },        // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
     // CLOUD_PURPLE_SMOKE,
     { "purple smoke",  nullptr,                 // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_TLOC_ENERGY, CTVARY_NONE },  // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
     // CLOUD_TLOC_ENERGY,
     { "translocational energy",  nullptr,       // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_TLOC_ENERGY, CTVARY_NONE },  // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
     // CLOUD_FOREST_FIRE,
     { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
+      { TILE_CLOUD_FOREST_FIRE },               // tile
       BEAM_FIRE,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
       true,                                     // opacity
@@ -140,6 +152,7 @@ static const cloud_data clouds[] = {
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
       LIGHTGREY,                                // colour
+      { TILE_CLOUD_GREY_SMOKE, CTVARY_NONE },   // tile
       BEAM_STEAM,                               // beam_effect
       {0, 16},                                  // base, random damage
       true,                                     // opacity
@@ -148,23 +161,27 @@ static const cloud_data clouds[] = {
     // CLOUD_GLOOM,
     { "gloom", "thick gloom",                   // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_GLOOM },                     // tile
     },
 #endif
     // CLOUD_INK,
     { "ink",  nullptr,                          // terse, verbose name
       DARKGREY,                                 // colour
+      { TILE_CLOUD_INK },                       // tile
       BEAM_INK, {},                             // beam_effect & damage
       true,                                     // opacity
     },
     // CLOUD_PETRIFY,
     { "calcifying dust",  nullptr,              // terse, verbose name
       WHITE,                                    // colour
+      { TILE_CLOUD_PETRIFY, CTVARY_RANDOM },    // tile
       BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
       true,                                     // opacity
     },
     // CLOUD_HOLY_FLAMES,
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
+      { TILE_CLOUD_YELLOW_SMOKE },              // tile
       BEAM_HOLY_FLAME,                          // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
       true,                                     // opacity
@@ -172,21 +189,25 @@ static const cloud_data clouds[] = {
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
       DARKGREY,                                 // colour
+      { TILE_CLOUD_MIASMA, CTVARY_DUR },        // tile
       BEAM_MIASMA,                              // beam_effect
       { 0, 12 },                                // base, random damage
     },
     // CLOUD_MIST,
     { "thin mist", nullptr,                     // terse, verbose name
       ETC_MIST,                                 // colour
+      { TILE_CLOUD_MIST, CTVARY_NONE },         // tile
     },
     // CLOUD_CHAOS,
     { "seething chaos", nullptr,                // terse, verbose name
       ETC_RANDOM,                               // colour
+      { TILE_CLOUD_CHAOS, CTVARY_RANDOM },      // tile
       BEAM_CHAOS,                               // beam_effect
     },
     // CLOUD_RAIN,
     { "rain", "the rain",                       // terse, verbose name
       ETC_MIST,                                 // colour
+      { TILE_CLOUD_RAIN, CTVARY_RANDOM },       // tile
       BEAM_NONE,                                // unused
       { 0, 9 },                                 // base, random damage
                                                 // but only for fiery mons
@@ -194,40 +215,48 @@ static const cloud_data clouds[] = {
     // CLOUD_MUTAGENIC,
     { "mutagenic fog",  nullptr,                // terse, verbose name
       ETC_MUTAGENIC,                            // colour
+      { TILE_ERROR, CTVARY_NONE },              // tile
     },
     // CLOUD_MAGIC_TRAIL,
     { "magical condensation", nullptr,          // terse, verbose name
       ETC_MAGIC,                                // colour
+      { CLOUD_MAGIC_TRAIL, CTVARY_DUR },        // tile
     },
     // CLOUD_TORNADO,
     { "raging winds", nullptr,                  // terse, verbose name
       ETC_TORNADO,                              // colour
+      { TILE_ERROR },                           // tile
     },
     // CLOUD_DUST_TRAIL,
     { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
+      { TILE_CLOUD_DUST_TRAIL, CTVARY_DUR },    // tile
     },
     // CLOUD_SPECTRAL,
     { "spectral mist", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
+      { TILE_CLOUD_SPECTRAL, CTVARY_DUR },      // tile
       BEAM_NONE,                                // beam_effect
       { 4, 15 },                                // base, random damage
     },
     // CLOUD_ACID,
     { "acidic fog", nullptr,                    // terse, verbose name
       YELLOW,                                   // colour
+      { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
       ETC_DARK,                                 // colour
+      { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
       {12, 12},         // fake damage - used only for monster pathing
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
       ETC_INCARNADINE,                          // colour
+      { TILE_CLOUD_NEG, CTVARY_DUR },           // tile
       BEAM_NEG,                                 // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
@@ -1756,4 +1785,9 @@ void run_cloud_spreaders(int dur)
             break;
         }
     }
+}
+
+const cloud_tile_info& cloud_type_tile_info(cloud_type type)
+{
+    return clouds[type].tile_info;
 }
