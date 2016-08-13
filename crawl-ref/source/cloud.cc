@@ -123,7 +123,7 @@ static const cloud_data clouds[] = {
     // CLOUD_BLUE_SMOKE,
     { "blue smoke",  nullptr,                   // terse, verbose name
       LIGHTBLUE,                                // colour
-      { CLOUD_BLUE_SMOKE, CTVARY_NONE },        // tile
+      { TILE_CLOUD_BLUE_SMOKE, CTVARY_NONE },   // tile
       BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
@@ -220,7 +220,7 @@ static const cloud_data clouds[] = {
     // CLOUD_MAGIC_TRAIL,
     { "magical condensation", nullptr,          // terse, verbose name
       ETC_MAGIC,                                // colour
-      { CLOUD_MAGIC_TRAIL, CTVARY_DUR },        // tile
+      { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
     },
     // CLOUD_TORNADO,
     { "raging winds", nullptr,                  // terse, verbose name
