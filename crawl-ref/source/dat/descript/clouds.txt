@@ -164,3 +164,9 @@ white fluffiness cloud
 
 Not actually solid enough to use as a pillow. And yet, still, oddly peaceful.
 %%%%
+salt cloud
+
+A cloud of rapidly whirling dust and salt, filling the air and stinging the
+eyes and skin of any unfortunate creatures caught within. Your cloak might
+need some laundering after this one.
+%%%%
