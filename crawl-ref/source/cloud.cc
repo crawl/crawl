@@ -1467,23 +1467,6 @@ bool mons_avoids_cloud(const monster* mons, coord_def pos, bool placement)
 
     return !_mons_avoids_cloud(mons, *cloud_at(mons->pos()), true);
 }
-// Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
-// is engulfed in <cloud> messages will be suppressed.
-static bool _cloud_is_cosmetic(cloud_type type)
-{
-    switch (type)
-    {
-    case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE:
-    case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURPLE_SMOKE:
-    case CLOUD_MIST:
-    case CLOUD_FLUFFY:
-        return true;
-    default:
-        return false;
-    }
-}
 
 bool is_harmless_cloud(cloud_type type)
 {
@@ -1499,9 +1482,15 @@ bool is_harmless_cloud(cloud_type type)
 #endif
     case CLOUD_INK:
     case CLOUD_DEBUGGING:
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURPLE_SMOKE:
+    case CLOUD_MIST:
+    case CLOUD_FLUFFY:
         return true;
     default:
-        return _cloud_is_cosmetic(type);
+            return false;
     }
 }
 
@@ -1607,9 +1596,6 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
     ASSERT(act); // XXX: change to const actor &act
-    if (_cloud_is_cosmetic(type))
-        return;
-
     if (!you.can_see(*act))
         return;
 
