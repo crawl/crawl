@@ -260,6 +260,19 @@ static const cloud_data clouds[] = {
       BEAM_NEG,                                 // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
+    // CLOUD_FLUFFY,
+    { "white fluffiness",  nullptr,             // terse, verbose name
+      WHITE,                                    // colour
+      { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },  // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
+    },
+    // CLOUD_XOM_TRAIL,
+    { "magical condensation", nullptr,          // terse, verbose name
+      ETC_RANDOM,                               // colour
+      { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
+      // TODO: another tile?
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -280,6 +293,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
+    case CLOUD_FLUFFY:
         return 22;
     case CLOUD_RAIN:
     case CLOUD_INK:
@@ -1464,6 +1478,7 @@ static bool _cloud_is_cosmetic(cloud_type type)
     case CLOUD_BLUE_SMOKE:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_MIST:
+    case CLOUD_FLUFFY:
         return true;
     default:
         return false;
@@ -1478,6 +1493,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_MAGIC_TRAIL:
     case CLOUD_DUST_TRAIL:
+    case CLOUD_XOM_TRAIL:
 #if TAG_MAJOR_VERSION == 34
     case CLOUD_GLOOM:
 #endif
