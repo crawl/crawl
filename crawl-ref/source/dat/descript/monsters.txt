@@ -1543,8 +1543,7 @@ searching for carrion to devour.
 %%%%
 jelly
 
-A pulsating mass of acidic protoplasm. It can and will eat almost anything,
-growing and splitting as it does so.
+A pulsating mass of acidic protoplasm.
 %%%%
 jiangshi
 
