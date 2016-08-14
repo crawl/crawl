@@ -193,6 +193,7 @@ enum tag_minor_version
     TAG_MINOR_DEMONIC_SPELLS,      // merge demonic spells into magical spells
     TAG_MINOR_MUMMY_RESTORATION,   // remove mummy self-restoration ability
     TAG_MINOR_DECUSTOM_CLOUDS,     // remove support for custom clouds
+    TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
