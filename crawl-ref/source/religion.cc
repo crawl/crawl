@@ -275,7 +275,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 1, "You are surrounded by a storm.", "Your storm dissipates completely." },
       { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
       { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },
-      { 4, "The storm surrounding you is powerful enough to repel missilies.",
+      { 4, "The storm surrounding you is powerful enough to repel missiles.",
            "The storm surrounding you is now too weak to repel missiles." },
       { 4, "You adapt resistances upon receiving elemental damage.",
            "You no longer adapt resistances upon receiving elemental damage." },
