@@ -1470,28 +1470,11 @@ bool mons_avoids_cloud(const monster* mons, coord_def pos, bool placement)
 
 bool is_harmless_cloud(cloud_type type)
 {
-    switch (type)
-    {
-    case CLOUD_NONE:
-    case CLOUD_TLOC_ENERGY:
-    case CLOUD_MAGIC_TRAIL:
-    case CLOUD_DUST_TRAIL:
-    case CLOUD_XOM_TRAIL:
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_GLOOM:
-#endif
-    case CLOUD_INK:
-    case CLOUD_DEBUGGING:
-    case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE:
-    case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURPLE_SMOKE:
-    case CLOUD_MIST:
-    case CLOUD_FLUFFY:
-        return true;
-    default:
-            return false;
-    }
+    return clouds[type].beam_effect == BEAM_NONE
+           && clouds[type].damage.base == 0
+           && clouds[type].damage.random == 0
+           && !_cloud_has_negative_side_effects(type)
+           && type != CLOUD_TORNADO;
 }
 
 string cloud_type_name(cloud_type type, bool terse)
