@@ -3139,6 +3139,13 @@ static void tag_read_you(reader &th)
         you.exp_docked_total[i] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     }
+    if (th.getMinorVersion() < TAG_MINOR_PAKELLAS_WRATH
+        && player_under_penance(GOD_PAKELLAS))
+    {
+        you.exp_docked[GOD_PAKELLAS] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[GOD_PAKELLAS] = you.exp_docked[GOD_PAKELLAS];
+    }
 #endif
 
     // elapsed time
