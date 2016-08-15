@@ -578,6 +578,8 @@ string SkillMenuSwitch::get_help()
             vector<string> causes;
             if (you.duration[DUR_HEROISM])
                 causes.push_back("Heroism");
+            if (you.props.exists(POTION_PROWESS_KEY))
+                causes.push_back("Prowess");
 
             if (!you.skill_boost.empty()
                 && have_passive(passive_t::bondage_skill_boost))

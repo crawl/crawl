@@ -802,6 +802,12 @@ potion of might
 A potion which greatly increases the strength and physical power of one who
 drinks it.
 %%%%
+potion of prowess
+
+A potion which temporarily transforms you into a shape more suited for combat,
+and gives you sufficient knowledge of unarmed combat to fight effectively
+in that form.
+%%%%
 potion of mutation
 
 A potion which causes random mutation.

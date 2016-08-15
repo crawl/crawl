@@ -3969,6 +3969,7 @@ enum potion_type
 #endif
     POT_LIGNIFY,
     POT_BENEFICIAL_MUTATION,
+    POT_PROWESS,
     NUM_POTIONS
 };
 

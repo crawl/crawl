@@ -682,6 +682,7 @@ const char* potion_type_name(int potiontype)
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
+    case POT_PROWESS:           return "prowess";
     default:                    return "bugginess";
     }
 }
@@ -3313,6 +3314,8 @@ bool is_bad_item(const item_def &item, bool temp)
 #endif
         case POT_DEGENERATION:
             return true;
+        case POT_PROWESS:
+            return you_worship(GOD_YREDELEMNUL);
 #if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
@@ -3612,6 +3615,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
             return !you.can_safely_mutate(temp);
 
+        case POT_PROWESS:
         case POT_LIGNIFY:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE

@@ -1384,7 +1384,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight is 1065
+            // total weight is 1131
             stype = random_choose_weighted(192, POT_CURING,
                                             95, POT_HEAL_WOUNDS,
                                             72, POT_DEGENERATION,
@@ -1393,6 +1393,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
+                                            66, POT_PROWESS,
                                             63, POT_HASTE,
                                             46, POT_MUTATION,
                                             35, POT_INVISIBILITY,

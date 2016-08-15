@@ -855,7 +855,8 @@ i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
+i-good-mutation POT_BENEFICIAL_MUTATION
+i-prowess POT_PROWESS POT_ID_LAST
 %back none
 %rim 1
 

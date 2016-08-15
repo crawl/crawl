@@ -328,6 +328,51 @@ public:
     }
 };
 
+class PotionProwess : public PotionEffect
+{
+private:
+    PotionProwess() : PotionEffect(POT_PROWESS) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionProwess);
+public:
+    static const PotionProwess &instance()
+    {
+        static PotionProwess inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        return transform(0, TRAN_SPIDER, false, true, reason);
+    }
+
+    bool effect(bool was_known = true, int pow = 40, bool=true) const override
+    {
+        transformation_type form = random_choose(
+                TRAN_SPIDER, TRAN_BLADE_HANDS, TRAN_STATUE, TRAN_ICE_BEAST, TRAN_HYDRA, TRAN_DRAGON
+        );
+
+        return transform(pow, form, !was_known);
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known)
+        {
+            // should be more careful about stats for various forms in weird edge cases
+            if (!check_known_quaff() || !check_form_stat_safety(TRAN_SPIDER))
+                return false;
+        }
+        if (effect(was_known))
+        {
+            you.transform_uncancellable = true;
+            you.props[POTION_PROWESS_KEY] = true;
+            did_god_conduct(DID_CHAOS, 10, was_known);
+        }
+        else
+            mpr("Your body flexes and twists for a moment.");
+        return true;
+    }
+};
+
 class PotionBrilliance : public PotionEffect
 {
 private:
@@ -1291,7 +1336,8 @@ static const PotionEffect* potion_effects[] =
 #endif
     &PotionLignify::instance(),
     &PotionBeneficialMutation::instance(),
-    &PotionStale::instance()
+    &PotionProwess::instance(),
+    &PotionStale::instance(),
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)

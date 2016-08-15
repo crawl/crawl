@@ -5961,9 +5961,16 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             level = ash_skill_boost(sk, scale);
         }
     }
+
+    if (you.props.exists(POTION_PROWESS_KEY) && sk == SK_UNARMED_COMBAT)
+    {
+        const int prowess_level = scale * max(5, min(15, you.experience_level));
+        level = max(level, prowess_level);
+    }
+
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level = min(level + 5 * scale, 27 * scale);
-    return level;
+        level += 5 * scale;
+    return min(level, 27 * scale);
 }
 
 int player_icemail_armour_class()

@@ -1996,6 +1996,8 @@ void untransform(bool skip_move)
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
         you.props.erase(HYDRA_FORM_HEADS_KEY);
+    if (you.props.exists(POTION_PROWESS_KEY))
+        you.props.erase(POTION_PROWESS_KEY);
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;
