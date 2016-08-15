@@ -1140,7 +1140,7 @@ MAP
 ENDMAP
 
 # This vault would really appreciate "warning door" and "locked door"
-# being seperated from their forced union as runed doors...
+# being separated from their forced union as runed doors...
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = giant orange brain
