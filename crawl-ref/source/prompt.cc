@@ -47,7 +47,7 @@ bool yes_or_no(const char* fmt, ...)
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
+bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
            const explicit_keymap *map, GotoRegion region)
 {
@@ -101,22 +101,22 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         // The caller must handle this case, preferably by issuing an uncancel
         // event that can restart when the game restarts -- and ignore the
         // the return value here.
-        if (crawl_state.seen_hups && !safeanswer)
+        if (crawl_state.seen_hups && !default_answer)
             return false;
 
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
-        if (safeanswer
+        if (default_answer
             && (tmp == ' ' || key_is_escape(tmp)
                 || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
         {
-            tmp = safeanswer;
+            tmp = default_answer;
         }
 
         if (Options.easy_confirm == CONFIRM_ALL_EASY
-            || tmp == safeanswer
-            || Options.easy_confirm == CONFIRM_SAFE_EASY && safe)
+            || tmp == default_answer
+            || Options.easy_confirm == CONFIRM_SAFE_EASY && allow_lowercase)
         {
             tmp = toupper(tmp);
         }
@@ -130,8 +130,9 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             return true;
         else if (!noprompt)
         {
-            bool upper = !safe && (tmp == 'n' || tmp == 'y'
-                                   || crawl_state.game_is_hints_tutorial());
+            bool upper = !allow_lowercase
+                         && (tmp == 'n' || tmp == 'y'
+                             || crawl_state.game_is_hints_tutorial());
             const string pr = make_stringf("%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
 #ifdef TOUCH_UI
@@ -200,7 +201,7 @@ static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
 // alt_yes and alt_yes2 allow up to two synonyms for 'Y'.
 // FIXME: This function is shaping up to be a monster. Help!
-int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
+int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool allow_all,
               bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
@@ -211,7 +212,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     string prompt =
     make_stringf("%s%s ", str ? str : "Buggy prompt?",
                  _list_allowed_keys(alt_yes, alt_yes2,
-                                    safe, allow_all).c_str());
+                                    allow_lowercase, allow_all).c_str());
     while (true)
     {
         mprf(MSGCH_PROMPT, "%s", prompt.c_str());
@@ -224,12 +225,12 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
             return -1;
         }
 
-        if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
-            tmp = safeanswer;
+        if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && default_answer)
+            tmp = default_answer;
 
         if (Options.easy_confirm == CONFIRM_ALL_EASY
-            || tmp == safeanswer
-            || safe && Options.easy_confirm == CONFIRM_SAFE_EASY)
+            || tmp == default_answer
+            || allow_lowercase && Options.easy_confirm == CONFIRM_SAFE_EASY)
         {
             tmp = toupper(tmp);
         }
@@ -247,8 +248,9 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
                 return 2;
             else
             {
-                bool upper = !safe && (tmp == 'n' || tmp == 'y' || tmp == 'a'
-                                       || crawl_state.game_is_hints_tutorial());
+                bool upper = !allow_lowercase
+                             && (tmp == 'n' || tmp == 'y' || tmp == 'a'
+                                 || crawl_state.game_is_hints_tutorial());
                 mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
                      upper ? "uppercase " : "",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
@@ -256,8 +258,9 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
         }
         else
         {
-            bool upper = !safe && (tmp == 'n' || tmp == 'y'
-                                   || crawl_state.game_is_hints_tutorial());
+            bool upper = !allow_lowercase
+                         && (tmp == 'n' || tmp == 'y'
+                             || crawl_state.game_is_hints_tutorial());
             mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
                  upper ? "Uppercase " : "",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
@@ -265,13 +268,14 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_quantity
-//
-// Returns -1 if ; or enter is pressed (pickup all).
-// Else, returns quantity.
-//---------------------------------------------------------------
+/**
+ * Prompt the user for a quantity of things.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @return -1 if <enter> or ';' are pressed (meaning all);
+ *         0 if the user escaped;
+ *         the number chosen otherwise.
+ */
 int prompt_for_quantity(const char *prompt)
 {
     msgwin_prompt(prompt);
@@ -286,14 +290,14 @@ int prompt_for_quantity(const char *prompt)
     return prompt_for_int("", false);
 }
 
-//---------------------------------------------------------------
-//
-// prompt_for_int
-//
-// If nonneg, then it returns a non-negative number or -1 on fail
-// If !nonneg, then it returns an integer, and 0 on fail
-//
-//---------------------------------------------------------------
+/**
+ * Returns an integer, with a failure state.
+ *
+ * @param prompt the message to be used before the prompt.
+ * @param nonneg if true, the failure sentinel is -1;
+ *               if false, the sentinel is 0.
+ * @return the chosen number, or the chosen sentinel value.
+ */
 int prompt_for_int(const char *prompt, bool nonneg)
 {
     char specs[80];

@@ -1,3 +1,16 @@
+###############################################################################
+# shops.des: The file for minivaults centered around a single shops. The
+#            generic vaults, with the 'shop' tag, can be placed by themselves
+#            or in sets of multiple shops throughout valid levels. The themed
+#            vaults are excluded from the latter, but are collected here for
+#            ease of reference.
+#
+# <<1>>      Generic
+# <<2>>      Themed
+# <<3>>      Untagged
+#
+###############################################################################
+
 lua {{
 require('dlua/vault.lua')
 
@@ -72,7 +85,10 @@ end)
 MAP
 ENDMAP
 
-# Shop vaults: Tagged shop, may only contain a single shop.
+###############################################################################
+# <<1>> Generic.
+#       Tagged shop, may only contain a single shop. No threats.
+#
 NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 100
@@ -276,27 +292,22 @@ cww.wwc
 ccc+ccc
 ENDMAP
 
-NAME: nicolae_shop_scaring_up_business
-TAGS: allow_dup extra shop
-WEIGHT: 1
-KFEAT: O = food shop
-KMONS: O = patrolling hungry ghost
-MAP
-...
-.O.
-...
-ENDMAP
+###############################################################################
+# <<2>> Themed.
+#       Not tagged shop, but still contains one. Can have threats, and can have
+#       have a specific custom item list. Even if the below examples don't show
+#       it, try to have some restraint with additions here.
+#
 
 #####################################################
-# Custom venom shop Vault
+# Custom venom shop
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:30 potion of poison | \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
-         w:14 arrow ego:poisoned | w:14 tomahawk ego:poisoned | \
+         w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
@@ -313,7 +324,7 @@ xxxxx
 ENDMAP
 
 #####################################################
-# Custom earth shop Vault
+# Custom earth shop
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
@@ -323,8 +334,8 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
-         w:8 sling bullet | w:4 sling bullet ego:steel | \
-         w:14 stone of tremors | w:7 crystal ball of energy | \
+         w:8 sling bullet | \
+         w:7 crystal ball of energy | \
          w:4 wand of digging | w:5 randbook disc:earth | \
          w:2 book of the earth | w:2 book of geomancy | w:4 staff of earth | \
          w:4 wand of disintegration | w:1 crystal plate armour
@@ -343,7 +354,7 @@ MAP
 ENDMAP
 
 #####################################################
-# Custom blood shop Vault
+# Custom blood shop
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen
 DEPTH:   D:12-, Depths
@@ -365,29 +376,6 @@ xxxxx
 ENDMAP
 
 #####################################################
-# Off-brand ammo
-NAME:  nicolae_offbrand_ammo
-DEPTH:  D:5-, Depths, Orc
-WEIGHT: 1
-TAGS:  no_hmirror no_vmirror
-KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
-       tomahawk ego:flame | tomahawk ego:frost | tomahawk ego:chaos | \
-       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos | \
-       arrow ego:silver | arrow ego:steel | arrow ego:exploding | \
-       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
-       bolt ego:dispersal | bolt ego:chaos | \
-       sling bullet ego:dispersal | sling bullet ego:chaos
-MAP
-.......
-.lllll.
-.lG.Gl.
-.l.S.l.
-.lG.Gl.
-.ll.ll.
-.......
-ENDMAP
-
-#####################################################
 # Sells only evil items.
 NAME: nicolae_evil_shop
 WEIGHT: 2
@@ -402,14 +390,14 @@ SUBST: G : YlG
 :   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
 :   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
-:   demon whip w:5 | wand of draining | scroll of torment | staff of death | \
-:   lantern of shadows w:5 | book of necromancy | book of death | \
+:   demon whip w:5 | scroll of torment | staff of death | \
+:   book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
-:   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
-:   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
-:   centaur barding unrand:black_knights_horse_barding w:1 | \
-:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:hellfire w:1 | \
-:   double sword unrand:sword_of_zonguldrok w:1 | rod of destruction w:3")
+:   grand grimoire w:1 | sceptre_of_torment w:1 | \
+:   scythe_of_curses w:1 | majin-bo w:1 | \
+:   black_knights_horse_barding w:1 | \
+:   obsidian_axe w:1 | damnation w:1 | \
+:   sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP
@@ -427,9 +415,9 @@ TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | wand of heal wounds | \
-   tomahawk ego:silver w:2 | javelin ego:silver w:2 | bolt ego:silver w:2 |\
+   tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
-   sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
+   amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 KPROP: 1 = no_tele_into
@@ -478,15 +466,14 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    randbook disc:conjuration | book of the tempests | book of clouds | \
-   wand of fire | wand of fireball | wand of flame | wand of disintegration | \
-   wand of frost | wand of cold | wand of lightning | wand of magic darts | \
-   staff of conjuration | lightning rod | rod of inaccuracy | \
-   rod of destruction | iron rod | large rock ego:exploding | \
-   arrow ego:exploding | bolt ego:exploding | javelin ego:exploding | \
+   wand of iceblast | wand of flame | wand of disintegration | \
+   wand of lightning | staff of conjuration | lightning rod | \
+   rod of inaccuracy | iron rod | large rock ego:exploding | \
+   javelin ego:exploding | wand of acid | \
    tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
-   lamp of fire | phial of floods | stone of tremors | rod of clouds | \
-   sling bullet ego:exploding | scroll of immolation | book of flames | \
-   book of fire | book of air | manual of conjurations | manual of evocations
+   lamp of fire | phial of floods | rod of clouds | scroll of immolation | \
+   book of flames | book of fire | book of air | manual of conjurations | \
+   manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP
@@ -513,13 +500,14 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
 {{
+-- No earth-themed evoker, so just include another wand type.
   local evocables = {"lamp of fire","phial of floods",
-                     "fan of gales","stone of tremors"}
+                     "fan of gales","wand of disintegration"}
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
                      "randbook disc:air","randbook disc:earth"}
-  local wands     = {"wand of fire","wand of cold",
+  local wands     = {"wand of flame","wand of iceblast",
                      "wand of lightning","wand of digging"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp
@@ -570,4 +558,202 @@ MAP
 c.S.c
 .....
  c.c
+ENDMAP
+
+# Why not take a chance on an unidentified artefact?
+NAME: nicolae_antique_artefacts
+TAGS: transparent
+DEPTH: D:10-, Depths
+WEIGHT: 1
+SHUFFLE: -m
+SUBST: - = .
+KFEAT: m = iron_grate
+KFEAT: S = antiques shop type:Antique suffix:Artefacts count:6 ; \
+   any weapon randart | any armour randart | any jewellery randart w:4
+MAP
+.......
+.-vmv-.
+.v...v.
+.m.S.m.
+.v...v.
+.-vmv-.
+.......
+ENDMAP
+
+NAME: nicolae_shop_scaring_up_business
+TAGS: extra
+DEPTH: D:7-
+WEIGHT: 1
+KFEAT: O = food shop
+KMONS: O = patrolling hungry ghost
+MAP
+...
+.O.
+...
+ENDMAP
+
+# Get away from it all.
+NAME: nicolae_island_escapes
+DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
+TAGS: no_trap_gen no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
+WEIGHT: 5
+SHUFFLE: Aa/Bb
+SUBST: Aa = t, B = ..t, b = .
+KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
+ scroll of blinking | scroll of teleportation | scroll of fog w:8 | \
+ potion of flight | potion of invisibility w:8 | potion of haste w:1 | \
+ ring of flight w:5 | ring of teleportation w:5 | ring of stealth w:4 | \
+ wand of teleportation w:5 | wand of digging w:4 | wand of hasting w:1
+MAP
+  wwwwwwwww
+ wwwwwwwwwww
+ wwwwwwwwwww
+ wwwwBABwwww
+@wwwa...Awww
+@wwwb.S>Bwww
+@wwwa...Awww
+ wwwwBABwwww
+ wwwwwwwwwww
+ wwwwwwwwwww
+  wwwwwwwww
+ENDMAP
+
+# Eat the purple.
+NAME: nicolae_transmutations_shop
+TAGS: transparent no_item_gen no_monster_gen no_trap_gen
+DEPTH: D:8-, Depths, Zot
+COLOUR: m = magenta
+TILE: m = dngn_transparent_wall_magenta
+KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
+   potion of cure mutation q:1 w:5 | potion of beneficial mutation q:1 w:5 | \
+   potion of mutation | potion of lignification | book of changes w:5 | \
+   wand of polymorph | ugly thing chunk | book of transfigurations w:5 | \
+   book of alchemy w:5 | randbook disc:transmutation w:5 | \
+   plutonium_sword w:1
+MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
+   pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
+   spread_rate = 0, excl_rad = 0 }
+MAP
+.........
+.mmmmmmm.
+.mFFFFFm.
+.m....Fm.
+....S.Fm.
+.m....Fm.
+.mFFFFFm.
+.mmmmmmm.
+.........
+ENDMAP
+
+###############################################################################
+# <<3>> Multi.
+#       Not tagged shop, and has no threats. Contain possibly multiple shops
+#       in a somewhat generic theme- kept here for a certain ease of reference.
+#
+
+# 3 shops
+NAME:    minmay_shop_grove
+TAGS:    extra luniq_floating_shops
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+MONS:    plant / bush w:2
+KFEAT:   B = gadget shop
+KFEAT:   C = jewellery shop
+SUBST:   1 : 1.
+SUBST:   1 = 1:9 .:1
+SUBST:   x : xc v:2 b:2
+SHUFFLE: BC
+# The empty arch is intentional!
+MAP
+  xxxxxxx
+ xxtttttxx
+xxtt1.1ttxx
+xtt..B..ttx
+xt.C...C.tx
+xt1..T..1tx
+xt11...11tx
+xttttAttttx
+xxxxx@xxxxx
+ENDMAP
+
+# 1 (33%) or 4 (66%) shops
+NAME:    minmay_shop_grid_forest
+TAGS:    extra luniq_floating_shops
+DEPTH:   D:4-, Depths, Elf, Snake
+KFEAT:   A = any shop
+SHUFFLE: ABC
+SUBST:   t : t:11 x:1 c:1 b:1 v:1
+SUBST:   B : .:12 C:6 x:1 c:1 b:1 v:1 G:1 T:1
+SUBST:   C : T:12 x:1 c:1 b:1 v:1 G:1 t:1
+MAP
+.........
+.t.t.t.t.
+..B.C.B..
+.t.t.t.t.
+..C.A.C..
+.t.t.t.t.
+..B.C.B..
+.t.t.t.t.
+.........
+ENDMAP
+
+# 1 (25%), 2 (25%), or 3 (50%) shops
+NAME:    minmay_shop_star
+TAGS:    extra luniq_floating_shops
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+KFEAT:   A = any shop
+SHUFFLE: AB
+SUBST:   b : x:20 cv b:5 .:5 m:5 G:5 t:5
+SUBST:   A : A:90 .xcvbmGtT
+SUBST:   B = A
+MAP
+       x@x
+       x.x
+      xx.xx
+      x...x
+xxxxxxxb.bxxxxxxx
+@.....b...b.....@
+xxx.....A.....xxx
+  xxx.b...b.xxx
+    xxx.B.xxx
+  xxx.b...b.xxx
+xxx.....A.....xxx
+@.....b...b.....@
+xxxxxxxb.bxxxxxxx
+      x...x
+      xx.xx
+       x.x
+       x@x
+ENDMAP
+
+# 2 (50%) or 4 (50%) shops
+NAME:    minmay_shoptagon
+TAGS:    extra luniq_floating_shops
+DEPTH:   D:4-, Depths, Elf, Snake
+ORIENT:  float
+KFEAT:   A = any shop
+SUBST:   a : . m:1 G:1
+SUBST:   b : xcvbmGt
+SUBST:   d : .:60 cvbmGt
+SHUFFLE: AB, CD
+SUBST:   C : .:80 xcvbmGtT
+SUBST:   D : .:80 xcvbmGtT
+SUBST:   B : A.
+MAP
+    xxx@xxx
+   xxd...dxx
+  xxd..D..dxx
+ xxd.......dxx
+xxd....B....dxx
+xd...C...C...dx
+x.....aaa.....x
+@.D.A.aba.A.D.@
+x.....aaa.....x
+xd...C...C...dx
+xxd....B....dxx
+ xxd.......dxx
+  xxd..D..dxx
+   xxd...dxx
+    xxx@xxx
 ENDMAP

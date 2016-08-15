@@ -92,12 +92,6 @@ Lom Lobon
 Sens un savādi rāms dēmons. Tas uz Jums vēsi noraugās ar savu milzīgo un
 mirdzošo pieres vidū esošo aci.
 %%%%
-Maud
-
-Noslēpumaina karotājprincese no tāltālas karaļvalsts, kura ieradusies pēc
-leģendārā „Entareksa” zobena. Neskaitāmi ir bijuši tās apbrīnotāju, kas
-domādami par Maud, aizmirsa par visu pārējo.
-%%%%
 Maurice
 
 Izmanīgs un maskējies garnadzis. Savā arodā Maurīcijs tiek uzskatīts par
@@ -141,21 +135,6 @@ nav diez ko laba, tādēļ viņš tevi notur par harpiju.
         return "Viņš šausmīgi smako."
     end
 }}
-%%%%
-Wiglaf
-
-Resns rūķis, kurš valkā ģeķīga paskata cepuri. {{
-    if you.can_smell() then
-        return "Viņš dvako pēc alkohola. "
-    end
-}}Viņa nestabilajā gaitā ir kas savāds, it kā šī neticami tuklā persona būtu
-pieradusi pie spējākām kustībām par tādām, kas piemīt pļēgurīgam rūķim. Viņa
-labā roka ir pamatīgi apsvilināta, spriežot pēc ievainojuma apmēra, to droši
-vien izraisīja kas patiešām liels.
-
-Viņš nēsā palielu linu kreklu, kas šķiet par garu viņa druknajām aprisēm.
-Krekla aizmugurē ir izšūts vārds „Viglafs”, lai arī šķiet, ka sākotnējā vārda
-burtiem pa virsu ir pāršūti ielāpi ar citiem.
 %%%%
 Xtahua
 

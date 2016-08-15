@@ -37,6 +37,8 @@
 #include "godpassive.h"
 #include "godwrath.h"
 #include "hints.h"
+#include "itemname.h" // item_type_known
+#include "itemprop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -46,6 +48,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -93,11 +96,8 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
     else
         aid.context = SC_NEWLY_SEEN;
 
-    if (!mons_is_safe(mons)
-        && (mons_class_gives_xp(mons->type) || mons_is_active_ballisto(mons)))
-    {
+    if (!mons_is_safe(mons))
         return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
-    }
 
     seen_monster(mons);
 
@@ -139,7 +139,7 @@ void seen_monsters_react(int stealth)
             if (!(*mi)->alive())
                 continue;
 
-            handle_monster_shouts(*mi);
+            monster_consider_shouting(**mi);
         }
 
         if (!mi->visible_to(&you))
@@ -149,7 +149,7 @@ void seen_monsters_react(int stealth)
         gozag_check_bribe(*mi);
         slime_convert(*mi);
 
-        if (!mi->has_ench(ENCH_INSANE))
+        if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))
@@ -259,16 +259,213 @@ static void _genus_factoring(map<monster_type, int> &types,
     types[genus] = num;
 }
 
-void update_monsters_in_view()
+static bool _is_weapon_worth_listing(const item_def *wpn)
+{
+    return wpn && (wpn->base_type == OBJ_RODS || wpn->base_type == OBJ_STAVES
+                   || is_unrandom_artefact(*wpn)
+                   || get_weapon_brand(*wpn) != SPWPN_NORMAL);
+}
+
+/// Return a warning for the player about newly-seen monsters, as appropriate.
+static string _monster_headsup(const vector<monster*> &monsters,
+                               map<monster_type, int> &types,
+                               bool divine)
+{
+    string warning_msg = "";
+    for (const monster* mon : monsters)
+    {
+        const bool ash_ided = mon->props.exists("ash_id");
+        const bool zin_ided = mon->props.exists("zin_id");
+        const bool has_branded_weapon
+            = _is_weapon_worth_listing(mon->weapon())
+              || _is_weapon_worth_listing(mon->weapon(1));
+        if ((divine && !ash_ided && !zin_ided)
+            || (!divine && !has_branded_weapon))
+        {
+            continue;
+        }
+
+        if (!divine && monsters.size() == 1)
+            continue; // don't give redundant warnings for enemies
+
+        monster_info mi(mon);
+
+        if (warning_msg.size())
+            warning_msg += " ";
+
+        string monname;
+        if (monsters.size() == 1)
+            monname = mon->pronoun(PRONOUN_SUBJECTIVE);
+        else if (mon->type == MONS_DANCING_WEAPON)
+            monname = "There";
+        else if (types[mon->type] == 1)
+            monname = mon->full_name(DESC_THE);
+        else
+            monname = mon->full_name(DESC_A);
+        warning_msg += uppercase_first(monname);
+
+        warning_msg += " is";
+        if (!divine)
+        {
+            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON_WARNING,
+                                                      DESC_NONE) + ".";
+            continue;
+        }
+
+        if (you_worship(GOD_ZIN))
+        {
+            warning_msg += " a foul ";
+            if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+                warning_msg += "glowing ";
+            warning_msg += "shapeshifter";
+        }
+        else
+        {
+            // TODO: deduplicate
+            if (mon->type != MONS_DANCING_WEAPON)
+                warning_msg += " ";
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                      DESC_NONE);
+        }
+        warning_msg += ".";
+    }
+
+    return warning_msg;
+}
+
+/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
+static void _divine_headsup(const vector<monster*> &monsters,
+                            map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, true);
+    if (!warnings.size())
+        return;
+
+    const string warning_msg = " warns you: " + warnings;
+    simple_god_message(warning_msg.c_str());
+#ifndef USE_TILE_LOCAL
+    // XXX: should this really be here...?
+    if (you_worship(GOD_ZIN))
+        update_monster_pane();
+#endif
+}
+
+static void _secular_headsup(const vector<monster*> &monsters,
+                             map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, false);
+    if (!warnings.size())
+        return;
+    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
+}
+
+/**
+ * Handle printing "foo comes into view" messages for newly appeared monsters.
+ * Also let Ash/Zin warn the player about newly-seen monsters, as appropriate.
+ *
+ * @param msgs          A list of individual 'comes into view' messages; e.g.
+ *                      "the goblin comes into view.", "Mara opens the gate."
+ * @param monsters      A list of monsters that just became visible.
+ */
+static void _handle_comes_into_view(const vector<string> &msgs,
+                                    const vector<monster*> monsters)
 {
     const unsigned int max_msgs = 4;
+
+    map<monster_type, int> types;
+    map<monster_type, int> genera; // This is the plural for genus!
+    for (const monster *mon : monsters)
+    {
+        const monster_type type = mon->type;
+        types[type]++;
+        genera[_mons_genus_keep_uniques(type)]++;
+    }
+
+    unsigned int size = monsters.size();
+    if (size == 1)
+        mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
+    else
+    {
+        while (types.size() > max_msgs && !genera.empty())
+            _genus_factoring(types, genera);
+        mprf(MSGCH_MONSTER_WARNING, "%s",
+             _desc_mons_type_map(types).c_str());
+    }
+
+    _divine_headsup(monsters, types);
+    _secular_headsup(monsters, types);
+}
+
+/// If the player has the shout mutation, maybe shout at newly-seen monsters.
+static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
+{
+    if (!player_mutation_level(MUT_SCREAM))
+        return;
+
+    for (const monster* mon : monsters)
+    {
+        if (x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        {
+            yell(mon);
+            return;
+        }
+    }
+}
+
+/// Let Gozag's wrath buff newly-seen hostile monsters, maybe.
+static void _maybe_gozag_incite(vector<monster*> monsters)
+{
+    if (!player_under_penance(GOD_GOZAG))
+        return;
+
+    counted_monster_list mon_count;
+    vector<monster *> incited;
+    for (monster* mon : monsters)
+    {
+        // XXX: some of this is probably redundant with interrupt_activity
+        if (!mon->see_cell(you.pos()) // xray_vision
+            || mon->wont_attack()
+            || mon->is_stationary()
+            || mons_is_object(mon->type)
+            || mons_is_tentacle_or_tentacle_segment(mon->type))
+        {
+            continue;
+        }
+
+        if (coinflip()
+            && mon->get_experience_level() >= random2(you.experience_level))
+        {
+            mon_count.add(mon);
+            incited.push_back(mon);
+        }
+    }
+
+    if (incited.empty())
+        return;
+
+    string msg = make_stringf("%s incites %s against you.",
+                              god_name(GOD_GOZAG).c_str(),
+                              mon_count.describe().c_str());
+    if (strwidth(msg) >= get_number_of_cols() - 2)
+    {
+        msg = make_stringf("%s incites your enemies against you.",
+                           god_name(GOD_GOZAG).c_str());
+    }
+    mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+
+    for (monster *mon : incited)
+        gozag_incite(mon);
+}
+
+void update_monsters_in_view()
+{
     int num_hostile = 0;
     vector<string> msgs;
     vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_near(*mi))
+        if (you.see_cell(mi->pos()))
         {
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
@@ -301,122 +498,11 @@ void update_monsters_in_view()
 
     if (!msgs.empty())
     {
-        map<monster_type, int> types;
-        map<monster_type, int> genera; // This is the plural for genus!
-        const monster* target = nullptr;
-        for (const monster *mon : monsters)
-        {
-            const monster_type type = mon->type;
-            types[type]++;
-            genera[_mons_genus_keep_uniques(type)]++;
-        }
-
-        unsigned int size = monsters.size();
-        if (size == 1)
-            mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
-        else
-        {
-            while (types.size() > max_msgs && !genera.empty())
-                _genus_factoring(types, genera);
-            mprf(MSGCH_MONSTER_WARNING, "%s",
-                 _desc_mons_type_map(types).c_str());
-        }
-
-        bool warning = false;
-        string warning_msg = you_worship(GOD_ZIN) ? "Zin warns you:"
-                                                  : "Ashenzari warns you:";
-        warning_msg += " ";
-        for (const monster* mon : monsters)
-        {
-            if (!target
-                && player_mutation_level(MUT_SCREAM)
-                && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3,
-                                 100))
-            {
-                target = mon;
-            }
-            if (!mon->props.exists("ash_id") && !mon->props.exists("zin_id"))
-                continue;
-
-            monster_info mi(mon);
-
-            if (warning)
-                warning_msg += " ";
-            else
-                warning = true;
-
-            string monname;
-            if (size == 1)
-                monname = mon->pronoun(PRONOUN_SUBJECTIVE);
-            else if (mon->type == MONS_DANCING_WEAPON)
-                monname = "There";
-            else if (types[mon->type] == 1)
-                monname = mon->full_name(DESC_THE);
-            else
-                monname = mon->full_name(DESC_A);
-            warning_msg += uppercase_first(monname);
-
-            warning_msg += " is";
-            if (you_worship(GOD_ZIN))
-            {
-                warning_msg += " a foul ";
-                if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-                    warning_msg += "glowing ";
-                warning_msg += "shapeshifter";
-            }
-            else
-            {
-                warning_msg += " "
-                               + get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                                            DESC_NONE);
-            }
-            warning_msg += ".";
-        }
-        if (warning)
-        {
-            mprf(MSGCH_GOD, "%s", warning_msg.c_str());
-#ifndef USE_TILE_LOCAL
-            if (you_worship(GOD_ZIN))
-                update_monster_pane();
-#endif
-        }
-
-        if (target)
-            yell(target);
-
-        if (player_under_penance(GOD_GOZAG))
-        {
-            counted_monster_list mon_count;
-            vector<monster *> mons;
-            for (monster *mon : monsters)
-            {
-                if (mon->wont_attack()
-                    || mon->is_stationary()
-                    || mons_is_object(mon->type)
-                    || mons_is_tentacle_or_tentacle_segment(mon->type))
-                {
-                    continue;
-                }
-
-                if (coinflip()
-                    && mon->get_experience_level() >=
-                       random2(you.experience_level))
-                {
-                    mon_count.add(mon);
-                    mons.push_back(mon);
-                }
-            }
-            if (mons.size() > 0)
-            {
-                string msg = make_stringf("Gozag incites %s against you.",
-                                          mon_count.describe().c_str());
-                if (strwidth(msg) >= get_number_of_cols() - 2)
-                    msg = "Gozag incites your enemies against you.";
-                mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-                for (monster *mon : mons)
-                    gozag_incite(mon);
-            }
-        }
+        _handle_comes_into_view(msgs, monsters);
+        // XXX: does interrupt_activity() add 'comes into view' messages to
+        // 'msgs' in ALL cases we want shoutitis/gozag wrath to trigger?
+        _maybe_trigger_shoutitis(monsters);
+        _maybe_gozag_incite(monsters);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
@@ -680,15 +766,6 @@ void fully_map_level()
     }
 }
 
-// Is the given monster near (in LOS of) the player?
-bool mons_near(const monster* mons)
-{
-    ASSERT(mons);
-    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return true;
-    return you.see_cell(mons->pos());
-}
-
 bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
@@ -705,12 +782,12 @@ bool mon_enemies_around(const monster* mons)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return mons_near(mons) && there_are_monsters_nearby(true);
+        return you.can_see(*mons) && there_are_monsters_nearby(true);
     }
     else
     {
         // For hostile monster* you* are the main enemy.
-        return mons_near(mons);
+        return mons->can_see(you);
     }
 }
 
@@ -916,23 +993,20 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
-    const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD && !crawl_state.game_is_arena())
+    const cloud_struct* cloud = cloud_at(gc);
+    if (cloud && !crawl_state.game_is_arena())
     {
-        cloud_struct &cl   = env.cloud[cloudidx];
-        cloud_type   ctype = cl.type;
+        const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
         if (!cl.temporary() && is_damaging_cloud(cl.type, false))
         {
-            int size;
+            int size = cl.exclusion_radius();
 
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
-            if (ctype == CLOUD_STEAM && cl.exclusion_radius() == 1)
+            if (cl.type == CLOUD_STEAM && size == 1)
                 size = 0;
-            else
-                size = cl.exclusion_radius();
 
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
@@ -1261,17 +1335,17 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
     }
 }
 
-//---------------------------------------------------------------
-//
-// Draws the main window using the character set returned
-// by get_show_glyph().
-//
-// If show_updates is set, env.show and dependent structures
-// are updated. Should be set if anything in view has changed.
-//
-// If tiles_only is set, only the tile view will be updated. This
-// is only relevant for Webtiles.
-//---------------------------------------------------------------
+/**
+ * Draws the main window using the character set returned
+ * by get_show_glyph().
+ *
+ * @param show_updates if true, env.show and dependent structures
+ *                     are updated. Should be set if anything in
+ *                     view has changed.
+ * @param tiles_only if true, only the tile view will be updated. This
+ *                   is only relevant for Webtiles.
+ * @param a[in] the animation to be showing, if any.
+ */
 void viewwindow(bool show_updates, bool tiles_only, animation *a)
 {
     // The player could be at (0,0) if we are called during level-gen; this can
@@ -1499,24 +1573,39 @@ static void _config_layers_menu()
     bool exit = false;
 
     _layers = _layers_saved;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
     msgwin_set_temporary(true);
     while (!exit)
     {
         viewwindow();
-        mprf(MSGCH_PROMPT, "Select layers to display: "
+        mprf(MSGCH_PROMPT, "Select layers to display:\n"
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
-                           "<%s>(c)louds</%s>",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_MONSTERS ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_PLAYER   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_ITEMS    ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey",
-           _layers & LAYER_CLOUDS   ? "lightgrey" : "darkgrey"
+                           "<%s>(c)louds</%s>"
+#ifndef USE_TILE_LOCAL
+                           "|"
+                           "<%s>monster (w)eapons</%s>|"
+                           "<%s>monster (h)ealth</%s>"
+#endif
+                           ,
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_ITEMS           ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey",
+           _layers & LAYER_CLOUDS          ? "lightgrey" : "darkgrey"
+#ifndef USE_TILE_LOCAL
+           ,
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_WEAPONS ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey",
+           _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
+#endif
         );
         mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
                            "Press any other key to exit.",
@@ -1524,18 +1613,33 @@ static void _config_layers_menu()
 
         switch (get_ch())
         {
-        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS; break;
-        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;   break;
-        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;    break;
-        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;   break;
+        case 'm': _layers_saved = _layers ^= LAYER_MONSTERS;        break;
+        case 'p': _layers_saved = _layers ^= LAYER_PLAYER;          break;
+        case 'i': _layers_saved = _layers ^= LAYER_ITEMS;           break;
+        case 'c': _layers_saved = _layers ^= LAYER_CLOUDS;          break;
+#ifndef USE_TILE_LOCAL
+        case 'w': _layers_saved = _layers ^= LAYER_MONSTER_WEAPONS;
+                  if (_layers & LAYER_MONSTER_WEAPONS)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
+        case 'h': _layers_saved = _layers ^= LAYER_MONSTER_HEALTH;
+                  if (_layers & LAYER_MONSTER_HEALTH)
+                      _layers_saved = _layers |= LAYER_MONSTERS;
+                  break;
+#endif
 
         // Remaining cases fall through to exit.
         case '|':
             _layers = LAYERS_ALL;
+            crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+            crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
         default:
             exit = true;
             break;
         }
+
+        crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+        crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 
         msgwin_clear_temporary();
     }
@@ -1564,6 +1668,8 @@ void reset_show_terrain()
         mprf(MSGCH_PROMPT, "Restoring view layers.");
 
     _layers = LAYERS_ALL;
+    crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
+    crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
 }
 
 ////////////////////////////////////////////////////////////////////////////

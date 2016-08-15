@@ -26,7 +26,7 @@ static const sacrifice_def sac_data[] =
 {
 
 { ABIL_RU_SACRIFICE_PURITY, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed purity",
 
   0,
@@ -56,7 +56,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed essence",
 
   0,
@@ -66,7 +66,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_HEALTH, MUT_NON_MUTATION,
-  "corrupt yourself with",
+  "corrupt yourself such that",
   "sacrificed health",
 
   20,
@@ -159,7 +159,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  30,
+  35,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
@@ -169,7 +169,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your skill",
   "sacrificed skill",
 
-  35,
+  40,
   SK_NONE,
   nullptr,
   nullptr,

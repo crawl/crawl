@@ -18,21 +18,18 @@ enum skill_menu_flags
     SKMF_RESKILL_FROM      = 1<<0,
     SKMF_RESKILL_TO        = 1<<1,
     SKMF_RESKILLING        = SKMF_RESKILL_FROM | SKMF_RESKILL_TO,
-    SKMF_EXPERIENCE_CARD   = 1<<2,
-    SKMF_EXPERIENCE_POTION = 1<<3,
-    SKMF_EXPERIENCE        = SKMF_EXPERIENCE_CARD | SKMF_EXPERIENCE_POTION,
+    SKMF_EXPERIENCE        = 1<<2,
     SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
-    SKMF_MANUAL            = 1<<4,  // was SKMF_CROSSTRAIN
-                           //1<<5,  // was SKMF_ANTITRAIN
-    SKMF_ENHANCED          = 1<<6,
-    SKMF_REDUCED           = 1<<7,
+    SKMF_MANUAL            = 1<<3,
+    SKMF_ENHANCED          = 1<<4,
+    SKMF_REDUCED           = 1<<5,
     SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
 
-    SKMF_SKILL_ICONS       = 1<<8,
-    SKMF_APTITUDE          = 1<<9,
-    SKMF_SIMPLE            = 1<<10, // Simple mode for tutorial and hint mode.
-    SKMF_HELP              = 1<<11,
+    SKMF_SKILL_ICONS       = 1<<6,
+    SKMF_APTITUDE          = 1<<7,
+    SKMF_SIMPLE            = 1<<8, // Simple mode for tutorial and hint mode.
+    SKMF_HELP              = 1<<9,
 };
 
 #define SKM_HELP -1

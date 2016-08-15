@@ -150,6 +150,38 @@ private:
 
 
 
+/**
+ * What monster enum corresponds to the given Serpent of Hell name?
+ *
+ * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
+ * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
+ */
+static monster_type _soh_type(string soh_name)
+{
+    // trying to minimize code duplication...
+    static const vector<monster_type> soh_types = {
+        MONS_SERPENT_OF_HELL, MONS_SERPENT_OF_HELL_DIS,
+        MONS_SERPENT_OF_HELL_COCYTUS, MONS_SERPENT_OF_HELL_TARTARUS,
+    };
+
+    // grab 'cocytus' etc
+    const string flavour_name
+        = soh_name.substr(lowercase(soh_name).find("hell") + 5);
+    for (monster_type mtype : soh_types)
+        if (serpent_of_hell_flavour(mtype) == flavour_name)
+            return mtype;
+    return MONS_PROGRAM_BUG;
+}
+
+static bool _is_soh(string name)
+{
+    return starts_with(lowercase(name), "the serpent of hell");
+}
+
+static monster_type _mon_by_name(string name)
+{
+    return _is_soh(name) ? _soh_type(name) : get_monster_by_name(name);
+}
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
@@ -252,18 +284,7 @@ public:
 static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
     vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
-
-    if (key_matches.size() == 1)
-        return key_matches;
-    else if (key_matches.size() > 52)
-        return key_matches;
-
     vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
-
-    if (key_matches.empty() && body_matches.empty())
-        return key_matches;
-    else if (key_matches.empty() && body_matches.size() == 1)
-        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
     vector<string> tmp = key_matches;
@@ -294,11 +315,20 @@ static vector<string> _get_monster_keys(ucs_t showchar)
         if (me->mc != i)
             continue;
 
+        if ((ucs_t)me->basechar != showchar)
+            continue;
+
+        if (mons_species(i) == MONS_SERPENT_OF_HELL)
+        {
+            mon_keys.push_back(string(me->name) + " "
+                               + serpent_of_hell_flavour(i));
+            continue;
+        }
+
         if (getLongDescription(me->name).empty())
             continue;
 
-        if ((ucs_t)me->basechar == showchar)
-            mon_keys.push_back(me->name);
+        mon_keys.push_back(me->name);
     }
 
     return mon_keys;
@@ -364,16 +394,15 @@ static vector<string> _get_skill_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    monster_type mon_num = get_monster_by_name(key.c_str());
+    const monster_type mon_num = _mon_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
 
 static bool _spell_filter(string key, string body)
 {
-    if (!ends_with(key, " spell"))
+    if (!strip_suffix(key, "spell"))
         return true;
-    key.erase(key.length() - 6);
 
     spell_type spell = spell_by_name(key);
 
@@ -401,9 +430,8 @@ static bool _card_filter(string key, string body)
     lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (!ends_with(key, " card"))
+    if (!strip_suffix(key, "card"))
         return true;
-    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
@@ -416,24 +444,60 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
-    if (!ends_with(key, " ability"))
+
+    if (!strip_suffix(key, "ability"))
         return true;
-    key.erase(key.length() - 8);
 
-    if (string_matches_ability_name(key))
-        return false;
-
-    return true;
+    return !string_matches_ability_name(key);
 }
 
+static bool _status_filter(string key, string body)
+{
+    return !strip_suffix(lowercase(key), " status");
+}
 
 
 static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
-        monster_type type = get_monster_by_name(keys[i]);
-        keys[i] = mons_type_name(type, DESC_PLAIN);
+        if (!_is_soh(keys[i]))
+        {
+            monster_type type = get_monster_by_name(keys[i]);
+            keys[i] = mons_type_name(type, DESC_PLAIN);
+        }
+    }
+}
+
+/**
+ * Fixup spell names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of spell names.
+ */
+static void _recap_spell_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        // first, strip " spell"
+        const string key_name = keys[i].substr(0, keys[i].length() - 6);
+        // then get the real name
+        keys[i] = make_stringf("%s spell",
+                               spell_title(spell_by_name(key_name)));
+    }
+}
+
+/**
+ * Fixup ability names. (Correcting capitalization, mainly.)
+ *
+ * @param[in,out] keys      A lowercased list of ability names.
+ */
+static void _recap_ability_keys(vector<string> &keys)
+{
+    for (auto &key : keys)
+    {
+        strip_suffix(key, "ability");
+        // get the real name
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
     }
 }
 
@@ -569,11 +633,12 @@ static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
  * @return            A new menu entry.
  */
 static MenuEntry* _monster_menu_gen(char letter, const string &str,
-                             monster_info &mslot)
+                                    monster_info &mslot)
 {
     // Create and store fake monsters, so the menu code will
     // have something valid to refer to.
-    monster_type m_type = get_monster_by_name(str);
+    monster_type m_type = _mon_by_name(str);
+    const string name = _is_soh(str) ? "The Serpent of Hell" : str;
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
@@ -598,9 +663,9 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     prefix += colour_to_str(colour);
     prefix += ">) ";
 
-    const string title = prefix + str;
+    const string title = prefix + name;
 #else
-    const string &title = str;
+    const string &title = name;
 #endif
 
     // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
@@ -682,7 +747,7 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 
 #ifdef USE_TILE
     const skill_type skill = str_to_skill(str);
-    me->add_tile(tile_def(tileidx_skill(skill, 1), TEX_GUI));
+    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
 #endif
 
     return me;
@@ -767,6 +832,14 @@ vector<string> LookupType::matching_keys(string regex) const
     return key_list;
 }
 
+static string _mons_desc_key(monster_type type)
+{
+    const string name = mons_type_name(type, DESC_PLAIN);
+    if (mons_species(type) == MONS_SERPENT_OF_HELL)
+        return name + " " + serpent_of_hell_flavour(type);
+    return name;
+}
+
 /**
  * Build a menu listing the given keys, and allow the player to interact
  * with them.
@@ -825,7 +898,7 @@ void LookupType::display_keys(vector<string> &key_list) const
             if (doing_mons)
             {
                 monster_info* mon = (monster_info*) sel[0]->data;
-                key = mons_type_name(mon->type, DESC_PLAIN);
+                key = _mons_desc_key(mon->type);
             }
             else
                 key = *((string*) sel[0]->data);
@@ -857,10 +930,8 @@ MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
 string LookupType::key_to_menu_str(const string &key) const
 {
     string str = uppercase_first(key);
-
-    if (ends_with(str, suffix())) // perhaps we should assert this?
-        str.erase(str.length() - suffix().length());
-
+    // perhaps we should assert this?
+    strip_suffix(str, suffix());
     return str;
 }
 
@@ -898,8 +969,7 @@ static int _describe_key(const string &key, const string &suffix,
     inf.body << desc << extra_info;
 
     string title = key;
-    if (ends_with(title, suffix))
-        title.erase(title.length() - suffix.length());
+    strip_suffix(title, suffix);
     title = uppercase_first(title);
     linebreak_string(footer, width - 1);
 
@@ -939,7 +1009,7 @@ static int _describe_generic(const string &key, const string &suffix,
 static int _describe_monster(const string &key, const string &suffix,
                              string footer)
 {
-    const monster_type mon_num = get_monster_by_name(key);
+    const monster_type mon_num = _mon_by_name(key);
     ASSERT(mon_num != MONS_PROGRAM_BUG);
     // Don't attempt to get more information on ghost demon
     // monsters, as the ghost struct has not been initialised, which
@@ -1003,17 +1073,12 @@ static int _describe_card(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_cloud(const string &key, const string &suffix,
-                          string footer)
+                           string footer)
 {
     const string cloud_name = key.substr(0, key.size() - suffix.size());
     const cloud_type cloud = cloud_name_to_type(cloud_name);
     ASSERT(cloud != NUM_CLOUD_TYPES);
-
-    const string extra_info = is_opaque_cloud_type(cloud) ?
-        "\nThis cloud is opaque; one tile will not block vision, but "
-        "multiple will."
-        : "";
-    return _describe_key(key, suffix, footer, extra_info);
+    return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
 }
 
 
@@ -1048,14 +1113,6 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     item_def item;
-    // spellbooks/rods are interactive & so require special handling
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        item_colour(item);
-        return _describe_spell_item(item);
-    }
-
     string stats;
     if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS)
         || get_item_by_name(&item, key.c_str(), OBJ_ARMOUR)
@@ -1064,6 +1121,13 @@ static int _describe_item(const string &key, const string &suffix,
     {
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
+    }
+    // spellbooks/rods are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        item_colour(item);
+        return _describe_spell_item(item);
     }
 
     return _describe_key(key, suffix, footer, stats);
@@ -1228,7 +1292,7 @@ static const vector<LookupType> lookup_types = {
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
                lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
-    LookupType('S', "spell", nullptr, _spell_filter,
+    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
@@ -1236,7 +1300,7 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
                lookup_type::SUPPORT_TILES),
-    LookupType('A', "ability", nullptr, _ability_filter,
+    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
@@ -1264,6 +1328,10 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
                lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+    LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic,
+               lookup_type::DB_SUFFIX),
 };
 
 /**

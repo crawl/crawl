@@ -32,6 +32,7 @@ tileidx_t tileidx_draco_job(const monster_info& mon);
 tileidx_t tileidx_demonspawn_base(const monster_info& mon);
 tileidx_t tileidx_demonspawn_job(const monster_info& mon);
 tileidx_t tileidx_player_mons();
+tileidx_t tileidx_tentacle(const monster_info& mon);
 
 tileidx_t tileidx_item(const item_info &item);
 tileidx_t tileidx_item_throw(const item_info &item, int dx, int dy);
@@ -70,6 +71,6 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefi
 
 void tile_init_props(monster* mon);
 tileidx_t tileidx_monster_base(int type, bool in_water = false, int colour = 0,
-                               int number = 0, int tile_num_prop = 0);
+                               int number = 4, int tile_num_prop = 0);
 tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset);
 #endif

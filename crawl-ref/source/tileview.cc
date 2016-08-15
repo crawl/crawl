@@ -3,7 +3,6 @@
 #include "tileview.h"
 
 #include "areas.h"
-#include "asg.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -18,6 +17,7 @@
 #include "kills.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pcg.h"
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
@@ -300,12 +300,8 @@ void tile_init_flavour()
     vector<unsigned int> output;
     {
         domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-        uint32_t seed[] =
-        {
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-            static_cast<uint32_t>(ui_random(INT_MAX)),
-        };
-        AsgKISS rng(seed, 2);
+        uint64_t seed[] = { get_uint64(RNG_UI), get_uint64(RNG_UI) };
+        PcgRNG rng(seed, ARRAYSZ(seed));
         dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -390,7 +386,7 @@ static int _find_variants(tileidx_t idx, int variant, map<tileidx_t, int> &out)
 
 tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
 {
-    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
+    ASSERT_LESS(idx, TILE_DNGN_MAX);
     map<tileidx_t, int> choices;
     int total = _find_variants(idx, domino, choices);
     if (choices.size() == 1)
@@ -400,7 +396,7 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (const auto& elem : choices)
     {
         rand -= elem.second;
-        if (rand <= 0)
+        if (rand < 0)
             return elem.first;
     }
 
@@ -1044,6 +1040,8 @@ void tile_draw_rays(bool reset_count)
             flag = TILE_FLAG_RAY;
         else if (tile_ray_vec[i].in_range == AFF_LANDING)
             flag = TILE_FLAG_LANDING;
+        else if (tile_ray_vec[i].in_range == AFF_MULTIPLE)
+            flag = TILE_FLAG_RAY_MULTI;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 
@@ -1380,16 +1378,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
     else if (mc.flags & MAP_HALOED)
-    {
-        monster_info* mon = mc.monsterinfo();
-        if (mon && mons_class_gives_xp(mon->type))
-        {
-            cell.halo = HALO_MONSTER;
-            print_blood = false;
-        }
-        else
-            cell.halo = HALO_RANGE;
-    }
+        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 

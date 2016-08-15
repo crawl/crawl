@@ -728,7 +728,7 @@ ENDMAP
 
 NAME:   dpeg_vaults_pockets_of_resistance
 TAGS:   vaults_hard
-SUBST:  0 = 0000099998
+NSUBST: 0 = 3 = 899 / 12 = 099 / * = 0
 MAP
   xxx......
  xxxxx....xxx
@@ -843,7 +843,7 @@ ENDMAP
 
 NAME: nicolae_vaults_statue_guard
 TAGS: vaults_hard vaults_orient_e
-MONS: obsidian statue / ice statue / orange crystal statue
+MONS: obsidian statue / orange crystal statue
 KPROP: % = no_tele_into
 SUBST: % = %%%*
 MAP
@@ -1100,7 +1100,7 @@ ENDMAP
 NAME: nicolae_vaults_fighting_squares
 TAGS: vaults_hard
 SHUFFLE: ABCDEFGHabcdefgh%/IJKLMNOPijklmnop!
-NSUBST: 0 = 9 / 0009., ABCDEFGH = x / +, abcdefgh = + / x, \
+NSUBST: 0 = 1:9 / * = 0009., ABCDEFGH = x / +, abcdefgh = + / x, \
         PI = + / x, JK = + / x, LM = + / x, NO = + / x, \
         ij = + / x, kl = + / x, mn = + / x, op = + / x
 SUBST: ! = .
@@ -1169,16 +1169,17 @@ ENDMAP
 
 NAME:   kennysheep_vaults_gozag_temple
 TAGS:   vaults_hard no_item_gen uniq_kennysheep_gozag_temple
-KMONS:  2 = vault warden
+WEIGHT: 5
 KMONS:  1 = ironheart preserver
+KMONS:  2 = vault warden
 KITEM:  | = gold good_item
-KITEM:  21 = gold
+KITEM:  12 = gold
 KFEAT:  B = altar_gozag
 KFEAT:  D = granite_statue
 TILE:   GD = dngn_golden_statue
 : set_feature_name("granite_statue", "golden statue")
 COLOUR: cGD = yellow
-FTILE:  $|B}+nc21-D = floor_limestone
+FTILE:  $|B}+nc12-D = floor_limestone
 FTILE:  " = floor_hall
 KFEAT:  _ = antiques shop name:Gozag greed:100 /\
             antique weapon shop name:Gozag greed:100 /\
@@ -1200,4 +1201,133 @@ MAP
 .."""""_"""""..
 .G.""""""""".G.
 ...............
+ENDMAP
+
+NAME: nicolae_vaults_inception_network
+TAGS: vaults_hard
+WEIGHT: 5
+KMONS: 0 = 0 / 0 band w:5
+KMONS: 9 = 9 / 9 band w:5
+KITEM: 0 = $ / any w:5
+KITEM: 9 = * / % w:5
+NSUBST: p = x / ., q = x / ., r = x / ., s = x / .
+NSUBST: A = . / x, B = . / x, C = . / x, D = . / x, E = . / x,  F = . / x, \
+  G = . / x, H = . / x, I = . / x, J = . / x, K = . / x, L = . / x, M = . / x, \
+  N = . / x, O = . / x, P = . / x, Q = . / x, R = . / x, S = . / x, T = . / x, \
+  U = . / x, V = . / x, W = . / x, X = . / x, Y = . / x, Z = . / x, 1 = . / x, \
+  2 = . / x, 3 = . / x, 4 = . / x, 5 = . / x, 6 = . / x
+NSUBST: % = 2:9 / 6:0 / 4 = 0% / * = ......%
+MAP
+.........................
+.x6xpxAxBxCxDxExFxGxqxHx.
+.6%6.A%x%x%x%x%x%x%G.H%H.
+.x6xpxAxBxCxDxExFxGxqxHx.
+.p.p.................q.q.
+.x5x.               .xIx.
+.5%5.               .I%I.
+.xxx.               .xxx.
+.4%4.               .J%J.
+.xxx.               .xxx.
+.3%3.               .K%K.
+.xxx.               .xxx.
+.2%2.               .L%L.
+.xxx.               .xxx.
+.1%1.               .M%M.
+.xxx.               .xxx.
+.Z%Z.               .N%N.
+.xxx.               .xxx.
+.Y%Y.               .O%O.
+.xYx.               .xOx.
+.s.s.................r.r.
+.xXxsxWxVxUxTxSxRxQxrxPx.
+.X%X.x%x%x%x%x%x%x%Q.P%P.
+.xXxsxWxVxUxTxSxRxQxrxPx.
+.........................
+ENDMAP
+
+NAME: nicolae_vaults_holding_cells
+TAGS: vaults_hard
+WEIGHT: 5
+KMONS: P = human ; nothing / orc ; nothing / elf ; nothing / troll ; nothing / \
+       centaur ; nothing / kobold ; nothing
+KFEAT: g = iron_grate
+KFEAT: ^ = alarm trap
+KMONS: 1 = vault guard
+KMONS: 2 = vault warden
+KMONS: 3 = ironheart preserver / ironbrand convoker
+NSUBST: 1 = 4:1 / 1:2 / 1:3 / *:., . = 2:^ / *:.
+SUBST: ' = .
+KPROP: P = no_tele_into
+KMASK: P = opaque
+KMASK: P = no_trap_gen
+KMASK: P = no_item_gen
+MAP
+xxxxxxxxx
+xPg..1xxx
+xxx1...xx
+xPg....1x
+xxx1.1..'
+xPg....1x
+xxx1...xx
+xPg..1xxx
+xxxxxxxxx
+ENDMAP
+
+NAME:    minmay_guarded_unrand_guard_vaults
+TAGS:    vaults_hard vaults_orient_n
+WEIGHT:  3
+: if you.unrands("glaive_of_the_guard") then
+ITEM:    bardiche randart no_pickup
+: else
+ITEM:    glaive_of_the_guard no_pickup
+: end
+SUBST:   b : bxcmG.T
+NSUBST:  3:9 / 4=9. / ., 8 = 2:8 / 6=8.. / .
+MAP
+vvvvvvv@vvvvvvv
+v...v*v.v*v...v
+v8b8.*n.n*.8b8v
+v.8.v*v.v*v.8.v
+vv.vvvv.vvvv.vv
+v.9.vv.9.vv.9.v
+v.b9..9b9..9b.v
+v.9.vv...vv.9.v
+vv.vvvvnvvvv.vv
+vv.vvv...vvv.vv
+v.8.v..*..v.8.v
+v8b8..*d*..8b8v
+v...v..*..v...v
+vGvGvv...vvGvGv
+vvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    minmay_guarded_unrand_secular_launcher
+TAGS:    vaults_hard vaults_orient_s
+WEIGHT:  3
+: if you.unrands("sniper") and you.unrands("piercer") then
+ITEM:    triple crossbow randart no_pickup / longbow randart no_pickup
+: elseif you.unrands("sniper") then
+ITEM:    piercer no_pickup
+: elseif you.unrands("piercer") then
+ITEM:    sniper no_pickup
+: else
+ITEM:    piercer no_pickup / sniper no_pickup
+: end
+NSUBST:  3:9 / 6=9. / ., 8 = 2:8 / 6=8.. / .
+MAP
+     vvvvv
+   vvv999vvv
+  vv.......vv
+ vv..cc.cc..vv
+ v..cc888cc..v
+vv.cc|...|cc.vv
+v9.c8.bbb.8c.9v
+v9.c8.bdb.8c.9v
+v9.c8.b.b.8c.9v
+vv.cc|...|cc.vv
+ v..cc888cc..v
+ vv..ccncc..vv
+  vv.......vv
+   vvv999vvv
+     vv.vv
 ENDMAP

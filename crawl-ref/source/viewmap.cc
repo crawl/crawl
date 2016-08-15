@@ -126,6 +126,11 @@ static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 }
 #endif
 
+static bool _is_player_defined_feature(ucs_t feature)
+{
+    return feature == 'E' || feature == 'F' || feature == 'W';
+}
+
 // Determines if the given feature is present at (x, y) in _feat_ coordinates.
 // If you have map coords, add (1, 1) to get grid coords.
 // Use one of
@@ -136,7 +141,7 @@ static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(ucs_t feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).known() && !you.see_cell(where))
+    if (!env.map_knowledge(where).known() && !you.see_cell(where) && !_is_player_defined_feature(feature))
         return false;
 
     dungeon_feature_type grid = env.map_knowledge(where).feat();
@@ -173,7 +178,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
 
 static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 {
-    if (!env.map_knowledge(where).known())
+    if (!env.map_knowledge(where).known() && !_is_player_defined_feature(glyph))
         return false;
 
     if (is_feature(glyph, where))
@@ -983,6 +988,7 @@ bool show_map(level_pos &lpos,
                 {
                     lpos = dest;
                 }
+                los_changed();
                 continue;
             }
 
@@ -1116,7 +1122,7 @@ bool show_map(level_pos &lpos,
                     anchor_x = lpos.pos.x;
                     anchor_y = lpos.pos.y;
                 }
-                if (travel_mode)
+                if (travel_mode && !_is_player_defined_feature(getty))
                 {
                     search_found = _find_feature(features, getty,
                                                  curs_x, curs_y,
@@ -1159,10 +1165,7 @@ bool show_map(level_pos &lpos,
                 le.go_to(lpos.id);
 
                 if (!is_map_persistent())
-                {
                     mpr("You can't annotate this level.");
-                    more();
-                }
                 else
                     do_annotate(lpos.id);
 

@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include "status.h"
-#include "duration-data.h"
 
 #include "areas.h"
 #include "branch.h"
@@ -10,15 +9,23 @@
 #include "evoke.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "itemprop.h"
+#include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
 #include "player-stats.h"
+#include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h"
+#include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stringutil.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
+
+#include "duration-data.h"
 
 static int duration_index[NUM_DURATIONS];
 
@@ -171,6 +178,23 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_DIVINE_ENERGY:
+        if (you.duration[DUR_NO_CAST])
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "-Cast";
+            inf->short_text   = "no casting";
+            inf->long_text    = "You are unable to cast spells.";
+        }
+        else if (you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "+Cast";
+            inf->short_text   = "divine energy";
+            inf->long_text    = "You are calling on Sif Muna for divine "
+                                "energy.";
+        }
+        break;
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",
@@ -492,7 +516,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_MAGIC_SAPPED:
-        if (you.duration[DUR_MAGIC_SAPPED] > 50 * BASELINE_DELAY)
+        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
         {
             inf->light_colour = RED;
             inf->light_text   = "-Wiz";
@@ -500,7 +524,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been greatly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED] > 20 * BASELINE_DELAY)
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
         {
             inf->light_colour = LIGHTRED;
             inf->light_text   = "-Wiz";
@@ -508,7 +532,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "Your control over your magic has "
                                 "been significantly sapped.";
         }
-        else if (you.duration[DUR_MAGIC_SAPPED])
+        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
         {
             inf->light_colour = YELLOW;
             inf->light_text   = "-Wiz";
@@ -605,6 +629,31 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_PORTAL_PROJECTILE:
+    {
+        if (!is_pproj_active())
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
+    case DUR_INFUSION:
+    {
+        if (!enough_mp(1, true, false))
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
+    case STATUS_ORB:
+    {
+        if (player_has_orb())
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text = "Orb";
+        }
+
+        break;
+    }
+
     default:
         if (!found)
         {
@@ -692,7 +741,7 @@ static void _describe_glow(status_info* inf)
         "very very heavily ", // this is silly but no one will ever see it
         "impossibly ",        // (likewise)
     };
-    ASSERT(cont >= 0);
+    ASSERT(signed_cont >= 0);
 
     const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
     inf->short_text = contam_adjectives[adj_i] + "contaminated";
@@ -703,9 +752,7 @@ static void _describe_regen(status_info* inf)
 {
     const bool regen = (you.duration[DUR_REGENERATION] > 0
                         || you.duration[DUR_TROGS_HAND] > 0);
-    const bool no_heal =
-            (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
-            || (player_mutation_level(MUT_SLOW_REGENERATION) == 3);
+    const bool no_heal = !player_regenerates_hp();
     // Does vampire hunger level affect regeneration rate significantly?
     const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE
                          && you.hunger_state != HS_SATIATED;
@@ -806,11 +853,12 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight();
-    const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool perm      = you.permanent_flight();
+    const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
     const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
-    inf->light_colour = perm ? WHITE : BLUE;
+    inf->light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf->light_text   = "Fly";
     inf->short_text   = "flying" + desc;
     inf->long_text    = "You are flying" + desc + ".";
@@ -925,7 +973,7 @@ static void _describe_missiles(status_info* inf)
 
     if (level > 1)
     {
-        bool perm = false; /* in_good_standing(GOD_QAZLAL, 4) */
+        bool perm = false;
         inf->light_colour = perm ? WHITE : LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
@@ -935,7 +983,7 @@ static void _describe_missiles(status_info* inf)
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.scan_artefacts(ARTP_RMSL)
-                    || in_good_standing(GOD_QAZLAL, 3);
+                    || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
@@ -968,4 +1016,85 @@ static void _describe_invisible(status_info* inf)
     _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
+}
+
+/**
+ * Does a given duration tick down simply over time?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      Whether the duration's end_msg is non-null.
+ */
+bool duration_decrements_normally(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.end.msg != nullptr;
+}
+
+/**
+ * What message should a given duration print when it expires, if any?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A message to print for the duration when it ends.
+ */
+const char *duration_end_message(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.end.msg;
+}
+
+/**
+ * What message should a given duration print when it reaches 50%, if any?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A message to print for the duration when it hits 50%.
+ */
+const char *duration_mid_message(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.mid_msg.msg;
+}
+
+/**
+ * How much should the duration be decreased by when it hits the midpoint (to
+ * fuzz the remaining time), if at all?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      A random value to reduce the remaining duration by; may be 0.
+ */
+int duration_mid_offset(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.mid_msg.offset();
+}
+
+/**
+ * At what number of turns remaining is the given duration considered to be
+ * 'expiring', for purposes of messaging & status light colouring?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The maximum number of remaining turns at which the duration
+ *              is considered 'expiring'; may be 0.
+ */
+int duration_expire_point(duration_type dur)
+{
+    return _lookup_duration(dur)->expire_threshold * BASELINE_DELAY;
+}
+
+/**
+ * What channel should the duration messages be printed in?
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
+ */
+msg_channel_type duration_mid_chan(duration_type dur)
+{
+    return _lookup_duration(dur)->decr.recovery ? MSGCH_RECOVERY
+                                                : MSGCH_DURATION;
+}
+
+/**
+ * If a duration has some special effect when ending, trigger it.
+ *
+ * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ */
+void duration_end_effect(duration_type dur)
+{
+    if (_lookup_duration(dur)->decr.end.on_end)
+        _lookup_duration(dur)->decr.end.on_end();
 }

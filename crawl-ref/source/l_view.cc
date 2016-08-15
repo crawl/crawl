@@ -142,6 +142,21 @@ LUAFN(view_invisible_monster)
     return 1;
 }
 
+LUAFN(view_cell_see_cell)
+{
+    COORDSHOW(s1, 1, 2)
+    COORDSHOW(s2, 3, 4)
+    const coord_def p1 = player2grid(s1);
+    const coord_def p2 = player2grid(s2);
+    if (!map_bounds(p1) || !map_bounds(p2))
+    {
+        PLUARET(boolean, false);
+        return 1;
+    }
+    PLUARET(boolean, exists_ray(p1, p2, opc_excl));
+    return 1;
+}
+
 LUAFN(view_update_monsters)
 {
     ASSERT_DLUA;
@@ -158,6 +173,7 @@ static const struct luaL_reg view_lib[] =
     { "can_reach", view_can_reach },
     { "withheld", view_withheld },
     { "invisible_monster", view_invisible_monster },
+    { "cell_see_cell", view_cell_see_cell },
 
     { "update_monsters", view_update_monsters },
 

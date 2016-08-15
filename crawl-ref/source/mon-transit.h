@@ -23,9 +23,12 @@ struct follower
     void restore_mons_items(monster& m);
 };
 
+// Several erase() calls rely on this being a linked list (so erasing does not
+// invalidate the iterators).
 typedef list<follower> m_transit_list;
 typedef map<level_id, m_transit_list> monsters_in_transit;
 
+// This one too.
 typedef list<item_def> i_transit_list;
 typedef map<level_id, i_transit_list> items_in_transit;
 

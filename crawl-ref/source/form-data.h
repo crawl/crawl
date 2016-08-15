@@ -88,8 +88,8 @@ static const form_entry formdata[] =
     TRAN_STATUE, MONS_STATUE, "Statue", "statue-form", "statue",
     "a stone statue.",
     EQF_STATUE, MR_RES_ELEC | MR_RES_NEG | MR_RES_PETRIFY,
-    DEFAULT_DURATION, 2, -2, SIZE_CHARACTER, 13, 0,
-    17, 10, 0, true, 0, 9, -1,
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13, 0,
+    20, 12, 0, true, 0, 9, -1,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
     "", 0, "", "", "place yourself before", "stone"
@@ -131,7 +131,7 @@ static const form_entry formdata[] =
     TRAN_BAT, MONS_PROGRAM_BUG, "Bat", "bat-form", "bat",
     "",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
-    DEFAULT_DURATION, -5, 5, SIZE_TINY, 10, 17,
+    DEFAULT_DURATION, 0, 5, SIZE_TINY, 10, 17,
     0, 0, 0, false, 0, 12, -1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
@@ -186,8 +186,8 @@ static const form_entry formdata[] =
     TRAN_WISP, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",
     "an insubstantial wisp.",
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
-             | MR_RES_POISON     | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3)
-             | MR_RES_ROTTING    | MR_RES_ACID         | MR_RES_PETRIFY,
+             | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ACID
+             | MR_RES_PETRIFY,
     BAD_DURATION, 0, 0, SIZE_TINY, 10, 21,
     5, 0, 50, false, 0, 10, 5,
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "hit",
@@ -236,7 +236,7 @@ static const form_entry formdata[] =
     TRAN_HYDRA, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
     EQF_PHYSICAL, MR_RES_POISON,
-    FormDuration(10, PS_SINGLE, 100), 8, 0, SIZE_BIG, 13, 6,
+    FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_BIG, 13, 6,
     6, 5, 0, true, 0, 10, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,

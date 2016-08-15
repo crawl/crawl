@@ -47,7 +47,9 @@ enum status_type
     STATUS_BRIBE,
     STATUS_CLOUD,
     STATUS_BONE_ARMOUR,
-    STATUS_LAST_STATUS = STATUS_BONE_ARMOUR
+    STATUS_ORB,
+    STATUS_DIVINE_ENERGY,
+    STATUS_LAST_STATUS = STATUS_DIVINE_ENERGY
 };
 
 struct status_info
@@ -67,5 +69,13 @@ bool fill_status_info(int status, status_info* info);
 const char *duration_name(duration_type dur);
 bool duration_dispellable(duration_type dur);
 void init_duration_index();
+
+bool duration_decrements_normally(duration_type dur);
+const char *duration_end_message(duration_type dur);
+void duration_end_effect(duration_type dur);
+const char *duration_mid_message(duration_type dur);
+int duration_mid_offset(duration_type dur);
+int duration_expire_point(duration_type dur);
+msg_channel_type duration_mid_chan(duration_type dur);
 
 #endif

@@ -272,10 +272,6 @@ decaying skeleton
 
 Et rådnende skelet.
 %%%%
-deck of defence
-
-Et spil magiske kort som hovedsagligt beskytter brugeren mod skade.
-%%%%
 deck of destruction
 
 Et spil magiske kort som for det meste slynger død og ødelæggelse efter dine
@@ -285,18 +281,9 @@ deck of punishment
 
 Et spil magiske kort som hærger brugeren.
 %%%%
-deck of summonings
+deck of summoning
 
 Et spil magiske kort som afbilder en lang række sære og underfulde væsener.
-%%%%
-deck of war
-
-Et spil magiske kort som er nyttige før og under en kamp.
-%%%%
-deck of wonders
-
-Et spil med særdeles mystiske og magiske kort som kan ændre brugerens fysiske
-og mentale tilstand til det bedre eller det værre.
 %%%%
 demon blade
 
@@ -559,22 +546,10 @@ potion of mutation
 
 En drik, som gør overordentligt underlige ting ved dig.
 %%%%
-potion of poison
-
-En fæl, giftig væske.
-%%%%
-potion of porridge
-
-En mættende portion slim, som er fyldt med kornfiber.
-%%%%
 potion of resistance
 
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
-%%%%
-potion of slowing
-
-En drik, som forsinker dine handlinger.
 %%%%
 quad damage
 
@@ -642,10 +617,6 @@ ring of strength
 Denne ring øger eller mindsker sin bærers fysiske styrke, alt efter hvor
 fortryllet den er.
 %%%%
-ring of sustain attributes
-
-Denne ring beskytter sin bærer mod tab af styrke, behændighed og intelligens.
-%%%%
 ring of teleportation
 
 Denne ring translokerer lejlighedsvis bæreren til et tilfældigt sted og kan
@@ -654,12 +625,6 @@ aktiveres med vilje for at opnå samme effekt.
 ring of wizardry
 
 Denne ring øger bærerens evne til at bruge magiske besværgelser.
-%%%%
-rod of destruction
-
-Denne stok kan vækkes til at udløse en skadelig besværgelse der udvalgt
-tilfældigt fra et lille sæt, som alle kan gennembore uhyrer og skade dem, der
-står bag dem.
 %%%%
 rod of inaccuracy
 
@@ -671,10 +636,6 @@ Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
 forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
 den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
 grundlæggende effektivitet med våbnet.
-%%%%
-rod of the swarm
-
-Denne stok lader brugeren hidkalde en sværm af insekter.
 %%%%
 royal jelly
 
@@ -964,14 +925,6 @@ stone
 
 En lille klump kompakt, men ellers ikke opsigtsvækkende naturligt forekommende
 mineraler. Den kan kastes med hænderne eller affyres med en slynge.
-%%%%
-stone of tremors
-
-En poleret sten, som er beboet af venligtsindede jordånder. Når man løfter den
-over hovedet, sender den voldsomme trykbølger gennem de underjordiske gange,
-mens ånderne søger fast form i klipperne. De, der står tæt på murene, vil blive
-ramt af faldende sten, mens klippevæggen bølger og smuldrer, og andre opsluges
-af revner i selve jorden.
 %%%%
 storm dragon armour
 

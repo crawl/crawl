@@ -67,6 +67,18 @@ Ru lastname
 
 Ru the Awakened
 %%%%
+Pakellas lastname
+
+Pakellas the Inventive
+%%%%
+Uskayaw lastname
+
+Uskayaw the Reveler
+%%%%
+Hepliaklqanal lastname
+
+Hepliaklqanal the Forgotten
+%%%%
 Xom lastname
 
 w:280

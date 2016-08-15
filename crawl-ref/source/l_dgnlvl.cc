@@ -93,9 +93,9 @@ level_id dlua_level_id(lua_State *ls, int ndx)
         {
             return level_id::parse_level_id(s);
         }
-        catch (const string &err)
+        catch (const bad_level_id &err)
         {
-            luaL_error(ls, err.c_str());
+            luaL_error(ls, err.what());
         }
     }
     else if (lua_isuserdata(ls, ndx))

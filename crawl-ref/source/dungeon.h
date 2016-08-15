@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <set>
+#include <stdexcept>
 #include <vector>
 
 #include "env.h"
@@ -53,17 +54,10 @@ enum map_mask_type
 class dgn_region;
 typedef vector<dgn_region> dgn_region_list;
 
-class dgn_veto_exception : public exception
+struct dgn_veto_exception : public runtime_error
 {
-public:
-    dgn_veto_exception(const string& _msg) : msg(_msg) { }
-    ~dgn_veto_exception() throw () { }
-    const char *what() const throw () override
-    {
-        return msg.c_str();
-    }
-private:
-    string msg;
+    dgn_veto_exception(const string& msg) : runtime_error(msg) {}
+    dgn_veto_exception(const char *msg) : runtime_error(msg) {}
 };
 
 class dgn_region
@@ -221,11 +215,11 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
 void level_clear_vault_memory();
 void run_map_epilogues();
 
-bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
+void place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;
 void place_spec_shop(const coord_def& where, shop_type force_type);
-void place_spec_shop(const coord_def& where, shop_spec &spec);
+void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
 int greed_for_shop_type(shop_type shop, int level_number);
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_replace_feat(dungeon_feature_type replace,

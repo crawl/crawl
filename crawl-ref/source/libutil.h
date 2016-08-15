@@ -64,7 +64,7 @@ static inline int toalower(int c)
 }
 
 int numcmp(const char *a, const char *b, int limit = 0);
-bool numcmpstr(string a, string b);
+bool numcmpstr(const string &a, const string &b);
 
 bool version_is_stable(const char *ver);
 
@@ -87,11 +87,11 @@ void play_sound(const char *file);
 
 string unwrap_desc(string desc);
 
-/** Ignore an argument and return true.
+/** Ignore any number of arguments and return true.
  *
  * @return true
  */
-template<class T> bool always_true(T) { return true; }
+template<class ... Ts> bool always_true(Ts ...) { return true; }
 
 /** Remove an element from a vector without preserving order.
  *  The indicated element is replaced by the last element of the vector.
@@ -172,6 +172,50 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
 {
     auto it = map.find(key);
     return it == map.end() ? unfound : it->second;
+}
+
+// Delete when we upgrade to C++14!
+template<typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... args)
+{
+    return unique_ptr<T>(new T(forward<Args>(args)...));
+}
+
+/** Remove from a container all elements matching a predicate.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           and must provide an erase() method taking two iterators.
+ * @tparam P the predicate type, typically but not necessarily
+ *           function<bool (const C::value_type &)>
+ * @param container The container to modify.
+ * @param pred The predicate to test.
+ *
+ * @post The container contains only those elements for which pred(elt)
+ *       returns false, in the same relative order.
+ */
+template<class C, class P>
+void erase_if(C &container, P pred)
+{
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
+
+/** Remove from a container all elements with a given value.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           must provide an erase() method taking two iterators, and
+ *           must provide a value_type type member.
+ * @param container The container to modify.
+ * @param val The value to remove.
+ *
+ * @post The container contains only those elements not equal to val, in the
+ *       in the same relative order.
+ */
+template<class C>
+void erase_val(C &container, const typename C::value_type &val)
+{
+    container.erase(remove(begin(container), end(container), val),
+                    end(container));
 }
 
 static inline int sqr(int x)

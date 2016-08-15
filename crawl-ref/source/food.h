@@ -44,20 +44,15 @@ mon_intel_type corpse_intelligence(const item_def &corpse);
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
 
 bool eat_item(item_def &food);
+void finish_eating_item(item_def &food);
 
-int eat_from_floor(bool skip_chunks = true);
-bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
 
 bool food_change(bool initial = false);
 
-bool prompt_eat_inventory_item(int slot = -1);
-
-void chunk_nutrition_message(int nutrition);
+bool prompt_eat_item(int slot = -1);
 
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
-
-void finished_eating_message(int food_type);
 
 int you_max_hunger();
 int you_min_hunger();

@@ -25,10 +25,9 @@ function init_research(e, disc)
   e.tags('patrolling')
   e.weight('1')
   if you.in_branch("Elf") then
-     e.kmons('0 = deep elf mage / deep elf knight / deep elf conjurer')
+     e.kmons('0 = deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / \
-                  deep elf mage w:4 / deep elf conjurer w:6')
+     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf mage')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
@@ -96,8 +95,8 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
-MONS:   air elemental / raiju / shock serpent
-MONS:   sky beast, ball lightning / lightning spire
+MONS:   air elemental / raiju / sky beast
+MONS:   lightning spire, ball lightning / shock serpent
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan
@@ -134,11 +133,11 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
-MONS:    spiny frog / black mamba, trapdoor spider
+MONS:    spiny frog / black mamba, redback
 MONS:    sea snake / redback, hornet / wasp
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
-KITEM:   E = potion of poison ident:type / \
+KITEM:   E = potion of degeneration ident:type / \
              potion of mutation ident:type
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
@@ -158,7 +157,7 @@ ENDMAP
 
 NAME:    hangedman_research_thanatology
 MONS:    macabre mass hd:4 / small abomination
-MONS:    zombie / skeleton, spectral thing, place:Depths:$ simulacrum
+MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }

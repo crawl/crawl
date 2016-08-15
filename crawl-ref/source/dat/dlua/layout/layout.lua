@@ -32,7 +32,7 @@ end
 --    around the primary vault.
 --
 -- Parameter(s):
---  -> e: A reference to the gobal enviroment. Pass in _G.
+--  -> e: A reference to the global environment. Pass in _G.
 --  -> x1
 --  -> y1
 --  -> x2

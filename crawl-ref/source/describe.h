@@ -29,13 +29,6 @@ enum item_description_type
     NUM_IDESC
 };
 
-enum book_mem_or_forget
-{
-    BOOK_MEM,
-    BOOK_FORGET,
-    BOOK_NEITHER
-};
-
 struct describe_info
 {
     ostringstream body;
@@ -54,16 +47,16 @@ string get_item_description(const item_def &item, bool verbose,
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
-bool describe_item(item_def &item, bool allow_inscribe = false,
-                   bool shopping = false);
+bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
-void inscribe_item(item_def &item, bool msgwin);
+void inscribe_item(item_def &item);
 
 int describe_monsters(const monster_info &mi, bool force_seen = false,
                       const string &footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
+string serpent_of_hell_flavour(monster_type m);
 
 string player_spell_desc(spell_type spell, const item_def* item = nullptr);
 void get_spell_desc(const spell_type spell, describe_info &inf);
@@ -96,6 +89,9 @@ string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
 int count_desc_lines(const string& _desc, const int width);
+
+string extra_cloud_info(cloud_type cloud_type);
+
 
 class alt_desc_proc
 {

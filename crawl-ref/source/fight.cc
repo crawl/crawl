@@ -8,6 +8,7 @@
 #include "fight.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -16,10 +17,12 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "english.h"
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -41,6 +44,7 @@
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
@@ -135,7 +139,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
-        if (Options.auto_switch
+        if (!simu && Options.auto_switch
             && you.weapon()
             && _autoswitch_to_melee())
         {
@@ -152,7 +156,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(*defender)
+        if (you.can_see(*defender) && !simu
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
@@ -174,7 +178,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
 
-        if (!simu && you_worship(GOD_DITHMENOS))
+        if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
         return true;
@@ -322,18 +326,61 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     return true;
 }
 
+/**
+ * If the given attacker attacks the given defender right now, what kind of
+ * extra-damage "stab" attack can the attacker perform, if any?
+ *
+ * @param attacker  The attacker; may be null.
+ * @param defender  The defender.
+ * @return          The best (most damaging) kind of stab available to the
+ *                  attacker against this defender, or STAB_NO_STAB.
+ */
 stab_type find_stab_type(const actor *attacker,
-                         const actor *defender)
+                         const actor &defender)
 {
-    ASSERT(defender); // XXX: change to const actor &defender
-    const monster* def = defender->as_monster();
-    stab_type unchivalric = STAB_NO_STAB;
+    const monster* def = defender.as_monster();
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(*defender)))
-        return unchivalric;
+    if (defender.cannot_fight() || (attacker && !attacker->can_see(defender)))
+        return STAB_NO_STAB;
+
+    // sleeping
+    if (defender.asleep())
+        return STAB_SLEEPING;
+
+    // paralysed
+    if (defender.paralysed())
+        return STAB_PARALYSED;
+
+    // petrified
+    if (defender.petrified())
+        return STAB_PETRIFIED;
+
+    // petrifying
+    if (def && def->petrifying())
+        return STAB_PETRIFYING;
+
+    // held in a net
+    if (def && def->caught())
+        return STAB_HELD_IN_NET;
+
+    // invisible
+    if (attacker && !attacker->visible_to(&defender))
+        return STAB_INVISIBLE;
+
+    // fleeing
+    if (def && mons_is_fleeing(def))
+        return STAB_FLEEING;
+
+    // allies
+    if (def && def->friendly())
+        return STAB_ALLY;
+
+    // confused (but not perma-confused)
+    if (def && mons_is_confused(def, false))
+        return STAB_CONFUSED;
 
     // Distracted (but not batty); this only applies to players.
     // Under TSO, monsters are never distracted by your allies.
@@ -341,46 +388,35 @@ stab_type find_stab_type(const actor *attacker,
         && def && def->foe != MHITYOU && !mons_is_batty(def)
         && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
     {
-        unchivalric = STAB_DISTRACTED;
+        return STAB_DISTRACTED;
     }
 
-    // confused (but not perma-confused)
-    if (def && mons_is_confused(def, false))
-        unchivalric = STAB_CONFUSED;
+    return STAB_NO_STAB;
+}
 
-    // allies
-    if (def && def->friendly())
-        unchivalric = STAB_ALLY;
-
-    // fleeing
-    if (def && mons_is_fleeing(def))
-        unchivalric = STAB_FLEEING;
-
-    // invisible
-    if (attacker && !attacker->visible_to(defender))
-        unchivalric = STAB_INVISIBLE;
-
-    // held in a net
-    if (def && def->caught())
-        unchivalric = STAB_HELD_IN_NET;
-
-    // petrifying
-    if (def && def->petrifying())
-        unchivalric = STAB_PETRIFYING;
-
-    // petrified
-    if (defender->petrified())
-        unchivalric = STAB_PETRIFIED;
-
-    // paralysed
-    if (defender->paralysed())
-        unchivalric = STAB_PARALYSED;
-
-    // sleeping
-    if (defender->asleep())
-        unchivalric = STAB_SLEEPING;
-
-    return unchivalric;
+/**
+ * What bonus does this type of stab give the player when attacking?
+ *
+ * @param   The type of stab in question; e.g. STAB_SLEEPING.
+ * @return  The bonus the stab gives. Note that this is used as a divisor for
+ *          damage, so the larger the value we return here, the less bonus
+ *          damage will be done.
+ */
+int stab_bonus_denom(stab_type stab)
+{
+    // XXX: if we don't get rid of this logic, turn it into a static array.
+    switch (stab)
+    {
+        case STAB_NO_STAB:
+        case NUM_STABS:
+            return 0;
+        case STAB_SLEEPING:
+        case STAB_PARALYSED:
+        case STAB_PETRIFIED:
+            return 1;
+        default:
+            return 4;
+    }
 }
 
 static bool is_boolean_resist(beam_type flavour)
@@ -419,7 +455,6 @@ static inline int get_resistible_fraction(beam_type flavour)
         return 55;
 
     case BEAM_POISON_ARROW:
-    case BEAM_GHOSTLY_FLAME:
         return 70;
 
     default:
@@ -434,8 +469,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_FIRE:
         case BEAM_LAVA:
             return defender->res_fire();
-        case BEAM_HELLFIRE:
-            return defender->res_hellfire();
+        case BEAM_DAMNATION:
+            return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:
@@ -446,7 +481,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_ELECTRICITY:
             return defender->res_elec();
         case BEAM_NEG:
-        case BEAM_GHOSTLY_FLAME:
+        case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
             return defender->res_negative_energy();
         case BEAM_ACID:
@@ -493,6 +528,8 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
     {
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
+                                     || flavour == BEAM_PAIN
+                                     || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;
@@ -507,8 +544,12 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
             // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
-            else if (flavour == BEAM_NEG)
+            else if (flavour == BEAM_NEG
+                     || flavour == BEAM_PAIN
+                     || flavour == BEAM_MALIGN_OFFERING)
+            {
                 resistible /= res * 2;
+            }
             else
                 resistible /= (3 * res + 1) / 2 + bonus_res;
         }
@@ -519,9 +560,31 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
     return max(resistible + irresistible, 0);
 }
 
+// Reduce damage by AC.
+// In most cases, we want AC to mostly stop weak attacks completely but affect
+// strong ones less, but the regular formula is too hard to apply well to cases
+// when damage is spread into many small chunks.
+//
+// Every point of damage is processed independently. Every point of AC has
+// an independent 1/81 chance of blocking that damage.
+//
+// AC 20 stops 22% of damage, AC 40 -- 39%, AC 80 -- 63%.
+int apply_chunked_AC(int dam, int ac)
+{
+    double chance = pow(80.0/81, ac);
+    uint64_t cr = chance * (((uint64_t)1) << 32);
+
+    int hurt = 0;
+    for (int i = 0; i < dam; i++)
+        if (get_uint32() < cr)
+            hurt++;
+
+    return hurt;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(item_def *weapon, bool no_message)
+bool wielded_weapon_check(item_def *weapon)
 {
     bool penance = false;
     if (you.received_weapon_warning
@@ -537,13 +600,12 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     // melee weapons yet.
     if (!weapon
         && (you.skill(SK_UNARMED_COMBAT) > 0
-            || !any_of(you.inv.begin(), you.inv.end(), is_melee_weapon)))
+            || !any_of(you.inv.begin(), you.inv.end(),
+                       [](item_def &it)
+                       { return is_melee_weapon(it) && can_wield(&it); })))
     {
         return true;
     }
-
-    if (no_message)
-        return false;
 
     string prompt;
     if (weapon)
@@ -678,21 +740,19 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 int weapon_min_delay_skill(const item_def &weapon)
 {
     const int speed = property(weapon, PWPN_SPEED);
-    const int mindelay = weapon_min_delay(weapon);
+    const int mindelay = weapon_min_delay(weapon, false);
     return (speed - mindelay) * 2;
 }
 
 /**
  * How fast will this weapon get from your skill training?
  *
- * Does NOT take speed brand into account, since the brand shouldn't affect how
- * long you will continue to gain benefits from training the weapon skill, just
- * how big those benefits are.
  * @param weapon the weapon to be considered.
- * @returns How many aut the fastest possible attack with a weapon of this kind
- *          would take.
+ * @param check_speed whether to take it into account if the weapon has the
+ *                    speed brand.
+ * @return How many aut the fastest possible attack with this weapon would take.
  */
-int weapon_min_delay(const item_def &weapon)
+int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
     int min_delay = base/2;
@@ -713,24 +773,17 @@ int weapon_min_delay(const item_def &weapon)
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
+    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
+    {
+        min_delay *= 2;
+        min_delay /= 3;
+    }
+
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
-}
-
-int finesse_adjust_delay(int delay)
-{
-    if (you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            delay = haste_mul(delay);
-        delay = div_rand_round(delay, 2);
-    }
-    return delay;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)
@@ -775,5 +828,215 @@ int mons_usable_missile(monster* mons, item_def **launcher)
     {
         *launcher = launch;
         return missiles->index();
+    }
+}
+
+
+
+bool bad_attack(const monster *mon, string& adj, string& suffix,
+                bool& would_cause_penance, coord_def attack_pos,
+                bool check_landing_only)
+{
+    ASSERT(mon); // XXX: change to const monster &mon
+    ASSERT(!crawl_state.game_is_arena());
+    bool bad_landing = false;
+
+    if (!you.can_see(*mon))
+        return false;
+
+    if (attack_pos == coord_def(0, 0))
+        attack_pos = you.pos();
+
+    adj.clear();
+    suffix.clear();
+    would_cause_penance = false;
+
+    if (!check_landing_only
+        && (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos)))
+    {
+        suffix = ", despite your sanctuary";
+    }
+    else if (check_landing_only && is_sanctuary(attack_pos))
+    {
+        suffix = ", when you might land in your sanctuary";
+        bad_landing = true;
+    }
+    if (check_landing_only)
+        return bad_landing;
+
+    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
+        && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
+    {
+        would_cause_penance = true;
+        return true;
+    }
+
+    if (mon->friendly())
+    {
+        if (god_hates_attacking_friend(you.religion, mon))
+        {
+            adj = "your ally ";
+
+            monster_info mi(mon, MILEV_NAME);
+            if (!mi.is(MB_NAME_UNQUALIFIED))
+                adj += "the ";
+
+            would_cause_penance = true;
+
+        }
+        else
+        {
+            adj = "your ";
+
+            monster_info mi(mon, MILEV_NAME);
+            if (mi.is(MB_NAME_UNQUALIFIED))
+                adj += "ally ";
+        }
+
+        return true;
+    }
+
+    if (find_stab_type(&you, *mon) != STAB_NO_STAB
+        && you_worship(GOD_SHINING_ONE)
+        && !tso_unchivalric_attack_safe_monster(mon))
+    {
+        adj += "helpless ";
+        would_cause_penance = true;
+    }
+
+    if (mon->neutral() && is_good_god(you.religion))
+    {
+        adj += "neutral ";
+        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
+            would_cause_penance = true;
+    }
+    else if (mon->wont_attack())
+    {
+        adj += "non-hostile ";
+        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
+            would_cause_penance = true;
+    }
+
+    return !adj.empty() || !suffix.empty();
+}
+
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
+                        coord_def beam_target, bool *prompted,
+                        coord_def attack_pos, bool check_landing_only)
+{
+    ASSERT(mon); // XXX: change to const monster &mon
+    bool penance = false;
+
+    if (prompted)
+        *prompted = false;
+
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return false;
+
+    if (you.confused() || !you.can_see(*mon))
+        return false;
+
+    string adj, suffix;
+    if (!bad_attack(mon, adj, suffix, penance, attack_pos, check_landing_only))
+        return false;
+
+    // Listed in the form: "your rat", "Blork the orc".
+    string mon_name = mon->name(DESC_PLAIN);
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+    string verb;
+    if (beam_attack)
+    {
+        verb = "fire ";
+        if (beam_target == mon->pos())
+            verb += "at ";
+        else
+        {
+            verb += "in " + apostrophise(mon_name) + " direction";
+            mon_name = "";
+        }
+    }
+    else
+        verb = "attack ";
+
+    const string prompt = make_stringf("Really %s%s%s?%s",
+             verb.c_str(), mon_name.c_str(), suffix.c_str(),
+             penance ? " This attack would place you under penance!" : "");
+
+    if (prompted)
+        *prompted = true;
+
+    if (yesno(prompt.c_str(), false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+}
+
+bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+                        bool (*affects)(const actor *victim), bool *prompted)
+{
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return false;
+
+    if (crawl_state.which_god_acting() == GOD_XOM)
+        return false;
+
+    if (you.confused())
+        return false;
+
+    string adj, suffix;
+    bool penance = false;
+    counted_monster_list victims;
+    for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
+    {
+        if (hitfunc.is_affected(*di) <= AFF_NO)
+            continue;
+        const monster* mon = monster_at(*di);
+        if (!mon || !you.can_see(*mon))
+            continue;
+        if (affects && !affects(mon))
+            continue;
+        string adjn, suffixn;
+        bool penancen = false;
+        if (bad_attack(mon, adjn, suffixn, penancen))
+        {
+            // record the adjectives for the first listed, or
+            // first that would cause penance
+            if (victims.empty() || penancen && !penance)
+                adj = adjn, suffix = suffixn, penance = penancen;
+            victims.add(mon);
+        }
+    }
+
+    if (victims.empty())
+        return false;
+
+    // Listed in the form: "your rat", "Blork the orc".
+    string mon_name = victims.describe(DESC_PLAIN);
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    if (!starts_with(adj, "your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+
+    const string prompt = make_stringf("Really %s %s%s?%s",
+             verb, mon_name.c_str(), suffix.c_str(),
+             penance ? " This attack would place you under penance!" : "");
+
+    if (prompted)
+        *prompted = true;
+
+    if (yesno(prompt.c_str(), false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
     }
 }

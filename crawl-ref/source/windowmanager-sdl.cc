@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
+#include "unicode.h"
 #include "version.h"
 #include "windowmanager.h"
 
@@ -383,22 +384,6 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     glDebug("SDL_GL_ALPHA_SIZE 8");
 
-#if !SDL_VERSION_ATLEAST(2,0,0)
-    if (Options.tile_key_repeat_delay > 0)
-    {
-        const int repdelay    = Options.tile_key_repeat_delay;
-        const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
-        if (SDL_EnableKeyRepeat(repdelay, interval) != 0)
-#ifdef __ANDROID__
-            __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                                "Failed to set key repeat mode: %s",
-                                SDL_GetError());
-#else
-            printf("Failed to set key repeat mode: %s\n", SDL_GetError());
-#endif
-    }
-#endif
-
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
 
 #ifdef USE_GLES
@@ -480,9 +465,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     m_windowsz->x = x;
     m_windowsz->y = y;
 #ifdef __ANDROID__
-  #ifndef TOUCH_UI
+# ifndef TOUCH_UI
     SDL_StartTextInput();
-  #endif
+# endif
     __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
 #endif
 
@@ -667,6 +652,8 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
+        if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
+            return 0;
         event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
@@ -698,10 +685,14 @@ int SDLWrapper::wait_event(wm_event *event)
 
         break;
     case SDL_TEXTINPUT:
+    {
         event->type = WME_KEYPRESS;
         // XXX: handle multiple keys?
-        event->key.keysym.sym = sdlevent.text.text[0];
+        ucs_t wc;
+        utf8towc(&wc, sdlevent.text.text);
+        event->key.keysym.sym = wc;
         break;
+    }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);

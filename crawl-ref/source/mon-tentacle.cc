@@ -15,9 +15,9 @@
 #include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen_data.h"
-#include "misc.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "nearby-danger.h"
 #include "terrain.h"
 #include "view.h"
 
@@ -217,16 +217,17 @@ static void _establish_connection(monster* tentacle,
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
-        if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(head), head,
-                      0, 0, last->pos, head->foe,
-                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
-                      head->colour, PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
+                     0, 0, last->pos, head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster *connect = create_monster(mg))
         {
             connect->props["inwards"].get_int() = MID_NOBODY;
             connect->props["outwards"].get_int() = MID_NOBODY;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
             connect->max_hit_points = tentacle->max_hit_points;
@@ -261,11 +262,12 @@ static void _establish_connection(monster* tentacle,
         }
 
          // place a connector
-        if (monster *connect = create_monster(
-            mgen_data(connector_type, SAME_ATTITUDE(head), head,
-                      0, 0, current->pos, head->foe,
-                      MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, tentacle->mid,
-                      head->colour, PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
+                     0, 0, current->pos, head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster *connect = create_monster(mg))
         {
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
@@ -276,7 +278,7 @@ static void _establish_connection(monster* tentacle,
             if (last_mon->type == connector_type)
                 last_mon->props["outwards"].get_int() = connect->mid;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
             if (monster_can_submerge(connect, env.grid(connect->pos())))
@@ -1148,9 +1150,9 @@ static monster* _mons_get_parent_monster(monster* mons)
 
 // When given either a tentacle end or segment, kills the end and all segments
 // of that tentacle.
-int destroy_tentacle(monster* mons)
+bool destroy_tentacle(monster* mons)
 {
-    int seen = 0;
+    bool any = false;
 
     monster* head = mons_is_tentacle_segment(mons->type)
             ? _mons_get_parent_monster(mons) : mons;
@@ -1158,7 +1160,7 @@ int destroy_tentacle(monster* mons)
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
     if (head == nullptr)
-        return 0;
+        return false;
 
     // Some issue with using monster_die leading to DEAD_MONSTER
     // or w/e. Using hurt seems to cause more problems though.
@@ -1166,8 +1168,7 @@ int destroy_tentacle(monster* mons)
     {
         if (mi->is_child_tentacle_of(head))
         {
-            if (mons_near(*mi))
-                seen++;
+            any = true;
             //mi->hurt(*mi, INSTANT_DEATH);
             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
@@ -1175,32 +1176,29 @@ int destroy_tentacle(monster* mons)
 
     if (mons != head)
     {
-        if (mons_near(head))
-            seen++;
-
+        any = true;
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
 
-    return seen;
+    return any;
 }
 
-int destroy_tentacles(monster* head)
+bool destroy_tentacles(monster* head)
 {
-    int seen = 0;
+    bool any = false;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->is_child_tentacle_of(head))
         {
-            if (destroy_tentacle(*mi))
-                seen++;
+            any |= destroy_tentacle(*mi);
             if (!mi->is_child_tentacle_segment())
             {
                 monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
-                seen++;
+                any = true;
             }
         }
     }
-    return seen;
+    return any;
 }
 
 static int _max_tentacles(const monster* mon)
@@ -1257,19 +1255,19 @@ void mons_create_tentacles(monster* head)
 
     for (int i = 0 ; i < possible_count; ++i)
     {
-        if (monster *tentacle = create_monster(
-            mgen_data(tent_type, SAME_ATTITUDE(head), head,
-                        0, 0, adj_squares[i], head->foe,
-                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                        head->mid, head->colour,
-                        PROX_CLOSE_TO_PLAYER)))
+        mgen_data mg(tent_type, SAME_ATTITUDE(head), head,
+                     0, 0, adj_squares[i], head->foe,
+                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
+                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(head->mid);
+        if (monster *tentacle = create_monster(mg))
         {
             if (you.can_see(*tentacle))
                 visible_count++;
 
             tentacle->props["inwards"].get_int() = head->mid;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 tentacle->flags |= MF_FAKE_UNDEAD;
         }
     }

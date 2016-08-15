@@ -20,7 +20,8 @@ enum unarmed_attack_type
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_TENTACLES
+    UNAT_LAST_ATTACK = UNAT_TENTACLES,
+    NUM_UNARMED_ATTACKS,
 };
 
 class melee_attack : public attack
@@ -32,6 +33,7 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
+    bool      is_riposte;         // long blade retaliation attack
     coord_def attack_position;
 
 public:
@@ -69,8 +71,6 @@ private:
     void check_autoberserk();
     bool check_unrand_effects() override;
 
-    bool attack_ignores_shield(bool verbose) override;
-
     void rot_defender(int amount);
     void splash_defender_with_acid(int strength);
 
@@ -81,6 +81,9 @@ private:
     /* Axe cleaving */
     void cleave_setup();
     int cleave_damage_mod(int dam);
+
+    /* Long blade riposte */
+    void riposte();
 
     /* Mutation Effects */
     void do_spines();
@@ -122,7 +125,6 @@ private:
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
 
-    int  player_aux_stat_modify_damage(int damage);
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage) override;
 
@@ -141,8 +143,7 @@ private:
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
-                                 bool vampiric = false);
+    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);

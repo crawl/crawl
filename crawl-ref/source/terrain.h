@@ -82,6 +82,7 @@ bool feat_is_reachable_past(dungeon_feature_type feat);
 bool feat_is_critical(dungeon_feature_type feat);
 bool feat_is_valid_border(dungeon_feature_type feat);
 bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
+bool feat_is_shaftable(dungeon_feature_type feat);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
@@ -100,10 +101,10 @@ bool feat_eliminates_items(dungeon_feature_type feat);
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
-                             bool affect_player = true,
                              bool preserve_features = false,
                              bool preserve_items = false,
-                             int colour = BLACK);
+                             bool temporary = false,
+                             bool wizmode = false);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,

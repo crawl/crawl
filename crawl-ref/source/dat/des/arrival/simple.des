@@ -1917,6 +1917,8 @@ ENDMAP
 NAME:    grunt_arrival_lava_bath
 ORIENT:  float
 TAGS:    arrival no_monster_gen
+KITEM:   % = %
+KFEAT:   % = >
 MAP
     .@...xxxxx
    ....G.ccccx
@@ -1990,4 +1992,25 @@ vvv.ll.vvv
  vv....vv
   vvvvvv
    vvvv
+ENDMAP
+
+###############################################################################
+
+NAME:   mushboom_english_gardens
+ORIENT: float
+TAGS:   arrival no_monster_gen
+FTILE:  -T = floor_grass
+COLOUR: -T = green
+MAP
+xxxxx+xxxxx
+x.........x
+x.---.---.x
+x.-T-.-T-.x
+x.---.---.x
++....{....+
+x.---.---.x
+x.-T-.-T-.x
+x.---.---.x
+x.........x
+xxxxx+xxxxx
 ENDMAP

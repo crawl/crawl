@@ -12,4 +12,6 @@ void reduce_xp_penance(god_type god, int amount);
 void beogh_idol_revenge();
 
 void gozag_incite(monster *mon);
+
+bool drain_wands();
 #endif

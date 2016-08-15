@@ -4,7 +4,7 @@ compiler:
     - gcc
 before_install:
     - perl .travis/apt.pl
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
 env:
     - NOTHING=1
     - FULLDEBUG=1

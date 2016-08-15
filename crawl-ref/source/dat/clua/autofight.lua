@@ -29,9 +29,18 @@ AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
   local d2v = {
-    [-1] = { [-1] = 'y', [0] = 'h', [1] = 'b'},
-    [0]  = { [-1] = 'k',            [1] = 'j'},
-    [1]  = { [-1] = 'u', [0] = 'l', [1] = 'n'},
+    [-1] = { [-1] = "CMD_MOVE_UP_LEFT",  [0] = "CMD_MOVE_LEFT",  [1] = "CMD_MOVE_DOWN_LEFT"},
+    [0]  = { [-1] = "CMD_MOVE_UP",                               [1] = "CMD_MOVE_DOWN"},
+    [1]  = { [-1] = "CMD_MOVE_UP_RIGHT", [0] = "CMD_MOVE_RIGHT", [1] = "CMD_MOVE_DOWN_RIGHT"},
+  }
+  return d2v[dx][dy]
+end
+
+local function target_delta_to_vi(dx, dy)
+  local d2v = {
+    [-1] = { [-1] = "CMD_TARGET_UP_LEFT",  [0] = "CMD_TARGET_LEFT",  [1] = "CMD_TARGET_DOWN_LEFT"},
+    [0]  = { [-1] = "CMD_TARGET_UP",                                 [1] = "CMD_TARGET_DOWN"},
+    [1]  = { [-1] = "CMD_TARGET_UP_RIGHT", [0] = "CMD_TARGET_RIGHT", [1] = "CMD_TARGET_DOWN_RIGHT"},
   }
   return d2v[dx][dy]
 end
@@ -48,15 +57,13 @@ local function adjacent(dx, dy)
   return abs(dx) <= 1 and abs(dy) <= 1
 end
 
-local function vector_move(dx, dy)
-  local str = ''
+local function vector_move(a, dx, dy)
   for i = 1,abs(dx) do
-    str = str .. delta_to_vi(sign(dx), 0)
+    a[#a+1] = target_delta_to_vi(sign(dx), 0)
   end
   for i = 1,abs(dy) do
-    str = str .. delta_to_vi(0, sign(dy))
+    a[#a+1] = target_delta_to_vi(0, sign(dy))
   end
-  return str
 end
 
 local function have_reaching()
@@ -80,18 +87,37 @@ local function is_safe_square(dx, dy)
     return view.is_safe_square(dx, dy)
 end
 
-local function try_move(dx, dy)
-  m = monster.get_monster_at(dx, dy)
-  -- attitude > ATT_NEUTRAL should mean you can push past the monster
-  if is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL) then
-    return delta_to_vi(dx, dy)
-  else
-    return nil
+local function can_move_maybe(dx, dy)
+  if view.feature_at(dx,dy) ~= "unseen" and view.is_safe_square(dx,dy) then
+    local m = monster.get_monster_at(dx, dy)
+    if not m or not m:is_firewood() then
+      return true
+    end
   end
+  return false
 end
 
-local function move_towards(dx, dy)
+local function can_move_now(dx, dy)
+  local m = monster.get_monster_at(dx, dy)
+  -- attitude > ATT_NEUTRAL should mean you can push past the monster
+  return (is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL))
+end
+
+local function choose_move_towards(ax, ay, bx, by, square_func)
   local move = nil
+  local dx = bx - ax
+  local dy = by - ay
+  local function try_move(mx, my)
+    if mx == 0 and my == 0 then
+      return nil
+    elseif abs(ax+mx) > LOS_RADIUS or abs(ay+my) > LOS_RADIUS then
+      return nil
+    elseif square_func(ax+mx, ay+my) then
+      return {mx,my}
+    else
+      return nil
+    end
+  end
   if abs(dx) > abs(dy) then
     if abs(dy) == 1 then
       move = try_move(sign(dx), 0)
@@ -123,11 +149,28 @@ local function move_towards(dx, dy)
     end
     if move == nil then move = try_move(sign(dx), 0) end
   end
+  return move
+end
+
+local function move_towards(dx, dy)
+  local move = choose_move_towards(0, 0, dx, dy, can_move_now)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.process_keys(move)
+    crawl.do_commands({delta_to_vi(move[1],move[2])})
   end
+end
+
+local function will_tab(ax, ay, bx, by)
+  if abs(bx-ax) <= 1 and abs(by-ay) <= 1 or
+     abs(bx-ax) <= 2 and abs(by-ay) <= 2 and have_reaching() then
+    return true
+  end
+  local move = choose_move_towards(ax, ay, bx, by, can_move_maybe)
+  if move == nil then
+    return false
+  end
+  return will_tab(ax+move[1], ay+move[2], bx, by)
 end
 
 local function get_monster_info(dx,dy,no_move)
@@ -155,7 +198,10 @@ local function get_monster_info(dx,dy,no_move)
     -- Melee is better than throwing.
     info.attack_type = 3
   end
-  info.can_attack = (info.attack_type > 0) and 1 or 0
+  if info.attack_type == 0 and not will_tab(0,0,dx,dy) then
+    info.attack_type = -1
+  end
+  info.can_attack = (info.attack_type > 0) and 1 or info.attack_type
   info.safe = m:is_safe() and -1 or 0
   info.constricting_you = m:is_constricting_you() and 1 or 0
   -- Only prioritize good stabs: sleep and paralysis.
@@ -222,23 +268,28 @@ local function get_target(no_move)
 end
 
 local function attack_fire(x,y)
-  move = 'fr' .. vector_move(x, y) .. 'f'
-  crawl.process_keys(move, true)
+  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_fire_stop(x,y)
-  move = 'fr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move, true)
+  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_reach(x,y)
-  move = 'vr' .. vector_move(x, y) .. '.'
-  crawl.process_keys(move, true)
+  local a = {"CMD_EVOKE_WIELDED", "CMD_TARGET_FIND_YOU"}
+  vector_move(a, x, y)
+  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
+  crawl.do_commands(a, true)
 end
 
 local function attack_melee(x,y)
-  move = delta_to_vi(x, y)
-  crawl.process_keys(move)
+  crawl.do_commands({delta_to_vi(x, y)})
 end
 
 local function set_stop_level(key, value, mode)
@@ -309,13 +360,13 @@ function attack(allow_movement)
     crawl.mpr("You are too confused!")
   elseif caught then
     if AUTOFIGHT_CAUGHT then
-      crawl.process_keys(delta_to_vi(1, 0)) -- Direction doesn't matter.
+      crawl.do_commands({delta_to_vi(1, 0)}) -- Direction doesn't matter.
     else
       crawl.mpr("You are " .. caught .. "!")
     end
   elseif info == nil then
     if AUTOFIGHT_WAIT and not allow_movement then
-      crawl.process_keys('s')
+      crawl.do_commands({"CMD_WAIT"})
     else
       crawl.mpr("No target in view!")
     end
@@ -329,12 +380,14 @@ function attack(allow_movement)
     attack_melee(x,y)
   elseif info.attack_type == 1 then
     attack_reach(x,y)
+  elseif info.attack_type == -1 then
+    crawl.mpr("No reachable target in view!")
   elseif allow_movement then
     if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
       move_towards(x,y)
     end
   elseif AUTOFIGHT_WAIT then
-    crawl.process_keys('s')
+    crawl.do_commands({"CMD_WAIT"})
   else
     crawl.mpr("No target in range!")
   end

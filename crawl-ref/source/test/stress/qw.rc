@@ -1076,7 +1076,7 @@ local scary_monsters = {
   {12, "spiny frog"},
   {12, "black mamba"},
   {12, "Snorg"},
-  {12, "fire drake"},
+  {12, "rime drake"},
   {12, "Harold"},
   {12, "komodo dragon"},
   {12, "Gastronok"},
@@ -1094,7 +1094,6 @@ local scary_monsters = {
   {13, "blink frog"},
 
   {15, "death yak"},
-  {15, "Maud"},
   {15, "Erica"},
   {15, "catoblepas"},
   {15, "orc knight"},
@@ -1121,7 +1120,6 @@ local scary_monsters = {
   {20, "greater naga"},
   {20, "naga sharpshooter"},
   {20, "emperor scorpion"},
-  {20, "Wiglaf"},
   {20, "Rupert"},
   {20, "Aizul"},
   {20, "desc", "hydra"},
@@ -1153,7 +1151,6 @@ local scary_monsters = {
   {100, "Sojobo"},
   {100, "desc", "berserk[^e]"},
   {100, "Roxanne"},
-  {100, "Norris"},
   {100, "Erolcha"},
   {100, "desc", "statue"},
   {100, "Nessos"},
@@ -1176,7 +1173,7 @@ local scary_monsters = {
   {100, "tormentor"},
   {100, "Hell Sentinel"},
   {100, "Ice Fiend"},
-  {100, "Shadow Fiend"},
+  {100, "Tzitzimitl"},
   {100, "Brimstone Fiend"},
   {100, "curse toe"},
   {100, "curse skull"},
@@ -1221,7 +1218,6 @@ local bia_monsters = {
   {20, "Saint Roka"},
   {20, "Agnes"},
   {20, "Jory"},
-  {20, "Norris"},
   {20, "Arachne"},
   {20, "Nikola"},
   {20, "Vashnia"},
@@ -1255,7 +1251,7 @@ local bia_monsters = {
   {100, "Hell Sentinel"},
   {100, "Ice Fiend"},
   {100, "Brimstone Fiend"},
-  {100, "Shadow Fiend"},
+  {100, "Tzitzimitl"},
   {100, "Tiamat"},
   {100, "orb of fire"},
   {100, "caustic shrike"},
@@ -3660,7 +3656,7 @@ function plan_use_good_consumables()
         return drink(it)
       end
       if it.name():find("cure mutation") then
-        if base_mutation("slow healing") > 0 and you.race() ~= "Deep Dwarf"
+        if base_mutation("slow regeneration") > 0 and you.race() ~= "Deep Dwarf"
            and you.race() ~= "Ghoul" or
            base_mutation("dopey") > 1 or
            intrinsic_like_dex() and base_mutation("clumsy") > 1 or
@@ -4007,7 +4003,7 @@ function can_use_stairs(mname)
      or mname:find("statue") or mname:find("ballistomycete")
      or mname == "burning bush" or mname == "lightning spire"
      or mname:find("tentacle") or mname == "silent spectre"
-     or mname == "Geryon" or mname == "the royal jelly"
+     or mname == "Geryon" or mname == "the Royal Jelly"
      or mname:find("'s ghost") or mname:find("' ghost")
      or mname == "swamp worm" or mname == "electric eel"
      or mname == "kraken" or mname == "lava snake" then

@@ -252,7 +252,7 @@ end
 
 function Triggerable:do_trigger(triggerer, marker, ev)
   for _, listener in ipairs(self.listeners) do
-    listener:func(triggerable, triggerer, marker, ev)
+    listener:func(self, triggerer, marker, ev)
   end
 
   if triggerer.listener_only then

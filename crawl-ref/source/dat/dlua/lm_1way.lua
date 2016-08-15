@@ -18,8 +18,8 @@ function OneWayStair:activate(marker)
   dgn.register_listener(ev, marker, marker:pos())
 end
 
-function OneWayStair:disappear(marker, affect_player, x, y)
-  dgn.terrain_changed(x, y, self.props.floor or 'floor', affect_player, false)
+function OneWayStair:disappear(marker, x, y)
+  dgn.terrain_changed(x, y, self.props.floor or 'floor', false)
   dgn.tile_feat_changed(x, y, self.props.feat_tile or nil)
   if self.props.floor_tile ~= nil then
     dgn.tile_floor_changed(x, y, self.props.floor_tile)
@@ -37,7 +37,7 @@ function OneWayStair:event(marker, ev)
       self.props.onclimb(self, marker, ev)
     end
 
-    self:disappear(marker, false, x, y)
+    self:disappear(marker, x, y)
     return true
   end
 end

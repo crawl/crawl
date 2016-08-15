@@ -96,7 +96,7 @@ endif
 	rm -rf $(RESOURCES)/docs/template
 	rm -f $(RESOURCES)/docs/*.html
 	rm -f $(RESOURCES)/docs/*.pdf
-	rm -f $(RESOURCES)/docs/*.reST
+	rm -f $(RESOURCES)/docs/*.rst
 	rm -f $(RESOURCES)/docs/crawl.6
 	rm -f $(RESOURCES)/*.png
 

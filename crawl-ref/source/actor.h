@@ -11,8 +11,7 @@ enum ev_ignore_bit
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1<<0,
-    EV_IGNORE_PHASESHIFT = 1<<1,
-    EV_IGNORE_UNIDED     = 1<<2,
+    EV_IGNORE_UNIDED     = 1<<1,
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore_bit);
 
@@ -62,7 +61,7 @@ public:
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
 
-    virtual bool self_destructs() { return false; }
+    virtual void self_destruct() { }
 
     // Blink the actor to the destination. c should be a
     // valid target, though the method returns false
@@ -97,11 +96,8 @@ public:
     {
         return weapon(0);
     }
-    virtual random_var attack_delay(const item_def *weapon,
-                                    const item_def *projectile = nullptr,
-                                    bool random = true, bool scaled = true,
-                                    bool shield = true)
-                                   const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr,
+                                    bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
@@ -114,7 +110,8 @@ public:
                                bool calc_unid = true,
                                vector<item_def> *matches = nullptr) const = 0;
 
-    virtual hands_reqd_type hands_reqd(const item_def &item) const;
+    virtual hands_reqd_type hands_reqd(const item_def &item,
+                                       bool base = false) const;
 
             bool can_wield(const item_def* item,
                            bool ignore_curse = false,
@@ -165,7 +162,7 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
-    virtual bool can_see_invisible() const = 0;
+    virtual bool can_see_invisible(bool calc_unid = true) const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
@@ -204,8 +201,9 @@ public:
                       string aux = "",
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
-    virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const string &who = "") = 0;
+    virtual bool heal(int amount) = 0;
+    virtual void banish(actor *agent, const string &who = "",
+                        const int power = 0, bool force = false) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
@@ -254,7 +252,7 @@ public:
     virtual int armour_class(bool calc_unid = true) const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
-                 int stab_bypass = 0) const;
+                 int stab_bypass = 0, bool for_real = true) const;
     virtual int evasion(ev_ignore_type ign = EV_IGNORE_NONE,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
@@ -278,14 +276,13 @@ public:
     virtual bool undead_or_demonic() const = 0;
     virtual bool holy_wrath_susceptible() const = 0;
     virtual bool is_holy(bool spells = true) const = 0;
-    virtual bool is_unholy(bool spells = true) const = 0;
-    virtual bool is_evil(bool spells = true) const = 0;
+    virtual bool is_nonliving(bool temp = true) const = 0;
+    bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
-    virtual bool is_artificial(bool temp = true) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
-    virtual bool res_hellfire() const = 0;
+    virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
@@ -300,7 +297,7 @@ public:
     virtual bool res_wind() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int res_magic() const = 0;
+    virtual int res_magic(bool calc_unid = true) const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
@@ -317,9 +314,12 @@ public:
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
-    virtual bool warding(bool calc_unid = true, bool items = true) const;
+    virtual bool dismissal(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
+    virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
+    virtual bool reflection(bool calc_unid = true, bool items = true) const;
+    virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
@@ -371,8 +371,6 @@ public:
 #if TAG_MAJOR_VERSION == 34
     virtual int heat_radius() const = 0;
 #endif
-
-    virtual bool glows_naturally() const { return false; };
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
@@ -426,8 +424,9 @@ public:
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(actor* defender);
+    bool can_constrict(const actor* defender) const;
     void clear_far_constrictions();
+    void clear_constrictions_far_from(const coord_def &where);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;

@@ -19,10 +19,8 @@
 map<mid_t, companion> companion_list;
 
 companion::companion(const monster& m)
+    : mons(follower(m)), level(level_id::current()), timestamp(you.elapsed_time)
 {
-    mons = follower(m);
-    level = level_id::current();
-    timestamp = you.elapsed_time;
 }
 
 void init_companions()
@@ -209,6 +207,49 @@ void wizard_list_companions()
         mprf("%s (%d)(%s:%d)", mon.name(DESC_PLAIN, true).c_str(), mon.mid,
              branches[comp.level.branch].abbrevname, comp.level.depth);
     }
+}
+
+/**
+ * Returns the mid of the current ancestor granted by Hepliaklqana, if any. If none
+ * exists, returns MID_NOBODY.
+ *
+ * The ancestor is *not* guaranteed to be on-level, even if it exists; check
+ * the companion_list before doing anything rash!
+ *
+ * @return  The mid_t of the player's ancestor, or MID_NOBODY if none exists.
+ */
+mid_t hepliaklqana_ancestor()
+{
+    for (auto &entry : companion_list)
+        if (mons_is_hepliaklqana_ancestor(entry.second.mons.mons.type))
+            return entry.first;
+    return MID_NOBODY;
+}
+
+/**
+ * Returns the a pointer to the current ancestor granted by Hepliaklqana, if
+ * any. If none exists, returns null.
+ *
+ * The ancestor is *not* guaranteed to be on-level, even if it exists; check
+ * the companion_list before doing anything rash!
+ *
+ * @return  The player's ancestor, or nullptr if none exists.
+ */
+monster* hepliaklqana_ancestor_mon()
+{
+    const mid_t ancestor_mid = hepliaklqana_ancestor();
+    if (ancestor_mid == MID_NOBODY)
+        return nullptr;
+
+    monster* ancestor = monster_by_mid(ancestor_mid);
+    if (ancestor)
+        return ancestor;
+
+    for (auto &entry : companion_list)
+        if (mons_is_hepliaklqana_ancestor(entry.second.mons.mons.type))
+            return &entry.second.mons.mons;
+    // should never reach this...
+    return nullptr;
 }
 
 #if TAG_MAJOR_VERSION == 34

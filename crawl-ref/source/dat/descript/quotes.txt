@@ -200,16 +200,20 @@ ch. 2
 %%%%
 A portal to a secret trove of treasure
 
-“‘Stop thief! Stop thief!’ There is a magic in the sound. The tradesman leaves
-his counter, and the car-man his waggon; the butcher throws down his tray; the
-baker his basket; the milkman his pail; the errand-boy his parcels; the
-school-boy his marbles; the paviour his pickaxe; the child his battledore. Away
-they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
-knocking down the passengers as they turn the corners, rousing up the dogs, and
-astonishing the fowls: and streets, squares, and courts, re-echo with the
-sound.”
-    -Charles Dickens, _Oliver Twist; or, The parish boy's progress_, ch. X.
-1838.
+“He saw a large cavern and a vaulted [roof], in height equalling the stature
+of a full-grown man and it was hewn in the live stone and lighted up with
+light that came through air-holes and bullseyes in the upper surface of the
+rock which formed the roof. He had expected to find naught save outer gloom
+in this robbers' den, and he was surprised to see the whole room filled
+with bales of all manner stuffs, and heaped up from sole to ceiling with
+camel-loads of silks and brocades and embroidered cloths and mounds on
+mounds of vari-colored carpetings; besides which he espied coins golden and
+silvern without measure or account, some piled upon the ground and others
+bound in leathern bags and sacks. Seeing these goods and moneys in such
+abundance, Ali Baba determined in his mind that not during a few years only
+but for many generations thieves must have stored their gains and spoils in
+this place.”
+    -_The Arabian Nights_. trans. Sir Richard F. Burton, 1885.
 %%%%
 A rock wall
 
@@ -628,12 +632,6 @@ settle the battles of the near future.”
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
-Norris
-
-“Death and death alone gives meaning to life and this meaning is entirely
-negative.”
-    -Georges Poulet
-%%%%
 Orcish Mines
 
 “You load sixteen tons, what do you get
@@ -804,7 +802,7 @@ will hurt you.’”
     -Victor Marie Hugo, _Notre Dame de Paris_, Book II, chapter VII “A Wedding
      Night”. 1831.
 %%%%
-amulet of clarity
+amulet of harm
 
 <amulet>
 %%%%
@@ -820,6 +818,10 @@ amulet of inaccuracy
 
 <amulet>
 %%%%
+amulet of magic regeneration
+
+<amulet>
+%%%%
 amulet of rage
 
 <amulet>
@@ -828,11 +830,7 @@ amulet of regeneration
 
 <amulet>
 %%%%
-amulet of resist corrosion
-
-<amulet>
-%%%%
-amulet of resist mutation
+amulet of nothing
 
 <amulet>
 %%%%
@@ -949,29 +947,6 @@ and probably varies in different localities; but it would seem that the chief
 ingredient is always the juice of a Strychnos plant. It is known among
 different tribes by many names; such as Curari, Ourari, Urari and Woorali.”
     -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
-%%%%
-blue devil
-
-“From the sad marine decanter I then drew the cork. Instanter
- Out there jumped a little devil, blue in colour; and before
- I could speak to the new comer (for I never was struck dumber),
- Down upon my empty rummer, straight the little devil bore,
- Right into my empty tumbler straight the little devil bore,
- Squatted, grinned and nothing more.
-
- There the little imp sat grinning at me while my head went spinning,
- So that had I not sat down I should have fallen upon the floor;
- ‘Though thy looks be somewhat evil,’ said I ”tell me thou blue devil,
- Wherefore holdest though thy revel in the glass that held before
- Much the more agreeable spirit,—mizzle! leave me as before.“
- Then the imp said ‘Never-more!’
-
- Though I felt uncommon funky, still this answer put my monkey
- Up, and at the small blue devil in an undertone I swore.
- Then I said I must be dreaming, although broad awake I'm seeming;
- Doubtless I shall have a screaming morning headache — what a bore:
- Salmon I will eat no more.”
-    -J.T.S, “The Blue Imp”, _Melbourne Punch_. Sept. 4, 1856.
 %%%%
 boggart
 
@@ -1192,6 +1167,14 @@ dire flail
 “‘Ah! ah! ah!’ laughed his two men, ‘how the Norman villains will be humbled
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
+%%%%
+doom hound
+
+“Standing over Hugo, and plucking at his throat, there stood a foul thing, a
+great, black beast, shaped like a hound, yet larger than any hound that ever
+mortal eye has rested upon. And even as they looked the thing tore the throat
+out of Hugo Baskerville...”
+    -Arthur Conan Doyle, _The Hound of the Baskervilles_. 1902.
 %%%%
 Dragon's Call spell
 
@@ -1426,17 +1409,17 @@ giga bat
 glaive
 
 “To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lenghts, you
+Partiſan or Gleue, or ſuch like weapons of vantage and perfect lengths, you
 ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
 left hãd, reaching with your right hand your ſtaffe as high as you can, and
 then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thrust and ward, & that is the iuſt
+fight, wherein you may conueniently ſtrike, thruſt and ward, & that is the iuſt
 length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foor long, and will fit, although not
+commonly fall out to be eight or nine foot long, and will fit, although not
 iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
 fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
 to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmost hand doth no harme.”
+ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
 %%%%
 gnoll
@@ -1697,8 +1680,8 @@ deeply-felt respect for any object in the universe than this here shotgun...”
 %%%%
 Iskenderun's Battlesphere spell
 
-“Rule 4: Close air support covereth a multitude of sins.”
-    -Howard Tayler, _The Seven Habits of Highly Effective Pirates_,
+“Maxim 4: Close air support covereth a multitude of sins.”
+    -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
      in _Schlock Mercenary_. 2008.
 %%%%
 jackal
@@ -2163,15 +2146,6 @@ potion of blood
 and thou mayest not eat the life with the flesh.”
     -KJV Bible, Deuteronomy 12:23
 %%%%
-potion of poison
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of curing
 
 “But if when you say ‘whiskey’ you mean the oil of conversation,
@@ -2179,6 +2153,15 @@ potion of curing
  get together, that puts a song in their hearts and laughter on
  their lips, and the warm glow of contentment in their eyes...
  then certainly I am for it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
+%%%%
+potion of degeneration
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 profane servitor
@@ -2334,14 +2317,9 @@ ring of intelligence
 
 <ring>
 %%%%
-ring of invisibility
+ring of resist corrosion
 
-“With yells of delight the goblins rushed upon him. A pang of fear and loss,
-like an echo of Gollum's misery, smote Bilbo, and forgetting even to draw his
-sword he struck his hands into his pockets. And — there was the ring still, in
-his left pocket, and it slipped on his finger. The goblins stopped short. They
-could not see a sign of him. He had vanished.”
-    -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
+<ring>
 %%%%
 ring of magical power
 
@@ -2382,10 +2360,6 @@ ring of slaying
 <ring>
 %%%%
 ring of strength
-
-<ring>
-%%%%
-ring of sustain attributes
 
 <ring>
 %%%%
@@ -2693,15 +2667,6 @@ iron, and laughed its laughter of nails rattling.
 pounding and pounding, and the mouth answering.”
     -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
 %%%%
-skeletal archer
-
-“For a glory of all evil spirits rise for victory
- Pain for pain, blood for blood
- Pagan warriors moved quickly forward
- Bows are ready to shoot out their searing
- Darts...”
-    -Mastiphal, “For a Glory of All Evil Spirits”. 1995.
-%%%%
 skeletal bat
 
 <bat>
@@ -2835,6 +2800,18 @@ spectral thing
 “On the hungry craving wind
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
+%%%%
+spellforged servitor
+
+“When you think
+ Your toys have gone berserk
+ It's an illusion
+ You cannot shirk”
+    -Siouxsie and the Banshees, "Spellbound"
+%%%%
+Spellforged Servitor spell
+
+<spellforged servitor>
 %%%%
 staff
 
@@ -3228,7 +3205,7 @@ summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.
 %%%%
-wand of cold
+wand of acid
 
 <wand>
 %%%%
@@ -3244,27 +3221,11 @@ wand of disintegration
 
 <wand>
 %%%%
-wand of draining
-
-<wand>
-%%%%
 wand of enslavement
 
 <Enslavement spell>
 %%%%
-wand of fire
-
-<wand>
-%%%%
-wand of fireball
-
-<wand>
-%%%%
 wand of flame
-
-<wand>
-%%%%
-wand of frost
 
 <wand>
 %%%%
@@ -3272,15 +3233,11 @@ wand of hasting
 
 <wand>
 %%%%
-wand of invisibility
+wand of iceblast
 
 <wand>
 %%%%
 wand of lightning
-
-<wand>
-%%%%
-wand of magic darts
 
 <wand>
 %%%%
@@ -3335,6 +3292,13 @@ time to time, to pass across the glowing face of the pile, like a bat in front
 of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
+%%%%
+wolf
+
+“Teacher: How does a dog smell?
+ Student: I don't know.
+ Teacher: Correct!”
+    -Traditional Spanish joke.
 %%%%
 water nymph
 

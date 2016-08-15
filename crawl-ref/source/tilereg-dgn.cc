@@ -20,8 +20,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
 #include "process_desc.h"
@@ -393,16 +393,13 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
-    // We don't handle grid targeted spells yet.
-    if (flags & SPFLAG_GRID)
-        return false;
-
     // Most spells are blocked by transparent walls.
+    // XXX: deduplicate this with the other two? smitey spell lists
     if (targeted && !you.see_cell_no_trans(target->pos()))
     {
         switch (spell)
         {
-        case SPELL_HELLFIRE_BURST:
+        case SPELL_CALL_DOWN_DAMNATION:
         case SPELL_SMITING:
         case SPELL_HAUNT:
         case SPELL_FIRE_STORM:
@@ -780,11 +777,10 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
         if (you.see_cell(gc))
         {
-            const int cloudidx = env.cgrid(gc);
-            if (cloudidx != EMPTY_CLOUD)
+            if (cloud_struct* cloud = cloud_at(gc))
             {
                 string terrain_desc = desc;
-                desc = cloud_name_at_index(cloudidx);
+                desc = cloud->cloud_name(true);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;

@@ -105,68 +105,9 @@ yellow
 %%%%
 # "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
 # If a language needs these keys split, please say so.
-#
-# Also used by Tome of Destruction below.
 glowing_colour_name
 
 @_glowing_adj_@ @_colour_name_@
-%%%%
-_writing_adj_
-
-angular
-
-blocky
-
-bold
-
-faded
-
-flowing
-
-glowing
-
-shifting
-
-sinuous
-
-spidery
-
-writhing
-%%%%
-_writing_noun_
-
-binary code
-
-figures
-
-glyphs
-
-hieroglyphics
-
-print-out
-
-runes
-
-scrawl
-
-sigils
-
-symbols
-
-text
-
-writing
-%%%%
-# Tome of Destruction: "The book opens to a page covered in XXX."
-writing_name
-
-@_colour_name_@ @_writing_noun_@
-
-@glowing_colour_name@ @_writing_noun_@
-
-@_writing_adj_@ @_colour_name_@ @_writing_noun_@
-
-@_writing_adj_@ @_writing_noun_@
 %%%%
 # random uselessness: "You smell XXX."
 smell_name
@@ -177,7 +118,11 @@ burning hair
 
 coffee
 
+dragon dung
+
 fire and brimstone
+
+mustard
 
 pepper
 
@@ -188,6 +133,8 @@ something weird
 sulphur
 
 tea
+
+the scent of fear
 
 wet wool
 %%%%
@@ -218,7 +165,11 @@ yak
 # random uselessness: "You hear XXX."
 sound_name
 
+a burbling brook
+
 a crunching sound
+
+a lullaby played backwards
 
 a very strange noise
 
@@ -234,9 +185,17 @@ the distant roaring of an enraged @_roaring_animal_name_@
 
 the chiming of a distant gong
 
-the tinkle of an enormous bell
+the sound of one hand clapping
+
+the tinkle of a tiny bell
+
+the ringing of an enormous bell
+
+whispers in an ancient language
+
+whistling wind
 %%%%
-# Used both by Summon Horrible Things and Malign Gateway.
+# Used by Summon Horrible Things.
 SHT_int_loss
 
 Your mind reels, touched by the horrors through the portal.
@@ -305,11 +264,11 @@ The bosom of this dungeon contains the fabled artefact, the Orb of Zot.
 
 Will you be the one to retrieve the fabulous Orb of Zot from the depths?
 
-It is said that the Orb of Zot exists deep within this dungeon, but nobody has ever found it.
+It is said that the Orb of Zot exists deep within this dungeon.
 %%%%
 welcome_spam Halloween
 
-They say the Orb is deep down, but nobody ever got it. Be careful! Halloween tonight.
+@welcome_spam@ Be careful! Halloween tonight.
 
 The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
 

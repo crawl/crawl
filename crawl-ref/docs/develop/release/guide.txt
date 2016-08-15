@@ -23,7 +23,7 @@ for those the list begins with step 3.
 
 2. Tag the branch point
 
-   git tag -s 0.X-b1
+   git tag -a 0.X-b1
    git push origin 0.X-b1
    Also, after the next diverging commit, tag the trunk as 0.${X+1}-a0; you
    need to make sure the commits pointed to by 0.X-b1 and 0.${X+1}-a0 are
@@ -69,13 +69,18 @@ for those the list begins with step 3.
        * accessing all help screens (including the ? submenus)
 
 
-5. Sync the documentation
+5. Update documentation files
 
-   Update the release date in the changelog. In major releases (not point
-   ones!), use "make rest" to fetch the the manual from the wiki
-   (https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest). Remember that
-   after the release the wiki refers to the next major version, so any further
-   changes need to be done in the git tree directly. Commit.
+   Update the release date in the changelog. This is a good time to make a
+   final check of the Crawl manual to make sure it's updated for any relevant
+   changes.
+
+   It's ideal if you can also update the Debian changelog file before tagging
+   the release, but this can be done later by the person preparing the debian
+   packages. In the debian.txt guide in this directory, see the step "0.2
+   Release Prerequisites" to update `source/debian/changelog` for the new
+   version.
+
 
 6. Tag the release
 
@@ -137,9 +142,7 @@ for those the list begins with step 3.
    ~/dcss-website, and the origin repo on github is maintained by chequers, who
    can grant push access to new users. It's best to update the files in the
    dcss-website/site in the repo, make a commit for the change, and then copy
-   the download.htm file to the live ~/website directory. Note that the repo
-   currently uses .html file extensions, so change .html files in the repo, but
-   copy them to the file with the .htm extension in ~/website.
+   the download.htm file to the live ~/website directory.
 
    Ideally you'll also push the commit to chequers' origin repo. In the future
    we'll probably move the website repo to the github crawl group and better

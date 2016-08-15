@@ -37,7 +37,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
-#include "random-weight.h"
+#include "random.h"
 #include "rot.h"
 #include "religion.h"
 #include "skills.h"
@@ -122,10 +122,9 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BONE_DRAGON, 5 },
         { MONS_ICE_DRAGON, 5 },
         { MONS_BLIZZARD_DEMON, 5 },
-        { MONS_BLUE_DEVIL, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_TARTARUS, { {MONS_SHADOW_FIEND}, SPTYP_NECROMANCY, {
+    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, SPTYP_NECROMANCY, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
 };
@@ -200,8 +199,8 @@ static void _hell_effects(int /*time_delta*/)
         return;
 
     // 50% chance at max piety
-    if (you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY * 2)
-        || is_sanctuary(you.pos()))
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
         return;
@@ -814,21 +813,6 @@ static void _handle_magic_contamination(int /*time_delta*/)
     }
 }
 
-// Adjust the player's stats if diseased.
-static void _handle_sickness(int /*time_delta*/)
-{
-    // If Cheibriados has slowed your biology, disease might
-    // not actually do anything.
-    if (you.disease && one_chance_in(30)
-        && !(you_worship(GOD_CHEIBRIADOS)
-             && you.piety >= piety_breakpoint(0)
-             && coinflip()))
-    {
-        mprf(MSGCH_WARN, "Your disease is taking its toll.");
-        lose_stat(STAT_RANDOM, 1);
-    }
-}
-
 // Exercise armour *xor* stealth skill: {dlb}
 static void _wait_practice(int /*time_delta*/)
 {
@@ -848,7 +832,7 @@ static void _abyss_speed(int /*time_delta*/)
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
-    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+    if (have_passive(passive_t::slow_abyss) && coinflip())
         ; // Speed change less often for Chei.
     else if (coinflip() && you.abyss_speed < 100)
         ++you.abyss_speed;
@@ -858,10 +842,7 @@ static void _abyss_speed(int /*time_delta*/)
 
 static void _jiyva_effects(int /*time_delta*/)
 {
-    if (!you_worship(GOD_JIYVA))
-        return;
-
-    if (one_chance_in(10))
+    if (have_passive(passive_t::jellies_army) && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -876,11 +857,11 @@ static void _jiyva_effects(int /*time_delta*/)
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
-                   || env.cgrid(newpos) != EMPTY_CLOUD
+                   || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
             mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
-                         MHITNOT, 0, GOD_JIYVA);
+                         MHITNOT, MG_NONE, GOD_JIYVA);
             mg.non_actor_summoner = "Jiyva";
 
             if (create_monster(mg))
@@ -906,13 +887,14 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    if (x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (have_passive(passive_t::fluid_stats)
+        && x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (one_chance_in(25))
+    if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 }
 
@@ -952,7 +934,6 @@ static int _div(int num, int denom)
 
 struct timed_effect
 {
-    timed_effect_type effect;
     void              (*trigger)(int);
     int               min_time;
     int               max_time;
@@ -961,25 +942,27 @@ struct timed_effect
 
 static struct timed_effect timed_effects[] =
 {
-    { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
-    { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
-    { TIMER_SICKNESS,      _handle_sickness,              100,   300, false },
-    { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
+    { rot_floor_items,               200,   200, true  },
+    { _hell_effects,                 200,   600, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_DETERIORATION, nullptr,                         0,     0, false },
+    { nullptr,                         0,     0, false },
 #endif
-    { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
+    { _handle_magic_contamination,   200,   600, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_SCREAM, nullptr,                                0,     0, false },
+    { nullptr,                         0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      rot_inventory_food,            100,   300, false },
-    { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
-    { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
-    { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
-    { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
-    { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
+    { handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_BRIBE_TIMEOUT, nullptr,                         0,     0, false },
+    { nullptr,                                0,     0, false },
+#endif
+    { rot_inventory_food,            100,   300, false },
+    { _wait_practice,                100,   300, false },
+    { _lab_change,                  1000,  3000, false },
+    { _abyss_speed,                  100,   300, false },
+    { _jiyva_effects,                100,   300, false },
+    { _evolve,                      5000, 15000, false },
+#if TAG_MAJOR_VERSION == 34
+    { nullptr,                         0,     0, false },
 #endif
 };
 
@@ -1267,32 +1250,30 @@ static void _catchup_monster_moves(monster* mon, int turns)
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
 
-//---------------------------------------------------------------
-//
-// timeout_enchantments
-//
-// Update a monster's enchantments when the player returns
-// to the level.
-//
-// Management for enchantments... problems with this are the oddities
-// (monster dying from poison several thousands of turns later), and
-// game balance.
-//
-// Consider: Poison/Sticky Flame a monster at range and leave, monster
-// dies but can't leave level to get to player (implied game balance of
-// the delayed damage is that the monster could be a danger before
-// it dies). This could be fixed by keeping some monsters active
-// off level and allowing them to take stairs (a very serious change).
-//
-// Compare this to the current abuse where the player gets
-// effectively extended duration of these effects (although only
-// the actual effects only occur on level, the player can leave
-// and heal up without having the effect disappear).
-//
-// This is a simple compromise between the two... the enchantments
-// go away, but the effects don't happen off level.  -- bwr
-//
-//---------------------------------------------------------------
+/**
+ * Update a monster's enchantments when the player returns
+ * to the level.
+ *
+ * Management for enchantments... problems with this are the oddities
+ * (monster dying from poison several thousands of turns later), and
+ * game balance.
+ *
+ * Consider: Poison/Sticky Flame a monster at range and leave, monster
+ * dies but can't leave level to get to player (implied game balance of
+ * the delayed damage is that the monster could be a danger before
+ * it dies). This could be fixed by keeping some monsters active
+ * off level and allowing them to take stairs (a very serious change).
+ *
+ * Compare this to the current abuse where the player gets
+ * effectively extended duration of these effects (although only
+ * the actual effects only occur on level, the player can leave
+ * and heal up without having the effect disappear).
+ *
+ * This is a simple compromise between the two... the enchantments
+ * go away, but the effects don't happen off level.  -- bwr
+ *
+ * @param levels XXX: sometimes the missing aut/10, sometimes aut/100
+ */
 void monster::timeout_enchantments(int levels)
 {
     if (enchantments.empty())
@@ -1318,21 +1299,19 @@ void monster::timeout_enchantments(int levels)
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
-        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
-        case ENCH_SILENCE: case ENCH_LOWERED_MR:
-        case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
+        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
-        case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
-        case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_WRETCHED: case ENCH_SCREAMED:
-        case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_BARBS:
+        case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
+        case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
+        case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
-        case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_CHANT_FIRE_STORM:
-        case ENCH_CHANT_WORD_OF_ENTROPY:
+        case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
+        case ENCH_BOUND_SOUL:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1360,6 +1339,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
+        case ENCH_INFESTATION:
             del_ench(entry.first);
             break;
 
@@ -1410,13 +1390,11 @@ void monster::timeout_enchantments(int levels)
     }
 }
 
-//---------------------------------------------------------------
-//
-// update_level
-//
-// Update the level when the player returns to it.
-//
-//---------------------------------------------------------------
+/**
+ * Update the level upon the player's return.
+ *
+ * @param elapsedTime how long the player was away.
+ */
 void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1483,8 +1461,7 @@ void update_level(int elapsedTime)
     dprf("total monsters on level = %d", mons_total);
 #endif
 
-    for (int i = 0; i < MAX_CLOUDS; i++)
-        delete_cloud(i);
+    delete_all_clouds();
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
@@ -1497,7 +1474,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
     // -4 rods don't recharge at all.
     aut = min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
 
-    int rate = 4 + rod.special;
+    int rate = 4 + rod.rod_plus;
 
     rate *= 10 * aut;
     if (in_inv)

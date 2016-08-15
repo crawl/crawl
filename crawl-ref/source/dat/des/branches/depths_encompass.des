@@ -15,7 +15,7 @@
                     .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
                     .. 'nothing w:68')
             e.kmons('2 = spriggan berserker / tengu warrior w:20')
-            e.kmons('3 = deep elf high priest / salamander stormcaller')
+            e.kmons('3 = deep elf high priest')
         end
         e.subst('% = * %:20 .')
         e.lua_marker(':', fog_machine { cloud_type = "flame",
@@ -28,10 +28,10 @@
         e.weight("5")
         e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
                "storm dragon w:5 / shock serpent w:5 / " ..
-               "blizzard demon w:15 / salamander firebrand w:15")
-        e.mons("obsidian statue / ice statue / w:1 orange crystal statue")
+               "blizzard demon w:15")
+        e.mons("w:20 obsidian statue / w:1 orange crystal statue")
         e.mons("glowing shapeshifter")
-        e.mons("ugly thing / very ugly thing w:5")
+        e.mons("very ugly thing / ugly thing w:5")
         e.mons("ball lightning")
         e.mons("insubstantial wisp")
         e.mons("crystal guardian")
@@ -54,9 +54,8 @@
         e.shuffle("34")
         e.shuffle("m6")
         e.kitem("p = w:60 potion of mutation / " ..
-                "w:5 amulet of resist mutation ident:all / " ..
                 "w:1 potion of cure mutation")
-        e.kitem("P = amulet of resist mutation ident:all")
+        e.kitem("P = any jewellery good_item")
         e.kitem("Q = potion of cure mutation")
         e.kitem("R = potion of cure mutation / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
@@ -98,8 +97,8 @@ default-depth: Depths:2-, !Depths:$
 # The River Lethe
 #
 # The two orange statues are placed for maximum pain -- one you're likely to
-# first see while flying, the other is hard to target with disintegration
-# through its protective plants.
+# first see while flying, the other aided by a giant eyeball and protective
+# plants.
 #
 # Lemuel
 #
@@ -108,8 +107,8 @@ TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 MONS:    plant / fungus w:2
 MONS:    wolf / warg / hell hound / raiju w:4
-MONS:    shadow w:20 / wraith w:20 / lost soul w:2 / \
-         shadow wraith / phantasmal warrior / skeletal warrior
+MONS:    shadow w:20 / wraith w:20 / shadow wraith / phantasmal warrior / \
+         skeletal warrior
 MONS:    dancing weapon / war gargoyle w:2
 MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \
@@ -118,9 +117,8 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
          merfolk simulacrum w:2 / vampire / wraith / wight
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
-MONS:    ancient lich w:20 / shadow fiend
-KMONS:   8 = Maud, patrolling giant orange brain
-KMONS:   9 = patrolling giant orange brain
+MONS:    ancient lich w:20 / tzitzimitl
+KMONS:   89 = patrolling giant orange brain
 KMONS:   0 = orange crystal statue
 KMONS:   B = giant eyeball
 KMONS:   C = 0 band
@@ -136,7 +134,7 @@ KITEM:   0 = potion of brilliance ident:type
 KFEAT:   8e = >
 KFEAT:   W = w
 NSUBST:  h = 1:+ / *:x, H = 1:+ / *:x
-SHUFFLE: dD/eE/fF/gG
+SHUFFLE: dD / eE / fF / gG
 SUBST:   D = +, EFG = x
 NSUBST:  e = 1:e / 1:* / *:%, f = 1:e / *:%, g = 1:e / *:%
 SUBST:   | = |*
@@ -210,24 +208,23 @@ ORIENT:  encompass
 : local brnd = crawl.random2(3)
 : if brnd == 0 then
 MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
-        deep elf priest / deep elf conjurer / deep elf knight / nothing
+        deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5 / nothing
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
 MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
         ogre mage w:8 / ettin / stone giant / frost giant w:8 / nothing
 MONS:   spriggan air mage / fire giant
 : else
-MONS:   salamander w:8 / salamander mystic w:12 / \
+MONS:   yaktaur w:8 / centaur warrior / minotaur w:2 / \
         tengu conjurer / tengu warrior / nothing w:5
-MONS:   salamander firebrand / tengu reaver
+MONS:   tengu reaver / sphinx
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
 KMONS:   z = killer bee
 KMONS:   Z = queen bee
-ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
-ITEM:    amulet of stasis
+ITEM:    amulet of reflection
 KITEM:   gzZ = royal jelly w:10 / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
@@ -256,7 +253,7 @@ x.......xccccccxxxxxxx.........................................w"..xxx
 x.(...{.xc....cbbbbbxx................xxx...................."w......x
 x.......++.U..++.].++.....'''....'l'....xxx................."ww"..)..x
 x...[...xc....cbbbbbxx...'''..''lllll'....xx...vvEvvEv......"ww"....xx
-x.......xcccccccxxxxxx.......'llllllll.....x...vd...9v...."www".....xx
+x.......xcccccccxxxxxx.......'llllllll.....x...v....9v...."www".....xx
 xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx
 x.............................'lllll'.....xx...v9....v.www..w".....xxx
 x....""w.............".xxx......'ll'......x....vvEEEEvwww.www.....xxxx
@@ -456,7 +453,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = red devil / hell hound / efreet w:5
 KMONS: 5 = sun demon
-KMONS: 6 = salamander firebrand / balrug
+KMONS: 6 = balrug
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -487,9 +484,9 @@ NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
-KMONS: 5 = ice devil
-KMONS: 6 = blizzard demon / ice dragon
+KMONS: 4 = ice devil / ettin simulacrum w:20 / freezing wraith
+KMONS: 5 = quicksilver dragon simulacrum
+KMONS: 6 = blizzard demon
 KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
@@ -636,99 +633,88 @@ ENDMAP
 default-depth: Depths:2-, !Depths:$
 
 ################################################################################
-# A bizarre, imposing crystal construct, radiating great elemental magic
-# that lures in and alters enemies often rare, strange, and nasty.
+# An imposing crystal structure, luring in and altering many to feast
+# upon and be empowered by the radiant great elemental magic.
 # Vaguely, vaguely inspired by Crawl Alternative's Jade Caves
-# and the non-livings sets for the proposed Radiant Caverns.
-# Stairs and greater threats are scattered throughout the level:
-# anticipating dangers and skipping through the level may be quite difficult.
-#
-NAME:    hangedman_crystal_crosses_colossus
-TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
-ORIENT:  encompass
-MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
-         centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . arrow / \
-         two-headed ogre w:5 ; great mace ego:freezing ident:type . \
-         great mace ego:flaming ident:type / efreet w:5 / \
-         rakshasa w:5 ; wand of flame | wand of frost . whip . robe
-MONS:    ugly thing w:15 / shapeshifter / unseen horror w:15 / \
-         chaos spawn / fire elemental / water elemental w:5 / \
-         air elemental / earth elemental w:5 / mana viper w:5 / \
-         insubstantial wisp / gargoyle w:5 / wolf spider simulacrum w:3 / \
-         elephant simulacrum w:3 / deep troll simulacrum w:3 / \
-         lindwurm perm_ench:shapeshifter w:7 / lindwurm w:3 / \
-         dancing weapon w:5 ; trident ego:flaming | trident ego:freezing | \
-         war axe ego:flaming | war axe w:15 ego:freezing |  \
-         scimitar w:15 ego:freezing | scimitar ego:flaming | \
-         dire flail w:5 ego:flaming | dire flail w:5 ego:freezing
-MONS:    frost giant w:5 / fire giant w:5 / naga mage w:15 / hell knight w:5 / \
-         salamander mystic w:5 / spriggan air mage / deep troll earth mage / \
-         yaktaur captain ; arbalest ego:flaming | arbalest ego:freezing . bolt / \
-         rakshasa w:5 ; robe . wand of fire | wand of cold . \
-         glaive w:2 ego:flaming | glaive w:2 ego:freezing
-MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
-         ice dragon perm_ench:shapeshifter w:12 / ice dragon w:3 / \
-         war gargoyle w:5 / glowing shapeshifter / ghost moth w:1 / \
-         boulder beetle / anaconda simulacrum w:4 / harpy simulacrum w:4 / \
-         hydra simulacrum w:4 / fire dragon simulacrum w:3 / fire crab w:5 / \
-         dancing weapon w:15 ; glaive ego:flaming | glaive ego:freezing | \
-         battleaxe w:5 ego:flaming | battleaxe ego:freezing | \
-         great sword ego:flaming | great sword w:5 ego:freezing | \
-         great mace ego:flaming | great mace ego:freezing
-KMONS:   A = fire giant ; battleaxe ego:freezing ident:type
-KMONS:   B = frost giant ; great sword ego:flaming ident:type
-KMONS:   C = rakshasa ; robe good_item . wand of cold | wand of fire | \
-                      wand of lightning . \
-                      glaive ego:freezing | glaive ego:flaming . \
-                      potion of heal wounds | potion of might | \
-                      potion of haste | nothing w:20
-KMONS:   D = ettin ; great mace ego:flaming ident:type . \
-                     great mace ego:freezing ident:type
-KMONS:   E = deep elf annihilator ; robe randart | mundane ice dragon armour | \
-                                  mundane fire dragon armour | robe w:1 . \
-                                  scimitar ego:flaming | scimitar ego:freezing
-KMONS:   F = tengu reaver
-KMONS:   G = deep elf blademaster ; mundane crystal plate armour . \
-                                  rapier ego:flaming ident:type . \
-                                  rapier ego:freezing ident:type
-KMONS:   H = ancient lich w:5 / lich
-KMONS:   I = titan
-KMONS:   J = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
-             quicksilver dragon w:14 / \
-             quicksilver dragon perm_ench:shapeshifter w:1
-KMONS:   K = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
-KMONS:   L = crystal guardian
-SHUFFLE: ABCD
-NSUBST:  "~ = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<. / 1:>>. / 4:T
-NSUBST:  A = 1:A / 1:F / *:1, B = 1:B / 1:G / *:1
-NSUBST:  C = 1:CC1 / 1:H / *:1, D = 1:D / 1:II1 / *:1
-SHUFFLE: ABCDEF, GHIJKL, "X / ~Y / ^Z, +-=
-SUBST:   "X = bX..., ~Y = bbY.., ^Z = b., v : v:3 b:2, c : c:3 b:2, d = c
-SUBST:   + = +:14 .:1, - = +:4 .:1, = = +:2 .:3, * = *:9 |:1, % = %:14 *:5 .:1
-SHUFFLE: XY
-SUBST:   X : w:60 l., Y : l:40 w., l = lll., 1 : 1:99 .:1
-KPROP:   l = no_cloud_gen
+# and the non-livings sets for the old proposed Radiant Caverns.
+NAME:     hangedman_crystal_crosses_colossus
+TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
+ORIENT:   encompass
+MONS:     deep elf mage w:12 / naga mage / hell knight / efreet w:5 / \
+          rakshasa w:5 ; robe . wand of iceblast | wand of lightning . \
+                         trident ego:freezing | trident ego:flaming / \
+          centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . \
+                                arrow . long sword good_item
+MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
+          ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
+          mana viper w:5 / mana viper perm_ench:shapeshifter w:5 / \
+          very ugly thing w:20 / shock serpent / boulder beetle / \
+          hydra simulacrum w:4 / anaconda simulacrum w:4 / harpy simulacrum w:4 / \
+          dancing weapon w:8 ; trident ego:flaming | trident ego:freezing | \
+                               war axe ego:flaming | war axe ego:freezing | \
+                               long sword ego:flaming | long sword ego:freezing | \
+                               flail ego:flaming | flail ego:freezing
+MONS:     fire giant ; battleaxe ego:freezing / spriggan air mage / sphinx w:5 / \
+          frost giant ; great sword ego:flaming / deep troll earth mage / \
+          tengu reaver / ettin ; great mace ego:flaming . great mace ego:freezing / \
+          deep elf annihilator ; ice dragon armour | fire dragon armour . \
+                                 scimitar ego:flaming | scimitar ego:freezing
+MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
+          storm dragon w:5 / storm dragon perm_ench:shapeshifter w:5 / \
+          war gargoyle / juggernaut simulacrum w:5 / lorocyproca w:5 / \
+          ghost moth w:5 / glowing shapeshifter w:15 / spark wasp / \
+          dancing weapon ; glaive ego:flaming | glaive ego:freezing | \
+                           battleaxe ego:flaming | battleaxe ego:freezing | \
+                           great sword ego:flaming | great sword ego:freezing | \
+                           great mace ego:flaming | great mace ego:freezing
+KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
+                                     rapier ego:flaming . rapier ego:freezing
+KMONS:    6 = deep elf master archer ; fire dragon armour | ice dragon armour . \
+                                       longbow ego:flaming | longbow ego:freezing . \
+                                       arrow . potion of haste | potion of resistance
+KMONS:    7 = lich / ancient lich w:5
+KMONS:    8 = titan / draconian annihilator w:5
+KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
+              quicksilver dragon w:14 / \
+              quicksilver dragon perm_ench:shapeshifter w:1
+KMONS:    B = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
+KMONS:    CD = crystal guardian
+# Randomized: Entryways across arms, stair and portal placement,
+# "boss" center versus arm distribution, center openness,
+# pillars across halves, monsters sets versus depth,
+# item quality and decorative lining.
+SHUFFLE:  defghi
+SUBVAULT: d : crystal_crosses_four
+SUBVAULT: e : crystal_crosses_four
+SUBVAULT: f : crystal_crosses_two
+SUBVAULT: g : crystal_crosses_two
+SUBVAULT: h : crystal_crosses_one
+SUBVAULT: i : crystal_crosses_one
+NSUBST:   { = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<> / 1:>>< / *:T
+NSUBST:   5 = 1:5 / *:1, 6 = 1:6 / *:1, 7 = 1:774 / *:1, 8 = 1:8 / 1:AA4 / *:1
+SUBST:    1 = 1:99 .:1, j : b:3 ~:2
+SHUFFLE:  5678ABCD, XYZ, -=~
+SUBST:    X = bbX.., Y = bbY.., Z : bb.
+SUBST:    X : w:60 l., Y : l:40 w., l = lll.
+SUBST:    - = ., = = +:3 .:1, ~ = +:9 .:1
+SUBST:    * = *:4 |:1, % = %:14 *:5 .:1
+SUBST:    v : v:3 b:2, k : c:3 b:2
+KPROP:    l = no_cloud_gen
 :  local Z = you.absdepth()
-:  if you.absdepth() * 4 - 74 <= 0 then
-:    subst("1 = 1:" .. math.max(72 - Z * 3, 3) ..
-:             " 2:" .. math.max(52 - Z * 2, 3))
-:  elseif you.absdepth() * 4 - 78 <= 0 then
-:    subst("1 = 1:" .. math.max(72 - Z * 3, 3) ..
-:             " 2:" .. math.max(52 - Z * 2, 3) ..
-:             " 3:" .. Z * 4 - 74)
+:  if you.absdepth() * 5 - 74 <= 0 then
+:    subst("1 = 1:" .. math.max(62 - Z * 2, 2) ..
+:             " 2:" .. math.max(60 - Z * 2, 2))
 :  else
-:    subst("1 = 1:" .. math.max(72 - Z * 3, 3) ..
-:             " 2:" .. math.max(52 - Z * 2, 3) ..
-:             " 3:" .. Z * 4 - 74 .. " 4:" .. Z * 4 - 78)
+:    subst("1 = 1:" .. math.max(62 - Z * 2, 2) ..
+:             " 2:" .. math.max(60 - Z * 2, 2) ..
+:             " 3:" .. Z * 5 - 74 .. " 4:" .. Z * 5 - 78)
 :  end
-MARKER:  T = lua:props_marker { portal=1 }
-: _G.set_random_mon_list("place:" .. you.where() .. " w:150 / " ..
-:   "fire giant / frost giant / rakshasa w:5 / deep elf knight w:5 / " ..
-:   "glowing shapeshifter w:8 / simulacrum w:5 / dancing weapon w:2 / " ..
-:   "fire crab w:5 / boulder beetle / mana viper w:5 / ugly thing band w:5")
-TILE:    b = wall_emerald
-TILE:    c = wall_crystal_squares
-TILE:    v = dngn_metal_wall_darkgray
+MARKER:   T = lua:props_marker { portal=1 }
+: _G.set_random_mon_list("place:" .. you.where() .. " w:210 / " ..
+:   "rakshasa / dancing weapon / glowing shapeshifter / very ugly thing band")
+TILE:     b = wall_emerald
+TILE:     c = wall_crystal_squares
+TILE:     v = dngn_metal_wall_darkgray
 LFLOORTILE: floor_pebble_green
 LFLOORCOL:  white
 MAP
@@ -736,65 +722,129 @@ MAP
                                          bbYbb
                                          b.%.b
                                          b.Y.b
-          bbb                            b.B.b    bbb
-         bbXbb                       bbbbc...cbbbbbYbb
-         b.%.b                      bb...........b...b
-         b.X.b                      bY.Y...Y...Y.-.Y.b
-         b.A.b    bbb               bb...........b...b
-     bbbbc...cbbbbbXbb               bb-bb...bbbbb...cbbbb
-    bb...........b...b               b...b.1.b...........bb
-    bX.X...X...X.-.X.b               b.Y.b.Y.b%Y1..Y..BY%Yb
-    bb...........b...b    bbb        b...b.%.b...........bb
-     bb-bb...bbbbb...bbbbbbXbb   bbbbb...bbbbvbbbb...cbbbb
-     b...b.1.b....1......b...b  bb......1....b.%.b...b
-     b.X.b.X.b%"...X...X.-.X.b  bY.Y...Y...~%b.~.b.Y.b
-     b...b.%.b......1....b...b  bb....1......b...b...b
- bbbbc...bbbbvbbbb...bbbbb...bbbbbb-bb...bbbbb...bb-bb
-bb...........b.%.b...b....1......b...b...b......1....bb
-bX%XA..X..1X%b.".b.".b%"...X...X.+.Z.b.~.b%~...Y...Y.Yb
-bb...........b...b.%.b......1....b...b.%.b....1......bb
- bbbbc...bbbbb...bbbbvbbbb...bbbbb...bbbbvbbbb...bbbbb
-     b...b....1......b.%.b...b......1....b.%.b...b
-     b.X.-.X...X..."%b.Z.b.".b.Z...Z...Z%b.~.b.Y.b
-     b...b......1....b...b.%.b....B......b...b...b
-     bbXbbbbbb...bbbbb...bbbbv+d+b...bbbbb...bb-bb
-      bbb    b...b....1......b...b...b......1....bb
-             b.X.-.Z...Z...Z%b.Z.b.Z.b%~...Y...Y.Yb
-             b...b......A....b...b.%.b....1......bb
-             bbXbbb+bb...bbbbb...bbbbvbbbb...bbbbb
-              bbbb...b...+....A*B....+...b...b
-                 b.Y.b.Z.d.Z..*Z*..Z.d.Z.b.Y.b
-                 b...b...+....C*D....+...b...bbbb
-             bbbbb...bbbbvbbbb...bbbbb...bb+bbbXbb
-            bb......1....b.%.b...b....D......b...b
-            bY.Y...Y...~%b.Z.b.Z.b%Z...Z...Z.=.X.b
-            bb....1......b...b...b......1....b...b    bbb
-             bb=bb...bbbbb...b+d+vbbbb...bbbbb...bbbbbbXbb
-             b...b...b......C....b.%.b...b....1......b...b
-             b.Y.b.~.b%Z...Z...Z.b.".b.Z.b%"...X...X.=.X.b
-             b...b.%.b....1......b...b.%.b......1....b...b
-         bbbbb...bbbbvbbbb...bbbbb...bbbbvbbbb...bbbbb...cbbbb
-        bb......1....b.%.b...b....1......b.%.b...b...........bb
-        bY.Y...Y...~%b.Y.b.Z.+.X...X..."%b.".b.".b%X1..X..DX%Xb
-        bb....1......b...b...b......1....b...b.%.b...........bb
-         bb=bb...bbbbb...bb=bbbbbb...bbbbb...bbbbvbbbb...cbbbb
-         b...b...b......1....bb  b...b....1......b.%.b...b
-         b.Y.b.~.b%~...Y...~.Yb  b.X.=.X...X..."%b.X.b.X.b
-         b...b.%.b....1......bb  b...b......1....b.1.b...b
-     bbbbc...bbbbvbbbb...bbbbb   bbXbbbbbb...bbbbb...bb=bb
-    bb...........b.%.b...b        bbb    b...b...........bb
-    bY%YC..Y..1Y%b.Y.b.Y.b               b.X.=.X...X...X.Xb
-    bb...........b.1.b...b               b...b...........bb
-     bbbbc...bbbbb...bb=bb               bbXbbbbbc...cbbbb
-         b...b...........bb               bbb    b.D.b
-         b.Y.=.Y...Y...Y.Yb                      b.X.b
-         b...b...........bb                      b.%.b
-         bbYbbbbbc...cbbbb                       bbXbb
-          bbb    b.C.b                            bbb
+          bbb                            b.6.b    bbb
+         bbXbb                       bbbbk...kbbbebYbb
+         b.*.b                      bb...........e...b
+         b.X.b                      bY.Y...Y...Y.e.Y.b
+         b.5.b    bbb               bb...........e.1.b
+     bbbbk...kbbbdbXbb               eeeee...eeeee...kbbbb
+    bb...........d...b               b...e.1.e...........bb
+    bX.X1..X...X.d.X.b               b.Y.e.Y.e%Y1..Y..6Y*Yb
+    bb...........d...b    bbb        b...e.%.e...........bb
+     ddddd...ddddd...bbbbbbXbb   bbbbb...eeeeveeee...kbbbb
+     b...d.1.d....1......b...b  bb......1....e.%.e...b
+     b.X.d.X.d%X...X...X.-.X.b  bY.Y...Y...Y%e...e.Y.b
+     b...b.%.d......1....b...b  bb....1......e...e...b
+ bbbbk...ddddvdddd...bbbbb...bbbbbb-bb...eeeee...eeeee
+bb...........d.%.d...b....1......b...b...b......1....bb
+bX%X5..X..1X%d.X.d.X.b%{...X...X.-.Z.b.{.b%Y...Y...Y.Yb
+bb...........d...d.%.b......1....b...b.%.b....1......bb
+ bbbbk...ddddd...dbbbvbbbb...bbjbb...bbbbvbbbb...bbbbb
+     b...d....1......b.%.b...b......1....b.%.b...b
+     b.X.d.X...X...{%b.Z.b.{.b.Z...Z...Z%b.{.b.Y.b
+     b...d......1....b...b.%.b....6......b...b...b
+     bbXbdbbbb...bbbbb...bbbbv+c+b...bbbbb...bb-bb
+      bbb    b...b....1......j...b...b......1....bb
+             b.X.-.Z...Z...Z%b.Z.b.Z.b%{...Y...Y.Yb
+             b...b......5....j...b.%.b....1......bb
+             bbXbbb-bb...bbbbb...bjbjvbbbb...bbbbb
+              bbbb...b...+....5*6....+...b...b
+                 b.Y.j.Z.c.Z..*Z*..Z.c.Z.j.Y.b
+                 b...b...+....8*7....+...b...bbbb
+             bbbbb...bbbbvjbjb...bbbbb...bb-bbbXbb
+            bb......1....b.%.b...j....7......b...b
+            bY.Y...Y...{%b.Z.b.Z.b%Z...Z...Z.-.X.b
+            bb....1......b...b...j......1....b...b    bbb
+             bb-bb...bbbbb...b+c+vbbbb...bbbbb...bbbbfbXbb
+             b...b...b......8....b.%.b...b....1......f...b
+             b.Y.b.{.b%Z...Z...Z.b.{.b.Z.b%{...X...X.f.X.b
+             b...b.%.b....1......b...b.%.b......1....f...b
+         bbbbb...bbbbvbbbb...bbjbb...bbbbvbbbf...fffff...kbbbb
+        bb......1....b.%.b...b....1......b.%.f...f...........bb
+        bY.Y...Y...Y%b.Y.b.Z.-.X...X...{%b.X.f.X.f%X1..X..7X%Xb
+        bb....1......b.{.b...b......1....b...f.%.f...........bb
+         ggggg...gbbbb...bb-bbbbbb...bbbbb...ffffvffff...kbbbb
+         b...g...g......1....bb  b...b....1......f.%.f...b
+         b.Y.g.Y.g%Y...Y...Y.Yb  b.X.-.X...X...X%f.X.f.X.b
+         b...g.%.g....1......bb  b...b......1....f.1.f...b
+     bbbbk...ggggvgggg...bbbbb   bbXbbbbbb...fffff...fffff
+    bb...........g.%.g...b        bbb    b...f...........bb
+    bY*Y8..Y..1Y%g.Y.g.Y.b               b.X.f.X...X..1X.Xb
+    bb...........g.1.g...b               b...f...........bb
+     bbbbk...ggggg...ggggg               bbXbfbbbk...kbbbb
+         b.1.g...........bb               bbb    b.7.b
+         b.Y.g.Y...Y...Y.Yb                      b.X.b
+         b...g...........bb                      b.*.b
+         bbYbgbbbk...kbbbb                       bbXbb
+          bbb    b.8.b                            bbb
                  b.Y.b
                  b.%.b
                  bbYbb
                   bbb
+ENDMAP
+
+# Precision arm randomization. No more than two of a specific divider style
+# per spawning, with specific chances on each style's doors.
+NAME:    crystal_crosses_arms_four
+TAGS:    unrand allow_dup crystal_crosses_four
+SUBST:   + : +++.
+TILE:    b = wall_emerald
+MAP
+b+b.b   bbbbb
+    .   b
+    b   b
+    +   b
+    bbbb bbbb
+        b   +
+        b   b
+        b   .
+    b.b+b   b.b+b
+    .
+    b
+    +
+    b
+ENDMAP
+
+NAME:    crystal_crosses_arms_two
+TAGS:    unrand allow_dup crystal_crosses_two
+SHUFFLE: +. / +. / .+
+SUBST:   + : ++.
+TILE:    b = wall_emerald
+MAP
+bb+bb   bbbbb
+    b   b
+    .   b
+    b   b
+    bbbb bbbb
+        b   b
+        b   .
+        b   b
+    bb.bb   bb+bb
+    b
+    +
+    b
+    b
+ENDMAP
+
+NAME:    crystal_crosses_arms_one
+TAGS:    unrand allow_dup crystal_crosses_one
+SHUFFLE: B+ / B+ / B+ / +B
+SUBST:   B = b, + : +..
+TILE:    b = wall_emerald
+MAP
+bb+bb   bbbbb
+    b   b
+    B   b
+    b   b
+    bbbb bbbb
+        b   b
+        b   B
+        b   b
+    bbBbb   bb+bb
+    b
+    +
+    b
+    b
 ENDMAP
 
 ################################################################################
@@ -807,33 +857,54 @@ ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
-KMONS:   Z = base draconian
-KFEAT:   z = known zot trap w:499 / floor w:1
+# everything here (bar the very top) spawns regularly in depths,
+# if possibly as part of a band.
+MONS:    boggart / wizard w:8 / necromancer w:8 / centaur warrior / \
+         ogre mage / yaktaur w:8 / spriggan rider w:4
+MONS:    rakshasa / hell knight / yaktaur captain w:5 / \
+         vampire mage / ettin / spriggan berserker / \
+         deep troll earth mage / deep troll shaman w:5
+MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
+         vampire knight / spriggan air mage / tengu reaver / \
+         deep elf high priest w:4 / deep elf demonologist w:4 / \
+         deep elf annihilator w:4 / deep elf sorcerer w:4 / \
+         deep elf death mage w:2 / deep elf elementalist w:2
+MONS:    large slime creature / ugly thing w:20 / shapeshifter w:20 / \
+         great orb of eyes / giant orange brain / deep troll
+MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
+         titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \
+         caustic shrike skeleton w:2 / spark wasp zombie w:2
+MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
+         storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
+         iron dragon w:4 / golden dragon w:4 / caustic shrike / \
+         tentacled monstrosity / juggernaut zombie w:2
+MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
+         deep elf blademaster / deep elf master archer / \
+         draconian monk / draconian annihilator / draconian knight / \
+         juggernaut w:20
+KMONS:   Z = draconian knight / draconian annihilator
+KFEAT:   z^ = known zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
-NSUBST:  ] = 1:) / 1:] / 1:>
+NSUBST:  ] = 1:) / 1:] / *:>
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   L : xx., M : xx., j : x.., k : x.., n : x.
 SUBST:   HJOQRm = x, IKNPSl = .
-SUBST:   b : bbbbbbvc, ^ = 09, y = Y
-SUBST:   & = &:25 0:2
-: local Z = you.depth()
-:   subst("9 = 9:90 8:" .. Z + 5)
-:   subst("1 = 9:" .. Z + 2 .. " 0:20")
+SUBST:   b : bbbbbbvc, @ = 14, ! = 24, & = 36
+NSUBST:  14 = 1:36
+: local Z = math.max(math.min(5 + (you.absdepth() - 23) * 5, 30), 10)
+:   subst("2 = 2:20 3:" .. Z)
+:   subst("5 = 5:20 6:" .. Z)
+:   subst("1 = 1:" .. 40 - Z .. " 2:" .. Z - 5)
+:   subst("4 = 4:" .. 40 - Z .. " 5:" .. Z - 5)
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBST:  )]} = ., > = <, " = `
-NSUBST: ' = 1:Z / 2:` / *:`
-KMONS:  & = draconian knight / draconian monk w:15                         / \
-        draconian annihilator / deep elf blademaster w:15                  / \
-        deep elf master archer w:15 / lich w:15 /                          / \
-        ancient lich w:15 / balrug w:5 / executioner w:5
-: else
-KMONS:  & = 8
+SUBST:  )]}> = ., " = `
+NSUBST: ' = 1:Z / 2:^ / *:`
 : end
-SUBST:  '" = .
+SUBST:  ' = .
 MARKER: Y = lua:props_marker { portal=1 }
-FTILE:  Z` = floor_marble
+FTILE:  Z`^ = floor_marble
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -841,64 +912,64 @@ xxxxxxxxxxJ.............xxxxxx
 xxxxxxxxxxx......c.........xxx
 xxxxxxxxx"".....cbc..x......xxx
 xxxxxklxP".....cbcbc.x......Mxxxx
-xxxxxl'"0.....xF.b.cc...n....Lxxxx
-xxxxxx""0....x...x..cc.x.......xxx
-xxxxxP00.........b..0cc.........xxx
-xxxx"".....x..xxb.bxb.cc..1.....xxx
-xxJx".....x..E...b...b.cc0..n...xxx
-xx.......x.......xx.0x.1cc.x.....xx
+xxxxxl'"4.....xF.b.cc...n....Lxxxx
+xxxxxx""1....x...x..cc.x.......xxx
+xxxxxP41.........b..@cc.........xxx
+xxxx"".....x..xxb.bxb.cc..@.....xxx
+xxJx".....x..E...b...b.cc@..n...xxx
+xx.......x.......xx..x.1cc.x.....xx
 xx.............F...x.b*..cc......xx
 xx.....x..E........xb.bxb.cc.xx..xx
-xx....x..x...........b.0.b9cc....xxxxxxxxxxxxx
-xx...cF..x..F....%...xx.1x..cc...xxxxxxxxxxxxxx
-xx..cb...b......%*.....x.b...bc..xxxx0.%.%.0.xxx
+xx....x..x...........b.2.b5cc....xxxxxxxxxxxxx
+xx...cF..x..F....%...xx.2x..cc...xxxxxxxxxxxxxx
+xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
 xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
-xx....cc0b00.b.......b%91b1cc....xxxxxxxx...I.x.xxxx
-xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.^..xxx
+xx....cc@b...b.......b%63b5cc....xxxxxxxx...I.x.xxxx
+xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.!..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
-xx.....x.cc1.x0.xxx.9x*&cc.......xx.......xx...H....xxx
-xxxx..n..0cc.b01.b..1b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....1..cc.bxb.bxb.cc.1.xxx...xxx...xxx...x......0xx
-  xx........cc9..b..1cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.0..SR..0..RS..0.x..xx....%xx
+xx.....x.cc!.x2.xxx.6x*7cc.......xx.......xx...H....xxx
+xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
+ xxx....@..cc.bxb.bxb.cc.@.xxx...xxx...xxx...x......@xx
+  xx........cc5..b..5cc.........x...x........xx......xx
+  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
-    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx0xx
+    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx@xx
    xxc.xx...............x.x...x.J...H.x...x.x...xxxxxxx
-   xc0.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
-   xc....xx.....nnnnxxxxxx.0..NO..z..ON..0.xxxxxxxxxxxxxxx
+   xc4.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
+   xc....xx.....nnnnxxxxxx.@..NO..z..ON..@.xxxxxxxxxxxxxxx
   xc.....xx........nx....x.....c.(.{.c.....x.xxxxxxxxxxxxxx
-  xc.......xx......nx...x.x...x.H...J.x...x.x............xxxxxx
+  xc.......xx......nx...x.x...x.H...J.x...x.x]...........xxxxxx
   xxc......xx.......xx..M..RRR.I.cPc.K.RRR..L...Y..c......xxxxx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x.....cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x].Y..xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x0cc......cb%bc...x..x.0..SR..0..RS..0.x.x.x..0c...x.x....Mxxxx
-    xc..cc..cc.0b.....KJ........x...x.....x....b..0b10.b.........xx
+    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..4c...x.x....Mxxxx
+    xc..cc..cc.4b.....KJ........x...x.....x....b..1b14.b.........xx
     xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx.....x.x..0c.0ccc0.c0..x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx...Y...b.00b*cc&cc%b91.b.......xx
-     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc9x9cbcbcb.bx.....xx
-     xc..k.....c......xx.......xxxxx.Y..x..b..*b9..x..9b*..b..x....xx
-    xxc........c...j....xx......nnnx...x...c.0cc.0|x|*0cc0.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.00c%cc9.|x%*|.1cc*b11.bc..xx
-    xc0.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..1c%cc9.|*%x.....%C...Bx..xx
-    xc........0"b".cc..cc.0b.......x...x..0c.0cc.*|x....C..x...x...xx
-   xxc.mm....ll0c....cc....c.xx....x....x..b..%c90.x.....%.x..x....xx
+     xc.....k..c....xx..KJJ.......xx]....x.x..4c.0ccc5.c...x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx...Y...b.41b*cc7cc%b25.b.......xx
+     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x6cbcbcb.bx.....xx
+     xc..k.....c......xx.......xxxxx.Y..x..b..*b@..x..5b*..b..x....xx
+    xxc........c...j....xx......nnnx...x...c.0cc.@|x|*4cc3.c...x...xx
+    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|.4cc*b36.bc..xx
+    xc2.cc..cc."b".........b......nx.cbcbccccc7xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb'bc......cb%bc....nx..cb..1c%cc3.|*%x.....%C...Bx..xx
+    xc........!"b".cc..cc.4b.......x...x..4c.5cc.*|x....C..x...x...xx
+   xxc.mm....ll!c....cc....c.xx....x....x..b..%c21.x.....%.x..x....xx
    xc..mm...%ll..c........c..xx....x.....xb.bccccc1x....D.x........xx
-   xc......xx%...c.....k..c....xx..........b..9c*ccc.C%D...........xx
-  xc%.....%xx.....c..%...c.....xx........x.x.1.c.0cc.....D.x.......xx
+   xc......xx%...c.....k..c....xx..........b..2c*ccc.C%D...........xx
+  xc%.....%xx.....c..%...c.....xx........x.x..5c.5cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
   xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
-   xc..ll%...mm..c........c...j....xx..........b..1b........"""JRlxxx
-   xxc1ll....mm.c....cc....c.......xx.cxM....x.x..1c........"'"jxxxxx
-    xc^1........c0.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
-    xxcc......cc.ccxxxxxxcc0cc.....0ccxxxx.......xbcBx......Jjklxxxxx
+   xc&.ll%...mm..c........c...j....xx..........b..3b........"""JRlxxx
+   xxc5ll....mm.c....cc....c.......xx.cxM....x.x..6c........"'"jxxxxx
+    xc25........c2.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+    xxcc&.....cc.ccxxxxxxcc@cc.....4ccxxxx.......xbcBx......Jjklxxxxx
      xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
        xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx
          xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx

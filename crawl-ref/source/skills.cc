@@ -27,7 +27,7 @@
 #include "misc.h"
 #include "notes.h"
 #include "output.h"
-#include "random-weight.h"
+#include "random.h"
 #include "religion.h"
 #include "skill_menu.h"
 #include "sprint.h"
@@ -105,6 +105,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Gozag's case, gold.
+    // or, in U's case, invocations skill.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
 };
@@ -187,6 +188,25 @@ int one_level_cost(skill_type sk)
         return 0;
     return skill_exp_needed(you.skills[sk] + 1, sk)
            - skill_exp_needed(you.skills[sk], sk);
+}
+
+/**
+ * The number displayed in the 'cost' interface on the m screen.
+ *
+ * @param sk the skill to compute the cost of
+ * @returns the cost of raising sk from floor(level) to ceiling(level),
+ *          as a multiple of skill_cost_baseline()
+ */
+float scaled_skill_cost(skill_type sk)
+{
+    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
+        return 0;
+    int baseline = skill_cost_baseline();
+    int next_level = one_level_cost(sk);
+    if (skill_has_manual(sk))
+        baseline *= 2;
+
+    return (float)next_level / baseline;
 }
 
 // Characters are actually granted skill points, not skill levels.
@@ -289,7 +309,7 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (you.skills[exsk] - n == MAX_SKILL_LEVEL)
     {
-        you.train[exsk] = 1;
+        you.train[exsk] = TRAINING_ENABLED;
         need_reset = true;
     }
 
@@ -302,14 +322,14 @@ static void _change_skill_level(skill_type exsk, int n)
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
     if (exsk == SK_FIGHTING)
-        calc_hp();
+        recalc_and_scale_hp();
 }
 
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill)
 {
     if (exsk == SK_FIGHTING)
-        calc_hp();
+        recalc_and_scale_hp();
 
     if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
         calc_mp();
@@ -438,7 +458,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    for (ability_type abil : get_god_abilities(true, true))
+    for (ability_type abil : get_god_abilities())
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
@@ -570,12 +590,12 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
-            you.train[i] = you.train_alt[i] = true;
+            you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
             // Skills are on by default in auto mode and off in manual.
-            you.train[i] = you.auto_training;
-            you.train_alt[i] = !you.auto_training;
+            you.train[i] = (training_status)you.auto_training;
+            you.train_alt[i] = (training_status)!you.auto_training;
         }
 }
 
@@ -802,8 +822,8 @@ static bool _level_up_check(skill_type sk, bool simu)
         you.training[sk] = 0;
         if (!simu)
         {
-            you.train[sk] = 0;
-            you.train_alt[sk] = 0;
+            you.train[sk] = TRAINING_DISABLED;
+            you.train_alt[sk] = TRAINING_DISABLED;
         }
         return true;
     }
@@ -1283,7 +1303,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_EVOCATIONS:
-            if (god == GOD_NEMELEX_XOBEH)
+            if (god == GOD_PAKELLAS)
                 result = god_title(god, species, piety);
             break;
 
@@ -1439,13 +1459,18 @@ bool is_harmful_skill(skill_type skill)
     return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
-bool all_skills_maxed(bool inc_harmful)
+/**
+ * Has the player maxed out all skills?
+ *
+ * @param really_all If true, also consider skills that are harmful and/or
+ *        currently untrainable. Useless skills are never considered.
+ */
+bool all_skills_maxed(bool really_all)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        if (you.skills[i] < MAX_SKILL_LEVEL && you.can_train[i]
-            && !is_useless_skill((skill_type) i)
-            && (inc_harmful || !is_harmful_skill((skill_type) i)))
+        if (you.skills[i] < MAX_SKILL_LEVEL && !is_useless_skill(i)
+            && (really_all || you.can_train[i] && !is_harmful_skill(i)))
         {
             return false;
         }
@@ -1464,7 +1489,7 @@ int skill_bump(skill_type skill, int scale)
 // (i.e., old-style aptitude 50).
 #define APT_DOUBLE 4
 
-static float _apt_to_factor(int apt)
+float apt_to_factor(int apt)
 {
     return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
@@ -1506,7 +1531,7 @@ int species_apt(skill_type skill, species_type species)
 
 float species_apt_factor(skill_type sk, species_type sp)
 {
-    return _apt_to_factor(species_apt(sk, sp));
+    return apt_to_factor(species_apt(sk, sp));
 }
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)

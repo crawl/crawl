@@ -13,9 +13,102 @@ FixedVector<int, NUM_BRANCHES> brdepth;
 FixedVector<int, NUM_BRANCHES> branch_bribe;
 branch_type root_branch;
 
-branch_iterator::branch_iterator() :
-    i(BRANCH_DUNGEON)
+/// A basic ordering for branches.
+static const branch_type logical_branch_order[] = {
+    BRANCH_DUNGEON,
+    BRANCH_TEMPLE,
+    BRANCH_LAIR,
+    BRANCH_SWAMP,
+    BRANCH_SHOALS,
+    BRANCH_SNAKE,
+    BRANCH_SPIDER,
+    BRANCH_SLIME,
+    BRANCH_ORC,
+    BRANCH_ELF,
+#if TAG_MAJOR_VERSION == 34
+    BRANCH_DWARF,
+#endif
+    BRANCH_VAULTS,
+#if TAG_MAJOR_VERSION == 34
+    BRANCH_BLADE,
+    BRANCH_FOREST,
+#endif
+    BRANCH_CRYPT,
+    BRANCH_TOMB,
+    BRANCH_DEPTHS,
+    BRANCH_VESTIBULE,
+    BRANCH_DIS,
+    BRANCH_GEHENNA,
+    BRANCH_COCYTUS,
+    BRANCH_TARTARUS,
+    BRANCH_ZOT,
+    BRANCH_ABYSS,
+    BRANCH_PANDEMONIUM,
+    BRANCH_ZIGGURAT,
+    BRANCH_LABYRINTH,
+    BRANCH_BAZAAR,
+    BRANCH_TROVE,
+    BRANCH_SEWER,
+    BRANCH_OSSUARY,
+    BRANCH_BAILEY,
+    BRANCH_ICE_CAVE,
+    BRANCH_VOLCANO,
+    BRANCH_WIZLAB
+};
+COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
+
+/// Branches ordered loosely by challenge level.
+static const branch_type danger_branch_order[] = {
+    BRANCH_TEMPLE,
+    BRANCH_BAZAAR,
+    BRANCH_TROVE,
+    BRANCH_DUNGEON,
+    BRANCH_SEWER,
+    BRANCH_OSSUARY,
+    BRANCH_BAILEY,
+    BRANCH_LAIR,
+    BRANCH_ICE_CAVE,
+    BRANCH_VOLCANO,
+    BRANCH_LABYRINTH,
+    BRANCH_ORC,
+    BRANCH_SWAMP,
+    BRANCH_SHOALS,
+    BRANCH_SNAKE,
+    BRANCH_SPIDER,
+    BRANCH_VAULTS,
+    BRANCH_ELF,
+    BRANCH_CRYPT,
+    BRANCH_ABYSS,
+    BRANCH_WIZLAB,
+    BRANCH_SLIME,
+    BRANCH_DEPTHS,
+    BRANCH_VESTIBULE,
+    BRANCH_ZOT,
+    BRANCH_PANDEMONIUM,
+    BRANCH_TARTARUS,
+    BRANCH_GEHENNA,
+    BRANCH_COCYTUS,
+    BRANCH_DIS,
+    BRANCH_TOMB,
+    BRANCH_ZIGGURAT,
+#if TAG_MAJOR_VERSION == 34
+    BRANCH_DWARF,
+    BRANCH_BLADE,
+    BRANCH_FOREST,
+#endif
+};
+COMPILE_CHECK(ARRAYSZ(danger_branch_order) == NUM_BRANCHES);
+
+branch_iterator::branch_iterator(branch_iterator_type type) :
+    iter_type(type), i(0)
 {
+}
+
+const branch_type* branch_iterator::branch_order() const
+{
+    if (iter_type == BRANCH_ITER_DANGER)
+        return danger_branch_order;
+    return logical_branch_order;
 }
 
 branch_iterator::operator bool() const
@@ -25,51 +118,9 @@ branch_iterator::operator bool() const
 
 const Branch* branch_iterator::operator*() const
 {
-    static const branch_type branch_order[] = {
-        BRANCH_DUNGEON,
-        BRANCH_TEMPLE,
-        BRANCH_LAIR,
-        BRANCH_SWAMP,
-        BRANCH_SHOALS,
-        BRANCH_SNAKE,
-        BRANCH_SPIDER,
-        BRANCH_SLIME,
-        BRANCH_ORC,
-        BRANCH_ELF,
-#if TAG_MAJOR_VERSION == 34
-        BRANCH_DWARF,
-#endif
-        BRANCH_VAULTS,
-#if TAG_MAJOR_VERSION == 34
-        BRANCH_BLADE,
-        BRANCH_FOREST,
-#endif
-        BRANCH_CRYPT,
-        BRANCH_TOMB,
-        BRANCH_DEPTHS,
-        BRANCH_VESTIBULE,
-        BRANCH_DIS,
-        BRANCH_GEHENNA,
-        BRANCH_COCYTUS,
-        BRANCH_TARTARUS,
-        BRANCH_ZOT,
-        BRANCH_ABYSS,
-        BRANCH_PANDEMONIUM,
-        BRANCH_ZIGGURAT,
-        BRANCH_LABYRINTH,
-        BRANCH_BAZAAR,
-        BRANCH_TROVE,
-        BRANCH_SEWER,
-        BRANCH_OSSUARY,
-        BRANCH_BAILEY,
-        BRANCH_ICE_CAVE,
-        BRANCH_VOLCANO,
-        BRANCH_WIZLAB
-    };
-    COMPILE_CHECK(ARRAYSZ(branch_order) == NUM_BRANCHES);
 
     if (i < NUM_BRANCHES)
-        return &branches[branch_order[i]];
+        return &branches[branch_order()[i]];
     else
         return nullptr;
 }

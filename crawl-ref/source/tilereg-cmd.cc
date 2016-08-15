@@ -13,13 +13,12 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
-#include "misc.h"
+#include "nearby-danger.h"
 #include "process_desc.h"
 #include "process_desc.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
@@ -162,8 +161,6 @@ void CommandRegion::pack_buffers()
         {
             if (i >= m_items.size())
                 break;
-
-            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
 
             InventoryTile &item = m_items[i++];
             if (item.flag & TILEI_FLAG_INVALID)

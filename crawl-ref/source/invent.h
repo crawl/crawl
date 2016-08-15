@@ -21,7 +21,7 @@ enum object_selector
     OSEL_UNIDENT                 =  -3,
 //  OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
-    OSEL_ENCH_ARM                =  -6,
+    OSEL_ENCHANTABLE_ARMOUR      =  -6,
     OSEL_BEOGH_GIFT              =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
@@ -29,11 +29,19 @@ enum object_selector
     OSEL_WORN_ARMOUR             = -11,
 //  OSEL_FRUIT                   = -12,
     OSEL_CURSED_WORN             = -13,
+#if TAG_MAJOR_VERSION == 34
     OSEL_UNCURSED_WORN_ARMOUR    = -14,
     OSEL_UNCURSED_WORN_JEWELLERY = -15,
+#endif
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
+    OSEL_SUPERCHARGE             = -19,
+    OSEL_CURSABLE                = -20, // Items that are cursable and not
+                                        // known-cursed. Unknown-cursed items
+                                        // are included, to prevent information
+                                        // leakage.
+    OSEL_DIVINE_RECHARGE         = -21,
 };
 
 #define PROMPT_ABORT         -1
@@ -75,7 +83,6 @@ private:
 class InvEntry : public MenuEntry
 {
 private:
-    static bool show_prices;
     static bool show_glyph;
 
     mutable string basename;
@@ -85,12 +92,12 @@ private:
 protected:
     static bool show_cursor;
     // Should we show the floor tile, etc?
-    bool show_background;
+    bool show_background = true;
 
 public:
     const item_def *item;
 
-    InvEntry(const item_def &i, bool show_bg = false);
+    InvEntry(const item_def &i);
     string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
@@ -99,11 +106,11 @@ public:
     const string &get_qualname() const;
     const string &get_fullname() const;
     const string &get_dbname() const;
-    bool         is_item_cursed() const;
-    bool         is_item_glowing() const;
-    bool         is_item_ego() const;
-    bool         is_item_art() const;
-    bool         is_item_equipped() const;
+    bool         is_cursed() const;
+    bool         is_glowing() const;
+    bool         is_ego() const;
+    bool         is_art() const;
+    bool         is_equipped() const;
 
     virtual int highlight_colour() const override
     {
@@ -146,19 +153,19 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Make sure this menu does not outlive items, or mayhem will ensue!
     menu_letter load_items(const vector<item_def>& items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
-                        MenuEntry *(*procfn)(MenuEntry *me) = nullptr);
+                        function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
     vector<SelItem> get_selitems() const;
 
@@ -180,8 +187,8 @@ protected:
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
-bool is_item_selected(const item_def &item, int selector);
-bool any_items_of_type(int type_expect, int excluded_slot = -1);
+bool item_is_selected(const item_def &item, int selector);
+bool any_items_of_type(int type_expect, int excluded_slot = -1, bool inspect_floor = false);
 string no_selectables_message(int item_selector);
 
 string slot_description();
@@ -242,4 +249,5 @@ bool item_is_evokable(const item_def &item, bool reach = true,
 bool nasty_stasis(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
+int digit_inscription_to_inv_index(char digit, operation_types oper);
 #endif

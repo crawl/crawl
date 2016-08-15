@@ -24,9 +24,9 @@ Dungeon Crawl Stone Soup maps, specifically at runtime. They can be used in
 every-day minivaults, portal vaults, branch endings and more.
 
 You've probably already used Triggerables in vaults, or seen them in action:
-FogMachines are a randomised Triggerable, while the removal of no
-controlled-teleport from some branch ends upon pickup of the rune is achieved
-through a Triggerable. These often used Triggerables are wrapped in convenience
+FogMachines are a randomised Triggerable, while many altar and trap vaults use
+Triggerables to take some action when the player comes into view or steps on a
+specific square. These often-used Triggerables may be wrapped in convenience
 functions (see section D).
 
 However, Triggerables can be combined with pre-defined Lua functions to achieve

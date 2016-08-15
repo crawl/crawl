@@ -12,7 +12,9 @@
 #include "clua.h"
 #include "command.h"
 #include "describe.h"
+#include "english.h" // apostrophise
 #include "evoke.h"
+#include "godpassive.h" // passive_t::bondage_skill_boost
 #include "hints.h"
 #include "options.h"
 #include "output.h"
@@ -129,8 +131,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (is_set(SKMF_RESKILL_TO) && is_useless_skill(m_sk))
         return false;
 
-    if (is_set(SKMF_RESKILL_FROM)
-        && you.skill_points[m_sk] <= skill_exp_needed(1, m_sk))
+    if (is_set(SKMF_RESKILL_FROM) && !you.skill_points[m_sk])
     {
         if (!keep_hotkey)
             ++m_letter;
@@ -232,11 +233,20 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     {
         m_name->clear_tile();
         if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
-        else if (!you.training[m_sk])
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED),
+                                      TEX_GUI));
+        }
+        else if (you.training[m_sk] == TRAINING_DISABLED)
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE),
+                                      TEX_GUI));
+        }
         else
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]), TEX_GUI));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
+                                      TEX_GUI));
+        }
     }
 #endif
     set_level();
@@ -279,12 +289,14 @@ COLOURS SkillMenuEntry::get_colour() const
         return CYAN;
     }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
+             && (you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false)
+                 // Drained a tiny but nonzero amount.
+                 || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
     {
-        if (you.skill(m_sk, 10, true) > you.skill(m_sk, 10, false))
-            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
-        else
+        if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
+        else
+            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
     }
     else if (mastered())
         return YELLOW;
@@ -296,7 +308,7 @@ COLOURS SkillMenuEntry::get_colour() const
             return LIGHTGREEN;
         return you.train[m_sk] ? LIGHTGREEN : GREEN;
     }
-    else if (you.train[m_sk] == 2)
+    else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
     else
         return LIGHTGREY;
@@ -313,7 +325,7 @@ string SkillMenuEntry::get_prefix()
         letter = ' ';
 
     const int sign = (!you.can_train[m_sk] || mastered()) ? ' ' :
-                                   (you.train[m_sk] == 2) ? '*' :
+                                   (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
     return make_stringf(" %c %c", letter, sign);
@@ -491,19 +503,14 @@ void SkillMenuEntry::set_cost()
 {
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
-    auto baseline = skill_cost_baseline();
-    auto next_level = one_level_cost(m_sk);
     if (skill_has_manual(m_sk))
-    {
-        next_level /= 2;
         m_progress->set_fg_colour(LIGHTGREEN);
-    }
     else
         m_progress->set_fg_colour(CYAN);
 
-    auto ratio = (float)next_level / baseline;
+    auto ratio = scaled_skill_cost(m_sk);
     // Don't let the displayed number go greater than 4 characters
-    if (next_level > 0)
+    if (ratio > 0)
         m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
 }
 
@@ -568,15 +575,18 @@ string SkillMenuSwitch::get_help()
         string result;
         if (skm.is_set(SKMF_ENHANCED))
         {
-            vector<const char *> causes;
+            vector<string> causes;
             if (you.duration[DUR_HEROISM])
                 causes.push_back("Heroism");
-            if (!you.skill_boost.empty() && in_good_standing(GOD_ASHENZARI, 3))
-                causes.push_back("Ashenzari's power");
+
+            if (!you.skill_boost.empty()
+                && have_passive(passive_t::bondage_skill_boost))
+            {
+                causes.push_back(apostrophise(god_name(you.religion))
+                                 + " power");
+            }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
-            if (player_equip_unrand(UNRAND_FENCERS))
-                causes.push_back("the fencer's gloves");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <blue>blue</blue>.";
@@ -743,7 +753,7 @@ void SkillMenu::init(int flag)
             if (!is_useless_skill(sk) && !you.can_train[sk])
             {
                 you.can_train.set(sk);
-                you.train[sk] = false;
+                you.train[sk] = TRAINING_DISABLED;
             }
         }
     }
@@ -1011,7 +1021,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
         return;
 
     // XXX: should use a pointer instead.
-    FixedVector<int8_t, NUM_SKILLS> tmp;
+    FixedVector<training_status, NUM_SKILLS> tmp;
 
     switch (sw)
     {
@@ -1073,6 +1083,11 @@ void SkillMenu::init_flags()
         else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
+
+    // You might be drained by a small enough amount to not affect the
+    // rounded numbers.
+    if (you.attribute[ATTR_XP_DRAIN])
+        set_flag(SKMF_REDUCED);
 }
 
 void SkillMenu::init_title()
@@ -1151,7 +1166,11 @@ void SkillMenu::init_switches()
     m_switches[SKM_SHOW] = sw;
     sw->add(SKM_SHOW_DEFAULT);
     if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+    {
         sw->add(SKM_SHOW_ALL);
+        if (Options.default_show_all_skills)
+            sw->set_state(SKM_SHOW_ALL);
+    }
     sw->update();
     sw->set_id(SKM_SHOW);
     add_item(sw, sw->size(), m_pos);
@@ -1173,13 +1192,19 @@ void SkillMenu::init_switches()
     if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
         sw->add(SKM_VIEW_TRAINING);
+
         if (transferring)
         {
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
+
+        sw->add(SKM_VIEW_COST);
+
+        if (!you.auto_training)
+            sw->set_state(SKM_VIEW_COST);
     }
-    sw->add(SKM_VIEW_COST);
+
     if (you.wizard)
     {
         sw->add(SKM_VIEW_PROGRESS);
@@ -1358,11 +1383,14 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
     ASSERT(you.can_train[sk]);
     if (keyn >= 'A' && keyn <= 'Z')
-        you.train.init(0);
+        you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
-        you.train[sk] = !you.train[sk];
+        you.train[sk] = (you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
-        you.train[sk] = (you.train[sk] + 1) % 3;
+    {
+        you.train[sk]
+            = (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES);
+    }
     else
         die("Invalid state.");
     reset_training();
@@ -1395,11 +1423,7 @@ void SkillMenu::set_title()
         t = make_stringf(format, "source");
     else if (is_set(SKMF_RESKILL_TO))
         t = make_stringf(format, "destination");
-    else if (is_set(SKMF_EXPERIENCE_CARD) && is_set(SKMF_EXPERIENCE_POTION))
-        t = "You are more experienced. Select the skills to train.";
-    else if (is_set(SKMF_EXPERIENCE_CARD))
-        t = make_stringf(format, "drawn an Experience card");
-    else if (is_set(SKMF_EXPERIENCE_POTION))
+    else if (is_set(SKMF_EXPERIENCE))
         t = make_stringf(format, "quaffed a potion of experience");
 
     m_title->set_text(t);

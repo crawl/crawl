@@ -462,8 +462,6 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     if (feat_is_closed_door(grd(npos)))
         return 2;
 
-    const bool ground_level = !(mons->airborne() || mons->can_cling_to(npos));
-
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
@@ -472,7 +470,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     // Try to avoid (known) traps.
-    const trap_def* ptrap = find_trap(npos);
+    const trap_def* ptrap = trap_at(npos);
     if (ptrap)
     {
         const bool knows_trap = ptrap->is_known(mons);
@@ -488,9 +486,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
             return 1;
         }
 
-        // Mechanical traps can be avoided by flying, as can shafts, and
-        // tele traps are never traversable anyway.
-        if (knows_trap && ground_level)
+        if (knows_trap)
             return 2;
     }
 

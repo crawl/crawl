@@ -73,10 +73,10 @@ bool blink_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool distortion_tele_fineff::mergeable(const final_effect &fe) const
+bool teleport_fineff::mergeable(const final_effect &fe) const
 {
-    const distortion_tele_fineff *o =
-        dynamic_cast<const distortion_tele_fineff *>(&fe);
+    const teleport_fineff *o =
+        dynamic_cast<const teleport_fineff *>(&fe);
     return o && def == o->def;
 }
 
@@ -238,7 +238,7 @@ void blink_fineff::fire()
         defend->blink();
 }
 
-void distortion_tele_fineff::fire()
+void teleport_fineff::fire()
 {
     actor *defend = defender();
     if (defend && defend->alive() && !defend->no_tele(true, false))
@@ -284,7 +284,7 @@ void trj_spawn_fineff::fire()
                               mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
                                         foe, MG_DONT_COME, GOD_JIYVA)))
         {
-            // Don't allow milking the royal jelly.
+            // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD;
             spawned++;
         }
@@ -311,10 +311,10 @@ void trj_spawn_fineff::fire()
         }
     }
     else if (spawned == 1)
-        mpr("One of the royal jelly's fragments survives.");
+        mpr("One of the Royal Jelly's fragments survives.");
     else
     {
-        mprf("The dying royal jelly spits out %s more jellies.",
+        mprf("The dying Royal Jelly spits out %s more jellies.",
              number_in_words(spawned).c_str());
     }
 }
@@ -436,65 +436,34 @@ void starcursed_merge_fineff::fire()
 
 void shock_serpent_discharge_fineff::fire()
 {
-    monster* serpent = defender() ? defender()->as_monster() : nullptr;
-    int range = min(3, power);
-    bool pause = false;
+    if (!oppressor.alive())
+        return;
 
-    bolt beam;
-    beam.flavour    = BEAM_VISUAL;
-    beam.colour     = LIGHTCYAN;
-    beam.glyph      = dchar_glyph(DCHAR_EXPLOSION);
-#ifdef USE_TILE
-    beam.tile_beam = -1;
-#endif
-    beam.draw_delay = 0;
-    coord_def tl(position.x - range, position.y - range);
-    coord_def br(position.x + range, position.y + range);
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-        if (in_bounds(*ri) && !cell_is_solid(*ri))
-        {
-            if (!pause && you.see_cell(*ri))
-                pause = true;
-            beam.draw(*ri);
-        }
+    const int max_range = 3; // v0v
+    if (grid_distance(oppressor.pos(), position) > max_range)
+        return;
 
-    if (pause)
-        scaled_delay(100);
-
-    vector <actor*> targets;
-    for (actor_near_iterator ai(position); ai; ++ai)
-    {
-        if (ai->pos().distance_from(position) <= range
-            && !mons_atts_aligned(attitude, ai->is_player() ? ATT_FRIENDLY
-                                                            : mons_attitude(ai->as_monster()))
-            && ai->res_elec() < 3)
-        {
-            targets.push_back(*ai);
-        }
-    }
-
+    const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
-             power < 4 ? "" : " violently");
+        mprf("%s electric aura discharges%s, shocking %s!",
+             serpent->name(DESC_ITS).c_str(),
+             power < 4 ? "" : " violently",
+             oppressor.name(DESC_THE).c_str());
     }
-    else if (pause)
-        mpr("The air sparks with electricity!");
-
-    // FIXME: should merge the messages.
-    for (actor *act : targets)
+    else if (you.can_see(oppressor))
     {
-        // May have died because of hurting an earlier monster (tentacles).
-        if (!act->alive())
-            continue;
-        int amount = roll_dice(3, 4 + power * 3 / 2);
-        amount = act->apply_ac(amount, 0, AC_HALF);
-
-        if (you.see_cell(act->pos()))
-            mprf("The lightning shocks %s.", act->name(DESC_THE).c_str());
-        act->hurt(serpent, amount, BEAM_ELECTRICITY, KILLED_BY_BEAM,
-                  "a shock serpent", "electric aura");
+        mprf("The air sparks with electricity, shocking %s!",
+             oppressor.name(DESC_THE).c_str());
     }
+
+
+    int amount = roll_dice(3, 4 + power * 3 / 2);
+    amount = oppressor.apply_ac(amount, 0, AC_HALF);
+    // hack
+    actor_at(oppressor.pos())->hurt(serpent, amount, BEAM_ELECTRICITY,
+                                    KILLED_BY_BEAM,
+                                    "a shock serpent", "electric aura");
 }
 
 void delayed_action_fineff::fire()
@@ -545,8 +514,8 @@ void bennu_revive_fineff::fire()
 
 
     monster *newmons = create_monster(mgen_data(MONS_BENNU,
-                                                att, 0, 0, 0, posn, foe,
-                                                res_visible ? MG_DONT_COME : 0));
+                                                attitude, 0, 0, 0, posn, foe,
+                                                res_visible ? MG_DONT_COME : MG_NONE));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
 }

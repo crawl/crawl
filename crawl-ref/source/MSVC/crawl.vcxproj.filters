@@ -12,7 +12,6 @@
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
     <ClCompile Include="..\artefact.cc" />
-    <ClCompile Include="..\asg.cc" />
     <ClCompile Include="..\attack.cc" />
     <ClCompile Include="..\attitude-change.cc" />
     <ClCompile Include="..\beam.cc" />
@@ -132,6 +131,7 @@
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
     <ClCompile Include="..\package.cc" />
+    <ClCompile Include="..\pcg.cc" />
     <ClCompile Include="..\perlin.cc" />
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
@@ -180,6 +180,7 @@
     <ClCompile Include="..\mon-util.cc" />
     <ClCompile Include="..\monster.cc" />
     <ClCompile Include="..\mutation.cc" />
+    <ClCompile Include="..\nearby-danger.cc" />
     <ClCompile Include="..\newgame.cc" />
     <ClCompile Include="..\ng-init.cc" />
     <ClCompile Include="..\ng-input.cc" />
@@ -318,7 +319,6 @@
     <ClInclude Include="..\art-enum.h" />
     <ClInclude Include="..\art-func.h" />
     <ClInclude Include="..\artefact.h" />
-    <ClInclude Include="..\asg.h" />
     <ClInclude Include="..\attack.h" />
     <ClInclude Include="..\attitude-change.h" />
     <ClInclude Include="..\beam.h" />
@@ -505,6 +505,7 @@
     <ClInclude Include="..\ouch.h" />
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\pattern.h" />
+    <ClInclude Include="..\pcg.h" />
     <ClInclude Include="..\place.h" />
     <ClInclude Include="..\player.h" />
     <ClInclude Include="..\playable.h" />
@@ -512,7 +513,6 @@
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
     <ClInclude Include="..\random-var.h" />
-    <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
     <ClInclude Include="..\ranged_attack.h" />
     <ClInclude Include="..\ray.h" />

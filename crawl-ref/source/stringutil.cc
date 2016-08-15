@@ -38,7 +38,7 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 #endif
 
 
-string lowercase_string(const string s)
+string lowercase_string(const string &s)
 {
     string res;
     ucs_t c;

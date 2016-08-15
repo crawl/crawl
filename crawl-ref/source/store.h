@@ -306,7 +306,7 @@ public:
     unsigned int size() const;
     bool      empty() const;
 
-    void      erase(const string key);
+    void      erase(const string& key);
     void      erase(const char *key) { erase(string(key)); }
     void      clear();
 

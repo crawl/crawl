@@ -41,9 +41,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_forest
   elseif you.in_branch("crypt") then
     streams = false
     scale = 0.5
-    plant_mons = "w:2 col:darkgrey plant name:withered name_adjective               \
-                  tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
-                  name_adjective tile:mons_withered_plant"
+    plant_mons = "withered plant"
     colour("t = w:5 lightgrey / w:5 darkgrey / brown")
     set_feature_name("tree", "dead tree")
     lakes = false

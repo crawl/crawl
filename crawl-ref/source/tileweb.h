@@ -95,6 +95,7 @@ public:
     int getch_ck();
     void resize();
     void clrscr();
+    void layout_reset();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 
@@ -195,6 +196,7 @@ public:
 
     void clear_crt_menu() { m_text_menu.clear(); }
 
+    void set_text_cursor(bool enabled);
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
@@ -208,6 +210,7 @@ protected:
     vector<sockaddr_un> m_dest_addrs;
 
     bool m_controlled_from_web;
+    bool m_need_flush;
 
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, string data);
@@ -236,6 +239,7 @@ protected:
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
+    bool m_layout_reset;
 
     coord_def m_origin;
 
@@ -266,6 +270,8 @@ protected:
 
     coord_def m_cursor[CURSOR_MAX];
     coord_def m_last_clicked_grid;
+    bool m_text_cursor;
+    bool m_last_text_cursor;
 
     bool m_has_overlays;
 
@@ -284,6 +290,7 @@ protected:
 
     void _send_version();
     void _send_options();
+    void _send_layout();
 
     void _send_everything();
 

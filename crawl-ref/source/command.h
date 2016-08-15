@@ -11,9 +11,6 @@
 void list_armour();
 void list_jewellery();
 
-void toggle_viewport_monster_hp();
-void toggle_viewport_weapons();
-
 void show_specific_help(const string& key);
 void show_levelmap_help();
 void show_targeting_help();

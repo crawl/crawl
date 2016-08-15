@@ -26,7 +26,7 @@ function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
         dgn.persist.grunt_iron_hall_animated = true
         for slave in iter.slave_iterator("trap_statue", 1) do
         if crawl.one_chance_in(4) then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+            dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
             dgn.create_monster(slave.x, slave.y,
                                "patrolling iron golem generate_awake")
         end
@@ -40,7 +40,7 @@ function dis_divider(e, water)
    e.orient("north")
    e.depth("Dis:$")
    e.kmons("1 = hell sentinel")
-   e.kmons("2 = iron dragon")
+   e.kmons("2 = iron dragon / iron giant w:5")
    if water then
       e.kfeat("2w = deep_water")
       e.kmask("w = no_monster_gen")
@@ -387,6 +387,48 @@ MAP
          ...
 ENDMAP
 
+NAME:   lightli_tower_of_babel
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Dis, !Dis:$
+ORIENT: float
+MONS:   flying skull
+KMONS:  2 = patrolling iron giant
+KFEAT:  2 = )
+TILE:   c = wall_marble
+MAP
+            vvvvv
+       vvvvvv...vvvvv
+    vvvvv...........vvvvv
+ vvvv........1.1........vvvv
+vv.........c.....c.........vv
+v..2.cc....1..c..1....cc....v
+v....cc.......1.......cc....v
+v......v.............v......v
+v.......v...vv.vv...v.......v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......vvvvv...vvvvv.......v
+v..c1...vvvvvv.vvvvvv...1c..v
+v......vvvvvvv+vvvvvvv......v
+v.1....v...vv...vv...v....1.v
+v...c1......+.(.+......1c...v
+v.1....v...vv...vv...v....1.v
+v......vvvvvvv+vvvvvvv......v
+v..c1...vvvvvv.vvvvvv...1...v
+v.......vvvvv...vvvvv....c..v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......v...vv.vv...v.......v
+v......v.............v......v
+v....cc.......1.......cc....v
+v....cc....1..c..1....cc....v
+vv.........c.....c.........vv
+ vvvv........1.1........vvvv
+    vvvvv...........vvvvv
+        vvvvv...vvvvv
+            vvvvv
+ENDMAP
+
 NAME:    hangedman_dis_decor_blocks_mantle
 TAGS:    extra transparent decor
 SHUFFLE: ABC, DEFG
@@ -578,8 +620,8 @@ DEPTH:   Dis, !Dis:$
 ORIENT:  float
 MONS:    skeletal warrior / vampire w:6 / wight w:2          / \
          zombie / skeleton / hell hound / rust devil w:14    / \
-         red devil / blue devil / sun demon w:6              / \
-         ice devil w:6 / hellwing / soul eater w:6
+         red devil / ice devil w:16 / sun demon w:6          / \
+         hellwing / soul eater w:6
 MONS:    reaper / hellion / tormentor / executioner w:2      / \
          bone dragon / lich / ancient champion               / \
          balrug w:2 / blizzard demon w:2 / shadow demon w:2  / \
@@ -683,7 +725,7 @@ ENDMAP
 
 NAME:    dis_old
 MONS:    patrolling Dispater, brimstone fiend, Ice Fiend
-MONS:    rust devil, war gargoyle, iron dragon
+MONS:    rust devil, war gargoyle, iron dragon / iron giant w:5
 KMONS:   7 = hell sentinel
 KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
@@ -726,7 +768,7 @@ ENDMAP
 NAME:    dis_mu
 KFEAT:   o = granite_statue
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, rust devil
-MONS:    war gargoyle, iron dragon, iron troll
+MONS:    war gargoyle, iron dragon / iron giant w:5, iron troll
 KMONS:   8 = iron golem
 KMONS:   9 = hell sentinel
 KMONS:   0 = quicksilver dragon
@@ -782,7 +824,7 @@ MAP
 ENDMAP
 
 NAME:   dis_grunt
-MONS:   patrolling Dispater, Hell Sentinel, iron dragon
+MONS:   patrolling Dispater, Hell Sentinel, iron dragon / iron giant w:5
 MONS:   rust devil / iron imp w:20
 MONS:   iron troll, quicksilver dragon, cacodemon
 NSUBST: G = 4:8 / *:G
@@ -958,15 +1000,16 @@ ENDMAP
 NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
-MONS:    iron troll, iron dragon, cacodemon
-SUBST:   5=5.,6=6.,7=7.,8=4:15 67...,0=09988...
-SHUFFLE: 67
+MONS:    iron troll, iron dragon / iron giant w:2
+MONS:    cacodemon / ancient champion w:8
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 # four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
+NSUBST:  5 = 1:5 / 1:. / * = 5., 6 = 1:6 / 1:. / * = 6., 7 = 1:7 / 1:. / * = 7.
+NSUBST:  8 = 2:4 / 1:6 / 1:7 / 4 = 4.. / 4 = 67. / *:.
+SUBST:   0 = 09988...
+SHUFFLE: 67
 KMASK:   W = no_monster_gen
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
@@ -983,12 +1026,12 @@ v....v__v__v$$$$$v__v__v....v.........vvvvvv....v.....G.6..G....+....v
 v....v__v__v$|||$v__v__v....vvvvvv..7..v0..A..0.v.....G....G....v.0..v
 v....v__v__v$|O|$v__v__v....v....v.....v...v....v..6..........vvvvvvvv
 v..8.v__v__v$|||$v__v__v.8..B..0.v.....v+vvvv+vvv.............v......v
-v....v__v__v$$$$$v__v__v....v....+.7.......v..........G....G..v......v
-v....v__v__vvv+vvv__v__v....v.0..v...vvvvvvv..........G....G..v..0...v
-v....v__v____3_2____v__v....vvvvvv...v.....vvv+v..6......6....v......v
-v..8.v__v___________v__v.8..v......7.v..0..v...v..............v+vvvvvv
-v....v__vvvv__1__vvvv__v....vv+vvv...+.....A0..v......G....G......+..v
-v....v_____v_____v_____v....v....v...v..0..vvvvvvv....G....G......v0.v
+v....v__v..v$$$$$v..v__v....v....+.7.......v..........G....G..v......v
+v....v__v..vvv+vvv..v__v....v.0..v...vvvvvvv..........G....G..v..0...v
+v....v__v....3.2....v__v....vvvvvv...v.....vvv+v..6......6....v......v
+v..8.v__v...........v__v.8..v......7.v..0..v...v..............v+vvvvvv
+v....v__vvvv..1..vvvv__v....vv+vvv...+.....A0..v......G....G......+..v
+v....v_____v.....v_____v....v....v...v..0..vvvvvvv....G....G......v0.v
 v....v_____vvvvvvv_____v....B..0.v...v.....v.....v.......6....6.v+vvvv
 v....vvvv___________vvvv....v....v.7.vvvvvvv.....v..............v....v
 v.......v___________v.......vvvvvv.........v..0..v....G....G....v.0..v
@@ -1053,7 +1096,8 @@ TAGS:    no_monster_gen
 ORIENT:  encompass
 MONS:    rust devil w:40 / skeletal warrior
 MONS:    war gargoyle, brimstone fiend, ice fiend, hell sentinel
-MONS:    patrolling iron dragon w:15 / patrolling quicksilver dragon
+MONS:    patrolling iron dragon / patrolling quicksilver dragon / \
+         patrolling iron giant w:5
 MONS:    patrolling Dispater
 KMONS:   8 = vampire knight w:8 / hell knight band w:8 / ancient champion w:18 / \
          reaper w:6 / cacodemon w:2 / executioner w:6 / balrug w:4 / \
@@ -1136,4 +1180,104 @@ vvv|||8.....%%%%%v..................vvvGGv.....G.....G......5..Gvvv
 vvvvvvvvvvvvvvvvvv...vv...vv...vv...vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+##############################################################################
+# Dis Layers by Grunt
+##############################################################################
+NAME:    dis_grunt_layers
+ORIENT:  encompass
+MONS:    patrolling Dispater, Hell Sentinel
+MONS:    iron dragon / iron giant w:5 / quicksilver dragon w:5
+MONS:    rust devil / iron imp w:20, iron troll
+MONS:    brimstone fiend, ice fiend
+SHUFFLE: {([<
+NSUBST:  2 = 3:6 / 3:7 / *:2
+NSUBST:  P = 1:1 / *:2
+NSUBST:  Q = 1:O / *:|
+NSUBST:  R = 1:D / *:.
+NSUBST:  G = 4:8 / *:G
+NSUBST:  d = 1:+ / 1:v / *=+vvv
+NSUBST:  e = 1:+ / 1:v / *=+vvv
+NSUBST:  f = 1:+ / 1:v / *=+vvv
+NSUBST:  . = 20:4 / 10:5 / *:.
+TILE:    G = dngn_statue_iron_golem
+COLOUR:  G = cyan
+KMONS:   8 = iron golem
+KMONS:   9 = war gargoyle
+: serpent_of_hell_setup(_G)
+: dis_setup(_G)
+: dis_rune(_G)
+: dis_statues(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv........vv........vv......................vv........vv....vvvvvvvv
+vvvv........vv........vv..G................G..vv........vv....v..|vvvv
+vvvv........vv........vv....2....v++v....2....vv........vv....v..|vvvv
+vvvv..vvvvv.vv........vv..G....vvv..vvv....G..vv........vv....v..|vvvv
+vvvv..v|||v.vv........vvv.....vv......vv.....vvv........vv....+..|vvvv
+vvvv..v...v.vv........vvv.G...v........v...G.vvv........vv....v..|vvvv
+vvvv..vvv+v.vvvvev.....vv....vv........vv....vv........vvv....vvvvvvvv
+vvvv.........v.9.v.....vv.G..v..........v..G.vv........vv.........vvvv
+vvvvv........v...e.....vv....v.v$.PP.$v.v....vv........vv........vvvvv
+vv.vv........+.9.v.....vvv...vv|v$$$$v|vv...vvvv.......vv........vv.vv
+vv.vv........vvvev.....vvv....v|vvvvvv|v....v.3v.......vv........vv.vv
+vv.vv........vv.........vv....vv||vv||vv....v3.v.......vv.vvvvv..vv.vv
+vv.vv........vv.........vv.....vvvQQvvv.....f..v.......vv.v$$$v..vv.vv
+vv.vv........vv.........vvv......vvvv......vvv+v.......vv.v...v..vv.vv
+vv.vv........vvv.........vv....G......G....vv.........vvv.vv+vv..vv.vv
+vv.vv.........vv.........vvv..2..G..G..2..vvv.........vv.........vv.vv
+vv.vvv..vvvv..vv..........vv......RR......vv..........vv........vvv.vv
+vv..vv..v$$v..vv.......vvvvvfv...........vvv...2......vv........vv..vv
+vv..vv..v..v..vvv......v.....v.........vfvv..........vvv........vv..vv
+vv..vv..v..v...vv......v.3.3.f.........v.3v....vvevv.vv.........vv..vv
+vv..vv..v+vv...vv......v.....vv..G..G..f3.v....v...v.vv.........vv..vv
+vv..vv.........vvv.....vv+vvvvvv......vvv+v....e.9.vvvv.........vv..vv
+vv..vvv.........vv..3.........vvv....vvv.......v...vvv.........vvv..vv
+vv...vv.........vv.............vvvvvvvv........v...vvv.........vv...vv
+vv...vv.........vvv..............vvvv......2...e...vvv.........vv...vv
+vv...vv..........vv.......2....................v...vv.vvvvv....vv...vv
+vv...vvv.........vv...................vvvv.....v...vv.v%%%v...vvv...vv
+vv....vv.........vvv..................v%$v.....v.9.vv.v...v...vv....vv
+vv....vv..........vv..................v..v.....e...+..v...v...vv....vv
+vv....vv..........vv...........vvvvv..v+vv.....vvvvv..v+vvv...vv....vv
+vv....vvv..........vvvevv......v%%%v........3....vv..........vvv....vv
+vv...vvvvv.........vv9..v......v$$$v............vvv..........vv.....vv
+vv...v...d..vvvvv...v...e......v...v............vv...........vv.....vv
+vv...v.9.v..v%%%v...+..9v......+...v....2......vvv..........vvv.....vv
+vv...v...d..v...v...vvvvv......v...v..........vvv...........vv......vv
+vv...+.9.v..vv+vv.....vv...3...vvvvv..........vv...vvvv.....vv....vvvv
+vvv..v...vv...........vvv................vvevvvv...v.$v....vvv....vvvv
+vvv..vvvvvv............vvv...............v.....v...v.$v....vv.....vvvv
+vvv......vv.............vvv..............e.9.9.v...+.$v....vv.....vvvv
+vvv......vvv.............vvv.......3.....v.....v...vvvv...vvv.....vvvv
+vvv.......vv......2....vvvvvev...........vvvv+vv..........vv........vv
+vv........vvv..........v.....vv........vvvv.......3......vvv........vv
+vv.........vv..3.......v.9.9.vvvvv..vvvvvv...............vv.........vv
+vv.........vvv.........+.....vvvvvvvvvvv................vvv.........vv
+vv..........vv.........vvvvvvv...vvvv.............vvdvvvvvvvv.......vv
+vv..........vvv................3..........2.......v.......9.v.......vv
+vv...........vv...................................d..9......v.......vv
+vv..vv+vvvv..vvv........3........vvvv.............v.........v.......vv
+vv..v%...$v...vvvvdvv.........2..v.%v.............vdvvvvvv+vv...vvvvvv
+vv..v%...$v...vvv9..d............+.%v......v+vv......vvv........v$$vvv
+vv..v%...$v....vv..9v...vvdvv....vvvv......v..v.....vvv.........v..vvv
+vv..vvvv+vv.....+...d...v...v..............v$$v.....vv..........v+vvvv
+vv..............vvvvv...v.9.v....3.........vvvv....vvv..............vv
+vv...............vvv....v...d.....................vvv...............vv
+vv................vvv...d...v.....vvv+v..........vvv................vv
+vv.................vvv..v...v.....v%..v.........vvv.................vv
+vv....vvvvv.........vvv.v...v.....v..$v..vvdvv.vvv.......vvvv+vv....vv
+vv....v%%%v..........vvvv...v..3..v+vvv..v..9vvvv........v%...$v....vv
+vv....v...v...........vvv.9.v............d...vvv..vvvv...v%...$v....vv
+vv....v...v............vv...v............v9..vv...v.$v...v%...$v....vv
+vv....v+vvv...vvvv......v+vvv............vvv+v....+.$v...vv+vvvv....vv
+vv............+..v........vvvvvv......vvvvvv......vvvv..............vv
+vv.{..........v%%v..........vvvvvvvvvvvvvv........................<.vv
+vv............vvvv.............vvvvvvvv.............................vv
+vv...[................vvvvv........................vvvvv........(...vv
+vv....................vvvvv........................vvvvv............vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP

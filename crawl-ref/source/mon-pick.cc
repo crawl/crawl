@@ -199,7 +199,7 @@ static bool _not_skeletonable(monster_type mt)
         return true;
     if (!mons_zombie_size(mt) || mons_is_unique(mt))
         return true;
-    if (mons_class_holiness(mt) != MH_NATURAL)
+    if (!(mons_class_holiness(mt) & MH_NATURAL))
         return true;
     return !mons_skeleton(mt);
 }
@@ -225,14 +225,6 @@ void debug_monpick()
         }
     }
 
-    if (!fails.empty())
-    {
-        FILE *f = fopen("mon-pick.out", "w");
-        if (!f)
-            sysfail("can't write test output");
-        fprintf(f, "%s", fails.c_str());
-        fclose(f);
-        fail("mon-pick mismatches (dumped to mon-pick.out)");
-    }
+    dump_test_fails(fails, "mon-pick");
 }
 #endif

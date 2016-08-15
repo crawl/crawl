@@ -24,6 +24,8 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
+#include "godcompanions.h" // hep stuff
+#include "godpassive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"
@@ -39,7 +41,9 @@
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "notes.h"
+#include "output.h" // redraw_screens
 #include "religion.h"
+#include "spl-clouds.h" // big_cloud
 #include "stash.h"
 #include "state.h"
 #include "stairs.h"
@@ -121,8 +125,7 @@ static void _write_abyssal_features()
         return;
 
     dprf(DIAG_ABYSS, "Writing a mock-up of old level.");
-    const int count = abyssal_features.size();
-    ASSERT(count == sqr(2 * LOS_RADIUS + 1));
+    ASSERT((int)abyssal_features.size() == sqr(2 * LOS_RADIUS + 1));
     const int scalar = 0xFF;
     int index = 0;
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
@@ -143,7 +146,7 @@ static void _write_abyssal_features()
                         grd(p) = abyssal_features[index];
                         env.level_map_mask(p) = MMT_VAULT;
                         if (cell_is_solid(p))
-                            delete_cloud_at(p);
+                            delete_cloud(p);
                         if (monster* mon = monster_at(p))
                             _push_displaced_monster(mon);
                     }
@@ -168,9 +171,9 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool lugonu_favoured = in_good_standing(GOD_LUGONU, 4);
+    const bool god_favoured = have_passive(passive_t::attract_abyssal_rune);
 
-    const double depth = you.depth + lugonu_favoured;
+    const double depth = you.depth + god_favoured;
 
     return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
@@ -369,18 +372,29 @@ static string _who_banished(const string &who)
     return who.empty() ? who : " (" + who + ")";
 }
 
-void banished(const string &who)
+static int _banished_depth(const int power)
+{
+    // Linear, with the max going from (1,1) to (25,5)
+    // and the min going from (9,1) to (27,5)
+    // Currently using HD for power
+
+    // This means an orc will send you to A:1, an orc warrior
+    // has a small chance of A:2,
+    // Elves have a good shot at sending you to A:3, but won't
+    // always
+    // Ancient Liches are sending you to A:5 and there's nothing
+    // you can do about that.
+    const int maxdepth = div_rand_round((power + 5), 6);
+    const int mindepth = (4 * power + 7) / 23;
+    return min(5, max(1, random_range(mindepth, maxdepth)));
+}
+
+void banished(const string &who, const int power)
 {
     ASSERT(!crawl_state.game_is_arena());
     push_features_to_abyss();
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
-
-    if (!player_in_branch(BRANCH_ABYSS))
-    {
-        mark_milestone("abyss.enter",
-                       "was cast into the Abyss!" + _who_banished(who));
-    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -395,12 +409,19 @@ void banished(const string &who)
         return;
     }
 
-    const string what = "Cast into the Abyss" + _who_banished(who);
+    const int depth = _banished_depth(power);
+    const string what = make_stringf("Cast into level %d of the Abyss", depth)
+                      + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
-    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
+    push_features_to_abyss();
+    floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
+                     level_id(BRANCH_ABYSS, depth), true);
+    // This is an honest abyss entry, mark milestone
+    mark_milestone("abyss.enter",
+        "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
     if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
@@ -564,6 +585,12 @@ static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_abyss_transit())
         mons.set_transit(level_id(BRANCH_ABYSS));
+    // make sure we don't end up with an invalid hep ancestor
+    else if (hepliaklqana_ancestor() == mons.mid)
+    {
+        remove_companion(&mons);
+        you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
+    }
 
     mons.destroy_inventory();
     monster_cleanup(&mons);
@@ -594,8 +621,6 @@ static void _push_displaced_monster(monster* mon)
 
 static void _place_displaced_monsters()
 {
-    list<monster*>::iterator mon_itr;
-
     for (monster *mon : displaced_monsters)
     {
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
@@ -688,7 +713,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     }
 
     // Delete cloud.
-    delete_cloud_at(p);
+    delete_cloud(p);
 
     env.pgrid(p)        = 0;
     env.grid_colours(p) = 0;
@@ -963,7 +988,7 @@ void maybe_shift_abyss_around_player()
         ++j;
 
     dprf(DIAG_ABYSS, "Number of monsters present: %d", j);
-    dprf(DIAG_ABYSS, "Number of clouds present: %d", env.cloud_no);
+    dprf(DIAG_ABYSS, "Number of clouds present: %d", int(env.cloud.size()));
 #endif
 }
 
@@ -1178,11 +1203,7 @@ static void _update_abyss_terrain(const coord_def &p,
                 check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
         }
         else if (feat_is_solid(feat))
-        {
-            int cloud = env.cgrid(rp);
-            if (cloud != EMPTY_CLOUD)
-                delete_cloud(cloud);
-        }
+            delete_cloud(rp);
         monster* mon = monster_at(rp);
         if (mon && !monster_habitable_grid(mon, feat))
             _push_displaced_monster(mon);
@@ -1362,11 +1383,11 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
 static void _initialize_abyss_state()
 {
-    abyssal_state.major_coord.x = random_int() & 0x7FFFFFFF;
-    abyssal_state.major_coord.y = random_int() & 0x7FFFFFFF;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.major_coord.x = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.major_coord.y = get_uint32() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
-    abyssal_state.depth = random_int() & 0x7FFFFFFF;
+    abyssal_state.depth = get_uint32() & 0x7FFFFFFF;
     abyssal_state.destroy_all_terrain = false;
     abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
@@ -1376,7 +1397,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 {
     abyssal_state.major_coord = coord;
     abyssal_state.depth = depth;
-    abyssal_state.seed = random_int() & 0x7FFFFFFF;
+    abyssal_state.seed = get_uint32() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
     abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
@@ -1574,7 +1595,7 @@ retry:
 static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
+    if (!have_passive(passive_t::slow_abyss))
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
         delta *= 5;
@@ -1673,13 +1694,8 @@ static bool _incorruptible(monster_type mt)
 // more monsters can fit in.
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
-    const beh_type beh =
-        x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)) ? BEH_HOSTILE
-        : BEH_NEUTRAL;
-
-    // [ds] No longer summon hostiles -- don't create the monster if
-    // it would be hostile.
-    if (beh == BEH_HOSTILE)
+    // Chance to fail to place a monster (but allow continued attempts).
+    if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
         return true;
 
     // Thirty tries for a place.
@@ -1696,7 +1712,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         ASSERT(mons);
         if (!monster_habitable_grid(mons, grd(p)))
             continue;
-        mgen_data mg(mons, beh, 0, 5, 0, p);
+        mgen_data mg(mons, BEH_NEUTRAL, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
@@ -1867,7 +1883,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
             feat = DNGN_FLOOR;
     }
 
-    dungeon_terrain_changed(c, feat, true, preserve_features, true);
+    dungeon_terrain_changed(c, feat, preserve_features, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = cenv.rock_colour;
     else if (feat == DNGN_FLOOR)
@@ -1978,4 +1994,31 @@ bool lugonu_corrupt_level(int power)
 #endif
 
     return true;
+}
+
+/// If the player has earned enough XP, spawn an exit or stairs down.
+void abyss_maybe_spawn_xp_exit()
+{
+    if (!player_in_branch(BRANCH_ABYSS)
+        || !you.props.exists(ABYSS_STAIR_XP_KEY)
+        || you.props[ABYSS_STAIR_XP_KEY].get_int() > 0
+        || !in_bounds(you.pos())
+        || feat_is_staircase(grd(you.pos())))
+    {
+        return;
+    }
+    const bool stairs = !at_branch_bottom()
+                        && you.props.exists(ABYSS_SPAWNED_XP_EXIT_KEY)
+                        && you.props[ABYSS_SPAWNED_XP_EXIT_KEY].get_bool();
+
+    destroy_wall(you.pos()); // fires listeners etc even if it wasn't a wall
+    grd(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
+    big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
+    redraw_screen(); // before the force-more
+    mprf(MSGCH_BANISHMENT,
+         "The substance of the Abyss twists violently,"
+         " and a gateway leading %s appears!", stairs ? "down" : "out");
+
+    you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
+    you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;
 }

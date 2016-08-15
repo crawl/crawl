@@ -459,22 +459,9 @@ potion of mutation
 
 Eliksir który powoduje trwałe nieprzewidywalne zmiany w ciele pijącego.
 %%%%
-potion of poison
-
-Paskudna trująca ciecz.
-%%%%
-potion of porridge
-
-To nie magiczny eliksir, a porcja zwykłej potrawy, w postaci gęstej, pożywnej
-lecz niezbyt smacznej mazi.
-%%%%
 potion of resistance
 
 Eliksir który zapewnia tymczasową odporność na ogień, zimno, prąd i truciznę.
-%%%%
-potion of slowing
-
-Eliksir który spowalnia szybkość ruchów.
 %%%%
 quad damage
 
@@ -536,10 +523,6 @@ ring of strength
 Ten pierścień zwiększa lub zmniejsza fizyczną siłę nosiciela, w zależności od
 mocy i kierunku czaru nań rzuconego.
 %%%%
-ring of sustain attributes
-
-Ten pierścień chroni przed tymczasową utratą siły, inteligencji i zręczności.
-%%%%
 ring of teleportation
 
 Ten pierścień od czasu do czasu przenosi swego nosiciela w przypadkowe miejsce.
@@ -555,10 +538,6 @@ rod of inaccuracy
 Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
 wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
 skutki są dość brutalne.
-%%%%
-rod of the swarm
-
-Ten pręt pozwala przyzwać chmarę owadów.
 %%%%
 royal jelly
 
@@ -715,13 +694,6 @@ Miękka skóra smoka parowego, w surowej postaci. Można zrobić z niej zbroję.
 stone
 
 Mały kamyk. Można nim rzucić lub wystrzelić go z procy.
-%%%%
-stone of tremors
-
-Wygładzony kamień zamieszkały przez przyjazne duchy ziemi. Uderzenie tym
-kamieniem o skałę spowoduje małe trzęsienie ziemi, wyzwalając owe duchy.
-Ktokolwiek stoi w pobliżu surowej skały zostanie zasypany gradem mniejszych i
-większych odłamów — lub nawet zapadnie się w szczeliny w podłożu.
 %%%%
 storm dragon armour
 

@@ -20,6 +20,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "misc.h" // frombool
 #include "mutation.h"
 #include "ng-setup.h"
 #include "output.h"
@@ -102,6 +103,34 @@ species_type find_species_from_string(const string &species)
     return sp;
 }
 
+static xom_event_type _find_xom_event_from_string(const string &event_name)
+{
+    string spec = lowercase_string(event_name);
+
+    xom_event_type x = XOM_DID_NOTHING;
+
+    for (int i = 0; i <= XOM_LAST_REAL_ACT; ++i)
+    {
+        const xom_event_type xi = static_cast<xom_event_type>(i);
+        const string x_name = lowercase_string(xom_effect_to_name(xi));
+
+        string::size_type pos = x_name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                x = xi;
+                break;
+            }
+            else
+                x = xi;
+        }
+    }
+
+    return x;
+}
+
 void wizard_change_species_to(species_type sp)
 {
     // Means find_species_from_string couldn't interpret right.
@@ -174,7 +203,7 @@ void wizard_change_species_to(species_type sp)
 
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
         if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
             && you.equip[i] != -1)
         {
@@ -223,9 +252,7 @@ void wizard_change_species()
 
     wizard_change_species_to(sp);
 }
-#endif
 
-#ifdef WIZARD
 // Casts a specific spell by number or name.
 void wizard_cast_spec_spell()
 {
@@ -286,7 +313,6 @@ void wizard_memorise_spec_spell()
     if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }
-#endif
 
 void wizard_heal(bool super_heal)
 {
@@ -302,8 +328,14 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
+        you.duration[DUR_DOOM_HOWL] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
+        while (delete_temp_mutation());
+        you.attribute[ATTR_TEMP_MUT_XP] = 0;
+        you.stat_loss.init(0);
+        you.attribute[ATTR_STAT_LOSS_XP] = 0;
+        you.redraw_stats = true;
     }
     else
         mpr("Healing.");
@@ -457,12 +489,6 @@ void wizard_set_piety()
     wizard_set_piety_to(atoi(buf));
 }
 
-//---------------------------------------------------------------
-//
-// debug_add_skills
-//
-//---------------------------------------------------------------
-#ifdef WIZARD
 void wizard_exercise_skill()
 {
     skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
@@ -475,9 +501,7 @@ void wizard_exercise_skill()
         exercise(skill, 10);
     }
 }
-#endif
 
-#ifdef WIZARD
 void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
@@ -504,8 +528,8 @@ void wizard_set_skill_level(skill_type skill)
 
     if (amount == 27)
     {
-        you.train[skill] = 0;
-        you.train_alt[skill] = 0;
+        you.train[skill] = TRAINING_DISABLED;
+        you.train_alt[skill] = TRAINING_DISABLED;
         reset_training();
         check_selected_skills();
     }
@@ -517,9 +541,7 @@ void wizard_set_skill_level(skill_type skill)
                                                           : "Reset"),
          skill_name(skill), amount);
 }
-#endif
 
-#ifdef WIZARD
 void wizard_set_all_skills()
 {
     double amount = prompt_for_float("Set all skills to what level? ");
@@ -540,7 +562,7 @@ void wizard_set_all_skills()
 
             if (amount == 27)
             {
-                you.train[sk] = 0;
+                you.train[sk] = TRAINING_DISABLED;
                 you.training[sk] = 0;
             }
         }
@@ -549,16 +571,14 @@ void wizard_set_all_skills()
 
         // We're not updating skill cost here since XP hasn't changed.
 
-        calc_hp();
+        recalc_and_scale_hp();
         calc_mp();
 
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
     }
 }
-#endif
 
-#ifdef WIZARD
 bool wizard_add_mutation()
 {
     bool success = false;
@@ -605,7 +625,7 @@ bool wizard_add_mutation()
     const bool god_gift = (answer == 1);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
-                    "'xom', 'slime', 'corrupt', 'qazlal')? ",
+                    "'xom', 'slime', 'qazlal')? ",
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
@@ -625,8 +645,6 @@ bool wizard_add_mutation()
         mutat = RANDOM_XOM_MUTATION;
     else if (spec == "slime")
         mutat = RANDOM_SLIME_MUTATION;
-    else if (spec == "corrupt")
-        mutat = RANDOM_CORRUPT_MUTATION;
     else if (spec == "qazlal")
         mutat = RANDOM_QAZLAL_MUTATION;
 
@@ -723,7 +741,6 @@ bool wizard_add_mutation()
 
     return success;
 }
-#endif
 
 void wizard_set_abyss()
 {
@@ -758,6 +775,7 @@ void wizard_set_stats()
     you.base_stats[STAT_INT] = debug_cap_stat(sint);
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
+    you.attribute[ATTR_STAT_LOSS_XP] = 0;
     you.redraw_stats.init(true);
     you.redraw_evasion = true;
 }
@@ -1008,11 +1026,11 @@ void wizard_god_wrath()
 void wizard_god_mollify()
 {
     bool mollified = false;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    for (god_iterator it; it; ++it)
     {
-        if (player_under_penance((god_type) i))
+        if (player_under_penance(*it))
         {
-            dec_penance((god_type) i, you.penance[i]);
+            dec_penance(*it, you.penance[*it]);
             mollified = true;
         }
     }
@@ -1093,6 +1111,40 @@ void wizard_join_religion()
     {
         if (god == GOD_GOZAG)
             you.gold = max(you.gold, gozag_service_fee());
-        join_religion(god, true);
+        join_religion(god);
     }
 }
+
+void wizard_xom_acts()
+{
+    char specs[80];
+
+    msgwin_get_line("What action should Xom take? (Blank = any) " ,
+                    specs, sizeof(specs));
+
+    const int severity = you_worship(GOD_XOM) ? abs(you.piety - HALF_MAX_PIETY)
+                                              : random_range(0, HALF_MAX_PIETY);
+
+    if (specs[0] == '\0')
+    {
+        const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
+                                frombool(coinflip());
+        const xom_event_type result = xom_acts(severity, nice);
+        dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
+#ifndef DEBUG_DIAGNOSTICS
+        UNUSED(result);
+#endif
+        return;
+    }
+
+    xom_event_type event = _find_xom_event_from_string(specs);
+    if (event == XOM_DID_NOTHING)
+    {
+        dprf("That action doesn't seem to exist!");
+        return;
+    }
+
+    dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
+    xom_take_action(event, severity);
+}
+#endif

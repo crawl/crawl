@@ -16,6 +16,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godpassive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -72,7 +73,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
-    if (you_worship(GOD_BEOGH)
+    if (will_have_passive(passive_t::convert_orcs)
         && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
@@ -86,11 +87,12 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
         const int hd = mons->get_experience_level();
 
-        if (in_good_standing(GOD_BEOGH, 2)
+        if (have_passive(passive_t::convert_orcs)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
-            beogh_convert_orc(mons, orc_hit);
+            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::DEATHBED
+                                                              : conv_t::SIGHT);
             stop_running();
         }
     }
@@ -98,7 +100,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
 void slime_convert(monster* mons)
 {
-    if (you_worship(GOD_JIYVA) && mons_is_slime(mons)
+    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
@@ -115,7 +117,7 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (in_good_standing(GOD_FEDHAS)
+    if (have_passive(passive_t::friendly_plants)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -274,7 +276,7 @@ bool beogh_followers_abandon_you()
     return false;
 }
 
-static void _print_converted_orc_speech(const string key,
+static void _print_converted_orc_speech(const string& key,
                                         monster* mon,
                                         msg_channel_type channel)
 {
@@ -290,38 +292,35 @@ static void _print_converted_orc_speech(const string key,
 
 // Orcs may turn friendly when encountering followers of Beogh, and be
 // made gifts of Beogh.
-void beogh_convert_orc(monster* orc, bool emergency,
-                       bool converted_by_follower)
+void beogh_convert_orc(monster* orc, conv_t conv)
 {
     ASSERT(orc); // XXX: change to monster &orc
     ASSERT(mons_genus(orc->type) == MONS_ORC);
 
-    if (you.can_see(*orc)) // show reaction
+    switch (conv)
     {
-        if (emergency || !orc->alive())
-        {
-            if (converted_by_follower)
-            {
-                _print_converted_orc_speech("reaction_battle_follower", orc,
-                                            MSGCH_FRIEND_ENCHANT);
-                _print_converted_orc_speech("speech_battle_follower", orc,
-                                            MSGCH_TALK);
-            }
-            else
-            {
-                _print_converted_orc_speech("reaction_battle", orc,
-                                            MSGCH_FRIEND_ENCHANT);
-                _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
-            }
-        }
-        else
-        {
-            _print_converted_orc_speech("reaction_sight", orc,
-                                        MSGCH_FRIEND_ENCHANT);
+    case conv_t::DEATHBED_FOLLOWER:
+        _print_converted_orc_speech("reaction_battle_follower", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_battle_follower", orc,
+                                    MSGCH_TALK);
+        break;
+    case conv_t::DEATHBED:
+        _print_converted_orc_speech("reaction_battle", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
+        break;
+    case conv_t::SIGHT:
+        _print_converted_orc_speech("reaction_sight", orc,
+                                    MSGCH_FRIEND_ENCHANT);
 
-            if (!one_chance_in(3))
-                _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
-        }
+        if (!one_chance_in(3))
+            _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
+        break;
+    case conv_t::RESURRECTION:
+        _print_converted_orc_speech("resurrection", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        break;
     }
 
     orc->attitude = ATT_FRIENDLY;
@@ -390,14 +389,6 @@ static void _jiyva_convert_slime(monster* slime)
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
-    if (!mons_eats_items(slime))
-    {
-        slime->add_ench(ENCH_EAT_ITEMS);
-
-        mprf(MSGCH_MONSTER_ENCHANT, "%s looks hungrier.",
-             slime->name(DESC_THE).c_str());
-    }
-
     mons_make_god_gift(slime, GOD_JIYVA);
 
     mons_att_changed(slime);
@@ -405,58 +396,53 @@ static void _jiyva_convert_slime(monster* slime)
 
 void gozag_set_bribe(monster* traitor)
 {
-    branch_type branch = gozag_fixup_branch(you.where_are_you);
-
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
-    if (bribability > 0)
+
+    if (bribability <= 0 || traitor->friendly())
+        return;
+
+    const monster* leader =
+        traitor->props.exists("band_leader")
+        ? monster_by_mid(traitor->props["band_leader"].get_int())
+        : nullptr;
+
+    if (leader)
     {
-        const monster* leader =
-            traitor->props.exists("band_leader")
-            ? monster_by_mid(traitor->props["band_leader"].get_int())
-            : nullptr;
-
-        int cost = max(1, exper_value(traitor) / 20);
-
-        if (leader)
+        if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
+            || leader->props.exists(FRIENDLY_BRIBE_KEY))
         {
-            if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
-                || leader->props.exists(FRIENDLY_BRIBE_KEY))
-            {
-                gozag_deduct_bribe(branch, 2*cost);
-                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
-            }
-            else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
-                     || leader->props.exists(NEUTRAL_BRIBE_KEY))
-            {
-                gozag_deduct_bribe(branch, cost);
-                // Don't continue if we exhausted our funds.
-                if (branch_bribe[branch] > 0)
-                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
-            }
+            traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
         }
-        else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+        else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
+                 || leader->props.exists(NEUTRAL_BRIBE_KEY))
         {
-            // Sometimes get permanent followers at twice the cost.
-            if (branch_bribe[branch] > 2*cost && one_chance_in(3))
-            {
-                gozag_deduct_bribe(branch, 2*cost);
-                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
-            }
-            else
-            {
-                gozag_deduct_bribe(branch, cost);
-                // Don't continue if we exhausted our funds.
-                if (branch_bribe[branch] > 0)
-                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
-            }
+            traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
         }
+    }
+    else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+    {
+        // Sometimes get permanent followers
+        if (one_chance_in(3))
+            traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
+        else
+            traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
     }
 }
 
 void gozag_check_bribe(monster* traitor)
 {
+    branch_type branch = gozag_fixup_branch(you.where_are_you);
+
+    if (branch_bribe[branch] == 0)
+        return; // Do nothing if branch isn't currently bribed.
+
+    const int base_cost = max(1, exper_value(traitor) / 20);
+
+    int cost = 0;
+
     string msg;
+
     if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
         traitor->props.erase(FRIENDLY_BRIBE_KEY);
@@ -466,6 +452,9 @@ void gozag_check_bribe(monster* traitor)
                              + " Gozag permabribe");
         if (msg.empty())
             msg = getSpeakString("Gozag permabribe");
+
+        // Actual allies deduct more gold.
+        cost = 2 * base_cost;
     }
     else if (traitor->props.exists(NEUTRAL_BRIBE_KEY))
     {
@@ -475,6 +464,8 @@ void gozag_check_bribe(monster* traitor)
                              + " Gozag bribe");
         if (msg.empty())
             msg = getSpeakString("Gozag bribe");
+
+        cost = base_cost;
     }
 
     if (!msg.empty())
@@ -483,6 +474,8 @@ void gozag_check_bribe(monster* traitor)
         msg = do_mon_str_replacements(msg, traitor);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
+        // !msg.empty means a monster was bribed.
+        gozag_deduct_bribe(branch, cost);
     }
 }
 

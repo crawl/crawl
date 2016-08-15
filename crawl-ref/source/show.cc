@@ -223,7 +223,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     }
 }
 
-void update_item_at(const coord_def &gp, bool detected)
+void update_item_at(const coord_def &gp, bool detected, bool wizard)
 {
     if (!in_bounds(gp))
         return;
@@ -231,23 +231,26 @@ void update_item_at(const coord_def &gp, bool detected)
     item_def eitem;
     bool more_items = false;
 
-    if (you.see_cell(gp))
+    if (you.see_cell(gp) || wizard)
     {
-        if (you.visible_igrd(gp) != NON_ITEM)
-            eitem = mitm[you.visible_igrd(gp)];
-        else
+        const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
+        if (item_grid == NON_ITEM)
             return;
+        eitem = mitm[item_grid];
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem.link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+        if (eitem.link > NON_ITEM)
             more_items = true;
         else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
             more_items = true;
+
+        if (wizard)
+            StashTrack.add_stash(gp);
     }
     else
     {
         if (detected)
-            StashTrack.add_stash(gp.x, gp.y);
+            StashTrack.add_stash(gp);
 
         const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
@@ -260,27 +263,9 @@ void update_item_at(const coord_def &gp, bool detected)
     env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
 }
 
-static void _update_cloud(int cloudno)
+static void _update_cloud(cloud_struct& cloud)
 {
-    cloud_struct& cloud = env.cloud[cloudno];
     const coord_def gp = cloud.pos;
-
-    unsigned short ch = 0;
-
-    tileidx_t index = 0;
-    if (!cloud.tile.empty())
-    {
-        if (!tile_main_index(cloud.tile.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", cloud.tile.c_str());
-            ch = TILE_ERROR;
-        }
-        else
-        {
-            int offset = tile_main_count(index);
-            ch = index + offset;
-        }
-    }
 
     int dur = cloud.decay/20;
     if (dur < 0)
@@ -288,7 +273,7 @@ static void _update_cloud(int cloudno)
     else if (dur > 3)
         dur = 3;
 
-    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp,
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
                   cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }
@@ -414,7 +399,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
     // Fall back to a random position adjacent to the unseen position.
     // This can only happen if the monster just became unseen.
     vector <coord_def> adj_unseen;
-    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ai++)
+    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ++ai)
     {
         if (_valid_invisible_spot(*ai, mons))
             adj_unseen.push_back(*ai);
@@ -458,30 +443,29 @@ static void _update_monster(monster* mons)
     if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
     {
         you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-        you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+        you.attribute[ATTR_SEEN_INVIS_SEED] = get_uint32();
     }
     // After the player finishes this turn, the monster's unseen pos (and
     // its invis indicator due to going unseen) will be erased.
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
+    // Being submerged is not the same as invisibility.
+    if (mons->submerged())
+        return;
+
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
     if (grd(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
-            && env.cgrid(gp) == EMPTY_CLOUD
-        || is_opaque_cloud(env.cgrid(gp))
-            && !mons->submerged()
+            && !cloud_at(gp)
+        || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
             && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;
         return;
     }
-
-    // Being submerged is not the same as invisibility.
-    if (mons->submerged())
-        return;
 
     int range = player_monster_detect_radius();
     if (mons->constricted_by == MID_PLAYER
@@ -535,14 +519,8 @@ void show_update_at(const coord_def &gp, layers_type layers)
         }
 
         if (layers & LAYER_CLOUDS)
-        {
-            const int cloud = env.cgrid(gp);
-            if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
-                && env.cloud[cloud].pos == gp)
-            {
-                _update_cloud(cloud);
-            }
-        }
+            if (cloud_struct* cloud = cloud_at(gp))
+                _update_cloud(*cloud);
 
         if (layers & LAYER_ITEMS)
             update_item_at(gp);
@@ -582,9 +560,7 @@ void show_init(layers_type layers)
         env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
-// Emphasis may change while off-level (precisely, after
-// taking stairs and saving the level, when we reach
-// the next level). This catches up.
+// Emphasis may change while off-level. This catches up.
 // It should be equivalent to looping over the whole map
 // and setting MAP_EMPHASIZE for any coordinate with
 // emphasise(p) == true, but we optimise a bit.

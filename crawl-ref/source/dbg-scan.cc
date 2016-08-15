@@ -80,11 +80,6 @@ static void _dump_item(const char *name, int num, const item_def &item,
     crawl_state.cancel_cmd_repeat();
 }
 
-//---------------------------------------------------------------
-//
-// debug_item_scan
-//
-//---------------------------------------------------------------
 void debug_item_scan()
 {
     int   i;
@@ -179,15 +174,18 @@ void debug_item_scan()
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; ++j)
-                for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+            {
+                monster& mons(menv[j]);
+                for (mon_inv_iterator ii(mons); ii; ++ii)
                 {
-                    if (menv[j].inv[k] == i)
+                    if (ii->index() == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
-                             j, menv[j].name(DESC_A, true).c_str(),
-                             menv[j].pos().x, menv[j].pos().y);
+                             j, mons.name(DESC_A, true).c_str(),
+                             mons.pos().x, mons.pos().y);
                     }
                 }
+            }
         }
 
         // Current bad items of interest:
@@ -217,9 +215,9 @@ void debug_item_scan()
         }
         else if (!is_artefact(mitm[i])
                  && (mitm[i].base_type == OBJ_WEAPONS
-                     && mitm[i].special >= NUM_SPECIAL_WEAPONS
+                        && mitm[i].brand >= NUM_SPECIAL_WEAPONS
                      || mitm[i].base_type == OBJ_ARMOUR
-                        && mitm[i].special >= NUM_SPECIAL_ARMOURS))
+                        && mitm[i].brand >= NUM_SPECIAL_ARMOURS))
         {
             _dump_item(name, i, mitm[i], "Bad special value:");
         }
@@ -381,7 +379,7 @@ void debug_mons_scan()
         {
             mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
         }
         else if (mgrd(pos) != i)
@@ -391,7 +389,7 @@ void debug_mons_scan()
 
             _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
@@ -404,7 +402,7 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
-                string full = m2->full_name(DESC_PLAIN, true);
+                string full = m2->full_name(DESC_PLAIN);
                 if (m2->alive())
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
@@ -426,7 +424,7 @@ void debug_mons_scan()
             env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
             mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  dungeon_feature_name(grd(pos)),
                  pos.x, pos.y,
                  _vault_desc(pos).c_str());
@@ -442,7 +440,7 @@ void debug_mons_scan()
             {
                 mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
                                   "index %d in slot %d.",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, idx, j);
                 continue;
             }
@@ -454,7 +452,7 @@ void debug_mons_scan()
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
                                  "slot %d (midx = %d)",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, j, i);
                 continue;
             }
@@ -469,7 +467,7 @@ void debug_mons_scan()
                             idx, item,
                            "Monster %s (%d, %d) holding non-monster "
                            "item (midx = %d)",
-                           m->full_name(DESC_PLAIN, true).c_str(),
+                           m->full_name(DESC_PLAIN).c_str(),
                            pos.x, pos.y, i);
                 continue;
             }
@@ -481,10 +479,10 @@ void debug_mons_scan()
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
                                  "item %s, but item thinks it's held by "
                                  "monster %s (%d, %d) [midx = %d]",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      m->pos().x, m->pos().y, i,
                      item.name(DESC_PLAIN).c_str(),
-                     holder->full_name(DESC_PLAIN, true).c_str(),
+                     holder->full_name(DESC_PLAIN).c_str(),
                      holder->pos().x, holder->pos().y, holder->mindex());
 
                 bool found = false;
@@ -690,9 +688,9 @@ void check_map_validity()
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
 
-        find_trap(*ri); // this has all needed asserts already
+        trap_at(*ri); // this has all needed asserts already
 
-        if (shop_struct *shop = get_shop(*ri))
+        if (shop_struct *shop = shop_at(*ri))
             ASSERT_RANGE(shop->type, 0, NUM_SHOPS);
 
         // border must be impassable

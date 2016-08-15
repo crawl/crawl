@@ -83,7 +83,7 @@ void debug_dump_levgen()
         mpr("Level vaults:");
         for (auto &vault : env.level_vaults)
         {
-            string vault_name = vault->map.name.c_str();
+            string vault_name = vault->map.name;
             if (vault->map.subvault_places.size())
             {
                 vault_name += " [";
@@ -113,7 +113,7 @@ string debug_mon_str(const monster* mon)
     if (invalid_monster_index(midx))
         return make_stringf("Invalid monster index %d", midx);
 
-    string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    string out = "Monster '" + mon->full_name(DESC_PLAIN) + "' ";
     out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
@@ -169,7 +169,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     fprintf(stderr, "Base name: %s\n",
             mon->base_name(DESC_PLAIN, true).c_str());
     fprintf(stderr, "Full name: %s\n\n",
-            mon->full_name(DESC_PLAIN, true).c_str());
+            mon->full_name(DESC_PLAIN).c_str());
 
     if (in_bounds(mon->pos()))
     {
@@ -307,7 +307,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
             found_spells = true;
         }
 
-        fprintf(stderr, "    slot #%d: ", i);
+        fprintf(stderr, "    slot #%u: ", i);
         if (!is_valid_spell(spell))
             fprintf(stderr, "Invalid spell #%d\n", (int) spell);
         else

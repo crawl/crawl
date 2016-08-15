@@ -21,7 +21,7 @@ struct stash_search_result;
 class Stash
 {
 public:
-    Stash(int xp = -1, int yp = -1);
+    Stash(coord_def pos_ = coord_def());
     Stash(const Stash &other) { *this = other; };
 
     static bool is_boring_feature(dungeon_feature_type feat);
@@ -36,15 +36,9 @@ public:
     string feature_description() const;
     vector<item_def> get_items() const;
 
-    bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>* matching_items = nullptr) const;
-
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
     bool pickup_eligible() const;
-
-    // Returns true if this Stash contains items that can be sacrificed
-    bool sacrificeable() const;
 
     // Returns true if this Stash contain items not handled by autopickup and
     // auto_sacrifce
@@ -54,31 +48,18 @@ public:
     // verify the stash).
     bool unverified() const;
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        stash_search_result &res)
-            const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
-    void write(FILE *f, int refx = 0, int refy = 0,
-                 string place = "",
-                 bool identify = false) const;
+    void write(FILE *f, coord_def refpos, string place = "",
+               bool identify = false) const;
 
     bool empty() const
     {
-        return enabled && items.empty() && feat == DNGN_FLOOR;
+        return items.empty() && feat == DNGN_FLOOR;
     }
 
-    bool isAt(const coord_def& c) const { return c.x == x && c.y == y; }
-    int  abs_pos() const { return abspos; }
-    int  getX() const { return x; }
-    int  getY() const { return y; }
-
     bool is_verified() const {  return verified; }
-
-    bool enabled;       // If false, this Stash will neither track
-                        // items nor dump itself. Disabled stashes are
-                        // also never removed from the level's map of
-                        // stashes.
 
 private:
     void _update_corpses(int rot_time);
@@ -87,8 +68,7 @@ private:
 
 private:
     bool verified;      // Is this correct to the best of our knowledge?
-    uint8_t x, y;
-    int  abspos;
+    coord_def pos;
     dungeon_feature_type feat;
     string feat_desc; // Only for interesting features.
     trap_type trap;
@@ -105,57 +85,25 @@ private:
 class ShopInfo
 {
 public:
-    ShopInfo(int xp, int yp);
+    ShopInfo(const shop_struct& shop_ = shop_struct());
 
-    bool matches_search(const string &prefix,
-                        const base_pattern &search,
-                        stash_search_result &res)
-            const;
-
-    string description() const;
-    vector<item_def> inventory() const;
+    vector<stash_search_result> matches_search(
+        const string &prefix, const base_pattern &search) const;
 
     void save(writer&) const;
     void load(reader&);
 
-    bool show_menu(const level_pos &place, bool can_travel) const;
-    bool is_visited() const { return items.size() || visited; }
-
     void write(FILE *f, bool identify = false) const;
+    void show_menu(const level_pos& place) const;
 
-    void reset() { items.clear(); visited = true; }
-    void set_name(const string& s) { name = s; }
-
-    void add_item(const item_def &item, unsigned price);
-
-    bool isAt(const coord_def& c) const { return x == c.x && y == c.y; }
-
-    // Messy!
-    struct shop_item
-    {
-        item_def item;
-        unsigned price;
-    };
-
-    // Attempts to guess if the item came from the shop, and if so returns the
-    // corresponding shop_item_name:
-    string get_shop_item_name(const item_def&) const;
+    bool is_at(coord_def other) const { return shop.pos == other; }
+    bool is_visited() const { return !shop.stock.empty(); }
 
 private:
-    int x, y;
-    string name;
+    shop_struct shop;
 
-    int shoptype;
-
-    // Set true if the player has visited this shop
-    bool visited;
-
-    vector<shop_item> items;
-
-    string shop_item_name(const shop_item &si) const;
-    string shop_item_desc(const shop_item &si) const;
-    void describe_shop_item(const shop_item &si) const;
-    void fill_out_menu(StashMenu &menu, const level_pos &place) const;
+    string shop_item_name(const item_def &it) const;
+    string shop_item_desc(const item_def &it) const;
 
     friend class ST_ItemIterator;
 };
@@ -169,34 +117,27 @@ struct stash_search_result
     // is on.
     int player_distance;
 
-    // Number of items in the stash that match the search.
-    int matches;
-
-    // Count of items stacks in the stash that matched. This will be the same as
-    // matches if each matching stack's quantity is 1.
-    int count;
-
     // Text that describes this search result - usually the name of
     // the first matching item in the stash or the name of the shop.
     string match;
 
-    // The stash or shop in question. Both can be null if this is a feature.
-    const Stash    *stash;
+    // Item that was matched.
+    item_def item;
+
+    // The shop in question, if this is result is for a shop name.
     const ShopInfo *shop;
 
-    // The items that matched the search, if any.
-    vector<item_def> matching_items;
+    // Whether the found items are in the player's inventory.
+    bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0), matches(0),
-                            count(0), match(), stash(nullptr), shop(nullptr),
-                            matching_items()
+    stash_search_result() : pos(), player_distance(0), match(), item(),
+                            shop(nullptr), in_inventory(false)
     {
     }
 
     stash_search_result(const stash_search_result &o)
-        : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
-          count(o.count), match(o.match), stash(o.stash), shop(o.shop),
-          matching_items(o.matching_items)
+        : pos(o.pos), player_distance(o.player_distance), match(o.match),
+          item(o.item), shop(o.shop), in_inventory(o.in_inventory)
     {
     }
 
@@ -204,23 +145,17 @@ struct stash_search_result
     {
         pos = o.pos;
         player_distance = o.player_distance;
-        matches = o.matches;
-        count = o.count;
         match = o.match;
-        stash = o.stash;
+        item = o.item;
         shop = o.shop;
-        matching_items = o.matching_items;
+        in_inventory = o.in_inventory;
         return *this;
     }
 
     bool operator < (const stash_search_result &ssr) const
     {
-        return player_distance < ssr.player_distance
-                  || (player_distance == ssr.player_distance
-                      && matches > ssr.matches);
+        return player_distance < ssr.player_distance;
     }
-
-    bool show_menu() const;
 };
 
 class LevelStashes
@@ -246,24 +181,14 @@ public:
 
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
-    bool  needs_visit(const coord_def& c, bool autopickup, bool sacrifice) const;
+    bool  needs_visit(const coord_def& c, bool autopickup) const;
     bool  shop_needs_visit(const coord_def& c) const;
 
     // Returns true if the items at c are not fully known to the stash-tracker
-    // and the items are not all handled by autopickup/auto_sacrifice.
+    // and the items are not all handled by autopickup.
     bool  needs_stop(const coord_def &c) const;
 
-    // Returns true if the items at c contains at least one that can be
-    // sacrificed
-    bool sacrificeable(const coord_def &c) const;
-
-    // Add stash at (x,y), or player's current location if no parameters are
-    // supplied
-    void  add_stash(int x = -1, int y = -1);
-
-    // Mark square (x,y) as not stashworthy. The player's current location is
-    // used if no parameters are supplied.
-    void  no_stash(int x = -1, int y = -1);
+    void  add_stash(coord_def p);
 
     void  kill_stash(const Stash &s);
     void  move_stash(const coord_def& from, const coord_def& to);
@@ -275,20 +200,17 @@ public:
     string level_name() const;
     string short_level_name() const;
 
-    int   stash_count() const { return m_stashes.size() + m_shops.size(); }
-    int   visible_stash_count() const { return _num_enabled_stashes() + m_shops.size(); }
+    bool  has_stashes() const { return m_stashes.size() + m_shops.size() > 0; }
 
     bool  is_current() const;
 
     void  remove_shop(const coord_def& c);
- private:
-    int _num_enabled_stashes() const;
+private:
     void _update_corpses(int rot_time);
     void _update_identification();
     void _waypoint_search(int n, vector<stash_search_result> &results) const;
 
- private:
-    typedef map<int, Stash>  stashes_t;
+    typedef map<coord_def, Stash> stashes_t;
     typedef vector<ShopInfo> shops_t;
 
     // which level
@@ -333,13 +255,7 @@ public:
     // Mark nets at (x,y) on current level as no longer trapping an actor.
     bool unmark_trapping_nets(const coord_def &c);
 
-    // Add stash at (x,y), or player's current location if no parameters are
-    // supplied.
-    void add_stash(int x = -1, int y = -1);
-
-    // Mark square (x,y) as not stashworthy. The player's current location is
-    // used if no parameters are supplied.
-    void no_stash(int x = -1, int y = -1);
+    void  add_stash(coord_def p);
 
     void save(writer&) const;
     void load(reader&);
@@ -355,9 +271,10 @@ private:
                               bool curr_lev = false) const;
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
-                                bool& show_as_stacks,
                                 bool& filter_useless,
-                                bool& default_execute);
+                                bool& default_execute,
+                                base_pattern* search,
+                                bool nohl);
     string stash_search_prompt();
 
 private:
@@ -386,17 +303,16 @@ public:
     unsigned         price();
 
 private:
-          level_id  m_place;
+    level_id        m_place;
     const item_def* m_item;
-          unsigned  m_price;
+    unsigned        m_price;
     const ShopInfo* m_shop;
 
     StashTracker::stash_levels_t::const_iterator m_stash_level_it;
     LevelStashes::stashes_t::const_iterator      m_stash_it;
     LevelStashes::shops_t::const_iterator        m_shop_it;
     vector<item_def>::const_iterator             m_stash_item_it;
-
-    vector<ShopInfo::shop_item>::const_iterator  m_shop_item_it;
+    vector<item_def>::const_iterator             m_shop_item_it;
 
 private:
     void new_level();

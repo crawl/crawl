@@ -28,8 +28,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
 #include "religion.h"
@@ -429,7 +429,7 @@ void hints_new_turn()
  * @param arg1 A string that can be inserted into the hint message.
  * @param arg2 Another string that can be inserted into the hint message.
  */
-void print_hint(string key, const string arg1, const string arg2)
+void print_hint(string key, const string& arg1, const string& arg2)
 {
     string text = getHintString(key);
     if (text.empty())
@@ -519,8 +519,6 @@ void hints_death_screen()
 // know by now.
 void hints_finished()
 {
-    string text;
-
     crawl_state.type = GAME_TYPE_NORMAL;
 
     print_hint("finished");
@@ -801,18 +799,14 @@ static bool _advise_use_wand()
         switch (obj.sub_type)
         {
         case WAND_FLAME:
-        case WAND_FROST:
         case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
         case WAND_PARALYSIS:
-        case WAND_FIRE:
-        case WAND_COLD:
         case WAND_CONFUSION:
-        case WAND_FIREBALL:
+        case WAND_ICEBLAST:
         case WAND_TELEPORTATION:
         case WAND_LIGHTNING:
         case WAND_ENSLAVEMENT:
-        case WAND_DRAINING:
+        case WAND_ACID:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
             return true;
@@ -824,7 +818,7 @@ static bool _advise_use_wand()
 
 void hints_monster_seen(const monster& mon)
 {
-    if (!mons_class_gives_xp(mon.type))
+    if (mons_is_firewood(&mon))
     {
         if (Hints.hints_events[HINT_SEEN_ZERO_EXP_MON])
         {
@@ -983,7 +977,7 @@ void hints_first_item(const item_def &item)
 #endif
 
     print_hint("HINT_SEEN_FIRST_OBJECT",
-               glyph_to_tagstr(get_item_glyph(&item)));
+               glyph_to_tagstr(get_item_glyph(item)));
 }
 
 static string _describe_portal(const coord_def &gc)
@@ -1325,7 +1319,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             else
             {
                 text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
+                string glyph = glyph_to_tagstr(get_item_glyph(mitm[i]));
                 const string::size_type found = glyph.find("%");
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");
@@ -1664,7 +1658,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_SHOP:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, shop_name(*shop_at(gc)), gc);
 #else
         // Is a monster blocking the view?
         if (monster_at(gc))
@@ -1841,7 +1835,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
-                "Strength, Intelligence, or Dexterity. "
+                "Strength, intelligence, or dexterity. "
                 "<w>Strength</w> affects your effectiveness in combat "
                 "and makes it easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
@@ -2304,10 +2298,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         const int      old_piety = gc.y;
 
         god_type old_god = GOD_NO_GOD;
-        for (int i = 0; i < NUM_GODS; i++)
-            if (you.worshipped[i] > 0)
+        for (god_iterator it; it; ++it)
+            if (you.worshipped[*it] > 0)
             {
-                old_god = (god_type) i;
+                old_god = *it;
                 break;
             }
 
@@ -2495,7 +2489,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         // "Shouts" from zero experience monsters are boring, ignore
         // them.
-        if (!mons_class_gives_xp(m->type))
+        if (!mons_is_threatening(m))
         {
             Hints.hints_events[HINT_MONSTER_SHOUT] = true;
             return;
@@ -2518,7 +2512,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "vicinity, who will come to check out what the commotion "
                     "was about.";
         }
-        else if (mons_shouts(m->type, false) == S_SILENT)
+        else if (!mons_can_shout(m->type))
         {
             text << "Uh-oh, that monster noticed you! Fortunately, it "
                     "didn't make any noise, but many monsters do make "
@@ -2853,7 +2847,7 @@ formatted_string hints_abilities_info()
 
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    return formatted_string::parse_string(text.str(), false);
+    return formatted_string::parse_string(text.str());
 }
 
 // Explains the basics of the skill screen. Don't bother the player with the
@@ -3011,12 +3005,7 @@ void check_item_hint(const item_def &item, unsigned int num_old_talents)
 
 // Explains the most important commands necessary to use an item, and mentions
 // special effects, etc.
-// NOTE: For identified artefacts don't give all this information!
-//       (The screen is likely to overflow.) Artefacts need special information
-//       if they are evokable or grant resistances.
-//       In any case, check whether we still have enough space for the
-//       inscription prompt and answer.
-void hints_describe_item(const item_def &item)
+string hints_describe_item(const item_def &item)
 {
     ostringstream ostr;
     ostr << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -3028,8 +3017,7 @@ void hints_describe_item(const item_def &item)
         {
             if (is_artefact(item) && item_type_known(item))
             {
-                if (gives_ability(item)
-                    && wherey() <= get_number_of_lines() - 5)
+                if (gives_ability(item))
                 {
                     // You can activate it.
                     ostr << "When wielded, some weapons (such as this one) "
@@ -3037,8 +3025,7 @@ void hints_describe_item(const item_def &item)
                     ostr << _hints_abilities(item);
                     break;
                 }
-                else if (gives_resistance(item)
-                         && wherey() <= get_number_of_lines() - 3)
+                else if (gives_resistance(item))
                 {
                     // It grants a resistance.
                     ostr << "\nThis weapon offers its wearer protection from "
@@ -3052,7 +3039,8 @@ void hints_describe_item(const item_def &item)
                     cmd.push_back(CMD_RESISTS_SCREEN);
                     break;
                 }
-                return;
+                else
+                    return "";
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
@@ -3406,7 +3394,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "A manual can greatly help you in training a skill. "
                         "As long as you are carrying it, the skill in "
-                        "question will be trained more effeciently and will "
+                        "question will be trained more efficiently and will "
                         "level up faster.";
                 cmd.push_back(CMD_READ);
             }
@@ -3602,16 +3590,14 @@ void hints_describe_item(const item_def &item)
             break;
 
         default:
-            return;
+            return "";
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = ostr.str();
     if (!cmd.empty())
         insert_commands(broken, cmd);
-    linebreak_string(broken, _get_hints_cols());
-    cgotoxy(1, wherey() + 2);
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_inscription_info(string prompt)
@@ -3653,7 +3639,7 @@ void hints_inscription_info(string prompt)
 //        but it's a lot more hit'n'miss now.
 bool hints_pos_interesting(int x, int y)
 {
-    return cloud_type_at(coord_def(x, y)) != CLOUD_NONE
+    return cloud_at(coord_def(x, y))
            || _water_is_disturbed(x, y)
            || _hints_feat_interesting(grd[x][y]);
 }
@@ -3691,194 +3677,194 @@ static void _hints_describe_feature(int x, int y)
     {
     case DNGN_ORCISH_IDOL:
     case DNGN_GRANITE_STATUE:
-         ostr << "It's just a harmless statue - or is it?\nEven if not "
-                 "a danger by themselves, statues often mark special "
-                 "areas, dangerous ones or ones harbouring treasure.";
-         break;
+        ostr << "It's just a harmless statue - or is it?\nEven if not "
+            "a danger by themselves, statues often mark special "
+            "areas, dangerous ones or ones harbouring treasure.";
+        break;
 
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
-         ostr << "These nasty constructions can cause a range of "
-                 "unpleasant effects. You won't be able to avoid "
-                 "tripping traps by flying over them; their magic "
-                 "construction will cause them to be triggered anyway.";
-         Hints.hints_events[HINT_SEEN_TRAP] = false;
-         break;
+        ostr << "These nasty constructions can cause a range of "
+                "unpleasant effects. You won't be able to avoid "
+                "tripping traps by flying over them; their magic "
+                "construction will cause them to be triggered anyway.";
+        Hints.hints_events[HINT_SEEN_TRAP] = false;
+        break;
 
     case DNGN_TRAP_SHAFT:
-         ostr << "The dungeon contains a number of natural obstacles such "
-                 "as shafts, which lead one to three levels down. Once you "
-                 "know the shaft is there, you can safely step over it.\n"
-                 "If you want to jump down there, use <w>></w> to do so. "
-                 "Be warned that getting back here might be difficult.";
-         Hints.hints_events[HINT_SEEN_TRAP] = false;
-         break;
+        ostr << "The dungeon contains a number of natural obstacles such "
+                "as shafts, which lead one to three levels down. Once you "
+                "know the shaft is there, you can safely step over it.\n"
+                "If you want to jump down there, use <w>></w> to do so. "
+                "Be warned that getting back here might be difficult.";
+        Hints.hints_events[HINT_SEEN_TRAP] = false;
+        break;
 
     case DNGN_TRAP_WEB:
-         ostr << "Some areas of the dungeon, such as the Spider Nest, may "
-                 "be strewn with giant webs that may ensnare you for a short "
-                 "time and notify nearby spiders of your location. "
-                 "Players in Spider Form can safely navigate the webs (as "
-                 "can incorporeal entities and various oozes). ";
-         Hints.hints_events[HINT_SEEN_WEB] = false;
-         break;
+        ostr << "Some areas of the dungeon, such as the Spider Nest, may "
+                "be strewn with giant webs that may ensnare you for a short "
+                "time and notify nearby spiders of your location. "
+                "Players in Spider Form can safely navigate the webs (as "
+                "can incorporeal entities and various oozes). ";
+        Hints.hints_events[HINT_SEEN_WEB] = false;
+        break;
 
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-         ostr << "You can enter the next (deeper) level by following them "
-                 "down (<w>></w>). To get back to this level again, "
-                 "press <w><<</w> while standing on the upstairs.";
+        ostr << "You can enter the next (deeper) level by following them "
+                "down (<w>></w>). To get back to this level again, "
+                "press <w><<</w> while standing on the upstairs.";
 #ifdef USE_TILE
-         ostr << " In Tiles, you can achieve the same, in either direction, "
-                 "by clicking the <w>left mouse button</w>.";
+        ostr << " In Tiles, you can achieve the same, in either direction, "
+                "by clicking the <w>left mouse button</w>.";
 #endif
 
-         if (is_unknown_stair(where))
-         {
-             ostr << "\n\nYou have not yet passed through this particular "
-                     "set of stairs. ";
-         }
+        if (is_unknown_stair(where))
+        {
+            ostr << "\n\nYou have not yet passed through this particular "
+                    "set of stairs. ";
+        }
 
-         Hints.hints_events[HINT_SEEN_STAIRS] = false;
-         break;
+        Hints.hints_events[HINT_SEEN_STAIRS] = false;
+        break;
 
     case DNGN_EXIT_DUNGEON:
-         ostr << "These stairs lead out of the dungeon. Following them "
-                 "will end the game. The only way to win is to "
-                 "transport the fabled Orb of Zot outside.";
-         break;
+        ostr << "These stairs lead out of the dungeon. Following them "
+                "will end the game. The only way to win is to "
+                "transport the fabled Orb of Zot outside.";
+        break;
 
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-         ostr << "You can enter the previous (shallower) level by "
-                 "following these up (<w><<</w>). This is ideal for "
-                 "retreating or finding a safe resting spot, since the "
-                 "previous level will have less monsters and monsters "
-                 "on this level can't follow you up unless they're "
-                 "standing right next to you. To get back to this "
-                 "level again, press <w>></w> while standing on the "
-                 "downstairs.";
+        ostr << "You can enter the previous (shallower) level by "
+                "following these up (<w><<</w>). This is ideal for "
+                "retreating or finding a safe resting spot, since the "
+                "previous level will have less monsters and monsters "
+                "on this level can't follow you up unless they're "
+                "standing right next to you. To get back to this "
+                "level again, press <w>></w> while standing on the "
+                "downstairs.";
 #ifdef USE_TILE
-         ostr << " In Tiles, you can perform either action simply by "
-                 "clicking the <w>left mouse button</w> instead.";
+        ostr << " In Tiles, you can perform either action simply by "
+                "clicking the <w>left mouse button</w> instead.";
 #endif
-         if (is_unknown_stair(where))
-         {
-             ostr << "\n\nYou have not yet passed through this "
-                     "particular set of stairs. ";
-         }
-         Hints.hints_events[HINT_SEEN_STAIRS] = false;
-         break;
+        if (is_unknown_stair(where))
+        {
+            ostr << "\n\nYou have not yet passed through this "
+                    "particular set of stairs. ";
+        }
+        Hints.hints_events[HINT_SEEN_STAIRS] = false;
+        break;
 
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
-         ostr << "Escape hatches can be used to quickly leave a level with "
-                 "<w><<</w> and <w>></w>, respectively. Note that you will "
-                 "usually be unable to return right away.";
+        ostr << "Escape hatches can be used to quickly leave a level with "
+                "<w><<</w> and <w>></w>, respectively. Note that you will "
+                "usually be unable to return right away.";
 
-         Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
-         break;
+        Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
+        break;
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
-         ostr << "This " << _describe_portal(where);
-         Hints.hints_events[HINT_SEEN_PORTAL] = false;
-         break;
+        ostr << "This " << _describe_portal(where);
+        Hints.hints_events[HINT_SEEN_PORTAL] = false;
+        break;
 #endif
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
-         if (!Hints.hints_explored)
-         {
-             ostr << "\nTo avoid accidentally opening a door you'd rather "
-                     "remain closed during travel or autoexplore, you can "
-                     "mark it with an exclusion from the map view "
-                     "(<w>X</w>) with <w>ee</w> while your cursor is on the "
-                     "grid in question. Such an exclusion will prevent "
-                     "autotravel from ever entering that grid until you "
-                     "remove the exclusion with another press of <w>Xe</w>.";
-         }
-         break;
+        if (!Hints.hints_explored)
+        {
+            ostr << "\nTo avoid accidentally opening a door you'd rather "
+                    "remain closed during travel or autoexplore, you can "
+                    "mark it with an exclusion from the map view "
+                    "(<w>X</w>) with <w>ee</w> while your cursor is on the "
+                    "grid in question. Such an exclusion will prevent "
+                    "autotravel from ever entering that grid until you "
+                    "remove the exclusion with another press of <w>Xe</w>.";
+        }
+        break;
 
     default:
-         if (feat_is_altar(feat))
-         {
-             god_type altar_god = feat_altar_god(feat);
+        if (feat_is_altar(feat))
+        {
+            god_type altar_god = feat_altar_god(feat);
 
-             // I think right now Sif Muna is the only god for whom
-             // you can find altars early and who may refuse to accept
-             // worship by one of the hint mode characters. (jpeg)
-             if (altar_god == GOD_SIF_MUNA
-                 && !player_can_join_god(altar_god))
-             {
-                 ostr << "As <w>p</w>raying on the altar will tell you, "
-                      << god_name(altar_god) << " only accepts worship from "
-                         "those who have already dabbled in magic. You can "
-                         "find out more about this god by searching the "
-                         "database with <w>?/g</w>.\n"
-                         "For other gods, you'll be able to join the faith "
-                         "by <w>p</w>raying at their altar.";
-             }
-             else if (you_worship(GOD_NO_GOD))
-             {
-                 ostr << "This is your chance to join a religion! In "
-                         "general, the gods will help their followers, "
-                         "bestowing powers of all sorts upon them, but many "
-                         "of them demand a life of dedication, constant "
-                         "tributes or entertainment in return.\n"
-                         "You can get information about <w>"
-                      << god_name(altar_god)
-                      << "</w> by pressing <w>p</w> while standing on the "
-                         "altar. Before taking up the responding faith "
-                         "you'll be asked for confirmation.";
-             }
-             else if (you_worship(altar_god))
-             {
-                 // If we don't have anything to say, return early.
-                 return;
-             }
-             else
-             {
-                 ostr << god_name(you.religion)
-                      << " probably won't like it if you switch allegiance, "
-                         "but having a look won't hurt: to get information "
-                         "on <w>";
-                 ostr << god_name(altar_god);
-                 ostr << "</w>, press <w>p</w> while standing on the "
-                         "altar. Before taking up the responding faith (and "
-                         "abandoning your current one!) you'll be asked for "
-                         "confirmation."
-                         "\nTo see your current standing with "
-                      << god_name(you.religion)
-                      << " press <w>^</w>"
+            // I think right now Sif Muna is the only god for whom
+            // you can find altars early and who may refuse to accept
+            // worship by one of the hint mode characters. (jpeg)
+            if (altar_god == GOD_SIF_MUNA
+                && !player_can_join_god(altar_god))
+            {
+                ostr << "As <w>p</w>raying on the altar will tell you, "
+                     << god_name(altar_god) << " only accepts worship from "
+                        "those who have already dabbled in magic. You can "
+                        "find out more about this god by searching the "
+                        "database with <w>?/g</w>.\n"
+                        "For other gods, you'll be able to join the faith "
+                        "by <w>p</w>raying at their altar.";
+            }
+            else if (you_worship(GOD_NO_GOD))
+            {
+                ostr << "This is your chance to join a religion! In "
+                        "general, the gods will help their followers, "
+                        "bestowing powers of all sorts upon them, but many "
+                        "of them demand a life of dedication, constant "
+                        "tributes or entertainment in return.\n"
+                        "You can get information about <w>"
+                     << god_name(altar_god)
+                     << "</w> by pressing <w>p</w> while standing on the "
+                        "altar. Before taking up the responding faith "
+                        "you'll be asked for confirmation.";
+            }
+            else if (you_worship(altar_god))
+            {
+                // If we don't have anything to say, return early.
+                return;
+            }
+            else
+            {
+                ostr << god_name(you.religion)
+                     << " probably won't like it if you switch allegiance, "
+                        "but having a look won't hurt: to get information "
+                        "on <w>";
+                ostr << god_name(altar_god);
+                ostr << "</w>, press <w>p</w> while standing on the "
+                        "altar. Before taking up the responding faith (and "
+                        "abandoning your current one!) you'll be asked for "
+                        "confirmation."
+                        "\nTo see your current standing with "
+                     << god_name(you.religion)
+                     << " press <w>^</w>"
 #ifdef USE_TILE
-                         ", or click with your <w>right mouse button</w> "
-                         "on your avatar while pressing <w>Shift</w>"
+                        ", or click with your <w>right mouse button</w> "
+                        "on your avatar while pressing <w>Shift</w>"
 #endif
-                         ".";
-             }
-             Hints.hints_events[HINT_SEEN_ALTAR] = false;
-             break;
-         }
-         else if (feat_is_branch_entrance(feat))
-         {
-             ostr << "An entryway into one of the many dungeon branches in "
-                     "Crawl. ";
-             if (feat != DNGN_ENTER_TEMPLE)
-                 ostr << "Beware, sometimes these can be deadly!";
-             break;
-         }
-         else
-         {
-             // Describe blood-stains even for boring features.
-             if (!is_bloodcovered(where))
-                 return;
-             boring = true;
-         }
+                        ".";
+            }
+            Hints.hints_events[HINT_SEEN_ALTAR] = false;
+            break;
+        }
+        else if (feat_is_branch_entrance(feat))
+        {
+            ostr << "An entryway into one of the many dungeon branches in "
+                    "Crawl. ";
+            if (feat != DNGN_ENTER_TEMPLE)
+                ostr << "Beware, sometimes these can be deadly!";
+            break;
+        }
+        else
+        {
+            // Describe blood-stains even for boring features.
+            if (!is_bloodcovered(where))
+                return;
+            boring = true;
+        }
     }
 
     if (is_bloodcovered(where))
@@ -3902,11 +3888,12 @@ static void _hints_describe_feature(int x, int y)
 
 static void _hints_describe_cloud(int x, int y)
 {
-    cloud_type ctype = cloud_type_at(coord_def(x, y));
-    if (ctype == CLOUD_NONE)
+    cloud_struct* cloud = cloud_at(coord_def(x, y));
+    if (!cloud)
         return;
 
-    string cname = cloud_name_at_index(env.cgrid(coord_def(x, y)));
+    const string cname = cloud->cloud_name(true);
+    const cloud_type ctype = cloud->type;
 
     ostringstream ostr;
 
@@ -3948,7 +3935,7 @@ static void _hints_describe_cloud(int x, int y)
         }
     }
 
-    if (is_opaque_cloud(env.cgrid[x][y]))
+    if (is_opaque_cloud(ctype))
     {
         ostr << (need_cloud? "\nThis cloud" : "It")
              << " is opaque. If two or more opaque clouds are between "

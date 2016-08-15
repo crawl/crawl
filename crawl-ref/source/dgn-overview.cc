@@ -648,7 +648,7 @@ static void _seen_altar(god_type god, const coord_def& pos)
 
 static void _seen_shop(const coord_def& pos)
 {
-    shops_present[level_pos(level_id::current(), pos)] = get_shop(pos)->type;
+    shops_present[level_pos(level_id::current(), pos)] = shop_at(pos)->type;
 }
 
 static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
@@ -727,21 +727,6 @@ void enter_branch(branch_type branch, level_id from)
     }
 }
 
-// Mark a shop guaranteed on this level if we haven't been there yet.
-// Used by Gozag's call merchant ability.
-// Only one per level!
-void mark_offlevel_shop(level_id lid, shop_type type)
-{
-    ASSERT(!shops_present.count(level_pos(lid, coord_def())));
-    shops_present[level_pos(lid, coord_def())] = type;
-}
-
-void unmark_offlevel_shop(level_id lid)
-{
-    ASSERT(shops_present.count(level_pos(lid, coord_def())));
-    shops_present.erase(level_pos(lid, coord_def()));
-}
-
 // Add an annotation on a level if we corrupt with Lugonu's ability
 void mark_corrupted_level(level_id li)
 {
@@ -783,11 +768,8 @@ static string unique_name(monster* mons)
         name += ", " + short_ghost_description(mons, true);
     else
     {
-        if (strstr(name.c_str(), "royal jelly")
-            || strstr(name.c_str(), "Royal Jelly"))
-        {
+        if (strstr(name.c_str(), "Royal Jelly"))
             name = "Royal Jelly";
-        }
         if (strstr(name.c_str(), "Lernaean hydra"))
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))

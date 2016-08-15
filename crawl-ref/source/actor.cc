@@ -8,12 +8,13 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "attack.h"
+#include "chardump.h"
 #include "directn.h"
 #include "env.h"
+#include "fight.h" // apply_chunked_ac
 #include "fprop.h"
 #include "itemprop.h"
 #include "los.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
@@ -61,9 +62,9 @@ bool actor::stand_on_solid_ground() const
 }
 
 // Give hands required to wield weapon.
-hands_reqd_type actor::hands_reqd(const item_def &item) const
+hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {
-    return basic_hands_reqd(item, body_size());
+    return basic_hands_reqd(item, body_size(PSIZE_TORSO, base));
 }
 
 /**
@@ -105,7 +106,7 @@ bool actor::is_habitable(const coord_def &_pos) const
 
 bool actor::handle_trap()
 {
-    trap_def* trap = find_trap(pos());
+    trap_def* trap = trap_at(pos());
     if (trap)
         trap->trigger(*this);
     return trap != nullptr;
@@ -187,7 +188,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
 bool actor::can_sleep(bool holi_only) const
 {
     const mon_holy_type holi = holiness();
-    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         return false;
 
     if (!holi_only)
@@ -206,7 +207,7 @@ void actor::shield_block_succeeded(actor *foe)
         && get_armour_slot(*sh) == EQ_SHIELD
         && is_artefact(*sh)
         && is_unrandom_artefact(*sh)
-        && (unrand_entry = get_unrand_entry(sh->special))
+        && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
         unrand_entry->melee_effects(sh, this, foe, false, 0);
@@ -225,7 +226,7 @@ bool actor::gourmand(bool calc_unid, bool items) const
 
 bool actor::res_corr(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
+    return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
@@ -240,7 +241,7 @@ bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
 
 bool actor::stasis(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_STASIS, calc_unid);
+    return false;
 }
 
 // permaswift effects like boots of running and lightning scales
@@ -256,8 +257,7 @@ bool actor::angry(bool calc_unid, bool items) const
 
 bool actor::clarity(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_AMULET, AMU_CLARITY, calc_unid)
-                     || scan_artefacts(ARTP_CLARITY, calc_unid));
+    return items && scan_artefacts(ARTP_CLARITY, calc_unid);
 }
 
 bool actor::faith(bool calc_unid, bool items) const
@@ -265,12 +265,9 @@ bool actor::faith(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
-bool actor::warding(bool calc_unid, bool items) const
+bool actor::dismissal(bool calc_unid, bool items) const
 {
-    // Note: when adding a new source of warding, please add it to
-    // melee_attack::attack_warded_off() as well.
-    return items && (wearing(EQ_AMULET, AMU_WARDING, calc_unid)
-                     || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
+    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
 }
 
 int actor::archmagi(bool calc_unid, bool items) const
@@ -281,15 +278,36 @@ int actor::archmagi(bool calc_unid, bool items) const
     return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
 }
 
+/**
+ * Indicates if the actor has an active evocations enhancer.
+ *
+ * @param calc_unid Whether to identify unknown items that enhance evocations.
+ * @param items Whether to count item powers.
+ * @return The number of levels of evocations enhancement this actor has.
+ */
+int actor::spec_evoke(bool calc_unid, bool items) const
+{
+    return 0;
+}
+
 bool actor::no_cast(bool calc_unid, bool items) const
 {
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
 }
 
+bool actor::reflection(bool calc_unid, bool items) const
+{
+    return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
+}
+
+bool actor::extra_harm(bool calc_unid, bool items) const
+{
+    return items && wearing(EQ_AMULET, AMU_HARM, calc_unid);
+}
+
 bool actor::rmut_from_item(bool calc_unid) const
 {
-    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid)
-           || scan_artefacts(ARTP_RMUT, calc_unid);
+    return scan_artefacts(ARTP_RMUT, calc_unid);
 }
 
 bool actor::evokable_berserk(bool calc_unid) const
@@ -300,8 +318,7 @@ bool actor::evokable_berserk(bool calc_unid) const
 
 bool actor::evokable_invis(bool calc_unid) const
 {
-    return wearing(EQ_RINGS, RING_INVISIBILITY, calc_unid)
-           || wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
+    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
            || scan_artefacts(ARTP_INVISIBLE, calc_unid);
 }
 
@@ -333,7 +350,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
-                    int stab_bypass) const
+                    int stab_bypass, bool for_real) const
 {
     int ac = max(armour_class() - stab_bypass, 0);
     int gdr = gdr_perc();
@@ -368,6 +385,15 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     }
 
     saved = max(saved, min(gdr * max_damage / 100, ac / 2));
+    if (for_real && (damage > 0) && (saved >= damage) && is_player())
+    {
+        const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            count_action(CACT_ARMOUR, body_armour->sub_type);
+        else
+            count_action(CACT_ARMOUR, -1); // unarmoured subtype
+    }
+
     return max(damage - saved, 0);
 }
 
@@ -520,10 +546,15 @@ void actor::stop_being_constricted(bool quiet)
 
 void actor::clear_far_constrictions()
 {
+    clear_constrictions_far_from(pos());
+}
+
+void actor::clear_constrictions_far_from(const coord_def &where)
+{
     clear_far_engulf();
     actor* const constrictor = actor_by_mid(constricted_by);
 
-    if (!constrictor || !adjacent(pos(), constrictor->pos()))
+    if (!constrictor || !adjacent(where, constrictor->pos()))
         stop_being_constricted();
 
     if (!constricting)
@@ -533,7 +564,7 @@ void actor::clear_far_constrictions()
     for (const auto &entry : *constricting)
     {
         actor* const constrictee = actor_by_mid(entry.first);
-        if (!constrictee || !adjacent(pos(), constrictee->pos()))
+        if (!constrictee || !adjacent(where, constrictee->pos()))
             need_cleared.push_back(entry.first);
     }
 
@@ -580,7 +611,7 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(actor* defender)
+bool actor::can_constrict(const actor* defender) const
 {
     ASSERT(defender); // XXX: change to actor &defender
     return (!is_constricting() || has_usable_tentacle())
@@ -818,8 +849,12 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     ASSERT(this != other);
     ASSERT(alive());
 
-    if (is_insubstantial())
+    if (is_insubstantial()
+        || mons_is_projectile(type)
+        || other && mons_is_projectile(other->type))
+    {
         return;
+    }
 
     if (is_monster())
         behaviour_event(as_monster(), ME_WHACK, agent);
@@ -870,4 +905,10 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
+}
+
+/// Is this creature despised by the so-called 'good gods'?
+bool actor::evil() const
+{
+    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
 }

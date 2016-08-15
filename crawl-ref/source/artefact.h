@@ -13,7 +13,7 @@
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
-#define HELLFIRE_BOLT_KEY "hellfire_bolt"
+#define DAMNATION_BOLT_KEY "damnation_bolt"
 
 struct bolt;
 
@@ -22,7 +22,7 @@ enum unrand_flag_type
     UNRAND_FLAG_NONE             = 0x00,
     UNRAND_FLAG_SPECIAL          = 0x01,
     UNRAND_FLAG_HOLY             = 0x02,
-    UNRAND_FLAG_UNHOLY           = 0x04,
+                              // = 0x04,  // was UNRAND_FLAG_UNHOLY
     UNRAND_FLAG_EVIL             = 0x08,
     UNRAND_FLAG_UNCLEAN          = 0x10,
     UNRAND_FLAG_CHAOTIC          = 0x20,

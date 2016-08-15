@@ -225,6 +225,24 @@ the current version and one for future versions:
         DNGN_BADLY_SEALED_DOOR,
     #endif
 
+Note that the function tag_read_char() should generally *not* use the
+"#if TAG_MAJOR_VERSION" construct, as character chunks are intended to be
+visible (in the saved game browser) even across major save bumps. In that
+function, one would instead check the chunk's major version at runtime.
+Additionally, minor tag comparisons in tag_read_char() typically use
+numbers rather than tag_minor_version enumerators, so that they do not
+have to be rewritten on major version bumps.
+
+    if (major > 34 || major == 34 && minor >= 29)
+        crawl_state.map = unmarshallString2(th);
+
+A comment with the name of the enumerator would be apropos, but is not
+required:
+
+    // TAG_MINOR_EXPLORE_MODE and TAG_MINOR_FIX_EXPLORE_MODE
+    if (major == 34 && (minor >= 121 && minor < 130))
+        you.explore = unmarshallBoolean(th);
+
 neil
 
 

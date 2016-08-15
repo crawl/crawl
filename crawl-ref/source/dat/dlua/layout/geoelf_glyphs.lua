@@ -19,7 +19,7 @@ geoelf.glyphs    = {}    -- Namespace for glyph constants, etc.
 --  constants like 'x' into a complex block of code.
 --
 -- TODO: Special tiles for door in glass and glass depicting
---       plant or feature (together or seperately).
+--       plant or feature (together or separately).
 --
 
 geoelf.glyphs.WALL           = 'x'

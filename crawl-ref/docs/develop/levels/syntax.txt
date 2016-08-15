@@ -63,10 +63,9 @@ Features
  >< - escape hatches - you can leave the level by these but will usually
       not land on stairs/hatches
 
- I - orcish idol (does nothing)
-
- ^ - random trap.
+ ^ - random trap. Deprecated.
  ~ - random trap suitable for the branch and depth the map is being used.
+     Deprecated.
 
  A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
@@ -76,6 +75,8 @@ Features
  G - Granite statue (does nothing) - you can see through but not walk through.
      Also, sight-based effects like smiting work past granite statues, as does
      apportation.
+ I - orcish idol. As granite statue, but anyone who destroys an idol will be
+     smitten by the hand of Beogh for massive damage. Generally used for theme.
 
  T - Water fountain
  U - Magic fountain
@@ -324,7 +325,7 @@ PLACE:    Used to specify certain special levels. Existing special levels
 
 TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           TAGS: lines, or use \ for very long ones. Valid tags are:
-          * Any KPROP name ("no_rtele_into", "no_tide", etc.): applies the
+          * Any KPROP name ("no_tele_into", "no_tide", etc.): applies the
              property to every square of the vault. See KPROP: below.
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
@@ -546,12 +547,6 @@ ITEM:     (list of items, separated by comma)
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
-          * "unrand:item_name" will make a given unrandom by a given name,
-            like "long sword unrand:singing_sword". Omit any apostrophes
-            in the name (e.g, unrand:vampires_tooth). If the name has
-            something between double quotes then use that string (e.g,
-            unrand:bloodbane). If the unique already exists, the base item
-            will be given instead.
           * "randart" will force a randart. Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
@@ -627,6 +622,20 @@ ITEM:     (list of items, separated by comma)
           the glyph after all substitutions, while the latter considers only
           those substitutions that precede the delayed_decay call.
 
+          Unrands
+          -------------------
+          You can specify fixed artefacts, e.g. the scythe of curses, by
+          naming them: "KITEM: e = scythe of curses". If the desired unrand's
+          names has something between double quotes, use that: e.g, bloodbane.
+
+          If this unrand has already been placed, a randart of the same type
+          will be created instead. Staff unrands, since they have no
+          corresponding type that can be transformed into a randart, are
+          replaced by an appropriate magical staff. (E.g. a staff of poison.)
+          The lua function you.unrands() ('you.unrands("scythe of curses")')
+          can be used to check whether an unrand has already been seen, if
+          you don't want to use the default fallback.
+
           Randart spell books
           -------------------
           You can specify random artefact spell books using:
@@ -691,9 +700,9 @@ MONS:     (list of monsters)
           an "n-headed hydra" (with a maximum of 20 heads):
               MONS: four-headed hydra
 
-          A chimera can be given parts from three specific monsters by
-          specifying them in a hyphen-separated list as follows:
-              MONS: yak-frog-bat chimera
+          A mutant beast can be customized by prefacing it with a maturity level
+          and/or hyphen-separated set of traits, as follows:
+              MONS: mature shock-weird mutant beast
 
           A slime creature's size can be set to other than normal using
           the prefixes "large", "very large", "enormous" or "titanic":
@@ -1418,18 +1427,12 @@ KPROP:    x = bloody
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
-          * "no_rtele_into": Prevents random teleport from choosing to use this
+          * "no_tele_into": Prevents teleportation from choosing to use this
              square. Also prevents this square from being the destination of
              a shaft or hatch. Use this tag to prevent nasty situations like
              the player ending up in a closet or an extremely dense monster
-             array (like a hellion island).
-          * "no_ctele_into": Prevents controlled teleportation into this square.
-             Will instead generate the message "A strong magical force throws
-             you back!".
-          * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
-             in one flag, and disallows both random and controlled teleports.
-             Use this for vaults with loot where the player is not supposed to
-             get it by teleporting alone.
+             array (like a hellion island); or for vaults with loot where the
+             player is not supposed to get it by teleporting alone.
           * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
@@ -1444,7 +1447,7 @@ KPROP:    x = bloody
             vaults.
 
           Properties can also be used as tags to apply to the entire vault:
-            TAGS: no_rtele_into no_tide
+            TAGS: no_tele_into no_tide
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

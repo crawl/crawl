@@ -49,9 +49,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                 0,
                 SPELL_IOOD,
                 coord_def(),
-                mtarg,
-                0,
-                GOD_NO_GOD), true, true);
+                mtarg), true, true);
     if (!mon)
     {
         mprf(MSGCH_ERROR, "Failed to spawn projectile.");
@@ -577,7 +575,7 @@ move_again:
         if (victim && _iood_shielded(mon, *victim))
         {
             item_def *shield = victim->shield();
-            if (!shield || !shield_reflects(*shield))
+            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
@@ -593,21 +591,41 @@ move_again:
 
             if (victim->is_player())
             {
-                mprf("Your %s reflects %s!",
-                    shield->name(DESC_PLAIN).c_str(),
-                    mon.name(DESC_THE, true).c_str());
-                ident_reflector(shield);
+                if (shield && shield_reflects(*shield)) {
+                    mprf("Your %s reflects %s!",
+                        shield->name(DESC_PLAIN).c_str(),
+                        mon.name(DESC_THE, true).c_str());
+                    ident_reflector(shield);
+                }
+                else // has reflection property not from shield
+                {
+                    mprf("%s reflects off an invisible shield around you!",
+                            mon.name(DESC_THE, true).c_str());
+                }
             }
             else if (you.see_cell(pos))
             {
                 if (victim->observable())
                 {
-                    mprf("%s reflects %s with %s %s!",
-                        victim->name(DESC_THE, true).c_str(),
-                        mon.name(DESC_THE, true).c_str(),
-                        mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
-                        shield->name(DESC_PLAIN).c_str());
-                    ident_reflector(shield);
+                    if (shield && shield_reflects(*shield))
+                    {
+                        mprf("%s reflects %s with %s %s!",
+                            victim->name(DESC_THE, true).c_str(),
+                            mon.name(DESC_THE, true).c_str(),
+                            mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                            shield->name(DESC_PLAIN).c_str());
+                        ident_reflector(shield);
+                    }
+                    else
+                    {
+                        mprf("%s reflects off an invisible shield around %s!",
+                            mon.name(DESC_THE, true).c_str(),
+                            victim->name(DESC_THE, true).c_str());
+
+                        item_def *amulet = victim->slot_item(EQ_AMULET);
+                        if (amulet)
+                            ident_reflector(amulet);
+                    }
                 }
                 else
                 {

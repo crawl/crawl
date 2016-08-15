@@ -2823,7 +2823,7 @@ ENDMAP
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
-ITEM:   ring of teleportation / scroll of teleportation q:3
+ITEM:   scroll of teleportation ident:type q:3
 DEPTH:  D:5-, Depths
 MAP
    wwwwwwwww
@@ -2910,17 +2910,6 @@ x+xx
 xddx
 xddx
 xxxx
-ENDMAP
-
-NAME:  minmay_bad_closet
-TAGS:  extra
-DEPTH: D:2-12
-ITEM:  scroll of immolation / potion of degeneration / potion of poison
-MAP
-xxxx
-xddx
-xddx
-xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet

@@ -14,6 +14,7 @@
 #include "crash.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
+#include "delay.h"
 #include "directn.h"
 #include "dlua.h"
 #include "env.h"
@@ -184,16 +185,11 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (const delay_queue_item &item : you.delay_queue)
+        for (const auto delay : you.delay_queue)
         {
-            fprintf(file, "    type:     %d", item.type);
-            if (item.type <= DELAY_NOT_DELAYED || item.type >= NUM_DELAYS)
-                fprintf(file, " <invalid>");
+            fprintf(file, "    type:     %s", delay->name());
             fprintf(file, "\n");
-            fprintf(file, "    duration: %d\n", item.duration);
-            fprintf(file, "    parm1:    %d\n", item.parm1);
-            fprintf(file, "    parm2:    %d\n", item.parm2);
-            fprintf(file, "    started:  %d\n\n", (int) item.started);
+            fprintf(file, "    duration: %d\n", delay->duration);
         }
         fprintf(file, "\n");
     }
@@ -212,7 +208,7 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|     %c     |   %d   |   %3d    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
@@ -357,7 +353,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "\n");
 
     fprintf(file, "Equipment:\n");
-    for (int i = 0; i < NUM_EQUIP; ++i)
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         int8_t eq = you.equip[i];
 
@@ -512,7 +508,7 @@ static void _debug_dump_lua_markers(FILE *file)
         if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
-        fprintf(file, "Lua marker %d at (%d, %d):\n",
+        fprintf(file, "Lua marker %u at (%d, %d):\n",
                 i, marker->pos.x, marker->pos.y);
         fprintf(file, "{{{{\n");
         fprintf(file, "%s", result.c_str());
@@ -627,6 +623,7 @@ void do_crash_dump()
 
     if (!crawl_state.test && !_assert_msg.empty())
         fprintf(stderr, "\n%s", _assert_msg.c_str());
+    // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
             "Please submit a bug report at https://crawl.develz.org/mantis/ "
@@ -760,9 +757,6 @@ void do_crash_dump()
 
 // Assertions and such
 
-//---------------------------------------------------------------
-// BreakStrToDebugger
-//---------------------------------------------------------------
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 // FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
@@ -800,11 +794,6 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 }
 
 #ifdef ASSERTS
-//---------------------------------------------------------------
-//
-// AssertFailed
-//
-//---------------------------------------------------------------
 NORETURN void AssertFailed(const char *expr, const char *file, int line,
                            const char *text, ...)
 {
