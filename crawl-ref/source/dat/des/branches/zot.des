@@ -2502,7 +2502,7 @@ TAGS:       no_dump
 
 ## terrain
 # XXX: Fixed trap chance spots and slim chances for traps on nearly every
-# square should be replaced with per-chamber trap NSUBSTs, with seperate
+# square should be replaced with per-chamber trap NSUBSTs, with separate
 # NSUBSTs for each chamber's inner and outer edges alongside main innards.
 KFEAT:    ~ = any trap / w:20 floor
 KMASK:    1! = no_item_gen
