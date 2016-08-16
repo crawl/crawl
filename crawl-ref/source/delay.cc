@@ -480,7 +480,8 @@ static bool _auto_eat()
 {
     return Options.auto_eat_chunks
            && Options.autopickup_on > 0
-           && (!you.gourmand()
+           && (player_likes_chunks(true)
+               || !you.gourmand()
                || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED);
 }
