@@ -981,12 +981,10 @@ LROCKTILE:  wall_hall
               "If it is a boss round, you only need to kill the boss in order to win.\n" ..
               "If it is a lightning round, you only need to survive!</cyan>")
 }}
-# No exploration gods or beogh, although both gods are still allowed (just
-# harder to get). Both would be rather useless if you picked them, though.
-# Positions are random, and you don't have enough time to reach an altar before
-# the game starts.
-NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / k / l / n / \
-            o / p / q / r / s / *:.
+# No exploration gods. Positions are random, and you don't have enough time to
+# reach an altar before the game starts.
+NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / \
+            m / n / o / p / q / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -998,14 +996,15 @@ KFEAT:  7 = altar_okawaru
 KFEAT:  8 = altar_makhleb
 KFEAT:  9 = altar_sif_muna
 KFEAT:  h = altar_trog
-KFEAT:  k = altar_cheibriados
-KFEAT:  l = altar_jiyva
-KFEAT:  n = altar_fedhas
-KFEAT:  o = altar_dithmenos
-KFEAT:  p = altar_gozag
-KFEAT:  q = altar_qazlal
-KFEAT:  r = altar_ru
-KFEAT:  s = altar_uskayaw
+KFEAT:  i = altar_beogh
+KFEAT:  j = altar_cheibriados
+KFEAT:  k = altar_jiyva
+KFEAT:  l = altar_fedhas
+KFEAT:  m = altar_dithmenos
+KFEAT:  n = altar_gozag
+KFEAT:  o = altar_qazlal
+KFEAT:  p = altar_ru
+KFEAT:  q = altar_uskayaw
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of iceblast charges:5 ident:all, \

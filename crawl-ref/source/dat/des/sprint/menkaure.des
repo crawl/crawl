@@ -211,39 +211,38 @@ ENDMAP
 
 NAME:   sprint2_temple
 TAGS:   sprint2_temple no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-SHUFFLE: abdefghijklmnopqrstuvwx
-KFEAT:  a = altar_zin
-KFEAT:  b = altar_the_shining_one
-KFEAT:  d = altar_kikubaaqudgha
-KFEAT:  e = altar_yredelemnul
-KFEAT:  f = altar_xom
-KFEAT:  g = altar_vehumet
-KFEAT:  h = altar_okawaru
-KFEAT:  i = altar_makhleb
-KFEAT:  j = altar_sif_muna
-KFEAT:  k = altar_trog
-KFEAT:  l = altar_nemelex_xobeh
-KFEAT:  m = altar_elyvilon
-KFEAT:  n = altar_lugonu
-KFEAT:  o = altar_beogh
-KFEAT:  p = altar_jiyva
-KFEAT:  q = altar_fedhas
-KFEAT:  r = altar_cheibriados
-KFEAT:  s = altar_dithmenos
-KFEAT:  t = altar_gozag
-KFEAT:  u = altar_qazlal
-KFEAT:  v = altar_ru
-KFEAT:  w = altar_uskayaw
-KFEAT:  x = altar_hepliaklqana
+KFEAT:  b = altar_beogh
+KFEAT:  c = altar_cheibriados
+KFEAT:  d = altar_dithmenos
+KFEAT:  e = altar_elyvilon
+KFEAT:  f = altar_fedhas
+KFEAT:  g = altar_gozag
+KFEAT:  h = altar_hepliaklqana
+KFEAT:  j = altar_jiyva
+KFEAT:  k = altar_kikubaaqudgha
+KFEAT:  l = altar_lugonu
+KFEAT:  m = altar_makhleb
+KFEAT:  n = altar_nemelex_xobeh
+KFEAT:  o = altar_okawaru
+KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
+KFEAT:  s = altar_sif_muna
+KFEAT:  t = altar_trog
+KFEAT:  u = altar_uskayaw
+KFEAT:  v = altar_vehumet
+KFEAT:  x = altar_xom
+KFEAT:  y = altar_yredelemnul
+KFEAT:  z = altar_zin
+KFEAT:  1 = altar_the_shining_one
 MAP
-..u.d...
-.t.g.h..
-x.k.l.s.
-.w.o.p.v
-..a.i.m.
-...r.q.j
-....n.f.
-.....b.e
+..q.x...
+.h.r.y..
+b.j.s.z.
+.c.k.t.1
+..d.l.u.
+...e.m.v
+....f.n.
+.....g.o
 ENDMAP
 
 NAME:   sprint2_shoproom
