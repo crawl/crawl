@@ -168,7 +168,7 @@ static const cloud_data clouds[] = {
     { "ink",  nullptr,                          // terse, verbose name
       DARKGREY,                                 // colour
       { TILE_CLOUD_INK },                       // tile
-      BEAM_INK, {},                             // beam_effect & damage
+      BEAM_NONE, {},                            // beam_effect & damage
       true,                                     // opacity
     },
     // CLOUD_PETRIFY,
