@@ -689,18 +689,15 @@ static like_response okawaru_kill(const char* desc)
     };
 }
 
-static const like_response explore_response(int level)
-{
-    return {
-        "you explore the world", false,
-        0, 0, 0, nullptr,
-        [level] (int &piety, int &denom, const monster* /*victim*/)
-        {
-            // piety = denom = level at the start of the function
-            piety = level;
-        }
-    };
-}
+static const like_response EXPLORE_RESPONSE = {
+    "you explore the world", false,
+    0, 0, 0, nullptr,
+    [] (int &piety, int &denom, const monster* /*victim*/)
+    {
+        // piety = denom = level at the start of the function
+        piety = 20;
+    }
+};
 
 
 typedef map<conduct_type, like_response> like_map;
@@ -849,11 +846,11 @@ static like_map divine_likes[] =
     },
     // GOD_NEMELEX_XOBEH,
     {
-        { DID_EXPLORATION, explore_response(20) },
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
     // GOD_ELYVILON,
     {
-        { DID_EXPLORATION, explore_response(20) },
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
     // GOD_LUGONU,
     {
@@ -986,7 +983,7 @@ static like_map divine_likes[] =
     },
     // GOD_HEPLIAKLQANA,
     {
-        { DID_EXPLORATION, explore_response(20) },
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
 };
 
