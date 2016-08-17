@@ -1531,8 +1531,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISCELLANY);
         bad_class.set(OBJ_WANDS);
     }
-    if (you_worship(GOD_TROG))
-        bad_class.set(OBJ_STAVES);
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
