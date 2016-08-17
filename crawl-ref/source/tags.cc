@@ -2945,6 +2945,14 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_BLINK] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_MUMMY_RESTORATION)
+    {
+        if (you.mutation[MUT_MUMMY_RESTORATION])
+            you.mutation[MUT_MUMMY_RESTORATION] = 0;
+        if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
+            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+    }
+
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.
     const int xl_remaining = you.get_max_xl() - you.experience_level;
@@ -3130,6 +3138,13 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count; i++)
         you.exp_docked_total[i] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
+    }
+    if (th.getMinorVersion() < TAG_MINOR_PAKELLAS_WRATH
+        && player_under_penance(GOD_PAKELLAS))
+    {
+        you.exp_docked[GOD_PAKELLAS] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[GOD_PAKELLAS] = you.exp_docked[GOD_PAKELLAS];
     }
 #endif
 
@@ -3425,7 +3440,7 @@ static void tag_read_you(reader &th)
             you.props["sticky_flame_aux"] = you.props["napalm_aux"];
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists(ORIGINAL_BRAND_KEY))
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
         you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
 
     // Both saves prior to TAG_MINOR_RU_DELAY_STACKING, and saves transferred
@@ -3946,9 +3961,6 @@ static void tag_construct_level(writer &th)
         marshallByte(th, cloud.whose);
         marshallByte(th, cloud.killer);
         marshallInt(th, cloud.source);
-        marshallShort(th, cloud.colour);
-        marshallString(th, cloud.name);
-        marshallString(th, cloud.tile);
         marshallInt(th, cloud.excl_rad);
     }
 
@@ -5373,9 +5385,14 @@ static void tag_read_level(reader &th)
         cloud.whose = static_cast<kill_category>(unmarshallUByte(th));
         cloud.killer = static_cast<killer_type>(unmarshallUByte(th));
         cloud.source = unmarshallInt(th);
-        cloud.colour = unmarshallShort(th);
-        cloud.name   = unmarshallString(th);
-        cloud.tile   = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_DECUSTOM_CLOUDS)
+        {
+            unmarshallShort(th); // was cloud.colour
+            unmarshallString(th); // was cloud.name
+            unmarshallString(th); // was cloud.tile
+        }
+#endif
         cloud.excl_rad = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34

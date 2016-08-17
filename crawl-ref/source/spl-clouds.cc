@@ -174,24 +174,22 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 }
 
 static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                                cloud_type ctype, const actor *agent, int colour,
-                                string name, string tile, int excl_rad)
+                                cloud_type ctype, const actor *agent,
+                                int excl_rad)
 {
     place_cloud(ctype, where,
                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                agent, spread_rate, colour, name, tile, excl_rad);
+                agent, spread_rate, excl_rad);
 
     return 1;
 }
 
 void big_cloud(cloud_type cl_type, const actor *agent,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, string name, string tile)
+               const coord_def& where, int pow, int size, int spread_rate)
 {
     // The starting point _may_ be a place no cloud can be placed on.
     apply_area_cloud(_make_a_normal_cloud, where, pow, size,
-                     cl_type, agent, spread_rate, colour, name, tile,
-                     -1);
+                     cl_type, agent, spread_rate, -1);
 }
 
 spret_type cast_ring_of_flames(int power, bool fail)

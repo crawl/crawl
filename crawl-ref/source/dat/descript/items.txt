@@ -1,9 +1,4 @@
 %%%%
-akashic record
-
-The last and greatest work of the Warper Golubria, detailing the most powerful
-Translocations spells in existence.
-%%%%
 amulet of dismissal
 
 An amulet which generates a field of translocational energy that will teleport
@@ -940,11 +935,6 @@ ring of strength
 
 A ring that increases or decreases the physical strength of its wearer,
 depending on its degree of enchantment.
-%%%%
-ring of sustain attributes
-
-A ring that protects its wearer from loss of strength, dexterity and
-intelligence.
 %%%%
 ring of teleportation
 

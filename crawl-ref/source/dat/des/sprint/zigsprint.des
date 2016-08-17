@@ -48,7 +48,7 @@ end
 
 function callback.make_hatch(data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("hatch", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false)
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false)
         dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
     end
     crawl.mpr("<magenta>An exit appears before you!</magenta>")
@@ -690,31 +690,30 @@ ENDMAP
 NAME:  room_start
 TAGS:  no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 : setup_room(_G, 1)
-KFEAT:  a = altar_zin
-KFEAT:  b = altar_the_shining_one
-KFEAT:  c = altar_ashenzari
-KFEAT:  d = altar_kikubaaqudgha
-KFEAT:  e = altar_yredelemnul
-KFEAT:  f = altar_xom
-KFEAT:  g = altar_vehumet
-KFEAT:  h = altar_okawaru
-KFEAT:  i = altar_makhleb
-KFEAT:  j = altar_sif_muna
-KFEAT:  k = altar_trog
-KFEAT:  l = altar_nemelex_xobeh
-KFEAT:  m = altar_elyvilon
-KFEAT:  n = altar_lugonu
-KFEAT:  o = altar_beogh
-KFEAT:  p = altar_jiyva
-KFEAT:  q = altar_fedhas
-KFEAT:  r = altar_cheibriados
-KFEAT:  s = altar_dithmenos
-KFEAT:  t = altar_gozag
-KFEAT:  u = altar_qazlal
-KFEAT:  v = altar_ru
-KFEAT:  w = altar_pakellas
-KFEAT:  x = altar_uskayaw
-KFEAT:  y = altar_hepliaklqana
+KFEAT:  a = altar_ashenzari
+KFEAT:  b = altar_beogh
+KFEAT:  c = altar_cheibriados
+KFEAT:  d = altar_dithmenos
+KFEAT:  e = altar_elyvilon
+KFEAT:  f = altar_fedhas
+KFEAT:  g = altar_gozag
+KFEAT:  h = altar_hepliaklqana
+KFEAT:  j = altar_jiyva
+KFEAT:  k = altar_kikubaaqudgha
+KFEAT:  l = altar_lugonu
+KFEAT:  m = altar_makhleb
+KFEAT:  n = altar_nemelex_xobeh
+KFEAT:  o = altar_okawaru
+KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
+KFEAT:  s = altar_sif_muna
+KFEAT:  t = altar_trog
+KFEAT:  u = altar_uskayaw
+KFEAT:  v = altar_vehumet
+KFEAT:  x = altar_xom
+KFEAT:  y = altar_yredelemnul
+KFEAT:  z = altar_zin
+KFEAT:  1 = altar_the_shining_one
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -805,19 +804,19 @@ KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
-^g^h^i&A&j^k^l^
-f.............m
+^g^h^j&A&k^l^m^
+f.............n
 ^.........RT..^
-e..HG.........n
+e..HG.........o
 ^..IF.........^
-d..JE.....S...o
+d..JE.....S...q
 ^...D..M..P...^
-c......L..O...p
+c......L..O...r
 ^...C..K..N...^
-b...B.{.......q
+b...B.{.......s
 ^.............^
-a.............r
-^y^x^w^v^u^t^s^
+a.............t
+^^1^z^y^x^v^u^^
 ENDMAP
 
 NAME:  room_1

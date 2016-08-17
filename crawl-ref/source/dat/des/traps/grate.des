@@ -47,7 +47,7 @@ function callback.grate_trap_stepped(data, triggerable, triggerer, marker, ev)
         if (dgn.mons_at(slave.x, slave.y) ~= nil or (slave.x == you_x and slave.y == you_y)) then
             crawl.mpr("You hear a faint grinding sound.")
         else
-            dgn.terrain_changed(slave.x, slave.y, "iron_grate", false, false)
+            dgn.terrain_changed(slave.x, slave.y, "iron_grate", false)
             if (you.see_cell(slave.x, slave.y)) then
                 crawl.mpr("An iron grate slams shut!")
             else

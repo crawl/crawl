@@ -244,10 +244,10 @@ TAGS:    no_rotate
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
-FTILE:   "ABCDEFGHIJKLMNOPRQSTUV : floor_limestone w:5 / floor_nerves
+FTILE:   "ABCDEFGHIJKLMNOPRQSTU : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
-SHUFFLE: ABCDEFHIJKLMNOPQRSTUV
+SHUFFLE: ABCDEFHIJKLMNOPQRSTU
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
@@ -266,18 +266,17 @@ KFEAT:   P = altar_ashenzari
 KFEAT:   Q = altar_dithmenos
 KFEAT:   R = altar_gozag
 KFEAT:   S = altar_qazlal
-KFEAT:   T = altar_pakellas
-KFEAT:   U = altar_uskayaw
-KFEAT:   V = altar_hepliaklqana
+KFEAT:   T = altar_uskayaw
+KFEAT:   U = altar_hepliaklqana
 MAP
 ''''''...............
 ''ccccccccccccccccc..
 ''G'c"""D"""""P"""c..
-''''c"A"""I"L"""T"c..
+''''c"A"""I"L"""S"c..
 ''G'c"""E"""""Q"""ct.
-''''+"B"""J"N"""U"c..
+''''+"B"""J"N"""T"c..
 ''G'c"""F"""""R"""c..
-''''c"C"""K"O"""V"c.t
+''''c"C"""K"O"""U"c.t
 ''G'c"""H"""""S"""c..
 ''ccccccccccccccccc..
 .......t......ttt....
@@ -1140,7 +1139,7 @@ MAP
 ENDMAP
 
 # This vault would really appreciate "warning door" and "locked door"
-# being seperated from their forced union as runed doors...
+# being separated from their forced union as runed doors...
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = giant orange brain

@@ -2944,13 +2944,10 @@ Curse
   chance of self-cursing when equipped
 
 Fire
-  rF+, rC-, enhances fire magic and weakens ice magic
+  rF+, rC-, enhances fire magic
 
 Ice
-  rC+, rF-, enhances ice magic and weakens fire magic
-
-SustAb
-  sustain abilities
+  rC+, rF-, enhances ice magic
 
 Regen
   regeneration
@@ -2972,9 +2969,6 @@ Clar
 
 Gourm
   gourmand
-
-Ward
-  warding
 
 Spirit
   guardian spirit

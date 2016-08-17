@@ -833,7 +833,7 @@ static void _animate_weapon(int pow, actor* target)
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
-        if (you.duration[DUR_WEAPON_BRAND])
+        if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             end_weapon_brand(*wpn);
 
         // Mark weapon as "thrown", so we'll autopickup it later.
@@ -1152,13 +1152,13 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         // tier 4
         type = random_choose(MONS_ICE_DEVIL,     MONS_RUST_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
-                             MONS_SIXFIRHY,      MONS_HELLWING);
+                             MONS_CHAOS_SPAWN,   MONS_HELLWING);
     }
     else
     {
         // tier 3
         type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
-                             MONS_CHAOS_SPAWN,   MONS_SMOKE_DEMON,
+                             MONS_SIXFIRHY,      MONS_SMOKE_DEMON,
                              MONS_NEQOXEC,       MONS_YNOXINUL);
     }
 
@@ -1378,7 +1378,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss"));
-        lose_stat(STAT_INT, 1 + random2(2));
+        lose_stat(STAT_INT, 1);
     }
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);

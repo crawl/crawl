@@ -1725,7 +1725,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     else if (power_level == 1)
     {
         dct = random_choose(MONS_SUN_DEMON, MONS_SOUL_EATER,
-              MONS_CHAOS_SPAWN, MONS_SMOKE_DEMON, MONS_YNOXINUL,
+              MONS_SIXFIRHY, MONS_SMOKE_DEMON, MONS_YNOXINUL,
               MONS_NEQOXEC);
         dct2 = MONS_RAKSHASA;
     }
@@ -1733,7 +1733,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     {
         dct = random_choose(MONS_RED_DEVIL, MONS_ICE_DEVIL,
               MONS_RUST_DEVIL, MONS_HELLWING, MONS_ORANGE_DEMON,
-              MONS_SIXFIRHY);
+              MONS_CHAOS_SPAWN);
         dct2 = MONS_HELL_HOUND;
     }
 

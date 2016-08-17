@@ -3420,7 +3420,7 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
                 MONS_RUST_DEVIL,
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
-                MONS_SIXFIRHY,
+                MONS_CHAOS_SPAWN,
                 MONS_HELLWING);
         }
         else
@@ -3432,7 +3432,7 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
                 MONS_SMOKE_DEMON,
                 MONS_NEQOXEC,
                 MONS_YNOXINUL,
-                MONS_CHAOS_SPAWN);
+                MONS_SIXFIRHY);
         }
 
     case RANDOM_DEMON_GREATER:

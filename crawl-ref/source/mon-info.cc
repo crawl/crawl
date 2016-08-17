@@ -814,7 +814,12 @@ string monster_info::_core_name() const
     monster_type nametype = type;
 
     if (mons_class_is_zombified(type))
-        nametype = mons_species(base_type);
+    {
+        if (mons_is_unique(base_type))
+            nametype = mons_species(base_type);
+        else
+            nametype = base_type;
+    }
     else if (type == MONS_PILLAR_OF_SALT
              || type == MONS_BLOCK_OF_ICE
              || type == MONS_SENSED)

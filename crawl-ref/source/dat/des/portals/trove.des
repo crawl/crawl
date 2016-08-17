@@ -919,8 +919,7 @@ veto {{ return crawl.game_started()
 COLOUR: x = blue
 COLOUR: ' = yellow
 SUBST:  d = dde
-KFEAT:  _ = altar_pakellas
-FTILE:  'T_ : floor_limestone
+FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
 ITEM:   any misc / any rod w:4
@@ -931,7 +930,7 @@ MAP
   xxxxx
   xfffx
  xxx+xxx
- xdT_Tdx
+ xd'''dx
  xd'''dx
  xd'''dx
  xd'''dx

@@ -201,11 +201,12 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Warp
-    SPELL_RECALL,
     SPELL_GRAVITAS,
     SPELL_FORCE_LANCE,
-    SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
+    SPELL_DISPERSAL,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_DISJUNCTION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -292,12 +293,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_INVISIBILITY
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Akashic Record
     SPELL_DISPERSAL,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
     SPELL_CONTROLLED_BLINK,
 },
+#endif
 
 {   // Book of Debilitation
     SPELL_CORONA,

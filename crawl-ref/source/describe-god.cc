@@ -831,7 +831,12 @@ static void _describe_god_powers(god_type which_god)
             textcolour(god_colour(which_god));
         else
             textcolour(DARKGREY);
-        cprintf("%s supports your attributes (+%d).\n",
+        cprintf("%s %sslows your movement.\n",
+                uppercase_first(god_name(which_god)).c_str(),
+                piety >= piety_breakpoint(5) ? "greatly " :
+                piety >= piety_breakpoint(2) ? "" :
+                                               "slightly ");
+        cprintf("%s supports your attributes. (+%d)\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 chei_stat_boost(piety));
         break;
@@ -876,9 +881,16 @@ static void _describe_god_powers(god_type which_god)
         cprintf("Your enemies may become distracted by gold.\n");
         break;
 
+    case GOD_HEPLIAKLQANA:
+        have_any = true;
+        cprintf("Your life essence is reduced. (-10% HP)\n");
+        break;
+
     case GOD_PAKELLAS:
     {
         have_any = true;
+        cprintf("%s prevents your magic from regenerating.\n",
+                uppercase_first(god_name(which_god)).c_str());
         cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
         if (!you_foodless_normally())

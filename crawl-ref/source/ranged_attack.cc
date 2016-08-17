@@ -644,11 +644,6 @@ bool ranged_attack::apply_missile_brand()
     default:
         break;
     case SPMSL_FLAME:
-        if (using_weapon()
-            && get_weapon_brand(*weapon) == SPWPN_FREEZING)
-        {
-            break;
-        }
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
@@ -660,11 +655,6 @@ bool ranged_attack::apply_missile_brand()
         attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
-        if (using_weapon()
-            && get_weapon_brand(*weapon) == SPWPN_FLAMING)
-        {
-            break;
-        }
         calc_elemental_brand_damage(BEAM_COLD, "freeze",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);

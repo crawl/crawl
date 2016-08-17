@@ -178,37 +178,37 @@ ENDMAP
 
 NAME:     line_temple
 TAGS:     line_temple
-KFEAT:    a = altar_zin
-KFEAT:    b = altar_the_shining_one
-KFEAT:    c = altar_kikubaaqudgha
-KFEAT:    d = altar_yredelemnul
-KFEAT:    e = altar_xom
-KFEAT:    f = altar_vehumet
-KFEAT:    g = altar_okawaru
-KFEAT:    h = altar_makhleb
-KFEAT:    i = altar_sif_muna
-KFEAT:    j = altar_trog
-KFEAT:    k = altar_nemelex_xobeh
-KFEAT:    l = altar_elyvilon
-KFEAT:    m = altar_beogh
-KFEAT:    n = altar_jiyva
-KFEAT:    o = altar_lugonu
-KFEAT:    p = altar_fedhas
-KFEAT:    q = altar_cheibriados
-KFEAT:    r = altar_dithmenos
-KFEAT:    s = altar_qazlal
-KFEAT:    t = altar_gozag
-KFEAT:    u = altar_ru
-KFEAT:    v = altar_pakellas
-KFEAT:    w = altar_uskayaw
-KFEAT:    y = altar_hepliaklqana
+# No Ashenzari.
+KFEAT:    b = altar_beogh
+KFEAT:    c = altar_cheibriados
+KFEAT:    d = altar_dithmenos
+KFEAT:    e = altar_elyvilon
+KFEAT:    f = altar_fedhas
+KFEAT:    g = altar_gozag
+KFEAT:    h = altar_hepliaklqana
+KFEAT:    j = altar_jiyva
+KFEAT:    k = altar_kikubaaqudgha
+KFEAT:    l = altar_lugonu
+KFEAT:    m = altar_makhleb
+KFEAT:    n = altar_nemelex_xobeh
+KFEAT:    o = altar_okawaru
+KFEAT:    q = altar_qazlal
+KFEAT:    r = altar_ru
+KFEAT:    s = altar_sif_muna
+KFEAT:    t = altar_trog
+KFEAT:    u = altar_uskayaw
+KFEAT:    v = altar_vehumet
+KFEAT:    x = altar_xom
+KFEAT:    y = altar_yredelemnul
+KFEAT:    z = altar_zin
+KFEAT:    1 = altar_the_shining_one
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrstuvwy
+~bcdefghjklmnoqrstuvxyz1.
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

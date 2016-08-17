@@ -346,10 +346,12 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         = static_cast<special_missile_type>(item.brand);
     switch (brand)
     {
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_FLAME:
         return "flame";
     case SPMSL_FROST:
         return "frost";
+#endif
     case SPMSL_POISONED:
         return t == MBN_NAME ? "poisoned" : "poison";
     case SPMSL_CURARE:
@@ -745,7 +747,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_LOUDNESS:              return "loudness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
+#if TAG_MAJOR_VERSION == 34
         case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
+#endif
         case RING_STEALTH:               return "stealth";
         case RING_DEXTERITY:             return "dexterity";
         case RING_INTELLIGENCE:          return "intelligence";
@@ -1206,8 +1210,10 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         else if (sub_type == BOOK_AKASHIC_RECORD)
             return "Akashic Record";
+#endif
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -3709,9 +3715,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_STEALTH:
             return player_mutation_level(MUT_NO_STEALTH);
-
-        case RING_SUSTAIN_ATTRIBUTES:
-            return player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
 
         default:
             return false;

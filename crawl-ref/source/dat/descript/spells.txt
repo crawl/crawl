@@ -196,7 +196,7 @@ undead.
 Brain Feed spell
 
 Drains a portion of a visible enemy's intelligence. Such a loss is only
-temporary, and can be prevented or reduced by having sustained attributes.
+temporary, and can be recovered by gaining experience.
 %%%%
 Brothers in Arms spell
 
@@ -1529,12 +1529,6 @@ brambles are sparse enough that almost any missile can pass through unhindered.
 Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
-%%%%
-Warp Weapon spell
-
-Temporarily binds a localized warp field to the caster's weapon. Unlike a
-permanently distortion-branded weapon, the affected weapon may still be safely
-unwielded. It will not affect artefact weapons.
 %%%%
 Waterstrike spell
 

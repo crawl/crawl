@@ -1871,7 +1871,7 @@ _Bai_Suzhen_common_
 
 @The_monster@ pines for @possessive@ lost husband.
 
-@The_monster@ roars, "Even the heavens can't seperate us forever!"
+@The_monster@ roars, "Even the heavens can't separate us forever!"
 
 @The_monster@ inspects @possessive@ gathered herbal reagents.
 

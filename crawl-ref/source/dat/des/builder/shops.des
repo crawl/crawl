@@ -376,25 +376,6 @@ xxxxx
 ENDMAP
 
 #####################################################
-# Off-brand ammo
-NAME:  nicolae_offbrand_ammo
-DEPTH:  D:5-, Depths, Orc
-WEIGHT: 1
-TAGS:  no_hmirror no_vmirror
-KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
-       tomahawk ego:flame | tomahawk ego:frost | tomahawk ego:chaos | \
-       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos
-MAP
-.......
-.lllll.
-.lG.Gl.
-.l.S.l.
-.lG.Gl.
-.ll.ll.
-.......
-ENDMAP
-
-#####################################################
 # Sells only evil items.
 NAME: nicolae_evil_shop
 WEIGHT: 2

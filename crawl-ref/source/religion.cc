@@ -275,7 +275,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 1, "You are surrounded by a storm.", "Your storm dissipates completely." },
       { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
       { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },
-      { 4, "The storm surrounding you is powerful enough to repel missilies.",
+      { 4, "The storm surrounding you is powerful enough to repel missiles.",
            "The storm surrounding you is now too weak to repel missiles." },
       { 4, "You adapt resistances upon receiving elemental damage.",
            "You no longer adapt resistances upon receiving elemental damage." },
@@ -396,7 +396,14 @@ bool is_unknown_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    return god == GOD_JIYVA && jiyva_is_dead();
+    if (god == GOD_JIYVA && jiyva_is_dead())
+        return true;
+
+    // Disabled, pending a rework.
+    if (god == GOD_PAKELLAS)
+        return true;
+
+    return false;
 }
 
 bool god_has_name(god_type god)
@@ -564,11 +571,19 @@ void dec_penance(god_type god, int val)
                      mi->del_ench(ENCH_AWAKEN_FOREST);
             }
         }
-        else if (god == GOD_PAKELLAS)
+        else
         {
-            // Penance just ended w/o worshipping Pakellas;
-            // notify the player that MP regeneration will start again.
-            mprf(MSGCH_GOD, god, "You begin regenerating magic.");
+            if (god == GOD_PAKELLAS)
+            {
+                // Penance just ended w/o worshipping Pakellas;
+                // notify the player that MP regeneration will start again.
+                mprf(MSGCH_GOD, god, "You begin regenerating magic.");
+            }
+            else if (god == GOD_HEPLIAKLQANA)
+            {
+                calc_hp(); // frailty ends
+                mprf(MSGCH_GOD, god, "Your full life essence returns.");
+            }
         }
     }
     else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
@@ -2867,7 +2882,10 @@ void excommunication(bool voluntary, god_type new_god)
                            old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
-        _set_penance(old_god, 25);
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        _set_penance(old_god, 50);
         break;
 
     case GOD_CHEIBRIADOS:
@@ -2976,6 +2994,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     case TRAN_LICH:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
     case TRAN_STATUE:
+    case TRAN_WISP:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;
@@ -3005,7 +3024,7 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.undead_or_demonic())
         return false;
 
-    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
+    if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
@@ -3398,11 +3417,13 @@ static void _join_hepliaklqana()
                                                          : GENDER_MALE;
     }
 
+    calc_hp(); // adjust for frailty
+
     // Complimentary ancestor upon joining.
     const mgen_data mg = hepliaklqana_ancestor_gen_data();
     delayed_monster(mg);
-    simple_god_message(make_stringf(" brings forth the memory of your ancestor,"
-                                    " %s!",
+    simple_god_message(make_stringf(" forms a fragment of your life essence"
+                                    " into the memory of your ancestor, %s!",
                                     mg.mname.c_str()).c_str());
 }
 
@@ -4001,39 +4022,25 @@ void handle_god_time(int /*time_delta*/)
         case GOD_LUGONU:
         case GOD_DITHMENOS:
         case GOD_QAZLAL:
-            if (one_chance_in(16))
-                lose_piety(1);
-            break;
-
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
+        case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
 
-        case GOD_JIYVA:
-            if (one_chance_in(20))
-                lose_piety(1);
-            break;
-
         case GOD_ASHENZARI:
-            if (one_chance_in(25))
-                lose_piety(1);
-            break;
-
+        case GOD_ELYVILON:
+        case GOD_HEPLIAKLQANA:
+        case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
         case GOD_SIF_MUNA:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
-                lose_piety(1);
-            break;
-
-        case GOD_ELYVILON:
-        case GOD_HEPLIAKLQANA:
-            if (one_chance_in(50))
                 lose_piety(1);
             break;
 
@@ -4056,9 +4063,6 @@ void handle_god_time(int /*time_delta*/)
 
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-            // These gods do not lose piety over time.
         case GOD_GOZAG:
         case GOD_XOM:
             // Gods without normal piety do nothing each tick.
@@ -4570,6 +4574,10 @@ static bool _is_temple_god(god_type god)
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
+        return false;
+
+    // Disabled, pending a rework.
+    case GOD_PAKELLAS:
         return false;
 
     default:
