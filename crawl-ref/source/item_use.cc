@@ -1889,13 +1889,6 @@ void drink(item_def* potion)
         return;
     }
 
-    if (inv_count() == 0)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        _vampire_corpse_help();
-        return;
-    }
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2475,12 +2468,6 @@ bool player_can_read()
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
         return false;
     }
 
