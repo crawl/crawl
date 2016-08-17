@@ -20,7 +20,7 @@ function callback.grunt_nemelex_gamble_start(data,triggerable,triggerer,marker,e
     end
     dgn.persist.grunt_nemelex_gamble_triggered = true
     slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false, false)
+    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
     if crawl.coinflip() then
         slave = dgn.find_marker_positions_by_prop("prize", 1)
         you.teleport_to(slave[1].x, slave[1].y)
@@ -58,7 +58,7 @@ function callback.grunt_nemelex_gamble_expire(data,triggerable,triggerer,marker,
     end
     dgn.persist.grunt_nemelex_gamble_triggered = true
     slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false, false)
+    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
     if (you.see_cell(slave[1].x, slave[1].y)) then
         crawl.mpr("<white>The teleporter glows with a rainbow of weird colours and disappears.</white>")
     end

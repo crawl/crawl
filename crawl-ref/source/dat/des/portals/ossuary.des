@@ -59,7 +59,7 @@ end
 function callback.badplayer_boxes_open_up(data, triggerable, triggerer, marker,
                                           ev)
   for slave in iter.slave_iterator("disappearing_wall", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+    dgn.terrain_changed(slave.x, slave.y, "floor", false)
   end
   crawl.mpr("There is a click, and some walls slide away!", 'warning')
 end

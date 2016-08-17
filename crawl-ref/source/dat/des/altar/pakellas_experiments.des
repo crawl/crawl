@@ -104,7 +104,7 @@ function pakellas_gate(gate_name, raise)
   end
 
   for i, pos in ipairs(gate_pos) do
-    dgn.terrain_changed(pos.x, pos.y, new_feature, false, false)
+    dgn.terrain_changed(pos.x, pos.y, new_feature, false)
   end
 end
 
