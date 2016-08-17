@@ -934,20 +934,29 @@ void item_check()
     }
 }
 
+/// If the given item is an unknown book, ID it; return whether we did.
+static bool _id_floor_book(item_def &book)
+{
+    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
+        return false;
+
+    if (fully_identified(book))
+        return false;
+
+    // fix autopickup for previously-unknown books (hack)
+    if (item_needs_autopickup(book))
+        book.props["needs_autopickup"] = true;
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    mark_had_book(book);
+    return true;
+}
+
 /// Auto-ID whatever spellbooks the player stands on.
 void id_floor_books()
 {
     for (stack_iterator si(you.pos()); si; ++si)
-    {
         if (si->base_type == OBJ_BOOKS && si->sub_type != BOOK_MANUAL)
-        {
-            // fix autopickup for previously-unknown books (hack)
-            if (item_needs_autopickup(*si))
-                si->props["needs_autopickup"] = true;
-            set_ident_flags(*si, ISFLAG_IDENT_MASK);
-            mark_had_book(*si);
-        }
-    }
+            _id_floor_book(*si);
 }
 
 void pickup_menu(int item_link)
@@ -2229,6 +2238,9 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         god_id_item(item);
         maybe_identify_base_type(item);
     }
+
+    if (p == you.pos() && _id_floor_book(item))
+        mprf("You see here %s.", item.name(DESC_A).c_str());
 
     return true;
 }
