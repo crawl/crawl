@@ -3740,8 +3740,6 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_STAVES:
         if (you.species == SP_FELID)
             return true;
-        if (you_worship(GOD_TROG))
-            return true;
         if (!you.could_wield(item, true, !temp))
         {
             // Weapon is too large (or small) to be wielded and cannot
@@ -3750,7 +3748,16 @@ bool is_useless_item(const item_def &item, bool temp)
         }
         if (!item_type_known(item))
             return false;
-        break;
+
+        switch (item.sub_type)
+        {
+        case STAFF_WIZARDRY:
+        case STAFF_CONJURATION:
+        case STAFF_SUMMONING:
+            return you_worship(GOD_TROG);
+        }
+
+        return false;
 
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
