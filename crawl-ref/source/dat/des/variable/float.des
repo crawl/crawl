@@ -2886,31 +2886,6 @@ MAP
                  .@.
 ENDMAP
 
-NAME: cheibrodos_stairvault_heist
-DEPTH: D:8-,!D:$
-TAGS: no_item_gen no_monster_gen
-ORIENT: float
-MONS: iron golem
-MAP
-vvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvv
-vv9...........]vv
-vv.............vv
-vv..vvvv.vvvv..vv
-vv..v1.....1v..vv
-vv..v.......v..vv
-vv..v..*$%..v..vv
-vv..v..$|$..v..vv
-vv..v..%$*..v..vv
-vv..v.......v..vv
-vv..v1.....1v..vv
-vv..vvvv.vvvv..vv
-vv.............vv
-vv[...........9vv
-vvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvv
-ENDMAP
-
 NAME: cheibrodos_poisonous_passages
 DEPTH: Depths, !Depths:$
 TAGS: no_item_gen no_monster_gen
