@@ -48,7 +48,7 @@ end
 
 function callback.make_hatch(data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("hatch", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false)
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false)
         dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
     end
     crawl.mpr("<magenta>An exit appears before you!</magenta>")
