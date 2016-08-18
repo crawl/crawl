@@ -198,7 +198,7 @@ static const mutation_def mut_data[] =
   {"You feel less vulnerable to electricity.", "", ""},
 },
 
-{ MUT_REGENERATION, 3, 3, mutflag::GOOD, false,
+{ MUT_REGENERATION, 2, 3, mutflag::GOOD, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
@@ -218,16 +218,16 @@ static const mutation_def mut_data[] =
   "slow regeneration",
 
   {"You regenerate slowly when monsters are visible.",
-   "You do not regenerate naturally when monsters are visible.",
-   "You do not regenerate naturally."},
+   "You do not regenerate when monsters are visible.",
+   "You do not regenerate."},
 
-  {"Your natural regeneration is weakened.",
-   "Your natural regeneration is weakened.",
-   "You stop regenerating."},
+  {"Your regeneration weakens near monsters.",
+   "Your regeneration stops near monsters.",
+   "Your regeneration stops completely."},
 
-  {"Your natural regeneration is strengthened.",
-   "Your natural regeneration is strengthened.",
-   "Your natural regeneration is strengthened."},
+  {"Your regeneration returns to normal.",
+   "Your regeneration begins to work slowly in the presence of monsters.",
+   "You begin to regenerate when monsters are not visible."},
 },
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::BAD, false,
