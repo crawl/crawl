@@ -177,7 +177,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-poly.cc \
     $(CRAWL_PATH)/mon-project.cc \
     $(CRAWL_PATH)/mon-speak.cc \
-    $(CRAWL_PATH)/mon-stealth.cc \
     $(CRAWL_PATH)/mon-tentacle.cc \
     $(CRAWL_PATH)/mon-transit.cc \
     $(CRAWL_PATH)/mon-util.cc \

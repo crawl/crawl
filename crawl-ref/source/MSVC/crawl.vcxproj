@@ -360,7 +360,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\melee_attack.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
-    <ClCompile Include="..\mon-stealth.cc" />
     <ClCompile Include="..\ng-setup.cc" />
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />

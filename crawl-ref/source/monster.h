@@ -491,7 +491,8 @@ public:
 
     int stat_hp() const override    { return hit_points; }
     int stat_maxhp() const override { return max_hit_points; }
-    int stealth() const override;
+    int stealth() const override { return 0; }
+
 
     bool    shielded() const override;
     int     shield_bonus() const override;
