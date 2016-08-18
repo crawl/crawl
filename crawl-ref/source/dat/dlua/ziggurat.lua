@@ -245,11 +245,11 @@ mset(spec_fn(function ()
          "moth of wrath w:" .. f
 end))
 
-mset(with_props(spec_fn(function ()
+mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
   return "place:Slime:$ w:1500 / giant eyeball w:" .. d .. " / " ..
          "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
-end), { jelly_protect = true }))
+end))
 
 mset(spec_fn(function ()
   local d = math.max(2, 290 - 10 * you.depth() - you.zigs_completed())
@@ -625,83 +625,6 @@ local function ziggurat_create_loot_at(c)
   end
 end
 
--- Suitable for use in loot vaults.
-function ziggurat_loot_spot(e, key)
-  e.lua_marker(key, portal_desc { ziggurat_loot = "X" })
-  e.kfeat(key .. " = .")
-  e.marker("@ = lua:props_marker({ door_restrict=\"veto\" })")
-  e.kfeat("@ = +")
-end
-
-local has_loot_chamber = false
-
-local function ziggurat_create_loot_vault(entry, exit)
-  local inc = (exit - entry):sgn()
-
-  local connect_point = exit - inc * 3
-  local map = dgn.map_by_tag("ziggurat_loot_chamber")
-
-  if not map then
-    return exit
-  end
-
-  local function place_loot_chamber()
-    local res = dgn.place_map(map, true, true)
-    if res then
-      has_loot_chamber = true
-    end
-    return res
-  end
-
-  local function good_loot_bounds(map, px, py, xs, ys)
-    local vc = dgn.point(px + math.floor(xs / 2),
-                         py + math.floor(ys / 2))
-
-
-    local function safe_area()
-      local p = dgn.point(px, py)
-      local sz = dgn.point(xs, ys)
-      local floor = dgn.fnum("floor")
-      return dgn.rectangle_forall(p, p + sz - 1,
-                                  function (c)
-                                    return dgn.grid(c.x, c.y) == floor
-                                  end)
-    end
-
-    local linc = (exit - vc):sgn()
-    -- The map's positions should be at the same increment to the exit
-    -- as the exit is to the entrance, else reject the place.
-    return (inc == linc) and safe_area()
-  end
-
-  local function connect_loot_chamber()
-    return dgn.with_map_bounds_fn(good_loot_bounds, place_loot_chamber)
-  end
-
-  local res = dgn.with_map_anchors(connect_point.x, connect_point.y,
-                                   connect_loot_chamber)
-  if not res then
-    return exit
-  else
-    -- Find the square to drop the loot.
-    local lootx, looty = dgn.find_marker_position_by_prop("ziggurat_loot")
-
-    if lootx and looty then
-      return dgn.point(lootx, looty)
-    else
-      return exit
-    end
-  end
-end
-
-local function ziggurat_locate_loot(entrance, exit, jelly_protect)
-  if jelly_protect then
-    return ziggurat_create_loot_vault(entrance, exit)
-  else
-    return exit
-  end
-end
-
 local function ziggurat_place_pillars(c)
   local range = crawl.random_range
   local floor = dgn.fnum("floor")
@@ -783,24 +706,15 @@ end
 local function ziggurat_furnish(centre, entry, exit)
   ziggurat_stairs(entry, exit)
 
-  has_loot_chamber = false
   local monster_generation = choose_monster_set()
 
   if type(monster_generation.spec) == "string" then
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
-  -- Identify where we're going to place loot, but don't actually put
-  -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit,
-    monster_generation.jelly_protect)
+  ziggurat_place_pillars(centre)
 
-  if not has_loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
-    ziggurat_place_pillars(centre)
-  end
-
-  ziggurat_create_loot_at(lootspot)
+  ziggurat_create_loot_at(exit)
 
   ziggurat_create_monsters(entry, exit, monster_generation.fn)
 
