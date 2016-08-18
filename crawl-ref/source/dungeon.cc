@@ -4418,7 +4418,7 @@ int dgn_place_item(const item_spec &spec,
 
     while (true)
     {
-        int item_made;
+        int item_made = NON_ITEM;
 
         if (acquire)
         {
@@ -4426,15 +4426,20 @@ int dgn_place_item(const item_spec &spec,
                                                 spec.acquirement_source,
                                                 true, where);
         }
-        else if (spec.corpselike())
-            item_made = _dgn_item_corpse(spec, where);
-        else
-        {
-            item_made = items(spec.allow_uniques, base_type,
-                              spec.sub_type, level, spec.ego);
 
-            if (spec.level == ISPEC_MUNDANE)
-                squash_plusses(item_made);
+        // Both normal item generation and the failed "acquire foo" fallback.
+        if (item_made == NON_ITEM)
+        {
+            if (spec.corpselike())
+                item_made = _dgn_item_corpse(spec, where);
+            else
+            {
+                item_made = items(spec.allow_uniques, base_type,
+                                  spec.sub_type, level, spec.ego);
+
+                if (spec.level == ISPEC_MUNDANE)
+                    squash_plusses(item_made);
+            }
         }
 
         if (item_made == NON_ITEM || item_made == -1)
