@@ -4563,9 +4563,16 @@ static bool _is_god(god_type god)
     return god > GOD_NO_GOD && god < NUM_GODS;
 }
 
+// Not appearing in new games, but still extant.
+static bool _is_disabled_god(god_type god)
+{
+    // Disabled, pending a rework.
+    return god == GOD_PAKELLAS;
+}
+
 static bool _is_temple_god(god_type god)
 {
-    if (!_is_god(god))
+    if (!_is_god(god) || _is_disabled_god(god))
         return false;
 
     switch (god)
@@ -4576,10 +4583,6 @@ static bool _is_temple_god(god_type god)
     case GOD_JIYVA:
         return false;
 
-    // Disabled, pending a rework.
-    case GOD_PAKELLAS:
-        return false;
-
     default:
         return true;
     }
@@ -4587,7 +4590,7 @@ static bool _is_temple_god(god_type god)
 
 static bool _is_nontemple_god(god_type god)
 {
-    return _is_god(god) && !_is_temple_god(god);
+    return _is_god(god) && !_is_temple_god(god) && !_is_disabled_god(god);
 }
 
 static bool _cmp_god_by_name(god_type god1, god_type god2)
