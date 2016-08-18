@@ -641,3 +641,7 @@ substance and polished to a blinding sheen. A skilled user will find that it
 can reflect almost anything, even spells that pierce through lesser materials
 and hexes with no physical manifestation at all.
 %%%%
+amulet of invisibility
+
+An amulet that can be activated to render its wearer invisible.
+%%%%

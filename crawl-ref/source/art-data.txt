@@ -1275,6 +1275,12 @@ TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER
 BRAND:    SPARM_REFLECTION
 
+# Fedhas sprint, to allow all species access to evocable invisibility.
+NAME:     amulet of invisibility
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:   WHITE
+BOOL:     inv, nogen
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
