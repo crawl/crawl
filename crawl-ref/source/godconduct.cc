@@ -846,7 +846,15 @@ static like_map divine_likes[] =
     },
     // GOD_NEMELEX_XOBEH,
     {
-        { DID_EXPLORATION, EXPLORE_RESPONSE },
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 14;
+            }
+        } },
     },
     // GOD_ELYVILON,
     {
