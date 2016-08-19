@@ -3353,13 +3353,87 @@ static monster_spells _find_usable_spells(monster &mons)
 }
 
 /**
+ * For the given spell and monster, try to find a target for the spell, and
+ * and then see if it's a good idea to actually cast the spell at that target.
+ * Return whether we succeeded in both.
+ *
+ * @param mons            The monster casting the spell. XXX: should be const
+ * @param beem[in,out]    A targeting beam. Has a very few params already set.
+ *                        (from setup_targetting_beam())
+ * @param spell           The spell to be targetted and cast.
+ * @param ignore_good_idea  Whether to ignore most targeting constraints (ru)
+ */
+static bool _target_and_justify_spell(monster &mons,
+                                      bolt &beem,
+                                      spell_type spell,
+                                      bool ignore_good_idea)
+{
+    // Setup the spell.
+    setup_mons_cast(&mons, beem, spell);
+
+    switch (spell)
+    {
+        case SPELL_HASTE_OTHER:
+        case SPELL_HEAL_OTHER:
+        case SPELL_MIGHT_OTHER:
+        case SPELL_INVISIBILITY_OTHER:
+            // Try to find a nearby ally to haste, heal, might,
+            // or make invisible.
+            if (!_set_allied_target(&mons, beem,
+                                    mons.type == MONS_IRONBRAND_CONVOKER))
+            {
+                return false;
+            }
+            break;
+        case SPELL_ENSLAVEMENT:
+            // Try to find an ally of the player to hex if we are
+            // hexing the player.
+            if (mons.foe == MHITYOU && !_set_hex_target(&mons, beem))
+                return false;
+            break;
+        case SPELL_LRD:
+        case SPELL_CONJURE_FLAME:
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_AWAKEN_EARTH:
+            // special targetting (in setup_mons_cast()); returns an OOB pos
+            // in case of failure
+            if (!in_bounds(beem.target))
+                return false;
+            break;
+        case SPELL_DAZZLING_SPRAY:
+            if (!mons.get_foe()
+                || !_spray_tracer(&mons, _mons_spellpower(spell, mons),
+                                  beem, spell))
+            {
+                return false;
+            }
+            break;
+        default:
+            break;
+    }
+
+    // Don't knockback something we're trying to constrict.
+    const actor *victim = actor_at(beem.target);
+    if (victim &&
+        beem.can_knockback(victim)
+        && mons.is_constricting()
+        && mons.constricting->count(victim->mid))
+    {
+        return false;
+    }
+
+    return _should_cast_spell(mons, spell, beem, ignore_good_idea);
+}
+
+/**
  * Let a monster choose a spell to cast; may be SPELL_NO_SPELL.
  *
  * @param mons          The monster doing the casting, potentially.
  *                      TODO: should be const (requires _ms_low_hitpoint_cast
                         param to be const)
- * @param orig_beem[in,out]     A beam. XXX: what's already in here?
- *                      TODO: split out targeting into another func
+ * @param orig_beem[in,out]     A beam. Has a very few params already set.
+ *                              (from setup_targetting_beam())
+ *                              TODO: split out targeting into another func
  * @param hspell_pass   A list of valid spells to consider casting.
  * @param ignore_good_idea      Whether to be almost completely indiscriminate
  *                              with beam spells. XXX: refactor this out?
@@ -3431,63 +3505,12 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         // reset the beam
         beem = orig_beem;
 
-        // Setup the spell.
-        setup_mons_cast(&mons, beem, chosen_slot.spell);
-
-        // Try to find a nearby ally to haste, heal, might,
-        // or make invisible.
-        if ((chosen_slot.spell == SPELL_HASTE_OTHER
-             || chosen_slot.spell == SPELL_HEAL_OTHER
-             || chosen_slot.spell == SPELL_MIGHT_OTHER
-             || chosen_slot.spell == SPELL_INVISIBILITY_OTHER)
-            && !_set_allied_target(&mons, beem,
-                                   mons.type == MONS_IRONBRAND_CONVOKER))
+        if (_target_and_justify_spell(mons, beem, chosen_slot.spell,
+                                       ignore_good_idea))
         {
-            continue;
+            ASSERT(chosen_slot.spell != SPELL_NO_SPELL);
+            return chosen_slot;
         }
-
-        // Try to find an ally of the player to hex if we are
-        // hexing the player.
-        if (chosen_slot.spell == SPELL_ENSLAVEMENT
-            && mons.foe == MHITYOU
-            && !_set_hex_target(&mons, beem))
-        {
-            continue;
-        }
-
-        // Don't knockback something we're trying to constrict.
-        const actor *victim = actor_at(beem.target);
-        if (victim &&
-            beem.can_knockback(victim)
-            && mons.is_constricting()
-            && mons.constricting->count(victim->mid))
-        {
-            continue;
-        }
-
-        if ((chosen_slot.spell == SPELL_LRD
-             || chosen_slot.spell == SPELL_CONJURE_FLAME
-             || chosen_slot.spell == SPELL_FULMINANT_PRISM
-             || chosen_slot.spell == SPELL_AWAKEN_EARTH)
-            && !in_bounds(beem.target))
-        {
-            continue;
-        }
-
-        if (chosen_slot.spell == SPELL_DAZZLING_SPRAY
-            && (!mons.get_foe()
-                || !_spray_tracer(&mons, _mons_spellpower(chosen_slot.spell,
-                                                          mons),
-                                  beem, chosen_slot.spell)))
-        {
-            continue;
-        }
-
-        if (!_should_cast_spell(mons, chosen_slot.spell, beem, ignore_good_idea))
-            continue;
-
-        ASSERT(chosen_slot.spell != SPELL_NO_SPELL);
-        return chosen_slot;
     }
 
     return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
