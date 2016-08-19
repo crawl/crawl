@@ -16,7 +16,7 @@ int sprint_modify_exp_inverse(int exp)
 
 int sprint_modify_piety(int piety)
 {
-    // XXX: why not oka?
+    // usk is tactical, oka gives bonus piety for scary monsters (all of them)
     if (you_worship(GOD_OKAWARU) || you_worship(GOD_USKAYAW))
         return piety;
 
