@@ -2147,88 +2147,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
     return goaded > 0;
 }
 
-static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
-{
-    spell_type monspell = slot.spell;
-
-    bool targ_adj       = false;
-    bool targ_sanct     = false;
-    bool targ_friendly  = false;
-    bool targ_living    = false;
-
-    if (mon->foe == MHITYOU || mon->foe == MHITNOT)
-    {
-        if (adjacent(you.pos(), mon->pos()))
-            targ_adj = true;
-        if (is_sanctuary(you.pos()))
-            targ_sanct = true;
-        if (you.holiness() & MH_NATURAL)
-            targ_living = true;
-    }
-    else
-    {
-        if (adjacent(menv[mon->foe].pos(), mon->pos()))
-            targ_adj = true;
-        if (is_sanctuary(menv[mon->foe].pos()))
-            targ_sanct = true;
-        if (menv[mon->foe].holiness() & MH_NATURAL)
-            targ_living = true;
-    }
-
-    targ_friendly = (mon->foe == MHITYOU
-                     ? mon->wont_attack()
-                     : mons_aligned(mon, mon->get_foe()));
-
-    switch (monspell)
-    {
-    case SPELL_HEAL_OTHER:
-        return targ_friendly && mon->foe != MHITYOU;
-    case SPELL_TELEPORT_OTHER:
-        return !targ_sanct && !targ_friendly;
-    case SPELL_MINOR_HEALING:
-    case SPELL_MAJOR_HEALING:
-    case SPELL_INVISIBILITY:
-    case SPELL_TELEPORT_SELF:
-    case SPELL_HASTE:
-    case SPELL_BERSERKER_RAGE:
-    case SPELL_MIGHT:
-    case SPELL_WIND_BLAST:
-        return true;
-    case SPELL_VAMPIRIC_DRAINING:
-        return !targ_sanct && targ_adj && !targ_friendly && targ_living;
-    case SPELL_BLINK_AWAY:
-    case SPELL_BLINK_RANGE:
-    case SPELL_INJURY_MIRROR:
-        return !targ_friendly;
-    case SPELL_BLINK_OTHER:
-        return !targ_sanct && targ_adj && !targ_friendly;
-    case SPELL_CONFUSE:
-    case SPELL_DRAIN_LIFE:
-    case SPELL_BANISHMENT:
-    case SPELL_CALL_DOWN_DAMNATION:
-    case SPELL_FIREBALL:
-    case SPELL_AIRSTRIKE:
-    case SPELL_IOOD:
-    case SPELL_ENSNARE:
-    case SPELL_THROW_FLAME:
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_DEATH_RATTLE:
-        return !targ_friendly && !targ_sanct;
-    case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
-        return targ_adj;
-    case SPELL_TOMB_OF_DOROKLOHE:
-        return true;
-    case SPELL_NO_SPELL:
-        return false;
-    case SPELL_INK_CLOUD:
-        if (mon->type == MONS_KRAKEN)
-            return true;
-    default:
-        return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
-    }
-}
-
 // Spells for a quick get-away.
 // Currently only used to get out of a net.
 static bool _ms_quick_get_away(spell_type monspell)
@@ -3464,7 +3382,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         mon_spell_slot chosen_slot = { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
         for (const mon_spell_slot &slot : hspell_pass)
         {
-            if (_ms_low_hitpoint_cast(&mons, slot)
+            if (_target_and_justify_spell(mons, beem, slot.spell,
+                                          ignore_good_idea)
                 && one_chance_in(++found_spell))
             {
                 chosen_slot = slot;
