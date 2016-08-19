@@ -977,6 +977,7 @@ void game_options::reset_options()
     tile_show_items      = "!?/%=([)x}:|\\";
     tile_skip_title      = false;
     tile_menu_icons      = true;
+    tile_light_blur      = 6;
 
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
@@ -3706,6 +3707,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_show_items = field;
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
+    else INT_OPTION(tile_light_blur, 0, 16);
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -4623,7 +4625,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
 
     tiles.json_write_bool("show_game_turns", Options.show_game_turns);
-
+    tiles.json_write_int("tile_light_blur", Options.tile_light_blur);
     _write_minimap_colours();
 
     tiles.json_close_object();

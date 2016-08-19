@@ -50,6 +50,18 @@ define(function () {
     exports.HALO_RANGE = 1;
     exports.HALO_UMBRA = 2;
 
+    // Lighting
+    exports.LIGHT_CENTRE = 0;
+    exports.LIGHT_N = 1;
+    exports.LIGHT_NE = 2;
+    exports.LIGHT_E = 3;
+    exports.LIGHT_SE = 4;
+    exports.LIGHT_S = 5;
+    exports.LIGHT_SW = 6;
+    exports.LIGHT_W = 7;
+    exports.LIGHT_NW = 8;
+    exports.NUM_LIGHT_SEGS = 9;
+
     // equipment_type
     exports.equip = {};
     val = 0;

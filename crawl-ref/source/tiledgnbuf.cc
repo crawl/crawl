@@ -23,7 +23,8 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_spells(&im->m_textures[TEX_GUI]),
     m_buf_skills(&im->m_textures[TEX_GUI]),
     m_buf_commands(&im->m_textures[TEX_GUI]),
-    m_buf_icons(&im->m_textures[TEX_ICONS])
+    m_buf_icons(&im->m_textures[TEX_ICONS]),
+    m_buf_overlay(&im->m_textures[TEX_ICONS])
 {
 }
 
@@ -55,6 +56,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
+    pack_lighting(x, y, cell);
 
     // Draw cloud layer(s)
     if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
@@ -130,6 +132,11 @@ void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y)
     m_buf_icons.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_overlay_tile(int tileidx, int x, int y)
+{
+    m_buf_overlay.add(tileidx, x, y);
+}
+
 void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y,
                                        int ox, int oy)
 {
@@ -149,6 +156,8 @@ void DungeonCellBuffer::clear()
     m_buf_skills.clear();
     m_buf_commands.clear();
     m_buf_icons.clear();
+    m_buf_lighting.clear();
+    m_buf_overlay.clear();
 }
 
 void DungeonCellBuffer::draw()
@@ -164,6 +173,8 @@ void DungeonCellBuffer::draw()
     m_buf_spells.draw();
     m_buf_commands.draw();
     m_buf_icons.draw();
+    m_buf_lighting.draw();
+    m_buf_overlay.draw();
 }
 
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
@@ -197,6 +208,41 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         int offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
         m_buf_feat.add(TILE_GLOWING_MOLD + offset, x, y);
     }
+}
+
+static VColour _to_vcolour(uint32_t colour)
+{
+    return VColour((colour >> 24) & 0xff, (colour >> 16) & 0xff,
+                   (colour >> 8) & 0xff, (colour & 0xff));
+}
+
+void DungeonCellBuffer::pack_lighting(int x, int y, const packed_cell &cell)
+{
+    const float r = min(max(Options.tile_light_blur, 0), 16) / 32.0;
+
+    const struct
+    {
+        float x1;
+        float y1;
+        float x2;
+        float y2;
+        light_segment seg;
+    } regions[] =
+    {
+        { 0, 0, r, r, LIGHT_NW },
+        { r, 0, 1 - r, r, LIGHT_N },
+        { 1 - r, 0, 1, r, LIGHT_NE },
+        { 0, r, r, 1 - r, LIGHT_W },
+        { r, r, 1 - r, 1 - r, LIGHT_CENTRE },
+        { 1 - r, r, 1, 1 - r, LIGHT_E },
+        { 0, 1 - r, r, 1, LIGHT_SW },
+        { r, 1 - r, 1 - r, 1, LIGHT_S },
+        { 1 - r, 1 - r, 1, 1, LIGHT_SE },
+    };
+
+    for (const auto &region : regions)
+        m_buf_lighting.add(x + region.x1, y + region.y1, x + region.x2,
+                           y + region.y2, _to_vcolour(cell.lighting[region.seg]));
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
@@ -281,15 +327,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 #endif
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
-            if (cell.halo == HALO_RANGE)
-                m_buf_feat.add(TILE_HALO_RANGE, x, y);
-            if (cell.halo == HALO_UMBRA)
-                m_buf_feat.add(TILE_UMBRA + random2(4), x, y);
 
-            if (cell.orb_glow)
-                m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
-            if (cell.quad_glow)
-                m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
 
@@ -420,9 +458,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     }
     if (fg & TILE_FLAG_GLOWING)
     {
-        //if (!cell.halo)
-        //    m_buf_feat.add(TILE_HALO, x, y);
-
         m_buf_icons.add(TILEI_GLOWING, x, y, -status_shift, 0);
         status_shift += 7;
     }
@@ -496,14 +531,8 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_PERM_SUMMON)
         m_buf_icons.add(TILEI_PERM_SUMMON, x, y);
 
-    if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
-        m_buf_icons.add(TILEI_MESH, x, y);
-
     if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
         m_buf_icons.add(TILEI_OOR_MESH, x, y);
-
-    if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
-        m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
@@ -517,7 +546,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
-        m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
+        m_buf_overlay.add(TILEI_TUTORIAL_CURSOR, x, y);
     else if (bg & TILE_FLAG_CURSOR)
     {
         int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
@@ -526,7 +555,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
            type = TILEI_CURSOR3;
 
-        m_buf_icons.add(type, x, y);
+        m_buf_overlay.add(type, x, y);
     }
 
     if (cell.travel_trail & 0xF)

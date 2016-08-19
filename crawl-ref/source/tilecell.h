@@ -9,6 +9,20 @@ enum halo_type
     HALO_UMBRA = 2,
 };
 
+enum light_segment
+{
+    LIGHT_CENTRE = 0,
+    LIGHT_N,
+    LIGHT_NE,
+    LIGHT_E,
+    LIGHT_SE,
+    LIGHT_S,
+    LIGHT_SW,
+    LIGHT_W,
+    LIGHT_NW,
+    NUM_LIGHT_SEGS
+};
+
 struct packed_cell
 {
     // For anything that requires multiple dungeon tiles (such as waves)
@@ -39,6 +53,7 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
     uint8_t heat_aura;
 #endif
+    FixedVector<uint32_t, NUM_LIGHT_SEGS> lighting;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }

@@ -179,11 +179,12 @@ void MonsterRegion::pack_buffers()
                     cell.bg = env.tile_bg(ep);
                     cell.flv = env.tile_flv(gc);
                     tile_apply_properties(gc, cell);
+                    tile_apply_lighting(gc, &cell);
 
                     m_buf.add(cell, x, y);
 
                     if (cursor)
-                        m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+                        m_buf.add_overlay_tile(TILEI_CURSOR, x, y);
                     continue;
                 }
             }

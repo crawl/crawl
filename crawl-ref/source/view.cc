@@ -1533,6 +1533,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         cell->tile.bg |= TILE_FLAG_OOR;
 
     tile_apply_properties(gc, cell->tile);
+    tile_apply_lighting(gc, &cell->tile);
 #elif defined(USE_TILE_WEB)
     // For webtiles, we only grey out visible tiles
     else if (you.get_beholder(gc) && you.see_cell(gc))
@@ -1542,6 +1543,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         cell->tile.bg |= TILE_FLAG_OOR;
 
     tile_apply_properties(gc, cell->tile);
+    tile_apply_lighting(gc, &cell->tile);
 #endif
 #ifndef USE_TILE_LOCAL
     if ((_layers != LAYERS_ALL || Options.always_show_exclusions)

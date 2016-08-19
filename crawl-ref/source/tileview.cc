@@ -29,6 +29,17 @@
 #include "travel.h"
 #include "viewgeom.h"
 
+#define COLOUR_LAVA 0xda49009f
+#define COLOUR_CLOSE 0xf4d2a0cf
+#define COLOUR_UMBRA 0x4637727f
+#define COLOUR_HALO 0xf6ec947f
+#define COLOUR_ORB_GLOW_1 0x4e194a7f
+#define COLOUR_ORB_GLOW_2 0x6922647f
+#define COLOUR_QUAD_GLOW 0x0000b37f
+#define COLOUR_MAGIC_MAP 0x190d4d9f
+#define COLOUR_OOR 0x000000bf
+#define COLOUR_UNSEEN 0x0000007b
+
 void tile_new_level(bool first_time, bool init_unseen)
 {
     if (first_time)
@@ -1450,5 +1461,120 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             }
         }
     }
+}
+
+static uint32_t _mix_colour (uint32_t x, uint32_t y, int y_percent)
+{
+    ASSERT(y_percent <= 100);
+    ASSERT(y_percent >= 0);
+    const int x_percent = 100 - y_percent;
+    const int x_a = x & 0xff;
+    const int y_a = y & 0xff;
+
+    const int r = (((x >> 24) & 0xff) * x_percent + ((y >> 24) & 0xff) * y_percent) / 100;
+    const int g = (((x >> 16) & 0xff) * x_percent  + ((y >> 16) & 0xff) * y_percent) / 100;
+    const int b = (((x >> 8) & 0xff) * x_percent  + ((y >> 8) & 0xff) * y_percent) / 100;
+    const int a = (x_a * x_percent + y_a * y_percent) / 100;
+
+    return (r << 24) + (g << 16) + (b << 8) + a;
+}
+
+static dungeon_feature_type _safe_feat(const coord_def &gc)
+{
+    if (!map_bounds(gc))
+        return DNGN_UNSEEN;
+
+    return env.map_knowledge(gc).feat();
+}
+
+static uint32_t _get_colour(const coord_def &gc)
+{
+    if (!map_bounds(gc))
+        // e.g. open sea / lava
+        return 0x000000ff;
+
+    const map_cell& mc = env.map_knowledge(gc);
+    const dungeon_feature_type feat = mc.feat();
+    if (feat == DNGN_UNSEEN)
+        // Partially transparent for Ash item detection etc.
+        return COLOUR_UNSEEN;
+
+    uint32_t colour = 0x00000000;
+
+    if (feat == DNGN_LAVA || feat == DNGN_LAVA_SEA)
+        colour = _mix_colour(colour, COLOUR_LAVA, 50);
+
+    if (mc.visible())
+    {
+        const int range = min(8, max(abs(you.pos().x - gc.x), abs(you.pos().y - gc.y)));
+        colour = _mix_colour(colour, COLOUR_CLOSE, (32 - range * 3));
+
+        if (mc.flags & MAP_UMBRAED)
+            colour = _mix_colour(colour, COLOUR_UMBRA, 50);
+        else if (mc.flags & MAP_HALOED)
+            colour = _mix_colour(colour, COLOUR_HALO, 50);
+        
+        if (mc.flags & MAP_ORB_HALOED)
+            colour = _mix_colour(colour, get_orb_phase(gc) ? COLOUR_ORB_GLOW_1 : COLOUR_ORB_GLOW_2, 50);
+
+        if (mc.flags & MAP_QUAD_HALOED)
+            colour = _mix_colour(colour, COLOUR_QUAD_GLOW, 50);
+    }
+    else
+        colour = _mix_colour(colour, COLOUR_OOR, 70);
+
+    if (mc.mapped())
+        colour = _mix_colour(colour, COLOUR_MAGIC_MAP, 70);
+
+    return colour;
+}
+
+static uint32_t _get_blend_colour(const coord_def &gc,
+                                  const coord_def &target,
+                                  uint32_t colour_centre)
+{
+    const dungeon_feature_type feat = _safe_feat(gc);
+    if (feat == DNGN_UNSEEN)
+        return COLOUR_UNSEEN;
+
+    const dungeon_feature_type feat_target = _safe_feat(target);
+    if (feat_target == DNGN_UNSEEN)
+        /*
+         *  Make unseen tiles appear darker than their calculated colour would
+         *  suggest (due to Ash detection tiles sometimes appearing on
+         *  DNGN_UNSEEN feats)
+         */
+        return 0x000000ff;
+
+    /*
+     * Don't blend from non-opaque to opaque tiles, because most light sources
+     * are not on opaque tiles, and it therefore looks a bit odd. This should be
+     * changed if torches are made to give off light.
+     */
+    return (feat_is_opaque(feat) || !feat_is_opaque(feat_target)) ?
+           _get_colour(target) : colour_centre;
+}
+
+void tile_apply_lighting(const coord_def &gc, packed_cell *cell)
+{
+    const uint32_t centre = _get_colour(gc);
+    const uint32_t n = _get_blend_colour(gc, coord_def(gc.x, gc.y - 1), centre);
+    const uint32_t ne = _get_blend_colour(gc, coord_def(gc.x + 1, gc.y - 1), centre);
+    const uint32_t e = _get_blend_colour(gc, coord_def(gc.x + 1, gc.y), centre);
+    const uint32_t se = _get_blend_colour(gc, coord_def(gc.x + 1, gc.y + 1), centre);
+    const uint32_t s = _get_blend_colour(gc, coord_def(gc.x, gc.y + 1), centre);
+    const uint32_t sw = _get_blend_colour(gc, coord_def(gc.x - 1, gc.y + 1), centre);
+    const uint32_t w = _get_blend_colour(gc, coord_def(gc.x - 1, gc.y), centre);
+    const uint32_t nw = _get_blend_colour(gc, coord_def(gc.x - 1, gc.y - 1), centre);
+
+    cell->lighting[LIGHT_CENTRE] = centre;
+    cell->lighting[LIGHT_N]  = _mix_colour(centre, n, 35);
+    cell->lighting[LIGHT_NE] = _mix_colour(centre, _mix_colour(ne, _mix_colour(n, e, 50), 75), 50);
+    cell->lighting[LIGHT_E]  = _mix_colour(centre, e, 35);
+    cell->lighting[LIGHT_SE] = _mix_colour(centre, _mix_colour(se, _mix_colour(s, e, 50), 75), 50);
+    cell->lighting[LIGHT_S]  = _mix_colour(centre, s, 35);
+    cell->lighting[LIGHT_SW] = _mix_colour(centre, _mix_colour(sw, _mix_colour(s, w, 50), 75), 50);
+    cell->lighting[LIGHT_W]  = _mix_colour(centre, w, 35);
+    cell->lighting[LIGHT_NW] = _mix_colour(centre, _mix_colour(nw, _mix_colour(n, w, 50), 75), 50);
 }
 #endif
