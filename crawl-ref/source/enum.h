@@ -3546,8 +3546,8 @@ enum monster_type                      // menv[].type
     RANDOM_NONBASE_DRACONIAN,
 
     RANDOM_DEMON_LESSER,               //    0: Class V
-    RANDOM_DEMON_COMMON,               //    1: Class II-IV
-    RANDOM_DEMON_GREATER,              //    2: Class I
+    RANDOM_DEMON_COMMON,               //    1: Class III-IV
+    RANDOM_DEMON_GREATER,              //    2: Class I-II
     RANDOM_DEMON,                      //    any of the above
 
     RANDOM_MODERATE_OOD, // +5 depth, AKA '9' glyph on maps

@@ -5255,7 +5255,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
 
-    case SPELL_SUMMON_DEMON: // class 2-4 demons
+    case SPELL_SUMMON_DEMON: // class 3-4 demons
         // if you change this, please update art-func.h:_DEMON_AXE_melee_effects
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 10 + 1);
 
