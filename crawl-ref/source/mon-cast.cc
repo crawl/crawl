@@ -3369,6 +3369,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
             if (_ms_quick_get_away(slot.spell))
                 return slot;
 
+    bolt orig_beem = beem;
+
     // Promote the casting of useful spells for low-HP monsters.
     // (kraken should always cast their escape spell of inky).
     if (_mons_in_emergency(mons)
@@ -3382,11 +3384,13 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         mon_spell_slot chosen_slot = { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
         for (const mon_spell_slot &slot : hspell_pass)
         {
-            if (_target_and_justify_spell(mons, beem, slot.spell,
+            bolt targ_beam = orig_beem;
+            if (_target_and_justify_spell(mons, targ_beam, slot.spell,
                                           ignore_good_idea)
                 && one_chance_in(++found_spell))
             {
                 chosen_slot = slot;
+                beem = targ_beam;
             }
         }
 
@@ -3398,8 +3402,6 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     // neutrals will rarely cast.
     if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
         return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
-
-    bolt orig_beem = beem;
 
     bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS);
     for (int attempt = 0; attempt < 2; attempt++)
