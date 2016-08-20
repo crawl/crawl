@@ -85,6 +85,24 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
 }
 
 /**
+ * Produces a portion of the spellbook description: the portion indicating
+ * whether the list of spellbooks has been filtered based on which spells you
+ * have seen the monster cast already.
+ *
+ * @param type    The type of ability set / spellbook we're decribing.
+ * @param pronoun The monster pronoun to use (should be derived from PRONOUN_OBJECTIVE).
+ * @return        A string to include in the spellbook description.
+ */
+static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pronoun)
+{
+    const bool is_spell = type = MON_SPELL_WIZARD;
+    return make_stringf(" (judging by the %s you have seen %s %s)",
+                        is_spell ? "spells" : "abilities",
+                        pronoun,
+                        is_spell ? "cast" : "use");
+}
+
+/**
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
@@ -94,12 +112,14 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  *                          despite being non-wizardly and non-priestly.
  * @param has_filtered      Whether any spellbooks have been filtered out due
  *                          to the spells you've seen the monster cast.
+ * @param pronoun           The pronoun to use in describing which spells
+ *                          the monster has been seen casting.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable, bool has_filtered)
+                               bool has_silencable, bool has_filtered, const char* pronoun)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
@@ -109,8 +129,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
         return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            has_filtered ? " (judging by the spells you have"
-                                           " seen them cast)"
+                            has_filtered ? _describe_spell_filtering(type, pronoun).c_str()
                                          : "",
                             vulnerabilities.c_str());
     }
@@ -119,8 +138,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        has_filtered ? " (judging by the abilities you have"
-                                       " seen them use)"
+                        has_filtered ? _describe_spell_filtering(type, pronoun).c_str()
                                      : "",
                         vulnerabilities.c_str());
 }
@@ -208,7 +226,7 @@ static void _monster_spellbooks(const monster_info &mi,
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
                 _booktype_header(type, valid_books.size(), has_silencable,
-                                 filtered_books);
+                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE));
         }
         if (valid_books.size() > 1)
         {
