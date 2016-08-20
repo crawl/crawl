@@ -4845,13 +4845,20 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {
-        dprf("Legendary destruction double cast.");
+        if (do_noise)
+        {
+            mons_cast_noise(mons, pbolt, SPELL_LEGENDARY_DESTRUCTION,
+                            slot_flags);
+        }
+
         setup_mons_cast(mons, pbolt, SPELL_LEGENDARY_DESTRUCTION);
-        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags, do_noise);
+        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags,
+                  false);
         if (!mons->get_foe())
             return;
         setup_mons_cast(mons, pbolt, SPELL_LEGENDARY_DESTRUCTION);
-        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags, do_noise);
+        mons_cast(mons, pbolt, _legendary_destruction_spell(), slot_flags,
+                  false);
         return;
     }
     // Always do setup. It might be done already, but it doesn't hurt
