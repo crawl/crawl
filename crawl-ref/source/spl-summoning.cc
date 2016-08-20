@@ -1148,19 +1148,9 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
     monster_type type = MONS_PROGRAM_BUG;
 
     if (x_chance_in_y(chance, 100))
-    {
-        // tier 4
-        type = random_choose(MONS_ICE_DEVIL,     MONS_RUST_DEVIL,
-                             MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
-                             MONS_CHAOS_SPAWN,   MONS_HELLWING);
-    }
+        type = random_demon_by_tier(4);
     else
-    {
-        // tier 3
-        type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
-                             MONS_SIXFIRHY,      MONS_SMOKE_DEMON,
-                             MONS_NEQOXEC,       MONS_YNOXINUL);
-    }
+        type = random_demon_by_tier(3);
 
     return _summon_demon_wrapper(pow, god, spell, type,
                                  min(2 + (random2(pow) / 4), 6),

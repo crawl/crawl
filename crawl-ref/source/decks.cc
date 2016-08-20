@@ -1716,24 +1716,17 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     monster_type dct, dct2;
     if (power_level >= 2)
     {
-        dct = random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON,
-              MONS_GREEN_DEATH, MONS_SHADOW_DEMON, MONS_CACODEMON,
-              MONS_HELL_BEAST, MONS_REAPER, MONS_LOROCYPROCA,
-              MONS_HELLION, MONS_TORMENTOR);
+        dct = random_demon_by_tier(2);
         dct2 = MONS_PANDEMONIUM_LORD;
     }
     else if (power_level == 1)
     {
-        dct = random_choose(MONS_SUN_DEMON, MONS_SOUL_EATER,
-              MONS_SIXFIRHY, MONS_SMOKE_DEMON, MONS_YNOXINUL,
-              MONS_NEQOXEC);
+        dct = random_demon_by_tier(3);
         dct2 = MONS_RAKSHASA;
     }
     else
     {
-        dct = random_choose(MONS_RED_DEVIL, MONS_ICE_DEVIL,
-              MONS_RUST_DEVIL, MONS_HELLWING, MONS_ORANGE_DEMON,
-              MONS_CHAOS_SPAWN);
+        dct = random_demon_by_tier(4);
         dct2 = MONS_HELL_HOUND;
     }
 

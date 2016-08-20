@@ -3354,6 +3354,53 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
 static void _get_vault_mon_list(vector<mons_spec> &list);
 
+monster_type random_demon_by_tier(int tier)
+{
+    switch (tier)
+    {
+    case 5:
+        return random_choose(MONS_CRIMSON_IMP,
+                             MONS_QUASIT,
+                             MONS_WHITE_IMP,
+                             MONS_UFETUBUS,
+                             MONS_IRON_IMP,
+                             MONS_SHADOW_IMP);
+    case 4:
+        return random_choose(MONS_ICE_DEVIL,
+                             MONS_RUST_DEVIL,
+                             MONS_ORANGE_DEMON,
+                             MONS_RED_DEVIL,
+                             MONS_CHAOS_SPAWN,
+                             MONS_HELLWING);
+    case 3:
+        return random_choose(MONS_SUN_DEMON,
+                             MONS_SOUL_EATER,
+                             MONS_SMOKE_DEMON,
+                             MONS_NEQOXEC,
+                             MONS_YNOXINUL,
+                             MONS_SIXFIRHY);
+    case 2:
+        return random_choose(MONS_GREEN_DEATH,
+                             MONS_BLIZZARD_DEMON,
+                             MONS_BALRUG,
+                             MONS_CACODEMON,
+                             MONS_HELL_BEAST,
+                             MONS_HELLION,
+                             MONS_REAPER,
+                             MONS_LOROCYPROCA,
+                             MONS_TORMENTOR,
+                             MONS_SHADOW_DEMON);
+    case 1:
+        return random_choose(MONS_BRIMSTONE_FIEND,
+                             MONS_ICE_FIEND,
+                             MONS_TZITZIMITL,
+                             MONS_HELL_SENTINEL,
+                             MONS_EXECUTIONER);
+    default:
+        die("invalid demon tier");
+    }
+}
+
 monster_type summon_any_demon(monster_type dct, bool use_local_demons)
 {
     // Draw random demon types in Pan from the local pools first.
@@ -3402,65 +3449,19 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
     switch (dct)
     {
     case RANDOM_DEMON_LESSER:
-        // tier 5
-        return random_choose(
-            MONS_CRIMSON_IMP,
-            MONS_QUASIT,
-            MONS_WHITE_IMP,
-            MONS_UFETUBUS,
-            MONS_IRON_IMP,
-            MONS_SHADOW_IMP);
+        return random_demon_by_tier(5);
 
     case RANDOM_DEMON_COMMON:
         if (x_chance_in_y(6, 10))
-        {
-            // tier 4
-            return random_choose(
-                MONS_ICE_DEVIL,
-                MONS_RUST_DEVIL,
-                MONS_ORANGE_DEMON,
-                MONS_RED_DEVIL,
-                MONS_CHAOS_SPAWN,
-                MONS_HELLWING);
-        }
+            return random_demon_by_tier(4);
         else
-        {
-            // tier 3
-            return random_choose(
-                MONS_SUN_DEMON,
-                MONS_SOUL_EATER,
-                MONS_SMOKE_DEMON,
-                MONS_NEQOXEC,
-                MONS_YNOXINUL,
-                MONS_SIXFIRHY);
-        }
+            return random_demon_by_tier(3);
 
     case RANDOM_DEMON_GREATER:
         if (x_chance_in_y(6, 10))
-        {
-            // tier 2
-            return random_choose(
-                MONS_GREEN_DEATH,
-                MONS_BLIZZARD_DEMON,
-                MONS_BALRUG,
-                MONS_CACODEMON,
-                MONS_HELL_BEAST,
-                MONS_HELLION,
-                MONS_REAPER,
-                MONS_LOROCYPROCA,
-                MONS_TORMENTOR,
-                MONS_SHADOW_DEMON);
-        }
+            return random_demon_by_tier(2);
         else
-        {
-            // tier 1
-            return random_choose(
-                MONS_BRIMSTONE_FIEND,
-                MONS_ICE_FIEND,
-                MONS_TZITZIMITL,
-                MONS_HELL_SENTINEL,
-                MONS_EXECUTIONER);
-        }
+            return random_demon_by_tier(1);
 
     default:
         return dct;
