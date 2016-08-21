@@ -355,9 +355,6 @@ static void _ely_dull_inventory_weapons()
 {
     int chance = 50;
     int num_dulled = 0;
-    int quiver_link;
-
-    you.m_quiver.get_desired_item(nullptr, &quiver_link);
 
     for (auto &item : you.inv)
     {
