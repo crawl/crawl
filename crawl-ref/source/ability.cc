@@ -1527,7 +1527,10 @@ static bool _check_ability_possible(const ability_def& abil,
         if (hepliaklqana_ancestor() == MID_NOBODY)
         {
             if (!quiet)
-                mpr("Your ancestor is still trapped in memory!");
+            {
+                mprf("%s is still trapped in memory!",
+                     hepliaklqana_ally_name().c_str());
+            }
             return false;
         }
         return true;
