@@ -1693,23 +1693,27 @@ KMONS:  p = plant / fungus / toadstool
 KMONS:  q = plant / fungus / toadstool
 KMONS:  1 = electric eel / rime drake / elephant / griffon
 KMONS:  2 = lindwurm / dire elephant / catoblepas
+KITEM:  2 = * / |
 KFEAT:  q = W
 KFEAT:  1 = w
-SUBST:  p = p., q = qW, r = tx, E = tE, * = *|, 1 = 11www
-NSUBST: . = 2:9 / 3:0 / .
+KFEAT:  h = runed_door
+# Set these  before the NSUBST
+FTILE:  iG = floor_pebble_brown
+SUBST:  p = p., q = qW, r = tx, E = tE, * = *|, i : Gt, j = Gtx-
+NSUBST: . = 2:9 / 3:0 / ., 1 = 3:1 / * = 1ww
 CLEAR:  E
 KMASK:  Ww = no_monster_gen
 COLOUR: -|*2 = brown
-FTILE:  -|*2> = floor_pebble_brown
+FTILE:  -|*2h = floor_pebble_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
-Etc*-WWWWWw1xxwWW1xxxww1ctE
+Etci-WWWWW1jxxwWW1xxjww1ctE
 Etc*2-WWxWWxxwWWwWWxxwwwctE
-Etc*2-wxxWWxWWWxxwwWWwWWctE
-Etc*-wwxxxWWW1xxxx1wWWWwctE
+Etc*2-wxxWWxWWWjjwwWWwWWctE
+Etci-wwjxxWWW1xxxx1wWWWwctE
 EtccccccccccccccccccccWqxtE
-Etxxxxxxxxxxxxxxxxxxxxx>xtE
+EtxxxxxxxxxxxxxxxxxxxxxhxtE
 EttttxrrrrrrrrrrrrrrttWWttE
 Ettttt.qWWwWttqWtwwwqWWwttE
 Ettt...qWwWwWwWwWwwwWwwwttE
