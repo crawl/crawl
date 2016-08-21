@@ -123,14 +123,15 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
+    const string spell_filter_desc = has_filtered ? _describe_spell_filtering(type, pronoun)
+                                                  : "";
 
     if (type == MON_SPELL_WIZARD)
     {
         return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            has_filtered ? _describe_spell_filtering(type, pronoun).c_str()
-                                         : "",
+                            spell_filter_desc.c_str(),
                             vulnerabilities.c_str());
     }
 
@@ -138,8 +139,7 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        has_filtered ? _describe_spell_filtering(type, pronoun).c_str()
-                                     : "",
+                        spell_filter_desc.c_str(),
                         vulnerabilities.c_str());
 }
 
