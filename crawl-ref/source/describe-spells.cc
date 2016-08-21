@@ -145,11 +145,8 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
 static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
 {
-    // XXX: i'm 90% sure there's a neater way to do this (std something?)
-    for (mon_spell_slot slot : book)
-        if (slot.spell == spell)
-            return true;
-    return false;
+    return any_of(book.begin(), book.end(),
+                  [=](mon_spell_slot slot){return slot.spell == spell;});
 }
 
 /**
@@ -166,12 +163,12 @@ static bool _book_valid(const vector<mon_spell_slot> &book,
     if (!mi.props.exists(SEEN_SPELLS_KEY))
         return true;
 
+    auto seen_spells = mi.props[SEEN_SPELLS_KEY].get_vector();
+
     // assumption: any monster with multiple true spellbooks will only ever
     // use one of them
-    for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
-        if (!_spell_in_book((spell_type)spell, book))
-            return false;
-    return true;
+    return all_of(seen_spells.begin(), seen_spells.end(),
+                  [&](int spell){return _spell_in_book((spell_type)spell, book);});
 }
 
 /**
