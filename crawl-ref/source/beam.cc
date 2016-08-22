@@ -2212,7 +2212,8 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
-void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
+void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
+                 bool explosion_hole)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
@@ -2249,7 +2250,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
 
     // Fire!
     if (explode_only)
-        pbolt.explode(false);
+        pbolt.explode(false, explosion_hole);
     else
         pbolt.fire();
 
@@ -5924,6 +5925,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_ICEBLAST, {
         "The mass of ice explodes!",
         "an explosion",
+    } },
+    { SPELL_GHOSTLY_SACRIFICE, {
+        "The ghostly flame explodes!",
+        "the shriek of haunting fire",
     } },
 };
 

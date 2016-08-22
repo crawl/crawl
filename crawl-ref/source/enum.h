@@ -2992,6 +2992,7 @@ enum monster_type                      // menv[].type
     MONS_IRONBRAND_CONVOKER,
     MONS_IRONHEART_PRESERVER,
     MONS_SERVANT_OF_WHISPERS,
+    MONS_HALAZID_WARLOCK,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -3536,6 +3537,7 @@ enum monster_type                      // menv[].type
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
     MONS_SERVANT_OF_WHISPERS,
+    MONS_HALAZID_WARLOCK,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4685,6 +4687,7 @@ enum spell_type : int
     SPELL_BIND_SOULS,
     SPELL_INFESTATION,
     SPELL_STILL_WINDS,
+    SPELL_GHOSTLY_SACRIFICE,
     NUM_SPELLS
 };
 

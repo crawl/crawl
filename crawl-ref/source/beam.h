@@ -319,7 +319,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
-                  bool explode_only = false);
+                  bool explode_only = false, bool explosion_hole = false);
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,

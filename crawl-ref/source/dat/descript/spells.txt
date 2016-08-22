@@ -607,6 +607,12 @@ Ghostly Fireball spell
 Hurls an exploding ball of negative energy which drains any living creature
 it engulfs.
 %%%%
+Ghostly Sacrifice spell
+
+Uses an ally's motivating essence to create a blast of negative energy,
+draining any living creature it engulfs. The being used to fuel the spell, no
+matter whether living or construct, is consumed and unmade in the process.
+%%%%
 Throw Ally spell
 
 Throws a nearby ally at the monster's foe, doing minimal damage and landing the

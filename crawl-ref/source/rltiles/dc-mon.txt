@@ -767,6 +767,7 @@ revenant MONS_REVENANT
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
+halazid_warlock MONS_HALAZID_WARLOCK
 mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
 ## Mummies ('M')
