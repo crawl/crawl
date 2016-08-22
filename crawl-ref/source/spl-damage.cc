@@ -1065,6 +1065,7 @@ static int _shatter_mon_dice(const monster *mon)
     case MONS_GARGOYLE:
     case MONS_IRON_ELEMENTAL:
     case MONS_IRON_GOLEM:
+    case MONS_PEACEKEEPER:
     case MONS_WAR_GARGOYLE:
     case MONS_CRYSTAL_GUARDIAN:
     case MONS_OBSIDIAN_STATUE:
@@ -2073,6 +2074,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         case MONS_IRON_ELEMENTAL:
         case MONS_IRON_GOLEM:
+        case MONS_PEACEKEEPER:
         case MONS_WAR_GARGOYLE:
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;

@@ -1854,6 +1854,13 @@ pandemonium lord
 A formidable demon lord inhabiting the endless halls of Pandemonium. Each one
 is different, with its own set of strengths and weaknesses.
 %%%%
+peacekeeper
+
+A four-legged construct the size of a man. Built to enforce imperial laws, its
+hurled barbs slow the escape of captives and slaves, and its roar magically
+strengthens its other nonliving allies in the battle against heretics. The
+empire may have fallen, but a true peacekeeper knows no jurisdiction.
+%%%%
 pearl dragon
 
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and

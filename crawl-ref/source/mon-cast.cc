@@ -1464,6 +1464,7 @@ enum battlecry_type
     BATTLECRY_GOBLIN,
     BATTLECRY_ORC,
     BATTLECRY_HOLY,
+    BATTLECRY_NONLIVING,
     BATTLECRY_NATURAL,
     NUM_BATTLECRIES
 };
@@ -1485,6 +1486,8 @@ static bool _is_battlecry_compatible(const monster& mons, battlecry_type type)
             return mons_genus(mons.type) == MONS_ORC;
         case BATTLECRY_HOLY:
             return bool(mons.holiness() & MH_HOLY);
+        case BATTLECRY_NONLIVING:
+            return bool(mons.holiness() & MH_NONLIVING);
         case BATTLECRY_NATURAL:
             return bool(mons.holiness() & MH_NATURAL);
         default:
@@ -1508,6 +1511,8 @@ static battlecry_type _get_cry_type(const monster& crier)
         return BATTLECRY_ORC;
     if (crier.holiness() & MH_HOLY)
         return BATTLECRY_HOLY;
+    if (crier.holiness() & MH_NONLIVING)
+        return BATTLECRY_NONLIVING;
     return BATTLECRY_NATURAL;
 }
 
@@ -1540,6 +1545,11 @@ static void _print_battlecry_announcement(const monster& chief,
             "%s is roused by the hymn!",
             "%s %s are roused to righteous anger!",
             "holy creatures"
+        },
+        {
+            "%s is filled with furious energy!",
+            "%s %s are filled with furious energy!",
+            "constructs"
         },
         {
             "%s is stirred to greatness!",

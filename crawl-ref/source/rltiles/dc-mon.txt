@@ -440,6 +440,7 @@ iron_golem MONS_IRON_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
 %rim 0
 ushabti MONS_USHABTI
+peacekeeper MONS_PEACEKEEPER
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM

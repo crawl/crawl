@@ -648,6 +648,10 @@ Fireball hell hog cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Throw Barbs peacekeeper cast
+
+@The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

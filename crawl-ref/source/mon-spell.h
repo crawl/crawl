@@ -1581,6 +1581,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_PEACEKEEPER,
+      {
+       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
+       { SPELL_BATTLECRY, 25, MON_SPELL_MAGICAL | MON_SPELL_INSTANT
+                              | MON_SPELL_NO_SILENT | MON_SPELL_NOISY },
+      }
+    },
+
     {  MST_CRYSTAL_GUARDIAN,
       {
        { SPELL_CRYSTAL_BOLT, 66, MON_SPELL_MAGICAL },
