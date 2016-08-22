@@ -2787,6 +2787,7 @@ enum monster_type                      // menv[].type
     MONS_WOOD_GOLEM,
     MONS_STONE_GOLEM,
 #else
+    MONS_SALTLING,
     MONS_PEACEKEEPER,
 #endif
     MONS_IRON_GOLEM,
@@ -3540,6 +3541,7 @@ enum monster_type                      // menv[].type
     MONS_MELIAI,
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
+    MONS_SALTLING,
     MONS_IMPERIAL_MYRMIDON,
     MONS_SERVANT_OF_WHISPERS,
     MONS_PEACEKEEPER,
