@@ -579,6 +579,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_SERVANT_OF_WHISPERS,
+      {
+       { SPELL_STILL_WINDS, 20, MON_SPELL_PRIEST },
+       { SPELL_LIGHTNING_BOLT, 40, MON_SPELL_PRIEST },
+      }
+    },
+
     // ('q') Classed draconians.
 
     {  MST_DRACONIAN_SCORCHER,

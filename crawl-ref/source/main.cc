@@ -2469,6 +2469,15 @@ static void _update_golubria_traps()
         env.level_state &= ~LSTATE_GOLUBRIA;
 }
 
+static void _update_still_winds()
+{
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+        if (mon_it->has_ench(ENCH_STILL_WINDS))
+            return;
+    // still winds somehow ended without the flag being unset. fix it
+    end_still_winds();
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2545,6 +2554,8 @@ void world_reacts()
         _update_mold();
     if (env.level_state & LSTATE_GOLUBRIA)
         _update_golubria_traps();
+    if (env.level_state & LSTATE_STILL_WINDS)
+        _update_still_winds();
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 

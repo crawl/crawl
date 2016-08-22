@@ -1488,6 +1488,12 @@ static bool _check_ability_possible(const ability_def& abil,
                 mpr("It's too cloudy to do that here.");
             return false;
         }
+        if (env.level_state & LSTATE_STILL_WINDS)
+        {
+            if (!quiet)
+                mpr("The air is too still for clouds to form.");
+            return false;
+        }
         return true;
 
     case ABIL_GOZAG_POTION_PETITION:

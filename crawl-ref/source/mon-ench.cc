@@ -247,6 +247,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             unwind_var<FixedBitVector<NUM_ENCHANTMENTS>> ecache(ench_cache, {});
             end_flayed_effect(this);
         }
+        del_ench(ENCH_STILL_WINDS);
 
         if (is_patrolling())
         {
@@ -303,6 +304,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             went_unseen_this_turn = true;
             unseen_pos = pos();
         }
+        break;
+
+    case ENCH_STILL_WINDS:
+        start_still_winds();
         break;
 
     default:
@@ -952,6 +957,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer infested.");
         break;
 
+    case ENCH_STILL_WINDS:
+        end_still_winds();
+        break;
+
     default:
         break;
     }
@@ -1442,6 +1451,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
+    case ENCH_STILL_WINDS:
         decay_enchantment(en);
         break;
 
@@ -2145,6 +2155,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
+    "stilling the winds",
     "buggy",
 };
 
@@ -2300,6 +2311,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
+    case ENCH_STILL_WINDS:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

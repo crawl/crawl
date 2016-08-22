@@ -165,6 +165,7 @@ enum monster_info_flags
     MB_BOUND_SOUL,
     MB_INFESTATION,
     MB_NO_REWARD,
+    MB_STILL_WINDS,
     NUM_MB_FLAGS
 };
 

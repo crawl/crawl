@@ -1378,6 +1378,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot coerce anything to obey you.";
         break;
 
+    case SPELL_CORPSE_ROT:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_MEPHITIC_CLOUD:
+        if (env.level_state & LSTATE_STILL_WINDS)
+            return "the air is too still for clouds to form.";
+        break;
+
     default:
         break;
     }

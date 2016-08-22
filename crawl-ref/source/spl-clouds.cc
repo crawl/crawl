@@ -328,6 +328,13 @@ random_pick_entry<cloud_type> cloud_cone_clouds[] =
 spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail)
 {
+    if (env.level_state & LSTATE_STILL_WINDS)
+    {
+        if (caster->is_player())
+            mpr("The air is too still to form clouds.");
+        return SPRET_ABORT;
+    }
+
     // For monsters:
     pow = min(100, pow);
 

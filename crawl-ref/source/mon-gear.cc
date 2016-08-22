@@ -663,6 +663,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         } } },
         { MONS_FAUN,                    { FAUN_WEAPONS } },
         { MONS_SATYR,                   { FAUN_WEAPONS } },
+        { MONS_SERVANT_OF_WHISPERS,     { FAUN_WEAPONS } },
         { MONS_NESSOS, {
             { { WPN_LONGBOW,            1 } },
             { 1, 1, 3 },
@@ -1858,6 +1859,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_HELLBINDER:
     case MONS_SALAMANDER_MYSTIC:
+    case MONS_SERVANT_OF_WHISPERS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;

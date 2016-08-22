@@ -25,6 +25,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
+#include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
@@ -3543,6 +3544,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_RECHARGING:
             return player_mutation_level(MUT_NO_ARTIFICE) > 0;
+        case SCR_FOG:
+            return env.level_state & LSTATE_STILL_WINDS;
         default:
             return false;
         }
@@ -3728,6 +3731,10 @@ bool is_useless_item(const item_def &item, bool temp)
         }
         switch (item.sub_type)
         {
+            case ROD_CLOUDS:
+                if (item_type_known(item))
+                    return env.level_state & LSTATE_STILL_WINDS;
+                break;
             case ROD_SHADOWS:
                 if (item_type_known(item))
                     return player_mutation_level(MUT_NO_LOVE);

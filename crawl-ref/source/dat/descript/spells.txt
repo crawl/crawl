@@ -1257,6 +1257,13 @@ Sticky Flame spell
 Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
 for a short time.
 %%%%
+Still Winds spell
+
+Brings the air into unnatural stillness across a huge area, preventing anything
+short of a tornado from breaking the calm. The effect takes concentration to
+maintain, and only lasts a short time; if the caster is killed, clouds will
+begin to form again as normal.
+%%%%
 Sting spell
 
 Fires a magical dart of poison.

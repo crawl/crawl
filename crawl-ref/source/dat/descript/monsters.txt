@@ -2036,6 +2036,12 @@ The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts,
 the mightiest servants of the good gods. They have six wings and but one face,
 and are said to sometimes take the forms of fiery serpents.
 %%%%
+servant of whispers
+
+A member of an order of monks who abandoned their former faith. They now serve
+a minor god of wind and whispers, who allows them to calm the air and, when
+in great need, to break the stillness with divine thunder.
+%%%%
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
