@@ -474,6 +474,16 @@ grass_flowers_yellow1
 grass_flowers_yellow2
 grass_flowers_yellow3
 
+grass_n HALO_GRASS
+grass_ne
+grass_e
+grass_se
+grass_s
+grass_sw
+grass_w
+grass_nw
+grass_full
+
 grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
 grass0-dirt-mix2
 grass0-dirt-mix3
@@ -621,9 +631,89 @@ floor_nerves6
 %repeat FLOOR_NERVES FLOOR_NERVES_WHITE
 %resetcol
 
+%start
+%compose grass/grass0
+%compose pedestal_n
+%finish HALO_GRASS2
+%start
+%compose grass/grass1
+%compose pedestal_ne
+%finish
+%start
+%compose grass/grass2
+%compose pedestal_e
+%finish
+%start
+%compose grass/grass1
+%compose pedestal_se
+%finish
+%start
+%compose grass/grass0
+%compose pedestal_s
+%finish
+%start
+%compose grass/grass1
+%compose pedestal_sw
+%finish
+%start
+%compose grass/grass2
+%compose pedestal_w
+%finish
+%start
+%compose grass/grass0
+%compose pedestal_nw
+%finish
+
+%sdir dngn/floor
+pedestal_full
+
+%start
+%compose rect_gray0
+%compose pedestal_n
+%finish HALO_VAULT
+%start
+%compose rect_gray1
+%compose pedestal_ne
+%finish
+%start
+%compose rect_gray2
+%compose pedestal_e
+%finish
+%start
+%compose rect_gray3
+%compose pedestal_se
+%finish
+%start
+%compose rect_gray2
+%compose pedestal_s
+%finish
+%start
+%compose rect_gray1
+%compose pedestal_sw
+%finish
+%start
+%compose rect_gray0
+%compose pedestal_w
+%finish
+%start
+%compose rect_gray3
+%compose pedestal_nw
+%finish
+pedestal_full
+
 dirt0 FLOOR_DIRT
 dirt1
 dirt2
+
+dirt_n HALO_DIRT
+dirt_ne
+dirt_e
+dirt_se
+dirt_s
+dirt_sw
+dirt_w
+dirt_nw
+dirt_full
 
 tutorial_pad TUTORIAL_PAD
 
