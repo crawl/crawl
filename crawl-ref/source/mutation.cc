@@ -2436,11 +2436,12 @@ void check_monster_detect()
 
         env.map_knowledge(*ri).set_detected_monster(mc);
 
-        // Don't bother warning the player (or interrupting
-        // autoexplore) about monsters known to be easy or
-        // friendly, or those recently warned about
+        // Don't bother warning the player (or interrupting autoexplore) about
+        // friendly monsters or those known to be easy, or those recently
+        // warned about
         if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
-            || mc == MONS_SENSED_FRIENDLY || testbits(mon->flags, MF_SENSED))
+            || mc == MONS_SENSED_FRIENDLY || mon->wont_attack()
+            || testbits(mon->flags, MF_SENSED))
         {
             continue;
         }
