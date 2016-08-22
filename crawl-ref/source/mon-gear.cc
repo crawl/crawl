@@ -2131,6 +2131,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_ANUBIS_GUARD:
+    case MONS_HALAZID_WARLOCK:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_ROBE;
         break;

@@ -98,6 +98,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
+static coord_def _mons_ghostly_sacrifice_target(monster &caster);
 
 void init_mons_spells()
 {
@@ -906,9 +907,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_GHOSTLY_FIREBALL:
+    case SPELL_GHOSTLY_SACRIFICE:
         beam.colour   = CYAN;
         beam.name     = "ghostly fireball";
-        beam.damage   = dice_def(3, 6 + power / 13);
+        beam.damage   = dice_def(real_spell == SPELL_GHOSTLY_SACRIFICE ? 5 : 3,
+                                 6 + power / 13);
         beam.hit      = 40;
         beam.flavour  = BEAM_NEG;
         beam.is_explosion = true;
@@ -1324,6 +1327,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else if (spell_cast == SPELL_AWAKEN_EARTH)
         {
             pbolt.target = _mons_awaken_earth_target(*mons);
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_GHOSTLY_SACRIFICE)
+        {
+            pbolt.target = _mons_ghostly_sacrifice_target(*mons);
             pbolt.aimed_at_spot = true; // ditto
         }
      }
@@ -3075,6 +3083,83 @@ static coord_def _mons_awaken_earth_target(monster &mon)
     return choice ? *choice : coord_def(0, 0);
 }
 
+/**
+ * Get the fraction of damage done by the given beam that's to enemies,
+ * multiplied by the given scale.
+ */
+static int _get_dam_fraction(const bolt &tracer, int scale)
+{
+    if (!tracer.foe_info.power)
+        return 0;
+    return tracer.foe_info.power * scale
+            / (tracer.foe_info.power + tracer.friend_info.power);
+}
+
+/**
+ * Pick a target for Ghostly Sacrifice.
+ *
+ *  @param  caster       The monster casting the spell.
+ *                      TODO: constify (requires mon_spell_beam param const
+ *  @return The target square, or an out of bounds coord if none was found.
+ */
+static coord_def _mons_ghostly_sacrifice_target(monster &caster)
+{
+    const int dam_scale = 1000;
+    int best_dam_fraction = dam_scale / 2;
+    coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
+
+    const int pow = _mons_spellpower(SPELL_GHOSTLY_SACRIFICE, caster);
+    // XXX: is it safe to build this outside the loop?
+    bolt tracer = mons_spell_beam(&caster, SPELL_GHOSTLY_SACRIFICE, pow);
+    tracer.ex_size = 1;
+
+    for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (*mi == &caster)
+            continue; // don't blow yourself up!
+
+        if (!mons_aligned(&caster, *mi))
+            continue; // can only blow up allies ;)
+
+        tracer.target = mi->pos();
+        fire_tracer(&caster, tracer, true, true);
+        if (mons_is_threatening(*mi)) // only care about sacrificing real mons
+            tracer.friend_info.power += mi->get_experience_level() * 2;
+
+        const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
+        dprf("if sacrificing %s (at %d,%d): ratio %d/%d",
+             mi->name(DESC_A, true).c_str(),
+             best_target.x, best_target.y, dam_fraction, dam_scale);
+        if (dam_fraction > best_dam_fraction)
+        {
+            best_target = mi->pos();
+            best_dam_fraction = dam_fraction;
+            dprf("setting best target");
+        }
+    }
+
+    return best_target;
+}
+
+/// Everything short of the actual explosion. Returns whether to explode.
+static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam)
+{
+    if (!in_bounds(beam.target))
+        return false; // assert?
+
+    monster* victim = monster_at(beam.target);
+    if (!victim)
+        return false; // assert?
+
+    if (you.see_cell(victim->pos()))
+    {
+        mprf("%s animating energy erupts into ghostly fire!",
+             apostrophise(victim->name(DESC_THE)).c_str());
+    }
+    monster_die(victim, &caster, true);
+    return true;
+}
+
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 {
     targetter_shotgun hitfunc(caster, shotgun_beam_count(pow),
@@ -3356,6 +3441,7 @@ static bool _target_and_justify_spell(monster &mons,
         case SPELL_CONJURE_FLAME:
         case SPELL_FULMINANT_PRISM:
         case SPELL_AWAKEN_EARTH:
+        case SPELL_GHOSTLY_SACRIFICE:
             // special targetting (in setup_mons_cast()); returns an OOB pos
             // in case of failure
             if (!in_bounds(beem.target))
@@ -5514,6 +5600,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
     }
+
+    case SPELL_GHOSTLY_SACRIFICE:
+        if (_prepare_ghostly_sacrifice(*mons, pbolt))
+            break; // and explode
+        if (you.can_see(*mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return; // don't explode
 
     case SPELL_SHATTER:
         mons_shatter(mons);

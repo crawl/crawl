@@ -586,6 +586,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_HALAZID_WARLOCK,
+      {
+       { SPELL_GHOSTLY_SACRIFICE, 20, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_DRAINING, 20, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_COLD, 20, MON_SPELL_WIZARD },
+       { SPELL_SHADOW_CREATURES, 25, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
     // ('q') Classed draconians.
 
     {  MST_DRACONIAN_SCORCHER,
