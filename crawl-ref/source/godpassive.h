@@ -65,9 +65,6 @@ enum class passive_t
     /// Your god blesses your followers when they kill evil things.
     bless_followers_vs_evil,
 
-    /// You receive a bonus to armour class.
-    bonus_ac,
-
     /// You cannot be hasted.
     no_haste,
 

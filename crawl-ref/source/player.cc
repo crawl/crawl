@@ -2138,30 +2138,6 @@ int player_mutation_level(mutation_type mut, bool temp)
     return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
 }
 
-static int _player_armour_beogh_bonus(const item_def& item)
-{
-    if (item.base_type != OBJ_ARMOUR)
-        return 0;
-
-    int bonus = 0;
-
-    if (have_passive(passive_t::bonus_ac))
-    {
-        if (you.piety >= piety_breakpoint(5))
-            bonus = 10;
-        else if (you.piety >= piety_breakpoint(4))
-            bonus = 8;
-        else if (you.piety >= piety_breakpoint(2))
-            bonus = 6;
-        else if (you.piety >= piety_breakpoint(0))
-            bonus = 4;
-        else
-            bonus = 2;
-    }
-
-    return bonus;
-}
-
 bool is_effectively_light_armour(const item_def *item)
 {
     return !item
@@ -2423,12 +2399,9 @@ int player_shield_class()
                         * (item.sub_type - ARM_LARGE_SHIELD);
         int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
-        int beogh_bonus = _player_armour_beogh_bonus(item);
-
         // bonus applied only to base, see above for effect:
         shield += base_shield * 50;
         shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
-        shield += base_shield * beogh_bonus * 10 / 6;
 
         shield += item.plus * 200;
 
@@ -6020,12 +5993,9 @@ int sanguine_armour_bonus()
 int player::base_ac_from(const item_def &armour, int scale) const
 {
     const int base_ac     = property(armour, PARM_AC) * scale;
-    const int beogh_bonus  = _player_armour_beogh_bonus(armour);
 
-    // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
-    // Armour Skill + beogh_bonus / 2.
-    const int AC
-        = base_ac * (440 + skill(SK_ARMOUR, 20) + beogh_bonus * 10) / 440;
+    // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
+    const int AC = base_ac * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
