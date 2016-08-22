@@ -2272,6 +2272,9 @@ static const map<monster_type, band_set> bands_by_leader = {
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
     { MONS_MELIAI,          { {}, {{ BAND_MELIAI, {2, 3} }}}},
+    { MONS_DANCING_WEAPON,  { {0, 0, []() {
+        return you.where_are_you == BRANCH_DESOLATION;
+    }},                            {{ BAND_DANCING_WEAPONS, {2, 3} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2442,6 +2445,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_AIR_ELEMENTALS,      {{{MONS_AIR_ELEMENTAL, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
+    { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},

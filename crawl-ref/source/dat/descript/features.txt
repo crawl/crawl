@@ -261,6 +261,13 @@ A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 %%%%
+A ruined silver gateway
+
+A pair of large gold-inlaid doors, covered in entreaties to the good gods to
+contain the evils sealed therein. Whatever barriers once held the gate shut
+have finally succumbed to the ravages of time, and a bitter breeze pours forth
+from the distant land beyond.
+%%%%
 A runed door
 
 A door, covered in runic writing. It looks like there is something special
@@ -868,6 +875,18 @@ A floating ball radiating with shimmering light.
 A sealed sarcophagus
 
 An ancient sarcophagus. It is sealed shut.
+%%%%
+# Desolation
+An endless expanse of salt
+
+A seemingly endless, flat plain, wracked by blinding salt-storms. You'd be lost
+beyond all hope in short order — better not risk it.
+%%%%
+# Desolation
+A ruined idol
+
+A monument to the glory of a dead god. The statue has been methodically
+defaced; not a single distinguishing feature remains.
 %%%%
 ###########################
 ### Portal vault entrances

@@ -271,6 +271,11 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_DESOLATION: // TODO
+        flv.floor = TILE_FLOOR_SALT;
+        flv.wall = TILE_WALL_PEBBLE_MIDBROWN;
+        return;
+
     case NUM_BRANCHES:
     case GLOBAL_BRANCH_INFO:
         break;

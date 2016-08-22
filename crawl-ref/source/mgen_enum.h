@@ -116,6 +116,7 @@ enum band_type
     BAND_MELIAI,
     BAND_ANCIENT_CHAMPIONS,
     BAND_SALTLINGS,
+    BAND_DANCING_WEAPONS,
     NUM_BANDS                   // always last
 };
 
