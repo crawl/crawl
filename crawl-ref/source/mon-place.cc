@@ -2179,6 +2179,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ALLIGATOR,       { {5}, {{ BAND_ALLIGATOR, {1, 2}, true }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
+    { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
     // Journey -- Added Draconian Packs
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
@@ -2643,6 +2644,21 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_CHERUB, 80},
                                   {MONS_DAEVA, 50},
                                   {MONS_OPHAN, 1}}}}, // !?
+
+    // one supporter, and maybe more
+    { BAND_SALTLINGS,           {{{MONS_SALAMANDER_MYSTIC, 1},
+                                  {MONS_GUARDIAN_SERPENT, 1},
+                                  {MONS_RAGGED_HIEROPHANT, 1},
+                                  {MONS_SERVANT_OF_WHISPERS, 1},
+                                  {MONS_PEACEKEEPER, 1}},
+
+                                 {{MONS_SALTLING, 150},
+                                  {MONS_SALAMANDER_MYSTIC, 5},
+                                  {MONS_GUARDIAN_SERPENT, 5},
+                                  {MONS_RAGGED_HIEROPHANT, 5},
+                                  {MONS_SERVANT_OF_WHISPERS, 5},
+                                  {MONS_PEACEKEEPER, 5},
+                                  {MONS_IMPERIAL_MYRMIDON, 2}}}},
 };
 
 /**

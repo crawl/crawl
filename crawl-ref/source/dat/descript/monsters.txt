@@ -2039,6 +2039,12 @@ channel the fire within them to empower their allies, hurl blasts of lava or,
 by fusing their arts with those of their naga brethren, ignite even a single
 drop of poison within the veins of an enemy.
 %%%%
+saltling
+
+A small, man-shaped agglomeration of salt. When the old eastern empire fell,
+its last fugitive loyalists were forced to rely on local resources to defend
+themselves. Hence, these rather brittle, awkward golems.
+%%%%
 satyr
 
 A more intelligent relative of the faun, often found in their company, and far

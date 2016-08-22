@@ -115,6 +115,7 @@ enum band_type
     BAND_HOWLER_MONKEY,
     BAND_MELIAI,
     BAND_ANCIENT_CHAMPIONS,
+    BAND_SALTLINGS,
     NUM_BANDS                   // always last
 };
 
