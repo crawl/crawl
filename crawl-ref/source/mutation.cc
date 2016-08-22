@@ -2402,6 +2402,7 @@ void check_monster_detect()
     int radius = player_monster_detect_radius();
     if (radius <= 0)
         return;
+
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
@@ -2410,43 +2411,47 @@ void check_monster_detect()
         {
             if (cell.detected_monster())
                 cell.clear_monster();
+            continue;
         }
-        else if (!mons_is_firewood(mon))
+        if (mons_is_firewood(mon))
+            continue;
+
+        // [ds] If the PC remembers the correct monster at this
+        // square, don't trample it with MONS_SENSED. Forgetting
+        // legitimate monster memory affects travel, which can
+        // path around mimics correctly only if it can actually
+        // *see* them in monster memory -- overwriting the mimic
+        // with MONS_SENSED causes travel to bounce back and
+        // forth, since every time it leaves LOS of the mimic, the
+        // mimic is forgotten (replaced by MONS_SENSED).
+        // XXX: since mimics were changed, is this safe to remove now?
+        const monster_type remembered_monster = cell.monster();
+        if (remembered_monster == mon->type)
+            continue;
+
+        const monster_type mc = mon->friendly() ? MONS_SENSED_FRIENDLY
+            : have_passive(passive_t::detect_montier)
+            ? ash_monster_tier(mon)
+            : MONS_SENSED;
+
+        env.map_knowledge(*ri).set_detected_monster(mc);
+
+        // Don't bother warning the player (or interrupting
+        // autoexplore) about monsters known to be easy or
+        // friendly, or those recently warned about
+        if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
+            || mc == MONS_SENSED_FRIENDLY || testbits(mon->flags, MF_SENSED))
         {
-            // [ds] If the PC remembers the correct monster at this
-            // square, don't trample it with MONS_SENSED. Forgetting
-            // legitimate monster memory affects travel, which can
-            // path around mimics correctly only if it can actually
-            // *see* them in monster memory -- overwriting the mimic
-            // with MONS_SENSED causes travel to bounce back and
-            // forth, since every time it leaves LOS of the mimic, the
-            // mimic is forgotten (replaced by MONS_SENSED).
-            const monster_type remembered_monster = cell.monster();
-            if (remembered_monster != mon->type)
+            continue;
+        }
+
+        for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
+        {
+            if (you.see_cell(*ri2))
             {
-                const monster_type mc = mon->friendly() ? MONS_SENSED_FRIENDLY
-                                      : have_passive(passive_t::detect_montier)
-                                                        ? ash_monster_tier(mon)
-                                                        : MONS_SENSED;
-
-                env.map_knowledge(*ri).set_detected_monster(mc);
-
-                // Don't bother warning the player (or interrupting
-                // autoexplore) about monsters known to be easy or
-                // friendly, or those recently warned about
-                if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
-                    || mc == MONS_SENSED_FRIENDLY
-                    || testbits(mon->flags, MF_SENSED))
-                {
-                    continue;
-                }
-
-                for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
-                    if (you.see_cell(*ri2))
-                    {
-                        mon->flags |= MF_SENSED;
-                        interrupt_activity(AI_SENSE_MONSTER);
-                    }
+                mon->flags |= MF_SENSED;
+                interrupt_activity(AI_SENSE_MONSTER);
+                break;
             }
         }
     }
