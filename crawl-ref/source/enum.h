@@ -1402,6 +1402,7 @@ enum level_state_type
     LSTATE_DELETED        = (1 << 2), // The level won't be saved.
     LSTATE_BEOGH          = (1 << 3), // Possibly an orcish priest around.
     LSTATE_SLIMY_WALL     = (1 << 4), // Any slime walls exist.
+    LSTATE_STILL_WINDS    = (1 << 5), // Cloud generation is disabled
 };
 
 // NOTE: The order of these is very important to their usage!
@@ -2098,6 +2099,7 @@ enum enchant_type
     ENCH_IDEALISED,
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
+    ENCH_STILL_WINDS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2989,6 +2991,7 @@ enum monster_type                      // menv[].type
     MONS_VAULT_WARDEN,
     MONS_IRONBRAND_CONVOKER,
     MONS_IRONHEART_PRESERVER,
+    MONS_SERVANT_OF_WHISPERS,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -3532,6 +3535,7 @@ enum monster_type                      // menv[].type
     MONS_MELIAI,
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
+    MONS_SERVANT_OF_WHISPERS,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4680,6 +4684,7 @@ enum spell_type : int
     SPELL_SERPENT_OF_HELL_DIS_BREATH,
     SPELL_BIND_SOULS,
     SPELL_INFESTATION,
+    SPELL_STILL_WINDS,
     NUM_SPELLS
 };
 

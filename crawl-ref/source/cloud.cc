@@ -738,6 +738,13 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
 
+    if (env.level_state & LSTATE_STILL_WINDS
+        && cl_type != CLOUD_TORNADO
+        && cl_type != CLOUD_INK)
+    {
+        return;
+    }
+
     ASSERT(!cell_is_solid(ctarget));
 
     kill_category whose = KC_OTHER;
@@ -1764,4 +1771,18 @@ void run_cloud_spreaders(int dur)
 const cloud_tile_info& cloud_type_tile_info(cloud_type type)
 {
     return clouds[type].tile_info;
+}
+
+/// Knock out clouds & set the still winds level flag; also message.
+void start_still_winds()
+{
+    delete_all_clouds();
+    env.level_state |= LSTATE_STILL_WINDS;
+    mprf(MSGCH_WARN, "%s", "The air becomes perfectly still.");
+}
+
+void end_still_winds()
+{
+    env.level_state &= ~LSTATE_STILL_WINDS;
+    mpr("The air resumes its normal movements.");
 }

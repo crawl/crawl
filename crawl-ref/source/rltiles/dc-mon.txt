@@ -541,6 +541,7 @@ vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL
 ironbrand_convoker MONS_IRONBRAND_CONVOKER
 ironheart_preserver MONS_IRONHEART_PRESERVER
+servant_of_whispers MONS_SERVANT_OF_WHISPERS
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown_blue MONS_KILLER_KLOWN

@@ -1844,6 +1844,9 @@ item_def* monster_die(monster* mons, killer_type killer,
     // ... and liquefiers.
     mons->del_ench(ENCH_LIQUEFYING);
 
+    // ... and wind-stillers.
+    mons->del_ench(ENCH_STILL_WINDS, true);
+
     // Clean up any blood from the flayed effect
     if (mons->has_ench(ENCH_FLAYED))
         heal_flayed_effect(mons, true, true);

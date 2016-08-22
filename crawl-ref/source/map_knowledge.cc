@@ -257,6 +257,13 @@ bool map_cell::update_cloud_state()
         return true;
     }
 
+    // still winds KOs all clouds, even those out of LOS
+    if (_cloud && env.level_state & LSTATE_STILL_WINDS)
+    {
+        clear_cloud();
+        return true;
+    }
+
     // TODO: track decay & vanish appropriately (based on some worst case?)
     return false;
 }

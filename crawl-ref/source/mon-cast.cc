@@ -1268,6 +1268,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AURA_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
+    case SPELL_STILL_WINDS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -2052,6 +2053,48 @@ static bool _seal_doors_and_stairs(const monster* warden,
     }
 
     return false;
+}
+
+/// Should the given monster cast Still Winds?
+static bool _should_still_winds(const monster &caster)
+{
+    // if it's already running, don't start it again.
+    if (env.level_state & LSTATE_STILL_WINDS)
+        return false;
+
+    // just gonna annoy the player most of the time. don't try to be clever
+    if (caster.wont_attack())
+        return false;
+
+    for (radius_iterator ri(caster.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        const cloud_struct *cloud = cloud_at(*ri);
+        if (!cloud)
+            continue;
+
+        // clouds the player might hide in are worrying.
+        if (grid_distance(*ri, you.pos()) <= 3 // decent margin
+            && is_opaque_cloud(cloud->type)
+            && actor_cloud_immune(&you, *cloud))
+        {
+            return true;
+        }
+
+        // so are hazardous clouds on allies.
+        const monster* mon = monster_at(*ri);
+        if (mon && !actor_cloud_immune(mon, *cloud))
+            return true;
+    }
+
+    // let's give a pass otherwise.
+    return false;
+}
+
+/// Cast the spell Still Winds, disabling clouds across the level temporarily.
+static void _still_winds(monster &caster)
+{
+    ASSERT(!(env.level_state & LSTATE_STILL_WINDS));
+    caster.add_ench(ENCH_STILL_WINDS);
 }
 
 static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
@@ -6223,6 +6266,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
         return;
 
+    case SPELL_STILL_WINDS:
+        _still_winds(*mons);
+        return;
+
     case SPELL_SUMMON_SCARABS:
     {
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
@@ -7417,6 +7464,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
     }
 
+    const bool no_clouds = env.level_state & LSTATE_STILL_WINDS;
+
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
     // handled here as well. - bwr
@@ -7452,7 +7501,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || !_torment_vulnerable(foe);
 
     case SPELL_MIASMA_BREATH:
-        return !foe || foe->res_rotting();
+        return !foe || foe->res_rotting() || no_clouds;
 
     case SPELL_DISPEL_UNDEAD:
         // [ds] How is dispel undead intended to interact with vampires?
@@ -7676,10 +7725,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_HAUNT:
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SMITING:
-    case SPELL_HOLY_FLAMES:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
         return !foe;
+
+    case SPELL_HOLY_FLAMES:
+        return !foe || no_clouds;
 
     case SPELL_AIRSTRIKE:
         return !foe || foe->res_wind();
@@ -7876,9 +7927,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                                     foe->pos());
 
     case SPELL_CLOUD_CONE:
-        return !foe
+        return !foe || no_clouds
                || !mons_should_cloud_cone(mon, _mons_spellpower(monspell, *mon),
                                           foe->pos());
+
+    case SPELL_STILL_WINDS:
+        return !_should_still_winds(*mon);
 
     // Friendly monsters don't use polymorph, as it's likely to cause
     // runaway growth of an enemy.
@@ -7964,6 +8018,17 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             if (_mons_can_bind_soul(mon, *mi))
                 return false;
         return true;
+
+    case SPELL_CORPSE_ROT:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_NOXIOUS_CLOUD:
+    case SPELL_SPECTRAL_CLOUD:
+    case SPELL_FLAMING_CLOUD:
+    case SPELL_CHAOS_BREATH:
+        return no_clouds;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
