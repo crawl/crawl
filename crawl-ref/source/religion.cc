@@ -204,9 +204,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Beogh
-    { { 1, "Beogh aids your use of armour.",
-           "Beogh no longer aids your use of armour." },
-      { 2, ABIL_BEOGH_SMITING, "smite your foes" },
+    { { 2, ABIL_BEOGH_SMITING, "smite your foes" },
       { 3, "gain orcish followers" },
       { 4, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
       { 5, "walk on water" },
@@ -534,9 +532,6 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            // Orcish bonuses are now once more effective.
-            if (have_passive(passive_t::bonus_ac))
-                 you.redraw_armour_class = true;
             if (have_passive(passive_t::sinv))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
@@ -682,10 +677,6 @@ static void _inc_penance(god_type god, int val)
             mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
             invalidate_agrid();
         }
-
-        // Orcish bonuses don't apply under penance.
-        if (will_have_passive(passive_t::bonus_ac))
-            you.redraw_armour_class = true;
 
         if (will_have_passive(passive_t::water_walk)
             && _need_water_walking() && !have_passive(passive_t::water_walk))
@@ -2351,10 +2342,6 @@ static void _gain_piety_point()
         }
     }
 
-    // Every piety level change also affects AC.
-    if (will_have_passive(passive_t::bonus_ac))
-        you.redraw_armour_class = true;
-
     // The player's symbol depends on Beogh piety.
     if (you_worship(GOD_BEOGH))
         update_player_symbol();
@@ -2499,10 +2486,6 @@ void lose_piety(int pgn)
 
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
-
-    // Every piety level change also affects AC.
-    if (will_have_passive(passive_t::bonus_ac))
-        you.redraw_armour_class = true;
 
     if (will_have_passive(passive_t::water_walk) && _need_water_walking()
         && !have_passive(passive_t::water_walk))
