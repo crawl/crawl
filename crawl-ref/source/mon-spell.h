@@ -579,6 +579,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_IMPERIAL_MYRMIDON,
+      {
+       { SPELL_SLOW, 13, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 13, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 13, MON_SPELL_WIZARD },
+      }
+    },
+
     { MST_SERVANT_OF_WHISPERS,
       {
        { SPELL_STILL_WINDS, 20, MON_SPELL_PRIEST },

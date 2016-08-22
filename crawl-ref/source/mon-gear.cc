@@ -878,6 +878,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
               { WPN_WAR_AXE,            7 },
               { WPN_BROAD_AXE,          1 }, },
         } },
+        { MONS_IMPERIAL_MYRMIDON, {
+            { { WPN_SCIMITAR,           20 },
+              { WPN_DEMON_BLADE,        4 },
+              { WPN_DOUBLE_SWORD,       1 }, },
+        } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
@@ -1767,6 +1772,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_JOSEPH:
+    case MONS_IMPERIAL_MYRMIDON:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL,
