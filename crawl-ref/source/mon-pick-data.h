@@ -942,6 +942,15 @@ static const pop_entry pop_trove[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_desolation[] =
+{ // Desolation
+  {  1,  1, 1200, FLAT, MONS_SALTLING },
+  {  1,  1,  100, FLAT, MONS_DANCING_WEAPON },
+  {  1,  1,   50, FLAT, MONS_CRYSTAL_GUARDIAN },
+  {  1,  1,   50, FLAT, MONS_IMPERIAL_MYRMIDON },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_sewer[] =
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_GIANT_NEWT },
@@ -1117,6 +1126,7 @@ static const struct { const pop_entry *pop; int count; } population[] =
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
 #endif
+    POP(desolation),
 };
 
 // Lists for picking zombies from.
@@ -1225,6 +1235,7 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
 #endif
+    POP(desolation),
 };
 
 static const pop_entry pop_water_generic[] =
@@ -1328,6 +1339,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
 #if TAG_MAJOR_VERSION == 34
     POP(water_depths),
 #endif
+    POP(water_generic),
 };
 
 static const pop_entry pop_lava_generic[] =
@@ -1429,4 +1441,5 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
 #if TAG_MAJOR_VERSION == 34
     POP(lava_depths),
 #endif
+    POP(lava_generic),
 };

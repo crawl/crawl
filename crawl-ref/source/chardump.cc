@@ -241,6 +241,7 @@ static branch_type single_portals[] =
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
+    BRANCH_DESOLATION,
 };
 
 static void _sdump_visits(dump_params &par)

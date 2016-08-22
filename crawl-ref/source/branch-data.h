@@ -299,4 +299,12 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, 0 },
+
+    { BRANCH_DESOLATION, NUM_BRANCHES, -1, -1, 1, 20,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS,
+      DNGN_ENTER_DESOLATION, DNGN_EXIT_DESOLATION, NUM_FEATURES, // TODO
+      "Desolation", "the Desolation of Salt", "Desolation",
+      "You enter a great desolation of salt!",
+      LIGHTGREY, BROWN, // TODO
+      '9', {}, 2 },
 };
