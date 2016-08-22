@@ -1386,6 +1386,9 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return item_attack_skill(weapon) == SK_SHORT_BLADES
                    || wtype == WPN_BLOWGUN;
         }
+
+        if (mons->type == MONS_IMPERIAL_MYRMIDON)
+            return item_attack_skill(weapon) == SK_LONG_BLADES;
     }
 
     if (mons->is_holy())

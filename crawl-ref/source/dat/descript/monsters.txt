@@ -1432,6 +1432,12 @@ iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
 %%%%
+imperial myrmidon
+
+A warrior initiated in the mysteries of a dying cult, dedicated to serve
+thrones long-fallen. The myrmidons' swords cut through their foes' magical
+defenses, leaving them vulnerable to even the simplest hexes.
+%%%%
 infernal demonspawn
 
 <demonspawn>
