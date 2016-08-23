@@ -88,21 +88,19 @@ static const armour_def Armour_prop[] =
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, prc, henum, hname, hprc, res, \
-                    weight)                                                \
-    { henum, hname, (aac)/2, aevp, prc,                                    \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },            \
-    { aenum, aname, aac, aevp, hprc,                                       \
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, prc, henum, hname, res, weight) \
+    { henum, hname, (aac)/2, aevp, prc,                                      \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },              \
+    { aenum, aname, aac, aevp, prc-100,                                      \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
 
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res) \
     HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                prc, ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", \
-                prc-100, res, 25)
+                prc, ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
 
     HIDE_ARMOUR(
       ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,  150,
-      ARM_TROLL_HIDE,           "troll hide",                        40,
+      ARM_TROLL_HIDE,           "troll hide",
         ARMF_REGENERATION, 50
     ),
 
