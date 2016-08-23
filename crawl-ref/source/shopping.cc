@@ -268,30 +268,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_MISSILES:          // ammunition
-        switch (item.sub_type)
-        {
-        case MI_STONE:
-        case MI_NONE:
-            valued++;
-            break;
-        case MI_NEEDLE:
-        case MI_ARROW:
-        case MI_BOLT:
-            valued += 2;
-            break;
-        case MI_LARGE_ROCK:
-            valued += 7;
-            break;
-        case MI_JAVELIN:
-            valued += 8;
-            break;
-        case MI_THROWING_NET:
-            valued += 30;
-            break;
-        default:
-            valued += 5;
-            break;
-        }
+        valued += missile_base_price((missile_type)item.sub_type);
 
         if (item_type_known(item))
         {

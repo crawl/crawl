@@ -630,6 +630,7 @@ struct missile_def
     const char *name;
     int         dam;
     int         mulch_rate;
+    int         price;
     bool        throwable;
 };
 
@@ -637,17 +638,17 @@ static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
 #if TAG_MAJOR_VERSION == 34
-    { MI_DART,          "dart",          2, 1,  true  },
+    { MI_DART,          "dart",          2, 1,  1,  true  },
 #endif
-    { MI_NEEDLE,        "needle",        0, 12, false },
-    { MI_STONE,         "stone",         2, 8,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  false },
-    { MI_BOLT,          "bolt",          0, 8,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  false },
-    { MI_JAVELIN,       "javelin",      10, 20, true  },
-    { MI_THROWING_NET,  "throwing net",  0, 0,  true  },
-    { MI_TOMAHAWK,      "tomahawk",      6, 20, true  },
+    { MI_NEEDLE,        "needle",        0, 12, 2,  false },
+    { MI_STONE,         "stone",         2, 8,  1,  true  },
+    { MI_ARROW,         "arrow",         0, 8,  2,  false },
+    { MI_BOLT,          "bolt",          0, 8,  2,  false },
+    { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
+    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
+    { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
+    { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
+    { MI_TOMAHAWK,      "tomahawk",      6, 20, 5,  true  },
 };
 
 struct food_def
@@ -3142,4 +3143,15 @@ int armour_type_prop(const uint8_t arm, const armour_flag prop)
 int weapon_base_price(weapon_type type)
 {
     return Weapon_prop[ Weapon_index[type] ].price;
+}
+
+/**
+ * For store pricing purposes, how much is the given type of missile worth?
+ *
+ * @param type      The type of missile in question; e.g. MI_ARROW.
+ * @return          A value in gold for each missile; e.g. 20.
+ */
+int missile_base_price(missile_type type)
+{
+    return Missile_prop[ Missile_index[type] ].price;
 }
