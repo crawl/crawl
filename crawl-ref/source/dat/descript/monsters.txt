@@ -691,7 +691,7 @@ catoblepas
 
 A sluggish black buffalo, its hide encrusted with dull scales. It carries its
 hog-like head just above the ground, protected by a stiff mane of bristles.
-Its fearsome breath is known to turn flesh into stone.
+Its fearsome breath turns flesh into stone.
 %%%%
 caustic shrike
 
@@ -958,17 +958,13 @@ some unknown dark god.
 drowned soul
 
 A cold and hollow apparition of the drowned dead, chained by some lingering
-attachment to the depths in which it perished. It clamours around the living,
+attachment to the depths in which it perished. It rushes to embrace the living,
 sharing the last moments of its watery fate with whatever it touches.
 %%%%
 dryad
 
 A spirit of nature, bound to the forest in which it resides. It is capable of
 calling upon the trees to defend against incursions.
-%%%%
-formicid
-
-A sentient ant that walks upright and is competent at digging.
 %%%%
 dwarf
 
@@ -1005,7 +1001,7 @@ wizard's experiment.
 %%%%
 electric eel
 
-A variety of fish, capable of generating a powerful electric field.
+A type of fish capable of generating a powerful electric field.
 %%%%
 elemental wellspring
 
@@ -1084,8 +1080,8 @@ a brilliant column of raging flames.
 fire giant
 
 A giant with obsidian skin and a wild mane of glowing red hair, holding aloft a
-fiery sword. It is rumoured that fire giants believe that they are destined to
-unite and burn the entire world to cinders.
+fiery sword. Fire giants believe that they are destined to unite and burn the
+entire world to cinders.
 %%%%
 fire vortex
 
@@ -1105,6 +1101,10 @@ freed slave
 
 A human who has just been released from magical enslavement. It tries to stand
 proudly, despite its lingering fear and unkempt appearance.
+%%%%
+formicid
+
+A sentient ant that walks upright and is competent at digging.
 %%%%
 freezing wraith
 
@@ -1291,8 +1291,8 @@ An abominable crossbreed of beast and man that makes horrible barking noises.
 %%%%
 hell hog
 
-An extremely large and aggressive swine, bred in Hell, whose breath ignites its
-foes violently.
+An extremely large and aggressive swine, bred in Hell, whose breath burns its
+foes to ash.
 %%%%
 hell hound
 
@@ -1389,9 +1389,9 @@ A great and nightmarish lacertilian beast. It has many heads, and the potential
 to grow many more!
 
 Hitting it with any bladed weapon bigger than a short blade risks lopping a
-head off and causing two more to grow in its place. Even a troll's claws are
-long enough to do the same. Only a weapon branded with flame will cauterize the
-wound and prevent more heads from growing.
+head off and causing two more to grow in its place. Very large claws, such as
+trolls', are long enough to do the same. Only a weapon branded with flame will
+cauterize the wound and prevent more heads from growing.
 %%%%
 hyperactive ballistomycete
 
