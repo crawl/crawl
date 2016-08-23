@@ -338,15 +338,6 @@ unsigned int item_value(item_def item, bool ident)
 
             valued /= 10;
         }
-
-        if (item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            if (item.plus >= 0)
-                valued += (item.plus * 2);
-
-            if (item.plus < 0)
-                valued += item.plus * item.plus * item.plus;
-        }
         break;
 
     case OBJ_ARMOUR:
