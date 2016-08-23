@@ -232,6 +232,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type) IMMUTABLE;
 equipment_type get_item_slot(const item_def &item) PURE;
 
 int weapon_base_price(weapon_type type) PURE;
+int missile_base_price(missile_type type) PURE;
 
 string item_base_name(const item_def &item);
 string item_base_name(object_class_type type, int sub_type);
