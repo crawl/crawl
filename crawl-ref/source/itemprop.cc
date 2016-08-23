@@ -47,6 +47,8 @@ struct armour_def
     int                 ac;
     /// The base EV penalty of the armour; used for EV, stealth, spell %, &c.
     int                 ev;
+    /// The base price of the item in shops.
+    int                 price;
 
     /// The slot the armour is equipped into; e.g. EQ_BOOTS.
     equipment_type      slot;
@@ -68,99 +70,101 @@ struct armour_def
 static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
-    { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,
+    { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,     3,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
-    { ARM_ROBE,                 "robe",                   2,   0,
+    { ARM_ROBE,                 "robe",                   2,   0,     7,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true, ARMF_NO_FLAGS, 1000 },
-    { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,
+    { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
-    { ARM_RING_MAIL,            "ring mail",              5,  -70,
+    { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
-    { ARM_SCALE_MAIL,           "scale mail",             6, -100,
+    { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
-    { ARM_CHAIN_MAIL,           "chain mail",             8, -150,
+    { ARM_CHAIN_MAIL,           "chain mail",             8, -150,   45,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
-    { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,
+    { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   230,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
-    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,
+    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res, weight) \
-    { henum, hname, (aac)/2, aevp,                                      \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },         \
-    { aenum, aname, aac, aevp,                                          \
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, prc, henum, hname, hprc, res, \
+                    weight)                                                \
+    { henum, hname, (aac)/2, aevp, prc,                                    \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },            \
+    { aenum, aname, aac, aevp, hprc,                                       \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
 
-#define DRAGON_ARMOUR(id, name, ac, evp, res) \
+#define DRAGON_ARMOUR(id, name, ac, evp, prc, res) \
     HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
+                prc, ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", \
+                prc-100, res, 25)
 
     HIDE_ARMOUR(
-      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,
-      ARM_TROLL_HIDE,           "troll hide",
+      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,  150,
+      ARM_TROLL_HIDE,           "troll hide",                        40,
         ARMF_REGENERATION, 50
     ),
 
-    DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
+    DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
         ARMF_RES_STEAM),
-    DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -50,
+    DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -50,  400,
         ARMF_RES_STICKY_FLAME),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
         ARMF_RES_MAGIC),
-    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,
+    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
         ARMF_RES_POISON),
-    DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,
+    DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  600,
         ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD),
-    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,
+    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,  600,
         ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE),
-    DRAGON_ARMOUR(PEARL,       "pearl",                  10, -110,
+    DRAGON_ARMOUR(PEARL,       "pearl",                  10, -110, 1000,
         ARMF_RES_NEG),
-    DRAGON_ARMOUR(STORM,       "storm",                  10, -150,
+    DRAGON_ARMOUR(STORM,       "storm",                  10, -150,  800,
         ARMF_RES_ELEC),
-    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -150,
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -150,  800,
         ard(ARMF_STEALTH, 4)),
-    DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,
+    DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
 
 #undef DRAGON_HIDE
 #undef HIDE_ARMOUR
 
-    { ARM_CLOAK,                "cloak",                  1,   0,
+    { ARM_CLOAK,                "cloak",                  1,   0,   45,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
-    { ARM_GLOVES,               "gloves",                 1,   0,
+    { ARM_GLOVES,               "gloves",                 1,   0,   45,
         EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
-    { ARM_HELMET,               "helmet",                 1,   0,
+    { ARM_HELMET,               "helmet",                 1,   0,   45,
         EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
 #if TAG_MAJOR_VERSION == 34
-    { ARM_CAP,                  "cap",                    0,   0,
+    { ARM_CAP,                  "cap",                    0,   0,   45,
         EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
 #endif
 
-    { ARM_HAT,                  "hat",                    0,   0,
+    { ARM_HAT,                  "hat",                    0,   0,   40,
         EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
     // and shapeshift status.
-    { ARM_BOOTS,                "boots",                  1,   0,
+    { ARM_BOOTS,                "boots",                  1,   0,   45,
         EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true },
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
-    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -60,
+    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -60,  230,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
-    { ARM_NAGA_BARDING,         "naga barding",           4,  -60,
+    { ARM_NAGA_BARDING,         "naga barding",           4,  -60,  230,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                3,  -8,
+    { ARM_BUCKLER,              "buckler",                3,  -8,   45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
-    { ARM_SHIELD,               "shield",                 8,  -30,
+    { ARM_SHIELD,               "shield",                 8,  -30,  45,
         EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG, true    },
-    { ARM_LARGE_SHIELD,         "large shield",          13,  -50,
+    { ARM_LARGE_SHIELD,         "large shield",          13,  -50,  45,
         EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
 };
 
@@ -3154,4 +3158,17 @@ int weapon_base_price(weapon_type type)
 int missile_base_price(missile_type type)
 {
     return Missile_prop[ Missile_index[type] ].price;
+}
+
+/**
+ * For store pricing purposes, how much is the given type of armour worth,
+ * before curses, egos, etc are taken into account?
+ *
+ * @param type      The type of weapon in question; e.g. ARM_RING_MAIL, or
+ *                  ARM_BUCKLER.
+ * @return          A value in gold; e.g. 45.
+ */
+int armour_base_price(armour_type type)
+{
+    return Armour_prop[ Armour_index[type] ].price;
 }
