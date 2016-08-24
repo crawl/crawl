@@ -955,6 +955,13 @@ draconian zealot
 A draconian deriving its hellish powers and demonic allies from the worship of
 some unknown dark god.
 %%%%
+dream sheep
+
+A drowsy, fluffy ovine that emanates sparkling motes of dust from its coat.
+When a herd of dream sheep gather, this dream dust overwhelms and puts their
+victims to sleep. When threatened, individual dream sheep may muster a large
+amount of dream dust.
+%%%%
 drowned soul
 
 A cold and hollow apparition of the drowned dead, chained by some lingering

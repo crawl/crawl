@@ -756,13 +756,14 @@ public:
 
     bool asleep() const override;
     void put_to_sleep(actor *, int power = 0, bool hibernate = false) override;
-    void awake();
+    void awaken();
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
+    bool can_sleep(bool holi_only = false) const override;
 
     int racial_ac(bool temp) const;
     int armour_class(bool /*calc_unid*/ = true) const override;

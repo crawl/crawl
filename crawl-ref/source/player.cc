@@ -7389,6 +7389,11 @@ bool player::can_smell() const
     return species != SP_MUMMY;
 }
 
+bool player::can_sleep(bool holi_only) const
+{
+    return !you.duration[DUR_SLEEP_IMMUNITY] && actor::can_sleep(holi_only);
+}
+
 /**
  * Attempts to put the player to sleep.
  *
@@ -7427,12 +7432,12 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     set_duration(DUR_SLEEP, dur);
 }
 
-void player::awake()
+void player::awaken()
 {
     ASSERT(!crawl_state.game_is_arena());
 
     duration[DUR_SLEEP] = 0;
-    duration[DUR_SLEEP_IMMUNITY] = 1;
+    if (duration[DUR_SLEEP_IMMUNITY] == 0) duration[DUR_SLEEP_IMMUNITY] = 1;
     mpr("You wake up.");
     flash_view(UA_MONSTER, BLACK);
 }
@@ -7440,7 +7445,7 @@ void player::awake()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
-        awake();
+        awaken();
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
