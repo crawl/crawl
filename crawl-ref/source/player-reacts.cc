@@ -469,7 +469,7 @@ void player_reacts_to_monsters()
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awake();
+        you.awaken();
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
