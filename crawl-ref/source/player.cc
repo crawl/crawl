@@ -7389,6 +7389,11 @@ bool player::can_smell() const
     return species != SP_MUMMY;
 }
 
+bool player::can_sleep(bool holi_only) const
+{
+    return !you.duration[DUR_SLEEP_IMMUNITY] && actor::can_sleep(holi_only);
+}
+
 /**
  * Attempts to put the player to sleep.
  *
@@ -7432,7 +7437,7 @@ void player::awake()
     ASSERT(!crawl_state.game_is_arena());
 
     duration[DUR_SLEEP] = 0;
-    duration[DUR_SLEEP_IMMUNITY] = 1;
+    if (duration[DUR_SLEEP_IMMUNITY] == 0) duration[DUR_SLEEP_IMMUNITY] = 1;
     mpr("You wake up.");
     flash_view(UA_MONSTER, BLACK);
 }

@@ -534,7 +534,7 @@ Sleep satyr cast
 %%%%
 Sleep dream sheep cast
 
-@The_monster@ materializes a large amount of dream dust! 
+@The_monster@ suddenly materializes a large amount of dream dust! 
 %%%%
 Metal Splinters war gargoyle cast
 

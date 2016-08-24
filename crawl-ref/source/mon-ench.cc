@@ -2109,7 +2109,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "deaths_door",
 #endif
-    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall", 
+    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
     "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
