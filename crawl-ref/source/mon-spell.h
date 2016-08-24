@@ -1371,7 +1371,7 @@ static const mon_spellbook mspell_list[] =
 
     { MST_DREAM_SHEEP,
       {
-        { SPELL_SUMMON_DREAM_SHEEP, 50, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+        { SPELL_SLEEP, 32, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
       }
     },
 

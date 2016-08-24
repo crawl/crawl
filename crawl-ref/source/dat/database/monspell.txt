@@ -173,10 +173,6 @@ Druid's Call cast
 
 @The_monster@ calls out to the beasts of the wild!
 %%%%
-Summon Dream Sheep cast
-
-@The_monster@ materializes a new companion out of dream dust! 
-%%%%
 Legendary Destruction cast
 
 @Major Destruction cast@
@@ -535,6 +531,10 @@ Cause Fear satyr cast
 Sleep satyr cast
 
 @The_monster@ plays a lulling melody on his pipes!
+%%%%
+Sleep dream sheep cast
+
+@The_monster@ materializes a large amount of dream dust! 
 %%%%
 Metal Splinters war gargoyle cast
 

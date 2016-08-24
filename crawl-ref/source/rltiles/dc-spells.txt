@@ -277,7 +277,6 @@ sticky_flame_splash STICKY_FLAME_SPLASH
 error STRIP_RESISTANCE
 %sdir gui/spells/monster
 summon_drakes SUMMON_DRAKES
-summon_dream_sheep SUMMON_DREAM_SHEEP
 summon_eyeballs SUMMON_EYEBALLS
 summon_hell_beast SUMMON_HELL_BEAST
 %sdir misc

@@ -1306,10 +1306,6 @@ Summon Drakes spell
 Summons multiple drakes, and possibly one true dragon of some kind, barring the
 most powerful ones.
 %%%%
-Summon Dream Sheep spell
-
-Creates a dream sheep out of dream dust. 
-%%%%
 Summon Earth Elementals spell
 
 Summons one or more earth elementals.

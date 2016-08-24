@@ -1268,7 +1268,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AURA_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
-    case SPELL_SUMMON_DREAM_SHEEP:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -5373,13 +5372,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                           SAME_ATTITUDE(mons), mons, duration, spell_cast,
                           empty, mons->foe, MG_FORCE_PLACE, god));
         }
-        return;
-
-    // Summon more dream sheep in an emergency.
-    case SPELL_SUMMON_DREAM_SHEEP:
-        create_monster(
-            mgen_data(MONS_DREAM_SHEEP, SAME_ATTITUDE(mons), mons,
-                      3, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
