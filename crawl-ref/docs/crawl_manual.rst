@@ -1529,7 +1529,7 @@ Trolls
 
   They can rip creatures apart with their claws, and regenerate very quickly
   from even the most terrible wounds. They learn slowly indeed - as slowly as
-  High Elves - and need a great amount of food to survive.
+  Fen Elves - and need a great amount of food to survive.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1707,22 +1707,26 @@ Due to their fey natures, all Elves are good at using magic in general and
 elemental magic in particular, while their affinity for other types of magic
 varies among the different sub-species.
 
-High Elves
-  This is a tall and powerful Elven species who advance in levels slowly,
-  requiring half again as much experience as Humans. They have good intelligence
-  and dexterity, but suffer in strength. Compared with Humans, they have fewer
-  HP but more magic. Among all races, they are best with blades and bows. They
-  are not very good with necromancy or with earth or poison magic, but are
-  highly skilled with most other forms of magic, especially Air and Charms.
+Fen Elves
+  A tall and hardened Elven species who rarely venture out of their overgrown
+  swamps. They advance in levels slowly, requiring half again as much experience
+  as Humans. They are intelligent and dexterous, but not as strong as other
+  species. Compared with Humans, they have less health but more magic.
+  
+  Among all species, they are unsurpassed with blades and bows. They are
+  averse to necromancy, fire and ice magic, and magical devices. Fen Elves
+  are self-sufficient survivors who improve their personal capabilities through
+  magical charms and transform the battlefield through hexes and 
+  elemental magic. 
 
 Deep Elves
-  This is an Elven species who long ago fled the overworld to live in darkness
-  underground. There, they developed their mental powers, evolving a natural
-  gift for all forms of magic (including necromancy and earth magic), and
-  adapted physically to their new environment, becoming shorter and weaker than
-  High Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels at the same
-  speed as High Elves.
+   They are descendants of magic-obsessed Fen Elves who long ago fled the
+   swamps to live in darkness underground. There, they developed their mental
+   powers, evolving a natural gift for all forms of magic (including necromancy,
+   fire, and ice magic), and adapted physically to their new environment,
+   becoming shorter and weaker than Fen Elves and losing all colouration.
+   They are poor at hand-to-hand combat, but excellent at fighting from a
+   distance. They advance in levels at the same speed as Fen Elves.
 
 The Undead
 ========================================

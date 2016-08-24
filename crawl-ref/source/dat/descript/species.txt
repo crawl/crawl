@@ -38,6 +38,11 @@ Felid
 Felids are many-lived cats possessing sentience. They are incapable of advanced
 item manipulation or the use of armour or weapons.
 %%%%
+Fen Elf
+
+Hardened swamp-dwellers, Fen Elves are adept with blades, bows, and many 
++schools of magic, and have high attributes.
+%%%%
 Ghoul
 
 Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
@@ -52,11 +57,6 @@ Halfling
 
 Small but hardy, Halflings excel with slings. They have an increased resistance
 to mutagenic effects.
-%%%%
-High Elf
-
-High Elves are adept with blades and with many schools of magic, and have high
-attributes.
 %%%%
 Hill Orc
 
