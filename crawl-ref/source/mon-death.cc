@@ -60,6 +60,7 @@
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
+#include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -399,6 +400,11 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     const int dur = corpse.quantity * 2;
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
+
+    // In sprint, increase the amount of gold from corpses (but not
+    // the gold aura duration!)
+    if (crawl_state.game_is_sprint())
+        corpse.quantity *= SPRINT_MULTIPLIER;
 
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
     if (!x_chance_in_y(chance, chance + 9))
