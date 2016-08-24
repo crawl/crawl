@@ -7432,7 +7432,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     set_duration(DUR_SLEEP, dur);
 }
 
-void player::awake()
+void player::awaken()
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7445,7 +7445,7 @@ void player::awake()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
-        awake();
+        awaken();
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
