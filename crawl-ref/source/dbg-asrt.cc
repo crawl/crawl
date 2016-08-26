@@ -626,9 +626,11 @@ void do_crash_dump()
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
-            "Please submit a bug report at https://crawl.develz.org/mantis/ "
-            "and include the crash report (%s), your save file (%s), and a "
-            "description of what you were doing when this crash occurred.\n\n",
+            "\nPlease submit a bug report at https://crawl.develz.org/mantis/ "
+            "and include:"
+            "\n- The crash report: %s"
+            "\n- Your save file: %s"
+            "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
