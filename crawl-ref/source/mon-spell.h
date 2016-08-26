@@ -586,6 +586,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_RAGGED_HIEROPHANT,
+      {
+       { SPELL_INJURY_BOND, 20, MON_SPELL_WIZARD },
+       { SPELL_RESONANCE_STRIKE, 40, MON_SPELL_WIZARD },
+      }
+    },
+
     { MST_HALAZID_WARLOCK,
       {
        { SPELL_GHOSTLY_SACRIFICE, 20, MON_SPELL_WIZARD },

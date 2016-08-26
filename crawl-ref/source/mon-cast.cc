@@ -1260,6 +1260,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
+    case SPELL_RESONANCE_STRIKE:
     case SPELL_FLAY:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CHANT_FIRE_STORM:
@@ -4908,6 +4909,68 @@ static void _cast_flay(monster* source, actor *defender)
     }
 }
 
+/// What nonliving creatures are adjacent to the given location?
+static vector<const actor*> _find_nearby_constructs(coord_def pos)
+{
+    vector<const actor*> nearby_constructs;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        const actor* act = actor_at(*ai);
+        if (act && act->holiness() & MH_NONLIVING)
+            nearby_constructs.push_back(act);
+    }
+    return nearby_constructs;
+}
+
+/// How many nonliving creatures are adjacent to the given location?
+static int _count_nearby_constructs(coord_def pos)
+{
+    return _find_nearby_constructs(pos).size();
+}
+
+/// What's a good description of nonliving creatures adjacent to the given point?
+static string _describe_nearby_constructs(coord_def pos)
+{
+    const vector<const actor*> nearby_constructs = _find_nearby_constructs(pos);
+    if (!nearby_constructs.size())
+        return "";
+
+    const string name = nearby_constructs.back()->name(DESC_THE);
+    if (nearby_constructs.size() == 1)
+        return make_stringf(" and %s", name.c_str());
+
+    for (auto act : nearby_constructs)
+        if (act->name(DESC_THE) != name)
+            return " and the adjacent constructs";
+    return make_stringf(" and %s", pluralise_monster(name).c_str());
+}
+
+/// Cast Resonance Strike, blasting the caster's target with smitey damage.
+static void _resonance_strike(const monster &caster)
+{
+    actor* target = caster.get_foe();
+    if (!target)
+        return;
+
+    const int constructs = _count_nearby_constructs(target->pos());
+    // base damage 3d(spell hd) (probably 3d12)
+    // + 1 die for every 2 adjacent constructs (so at 4 constructs, 5dhd)
+    const int dice = 3 + div_rand_round(constructs, 2);
+    const int die_size = caster.spell_hd(SPELL_RESONANCE_STRIKE);
+    const int preac_dam = roll_dice(dice, die_size);
+    const int dam = target->apply_ac(preac_dam);
+    const string constructs_desc = _describe_nearby_constructs(target->pos());
+
+    if (you.see_cell(target->pos()))
+    {
+        mprf("A blast of power from the earth%s strikes %s!",
+             constructs_desc.c_str(),
+             target->name(DESC_THE).c_str());
+    }
+    target->hurt(&caster, dam, BEAM_MISSILE, KILLED_BY_BEAM,
+                 "", "by a resonance strike");
+}
+
 static bool _spell_charged(monster *mons)
 {
     mon_enchant ench = mons->get_ench(ENCH_SPELL_CHARGED);
@@ -5115,6 +5178,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                   "", "by the air");
         return;
     }
+
+    case SPELL_RESONANCE_STRIKE:
+        _resonance_strike(*mons);
+        return;
 
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
@@ -7820,6 +7887,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SMITING:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
+    case SPELL_RESONANCE_STRIKE:
         return !foe;
 
     case SPELL_HOLY_FLAMES:

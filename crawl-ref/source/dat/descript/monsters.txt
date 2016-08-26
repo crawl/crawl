@@ -1943,6 +1943,11 @@ quokka
 
 A pesky little marsupial that is a bit like a rat, but not quite.
 %%%%
+ragged hierophant
+
+A bedraggled priest, once-fine robes now lined with salt and dust. Forsaken by
+their gods, they rely on constructs to protect themselves.
+%%%%
 rakshasa
 
 A demon in the form of a tiger who comes to the material world in search of

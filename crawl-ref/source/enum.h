@@ -2992,6 +2992,7 @@ enum monster_type                      // menv[].type
     MONS_IRONBRAND_CONVOKER,
     MONS_IRONHEART_PRESERVER,
     MONS_SERVANT_OF_WHISPERS,
+    MONS_RAGGED_HIEROPHANT,
     MONS_HALAZID_WARLOCK,
 #endif
     MONS_KILLER_KLOWN,
@@ -3537,6 +3538,7 @@ enum monster_type                      // menv[].type
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
     MONS_SERVANT_OF_WHISPERS,
+    MONS_RAGGED_HIEROPHANT,
     MONS_HALAZID_WARLOCK,
 #endif
 
@@ -4687,6 +4689,7 @@ enum spell_type : int
     SPELL_BIND_SOULS,
     SPELL_INFESTATION,
     SPELL_STILL_WINDS,
+    SPELL_RESONANCE_STRIKE,
     SPELL_GHOSTLY_SACRIFICE,
     NUM_SPELLS
 };
