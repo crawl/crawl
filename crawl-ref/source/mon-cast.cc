@@ -1459,62 +1459,6 @@ static bool _valid_aura_of_brilliance_ally(const monster* caster,
            && target->is_actual_spellcaster();
 }
 
-enum battlecry_type
-{
-    BATTLECRY_GOBLIN,
-    BATTLECRY_ORC,
-    BATTLECRY_HOLY,
-    BATTLECRY_NONLIVING,
-    BATTLECRY_NATURAL,
-    NUM_BATTLECRIES
-};
-
-/**
- * Is the given monster affected by the given type of battlecry?
- *
- * @param mons   The monster to be affected.
- * @param type   What type of battlecry is being loosed.
- * @return       Whether the given monster will be buffed by the battlecry.
- */
-static bool _is_battlecry_compatible(const monster& mons, battlecry_type type)
-{
-    switch (type)
-    {
-        case BATTLECRY_GOBLIN:
-            return mons_genus(mons.type) == MONS_GOBLIN;
-        case BATTLECRY_ORC:
-            return mons_genus(mons.type) == MONS_ORC;
-        case BATTLECRY_HOLY:
-            return bool(mons.holiness() & MH_HOLY);
-        case BATTLECRY_NONLIVING:
-            return bool(mons.holiness() & MH_NONLIVING);
-        case BATTLECRY_NATURAL:
-            return bool(mons.holiness() & MH_NATURAL);
-        default:
-            return false;
-    }
-}
-
-
-/**
- * What type of cry does the given monster perform?
- *
- * @param crier  The monster letting loose a mighty battlecry.
- * @return       The battlecry type, which corresponds to different sets of
- *               affected monsters, messages, and (technically) enchantments.
- */
-static battlecry_type _get_cry_type(const monster& crier)
-{
-    if (mons_genus(crier.type) == MONS_GOBLIN)
-        return BATTLECRY_GOBLIN;
-    if (mons_genus(crier.type) == MONS_ORC)
-        return BATTLECRY_ORC;
-    if (crier.holiness() & MH_HOLY)
-        return BATTLECRY_HOLY;
-    if (crier.holiness() & MH_NONLIVING)
-        return BATTLECRY_NONLIVING;
-    return BATTLECRY_NATURAL;
-}
 
 /**
  * Print the message that the player sees after a battlecry goes off.
@@ -1526,65 +1470,32 @@ static battlecry_type _get_cry_type(const monster& crier)
 static void _print_battlecry_announcement(const monster& chief,
                                           vector<monster*> &seen_affected)
 {
-    // Columns 0 and 1 should have one instance of %s (for the monster),
-    // column 2 two (for a determiner and the monsters), and column 3 none.
-    enum { AFFECT_ONE, AFFECT_MANY, GENERIC_ALLIES };
-    static const char * const messages[][3] =
-    {
-        {
-            "%s goes into a battle-frenzy!",
-            "%s %s go into a battle-frenzy!",
-            "goblins"
-        },
-        {
-            "%s goes into a battle-frenzy!",
-            "%s %s go into a battle-frenzy!",
-            "orcs"
-        },
-        {
-            "%s is roused by the hymn!",
-            "%s %s are roused to righteous anger!",
-            "holy creatures"
-        },
-        {
-            "%s is filled with furious energy!",
-            "%s %s are filled with furious energy!",
-            "constructs"
-        },
-        {
-            "%s is stirred to greatness!",
-            "%s %s are stirred to greatness!",
-            "satyr's allies"
-        },
-    };
-    COMPILE_CHECK(ARRAYSZ(messages) == NUM_BATTLECRIES);
-
-    const battlecry_type type = _get_cry_type(chief);
     // Disabling detailed frenzy announcement because it's so spammy.
     const msg_channel_type channel = chief.friendly() ? MSGCH_MONSTER_ENCHANT
                                                       : MSGCH_FRIEND_ENCHANT;
 
-    string who;
     if (seen_affected.size() == 1)
     {
-        who = seen_affected[0]->name(DESC_THE);
-        mprf(channel, messages[type][AFFECT_ONE], who.c_str());
+        mprf(channel, "%s goes into a battle-frenzy!",
+             seen_affected[0]->name(DESC_THE).c_str());
+        return;
     }
-    else
-    {
-        monster_type mon_type = seen_affected[0]->type;
-        // if not homogeneous, use the generic term instead
-        const bool generic = any_of(
-                                    begin(seen_affected), end(seen_affected),
-                                    [=](const monster *m)
-                                    { return m->type != mon_type; });
-        who = get_monster_data(mon_type)->name;
 
-        mprf(channel, messages[type][AFFECT_MANY],
-             chief.friendly() ? "Your" : "The",
-             generic ? messages[type][GENERIC_ALLIES]
-             : pluralise_monster(who).c_str());
-    }
+    // refer to the group by the most specific name possible. If they're all
+    // one monster type; use that name; otherwise, use the genus name (since
+    // we restrict this by genus).
+    // Note: If we stop restricting by genus, use "foo's allies" instead.
+    monster_type first_type = seen_affected[0]->type;
+    const bool generic = any_of(
+                                begin(seen_affected), end(seen_affected),
+                                [=](const monster *m)
+                                { return m->type != first_type; });
+    monster_type group_type = generic ? mons_genus(chief.type) : first_type;
+
+    const string ally_desc
+        = pluralise_monster(mons_type_name(group_type, DESC_PLAIN));
+    mprf(channel, "%s %s go into a battle-frenzy!",
+         chief.friendly() ? "Your" : "The", ally_desc.c_str());
 }
 
 /**
@@ -1610,8 +1521,6 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
     // Don't try to make noise when silent.
     if (chief.is_silenced())
         return false;
-
-    const battlecry_type type = _get_cry_type(chief);
 
     int affected = 0;
 
@@ -1639,13 +1548,9 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         if (mons->has_ench(ENCH_MIGHT))
             continue;
 
-        // invalid battlecry target (wrong genus/holiness, or hd too high)
-        if (!_is_battlecry_compatible(*mons, type)
-            || mons->get_hit_dice() >= chief.get_hit_dice()
-               && type != BATTLECRY_HOLY)
-        {
+        // invalid battlecry target (wrong genus)
+        if (mons_genus(mons->type) != mons_genus(chief.type))
             continue;
-        }
 
         if (check_only)
             return true; // just need to check
