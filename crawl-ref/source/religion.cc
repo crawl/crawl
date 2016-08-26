@@ -3551,7 +3551,6 @@ void join_religion(god_type which_god)
     _set_initial_god_piety();
 
     set_god_ability_slots();    // remove old god's slots, reserve new god's
-    _god_welcome_handle_gear();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile.
@@ -3584,6 +3583,10 @@ void join_religion(god_type which_god)
     // after join_effect() so that gozag's service fee is right for monks
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
+
+    // after join_effect so that ru is initialized correctly for get_abilities
+    // when flash_view_delay redraws the screen in local tiles
+    _god_welcome_handle_gear();
 
     // Warn if a good god is starting wrath now.
     _check_good_god_wrath(old_god);
