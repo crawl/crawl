@@ -4825,28 +4825,30 @@ static void _cast_flay(monster* source, actor *defender)
 }
 
 /// What nonliving creatures are adjacent to the given location?
-static vector<const actor*> _find_nearby_constructs(coord_def pos)
+static vector<const actor*> _find_nearby_constructs(const monster &caster,
+                                                    coord_def pos)
 {
     vector<const actor*> nearby_constructs;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         const actor* act = actor_at(*ai);
-        if (act && act->holiness() & MH_NONLIVING)
+        if (act && act->holiness() & MH_NONLIVING && mons_aligned(&caster, act))
             nearby_constructs.push_back(act);
     }
     return nearby_constructs;
 }
 
 /// How many nonliving creatures are adjacent to the given location?
-static int _count_nearby_constructs(coord_def pos)
+static int _count_nearby_constructs(const monster &caster, coord_def pos)
 {
-    return _find_nearby_constructs(pos).size();
+    return _find_nearby_constructs(caster, pos).size();
 }
 
 /// What's a good description of nonliving creatures adjacent to the given point?
-static string _describe_nearby_constructs(coord_def pos)
+static string _describe_nearby_constructs(const monster &caster, coord_def pos)
 {
-    const vector<const actor*> nearby_constructs = _find_nearby_constructs(pos);
+    const vector<const actor*> nearby_constructs
+        = _find_nearby_constructs(caster, pos);
     if (!nearby_constructs.size())
         return "";
 
@@ -4867,14 +4869,15 @@ static void _resonance_strike(const monster &caster)
     if (!target)
         return;
 
-    const int constructs = _count_nearby_constructs(target->pos());
+    const int constructs = _count_nearby_constructs(caster, target->pos());
     // base damage 3d(spell hd) (probably 3d12)
     // + 1 die for every 2 adjacent constructs (so at 4 constructs, 5dhd)
     const int dice = 3 + div_rand_round(constructs, 2);
     const int die_size = caster.spell_hd(SPELL_RESONANCE_STRIKE);
     const int preac_dam = roll_dice(dice, die_size);
     const int dam = target->apply_ac(preac_dam);
-    const string constructs_desc = _describe_nearby_constructs(target->pos());
+    const string constructs_desc
+        = _describe_nearby_constructs(caster, target->pos());
 
     if (you.see_cell(target->pos()))
     {
