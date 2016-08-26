@@ -192,7 +192,7 @@ bool actor::can_sleep(bool holi_only) const
         return false;
 
     if (!holi_only)
-        return !(berserk() || asleep());
+        return !(berserk() || clarity() || asleep());
 
     return true;
 }
