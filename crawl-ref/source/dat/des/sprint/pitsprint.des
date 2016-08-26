@@ -761,7 +761,6 @@ KITEM: i = chain mail plus:3 ident:all not_cursed w:20 /\
        scale mail plus:3 ident:all not_cursed /\
        plate armour plus:2 ident:all not_cursed
 SHUFFLE: abcdef
-: general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
