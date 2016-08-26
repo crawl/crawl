@@ -194,6 +194,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
         return TILE_FLOOR_NORMAL;
+    case DNGN_ENDLESS_SALT:
+        return TILE_DNGN_ENDLESS_SALT;
     case DNGN_ENTER_HELL:
         if (player_in_hell())
             return TILE_DNGN_RETURN_VESTIBULE;

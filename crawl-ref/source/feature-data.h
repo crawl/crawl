@@ -142,6 +142,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_ENDLESS_SALT, "endless expanse of salt", "endless_salt",
+    DCHAR_WALL, NUM_DCHAR_TYPES,
+    COLOUR_IS(WHITE),
+    FFT_SOLID, MF_FLOOR,
+},
+
+{
     DNGN_ORCISH_IDOL, "orcish idol", "orcish_idol",
     DCHAR_STATUE, NUM_DCHAR_TYPES,
     COLOUR_IS(BROWN),
