@@ -20,7 +20,7 @@ function desolation_portal(e)
   local messager =
     timed_msg {
       initmsg = { "You hear a distant wind.",
-                  "There is an portal to the Desolation of Salt on this level."
+                  "There is a portal to the Desolation of Salt on this level."
                    .. " Hurry and find it before the gateway collapses!" },
       finalmsg = "The wind is rapidly growing quiet.",
 
