@@ -1043,6 +1043,12 @@ easier to dodge. Single-target attacks are much easier to repel than
 penetrating attacks. Each time a missile is repelled the spell has a chance of
 expiring, with a lower chance of expiry at high power.
 %%%%
+Resonance Strike spell
+
+Calls a surge of power from the earth, striking an enemy within the caster's
+sight. The spell cascades through nearby constructs, growing in strength with
+each one standing near the target.
+%%%%
 Ring of Flames spell
 
 Surrounds the caster with a mobile ring of searing flame, and keeps other fire

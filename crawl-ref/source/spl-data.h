@@ -3813,6 +3813,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RESONANCE_STRIKE, "Resonance Strike",
+    SPTYP_EARTH,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE | SPFLAG_MONSTER,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_GHOSTLY_SACRIFICE, "Ghostly Sacrifice",
     SPTYP_NECROMANCY,
     SPFLAG_TARGET | SPFLAG_MONSTER,
