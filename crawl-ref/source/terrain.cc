@@ -601,7 +601,8 @@ bool feat_is_valid_border(dungeon_feature_type feat)
     return feat_is_wall(feat)
            || feat_is_tree(feat)
            || feat == DNGN_OPEN_SEA
-           || feat == DNGN_LAVA_SEA;
+           || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
 }
 
 /** Can this feature be a mimic?

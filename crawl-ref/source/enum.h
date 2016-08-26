@@ -1516,6 +1516,9 @@ enum dungeon_feature_type
     // Misc solid features
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENDLESS_SALT,                 // Desolation equivalent for permarock
+#endif
     DNGN_ORCISH_IDOL,
     DNGN_GRANITE_STATUE,
     DNGN_MALIGN_GATEWAY,
@@ -1725,6 +1728,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+
+    DNGN_ENDLESS_SALT,
 #endif
 
     NUM_FEATURES
