@@ -2988,6 +2988,8 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_REACH_STING:     return "cause poisoning from a distance";
     case AF_WEAKNESS:        return "cause weakness";
     case AF_MIASMATA:        return "surround the defender with miasma";
+    case AF_KITE:            return "retreat from adjacent targets";
+    case AF_SWOOP:           return "swoop behind its target";
     default:                 return "";
     }
 }
@@ -3497,11 +3499,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_VAMPIRE_MAGE:
         if (you.undead_state() == US_ALIVE && mi.attitude == ATT_HOSTILE)
             inf.body << "\n" << It << " wants to drink your blood!\n";
-        break;
-
-    case MONS_REAPER:
-        if (you.undead_state(false) == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body <<  "\n" << It << " has come for your soul!\n";
         break;
 
     case MONS_RED_DRACONIAN:
