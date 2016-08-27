@@ -62,17 +62,18 @@ end
 NAME:       portal_desolation_entry_ruin
 DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent extra
+FTILE:      ; = FLOOR_SALT
 : desolation_portal(_G)
 MAP
-...........
-........cc.
-.c..c....c.
-.c.........
-.ccc...cc..
-...c.O.c...
-.ccc...ccc.
-.c.......c.
-.c..ccc..c.
+...;;..;...
+;;;;;;;;cc.
+.c;;c;;;;c.
+.c;;;;;;;;;
+.ccc;;;cc;.
+...c;O;c...
+.ccc;;;ccc.
+.c;;;;;;;c.
+.c;;ccc;;c.
 .cccc.cccc.
 ..........
 ENDMAP
@@ -133,14 +134,16 @@ DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent no_monster_gen extra
 : desolation_portal(_G)
 KMONS:      O = saltling band
+SUBST:      . = ;.
+FTILE:      ;OP = FLOOR_SALT
 MARKER:     P = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
                                   pow_max=6, delay=0, size=5, spread_rate=3, }
 MAP
 .......
-.......
-...O...
-...P...
-.......
+.;;;;;.
+.;;O;;.
+.;;P;;.
+.;;;;;.
 .......
 ENDMAP
 
