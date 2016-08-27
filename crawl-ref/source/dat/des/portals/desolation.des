@@ -44,7 +44,7 @@ function desolation_portal(e)
         msg = messager })
   e.tags("uniq_desolation no_monster_gen chance_desolation")
   e.kfeat("O = enter_desolation")
-  e.chance(500)
+  e.place("Elf:1")
 end
 
 function desolation_ruins_setup(e)
@@ -61,7 +61,7 @@ end
 ##############################################################################
 NAME:       portal_desolation_entry_ruin
 DEPTH:      Swamp, Shoals, Snake, Spider, Elf
-TAGS:       transparent
+TAGS:       transparent extra
 : desolation_portal(_G)
 MAP
 ...........
@@ -79,7 +79,7 @@ ENDMAP
 
 NAME:       portal_desolation_entry_holy_temple
 DEPTH:      Swamp, Shoals, Snake, Spider, Elf
-TAGS:       transparent no_monster_gen
+TAGS:       transparent no_monster_gen extra
 # XXX: no_item_gen?
 : desolation_portal(_G)
 KFEAT:      B = altar_zin
@@ -107,7 +107,7 @@ ENDMAP
 
 NAME:       portal_desolation_entry_twin_temple
 DEPTH:      Swamp, Shoals, Snake, Spider, Elf
-TAGS:       transparent no_monster_gen
+TAGS:       transparent no_monster_gen extra
 # XXX: no_item_gen?
 : desolation_portal(_G)
 : set_feature_name("granite_statue", "ruined idol")
@@ -130,7 +130,7 @@ ENDMAP
 
 NAME:       portal_desolation_entry_salt
 DEPTH:      Swamp, Shoals, Snake, Spider, Elf
-TAGS:       transparent no_monster_gen
+TAGS:       transparent no_monster_gen extra
 : desolation_portal(_G)
 KMONS:      O = saltling band
 MARKER:     P = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
