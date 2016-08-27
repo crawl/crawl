@@ -2484,43 +2484,64 @@ item_def* monster_die(monster* mons, killer_type killer,
         }
     }
 
-    if (mons->type == MONS_BORIS && !in_transit && !mons->pacified())
+    // None of these effects should trigger on illusory copies.
+    if (!mons->is_illusion())
     {
-        // XXX: Actual blood curse effect for Boris? - bwr
+        if (mons->type == MONS_BORIS && !in_transit && !mons->pacified())
+        {
+            // XXX: Actual blood curse effect for Boris? - bwr
 
-        // Now that Boris is dead, he's a valid target for monster
-        // creation again. - bwr
-        you.unique_creatures.set(mons->type, false);
-        // And his vault can be placed again.
-        you.uniq_map_names.erase("uniq_boris");
-    }
-    if (mons->type == MONS_JORY && !in_transit)
-        blood_spray(mons->pos(), MONS_JORY, 50);
-    else if (mons_is_mons_class(mons, MONS_KIRKE)
-             && !in_transit
-             && !testbits(mons->flags, MF_WAS_NEUTRAL))
-    {
-        hogs_to_humans();
-    }
-    else if ((mons_is_mons_class(mons, MONS_NATASHA)
-              || mons_genus(mons->type) == MONS_FELID)
-             && !in_transit && !mons->pacified() && mons_felid_can_revive(mons))
-    {
-        drop_items = false;
+            // Now that Boris is dead, he's a valid target for monster
+            // creation again. - bwr
+            you.unique_creatures.set(mons->type, false);
+            // And his vault can be placed again.
+            you.uniq_map_names.erase("uniq_boris");
+        }
+        if (mons->type == MONS_JORY && !in_transit)
+            blood_spray(mons->pos(), MONS_JORY, 50);
+        else if (mons_is_mons_class(mons, MONS_KIRKE)
+                 && !in_transit
+                 && !testbits(mons->flags, MF_WAS_NEUTRAL))
+        {
+            hogs_to_humans();
+        }
+        else if ((mons_is_mons_class(mons, MONS_NATASHA)
+                  || mons_genus(mons->type) == MONS_FELID)
+                 && !in_transit && !mons->pacified()
+                 && mons_felid_can_revive(mons))
+        {
+            drop_items = false;
 
-        // Like Boris, but her vault can't come back
-        if (mons_is_mons_class(mons, MONS_NATASHA))
-            you.unique_creatures.set(MONS_NATASHA, false);
-        if (!mons_reset && !wizard)
-            mons_felid_revive(mons);
+            // Like Boris, but her vault can't come back
+            if (mons_is_mons_class(mons, MONS_NATASHA))
+                you.unique_creatures.set(MONS_NATASHA, false);
+            if (!mons_reset && !wizard)
+                mons_felid_revive(mons);
+        }
+        else if (mons_is_mons_class(mons, MONS_PIKEL))
+        {
+            // His slaves don't care if he's dead or not, just whether or not
+            // he goes away.
+            pikel_band_neutralise();
+        }
+        else if (mons_is_elven_twin(mons))
+            elven_twin_died(mons, in_transit, killer, killer_index);
+        else if (mons->type == MONS_BENNU && !in_transit && !was_banished
+                 && !mons_reset && !mons->pacified()
+                 && (!summoned || duration > 0) && !wizard
+                 && mons_bennu_can_revive(mons))
+        {
+            // All this information may be lost by the time the monster revives.
+            const int revives = (mons->props.exists("bennu_revives"))
+                              ? mons->props["bennu_revives"].get_byte() : 0;
+            const beh_type att = mons->has_ench(ENCH_CHARM)
+                                     ? BEH_HOSTILE : SAME_ATTITUDE(mons);
+
+            bennu_revive_fineff::schedule(mons->pos(), revives, att, mons->foe);
+        }
     }
-    else if (mons_is_mons_class(mons, MONS_PIKEL))
-    {
-        // His slaves don't care if he's dead or not, just whether or not
-        // he goes away.
-        pikel_band_neutralise();
-    }
-    else if (mons_is_tentacle_head(mons_base_type(mons)))
+
+    if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (destroy_tentacles(mons)
             && !in_transit
@@ -2556,8 +2577,6 @@ item_def* monster_die(monster* mons, killer_type killer,
        monster_die(monster_by_mid(mons->tentacle_connect), killer,
                    killer_index, silent, wizard, fake);
     }
-    else if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, in_transit, killer, killer_index);
     else if (mons->type == MONS_FLAYED_GHOST)
         end_flayed_effect(mons);
     // Give the treant a last chance to release its wasps if it is killed in a
@@ -2567,19 +2586,6 @@ item_def* monster_die(monster* mons, killer_type killer,
              && !mons_reset)
     {
         treant_release_fauna(mons);
-    }
-    else if (mons->type == MONS_BENNU && !in_transit && !was_banished
-             && !mons_reset && !mons->pacified()
-             && (!summoned || duration > 0) && !wizard
-             && mons_bennu_can_revive(mons))
-    {
-        // All this information may be lost by the time the monster revives.
-        const int revives = (mons->props.exists("bennu_revives"))
-                          ? mons->props["bennu_revives"].get_byte() : 0;
-        const beh_type att = mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
-                                                        : SAME_ATTITUDE(mons);
-
-        bennu_revive_fineff::schedule(mons->pos(), revives, att, mons->foe);
     }
     else if (!mons->is_summoned() && mummy_curse_power(mons->type) > 0)
         _mummy_curse(mons, mummy_curse_power(mons->type), killer, killer_index);

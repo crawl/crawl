@@ -6651,7 +6651,9 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
 
 bool monster::is_illusion() const
 {
-    return props.exists(CLONE_SLAVE_KEY);
+    return type == MONS_PLAYER_ILLUSION
+           || has_ench(ENCH_PHANTOM_MIRROR)
+           || props.exists(CLONE_SLAVE_KEY);
 }
 
 bool monster::is_divine_companion() const

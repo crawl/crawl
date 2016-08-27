@@ -3826,9 +3826,9 @@ bool god_hates_killing(god_type god, const monster* mon)
     const mon_holy_type holiness = mon->holiness();
 
     if (holiness & MH_HOLY)
-            retval = (is_good_god(god));
+        retval = (is_good_god(god));
     else if (holiness & MH_NATURAL)
-            retval = (god == GOD_ELYVILON);
+        retval = (god == GOD_ELYVILON);
 
     if (god == GOD_FEDHAS)
         retval = (fedhas_protects(mon));
