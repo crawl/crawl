@@ -418,7 +418,7 @@ SUBVAULT:   A : desolation_ruin
 SUBVAULT:   B : desolation_ruin
 SUBVAULT:   C : desolation_ruin
 SUBST:      EFI = .:1000 x:2 G:2 S:1
-SUBST:      . = .:1000 1:6 %:4
+SUBST:      . = .:1000 1:8 %:4
 KFEAT:      < = exit_desolation
 KFEAT:      H = stone_arch
 KFEAT:      O = permarock_wall
