@@ -2650,14 +2650,14 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_OPHAN, 1}}}}, // !?
 
     // one supporter, and maybe more
-    { BAND_SALTLINGS,           {{{MONS_SALAMANDER_MYSTIC, 1},
+    { BAND_SALTLINGS,           {{{MONS_ALLIGATOR_SNAPPING_TURTLE, 1},
                                   {MONS_GUARDIAN_SERPENT, 1},
                                   {MONS_RAGGED_HIEROPHANT, 1},
                                   {MONS_SERVANT_OF_WHISPERS, 1},
                                   {MONS_PEACEKEEPER, 1}},
 
                                  {{MONS_SALTLING, 150},
-                                  {MONS_SALAMANDER_MYSTIC, 5},
+                                  {MONS_ALLIGATOR_SNAPPING_TURTLE, 5},
                                   {MONS_GUARDIAN_SERPENT, 5},
                                   {MONS_RAGGED_HIEROPHANT, 5},
                                   {MONS_SERVANT_OF_WHISPERS, 5},
