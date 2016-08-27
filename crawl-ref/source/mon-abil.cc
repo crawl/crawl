@@ -878,8 +878,10 @@ static void _dream_sheep_sleep(monster *mons, actor *target)
     // a stronger effect.
     int sleep_pow = min(150, random2(num_sheep * 25) + 1);
     if (sleep_pow < 25)
+    {
         sleep_pow = 0; // Weak attempts should not succeed.
                        // Single sheep have a 1 in 25 chance to sleep.
+    }
 
     // Communicate to the player.
     _sheep_message(num_sheep, sleep_pow, target);
