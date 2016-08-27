@@ -272,7 +272,9 @@ swamp2
 swamp3
 
 salt0 FLOOR_SALT
+%weight 2
 salt1
+%weight 10
 salt2
 
 %weight 20
