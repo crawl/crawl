@@ -319,8 +319,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         // Finesse shouldn't stack with Haste, so we make this attack take
         // longer so when Haste speeds it up, only Finesse will apply.
         if (you.duration[DUR_HASTE] && rescale)
-            attk_delay = haste_mul(attk_delay);
-        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
+            attk_delay = rv::max(random_var(haste_mul(2)), div_rand_round(haste_mul(attk_delay), 2));
+        else
+            attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
     }
 
     // see comment on player.cc:player_speed
