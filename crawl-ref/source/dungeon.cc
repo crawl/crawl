@@ -1623,7 +1623,11 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // In Zot, don't create extra escape hatches, in order to force
     // the player through vaults that use all three down stone stairs.
     if (player_in_branch(BRANCH_ZOT))
-        replace = DNGN_GRANITE_STATUE;
+    {
+        replace = random_choose(DNGN_FOUNTAIN_BLUE,
+                                DNGN_FOUNTAIN_SPARKLING,
+                                DNGN_FOUNTAIN_BLOOD);
+    }
 
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
