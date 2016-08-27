@@ -86,7 +86,7 @@ KFEAT:      B = altar_zin
 KFEAT:      C = altar_the_shining_one
 KFEAT:      D = altar_elyvilon
 SHUFFLE:    BCD
-MONS:       angel patrolling
+KMONS:      O = patrolling angel
 MAP
    .........
    .cc+++cc.
@@ -95,7 +95,7 @@ MAP
 .cccc.c.c.cccc.
 .c...........c.
 .n.c.......c.n.
-.n...1.O.1...n.
+.n.....O.....n.
 .n.c.......c.n.
 .c....BCD....c.
 .cccc.....cccc.
