@@ -52,18 +52,11 @@ static bool _monster_clone_exists(monster* mons)
     return false;
 }
 
-static bool _mons_is_illusion(monster* mons)
-{
-    return mons->type == MONS_PLAYER_ILLUSION
-           || mons->has_ench(ENCH_PHANTOM_MIRROR)
-           || mons->props.exists(CLONE_SLAVE_KEY);
-}
-
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
     return !mons_is_conjured(mons->type)
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && !_mons_is_illusion(mons)
+           && !mons->is_illusion()
            && !_monster_clone_exists(mons);
 }
 
