@@ -3050,10 +3050,6 @@ static void _close_door(coord_def move)
 //
 static void _do_berserk_no_combat_penalty()
 {
-    // Butchering/eating a corpse will maintain a blood rage.
-    if (you_are_delayed() && current_delay()->berserk_ok())
-        return;
-
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
         return;
 

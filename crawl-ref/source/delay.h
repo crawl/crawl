@@ -151,14 +151,6 @@ public:
     }
 
     /**
-     * @return whether there's no berserk penalty for turns spent in this delay.
-     */
-    virtual bool berserk_ok() const
-    {
-        return false;
-    }
-
-    /**
      * @return whether it's OK to start eating during this delay if hungry.
      */
     virtual bool want_autoeat() const
@@ -233,11 +225,6 @@ public:
     EatDelay(int dur, item_def& item) :
              Delay(dur), food(item)
     {
-    }
-
-    bool berserk_ok() const override
-    {
-        return true;
     }
 
     bool is_being_used(const item_def* item, operation_types oper) const override
@@ -394,11 +381,6 @@ public:
     bool try_interrupt() override;
 
     bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool berserk_ok() const override
     {
         return true;
     }

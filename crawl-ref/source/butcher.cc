@@ -85,13 +85,6 @@ void finish_butchering(item_def& corpse, bool bottling)
              corpse.name(DESC_THE).c_str());
 
         butcher_corpse(corpse);
-
-        if (you.berserk()
-            && you.berserk_penalty != NO_BERSERK_PENALTY)
-        {
-            mpr("You enjoyed that.");
-            you.berserk_penalty = 0;
-        }
     }
 
     if (was_same_genus)
