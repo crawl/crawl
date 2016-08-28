@@ -2681,7 +2681,6 @@ enum monster_type                      // menv[].type
     MONS_CAUSTIC_SHRIKE,
     MONS_SHARD_SHRIKE,
 
-    MONS_ANUBIS_GUARD,
 #endif
     MONS_FIRE_CRAB,
 #if TAG_MAJOR_VERSION == 34

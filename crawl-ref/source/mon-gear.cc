@@ -868,11 +868,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
               { WPN_LAJATANG,           1 } },
             {}, {}, 4,
         } },
-        { MONS_ANUBIS_GUARD, { // crook and flail
-           { { WPN_FLAIL,               10 },
-             { WPN_DIRE_FLAIL,          5 },
-             { WPN_QUARTERSTAFF,        15 } },
-        } },
         { MONS_MELIAI, { // labrys
             { { WPN_HAND_AXE,           12 },
               { WPN_WAR_AXE,            7 },
@@ -1200,14 +1195,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         else
             level = random2(300);
-        break;
-
-    case MONS_ANUBIS_GUARD:
-        if (item.sub_type == WPN_QUARTERSTAFF)
-        {
-            floor_tile = "wpn_staff_mummy";
-            equip_tile = "staff_mummy";
-        }
         break;
 
     case MONS_ANCESTOR_HEXER:
@@ -2138,7 +2125,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                   0);
         break;
 
-    case MONS_ANUBIS_GUARD:
     case MONS_HALAZID_WARLOCK:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_ROBE;

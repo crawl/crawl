@@ -32,13 +32,11 @@ function tomb_guardian_set(e, include_nothing)
      return
   end
   if dgn.persist.tomb_guardian_sets == nil then
-    dgn.persist.tomb_guardian_sets = { 0, 0, 0 }
+    dgn.persist.tomb_guardian_sets = { 0, 0 }
   end
   local sets =
     {
       "ushabti w:119 / guardian mummy w:79 / mummy w:28 / " ..
-          "ancient champion w:8 / skeletal warrior w:8 / bennu",
-      "anubis guard band w:119 / guardian mummy w:79 / mummy w:28 / " ..
           "ancient champion w:8 / skeletal warrior w:8 / bennu",
       "guardian mummy w:119 / death scarab band w:79 / mummy w:28 / " ..
           "ancient champion w:8 / skeletal warrior w:8 / bennu"
