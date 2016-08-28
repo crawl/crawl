@@ -479,14 +479,13 @@ static const pop_entry pop_tomb[] =
   {  1,  5,   50, SEMI, MONS_SIMULACRUM },
   {  1,  5, 1000, FLAT, MONS_MUMMY },
   {  1,  5,  230, FLAT, MONS_FLYING_SKULL },
-  {  1,  5,  500, FLAT, MONS_GUARDIAN_MUMMY },
+  {  1,  5,  600, FLAT, MONS_GUARDIAN_MUMMY },
   { -1,  9,  335, SEMI, MONS_MUMMY_PRIEST },
   {  4,  5,    3, RISE, MONS_GREATER_MUMMY },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
-  {  1,  5,  200, FLAT, MONS_ANUBIS_GUARD },
-  {  1,  5,  200, FLAT, MONS_USHABTI },
-  {  1,  5,  100, FLAT, MONS_DEATH_SCARAB },
+  {  1,  5,  250, FLAT, MONS_USHABTI },
+  {  1,  5,  150, FLAT, MONS_DEATH_SCARAB },
   {  3,  5,   12, SEMI, MONS_BENNU },
   { 0,0,0,FLAT,MONS_0 }
 };

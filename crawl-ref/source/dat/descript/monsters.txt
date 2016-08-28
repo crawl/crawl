@@ -528,12 +528,6 @@ angel
 A divine warrior of the Shining One. It is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light.
 %%%%
-anubis guard
-
-A jackal-headed humanoid charged with preventing trespassers from defiling
-sacred burial grounds and with keeping the unruly denizens therein under
-control. It is conditioned to be insensitive to extreme amounts of pain.
-%%%%
 apis
 
 A placid, sacred bull of Elyvilon.
@@ -2486,10 +2480,9 @@ creatures' bat-like movement.
 %%%%
 ushabti
 
-A funerary stone figurine kept in tombs to serve the deceased as they passed
-through the afterlife. Inscribed with spells to answer divine calls for manual
-labour in the afterlife, the ushabti are magically animated to slavishly
-protect the interred for eternity.
+A funerary stone figurine kept in tombs to serve the deceased as they pass
+through the afterlife. It is inscribed with spells to protect the interred for
+eternity.
 %%%%
 vampire
 

@@ -7575,6 +7575,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_GHOSTLY_FIREBALL:
         return !foe || _foe_should_res_negative_energy(foe);
 
+    case SPELL_DEATH_RATTLE:
+        return !foe || _foe_should_res_negative_energy(foe) || no_clouds;
+
     case SPELL_AGONY:
         return !foe || !_torment_vulnerable(foe);
 

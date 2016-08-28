@@ -977,15 +977,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_ANUBIS_GUARD,
-      {
-       { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NOISY
-                                | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
-       { SPELL_BOLT_OF_DRAINING, 56, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-       { SPELL_DISPEL_UNDEAD, 44, MON_SPELL_PRIEST },
-      }
-    },
-
     {  MST_SPHINX,
       {
        { SPELL_CONFUSE, 11, MON_SPELL_WIZARD },
@@ -1591,7 +1582,10 @@ static const mon_spellbook mspell_list[] =
     // ('8') Animate / statues.
     {  MST_USHABTI,
       {
-       { SPELL_DEATH_RATTLE, 57, MON_SPELL_NATURAL },
+       { SPELL_DEATH_RATTLE, 57, MON_SPELL_MAGICAL },
+       { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                                | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
+       { SPELL_DISPEL_UNDEAD, 44, MON_SPELL_MAGICAL },
       }
     },
 

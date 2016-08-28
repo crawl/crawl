@@ -580,13 +580,21 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
-ushabti cast
+Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.
 %%%%
-Bolt of Draining anubis guard cast
+Warning Cry ushabti cast
 
-@The_monster@ breathes @beam@ @at@ @target@.
+@The_monster@ shakes and rattles deafeningly!
+%%%%
+unseen Warning Cry ushabti cast
+
+You hear a deafening rattling sound!
+%%%%
+ushabti cast targeted
+
+@The_monster@ gestures slowly @at@ @target@.
 %%%%
 Ghostly Fireball revenant cast
 
