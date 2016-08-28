@@ -35,8 +35,8 @@ static const mon_spellbook mspell_list[] =
     /* Orc warlords and cherubs. */
     {  MST_BATTLECRY,
       {
-       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                               | MON_SPELL_NO_SILENT },
       }
     },
 
@@ -457,8 +457,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ORC_KNIGHT,
       {
-       { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                              | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                              | MON_SPELL_NO_SILENT },
       }
     },
 
@@ -1592,8 +1592,8 @@ static const mon_spellbook mspell_list[] =
     {  MST_PEACEKEEPER,
       {
        { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
-       { SPELL_BATTLECRY, 25, MON_SPELL_MAGICAL | MON_SPELL_INSTANT
-                              | MON_SPELL_NO_SILENT | MON_SPELL_NOISY },
+       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
+                              | MON_SPELL_NOISY },
       }
     },
 
@@ -1708,8 +1708,8 @@ static const mon_spellbook mspell_list[] =
     // ('g') Small humanoids.
     {  MST_ROBIN,
       {
-        { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                                | MON_SPELL_NO_SILENT },
+        { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                               | MON_SPELL_NO_SILENT },
         { SPELL_THROW_ALLY, 80, MON_SPELL_NATURAL }
       }
     },
@@ -1767,8 +1767,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SAINT_ROKA,
       {
-       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                               | MON_SPELL_NO_SILENT },
        { SPELL_SMITING, 64, MON_SPELL_PRIEST },
       }
     },
