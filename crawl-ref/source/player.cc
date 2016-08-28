@@ -2210,22 +2210,11 @@ static int _player_adjusted_evasion_penalty(const int scale)
            you.adjusted_body_armour_penalty(scale);
 }
 
-// EV bonuses that work even when helpless.
-static int _player_para_evasion_bonuses(ev_ignore_type evit)
-{
-    int evbonus = 0;
-
-    if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
-        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
-
-    return evbonus;
-}
-
 // Player EV bonuses for various effects and transformations. This
 // does not include tengu/merfolk EV bonuses for flight/swimming.
-static int _player_evasion_bonuses(ev_ignore_type evit)
+static int _player_evasion_bonuses()
 {
-    int evbonus = _player_para_evasion_bonuses(evit);
+    int evbonus = 0;
 
     if (you.duration[DUR_AGILITY])
         evbonus += AGILITY_BONUS;
@@ -2236,6 +2225,9 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 
     // mutations
     evbonus += player_mutation_level(MUT_GELATINOUS_BODY);
+
+    if (player_mutation_level(MUT_DISTORTION_FIELD))
+        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
     // transformation penalties/bonuses not covered by size alone:
     if (player_mutation_level(MUT_SLOW_REFLEXES))
@@ -2315,14 +2307,11 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
 static int _player_evasion(ev_ignore_type evit)
 {
     const int size_factor = _player_evasion_size_factor();
-    // Repulsion fields and size are all that matters when paralysed or
-    // at 0 dex.
+    // Size is all that matters when paralysed or at 0 dex.
     if ((you.cannot_move() || you.duration[DUR_CLUMSY] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
-        const int paralysed_base_ev = 2 + size_factor / 2;
-        const int repulsion_ev = _player_para_evasion_bonuses(evit);
-        return max(1, paralysed_base_ev + repulsion_ev);
+        return max(1, 2 + size_factor / 2);
     }
 
     const int scale = 100;
@@ -2340,7 +2329,7 @@ static int _player_evasion(ev_ignore_type evit)
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
 
-    const int evasion_bonuses = _player_evasion_bonuses(evit) * scale;
+    const int evasion_bonuses = _player_evasion_bonuses() * scale;
 
     const int prescaled_evasion =
         poststepdown_evasion + evasion_bonuses;
