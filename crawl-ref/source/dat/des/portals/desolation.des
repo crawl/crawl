@@ -89,20 +89,21 @@ KFEAT:      C = altar_the_shining_one
 KFEAT:      D = altar_elyvilon
 SHUFFLE:    BCD
 KMONS:      O = patrolling angel
+FTILE:      ;OBCD = FLOOR_LIMESTONE
 MAP
    .........
    .cc+++cc.
-   .c.....c.
-....c.....c....
-.cccc.c.c.cccc.
-.c...........c.
-.n.c.......c.n.
-.n.....O.....n.
-.n.c.......c.n.
-.c....BCD....c.
-.cccc.....cccc.
-....c.c.c.c....
-   .c.....c.
+   .c;;;;;c.
+....c;;;;;c....
+.cccc;c;c;cccc.
+.c;;;;;;;;;;;c.
+.n;c;;;;;;;c;n.
+.n;;;;;O;;;;;n.
+.n;c;;;;;;;c;n.
+.c;;;;BCD;;;;c.
+.cccc;;;;;cccc.
+....c;c;c;c....
+   .c;;;;;c.
    .ccnnncc.
    .........
 ENDMAP
@@ -114,18 +115,19 @@ TAGS:       transparent no_monster_gen extra
 : desolation_portal(_G)
 : set_feature_name("granite_statue", "ruined idol")
 MONS:       peacekeeper
+FTILE:      ;1G = FLOOR_NORMAL
 MAP
    .........
    .c.....c.
  ...c.....c...
  .ccc+++++ccc.
-..c.........c..
-.cc.G.....G.cc.
-.c...........c.
-.c1.G.....G.1c.
-.c.....O.....c.
-.cc.G.....G.cc.
-..c.........c..
+..c;;;;;;;;;c..
+.cc;G;;;;;G;cc.
+.c;;;;;;;;;;;c.
+.c1;G;;;;;G;1c.
+.c;;;;;O;;;;;c.
+.cc;G;;;;;G;cc.
+..c;;;;;;;;;c..
  .ccccccccccc.
  .............
 ENDMAP
