@@ -415,14 +415,13 @@ default-depth: Desolation
 NAME:       desolation_of_salt
 TAGS:       no_dump no_monster_gen
 ORIENT:     encompass
-SUBST:      1 = 1.
-SUBST:      X = x.
-SHUFFLE:    ABCDE
+SHUFFLE:    ABCDEF
 SUBVAULT:   A : desolation_ruin
 SUBVAULT:   B : desolation_ruin
 SUBVAULT:   C : desolation_ruin
-SUBST:      EFI = .:1000 x:2 G:2 S:1
-SUBST:      . = .:1000 1:8 %:4
+SUBST:      DEF = .:1000 x:2 G:2 S:1
+SUBST:      . = .:1000 1:8
+SUBST:      X = x.
 KFEAT:      < = exit_desolation
 KFEAT:      H = stone_arch
 KFEAT:      O = permarock_wall
@@ -453,44 +452,44 @@ P...AAAAAAAAAAAA...........CCCCCCCCCCCC.....DDDDDDDDDDDD....P
 P..........................CCCCCCCCCCCC.....DDDDDDDDDDDD....P
 P..........................CCCCCCCCCCCC.....DDDDDDDDDDDD....P
 P...........................................DDDDDDDDDDDD....P
-P...........................................DDDDDDDDDDDD....P
-P.........XXX...............................DDDDDDDDDDDD....P
-P..........XX...............................DDDDDDDDDDDD.XX.P
-P...........................................DDDDDDDDDDDD..X.P
-P...................................S.......DDDDDDDDDDDD....P
-P...S................X......................................P
-P....................X......................................P
-P...................XX...................X..................P
-P........................................X..................P
-P.......................................XX..................P
+P.................,,,,,,XX,,,,,,,,,,,,,..S..DDDDDDDDDDDD....P
+P.........XXX.....,,,,,,,X,,,,,,,,,,,,,.....DDDDDDDDDDDD....P
+P..........XX.....,,,,,,,,,,,,,,,,,,,,,.....DDDDDDDDDDDD.XX.P
+P.................,,,,,,,,,,,,,,,,,,,,,.....DDDDDDDDDDDD..X.P
+P.................,,,,,,,,,,,,,,,,,,,,,.....DDDDDDDDDDDD....P
+P...S.............,,,X,,,,,,,,,,,,,,,,,.....................P
+P.................,,,X,,,,,,,,,,,X,,,,,.....................P
+P.................,,,,,,,,,,,,,,,XX,,,,..X..................P
+P.................,,,,,,,,,,,,,,,,X,,,,..X..................P
+P.................,,,,,,,,,,,,,,,,,,,,,.XX..................P
+P.................,,,,,,,,,,H,<,,,,,,,,.....................P
+P.................,,,,,,,,,,,,,,,,,,,,,.....................P
+P............XX...,,,,,,,,,,,,,,,,,,,,,........S........XX..P
+P..XX.............,,,,,,,,,,,,,,,,,,,XX.................X...P
+P...X.............,,,,,,,,,,,,,,,,,,,X,.....................P
+P...X.............,,,,,,,XXX,,,,,,,,,,,.....................P
+P.................,,,,,,,,XX,,,,,,,,,,,....XX...............P
+P.................,,,,,,,,,,,,,,,,,,,,,.....................P
+P....XX.........X.,,,,,,,,,,,,,,,,,,,,,.....................P
+P................XX,,,,,,,,,,,,,,,,,,,,........EEEEEEEEEEEE.P
+P.................,,,,,,,,,,,,,,,,,,,,,........EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.............XX..............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF..............X..............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF......................S......EEEEEEEEEEEE.P
+P.XX..FFFFFFFFFFFF...S.........................EEEEEEEEEEEE.P
+P..X..FFFFFFFFFFFF.............................EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB............EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB.....XX.....EEEEEEEEEEEE.P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB......X..................P
+P.....FFFFFFFFFFFF.....BBBBBBBBBBBB.........................P
+P......................BBBBBBBBBBBB.........................P
+P......................BBBBBBBBBBBB....................XX...P
+P......S...XXXXX.......BBBBBBBBBBBB..............S......X...P
+P...........XX.........BBBBBBBBBBBB....XX...................P
+P......................BBBBBBBBBBBB.....X...................P
 P...........................................................P
-P...........................................................P
-P..............................................S........XX..P
-P..XX...................................................X...P
-P...X.......................................................P
-P...X.....................S....BBBBBBBBBBBB.................P
-P..............................BBBBBBBBBBBB.................P
-P..............................BBBBBBBBBBBB.................P
-P..............................BBBBBBBBBBBB.................P
-P.................XX...........BBBBBBBBBBBB....EEEEEEEEEEEE.P
-P.......,,S,,......X...........BBBBBBBBBBBB....EEEEEEEEEEEE.P
-P.....,,,,,,,,,................BBBBBBBBBBBB....EEEEEEEEEEEE.P
-P....,,,,,,,,,,,...............BBBBBBBBBBBB....EEEEEEEEEEEE.P
-xxx..xxxx,,,xxxxxxxxxx.........BBBBBBBBBBBB....EEEEEEEEEEEE.P
-xxxxxxxxxx,,,xxxxxxxxxx........BBBBBBBBBBBB....EEEEEEEEEEEE.P
-xxxxxxxxxxx,,xxxxxxxxxxx.......BBBBBBBBBBBB....EEEEEEEEEEEE.P
-xxxxxxxxx,,,xxxxx,,xxxxxx......BBBBBBBBBBBB....EEEEEEEEEEEE.P
-xxxxxxxx,,,xxxxx,<,,xxxxxx.x...................EEEEEEEEEEEE.P
-xxxxxxx,,xxxxxx,,,,xxxxxxxxx...................EEEEEEEEEEEE.P
-xxxxxxx,,,,xxxx,,H,,xxxxxxxxx....XX.........S..EEEEEEEEEEEE.P
-xxxxxxxx,,,xxxxx,,,,xxxxxxxxx......X...........EEEEEEEEEEEE.P
-xxxxxxxxx,,,xxx,,,xxxxxxxxxxx...............XX..............P
-xxxxxxxxxxx,,,,,,xxxxxxxxxxxx.............XXxxXXX...........P
-xxxxxxxxxxxx,,,xxxxxxxxxxxxxxx.........XXXxxxxxxxXX.........P
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.XXX.XXXxxxxxxxxxxxxXX.....XXP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 ENDMAP
