@@ -4872,10 +4872,9 @@ static void _resonance_strike(const monster &caster)
     const int constructs = _count_nearby_constructs(caster, target->pos());
     // base damage 3d(spell hd) (probably 3d12)
     // + 1 die for every 2 adjacent constructs (so at 4 constructs, 5dhd)
-    const int dice = 3 + div_rand_round(constructs, 2);
-    const int die_size = caster.spell_hd(SPELL_RESONANCE_STRIKE);
-    const int preac_dam = roll_dice(dice, die_size);
-    const int dam = target->apply_ac(preac_dam);
+    dice_def dice = resonance_strike_base_damage(caster);
+    dice.num += div_rand_round(constructs, 2);
+    const int dam = target->apply_ac(dice.roll());
     const string constructs_desc
         = _describe_nearby_constructs(caster, target->pos());
 
@@ -4921,6 +4920,21 @@ static bool _spell_charged(monster *mons)
     }
     mons->del_ench(ENCH_SPELL_CHARGED);
     return true;
+}
+
+/// How much damage does the given monster do when casting Waterstrike?
+dice_def waterstrike_damage(const monster &mons)
+{
+    return dice_def(3, 7 + mons.spell_hd(SPELL_WATERSTRIKE));
+}
+
+/**
+ * How much damage does the given monster do when casting Resonance Strike,
+ * assuming no allied constructs are boosting damage?
+ */
+dice_def resonance_strike_base_damage(const monster &mons)
+{
+    return dice_def(3, mons.spell_hd(SPELL_RESONANCE_STRIKE));
 }
 
 /**
@@ -5059,7 +5073,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         pbolt.flavour    = BEAM_WATER;
 
-        int damage_taken = roll_dice(3, 7 + mons->spell_hd(spell_cast));
+        int damage_taken = waterstrike_damage(*mons).roll();
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
         damage_taken = foe->apply_ac(damage_taken);
 
