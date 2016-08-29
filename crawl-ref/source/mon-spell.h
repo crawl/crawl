@@ -1391,6 +1391,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_DREAM_SHEEP,
+      {
+       { SPELL_DREAM_DUST, 40, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_HELLEPHANT,
       {
        { SPELL_FIRE_BREATH, 35, MON_SPELL_NATURAL | MON_SPELL_BREATH },
