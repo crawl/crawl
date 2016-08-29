@@ -30,8 +30,7 @@ enum spflag_type
     SPFLAG_ESCAPE               = 0x002000,      // useful for running away
     SPFLAG_RECOVERY             = 0x004000,      // healing or recovery spell
     SPFLAG_AREA                 = 0x008000,      // area affect
-    SPFLAG_BATTLE               = 0x010000,      // a non-Conjuration spell that
-                                                 // is still a battle spell
+                            //  = 0x010000,      // was SPFLAG_BATTLE
     SPFLAG_SELFENCH             = 0x020000,      // monsters use as selfench
     SPFLAG_MONSTER              = 0x040000,      // monster-only spell
     SPFLAG_NEEDS_TRACER         = 0x080000,      // monster casting needs tracer
