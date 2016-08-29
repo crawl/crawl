@@ -951,10 +951,10 @@ some unknown dark god.
 %%%%
 dream sheep
 
-A drowsy, fluffy ovine that emanates sparkling motes of dust from its coat.
-When a herd of dream sheep gather, this dream dust overwhelms and puts their
-victims to sleep. When threatened, individual dream sheep may muster a large
-amount of dream dust. It looks quite flammable.
+A drowsy, fluffy ovine whose coat sparkles with motes of dream dust. Air heavy
+with the dust from a herd of dream sheep may overwhelm the sheep's victims,
+putting them to sleep. When threatened, individual dream sheep may muster a
+large amount of dream dust. It looks quite flammable.
 %%%%
 drowned soul
 
