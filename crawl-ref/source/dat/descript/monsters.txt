@@ -953,8 +953,7 @@ dream sheep
 
 A drowsy, fluffy ovine whose coat sparkles with motes of dream dust. Air heavy
 with the dust from a herd of dream sheep may overwhelm the sheep's victims,
-putting them to sleep. When threatened, individual dream sheep may muster a
-large amount of dream dust. It looks quite flammable.
+putting them to sleep. It looks quite flammable.
 %%%%
 drowned soul
 
