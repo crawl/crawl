@@ -361,8 +361,11 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
         case SPELL_WATERSTRIKE:
-            spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
+            spell_beam.damage = waterstrike_damage(*monster);
             break;
+        case SPELL_RESONANCE_STRIKE:
+            return dice_def_string(resonance_strike_base_damage(*monster))
+                   + "+"; // could clarify further?
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
