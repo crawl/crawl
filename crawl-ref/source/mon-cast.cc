@@ -79,6 +79,9 @@
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static bool _is_wiz_cast();
+static void _fire_simple_beam(monster &caster, bolt &beam);
+static void _fire_direct_explosion(monster &caster, bolt &beam);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
@@ -99,6 +102,85 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
 static coord_def _mons_ghostly_sacrifice_target(monster &caster);
+function<void(bolt&, const monster&)> _selfench_beam_setup(beam_type flavour);
+
+struct mons_spell_logic
+{
+    /// Can casting this spell right now accomplish anything useful?
+    function<bool(const monster&)> worthwhile;
+    /// Actually cast the given spell.
+    function<void(monster&, bolt&)> cast;
+    /// Setup a targeting/effect beam for the given spell, if applicable.
+    function<void(bolt&, const monster&)> setup_beam;
+};
+
+/// How do monsters go about casting spells?
+static const map<spell_type, mons_spell_logic> spell_to_logic = {
+    { SPELL_MIGHT, {
+        [](const monster &caster) { return !caster.has_ench(ENCH_MIGHT); },
+        _fire_simple_beam,
+        _selfench_beam_setup(BEAM_MIGHT),
+    } },
+};
+
+/// Is the 'monster' actually a proxy for the player?
+static bool _caster_is_player_shadow(const monster &mons)
+{
+    // XXX: just check if type is MONS_PLAYER_SHADOW instead?
+    return mons.mid == MID_PLAYER && !_is_wiz_cast();
+}
+
+/**
+ * Take the given beam and fire it, handling screen-refresh issues in the
+ * process.
+ *
+ * @param caster    The monster casting the spell that produced the beam.
+ * @param pbolt     A pre-setup & aimed spell beam. (For e.g. FIREBALL.)
+ */
+static void _fire_simple_beam(monster &caster, bolt &pbolt)
+{
+    // If a monster just came into view and immediately cast a spell,
+    // we need to refresh the screen before drawing the beam.
+    viewwindow();
+    pbolt.fire();
+}
+
+/**
+ * Take the given explosion and fire it, handling screen-refresh issues in the
+ * process.
+ *
+ * @param caster    The monster casting the spell that produced the beam.
+ * @param pbolt     A pre-setup & aimed spell beam. (For e.g. FIRE_STORM.)
+ */
+static void _fire_direct_explosion(monster &caster, bolt &pbolt)
+{
+    // If a monster just came into view and immediately cast a spell,
+    // we need to refresh the screen before drawing the beam.
+    viewwindow();
+    const actor* foe = caster.get_foe();
+    const bool need_more = foe && (foe->is_player()
+                                   || you.see_cell(foe->pos()));
+    pbolt.in_explosion_phase = false;
+    pbolt.refine_for_explosion();
+    pbolt.explode(need_more);
+}
+
+/**
+ * Build a function to set up a beam to buff the caster.
+ *
+ * @param flavour   The flavour to buff a caster with.
+ * @return          A function that sets up a beam to buff its caster with
+ *                  the given flavour.
+ */
+function<void(bolt&, const monster&)> _selfench_beam_setup(beam_type flavour)
+{
+    return [flavour](bolt &beam, const monster &caster)
+    {
+        beam.flavour = flavour;
+        if (!_caster_is_player_shadow(caster))
+            beam.target = caster.pos();
+    };
+}
 
 void init_mons_spells()
 {
@@ -473,6 +555,8 @@ static spell_type _legendary_destruction_spell()
                                   0);
 }
 
+// TODO: documentme
+// NOTE: usually doesn't set target, but if set, should take precedence
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                      bool check_validity)
 {
@@ -517,6 +601,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.origin_spell = real_spell;
     beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
+
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+    if (logic && logic->setup_beam)
+        logic->setup_beam(beam, *mons);
 
     // FIXME: more of these should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -591,7 +679,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MIGHT_OTHER:
-    case SPELL_MIGHT:
         beam.flavour  = BEAM_MIGHT;
         break;
 
@@ -1042,6 +1129,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     default:
+        if (logic && logic->setup_beam) // already setup
+            break;
+
         if (check_validity)
         {
             beam.flavour = NUM_BEAMS;
@@ -1290,6 +1380,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
     bolt_parent_init(theBeam, pbolt);
+    if (!theBeam.target.origin())
+        pbolt.target = theBeam.target;
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
     if (!pbolt.is_enchantment())
@@ -1299,10 +1391,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     // Your shadow can target these spells at other monsters;
     // other monsters can't.
-    if (mons->mid != MID_PLAYER || _is_wiz_cast())
+    if (!_caster_is_player_shadow(*mons))
     {
         if (spell_cast == SPELL_HASTE
-            || spell_cast == SPELL_MIGHT
             || spell_cast == SPELL_INVISIBILITY
             || spell_cast == SPELL_MINOR_HEALING
             || spell_cast == SPELL_TELEPORT_SELF
@@ -5039,6 +5130,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+    if (logic && logic->cast)
+    {
+        logic->cast(*mons, pbolt);
+        return;
+    }
+
     // If this is a wizard spell, summons won't necessarily have the
     // same god. But intrinsic/priestly summons should.
     god_type god = slot_flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons->god;
@@ -6495,18 +6593,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     }
 
-    // If a monster just came into view and immediately cast a spell,
-    // we need to refresh the screen before drawing the beam.
-    viewwindow();
     if (spell_is_direct_explosion(spell_cast))
-    {
-        const bool need_more = foe && (foe->is_player() || you.see_cell(foe->pos()));
-        pbolt.in_explosion_phase = false;
-        pbolt.refine_for_explosion();
-        pbolt.explode(need_more);
-    }
+        _fire_direct_explosion(*mons, pbolt);
     else
-        pbolt.fire();
+        _fire_simple_beam(*mons, pbolt);
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
@@ -7556,6 +7646,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
     }
 
+    const mons_spell_logic* logic = map_find(spell_to_logic, monspell);
+    if (logic && logic->worthwhile)
+        return !logic->worthwhile(*mon);
+
     const bool no_clouds = env.level_state & LSTATE_STILL_WINDS;
 
     // Eventually, we'll probably want to be able to have monsters
@@ -7619,9 +7713,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_HASTE:
         return mon->has_ench(ENCH_HASTE);
-
-    case SPELL_MIGHT:
-        return mon->has_ench(ENCH_MIGHT);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SWIFTNESS:
