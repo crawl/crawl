@@ -7425,8 +7425,8 @@ void player::awaken()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    duration[DUR_SLEEP] = 0;
-    if (duration[DUR_SLEEP_IMMUNITY] == 0) duration[DUR_SLEEP_IMMUNITY] = 1;
+    set_duration(DUR_SLEEP, 0);
+    set_duration(DUR_SLEEP_IMMUNITY, random_range(2, 4));
     mpr("You wake up.");
     flash_view(UA_MONSTER, BLACK);
 }

@@ -886,16 +886,9 @@ static void _dream_sheep_sleep(monster *mons, actor *target)
     // Communicate to the player.
     _sheep_message(num_sheep, sleep_pow, target);
 
-    // This takes the results generated above and applies a sleep duration and
-    // sleep immunity duration (if player).
+    // This takes the results generated above and applies a sleep duration.
     // Sleep duration is 5 to 20 turns, depending on strength.
-    // Immunity is 4 to 8 turns regardless of duration of sleep.
-    if (sleep_pow)
-    {
-        target->put_to_sleep(mons, sleep_pow, false);
-        if (target->is_player())
-            you.set_duration(DUR_SLEEP_IMMUNITY, random_range(4, 8));
-    }
+    if (sleep_pow) target->put_to_sleep(mons, sleep_pow, false);
 }
 
 
