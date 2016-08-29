@@ -102,7 +102,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
 static coord_def _mons_ghostly_sacrifice_target(monster &caster);
-function<void(bolt&, const monster&)> _selfench_beam_setup(beam_type flavour);
+static function<void(bolt&, const monster&)>
+    _selfench_beam_setup(beam_type flavour);
+static void _setup_minor_healing(bolt &beam, const monster &caster);
 
 struct mons_spell_logic
 {
@@ -140,6 +142,22 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
+    } },
+    { SPELL_MINOR_HEALING, {
+        [](const monster &caster) {
+            return caster.hit_points <= caster.max_hit_points / 2;
+        },
+        _fire_simple_beam,
+        _setup_minor_healing,
+    } },
+    { SPELL_TELEPORT_SELF, {
+        [](const monster &caster)
+        {
+            // Monsters aren't smart enough to know when to cancel teleport.
+            return !caster.has_ench(ENCH_TP) && !caster.no_tele(true, false);
+        },
+        _fire_simple_beam,
+        _selfench_beam_setup(BEAM_TELEPORT),
     } },
 };
 
@@ -192,7 +210,8 @@ static void _fire_direct_explosion(monster &caster, bolt &pbolt)
  * @return          A function that sets up a beam to buff its caster with
  *                  the given flavour.
  */
-function<void(bolt&, const monster&)> _selfench_beam_setup(beam_type flavour)
+static function<void(bolt&, const monster&)>
+    _selfench_beam_setup(beam_type flavour)
 {
     return [flavour](bolt &beam, const monster &caster)
     {
@@ -200,6 +219,19 @@ function<void(bolt&, const monster&)> _selfench_beam_setup(beam_type flavour)
         if (!_caster_is_player_shadow(caster))
             beam.target = caster.pos();
     };
+}
+
+static void _setup_healing_beam(bolt &beam, const monster &caster)
+{
+    beam.damage   = dice_def(2, caster.spell_hd(SPELL_MINOR_HEALING) / 2);
+    beam.flavour  = BEAM_HEALING;
+}
+
+static void _setup_minor_healing(bolt &beam, const monster &caster)
+{
+    _setup_healing_beam(beam, caster);
+    if (!_caster_is_player_shadow(caster))
+        beam.target = caster.pos();
 }
 
 void init_mons_spells()
@@ -759,15 +791,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_HEAL_OTHER:
-    case SPELL_MINOR_HEALING:
-        beam.damage   = dice_def(2, mons->spell_hd(real_spell) / 2);
-        beam.flavour  = BEAM_HEALING;
-        beam.hit      = 25 + (power / 5);
-        break;
-
-    case SPELL_TELEPORT_SELF:
-        beam.flavour    = BEAM_TELEPORT;
-        beam.ench_power = 2000;
+        _setup_minor_healing(beam, *mons);
         break;
 
     case SPELL_TELEPORT_OTHER:
@@ -1412,13 +1436,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // other monsters can't.
     if (!_caster_is_player_shadow(*mons))
     {
-        if (spell_cast == SPELL_MINOR_HEALING
-            || spell_cast == SPELL_TELEPORT_SELF
-            || spell_cast == SPELL_SILENCE)
-        {
-            pbolt.target = mons->pos();
-        }
-        else if (spell_cast == SPELL_LRD)
+        if (spell_cast == SPELL_LRD)
         {
             pbolt.target = _mons_fragment_target(mons);
             pbolt.aimed_at_spot = true; // to get noise to work properly
@@ -7821,13 +7839,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return mon->has_ench(ENCH_RAISED_MR)
                || mon->has_ench(ENCH_REGENERATION);
 
-    case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return mon->hit_points > mon->max_hit_points / 2;
-
-    case SPELL_TELEPORT_SELF:
-        // Monsters aren't smart enough to know when to cancel teleport.
-        return mon->has_ench(ENCH_TP) || mon->no_tele(true, false);
 
     case SPELL_BLINK_CLOSE:
         if (!foe || adjacent(mon->pos(), foe->pos()))
