@@ -121,6 +121,26 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_MIGHT),
     } },
+    { SPELL_INVISIBILITY, {
+        [](const monster &caster) { return !caster.has_ench(ENCH_INVIS); },
+        _fire_simple_beam,
+        _selfench_beam_setup(BEAM_INVISIBILITY),
+    } },
+    { SPELL_HASTE, {
+        [](const monster &caster)
+        {
+            // keep non-summoned pals with haste from spamming constantly
+            if (caster.friendly()
+                && !caster.get_foe()
+                && !caster.is_summoned())
+            {
+                return false;
+            }
+            return !caster.has_ench(ENCH_HASTE);
+        },
+        _fire_simple_beam,
+        _selfench_beam_setup(BEAM_HASTE),
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -642,7 +662,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PARALYSE:
     case SPELL_PETRIFY:
     case SPELL_SLOW:
-    case SPELL_HASTE:
     case SPELL_CORONA:
     case SPELL_CONFUSE:
     case SPELL_HIBERNATION:
@@ -717,7 +736,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_INVISIBILITY:
     case SPELL_INVISIBILITY_OTHER:
         beam.flavour  = BEAM_INVISIBILITY;
         break;
@@ -1394,9 +1412,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // other monsters can't.
     if (!_caster_is_player_shadow(*mons))
     {
-        if (spell_cast == SPELL_HASTE
-            || spell_cast == SPELL_INVISIBILITY
-            || spell_cast == SPELL_MINOR_HEALING
+        if (spell_cast == SPELL_MINOR_HEALING
             || spell_cast == SPELL_TELEPORT_SELF
             || spell_cast == SPELL_SILENCE)
         {
@@ -7700,14 +7716,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     const bool friendly = mon->friendly();
 
     // Keep friendly summoners from spamming summons constantly.
-    // ditto, for non-summoned pals with haste
-    if (friendly
-        && !foe
-        && (spell_typematch(monspell, SPTYP_SUMMONING)
-            || !mon->is_summoned() && monspell == SPELL_HASTE))
-    {
+    if (friendly && !foe && spell_typematch(monspell, SPTYP_SUMMONING))
         return true;
-    }
 
     if (!mon->wont_attack())
     {
@@ -7793,9 +7803,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         }
         return !mon->needs_berserk(false);
 
-    case SPELL_HASTE:
-        return mon->has_ench(ENCH_HASTE);
-
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SWIFTNESS:
 #endif
@@ -7813,9 +7820,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_TROGS_HAND:
         return mon->has_ench(ENCH_RAISED_MR)
                || mon->has_ench(ENCH_REGENERATION);
-
-    case SPELL_INVISIBILITY:
-        return mon->has_ench(ENCH_INVIS);
 
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
