@@ -3332,7 +3332,7 @@ DEPTH:   Depths, Crypt
 MONS:    necromancer / vampire mage
 MONS:    lich / ancient lich w:5
 : if you.unrands("majin-bo") then
-ITEM:    quarterstaff randart ego:vampiric ident:type no_pickup \
+ITEM:    quarterstaff randart ego:vampirism ident:type no_pickup \
          / good_item lajatang no_pickup
 : else
 ITEM:    majin-bo no_pickup
