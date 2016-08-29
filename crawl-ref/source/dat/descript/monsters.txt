@@ -1280,7 +1280,7 @@ die in battle than leave anything to an intruder.
 halazid warlock
 
 An ancient undead sorcerer. The halazid warlocks were exhumed and enslaved by
-the living divines Sheza and Sargol, forced to labour night night and day to
+the living divines Sheza and Sargol, forced to labour night and day to
 anchor the Twins to the world. The warlocks were not freed by their passing;
 even now, they work to resurrect their fallen masters.
 %%%%
