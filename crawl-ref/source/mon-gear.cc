@@ -1966,8 +1966,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         }
         break;
 
-    case MONS_MAURICE:
     case MONS_CRAZY_YIUF:
+        if (one_chance_in(5))
+            level = ISPEC_GOOD_ITEM;
+        // deliberate fall through
+    case MONS_MAURICE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         break;
