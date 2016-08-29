@@ -2028,8 +2028,8 @@ static const struct spell_desc spelldata[] =
     8, 0,
     TILEG_ERROR,
 },
-
 #endif
+
 {
     SPELL_WATER_ELEMENTALS, "Summon Water Elementals",
     SPTYP_SUMMONING,
@@ -3831,6 +3831,17 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_DREAM_DUST, "Dream Dust",
+    SPTYP_HEXES,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
+    3,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0, 0,
     TILEG_ERROR,
 },
 

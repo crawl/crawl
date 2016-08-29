@@ -494,6 +494,11 @@ Draining Gaze spell
 Causes the target's magic to leak into the air, as though they were hit by an
 antimagic weapon, with no direct line of fire required.
 %%%%
+Dream Dust spell
+
+Overwhelms the target with soporific dream dust, putting them to sleep.
+Additional dream sheep will increase the strength and duration of this effect.
+%%%%
 Druid's Call spell
 
 Recalls woodland creatures from elsewhere on the same level.
