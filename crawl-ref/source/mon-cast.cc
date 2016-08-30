@@ -102,9 +102,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
 static coord_def _mons_ghostly_sacrifice_target(monster &caster);
-static function<void(bolt&, const monster&)>
+static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
-static void _setup_minor_healing(bolt &beam, const monster &caster);
+static function<void(bolt&, const monster&, int)>
+    _zap_setup(spell_type spell);
+static void _setup_minor_healing(bolt &beam, const monster &caster,
+                                 int = -1);
 
 struct mons_spell_logic
 {
@@ -113,8 +116,11 @@ struct mons_spell_logic
     /// Actually cast the given spell.
     function<void(monster&, bolt&)> cast;
     /// Setup a targeting/effect beam for the given spell, if applicable.
-    function<void(bolt&, const monster&)> setup_beam;
+    function<void(bolt&, const monster&, int)> setup_beam;
 };
+
+static bool _always_worthwhile(const monster &caster) { return true; }
+static mons_spell_logic _conjuration_logic(spell_type spell);
 
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
@@ -159,6 +165,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_TELEPORT),
     } },
+    { SPELL_SLUG_DART, _conjuration_logic(SPELL_SLUG_DART) },
+
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -166,6 +174,12 @@ static bool _caster_is_player_shadow(const monster &mons)
 {
     // XXX: just check if type is MONS_PLAYER_SHADOW instead?
     return mons.mid == MID_PLAYER && !_is_wiz_cast();
+}
+
+/// Create the appropriate casting logic for a simple conjuration.
+static mons_spell_logic _conjuration_logic(spell_type spell)
+{
+    return { _always_worthwhile, _fire_simple_beam, _zap_setup(spell), };
 }
 
 /**
@@ -210,14 +224,28 @@ static void _fire_direct_explosion(monster &caster, bolt &pbolt)
  * @return          A function that sets up a beam to buff its caster with
  *                  the given flavour.
  */
-static function<void(bolt&, const monster&)>
+static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour)
 {
-    return [flavour](bolt &beam, const monster &caster)
+    return [flavour](bolt &beam, const monster &caster, int)
     {
         beam.flavour = flavour;
         if (!_caster_is_player_shadow(caster))
             beam.target = caster.pos();
+    };
+}
+
+/**
+ * Build a function to set up a beam with spl-to-zap.
+ *
+ * @param spell     The spell for which beams will be set up.
+ * @return          A function that sets up a beam to zap the given spell.
+ */
+static function<void(bolt&, const monster&, int)> _zap_setup(spell_type spell)
+{
+    return [spell](bolt &beam, const monster &, int power)
+    {
+        zappy(spell_to_zap(spell), power, true, beam);
     };
 }
 
@@ -227,7 +255,7 @@ static void _setup_healing_beam(bolt &beam, const monster &caster)
     beam.flavour  = BEAM_HEALING;
 }
 
-static void _setup_minor_healing(bolt &beam, const monster &caster)
+static void _setup_minor_healing(bolt &beam, const monster &caster, int)
 {
     _setup_healing_beam(beam, caster);
     if (!_caster_is_player_shadow(caster))
@@ -656,7 +684,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
     if (logic && logic->setup_beam)
-        logic->setup_beam(beam, *mons);
+        logic->setup_beam(beam, *mons, power);
 
     // FIXME: more of these should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -703,7 +731,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_AGONY:
     case SPELL_BANISHMENT:
     case SPELL_ENSLAVEMENT:
-    case SPELL_SLUG_DART:
     case SPELL_QUICKSILVER_BOLT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
