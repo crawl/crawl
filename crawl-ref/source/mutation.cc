@@ -1279,6 +1279,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         switch (mutclass)
         {
         case MUTCLASS_TEMPORARY:
+            if (coinflip())
+                return false;
+            // fallthrough to normal mut
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
             lose_stat(STAT_RANDOM, 1);
