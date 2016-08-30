@@ -1068,7 +1068,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_HEAL_OTHER:
-        _setup_minor_healing(beam, *mons);
+        _setup_healing_beam(beam, *mons);
         break;
 
     case SPELL_TELEPORT_OTHER:
