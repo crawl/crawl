@@ -117,6 +117,7 @@ static void _cast_cantrip(monster &mons, bolt&);
 static void _cast_injury_mirror(monster &mons, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
+static void _branch_summon_helper(monster* mons, spell_type spell_cast);
 
 enum spell_logic_flag
 {
@@ -293,6 +294,22 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
 
             caster.add_ench(ENCH_LIQUEFYING);
             invalidate_agrid(true);
+        },
+        nullptr,
+        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+    } },
+    { SPELL_FORCEFUL_INVITATION, {
+        _always_worthwhile,
+        [](monster &caster, bolt&) {
+            _branch_summon_helper(&caster, SPELL_FORCEFUL_INVITATION);
+        },
+        nullptr,
+        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+    } },
+    { SPELL_PLANEREND, {
+        _always_worthwhile,
+        [](monster &caster, bolt&) {
+            _branch_summon_helper(&caster, SPELL_PLANEREND);
         },
         nullptr,
         MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
@@ -1597,8 +1614,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_EPHEMERAL_INFUSION:
 #endif
-    case SPELL_FORCEFUL_INVITATION:
-    case SPELL_PLANEREND:
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
 #if TAG_MAJOR_VERSION == 34
@@ -5058,25 +5073,34 @@ static branch_summon_pair _planerend_summons[] =
   { BRANCH_ZOT,    _planerend_zot }
 };
 
-
-
-static void _branch_summon_helper(monster* mons, spell_type spell_cast,
-                                  branch_summon_pair *summon_list,
-                                  const size_t list_size, int count)
+static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 {
-    int which = 0;
-    // XXX: should this not depend on the specific spell?
-    if (spell_cast == SPELL_FORCEFUL_INVITATION
-        && mons->props.exists("invitation_branch"))
+    // TODO: rewrite me! (should use maps, vectors, const monster&...)
+    branch_summon_pair *summon_list;
+    size_t list_size;
+    int which_branch;
+    static const string INVITATION_KEY = "invitation_branch";
+
+    switch (spell_cast)
     {
-        which = mons->props["invitation_branch"].get_byte();
+        case SPELL_FORCEFUL_INVITATION:
+            summon_list = _invitation_summons;
+            list_size = ARRAYSZ(_invitation_summons);
+            if (!mons->props.exists(INVITATION_KEY))
+                mons->props[INVITATION_KEY].get_byte() = random2(list_size);
+            which_branch = mons->props[INVITATION_KEY].get_byte();
+            break;
+        case SPELL_PLANEREND:
+            summon_list = _planerend_summons;
+            list_size = ARRAYSZ(_planerend_summons);
+            which_branch = random2(list_size);
+            break;
+        default:
+            dprf("Unsupported branch summon spell %s!",
+                 spell_title(spell_cast));
+            ASSERT(false);
     }
-    else
-    {
-        which = random2(list_size);
-        if (spell_cast == SPELL_FORCEFUL_INVITATION)
-            mons->props["invitation_branch"].get_byte() = which;
-    }
+    const int num_summons = random_range(1, 3);
 
     if (you.see_cell(mons->pos()))
     {
@@ -5085,16 +5109,17 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast,
         {
             msg  = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
             msg += " ";
-            msg += branches[summon_list[which].origin].longname;
+            msg += branches[summon_list[which_branch].origin].longname;
             msg += "!";
             mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
-                 : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
+                                     : MSGCH_MONSTER_ENCHANT,
+                 "%s", msg.c_str());
         }
     }
 
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < num_summons; i++)
     {
-        monster_type type = pick_monster_from(summon_list[which].pop, 1);
+        monster_type type = pick_monster_from(summon_list[which_branch].pop, 1);
         if (type == MONS_NO_MONSTER)
             continue;
 
@@ -5475,8 +5500,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_IOOD
         || spell_cast == SPELL_PORTAL_PROJECTILE
-        || spell_cast == SPELL_FORCEFUL_INVITATION
-        || spell_cast == SPELL_PLANEREND
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_PARALYSIS_GAZE
         || logic && (logic->flags & MSPELL_NO_AUTO_NOISE))
@@ -6505,16 +6528,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_IGNITE_POISON:
         cast_ignite_poison(mons, splpow, false);
-        return;
-
-    case SPELL_FORCEFUL_INVITATION:
-        _branch_summon_helper(mons, spell_cast, _invitation_summons,
-                              ARRAYSZ(_invitation_summons), 1 + random2(3));
-        return;
-
-    case SPELL_PLANEREND:
-        _branch_summon_helper(mons, spell_cast, _planerend_summons,
-                              ARRAYSZ(_planerend_summons), 1 + random2(3));
         return;
 
     case SPELL_BLACK_MARK:
