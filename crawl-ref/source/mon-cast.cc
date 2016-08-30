@@ -110,6 +110,7 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static bool _foe_should_res_negative_energy(const actor* foe);
 static void _mons_vampiric_drain(monster &mons, bolt&);
+static void _cast_cantrip(monster &mons, bolt&);
 
 enum spell_logic_flag
 {
@@ -194,6 +195,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                    && low_hp;
         },
         _mons_vampiric_drain,
+        nullptr,
+        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+    } },
+    { SPELL_CANTRIP, {
+        [](const monster &caster) { return caster.get_foe(); },
+        _cast_cantrip,
         nullptr,
         MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
     } },
@@ -291,6 +298,77 @@ static void _setup_minor_healing(bolt &beam, const monster &caster, int)
     _setup_healing_beam(beam, caster);
     if (!_caster_is_player_shadow(caster))
         beam.target = caster.pos();
+}
+
+/// Returns true if a message referring to the player's legs makes sense.
+static bool _legs_msg_applicable()
+{
+    return you.species != SP_NAGA && !you.fishtail;
+}
+
+// Monster spell of uselessness, just prints a message.
+// This spell exists so that some monsters with really strong
+// spells (ie orc priest) can be toned down a bit. -- bwr
+static void _cast_cantrip(monster &mons, bolt&)
+{
+    // only messaging; don't bother if you can't see anything anyway.
+    if (!you.see_cell(mons.pos()))
+        return;
+
+    const bool friendly  = mons.friendly();
+    const bool buff_only = !friendly && is_sanctuary(you.pos());
+    const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
+                                                : MSGCH_MONSTER_ENCHANT;
+
+    if (mons.type != MONS_GASTRONOK)
+    {
+        const char* msgs[] =
+        {
+            " casts a cantrip, but nothing happens.",
+            " miscasts a cantrip.",
+            " looks braver for a moment.",
+        };
+
+        simple_monster_message(&mons, RANDOM_ELEMENT(msgs), channel);
+        return;
+    }
+
+    bool has_mon_foe = !invalid_monster_index(mons.foe);
+    if (buff_only
+        || crawl_state.game_is_arena() && !has_mon_foe
+        || friendly && !has_mon_foe
+        || coinflip())
+    {
+        string slugform = getSpeakString("gastronok_self_buff");
+        if (!slugform.empty())
+        {
+            slugform = replace_all(slugform, "@The_monster@",
+                                   mons.name(DESC_THE));
+            mprf(channel, "%s", slugform.c_str());
+        }
+    }
+    else if (!friendly && !has_mon_foe)
+    {
+        // "Enchant" the player.
+        const string slugform = getSpeakString("gastronok_debuff");
+        if (!slugform.empty()
+            && (slugform.find("legs") == string::npos
+                || _legs_msg_applicable()))
+        {
+            mpr(slugform);
+        }
+    }
+    else
+    {
+        // "Enchant" another monster.
+        string slugform = getSpeakString("gastronok_other_buff");
+        if (!slugform.empty())
+        {
+            slugform = replace_all(slugform, "@The_monster@",
+                                   mons.get_foe()->name(DESC_THE));
+            mprf(channel, "%s", slugform.c_str());
+        }
+    }
 }
 
 void init_mons_spells()
@@ -1327,7 +1405,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MESMERISE:
     case SPELL_DRAIN_LIFE:
     case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_CANTRIP:
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
     case SPELL_TROGS_HAND:
@@ -4023,12 +4100,6 @@ static void _mons_summon_elemental(monster* mons,
     return;
 }
 
-// Returns true if a message referring to the player's legs makes sense.
-static bool _legs_msg_applicable()
-{
-    return you.species != SP_NAGA && !you.fishtail;
-}
-
 static void _mons_cast_haunt(monster* mons)
 {
     ASSERT(mons->get_foe());
@@ -5289,8 +5360,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    if (spell_cast == SPELL_CANTRIP
-        || spell_cast == SPELL_IOOD
+    if (spell_cast == SPELL_IOOD
         || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
@@ -5994,76 +6064,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                           mons->foe, MG_NONE, god));
         }
         return;
-
-    case SPELL_CANTRIP:
-    {
-        // Monster spell of uselessness, just prints a message.
-        // This spell exists so that some monsters with really strong
-        // spells (ie orc priest) can be toned down a bit. -- bwr
-
-        // Don't give any message if the monster isn't nearby.
-        // (Otherwise you could get them from halfway across the level.)
-        if (!you.see_cell(mons->pos()))
-            return;
-
-        const bool friendly  = mons->friendly();
-        const bool buff_only = !friendly && is_sanctuary(you.pos());
-        const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
-                                                    : MSGCH_MONSTER_ENCHANT;
-
-        if (mons->type == MONS_GASTRONOK)
-        {
-            bool has_mon_foe = !invalid_monster_index(mons->foe);
-            string slugform = "";
-            if (buff_only || crawl_state.game_is_arena() && !has_mon_foe
-                || friendly && !has_mon_foe || coinflip())
-            {
-                slugform = getSpeakString("gastronok_self_buff");
-                if (!slugform.empty())
-                {
-                    slugform = replace_all(slugform, "@The_monster@",
-                                           mons->name(DESC_THE));
-                    mprf(channel, "%s", slugform.c_str());
-                }
-            }
-            else if (!friendly && !has_mon_foe)
-            {
-                mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
-
-                // "Enchant" the player.
-                slugform = getSpeakString("gastronok_debuff");
-                if (!slugform.empty()
-                    && (slugform.find("legs") == string::npos
-                        || _legs_msg_applicable()))
-                {
-                    mpr(slugform);
-                }
-            }
-            else
-            {
-                // "Enchant" another monster.
-                slugform = getSpeakString("gastronok_other_buff");
-                if (!slugform.empty())
-                {
-                    slugform = replace_all(slugform, "@The_monster@",
-                                           foe->name(DESC_THE));
-                    mprf(channel, "%s", slugform.c_str());
-                }
-            }
-        }
-        else
-        {
-            const char* msgs[] =
-            {
-                " casts a cantrip, but nothing happens.",
-                " miscasts a cantrip.",
-                " looks braver for a moment.",
-            };
-
-            simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
-        }
-        return;
-    }
 
     case SPELL_BLINK_OTHER:
     {
@@ -8119,10 +8119,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_BLACK_MARK:
         return mon->has_ench(ENCH_BLACK_MARK);
-
-    // No need to spam cantrips if we're just travelling around
-    case SPELL_CANTRIP:
-        return !foe;
 
     case SPELL_BLINK_ALLIES_AWAY:
         if (!foe || !mon->see_cell_no_trans(foe->pos()) && !mon->can_see(*foe))
