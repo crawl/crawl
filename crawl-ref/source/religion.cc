@@ -3561,17 +3561,6 @@ void join_religion(god_type which_god)
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
-    // Chei worshippers start their stat gain immediately.
-    if (have_passive(passive_t::stat_boost))
-    {
-        string msg = " begins to support your attributes";
-        if (have_passive(passive_t::slowed))
-            msg += " as your movement slows";
-        msg += ".";
-        simple_god_message(msg.c_str());
-        notify_stat_change();
-    }
-
     // Move gold to top of piles with Gozag.
     if (have_passive(passive_t::detect_gold))
         add_daction(DACT_GOLD_ON_TOP);
