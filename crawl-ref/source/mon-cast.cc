@@ -418,7 +418,7 @@ static bool _legs_msg_applicable()
 // Monster spell of uselessness, just prints a message.
 // This spell exists so that some monsters with really strong
 // spells (ie orc priest) can be toned down a bit. -- bwr
-static void _cast_cantrip(monster &mons, bolt&)
+static void _cast_cantrip(monster &mons, bolt& pbolt)
 {
     // only messaging; don't bother if you can't see anything anyway.
     if (!you.see_cell(mons.pos()))
@@ -458,6 +458,8 @@ static void _cast_cantrip(monster &mons, bolt&)
     }
     else if (!friendly && !has_mon_foe)
     {
+        mons_cast_noise(&mons, pbolt, SPELL_CANTRIP, MON_SPELL_WIZARD);
+
         // "Enchant" the player.
         const string slugform = getSpeakString("gastronok_debuff");
         if (!slugform.empty()
