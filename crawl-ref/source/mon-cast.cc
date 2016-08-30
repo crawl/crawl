@@ -5942,15 +5942,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_DRAIN_LIFE:
     {
         int damage = 0;
-        cast_los_attack_spell(spell_cast, splpow, mons, true,
-                              true, false, true, &damage);
+        fire_los_attack_spell(spell_cast, splpow, mons, false, &damage);
         if (damage > 0 && mons->heal(damage))
             simple_monster_message(mons, " is healed.");
         return;
     }
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        cast_los_attack_spell(spell_cast, splpow, mons, true);
+        fire_los_attack_spell(spell_cast, splpow, mons);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -8266,8 +8265,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DRAIN_LIFE:
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_los_attack_spell(monspell, _mons_spellpower(monspell, *mon),
-                                     mon, false) != SPRET_SUCCESS
+        return trace_los_attack_spell(monspell,
+                                      _mons_spellpower(monspell, *mon), mon)
+                                     != SPRET_SUCCESS
                || you.visible_to(mon)
                   && friendly
                   && (monspell == SPELL_OZOCUBUS_REFRIGERATION

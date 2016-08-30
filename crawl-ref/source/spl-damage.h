@@ -14,10 +14,9 @@ bool cast_smitey_damnation(int pow, bolt &beam);
 spret_type cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail = false);
 
-spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
-                                 bool actual, bool added_effects = true,
-                                 bool fail = false, bool allow_cancel = true,
-                                 int* damage_done = nullptr);
+spret_type trace_los_attack_spell(spell_type spell, int pow, const actor* agent);
+spret_type fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
+                                 bool fail = false, int* damage_done = nullptr);
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);

@@ -427,7 +427,7 @@ static const dice_def _refrigerate_damage(int pow)
 }
 
 static int _refrigerate_player(const actor* agent, int pow, int avg,
-                               bool actual, bool added_effects)
+                               bool actual)
 {
     const dice_def dam_dice = _refrigerate_damage(pow);
 
@@ -441,7 +441,7 @@ static int _refrigerate_player(const actor* agent, int pow, int avg,
             ouch(hurted, KILLED_BY_BEAM, agent->mid,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
-            you.expose_to_element(BEAM_COLD, 5, added_effects);
+            you.expose_to_element(BEAM_COLD, 5);
 
             // Note: this used to be 12!... and it was also applied even if
             // the player didn't take damage from the cold, so we're being
@@ -450,7 +450,7 @@ static int _refrigerate_player(const actor* agent, int pow, int avg,
         else
         {
             ouch(hurted, KILLED_BY_FREEZING);
-            you.expose_to_element(BEAM_COLD, 5, added_effects);
+            you.expose_to_element(BEAM_COLD, 5);
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
         }
     }
@@ -459,7 +459,7 @@ static int _refrigerate_player(const actor* agent, int pow, int avg,
 }
 
 static int _refrigerate_monster(const actor* agent, monster* target, int pow,
-                                int avg, bool actual, bool added_effects)
+                                int avg, bool actual)
 {
     const dice_def dam_dice = _refrigerate_damage(pow);
 
@@ -522,8 +522,7 @@ static bool _drain_lifeable_hitfunc(const actor* act)
     return _drain_lifeable(&you, act);
 }
 
-static int _drain_player(const actor* agent, int pow, int avg,
-                         bool actual, bool added_effects)
+static int _drain_player(const actor* agent, int pow, int avg, bool actual)
 {
     const int hurted = resist_adjust_damage(&you, BEAM_NEG, avg);
     if (actual)
@@ -537,7 +536,7 @@ static int _drain_player(const actor* agent, int pow, int avg,
 }
 
 static int _drain_monster(const actor* agent, monster* target, int pow,
-                          int avg, bool actual, bool added_effects)
+                          int avg, bool actual)
 {
     ASSERT(target); // XXX: change to monster &target
     int hurted = resist_adjust_damage(target, BEAM_NEG, avg);
@@ -569,9 +568,8 @@ static int _drain_monster(const actor* agent, monster* target, int pow,
     return 0;
 }
 
-spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
-                                 bool actual, bool added_effects, bool fail,
-                                 bool allow_cancel, int* damage_done)
+spret_type _cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
+                                  bool actual, bool fail, int* damage_done)
 {
     const monster* mons = agent ? agent->as_monster() : nullptr;
 
@@ -580,8 +578,8 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr;
     bool (*vulnerable)(const actor *, const actor *) = nullptr;
     bool (*vul_hitfunc)(const actor *) = nullptr;
-    int (*damage_player)(const actor *, int, int, bool, bool) = nullptr;
-    int (*damage_monster)(const actor *, monster *, int, int, bool, bool)
+    int (*damage_player)(const actor *, int, int, bool) = nullptr;
+    int (*damage_monster)(const actor *, monster *, int, int, bool)
         = nullptr;
     void (*pre_hook)(const actor*, bool, vector<monster *>) = nullptr;
     int fake_damage = -1;
@@ -636,7 +634,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
         ASSERT(actual);
         targetter_los hitfunc(&you, LOS_NO_TRANS);
         {
-            if (allow_cancel && stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
+            if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
         }
         fail_check();
@@ -678,8 +676,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
     // order from the original behaviour in the case of refrigerate.
     if (affects_you)
     {
-        total_damage = (*damage_player)(agent, pow, hurted, actual,
-                                        added_effects);
+        total_damage = (*damage_player)(agent, pow, hurted, actual);
         if (!actual && mons)
         {
             if (mons->wont_attack())
@@ -707,8 +704,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
         if (!m->alive())
             continue;
 
-        this_damage = (*damage_monster)(agent, m, pow, hurted, actual,
-                                        added_effects);
+        this_damage = (*damage_monster)(agent, m, pow, hurted, actual);
         total_damage += this_damage;
 
         if (!actual && mons)
@@ -730,6 +726,17 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
     if (actual)
         return SPRET_SUCCESS;
     return mons_should_fire(beam) ? SPRET_SUCCESS : SPRET_ABORT;
+}
+
+spret_type trace_los_attack_spell(spell_type spell, int pow, const actor* agent)
+{
+    return _cast_los_attack_spell(spell, pow, agent, false, false, nullptr);
+}
+
+spret_type fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
+                                 bool fail, int* damage_done)
+{
+    return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
 }
 
 // Screaming Sword
