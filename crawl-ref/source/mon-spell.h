@@ -1981,7 +1981,7 @@ static const mon_spellbook mspell_list[] =
     // ('T') Trolls.
     {  MST_SNORG,
       {
-       { SPELL_BERSERKER_RAGE, 40, MON_SPELL_NATURAL },
+       { SPELL_BERSERKER_RAGE, 33, MON_SPELL_NATURAL },
       }
     },
 
