@@ -81,6 +81,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
+static int _mons_spellpower(spell_type spell, const monster &mons);
 static bool _is_wiz_cast();
 static void _fire_simple_beam(monster &caster, bolt &beam);
 static void _fire_direct_explosion(monster &caster, bolt &beam);
@@ -114,6 +115,7 @@ static bool _foe_should_res_negative_energy(const actor* foe);
 static void _mons_vampiric_drain(monster &mons, bolt&);
 static void _cast_cantrip(monster &mons, bolt&);
 static void _cast_injury_mirror(monster &mons, bolt&);
+static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 
 enum spell_logic_flag
 {
@@ -135,6 +137,8 @@ struct mons_spell_logic
     function<void(bolt&, const monster&, int)> setup_beam;
     /// What special behaviors does this spell have for monsters?
     spell_logic_flags flags;
+    /// How much 'power' is this spell cast with per caster HD? If 0, ignore
+    int power_hd_factor;
 };
 
 static bool _always_worthwhile(const monster &caster) { return true; }
@@ -218,7 +222,44 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         nullptr,
         MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
     } },
+    { SPELL_DRAIN_LIFE, {
+        [](const monster &caster) {
+            return _los_spell_worthwhile(caster, SPELL_DRAIN_LIFE)
+                   && (!caster.friendly()
+                       || !you.visible_to(&caster)
+                       || player_prot_life(false) >= 1);
+            // XXX: prevent casting unless the player is *fully* immune?
+        },
+        [](monster &caster, bolt&) {
+            const spell_type spell = SPELL_DRAIN_LIFE;
+            const int splpow = _mons_spellpower(spell, caster);
 
+            int damage = 0;
+            fire_los_attack_spell(spell, splpow, &caster, false, &damage);
+            if (damage > 0 && caster.heal(damage))
+                simple_monster_message(&caster, " is healed.");
+        },
+        nullptr,
+        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+        1,
+    } },
+    { SPELL_OZOCUBUS_REFRIGERATION, {
+        [](const monster &caster) {
+            return _los_spell_worthwhile(caster, SPELL_OZOCUBUS_REFRIGERATION)
+                   && (!caster.friendly()
+                       || !you.visible_to(&caster)
+                       || player_res_cold(false) >= 1);
+            // XXX: prevent casting unless the player is *fully* immune?
+        },
+        [](monster &caster, bolt&) {
+            const spell_type spell = SPELL_OZOCUBUS_REFRIGERATION;
+            const int splpow = _mons_spellpower(spell, caster);
+            fire_los_attack_spell(spell, splpow, &caster, false);
+        },
+        nullptr,
+        MSPELL_NO_BEAM,
+        5,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -396,6 +437,13 @@ static void _cast_injury_mirror(monster &mons, bolt&)
                               random_range(7, 9) * BASELINE_DELAY));
     mons.props[MIRROR_RECAST_KEY].get_int()
         = you.elapsed_time + 150 + random2(60);
+}
+
+/// Is the given full-LOS attack spell worth casting for the given monster?
+static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
+{
+    return trace_los_attack_spell(spell, _mons_spellpower(spell, mons), &mons)
+           == SPRET_SUCCESS;
 }
 
 void init_mons_spells()
@@ -604,6 +652,10 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
  */
 static int _mons_power_hd_factor(spell_type spell, bool random)
 {
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
+    if (logic && logic->power_hd_factor)
+        return logic->power_hd_factor;
+
     switch (spell)
     {
         case SPELL_CONFUSION_GAZE:
@@ -648,7 +700,6 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_CONJURE_FLAME:
             return 6;
 
-        case SPELL_OZOCUBUS_REFRIGERATION:
         case SPELL_SUMMON_DRAGON:
         case SPELL_SUMMON_HYDRA:
             return 5;
@@ -656,9 +707,6 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_CHAIN_LIGHTNING:
         case SPELL_CHAIN_OF_CHAOS:
             return 4;
-
-        case SPELL_DRAIN_LIFE:
-            return 1;
 
         default:
             return 12;
@@ -1429,7 +1477,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_CAUSE_FEAR:
     case SPELL_MESMERISE:
-    case SPELL_DRAIN_LIFE:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
@@ -1476,7 +1523,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
 #endif
     case SPELL_OZOCUBUS_ARMOUR:
-    case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
 #if TAG_MAJOR_VERSION == 34
@@ -5387,7 +5433,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     if (spell_cast == SPELL_IOOD
-        || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
         || spell_cast == SPELL_LEDAS_LIQUEFACTION
         || spell_cast == SPELL_PORTAL_PROJECTILE
@@ -5937,19 +5982,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CAUSE_FEAR:
         _mons_cause_fear(mons);
-        return;
-
-    case SPELL_DRAIN_LIFE:
-    {
-        int damage = 0;
-        fire_los_attack_spell(spell_cast, splpow, mons, false, &damage);
-        if (damage > 0 && mons->heal(damage))
-            simple_monster_message(mons, " is healed.");
-        return;
-    }
-
-    case SPELL_OZOCUBUS_REFRIGERATION:
-        fire_los_attack_spell(spell_cast, splpow, mons);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -8262,18 +8294,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || cast_toxic_radiance(mon, 100, false, true) != SPRET_SUCCESS;
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(mon, 0, false, true) != SPRET_SUCCESS;
-
-    case SPELL_DRAIN_LIFE:
-    case SPELL_OZOCUBUS_REFRIGERATION:
-        return trace_los_attack_spell(monspell,
-                                      _mons_spellpower(monspell, *mon), mon)
-                                     != SPRET_SUCCESS
-               || you.visible_to(mon)
-                  && friendly
-                  && (monspell == SPELL_OZOCUBUS_REFRIGERATION
-                      && player_res_cold(false) < 1
-                      || monspell == SPELL_DRAIN_LIFE
-                         && player_prot_life(false) < 1);
 
     case SPELL_GLACIATE:
         return !foe
