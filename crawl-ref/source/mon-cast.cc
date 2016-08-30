@@ -5502,7 +5502,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_IOOD
         || spell_cast == SPELL_PORTAL_PROJECTILE
-        || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_PARALYSIS_GAZE
         || logic && (logic->flags & MSPELL_NO_AUTO_NOISE))
     {
@@ -6780,11 +6779,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
         foe->corrode_equipment("the entropic weave");
         return;
-
-    case SPELL_FIRE_STORM:
-        if (orig_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
-        break;
 
     case SPELL_SUMMON_EXECUTIONERS:
     {
