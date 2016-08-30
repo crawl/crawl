@@ -79,6 +79,8 @@
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
+static const string MIRROR_RECAST_KEY = "mirror_recast_time";
+
 static bool _is_wiz_cast();
 static void _fire_simple_beam(monster &caster, bolt &beam);
 static void _fire_direct_explosion(monster &caster, bolt &beam);
@@ -111,6 +113,7 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
 static bool _foe_should_res_negative_energy(const actor* foe);
 static void _mons_vampiric_drain(monster &mons, bolt&);
 static void _cast_cantrip(monster &mons, bolt&);
+static void _cast_injury_mirror(monster &mons, bolt&);
 
 enum spell_logic_flag
 {
@@ -201,6 +204,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_CANTRIP, {
         [](const monster &caster) { return caster.get_foe(); },
         _cast_cantrip,
+        nullptr,
+        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+    } },
+    { SPELL_INJURY_MIRROR, {
+        [](const monster &caster) {
+            return !caster.has_ench(ENCH_MIRROR_DAMAGE)
+                    && (!caster.props.exists(MIRROR_RECAST_KEY)
+                        || you.elapsed_time >=
+                           caster.props[MIRROR_RECAST_KEY].get_int());
+        },
+        _cast_injury_mirror,
         nullptr,
         MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
     } },
@@ -369,6 +383,19 @@ static void _cast_cantrip(monster &mons, bolt&)
             mprf(channel, "%s", slugform.c_str());
         }
     }
+}
+
+static void _cast_injury_mirror(monster &mons, bolt&)
+{
+    const string msg
+        = make_stringf(" offers %s to %s, and fills with unholy energy.",
+                       mons.pronoun(PRONOUN_REFLEXIVE).c_str(),
+                       god_name(mons.god).c_str());
+    simple_monster_message(&mons, msg.c_str(), MSGCH_MONSTER_SPELL);
+    mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, &mons,
+                              random_range(7, 9) * BASELINE_DELAY));
+    mons.props[MIRROR_RECAST_KEY].get_int()
+        = you.elapsed_time + 150 + random2(60);
 }
 
 void init_mons_spells()
@@ -1363,7 +1390,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
-    case SPELL_INJURY_MIRROR:
     case SPELL_MAJOR_HEALING:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
@@ -5361,7 +5387,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     if (spell_cast == SPELL_IOOD
-        || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
         || spell_cast == SPELL_LEDAS_LIQUEFACTION
@@ -5540,16 +5565,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_MAJOR_HEALING:
         if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
             simple_monster_message(mons, " is healed.");
-        return;
-
-    case SPELL_INJURY_MIRROR:
-        simple_monster_message(mons,
-                               make_stringf(" offers %s to %s, and fills with unholy energy.",
-                                   mons->pronoun(PRONOUN_REFLEXIVE).c_str(),
-                                   god_name(mons->god).c_str()).c_str(),
-                               MSGCH_MONSTER_SPELL);
-        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons, random_range(7, 9) * BASELINE_DELAY));
-        mons->props["mirror_recast_time"].get_int() = you.elapsed_time + 150 + random2(60);
         return;
 
     case SPELL_BERSERKER_RAGE:
@@ -7880,11 +7895,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_REGENERATION:
         return mon->has_ench(ENCH_REGENERATION);
-
-    case SPELL_INJURY_MIRROR:
-        return mon->has_ench(ENCH_MIRROR_DAMAGE)
-               || mon->props.exists("mirror_recast_time")
-                  && you.elapsed_time < mon->props["mirror_recast_time"].get_int();
 
     case SPELL_TROGS_HAND:
         return mon->has_ench(ENCH_RAISED_MR)
