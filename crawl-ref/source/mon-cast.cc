@@ -108,6 +108,17 @@ static function<void(bolt&, const monster&, int)>
     _zap_setup(spell_type spell);
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
+static bool _foe_should_res_negative_energy(const actor* foe);
+static void _mons_vampiric_drain(monster &mons, bolt&);
+
+enum spell_logic_flags
+{
+    MSPELL_LOGIC_NONE    =      0,
+    MSPELL_NO_AUTO_NOISE = 1 << 0, ///< silent, or noise generated specially
+    MSPELL_NO_BEAM       = 1 << 1, ///< doesn't use a targeting/firing beam
+};
+// TODO: remove MSPELL_NO_BEAM after everything is in the struct
+// (can infer from lack of setup_beam
 
 struct mons_spell_logic
 {
@@ -117,6 +128,8 @@ struct mons_spell_logic
     function<void(monster&, bolt&)> cast;
     /// Setup a targeting/effect beam for the given spell, if applicable.
     function<void(bolt&, const monster&, int)> setup_beam;
+    /// What special behaviors does this spell have for monsters?
+    spell_logic_flags flags;
 };
 
 static bool _always_worthwhile(const monster &caster) { return true; }
@@ -166,6 +179,23 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_TELEPORT),
     } },
     { SPELL_SLUG_DART, _conjuration_logic(SPELL_SLUG_DART) },
+    { SPELL_VAMPIRIC_DRAINING, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            // always cast at < 1/3rd hp, never at > 2/3rd hp
+            const bool low_hp = x_chance_in_y(caster.max_hit_points * 2 / 3
+                                                - caster.hit_points,
+                                              caster.max_hit_points / 3);
+            return foe
+                   && adjacent(caster.pos(), foe->pos())
+                   && !_foe_should_res_negative_energy(foe)
+                   && low_hp;
+        },
+        _mons_vampiric_drain,
+        nullptr,
+        (spell_logic_flags)(MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM),
+    } },
 
 };
 
@@ -1437,12 +1467,22 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.glyph = 0;
         return true;
     default:
+    {
+        const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+        if (logic && (logic->flags & MSPELL_NO_BEAM))
+        {
+            pbolt.range = 0;
+            pbolt.glyph = 0;
+            return true;
+        }
+
         if (check_validity)
         {
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return beam.flavour != NUM_BEAMS;
         }
         break;
+    }
     }
 
     const int power = _mons_spellpower(spell_cast, *mons);
@@ -4047,35 +4087,35 @@ static void _mons_cast_spectral_orcs(monster* mons)
     }
 }
 
-static bool _mons_vampiric_drain(monster *mons)
+static void _mons_vampiric_drain(monster &mons, bolt&)
 {
-    actor *target = mons->get_foe();
+    actor *target = mons.get_foe();
     if (!target)
-        return false;
-    if (grid_distance(mons->pos(), target->pos()) > 1)
-        return false;
+        return;
+    if (grid_distance(mons.pos(), target->pos()) > 1)
+        return;
 
-    const int pow = _mons_spellpower(SPELL_VAMPIRIC_DRAINING, *mons);
+    const int pow = _mons_spellpower(SPELL_VAMPIRIC_DRAINING, mons);
     int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
-    hp_cost = min(hp_cost, mons->max_hit_points - mons->hit_points);
+    hp_cost = min(hp_cost, mons.max_hit_points - mons.hit_points);
 
     hp_cost = resist_adjust_damage(target, BEAM_NEG, hp_cost);
 
     if (!hp_cost)
     {
-        simple_monster_message(mons,
+        simple_monster_message(&mons,
                                " is infused with unholy energy, but nothing happens.",
                                MSGCH_MONSTER_SPELL);
-        return false;
+        return;
     }
 
     dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
 
-    if (you.can_see(*mons))
+    if (you.can_see(mons))
     {
-        simple_monster_message(mons,
+        simple_monster_message(&mons,
                                " is infused with unholy energy.",
                                MSGCH_MONSTER_SPELL);
     }
@@ -4084,10 +4124,10 @@ static bool _mons_vampiric_drain(monster *mons)
 
     if (target->is_player())
     {
-        ouch(hp_cost, KILLED_BY_BEAM, mons->mid, "by vampiric draining");
-        if (mons->heal(hp_cost * 2 / 3))
+        ouch(hp_cost, KILLED_BY_BEAM, mons.mid, "by vampiric draining");
+        if (mons.heal(hp_cost * 2 / 3))
         {
-            simple_monster_message(mons,
+            simple_monster_message(&mons,
                 " draws life force from you and is healed!");
         }
     }
@@ -4095,24 +4135,22 @@ static bool _mons_vampiric_drain(monster *mons)
     {
         monster* mtarget = target->as_monster();
         const string targname = mtarget->name(DESC_THE);
-        mtarget->hurt(mons, hp_cost);
+        mtarget->hurt(&mons, hp_cost);
         if (mtarget->is_summoned())
         {
-            simple_monster_message(mons,
+            simple_monster_message(&mons,
                                    make_stringf(" draws life force from %s!",
                                                 targname.c_str()).c_str());
         }
-        else if (mons->heal(hp_cost * 2 / 3))
+        else if (mons.heal(hp_cost * 2 / 3))
         {
-            simple_monster_message(mons,
+            simple_monster_message(&mons,
                 make_stringf(" draws life force from %s and is healed!",
                 targname.c_str()).c_str());
         }
         if (mtarget->alive())
             print_wounds(mtarget);
     }
-
-    return true;
 }
 
 static bool _mons_cast_freeze(monster* mons)
@@ -5224,6 +5262,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     const unsigned int flags = get_spell_flags(spell_cast);
     const bool orig_noise = do_noise;
     actor* const foe = mons->get_foe();
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
 
     int sumcount = 0;
     int sumcount2;
@@ -5250,7 +5289,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     if (spell_cast == SPELL_CANTRIP
-        || spell_cast == SPELL_VAMPIRIC_DRAINING
         || spell_cast == SPELL_IOOD
         || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
@@ -5260,7 +5298,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         || spell_cast == SPELL_FORCEFUL_INVITATION
         || spell_cast == SPELL_PLANEREND
         || spell_cast == SPELL_FIRE_STORM
-        || spell_cast == SPELL_PARALYSIS_GAZE)
+        || spell_cast == SPELL_PARALYSIS_GAZE
+        || logic && (logic->flags & MSPELL_NO_AUTO_NOISE))
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -5268,7 +5307,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
-    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
     if (logic && logic->cast)
     {
         logic->cast(*mons, pbolt);
@@ -5441,10 +5479,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                MSGCH_MONSTER_SPELL);
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons, random_range(7, 9) * BASELINE_DELAY));
         mons->props["mirror_recast_time"].get_int() = you.elapsed_time + 150 + random2(60);
-        return;
-
-    case SPELL_VAMPIRIC_DRAINING:
-        _mons_vampiric_drain(mons);
         return;
 
     case SPELL_BERSERKER_RAGE:
@@ -7804,17 +7838,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BRAIN_FEED:
         return !foe || !foe->is_player();
 
-    case SPELL_VAMPIRIC_DRAINING:
-        if (!foe
-            || !adjacent(mon->pos(), foe->pos())
-            || !(foe->holiness() & MH_NATURAL) // dumb enough to cast on rN,
-                                              // but not undead/demons/etc
-            || x_chance_in_y(mon->hit_points - (mon->max_hit_points / 3),
-                             mon->max_hit_points * 2 / 3))
-        {
-            return true;
-        }
-    // fall through
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_MALIGN_OFFERING:
     case SPELL_GHOSTLY_FIREBALL:
