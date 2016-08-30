@@ -6792,7 +6792,7 @@ static int _noise_level(const monster* mons, spell_type spell,
         noise = 0;
     }
     else if (mons_genus(mons->type) == MONS_DRAGON)
-        noise = get_shout_noise_level(S_ROAR);
+        noise = get_shout_noise_level(S_LOUD_ROAR);
     else
         noise = spell_noise(spell);
 
