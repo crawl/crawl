@@ -387,7 +387,7 @@ static bool _refrigerateable_hitfunc(const actor *act)
     return _refrigerateable(&you, act);
 }
 
-static void _pre_refrigerate(actor* agent, bool player,
+static void _pre_refrigerate(const actor* agent, bool player,
                              vector<monster *> affected_monsters)
 {
     if (!affected_monsters.empty())
@@ -426,7 +426,7 @@ static const dice_def _refrigerate_damage(int pow)
     return dice_def(3, 5 + pow / 10);
 }
 
-static int _refrigerate_player(actor* agent, int pow, int avg,
+static int _refrigerate_player(const actor* agent, int pow, int avg,
                                bool actual, bool added_effects)
 {
     const dice_def dam_dice = _refrigerate_damage(pow);
@@ -458,8 +458,8 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
     return hurted;
 }
 
-static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
-                                bool actual, bool added_effects)
+static int _refrigerate_monster(const actor* agent, monster* target, int pow,
+                                int avg, bool actual, bool added_effects)
 {
     const dice_def dam_dice = _refrigerate_damage(pow);
 
@@ -522,13 +522,13 @@ static bool _drain_lifeable_hitfunc(const actor* act)
     return _drain_lifeable(&you, act);
 }
 
-static int _drain_player(actor* agent, int pow, int avg,
+static int _drain_player(const actor* agent, int pow, int avg,
                          bool actual, bool added_effects)
 {
     const int hurted = resist_adjust_damage(&you, BEAM_NEG, avg);
     if (actual)
     {
-        monster* mons = agent ? agent->as_monster() : 0;
+        const monster* mons = agent ? agent->as_monster() : 0;
         ouch(hurted, KILLED_BY_BEAM, mons ? mons->mid : MID_NOBODY,
              "by drain life");
     }
@@ -536,8 +536,8 @@ static int _drain_player(actor* agent, int pow, int avg,
     return hurted;
 }
 
-static int _drain_monster(actor* agent, monster* target, int pow, int avg,
-                          bool actual, bool added_effects)
+static int _drain_monster(const actor* agent, monster* target, int pow,
+                          int avg, bool actual, bool added_effects)
 {
     ASSERT(target); // XXX: change to monster &target
     int hurted = resist_adjust_damage(target, BEAM_NEG, avg);
@@ -569,50 +569,29 @@ static int _drain_monster(actor* agent, monster* target, int pow, int avg,
     return 0;
 }
 
-static void _post_drain_life(actor* agent, bool player,
-                             vector<monster *> affected_monsters,
-                             int pow, int total_damage)
-{
-    total_damage /= 2;
-
-    total_damage = min(pow * 2, total_damage);
-
-    if (total_damage && agent)
-    {
-        if (agent->is_player())
-        {
-            mpr("You feel life flooding into your body.");
-            inc_hp(total_damage);
-        }
-        else
-        {
-            monster* mons = agent->as_monster();
-            ASSERT(mons);
-            if (mons->heal(total_damage))
-                simple_monster_message(mons, " is healed.");
-        }
-    }
-}
-
-spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
+spret_type cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
                                  bool actual, bool added_effects, bool fail,
-                                 bool allow_cancel)
+                                 bool allow_cancel, int* damage_done)
 {
-    monster* mons = agent ? agent->as_monster() : nullptr;
+    const monster* mons = agent ? agent->as_monster() : nullptr;
 
     colour_t flash_colour = BLACK;
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr;
     bool (*vulnerable)(const actor *, const actor *) = nullptr;
     bool (*vul_hitfunc)(const actor *) = nullptr;
-    int (*damage_player)(actor *, int, int, bool, bool) = nullptr;
-    int (*damage_monster)(actor *, monster *, int, int, bool, bool) = nullptr;
-    void (*pre_hook)(actor*, bool, vector<monster *>) = nullptr;
-    void (*post_hook)(actor*, bool, vector<monster *>, int, int) = nullptr;
+    int (*damage_player)(const actor *, int, int, bool, bool) = nullptr;
+    int (*damage_monster)(const actor *, monster *, int, int, bool, bool)
+        = nullptr;
+    void (*pre_hook)(const actor*, bool, vector<monster *>) = nullptr;
+    int fake_damage = -1;
+    if (!damage_done)
+        damage_done = &fake_damage;
 
     int hurted = 0;
     int this_damage = 0;
     int total_damage = 0;
+    *damage_done = total_damage;
 
     bolt beam;
     beam.source_id = agent ? agent->mid : MID_NOBODY;
@@ -646,7 +625,6 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             vul_hitfunc = &_drain_lifeable_hitfunc;
             damage_player = &_drain_player;
             damage_monster = &_drain_monster;
-            post_hook = &_post_drain_life;
             hurted = 3 + random2(7) + random2(pow);
             break;
 
@@ -748,17 +726,9 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         }
     }
 
+    *damage_done = total_damage;
     if (actual)
-    {
-        if (post_hook)
-        {
-            (*post_hook)(agent, affects_you, affected_monsters, pow,
-                         total_damage);
-        }
-
         return SPRET_SUCCESS;
-    }
-
     return mons_should_fire(beam) ? SPRET_SUCCESS : SPRET_ABORT;
 }
 

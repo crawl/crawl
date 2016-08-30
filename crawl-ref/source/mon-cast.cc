@@ -5940,8 +5940,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_DRAIN_LIFE:
-        cast_los_attack_spell(spell_cast, splpow, mons, true);
+    {
+        int damage = 0;
+        cast_los_attack_spell(spell_cast, splpow, mons, true,
+                              true, false, true, &damage);
+        if (damage > 0 && mons->heal(damage))
+            simple_monster_message(mons, " is healed.");
         return;
+    }
 
     case SPELL_OZOCUBUS_REFRIGERATION:
         cast_los_attack_spell(spell_cast, splpow, mons, true);
