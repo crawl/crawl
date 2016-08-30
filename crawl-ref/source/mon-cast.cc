@@ -116,6 +116,7 @@ static void _mons_vampiric_drain(monster &mons, bolt&);
 static void _cast_cantrip(monster &mons, bolt&);
 static void _cast_injury_mirror(monster &mons, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
+static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 
 enum spell_logic_flag
 {
@@ -480,6 +481,18 @@ static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 {
     return trace_los_attack_spell(spell, _mons_spellpower(spell, mons), &mons)
            == SPRET_SUCCESS;
+}
+
+/// Set up a fake beam, for noise-generating purposes (?)
+static void _setup_fake_beam(bolt& beam, const monster&, int)
+{
+    beam.flavour  = BEAM_DEVASTATION;
+    beam.pierce   = true;
+    // Doesn't take distance into account, but this is just a tracer so
+    // we'll ignore that. We need some damage on the tracer so the monster
+    // doesn't think the spell is useless against other monsters.
+    beam.damage   = dice_def(42, 1);
+    beam.range    = LOS_RADIUS;
 }
 
 void init_mons_spells()
@@ -1230,13 +1243,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_FULMINANT_PRISM:       // ditto
     case SPELL_SCATTERSHOT:           // ditto
     case SPELL_AWAKEN_EARTH:          // ditto
-        beam.flavour  = BEAM_DEVASTATION;
-        beam.pierce   = true;
-        // Doesn't take distance into account, but this is just a tracer so
-        // we'll ignore that. We need some damage on the tracer so the monster
-        // doesn't think the spell is useless against other monsters.
-        beam.damage   = dice_def(42, 1);
-        beam.range    = LOS_RADIUS;
+        _setup_fake_beam(beam, *mons);
         break;
 
     case SPELL_PETRIFYING_CLOUD:
