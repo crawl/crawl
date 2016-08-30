@@ -248,7 +248,6 @@ enum shout_type
     S_HISS,                 // for reptiles & arachnids. quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CHERUB,               // for cherubs
-    S_RUMBLE,               // for ushabti. very loud!
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     NUM_SHOUTS,

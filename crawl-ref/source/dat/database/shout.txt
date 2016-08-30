@@ -182,14 +182,6 @@ SOUND:You hear a roar.
 
 SOUND:You hear a low.
 %%%%
-__RUMBLE seen
-
-SOUND:@The_monster@ rumbles deeply!
-%%%%
-__RUMBLE unseen
-
-SOUND:You hear a deep rumbling!
-%%%%
 __LOUD_ROAR unseen
 
 SOUND:You hear a deafening roar!
