@@ -256,6 +256,46 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_NO_BEAM,
         5,
     } },
+    { SPELL_TROGS_HAND, {
+        [](const monster &caster) {
+            return !caster.has_ench(ENCH_RAISED_MR)
+                && !caster.has_ench(ENCH_REGENERATION);
+        },
+        [](monster &caster, bolt&) {
+            const string god = apostrophise(god_name(caster.god));
+            const string msg = make_stringf(" invokes %s protection!",
+                                            god.c_str());
+            simple_monster_message(&caster, msg.c_str(), MSGCH_MONSTER_SPELL);
+            // Not spell_hd(spell_cast); this is an invocation
+            const int dur = BASELINE_DELAY
+                * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
+                      100);
+            caster.add_ench(mon_enchant(ENCH_RAISED_MR, 0, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
+            dprf("Trog's Hand cast (dur: %d aut)", dur);
+        },
+        nullptr,
+        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+    } },
+    { SPELL_LEDAS_LIQUEFACTION, {
+        [](const monster &caster) {
+            return caster.stand_on_solid_ground() && !liquefied(caster.pos());
+        },
+        [](monster &caster, bolt&) {
+            if (you.can_see(caster))
+            {
+                mprf("%s liquefies the ground around %s!",
+                     caster.name(DESC_THE).c_str(),
+                     caster.pronoun(PRONOUN_REFLEXIVE).c_str());
+                flash_view_delay(UA_MONSTER, BROWN, 80);
+            }
+
+            caster.add_ench(ENCH_LIQUEFYING);
+            invalidate_agrid(true);
+        },
+        nullptr,
+        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1476,7 +1516,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
-    case SPELL_TROGS_HAND:
     case SPELL_SPRINT:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SWIFTNESS:
@@ -1511,7 +1550,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HOLIES:
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
-    case SPELL_LEDAS_LIQUEFACTION:
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
@@ -5429,8 +5467,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     if (spell_cast == SPELL_IOOD
-        || spell_cast == SPELL_TROGS_HAND
-        || spell_cast == SPELL_LEDAS_LIQUEFACTION
         || spell_cast == SPELL_PORTAL_PROJECTILE
         || spell_cast == SPELL_FORCEFUL_INVITATION
         || spell_cast == SPELL_PLANEREND
@@ -5612,21 +5648,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->props.erase("brothers_count");
         mons->go_berserk(true);
         return;
-
-    case SPELL_TROGS_HAND:
-    {
-        simple_monster_message(mons,
-                               make_stringf(" invokes %s protection!",
-                                   apostrophise(god_name(mons->god)).c_str()).c_str(),
-                               MSGCH_MONSTER_SPELL);
-        // Not spell_hd(spell_cast); this is an invocation
-        const int dur = BASELINE_DELAY
-            * min(5 + roll_dice(2, (mons->get_hit_dice() * 10) / 3 + 1), 100);
-        mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
-        mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
-        dprf("Trog's Hand cast (dur: %d aut)", dur);
-        return;
-    }
 
 #if TAG_MAJOR_VERSION == 34
     // Replaced with monster-specific version.
@@ -6003,18 +6024,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SHATTER:
         mons_shatter(mons);
-        return;
-
-    case SPELL_LEDAS_LIQUEFACTION:
-        if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(*mons))
-        {
-            mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
-                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
-            flash_view_delay(UA_MONSTER, BROWN, 80);
-        }
-
-        mons->add_ench(ENCH_LIQUEFYING);
-        invalidate_agrid(true);
         return;
 
     case SPELL_CORPSE_ROT:
@@ -7929,10 +7938,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_REGENERATION:
         return mon->has_ench(ENCH_REGENERATION);
 
-    case SPELL_TROGS_HAND:
-        return mon->has_ench(ENCH_RAISED_MR)
-               || mon->has_ench(ENCH_REGENERATION);
-
     case SPELL_MAJOR_HEALING:
         return mon->hit_points > mon->max_hit_points / 2;
 
@@ -8311,10 +8316,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_MALIGN_GATEWAY:
         return !can_cast_malign_gateway();
-
-    case SPELL_LEDAS_LIQUEFACTION:
-        return !mon->stand_on_solid_ground()
-                || liquefied(mon->pos());
 
     case SPELL_SIREN_SONG:
         return !_should_siren_sing(mon, false);
