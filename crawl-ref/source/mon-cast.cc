@@ -83,8 +83,8 @@ static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
 static int _mons_spellpower(spell_type spell, const monster &mons);
 static bool _is_wiz_cast();
-static void _fire_simple_beam(monster &caster, bolt &beam);
-static void _fire_direct_explosion(monster &caster, bolt &beam);
+static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
+static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
@@ -112,11 +112,12 @@ static function<void(bolt&, const monster&, int)>
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static bool _foe_should_res_negative_energy(const actor* foe);
-static void _mons_vampiric_drain(monster &mons, bolt&);
-static void _cast_cantrip(monster &mons, bolt&);
-static void _cast_injury_mirror(monster &mons, bolt&);
+static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
+static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
+static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
+static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
 
 enum spell_logic_flag
@@ -134,7 +135,7 @@ struct mons_spell_logic
     /// Can casting this spell right now accomplish anything useful?
     function<bool(const monster&)> worthwhile;
     /// Actually cast the given spell.
-    function<void(monster&, bolt&)> cast;
+    function<void(monster&, mon_spell_slot, bolt&)> cast;
     /// Setup a targeting/effect beam for the given spell, if applicable.
     function<void(bolt&, const monster&, int)> setup_beam;
     /// What special behaviors does this spell have for monsters?
@@ -231,12 +232,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                        || !you.visible_to(&caster)
                        || player_prot_life(false) >= 3);
         },
-        [](monster &caster, bolt&) {
-            const spell_type spell = SPELL_DRAIN_LIFE;
-            const int splpow = _mons_spellpower(spell, caster);
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            const int splpow = _mons_spellpower(slot.spell, caster);
 
             int damage = 0;
-            fire_los_attack_spell(spell, splpow, &caster, false, &damage);
+            fire_los_attack_spell(slot.spell, splpow, &caster, false, &damage);
             if (damage > 0 && caster.heal(damage))
                 simple_monster_message(&caster, " is healed.");
         },
@@ -249,10 +249,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return _los_spell_worthwhile(caster, SPELL_OZOCUBUS_REFRIGERATION)
                    && (!caster.friendly() || !you.visible_to(&caster));
         },
-        [](monster &caster, bolt&) {
-            const spell_type spell = SPELL_OZOCUBUS_REFRIGERATION;
-            const int splpow = _mons_spellpower(spell, caster);
-            fire_los_attack_spell(spell, splpow, &caster, false);
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            const int splpow = _mons_spellpower(slot.spell, caster);
+            fire_los_attack_spell(slot.spell, splpow, &caster, false);
         },
         nullptr,
         MSPELL_NO_BEAM,
@@ -263,7 +262,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return !caster.has_ench(ENCH_RAISED_MR)
                 && !caster.has_ench(ENCH_REGENERATION);
         },
-        [](monster &caster, bolt&) {
+        [](monster &caster, mon_spell_slot, bolt&) {
             const string god = apostrophise(god_name(caster.god));
             const string msg = make_stringf(" invokes %s protection!",
                                             god.c_str());
@@ -283,7 +282,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](const monster &caster) {
             return caster.stand_on_solid_ground() && !liquefied(caster.pos());
         },
-        [](monster &caster, bolt&) {
+        [](monster &caster, mon_spell_slot, bolt&) {
             if (you.can_see(caster))
             {
                 mprf("%s liquefies the ground around %s!",
@@ -300,17 +299,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_FORCEFUL_INVITATION, {
         _always_worthwhile,
-        [](monster &caster, bolt&) {
-            _branch_summon_helper(&caster, SPELL_FORCEFUL_INVITATION);
-        },
+        _branch_summon,
         nullptr,
         MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_PLANEREND, {
         _always_worthwhile,
-        [](monster &caster, bolt&) {
-            _branch_summon_helper(&caster, SPELL_PLANEREND);
-        },
+        _branch_summon,
         nullptr,
         MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
     } },
@@ -336,7 +331,7 @@ static mons_spell_logic _conjuration_logic(spell_type spell)
  * @param caster    The monster casting the spell that produced the beam.
  * @param pbolt     A pre-setup & aimed spell beam. (For e.g. FIREBALL.)
  */
-static void _fire_simple_beam(monster &caster, bolt &pbolt)
+static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &pbolt)
 {
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
@@ -351,7 +346,7 @@ static void _fire_simple_beam(monster &caster, bolt &pbolt)
  * @param caster    The monster casting the spell that produced the beam.
  * @param pbolt     A pre-setup & aimed spell beam. (For e.g. FIRE_STORM.)
  */
-static void _fire_direct_explosion(monster &caster, bolt &pbolt)
+static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &pbolt)
 {
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
@@ -418,7 +413,7 @@ static bool _legs_msg_applicable()
 // Monster spell of uselessness, just prints a message.
 // This spell exists so that some monsters with really strong
 // spells (ie orc priest) can be toned down a bit. -- bwr
-static void _cast_cantrip(monster &mons, bolt& pbolt)
+static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
 {
     // only messaging; don't bother if you can't see anything anyway.
     if (!you.see_cell(mons.pos()))
@@ -458,7 +453,7 @@ static void _cast_cantrip(monster &mons, bolt& pbolt)
     }
     else if (!friendly && !has_mon_foe)
     {
-        mons_cast_noise(&mons, pbolt, SPELL_CANTRIP, MON_SPELL_WIZARD);
+        mons_cast_noise(&mons, pbolt, slot.spell, slot.flags);
 
         // "Enchant" the player.
         const string slugform = getSpeakString("gastronok_debuff");
@@ -482,7 +477,7 @@ static void _cast_cantrip(monster &mons, bolt& pbolt)
     }
 }
 
-static void _cast_injury_mirror(monster &mons, bolt&)
+static void _cast_injury_mirror(monster &mons, mon_spell_slot slot, bolt&)
 {
     const string msg
         = make_stringf(" offers %s to %s, and fills with unholy energy.",
@@ -4289,7 +4284,7 @@ static void _mons_cast_spectral_orcs(monster* mons)
     }
 }
 
-static void _mons_vampiric_drain(monster &mons, bolt&)
+static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
 {
     actor *target = mons.get_foe();
     if (!target)
@@ -4297,7 +4292,7 @@ static void _mons_vampiric_drain(monster &mons, bolt&)
     if (grid_distance(mons.pos(), target->pos()) > 1)
         return;
 
-    const int pow = _mons_spellpower(SPELL_VAMPIRIC_DRAINING, mons);
+    const int pow = _mons_spellpower(slot.spell, mons);
     int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
@@ -5075,6 +5070,11 @@ static branch_summon_pair _planerend_summons[] =
   { BRANCH_ZOT,    _planerend_zot }
 };
 
+static void _branch_summon(monster &mons, mon_spell_slot slot, bolt&)
+{
+    _branch_summon_helper(&mons, slot.spell);
+}
+
 static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 {
     // TODO: rewrite me! (should use maps, vectors, const monster&...)
@@ -5514,7 +5514,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     if (logic && logic->cast)
     {
-        logic->cast(*mons, pbolt);
+        logic->cast(*mons, {spell_cast, 0, slot_flags}, pbolt);
         return;
     }
 
@@ -6851,9 +6851,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     if (spell_is_direct_explosion(spell_cast))
-        _fire_direct_explosion(*mons, pbolt);
+        _fire_direct_explosion(*mons, {spell_cast, 0, slot_flags}, pbolt);
     else
-        _fire_simple_beam(*mons, pbolt);
+        _fire_simple_beam(*mons, {spell_cast, 0, slot_flags}, pbolt);
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
