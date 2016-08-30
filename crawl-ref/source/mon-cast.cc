@@ -245,7 +245,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_OZOCUBUS_REFRIGERATION, {
         [](const monster &caster) {
             return _los_spell_worthwhile(caster, SPELL_OZOCUBUS_REFRIGERATION)
-                   && (!caster.friendly() || !you.visible_to(&caster);
+                   && (!caster.friendly() || !you.visible_to(&caster));
         },
         [](monster &caster, bolt&) {
             const spell_type spell = SPELL_OZOCUBUS_REFRIGERATION;
