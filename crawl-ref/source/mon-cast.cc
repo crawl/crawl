@@ -111,14 +111,15 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
 static bool _foe_should_res_negative_energy(const actor* foe);
 static void _mons_vampiric_drain(monster &mons, bolt&);
 
-enum spell_logic_flags
+enum spell_logic_flag
 {
-    MSPELL_LOGIC_NONE    =      0,
     MSPELL_NO_AUTO_NOISE = 1 << 0, ///< silent, or noise generated specially
     MSPELL_NO_BEAM       = 1 << 1, ///< doesn't use a targeting/firing beam
 };
 // TODO: remove MSPELL_NO_BEAM after everything is in the struct
 // (can infer from lack of setup_beam
+
+DEF_BITFIELD(spell_logic_flags, spell_logic_flag);
 
 struct mons_spell_logic
 {
@@ -194,7 +195,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _mons_vampiric_drain,
         nullptr,
-        (spell_logic_flags)(MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM),
+        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
     } },
 
 };
