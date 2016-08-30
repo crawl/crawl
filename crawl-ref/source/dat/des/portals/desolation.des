@@ -44,7 +44,8 @@ function desolation_portal(e)
         msg = messager })
   e.tags("uniq_desolation no_monster_gen chance_desolation")
   e.kfeat("O = enter_desolation")
-  e.place("Elf:1")
+  e.depth("Elf, !Elf:$, Vaults, !Vaults:$")
+  e.chance(10000)
 end
 
 function desolation_ruins_setup(e)
@@ -61,7 +62,6 @@ end
 
 ##############################################################################
 NAME:       portal_desolation_entry_ruin
-DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent extra
 FTILE:      ; = FLOOR_SALT
 : desolation_portal(_G)
@@ -80,7 +80,6 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_holy_temple
-DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent no_monster_gen extra
 # XXX: no_item_gen?
 : desolation_portal(_G)
@@ -88,8 +87,8 @@ KFEAT:      B = altar_zin
 KFEAT:      C = altar_the_shining_one
 KFEAT:      D = altar_elyvilon
 SHUFFLE:    BCD
-KMONS:      O = patrolling angel
-FTILE:      ;OBCD = FLOOR_LIMESTONE
+MONS:       patrolling angel
+FTILE:      ;OBCD1 = FLOOR_LIMESTONE
 MAP
    .........
    .cc+++cc.
@@ -98,7 +97,7 @@ MAP
 .cccc;c;c;cccc.
 .c;;;;;;;;;;;c.
 .n;c;;;;;;;c;n.
-.n;;;;;O;;;;;n.
+.n;;;1;O;1;;;n.
 .n;c;;;;;;;c;n.
 .c;;;;BCD;;;;c.
 .cccc;;;;;cccc.
@@ -109,7 +108,6 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_twin_temple
-DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent no_monster_gen extra
 # XXX: no_item_gen?
 : desolation_portal(_G)
@@ -133,7 +131,6 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_salt
-DEPTH:      Swamp, Shoals, Snake, Spider, Elf
 TAGS:       transparent no_monster_gen extra
 : desolation_portal(_G)
 KMONS:      O = saltling band
