@@ -1700,7 +1700,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_los_attack_spell(spell, powc, &you, true, true, fail);
+        return fire_los_attack_spell(spell, powc, &you, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return cast_toxic_radiance(&you, powc, fail);

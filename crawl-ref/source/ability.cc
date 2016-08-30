@@ -2268,11 +2268,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_YRED_DRAIN_LIFE:
     {
-        fail_check();
         int damage = 0;
-        cast_los_attack_spell(SPELL_DRAIN_LIFE,
-                              you.skill_rdiv(SK_INVOCATIONS),
-                              &you, true, true, false, true, &damage);
+        const spret_type result =
+            fire_los_attack_spell(SPELL_DRAIN_LIFE,
+                                  you.skill_rdiv(SK_INVOCATIONS),
+                                  &you, fail, &damage);
+        if (result != SPRET_SUCCESS)
+            return result;
+
         if (damage > 0)
         {
             mpr("You feel life flooding into your body.");
