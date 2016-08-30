@@ -7942,13 +7942,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || foe->backlit();
 
     case SPELL_BERSERKER_RAGE:
-        // Snorg does not go berserk as often until wounded.
-        if (mon->type == MONS_SNORG
-            && mon->hit_points == mon->max_hit_points
-            && !one_chance_in(4))
-        {
-            return true;
-        }
         return !mon->needs_berserk(false);
 
 #if TAG_MAJOR_VERSION == 34
