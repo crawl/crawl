@@ -2267,11 +2267,19 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
+    {
         fail_check();
+        int damage = 0;
         cast_los_attack_spell(SPELL_DRAIN_LIFE,
                               you.skill_rdiv(SK_INVOCATIONS),
-                              &you, true);
+                              &you, true, true, false, true, &damage);
+        if (damage > 0)
+        {
+            mpr("You feel life flooding into your body.");
+            inc_hp(damage);
+        }
         break;
+    }
 
     case ABIL_YRED_ENSLAVE_SOUL:
     {
