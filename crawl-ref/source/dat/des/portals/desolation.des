@@ -50,8 +50,7 @@ end
 
 function desolation_ruins_setup(e)
   e.mons("saltling band")
-  e.mons("imperial myrmidon / halazid warlock / alligator snapping turtle /\
-          crystal guardian")
+  e.mons("imperial myrmidon / halazid warlock / crystal guardian")
   e.nsubst("% = 5:| / 5:* / *:.")
   e.subst(".=,")
 end

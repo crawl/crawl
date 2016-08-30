@@ -944,7 +944,8 @@ static const pop_entry pop_trove[] =
 static const pop_entry pop_desolation[] =
 { // Desolation
   {  1,  1, 1200, FLAT, MONS_SALTLING },
-  {  1,  1,  100, FLAT, MONS_DANCING_WEAPON },
+  {  1,  1,   50, FLAT, MONS_DANCING_WEAPON },
+  {  1,  1,   50, FLAT, MONS_MOLTEN_GARGOYLE },
   {  1,  1,   50, FLAT, MONS_CRYSTAL_GUARDIAN },
   {  1,  1,   50, FLAT, MONS_IMPERIAL_MYRMIDON },
   { 0,0,0,FLAT,MONS_0 }
