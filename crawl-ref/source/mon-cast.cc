@@ -227,8 +227,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return _los_spell_worthwhile(caster, SPELL_DRAIN_LIFE)
                    && (!caster.friendly()
                        || !you.visible_to(&caster)
-                       || player_prot_life(false) >= 1);
-            // XXX: prevent casting unless the player is *fully* immune?
+                       || player_prot_life(false) >= 3);
         },
         [](monster &caster, bolt&) {
             const spell_type spell = SPELL_DRAIN_LIFE;
@@ -246,10 +245,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_OZOCUBUS_REFRIGERATION, {
         [](const monster &caster) {
             return _los_spell_worthwhile(caster, SPELL_OZOCUBUS_REFRIGERATION)
-                   && (!caster.friendly()
-                       || !you.visible_to(&caster)
-                       || player_res_cold(false) >= 1);
-            // XXX: prevent casting unless the player is *fully* immune?
+                   && (!caster.friendly() || !you.visible_to(&caster);
         },
         [](monster &caster, bolt&) {
             const spell_type spell = SPELL_OZOCUBUS_REFRIGERATION;
