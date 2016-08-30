@@ -2274,6 +2274,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DANCING_WEAPON,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;
     }},                            {{ BAND_DANCING_WEAPONS, {2, 3} }}}},
+    { MONS_MOLTEN_GARGOYLE,  { {0, 0, []() {
+        return you.where_are_you == BRANCH_DESOLATION;
+    }},                            {{ BAND_MOLTEN_GARGOYLES, {2, 3} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2446,6 +2449,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
+    { BAND_MOLTEN_GARGOYLES,    {{{MONS_MOLTEN_GARGOYLE, 1}}}},
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
@@ -2649,6 +2653,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
 
     // one supporter, and maybe more
     { BAND_SALTLINGS,           {{{MONS_GUARDIAN_SERPENT, 1},
+                                  {MONS_VAULT_SENTINEL, 1},
                                   {MONS_RAGGED_HIEROPHANT, 2},
                                   {MONS_SERVANT_OF_WHISPERS, 2},
                                   {MONS_PEACEKEEPER, 2}},
@@ -2657,9 +2662,10 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_RAGGED_HIEROPHANT, 5},
                                   {MONS_SERVANT_OF_WHISPERS, 5},
                                   {MONS_PEACEKEEPER, 5},
+                                  {MONS_MOLTEN_GARGOYLE, 5},
+                                  {MONS_VAULT_SENTINEL, 2},
                                   {MONS_GUARDIAN_SERPENT, 2},
-                                  {MONS_IMPERIAL_MYRMIDON, 2},
-                                  {MONS_ALLIGATOR_SNAPPING_TURTLE, 2}}}},
+                                  {MONS_IMPERIAL_MYRMIDON, 2}}}},
 };
 
 /**

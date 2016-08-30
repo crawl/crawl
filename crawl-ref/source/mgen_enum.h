@@ -116,6 +116,7 @@ enum band_type
     BAND_ANCIENT_CHAMPIONS,
     BAND_SALTLINGS,
     BAND_DANCING_WEAPONS,
+    BAND_MOLTEN_GARGOYLES,
     NUM_BANDS                   // always last
 };
 
