@@ -46,27 +46,6 @@
 #include "viewmap.h"
 
 #ifdef WIZARD
-// Creates a specific monster by mon type number.
-void wizard_create_spec_monster()
-{
-    int mon = prompt_for_int("Which monster by number? ", true);
-
-    if (mon == -1 || (mon >= NUM_MONSTERS
-                      && mon != RANDOM_MONSTER
-                      && mon != RANDOM_DRACONIAN
-                      && mon != RANDOM_BASE_DRACONIAN
-                      && mon != RANDOM_NONBASE_DRACONIAN
-                      && mon != WANDERING_MONSTER))
-    {
-        canned_msg(MSG_OK);
-    }
-    else
-    {
-        create_monster(
-            mgen_data::sleeper_at(
-                static_cast<monster_type>(mon), you.pos()));
-    }
-}
 
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.

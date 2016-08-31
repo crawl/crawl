@@ -782,8 +782,8 @@ static void _do_wizard_command(int wiz_command)
     case 'L': debug_place_map(false); break;
     // case CONTROL('L'): break;
 
+    case 'M':
     case 'm': wizard_create_spec_monster_name(); break;
-    case 'M': wizard_create_spec_monster(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
     case 'n':
@@ -810,10 +810,6 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('R'): wizard_recreate_level(); break;
 
     case 's':
-        you.exp_available += HIGH_EXP_POOL;
-        level_change();
-        you.redraw_experience = true;
-        break;
     case 'S': wizard_set_skill_level(); break;
     case CONTROL('S'): wizard_abyss_speed(); break;
 
