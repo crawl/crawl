@@ -113,11 +113,15 @@ static function<void(bolt&, const monster&, int)>
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static bool _foe_should_res_negative_energy(const actor* foe);
+static bool _caster_sees_foe(const monster &caster);
+static bool _should_still_winds(const monster &caster);
 static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
+static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
+static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -311,8 +315,30 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         nullptr,
         MSPELL_NO_AUTO_NOISE,
     } },
+    { SPELL_STILL_WINDS, { _should_still_winds, _cast_still_winds } },
     { SPELL_SMITING, { _caster_has_foe, _cast_smiting, } },
     { SPELL_RESONANCE_STRIKE, { _caster_has_foe, _cast_resonance_strike, } },
+    { SPELL_FLAY, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe(); // XXX: check vis?
+            return foe && (foe->holiness() & MH_NATURAL);
+        },
+        _cast_flay,
+    } },
+    { SPELL_PARALYSIS_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.get_foe()->paralyse(&caster, 2 + random2(3));
+        },
+    } },
+    { SPELL_DRAINING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            enchant_actor_with_flavour(caster.get_foe(), &caster,
+                                       BEAM_DRAIN_MAGIC,
+                                       _mons_spellpower(slot.spell, caster));
+        },
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -327,6 +353,7 @@ static mons_spell_logic _conjuration_logic(spell_type spell)
 {
     return { _always_worthwhile, _fire_simple_beam, _zap_setup(spell), };
 }
+
 
 /**
  * Take the given beam and fire it, handling screen-refresh issues in the
@@ -361,6 +388,12 @@ static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &pbolt)
     pbolt.in_explosion_phase = false;
     pbolt.refine_for_explosion();
     pbolt.explode(need_more);
+}
+
+static bool _caster_sees_foe(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    return foe && caster.can_see(*foe);
 }
 
 /**
@@ -1685,7 +1718,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_CONTROL_UNDEAD:
     case SPELL_CLEANSING_FLAME:
-    case SPELL_PARALYSIS_GAZE:
     case SPELL_DRAINING_GAZE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_HAUNT:
@@ -1695,7 +1727,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
-    case SPELL_FLAY:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CHANT_FIRE_STORM:
 #endif
@@ -1706,7 +1737,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AURA_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
-    case SPELL_STILL_WINDS:
     case SPELL_DREAM_DUST:
         pbolt.range = 0;
         pbolt.glyph = 0;
@@ -2453,7 +2483,7 @@ static bool _should_still_winds(const monster &caster)
 }
 
 /// Cast the spell Still Winds, disabling clouds across the level temporarily.
-static void _still_winds(monster &caster)
+static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&)
 {
     ASSERT(!(env.level_state & LSTATE_STILL_WINDS));
     caster.add_ench(ENCH_STILL_WINDS);
@@ -5174,8 +5204,11 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
     }
 }
 
-static void _cast_flay(monster* source, actor *defender)
+static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
 {
+    monster *source = &caster; // laziness - rewriteme!
+    actor* defender = caster.get_foe();
+
     bool was_flayed = false;
     int damage_taken = 0;
     if (defender->is_player())
@@ -5569,10 +5602,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     default:
         break;
 
-    case SPELL_FLAY:
-        _cast_flay(mons, foe);
-        return;
-
     case SPELL_WATERSTRIKE:
     {
         if (you.can_see(*foe))
@@ -5675,15 +5704,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         foe->confuse(mons, 5 + random2(3));
         return;
     }
-
-    case SPELL_DRAINING_GAZE:
-        enchant_actor_with_flavour(foe, mons, BEAM_DRAIN_MAGIC,
-                                   mons->get_experience_level() * 12);
-        return;
-
-    case SPELL_PARALYSIS_GAZE:
-        foe->paralyse(mons, 2 + random2(3));
-        return;
 
     case SPELL_MAJOR_HEALING:
         if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
@@ -6721,10 +6741,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_DEFLECT_MISSILES:
         simple_monster_message(mons, " begins deflecting missiles!");
         mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
-        return;
-
-    case SPELL_STILL_WINDS:
-        _still_winds(*mons);
         return;
 
     case SPELL_SUMMON_SCARABS:
@@ -8232,9 +8248,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SEAL_DOORS:
         return friendly || !_seal_doors_and_stairs(mon, true);
 
-    case SPELL_FLAY:
-        return !foe || !(foe->holiness() & MH_NATURAL);
-
     case SPELL_TWISTED_RESURRECTION:
         if (friendly && !_animate_dead_okay(monspell))
             return true;
@@ -8324,9 +8337,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || !mons_should_cloud_cone(mon, _mons_spellpower(monspell, *mon),
                                           foe->pos());
 
-    case SPELL_STILL_WINDS:
-        return !_should_still_winds(*mon);
-
     // Friendly monsters don't use polymorph, as it's likely to cause
     // runaway growth of an enemy.
     case SPELL_POLYMORPH:
@@ -8347,11 +8357,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DEFLECT_MISSILES:
         return mon->has_ench(ENCH_DEFLECT_MISSILES);
 
-    case SPELL_PARALYSIS_GAZE:
-        return !foe || foe->paralysed() || !mon->can_see(*foe);
-
     case SPELL_CONFUSION_GAZE:
-    case SPELL_DRAINING_GAZE:
         return !foe || !mon->can_see(*foe);
 
     case SPELL_CONTROL_UNDEAD:
