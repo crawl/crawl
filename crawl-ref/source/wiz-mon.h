@@ -8,7 +8,6 @@
 
 #ifdef WIZARD
 
-void wizard_create_spec_monster();
 void wizard_create_spec_monster_name();
 void wizard_spawn_control();
 void wizard_detect_creatures();
