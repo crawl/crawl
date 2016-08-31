@@ -117,6 +117,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
+static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -147,6 +148,7 @@ struct mons_spell_logic
 };
 
 static bool _always_worthwhile(const monster &caster) { return true; }
+static bool _caster_has_foe(const monster &caster) { return caster.foe != 0; }
 static mons_spell_logic _conjuration_logic(spell_type spell);
 
 /// How do monsters go about casting spells?
@@ -312,8 +314,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_SMITING, {
-        [](const monster &caster) { return caster.foe != 0; },
+        _caster_has_foe,
         _cast_smiting,
+        nullptr,
+        MSPELL_NO_BEAM,
+    } },
+    { SPELL_RESONANCE_STRIKE, {
+        _caster_has_foe,
+        _cast_resonance_strike,
         nullptr,
         MSPELL_NO_BEAM,
     } },
@@ -1699,7 +1707,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
-    case SPELL_RESONANCE_STRIKE:
     case SPELL_FLAY:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CHANT_FIRE_STORM:
@@ -5312,7 +5319,7 @@ static string _describe_nearby_constructs(const monster &caster, coord_def pos)
 }
 
 /// Cast Resonance Strike, blasting the caster's target with smitey damage.
-static void _resonance_strike(const monster &caster)
+static void _cast_resonance_strike(monster &caster, mon_spell_slot, bolt&)
 {
     actor* target = caster.get_foe();
     if (!target)
@@ -5627,10 +5634,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                   "", "by the air");
         return;
     }
-
-    case SPELL_RESONANCE_STRIKE:
-        _resonance_strike(*mons);
-        return;
 
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
@@ -8144,7 +8147,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
-    case SPELL_RESONANCE_STRIKE:
         return !foe;
 
     case SPELL_HOLY_FLAMES:
