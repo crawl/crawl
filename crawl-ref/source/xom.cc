@@ -1911,12 +1911,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     }
 
     if (in_view[DNGN_ORCISH_IDOL])
-    {
-        if (species_is_orcish(you.species))
-            priority.emplace_back("The idol of Beogh turns to glare at you.");
-        else
-            priority.emplace_back("The orcish idol turns to glare at you.");
-    }
+        priority.emplace_back("The idol of Beogh turns to glare at you.");
 
     if (in_view[DNGN_GRANITE_STATUE])
         priority.emplace_back("The granite statue turns to stare at you.");
