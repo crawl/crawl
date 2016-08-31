@@ -81,6 +81,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
+static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
 static int _mons_spellpower(spell_type spell, const monster &mons);
 static bool _is_wiz_cast();
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
@@ -115,6 +116,7 @@ static bool _foe_should_res_negative_energy(const actor* foe);
 static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
+static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -309,6 +311,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         nullptr,
         MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
     } },
+    { SPELL_SMITING, {
+        [](const monster &caster) { return caster.foe != 0; },
+        _cast_smiting,
+        nullptr,
+        MSPELL_NO_BEAM,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -488,6 +496,21 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot slot, bolt&)
                               random_range(7, 9) * BASELINE_DELAY));
     mons.props[MIRROR_RECAST_KEY].get_int()
         = you.elapsed_time + 150 + random2(60);
+}
+
+static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
+{
+    const god_type god = _find_god(caster, slot.flags);
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    if (foe->is_player())
+        mprf("%s smites you!", _god_name(god).c_str());
+    else
+        simple_monster_message(foe->as_monster(), " is smitten.");
+
+    foe->hurt(&caster, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
+              "", "by divine providence");
 }
 
 /// Is the given full-LOS attack spell worth casting for the given monster?
@@ -852,6 +875,31 @@ int mons_spell_range(spell_type spell, int hd)
 
     const int power = mons_power_for_hd(spell, hd);
     return spell_range(spell, power, false);
+}
+
+/**
+ * What god is responsible for a spell cast by the given monster with the
+ * given flags?
+ *
+ * Relevant for Smite messages & summons, sometimes.
+ *
+ * @param mons      The monster casting the spell.
+ * @param flags     The slot flags;
+ *                  e.g. MON_SPELL_NATURAL | MON_SPELL_NO_SILENT.
+ * @return          The god that is responsible for the spell.
+ */
+static god_type _find_god(const monster &mons, mon_spell_slot_flags flags)
+{
+    // Permanent wizard summons of Yred should have the same god even
+    // though they aren't priests. This is so that e.g. the zombies of
+    // Yred's enslaved souls will properly turn on you if you abandon
+    // Yred.
+    if (mons.god == GOD_YREDELEMNUL)
+        return mons.god;
+
+    // If this is a wizard spell, summons won't necessarily have the
+    // same god. But intrinsic/priestly summons should.
+    return flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons.god;
 }
 
 static spell_type _random_bolt_spell()
@@ -1647,7 +1695,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HAUNT:
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_BRAIN_FEED:
-    case SPELL_SMITING:
     case SPELL_HOLY_FLAMES:
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
@@ -5519,17 +5566,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    // If this is a wizard spell, summons won't necessarily have the
-    // same god. But intrinsic/priestly summons should.
-    god_type god = slot_flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons->god;
-
-    // Permanent wizard summons of Yred should have the same god even
-    // though they aren't priests. This is so that e.g. the zombies of
-    // Yred's enslaved souls will properly turn on you if you abandon
-    // Yred.
-    if (mons->god == GOD_YREDELEMNUL)
-        god = mons->god;
-
+    const god_type god = _find_god(*mons, slot_flags);
     const int splpow = _mons_spellpower(spell_cast, *mons);
 
     switch (spell_cast)
@@ -5598,17 +5635,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
         return;
-
-    case SPELL_SMITING:
-        if (foe->is_player())
-            mprf("%s smites you!", _god_name(god).c_str());
-        else
-            simple_monster_message(foe->as_monster(), " is smitten.");
-
-        foe->hurt(mons, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
-                       "", "by divine providence");
-        return;
-
     case SPELL_BRAIN_FEED:
         if (one_chance_in(3)
             && lose_stat(STAT_INT, 1 + random2(3)))
@@ -8116,7 +8142,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_HAUNT:
     case SPELL_SUMMON_SPECTRAL_ORCS:
-    case SPELL_SMITING:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_RESONANCE_STRIKE:
