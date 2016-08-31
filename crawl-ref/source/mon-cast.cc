@@ -5431,6 +5431,12 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise)
 {
+    // check sputtercast state for e.g. orb spiders. assumption: all
+    // sputtercasting monsters have one charge status and use it for all of
+    // their spells.
+    if (max_mons_charge(mons->type) > 0 && !_spell_charged(mons))
+        return;
+
     if (spell_is_soh_breath(spell_cast))
     {
         const vector<spell_type> *breaths = soh_breath_spells(spell_cast);
@@ -5472,7 +5478,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     // single calculation permissible {dlb}
     const unsigned int flags = get_spell_flags(spell_cast);
-    const bool orig_noise = do_noise;
     actor* const foe = mons->get_foe();
     const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
 
@@ -5500,9 +5505,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    if (spell_cast == SPELL_IOOD
-        || spell_cast == SPELL_PORTAL_PROJECTILE
-        || spell_cast == SPELL_PARALYSIS_GAZE
+    if (spell_cast == SPELL_PORTAL_PROJECTILE
         || logic && (logic->flags & MSPELL_NO_AUTO_NOISE))
     {
         do_noise = false;       // Spell itself does the messaging.
@@ -5663,10 +5666,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_PARALYSIS_GAZE:
-        if (mons->type == MONS_GIANT_EYEBALL && !_spell_charged(mons))
-            return;
-        if (orig_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         foe->paralyse(mons, 2 + random2(3));
         return;
 
@@ -6312,10 +6311,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IOOD:
-        if (mons->type == MONS_ORB_SPIDER && !_spell_charged(mons))
-            return;
-        if (orig_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
 
