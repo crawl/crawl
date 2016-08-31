@@ -5098,9 +5098,8 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
             which_branch = random2(list_size);
             break;
         default:
-            dprf("Unsupported branch summon spell %s!",
+            die("Unsupported branch summon spell %s!",
                  spell_title(spell_cast));
-            ASSERT(false);
     }
     const int num_summons = random_range(1, 3);
 
