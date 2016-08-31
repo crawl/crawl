@@ -6181,7 +6181,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
             else if (fly_died && observable())
             {
-                mprf("%s jumps down from %s now dead mount.",
+                mprf("%s falls from %s now dead mount.",
                      name(DESC_THE).c_str(),
                      pronoun(PRONOUN_POSSESSIVE).c_str());
             }
