@@ -722,9 +722,7 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return is_harmless_cloud(cloud.type)
            || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_TORNADO
-           || ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC
-           || cloud.decay <= 20; // soon gone
+           || ct == CLOUD_TORNADO; // soon gone
 }
 
 //   Places a cloud with the given stats. Will overwrite an old
