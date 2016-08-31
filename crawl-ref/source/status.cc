@@ -657,7 +657,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_STILL_WINDS:
         if (env.level_state & LSTATE_STILL_WINDS)
         {
-            inf->light_colour = WHITE;
+            inf->light_colour = BROWN;
             inf->light_text = "-Clouds";
         }
         break;
