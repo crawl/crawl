@@ -786,10 +786,7 @@ static void _do_wizard_command(int wiz_command)
     case 'm': wizard_create_spec_monster_name(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    case 'n':
-        mpr("Setting gold to 0.");
-        you.set_gold(0);
-        break;
+    // case 'n': break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
@@ -848,10 +845,7 @@ static void _do_wizard_command(int wiz_command)
     case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
-    case '$':
-        mpr("Adding 1000 gold.");
-        you.add_gold(1000);
-        break;
+    case '$': wizard_set_gold(); break;
     case '%': wizard_create_spec_object_by_name(); break;
     case '^': wizard_set_piety(); break;
     case '&': wizard_list_companions(); break;
