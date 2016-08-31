@@ -7135,6 +7135,8 @@ spret_type hepliaklqana_transference(bool fail)
 
     ancestor->apply_location_effects(destination);
     victim->apply_location_effects(target);
+    if (victim->is_monster())
+        behaviour_event(victim->as_monster(), ME_DISTURB, &you, target);
 
     if (have_passive(passive_t::transfer_drain))
         _transfer_drain_nearby(target);
