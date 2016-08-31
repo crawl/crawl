@@ -462,6 +462,25 @@ void wizard_set_piety_to(int newpiety, bool force)
         dec_penance(you.penance[you.religion]);
 }
 
+void wizard_set_gold()
+{
+    const int default_gold = you.gold + 1000;
+    mprf(MSGCH_PROMPT, "Enter new gold value (current = %d, Enter for %d): ",
+         you.gold, default_gold);
+
+    char buf[30];
+    if (cancellable_get_line_autohist(buf, sizeof buf))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (buf[0] == '\0')
+        you.gold = default_gold;
+    else
+        you.gold = atoi(buf);
+}
+
 void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))

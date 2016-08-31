@@ -15,6 +15,7 @@ void wizard_cast_spec_spell();
 void wizard_memorise_spec_spell();
 void wizard_heal(bool super_heal);
 void wizard_set_hunger_state();
+void wizard_set_gold();
 void wizard_set_piety();
 void wizard_set_piety_to(int new_piety, bool force = false);
 void wizard_exercise_skill();
