@@ -4,9 +4,8 @@ A Zot trap
 A trap which inflicts dangerously unpredictable magical effects on those
 unlucky enough to step on it. You may find yourself thrown into the Abyss,
 contaminated with enormous amounts of wild magic, have mighty fiends summoned
-against you, or the like — it is something to avoid at all costs. The monsters
-of the dungeon may even trigger it themselves to invoke its effects against
-you.
+against you, or the like. The monsters of the dungeon may even trigger it
+themselves to invoke its effects against you.
 %%%%
 A basalt altar of Yredelemnul
 
@@ -191,9 +190,9 @@ A passage leading to the Spider Nest.
 %%%%
 A hide-covered altar of Uskayaw
 
-An altar to Uskayaw the Reveler. The altar appears to be hollow and covered in a
-hide, giving it a resonant surface. Carvings on the side depict grouped figures
-that could be dancing or loving or fighting.
+An altar to Uskayaw the Reveler. It appears to be hollow and covered in a hide,
+giving it a resonant surface. Carvings on the side depict grouped figures that
+could be dancing or loving or fighting.
 %%%%
 A labyrinth entrance
 
@@ -229,8 +228,8 @@ of Golubria, and will close behind anything passing through it.
 A portal to somewhere
 
 A gash-like tear in reality that looks into some terrifying, starry otherworld.
-Thankfully, the magic that opened this portal prevents its vacuum from
-consuming and swallowing everything in sight.
+Thankfully, the magic that opened it also prevents its vacuum from consuming
+and swallowing everything in sight.
 %%%%
 A pressure plate
 
@@ -276,7 +275,7 @@ opening it like any other door.
 %%%%
 A sacrificial altar of Ru
 
-An altar to Ru the Awakened in the shape of a scales with a heart in
+An altar to Ru the Awakened in the shape of a pair of scales, with a heart in
 one scale and a pictogram representing power and enlightenment in the other.
 %%%%
 A sealed door
@@ -286,17 +285,17 @@ recognised by its magic.
 %%%%
 A sealed passage leading down
 
-A descending passage sealed tightly by a magical barricade. Forcing your way
-through it looks impossible, so long as the magic holds.
+A descending passage sealed tightly by a magical barricade. It is impossible to
+climb through it so long as the magic holds.
 %%%%
 A sealed passage leading up
 
-An ascending passage sealed tightly by a magical barricade. Forcing your way
-through it looks impossible, so long as the magic holds.
+An ascending passage sealed tightly by a magical barricade. It is impossible to
+climb through it so long as the magic holds.
 %%%%
 A shaft
 
-A deep hole. Who knows where you might end up if you were to fall through it?
+A hole in the ground, leading to a dungeon level one or more floors deeper.
 %%%%
 A shadowy altar of Dithmenos
 
@@ -529,22 +528,6 @@ An exit through the horrors of the Abyss
 
 A gateway leading back to the dungeon via the madness of the Abyss.
 %%%%
-# shown if the player is an orc
-An idol of Beogh
-
-{{
-  if you.god() == "Beogh"
-    then
-      return "A crude but majestic statue representing Beogh in his glory. "
-          .. "May foul non-orcs all be smitten!";
-    else
-      return "A crude statue depicting Beogh, the god of the primitive orcs "
-          .. "living here. Their religion calls for the murder of all "
-          .. "non-believers. Beogh is known to be vengeful to those who dare "
-          .. "damage such idols.";
-  end
-}}
-%%%%
 An iron altar of Okawaru
 
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
@@ -557,9 +540,8 @@ quite easily. It is too strong to be breakable by hand, however.
 %%%%
 An oddly glowing altar of Pakellas
 
-Strange half-completed devices, tools beyond your comprehension, and a
-persistent light glowing in odd colours all adorn this altar to Pakellas the
-Inventive.
+An altar to Pakellas the Inventive, adorned with strange half-completed devices
+and tools, and glowing with an odd, persistent light.
 %%%%
 An open door
 
@@ -580,8 +562,8 @@ A wall imbued with magic that makes it indestructible.
 %%%%
 The endless lava
 
-A sea of fire and brimstone as far as the eye can see. Floating above this
-inferno would roast you in no time.
+A sea of fire and brimstone as far as the eye can see. Anyone venturing across
+it would be roasted in no time.
 %%%%
 The floor
 
@@ -606,8 +588,8 @@ landlubbers — this is sometimes dangerous, but never directly fatal.
 %%%%
 The open sea
 
-An expanse of endless wind and waves, with not a lighthouse in sight. You'd be
-lost beyond all hope in short order — better not risk it.
+An expanse of endless wind and waves, with not a lighthouse in sight. Anyone
+venturing across it would be lost beyond all hope in short order.
 %%%%
 ########################
 ## Big doors
@@ -814,14 +796,12 @@ An ancient sarcophagus. It appears to be empty.
 A heavily etched metal wall
 
 A metal wall etched with murals depicting, in great and gruesome detail,
-exactly what will be done to anyone caught stealing from the Vaults. It makes
-you feel queasy.
+exactly what will be done to anyone caught stealing from the Vaults.
 %%%%
 A heavily etched crystal wall
 
 A crystal wall etched with murals depicting, in great and gruesome detail,
-exactly what will be done to anyone caught stealing from the Vaults. It makes
-you feel queasy.
+exactly what will be done to anyone caught stealing from the Vaults.
 %%%%
 # moated_graveyard_entry (D:1)
 An adventurer's gravestone
@@ -879,8 +859,8 @@ An ancient sarcophagus. It is sealed shut.
 # Desolation
 An endless expanse of salt
 
-A seemingly endless, flat plain, wracked by blinding salt-storms. You'd be lost
-beyond all hope in short order — better not risk it.
+A seemingly endless, flat plain, wracked by blinding salt-storms. Anyone
+venturing across it would be lost beyond all hope in short order.
 %%%%
 # Desolation
 A ruined idol
