@@ -7370,7 +7370,7 @@ static monster* _find_ally_to_throw(const monster &mons)
     {
         monster* throwee = monster_at(*ai);
 
-        if (!throwee || !throwee->alive()
+        if (!throwee || !throwee->alive() || !mons_aligned(&mons, throwee)
             || !_will_throw_ally(mons, *throwee))
         {
             continue;
