@@ -3494,13 +3494,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     switch (mi.type)
     {
-    case MONS_VAMPIRE:
-    case MONS_VAMPIRE_KNIGHT:
-    case MONS_VAMPIRE_MAGE:
-        if (you.undead_state() == US_ALIVE && mi.attitude == ATT_HOSTILE)
-            inf.body << "\n" << It << " wants to drink your blood!\n";
-        break;
-
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:

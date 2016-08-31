@@ -513,6 +513,11 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past.
 %%%%
+ancient champion
+
+An unfathomably ancient skeleton. It has hundreds of golden sigils etched onto
+its bones, and pulses with terrible, unholy power.
+%%%%
 ancient lich
 
 A lich who, having existed for countless centuries, has grown almost
@@ -2658,50 +2663,49 @@ removed.
 %%%%
 sensed monster
 
-You know there is some creature here, and that it is not one of your allies.
+A hostile monster whose presence has been detected.
 %%%%
 trivial sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that it
-shouldn't give you the slightest concern.
+A trivially weak monster whose presence has been revealed by the power of
+Ashenzari.
 %%%%
 easy sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that you
-should be able to defeat it without much risk.
+A weak monster whose presence has been revealed by the power of Ashenzari.
 %%%%
 tough sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that it is
-somewhat dangerous.
+A somewhat dangerous monster whose presence has been revealed by the power of
+Ashenzari.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that it is
-very dangerous.
+A very dangerous monster whose presence has been revealed by the power of
+Ashenzari.
 %%%%
 friendly sensed monster
 
-{{
+A friendly monster whose presence has been {{
     if you.god() == "Ashenzari" then
-        return "By the power of Ashenzari, you"
+        return "revealed by the power of Ashenzari"
     else
-        return "You"
+        return "detected"
     end
-}} know there is some creature here, and that it is one of your allies.
+}}.
 %%%%
 ##############################################################################
 ### Vault-defined monsters
 ##############################################################################
 Cloud Mage
 
-This strange wizard has attained mastery over clouds, and his mystic gestures
-are as deft as they are foreboding.
+A strange wizard who has attained mastery over clouds, making deft and
+foreboding mystic gestures.
 %%%%
 Hellbinder
 
-A mighty spellcaster, wreathed in arcane energies, and muttering the most
-profane incantations you might ever have heard.
+A mighty spellcaster wreathed in arcane energies, muttering profane
+incantations.
 %%%%
 # arena sprint final boss
 Master Blaster
@@ -2711,9 +2715,9 @@ the slightest provocation, or just on a whim.
 %%%%
 Statue of Wucad Mu
 
-This statue, made of a fine glassy orange crystal, depicts a mystic known as
-Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
-as you have no chance in mental combat against it.
+A statue made of a fine glassy orange crystal. It depicts a mystic known as
+Wucad Mu, who mastered the matters of the mind, and is imbued with Wucad Mu's
+powers of mental combat.
 %%%%
 moon troll
 
@@ -2729,72 +2733,60 @@ air elementalist statue
 A delicate statue of a tengu gliding through the air. It looks quite
 insubstantial.
 %%%%
-ancient champion
-
-An unfathomably ancient skeleton. It has hundreds of golden sigils etched onto
-its bones, and pulses with terrible, unholy power.
-%%%%
 antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
-apprentice kobold demonologist
-
-A kobold who is in league with demonic powers. It can call forth beings from
-the depths of Hell, but has not yet mastered the skill well enough to command
-anything but the most minor of demons.
-%%%%
 archer statue
 
-The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
+A statue of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
-riddle you with arrows.
+riddle intruders with arrows.
+%%%%
+bog mummy
+
+An undead figure preserved by the brackish waters of a bog. It has begun to
+decay heavily, and looks fragile.
 %%%%
 captured wizard
 
-With wild eyes, this wizard frantically mumbles and waves his arms, but is
-unable to cast a single spell. His tongue has been cut off!
+A wild-eyed wizard whose tongue has been cut out, frantically mumbling and
+waving its arms but unable to cast a single spell.
 %%%%
 charred statue
 
-It looks like this statue has been imbued with fire magic, letting it use
-fire-based conjurations against you. Fortunately, it looks pretty ineptly made,
-and its charring shows that it has trouble controlling its magic as well.
+A statue that has been imbued with flame, allowing it to make use of simple
+fire-based conjurations.
 %%%%
 Cigotuvi's Monster
 
-This terrifying creation looks to have been constructed from the body parts of
-every monstrous creature imaginable, and sprouts some writhing tentacles.
+A terrifying creation that appears to have been constructed from the body parts
+of every monstrous creature imaginable, with writhing tentacles sprouting from
+its form.
 %%%%
 conjurer statue
 
-This statue harnesses the mightiest pure conjurations ever devised by
+A statue able to harness the mightiest of pure conjurations ever devised by
 Iskenderun.
-%%%%
-decayed bog body
-
-An undead figure preserved by the brackish waters of a bog. This one has
-decayed quite a bit, and looks weak.
 %%%%
 deformed humanoid
 
-This poor creature looks hideously deformed.
+A poor creature that looks hideously deformed.
 %%%%
 demonic plant
 
-Just as demons are shaped in a mockery of living beings, this thing is a
-mockery of a plant, with mysterious appendages and tentacles writhing around.
-Fortunately it appears to be harmless, but with demons you can never be sure.
+A demonic mockery of a plant, covered with mysterious appendages and writhing
+tentacles. It appears to be harmless.
 %%%%
 dimme
 
-A terrible demon, or perhaps a demigoddess, with powers over death, disease,
-and suffering. Its presence is horrifying, but supernaturally compelling.
+A terrible creature with demonic ancestry. Its presence is horrifying, but
+supernaturally compelling.
 %%%%
 drunken dwarf
 
-This short fellow seems to be working as an ale quality tester, and is enjoying
-the job a little too much.
+A dwarf who seems to be working as an ale quality tester, and is enjoying the
+job a little too much.
 %%%%
 earth elementalist statue
 
@@ -2817,12 +2809,11 @@ An animated mound of misshapen flesh, sculpted over an iron skeleton.
 %%%%
 frost-covered statue
 
-An ineptly made statue of a mage. Its magic keeps leaking, letting you know
-what kind of spells you can expect: cold-based ones.
+A statue of a mage, with frost constantly forming across its surface.
 %%%%
 ghost-faced bat
 
-Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+A bat with a spectral visage.
 %%%%
 giga bat
 
@@ -2838,26 +2829,24 @@ An undead creature in the shape of a bat, made of ice.
 %%%%
 kamikaze kobold
 
-This kobold is either mad or a martyr for some obscure kobold faith, being
-enchanted to explode in a blaze of fire. You'd better keep your distance!
+A kobold that has been enchanted to explode in a blaze of fire.
 %%%%
 lasher statue
 
-This statue depicts a savage-looking slave driver with a vicious barbed whip.
+A statue depicting a savage-looking slave driver with a vicious barbed whip.
 %%%%
 mad acolyte of Lugonu
 
-An insane follower of Lugonu. Years of living in the abyss have clearly taken
-their toll on this one's feeble mind.
+A devoted follower of Lugonu, driven mad by years of living in the Abyss.
 %%%%
 malarious merfolk avatar
 
-This young merfolk looks deeply ill, but still capable of bespelling its
+A young merfolk that looks deeply ill, but is still capable of bespelling its
 audience.
 %%%%
 master elementalist
 
-The primal forces of the universe dance at this demented wizard's fingertips.
+A demented wizard commanding the primal forces of the universe.
 %%%%
 megabat
 
@@ -2870,8 +2859,8 @@ A bat that, despite its name, is not any smaller than a megabat.
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
 
-It would seem inconceivable that a mere plant could attain sentience and the
-use of magic, but that's what you see here. What sorcery is it?
+A mere plant that has somehow attained sentience and the use of magic, by some
+inconceivable sorcery.
 %%%%
 oklob plant conjurer
 
@@ -2895,7 +2884,7 @@ oklob plant summoner
 %%%%
 oklob sapling priest
 
-This immature oklob plant seems to be mumbling some orisons... er, what?!?
+An immature oklob plant that seems to be mumbling some orisons... er, what?!?
 %%%%
 oklob sapling wizard
 
@@ -2910,7 +2899,7 @@ be found in the Realm of Zot.
 orb of electricity
 
 A massive floating ball. It resembles ball lightning, but looks far more
-stable. It definitely lacks some heavy-duty insulation, though.
+stable.
 %%%%
 # I'm not sure how widely cosmogonical Norse myths are known to an average
 # reader; Crawl's audience tends to be far more educated though, so let's
@@ -2918,19 +2907,18 @@ stable. It definitely lacks some heavy-duty insulation, though.
 # obscure.
 orb of ice
 
-A globe of primordial ice, floating in the air. You don't know whether the
-tales about the world's once being a void bracketed by realms of endless fire
-and cold are true, but if they are, this orb may be a relic of that ancient
-time.
+A globe of primordial ice, floating in the air. It is said to be a relic of
+ancient times, when the world was a void bracketed by realms of endless fire
+and cold.
 %%%%
 petrified plant
 
-Something has turned this ordinary plant into stone.
+An ordinary plant that has been turned to stone.
 %%%%
 phase bat
 
-A strange, glowing bat that flutters through more dimensions than the
-average bat.
+A strange, glowing bat that flutters through more dimensions than the average
+bat.
 %%%%
 phase spider
 
@@ -2939,18 +2927,17 @@ shifting between the planes of reality, in order to better ensnare its prey.
 %%%%
 pristine statue
 
-An immaculately sculpted porphyry statue of an archer poised to release an
-arrow, with a full quiver at the hip. The individually sculpted arrows look
-almost as if they could be removed one by one and used in a real bow.
+An immaculately sculpted porphyry statue of an archer poised to release a bolt,
+with a full quiver at the hip.
 %%%%
 rotten bat
 
-This bat is well past its sell-by date.
+A bat that is well past its sell-by date.
 %%%%
 sickly siren
 
-This young merfolk looks quite sick, but its voice still has the power to
-mesmerize its victims.
+A young merfolk that looks quite sick, but still has the power to mesmerize its
+victims.
 %%%%
 skeletal bat
 
@@ -2963,9 +2950,8 @@ A spriggan that has mastered the culinary arts.
 %%%%
 water elementalist statue
 
-A smooth, charming statue of a beautiful merfolk bathing in a fountain,
-sculpted from creamy, faintly pinkish travertine. It glistens softly in the
-light, as if sprinkled in actual water.
+A smooth statue of a beautiful merfolk bathing in a fountain, sculpted from
+creamy, faintly pinkish travertine. It glistens softly in the light.
 %%%%
 witch
 
@@ -2974,24 +2960,22 @@ be swamp ooze, cauldron soot and brew ingredients.
 %%%%
 withered plant
 
-This plant lost the war against life-draining influences, and yet its physical
-form is intact. Its dead body stays here uneaten, as the small creatures that
-would naturally decompose it prefer to stay away. And it looks like this plant
-died many {{ if you.branch() == "Crypt" or you.branch() == "Tomb" then return
-"centuries"; else return "years"; end }} ago.
+A plant whose life has been drained away, but with its physical form still
+intact. It looks like it died many {{ if you.branch() == "Crypt" or
+you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
+ago.
 %%%%
 zin angel
 
-A divine agent of Zin, it is a towering winged figure with an aura of brilliant
-white light. This angel's face, though, is marked by a scowl, as if its zeal
-against any real or perceived vice overshadows its goodness.
+A divine agent of Zin. It is a towering winged figure with an aura of brilliant
+white light. Its face is marked by a scowl, as if its zeal against any real or
+perceived vice overshadows its goodness.
 %%%%
 zot statue
 
-An utterly bizarre statue, hewn from a single piece of dark gabbro
-scintillating with tiny crystals. It is impossible to tell whether the statue
-is intended to represent some creature or personage, or is completely abstract.
-One thing is certain: it is profoundly disturbing.
+An profoundly disturbing statue, hewn from a single piece of dark gabbro
+scintillating with tiny crystals. It is impossible to tell whether it is
+intended to represent some creature or personage, or to be completely abstract.
 %%%%
 ### Arena sprint boss renames
 dire wolf spider
