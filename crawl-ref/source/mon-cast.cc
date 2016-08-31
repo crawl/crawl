@@ -126,12 +126,10 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast);
 enum spell_logic_flag
 {
     MSPELL_NO_AUTO_NOISE = 1 << 0, ///< silent, or noise generated specially
-    MSPELL_NO_BEAM       = 1 << 1, ///< doesn't use a targeting/firing beam
 };
-// TODO: remove MSPELL_NO_BEAM after everything is in the struct
-// (can infer from lack of setup_beam
 
 DEF_BITFIELD(spell_logic_flags, spell_logic_flag);
+constexpr spell_logic_flags MSPELL_LOGIC_NONE{};
 
 struct mons_spell_logic
 {
@@ -210,13 +208,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _mons_vampiric_drain,
         nullptr,
-        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_CANTRIP, {
         [](const monster &caster) { return caster.get_foe(); },
         _cast_cantrip,
         nullptr,
-        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_INJURY_MIRROR, {
         [](const monster &caster) {
@@ -227,7 +225,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _cast_injury_mirror,
         nullptr,
-        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_DRAIN_LIFE, {
         [](const monster &caster) {
@@ -245,7 +243,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 simple_monster_message(&caster, " is healed.");
         },
         nullptr,
-        MSPELL_NO_AUTO_NOISE | MSPELL_NO_BEAM,
+        MSPELL_NO_AUTO_NOISE,
         1,
     } },
     { SPELL_OZOCUBUS_REFRIGERATION, {
@@ -258,7 +256,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             fire_los_attack_spell(slot.spell, splpow, &caster, false);
         },
         nullptr,
-        MSPELL_NO_BEAM,
+        MSPELL_LOGIC_NONE,
         5,
     } },
     { SPELL_TROGS_HAND, {
@@ -280,7 +278,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             dprf("Trog's Hand cast (dur: %d aut)", dur);
         },
         nullptr,
-        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_LEDAS_LIQUEFACTION, {
         [](const monster &caster) {
@@ -299,32 +297,22 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             invalidate_agrid(true);
         },
         nullptr,
-        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_FORCEFUL_INVITATION, {
         _always_worthwhile,
         _branch_summon,
         nullptr,
-        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_PLANEREND, {
         _always_worthwhile,
         _branch_summon,
         nullptr,
-        MSPELL_NO_BEAM | MSPELL_NO_AUTO_NOISE,
+        MSPELL_NO_AUTO_NOISE,
     } },
-    { SPELL_SMITING, {
-        _caster_has_foe,
-        _cast_smiting,
-        nullptr,
-        MSPELL_NO_BEAM,
-    } },
-    { SPELL_RESONANCE_STRIKE, {
-        _caster_has_foe,
-        _cast_resonance_strike,
-        nullptr,
-        MSPELL_NO_BEAM,
-    } },
+    { SPELL_SMITING, { _caster_has_foe, _cast_smiting, } },
+    { SPELL_RESONANCE_STRIKE, { _caster_has_foe, _cast_resonance_strike, } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1726,7 +1714,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     default:
     {
         const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
-        if (logic && (logic->flags & MSPELL_NO_BEAM))
+        if (logic && logic->setup_beam == nullptr)
         {
             pbolt.range = 0;
             pbolt.glyph = 0;
