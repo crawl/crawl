@@ -122,6 +122,7 @@ static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
+static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -339,6 +340,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                                        _mons_spellpower(slot.spell, caster));
         },
     } },
+    { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+    { SPELL_EARTH_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+    { SPELL_AIR_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+    { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+#if TAG_MAJOR_VERSION == 34
+    { SPELL_IRON_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+#endif
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1618,13 +1626,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SWIFTNESS:
     case SPELL_STONESKIN:
-#endif
-    case SPELL_WATER_ELEMENTALS:
-    case SPELL_FIRE_ELEMENTALS:
-    case SPELL_AIR_ELEMENTALS:
-    case SPELL_EARTH_ELEMENTALS:
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_IRON_ELEMENTALS:
     case SPELL_SUMMON_ELEMENTAL:
 #endif
     case SPELL_CREATE_TENTACLES:
@@ -4280,19 +4281,31 @@ static void _do_high_level_summon(monster* mons, spell_type spell_cast,
     }
 }
 
-static void _mons_summon_elemental(monster* mons,
-                                   spell_type spell_cast,
-                                   monster_type elemental,
-                                   god_type god)
+
+static void _mons_summon_elemental(monster &mons, mon_spell_slot slot, bolt&)
 {
-    const int count = 1 + (mons->spell_hd(spell_cast) > 15)
-                      + random2(mons->spell_hd(spell_cast) / 7 + 1);
+    static const map<spell_type, monster_type> elemental_types = {
+        { SPELL_WATER_ELEMENTALS, MONS_WATER_ELEMENTAL },
+        { SPELL_FIRE_ELEMENTALS, MONS_FIRE_ELEMENTAL },
+        { SPELL_EARTH_ELEMENTALS, MONS_EARTH_ELEMENTAL },
+        { SPELL_AIR_ELEMENTALS, MONS_AIR_ELEMENTAL },
+#if TAG_MAJOR_VERSION == 34
+        { SPELL_IRON_ELEMENTALS, MONS_IRON_ELEMENTAL },
+#endif
+    };
+
+    const monster_type* mtyp = map_find(elemental_types, slot.spell);
+    ASSERT(mtyp);
+    const god_type god = _find_god(mons, slot.flags);
+
+    const int spell_hd = mons.spell_hd(slot.spell);
+    const int count = 1 + (spell_hd > 15) + random2(spell_hd / 7 + 1);
 
     for (int i = 0; i < count; i++)
     {
         create_monster(
-            mgen_data(elemental, SAME_ATTITUDE(mons), mons,
-                      3, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
+            mgen_data(*mtyp, SAME_ATTITUDE((&mons)), &mons,
+                      3, slot.spell, mons.pos(), mons.foe, MG_NONE, god));
     }
     return;
 }
@@ -5823,28 +5836,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
-
-    case SPELL_WATER_ELEMENTALS:
-        _mons_summon_elemental(mons, spell_cast, MONS_WATER_ELEMENTAL, god);
-        return;
-
-    case SPELL_EARTH_ELEMENTALS:
-        _mons_summon_elemental(mons, spell_cast, MONS_EARTH_ELEMENTAL, god);
-        return;
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_IRON_ELEMENTALS:
-        _mons_summon_elemental(mons, spell_cast, MONS_IRON_ELEMENTAL, god);
-        return;
-#endif
-
-    case SPELL_AIR_ELEMENTALS:
-        _mons_summon_elemental(mons, spell_cast, MONS_AIR_ELEMENTAL, god);
-        return;
-
-    case SPELL_FIRE_ELEMENTALS:
-        _mons_summon_elemental(mons, spell_cast, MONS_FIRE_ELEMENTAL, god);
-        return;
 
     case SPELL_SUMMON_ILLUSION:
         _mons_cast_summon_illusion(mons, spell_cast);
