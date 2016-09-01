@@ -233,9 +233,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (forbidden_terrain[grid])
             return false;
 
-        // Swimmers get deep water.
-        if (grid == DNGN_DEEP_WATER && player_likes_water(true))
+        // Swimmers and water-walkers get deep water.
+        if (grid == DNGN_DEEP_WATER
+            && (player_likes_water(true) || have_passive(passive_t::water_walk)))
+        {
             return true;
+        }
 
         // Likewise for lava
         if (grid == DNGN_LAVA && player_likes_lava(true))
