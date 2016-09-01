@@ -663,46 +663,64 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     }
 }
 
-// Find an allied monster to cast a beneficial beam spell at.
-static bool _set_allied_target(monster* caster, bolt& pbolt)
+/**
+ * Will the given monster consider buffing the given target? (Are they close
+ * enough in type, genus, attitude, etc?)
+ *
+ * @param caster    The monster casting a targeted buff spell.
+ * @param targ      The monster to be buffed.
+ * @return          Whether the monsters are similar enough.
+ */
+static bool _monster_will_buff(const monster &caster, const monster &targ)
 {
+    if (mons_is_firewood(&targ))
+        return false;
+
+    if (!mons_aligned(&targ, &caster))
+        return false;
+
+    // don't buff only temporarily-aligned pals (charmed, hexed)
+    if (!mons_atts_aligned(caster.temp_attitude(), targ.real_attitude()))
+        return false;
+
+    if (caster.type == MONS_IRONBRAND_CONVOKER || mons_enslaved_soul(&caster))
+        return true; // will buff any ally
+
+    if (targ.is_holy() && caster.is_holy())
+        return true;
+
+    const monster_type caster_genus = mons_genus(caster.type);
+    return mons_genus(targ.type) == caster_genus
+           || mons_genus(targ.base_monster) == caster_genus;
+}
+
+/// Find an allied monster to cast a beneficial beam spell at.
+static monster* _get_allied_target(monster &caster, spell_type spell)
+{
+    bolt tracer = setup_targetting_beam(caster);
+    setup_mons_cast(&caster, tracer, spell);
+
     monster* selected_target = nullptr;
-    int min_distance = INT_MAX;
+    int min_distance = tracer.range;
 
-    const monster_type caster_genus = mons_genus(caster->type);
-    const bool ignore_genus = caster->type == MONS_IRONBRAND_CONVOKER;
-
-    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
+    for (monster_near_iterator targ(&caster, LOS_NO_TRANS); targ; ++targ)
     {
-        if (*targ == caster)
-            continue;
-
-        const int targ_distance = grid_distance(targ->pos(), caster->pos());
-
-        bool got_target = false;
-
-        if ((mons_genus(targ->type) == caster_genus
-                 || mons_genus(targ->base_monster) == caster_genus
-                 || targ->is_holy() && caster->is_holy()
-                 || mons_enslaved_soul(caster)
-                 || ignore_genus)
-            && mons_aligned(*targ, caster)
-            && !targ->has_ench(ENCH_CHARM)
-            && !targ->has_ench(ENCH_HEXED)
-            && !mons_is_firewood(*targ)
-            && _flavour_benefits_monster(pbolt.flavour, **targ))
+        if (*targ == &caster
+            || !_monster_will_buff(caster, **targ)
+            || !_flavour_benefits_monster(tracer.flavour, **targ))
         {
-            got_target = true;
+            continue;
         }
 
-        if (got_target && targ_distance < min_distance
-            && targ_distance < pbolt.range)
+        // prefer the closest ally we can find (why?)
+        const int targ_distance = grid_distance(targ->pos(), caster.pos());
+        if (targ_distance < min_distance)
         {
-            // Make sure we won't hit an invalid target with this aim.
-            pbolt.target = targ->pos();
-            fire_tracer(caster, pbolt);
-            if (!mons_should_fire(pbolt)
-                || pbolt.path_taken.back() != pbolt.target)
+            // Make sure we won't hit someone other than we're aiming at.
+            tracer.target = targ->pos();
+            fire_tracer(&caster, tracer);
+            if (!mons_should_fire(tracer)
+                || tracer.path_taken.back() != tracer.target)
             {
                 continue;
             }
@@ -712,14 +730,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt)
         }
     }
 
-    if (selected_target)
-    {
-        pbolt.target = selected_target->pos();
-        return true;
-    }
-
-    // Didn't find a target.
-    return false;
+    return selected_target;
 }
 
 // Find an ally of the target to cast a hex at.
@@ -3827,11 +3838,15 @@ static bool _target_and_justify_spell(monster &mons,
         case SPELL_HEAL_OTHER:
         case SPELL_MIGHT_OTHER:
         case SPELL_INVISIBILITY_OTHER:
+        {
+            const monster* target = _get_allied_target(mons, spell);
             // Try to find a nearby ally to haste, heal, might,
             // or make invisible.
-            if (!_set_allied_target(&mons, beem))
+            if (!target)
                 return false;
+            beem.target = target->pos();
             break;
+        }
         case SPELL_ENSLAVEMENT:
             // Try to find an ally of the player to hex if we are
             // hexing the player.
