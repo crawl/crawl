@@ -90,10 +90,10 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
-static coord_def _mons_fragment_target(monster *mons);
-static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
-static coord_def _mons_prism_pos(monster* mon, actor* foe);
-static coord_def _mons_awaken_earth_target(monster& mon);
+static coord_def _mons_fragment_target(const monster *mons);
+static coord_def _mons_conjure_flame_pos(const monster* mon, actor* foe);
+static coord_def _mons_prism_pos(const monster* mon, actor* foe);
+static coord_def _mons_awaken_earth_target(const monster& mon);
 static bool _mons_consider_throwing(const monster &mons);
 static bool _throw(const monster &thrower, actor &victim, int pow);
 static void _maybe_throw_ally(const monster &mons);
@@ -105,7 +105,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
-static coord_def _mons_ghostly_sacrifice_target(monster &caster);
+static coord_def _mons_ghostly_sacrifice_target(const monster &caster);
 static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
@@ -999,7 +999,7 @@ static spell_type _legendary_destruction_spell()
 
 // TODO: documentme
 // NOTE: usually doesn't set target, but if set, should take precedence
-bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
+bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity)
 {
     ASSERT(power > 0);
@@ -1585,7 +1585,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 }
 
 // Set up bolt structure for monster spell casting.
-bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
+bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity)
 {
     // always set these -- used by things other than fire_beam()
@@ -3291,7 +3291,7 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
  * @param[in] foe The victim whose movement we are trying to impede.
  * @return A position for conjuring a cloud.
  */
-static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
+static coord_def _mons_conjure_flame_pos(const monster* mon, actor* foe)
 {
     // Don't bother if our target is sufficiently fire-resistant,
     // or doesn't exist.
@@ -3358,7 +3358,7 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
  * @param[in] foe The victim we're trying to kill.
  * @return A position for conjuring a prism.
  */
-static coord_def _mons_prism_pos(monster* mon, actor* foe)
+static coord_def _mons_prism_pos(const monster* mon, actor* foe)
 {
     // Don't bother if our target doesn't exist.
     if (!foe)
@@ -3440,7 +3440,7 @@ static bool _feat_is_awakenable(dungeon_feature_type feat)
  *  @param  mon       The monster casting
  *  @return The target square - out of bounds if no target was found.
  */
-static coord_def _mons_awaken_earth_target(monster &mon)
+static coord_def _mons_awaken_earth_target(const monster &mon)
 {
     coord_def pos = mon.target;
 
@@ -3517,7 +3517,7 @@ static int _get_dam_fraction(const bolt &tracer, int scale)
  *                      TODO: constify (requires mon_spell_beam param const
  *  @return The target square, or an out of bounds coord if none was found.
  */
-static coord_def _mons_ghostly_sacrifice_target(monster &caster)
+static coord_def _mons_ghostly_sacrifice_target(const monster &caster)
 {
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
@@ -4823,7 +4823,7 @@ static int _mons_control_undead(monster* mons, bool actual)
     return retval;
 }
 
-static coord_def _mons_fragment_target(monster *mons)
+static coord_def _mons_fragment_target(const monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
     const int pow = _mons_spellpower(SPELL_LRD, *mons);
