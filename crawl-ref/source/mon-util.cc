@@ -3189,35 +3189,16 @@ int mons_power(monster_type mc)
     return mons_class_hit_dice(mc);
 }
 
+/// Are two actors 'aligned'? (Will they refuse to attack each-other?)
 bool mons_aligned(const actor *m1, const actor *m2)
 {
-    mon_attitude_type fr1, fr2;
-    const monster* mon1, *mon2;
-
     if (!m1 || !m2)
         return true;
 
-    if (m1->is_player())
-        fr1 = ATT_FRIENDLY;
-    else
-    {
-        mon1 = static_cast<const monster* >(m1);
-        if (mons_is_projectile(mon1->type))
-            return true;
-        fr1 = mons_attitude(mon1);
-    }
+    if (mons_is_projectile(m1->type) || mons_is_projectile(m2->type))
+        return true; // they won't directly attack each-other, anyway
 
-    if (m2->is_player())
-        fr2 = ATT_FRIENDLY;
-    else
-    {
-        mon2 = static_cast<const monster* >(m2);
-        if (mons_is_projectile(mon2->type))
-            return true;
-        fr2 = mons_attitude(mon2);
-    }
-
-    return mons_atts_aligned(fr1, fr2);
+    return mons_atts_aligned(m1->temp_attitude(), m2->temp_attitude());
 }
 
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
@@ -3258,16 +3239,7 @@ bool mons_att_wont_attack(mon_attitude_type fr)
 
 mon_attitude_type mons_attitude(const monster* m)
 {
-    if (m->friendly())
-        return ATT_FRIENDLY;
-    else if (m->good_neutral())
-        return ATT_GOOD_NEUTRAL;
-    else if (m->strict_neutral())
-        return ATT_STRICT_NEUTRAL;
-    else if (m->neutral())
-        return ATT_NEUTRAL;
-    else
-        return ATT_HOSTILE;
+    return m->temp_attitude();
 }
 
 bool mons_is_confused(const monster* m, bool class_too)
