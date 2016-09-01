@@ -84,6 +84,7 @@ static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
 static int _mons_spellpower(spell_type spell, const monster &mons);
 static bool _is_wiz_cast();
+static monster* _get_allied_target(const monster &caster, bolt &tracer);
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
 static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
@@ -110,8 +111,11 @@ static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
     _zap_setup(spell_type spell);
+static function<void(bolt&, const monster&, int)>
+    _buff_beam_setup(beam_type flavour);
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
+static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
 static bool _foe_should_res_negative_energy(const actor* foe);
 static bool _caster_sees_foe(const monster &caster);
 static bool _should_still_winds(const monster &caster);
@@ -347,6 +351,26 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
 #if TAG_MAJOR_VERSION == 34
     { SPELL_IRON_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
 #endif
+    { SPELL_HASTE_OTHER, {
+        _always_worthwhile,
+        _fire_simple_beam,
+        _buff_beam_setup(BEAM_HASTE)
+    } },
+    { SPELL_MIGHT_OTHER, {
+        _always_worthwhile,
+        _fire_simple_beam,
+        _buff_beam_setup(BEAM_MIGHT)
+    } },
+    { SPELL_INVISIBILITY_OTHER, {
+        _always_worthwhile,
+        _fire_simple_beam,
+        _buff_beam_setup(BEAM_INVISIBILITY)
+    } },
+    { SPELL_HEAL_OTHER, {
+        _always_worthwhile,
+        _fire_simple_beam,
+        _setup_heal_other,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -423,6 +447,25 @@ static function<void(bolt&, const monster&, int)>
 }
 
 /**
+ * Build a function that sets up and targets a buffing beam at one of the
+ * caster's allies. If the function fails to find an ally, the beam will be
+ * targeted at an out-of-bounds tile to signal failure.
+ *
+ * @param flavour   The flavour to buff an ally with.
+ * @return          A function that sets up a single-target buff beam.
+ */
+static function<void(bolt&, const monster&, int)>
+    _buff_beam_setup(beam_type flavour)
+{
+    return [flavour](bolt &beam, const monster &caster, int)
+    {
+        beam.flavour = flavour;
+        const monster* target = _get_allied_target(caster, beam);
+        beam.target = target ? target->pos() : coord_def();
+    };
+}
+
+/**
  * Build a function to set up a beam with spl-to-zap.
  *
  * @param spell     The spell for which beams will be set up.
@@ -447,6 +490,13 @@ static void _setup_minor_healing(bolt &beam, const monster &caster, int)
     _setup_healing_beam(beam, caster);
     if (!_caster_is_player_shadow(caster))
         beam.target = caster.pos();
+}
+
+static void _setup_heal_other(bolt &beam, const monster &caster, int)
+{
+    _setup_healing_beam(beam, caster);
+    const monster* target = _get_allied_target(caster, beam);
+    beam.target = target ? target->pos() : coord_def();
 }
 
 /// Returns true if a message referring to the player's legs makes sense.
@@ -695,11 +745,8 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
 }
 
 /// Find an allied monster to cast a beneficial beam spell at.
-static monster* _get_allied_target(monster &caster, spell_type spell)
+static monster* _get_allied_target(const monster &caster, bolt &tracer)
 {
-    bolt tracer = setup_targetting_beam(caster);
-    setup_mons_cast(&caster, tracer, spell);
-
     monster* selected_target = nullptr;
     int min_distance = tracer.range;
 
@@ -1114,14 +1161,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(3, min(6 + power / 10, 40));
         break;
 
-    case SPELL_HASTE_OTHER:
-        beam.flavour  = BEAM_HASTE;
-        break;
-
-    case SPELL_MIGHT_OTHER:
-        beam.flavour  = BEAM_MIGHT;
-        break;
-
     case SPELL_MALMUTATE:
         beam.flavour  = BEAM_MALMUTATE;
         break;
@@ -1157,10 +1196,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_INVISIBILITY_OTHER:
-        beam.flavour  = BEAM_INVISIBILITY;
-        break;
-
     case SPELL_FIRE_STORM:
         setup_fire_storm(mons, power / 2, beam);
         beam.foe_ratio = random_range(40, 55);
@@ -1177,10 +1212,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.is_tracer    = false;
         beam.hit          = 20;
         beam.damage       = dice_def(3, 15);
-        break;
-
-    case SPELL_HEAL_OTHER:
-        _setup_healing_beam(beam, *mons);
         break;
 
     case SPELL_TELEPORT_OTHER:
@@ -3834,19 +3865,6 @@ static bool _target_and_justify_spell(monster &mons,
 
     switch (spell)
     {
-        case SPELL_HASTE_OTHER:
-        case SPELL_HEAL_OTHER:
-        case SPELL_MIGHT_OTHER:
-        case SPELL_INVISIBILITY_OTHER:
-        {
-            const monster* target = _get_allied_target(mons, spell);
-            // Try to find a nearby ally to haste, heal, might,
-            // or make invisible.
-            if (!target)
-                return false;
-            beem.target = target->pos();
-            break;
-        }
         case SPELL_ENSLAVEMENT:
             // Try to find an ally of the player to hex if we are
             // hexing the player.
@@ -3874,6 +3892,12 @@ static bool _target_and_justify_spell(monster &mons,
         default:
             break;
     }
+
+    // special beam targeting sets the beam's target to an out-of-bounds coord
+    // if no valid target was found.
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
+    if (logic && logic->setup_beam && !in_bounds(beem.target))
+        return false;
 
     // Don't knockback something we're trying to constrict.
     const actor *victim = actor_at(beem.target);
