@@ -428,6 +428,7 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
+    update_vision_range(); // in case you had darkness cast before
     you.props["corrosion_amount"] = 0;
 
     unrot_hp(9999);
