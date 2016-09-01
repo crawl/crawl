@@ -187,8 +187,10 @@ void mirror_damage_fineff::fire()
         const monster* reflector = defender() ?
                                    defender()->as_monster() : nullptr;
         if (reflector)
+        {
             mprf("%s reflects your damage back at you!",
                  reflector->name(DESC_THE).c_str());
+        }
         else
             mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
