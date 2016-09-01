@@ -569,6 +569,26 @@ static void _setup_fake_beam(bolt& beam, const monster&, int)
     beam.range    = LOS_RADIUS;
 }
 
+/**
+ * Create a summoned monster.
+ *
+ * @param summoner      The monster doing the summoning.
+ * @param mtyp          The type of monster to summon.
+ * @param dur           The duration for which the monster should last.
+ *                      Not in aut or turns; nonlinear. Sorry!
+ * @param slot          The spell & slot flags.
+ * @return              The summoned creature, if any.
+ */
+
+static monster* _summon(const monster &summoner, monster_type mtyp, int dur,
+                        mon_spell_slot slot)
+{
+    return create_monster(
+            mgen_data(mtyp, SAME_ATTITUDE((&summoner)), &summoner, dur,
+                      slot.spell, summoner.pos(), summoner.foe, MG_NONE,
+                      _find_god(summoner, slot.flags)));
+}
+
 void init_mons_spells()
 {
     monster fake_mon;
@@ -4102,11 +4122,7 @@ bool handle_mon_spell(monster* mons)
         {
             mons->hurt(mons, 5 + random2(15));
             if (mons->alive())
-            {
-                create_monster(
-                    mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
-                    3, spell_cast, mons->pos(), mons->foe));
-            }
+                _summon(*mons, MONS_WATER_ELEMENTAL, 3, spell_slot);
         }
     }
 
@@ -4296,18 +4312,12 @@ static void _mons_summon_elemental(monster &mons, mon_spell_slot slot, bolt&)
 
     const monster_type* mtyp = map_find(elemental_types, slot.spell);
     ASSERT(mtyp);
-    const god_type god = _find_god(mons, slot.flags);
 
     const int spell_hd = mons.spell_hd(slot.spell);
     const int count = 1 + (spell_hd > 15) + random2(spell_hd / 7 + 1);
 
     for (int i = 0; i < count; i++)
-    {
-        create_monster(
-            mgen_data(*mtyp, SAME_ATTITUDE((&mons)), &mons,
-                      3, slot.spell, mons.pos(), mons.foe, MG_NONE, god));
-    }
-    return;
+        _summon(mons, *mtyp, 3, slot);
 }
 
 static void _mons_cast_haunt(monster* mons)
@@ -5567,6 +5577,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     const unsigned int flags = get_spell_flags(spell_cast);
     actor* const foe = mons->get_foe();
     const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+    const mon_spell_slot slot = {spell_cast, 0, slot_flags};
 
     int sumcount = 0;
     int sumcount2;
@@ -5603,7 +5614,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     if (logic && logic->cast)
     {
-        logic->cast(*mons, {spell_cast, 0, slot_flags}, pbolt);
+        logic->cast(*mons, slot, pbolt);
         return;
     }
 
@@ -5949,9 +5960,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
-        create_monster(
-            mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(mons), mons,
-                      5, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
+        _summon(*mons, MONS_ICE_BEAST, 5, slot);
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.
@@ -6654,26 +6663,18 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_SUMMON_MANA_VIPER:
-        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-        create_monster(mgen_data(MONS_MANA_VIPER, SAME_ATTITUDE(mons),
-                                 mons, 2, spell_cast, mons->pos(),
-                                 mons->foe, MG_NONE, god));
-        }
+    {
+        const int num_vipers = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+        for (int i = 0; i < num_vipers; ++i)
+            _summon(*mons, MONS_MANA_VIPER, 2, slot);
         return;
+    }
 
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
     {
-        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(mgen_data(MONS_EMPEROR_SCORPION, SAME_ATTITUDE(mons),
-                                     mons, 5, spell_cast, mons->pos(),
-                                     mons->foe, MG_NONE, god));
-        }
+        const int num_scorps = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+        for (int i = 0; i < num_scorps; ++i)
+            _summon(*mons, MONS_EMPEROR_SCORPION, 5, slot);
         return;
     }
 
@@ -6694,9 +6695,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SPELLFORGED_SERVITOR:
     {
-        monster* servitor = create_monster(
-            mgen_data(MONS_SPELLFORGED_SERVITOR, SAME_ATTITUDE(mons),
-                      mons, 4, spell_cast, mons->pos(), mons->foe, MG_NONE, god));
+        monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, 4, slot);
         if (servitor)
             init_servitor(servitor, mons);
         else if (you.can_see(*mons))
@@ -6736,14 +6735,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_SCARABS:
     {
-        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(mgen_data(MONS_DEATH_SCARAB, SAME_ATTITUDE(mons),
-                                     mons, 2, spell_cast, mons->pos(),
-                                     mons->foe, MG_NONE, god));
-        }
+        const int num_scarabs = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+        for (int i = 0; i < num_scarabs; ++i)
+            _summon(*mons, MONS_DEATH_SCARAB, 2, slot);
         return;
     }
 
@@ -6800,17 +6794,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_EXECUTIONERS:
     {
-        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
-
-        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
-
-        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
-        {
-            create_monster(
-                mgen_data(MONS_EXECUTIONER, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, MG_NONE,
-                          god));
-        }
+        const int num_exec = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+        duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
+        for (int i = 0; i < num_exec; ++i)
+            _summon(*mons, MONS_EXECUTIONER, duration, slot);
         return;
     }
 
@@ -6853,19 +6840,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const monster_type servants[] = { MONS_EXECUTIONER, MONS_GREEN_DEATH,
                                           MONS_BLIZZARD_DEMON, MONS_BALRUG,
                                           MONS_CACODEMON };
-
-        create_monster(mgen_data(RANDOM_ELEMENT(servants), SAME_ATTITUDE(mons),
-                                 mons, 5, spell_cast, mons->pos(), mons->foe,
-                                 MG_NONE, god));
+        _summon(*mons, RANDOM_ELEMENT(servants), 5, slot);
         return;
     }
 
     }
 
     if (spell_is_direct_explosion(spell_cast))
-        _fire_direct_explosion(*mons, {spell_cast, 0, slot_flags}, pbolt);
+        _fire_direct_explosion(*mons, slot, pbolt);
     else
-        _fire_simple_beam(*mons, {spell_cast, 0, slot_flags}, pbolt);
+        _fire_simple_beam(*mons, slot, pbolt);
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
