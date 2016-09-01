@@ -664,12 +664,13 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 }
 
 // Find an allied monster to cast a beneficial beam spell at.
-static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
+static bool _set_allied_target(monster* caster, bolt& pbolt)
 {
     monster* selected_target = nullptr;
     int min_distance = INT_MAX;
 
     const monster_type caster_genus = mons_genus(caster->type);
+    const bool ignore_genus = caster->type == MONS_IRONBRAND_CONVOKER;
 
     for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
     {
@@ -3828,11 +3829,8 @@ static bool _target_and_justify_spell(monster &mons,
         case SPELL_INVISIBILITY_OTHER:
             // Try to find a nearby ally to haste, heal, might,
             // or make invisible.
-            if (!_set_allied_target(&mons, beem,
-                                    mons.type == MONS_IRONBRAND_CONVOKER))
-            {
+            if (!_set_allied_target(&mons, beem))
                 return false;
-            }
             break;
         case SPELL_ENSLAVEMENT:
             // Try to find an ally of the player to hex if we are
