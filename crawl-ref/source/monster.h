@@ -111,6 +111,7 @@ public:
     void set_hit_dice(int new_hd);
 
     mon_attitude_type temp_attitude() const override;
+    mon_attitude_type real_attitude() const override { return attitude; }
 
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.
