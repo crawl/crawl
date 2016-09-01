@@ -2524,7 +2524,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BARBS:
-        desc += terse ? "barbs" : "Succumbed to a manticore's barbed spikes";
+        desc += terse ? "barbs" : "Succumbed to barbed spike wounds";
         break;
 
     case KILLED_BY_BEING_THROWN:

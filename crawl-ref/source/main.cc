@@ -2110,7 +2110,7 @@ void process_command(command_type cmd)
         // else fall-through
     case CMD_WAIT:
         you.turn_is_over = true;
-        extract_manticore_spikes("You carefully extract the manticore spikes "
+        extract_manticore_spikes("You carefully extract the barbed spikes "
                                  "from your body.");
         break;
 
@@ -3481,14 +3481,14 @@ static void _move_player(coord_def move)
 
         if (you.duration[DUR_BARBS])
         {
-            mprf(MSGCH_WARN,"The barbed spikes dig painfully into your body "
-            "as you move.");
+            mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
+                             "as you move.");
             ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
             bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
 
             // Sometimes decrease duration even when we move.
             if (one_chance_in(3))
-                extract_manticore_spikes("The manticore spikes snap loose.");
+                extract_manticore_spikes("The barbed spikes snap loose.");
         }
 
         if (you_are_delayed() && current_delay()->is_run())

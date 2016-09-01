@@ -1477,7 +1477,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_TORNADO_COOLDOWN))
         v.emplace_back("surrounded by restless winds");
     if (is(MB_BARBS))
-        v.emplace_back("skewered by manticore barbs");
+        v.emplace_back("skewered by barbs");
     if (is(MB_POISON_VULN))
         v.emplace_back("more vulnerable to poison");
     if (is(MB_ICEMAIL))

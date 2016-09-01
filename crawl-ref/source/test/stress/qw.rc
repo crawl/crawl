@@ -2360,7 +2360,7 @@ function should_rest()
           (you.race() ~= "Deep Dwarf" and you.hunger_name() ~= "bloodless"
            or you.regenerating())
           or you.slowed() or you.exhausted() or you.teleporting()
-          or you.status("manticore barbs")
+          or you.status("spiked barbs")
           or you.silencing() or you.corrosion() > 0
           or you.god() == "Makhleb" and you.turns() <= sgd_timer + 100)
 end
