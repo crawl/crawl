@@ -408,7 +408,7 @@ static const duration_def duration_data[] =
       {{ "You feel less vulnerable to fire." }}},
     { DUR_BARBS,
       RED, "Barbs",
-      "spiked barbs", "",
+      "barbed spikes", "",
       "Barbed spikes are embedded in your body.", D_NO_FLAGS},
     { DUR_POISON_VULN,
       RED, "rP-",
