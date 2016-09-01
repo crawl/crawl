@@ -91,9 +91,9 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
-static coord_def _mons_fragment_target(const monster *mons);
-static coord_def _mons_conjure_flame_pos(const monster* mon, actor* foe);
-static coord_def _mons_prism_pos(const monster* mon, actor* foe);
+static coord_def _mons_fragment_target(const monster &mons);
+static coord_def _mons_conjure_flame_pos(const monster &mon);
+static coord_def _mons_prism_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static bool _mons_consider_throwing(const monster &mons);
 static bool _throw(const monster &thrower, actor &victim, int pow);
@@ -106,13 +106,16 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
-static coord_def _mons_ghostly_sacrifice_target(const monster &caster);
+static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
+                                                bolt tracer);
 static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
     _zap_setup(spell_type spell);
 static function<void(bolt&, const monster&, int)>
     _buff_beam_setup(beam_type flavour);
+static function<void(bolt&, const monster&, int)>
+    _target_beam_setup(function<coord_def(const monster&)> targetter);
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
@@ -131,6 +134,10 @@ static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
+static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
+static void _setup_ghostly_beam(bolt &beam, int power, int dice);
+static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
+                                          int power);
 
 enum spell_logic_flag
 {
@@ -371,6 +378,61 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _setup_heal_other,
     } },
+    { SPELL_LRD, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            const int splpow = _mons_spellpower(slot.spell, caster);
+            cast_fragmentation(splpow, &caster, pbolt.target, false);
+        },
+        _target_beam_setup(_mons_fragment_target),
+        MSPELL_LOGIC_NONE, 6
+    } },
+    { SPELL_CONJURE_FLAME, {
+        [](const monster &caster) {
+            return !(env.level_state & LSTATE_STILL_WINDS);
+        },
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            const int splpow = _mons_spellpower(slot.spell, caster);
+            if ((!in_bounds(pbolt.target)
+                 || conjure_flame(&caster, splpow, pbolt.target, false)
+                    != SPRET_SUCCESS)
+                && you.can_see(caster))
+            {
+                canned_msg(MSG_NOTHING_HAPPENS);
+            }
+        },
+        _target_beam_setup(_mons_conjure_flame_pos),
+        MSPELL_LOGIC_NONE, 6
+    } },
+    { SPELL_FULMINANT_PRISM, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            const int splpow = _mons_spellpower(slot.spell, caster);
+            if (in_bounds(pbolt.target))
+                cast_fulminating_prism(&caster, splpow, pbolt.target, false);
+            else if (you.can_see(caster))
+                canned_msg(MSG_NOTHING_HAPPENS);
+        },
+        _target_beam_setup(_mons_prism_pos),
+        MSPELL_LOGIC_NONE, 8
+    } },
+    { SPELL_AWAKEN_EARTH, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot, bolt& pbolt) {
+            _mons_awaken_earth(caster, pbolt.target);
+        },
+        _target_beam_setup(_mons_awaken_earth_target),
+    } },
+    { SPELL_GHOSTLY_SACRIFICE, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            if (_prepare_ghostly_sacrifice(caster, pbolt))
+                _fire_direct_explosion(caster, slot, pbolt);
+            else if (you.can_see(caster))
+                canned_msg(MSG_NOTHING_HAPPENS);
+        },
+        _setup_ghostly_sacrifice_beam,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -497,6 +559,27 @@ static void _setup_heal_other(bolt &beam, const monster &caster, int)
     _setup_healing_beam(beam, caster);
     const monster* target = _get_allied_target(caster, beam);
     beam.target = target ? target->pos() : coord_def();
+}
+
+/**
+ * Build a function that sets up a fake beam for targeting special spells.
+ *
+ * @param targetter     A function that finds a target for the given spell.
+ *                      Expected to return an out-of-bounds coord on failure.
+ * @return              A function that initializes a fake targetting beam.
+ */
+static function<void(bolt&, const monster&, int)>
+    _target_beam_setup(function<coord_def(const monster&)> targetter)
+{
+    return [targetter](bolt& beam, const monster& caster, int)
+    {
+        _setup_fake_beam(beam, caster);
+        // Your shadow keeps your targetting.
+        if (_caster_is_player_shadow(caster))
+            return;
+        beam.target = targetter(caster);
+        beam.aimed_at_spot = true;  // to get noise to work properly
+    };
 }
 
 /// Returns true if a message referring to the player's legs makes sense.
@@ -888,16 +971,13 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
             return 20;
 
         case SPELL_OLGREBS_TOXIC_RADIANCE:
-        case SPELL_FULMINANT_PRISM:
             return 8;
 
-        case SPELL_LRD:
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
         case SPELL_SPECTRAL_WEAPON:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
-        case SPELL_CONJURE_FLAME:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -1395,14 +1475,10 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_IOOD:                  // tracer only
-    case SPELL_LRD:                   // for noise generation purposes
-    case SPELL_PORTAL_PROJECTILE:     // ditto
+    case SPELL_PORTAL_PROJECTILE:     // for noise generation purposes
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
-    case SPELL_CONJURE_FLAME:         // ditto
-    case SPELL_FULMINANT_PRISM:       // ditto
     case SPELL_SCATTERSHOT:           // ditto
-    case SPELL_AWAKEN_EARTH:          // ditto
         _setup_fake_beam(beam, *mons);
         break;
 
@@ -1450,14 +1526,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_GHOSTLY_FIREBALL:
-    case SPELL_GHOSTLY_SACRIFICE:
-        beam.colour   = CYAN;
-        beam.name     = "ghostly fireball";
-        beam.damage   = dice_def(real_spell == SPELL_GHOSTLY_SACRIFICE ? 5 : 3,
-                                 6 + power / 13);
-        beam.hit      = 40;
-        beam.flavour  = BEAM_NEG;
-        beam.is_explosion = true;
+        _setup_ghostly_beam(beam, power, 3);
         break;
 
     case SPELL_DIMENSION_ANCHOR:
@@ -1835,37 +1904,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.aux_source = pbolt.name;
     else
         pbolt.aux_source.clear();
-
-    // Your shadow can target these spells at other monsters;
-    // other monsters can't.
-    if (!_caster_is_player_shadow(*mons))
-    {
-        if (spell_cast == SPELL_LRD)
-        {
-            pbolt.target = _mons_fragment_target(mons);
-            pbolt.aimed_at_spot = true; // to get noise to work properly
-        }
-        else if (spell_cast == SPELL_CONJURE_FLAME)
-        {
-            pbolt.target = _mons_conjure_flame_pos(mons, mons->get_foe());
-            pbolt.aimed_at_spot = true; // ditto
-        }
-        else if (spell_cast == SPELL_FULMINANT_PRISM)
-        {
-            pbolt.target = _mons_prism_pos(mons, mons->get_foe());
-            pbolt.aimed_at_spot = true; // ditto
-        }
-        else if (spell_cast == SPELL_AWAKEN_EARTH)
-        {
-            pbolt.target = _mons_awaken_earth_target(*mons);
-            pbolt.aimed_at_spot = true; // ditto
-        }
-        else if (spell_cast == SPELL_GHOSTLY_SACRIFICE)
-        {
-            pbolt.target = _mons_ghostly_sacrifice_target(*mons);
-            pbolt.aimed_at_spot = true; // ditto
-        }
-     }
 
     return true;
 }
@@ -3322,8 +3360,10 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
  * @param[in] foe The victim whose movement we are trying to impede.
  * @return A position for conjuring a cloud.
  */
-static coord_def _mons_conjure_flame_pos(const monster* mon, actor* foe)
+static coord_def _mons_conjure_flame_pos(const monster &mons)
 {
+    const monster *mon = &mons; // TODO: rewriteme
+    actor* foe = mon->get_foe();
     // Don't bother if our target is sufficiently fire-resistant,
     // or doesn't exist.
     if (!foe || foe->res_fire() >= 3)
@@ -3389,8 +3429,10 @@ static coord_def _mons_conjure_flame_pos(const monster* mon, actor* foe)
  * @param[in] foe The victim we're trying to kill.
  * @return A position for conjuring a prism.
  */
-static coord_def _mons_prism_pos(const monster* mon, actor* foe)
+static coord_def _mons_prism_pos(const monster &mons)
 {
+    const monster *mon = &mons; // TODO: rewriteme
+    actor* foe = mon->get_foe();
     // Don't bother if our target doesn't exist.
     if (!foe)
         return coord_def();
@@ -3548,15 +3590,12 @@ static int _get_dam_fraction(const bolt &tracer, int scale)
  *                      TODO: constify (requires mon_spell_beam param const
  *  @return The target square, or an out of bounds coord if none was found.
  */
-static coord_def _mons_ghostly_sacrifice_target(const monster &caster)
+static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
+                                                bolt tracer)
 {
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
-
-    const int pow = _mons_spellpower(SPELL_GHOSTLY_SACRIFICE, caster);
-    // XXX: is it safe to build this outside the loop?
-    bolt tracer = mons_spell_beam(&caster, SPELL_GHOSTLY_SACRIFICE, pow);
     tracer.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
@@ -3604,6 +3643,30 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam)
     }
     monster_die(victim, &caster, true);
     return true;
+}
+
+/// Setup a negative energy explosion.
+static void _setup_ghostly_beam(bolt &beam, int power, int dice)
+{
+    beam.colour   = CYAN;
+    beam.name     = "ghostly fireball";
+    beam.damage   = dice_def(dice, 6 + power / 13);
+    beam.hit      = 40;
+    beam.flavour  = BEAM_NEG;
+    beam.is_explosion = true;
+}
+
+/// Setup and target a ghostly sacrifice explosion.
+static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
+                                          int power)
+{
+    _setup_ghostly_beam(beam, power, 5);
+    // Future-proofing: your shadow keeps your targetting.
+    if (_caster_is_player_shadow(caster))
+        return;
+
+    beam.target = _mons_ghostly_sacrifice_target(caster, beam);
+    beam.aimed_at_spot = true;  // to get noise to work properly
 }
 
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
@@ -3869,16 +3932,6 @@ static bool _target_and_justify_spell(monster &mons,
             // Try to find an ally of the player to hex if we are
             // hexing the player.
             if (mons.foe == MHITYOU && !_set_hex_target(&mons, beem))
-                return false;
-            break;
-        case SPELL_LRD:
-        case SPELL_CONJURE_FLAME:
-        case SPELL_FULMINANT_PRISM:
-        case SPELL_AWAKEN_EARTH:
-        case SPELL_GHOSTLY_SACRIFICE:
-            // special targetting (in setup_mons_cast()); returns an OOB pos
-            // in case of failure
-            if (!in_bounds(beem.target))
                 return false;
             break;
         case SPELL_DAZZLING_SPRAY:
@@ -4847,9 +4900,10 @@ static int _mons_control_undead(monster* mons, bool actual)
     return retval;
 }
 
-static coord_def _mons_fragment_target(const monster *mons)
+static coord_def _mons_fragment_target(const monster &mon)
 {
     coord_def target(GXM+1, GYM+1);
+    const monster *mons = &mon; // TODO: rewriteme
     const int pow = _mons_spellpower(SPELL_LRD, *mons);
 
     // Shadow casting should try to affect the same tile as the player.
@@ -6106,23 +6160,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_toxic_radiance(mons, splpow);
         return;
 
-    case SPELL_LRD:
-    {
-        if (in_bounds(pbolt.target))
-            cast_fragmentation(splpow, mons, pbolt.target, false);
-        else if (you.can_see(*mons))
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return;
-    }
-
-    case SPELL_GHOSTLY_SACRIFICE:
-        if (_prepare_ghostly_sacrifice(*mons, pbolt))
-            break; // and explode
-        if (you.can_see(*mons))
-            canned_msg(MSG_NOTHING_HAPPENS);
-        return; // don't explode
-
     case SPELL_SHATTER:
         mons_shatter(mons);
         return;
@@ -6783,35 +6820,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_CONJURE_FLAME:
-    {
-        if (in_bounds(pbolt.target))
-        {
-            if (conjure_flame(mons, splpow, pbolt.target, false)
-                != SPRET_SUCCESS)
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-            }
-        }
-        else if (you.can_see(*mons))
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return;
-    }
-
     case SPELL_CONTROL_UNDEAD:
         _mons_control_undead(mons);
         return;
-
-    case SPELL_FULMINANT_PRISM:
-    {
-        if (in_bounds(pbolt.target))
-           cast_fulminating_prism(mons, splpow, pbolt.target, false);
-        else if (you.can_see(*mons))
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return;
-    }
 
     case SPELL_CLEANSING_FLAME:
         simple_monster_message(mons, " channels a blast of cleansing flame!");
@@ -6839,10 +6850,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_DOOM_HOWL:
         _doom_howl(*mons);
         break;
-
-    case SPELL_AWAKEN_EARTH:
-        _mons_awaken_earth(*mons, pbolt.target);
-        return;
 
     case SPELL_CALL_OF_CHAOS:
         _mons_call_of_chaos(*mons);
@@ -8425,7 +8432,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_CORPSE_ROT:
-    case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
