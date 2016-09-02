@@ -24,6 +24,30 @@ struct zap_info
 }
 */
 
+/// Boilerplate monster hex.
+static zap_info _mon_hex_zap(zap_type ztype, beam_type beam,
+                             int player_pow_cap = 100,
+                             colour_t colour = BLACK)
+{
+    return {
+        ztype,
+        "",
+        player_pow_cap,
+        nullptr,
+        nullptr,
+        nullptr,
+        new tohit_calculator<0, 1, 3>, // ENCH_POW_FACTOR
+        colour,
+        true,
+        beam,
+        NUM_DCHAR_TYPES,
+        false,
+        false,
+        false,
+        0
+    };
+}
+
 static const zap_info zap_data[] =
 {
 
@@ -153,23 +177,7 @@ static const zap_info zap_data[] =
     0
 },
 
-{
-    ZAP_PARALYSE,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_PARALYSIS,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 
 {
     ZAP_BOLT_OF_FIRE,
@@ -225,23 +233,7 @@ static const zap_info zap_data[] =
     6
 },
 
-{
-    ZAP_CONFUSE,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_CONFUSION,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
 
 {
     ZAP_TUKIMAS_DANCE,
@@ -351,23 +343,7 @@ static const zap_info zap_data[] =
     5 // XXX: Maybe louder?
 },
 
-{
-    ZAP_POLYMORPH,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_POLYMORPH,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
 
 {
     ZAP_VENOM_BOLT,
@@ -459,23 +435,7 @@ static const zap_info zap_data[] =
     4
 },
 
-{
-    ZAP_ENSLAVEMENT,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_ENSLAVE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
 
 {
     ZAP_PAIN,
@@ -549,23 +509,7 @@ static const zap_info zap_data[] =
     0
 },
 
-{
-    ZAP_BANISHMENT,
-    "",
-    150,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_BANISH,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
     ZAP_STING,
@@ -910,23 +854,8 @@ static const zap_info zap_data[] =
     0
 },
 
-{
-    ZAP_HIBERNATION,
-    "",
-    100, // power is capped to 50 in spl-zap.cc:spell_zap_power.
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_HIBERNATION,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
+_mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {
     ZAP_FLAME_TONGUE,
@@ -1036,59 +965,9 @@ static const zap_info zap_data[] =
     6 // XXX: Less noise because it's poison?
 },
 
-{
-    ZAP_PETRIFY,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_PETRIFY,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_PORKALATOR,
-    "porkalator",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    RED,
-    true,
-    BEAM_PORKALATOR,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_SLEEP,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_SLEEP,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_PETRIFY, BEAM_PETRIFY),
+_mon_hex_zap(ZAP_PORKALATOR, BEAM_PORKALATOR, 100, RED),
+_mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 
 {
     ZAP_IOOD,
