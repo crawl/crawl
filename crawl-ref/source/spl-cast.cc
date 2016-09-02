@@ -1614,19 +1614,6 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool fail)
 {
-    // First handle the zaps.
-    zap_type zap = spell_to_zap(spell);
-    if (zap != NUM_ZAPS)
-    {
-        spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
-                                 nullptr, fail);
-
-        if (ret == SPRET_SUCCESS)
-            _spell_zap_effect(spell);
-
-        return ret;
-    }
-
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
     {
@@ -2005,10 +1992,23 @@ static spret_type _do_cast(spell_type spell, int powc,
 #endif
 
     default:
-        return SPRET_NONE;
+        break;
     }
 
-    return SPRET_SUCCESS;
+    // Finally, try zaps.
+    zap_type zap = spell_to_zap(spell);
+    if (zap != NUM_ZAPS)
+    {
+        spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
+                                 nullptr, fail);
+
+        if (ret == SPRET_SUCCESS)
+            _spell_zap_effect(spell);
+
+        return ret;
+    }
+
+    return SPRET_NONE;
 }
 
 // _tetrahedral_number: returns the nth tetrahedral number.
