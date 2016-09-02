@@ -132,7 +132,9 @@ enum attack_flavour
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,
+#if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
+#endif
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
