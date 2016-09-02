@@ -1654,22 +1654,21 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     you.duration[DUR_ELIXIR_HEALTH] = 0;
     you.duration[DUR_ELIXIR_MAGIC] = 0;
 
-    if (power_level == 0)
+    switch (power_level)
     {
+    case 0:
         if (coinflip())
             you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
         else
             you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
-    }
-    else if (power_level == 1)
-    {
+        break;
+    case 1:
         if (you.hp * 2 < you.hp_max)
             you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
         else
             you.set_duration(DUR_ELIXIR_MAGIC, 10);
-    }
-    else if (power_level >= 2)
-    {
+        break;
+    default:
         you.set_duration(DUR_ELIXIR_HEALTH, 10);
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
