@@ -3724,7 +3724,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
 {
     MONS_HALAZID_WARLOCK, 'L', GREEN, "halazid warlock",
     M_SEE_INVIS | M_SPEAKS,
-    MR_NO_FLAGS,
+    mrd(MR_RES_COLD, 2),
     10, MONS_LICH, MONS_LICH, MH_UNDEAD, 100,
     { {AT_TOUCH, AF_PAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     18, 750,
