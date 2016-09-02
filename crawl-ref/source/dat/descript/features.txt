@@ -335,7 +335,7 @@ A broken pillar
 A ruined and crumbled stone pillar.
 %%%%
 ########################################################################
-### Branch entrances and exits 
+### Branch entrances and exits
 ########################################################################
 A gate leading back out of this place
 
