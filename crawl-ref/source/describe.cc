@@ -2987,7 +2987,6 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_TRAMPLE:         return "knock back the defender";
     case AF_REACH_STING:     return "cause poisoning from a distance";
     case AF_WEAKNESS:        return "cause weakness";
-    case AF_MIASMATA:        return "surround the defender with miasma";
     case AF_KITE:            return "retreat from adjacent targets";
     case AF_SWOOP:           return "swoop behind its target";
     default:                 return "";

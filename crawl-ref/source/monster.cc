@@ -3591,8 +3591,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
         holi |= MH_EVIL;
 
     if (has_attack_flavour(AF_DRAIN_XP)
-        || has_attack_flavour(AF_VAMPIRIC)
-        || has_attack_flavour(AF_MIASMATA))
+        || has_attack_flavour(AF_VAMPIRIC))
     {
         holi |= MH_EVIL;
     }
