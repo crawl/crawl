@@ -1689,22 +1689,16 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 // Special case for *your* god, maybe?
 static void _godly_wrath()
 {
-    int tries = 100;
-    while (tries-- > 0)
+    for (int tries = 0; tries < 100; tries++)
     {
         god_type god = random_god();
 
         // Don't recursively make player draw from the Deck of Punishment.
-        if (god == GOD_NEMELEX_XOBEH)
-            continue;
-
-        // Stop once we find a god willing to punish the player.
-        if (divine_retribution(god))
-            break;
+        if (god != GOD_NEMELEX_XOBEH && divine_retribution(god))
+            return; // Stop once we find a god willing to punish the player.
     }
 
-    if (tries <= 0)
-        mpr("You somehow manage to escape divine attention...");
+    mpr("You somehow manage to escape divine attention...");
 }
 
 static void _summon_demon_card(int power, deck_rarity_type rarity)
