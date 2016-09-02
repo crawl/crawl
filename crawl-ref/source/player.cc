@@ -606,23 +606,15 @@ bool player_can_open_doors()
     return you.form != TRAN_BAT;
 }
 
-// If transform is true, compare with current transformation instead
-// of (or in addition to) underlying species.
-// (See mon-data.h for species/genus use.)
+/**
+ * Is the player considered to be closely related, if not the same species, to
+ * the given monster? (See mon-data.h for species/genus info.)
+ *
+ * @param mon   The type of monster to be compared.
+ * @return      Whether the player's species is related to the one given.
+ */
 bool is_player_same_genus(const monster_type mon)
 {
-    // Genus would include necrophage and rotting hulk.
-    if (you.species == SP_GHOUL)
-        return mons_species(mon) == MONS_GHOUL;
-
-    // Note that these are currently considered to be the same genus:
-    // * humans, demigods, and demonspawn
-    // * ogres and two-headed ogres
-    // * trolls, iron trolls, and deep trolls
-    // * kobolds and big kobolds
-    // * dwarves and deep dwarves
-    // * all elf races
-    // * all orc races
     return mons_genus(mon) == mons_genus(player_mons(false));
 }
 
