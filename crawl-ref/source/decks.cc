@@ -1743,17 +1743,17 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // and thus not print the message.
     // This hack appears later in this file as well.
 
-    const bool friendly = !one_chance_in(power_level + 4);
+    const bool hostile = one_chance_in(power_level + 4);
 
-    if (!create_monster(mgen_data(dct, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+    if (!create_monster(mgen_data(dct, hostile ? BEH_HOSTILE : BEH_FRIENDLY,
                                   &you, 5 - power_level, 0, you.pos(), MHITYOU,
                                   MG_AUTOFOE)))
     {
         mpr("You see a puff of smoke.");
     }
-    else if (mons_class_flag(dct, M_INVIS)
-             && !you.can_see_invisible()
-             && !friendly)
+    else if (hostile
+             && mons_class_flag(dct, M_INVIS)
+             && !you.can_see_invisible())
     {
         mpr("You sense the presence of something unfriendly.");
     }
@@ -1892,14 +1892,14 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
     for (int i = 0; i < how_many; ++i)
     {
-        const bool friendly = !one_chance_in(power_level + 4);
+        const bool hostile = one_chance_in(power_level + 4);
 
         create_monster(
             mgen_data(result,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                      hostile ? BEH_HOSTILE : BEH_FRIENDLY, &you,
                       3, 0, you.pos(), MHITYOU, MG_AUTOFOE));
 
-        if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible() && !friendly)
+        if (hostile && mons_class_flag(result, M_INVIS) && !you.can_see_invisible())
             hostile_invis = true;
     }
 
