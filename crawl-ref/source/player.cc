@@ -6738,7 +6738,7 @@ bool player::rot(actor *who, int amount, bool quiet, bool /*no_cleanup*/)
     return true;
 }
 
-void player::corrode_equipment(const char* corrosion_source, int degree)
+bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
     if (res_corr())
@@ -6747,7 +6747,7 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
         if (!degree)
         {
             dprf("rCorr protects.");
-            return;
+            return false;
         }
     }
     // always increase duration, but...
@@ -6771,7 +6771,7 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
         redraw_armour_class = true;
         wield_change = true;
     }
-    return;
+    return true;
 }
 
 /**
