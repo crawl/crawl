@@ -1250,6 +1250,9 @@ static int _get_power_level(int power, deck_rarity_type rarity)
         die("unset deck rarity");
     }
     dprf("Power level: %d", power_level);
+
+    // other functions in this file will break if this assertion is violated
+    ASSERT(power_level >= 0 && power_level <= 2);
     return power_level;
 }
 
@@ -1679,7 +1682,7 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 
         if (mon && mon->wont_attack())
         {
-            const int hp = mon->max_hit_points / max(4 - power_level, 1);
+            const int hp = mon->max_hit_points / (4 - power_level);
             if (mon->heal(hp + random2avg(hp, 2)))
                simple_monster_message(mon, " is healed.");
         }
@@ -1707,20 +1710,19 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // one demon (potentially hostile), and one other demonic creature (always
     // friendly)
     monster_type dct, dct2;
-    if (power_level >= 2)
+    switch (power_level)
     {
-        dct = random_demon_by_tier(2);
-        dct2 = MONS_PANDEMONIUM_LORD;
-    }
-    else if (power_level == 1)
-    {
-        dct = random_demon_by_tier(3);
-        dct2 = MONS_RAKSHASA;
-    }
-    else
-    {
+    case 0:
         dct = random_demon_by_tier(4);
         dct2 = MONS_HELL_HOUND;
+        break;
+    case 1:
+        dct = random_demon_by_tier(3);
+        dct2 = MONS_RAKSHASA;
+        break;
+    default:
+        dct = random_demon_by_tier(2);
+        dct2 = MONS_PANDEMONIUM_LORD;
     }
 
     if (is_good_god(you.religion))
@@ -1809,17 +1811,17 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     ASSERT(mon->weapon() != nullptr);
     item_def& wpn(*mon->weapon());
 
-    if (power_level == 0)
+    switch (power_level)
     {
+    case 0:
         // Wimpy, negative-enchantment weapon.
         wpn.plus = random2(3) - 2;
         wpn.sub_type = (coinflip() ? WPN_QUARTERSTAFF : WPN_HAND_AXE);
 
         set_item_ego_type(wpn, OBJ_WEAPONS,
                           coinflip() ? SPWPN_VENOM : SPWPN_NORMAL);
-    }
-    else if (power_level == 1)
-    {
+        break;
+    case 1:
         // This is getting good.
         wpn.plus = random2(4) - 1;
         wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_TRIDENT);
@@ -1831,9 +1833,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         }
         else
             set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
-    }
-    else if (power_level == 2)
-    {
+        break;
+    default:
         // Rare and powerful.
         wpn.plus = random2(4) + 2;
         wpn.sub_type = (coinflip() ? WPN_DEMON_TRIDENT : WPN_EXECUTIONERS_AXE);
