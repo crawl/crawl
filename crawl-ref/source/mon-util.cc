@@ -5504,3 +5504,27 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         }
     }
 }
+
+static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
+{
+    bool affected_any = false;
+    for (; ri; ri++)
+    {
+        monster* mons = monster_at(*ri);
+        if (mons)
+            affected_any = f(*mons) || affected_any;
+    }
+
+    return affected_any;
+}
+
+bool apply_monsters_around_square(monster_func f, const coord_def& where,
+                                  int radius)
+{
+    return _apply_to_monsters(f, radius_iterator(where, radius, C_SQUARE, true));
+}
+
+bool apply_visible_monsters(monster_func f, const coord_def& where, los_type los)
+{
+    return _apply_to_monsters(f, radius_iterator(where, los, true));
+}

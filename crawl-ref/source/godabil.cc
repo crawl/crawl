@@ -55,6 +55,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -3567,40 +3568,37 @@ spret_type fedhas_evolve_flora(bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _lugonu_warp_monster(monster* mon, int pow)
+static bool _lugonu_warp_monster(monster& mon, int pow)
 {
-    if (mon == nullptr)
-        return 0;
-
     if (coinflip())
-        return 0;
+        return false;
 
-    if (!mon->friendly())
-        behaviour_event(mon, ME_ANNOY, &you);
+    if (!mon.friendly())
+        behaviour_event(&mon, ME_ANNOY, &you);
 
     const int damage = 1 + random2(pow / 6);
-    if (mons_genus(mon->type) == MONS_BLINK_FROG)
+    if (mons_genus(mon.type) == MONS_BLINK_FROG)
     {
         mprf("%s basks in the distortional energy.",
-             mon->name(DESC_THE).c_str());
-        mon->heal(damage);
+             mon.name(DESC_THE).c_str());
+        mon.heal(damage);
     }
     else
     {
-        mon->hurt(&you, damage);
-        if (!mon->alive())
-            return 1;
+        mon.hurt(&you, damage);
+        if (!mon.alive())
+            return true;
     }
 
-    if (!mon->no_tele(true, false))
-        mon->blink();
+    if (!mon.no_tele(true, false))
+        mon.blink();
 
-    return 1;
+    return true;
 }
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_monsters_around_square([pow] (monster* mon) {
+    apply_monsters_around_square([pow] (monster& mon) {
         return _lugonu_warp_monster(mon, pow);
     }, you.pos());
 }
@@ -6600,38 +6598,33 @@ int pakellas_surge_devices()
     return severity;
 }
 
-static int _get_stomped(monster* mons)
+static bool _get_stomped(monster& mons)
 {
-    if (mons == nullptr)
-        return 0;
-
     // Don't hurt your own demonic guardians
-    if (testbits(mons->flags, MF_DEMONIC_GUARDIAN) && mons->friendly())
-        return 0;
+    if (testbits(mons.flags, MF_DEMONIC_GUARDIAN) && mons.friendly())
+        return false;
 
-    behaviour_event(mons, ME_ANNOY, &you);
+    behaviour_event(&mons, ME_ANNOY, &you);
 
     // Damage starts at 1/6th of monster current HP, then gets some damage
     // scaling off Invo power.
-    int damage = div_rand_round(mons->hit_points, 6);
+    int damage = div_rand_round(mons.hit_points, 6);
     int die_size = 2 + div_rand_round(you.skill(SK_INVOCATIONS), 2);
     damage += roll_dice(2, die_size);
 
-    mons->hurt(&you, damage, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
+    mons.hurt(&you, damage, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
-    if (mons->alive() && you.can_see(*mons))
-        print_wounds(mons);
+    if (mons.alive() && you.can_see(mons))
+        print_wounds(&mons);
 
-    return 1;
+    return true;
 }
 
 bool uskayaw_stomp()
 {
     mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
-    apply_monsters_around_square([] (monster* mons) {
-            return _get_stomped(mons);
-        }, you.pos());
+    apply_monsters_around_square(_get_stomped, you.pos());
     return true;
 }
 
