@@ -4875,6 +4875,8 @@ enum zap_type
     ZAP_UNRAVELLING,
     ZAP_ICEBLAST,
     ZAP_SLUG_DART,
+    ZAP_BLINKBOLT,
+    ZAP_FREEZING_BLAST, // monster freezing cloud (!?)
     NUM_ZAPS
 };
 

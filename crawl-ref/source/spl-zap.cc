@@ -63,6 +63,12 @@ static pair<spell_type, zap_type> _spl_zaps[] =
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
+    { SPELL_PRIMAL_WAVE, ZAP_PRIMAL_WAVE },
+    { SPELL_BLINKBOLT, ZAP_BLINKBOLT },
+    { SPELL_STEAM_BALL, ZAP_BREATHE_STEAM },
+    // player spells with monster-specific zaps
+    { SPELL_SANDBLAST, ZAP_SANDBLAST },
+    { SPELL_FREEZING_CLOUD, ZAP_FREEZING_BLAST },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
