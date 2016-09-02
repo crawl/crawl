@@ -1221,19 +1221,16 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BANISHMENT:
     case SPELL_ENSLAVEMENT:
     case SPELL_QUICKSILVER_BOLT:
+    case SPELL_PRIMAL_WAVE:
+    case SPELL_BLINKBOLT:
+    case SPELL_STEAM_BALL:
+    case SPELL_SANDBLAST:
+    case SPELL_FREEZING_CLOUD:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
     case SPELL_DAZZLING_SPRAY: // special-cased because of a spl-zap hack...
         zappy(ZAP_DAZZLING_SPRAY, power, true, beam);
-        break;
-
-    case SPELL_SANDBLAST:
-        beam.colour   = BROWN;
-        beam.name     = "rocky blast";
-        beam.damage   = dice_def(3, 5 + (power / 40));
-        beam.hit      = 20 + power / 40;
-        beam.flavour  = BEAM_FRAG;
         break;
 
     case SPELL_DISPEL_UNDEAD:
@@ -1243,37 +1240,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_MALMUTATE:
         beam.flavour  = BEAM_MALMUTATE;
-        break;
-
-    case SPELL_PRIMAL_WAVE:
-        beam.name     = "great wave of water";
-        // Water attack is weaker than the pure elemental damage
-        // attacks, but also less resistible.
-        beam.damage   = dice_def(3, 6 + power / 12);
-        beam.colour   = LIGHTBLUE;
-        beam.flavour  = BEAM_WATER;
-        // Huge wave of water is hard to dodge.
-        beam.hit      = 20 + power / 20;
-        beam.pierce   = false;
-        beam.glyph    = dchar_glyph(DCHAR_WAVY);
-        break;
-
-    case SPELL_FREEZING_CLOUD:
-        beam.name     = "freezing blast";
-        beam.damage   = dice_def(2, 9 + power / 11);
-        beam.colour   = WHITE;
-        beam.flavour  = BEAM_COLD;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_BLINKBOLT:
-        beam.name     = "living lightning";
-        beam.damage   = dice_def(2, 10 + power / 17);
-        beam.colour   = LIGHTCYAN;
-        beam.flavour  = BEAM_ELECTRICITY;
-        beam.hit      = 16 + power / 40;
-        beam.pierce   = true;
         break;
 
     case SPELL_FIRE_STORM:
@@ -1296,14 +1262,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_TELEPORT_OTHER:
         beam.flavour  = BEAM_TELEPORT;
-        break;
-
-    case SPELL_STEAM_BALL:
-        beam.colour   = LIGHTGREY;
-        beam.name     = "ball of steam";
-        beam.damage   = dice_def(3, 7 + (power / 15));
-        beam.hit      = 20 + power / 20;
-        beam.flavour  = BEAM_STEAM;
         break;
 
     case SPELL_PAIN:
