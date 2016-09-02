@@ -4877,6 +4877,12 @@ enum zap_type
     ZAP_SLUG_DART,
     ZAP_BLINKBOLT,
     ZAP_FREEZING_BLAST, // monster freezing cloud (!?)
+    ZAP_DIMENSION_ANCHOR,
+    ZAP_VULNERABILITY,
+    ZAP_SENTINEL_MARK,
+    ZAP_SAP_MAGIC,
+    ZAP_VIRULENCE,
+    ZAP_DRAIN_MAGIC,
     NUM_ZAPS
 };
 
