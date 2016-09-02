@@ -5074,19 +5074,17 @@ struct branch_summon_pair
 
 static const pop_entry _invitation_lair[] =
 { // Lair enemies
-  {  1,   1,   80, FLAT, MONS_YAK },
   {  1,   1,   60, FLAT, MONS_BLINK_FROG },
-  {  1,   1,   40, FLAT, MONS_ELEPHANT },
+  {  1,   1,   40, FLAT, MONS_DREAM_SHEEP },
   {  1,   1,   20, FLAT, MONS_SPINY_FROG },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _invitation_snake[] =
 { // Snake enemies
-  {  1,   1,   90, FLAT, MONS_NAGA },
-  {  1,   1,   70, FLAT, MONS_WATER_MOCCASIN },
-  {  1,   1,   30, FLAT, MONS_BLACK_MAMBA },
-  {  1,   1,   10, FLAT, MONS_GUARDIAN_SERPENT },
+  {  1,   1,   80, FLAT, MONS_NAGA },
+  {  1,   1,   40, FLAT, MONS_BLACK_MAMBA },
+  {  1,   1,   20, FLAT, MONS_MANA_VIPER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -5094,7 +5092,6 @@ static const pop_entry _invitation_spider[] =
 { // Spider enemies
   {  1,   1,   60, FLAT, MONS_TARANTELLA },
   {  1,   1,   80, FLAT, MONS_JUMPING_SPIDER },
-  {  1,   1,   20, FLAT, MONS_REDBACK },
   {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -5103,40 +5100,36 @@ static const pop_entry _invitation_swamp[] =
 { // Swamp enemies
   {  1,   1,   80, FLAT, MONS_VAMPIRE_MOSQUITO },
   {  1,   1,   60, FLAT, MONS_INSUBSTANTIAL_WISP },
-  {  1,   1,   60, FLAT, MONS_SWAMP_DRAKE },
-  {  1,   1,   10, FLAT, MONS_ALLIGATOR },
+  {  1,   1,   40, FLAT, MONS_SWAMP_DRAKE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _invitation_shoals[] =
 { // Swamp enemies
-  {  1,   1,   80, FLAT, MONS_MERFOLK },
   {  1,   1,   60, FLAT, MONS_SIREN },
   {  1,   1,   40, FLAT, MONS_MANTICORE },
-  {  1,   1,   20, FLAT, MONS_SNAPPING_TURTLE },
+  {  1,   1,   20, FLAT, MONS_WIND_DRAKE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _invitation_orc[] =
 { // Orc enemies
-  {  1,   1,   90, FLAT, MONS_ORC_PRIEST },
-  {  1,   1,   70, FLAT, MONS_ORC_WARRIOR },
-  {  1,   1,   30, FLAT, MONS_WARG },
-  {  1,   1,   10, FLAT, MONS_TROLL },
+  {  1,   1,   80, FLAT, MONS_ORC_PRIEST },
+  {  1,   1,   40, FLAT, MONS_WARG },
+  {  1,   1,   20, FLAT, MONS_TROLL },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _invitation_elf[] =
 { // Elf enemies
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_MAGE },
-  {  1,   1,   50, FLAT, MONS_DEEP_ELF_KNIGHT },
-  {  1,   1,   50, FLAT, MONS_DEEP_ELF_ARCHER },
+  {  1,   1,   40, FLAT, MONS_DEEP_ELF_KNIGHT },
+  {  1,   1,   40, FLAT, MONS_DEEP_ELF_ARCHER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _invitation_vaults[] =
 { // Vaults enemies
-  {  1,   1,   80, FLAT, MONS_HUMAN },
   {  1,   1,   60, FLAT, MONS_YAKTAUR },
   {  1,   1,   40, FLAT, MONS_IRONHEART_PRESERVER },
   {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
@@ -5147,8 +5140,7 @@ static const pop_entry _invitation_crypt[] =
 { // Crypt enemies
   {  1,   1,   80, FLAT, MONS_WRAITH },
   {  1,   1,   60, FLAT, MONS_SHADOW },
-  {  1,   1,   40, FLAT, MONS_VAMPIRE },
-  {  1,   1,   20, FLAT, MONS_SHADOW_WRAITH },
+  {  1,   1,   20, FLAT, MONS_NECROMANCER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -5165,14 +5157,6 @@ static branch_summon_pair _invitation_summons[] =
   { BRANCH_CRYPT,  _invitation_crypt }
 };
 
-static const pop_entry _planerend_lair[] =
-{ // Lair enemies
-  {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
-  {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,   1,   60, FLAT, MONS_TORPOR_SNAIL },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
 static const pop_entry _planerend_snake[] =
 { // Snake enemies
   {  1,   1,   40, FLAT, MONS_ANACONDA },
@@ -5183,48 +5167,33 @@ static const pop_entry _planerend_snake[] =
 
 static const pop_entry _planerend_spider[] =
 { // Spider enemies
-  {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
-  {  1,   1,   20, FLAT, MONS_HORNET },
-  {  1,   1,   60, FLAT, MONS_ORB_SPIDER },
-  {  1,   1,   20, FLAT, MONS_TARANTELLA },
+  {  1,   1,   80, FLAT, MONS_TORPOR_SNAIL },
+  {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_swamp[] =
 { // Swamp enemies
-  {  1,   1,   80, FLAT, MONS_SWAMP_DRAGON },
-  {  1,   1,   80, FLAT, MONS_HYDRA },
-  {  1,   1,  100, FLAT, MONS_SHAMBLING_MANGROVE },
+  {  1,   1,  100, FLAT, MONS_SWAMP_DRAGON },
+  {  1,   1,   80, FLAT, MONS_SHAMBLING_MANGROVE },
   {  1,   1,   40, FLAT, MONS_THORN_HUNTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_shoals[] =
 { // Shoals enemies
-  {  1,   1,   50, FLAT, MONS_WATER_NYMPH },
-  {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
-  {  1,   1,  100, FLAT, MONS_MERFOLK_AQUAMANCER },
   {  1,   1,   80, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
+  {  1,   1,   40, FLAT, MONS_WATER_NYMPH },
+  {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_slime[] =
 { // Slime enemies
-  {  1,   1,  100, FLAT, MONS_ACID_BLOB },
+  {  1,   1,   80, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
   {  1,   1,  100, FLAT, MONS_AZURE_JELLY },
-  {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
-  {  1,   1,   80, FLAT, MONS_GIANT_ORANGE_BRAIN },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry _planerend_orc[] =
-{ // Orc enemies
-  {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
-  {  1,   1,   80, FLAT, MONS_ORC_SORCERER },
-  {  1,   1,   80, FLAT, MONS_ORC_HIGH_PRIEST },
-  {  1,   1,   40, FLAT, MONS_STONE_GIANT },
-  {  1,   1,   60, FLAT, MONS_OGRE_MAGE },
+  {  1,   1,  100, FLAT, MONS_ACID_BLOB },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -5232,7 +5201,6 @@ static const pop_entry _planerend_elf[] =
 { // Elf enemies
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_SORCERER },
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_HIGH_PRIEST },
-  {  1,   1,   60, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   {  1,   1,   60, FLAT, MONS_DEEP_ELF_BLADEMASTER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -5240,8 +5208,7 @@ static const pop_entry _planerend_elf[] =
 static const pop_entry _planerend_vaults[] =
 { // Vaults enemies
   {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
-  {  1,   1,   80, FLAT, MONS_DANCING_WEAPON },
-  {  1,   1,   60, FLAT, MONS_IRONBRAND_CONVOKER },
+  {  1,   1,   40, FLAT, MONS_IRONBRAND_CONVOKER },
   {  1,   1,  100, FLAT, MONS_WAR_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -5251,7 +5218,6 @@ static const pop_entry _planerend_crypt[] =
   {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
   {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
   {  1,   1,   80, FLAT, MONS_REVENANT },
-  {  1,   1,   80, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -5265,32 +5231,27 @@ static const pop_entry _planerend_tomb[] =
 
 static const pop_entry _planerend_abyss[] =
 { // Abyss enemies
-  {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
   {  1,   1,   80, FLAT, MONS_APOCALYPSE_CRAB },
-  {  1,   1,   50, FLAT, MONS_THRASHING_HORROR },
-  {  1,   1,   50, FLAT, MONS_VERY_UGLY_THING },
+  {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
+  {  1,   1,   40, FLAT, MONS_WRETCHED_STAR },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_zot[] =
 { // Zot enemies
-  {  1,   1,   80, FLAT, MONS_DRACONIAN_SHIFTER },
-  {  1,   1,   80, FLAT, MONS_DRACONIAN_SCORCHER },
-  {  1,   1,   80, FLAT, MONS_DRACONIAN_ZEALOT },
+  {  1,   1,   40, FLAT, MONS_DRACONIAN_ZEALOT },
   {  1,   1,  100, FLAT, MONS_GOLDEN_DRAGON },
-  {  1,   1,  100, FLAT, MONS_MOTH_OF_WRATH },
+  {  1,   1,   80, FLAT, MONS_MOTH_OF_WRATH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static branch_summon_pair _planerend_summons[] =
 {
-  { BRANCH_LAIR,   _planerend_lair },
   { BRANCH_SNAKE,  _planerend_snake },
   { BRANCH_SPIDER, _planerend_spider },
   { BRANCH_SWAMP,  _planerend_swamp },
   { BRANCH_SHOALS, _planerend_shoals },
   { BRANCH_SLIME,  _planerend_slime },
-  { BRANCH_ORC,    _planerend_orc },
   { BRANCH_ELF,    _planerend_elf },
   { BRANCH_VAULTS, _planerend_vaults },
   { BRANCH_CRYPT,  _planerend_crypt },

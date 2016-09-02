@@ -985,10 +985,10 @@ otherwise almost indistinguishable from the original.
 %%%%
 Plane Rend spell
 
-Summons some of the greater threats from one of the Lair of Beasts, the Snake
-Pit, the Spider Nest, the Swamp, the Shoals, the Pits of Slime, the Orcish
-Mines, the Elven Halls, the Vaults, the Crypt, the Tomb of Ancients, or the
-Realm of Zot; the specific branch varies with each cast of the spell.
+Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
+the Swamp, the Shoals, the Pits of Slime, the Elven Halls, the Vaults, the
+Crypt, the Tomb of Ancients, or the Realm of Zot; the specific branch varies
+with each cast of the spell.
 %%%%
 Poison Arrow spell
 
