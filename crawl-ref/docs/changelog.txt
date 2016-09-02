@@ -1,13 +1,18 @@
-Stone Soup 0.19 (up to 0.19-a0-1124-g3d89a69)
+Stone Soup 0.19 (up to 0.19-a0-1375-g616abca)
 --------------------------------------------
 
 Highlights
 ----------
 * New gods: Ukayaw the Reveler and Hepliaklqana the Forgotten.
+* New portal: the Desolation of Salt.
 * TODO: decide what else qualifies before release!
 
 Branches, Environment
 ---------------------
+* New timed portal vault: the Desolation of Salt, appearing in Elf and Vaults.
+  - Six new enemies, including fragile golems and several supporting allies.
+  - Open terrain layout with large, opaque clouds to use as cover.
+  - Many powerful artefacts resting within ancient ruins.
 * Lair is now six floors (formerly eight).
 * Slime is now five floors (formerly six).
 * Webs are no longer destroyed after creatures escape from them.
@@ -22,10 +27,16 @@ Character
 * Resistances granted by rN (to e.g. Pain effects) now scale with rN, only
   reaching full immunity at rN+++ (instead of at rN+).
 * Monks can now choose a weapon to start with.
-* Satiated vampires can now berserk and transform; previously required Full.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
+* Satiated vampires can now berserk and transform; previously required Full.
+* The undead always take stat damage if mutated, instead of sometimes rotting.
+* Temporary mutations only have a 50% chance of affecting the undead.
+* Mummy self-restoration has been removed.
+* The 'sustain abilities' effect has been removed.
 * Sickness no longer has a chance of damaging stats.
 * Issuing orders to allies no longer makes noise.
+* Climbing stairs takes slightly longer, but doesn't penalize EV.
+* Clarity provides immunity to sleep.
 
 Gods
 ----
@@ -56,6 +67,7 @@ Gods
   - Book gifts now begin at 5*, instead of 6*.
   - Sif grants piety for both learning magic and killing enemies.
 * Beogh's water-walking now always lasts until the player is on land.
+* Beogh no longer increases the benefits of armour and shields.
 * Dithmenos's Shadow Step can no longer be used on allies or while immobile.
 * Nemelex Xobeh's abilities now use invocations, not evocations.
 * Nemelex Xobeh now gifts decks of escape, destruction & summoning.
@@ -63,7 +75,10 @@ Gods
 * Pakellas's wrath no longer drains the player or their items, but instead
   passively blocks all device use for its duration.
 * Many divine abilities have had their hunger costs removed or increased.
+* Most gods that like killing are less particular about what you kill.
+* Piety decay over time has been streamlined and adjusted for most gods.
 * Gods that hate specific monsters no longer prevent you from enslaving them.
+* Pakellas has been removed.
 
 Interface
 ---------
@@ -108,8 +123,10 @@ Items
     Fortitude, Hammer, Helix, Helm, Mercenary, Potion, Repulsiveness, Shadow,
     Solitude, Swap, Water, Venom, and Xom cards.
   - Sword of the Doom Knight, Amulet of Cekugob, and "Brilliance".
+  - Rings of sustain abilities.
   - Stones of tremors.
   - The evasion weapon ego.
+  - The Akashic Record.
   - Artefact blowguns.
 
 Monsters
@@ -118,6 +135,8 @@ Monsters
   - Bai Suzhen, a late-game draconian unique that casts Summon Hydra. When
     severely injured, she becomes a dragon ringed by storm clouds.
   - Meliai, bee priestesses that sting and smite in trios.
+  - Dream sheep, pack monsters that put their enemies to sleep.
+  - ...and the residents of the Desolation of Salt.
 * Uniques:
   - Urug's weapons are now much nastier for their depth.
   - Donald can now cast Haste and Might.
@@ -128,6 +147,7 @@ Monsters
   - Various uniques have had their genders changed.
 * Zombies, skeletons, and simulacrula no longer hide damage taken, and display
   the full names of the monster they were created from.
+* Battlecry has been simplified, affecting all monsters of the same genus.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
 * Necromancers gain Bind Soul, reviving slain monsters as simulacrula.
 * Ghostly Fireball is now completely resistable by rN and causes draining.
@@ -140,8 +160,13 @@ Monsters
 * Death scarabs no longer trail miasma, but are somewhat tougher.
 * Decayed bog bodies have become bog mummies, which are somewhat weaker.
 * Friendly monsters will no longer open doors.
+* Jellies no longer eat unseen items for non-Jiyva worshippers.
+* Giant eyeballs charge up their paralysis-stare 50% faster.
+* Ushabti gain Dispel Undead and Warning Cry.
 * Removed monsters:
+  - Anubis guards.
   - Salamander stormcallers.
+  - Sheep.
   - Norris.
   - Maud.
   - Wiglaf.
@@ -151,11 +176,13 @@ Spells
 * New spell: Infestation (L8 Necromancy), appearing in the Necronomicon.
   Applies 'infested' to monsters in a large, smite-targeted area; a friendly
   death scarab erupts out of the victims when they die.
+* All temporary allies are incapable of attacking out of LOS, not just summons.
 * Confusing Touch is level 1 (was level 2).
 * Cigotuvi's Embrace only degrades over time, not on-hit.
 * Olgreb's Toxic Radiance causes less damage, but doesn't poison the caster.
 * Simulacrum's duration is significantly shorter.
-* Removed: Cure Poison.
+* Spells formerly in the Akashic Record have been redistributed elsewhere.
+* Removed: Cure Poison and Warp Weapon.
 
 
 Stone Soup 0.18 (20160504)
