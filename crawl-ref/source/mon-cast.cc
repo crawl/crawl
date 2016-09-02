@@ -121,6 +121,9 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
 static bool _foe_should_res_negative_energy(const actor* foe);
 static bool _caster_sees_foe(const monster &caster);
+static bool _foe_can_sleep(const monster &caster);
+static bool _foe_not_teleporting(const monster &caster);
+static bool _foe_not_mr_vulnerable(const monster &caster);
 static bool _should_still_winds(const monster &caster);
 static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
@@ -138,6 +141,9 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
                                           int power);
+static function<bool(const monster&)> _setup_hex_check(spell_type spell);
+static bool _worth_hexing(const monster &caster, spell_type spell);
+static bool _torment_vulnerable(actor* victim);
 
 enum spell_logic_flag
 {
@@ -164,6 +170,10 @@ struct mons_spell_logic
 static bool _always_worthwhile(const monster &caster) { return true; }
 static bool _caster_has_foe(const monster &caster) { return caster.foe != 0; }
 static mons_spell_logic _conjuration_logic(spell_type spell);
+static mons_spell_logic _hex_logic(spell_type spell,
+                                   function<bool(const monster&)> extra_logic
+                                   = nullptr,
+                                   int power_hd_factor = 0);
 
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
@@ -433,6 +443,41 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _setup_ghostly_sacrifice_beam,
     } },
+    { SPELL_SLOW, { _hex_logic(SPELL_SLOW) } },
+    { SPELL_CONFUSE, { _hex_logic(SPELL_CONFUSE) } },
+    { SPELL_BANISHMENT, { _hex_logic(SPELL_BANISHMENT) } },
+    { SPELL_PARALYSE, { _hex_logic(SPELL_PARALYSE) } },
+    { SPELL_PETRIFY, { _hex_logic(SPELL_PETRIFY) } },
+    { SPELL_PAIN, { _hex_logic(SPELL_PAIN) } },
+    { SPELL_DISINTEGRATE, { _hex_logic(SPELL_DISINTEGRATE) } },
+    { SPELL_CORONA, { _hex_logic(SPELL_CORONA, [](const monster& caster) {
+        return !caster.get_foe()->backlit();
+    }) } },
+    { SPELL_POLYMORPH, { _hex_logic(SPELL_POLYMORPH, [](const monster& caster) {
+        return !caster.friendly(); // too dangerous to let allies use
+    }) } },
+    { SPELL_SLEEP, { _hex_logic(SPELL_SLEEP, _foe_can_sleep, 6) } },
+    { SPELL_HIBERNATION, { _hex_logic(SPELL_HIBERNATION, _foe_can_sleep) } },
+    { SPELL_TELEPORT_OTHER, { _hex_logic(SPELL_TELEPORT_OTHER,
+                                         _foe_not_teleporting) } },
+    { SPELL_DIMENSION_ANCHOR, {_hex_logic(SPELL_DIMENSION_ANCHOR, nullptr, 6)}},
+    { SPELL_AGONY, {
+        _hex_logic(SPELL_AGONY, [](const monster &caster) {
+            return _torment_vulnerable(caster.get_foe());
+        }, 6)
+    } },
+    { SPELL_STRIP_RESISTANCE, {
+        _hex_logic(SPELL_STRIP_RESISTANCE, _foe_not_mr_vulnerable, 6)
+    } },
+    { SPELL_SENTINEL_MARK, { _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) } },
+    { SPELL_SAP_MAGIC, {
+        _always_worthwhile, _fire_simple_beam, _zap_setup(SPELL_SAP_MAGIC),
+        MSPELL_LOGIC_NONE, 10,
+    } },
+    { SPELL_DRAIN_MAGIC, { _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) } },
+    { SPELL_VIRULENCE, { _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
+        return caster.get_foe()->res_poison(false) < 3;
+    }, 6) } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -448,6 +493,31 @@ static mons_spell_logic _conjuration_logic(spell_type spell)
     return { _always_worthwhile, _fire_simple_beam, _zap_setup(spell), };
 }
 
+/**
+ * Create the appropriate casting logic for a simple mr-checking hex.
+ *
+ * @param spell             The hex in question; e.g. SPELL_CORONA.
+ * @param extra_logic       An additional pre-casting condition, beyond the
+ *                          normal hex logic.
+ * @param power_hd_factor   If nonzero, how much spellpower the spell has per
+ *                          caster HD.
+ */
+static mons_spell_logic _hex_logic(spell_type spell,
+                                   function<bool(const monster&)> extra_logic,
+                                   int power_hd_factor)
+{
+    function<bool(const monster&)> worthwhile = nullptr;
+    if (!extra_logic)
+        worthwhile = _setup_hex_check(spell);
+    else
+    {
+        worthwhile = [spell, extra_logic](const monster& caster) {
+            return _worth_hexing(caster, spell) && extra_logic(caster);
+        };
+    }
+    return { worthwhile, _fire_simple_beam, _zap_setup(spell),
+             MSPELL_LOGIC_NONE, power_hd_factor * ENCH_POW_FACTOR };
+}
 
 /**
  * Take the given beam and fire it, handling screen-refresh issues in the
@@ -488,6 +558,30 @@ static bool _caster_sees_foe(const monster &caster)
 {
     const actor* foe = caster.get_foe();
     return foe && caster.can_see(*foe);
+}
+
+static bool _foe_can_sleep(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    return foe && foe->can_sleep();
+}
+
+static bool _foe_not_teleporting(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    if (foe->is_player())
+        return !you.duration[DUR_TELEPORT];
+    return !foe->as_monster()->has_ench(ENCH_TP);
+}
+
+static bool _foe_not_mr_vulnerable(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    if (foe->is_player())
+        return !you.duration[DUR_LOWERED_MR];
+    return !foe->as_monster()->has_ench(ENCH_LOWERED_MR);
 }
 
 /**
@@ -949,23 +1043,11 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_CAUSE_FEAR:
             return 18 * ENCH_POW_FACTOR;
 
-        case SPELL_SENTINEL_MARK:
-            return 16 * ENCH_POW_FACTOR;
-
-        case SPELL_SAP_MAGIC:
         case SPELL_MESMERISE:
             return 10 * ENCH_POW_FACTOR;
 
         case SPELL_MASS_CONFUSION:
             return 8 * ENCH_POW_FACTOR;
-
-        case SPELL_SLEEP:
-        case SPELL_AGONY:
-        case SPELL_STRIP_RESISTANCE:
-        case SPELL_VIRULENCE:
-        case SPELL_DRAIN_MAGIC:
-        case SPELL_DIMENSION_ANCHOR:
-            return 6 * ENCH_POW_FACTOR;
 
         case SPELL_ABJURATION:
             return 20;
@@ -1208,17 +1290,9 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_FORCE_LANCE:
     case SPELL_EXPLOSIVE_BOLT:
     case SPELL_CORROSIVE_BOLT:
-    case SPELL_PARALYSE:
-    case SPELL_PETRIFY:
-    case SPELL_SLOW:
-    case SPELL_CORONA:
-    case SPELL_CONFUSE:
     case SPELL_HIBERNATION:
     case SPELL_SLEEP:
-    case SPELL_POLYMORPH:
     case SPELL_DIG:
-    case SPELL_AGONY:
-    case SPELL_BANISHMENT:
     case SPELL_ENSLAVEMENT:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_PRIMAL_WAVE:
@@ -1226,6 +1300,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STEAM_BALL:
     case SPELL_SANDBLAST:
     case SPELL_FREEZING_CLOUD:
+    case SPELL_TELEPORT_OTHER:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1258,15 +1333,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.is_tracer    = false;
         beam.hit          = 20;
         beam.damage       = dice_def(3, 15);
-        break;
-
-    case SPELL_TELEPORT_OTHER:
-        beam.flavour  = BEAM_TELEPORT;
-        break;
-
-    case SPELL_PAIN:
-        beam.flavour    = BEAM_PAIN;
-        beam.damage     = dice_def(1, 7 + (power / 20));
         break;
 
     case SPELL_NOXIOUS_CLOUD:
@@ -1313,12 +1379,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         // Natural ability, so don't use spell_hd here
         beam.hit      = 20 + (3 * mons->get_hit_dice());
         beam.flavour  = BEAM_ACID;
-        break;
-
-    case SPELL_DISINTEGRATE:
-        beam.flavour    = BEAM_DISINTEGRATION;
-        beam.ench_power = 50;
-        beam.damage     = dice_def(1, 30 + (power / 10));
         break;
 
     case SPELL_MEPHITIC_CLOUD:
@@ -1470,10 +1530,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
-    case SPELL_SENTINEL_MARK:
-        beam.flavour    = BEAM_SENTINEL_MARK;
-        break;
-
     case SPELL_SPECTRAL_CLOUD:
         beam.name     = "spectral mist";
         beam.damage   = dice_def(0, 1);
@@ -1499,10 +1555,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MMISSILE;
         break;
 
-    case SPELL_STRIP_RESISTANCE:
-        beam.flavour    = BEAM_VULNERABILITY;
-        break;
-
     // XXX: This seems needed to give proper spellcasting messages, even though
     //      damage is done via another means
     case SPELL_FREEZE:
@@ -1514,20 +1566,12 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage     = dice_def(2, 7 + (power / 13));
         break;
 
-    case SPELL_VIRULENCE:
-        beam.flavour    = BEAM_VIRULENCE;
-        break;
-
     case SPELL_FLASH_FREEZE:
         beam.name     = "flash freeze";
         beam.damage   = dice_def(3, 7 + (power / 12));
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
         beam.hit      = 5 + power / 3;
-        break;
-
-    case SPELL_SAP_MAGIC:
-        beam.flavour    = BEAM_SAP_MAGIC;
         break;
 
     case SPELL_CORRUPT_BODY:
@@ -1554,10 +1598,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_CRYSTAL;
         beam.hit      = 17 + power / 25;
         beam.pierce   = true;
-        break;
-
-    case SPELL_DRAIN_MAGIC:
-        beam.flavour    = BEAM_DRAIN_MAGIC;
         break;
 
     case SPELL_SPIT_LAVA:
@@ -3625,6 +3665,53 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
     beam.aimed_at_spot = true;  // to get noise to work properly
+}
+
+static function<bool(const monster&)> _setup_hex_check(spell_type spell)
+{
+    return [spell](const monster& caster) {
+        return _worth_hexing(caster, spell);
+    };
+}
+
+/**
+ * Does the given monster think it's worth casting the given hex at its current
+ * target?
+ *
+ * XXX: very strongly consider removing this logic!
+ *
+ * @param caster    The monster casting the hex.
+ * @param spell     The spell to cast; e.g. SPELL_DIMENSIONAL_ANCHOR.
+ * @return          Whether the monster thinks it's worth trying to beat the
+ *                  defender's magic resistance.
+ */
+static bool _worth_hexing(const monster &caster, spell_type spell)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe)
+        return false; // simplifies later checks
+
+    // Occasionally we don't estimate... just fire and see.
+    if (one_chance_in(5))
+        return true;
+
+    // Only intelligent monsters estimate.
+    if (mons_intel(&caster) < I_HUMAN)
+        return true;
+
+    // We'll estimate the target's resistance to magic, by first getting
+    // the actual value and then randomising it.
+    const int est_magic_resist = foe->res_magic() + random2(60) - 30; // +-30
+    const int power = ench_power_stepdown(_mons_spellpower(spell, caster));
+
+    // Determine the amount of chance allowed by the benefit from
+    // the spell. The estimated difficulty is the probability
+    // of rolling over 100 + diff on 2d100. -- bwr
+    int diff = (spell == SPELL_PAIN
+                || spell == SPELL_SLOW
+                || spell == SPELL_CONFUSE) ? 0 : 50;
+
+    return est_magic_resist - power <= diff;
 }
 
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
@@ -7922,9 +8009,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DEATH_RATTLE:
         return !foe || _foe_should_res_negative_energy(foe) || no_clouds;
 
-    case SPELL_AGONY:
-        return !foe || !_torment_vulnerable(foe);
-
     case SPELL_MIASMA_BREATH:
         return !foe || foe->res_rotting() || no_clouds;
 
@@ -7933,9 +8017,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // Currently if the vampire's undead state returns MH_UNDEAD it
         // affects the player.
         return !foe || !(foe->holiness() & MH_UNDEAD);
-
-    case SPELL_CORONA:
-        return !foe || foe->backlit();
 
     case SPELL_BERSERKER_RAGE:
         return !mon->needs_berserk(false);
@@ -7971,67 +8052,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 || foe->is_player()
                     && you.duration[DUR_DIMENSION_ANCHOR];
 
-    case SPELL_TELEPORT_OTHER:
-        // Monsters aren't smart enough to know when to cancel teleport.
-        if (!foe
-            || foe->is_player() && you.duration[DUR_TELEPORT]
-            || foe->is_monster() && foe->as_monster()->has_ench(ENCH_TP))
-        {
-            return true;
-        }
-        // intentional fall-through
-    case SPELL_SLOW:
-    case SPELL_CONFUSE:
-    case SPELL_PAIN:
-    case SPELL_BANISHMENT:
-    case SPELL_DISINTEGRATE:
-    case SPELL_PARALYSE:
-    case SPELL_SLEEP:
-    case SPELL_HIBERNATION:
-    case SPELL_DIMENSION_ANCHOR:
-    {
-        if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
-            && (!foe || foe->asleep() || !foe->can_sleep()))
-        {
-            return true;
-        }
-
-        // Occasionally we don't estimate... just fire and see.
-        if (one_chance_in(5))
-            return false;
-
-        // Only intelligent monsters estimate.
-        if (mons_intel(mon) < I_HUMAN)
-            return false;
-
-        // We'll estimate the target's resistance to magic, by first getting
-        // the actual value and then randomising it.
-        int est_magic_resist = 10000;
-
-        if (foe != nullptr)
-        {
-            est_magic_resist = foe->res_magic();
-
-            // now randomise
-            est_magic_resist += random2(60) - 30; // +-30
-        }
-
-        const int power = ench_power_stepdown(_mons_spellpower(monspell, *mon));
-
-        // Determine the amount of chance allowed by the benefit from
-        // the spell. The estimated difficulty is the probability
-        // of rolling over 100 + diff on 2d100. -- bwr
-        int diff = (monspell == SPELL_PAIN
-                    || monspell == SPELL_SLOW
-                    || monspell == SPELL_CONFUSE) ? 0 : 50;
-
-        return est_magic_resist - power > diff;
-    }
-
-    // Separate from the other sleep checks since dream dust does not check MR.
     case SPELL_DREAM_DUST:
-        return !foe
-               || !foe->can_sleep();
+        return !_foe_can_sleep(*mon);
 
     // Mara shouldn't cast player ghost if he can't see the player
     case SPELL_SUMMON_ILLUSION:
@@ -8112,12 +8134,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         else
             return true;
 
-    case SPELL_STRIP_RESISTANCE:
-        return !foe
-               || foe->is_monster()
-                  && foe->as_monster()->has_ench(ENCH_LOWERED_MR)
-               || foe->is_player() && you.duration[DUR_LOWERED_MR];
-
     case SPELL_BROTHERS_IN_ARMS:
         return mon->props.exists("brothers_count")
                && mon->props["brothers_count"].get_int() >= 2;
@@ -8161,9 +8177,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         beam.source_id = mon->mid;
         return !handle_throw(mon, beam, true, true);
     }
-
-    case SPELL_VIRULENCE:
-        return !foe || foe->res_poison(false) >= 3;
 
     case SPELL_FLASH_FREEZE:
         return !foe
@@ -8311,11 +8324,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || no_clouds
                || !mons_should_cloud_cone(mon, _mons_spellpower(monspell, *mon),
                                           foe->pos());
-
-    // Friendly monsters don't use polymorph, as it's likely to cause
-    // runaway growth of an enemy.
-    case SPELL_POLYMORPH:
-        return friendly;
 
     case SPELL_MALIGN_GATEWAY:
         return !can_cast_malign_gateway();
