@@ -647,7 +647,7 @@ monster_type player_mons(bool transform)
     else if (mons == MONS_OGRE)
     {
         const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-        if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+        if (sk >= SK_SPELLCASTING && sk <= SK_LAST_MAGIC)
             mons = MONS_OGRE_MAGE;
     }
 
