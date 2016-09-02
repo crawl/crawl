@@ -568,8 +568,9 @@ static int _drain_monster(const actor* agent, monster* target, int pow,
     return 0;
 }
 
-spret_type _cast_los_attack_spell(spell_type spell, int pow, const actor* agent,
-                                  bool actual, bool fail, int* damage_done)
+static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
+                                         actor* agent, bool actual, bool fail,
+                                         int* damage_done)
 {
     const monster* mons = agent ? agent->as_monster() : nullptr;
 
