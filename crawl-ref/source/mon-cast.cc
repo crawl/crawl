@@ -443,41 +443,40 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _setup_ghostly_sacrifice_beam,
     } },
-    { SPELL_SLOW, { _hex_logic(SPELL_SLOW) } },
-    { SPELL_CONFUSE, { _hex_logic(SPELL_CONFUSE) } },
-    { SPELL_BANISHMENT, { _hex_logic(SPELL_BANISHMENT) } },
-    { SPELL_PARALYSE, { _hex_logic(SPELL_PARALYSE) } },
-    { SPELL_PETRIFY, { _hex_logic(SPELL_PETRIFY) } },
-    { SPELL_PAIN, { _hex_logic(SPELL_PAIN) } },
-    { SPELL_DISINTEGRATE, { _hex_logic(SPELL_DISINTEGRATE) } },
-    { SPELL_CORONA, { _hex_logic(SPELL_CORONA, [](const monster& caster) {
-        return !caster.get_foe()->backlit();
-    }) } },
-    { SPELL_POLYMORPH, { _hex_logic(SPELL_POLYMORPH, [](const monster& caster) {
+    { SPELL_SLOW, _hex_logic(SPELL_SLOW) },
+    { SPELL_CONFUSE, _hex_logic(SPELL_CONFUSE) },
+    { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
+    { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
+    { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
+    { SPELL_PAIN, _hex_logic(SPELL_PAIN) },
+    { SPELL_DISINTEGRATE, _hex_logic(SPELL_DISINTEGRATE) },
+    { SPELL_CORONA, _hex_logic(SPELL_CORONA, [](const monster& caster) {
+            return !caster.get_foe()->backlit();
+    }) },
+    { SPELL_POLYMORPH, _hex_logic(SPELL_POLYMORPH, [](const monster& caster) {
         return !caster.friendly(); // too dangerous to let allies use
-    }) } },
-    { SPELL_SLEEP, { _hex_logic(SPELL_SLEEP, _foe_can_sleep, 6) } },
-    { SPELL_HIBERNATION, { _hex_logic(SPELL_HIBERNATION, _foe_can_sleep) } },
-    { SPELL_TELEPORT_OTHER, { _hex_logic(SPELL_TELEPORT_OTHER,
-                                         _foe_not_teleporting) } },
-    { SPELL_DIMENSION_ANCHOR, {_hex_logic(SPELL_DIMENSION_ANCHOR, nullptr, 6)}},
-    { SPELL_AGONY, {
-        _hex_logic(SPELL_AGONY, [](const monster &caster) {
+    }) },
+    { SPELL_SLEEP, _hex_logic(SPELL_SLEEP, _foe_can_sleep, 6) },
+    { SPELL_HIBERNATION, _hex_logic(SPELL_HIBERNATION, _foe_can_sleep) },
+    { SPELL_TELEPORT_OTHER, _hex_logic(SPELL_TELEPORT_OTHER,
+                                         _foe_not_teleporting) },
+    { SPELL_DIMENSION_ANCHOR, _hex_logic(SPELL_DIMENSION_ANCHOR, nullptr, 6)},
+    { SPELL_AGONY, _hex_logic(SPELL_AGONY, [](const monster &caster) {
             return _torment_vulnerable(caster.get_foe());
         }, 6)
-    } },
-    { SPELL_STRIP_RESISTANCE, {
+    },
+    { SPELL_STRIP_RESISTANCE,
         _hex_logic(SPELL_STRIP_RESISTANCE, _foe_not_mr_vulnerable, 6)
-    } },
-    { SPELL_SENTINEL_MARK, { _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) } },
+    },
+    { SPELL_SENTINEL_MARK, _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) },
     { SPELL_SAP_MAGIC, {
         _always_worthwhile, _fire_simple_beam, _zap_setup(SPELL_SAP_MAGIC),
         MSPELL_LOGIC_NONE, 10,
     } },
-    { SPELL_DRAIN_MAGIC, { _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) } },
-    { SPELL_VIRULENCE, { _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
+    { SPELL_DRAIN_MAGIC, _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) },
+    { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
         return caster.get_foe()->res_poison(false) < 3;
-    }, 6) } },
+    }, 6) },
 };
 
 /// Is the 'monster' actually a proxy for the player?
