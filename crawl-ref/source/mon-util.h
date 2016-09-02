@@ -544,4 +544,12 @@ void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
 void radiate_pain_bond(const monster* mon, int damage);
 void throw_monster_bits(const monster* mon);
 void set_ancestor_spells(monster &ancestor, bool notify = false);
+
+typedef function<bool (monster& mon)> monster_func;
+bool apply_monsters_around_square(monster_func mf, const coord_def& where,
+                                  int radius = 1);
+bool apply_visible_monsters(monster_func mf,
+                            const coord_def& center = you.pos(),
+                            los_type los = LOS_NO_TRANS);
+
 #endif

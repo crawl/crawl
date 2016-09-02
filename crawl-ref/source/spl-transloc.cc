@@ -890,31 +890,28 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _disperse_monster(monster* mon, int pow)
+static int _disperse_monster(monster& mon, int pow)
 {
-    if (!mon)
-        return 0;
+    if (mon.no_tele())
+        return false;
 
-    if (mon->no_tele())
-        return 0;
-
-    if (mon->check_res_magic(pow) > 0)
-        monster_blink(mon);
+    if (mon.check_res_magic(pow) > 0)
+        monster_blink(&mon);
     else
-        monster_teleport(mon, true);
+        monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
-    if (mon->alive() && mon->check_res_magic(pow) <= 0)
-        mon->confuse(&you, 1 + random2avg(pow / 10, 2));
+    if (mon.alive() && mon.check_res_magic(pow) <= 0)
+        mon.confuse(&you, 1 + random2avg(pow / 10, 2));
 
-    return 1;
+    return true;
 }
 
 spret_type cast_dispersal(int pow, bool fail)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
-    if (!apply_monsters_around_square([pow] (monster* mon) {
+    if (!apply_monsters_around_square([pow] (monster& mon) {
             return _disperse_monster(mon, pow);
         }, you.pos(), radius))
     {
