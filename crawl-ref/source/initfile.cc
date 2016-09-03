@@ -811,6 +811,10 @@ void game_options::reset_options()
     cloud_status           = !is_tiles();
     darken_beyond_range    = true;
 
+    // MGD
+    auto_butcher           = false;
+    // MGD
+
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = true;
@@ -2688,6 +2692,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
+    // MGD
+    else BOOL_OPTION(auto_butcher);
+    // MGD
+
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)

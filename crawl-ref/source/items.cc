@@ -2869,6 +2869,10 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
     if (in_inventory(item))
         return false;
 
+    // MGD mark corpses for pickup if auto_butcher is on
+    if( Options.auto_butcher && item.base_type == OBJ_CORPSES && !is_inedible(item) && !is_bad_food(item) )
+        return true;    
+
     if (item_is_stationary(item))
         return false;
 
@@ -3123,6 +3127,11 @@ static void _do_autopickup()
 
         if (item_needs_autopickup(mitm[o]))
         {
+            //MGD auto_butcher edible corpses
+            item_def& mi = mitm[o];
+            if( Options.auto_butcher && mi.base_type == OBJ_CORPSES && !is_inedible(mi) && !is_bad_food(mi) )
+                butchery(&mi);
+                            
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.
