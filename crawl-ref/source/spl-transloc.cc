@@ -675,10 +675,8 @@ void you_teleport_now(bool wizard_tele, bool teleportitis)
     // the player is in the Abyss and teleported to escape from all the
     // monsters chasing him/her, since in that case the new dangerous area is
     // almost certainly *less* dangerous than the old dangerous area.
-    // Teleporting in a labyrinth is also funny.
-    if (randtele
-        && (player_in_branch(BRANCH_LABYRINTH)
-            || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
+    if (randtele && !player_in_branch(BRANCH_ABYSS)
+        && player_in_a_dangerous_place())
     {
         xom_is_stimulated(200);
     }
