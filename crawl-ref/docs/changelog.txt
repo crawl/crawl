@@ -3,7 +3,7 @@ Stone Soup 0.19 (up to 0.19-a0-1375-g616abca)
 
 Highlights
 ----------
-* New gods: Ukayaw the Reveler and Hepliaklqana the Forgotten.
+* New gods: Uskayaw the Reveler and Hepliaklqana the Forgotten.
 * New portal: the Desolation of Salt.
 * TODO: decide what else qualifies before release!
 
@@ -40,7 +40,7 @@ Character
 
 Gods
 ----
-* New temple god: Ukayaw the Reveler.
+* New temple god: Uskayaw the Reveler.
   - Piety gained by dealing damage to enemies.
   - Piety decays extremely rapidly over time.
   - 1*: Stomp: deals damage to all adjacent enemies.
