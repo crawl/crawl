@@ -103,6 +103,10 @@ spret_type cast_excruciating_wounds(int power, bool fail)
         you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
+        if (orig_brand == SPWPN_PROTECTION)
+            you.redraw_armour_class = true;
+        if (orig_brand == SPWPN_ANTIMAGIC)
+            calc_mp();
     }
 
     you.increase_duration(DUR_EXCRUCIATING_WOUNDS, 8 + roll_dice(2, power), 50);
