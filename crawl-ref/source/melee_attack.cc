@@ -1849,19 +1849,12 @@ void melee_attack::rot_defender(int amount)
     // Keep the defender alive so that we credit kills properly.
     if (defender->rot(attacker, amount, true, true))
     {
-        // Duplicating the messages here because we want them to
-        // appear as a special_damage_message, not immediately.
-        if (defender->is_player())
+        if (needs_message)
         {
-            special_damage_message =
-                make_stringf("Your flesh rots away!");
-        }
-        else if (defender->is_monster() && defender_visible)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s looks less resilient!",
-                    defender_name(false).c_str());
+            if (defender->is_player())
+                mpr("You feel your flesh rotting away!");
+            else if (defender->is_monster() && defender_visible)
+                mprf("%s looks less resilient!", defender_name(false).c_str());
         }
     }
 }
