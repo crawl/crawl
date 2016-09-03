@@ -51,7 +51,7 @@ The contents of this text are:
                 auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
-                jewellery_prompt, easy_confirm, allow_self_target,
+                jewellery_prompt, easy_confirm, allow_self_target, auto_butcher,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
                 easy_exit_menu, ability_menu, sort_menus, spell_slot,
                 item_slot, ability_slot, autofight_stop, autofight_warning,
@@ -962,6 +962,10 @@ allow_self_target = (yes | no | prompt)
         'prompt' (the default), you will be required to confirm
         self-targeting. This option has no effect on area-effect
         spells, such as Mephitic Cloud, where you are always a valid target.
+
+auto_butcher = false
+        If this is set to true, you will automatically travel to and attempt to
+        butcher edible corpses.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if

@@ -799,6 +799,7 @@ void game_options::reset_options()
     warn_hatches           = false;
     enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
+    auto_butcher           = false;
     easy_eat_chunks        = false;
     auto_eat_chunks        = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -2688,6 +2689,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
+    else BOOL_OPTION(auto_butcher);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)
