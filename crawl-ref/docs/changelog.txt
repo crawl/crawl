@@ -66,14 +66,14 @@ Gods
   - At 3*, grants "Channel Magic", trading piety for a fast MP regen status.
   - Book gifts now begin at 5*, instead of 6*.
   - Sif grants piety for both learning magic and killing enemies.
+* Nemelex Xobeh changes:
+  - Now gifts decks of escape, destruction and summoning.
+  - Drawing from decks and using Nemelex abilities now uses invocations,
+    not evocations.
+  - Identify scrolls can no longer be used on decks.
 * Beogh's water-walking now always lasts until the player is on land.
 * Beogh no longer increases the benefits of armour and shields.
 * Dithmenos's Shadow Step can no longer be used on allies or while immobile.
-* Nemelex Xobeh's abilities now use invocations, not evocations.
-* Nemelex Xobeh now gifts decks of escape, destruction & summoning.
-* Pakellas suppresses Vine Stalker MP drain.
-* Pakellas's wrath no longer drains the player or their items, but instead
-  passively blocks all device use for its duration.
 * Many divine abilities have had their hunger costs removed or increased.
 * Most gods that like killing are less particular about what you kill.
 * Piety decay over time has been streamlined and adjusted for most gods.
@@ -106,8 +106,6 @@ Items
     per-use, instead of a hidden charge count. They now stack.
   - Fans of gales & lamps of fire no longer summon elemental allies.
   - Phials of floods impact damage significantly reduced.
-  - Deck use no longer has a chance of drawing from the deck of oddities.
-  - Identify scrolls can no longer be used on decks.
 * Players using long blades sometimes riposte when dodging attacks, launching
   instant, automatic counterattacks.
 * Amulets of harm now increase damage dealt more than damage taken, and are no
@@ -118,10 +116,7 @@ Items
 * Rods are created through misc. acquirement instead of staff acquirement.
 * It's no longer possible to acquire ammunition.
 * Removed:
-  - All decks, except for gifts from Nemelex Xobeh.
-  - Alchemist, Banshee, Blade, Crusade, Dowsing, Exile, Feast, Focus,
-    Fortitude, Hammer, Helix, Helm, Mercenary, Potion, Repulsiveness, Shadow,
-    Solitude, Swap, Water, Venom, and Xom cards.
+  - All decks and their cards, except for those gifted by Nemelex Xobeh.
   - Sword of the Doom Knight, Amulet of Cekugob, and "Brilliance".
   - Rings of sustain abilities.
   - Stones of tremors.
@@ -158,7 +153,6 @@ Monsters
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
 * Death scarabs no longer trail miasma, but are somewhat tougher.
-* Decayed bog bodies have become bog mummies, which are somewhat weaker.
 * Friendly monsters will no longer open doors.
 * Jellies no longer eat unseen items for non-Jiyva worshippers.
 * Giant eyeballs charge up their paralysis-stare 50% faster.
