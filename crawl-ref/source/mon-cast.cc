@@ -7921,6 +7921,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     if (friendly && !foe && spell_typematch(monspell, SPTYP_SUMMONING))
         return true;
 
+    // Don't try to cast spells at players who are stepped from time.
+    if (foe && foe->is_player() && you.duration[DUR_TIME_STEP])
+        return true;
+
     if (!mon->wont_attack())
     {
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
