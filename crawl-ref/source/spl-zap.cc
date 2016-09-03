@@ -72,9 +72,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_VIRULENCE, ZAP_VIRULENCE },
     { SPELL_SAP_MAGIC, ZAP_SAP_MAGIC },
     { SPELL_DRAIN_MAGIC, ZAP_DRAIN_MAGIC },
-    // player spells with monster-specific zaps
-    { SPELL_SANDBLAST, ZAP_SANDBLAST },
-    { SPELL_FREEZING_CLOUD, ZAP_FREEZING_BLAST },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
