@@ -5222,7 +5222,7 @@ player::player()
     last_timer_effect.init(0);
     next_timer_effect.init(20 * BASELINE_DELAY);
 
-    dead = false;
+    pending_revival = false;
     lives = 0;
     deaths = 0;
 

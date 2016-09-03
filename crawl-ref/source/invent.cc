@@ -1168,7 +1168,7 @@ static unsigned char _invent_select(const char *title = nullptr,
 void display_inventory()
 {
     int flags = MF_SINGLESELECT;
-    if (you.dead || crawl_state.updating_scores)
+    if (you.pending_revival || crawl_state.updating_scores)
         flags |= MF_EASY_EXIT;
 
     while (true)

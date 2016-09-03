@@ -852,7 +852,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (you.duration[DUR_TIME_STEP])
         return;
 
-    if (you.dead) // ... but eligible for revival
+    if (you.pending_revival)
         return;
 
     int drain_amount = 0;
@@ -1124,7 +1124,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         you.deaths++;
         you.lives--;
-        you.dead = true;
+        you.pending_revival = true;
 
         stop_delay(true);
 
