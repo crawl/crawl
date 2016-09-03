@@ -2418,9 +2418,9 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     }
     else
     {
-        const bool do_actions = in_inventory(item)
-                                // Dead men use no items.
-                                && !(you.dead || crawl_state.updating_scores);
+        const bool do_actions = in_inventory(item) // Dead men use no items.
+                                && !(you.pending_revival
+                                     || crawl_state.updating_scores);
         vector<command_type> actions;
         formatted_scroller menu;
         menu.add_text(desc, false, get_number_of_cols());

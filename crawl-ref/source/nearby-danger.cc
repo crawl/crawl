@@ -434,7 +434,7 @@ void revive()
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);
-    you.dead = false;
+    you.pending_revival = false;
 
     // Remove silence.
     invalidate_agrid();

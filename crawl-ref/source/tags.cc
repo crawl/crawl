@@ -1352,8 +1352,8 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
-    ASSERT(you.hp > 0 || you.dead);
-    marshallShort(th, you.dead ? 0 : you.hp);
+    ASSERT(you.hp > 0 || you.pending_revival);
+    marshallShort(th, you.pending_revival ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
@@ -3226,7 +3226,7 @@ static void tag_read_you(reader &th)
     }
 #endif
 
-    you.dead = !you.hp;
+    you.pending_revival = !you.hp;
 
     EAT_CANARY;
 
