@@ -41,6 +41,7 @@
 #include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -1319,80 +1320,81 @@ static void _velocity_card(int power, deck_rarity_type rarity)
             break;
     }
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    if (!apply_visible_monsters([=](monster& mon)
+          {
+              bool affected = false;
+              if (!mons_immune_magic(&mon))
+              {
+                  const bool hostile = !mon.wont_attack();
+                  const bool haste_immune = (mon.check_stasis(false)
+                                             || mons_is_immotile(&mon));
+
+                  bool did_haste = false;
+                  bool did_swift = false;
+
+                  if (hostile)
+                  {
+                      if (for_hostiles != ENCH_NONE)
+                      {
+                          if (for_hostiles == ENCH_SLOW)
+                          {
+                              do_slow_monster(&mon, &you);
+                              affected = true;
+                          }
+                          else if (!(for_hostiles == ENCH_HASTE && haste_immune))
+                          {
+                              if (have_passive(passive_t::no_haste))
+                                  _suppressed_card_message(you.religion, DID_HASTY);
+                              else
+                              {
+                                  mon.add_ench(for_hostiles);
+                                  affected = true;
+                                  if (for_hostiles == ENCH_HASTE)
+                                      did_haste = true;
+                                  else if (for_hostiles == ENCH_SWIFT)
+                                      did_swift = true;
+                              }
+                          }
+                      }
+                  }
+                  else //allies
+                  {
+                      if (for_allies != ENCH_NONE)
+                      {
+                          if (for_allies == ENCH_SLOW)
+                          {
+                              do_slow_monster(&mon, &you);
+                              affected = true;
+                          }
+                          else if (!(for_allies == ENCH_HASTE && haste_immune))
+                          {
+                              if (have_passive(passive_t::no_haste))
+                                  _suppressed_card_message(you.religion, DID_HASTY);
+                              else
+                              {
+                                  mon.add_ench(for_allies);
+                                  affected = true;
+                                  if (for_allies == ENCH_HASTE)
+                                      did_haste = true;
+                                  else if (for_allies == ENCH_SWIFT)
+                                      did_swift = true;
+                              }
+                          }
+                      }
+                  }
+
+                  if (did_haste)
+                      simple_monster_message(&mon, " seems to speed up.");
+
+                  if (did_swift)
+                      simple_monster_message(&mon, " is moving somewhat quickly.");
+              }
+              return affected;
+          })
+        && !did_something)
     {
-        monster* mon = monster_at(*ri);
-
-        if (mon && !mons_immune_magic(mon))
-        {
-            const bool hostile = !mon->wont_attack();
-            const bool haste_immune = (mon->check_stasis(false)
-                                || mons_is_immotile(mon));
-
-            bool did_haste = false;
-            bool did_swift = false;
-
-            if (hostile)
-            {
-                if (for_hostiles != ENCH_NONE)
-                {
-                    if (for_hostiles == ENCH_SLOW)
-                    {
-                        do_slow_monster(mon, &you);
-                        did_something = true;
-                    }
-                    else if (!(for_hostiles == ENCH_HASTE && haste_immune))
-                    {
-                        if (have_passive(passive_t::no_haste))
-                            _suppressed_card_message(you.religion, DID_HASTY);
-                        else
-                        {
-                            mon->add_ench(for_hostiles);
-                            did_something = true;
-                            if (for_hostiles == ENCH_HASTE)
-                                did_haste = true;
-                            else if (for_hostiles == ENCH_SWIFT)
-                                did_swift = true;
-                        }
-                    }
-                }
-            }
-            else //allies
-            {
-                if (for_allies != ENCH_NONE)
-                {
-                    if (for_allies == ENCH_SLOW)
-                    {
-                        do_slow_monster(mon, &you);
-                        did_something = true;
-                    }
-                    else if (!(for_allies == ENCH_HASTE && haste_immune))
-                    {
-                        if (have_passive(passive_t::no_haste))
-                            _suppressed_card_message(you.religion, DID_HASTY);
-                        else
-                        {
-                            mon->add_ench(for_allies);
-                            did_something = true;
-                            if (for_allies == ENCH_HASTE)
-                                did_haste = true;
-                            else if (for_allies == ENCH_SWIFT)
-                                did_swift = true;
-                        }
-                    }
-                }
-            }
-
-            if (did_haste)
-                simple_monster_message(mon, " seems to speed up.");
-
-            if (did_swift)
-                simple_monster_message(mon, " is moving somewhat quickly.");
-        }
-    }
-
-    if (!did_something)
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 }
 
 static void _exile_card(int power, deck_rarity_type rarity)
@@ -1441,18 +1443,13 @@ static void _shaft_card(int power, deck_rarity_type rarity)
             did_something = true;
         }
 
-        for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+        did_something = apply_visible_monsters([=](monster& mons)
         {
-            monster *mons = monster_at(*di);
-
-            if (mons && !mons->wont_attack()
-                && mons_is_threatening(mons)
-                && x_chance_in_y(power_level, 3))
-            {
-                if (mons->do_shaft())
-                    did_something = true;
-            }
-        }
+            return !mons.wont_attack()
+                   && mons_is_threatening(&mons)
+                   && x_chance_in_y(power_level, 3)
+                   && mons.do_shaft();
+        }) || did_something;
     }
 
     if (!did_something)
@@ -1532,16 +1529,13 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
             done_prompt = true;
             mpr(prompt);
             mpr("You radiate a wave of entropy!");
-            for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+            apply_visible_monsters([](monster& mons)
             {
-                monster *mons = monster_at(*di);
-
-                if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
-                    continue;
-
-                if (coinflip())
-                    mons->corrode_equipment();
-            }
+                return !mons.wont_attack()
+                       && mons_is_threatening(&mons)
+                       && coinflip()
+                       && mons.corrode_equipment();
+            });
         }
         ztype = acidzaps[power_level];
         break;
@@ -1581,22 +1575,21 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                         dec_hp(dam, false);
                 }
 
-                for (radius_iterator di(ghost->pos(), LOS_NO_TRANS); di; ++di)
+                apply_visible_monsters([&, ghost](monster& mons)
                 {
-                    monster *mons = monster_at(*di);
-
-                    if (!mons || mons->wont_attack()
-                        || !(mons->holiness() & MH_NATURAL))
+                    if (mons.wont_attack()
+                        || !(mons.holiness() & MH_NATURAL))
                     {
-                        continue;
+                        return false;
                     }
 
-                    beem.target = mons->pos();
-                    ghost->foe = mons->mindex();
+                    beem.target = mons.pos();
+                    ghost->foe = mons.mindex();
                     mons_cast(ghost, beem, SPELL_FLAY,
                               ghost->spell_slot_flags(SPELL_FLAY), msg);
                     msg = false;
-                }
+                    return true;
+                }, ghost->pos());
 
                 ghost->foe = MHITYOU;
             }
@@ -1676,17 +1669,16 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    apply_visible_monsters([=](monster& mon)
     {
-        monster* mon = monster_at(*ri);
-
-        if (mon && mon->wont_attack())
+        if (mon.wont_attack())
         {
-            const int hp = mon->max_hit_points / (4 - power_level);
-            if (mon->heal(hp + random2avg(hp, 2)))
-               simple_monster_message(mon, " is healed.");
+            const int hp = mon.max_hit_points / (4 - power_level);
+            if (mon.heal(hp + random2avg(hp, 2)))
+               simple_monster_message(&mon, " is healed.");
         }
-    }
+        return true;
+    });
 }
 
 // Special case for *your* god, maybe?
@@ -2067,7 +2059,6 @@ static void _illusion_card(int power, deck_rarity_type rarity)
 static void _degeneration_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    bool effects = false;
 
     if (you_worship(GOD_ZIN))
     {
@@ -2075,35 +2066,33 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
         return;
     }
 
-    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    if (!apply_visible_monsters([power_level](monster& mons)
+           {
+               if (mons.wont_attack() || !mons_is_threatening(&mons))
+                   return false;;
+
+               if (x_chance_in_y((power_level + 1) * 5 + random2(5),
+                                 mons.get_hit_dice()))
+               {
+                   if (mons.can_polymorph())
+                   {
+                       monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
+                       mons.malmutate("");
+                   }
+                   else
+                   {
+                       const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
+                       mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
+                       simple_monster_message(&mons,
+                                              " is dazed by the mutagenic energy.");
+                       return true;
+                   }
+               }
+               return false;
+           }))
     {
-        monster *mons = monster_at(*di);
-
-        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
-            continue;
-
-        if (x_chance_in_y((power_level + 1) * 5 + random2(5),
-                          mons->get_hit_dice()))
-        {
-            if (mons->can_polymorph())
-            {
-                monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
-                mons->malmutate("");
-            }
-            else
-            {
-                const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
-                mons->add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
-                simple_monster_message(mons,
-                                       " is dazed by the mutagenic energy.");
-            }
-
-            effects = true;
-        }
-    }
-
-    if (!effects)
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 }
 
 static void _wild_magic_card(int power, deck_rarity_type rarity)
