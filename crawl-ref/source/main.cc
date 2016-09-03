@@ -1333,7 +1333,7 @@ static void _input()
 
     reset_damage_counters();
 
-    if (you.dead)
+    if (you.pending_revival)
     {
         revive();
         bring_to_safety();

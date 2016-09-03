@@ -177,7 +177,7 @@ public:
     FixedVector<int, NUM_TIMERS> last_timer_effect;
     FixedVector<int, NUM_TIMERS> next_timer_effect;
 
-    bool dead; // ... but pending revival
+    bool pending_revival;
     int lives;
     int deaths;
 #if TAG_MAJOR_VERSION == 34

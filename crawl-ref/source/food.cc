@@ -1231,7 +1231,7 @@ void handle_starvation()
 
             mprf(MSGCH_FOOD, "You have starved to death.");
             ouch(INSTANT_DEATH, KILLED_BY_STARVATION);
-            if (!you.dead) // if we're still here...
+            if (!you.pending_revival) // if we're still here...
                 set_hunger(HUNGER_DEFAULT, true);
         }
     }
