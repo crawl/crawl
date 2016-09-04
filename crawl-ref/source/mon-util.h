@@ -370,7 +370,7 @@ bool mons_is_seeking(const monster* m);
 bool mons_is_fleeing(const monster* m);
 bool mons_is_retreating(const monster* m);
 bool mons_is_cornered(const monster* m);
-bool mons_is_batty(const monster* m);
+bool mons_is_batty(const monster& m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_just_slept(const monster* m);

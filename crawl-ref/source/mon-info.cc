@@ -582,7 +582,7 @@ monster_info::monster_info(const monster* m, int milev)
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(m))
             mb.set(MB_FLEEING);
-        else if (mons_is_wandering(m) && !mons_is_batty(m))
+        else if (mons_is_wandering(m) && !mons_is_batty(*m))
         {
             if (m->is_stationary())
                 mb.set(MB_UNAWARE);
@@ -590,7 +590,7 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_WANDERING);
         }
         // TODO: is this ever needed?
-        else if (m->foe == MHITNOT && !mons_is_batty(m)
+        else if (m->foe == MHITNOT && !mons_is_batty(*m)
                  && m->attitude == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
