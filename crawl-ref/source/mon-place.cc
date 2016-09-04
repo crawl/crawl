@@ -1557,7 +1557,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
     {
         no_messages nm;
-        monster_polymorph(mon, mg.initial_shifter);
+        monster_polymorph(mon, RANDOM_MONSTER);
 
         // It's not actually a known shapeshifter if it happened to be
         // placed in LOS of the player.

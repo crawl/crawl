@@ -4678,7 +4678,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.hd        = mspec.hd;
     mg.hp        = mspec.hp;
     mg.props     = mspec.props;
-    mg.initial_shifter = mspec.initial_shifter;
 
     // Marking monsters as summoned
     mg.abjuration_duration = mspec.abjuration_duration;

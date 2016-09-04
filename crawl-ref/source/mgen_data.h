@@ -88,9 +88,6 @@ struct mgen_data
     // Fiend ... summoned by the effects of Hell.
     string          non_actor_summoner;
 
-    // This simply stores the initial shape-shifter type.
-    monster_type    initial_shifter;
-
     // A grid feature to prefer when finding a place to create monsters.
     // For instance, using DNGN_FLOOR when placing flying monsters or
     // merfolk in the Shoals will force them to appear on land.
@@ -127,15 +124,13 @@ struct mgen_data
               int mhd = 0, int mhp = 0,
               monster_flags_t extflags = MF_NO_FLAGS,
               string monname = "",
-              string nas = "",
-              monster_type is = RANDOM_MONSTER)
+              string nas = "")
 
         : cls(mt), behaviour(beh), summoner(sner), abjuration_duration(abj),
           summon_type(st), pos(p), foe(mfoe), flags(genflags), god(which_god),
           base_type(base), colour(moncolour),
           proximity(prox), place(_place), hd(mhd), hp(mhp),
-          extra_flags(extflags), mname(monname), non_actor_summoner(nas),
-          initial_shifter(is)
+          extra_flags(extflags), mname(monname), non_actor_summoner(nas)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
@@ -187,7 +182,7 @@ struct mgen_data
                          alert ? MHITYOU : MHITNOT,
                          genflags, ngod, base, COLOUR_INHERIT,
                          PROX_ANYWHERE, level_id::current(), 0, 0, MF_NO_FLAGS,
-                         "", nsummoner, RANDOM_MONSTER);
+                         "", nsummoner);
     }
 };
 
