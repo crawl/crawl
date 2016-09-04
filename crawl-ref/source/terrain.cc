@@ -807,7 +807,7 @@ void slime_wall_damage(actor* act, int delay)
         monster* mon = act->as_monster();
 
         // Slime native monsters are immune to slime walls.
-        if (mons_is_slime(mon))
+        if (mons_is_slime(*mon))
             return;
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,

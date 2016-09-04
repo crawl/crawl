@@ -429,7 +429,7 @@ static peeve_map divine_peeves[] =
             nullptr, true,
             1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim
-                    && mons_is_slime(victim) && !victim->is_shapeshifter();
+                    && mons_is_slime(*victim) && !victim->is_shapeshifter();
             }
         } },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
@@ -896,7 +896,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
                 const int speed_delta =
-                    cheibriados_monster_player_speed_delta(victim);
+                    cheibriados_monster_player_speed_delta(*victim);
                 dprf("Chei DID_KILL_FAST: %s speed delta: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
                      speed_delta);

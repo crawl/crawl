@@ -1768,9 +1768,9 @@ static void _elements_card(int power, deck_rarity_type rarity)
         monster hackmon;
 
         hackmon.type = mons_type;
-        mons_load_spells(&hackmon);
+        mons_load_spells(hackmon);
 
-        if (you_worship(GOD_DITHMENOS) && mons_is_fiery(&hackmon))
+        if (you_worship(GOD_DITHMENOS) && mons_is_fiery(hackmon))
         {
             _suppressed_card_message(you.religion, DID_FIRE);
             start++;

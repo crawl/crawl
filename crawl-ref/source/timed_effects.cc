@@ -1122,7 +1122,7 @@ static void _catchup_monster_move(monster* mon, int moves)
         coord_def inc(mon->target - pos);
         inc = coord_def(sgn(inc.x), sgn(inc.y));
 
-        if (mons_is_retreating(mon))
+        if (mons_is_retreating(*mon))
             inc *= -1;
 
         // Bounds check: don't let shifting monsters try to run off the

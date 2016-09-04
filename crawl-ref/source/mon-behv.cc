@@ -286,8 +286,8 @@ void handle_behaviour(monster* mon)
         return;
     }
 
-    if (mons_is_fleeing_sanctuary(mon)
-        && mons_is_fleeing(mon)
+    if (mons_is_fleeing_sanctuary(*mon)
+        && mons_is_fleeing(*mon)
         && is_sanctuary(you.pos()))
     {
         return;
@@ -699,7 +699,7 @@ void handle_behaviour(monster* mon)
                     return;
             }
 
-            if (mon->strict_neutral() && mons_is_slime(mon)
+            if (mon->strict_neutral() && mons_is_slime(*mon)
                 && you_worship(GOD_JIYVA))
             {
                 set_random_slime_target(mon);
@@ -1034,7 +1034,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (src_idx == YOU_FAULTLESS)
         src_idx = MHITYOU;
 
-    if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
+    if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(*mon))
     {
         mon->behaviour = BEH_FLEE;
         mon->foe       = MHITYOU;
@@ -1059,7 +1059,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // monsters who aren't otherwise occupied will at
         // least consider the (apparent) source of the noise
         // interesting for a moment. -- bwr
-        if (!isSmart || mon->foe == MHITNOT || mons_is_wandering(mon))
+        if (!isSmart || mon->foe == MHITNOT || mons_is_wandering(*mon))
         {
             if (mon->is_patrolling())
                 break;
@@ -1123,7 +1123,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_fleeing(mon))
+        else if (!mons_is_fleeing(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (src == &you && mon->angered_by_attacks())
@@ -1181,7 +1181,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_retreating(mon))
+        if (!mons_is_retreating(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (mon->foe == MHITNOT)
@@ -1189,7 +1189,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (!src_pos.origin()
             && (mon->foe == MHITNOT || src && mon->foe == src->mindex()
-                || mons_is_wandering(mon)))
+                || mons_is_wandering(*mon)))
         {
             if (mon->is_patrolling())
                 break;
@@ -1240,7 +1240,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_CORNERED:
         // We only care about this event if we were actually running away
-        if (!mons_is_retreating(mon))
+        if (!mons_is_retreating(*mon))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
@@ -1250,7 +1250,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If we were already cornered last turn, give up on trying to flee
         // and turn to fight instead. Otherwise, pause a turn in hope that
         // an escape route will open up.
-        if (mons_is_cornered(mon))
+        if (mons_is_cornered(*mon))
         {
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
@@ -1266,7 +1266,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             mon->del_ench(ENCH_FEAR, true);
             mon->behaviour = BEH_SEEK;
         }
-        else if (mons_is_fleeing(mon))
+        else if (mons_is_fleeing(*mon))
         {
             // Save their current position so we know if they manage to move
             // on the following turn (and thus resume BEH_FLEE)
@@ -1335,7 +1335,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (mons_allows_beogh_now(mon))
+    if (mons_allows_beogh_now(*mon))
     {
         const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))
@@ -1360,7 +1360,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
 void make_mons_stop_fleeing(monster* mon)
 {
-    if (mons_is_retreating(mon))
+    if (mons_is_retreating(*mon))
         behaviour_event(mon, ME_CORNERED);
 }
 

@@ -7632,7 +7632,7 @@ bool player::made_nervous_by(const coord_def &p)
         return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (!mons_is_wandering(*mi)
+        if (!mons_is_wandering(**mi)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()

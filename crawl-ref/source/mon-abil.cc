@@ -88,7 +88,7 @@ void draconian_change_colour(monster* drac)
         if (!(slot.flags & MON_SPELL_BREATH))
             drac->spells.push_back(slot);
 
-    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(drac)));
+    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(*drac)));
 }
 
 bool ugly_thing_mutate(monster* ugly, bool force)
@@ -469,7 +469,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monster* thing)
 {
-    return thing->asleep() || mons_is_wandering(thing)
+    return thing->asleep() || mons_is_wandering(*thing)
            || thing->foe == MHITNOT;
 }
 
@@ -477,8 +477,8 @@ static bool _unoccupied_slime(monster* thing)
 static bool _disabled_merge(monster* thing)
 {
     return !thing
-           || mons_is_fleeing(thing)
-           || mons_is_confused(thing)
+           || mons_is_fleeing(*thing)
+           || mons_is_confused(*thing)
            || thing->paralysed();
 }
 
@@ -1008,7 +1008,7 @@ bool mon_special_ability(monster* mons)
     bool used = false;
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                  ? draco_or_demonspawn_subspecies(mons)
+                                  ? draco_or_demonspawn_subspecies(*mons)
                                   : mons->type;
 
     // Slime creatures can split while out of sight.
@@ -1093,7 +1093,7 @@ bool mon_special_ability(monster* mons)
         {
             mons->add_ench(ENCH_WITHDRAWN);
 
-            if (mons_is_retreating(mons))
+            if (mons_is_retreating(*mons))
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(*mons, " withdraws into its shell!");
@@ -1111,7 +1111,7 @@ bool mon_special_ability(monster* mons)
             bolt beem = setup_targetting_beam(*mons);
 
             // Fleeing check
-            if (mons_is_fleeing(mons))
+            if (mons_is_fleeing(*mons))
             {
                 if (coinflip())
                 {
@@ -1139,7 +1139,7 @@ bool mon_special_ability(monster* mons)
             _starcursed_split(mons), used = true;
         }
 
-        if (!mons_is_confused(mons)
+        if (!mons_is_confused(*mons)
                 && !is_sanctuary(mons->pos()) && !is_sanctuary(mons->target)
                 && _will_starcursed_scream(mons)
                 && coinflip())
@@ -1177,7 +1177,7 @@ bool mon_special_ability(monster* mons)
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
         else if (mons->props["foe_approaching"].get_bool() == true
-                 && !mons_is_confused(mons)
+                 && !mons_is_confused(*mons)
                  && coinflip())
         {
             int briar_count = 0;

@@ -692,7 +692,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
-        if (mons_is_wandering(this))
+        if (mons_is_wandering(*this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);
@@ -1270,7 +1270,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
 static void _merfolk_avatar_song(monster* mons)
 {
     // First, attempt to pull the player, if mesmerised
-    if (you.beheld_by(mons) && coinflip())
+    if (you.beheld_by(*mons) && coinflip())
     {
         // Don't pull the player if they walked forward voluntarily this
         // turn (to avoid making you jump two spaces at once)

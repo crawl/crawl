@@ -822,7 +822,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
 {
     // Only choose monsters that will attack.
     if (!mon->alive() || mons_attitude(*mon) != ATT_HOSTILE
-        || mons_is_fleeing(mon))
+        || mons_is_fleeing(*mon))
     {
         return false;
     }
@@ -1751,7 +1751,7 @@ static void _xom_destruction(int sever, bool real)
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_is_projectile(*mi)
+        if (mons_is_projectile(**mi)
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || one_chance_in(3))
         {
@@ -2821,7 +2821,7 @@ static bool _mon_valid_blink_victim(const monster *mon)
 {
     return !mon->wont_attack()
             && !mon->no_tele()
-            && !mons_is_projectile(mon);
+            && !mons_is_projectile(*mon);
 }
 
 static void _xom_blink_monsters(int /*sever*/)
@@ -3047,7 +3047,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         const bool fake = one_chance_in(3);
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_is_projectile(*mi)
+            if (mons_is_projectile(**mi)
                 || mons_is_tentacle_or_tentacle_segment(mi->type))
             {
                 continue;

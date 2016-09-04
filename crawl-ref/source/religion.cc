@@ -1199,14 +1199,14 @@ bool is_orcish_follower(const monster* mon)
 
 bool is_fellow_slime(const monster* mon)
 {
-    return mon->alive() && mons_is_slime(mon)
+    return mon->alive() && mons_is_slime(*mon)
            && mon->attitude == ATT_STRICT_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
 static bool _is_plant_follower(const monster* mon)
 {
-    return mon->alive() && mons_is_plant(mon)
+    return mon->alive() && mons_is_plant(*mon)
            && mon->attitude == ATT_FRIENDLY;
 }
 
@@ -2539,7 +2539,7 @@ bool fedhas_protects(const monster* target)
 // Fedhas neutralises most plants and fungi
 bool fedhas_neutralises(const monster* target)
 {
-    return target && mons_is_plant(target)
+    return target && mons_is_plant(*target)
            && target->holiness() & MH_PLANT
            && target->type != MONS_SNAPLASHER_VINE
            && target->type != MONS_SNAPLASHER_VINE_SEGMENT;
@@ -4260,7 +4260,7 @@ int get_monster_tension(const monster* mons, god_type god)
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
         return 0;
 
-    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(mons))
+    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
         return 0;
 
     int exper = exper_value(*mons);

@@ -271,7 +271,7 @@ bool check_awaken(monster* mons, int stealth)
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
-    if (mons_just_slept(mons))
+    if (mons_just_slept(*mons))
         return false;
 
     // Berserkers aren't really concerned about stealth.
@@ -291,7 +291,7 @@ bool check_awaken(monster* mons, int stealth)
     // still actively on guard for the player, even if they can't see you.
     // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
     // a while, removing this bonus.
-    if (mons_is_wandering(mons) && mons->foe == MHITYOU)
+    if (mons_is_wandering(*mons) && mons->foe == MHITYOU)
         mons_perc += 15;
 
     if (!you.visible_to(mons))
@@ -1138,7 +1138,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     if (monster *mons = monster_at(pos))
     {
         if (mons->alive()
-            && !mons_just_slept(mons)
+            && !mons_just_slept(*mons)
             && mons->mid != noise.noise_producer_mid)
         {
             const coord_def perceived_position =

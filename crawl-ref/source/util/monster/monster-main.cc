@@ -656,7 +656,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
                     this_spec = true;
             }
 
-            mons_remove_from_grid(mp);
+            mons_remove_from_grid(*mp);
 
             if (this_spec)
             {
@@ -854,7 +854,7 @@ int main(int argc, char* argv[])
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
 
     const monsterentry* mbase =
-        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(&mon)) :
+        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(mon)) :
                   (monsterentry*)0;
 
     if (me)
@@ -1114,7 +1114,7 @@ int main(int argc, char* argv[])
                         monsterflags, colour(RED, "demonic"));
         mons_check_flag((bool)(me->holiness & MH_NONLIVING),
                         monsterflags, colour(LIGHTCYAN, "non-living"));
-        mons_check_flag(mons_is_plant(&mon), monsterflags,
+        mons_check_flag(mons_is_plant(mon), monsterflags,
                         colour(GREEN, "plant"));
 
         switch (me->gmon_use)

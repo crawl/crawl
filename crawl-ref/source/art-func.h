@@ -602,15 +602,17 @@ static monster* _find_nearest_possible_beholder()
 static void _DEMON_AXE_world_reacts(item_def *item)
 {
 
-    monster* closest = _find_nearest_possible_beholder();
+    monster* mon = _find_nearest_possible_beholder();
 
-    if (!closest)
+    if (!mon)
         return;
+
+    monster& closest = *mon;
 
     if (!you.beheld_by(closest))
     {
         mprf("Visions of slaying %s flood into your mind.",
-             closest->name(DESC_THE).c_str());
+             closest.name(DESC_THE).c_str());
 
         // The monsters (if any) currently mesmerising the player do not include
         // this monster. To avoid trapping the player, all other beholders

@@ -616,7 +616,7 @@ static int _heretic_recite_weakness(const monster *mon)
     // Sleeping or paralyzed monsters will wake up or still perceive their
     // surroundings, respectively. So, you can still recite to them.
     if (mons_intel(*mon) >= I_HUMAN
-        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
+        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(*mon)))
     {
         // In the eyes of Zin, everyone is a sinner until proven otherwise!
             degree++;
@@ -1842,7 +1842,7 @@ void jiyva_paralyse_jellies()
     {
         monster* mon = monster_at(*ri);
         const int dur = 20 + random2(11);
-        if (mon != nullptr && mons_is_slime(mon) && !mon->is_shapeshifter())
+        if (mon != nullptr && mons_is_slime(*mon) && !mon->is_shapeshifter())
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
                                       &you, dur * BASELINE_DELAY));
@@ -3454,7 +3454,7 @@ spret_type fedhas_evolve_flora(bool fail)
     {
         if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else if (!mons_is_plant(plant))
+        else if (!mons_is_plant(*plant))
             mpr("Only plants or fungi may be evolved.");
         else if (plant->has_ench(ENCH_PETRIFIED))
             mpr("Stone cannot grow or evolve.");
@@ -3669,7 +3669,7 @@ static bool _slouchable(coord_def where)
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
-        || mon->asleep() && !mons_is_confused(mon))
+        || mon->asleep() && !mons_is_confused(*mon))
     {
         return false;
     }
@@ -3903,7 +3903,7 @@ bool can_convert_to_beogh()
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         const monster * const mon = monster_at(*ri);
-        if (mons_allows_beogh_now(mon))
+        if (mons_allows_beogh_now(*mon))
             return true;
     }
 
@@ -3936,7 +3936,7 @@ void spare_beogh_convert()
 
         // Anyone who has seen the priest perform the ceremony will spare you
         // as well.
-        if (mons_allows_beogh(mon))
+        if (mons_allows_beogh(*mon))
         {
             for (radius_iterator pi(you.pos(), LOS_DEFAULT); pi; ++pi)
             {
