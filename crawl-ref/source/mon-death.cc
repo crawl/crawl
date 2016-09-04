@@ -1415,7 +1415,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         cloud = CLOUD_CHAOS;
 
     if (!silent)
-        simple_monster_message(mons, (prefix + msg).c_str());
+        simple_monster_message(*mons, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
@@ -1573,7 +1573,7 @@ static void _druid_final_boon(const monster* mons)
 
     for (int i = 0; i < num; ++i)
     {
-        simple_monster_message(beasts[i], " seems to grow more fierce.");
+        simple_monster_message(*beasts[i], " seems to grow more fierce.");
         beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
                                         random_range(100, 160)));
     }
@@ -1777,7 +1777,7 @@ static void _special_corpse_messaging(monster &mons)
             const string message = "'s shape twists and changes as "
                                     + mons.pronoun(PRONOUN_SUBJECTIVE)
                                     + " dies.";
-            simple_monster_message(&mons, message.c_str());
+            simple_monster_message(mons, message.c_str());
         }
 
         return;
@@ -1794,7 +1794,7 @@ static void _special_corpse_messaging(monster &mons)
                             " original shape as " +
                             mons.pronoun(PRONOUN_SUBJECTIVE) +
                             " dies.";
-    simple_monster_message(&mons, message.c_str());
+    simple_monster_message(mons, message.c_str());
 }
 
 /**
@@ -1995,7 +1995,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (!silent && !hard_reset && !was_banished)
         {
-            simple_monster_message(mons, " detonates feebly.",
+            simple_monster_message(*mons, " detonates feebly.",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
@@ -2006,7 +2006,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (!silent && !mons_reset && !was_banished)
         {
-            simple_monster_message(mons, " dissipates!",
+            simple_monster_message(*mons, " dissipates!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
@@ -2024,7 +2024,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (!silent && !mons_reset && !was_banished)
         {
-            simple_monster_message(mons, " vapourises!",
+            simple_monster_message(*mons, " vapourises!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
@@ -2061,7 +2061,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                 && (!have_passive(passive_t::goldify_corpses)
                     || mons->has_ench(ENCH_ABJ)))
             {
-                simple_monster_message(mons, " falls from the air.",
+                simple_monster_message(*mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
             }
@@ -2107,7 +2107,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_BRIAR_PATCH)
     {
         if (timeout && !silent)
-            simple_monster_message(mons, " crumbles away.");
+            simple_monster_message(*mons, " crumbles away.");
     }
     else if (mons->type == MONS_SPECTRAL_WEAPON)
     {
@@ -2129,7 +2129,7 @@ item_def* monster_die(monster* mons, killer_type killer,
              && mons->mindex() == killer_index)
     {
         if (!silent)
-            simple_monster_message(mons, " exhausts itself and dries up.");
+            simple_monster_message(*mons, " exhausts itself and dries up.");
         silent = true;
     }
 
@@ -2311,7 +2311,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                     exploded                   ? " is blown up!" :
                     wounded_damaged(targ_holy) ? " is destroyed!"
                                                : " dies!";
-                simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
+                simple_monster_message(*mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
 
@@ -2367,21 +2367,21 @@ item_def* monster_die(monster* mons, killer_type killer,
                 {
                     // Sticks to Snakes
                     if (mons_genus(mons->type) == MONS_SNAKE)
-                        simple_monster_message(mons, " withers and dies!");
+                        simple_monster_message(*mons, " withers and dies!");
                     // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
-                        simple_monster_message(mons, " fades into mist!");
+                        simple_monster_message(*mons, " fades into mist!");
                     // Animate Skeleton/Animate Dead/Infestation
                     else if (mons->type == MONS_ZOMBIE
                              || mons->type == MONS_SKELETON
                              || mons->type == MONS_DEATH_SCARAB)
                     {
-                        simple_monster_message(mons, " crumbles into dust!");
+                        simple_monster_message(*mons, " crumbles into dust!");
                     }
                     else
                     {
                         string msg = " " + summoned_poof_msg(mons) + "!";
-                        simple_monster_message(mons, msg.c_str());
+                        simple_monster_message(*mons, msg.c_str());
                     }
                 }
                 else
@@ -2390,7 +2390,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                         exploded                     ? " is blown up!" :
                         wounded_damaged(targ_holy)   ? " is destroyed!"
                                                      : " dies!";
-                    simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
+                    simple_monster_message(*mons, msg, MSGCH_MONSTER_DAMAGE,
                                            MDAM_DEAD);
                 }
             }
@@ -2923,17 +2923,17 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     // Even fire resistant monsters perish in lava.
     if (grid == DNGN_LAVA && mons->res_fire() < 2)
     {
-        simple_monster_message(mons, " is incinerated.",
+        simple_monster_message(*mons, " is incinerated.",
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
     else if (mons->can_drown())
     {
-        simple_monster_message(mons, " drowns.",
+        simple_monster_message(*mons, " drowns.",
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
     else
     {
-        simple_monster_message(mons, " falls apart.",
+        simple_monster_message(*mons, " falls apart.",
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
 
@@ -3333,7 +3333,7 @@ void elven_twin_energize(monster* mons)
     {
         ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
         if (mons->observable())
-            simple_monster_message(mons, " seems to find hidden reserves of power!");
+            simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
         mons->add_ench(ENCH_HASTE);
     }
@@ -3359,7 +3359,7 @@ void elven_twins_pacify(monster* twin)
     if (mons->neutral())
         return;
 
-    simple_monster_message(mons, " likewise turns neutral.");
+    simple_monster_message(*mons, " likewise turns neutral.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
     mons_pacify(mons, ATT_NEUTRAL);

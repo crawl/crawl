@@ -266,7 +266,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             int damage = 0;
             fire_los_attack_spell(slot.spell, splpow, &caster, false, &damage);
             if (damage > 0 && caster.heal(damage))
-                simple_monster_message(&caster, " is healed.");
+                simple_monster_message(caster, " is healed.");
         },
         nullptr,
         MSPELL_NO_AUTO_NOISE,
@@ -294,7 +294,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const string god = apostrophise(god_name(caster.god));
             const string msg = make_stringf(" invokes %s protection!",
                                             god.c_str());
-            simple_monster_message(&caster, msg.c_str(), MSGCH_MONSTER_SPELL);
+            simple_monster_message(caster, msg.c_str(), MSGCH_MONSTER_SPELL);
             // Not spell_hd(spell_cast); this is an invocation
             const int dur = BASELINE_DELAY
                 * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
@@ -704,7 +704,7 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
             " looks braver for a moment.",
         };
 
-        simple_monster_message(&mons, RANDOM_ELEMENT(msgs), channel);
+        simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
         return;
     }
 
@@ -754,7 +754,7 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot slot, bolt&)
         = make_stringf(" offers %s to %s, and fills with unholy energy.",
                        mons.pronoun(PRONOUN_REFLEXIVE).c_str(),
                        god_name(mons.god).c_str());
-    simple_monster_message(&mons, msg.c_str(), MSGCH_MONSTER_SPELL);
+    simple_monster_message(mons, msg.c_str(), MSGCH_MONSTER_SPELL);
     mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, &mons,
                               random_range(7, 9) * BASELINE_DELAY));
     mons.props[MIRROR_RECAST_KEY].get_int()
@@ -770,7 +770,7 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
     if (foe->is_player())
         mprf("%s smites you!", _god_name(god).c_str());
     else
-        simple_monster_message(foe->as_monster(), " is smitten.");
+        simple_monster_message(*foe->as_monster(), " is smitten.");
 
     foe->hurt(&caster, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
               "", "by divine providence");
@@ -2785,7 +2785,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;
             ++num_recalled;
-            simple_monster_message(mon, " is recalled.");
+            simple_monster_message(*mon, " is recalled.");
         }
         // Can only recall a couple things at once
         if (num_recalled == recall_target)
@@ -3235,7 +3235,7 @@ static void _cast_black_mark(monster* agent)
         if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
-            simple_monster_message(mon, " begins absorbing vital energies!");
+            simple_monster_message(*mon, " begins absorbing vital energies!");
         }
     }
 }
@@ -4151,7 +4151,7 @@ bool handle_mon_spell(monster* mons)
             const string message
                 = make_stringf(" begins to %s, but is stunned by your will!",
                                _ru_spell_stop_desc(*mons).c_str());
-            simple_monster_message(mons, message.c_str(), MSGCH_GOD);
+            simple_monster_message(*mons, message.c_str(), MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
             return true;
         }
@@ -4207,7 +4207,7 @@ bool handle_mon_spell(monster* mons)
     {
         // This may be a bad idea -- if we decide monsters shouldn't
         // lose a turn like players do not, please make this just return.
-        simple_monster_message(mons, " falters for a moment.");
+        simple_monster_message(*mons, " falters for a moment.");
         mons->lose_energy(EUT_SPELL);
         return true;
     }
@@ -4323,7 +4323,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
     if (!target->lose_ench_duration(abj, pow))
     {
         if (!shielded)
-            simple_monster_message(target, " shudders.");
+            simple_monster_message(*target, " shudders.");
         return 1;
     }
 
@@ -4535,7 +4535,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
 
     if (!hp_cost)
     {
-        simple_monster_message(&mons,
+        simple_monster_message(mons,
                                " is infused with unholy energy, but nothing happens.",
                                MSGCH_MONSTER_SPELL);
         return;
@@ -4545,7 +4545,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
 
     if (you.can_see(mons))
     {
-        simple_monster_message(&mons,
+        simple_monster_message(mons,
                                " is infused with unholy energy.",
                                MSGCH_MONSTER_SPELL);
     }
@@ -4557,7 +4557,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
         ouch(hp_cost, KILLED_BY_BEAM, mons.mid, "by vampiric draining");
         if (mons.heal(hp_cost * 2 / 3))
         {
-            simple_monster_message(&mons,
+            simple_monster_message(mons,
                 " draws life force from you and is healed!");
         }
     }
@@ -4568,13 +4568,13 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
         mtarget->hurt(&mons, hp_cost);
         if (mtarget->is_summoned())
         {
-            simple_monster_message(&mons,
+            simple_monster_message(mons,
                                    make_stringf(" draws life force from %s!",
                                                 targname.c_str()).c_str());
         }
         else if (mons.heal(hp_cost * 2 / 3))
         {
-            simple_monster_message(&mons,
+            simple_monster_message(mons,
                 make_stringf(" draws life force from %s and is healed!",
                 targname.c_str()).c_str());
         }
@@ -4678,7 +4678,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
     {
         if (!already_mesmerised)
         {
-            simple_monster_message(mons, " attempts to bespell you!");
+            simple_monster_message(*mons, " attempts to bespell you!");
             flash_view(UA_MONSTER, LIGHTMAGENTA);
         }
         else
@@ -4724,7 +4724,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
     if (actual)
     {
         if (you.can_see(*mons))
-            simple_monster_message(mons, " radiates an aura of fear!");
+            simple_monster_message(*mons, " radiates an aura of fear!");
         else if (you.see_cell(mons->pos()))
             mpr("An aura of fear fills the air!");
     }
@@ -4790,7 +4790,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         int res_margin = mi->check_res_magic(pow);
         if (res_margin > 0)
         {
-            simple_monster_message(*mi,
+            simple_monster_message(**mi,
                 mi->resist_margin_phrase(res_margin).c_str());
             continue;
         }
@@ -4800,7 +4800,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             retval = 1;
 
             if (you.can_see(**mi))
-                simple_monster_message(*mi, " looks frightened!");
+                simple_monster_message(**mi, " looks frightened!");
 
             behaviour_event(*mi, ME_SCARE, mons);
 
@@ -4860,7 +4860,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         {
             if (actual)
             {
-                simple_monster_message(*mi,
+                simple_monster_message(**mi,
                     mi->resist_margin_phrase(res_margin).c_str());
             }
             continue;
@@ -4926,7 +4926,7 @@ static int _mons_control_undead(monster* mons, bool actual)
         {
             if (actual)
             {
-                simple_monster_message(*mi,
+                simple_monster_message(**mi,
                     mi->resist_margin_phrase(res_margin).c_str());
             }
             continue;
@@ -5039,7 +5039,7 @@ static void _blink_allies_encircle(const monster* mon)
                 if (!(ally->flags & MF_WAS_IN_VIEW)
                     && ally->flags & MF_SEEN)
                 {
-                    simple_monster_message(ally, " blinks into view!");
+                    simple_monster_message(*ally, " blinks into view!");
                 }
                 ally->behaviour = BEH_SEEK;
                 ally->foe = mon->foe;
@@ -5759,7 +5759,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         else
         {
-            simple_monster_message(foe->as_monster(),
+            simple_monster_message(*foe->as_monster(),
                                    " is struck by the twisting air!");
         }
 
@@ -5794,7 +5794,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (foe->is_player())
             mpr("Orcish apparitions take form around you.");
         else
-            simple_monster_message(foe->as_monster(), " is surrounded by Orcish apparitions.");
+            simple_monster_message(*foe->as_monster(), " is surrounded by Orcish apparitions.");
         _mons_cast_spectral_orcs(mons);
         return;
 
@@ -5831,7 +5831,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_MAJOR_HEALING:
         if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
-            simple_monster_message(mons, " is healed.");
+            simple_monster_message(*mons, " is healed.");
         return;
 
     case SPELL_BERSERKER_RAGE:
@@ -5845,13 +5845,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 #endif
     case SPELL_SPRINT:
         mons->add_ench(ENCH_SWIFT);
-        simple_monster_message(mons, " puts on a burst of speed!");
+        simple_monster_message(*mons, " puts on a burst of speed!");
         return;
 
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
         invalidate_agrid(true);
-        simple_monster_message(mons, "'s surroundings become eerily quiet.");
+        simple_monster_message(*mons, "'s surroundings become eerily quiet.");
         return;
 
     case SPELL_CALL_TIDE:
@@ -5862,7 +5862,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mons->add_ench(mon_enchant(ENCH_TIDE, 0, mons,
                                        tide_duration));
             mons->props[TIDE_CALL_TURN].get_int() = you.num_turns;
-            if (simple_monster_message(
+            if (simple_monster_message(*
                     mons,
                     " sings a water chant to call the tide!"))
             {
@@ -5877,7 +5877,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
 
-        simple_monster_message(
+        simple_monster_message(*
             mons,
             " squirts a massive cloud of ink into the water!");
         return;
@@ -6485,7 +6485,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_REGENERATION:
     {
-        simple_monster_message(mons,
+        simple_monster_message(*mons,
                                "'s wounds begin to heal before your eyes!");
         const int dur = BASELINE_DELAY
             * min(5 + roll_dice(2, (mons->spell_hd(spell_cast) * 10) / 3 + 1), 100);
@@ -6518,7 +6518,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_INJURY_BOND:
     {
-        simple_monster_message(mons,
+        simple_monster_message(*mons,
             make_stringf(" begins to accept %s allies' injuries.",
                          mons->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         // FIXME: allies preservers vs the player
@@ -6552,7 +6552,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_ENGLACIATION:
         if (you.can_see(*mons))
-            simple_monster_message(mons, " radiates an aura of cold.");
+            simple_monster_message(*mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
         apply_area_visible([splpow, mons] (coord_def where) {
@@ -6740,7 +6740,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             monster* targ = targets[random2(targets.size())];
             if (cast_phantom_mirror(mons, targ))
-                simple_monster_message(targ, " shimmers and seems to become two!");
+                simple_monster_message(*targ, " shimmers and seems to become two!");
         }
         return;
     }
@@ -6807,12 +6807,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_REPEL_MISSILES:
-        simple_monster_message(mons, " begins repelling missiles!");
+        simple_monster_message(*mons, " begins repelling missiles!");
         mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES));
         return;
 
     case SPELL_DEFLECT_MISSILES:
-        simple_monster_message(mons, " begins deflecting missiles!");
+        simple_monster_message(*mons, " begins deflecting missiles!");
         mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
         return;
 
@@ -6836,7 +6836,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CLEANSING_FLAME:
-        simple_monster_message(mons, " channels a blast of cleansing flame!");
+        simple_monster_message(*mons, " channels a blast of cleansing flame!");
         cleansing_flame(5 + (7 * mons->spell_hd(spell_cast) / 12),
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
@@ -6867,13 +6867,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_AURA_OF_BRILLIANCE:
-        simple_monster_message(mons, " begins emitting a brilliant aura!");
+        simple_monster_message(*mons, " begins emitting a brilliant aura!");
         mons->add_ench(ENCH_BRILLIANCE_AURA);
         aura_of_brilliance(mons);
         return;
 
     case SPELL_BIND_SOULS:
-        simple_monster_message(mons, " binds the souls of nearby monsters.");
+        simple_monster_message(*mons, " binds the souls of nearby monsters.");
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
             if (*mi == mons)
@@ -7881,7 +7881,7 @@ static void _siren_sing(monster* mons, bool avatar)
         const char * const song_adj = already_mesmerised ? "its luring"
                                                          : "a haunting";
         const string song_desc = make_stringf(" chants %s song.", song_adj);
-        simple_monster_message(mons, song_desc.c_str(), spl);
+        simple_monster_message(*mons, song_desc.c_str(), spl);
     }
     else
     {

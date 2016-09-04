@@ -165,7 +165,7 @@ static void _escape_water_hold(monster& mons)
         {
             mons.speed_increment -= 5;
         }
-        simple_monster_message(&mons, " pulls free of the water.");
+        simple_monster_message(mons, " pulls free of the water.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
@@ -988,7 +988,7 @@ static bool _handle_scroll(monster& mons)
         {
             if (mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
             {
-                simple_monster_message(&mons, " reads a scroll.");
+                simple_monster_message(mons, " reads a scroll.");
                 read = true;
                 monster_teleport(&mons, false);
             }
@@ -999,7 +999,7 @@ static bool _handle_scroll(monster& mons)
         if ((mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
             && mons.can_see(you) && !mons.no_tele(true, false))
         {
-            simple_monster_message(&mons, " reads a scroll.");
+            simple_monster_message(mons, " reads a scroll.");
             read = true;
             if (mons.caught())
                 monster_blink(&mons);
@@ -1011,7 +1011,7 @@ static bool _handle_scroll(monster& mons)
     case SCR_SUMMONING:
         if (mons.can_see(you))
         {
-            simple_monster_message(&mons, " reads a scroll.");
+            simple_monster_message(mons, " reads a scroll.");
             mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
             read = true;
             int count = roll_dice(2, 2);
@@ -1087,7 +1087,7 @@ static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
                             bool was_visible, bool niceWand)
 {
-    if (!simple_monster_message(&mons, " zaps a wand."))
+    if (!simple_monster_message(mons, " zaps a wand."))
     {
         if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, "You hear a zap.");
@@ -1121,7 +1121,7 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
 static void _rod_fired_pre(monster& mons)
 {
-    if (!simple_monster_message(&mons, " zaps a rod.")
+    if (!simple_monster_message(mons, " zaps a rod.")
         && !silenced(you.pos()))
     {
         mprf(MSGCH_SOUND, "You hear a zap.");
@@ -1323,7 +1323,7 @@ static bool _handle_wand(monster& mons)
     {
         if (wand->used_count != ZAPCOUNT_EMPTY)
         {
-            if (simple_monster_message(&mons, " zaps a wand."))
+            if (simple_monster_message(mons, " zaps a wand."))
                 canned_msg(MSG_NOTHING_HAPPENS);
             else if (!silenced(you.pos()))
                 mprf(MSGCH_SOUND, "You hear a zap.");
@@ -1516,7 +1516,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)
         {
-            simple_monster_message(mons,
+            simple_monster_message(*mons,
                                 " is stunned by your will and fails to attack.",
                                 MSGCH_GOD);
             return false;
@@ -1650,7 +1650,7 @@ static void _pre_monster_move(monster& mons)
         monster* awakener = monster_by_mid(mons.props["vine_awakener"].get_int());
         if (awakener && !awakener->can_see(mons))
         {
-            simple_monster_message(&mons, " falls limply to the ground.");
+            simple_monster_message(mons, " falls limply to the ground.");
             monster_die(&mons, KILL_RESET, NON_MONSTER);
             return;
         }
@@ -1844,7 +1844,7 @@ void handle_monster_move(monster* mons)
             {
                 if (you.can_see(*mons))
                 {
-                    simple_monster_message(mons, " crackles loudly.",
+                    simple_monster_message(*mons, " crackles loudly.",
                                            MSGCH_WARN);
                 }
                 else
@@ -1888,7 +1888,7 @@ void handle_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
-        simple_monster_message(mons, " is lost in a daze.");
+        simple_monster_message(*mons, " is lost in a daze.");
         mons->speed_increment -= non_move_energy;
         return;
     }
@@ -1916,14 +1916,14 @@ void handle_monster_move(monster* mons)
         {
             if (gozag_gold_in_los(mons))
             {
-                simple_monster_message(mons,
+                simple_monster_message(*mons,
                     " is distracted by the nearby gold.");
             }
             else if (you.gold > 0)
-                simple_monster_message(mons, " is distracted by your gold.");
+                simple_monster_message(*mons, " is distracted by your gold.");
             // Just in case!
             else
-                simple_monster_message(mons,
+                simple_monster_message(*mons,
                                        " is distracted by imaginary riches.");
 
             mons->add_ench(
@@ -2149,7 +2149,7 @@ void handle_monster_move(monster* mons)
                                 get_ru_attack_interference_level();
                         if (interference == DO_BLOCK_ATTACK)
                         {
-                            simple_monster_message(mons,
+                            simple_monster_message(*mons,
                                 " is stunned by your will and fails to attack.",
                                 MSGCH_GOD);
                             mons->speed_increment -= non_move_energy;
@@ -2323,12 +2323,12 @@ void monster::struggle_against_net()
                     if (!visible_to(&you))
                         mpr("Something you can't see is thrashing in a web.");
                     else
-                        simple_monster_message(this,
+                        simple_monster_message(*this,
                                            " struggles to get unstuck from the web.");
                 }
                 return;
             }
-            simple_monster_message(this, " pulls away from the web.");
+            simple_monster_message(*this, " pulls away from the web.");
 
         }
         del_ench(ENCH_HELD);
@@ -2340,7 +2340,7 @@ void monster::struggle_against_net()
         if (!visible_to(&you))
             mpr("Something wriggles in the net.");
         else
-            simple_monster_message(this, " struggles against the net.");
+            simple_monster_message(*this, " struggles against the net.");
     }
 
     int damage = 1 + random2(2);
@@ -2689,7 +2689,7 @@ static bool _jelly_divide(monster& parent)
     child->set_new_monster_id();
     child->move_to_pos(child_spot);
 
-    if (!simple_monster_message(&parent, " splits in two!")
+    if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent.pos()) || player_can_hear(child->pos())))
     {
         mprf(MSGCH_SOUND, "You hear a squelching noise.");
@@ -3486,10 +3486,10 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     if (mons.is_constricted())
     {
         if (mons.attempt_escape())
-            simple_monster_message(&mons, " escapes!");
+            simple_monster_message(mons, " escapes!");
         else
         {
-            simple_monster_message(&mons, " struggles to escape constriction.");
+            simple_monster_message(mons, " struggles to escape constriction.");
             _swim_or_move_energy(mons);
             return true;
         }
@@ -3512,7 +3512,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
-                    simple_monster_message(&mons, " bursts through the door, destroying it!");
+                    simple_monster_message(mons, " bursts through the door, destroying it!");
             }
         }
         else if (mons_can_open_door(&mons, f))
@@ -3537,7 +3537,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
-                    simple_monster_message(&mons, " eats the door!");
+                    simple_monster_message(mons, " eats the door!");
             }
         } // done door-eating jellies
     }
@@ -3546,7 +3546,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
     if (mons.seen_context == SC_JUST_SEEN && !you.see_cell(f))
-        simple_monster_message(&mons, " moves out of view.");
+        simple_monster_message(mons, " moves out of view.");
     else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
              && !you.see_cell(f))
     {
@@ -3657,7 +3657,7 @@ static bool _monster_move(monster* mons)
         }
         if (adj_move.empty())
         {
-            simple_monster_message(mons, " flops around on dry land!");
+            simple_monster_message(*mons, " flops around on dry land!");
             return false;
         }
 
@@ -3673,7 +3673,7 @@ static bool _monster_move(monster* mons)
             && (newpos == you.pos() && mons->wont_attack()
                 || (mon2 && mons->wont_attack() == mon2->wont_attack())))
         {
-            simple_monster_message(mons, " flops around on dry land!");
+            simple_monster_message(*mons, " flops around on dry land!");
             return false;
         }
 
@@ -3792,7 +3792,7 @@ static bool _monster_move(monster* mons)
                 _mons_fire_wand(*mons, wand, beem, you.can_see(*mons), false);
             }
             else
-                simple_monster_message(mons, " falters for a moment.");
+                simple_monster_message(*mons, " falters for a moment.");
             mons->lose_energy(EUT_SPELL);
             return true;
         }

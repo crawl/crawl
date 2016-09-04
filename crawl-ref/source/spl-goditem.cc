@@ -220,7 +220,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
         }
     }
     else
-        simple_monster_message(&mon, " turns neutral.");
+        simple_monster_message(mon, " turns neutral.");
 
     record_monster_defeat(&mon, KILL_PACIFIED);
     mons_pacify(&mon, ATT_NEUTRAL);
@@ -245,7 +245,7 @@ bool heal_monster(monster& patient, int amount)
     mprf("You heal %s.", patient.name(DESC_THE).c_str());
 
     if (patient.hit_points == patient.max_hit_points)
-        simple_monster_message(&patient, " is completely healed.");
+        simple_monster_message(patient, " is completely healed.");
     else
         print_wounds(&patient);
 
@@ -493,7 +493,7 @@ void debuff_monster(monster &mon)
     for (enchant_type buff : buffs)
         mon.del_ench(buff, true, true);
 
-    simple_monster_message(&mon, "'s magical effects unravel!");
+    simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 // pow -1 for passive
@@ -1091,9 +1091,9 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (hploss)
     {
         if (source == HOLY_WORD_ZIN)
-            simple_monster_message(mons, " is blasted by Zin's holy word!");
+            simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
-            simple_monster_message(mons, " convulses!");
+            simple_monster_message(*mons, " convulses!");
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1242,7 +1242,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     if (hploss)
     {
-        simple_monster_message(mons, " convulses!");
+        simple_monster_message(*mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use

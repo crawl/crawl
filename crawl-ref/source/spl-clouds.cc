@@ -306,7 +306,7 @@ void holy_flames(monster* caster, actor* defender)
         if (defender->is_player())
             mpr("Blessed fire suddenly surrounds you!");
         else
-            simple_monster_message(defender->as_monster(),
+            simple_monster_message(*defender->as_monster(),
                                    " is surrounded by blessed fire!");
     }
 }

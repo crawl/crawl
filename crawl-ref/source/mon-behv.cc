@@ -1426,11 +1426,11 @@ static void _mons_indicate_level_exit(const monster* mon)
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
     if (feat_is_gate(feat))
-        simple_monster_message(mon, " passes through the gate.");
+        simple_monster_message(*mon, " passes through the gate.");
     else if (feat_is_travelable_stair(feat))
     {
         command_type dir = feat_stair_direction(feat);
-        simple_monster_message(mon,
+        simple_monster_message(*mon,
             make_stringf(" %s the %s.",
                 dir == CMD_GO_UPSTAIRS     ? "goes up" :
                 dir == CMD_GO_DOWNSTAIRS   ? "goes down"
@@ -1440,7 +1440,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     }
     else if (is_shaft)
     {
-        simple_monster_message(mon,
+        simple_monster_message(*mon,
             make_stringf(" %s the shaft.",
                 mon->airborne() ? "goes down"
                                 : "jumps into").c_str());

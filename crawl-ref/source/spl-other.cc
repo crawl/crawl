@@ -187,7 +187,7 @@ bool try_recall(mid_t mid)
                 && mons->move_to_pos(empty))
             {
                 recall_orders(mons);
-                simple_monster_message(mons, " is recalled.");
+                simple_monster_message(*mons, " is recalled.");
                 mons->apply_location_effects(mons->pos());
                 // mons may have been killed, shafted, etc,
                 // but they were still recalled!
@@ -307,7 +307,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (x_chance_in_y(40 + pow/3, 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
-        simple_monster_message(mons, " looks rather confused.");
+        simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
     return 0;

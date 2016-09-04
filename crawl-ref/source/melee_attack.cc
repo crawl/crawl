@@ -1917,7 +1917,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
 
-    simple_monster_message(defender->as_monster(), " grows two more!");
+    simple_monster_message(*defender->as_monster(), " grows two more!");
     defender->as_monster()->num_heads += 2;
     defender->heal(8 + random2(8));
 
@@ -2087,7 +2087,7 @@ void melee_attack::attacker_sustain_passive_damage()
         mpr(you.hands_act("burn", "!"));
     else
     {
-        simple_monster_message(attacker->as_monster(),
+        simple_monster_message(*attacker->as_monster(),
                                " is burned by acid!");
     }
     attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
@@ -2931,7 +2931,7 @@ void melee_attack::mons_apply_attack_flavour()
             {
                 mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);
                 vine->lose_ench_duration(me, random2(damage_done) + 1);
-                simple_monster_message(attacker->as_monster(),
+                simple_monster_message(*attacker->as_monster(),
                                        spell_user
                                        ? " looks very invigorated."
                                        : " looks invigorated.");
@@ -3099,7 +3099,7 @@ void melee_attack::do_passive_freeze()
         if (!hurted)
             return;
 
-        simple_monster_message(mon, " is very cold.");
+        simple_monster_message(*mon, " is very cold.");
 
 #ifndef USE_TILE_LOCAL
         flash_monster_colour(mon, LIGHTBLUE, 200);
@@ -3134,7 +3134,7 @@ void melee_attack::do_passive_heat()
         if (!hurted)
             return;
 
-        simple_monster_message(mon, " is singed by your heat.");
+        simple_monster_message(*mon, " is singed by your heat.");
 
 #ifndef USE_TILE
         flash_monster_colour(mon, LIGHTRED, 200);
@@ -3218,7 +3218,7 @@ void melee_attack::do_spines()
             if (hurt <= 0)
                 return;
 
-            simple_monster_message(attacker->as_monster(),
+            simple_monster_message(*attacker->as_monster(),
                                    " is struck by your spines.");
 
             attacker->hurt(&you, hurt);

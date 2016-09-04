@@ -330,7 +330,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
             if (!mon->visible_to(&you))
                 mpr("The net bounces off something gigantic!");
             else
-                simple_monster_message(mon, " is too large for the net to hold!");
+                simple_monster_message(*mon, " is too large for the net to hold!");
         }
         return false;
     }
@@ -367,7 +367,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
             if (!mon->visible_to(&you))
                 mpr("Something gets caught in the net!");
             else
-                simple_monster_message(mon, " is caught in the net!");
+                simple_monster_message(*mon, " is caught in the net!");
         }
         return true;
     }
@@ -421,7 +421,7 @@ void check_net_will_hold_monster(monster* mons)
         if (net != NON_ITEM)
             free_stationary_net(net);
 
-        simple_monster_message(mons,
+        simple_monster_message(*mons,
                                " drifts right through the net!");
     }
     else
@@ -544,7 +544,7 @@ void trap_def::trigger(actor& triggerer)
             if (you_trigger)
                 mpr("You enter the passage of Golubria.");
             else
-                simple_monster_message(m, " enters the passage of Golubria.");
+                simple_monster_message(*m, " enters the passage of Golubria.");
 
             if (triggerer.move_to_pos(to))
             {
@@ -648,7 +648,7 @@ void trap_def::trigger(actor& triggerer)
                 // Trap doesn't trigger. Don't reveal it.
                 if (you_know)
                 {
-                    simple_monster_message(m,
+                    simple_monster_message(*m,
                                            " fails to trigger a blade trap.");
                 }
                 else
@@ -658,7 +658,7 @@ void trap_def::trigger(actor& triggerer)
                      || (trig_knows && random2(m->evasion()) > 8))
             {
                 if (in_sight
-                    && !simple_monster_message(m,
+                    && !simple_monster_message(*m,
                                             " avoids a huge, swinging blade."))
                 {
                     mpr("A huge blade swings out!");
@@ -730,7 +730,7 @@ void trap_def::trigger(actor& triggerer)
                 // Not triggered, trap stays.
                 triggered = false;
                 if (you_know)
-                    simple_monster_message(m, " fails to trigger a net trap.");
+                    simple_monster_message(*m, " fails to trigger a net trap.");
                 else
                     hide();
             }
@@ -742,7 +742,7 @@ void trap_def::trigger(actor& triggerer)
 
                 if (in_sight)
                 {
-                    if (!simple_monster_message(m,
+                    if (!simple_monster_message(*m,
                                                 " nimbly jumps out of the way "
                                                 "of a falling net."))
                     {
@@ -794,7 +794,7 @@ void trap_def::trigger(actor& triggerer)
             if (you_trigger)
                 mprf("You tear through %s web.", you_know ? "the" : "a");
             else if (m)
-                simple_monster_message(m, " tears through a web.");
+                simple_monster_message(*m, " tears through a web.");
             break;
         }
 
@@ -803,9 +803,9 @@ void trap_def::trigger(actor& triggerer)
             if (m)
             {
                 if (m->is_insubstantial())
-                    simple_monster_message(m, " passes through a web.");
+                    simple_monster_message(*m, " passes through a web.");
                 else if (mons_genus(m->type) == MONS_JELLY)
-                    simple_monster_message(m, " oozes through a web.");
+                    simple_monster_message(*m, " oozes through a web.");
                 // too spammy for spiders, and expected
             }
             break;
@@ -833,7 +833,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 // Not triggered, trap stays.
                 if (you_know)
-                    simple_monster_message(m, " evades a web.");
+                    simple_monster_message(*m, " evades a web.");
                 else
                     hide();
             }
@@ -843,7 +843,7 @@ void trap_def::trigger(actor& triggerer)
                 if (in_sight)
                 {
                     if (m->visible_to(&you))
-                        simple_monster_message(m, " is caught in a web!");
+                        simple_monster_message(*m, " is caught in a web!");
                     else
                         mpr("A web moves frantically as something is caught in it!");
                 }
@@ -1745,7 +1745,7 @@ bool ensnare(actor *fly)
     }
     else
     {
-        simple_monster_message(fly->as_monster(), " is caught in a web!");
+        simple_monster_message(*fly->as_monster(), " is caught in a web!");
         fly->as_monster()->add_ench(ENCH_HELD);
     }
 

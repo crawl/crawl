@@ -1384,10 +1384,10 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                   }
 
                   if (did_haste)
-                      simple_monster_message(&mon, " seems to speed up.");
+                      simple_monster_message(mon, " seems to speed up.");
 
                   if (did_swift)
-                      simple_monster_message(&mon, " is moving somewhat quickly.");
+                      simple_monster_message(mon, " is moving somewhat quickly.");
               }
               return affected;
           })
@@ -1675,7 +1675,7 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         {
             const int hp = mon.max_hit_points / (4 - power_level);
             if (mon.heal(hp + random2avg(hp, 2)))
-               simple_monster_message(&mon, " is healed.");
+               simple_monster_message(mon, " is healed.");
         }
         return true;
     });
@@ -1939,11 +1939,11 @@ bool recruit_mercenary(int mid)
     mon->props.erase("mercenary_fee");
     if (!paid)
     {
-        simple_monster_message(mon, " attacks!");
+        simple_monster_message(*mon, " attacks!");
         return true;
     }
 
-    simple_monster_message(mon, " joins your ranks!");
+    simple_monster_message(*mon, " joins your ranks!");
     for (mon_inv_iterator ii(*mon); ii; ++ii)
         ii->flags &= ~ISFLAG_SUMMONED;
     mon->flags &= ~MF_HARD_RESET;
@@ -2083,7 +2083,7 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
                    {
                        const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
                        mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
-                       simple_monster_message(&mons,
+                       simple_monster_message(mons,
                                               " is dazed by the mutagenic energy.");
                        return true;
                    }

@@ -804,7 +804,7 @@ void monster::equip_weapon(item_def &item, bool msg)
         const string str = " wields " +
                            item.name(DESC_A, false, false, true, false,
                                      ISFLAG_CURSED) + ".";
-        msg = simple_monster_message(this, str.c_str());
+        msg = simple_monster_message(*this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
@@ -901,7 +901,7 @@ void monster::equip_armour(item_def &item, bool msg)
     {
         const string str = " wears " +
                            item.name(DESC_A) + ".";
-        simple_monster_message(this, str.c_str());
+        simple_monster_message(*this, str.c_str());
     }
 }
 
@@ -913,7 +913,7 @@ void monster::equip_jewellery(item_def &item, bool msg)
     {
         const string str = " puts on " +
                            item.name(DESC_A) + ".";
-        simple_monster_message(this, str.c_str());
+        simple_monster_message(*this, str.c_str());
     }
 }
 
@@ -947,7 +947,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
         const string str = " unwields " +
                            item.name(DESC_A, false, false, true, false,
                                      ISFLAG_CURSED) + ".";
-        msg = simple_monster_message(this, str.c_str());
+        msg = simple_monster_message(*this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
@@ -999,7 +999,7 @@ void monster::unequip_armour(item_def &item, bool msg)
     {
         const string str = " takes off " +
                            item.name(DESC_A) + ".";
-        simple_monster_message(this, str.c_str());
+        simple_monster_message(*this, str.c_str());
     }
 }
 
@@ -1011,7 +1011,7 @@ void monster::unequip_jewellery(item_def &item, bool msg)
     {
         const string str = " takes off " +
                            item.name(DESC_A) + ".";
-        simple_monster_message(this, str.c_str());
+        simple_monster_message(*this, str.c_str());
     }
 }
 
@@ -2771,7 +2771,7 @@ bool monster::go_frenzy(actor *source)
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
-        simple_monster_message(this,
+        simple_monster_message(*this,
             make_stringf(" shakes off %s lethargy.",
                          pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
@@ -2792,7 +2792,7 @@ bool monster::go_frenzy(actor *source)
     }
     mons_att_changed(this);
 
-    if (simple_monster_message(this, " flies into a frenzy!"))
+    if (simple_monster_message(*this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
         xom_is_stimulated(friendly() ? 25 : 100);
 
@@ -2810,7 +2810,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
-        simple_monster_message(this,
+        simple_monster_message(*this,
             make_stringf(" shakes off %s lethargy.",
                          pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
@@ -2824,7 +2824,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
         wield_melee_weapon();
 
     add_ench(ENCH_BERSERK);
-    if (simple_monster_message(this, " goes berserk!"))
+    if (simple_monster_message(*this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 25 : 100);
 
@@ -2888,7 +2888,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
     if (!force && player_in_branch(BRANCH_ABYSS)
         && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
     {
-        simple_monster_message(this, " wobbles for a moment.");
+        simple_monster_message(*this, " wobbles for a moment.");
         return;
     }
 
@@ -2902,7 +2902,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
         }
     }
 
-    simple_monster_message(this, " is devoured by a tear in reality.",
+    simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(this, agent))
     {
@@ -3189,7 +3189,7 @@ void monster::maybe_degrade_bone_armour()
     if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
     {
         del_ench(ENCH_BONE_ARMOUR);
-        simple_monster_message(this, "'s corpse armour sloughs away.");
+        simple_monster_message(*this, "'s corpse armour sloughs away.");
     }
 }
 
@@ -4579,7 +4579,7 @@ void monster::petrify(actor *atk, bool force)
 
 bool monster::fully_petrify(actor *atk, bool quiet)
 {
-    bool msg = !quiet && simple_monster_message(this, mons_is_immotile(this) ?
+    bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(this) ?
                          " turns to stone!" : " stops moving altogether!");
 
     add_ench(ENCH_PETRIFIED);
@@ -5352,7 +5352,7 @@ bool monster::malmutate(const string &/*reason*/)
         return true;
     }
 
-    simple_monster_message(this, " twists and deforms.");
+    simple_monster_message(*this, " twists and deforms.");
     add_ench(mon_enchant(ENCH_WRETCHED, 1));
     return true;
 }
@@ -5519,7 +5519,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
         if (!monster_habitable_grid(this, grd(pos())))
-            simple_monster_message(this, " flops around on dry land!");
+            simple_monster_message(*this, " flops around on dry land!");
         else if (!monster_habitable_grid(this, grd(oldpos)))
         {
             if (you.can_see(*this))
@@ -5676,7 +5676,7 @@ bool monster::do_shaft()
                               !ground_level() ? "is sucked into"
                                               : "falls through");
 
-    const bool reveal = simple_monster_message(this, msg.c_str());
+    const bool reveal = simple_monster_message(*this, msg.c_str());
 
     place_cloud(CLOUD_DUST_TRAIL, pos(), 1 + random2(3), this);
 
@@ -5703,7 +5703,7 @@ void monster::put_to_sleep(actor *attacker, int strength, bool hibernate)
 void monster::weaken(actor *attacker, int pow)
 {
     if (!has_ench(ENCH_WEAK))
-        simple_monster_message(this, " looks weaker.");
+        simple_monster_message(*this, " looks weaker.");
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
@@ -5915,14 +5915,14 @@ bool monster::should_drink_potion(potion_type ptype) const
 bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 {
     if (!card)
-        simple_monster_message(this, " drinks a potion.");
+        simple_monster_message(*this, " drinks a potion.");
 
     switch (pot_eff)
     {
     case POT_CURING:
     {
         if (heal(5 + random2(7)))
-            simple_monster_message(this, " is healed!");
+            simple_monster_message(*this, " is healed!");
 
         static const enchant_type cured_enchants[] =
         {
@@ -5936,7 +5936,7 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
     case POT_HEAL_WOUNDS:
         if (heal(10 + random2avg(28, 3)))
-            simple_monster_message(this, " is healed!");
+            simple_monster_message(*this, " is healed!");
         break;
 
     case POT_BLOOD:
@@ -5946,7 +5946,7 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
         if (mons_species() == MONS_VAMPIRE)
         {
             heal(10 + random2avg(28, 3));
-            simple_monster_message(this, " is healed!");
+            simple_monster_message(*this, " is healed!");
         }
         break;
 
@@ -6046,9 +6046,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (type == MONS_SIXFIRHY && flavour == BEAM_ELECTRICITY)
     {
         if (!alive()) // overcharging is deadly
-            simple_monster_message(this, " explodes in a shower of sparks!");
+            simple_monster_message(*this, " explodes in a shower of sparks!");
         else if (heal(damage*2))
-            simple_monster_message(this, " seems to be charged up!");
+            simple_monster_message(*this, " seems to be charged up!");
         return;
     }
 
@@ -6096,7 +6096,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                     string buf = " shares ";
                     buf += owner->pronoun(PRONOUN_POSSESSIVE);
                     buf += " spectral weapon's damage!";
-                    simple_monster_message(owner->as_monster(), buf.c_str());
+                    simple_monster_message(*owner->as_monster(), buf.c_str());
                 }
 
                 // Share damage using a fineff, so that it's non-fatal
@@ -6597,7 +6597,7 @@ bool monster::shove(const char* feat_name)
         if (monster_space_valid(this, *di, false))
         {
             move_to_pos(*di);
-            simple_monster_message(this,
+            simple_monster_message(*this,
                 make_stringf(" is pushed out of the %s.", feat_name).c_str());
             dprf("Moved to (%d, %d).", pos().x, pos().y);
 
@@ -6644,7 +6644,7 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
         return false;
 
     if (!silent && you.can_see(*this))
-        simple_monster_message(this, " looks uneasy for a moment.");
+        simple_monster_message(*this, " looks uneasy for a moment.");
 
     return true;
 }

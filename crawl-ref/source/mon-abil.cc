@@ -125,7 +125,7 @@ bool ugly_thing_mutate(monster* ugly, bool force)
     if (!msg) // didn't find anything to mutate off of
         return false;
 
-    simple_monster_message(ugly, msg);
+    simple_monster_message(*ugly, msg);
     ugly->uglything_mutate(new_colour);
     return true;
 }
@@ -1096,7 +1096,7 @@ bool mon_special_ability(monster* mons)
             if (mons_is_retreating(mons))
                 behaviour_event(mons, ME_CORNERED);
 
-            simple_monster_message(mons, " withdraws into its shell!");
+            simple_monster_message(*mons, " withdraws into its shell!");
             return true;
         }
         break;
@@ -1116,7 +1116,7 @@ bool mon_special_ability(monster* mons)
                 if (coinflip())
                 {
                 //  behaviour_event(mons, ME_CORNERED);
-                    simple_monster_message(mons, " curls into a ball and rolls away!");
+                    simple_monster_message(*mons, " curls into a ball and rolls away!");
                     boulder_start(mons, &beem);
                     used = true;
                 }
@@ -1125,7 +1125,7 @@ bool mon_special_ability(monster* mons)
             else if (one_chance_in(3)
                      && !adjacent(mons->pos(), beem.target))
             {
-                simple_monster_message(mons, " curls into a ball and starts rolling!");
+                simple_monster_message(*mons, " curls into a ball and starts rolling!");
                 boulder_start(mons, &beem);
                 used = true;
             }
@@ -1213,7 +1213,7 @@ bool mon_special_ability(monster* mons)
                 {
                     if (mons->move_to_pos(spot))
                     {
-                        simple_monster_message(mons, " flows with the water.");
+                        simple_monster_message(*mons, " flows with the water.");
                         used = true;
                     }
                 }
@@ -1256,7 +1256,7 @@ bool mon_special_ability(monster* mons)
         if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
-            simple_monster_message(mons, " overheats!");
+            simple_monster_message(*mons, " overheats!");
             mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0,
                                        INFINITE_DURATION));
         }

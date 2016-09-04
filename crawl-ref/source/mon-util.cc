@@ -3373,7 +3373,7 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 
     if (mon->type == MONS_GERYON)
     {
-        simple_monster_message(mon,
+        simple_monster_message(*mon,
             make_stringf(" discards %s horn.",
                          mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(mon, false, item_is_horn_of_geryon);
@@ -5238,7 +5238,7 @@ void print_wounds(const monster* mons)
 
     desc.insert(0, " is ");
     desc += ".";
-    simple_monster_message(mons, desc.c_str(), MSGCH_MONSTER_DAMAGE,
+    simple_monster_message(*mons, desc.c_str(), MSGCH_MONSTER_DAMAGE,
                            dam_level);
 }
 

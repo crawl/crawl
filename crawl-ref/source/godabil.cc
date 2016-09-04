@@ -873,9 +873,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (mon->can_speak() && one_chance_in(5))
     {
         if (check < -10)
-            simple_monster_message(mon, " guffaws at your puny god.");
+            simple_monster_message(*mon, " guffaws at your puny god.");
         else if (check < -5)
-            simple_monster_message(mon, " sneers at your recitation.");
+            simple_monster_message(*mon, " sneers at your recitation.");
     }
 
     if (check <= 0)
@@ -1058,7 +1058,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(mon, " is dazed by your recitation.");
+            simple_monster_message(*mon, " is dazed by your recitation.");
             affected = true;
         }
         break;
@@ -1069,9 +1069,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             if (prayertype == RECITE_HERETIC)
-                simple_monster_message(mon, " is confused by your recitation.");
+                simple_monster_message(*mon, " is confused by your recitation.");
             else
-                simple_monster_message(mon, " stumbles about in disarray.");
+                simple_monster_message(*mon, " stumbles about in disarray.");
             affected = true;
         }
         break;
@@ -1080,7 +1080,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(mon,
+            simple_monster_message(*mon,
                 minor ? " is awed by your recitation."
                       : " is aghast at the heresy of your recitation.");
             affected = true;
@@ -1089,9 +1089,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case ZIN_SMITE:
         if (minor)
-            simple_monster_message(mon, " is smitten by the wrath of Zin.");
+            simple_monster_message(*mon, " is smitten by the wrath of Zin.");
         else
-            simple_monster_message(mon, " is blasted by the fury of Zin!");
+            simple_monster_message(*mon, " is blasted by the fury of Zin!");
         // XXX: This duplicates code in cast_smiting().
         mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
         if (mon->alive())
@@ -1102,7 +1102,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_BLIND:
         if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(mon, " is struck blind by the wrath of Zin!");
+            simple_monster_message(*mon, " is struck blind by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1111,7 +1111,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(mon, " is limned with silver light.");
+            simple_monster_message(*mon, " is limned with silver light.");
             affected = true;
         }
         break;
@@ -1121,7 +1121,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(mon,
+            simple_monster_message(*mon,
                 minor ? " quails at your recitation."
                       : " looks feeble and powerless before your recitation.");
             affected = true;
@@ -1131,7 +1131,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_MUTE:
         if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(mon, " is struck mute by the wrath of Zin!");
+            simple_monster_message(*mon, " is struck mute by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1139,7 +1139,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_MAD:
         if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(mon, " is driven mad by the wrath of Zin!");
+            simple_monster_message(*mon, " is driven mad by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1147,7 +1147,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_DUMB:
         if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
+            simple_monster_message(*mon, " is left stupefied by the wrath of Zin!");
             affected = true;
         }
         break;
@@ -1167,7 +1167,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
                 if (mon->alive())
                 {
-                    simple_monster_message(mon,
+                    simple_monster_message(*mon,
                       (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
                       (damage < 50) ? "'s chaotic flesh bubbles and boils."
                                     : "'s chaotic flesh runs like molten wax.");
@@ -1178,7 +1178,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 }
                 else
                 {
-                    simple_monster_message(mon,
+                    simple_monster_message(*mon,
                         " melts away into a sizzling puddle of chaotic flesh.");
                     monster_die(mon, KILL_YOU, NON_MONSTER);
                 }
@@ -1201,12 +1201,12 @@ bool zin_recite_to_single_monster(const coord_def& where)
             switch (prayertype)
             {
             case RECITE_CHAOTIC:
-                simple_monster_message(mon,
+                simple_monster_message(*mon,
                     minor ? "'s chaotic flesh is covered in bleeding sores."
                           : "'s chaotic flesh erupts into weeping sores!");
                 break;
             case RECITE_IMPURE:
-                simple_monster_message(mon,
+                simple_monster_message(*mon,
                     minor ? "'s impure flesh rots away."
                           : "'s impure flesh sloughs off!");
                 break;
@@ -1249,7 +1249,7 @@ static void _zin_saltify(monster* mon)
                                : mons_species(mon->type);
     const int hd = mon->get_hit_dice();
 
-    simple_monster_message(mon, " is turned into a pillar of salt by the wrath of Zin!");
+    simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
     item_def* corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
@@ -2534,7 +2534,7 @@ int fedhas_fungal_bloom()
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {
-                    simple_monster_message(target, "'s flesh rots away.");
+                    simple_monster_message(*target, "'s flesh rots away.");
 
                     downgrade_zombie_to_skeleton(target);
 
@@ -2549,7 +2549,7 @@ int fedhas_fungal_bloom()
                 // Ghoul-type monsters are always destroyed.
             case MONS_GHOUL:
             {
-                simple_monster_message(target, " rots away and dies.");
+                simple_monster_message(*target, " rots away and dies.");
 
                 kills = true;
 
@@ -3460,7 +3460,7 @@ spret_type fedhas_evolve_flora(bool fail)
             mpr("Stone cannot grow or evolve.");
         else
         {
-            simple_monster_message(plant, " has already reached the pinnacle"
+            simple_monster_message(*plant, " has already reached the pinnacle"
                                    " of evolution.");
         }
 
@@ -3494,7 +3494,7 @@ spret_type fedhas_evolve_flora(bool fail)
     case MONS_OKLOB_PLANT:
     {
         if (plant->type == MONS_OKLOB_SAPLING)
-            simple_monster_message(plant, " appears stronger.");
+            simple_monster_message(*plant, " appears stronger.");
         else
         {
             string evolve_desc = " can now spit acid";
@@ -3509,17 +3509,17 @@ spret_type fedhas_evolve_flora(bool fail)
                 evolve_desc += " somewhat quickly";
             evolve_desc += ".";
 
-            simple_monster_message(plant, evolve_desc.c_str());
+            simple_monster_message(*plant, evolve_desc.c_str());
         }
         break;
     }
 
     case MONS_WANDERING_MUSHROOM:
-        simple_monster_message(plant, " can now pick up its mycelia and move.");
+        simple_monster_message(*plant, " can now pick up its mycelia and move.");
         break;
 
     case MONS_HYPERACTIVE_BALLISTOMYCETE:
-        simple_monster_message(plant, " appears agitated.");
+        simple_monster_message(*plant, " appears agitated.");
         env.level_state |= LSTATE_GLOW_MOLD;
         break;
 
@@ -6474,7 +6474,7 @@ static int _apply_apocalypse(coord_def where)
 
     if (mons->alive() && enchantment != ENCH_NONE)
     {
-        simple_monster_message(mons, message.c_str());
+        simple_monster_message(*mons, message.c_str());
         mons->add_ench(mon_enchant(enchantment, 1, &you, duration));
     }
     return 1;
@@ -6963,9 +6963,9 @@ spret_type hepliaklqana_idealise(bool fail)
     if (ancestor->heal(healing))
     {
         if (ancestor->hit_points == ancestor->max_hit_points)
-            simple_monster_message(ancestor, " is fully restored!");
+            simple_monster_message(*ancestor, " is fully restored!");
         else
-            simple_monster_message(ancestor, " is healed somewhat.");
+            simple_monster_message(*ancestor, " is healed somewhat.");
     }
 
     // XXX: consider unifying this with beogh's balms list?
@@ -6981,7 +6981,7 @@ spret_type hepliaklqana_idealise(bool fail)
         if (ancestor->del_ench(ench))
             cured = true;
     if (cured)
-        simple_monster_message(ancestor, "'s debilitations are forgotten!");
+        simple_monster_message(*ancestor, "'s debilitations are forgotten!");
 
     const int dur = random_range(50, 80)
                     + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
@@ -7032,7 +7032,7 @@ static void _transfer_drain_nearby(coord_def destination)
             = random_range(1 + you.skill_rdiv(SK_INVOCATIONS, 1, 27),
                            2 + you.skill_rdiv(SK_INVOCATIONS, 4, 27));
         if (mon->add_ench(mon_enchant(ENCH_DRAINED, degree, &you, dur)))
-            simple_monster_message(mon, " is drained by nostalgia.");
+            simple_monster_message(*mon, " is drained by nostalgia.");
     }
 }
 

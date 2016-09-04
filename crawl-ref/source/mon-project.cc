@@ -243,7 +243,7 @@ static void _iood_stop(monster& mon, bool msg = true)
     }
 
     if (msg)
-        simple_monster_message(&mon, " dissipates.");
+        simple_monster_message(mon, " dissipates.");
     dprf("iood: dissipating");
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
@@ -293,7 +293,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     actor *victim = actor_at(pos);
     if (victim)
     {
-        simple_monster_message(&mon, (string(" smashes into ")
+        simple_monster_message(mon, (string(" smashes into ")
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = victim->apply_ac(roll_dice(3, 20));
@@ -581,7 +581,7 @@ move_again:
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 else
                 {
-                    simple_monster_message(mons, (" blocks "
+                    simple_monster_message(*mons, (" blocks "
                         + mon.name(DESC_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
