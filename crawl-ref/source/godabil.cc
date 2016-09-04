@@ -3642,7 +3642,7 @@ void cheibriados_time_bend(int pow)
                 make_stringf(" rebukes %s.",
                              mon->name(DESC_THE).c_str()).c_str(),
                              GOD_CHEIBRIADOS);
-            do_slow_monster(mon, &you);
+            do_slow_monster(*mon, &you);
         }
     }
 }

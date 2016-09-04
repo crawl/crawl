@@ -5475,7 +5475,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_SLOW:
-        obvious_effect = do_slow_monster(mon, agent(),
+        obvious_effect = do_slow_monster(*mon, agent(),
                                          ench_power * BASELINE_DELAY);
         return MON_AFFECTED;
 

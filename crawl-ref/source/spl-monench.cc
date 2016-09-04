@@ -57,7 +57,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     if (!mons)
         return slow_player(duration);
 
-    return do_slow_monster(mons, agent, duration);
+    return do_slow_monster(*mons, agent, duration);
 }
 
 spret_type cast_englaciation(int pow, bool fail)
@@ -93,16 +93,16 @@ bool backlight_monster(monster* mons)
     return true;
 }
 
-bool do_slow_monster(monster* mon, const actor* agent, int dur)
+bool do_slow_monster(monster& mon, const actor* agent, int dur)
 {
-    if (mon->check_stasis(false))
+    if (mon.check_stasis(false))
         return true;
 
-    if (!mon->is_stationary()
-        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
+    if (!mon.is_stationary()
+        && mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
-        if (!mon->paralysed() && !mon->petrified()
-            && simple_monster_message(mon, " seems to slow down."))
+        if (!mon.paralysed() && !mon.petrified()
+            && simple_monster_message(&mon, " seems to slow down."))
         {
             return true;
         }

@@ -2848,7 +2848,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
         if (slow_cold_blood && mons_class_flag(type, M_COLD_BLOOD)
             && res_cold() <= 0 && coinflip())
         {
-            do_slow_monster(this, this, (strength + random2(5)) * BASELINE_DELAY);
+            do_slow_monster(*this, this, (strength + random2(5)) * BASELINE_DELAY);
         }
         break;
     case BEAM_WATER:
