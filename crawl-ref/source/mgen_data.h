@@ -201,15 +201,11 @@ struct mgen_data
     }
 
     static mgen_data hostile_at(monster_type mt,
-                                string nsummoner,
                                 bool alert = false,
-                                const coord_def &p = coord_def(-1, -1),
-                                mgen_flags genflags = MG_NONE,
-                                god_type ngod = GOD_NO_GOD)
+                                const coord_def &p = coord_def(-1, -1))
 
     {
-        return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT,
-                         genflags, ngod).set_non_actor_summoner(nsummoner);
+        return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT);
     }
 };
 

@@ -2660,6 +2660,13 @@ static void _xom_torment(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
+monster* _xom_summon_hostile(monster_type hostile)
+{
+    return create_monster(mgen_data::hostile_at(hostile, true, you.pos())
+                          .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
+                          .set_non_actor_summoner("Xom"));
+}
+
 static void _xom_summon_hostiles(int sever)
 {
     int num_summoned = 0;
@@ -2670,15 +2677,8 @@ static void _xom_summon_hostiles(int sever)
         // Small number of shadow creatures.
         int count = 1 + random2(4);
         for (int i = 0; i < count; ++i)
-        {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        RANDOM_MOBILE_MONSTER, "Xom", true, you.pos())
-                    .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)))
-            {
+            if (_xom_summon_hostile(RANDOM_MOBILE_MONSTER))
                 num_summoned++;
-            }
-        }
     }
     else
     {
@@ -2698,15 +2698,8 @@ static void _xom_summon_hostiles(int sever)
         }
 
         for (int i = 0; i < numdemons; ++i)
-        {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        _xom_random_demon(sever), "Xom", true, you.pos())
-                    .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)))
-            {
+            if (_xom_summon_hostile(_xom_random_demon(sever)))
                 num_summoned++;
-            }
-        }
     }
 
     if (num_summoned > 0)
