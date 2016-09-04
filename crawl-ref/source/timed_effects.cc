@@ -146,8 +146,8 @@ static void _themed_hell_summon_or_miscast()
         const monster_type fiend
             = spec->fiend_types[random2(spec->fiend_types.size())];
         create_monster(
-                       mgen_data::hostile_at(fiend, "the effects of Hell",
-                                             true, you.pos()));
+                       mgen_data::hostile_at(fiend, true, you.pos())
+                       .set_non_actor_summoner("the effects of Hell"));
     }
     else
     {

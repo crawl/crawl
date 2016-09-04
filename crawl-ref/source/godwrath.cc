@@ -107,6 +107,15 @@ static string _god_wrath_name(god_type god)
                         god_name(god, use_full_name).c_str());
 }
 
+static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
+{
+    mgen_data mg = mgen_data::hostile_at(mtyp, true, you.pos())
+                    .set_summoned(nullptr, 0, 0, god)
+                    .set_non_actor_summoner(_god_wrath_name(god));
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    return mg;
+}
+
 static bool _yred_random_zombified_hostile()
 {
     const bool skel = one_chance_in(4);
@@ -123,12 +132,9 @@ static bool _yred_random_zombified_hostile()
     }
     while (skel && !mons_skeleton(z_base));
 
-    mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                           _god_wrath_name(GOD_YREDELEMNUL),
-                                           true, you.pos(), MG_NONE,
-                                           GOD_YREDELEMNUL).set_base(z_base);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mgen_data temp = _wrath_mon_data(skel ? MONS_SKELETON : MONS_ZOMBIE,
+                                     GOD_YREDELEMNUL)
+                     .set_base(z_base);
 
     return create_monster(temp, false);
 }
@@ -168,17 +174,12 @@ static bool _okawaru_random_servant()
     monster_type mon_type = pick_monster_from(_okawaru_servants,
                                               you.experience_level);
 
-    mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           _god_wrath_name(GOD_OKAWARU),
-                                           true, you.pos(), MG_NONE,
-                                           GOD_OKAWARU);
+    mgen_data temp = _wrath_mon_data(mon_type, GOD_OKAWARU);
 
     // Don't send dream sheep into battle, but otherwise let bands in.
     // This makes sure you get multiple orcs/gnolls early on.
     if (mon_type != MONS_CYCLOPS)
         temp.flags |= MG_PERMIT_BANDS;
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     return create_monster(temp, false);
 }
@@ -191,14 +192,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
     else if (tier >= 1 && count < 3 && coinflip())
         mon_type = MONS_SHADOW_DEMON;
 
-    mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           _god_wrath_name(GOD_DITHMENOS),
-                                           true, you.pos(), MG_NONE,
-                                           GOD_DITHMENOS);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    return create_monster(temp, false);
+    return create_monster(_wrath_mon_data(mon_type, GOD_DITHMENOS), false);
 }
 
 /**
@@ -637,15 +631,7 @@ static int _makhleb_num_greater_servants()
  */
 static bool _makhleb_summon_servant(monster_type servant)
 {
-
-    mgen_data temp = mgen_data::hostile_at(servant,
-                                           _god_wrath_name(GOD_MAKHLEB),
-                                           true, you.pos(), MG_NONE,
-                                           GOD_MAKHLEB);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    return create_monster(temp, false);
+    return create_monster(_wrath_mon_data(servant, GOD_MAKHLEB), false);
 }
 
 /**
@@ -935,9 +921,7 @@ static bool _beogh_retribution()
 
             // Now create monster.
             if (monster *mon =
-                create_monster(
-                    mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        _god_wrath_name(god), true, you.pos(), MG_NONE, god)))
+                create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
             {
                 ASSERT(mon->weapon() != nullptr);
                 item_def& wpn(*mon->weapon());
@@ -950,8 +934,6 @@ static bool _beogh_retribution()
                 set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
 
                 item_colour(wpn);
-
-                mon->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
                 ghost_demon newstats;
                 newstats.init_dancing_weapon(wpn,
@@ -997,12 +979,8 @@ static bool _beogh_retribution()
         else
             punisher = MONS_ORC;
 
-        mgen_data temp = mgen_data::hostile_at(punisher,
-                                               _god_wrath_name(god),
-                                               true, you.pos(),
-                                               MG_PERMIT_BANDS, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        mgen_data temp = _wrath_mon_data(punisher, god);
+        temp.flags |=  MG_PERMIT_BANDS;
 
         monster *mons = create_monster(temp, false);
 
@@ -1153,12 +1131,7 @@ static void _lugonu_minion_retribution()
                 0
             );
 
-        mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true,
-                                               you.pos(), MG_NONE, god);
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(to_summon, god), false))
             success = true;
     }
 
@@ -1169,12 +1142,7 @@ static void _lugonu_minion_retribution()
                                                      MONS_WRETCHED_STAR,
                                                      MONS_STARCURSED_MASS);
 
-        mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true,
-                                               you.pos(), MG_NONE, god);
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(to_summon, god), false))
             success = true;
     }
 
@@ -1384,14 +1352,7 @@ static void _jiyva_summon_slimes()
     {
         const monster_type slime = RANDOM_ELEMENT(slimes);
 
-        mgen_data temp =
-            mgen_data::hostile_at(static_cast<monster_type>(slime),
-                                  _god_wrath_name(god),
-                                  true, you.pos(), MG_NONE, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(slime, god), false))
             success = true;
     }
 
@@ -1467,13 +1428,7 @@ static bool _fedhas_summon_plants()
         }
     }
 
-    mgen_data temp =
-        mgen_data::hostile_at(MONS_OKLOB_PLANT,
-                              _god_wrath_name(god),
-                              false, coord_def(-1, -1),
-                              MG_FORCE_PLACE, god);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mgen_data temp = _wrath_mon_data(MONS_OKLOB_PLANT, god);
 
     // If we have a lot of space to work with we can do something
     // flashy.
@@ -1673,13 +1628,7 @@ static void _qazlal_summon_elementals()
         monster_type mon = pick_monster_from(pop_qazlal_wrath,
                                              you.experience_level);
 
-        mgen_data temp =
-            mgen_data::hostile_at(mon, _god_wrath_name(god), true, you.pos(),
-                                  MG_NONE, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(mon, god), false))
             success = true;
     }
 
