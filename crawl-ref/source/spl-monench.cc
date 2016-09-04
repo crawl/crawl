@@ -30,7 +30,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     {
         if (!mons)
             canned_msg(MSG_YOU_UNAFFECTED);
-        else if (mons && !mons_is_firewood(mons))
+        else if (!mons_is_firewood(mons))
             simple_monster_message(*mons, " is unaffected.");
         return 0;
     }
