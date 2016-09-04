@@ -1,0 +1,16 @@
+#! /bin/sh
+
+FONTDIRS="/usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts"
+
+name=$1
+[ "$name" ] || { echo "Usage: $0 <fontname.ttf>" >&2; exit 100; }
+
+{
+    {
+        fc-list | sed 's/: .*//' | grep -Fi "/$name"
+        for dir in $FONTDIRS; do
+            [ -d "$dir" ] && echo "$dir"
+        done
+    } | xargs -I% find % \( -type f -o -type l \) -iname "$name" -print \
+      | head -n1
+} 2>/dev/null

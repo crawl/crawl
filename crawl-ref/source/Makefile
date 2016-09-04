@@ -962,12 +962,7 @@ ifdef PROPORTIONAL_FONT
     INSTALL_FONTS += "$(PROPORTIONAL_FONT)"
   endif
 else
-  SYS_PROPORTIONAL_FONT = $(shell { name=$(OUR_PROPORTIONAL_FONT);\
-    {\
-      fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
-      for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
-      do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % \( -type f -o -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
+  SYS_PROPORTIONAL_FONT = $(shell util/find_font "$(OUR_PROPORTIONAL_FONT)")
   ifneq (,$(SYS_PROPORTIONAL_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
@@ -987,12 +982,7 @@ ifdef MONOSPACED_FONT
     INSTALL_FONTS += "$(MONOSPACED_FONT)"
   endif
 else
-  SYS_MONOSPACED_FONT = $(shell { name=$(OUR_MONOSPACED_FONT);\
-    {\
-      fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
-      for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
-      do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % \( -type f -o -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
+  SYS_MONOSPACED_FONT = $(shell util/find_font "$(OUR_MONOSPACED_FONT)")
   ifneq (,$(SYS_MONOSPACED_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
