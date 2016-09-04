@@ -3701,7 +3701,7 @@ static bool _worth_hexing(const monster &caster, spell_type spell)
         return true;
 
     // Only intelligent monsters estimate.
-    if (mons_intel(&caster) < I_HUMAN)
+    if (mons_intel(caster) < I_HUMAN)
         return true;
 
     // We'll estimate the target's resistance to magic, by first getting
@@ -6980,7 +6980,7 @@ static void _speech_keys(vector<string>& key_list,
     {
         if (real_spell)
             key_list.push_back(spell_name + cast_str + " real");
-        if (mons_intel(mons) >= I_HUMAN)
+        if (mons_intel(*mons) >= I_HUMAN)
             key_list.push_back(spell_name + cast_str + " gestures");
     }
 

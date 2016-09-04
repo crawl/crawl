@@ -5217,7 +5217,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
              && !mon->is_summoned()
              && !mons_enslaved_body_and_soul(mon)
              && mon->attitude != ATT_FRIENDLY
-             && mons_intel(mon) >= I_HUMAN
+             && mons_intel(*mon) >= I_HUMAN
              && mon->type != MONS_PANDEMONIUM_LORD;
         break;
 

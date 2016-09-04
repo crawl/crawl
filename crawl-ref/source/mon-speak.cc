@@ -692,7 +692,7 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    if (mons_intel(mons) < I_HUMAN)
+    if (mons_intel(*mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
 
     const mon_body_shape shape = get_mon_shape(mons);

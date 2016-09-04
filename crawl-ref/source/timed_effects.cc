@@ -1052,7 +1052,7 @@ static bool _monster_forget(monster* mon, int mon_turns)
     // After x turns, half of the monsters will have forgotten about the
     // player. A given monster has a 95% chance of forgetting the player after
     // 4*x turns.
-    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(mon));
+    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(*mon));
     const int forget_chances = mon_turns / forgetfulness_time;
     // n.b. this is an integer division, so if range < forgetfulness_time
     // nothing happens

@@ -374,7 +374,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     if (attacker->is_monster())
     {
-        mon_attack_def mon_attk = mons_attack_spec(attacker->as_monster(),
+        mon_attack_def mon_attk = mons_attack_spec(*attacker->as_monster(),
                                                    attack_number);
 
         attk_type       = mon_attk.type;

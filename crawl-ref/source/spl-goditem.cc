@@ -76,7 +76,7 @@ string unpacifiable_reason(const monster &mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(&mon) <= I_BRAINLESS // no self-awareness
+    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon.type)) // body part
     {
         return generic_reason;
@@ -131,7 +131,7 @@ static int _pacification_heal_div(mon_holy_type holiness)
  */
 static int _pacifiable_hp(const monster &mon, int healing)
 {
-    const int heal_mult = (mons_intel(&mon) < I_HUMAN) ? 3  // animals
+    const int heal_mult = (mons_intel(mon) < I_HUMAN) ? 3  // animals
                                                       : 1; // other
     const int heal_div = _pacification_heal_div(mon.holiness());
     // ignoring monster holiness & int

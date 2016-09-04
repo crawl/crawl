@@ -283,7 +283,7 @@ bool check_awaken(monster* mons, int stealth)
         return true;
 
 
-    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice();
+    int mons_perc = 10 + (mons_intel(*mons) * 4) + mons->get_hit_dice();
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 

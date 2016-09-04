@@ -255,7 +255,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         }
 
         if (!simu && attacker->is_monster()
-            && mons_attack_spec(attacker->as_monster(), attack_number, true)
+            && mons_attack_spec(*attacker->as_monster(), attack_number, true)
                    .flavour == AF_KITE
             && attacker->as_monster()->foe_distance() == 1
             && attacker->reach_range() == REACH_TWO

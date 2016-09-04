@@ -537,14 +537,14 @@ monster_info::monster_info(const monster* m, int milev)
 
     holi = m->holiness();
 
-    mintel = mons_intel(m);
+    mintel = mons_intel(*m);
     hd = m->get_hit_dice();
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
     mr = m->res_magic(false);
     can_see_invis = m->can_see_invisible(false);
-    mresists = get_mons_resists(m);
+    mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m, true);
     menergy = mons_energy(m);
@@ -553,7 +553,7 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_AIRBORNE);
     if (mons_wields_two_weapons(m))
         mb.set(MB_TWO_WEAPONS);
-    if (!mons_can_regenerate(m))
+    if (!mons_can_regenerate(*m))
         mb.set(MB_NO_REGEN);
     if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
@@ -675,7 +675,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack[i] = mons_attack_spec(m, i, true);
+        attack[i] = mons_attack_spec(*m, i, true);
         attack[i].damage = 0;
     }
 

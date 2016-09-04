@@ -1393,7 +1393,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     const int resistance = _actor_cloud_resist(mons, cloud);
 
     // Thinking things avoid things they are vulnerable to (-resists)
-    if (mons_intel(mons) >= I_ANIMAL && resistance < 0)
+    if (mons_intel(*mons) >= I_ANIMAL && resistance < 0)
         return true;
 
     switch (cloud.type)
@@ -1417,7 +1417,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         // This position could become deep water, and they might drown.
         if (grd(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(mons) > I_BRAINLESS)
+            && mons_intel(*mons) > I_BRAINLESS)
         {
             return true;
         }
@@ -1438,7 +1438,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int hp_threshold = damage * 3;
 
         // intelligent monsters want a larger margin of safety
-        int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
+        int safety_mult = (mons_intel(*mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
         const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
@@ -1451,7 +1451,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
-    if (mons_intel(mons) == I_BRAINLESS && !extra_careful)
+    if (mons_intel(*mons) == I_BRAINLESS && !extra_careful)
         return false;
 
     // If we get here, the cloud is potentially harmful.

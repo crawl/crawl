@@ -362,38 +362,38 @@ resists_t get_mons_class_resists(monster_type mc)
     return _apply_holiness_resists(resists, mons_class_holiness(mc));
 }
 
-resists_t get_mons_resists(const monster* mon)
+resists_t get_mons_resists(const monster& m)
 {
-    get_tentacle_head(mon);
+    const monster& mon = get_tentacle_head(m);
 
-    resists_t resists = get_mons_class_resists(mon->type);
+    resists_t resists = get_mons_class_resists(mon.type);
 
-    if (mons_is_ghost_demon(mon->type))
-        resists |= mon->ghost->resists;
+    if (mons_is_ghost_demon(mon.type))
+        resists |= mon.ghost->resists;
 
-    if (mons_genus(mon->type) == MONS_DRACONIAN
-            && mon->type != MONS_DRACONIAN
-        || mon->type == MONS_TIAMAT
-        || mons_genus(mon->type) == MONS_DEMONSPAWN
-            && mon->type != MONS_DEMONSPAWN)
+    if (mons_genus(mon.type) == MONS_DRACONIAN
+            && mon.type != MONS_DRACONIAN
+        || mon.type == MONS_TIAMAT
+        || mons_genus(mon.type) == MONS_DEMONSPAWN
+            && mon.type != MONS_DEMONSPAWN)
     {
-        monster_type subspecies = draco_or_demonspawn_subspecies(mon);
-        if (subspecies != mon->type)
+        monster_type subspecies = draco_or_demonspawn_subspecies(&mon);
+        if (subspecies != mon.type)
             resists |= get_mons_class_resists(subspecies);
     }
 
-    if (mon->props.exists(MUTANT_BEAST_FACETS))
-        for (auto facet : mon->props[MUTANT_BEAST_FACETS].get_vector())
+    if (mon.props.exists(MUTANT_BEAST_FACETS))
+        for (auto facet : mon.props[MUTANT_BEAST_FACETS].get_vector())
             resists |= _beast_facet_resists((beast_facet)facet.get_int());
 
     // This is set from here in case they're undead due to the
     // MF_FAKE_UNDEAD flag. See the comment in get_mons_class_resists.
-    return _apply_holiness_resists(resists, mon->holiness());
+    return _apply_holiness_resists(resists, mon.holiness());
 }
 
 int get_mons_resist(const monster* mon, mon_resist_flags res)
 {
-    return get_resist(get_mons_resists(mon), res);
+    return get_resist(get_mons_resists(*mon), res);
 }
 
 // Returns true if the monster successfully resists this attempt to poison it.
@@ -1590,14 +1590,14 @@ bool mons_class_can_regenerate(monster_type mc)
     return !mons_class_flag(mc, M_NO_REGEN);
 }
 
-bool mons_can_regenerate(const monster* mon)
+bool mons_can_regenerate(const monster& m)
 {
-    get_tentacle_head(mon);
+    const monster& mon = get_tentacle_head(m);
 
-    if (testbits(mon->flags, MF_NO_REGEN))
+    if (testbits(mon.flags, MF_NO_REGEN))
         return false;
 
-    return mons_class_can_regenerate(mon->type);
+    return mons_class_can_regenerate(mon.type);
 }
 
 bool mons_class_fast_regen(monster_type mc)
@@ -1906,16 +1906,16 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
  *                     random flavours.
  * @return  A mon_attack_def for the specified attack.
  */
-mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour)
+mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_flavour)
 {
-    monster_type mc = mon->type;
+    monster_type mc = m.type;
 
-    get_tentacle_head(mon);
+    const monster& mon = get_tentacle_head(m);
 
-    const bool zombified = mons_is_zombified(mon);
+    const bool zombified = mons_is_zombified(&mon);
 
-    if (mon->has_hydra_multi_attack())
-        attk_number -= mon->heads() - 1;
+    if (mon.has_hydra_multi_attack())
+        attk_number -= mon.heads() - 1;
 
     if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS)
         attk_number = 0;
@@ -1924,30 +1924,30 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     {
         if (attk_number == 0)
         {
-            return mon_attack_def::attk(mon->ghost->damage,
-                                        mon->ghost->att_type,
-                                        mon->ghost->att_flav);
+            return mon_attack_def::attk(mon.ghost->damage,
+                                        mon.ghost->att_type,
+                                        mon.ghost->att_flav);
         }
 
         return mon_attack_def::attk(0, AT_NONE);
     }
     else if (mc == MONS_MUTANT_BEAST)
-        return _mutant_beast_attack(*mon, attk_number);
+        return _mutant_beast_attack(mon, attk_number);
     else if (mons_is_hepliaklqana_ancestor(mc))
-        return _hepliaklqana_ancestor_attack(*mon, attk_number);
+        return _hepliaklqana_ancestor_attack(mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
-        mc = draco_or_demonspawn_subspecies(mon);
+        mc = draco_or_demonspawn_subspecies(&mon);
 
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
-        mc = mons_zombie_base(mon);
+        mc = mons_zombie_base(&mon);
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
 
-    if (mons_is_demonspawn(mon->type) && attk_number == 0)
+    if (mons_is_demonspawn(mon.type) && attk_number == 0)
     {
         const monsterentry* mbase =
-            get_monster_data (draco_or_demonspawn_subspecies(mon));
+            get_monster_data (draco_or_demonspawn_subspecies(&mon));
         ASSERT(mbase);
         attk.flavour = mbase->attack[0].flavour;
         return attk;
@@ -1957,19 +1957,19 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     // Implicit assumption: base draconian types only get one aux
     // attack, and it's in their second attack slot.
     // If that changes this code will need to be changed.
-    if (mons_species(mon->type) == MONS_DRACONIAN
-        && mon->type != MONS_DRACONIAN
+    if (mons_species(mon.type) == MONS_DRACONIAN
+        && mon.type != MONS_DRACONIAN
         && attk.type == AT_NONE
         && attk_number > 0
         && smc->attack[attk_number - 1].type != AT_NONE)
     {
         const monsterentry* mbase =
-            get_monster_data (draco_or_demonspawn_subspecies(mon));
+            get_monster_data (draco_or_demonspawn_subspecies(&mon));
         ASSERT(mbase);
         return mbase->attack[1];
     }
 
-    if (mon->type == MONS_PLAYER_SHADOW && attk_number == 0)
+    if (mon.type == MONS_PLAYER_SHADOW && attk_number == 0)
     {
         if (!you.weapon())
             attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
@@ -2002,10 +2002,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
 
     // Slime creature attacks are multiplied by the number merged.
-    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
-        attk.damage *= mon->blob_size;
+    if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
+        attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
+    return zombified ? _downscale_zombie_attack(&mon, attk) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)
@@ -3120,14 +3120,14 @@ mon_intel_type mons_class_intel(monster_type mc)
     return smc->intel;
 }
 
-mon_intel_type mons_intel(const monster* mon)
+mon_intel_type mons_intel(const monster& m)
 {
-    get_tentacle_head(mon);
+    const monster& mon = get_tentacle_head(m);
 
-    if (mons_enslaved_soul(mon))
-        return mons_class_intel(mons_zombie_base(mon));
+    if (mons_enslaved_soul(&mon))
+        return mons_class_intel(mons_zombie_base(&mon));
 
-    return mons_class_intel(mon->type);
+    return mons_class_intel(mon.type);
 }
 
 static habitat_type _mons_class_habitat(monster_type mc,
@@ -3184,7 +3184,7 @@ habitat_type mons_secondary_habitat(const monster* mon)
 
 bool intelligent_ally(const monster* mon)
 {
-    return mon->attitude == ATT_FRIENDLY && mons_intel(mon) >= I_HUMAN;
+    return mon->attitude == ATT_FRIENDLY && mons_intel(*mon) >= I_HUMAN;
 }
 
 int mons_power(monster_type mc)
@@ -3829,7 +3829,7 @@ bool monster_shover(const monster* m)
         return false;
 
     // no mindless creatures pushing, aside from jellies, which just kind of ooze.
-    return mons_intel(m) > I_BRAINLESS || mons_genus(m->type) == MONS_JELLY;
+    return mons_intel(*m) > I_BRAINLESS || mons_genus(m->type) == MONS_JELLY;
 }
 
 /**
@@ -4996,7 +4996,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
             return false;
     }
     // Monster recall requires same attitude and at least normal intelligence
-    else if (mons_intel(targ) < I_HUMAN
+    else if (mons_intel(*targ) < I_HUMAN
              || (!caller && targ->friendly())
              || (caller && !mons_aligned(targ, caller->as_monster())))
     {
