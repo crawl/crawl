@@ -1338,7 +1338,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                       {
                           if (for_hostiles == ENCH_SLOW)
                           {
-                              do_slow_monster(&mon, &you);
+                              do_slow_monster(mon, &you);
                               affected = true;
                           }
                           else if (!(for_hostiles == ENCH_HASTE && haste_immune))
@@ -1363,7 +1363,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                       {
                           if (for_allies == ENCH_SLOW)
                           {
-                              do_slow_monster(&mon, &you);
+                              do_slow_monster(mon, &you);
                               affected = true;
                           }
                           else if (!(for_allies == ENCH_HASTE && haste_immune))
