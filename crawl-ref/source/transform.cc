@@ -789,7 +789,7 @@ public:
      */
     int get_stealth_mod() const override
     {
-        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
+        return you.species == SP_VAMPIRE ? 21 : stealth_mod;
     }
 
     /**
