@@ -4751,7 +4751,9 @@ static int _mons_cause_fear(monster* mons, bool actual)
         else
         {
             const int res_margin = you.check_res_magic(pow);
-            if (res_margin > 0)
+            if (you.clarity())
+                canned_msg(MSG_YOU_UNAFFECTED);
+            else if (res_margin > 0)
                 mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
             else if (you.add_fearmonger(mons))
             {
