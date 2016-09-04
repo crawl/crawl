@@ -1180,7 +1180,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
 static monster* _xom_mons_poly_target()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (_choose_mutatable_monster(*mi) && !mons_is_firewood(*mi))
+        if (_choose_mutatable_monster(*mi) && !mons_is_firewood(**mi))
             return *mi;
     return nullptr;
 }

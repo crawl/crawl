@@ -1533,7 +1533,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
                 if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(new_target)
+                    || mons_is_firewood(*new_target)
                     || new_target->friendly())
                 {
                     continue;
@@ -1908,7 +1908,7 @@ void handle_monster_move(monster* mons)
         && !mons->asleep()
         && !mons_is_conjured(mons->type)
         && !mons_is_tentacle_or_tentacle_segment(mons->type)
-        && !mons_is_firewood(mons)
+        && !mons_is_firewood(*mons)
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
@@ -2164,7 +2164,7 @@ void handle_monster_move(monster* mons)
                                 monster* candidate = monster_at(*ai);
                                 if (candidate == nullptr
                                     || mons_is_projectile(candidate->type)
-                                    || mons_is_firewood(candidate)
+                                    || mons_is_firewood(*candidate)
                                     || candidate->friendly())
                                 {
                                     continue;
@@ -2229,7 +2229,7 @@ void handle_monster_move(monster* mons)
                 return;
             }
             // Figure out if they fight.
-            else if ((!mons_is_firewood(targ)
+            else if ((!mons_is_firewood(*targ)
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
@@ -3193,7 +3193,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
         // Cut down plants only when no alternative, or they're
         // our target.
-        if (mons_is_firewood(targmonster) && mons->target != targ)
+        if (mons_is_firewood(*targmonster) && mons->target != targ)
             return false;
 
         if (mons_aligned(mons, targmonster)
@@ -3247,7 +3247,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
     }
     // Outside of that case, can always cut mundane plants
     // (but don't try to attack briars unless their damage will be insignificant)
-    return mons_is_firewood(targ)
+    return mons_is_firewood(*targ)
         && (targ->type != MONS_BRIAR_PATCH
             || mons->type == MONS_THORN_HUNTER
             || mons->armour_class() * mons->hit_points >= 400);

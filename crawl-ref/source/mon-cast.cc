@@ -899,7 +899,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
  */
 static bool _monster_will_buff(const monster &caster, const monster &targ)
 {
-    if (mons_is_firewood(&targ))
+    if (mons_is_firewood(targ))
         return false;
 
     if (!mons_aligned(&targ, &caster))
@@ -980,7 +980,7 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
         if (mons_aligned(*targ, foe)
             && !targ->has_ench(ENCH_CHARM)
             && !targ->has_ench(ENCH_HEXED)
-            && !mons_is_firewood(*targ)
+            && !mons_is_firewood(**targ)
             && !_flavour_benefits_monster(pbolt.flavour, **targ))
         {
             got_target = true;
@@ -2184,7 +2184,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         if (!mons_aligned(&mon, mons))
             continue;
 
-        if (mons_is_firewood(mons))
+        if (mons_is_firewood(*mons))
             continue;
 
         if (check_only)
@@ -2727,7 +2727,7 @@ static bool _should_recall(monster* caller)
         {
             if (*mi != caller && caller->can_see(**mi)
                 && mons_aligned(caller, *mi)
-                && !mons_is_firewood(*mi))
+                && !mons_is_firewood(**mi))
             {
                 ally_hd += mi->get_experience_level();
             }
@@ -3232,7 +3232,7 @@ static void _cast_black_mark(monster* agent)
         if (ai->is_player() || !mons_aligned(*ai, agent))
             continue;
         monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(mon))
+        if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(*mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
             simple_monster_message(*mon, " begins absorbing vital energies!");
@@ -4165,7 +4165,7 @@ bool handle_mon_spell(monster* mons)
 
                 if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(new_target)
+                    || mons_is_firewood(*new_target)
                     || new_target->friendly())
                 {
                     continue;
@@ -4773,7 +4773,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // Will not further scare a monster that is already afraid.
         if (mons_immune_magic(*mi)
             || !(mi->holiness() & MH_NATURAL)
-            || mons_is_firewood(*mi)
+            || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mi->has_ench(ENCH_FEAR))
         {
@@ -4846,7 +4846,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
             continue;
 
         if (mons_immune_magic(*mi)
-            || mons_is_firewood(*mi)
+            || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mons->has_ench(ENCH_HEXED))
         {
@@ -4911,7 +4911,7 @@ static int _mons_control_undead(monster* mons, bool actual)
             continue;
 
         if (mons_immune_magic(*mi)
-            || mons_is_firewood(*mi)
+            || mons_is_firewood(**mi)
             || (mons_atts_aligned(mi->attitude, mons->attitude)
                 && !mi->has_ench(bad))
             || !(mi->holiness() & MH_UNDEAD))
@@ -7731,7 +7731,7 @@ static int _throw_site_score(const monster &thrower, const actor &victim,
         const monster * const mons = monster_at(*ai);
         if (mons && !mons->friendly()
             && mons != &thrower
-            && !mons_is_firewood(mons))
+            && !mons_is_firewood(*mons))
         {
             score += sqr(mons_threat_level(mons) + 2);
         }

@@ -121,7 +121,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 {
     // Short-circuit plants, some vaults have tons of those. Except for both
     // active and inactive ballistos, players may still want these.
-    if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
+    if (mons_is_firewood(*mon) && mon->type != MONS_BALLISTOMYCETE)
         return true;
 
     int  dist    = grid_distance(you.pos(), mon->pos());

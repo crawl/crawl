@@ -1375,7 +1375,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             if (!have_passive(passive_t::no_mp_regen)
                 && you.magic_points != you.max_magic_points
                 && !defender->as_monster()->is_summoned()
-                && !mons_is_firewood(defender->as_monster()))
+                && !mons_is_firewood(*defender->as_monster()))
             {
                 int drain = random2(damage_done * 2) + 1;
                 // Augment mana drain--1.25 "standard" effectiveness at 0 mp,
@@ -2927,7 +2927,7 @@ void melee_attack::mons_apply_attack_flavour()
             if (vine->has_ench(ENCH_ANTIMAGIC)
                 && (defender->is_player()
                     || (!defender->as_monster()->is_summoned()
-                        && !mons_is_firewood(defender->as_monster()))))
+                        && !mons_is_firewood(*defender->as_monster()))))
             {
                 mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);
                 vine->lose_ench_duration(me, random2(damage_done) + 1);

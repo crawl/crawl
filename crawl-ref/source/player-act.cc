@@ -692,7 +692,7 @@ void player::attacking(actor *other, bool ranged)
             pet_target = mon->mindex();
     }
 
-    if (ranged || mons_is_firewood((monster*) other))
+    if (ranged || mons_is_firewood(*(monster*) other))
         return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);

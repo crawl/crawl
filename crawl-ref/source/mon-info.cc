@@ -759,7 +759,7 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_SAFE);
         else
             mb.set(MB_UNSAFE);
-        if (mons_is_firewood(m))
+        if (mons_is_firewood(*m))
             mb.set(MB_FIREWOOD);
     }
 

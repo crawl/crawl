@@ -596,7 +596,7 @@ enum chaos_type
 void attack::chaos_affects_defender()
 {
     monster * const mon    = defender->as_monster();
-    const bool firewood    = mon && mons_is_firewood(mon);
+    const bool firewood    = mon && mons_is_firewood(*mon);
     const bool immune      = mon && mons_immune_magic(mon);
     const bool is_natural  = mon && defender->holiness() & MH_NATURAL;
     const bool is_shifter  = mon && mon->is_shapeshifter();

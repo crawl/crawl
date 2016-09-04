@@ -2416,7 +2416,7 @@ void check_monster_detect()
                 cell.clear_monster();
             continue;
         }
-        if (mons_is_firewood(mon))
+        if (mons_is_firewood(*mon))
             continue;
 
         // [ds] If the PC remembers the correct monster at this

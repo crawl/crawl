@@ -3710,7 +3710,7 @@ static void _randomly_place_item(int item)
         found = grd(itempos) == DNGN_FLOOR
                 && !map_masked(itempos, MMT_NO_ITEM)
                 // oklobs or statues are ok
-                && (!mon || !mons_is_firewood(mon));
+                && (!mon || !mons_is_firewood(*mon));
     }
     if (!found)
     {

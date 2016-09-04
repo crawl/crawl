@@ -1116,7 +1116,7 @@ bool does_ru_wanna_redirect(monster* mon)
     return have_passive(passive_t::aura_of_power)
             && !mon->friendly()
             && you.see_cell(mon->pos())
-            && !mons_is_firewood(mon)
+            && !mons_is_firewood(*mon)
             && !mon->submerged()
             && !mons_is_projectile(mon->type);
 }
@@ -1386,7 +1386,7 @@ static int _check_for_uskayaw_targets(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (mons_is_firewood(mons))
+    if (mons_is_firewood(*mons))
         return 0;
 
     return 1;
