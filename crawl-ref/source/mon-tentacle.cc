@@ -39,6 +39,16 @@ static monster_type _solo_tentacle_to_segment[][2] =
     { MONS_SNAPLASHER_VINE,   MONS_SNAPLASHER_VINE_SEGMENT },
 };
 
+static mgen_data _segment_data(const monster& head, coord_def pos,
+                               monster_type type)
+{
+    mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE);
+    mg.set_summoned(&head, 0, 0, head.god)
+      .set_prox(PROX_CLOSE_TO_PLAYER)
+      .set_col(head.colour);
+    return mg;
+}
+
 bool mons_is_tentacle_head(monster_type mc)
 {
     for (const monster_type (&m)[3] : _head_child_segment)
@@ -218,10 +228,7 @@ static void _establish_connection(monster* tentacle,
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
-        mgen_data mg(connector_type, SAME_ATTITUDE(head), last->pos, head->foe,
-                     MG_FORCE_PLACE);
-        mg.set_summoned(head, 0, 0, head->god);
-        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
+        mgen_data mg = _segment_data(*head, last->pos, connector_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -263,10 +270,7 @@ static void _establish_connection(monster* tentacle,
         }
 
          // place a connector
-        mgen_data mg(connector_type, SAME_ATTITUDE(head), current->pos,
-                     head->foe, MG_FORCE_PLACE);
-        mg.set_summoned(head, 0, 0, head->god);
-        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
+        mgen_data mg = _segment_data(*head, current->pos, connector_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -1256,10 +1260,7 @@ void mons_create_tentacles(monster* head)
 
     for (int i = 0 ; i < possible_count; ++i)
     {
-        mgen_data mg(tent_type, SAME_ATTITUDE(head), adj_squares[i], head->foe,
-                     MG_FORCE_PLACE);
-        mg.set_summoned(head, 0, 0, head->god);
-        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
+        mgen_data mg = _segment_data(*head, adj_squares[i], tent_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(head->mid);
         if (monster *tentacle = create_monster(mg))
         {
