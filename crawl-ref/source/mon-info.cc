@@ -1408,7 +1408,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_PETRIFYING))
         v.emplace_back("slowly petrifying");
     if (is(MB_VULN_MAGIC))
-        v.emplace_back("susceptible to magic");
+        v.emplace_back("susceptible to hostile enchantments");
     if (is(MB_SWIFT))
         v.emplace_back("covering ground quickly");
     if (is(MB_SILENCING))
@@ -1444,6 +1444,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lost in madness");
     if (is(MB_REGENERATION))
         v.emplace_back("regenerating");
+    if (is(MB_RAISED_MR))
+        v.emplace_back("resistant to hostile enchantments");
     if (is(MB_ROLLING))
         v.emplace_back("rolling");
     if (is(MB_OZOCUBUS_ARMOUR))

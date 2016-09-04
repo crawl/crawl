@@ -808,6 +808,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer regenerating.");
         break;
 
+    case ENCH_RAISED_MR:
+        if (!quiet)
+        {
+            simple_monster_message(*this, " is no longer resistant to hostile "
+                                          "enchantments.");
+        }
+        break;
+
     case ENCH_WRETCHED:
         if (!quiet)
         {
