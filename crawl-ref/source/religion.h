@@ -114,7 +114,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile = false);
 bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
-bool is_follower(const monster* mon);
+bool is_follower(const monster& mon);
 
 // Vehumet gift interface.
 bool vehumet_is_offering(spell_type spell);

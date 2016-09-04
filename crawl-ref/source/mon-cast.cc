@@ -2716,7 +2716,7 @@ static bool _should_recall(monster* caller)
     int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_is_recallable(caller, *mi)
+        if (mons_is_recallable(caller, **mi)
             && !caller->see_cell_no_trans((*mi)->pos()))
         {
             ++num;
@@ -2761,7 +2761,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
         if (*mi == mons)
             continue;
 
-        if (!mons_is_recallable(mons, *mi))
+        if (!mons_is_recallable(mons, **mi))
             continue;
 
         // Don't recall things that are already close to us
@@ -3615,7 +3615,7 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
 
         tracer.target = mi->pos();
         fire_tracer(&caster, tracer, true, true);
-        if (mons_is_threatening(*mi)) // only care about sacrificing real mons
+        if (mons_is_threatening(**mi)) // only care about sacrificing real mons
             tracer.friend_info.power += mi->get_experience_level() * 2;
 
         const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
@@ -4584,7 +4584,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
                 targname.c_str()).c_str());
         }
         if (mtarget->alive())
-            print_wounds(mtarget);
+            print_wounds(*mtarget);
     }
 }
 
@@ -4964,7 +4964,7 @@ static coord_def _mons_fragment_target(const monster &mon)
     const int pow = _mons_spellpower(SPELL_LRD, *mons);
 
     // Shadow casting should try to affect the same tile as the player.
-    if (mons_is_player_shadow(mons))
+    if (mons_is_player_shadow(*mons))
     {
         bool temp;
         bolt beam;
@@ -5519,7 +5519,7 @@ static bool _spell_charged(monster *mons)
                            .c_str());
         if (!msg.empty())
         {
-            msg = do_mon_str_replacements(msg, mons);
+            msg = do_mon_str_replacements(msg, *mons);
             mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
                  : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
         }
@@ -6943,7 +6943,7 @@ static void _speech_keys(vector<string>& key_list,
     const bool natural {slot_flags & MON_SPELL_NATURAL};
     const bool magical {slot_flags & MON_SPELL_MAGICAL};
 
-    const mon_body_shape shape = get_mon_shape(mons);
+    const mon_body_shape shape = get_mon_shape(*mons);
     const string    spell_name = spell_title(spell);
     const bool      real_spell = priest || wizard;
 
@@ -7736,7 +7736,7 @@ static int _throw_site_score(const monster &thrower, const actor &victim,
             && mons != &thrower
             && !mons_is_firewood(*mons))
         {
-            score += sqr(mons_threat_level(mons) + 2);
+            score += sqr(mons_threat_level(*mons) + 2);
         }
     }
 

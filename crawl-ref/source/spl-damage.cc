@@ -485,7 +485,7 @@ static int _refrigerate_monster(const actor* agent, monster* target, int pow,
         }
 
         if (target->alive() && you.can_see(*target))
-            print_wounds(target);
+            print_wounds(*target);
 
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
@@ -559,7 +559,7 @@ static int _drain_monster(const actor* agent, monster* target, int pow,
         }
 
         if (target->alive() && you.can_see(*target))
-            print_wounds(target);
+            print_wounds(*target);
     }
 
     if (!target->is_summoned())
@@ -865,7 +865,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     mons->hurt(&you, hp_gain);
 
     if (mons->alive())
-        print_wounds(mons);
+        print_wounds(*mons);
 
     hp_gain = div_rand_round(hp_gain, 2);
 
@@ -926,7 +926,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     if (mons->alive())
     {
         mons->expose_to_element(BEAM_COLD, orig_hurted);
-        print_wounds(mons);
+        print_wounds(*mons);
     }
 
     return SPRET_SUCCESS;
@@ -996,7 +996,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     mons->hurt(&you, hurted);
     if (mons->alive())
-        print_wounds(mons);
+        print_wounds(*mons);
 
     return SPRET_SUCCESS;
 }
@@ -1012,7 +1012,7 @@ static bool _player_hurt_monster(monster& m, int damage,
 
         if (m.alive())
         {
-            print_wounds(&m);
+            print_wounds(m);
             behaviour_event(&m, ME_WHACK, &you);
         }
         else
@@ -1638,7 +1638,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
 
         // Monster survived, remove any poison.
         mon->del_ench(ENCH_POISON, true); // suppress spam
-        print_wounds(mon);
+        print_wounds(*mon);
     }
     else
     {
@@ -3125,7 +3125,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
         if (!mons || !mons->alive() || !you.can_see(*mons))
             continue;
 
-        print_wounds(mons);
+        print_wounds(*mons);
     }
 
     return SPRET_SUCCESS;

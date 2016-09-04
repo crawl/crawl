@@ -524,7 +524,7 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Better not be an unsubmerged monster either.
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
            || fedhas_passthrough(monster_at(p))
-           || mons_is_player_shadow(monster_at(p)));
+           || mons_is_player_shadow(*monster_at(p)));
 
     // Move the player to new location.
     you.moveto(p, true);
@@ -1125,7 +1125,7 @@ static int _slow_regeneration_rate()
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_is_threatening(*mi)
+        if (mons_is_threatening(**mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {
@@ -7666,7 +7666,7 @@ bool player::made_nervous_by(const coord_def &p)
     if (form != TRAN_FUNGUS)
         return false;
     monster* mons = monster_at(p);
-    if (mons && mons_is_threatening(mons))
+    if (mons && mons_is_threatening(*mons))
         return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
@@ -7674,7 +7674,7 @@ bool player::made_nervous_by(const coord_def &p)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()
-            && mons_is_threatening(*mi)
+            && mons_is_threatening(**mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {

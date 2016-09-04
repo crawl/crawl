@@ -293,7 +293,7 @@ static int _current_horror_level()
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || !mons_is_threatening(mon)
+            || !mons_is_threatening(*mon)
             || !you.can_see(*mon))
         {
             continue;
@@ -301,7 +301,7 @@ static int _current_horror_level()
 
         ASSERT(mon);
 
-        const mon_threat_level_type threat_level = mons_threat_level(mon);
+        const mon_threat_level_type threat_level = mons_threat_level(*mon);
         if (threat_level == MTHRT_NASTY)
             horror_level += 3;
         else if (threat_level == MTHRT_TOUGH)

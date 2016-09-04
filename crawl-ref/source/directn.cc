@@ -2293,7 +2293,7 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
 {
     // Monsters that are no threat to you don't count as monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && !mons_is_threatening(mon))
+        && !mons_is_threatening(*mon))
     {
         return false;
     }
@@ -2394,7 +2394,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_INJURED_FRIEND:
-        if (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY)
+        if (mon->friendly() && mons_get_damage_level(*mon) > MDAM_OKAY)
             return true;
         return !mon->wont_attack() && !mon->neutral()
             && unpacifiable_reason(*mon).empty();

@@ -734,7 +734,7 @@ static string _tso_bless_duration(monster* follower)
 static bool _tso_bless_follower(monster* follower, bool force)
 {
 
-    if (!follower || (!force && !is_follower(follower)))
+    if (!follower || (!force && !is_follower(*follower)))
         return false;
 
     string blessing = "";
@@ -765,7 +765,7 @@ bool bless_follower(monster* follower,
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower.
     // XXX: factor out into another function?
-    if (!follower || (!force && !is_follower(follower)))
+    if (!follower || (!force && !is_follower(*follower)))
     {
         // Choose a random follower in LOS, preferably a named or
         // priestly one.

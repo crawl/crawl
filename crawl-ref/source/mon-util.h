@@ -427,7 +427,7 @@ void mons_remove_from_grid(const monster& mon);
 
 bool monster_shover(const monster& m);
 
-bool monster_senior(const monster* first, const monster* second,
+bool monster_senior(const monster& first, const monster& second,
                     bool fleeing = false);
 string ugly_thing_colour_name(colour_t colour);
 colour_t ugly_thing_random_colour();
@@ -445,10 +445,10 @@ monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 void         init_mon_name_cache();
 monster_type get_monster_by_name(string name, bool substring = false);
 
-string do_mon_str_replacements(const string &msg, const monster* mons,
+string do_mon_str_replacements(const string &msg, const monster& mons,
                                int s_type = -1);
 
-mon_body_shape get_mon_shape(const monster* mon);
+mon_body_shape get_mon_shape(const monster& mon);
 mon_body_shape get_mon_shape(const monster_type mc);
 string get_mon_shape_str(const mon_body_shape shape);
 bool mon_shape_is_humanoid(mon_body_shape shape);
@@ -458,53 +458,53 @@ mon_type_tile_variation get_mon_tile_variation(monster_type mc);
 tileidx_t get_mon_base_corpse_tile(monster_type mc);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
-bool mons_can_open_door(const monster* mon, const coord_def& pos);
-bool mons_can_eat_door(const monster* mon, const coord_def& pos);
-bool mons_can_destroy_door(const monster* mon, const coord_def& pos);
-bool mons_can_traverse(const monster* mon, const coord_def& pos,
+bool mons_can_open_door(const monster& mon, const coord_def& pos);
+bool mons_can_eat_door(const monster& mon, const coord_def& pos);
+bool mons_can_destroy_door(const monster& mon, const coord_def& pos);
+bool mons_can_traverse(const monster& mon, const coord_def& pos,
                        bool only_in_sight = false,
                        bool checktraps = true);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
-bool player_or_mon_in_sanct(const monster* mons);
+bool player_or_mon_in_sanct(const monster& mons);
 bool mons_is_immotile(const monster& mons);
 
 int get_dist_to_nearest_monster();
 bool monster_nearby();
 actor *actor_by_mid(mid_t m, bool require_valid = false);
 monster *monster_by_mid(mid_t m, bool require_valid = false);
-bool mons_is_recallable(actor* caller, monster* targ);
+bool mons_is_recallable(const actor* caller, const monster& targ);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
-mon_threat_level_type mons_threat_level(const monster *mon,
+mon_threat_level_type mons_threat_level(const monster &mon,
                                         bool real = false);
 int count_monsters(monster_type mtyp, bool friendly_only);
 int count_allies();
 
-bool mons_foe_is_marked(const monster* mons);
+bool mons_foe_is_marked(const monster& mons);
 vector<monster* > get_on_level_followers();
 
-bool mons_stores_tracking_data(const monster* mons);
+bool mons_stores_tracking_data(const monster& mons);
 
-bool mons_is_player_shadow(const monster* mon);
+bool mons_is_player_shadow(const monster& mon);
 
 void reset_all_monsters();
 void debug_mondata();
 void debug_monspells();
 
-bool choose_any_monster(const monster* mon);
+bool choose_any_monster(const monster& mon);
 monster *choose_random_nearby_monster(
     int weight,
-    bool (*suitable)(const monster* mon) =
+    bool (*suitable)(const monster& mon) =
         choose_any_monster,
     bool prefer_named_or_priest = false);
 
 monster *choose_random_monster_on_level(
     int weight,
-    bool (*suitable)(const monster* mon) =
+    bool (*suitable)(const monster& mon) =
         choose_any_monster,
     bool prefer_named_or_priest = false);
 
@@ -523,14 +523,14 @@ enum mon_dam_level_type
     MDAM_DEAD,
 };
 
-void print_wounds(const monster* mons);
+void print_wounds(const monster& mons);
 bool wounded_damaged(mon_holy_type holi);
 
-mon_dam_level_type mons_get_damage_level(const monster* mons);
+mon_dam_level_type mons_get_damage_level(const monster& mons);
 
 string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 bool mons_class_is_threatening(monster_type mo);
-bool mons_is_threatening(const monster* mon);
+bool mons_is_threatening(const monster& mon);
 bool mons_class_gives_xp(monster_type mc, bool indirect = false);
 bool mons_gives_xp(const monster& mon, const actor& agent);
 bool mons_is_notable(const monster& mon);
@@ -539,8 +539,8 @@ int max_mons_charge(monster_type m);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);
-void radiate_pain_bond(const monster* mon, int damage);
-void throw_monster_bits(const monster* mon);
+void radiate_pain_bond(const monster& mon, int damage);
+void throw_monster_bits(const monster& mon);
 void set_ancestor_spells(monster &ancestor, bool notify = false);
 
 typedef function<bool (monster& mon)> monster_func;

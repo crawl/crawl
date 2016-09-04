@@ -1474,7 +1474,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mon_item == NON_ITEM || !mitm[mon_item].defined())
         return false;
 
-    if (player_or_mon_in_sanct(mons))
+    if (player_or_mon_in_sanct(*mons))
         return false;
 
     item_def *missile = &mitm[mon_item];
@@ -1666,7 +1666,7 @@ static void _pre_monster_move(monster& mons)
         return;
     }
 
-    if (mons_stores_tracking_data(&mons))
+    if (mons_stores_tracking_data(mons))
     {
         actor* foe = mons.get_foe();
         if (foe)
@@ -2035,7 +2035,7 @@ void handle_monster_move(monster* mons)
 
     // XXX: A bit hacky, but stores where we WILL move, if we don't take
     //      another action instead (used for decision-making)
-    if (mons_stores_tracking_data(mons))
+    if (mons_stores_tracking_data(*mons))
         mons->props["mmov"].get_coord() = mmov;
 
     if (!mons->asleep() && !mons_is_wandering(*mons)
@@ -2990,7 +2990,7 @@ static bool _mons_can_displace(const monster* mpusher,
         return false;
 
     // Fleeing monsters of the same type may push past higher ranking ones.
-    if (!monster_senior(mpusher, mpushee, mons_is_retreating(*mpusher)))
+    if (!monster_senior(*mpusher, *mpushee, mons_is_retreating(*mpusher)))
         return false;
 
     return true;
@@ -3081,7 +3081,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         || target_grid == DNGN_GRATE && digs)
     {
     }
-    else if (!mons_can_traverse(mons, targ, false, false)
+    else if (!mons_can_traverse(*mons, targ, false, false)
              && !monster_habitable_grid(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
@@ -3498,7 +3498,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (grd(f) == DNGN_CLOSED_DOOR || grd(f) == DNGN_SEALED_DOOR)
     {
-        if (mons_can_destroy_door(&mons, f))
+        if (mons_can_destroy_door(mons, f))
         {
             grd(f) = DNGN_FLOOR;
             set_terrain_changed(f);
@@ -3516,12 +3516,12 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                     simple_monster_message(mons, " bursts through the door, destroying it!");
             }
         }
-        else if (mons_can_open_door(&mons, f))
+        else if (mons_can_open_door(mons, f))
         {
             _mons_open_door(mons, f);
             return true;
         }
-        else if (mons_can_eat_door(&mons, f))
+        else if (mons_can_eat_door(mons, f))
         {
             grd(f) = DNGN_FLOOR;
             set_terrain_changed(f);
@@ -3994,7 +3994,7 @@ static void _heated_area(monster& mons)
         mons.hurt(&you, final_damage, BEAM_MISSILE);
 
         if (mons.alive() && mons.observable())
-            print_wounds(&mons);
+            print_wounds(mons);
     }
 }
 #endif

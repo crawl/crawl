@@ -4153,7 +4153,7 @@ void bolt::update_hurt_or_helped(monster* mon)
         {
             foe_info.helped++;
             // Accidentally helped a foe.
-            if (!is_tracer && !effect_known && mons_is_threatening(mon))
+            if (!is_tracer && !effect_known && mons_is_threatening(*mon))
             {
                 const int interest =
                     (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
@@ -4317,7 +4317,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
-    if (final > 0 && mons_is_threatening(mon))
+    if (final > 0 && mons_is_threatening(*mon))
     {
         ASSERT(preac > 0);
 
@@ -4526,7 +4526,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (YOU_KILL(thrower) && you.see_cell(mon->pos())
         && name != "burst of metal fragments")
     {
-        print_wounds(mon);
+        print_wounds(*mon);
     }
 
     // Don't annoy friendlies or good neutrals if the player's beam
