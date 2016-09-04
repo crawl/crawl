@@ -2585,11 +2585,9 @@ static void _reduce_abyss_xp_timer(int exp)
     you.props[ABYSS_STAIR_XP_KEY].get_int() = new_req;
 }
 
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
+/// update penance for XP based gods
+static void _handle_xp_penance(int exp)
 {
-    if (crawl_state.game_is_arena())
-        return;
-
     vector<god_type> xp_gods;
     for (god_iterator it; it; ++it)
     {
@@ -2600,49 +2598,93 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     if (!xp_gods.empty())
     {
         god_type god = xp_gods[random2(xp_gods.size())];
-        reduce_xp_penance(god, exp_gained);
+        reduce_xp_penance(god, exp);
     }
+}
 
-    if (player_under_penance(GOD_HEPLIAKLQANA))
-        return; // no xp for you!
-
-    const unsigned int old_exp = you.experience;
-
-    dprf("gain_exp: %d", exp_gained);
-
-    if (you.transfer_skill_points > 0)
+/// update transfer knowledge
+static void _transfer_knowledge(int exp)
+{
+    if (!(you.transfer_skill_points > 0))
+        return;
+    // Can happen if the game got interrupted during target skill choice.
+    if (is_invalid_skill(you.transfer_to_skill))
     {
-        // Can happen if the game got interrupted during target skill choice.
-        if (is_invalid_skill(you.transfer_to_skill))
+        you.transfer_from_skill = SK_NONE;
+        you.transfer_skill_points = 0;
+        you.transfer_total_skill_points = 0;
+    }
+    else
+    {
+        int amount = exp * 20
+        / calc_skill_cost(you.skill_cost_level);
+        if (amount >= 20 || one_chance_in(20 - amount))
         {
-            you.transfer_from_skill = SK_NONE;
-            you.transfer_skill_points = 0;
-            you.transfer_total_skill_points = 0;
-        }
-        else
-        {
-            int amount = exp_gained * 20
-                                / calc_skill_cost(you.skill_cost_level);
-            if (amount >= 20 || one_chance_in(20 - amount))
-            {
-                amount = max(20, amount);
-                transfer_skill_points(you.transfer_from_skill,
-                                      you.transfer_to_skill, amount, false);
-            }
+            amount = max(20, amount);
+            transfer_skill_points(you.transfer_from_skill,
+                                  you.transfer_to_skill, amount, false);
         }
     }
+}
 
-    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
-        you.experience = MAX_EXP_TOTAL;
-    else
-        you.experience += exp_gained;
+/// update temporary mutations
+static void _handle_temp_mutation(int exp)
+{
+    if (!(you.attribute[ATTR_TEMP_MUTATIONS] > 0))
+        return;
 
-    you.attribute[ATTR_EVOL_XP] += exp_gained;
+    you.attribute[ATTR_TEMP_MUT_XP] -= exp;
+    if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
+        _remove_temp_mutation();
+}
+
+/// update stat loss
+static void _handle_stat_loss(int exp)
+{
+    if (!(you.attribute[ATTR_STAT_LOSS_XP] > 0))
+        return;
+
+    int loss = div_rand_round(exp * 3 / 2,
+                              max(1, calc_skill_cost(you.skill_cost_level) - 3));
+    you.attribute[ATTR_STAT_LOSS_XP] -= loss;
+    dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
+    if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
+        _recover_stat();
+}
+
+/// update xp drain
+static void _handle_xp_drain(int exp)
+{
+    if (!you.attribute[ATTR_XP_DRAIN])
+        return;
+
+    int loss = div_rand_round(exp * 3 / 2,
+                              calc_skill_cost(you.skill_cost_level));
+
+    // Make it easier to recover from very heavy levels of draining
+    // (they're nasty enough as it is)
+    loss = loss * (1 + (you.attribute[ATTR_XP_DRAIN] / 250.0f));
+
+    dprf("Lost %d of %d draining points", loss, you.attribute[ATTR_XP_DRAIN]);
+
+    you.attribute[ATTR_XP_DRAIN] -= loss;
+    // Regaining skills may affect AC/EV.
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+    if (you.attribute[ATTR_XP_DRAIN] <= 0)
+    {
+        you.attribute[ATTR_XP_DRAIN] = 0;
+        mprf(MSGCH_RECOVERY, "Your life force feels restored.");
+    }
+}
+
+static void _handle_god_wrath(int exp)
+{
     for (god_iterator it; it; ++it)
     {
         if (active_penance(*it))
         {
-            you.attribute[ATTR_GOD_WRATH_XP] -= exp_gained;
+            you.attribute[ATTR_GOD_WRATH_XP] -= exp;
             while (you.attribute[ATTR_GOD_WRATH_XP] < 0)
             {
                 you.attribute[ATTR_GOD_WRATH_COUNT]++;
@@ -2651,11 +2693,49 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
             break;
         }
     }
+}
 
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
+{
+    if (crawl_state.game_is_arena())
+        return;
+
+    // xp-gated effects that don't use sprint inflation
+    _handle_xp_penance(exp_gained);
+    _handle_god_wrath(exp_gained);
+    _transfer_knowledge(exp_gained);
+
+    // evolution mutation timer
+    you.attribute[ATTR_EVOL_XP] += exp_gained;
+
+    // modified experience due to sprint inflation
+    unsigned int skill_xp = exp_gained;
     if (crawl_state.game_is_sprint())
-        exp_gained = sprint_modify_exp(exp_gained);
+        skill_xp = sprint_modify_exp(skill_xp);
 
-    you.exp_available += exp_gained;
+    // xp-gated effects that use sprint inflation
+    _handle_stat_loss(skill_xp);
+    _handle_temp_mutation(skill_xp);
+    _recharge_xp_evokers(skill_xp);
+    _reduce_abyss_xp_timer(skill_xp);
+    _handle_xp_drain(skill_xp);
+
+    if (player_under_penance(GOD_HEPLIAKLQANA))
+        return; // no xp for you!
+
+    // handle actual experience gains,
+    // i.e. XL and skills
+
+    const unsigned int old_exp = you.experience;
+
+    dprf("gain_exp: %d", exp_gained);
+
+    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
+        you.experience = MAX_EXP_TOTAL;
+    else
+        you.experience += exp_gained;
+
+    you.exp_available += skill_xp;
 
     train_skills();
     while (check_selected_skills()
@@ -2671,48 +2751,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     if (actual_gain != nullptr)
         *actual_gain = you.experience - old_exp;
-
-    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
-    {
-        you.attribute[ATTR_TEMP_MUT_XP] -= exp_gained;
-        if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
-            _remove_temp_mutation();
-    }
-
-    if (you.attribute[ATTR_STAT_LOSS_XP] > 0)
-    {
-        int loss = div_rand_round(exp_gained * 3 / 2,
-                       max(1, calc_skill_cost(you.skill_cost_level) - 3));
-        you.attribute[ATTR_STAT_LOSS_XP] -= loss;
-        dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
-        if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
-            _recover_stat();
-    }
-
-    _recharge_xp_evokers(exp_gained);
-    _reduce_abyss_xp_timer(exp_gained);
-
-    if (you.attribute[ATTR_XP_DRAIN])
-    {
-        int loss = div_rand_round(exp_gained * 3 / 2,
-                                  calc_skill_cost(you.skill_cost_level));
-
-        // Make it easier to recover from very heavy levels of draining
-        // (they're nasty enough as it is)
-        loss = loss * (1 + (you.attribute[ATTR_XP_DRAIN] / 250.0f));
-
-        dprf("Lost %d of %d draining points", loss, you.attribute[ATTR_XP_DRAIN]);
-
-        you.attribute[ATTR_XP_DRAIN] -= loss;
-        // Regaining skills may affect AC/EV.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-        if (you.attribute[ATTR_XP_DRAIN] <= 0)
-        {
-            you.attribute[ATTR_XP_DRAIN] = 0;
-            mprf(MSGCH_RECOVERY, "Your life force feels restored.");
-        }
-    }
 }
 
 bool will_gain_life(int lev)
