@@ -363,69 +363,69 @@ bool mons_is_native_in_branch(const monster& mons,
 
 // Whether the monster is temporarily confused (class_too = false)
 // or confused at all (class_too = true; temporarily or by class).
-bool mons_is_confused(const monster* m, bool class_too = false);
+bool mons_is_confused(const monster& m, bool class_too = false);
 
-bool mons_is_wandering(const monster* m);
-bool mons_is_seeking(const monster* m);
-bool mons_is_fleeing(const monster* m);
-bool mons_is_retreating(const monster* m);
-bool mons_is_cornered(const monster* m);
+bool mons_is_wandering(const monster& m);
+bool mons_is_seeking(const monster& m);
+bool mons_is_fleeing(const monster& m);
+bool mons_is_retreating(const monster& m);
+bool mons_is_cornered(const monster& m);
 bool mons_is_batty(const monster& m);
-bool mons_is_influenced_by_sanctuary(const monster* m);
-bool mons_is_fleeing_sanctuary(const monster* m);
-bool mons_just_slept(const monster* m);
+bool mons_is_influenced_by_sanctuary(const monster& m);
+bool mons_is_fleeing_sanctuary(const monster& m);
+bool mons_just_slept(const monster& m);
 bool mons_class_is_slime(monster_type mc);
-bool mons_is_slime(const monster* mon);
+bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
-bool mons_is_plant(const monster* mon);
-bool mons_eats_items(const monster* mon);
+bool mons_is_plant(const monster& mon);
+bool mons_eats_items(const monster& mon);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
-monster_type draco_or_demonspawn_subspecies(const monster* mon);
+monster_type draco_or_demonspawn_subspecies(const monster& mon);
 monster_type draco_or_demonspawn_subspecies(monster_type type,
                                             monster_type base);
 monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
-bool mons_is_siren_beholder(const monster* mons);
+bool mons_is_siren_beholder(const monster& mons);
 
 bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
-void mons_start_fleeing_from_sanctuary(monster* mons);
-void mons_stop_fleeing_from_sanctuary(monster* mons);
+void mons_start_fleeing_from_sanctuary(monster& mons);
+void mons_stop_fleeing_from_sanctuary(monster& mons);
 
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster& mon);
-bool mons_is_active_ballisto(const monster* mon);
-bool mons_has_body(const monster* mon);
-bool mons_has_flesh(const monster* mon);
+bool mons_is_active_ballisto(const monster& mon);
+bool mons_has_body(const monster& mon);
+bool mons_has_flesh(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);
 
-bool herd_monster(const monster* mon);
+bool herd_monster(const monster& mon);
 
-int cheibriados_monster_player_speed_delta(const monster* mon);
-bool cheibriados_thinks_mons_is_fast(const monster* mon);
-bool mons_is_fiery(const monster* mon);
+int cheibriados_monster_player_speed_delta(const monster& mon);
+bool cheibriados_thinks_mons_is_fast(const monster& mon);
+bool mons_is_fiery(const monster& mon);
 bool mons_is_projectile(monster_type mc);
-bool mons_is_projectile(const monster* mon);
-bool mons_is_boulder(const monster* mon);
-bool mons_can_cling_to_walls(const monster* mon);
+bool mons_is_projectile(const monster& mon);
+bool mons_is_boulder(const monster& mon);
+bool mons_can_cling_to_walls(const monster& mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
-bool mons_allows_beogh(const monster* mon);
-bool mons_allows_beogh_now(const monster* mon);
+bool mons_allows_beogh(const monster& mon);
+bool mons_allows_beogh_now(const monster& mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
-void mons_load_spells(monster* mon);
+void mons_load_spells(monster& mon);
 
-void mons_remove_from_grid(const monster* mon);
+void mons_remove_from_grid(const monster& mon);
 
-bool monster_shover(const monster* m);
+bool monster_shover(const monster& m);
 
 bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);

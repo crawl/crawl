@@ -1437,7 +1437,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             // Nonbase demonspawn get bonuses from their base type.
             const monsterentry *mbase =
-                get_monster_data(draco_or_demonspawn_subspecies(mon));
+                get_monster_data(draco_or_demonspawn_subspecies(*mon));
             bonus_hp = mbase->avg_hp_10x;
         }
         mon->set_hit_dice(mg.hd);
@@ -1505,7 +1505,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
         mon->add_ench(ENCH_EXPLODING);
     else if (mons_is_demonspawn(mon->type)
-             && draco_or_demonspawn_subspecies(mon) == MONS_GELID_DEMONSPAWN)
+             && draco_or_demonspawn_subspecies(*mon) == MONS_GELID_DEMONSPAWN)
     {
         mon->add_ench(ENCH_ICEMAIL);
     }
@@ -3232,7 +3232,7 @@ conduct_type player_will_anger_monster(const monster &mon)
     if (god_hates_spellcasting(you.religion) && mon.is_actual_spellcaster())
         return DID_SPELL_CASTING;
 
-    if (you_worship(GOD_DITHMENOS) && mons_is_fiery(&mon))
+    if (you_worship(GOD_DITHMENOS) && mons_is_fiery(mon))
         return DID_FIRE;
 
     return DID_NOTHING;

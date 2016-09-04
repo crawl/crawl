@@ -369,7 +369,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!fol->alive()
         || fol->speed_increment < 50
         || fol->incapacitated()
-        || mons_is_boulder(fol)
+        || mons_is_boulder(*fol)
         || fol->is_stationary())
     {
         return false;
@@ -381,7 +381,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     // Only non-wandering friendly monsters or those actively
     // seeking the player will follow up/down stairs.
     if (!fol->friendly()
-          && (!mons_is_seeking(fol) || fol->foe != MHITYOU)
+          && (!mons_is_seeking(*fol) || fol->foe != MHITYOU)
         || fol->foe == MHITNOT)
     {
         return false;

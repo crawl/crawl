@@ -96,7 +96,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         if (mons.type == MONS_TIAMAT)
             corpse_class = MONS_DRACONIAN;
         else
-            corpse_class = draco_or_demonspawn_subspecies(&mons);
+            corpse_class = draco_or_demonspawn_subspecies(mons);
     }
 
     if (mons.props.exists(ORIGINAL_TYPE_KEY))
@@ -443,7 +443,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         || goldify
         || mons_class_flag(mons.type, M_ALWAYS_CORPSE)
         || mons_is_demonspawn(mons.type)
-           && mons_class_flag(draco_or_demonspawn_subspecies(&mons),
+           && mons_class_flag(draco_or_demonspawn_subspecies(mons),
                               M_ALWAYS_CORPSE);
 
     // 50/50 chance of getting a corpse, usually.
@@ -1714,7 +1714,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     // Jiyva hates you killing slimes, but eyeballs
     // mutation can confuse without you meaning it.
-    if (mons_is_slime(&mons) && killer != KILL_YOU_CONF)
+    if (mons_is_slime(mons) && killer != KILL_YOU_CONF)
         did_kill_conduct(DID_KILL_SLIME, mons);
 
     if (mons.is_holy())
@@ -1726,13 +1726,13 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
-    if (cheibriados_thinks_mons_is_fast(&mons) && !mons.cannot_move())
+    if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_move())
         did_kill_conduct(DID_KILL_FAST, mons);
 
     // Dithmenos hates sources of fire.
     // (This is *after* the holy so that the right order of
     //  messages appears.)
-    if (mons_is_fiery(&mons))
+    if (mons_is_fiery(mons))
         did_kill_conduct(DID_KILL_FIERY, mons);
 }
 
@@ -1880,7 +1880,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     mons->stop_constricting_all(false);
     mons->stop_being_constricted();
 
-    you.remove_beholder(mons);
+    you.remove_beholder(*mons);
     you.remove_fearmonger(mons);
     // Uniques leave notes and milestones, so this information is already leaked.
     remove_unique_annotation(mons);
@@ -2667,7 +2667,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         return corpse;
     }
 
-    mons_remove_from_grid(mons);
+    mons_remove_from_grid(*mons);
     fire_monster_death_event(mons, killer, killer_index, false);
 
     if (crawl_state.game_is_arena())
@@ -3054,7 +3054,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg = "dissolve%s into sparkling lights";
         }
 
-        if (mons_is_slime(mons)
+        if (mons_is_slime(*mons)
             && mons->god == GOD_JIYVA)
         {
             msg = "dissolve%s into a puddle of slime";

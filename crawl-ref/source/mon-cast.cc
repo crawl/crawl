@@ -3835,7 +3835,7 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
 
     // Monsters that are fleeing or pacified and leaving the
     // level will always try to choose an emergency spell.
-    if (mons_is_fleeing(&mons) || mons.pacified())
+    if (mons_is_fleeing(mons) || mons.pacified())
     {
         const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
                                                            SPFLAG_EMERGENCY);
@@ -4131,7 +4131,7 @@ bool handle_mon_spell(monster* mons)
     if (mons->asleep()
         || mons->submerged()
         || mons->berserk_or_insane()
-        || mons_is_confused(mons, false)
+        || mons_is_confused(*mons, false)
         || !mons->has_spells())
     {
         return false;
@@ -4662,7 +4662,7 @@ void setup_breath_timeout(monster* mons)
 static int _mons_mesmerise(monster* mons, bool actual)
 {
     ASSERT(mons); // XXX: change to monster &mons
-    bool already_mesmerised = you.beheld_by(mons);
+    bool already_mesmerised = you.beheld_by(*mons);
 
     if (!you.visible_to(mons)             // Don't mesmerise while invisible.
         || (!you.can_see(*mons)           // Or if we are, and you're aren't
@@ -4670,7 +4670,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         || !player_can_hear(mons->pos())  // Or if you're silenced, or we are.
         || you.berserk()                  // Or if you're berserk.
         || mons->has_ench(ENCH_CONFUSION) // Or we're confused,
-        || mons_is_fleeing(mons)          // fleeing,
+        || mons_is_fleeing(*mons)          // fleeing,
         || mons->pacified()               // pacified,
         || mons->friendly())              // or friendly!
     {
@@ -4713,7 +4713,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         return 0;
     }
 
-    you.add_beholder(mons);
+    you.add_beholder(*mons);
 
     return 1;
 }
@@ -7096,7 +7096,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
         target = mons->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
     // if they're targeting themselves.
-    else if (mons->foe == MHITNOT && !mons_is_confused(mons, true))
+    else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
              && menv[mons->foe].type == MONS_NO_MONSTER)
@@ -7769,7 +7769,7 @@ static bool _should_siren_sing(monster* mons, bool avatar)
     // Won't sing if either of you silenced, or it's friendly,
     // confused, fleeing, or leaving the level.
     if (mons->has_ench(ENCH_CONFUSION)
-        || mons_is_fleeing(mons)
+        || mons_is_fleeing(*mons)
         || mons->pacified()
         || mons->friendly()
         || !player_can_hear(mons->pos()))
@@ -7783,7 +7783,7 @@ static bool _should_siren_sing(monster* mons, bool avatar)
         return false;
 
     // If the mer is trying to mesmerise you anew, only sing half as often.
-    if (!you.beheld_by(mons) && mons->foe == MHITYOU && you.can_see(*mons)
+    if (!you.beheld_by(*mons) && mons->foe == MHITYOU && you.can_see(*mons)
         && coinflip())
     {
         return false;
@@ -7875,7 +7875,7 @@ static void _siren_sing(monster* mons, bool avatar)
 {
     const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
                                                        : MSGCH_MONSTER_SPELL);
-    const bool already_mesmerised = you.beheld_by(mons);
+    const bool already_mesmerised = you.beheld_by(*mons);
 
     noisy(LOS_RADIUS, mons->pos(), mons->mid, NF_SIREN);
 
@@ -7919,7 +7919,7 @@ static void _siren_sing(monster* mons, bool avatar)
         return;
     }
 
-    you.add_beholder(mons);
+    you.add_beholder(*mons);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -8138,7 +8138,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     // Don't spam mesmerisation if you're already mesmerised
     case SPELL_MESMERISE:
-        return you.beheld_by(mon) && coinflip();
+        return you.beheld_by(*mon) && coinflip();
 
     case SPELL_DISCHARGE:
         // TODO: possibly check for friendlies nearby?

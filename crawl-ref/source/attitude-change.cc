@@ -81,7 +81,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons->friendly()
         && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(mons) && !mons->paralysed())
+        && !mons_is_confused(*mons) && !mons->paralysed())
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -100,7 +100,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
 void slime_convert(monster* mons)
 {
-    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(mons)
+    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
@@ -225,7 +225,7 @@ bool beogh_followers_abandon_you()
 
             if (you.visible_to(mons)
                 && !mons->asleep()
-                && !mons_is_confused(mons)
+                && !mons_is_confused(*mons)
                 && !mons->cannot_act())
             {
                 const int hd = mons->get_experience_level();
@@ -366,7 +366,7 @@ static void _fedhas_neutralise_plant(monster* plant)
 static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(slime); // XXX: change to monster &slime
-    ASSERT(mons_is_slime(slime));
+    ASSERT(mons_is_slime(*slime));
 
     behaviour_event(slime, ME_ALERT);
 

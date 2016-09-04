@@ -99,7 +99,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_ALLY_PLANT:
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
-        return mons_is_plant(mon);
+        return mons_is_plant(*mon);
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_UPGRADE_ANCESTOR:
         return mon->wont_attack() && mons_is_god_gift(mon, GOD_HEPLIAKLQANA);
@@ -124,7 +124,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mons_enslaved_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
-        return mons_is_slime(mon);
+        return mons_is_slime(*mon);
 
     case DACT_KIRKE_HOGS:
         return (mon->type == MONS_HOG

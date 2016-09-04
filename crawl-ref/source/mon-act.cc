@@ -219,7 +219,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
     // A friendly or good-neutral monster moving past a fleeing hostile
     // or neutral monster, or vice versa.
     if (mover.wont_attack() == moved.wont_attack()
-        || mons_is_retreating(&mover) == mons_is_retreating(&moved))
+        || mons_is_retreating(mover) == mons_is_retreating(moved))
     {
         return false;
     }
@@ -401,7 +401,7 @@ static bool _mon_on_interesting_grid(monster* mon)
 // if it left it for fighting, seeking etc.
 static void _maybe_set_patrol_route(monster* mons)
 {
-    if (mons_is_wandering(mons)
+    if (mons_is_wandering(*mons)
         && !mons->friendly()
         && !mons->is_patrolling()
         && _mon_on_interesting_grid(mons))
@@ -467,7 +467,7 @@ static void _set_mons_move_dir(const monster* mons,
     // Move the monster.
     *dir = delta->sgn();
 
-    if (mons_is_retreating(mons)
+    if (mons_is_retreating(*mons)
         && (!mons->friendly() || mons->target != you.pos()))
     {
         *dir *= -1;
@@ -524,12 +524,12 @@ static void _handle_movement(monster* mons)
 
     // Monsters will try to flee out of a sanctuary.
     if (is_sanctuary(mons->pos())
-        && mons_is_influenced_by_sanctuary(mons)
-        && !mons_is_fleeing_sanctuary(mons))
+        && mons_is_influenced_by_sanctuary(*mons)
+        && !mons_is_fleeing_sanctuary(*mons))
     {
-        mons_start_fleeing_from_sanctuary(mons);
+        mons_start_fleeing_from_sanctuary(*mons);
     }
-    else if (mons_is_fleeing_sanctuary(mons)
+    else if (mons_is_fleeing_sanctuary(*mons)
              && !is_sanctuary(mons->pos()))
     {
         // Once outside there's a chance they'll regain their courage.
@@ -541,7 +541,7 @@ static void _handle_movement(monster* mons)
             || mons->has_ench(ENCH_INSANE)
             || x_chance_in_y(2, 5))
         {
-            mons_stop_fleeing_from_sanctuary(mons);
+            mons_stop_fleeing_from_sanctuary(*mons);
         }
     }
 
@@ -604,7 +604,7 @@ static void _handle_movement(monster* mons)
            || monster_at(newpos) && mons->foe == mgrd(newpos))
         && mons_intel(*mons) > I_BRAINLESS
         && coinflip()
-        && !mons_is_confused(mons) && !mons->caught()
+        && !mons_is_confused(*mons) && !mons->caught()
         && !mons->berserk_or_insane())
     {
         // If the monster is moving parallel to the x or y axis, check
@@ -796,7 +796,7 @@ static bool _handle_evoke_equipment(monster& mons)
     // TODO: check non-ring, non-amulet equipment
     item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
     if (mons.asleep()
-        || mons_is_confused(&mons)
+        || mons_is_confused(mons)
         || !jewel
         || !one_chance_in(3)
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
@@ -927,7 +927,7 @@ static bool _handle_reaching(monster* mons)
         return false;
 
     // Don't stop to jab at things while fleeing or leaving the level
-    if ((mons_is_fleeing(mons) || mons->pacified()))
+    if ((mons_is_fleeing(*mons) || mons->pacified()))
         return false;
 
     const coord_def foepos(foe->pos());
@@ -964,7 +964,7 @@ static bool _handle_scroll(monster& mons)
 
     // Yes, there is a logic to this ordering {dlb}:
     if (mons.asleep()
-        || mons_is_confused(&mons)
+        || mons_is_confused(mons)
         || mons.submerged()
         || !scroll
         || mons.has_ench(ENCH_BLIND)
@@ -986,7 +986,7 @@ static bool _handle_scroll(monster& mons)
     case SCR_TELEPORTATION:
         if (!mons.has_ench(ENCH_TP) && !mons.no_tele(true, false))
         {
-            if (mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
+            if (mons.caught() || mons_is_fleeing(mons) || mons.pacified())
             {
                 simple_monster_message(mons, " reads a scroll.");
                 read = true;
@@ -996,7 +996,7 @@ static bool _handle_scroll(monster& mons)
         break;
 
     case SCR_BLINKING:
-        if ((mons.caught() || mons_is_fleeing(&mons) || mons.pacified())
+        if ((mons.caught() || mons_is_fleeing(mons) || mons.pacified())
             && mons.can_see(you) && !mons.no_tele(true, false))
         {
             simple_monster_message(mons, " reads a scroll.");
@@ -1192,8 +1192,8 @@ static bool _handle_rod(monster &mons)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
-        || mons_is_confused(&mons)
-        || mons_is_fleeing(&mons)
+        || mons_is_confused(mons)
+        || mons_is_fleeing(mons)
         || mons.pacified()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
@@ -1308,7 +1308,7 @@ static bool _handle_wand(monster& mons)
     //        out of sight of the player [rob]
     if (!you.see_cell(mons.pos())
         || mons.asleep()
-        || mons_is_fleeing(&mons)
+        || mons_is_fleeing(mons)
         || mons.pacified()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
@@ -1463,7 +1463,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
-    if (mons_is_fleeing(mons) || mons->pacified())
+    if (mons_is_fleeing(*mons) || mons->pacified())
         return false;
 
     item_def *launcher = nullptr;
@@ -1755,7 +1755,7 @@ static void _pre_monster_move(monster& mons)
     // of in handle_behaviour() since that will be called with
     // every single movement, and we want these monsters to
     // hit and run. -- bwr
-    if (mons.foe != MHITNOT && mons_is_wandering(&mons)
+    if (mons.foe != MHITNOT && mons_is_wandering(mons)
         && mons_is_batty(mons))
     {
         mons.behaviour = BEH_SEEK;
@@ -1998,7 +1998,7 @@ void handle_monster_move(monster* mons)
         // Calculates mmov based on monster target.
         _handle_movement(mons);
 
-        if (mons_is_confused(mons))
+        if (mons_is_confused(*mons))
         {
             _confused_move_dir(mons);
 
@@ -2037,7 +2037,7 @@ void handle_monster_move(monster* mons)
     if (mons_stores_tracking_data(mons))
         mons->props["mmov"].get_coord() = mmov;
 
-    if (!mons->asleep() && !mons_is_wandering(mons)
+    if (!mons->asleep() && !mons_is_wandering(*mons)
             && !mons->withdrawn()
             // Berserking monsters are limited to running up and
             // hitting their foes.
@@ -2704,7 +2704,7 @@ static bool _jelly_divide(monster& parent)
 // Only Jiyva jellies eat items.
 static bool _monster_eat_item(monster* mons)
 {
-    if (!mons_eats_items(mons))
+    if (!mons_eats_items(*mons))
         return false;
 
     // Off-limit squares are off-limit.
@@ -2803,7 +2803,7 @@ static bool _handle_pickup(monster* mons)
 
     int count_pickup = 0;
 
-    if (mons_eats_items(mons) && _monster_eat_item(mons))
+    if (mons_eats_items(*mons) && _monster_eat_item(mons))
         return false;
 
     if (mons_itemuse(*mons) < MONUSE_WEAPONS_ARMOUR)
@@ -2813,7 +2813,7 @@ static bool _handle_pickup(monster* mons)
     // picking up stuff.
     const bool never_pickup
         = mons->neutral() || mons->friendly()
-          || you_worship(GOD_JIYVA) && mons_is_slime(mons)
+          || you_worship(GOD_JIYVA) && mons_is_slime(*mons)
           || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
 
 
@@ -2958,7 +2958,7 @@ static bool _mons_can_displace(const monster* mpusher,
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
     // Monsters caught in a net also can't be pushed past.
-    if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
+    if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
         || mpusher->cannot_move() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_tentacle_parts(mpusher, mpushee)
@@ -2974,7 +2974,7 @@ static bool _mons_can_displace(const monster* mpusher,
 
     // Fleeing monsters cannot push past other fleeing monsters
     // (This helps to prevent some traffic jams in confined spaces)
-    if (mons_is_fleeing(mpusher) && mons_is_fleeing(mpushee))
+    if (mons_is_fleeing(*mpusher) && mons_is_fleeing(*mpushee))
         return false;
 
     // Batty monsters are unpushable.
@@ -2985,11 +2985,11 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mpushee->submerged())
         return true;
 
-    if (!monster_shover(mpusher))
+    if (!monster_shover(*mpusher))
         return false;
 
     // Fleeing monsters of the same type may push past higher ranking ones.
-    if (!monster_senior(mpusher, mpushee, mons_is_retreating(mpusher)))
+    if (!monster_senior(mpusher, mpushee, mons_is_retreating(*mpusher)))
         return false;
 
     return true;
@@ -3010,7 +3010,7 @@ static int _count_adjacent_slime_walls(const coord_def &pos)
 static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
-    if (mons_is_slime(mon) || actor_slime_wall_immune(mon)
+    if (mons_is_slime(*mon) || actor_slime_wall_immune(mon)
         || mons_intel(*mon) <= I_BRAINLESS)
     {
         return false;
@@ -3025,7 +3025,7 @@ static bool _check_slime_walls(const monster *mon,
         return false;
 
     // The monster needs to have a purpose to risk taking damage.
-    if (!mons_is_seeking(mon))
+    if (!mons_is_seeking(*mon))
         return true;
 
     // With enough hit points monsters will consider moving
@@ -3113,7 +3113,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons->type == MONS_MERFOLK_AVATAR)
     {
         // Don't voluntarily break LoS with a player we're mesmerising
-        if (you.beheld_by(mons) && !you.see_cell(targ))
+        if (you.beheld_by(*mons) && !you.see_cell(targ))
             return false;
 
         // And path around players instead of into them
@@ -3288,7 +3288,7 @@ static void _find_good_alternate_move(monster* mons,
                 // If we can cut firewood there, it's still not a good move,
                 // but update mmov so we can fall back to it.
                 monster* targ = monster_at(mons->pos() + mon_compass[newdir]);
-                const bool retreating = mons_is_retreating(mons);
+                const bool retreating = mons_is_retreating(*mons);
 
                 dist[i] = (targ && _may_cutdown(mons, targ))
                           ? current_distance
@@ -3304,7 +3304,7 @@ static void _find_good_alternate_move(monster* mons,
             continue;
 
         // Which one was better? -- depends on FLEEING or not.
-        if (mons_is_retreating(mons))
+        if (mons_is_retreating(*mons))
         {
             if (dist[0] >= dist[1] && dist[0] >= current_distance)
             {
@@ -3923,7 +3923,7 @@ static bool _monster_move(monster* mons)
         return _do_move_monster(*mons, mmov);
 
     // Battlespheres need to preserve their tracking targets after each move
-    if (mons_is_wandering(mons)
+    if (mons_is_wandering(*mons)
         && mons->type != MONS_BATTLESPHERE)
     {
         // trigger a re-evaluation of our wander target on our next move -cao

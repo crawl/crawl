@@ -5683,7 +5683,7 @@ void unmarshallMonster(reader &th, monster& m)
             // Replace Draconian Breath with the colour-specific spell,
             // and remove Azrael's bad breath while we're at it.
             if (mons_genus(m.type) == MONS_DRACONIAN)
-                m.spells.push_back(drac_breath(draco_or_demonspawn_subspecies(&m)));
+                m.spells.push_back(drac_breath(draco_or_demonspawn_subspecies(m)));
         }
         // Give Mnoleg back malign gateway in place of tentacles.
         else if (slot.spell == SPELL_CREATE_TENTACLES

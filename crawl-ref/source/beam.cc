@@ -5128,7 +5128,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // All kinds of beams go past orbs of destruction and friendly
     // battlespheres. We don't check mon->is_projectile() because that
     // check includes boulder beetles which should be hit.
-    if (mons_is_projectile(mon)
+    if (mons_is_projectile(*mon)
         || (mons_is_avatar(mon->type) && mons_aligned(agent(), mon)))
     {
         return true;
@@ -5582,7 +5582,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SLEEP:
-        if (mons_just_slept(mon))
+        if (mons_just_slept(*mon))
             return MON_UNAFFECTED;
 
         mon->put_to_sleep(agent(), ench_power);

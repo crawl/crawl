@@ -333,7 +333,7 @@ bool remove_sanctuary(bool did_attack)
     // Now that the sanctuary is gone, monsters aren't afraid of it
     // anymore.
     for (monster_iterator mi; mi; ++mi)
-        mons_stop_fleeing_from_sanctuary(*mi);
+        mons_stop_fleeing_from_sanctuary(**mi);
 
     if (is_resting())
         stop_running();
@@ -449,12 +449,12 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, &you);
             }
-            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
+            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(*mon))
             {
-                mons_start_fleeing_from_sanctuary(mon);
+                mons_start_fleeing_from_sanctuary(*mon);
 
                 // Check to see that monster is actually fleeing.
-                if (mons_is_fleeing(mon) && you.can_see(*mon))
+                if (mons_is_fleeing(*mon) && you.can_see(*mon))
                 {
                     scare_count++;
                     seen_mon = mon;

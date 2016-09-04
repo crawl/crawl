@@ -217,7 +217,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // the polymorph disrupts the beholding process. Do this before
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a siren/merfolk avatar.
-    you.remove_beholder(mons);
+    you.remove_beholder(*mons);
     you.remove_fearmonger(mons);
 
     if (mons_is_tentacle_head(mons_base_type(*mons)))
@@ -308,7 +308,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
         const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(mons)
+                                ? draco_or_demonspawn_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
@@ -582,7 +582,7 @@ bool mon_can_be_slimified(const monster* mons)
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(mons));
+           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -682,6 +682,6 @@ void seen_monster(monster* mons)
         mons->flags |= MF_TSO_SEEN;
     }
 
-    if (mons_allows_beogh(mons))
+    if (mons_allows_beogh(*mons))
         env.level_state |= LSTATE_BEOGH;
 }

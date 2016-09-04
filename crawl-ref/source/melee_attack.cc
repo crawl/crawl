@@ -1455,7 +1455,7 @@ void melee_attack::player_warn_miss()
          defender->name(DESC_THE).c_str());
 
     // Upset only non-sleeping non-fleeing monsters if we missed.
-    if (!defender->asleep() && !mons_is_fleeing(defender->as_monster()))
+    if (!defender->asleep() && !mons_is_fleeing(*defender->as_monster()))
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 }
 

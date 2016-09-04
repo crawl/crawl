@@ -1019,7 +1019,7 @@ static void _update_level_state()
         env.level_state |= LSTATE_GLOW_MOLD;
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
-        if (mons_allows_beogh(*mon_it))
+        if (mons_allows_beogh(**mon_it))
             env.level_state |= LSTATE_BEOGH;
         if (mon_it->has_ench(ENCH_STILL_WINDS))
             env.level_state |= LSTATE_STILL_WINDS;

@@ -465,11 +465,11 @@ void debug_stethoscope(int mon)
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
-         : mons_is_wandering(&mons)       ? "wander"
-         : mons_is_seeking(&mons)         ? "seek"
-         : mons_is_fleeing(&mons)         ? "flee"
+         : mons_is_wandering(mons)       ? "wander"
+         : mons_is_seeking(mons)         ? "seek"
+         : mons_is_fleeing(mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
-         : mons_is_cornered(&mons)        ? "cornered"
+         : mons_is_cornered(mons)        ? "cornered"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,

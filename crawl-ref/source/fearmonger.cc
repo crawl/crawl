@@ -197,6 +197,6 @@ bool player::_possible_fearmonger(const monster* mon) const
         && !mon->asleep() && !mon->cannot_move()
         && !mon->wont_attack() && !mon->pacified()
         && !mon->berserk_or_insane()
-        && !mons_is_fleeing(mon)
+        && !mons_is_fleeing(*mon)
         && !is_sanctuary(pos());
 }

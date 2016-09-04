@@ -111,7 +111,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack()
-            && !mons_is_confused(attacker->as_monster())
+            && !mons_is_confused(*attacker->as_monster())
             && !attacker->as_monster()->has_ench(ENCH_INSANE))
         {
             return false;
@@ -371,7 +371,7 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_INVISIBLE;
 
     // fleeing
-    if (def && mons_is_fleeing(def))
+    if (def && mons_is_fleeing(*def))
         return STAB_FLEEING;
 
     // allies
@@ -379,7 +379,7 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_ALLY;
 
     // confused (but not perma-confused)
-    if (def && mons_is_confused(def, false))
+    if (def && mons_is_confused(*def, false))
         return STAB_CONFUSED;
 
     // Distracted (but not batty); this only applies to players.
@@ -864,7 +864,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (check_landing_only)
         return bad_landing;
 
-    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
         would_cause_penance = true;

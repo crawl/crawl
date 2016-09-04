@@ -580,9 +580,9 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_SLEEPING);
         }
         // Applies to both friendlies and hostiles
-        else if (mons_is_fleeing(m))
+        else if (mons_is_fleeing(*m))
             mb.set(MB_FLEEING);
-        else if (mons_is_wandering(m) && !mons_is_batty(*m))
+        else if (mons_is_wandering(*m) && !mons_is_batty(*m))
         {
             if (m->is_stationary())
                 mb.set(MB_UNAWARE);
@@ -607,7 +607,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
 
-    if (you.beheld_by(m))
+    if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
 
     // Evilness of attacking

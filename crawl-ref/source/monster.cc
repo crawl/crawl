@@ -140,7 +140,7 @@ void monster::reset()
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
 
-    mons_remove_from_grid(this);
+    mons_remove_from_grid(*this);
     target.reset();
     position.reset();
     firing_pos.reset();
@@ -260,7 +260,7 @@ bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
     return (mons_genus(type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(this) == MONS_GREY_DRACONIAN)
+            && draco_or_demonspawn_subspecies(*this) == MONS_GREY_DRACONIAN)
                 || grid == DNGN_SHALLOW_WATER
                    && (mons_genus(type) == MONS_NAGA // tails, not feet
                        || mons_genus(type) == MONS_SALAMANDER
@@ -1433,7 +1433,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
     // XXX: this could probably be a monster flag
     if (type == MONS_DRACONIAN_MONK
         || mons_is_demonspawn(type)
-           && draco_or_demonspawn_subspecies(this) == MONS_MONSTROUS_DEMONSPAWN)
+           && draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN)
     {
         return false;
     }
@@ -1951,7 +1951,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
 
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
-            if (!mons_is_wandering(this)
+            if (!mons_is_wandering(*this)
                 && foe != MHITYOU
                 && (item.quantity < 5 || miss && miss->quantity >= 7))
             {
@@ -2081,7 +2081,7 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     {
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
-        bool wandering = mons_is_wandering(this);
+        bool wandering = mons_is_wandering(*this);
         const int itype = item.base_type;
 
         // Weak(ened) monsters won't stop to pick up things as long as they
@@ -2105,7 +2105,7 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
             if (itype == OBJ_WEAPONS || itype == OBJ_MISSILES)
             {
                 // Fleeing monsters only pick up emergency equipment.
-                if (mons_is_fleeing(this))
+                if (mons_is_fleeing(*this))
                     return false;
 
                 // While occupied, hostile monsters won't pick up items
@@ -3004,7 +3004,7 @@ int monster::constriction_damage() const
 */
 bool monster::confused() const
 {
-    return mons_is_confused(this);
+    return mons_is_confused(*this);
 }
 
 static bool _you_responsible_for_ench(mon_enchant me)
@@ -3757,7 +3757,7 @@ bool monster::is_unbreathing() const
     if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         return true;
 
-    if (mons_is_slime(this))
+    if (mons_is_slime(*this))
         return true;
 
     return mons_class_flag(type, M_UNBREATHING);
@@ -6260,7 +6260,7 @@ reach_type monster::reach_range() const
 
 bool monster::can_cling_to_walls() const
 {
-    return mons_can_cling_to_walls(this);
+    return mons_can_cling_to_walls(*this);
 }
 
 void monster::steal_item_from_player()
@@ -6668,7 +6668,7 @@ bool monster::is_divine_companion() const
 
 bool monster::is_projectile() const
 {
-    return mons_is_projectile(this) || mons_is_boulder(this);
+    return mons_is_projectile(*this) || mons_is_boulder(*this);
 }
 
 bool monster::is_jumpy() const

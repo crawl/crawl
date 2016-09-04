@@ -1068,7 +1068,7 @@ static int _shatter_mon_dice(const monster *mon)
         else if (mon->is_insubstantial())
             return 0;
         // 1/3 damage to fliers and slimes.
-        else if (mon->airborne() || mons_is_slime(mon))
+        else if (mon->airborne() || mons_is_slime(*mon))
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
@@ -2934,7 +2934,7 @@ static bool _player_glaciate_affects(const actor *victim)
     if (!mon) // player
         return true;
 
-    return !mons_is_projectile(mon)
+    return !mons_is_projectile(*mon)
             && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
 }
 

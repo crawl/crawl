@@ -141,7 +141,7 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
         const monster* m = *mi;
         ASSERT(m);
 
-        if (!you.can_see(*m) || mons_is_projectile(m))
+        if (!you.can_see(*m) || mons_is_projectile(*m))
             continue;
 
         // is this position at a valid angle?
@@ -233,7 +233,7 @@ static void _iood_stop(monster& mon, bool msg = true)
     if (!mon.alive())
         return;
 
-    if (mons_is_boulder(&mon))
+    if (mons_is_boulder(mon))
     {
         // Deduct the energy first - the move they made that just stopped
         // them was a speed 14 move.
@@ -306,7 +306,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
-    if (mons_is_boulder(&mon))
+    if (mons_is_boulder(mon))
         return _boulder_hit(mon, pos);
 
     bolt beam;
@@ -370,7 +370,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 bool iood_act(monster& mon, bool no_trail)
 {
     bool iood = mons_is_projectile(mon.type);
-    ASSERT(iood || mons_is_boulder(&mon));
+    ASSERT(iood || mons_is_boulder(mon));
 
     float x = mon.props[IOOD_X];
     float y = mon.props[IOOD_Y];
@@ -536,7 +536,7 @@ move_again:
             }
         }
 
-        if (mons && mons_is_boulder(&mon) && mons_is_boulder(mons))
+        if (mons && mons_is_boulder(mon) && mons_is_boulder(*mons))
         {
             if (mon.observable())
             {
@@ -723,7 +723,7 @@ static bool _iood_catchup_move(monster& mon)
         return true;
     }
     // Boulder doesn't travel over water/lava.
-    if (mons_is_boulder(&mon)
+    if (mons_is_boulder(mon)
         && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
     {
         _iood_stop(mon, false);
@@ -751,7 +751,7 @@ void iood_catchup(monster* mons, int pturns)
     const int moves = pturns * mon.speed / BASELINE_DELAY;
 
     // Handle some cases for IOOD only
-    if (mons_is_projectile(mons))
+    if (mons_is_projectile(*mons))
     {
         if (moves > 50)
         {
@@ -779,9 +779,9 @@ void boulder_start(monster *mon, bolt *beam)
     beam->choose_ray();
     mon->props[IOOD_X].get_float() = beam->ray.r.start.x - 0.5;
     mon->props[IOOD_Y].get_float() = beam->ray.r.start.y - 0.5;
-    mon->props[IOOD_VX].get_float() = mons_is_fleeing(mon) ?
+    mon->props[IOOD_VX].get_float() = mons_is_fleeing(*mon) ?
         -beam->ray.r.dir.x : beam->ray.r.dir.x;
-    mon->props[IOOD_VY].get_float() = mons_is_fleeing(mon) ?
+    mon->props[IOOD_VY].get_float() = mons_is_fleeing(*mon) ?
         -beam->ray.r.dir.y : beam->ray.r.dir.y;
     iood_act(*mon);
 }

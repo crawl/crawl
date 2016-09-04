@@ -344,7 +344,7 @@ void maybe_mons_speaks(monster* mons)
     // might move into their LOS and the monster move back out before
     // the player's view has a chance to update) so prevent them
     // from speaking.
-    if (mons->is_patrolling() || mons_is_wandering(mons))
+    if (mons->is_patrolling() || mons_is_wandering(*mons))
         return;
 
     // per ef44f8a14, this seems to be handled elsewhere?
@@ -370,7 +370,7 @@ void maybe_mons_speaks(monster* mons)
     }
 
     // Confused and fleeing monsters are more interesting.
-    if (mons_is_fleeing(mons))
+    if (mons_is_fleeing(*mons))
         chance /= 2;
     if (mons->has_ench(ENCH_CONFUSION))
         chance /= 2;
@@ -466,7 +466,7 @@ bool mons_speaks(monster* mons)
     else
         prefixes.emplace_back("hostile");
 
-    if (mons_is_fleeing(mons))
+    if (mons_is_fleeing(*mons))
         prefixes.emplace_back("fleeing");
 
     bool silence = silenced(you.pos());

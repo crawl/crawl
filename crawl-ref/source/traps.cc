@@ -512,7 +512,7 @@ void trap_def::trigger(actor& triggerer)
     if (type == TRAP_SHAFT
         && m
         && (!m->will_trigger_shaft()
-            || trig_knows && !mons_is_fleeing(m) && !m->pacified()))
+            || trig_knows && !mons_is_fleeing(*m) && !m->pacified()))
     {
         return;
     }

@@ -498,12 +498,12 @@ public:
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon, bool axe = false);
+    void add_beholder(const monster& mon, bool axe = false);
     bool beheld() const;
-    bool beheld_by(const monster* mon) const;
+    bool beheld_by(const monster& mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
-    void remove_beholder(const monster* mon);
+    void remove_beholder(const monster& mon);
     void clear_beholders();
     void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();

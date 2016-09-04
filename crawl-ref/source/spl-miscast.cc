@@ -420,7 +420,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     if (target->is_monster())
     {
         msg = do_mon_str_replacements(msg, target->as_monster(), S_SILENT);
-        if (!mons_has_body(target->as_monster()))
+        if (!mons_has_body(*target->as_monster()))
             msg = replace_all(msg, "'s body", "");
     }
 
