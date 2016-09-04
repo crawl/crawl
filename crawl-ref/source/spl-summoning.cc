@@ -75,11 +75,19 @@ static void _monster_greeting(monster *mons, const string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
+static mgen_data _summon_data(const actor &caster, monster_type mtyp,
+                              int dur, god_type god, spell_type spell)
+{
+    return mgen_data(mtyp, BEH_COPY, caster.pos(),
+                     caster.is_player() ? MHITYOU : caster.as_monster()->foe,
+                     MG_AUTOFOE)
+                     .set_summoned(&caster, dur, spell, god);
+}
+
 static mgen_data _pal_data(monster_type pal, int dur, god_type god,
                            spell_type spell)
 {
-    return mgen_data(pal, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
-           .set_summoned(&you, dur, spell, god);
+    return _summon_data(you, pal, dur, god, spell);
 }
 
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
@@ -274,14 +282,11 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
                                   : 1);
     const bool plural = (num > 1);
 
-    const int hd_bonus = div_rand_round(pow - 50, 25);
-
-    mgen_data mdata(type, BEH_COPY, caster->pos(),
-                    caster->is_player() ? MHITYOU : caster->as_monster()->foe,
-                    MG_AUTOFOE | MG_DONT_CAP);
-    mdata.set_summoned(caster, 4, SPELL_MONSTROUS_MENAGERIE);
+    mgen_data mdata = _summon_data(*caster, type, 4, god,
+                                   SPELL_MONSTROUS_MENAGERIE);
+    mdata.flags |= MG_DONT_CAP;
     if (caster->is_player())
-        mdata.hd = get_monster_data(type)->HD +  hd_bonus;
+        mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
     bool seen = false;
     bool first = true;
@@ -334,11 +339,8 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     const int heads = max(4, min(random2(pow) / 6, maxheads));
 
     // Duration is always very short - just 1.
-    mgen_data mg(MONS_HYDRA, BEH_COPY, caster->pos(),
-                 caster->is_player() ? MHITYOU : caster->as_monster()->foe,
-                 MG_AUTOFOE);
-    mg.set_summoned(caster, 1, SPELL_SUMMON_HYDRA,
-                    (god == GOD_NO_GOD) ? caster->deity() : god);
+    mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, god,
+                                SPELL_SUMMON_HYDRA);
     mg.props[MGEN_NUM_HEADS] = heads;
     if (monster *hydra = create_monster(mg))
     {
@@ -567,11 +569,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
-                mgen_data(mon, BEH_COPY, caster->pos(),
-                          caster->is_player() ? MHITYOU
-                                              : caster->as_monster()->foe,
-                          MG_AUTOFOE)
-                .set_summoned(caster, 6, SPELL_SUMMON_DRAGON)))
+                _summon_data(*caster, mon, 6, god, SPELL_SUMMON_DRAGON)))
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
