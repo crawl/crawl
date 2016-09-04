@@ -425,7 +425,7 @@ monster_info::monster_info(const monster* m, int milev)
     attitude = mons_attitude(*m);
 
     type = m->type;
-    threat = mons_threat_level(m);
+    threat = mons_threat_level(*m);
 
     props.clear();
     // CrawlHashTable::begin() const can fail if the hash is empty.
@@ -568,9 +568,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->is_wall_clinging())
         mb.set(MB_CLINGING);
 
-    dam = mons_get_damage_level(m);
+    dam = mons_get_damage_level(*m);
 
-    if (mons_is_threatening(m)) // Firewood, butterflies, etc.
+    if (mons_is_threatening(*m)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -1804,7 +1804,7 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (mons_is_threatening(mon)
+        if (mons_is_threatening(*mon)
             || mon->is_child_tentacle())
         {
             mons.emplace_back(mon);

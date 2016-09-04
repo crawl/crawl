@@ -388,7 +388,7 @@ void maybe_mons_speaks(monster* mons)
         // So does Donald.
         mons_speaks(mons);
     }
-    else if (get_mon_shape(mons) >= MON_SHAPE_QUADRUPED)
+    else if (get_mon_shape(*mons) >= MON_SHAPE_QUADRUPED)
     {
         // Non-humanoid-ish monsters have a low chance of speaking
         // without the M_SPEAKS flag, to give the dungeon some
@@ -695,7 +695,7 @@ bool mons_speaks(monster* mons)
     if (mons_intel(*mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
 
-    const mon_body_shape shape = get_mon_shape(mons);
+    const mon_body_shape shape = get_mon_shape(*mons);
     if (msg.empty() || msg == "__NEXT")
     {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), mons,
@@ -786,7 +786,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     mon_acting mact(mons);
 
     // We have a speech string, now parse and act on it.
-    const string _msg = do_mon_str_replacements(msg, mons);
+    const string _msg = do_mon_str_replacements(msg, *mons);
     const vector<string> lines = split_string("\n", _msg);
 
     bool noticed = false;       // Any messages actually printed?

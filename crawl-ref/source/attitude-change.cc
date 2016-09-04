@@ -139,7 +139,7 @@ bool make_god_gifts_disappear()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (is_follower(*mi)
+        if (is_follower(**mi)
             && mi->has_ench(ENCH_ABJ)
             && mons_is_god_gift(*mi, god))
         {
@@ -284,7 +284,7 @@ static void _print_converted_orc_speech(const string& key,
 
     if (!msg.empty())
     {
-        msg = do_mon_str_replacements(msg, mon);
+        msg = do_mon_str_replacements(msg, *mon);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
@@ -471,7 +471,7 @@ void gozag_check_bribe(monster* traitor)
     if (!msg.empty())
     {
         msg_channel_type channel = MSGCH_FRIEND_ENCHANT;
-        msg = do_mon_str_replacements(msg, traitor);
+        msg = do_mon_str_replacements(msg, *traitor);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
         // !msg.empty means a monster was bribed.

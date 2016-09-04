@@ -1446,7 +1446,7 @@ static void _shaft_card(int power, deck_rarity_type rarity)
         did_something = apply_visible_monsters([=](monster& mons)
         {
             return !mons.wont_attack()
-                   && mons_is_threatening(&mons)
+                   && mons_is_threatening(mons)
                    && x_chance_in_y(power_level, 3)
                    && mons.do_shaft();
         }) || did_something;
@@ -1532,7 +1532,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
             apply_visible_monsters([](monster& mons)
             {
                 return !mons.wont_attack()
-                       && mons_is_threatening(&mons)
+                       && mons_is_threatening(mons)
                        && coinflip()
                        && mons.corrode_equipment();
             });
@@ -1982,7 +1982,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
             default: cloudy = CLOUD_DEBUGGING;
         }
 
-        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -2068,7 +2068,7 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
 
     if (!apply_visible_monsters([power_level](monster& mons)
            {
-               if (mons.wont_attack() || !mons_is_threatening(&mons))
+               if (mons.wont_attack() || !mons_is_threatening(mons))
                    return false;;
 
                if (x_chance_in_y((power_level + 1) * 5 + random2(5),
@@ -2104,7 +2104,7 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (!mons || mons->wont_attack() || !mons_is_threatening(mons))
+        if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),

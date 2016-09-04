@@ -750,7 +750,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (MON_KILL(killer) && !invalid_monster_index(killer_index))
     {
         const monster* responsible_monster = &menv[killer_index];
-        if (is_follower(responsible_monster) && !one_chance_in(3))
+        if (is_follower(*responsible_monster) && !one_chance_in(3))
             return _beogh_forcibly_convert_orc(mons, killer);
     }
 
@@ -1932,7 +1932,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
              && menv[killer_index].summoner == MID_PLAYER)
-            || mons_is_player_shadow(&menv[killer_index])))
+            || mons_is_player_shadow(menv[killer_index])))
     {
         killer_index = you.mindex();
     }
@@ -2984,7 +2984,7 @@ int dismiss_monsters(string pattern)
     {
         if (mi->alive()
             && (mobile ? !mons_class_is_stationary(mi->type) :
-                harmful ? mons_is_threatening(*mi) && !mi->wont_attack() :
+                harmful ? mons_is_threatening(**mi) && !mi->wont_attack() :
                 los ? you.see_cell(mi->pos())
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {

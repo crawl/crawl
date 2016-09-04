@@ -104,7 +104,7 @@ void start_recall(recall_t type)
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mons_is_recallable(&you, *mi))
+        if (!mons_is_recallable(&you, **mi))
             continue;
 
         if (type == RECALL_YRED)

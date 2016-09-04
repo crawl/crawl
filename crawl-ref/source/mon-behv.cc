@@ -516,7 +516,7 @@ void handle_behaviour(monster* mon)
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
-                if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
+                if (mons_foe_is_marked(*mon) || mon->has_ench(ENCH_HAUNTING))
                 {
                     mon->target = afoe->pos();
                     try_pathfind(mon);
@@ -709,7 +709,7 @@ void handle_behaviour(monster* mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && !mons_is_batty(*mon) || mons_foe_is_marked(mon))
+            if (proxFoe && !mons_is_batty(*mon) || mons_foe_is_marked(*mon))
             {
                 new_beh = BEH_SEEK;
                 break;
@@ -736,7 +736,7 @@ void handle_behaviour(monster* mon)
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && !mons_is_avatar(mon->type) && mon->foe != MHITNOT
                    && one_chance_in(isSmart ? 60 : 20)
-                   && !mons_foe_is_marked(mon)
+                   && !mons_foe_is_marked(*mon)
                 || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;
@@ -1088,7 +1088,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (!mons_is_threatening(mon)
+        if (!mons_is_threatening(*mon)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {

@@ -563,7 +563,7 @@ bool melee_attack::handle_phase_aux()
         if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
               && !you.duration[DUR_CLEAVE]))
         {
-            print_wounds(defender->as_monster());
+            print_wounds(*defender->as_monster());
         }
     }
 
@@ -3110,7 +3110,7 @@ void melee_attack::do_passive_freeze()
         if (mon->alive())
         {
             mon->expose_to_element(BEAM_COLD, orig_hurted);
-            print_wounds(mon);
+            print_wounds(*mon);
         }
     }
 }
@@ -3145,7 +3145,7 @@ void melee_attack::do_passive_heat()
         if (mon->alive())
         {
             mon->expose_to_element(BEAM_FIRE, orig_hurted);
-            print_wounds(mon);
+            print_wounds(*mon);
         }
     }
 }

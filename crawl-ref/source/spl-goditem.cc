@@ -48,7 +48,7 @@ static void _print_holy_pacification_speech(const string &key,
 
     if (!msg.empty())
     {
-        msg = do_mon_str_replacements(msg, &mon);
+        msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
@@ -206,7 +206,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
         string key;
 
         // Quadrupeds can't salute, etc.
-        if (mon_shape_is_humanoid(get_mon_shape(&mon)))
+        if (mon_shape_is_humanoid(get_mon_shape(mon)))
             key = "_humanoid";
 
         _print_holy_pacification_speech(key, mon,
@@ -247,7 +247,7 @@ bool heal_monster(monster& patient, int amount)
     if (patient.hit_points == patient.max_hit_points)
         simple_monster_message(patient, " is completely healed.");
     else
-        print_wounds(&patient);
+        print_wounds(patient);
 
     return true;
 }
@@ -1024,7 +1024,7 @@ bool cast_smiting(int pow, monster* mons)
         int damage_increment = div_rand_round(pow, 8);
         mons->hurt(&you, 6 + roll_dice(3, damage_increment));
         if (mons->alive())
-            print_wounds(mons);
+            print_wounds(*mons);
     }
 
     return success;

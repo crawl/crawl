@@ -429,10 +429,10 @@ void xom_tick()
     }
 }
 
-static bool mon_nearby(function<bool(monster*)> filter)
+static bool mon_nearby(function<bool(monster&)> filter)
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (filter(*mi))
+        if (filter(**mi))
             return true;
     return false;
 }
@@ -743,16 +743,16 @@ static void _xom_random_item(int sever)
     more();
 }
 
-static bool _choose_mutatable_monster(const monster* mon)
+static bool _choose_mutatable_monster(const monster& mon)
 {
-    return mon->alive() && mon->can_safely_mutate()
-           && !mon->submerged();
+    return mon.alive() && mon.can_safely_mutate()
+           && !mon.submerged();
 }
 
-static bool _choose_enchantable_monster(const monster* mon)
+static bool _choose_enchantable_monster(const monster& mon)
 {
-    return mon->alive() && !mon->wont_attack()
-           && !mons_immune_magic(*mon);
+    return mon.alive() && !mon.wont_attack()
+           && !mons_immune_magic(mon);
 }
 
 static bool _is_chaos_upgradeable(const item_def &item,
@@ -818,33 +818,33 @@ static bool _is_chaos_upgradeable(const item_def &item,
     return false;
 }
 
-static bool _choose_chaos_upgrade(const monster* mon)
+static bool _choose_chaos_upgrade(const monster& mon)
 {
     // Only choose monsters that will attack.
-    if (!mon->alive() || mons_attitude(*mon) != ATT_HOSTILE
-        || mons_is_fleeing(*mon))
+    if (!mon.alive() || mons_attitude(mon) != ATT_HOSTILE
+        || mons_is_fleeing(mon))
     {
         return false;
     }
 
-    if (mons_itemuse(*mon) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
         return false;
 
     // Holy beings are presumably protected by another god, unless
     // they're gifts from a chaotic god.
-    if (mon->is_holy() && !is_chaotic_god(mon->god))
+    if (mon.is_holy() && !is_chaotic_god(mon.god))
         return false;
 
     // God gifts from good gods will be protected by their god from
     // being given chaos weapons, while other gods won't mind the help
     // in their servants' killing the player.
-    if (is_good_god(mon->god))
+    if (is_good_god(mon.god))
         return false;
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_genus(mon->type) == MONS_ORC
-        && (mon->is_priest() || coinflip()))
+    if (mons_genus(mon.type) == MONS_ORC
+        && (mon.is_priest() || coinflip()))
     {
         return false;
     }
@@ -857,7 +857,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     for (int i = 0; i < 3; ++i)
     {
         const mon_inv_type slot = slots[i];
-        const int          midx = mon->inv[slot];
+        const int          midx = mon.inv[slot];
 
         if (midx == NON_ITEM)
             continue;
@@ -868,7 +868,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
         if (is_chaotic_item(item))
             return false;
 
-        if (_is_chaos_upgradeable(item, mon))
+        if (_is_chaos_upgradeable(item, &mon))
         {
             if (item.base_type != OBJ_MISSILES)
                 return true;
@@ -1180,7 +1180,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
 static monster* _xom_mons_poly_target()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (_choose_mutatable_monster(*mi) && !mons_is_firewood(**mi))
+        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi))
             return *mi;
     return nullptr;
 }
@@ -1323,10 +1323,10 @@ static int _xom_random_stickable(const int HD)
     return arr[c];
 }
 
-static bool _hostile_snake(monster* mon)
+static bool _hostile_snake(monster& mon)
 {
-    return mon->attitude == ATT_HOSTILE
-            && mons_genus(mon->type) == MONS_SNAKE;
+    return mon.attitude == ATT_HOSTILE
+            && mons_genus(mon.type) == MONS_SNAKE;
 }
 
 // An effect similar to old sticks to snakes (which worked on "sticks" other
@@ -1341,7 +1341,7 @@ static void _xom_snakes_to_sticks(int sever)
     bool action = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!_hostile_snake(*mi))
+        if (!_hostile_snake(**mi))
             continue;
 
         if (!action)
@@ -2807,11 +2807,11 @@ static void _xom_noise(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "noise"), true);
 }
 
-static bool _mon_valid_blink_victim(const monster *mon)
+static bool _mon_valid_blink_victim(const monster& mon)
 {
-    return !mon->wont_attack()
-            && !mon->no_tele()
-            && !mons_is_projectile(*mon);
+    return !mon.wont_attack()
+            && !mon.no_tele()
+            && !mons_is_projectile(mon);
 }
 
 static void _xom_blink_monsters(int /*sever*/)
@@ -2825,7 +2825,7 @@ static void _xom_blink_monsters(int /*sever*/)
         if (blinks >= 5)
             break;
 
-        if (!_mon_valid_blink_victim(*mi) || coinflip())
+        if (!_mon_valid_blink_victim(**mi) || coinflip())
             continue;
 
         // Only give this message once.
@@ -2992,7 +2992,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > 0 && x_chance_in_y(5, sever)
-        && mon_nearby([](monster* mon){ return !mon->wont_attack(); }))
+        && mon_nearby([](monster& mon){ return !mon.wont_attack(); }))
     {
         return XOM_GOOD_CONFUSION;
     }

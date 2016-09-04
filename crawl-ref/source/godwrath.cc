@@ -1706,9 +1706,9 @@ bool drain_wands()
     return true;
 }
 
-static bool _choose_hostile_monster(const monster* mon)
+static bool _choose_hostile_monster(const monster& mon)
 {
-    return mon->attitude == ATT_HOSTILE;
+    return mon.attitude == ATT_HOSTILE;
 }
 
 

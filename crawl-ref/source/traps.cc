@@ -685,7 +685,7 @@ void trap_def::trigger(actor& triggerer)
 
                 m->hurt(nullptr, damage_taken);
                 if (in_sight && m->alive())
-                    print_wounds(m);
+                    print_wounds(*m);
             }
         }
         break;

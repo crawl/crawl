@@ -354,7 +354,7 @@ static bool _is_religious_follower(const monster* mon)
     return (you_worship(GOD_YREDELEMNUL)
             || will_have_passive(passive_t::convert_orcs)
             || you_worship(GOD_FEDHAS))
-                && is_follower(mon);
+                && is_follower(*mon);
 }
 
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)

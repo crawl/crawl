@@ -250,7 +250,7 @@ void monster_shout(monster* mons, int shout)
                 seen_monster(mons);
             }
 
-            message = do_mon_str_replacements(message, mons, s_type);
+            message = do_mon_str_replacements(message, *mons, s_type);
             msg::streams(channel) << message << endl;
         }
     }

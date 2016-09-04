@@ -669,7 +669,7 @@ bool monster::can_speak()
         return false;
 
     // Does it have the proper vocal equipment?
-    return mon_shape_is_humanoid(get_mon_shape(this));
+    return mon_shape_is_humanoid(get_mon_shape(*this));
 }
 
 bool monster::is_silenced() const
@@ -2402,7 +2402,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
-    switch (get_mon_shape(this))
+    switch (get_mon_shape(*this))
     {
     case MON_SHAPE_CENTAUR:
     case MON_SHAPE_NAGA:
@@ -2528,7 +2528,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
-    switch (get_mon_shape(this))
+    switch (get_mon_shape(*this))
     {
     case MON_SHAPE_INSECT:
     case MON_SHAPE_INSECT_WINGED:
@@ -2642,7 +2642,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
 
 string monster::arm_name(bool plural, bool *can_plural) const
 {
-    mon_body_shape shape = get_mon_shape(this);
+    mon_body_shape shape = get_mon_shape(*this);
 
     if (!mon_shape_is_humanoid(shape))
         return hand_name(plural, can_plural);
@@ -4011,7 +4011,7 @@ int monster::res_holy_energy(const actor *attacker) const
         || is_good_god(god)
         || neutral()
         || find_stab_type(attacker, *this) != STAB_NO_STAB
-        || is_good_god(you.religion) && is_follower(this))
+        || is_good_god(you.religion) && is_follower(*this))
     {
         return 1;
     }
@@ -6053,7 +6053,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
 
     if (has_ench(ENCH_PAIN_BOND))
-        radiate_pain_bond(this, damage);
+        radiate_pain_bond(*this, damage);
 
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)

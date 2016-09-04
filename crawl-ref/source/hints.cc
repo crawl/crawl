@@ -2489,7 +2489,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         // "Shouts" from zero experience monsters are boring, ignore
         // them.
-        if (!mons_is_threatening(m))
+        if (!mons_is_threatening(*m))
         {
             Hints.hints_events[HINT_MONSTER_SHOUT] = true;
             return;
@@ -3993,7 +3993,7 @@ bool hints_monster_interesting(const monster* mons)
         return true;
 
     // Dangerous.
-    return mons_threat_level(mons) == MTHRT_NASTY;
+    return mons_threat_level(*mons) == MTHRT_NASTY;
 }
 
 string hints_describe_monster(const monster_info& mi, bool has_stat_desc)

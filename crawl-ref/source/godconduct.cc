@@ -1220,7 +1220,7 @@ void did_hurt_conduct(conduct_type thing_done,
     {
         // Give a "value" for the percent of the monster's hp done in damage,
         // scaled by the monster's threat level.11
-        int value = random2(3) + sqr((mons_threat_level(&victim) + 1) * 2)
+        int value = random2(3) + sqr((mons_threat_level(victim) + 1) * 2)
                 * damage_done / (victim.max_hit_points);
 
         you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() += 1;

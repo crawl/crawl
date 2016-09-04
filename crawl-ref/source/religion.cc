@@ -1220,18 +1220,18 @@ static bool _has_jelly()
     return false;
 }
 
-bool is_follower(const monster* mon)
+bool is_follower(const monster& mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_slave(mon);
+        return is_yred_undead_slave(&mon);
     else if (will_have_passive(passive_t::convert_orcs))
-        return is_orcish_follower(mon);
+        return is_orcish_follower(&mon);
     else if (you_worship(GOD_JIYVA))
-        return is_fellow_slime(mon);
+        return is_fellow_slime(&mon);
     else if (you_worship(GOD_FEDHAS))
-        return _is_plant_follower(mon);
+        return _is_plant_follower(&mon);
     else
-        return mon->alive() && mon->friendly();
+        return mon.alive() && mon.friendly();
 }
 
 
@@ -2117,7 +2117,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
-    mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, &fake_mon).c_str());
+    mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
     fake_mon.reset();
     mgrd(you.pos()) = orig_mon;

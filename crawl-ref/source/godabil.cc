@@ -1095,7 +1095,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         // XXX: This duplicates code in cast_smiting().
         mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
         if (mon->alive())
-            print_wounds(mon);
+            print_wounds(*mon);
         affected = true;
         break;
 
@@ -1172,7 +1172,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                       (damage < 50) ? "'s chaotic flesh bubbles and boils."
                                     : "'s chaotic flesh runs like molten wax.");
 
-                    print_wounds(mon);
+                    print_wounds(*mon);
                     behaviour_event(mon, ME_WHACK, &you);
                     affected = true;
                 }
@@ -6588,7 +6588,7 @@ static bool _get_stomped(monster& mons)
     mons.hurt(&you, damage, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
     if (mons.alive() && you.can_see(mons))
-        print_wounds(&mons);
+        print_wounds(mons);
 
     return true;
 }
@@ -6824,7 +6824,7 @@ bool uskayaw_grand_finale()
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial()) {
         blood_spray(mons->pos(), mons->mons_species(), mons->hit_points / 5);
-        throw_monster_bits(mons); // have some fun while we're at it
+        throw_monster_bits(*mons); // have some fun while we're at it
     }
 
     monster_die(mons, KILL_YOU, NON_MONSTER, false);
