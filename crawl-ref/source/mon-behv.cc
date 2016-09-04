@@ -84,7 +84,7 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_HUMAN || !mons_has_ranged_attack(mon))
+    if (mons_intel(*mon) < I_HUMAN || !mons_has_ranged_attack(mon))
         return false;
 
     // Any special case should go here.
@@ -222,7 +222,7 @@ static bool _monster_guesses_invis_player(const monster &mon)
 
     // [dshaligram] Smart monsters have a chance of clueing in to
     // invisible players in various ways.
-    if (mons_intel(&mon) == I_HUMAN && one_chance_in(12))
+    if (mons_intel(mon) == I_HUMAN && one_chance_in(12))
         return true;
 
     // Ash penance makes monsters very likely to target you through invis.
@@ -268,7 +268,7 @@ void handle_behaviour(monster* mon)
 
     bool proxFoe;
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart    = (mons_intel(mon) >= I_HUMAN);
+    bool isSmart    = (mons_intel(*mon) >= I_HUMAN);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
@@ -376,7 +376,7 @@ void handle_behaviour(monster* mon)
         if (!isFriendly
             && !mon->has_ench(ENCH_INSANE)
             && proxPlayer
-            && mons_intel(mon) >= I_HUMAN)
+            && mons_intel(*mon) >= I_HUMAN)
         {
             mon->foe = MHITYOU;
         }
@@ -644,7 +644,7 @@ void handle_behaviour(monster* mon)
 
             // Monster can see foe: set memory in case it loses sight.
             // Hack: smarter monsters will tend to pursue the player longer.
-            switch (mons_intel(mon))
+            switch (mons_intel(*mon))
             {
             case I_HUMAN:
                 mon->foe_memory = random_range(450, 1000);
@@ -1023,7 +1023,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    bool isSmart          = (mons_intel(mon) >= I_HUMAN);
+    bool isSmart          = (mons_intel(*mon) >= I_HUMAN);
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_unaware      = mon->asleep() || mon->foe == MHITNOT;
@@ -1103,7 +1103,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If the monster can't reach its target and can't attack it
         // either, retreat.
         try_pathfind(mon);
-        if (mons_intel(mon) > I_BRAINLESS && !mons_can_attack(mon)
+        if (mons_intel(*mon) > I_BRAINLESS && !mons_can_attack(mon)
             && target_is_unreachable(mon))
         {
             mon->behaviour = BEH_RETREAT;

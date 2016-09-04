@@ -296,7 +296,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
-        || mons_intel(mons) < I_HUMAN
+        || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
         || mons->check_clarity(false)
         || monster_resists_this_poison(mons))

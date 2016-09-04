@@ -169,29 +169,30 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
            && child->props["inwards"].get_int() == (int) parent->mid;
 }
 
-bool get_tentacle_head(const monster*& mon)
+const monster& get_tentacle_head(const monster& mon)
 {
+    const monster* m = &mon;
     // For tentacle segments, find the associated tentacle.
-    if (mon->is_child_tentacle_segment())
+    if (m->is_child_tentacle_segment())
     {
-        monster* tentacle = monster_by_mid(mon->tentacle_connect);
+        monster* tentacle = monster_by_mid(m->tentacle_connect);
         if (!tentacle)
-            return false;
+            return *m;
 
-        mon = tentacle;
+        m = tentacle;
     }
 
     // For tentacles, find the associated head.
-    if (mon->is_child_tentacle())
+    if (m->is_child_tentacle())
     {
-        monster* head = monster_by_mid(mon->tentacle_connect);
+        monster* head = monster_by_mid(m->tentacle_connect);
         if (!head)
-            return false;
+            return *m;
 
-        mon = head;
+        m = head;
     }
 
-    return true;
+    return *m;
 }
 
 static void _establish_connection(monster* tentacle,

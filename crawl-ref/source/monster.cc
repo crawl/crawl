@@ -358,7 +358,7 @@ int monster::damage_type(int which_attack)
 
     if (!mweap)
     {
-        const mon_attack_def atk = mons_attack_spec(this, which_attack);
+        const mon_attack_def atk = mons_attack_spec(*this, which_attack);
         return (atk.type == AT_CLAW)          ? DVORP_CLAWING :
                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
                                               : DVORP_CRUSHING;
@@ -396,7 +396,7 @@ int monster::has_claws(bool allow_tran) const
 {
     for (int i = 0; i < MAX_NUM_ATTACKS; i++)
     {
-        const mon_attack_def atk = mons_attack_spec(this, i);
+        const mon_attack_def atk = mons_attack_spec(*this, i);
         if (atk.type == AT_CLAW)
         {
             // Some better criteria would be better.
@@ -433,7 +433,7 @@ static int _mons_offhand_weapon_index(const monster* m)
 
 item_def *monster::weapon(int which_attack) const
 {
-    const mon_attack_def attk = mons_attack_spec(this, which_attack);
+    const mon_attack_def attk = mons_attack_spec(*this, which_attack);
     if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return nullptr;
 
@@ -665,7 +665,7 @@ bool monster::can_speak()
         return true;
 
     // Silent or non-sentient monsters can't use the original speech.
-    if (mons_intel(this) < I_HUMAN || !mons_can_shout(type))
+    if (mons_intel(*this) < I_HUMAN || !mons_can_shout(type))
         return false;
 
     // Does it have the proper vocal equipment?
@@ -2968,7 +2968,7 @@ bool monster::has_attack_flavour(int flavour) const
 {
     for (int i = 0; i < 4; ++i)
     {
-        const int attk_flavour = mons_attack_spec(this, i).flavour;
+        const int attk_flavour = mons_attack_spec(*this, i).flavour;
         if (attk_flavour == flavour)
             return true;
     }
@@ -2992,7 +2992,7 @@ int monster::constriction_damage() const
 {
     for (int i = 0; i < 4; ++i)
     {
-        const mon_attack_def attack = mons_attack_spec(this, i);
+        const mon_attack_def attack = mons_attack_spec(*this, i);
         if (attack.type == AT_CONSTRICT)
             return attack.damage;
     }
@@ -3095,7 +3095,7 @@ int monster::natural_regen_rate() const
 // in units of 1/100 hp/turn
 int monster::off_level_regen_rate() const
 {
-    if (!mons_can_regenerate(this))
+    if (!mons_can_regenerate(*this))
         return 0;
 
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
@@ -4243,7 +4243,7 @@ bool monster::poison(actor *agent, int amount, bool force)
 int monster::skill(skill_type sk, int scale, bool real, bool drained) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
-    if (mons_intel(this) < I_HUMAN && !mons_is_avatar(type))
+    if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))
         return 0;
 
     const int hd = scale * get_hit_dice();
@@ -4697,7 +4697,7 @@ static int _estimated_trap_damage(trap_type trap)
  */
 bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 {
-    const mon_intel_type intel = mons_intel(this);
+    const mon_intel_type intel = mons_intel(*this);
 
     const trap_def *ptrap = trap_at(where);
     if (!ptrap)
@@ -5153,7 +5153,7 @@ bool monster::can_go_frenzy() const
 
     // Brainless natural monsters can still be berserked/frenzied.
     // This could maybe all be replaced by mons_is_object()?
-    if (mons_intel(this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
+    if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
     if (paralysed() || petrified() || petrifying() || asleep())
@@ -5163,7 +5163,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // If we have no melee attack, going berserk is pointless.
-    const mon_attack_def attk = mons_attack_spec(this, 0);
+    const mon_attack_def attk = mons_attack_spec(*this, 0);
     if (attk.type == AT_NONE || attk.damage == 0)
         return false;
 
@@ -6245,7 +6245,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
 reach_type monster::reach_range() const
 {
-    const mon_attack_def attk(mons_attack_spec(this, 0));
+    const mon_attack_def attk(mons_attack_spec(*this, 0));
     if ((attk.flavour == AF_REACH || attk.flavour == AF_REACH_STING)
         && attk.damage)
     {

@@ -615,7 +615,7 @@ static int _heretic_recite_weakness(const monster *mon)
 
     // Sleeping or paralyzed monsters will wake up or still perceive their
     // surroundings, respectively. So, you can still recite to them.
-    if (mons_intel(mon) >= I_HUMAN
+    if (mons_intel(*mon) >= I_HUMAN
         && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
     {
         // In the eyes of Zin, everyone is a sinner until proven otherwise!

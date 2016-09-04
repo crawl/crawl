@@ -28,7 +28,7 @@
 // will still be able to come nearer (and the mark will then be cleared).
 static void _mark_neighbours_target_unreachable(monster* mon)
 {
-    const mon_intel_type intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(*mon);
     const bool flies         = mon->airborne();
     const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
@@ -50,7 +50,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // Don't restrict smarter monsters as they might find a path
         // a dumber monster wouldn't.
-        if (mons_intel(m) > intel)
+        if (mons_intel(*m) > intel)
             continue;
 
         // Monsters of differing habitats might prefer different routes.
@@ -564,7 +564,7 @@ static bool _handle_monster_travelling(monster* mon)
 
 static bool _choose_random_patrol_target_grid(monster* mon)
 {
-    const mon_intel_type intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(*mon);
 
     // Zombies will occasionally just stand around.
     // This does not mean that they don't move every second turn. Rather,
@@ -1053,7 +1053,7 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
     // Stupid monsters don't pathfind around shallow water
     // except the clinging ones.
     if (mon->floundering_at(p)
-        && (mons_intel(mon) >= I_HUMAN || mon->can_cling_to_walls()))
+        && (mons_intel(*mon) >= I_HUMAN || mon->can_cling_to_walls()))
     {
         return false;
     }

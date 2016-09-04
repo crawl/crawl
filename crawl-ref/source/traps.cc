@@ -156,7 +156,7 @@ bool trap_def::is_known(const actor* act) const
     else if (act->is_monster())
     {
         const monster* mons = act->as_monster();
-        const int intel = mons_intel(mons);
+        const int intel = mons_intel(*mons);
 
         // Smarter trap handling for intelligent monsters
         // * monsters native to a branch can be assumed to know the trap
@@ -613,7 +613,7 @@ void trap_def::trigger(actor& triggerer)
             // XXX: this is very goofy and probably should be replaced with
             // const mid_t source = triggerer.mid;
             mid_t source = !m ? MID_PLAYER :
-                            mons_intel(m) >= I_HUMAN ? m->mid : MID_NOBODY;
+                            mons_intel(*m) >= I_HUMAN ? m->mid : MID_NOBODY;
 
             noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
         }

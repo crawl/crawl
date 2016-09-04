@@ -141,7 +141,7 @@ static void monster_action_cost(string& qual, int cost, const char* desc)
 static string monster_int(const monster& mon)
 {
     string intel = "???";
-    switch (mons_intel(&mon))
+    switch (mons_intel(mon))
     {
     case I_BRAINLESS:
         intel = "brainless";
@@ -908,7 +908,7 @@ int main(int argc, char* argv[])
             int attack_num = x;
             if (mon.has_hydra_multi_attack())
                 attack_num = x == 0 ? x : x + mon.number - 1;
-            mon_attack_def attk = mons_attack_spec(&mon, attack_num);
+            mon_attack_def attk = mons_attack_spec(mon, attack_num);
             if (attk.type)
             {
                 if (monsterattacks.empty())
@@ -1212,7 +1212,7 @@ int main(int argc, char* argv[])
         }
 
         const resists_t res(shapeshifter ? me->resists :
-                                           get_mons_resists(&mon));
+                                           get_mons_resists(mon));
 #define res(c, x)                                                              \
     do                                                                         \
     {                                                                          \

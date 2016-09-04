@@ -135,7 +135,7 @@ static void _monster_regenerate(monster* mons)
         return;
 
     if (mons->has_ench(ENCH_SICK)
-        || !mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION)))
+        || !mons_can_regenerate(*mons) && !(mons->has_ench(ENCH_REGENERATION)))
     {
         return;
     }
@@ -602,7 +602,7 @@ static void _handle_movement(monster* mons)
     // this.
     if ((newpos == you.pos()
            || monster_at(newpos) && mons->foe == mgrd(newpos))
-        && mons_intel(mons) > I_BRAINLESS
+        && mons_intel(*mons) > I_BRAINLESS
         && coinflip()
         && !mons_is_confused(mons) && !mons->caught()
         && !mons->berserk_or_insane())
@@ -840,7 +840,7 @@ static bool _handle_evoke_equipment(monster& mons)
 static bool _handle_swoop(monster& mons)
 {
     // TODO: check for AF_SWOOP in other slots and/or make it work there?
-    if (mons_attack_spec(&mons, 0, true).flavour != AF_SWOOP)
+    if (mons_attack_spec(mons, 0, true).flavour != AF_SWOOP)
         return false;
 
     actor *defender = mons.get_foe();
@@ -3011,7 +3011,7 @@ static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
     if (mons_is_slime(mon) || actor_slime_wall_immune(mon)
-        || mons_intel(mon) <= I_BRAINLESS)
+        || mons_intel(*mon) <= I_BRAINLESS)
     {
         return false;
     }

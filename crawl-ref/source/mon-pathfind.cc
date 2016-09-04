@@ -32,7 +32,7 @@
 int mons_tracking_range(const monster* mon)
 {
     int range = 0;
-    switch (mons_intel(mon))
+    switch (mons_intel(*mon))
     {
     case I_BRAINLESS:
         range = 3;

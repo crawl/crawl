@@ -197,7 +197,7 @@ monsterentry *get_monster_data(monster_type mc) IMMUTABLE;
 int get_mons_class_ac(monster_type mc) IMMUTABLE;
 int get_mons_class_ev(monster_type mc) IMMUTABLE;
 resists_t get_mons_class_resists(monster_type mc) IMMUTABLE;
-resists_t get_mons_resists(const monster* mon);
+resists_t get_mons_resists(const monster& mon);
 int get_mons_resist(const monster* mon, mon_resist_flags res);
 const bool monster_resists_this_poison(const monster* mons, bool force = false);
 
@@ -248,7 +248,7 @@ bool mons_class_sees_invis(monster_type type, monster_type base);
 
 bool mons_immune_magic(const monster* mon);
 
-mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour = false);
+mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = false);
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
@@ -277,7 +277,7 @@ bool mons_wields_two_weapons(const monster* m);
 bool mons_self_destructs(const monster* m);
 
 mon_intel_type mons_class_intel(monster_type mc);
-mon_intel_type mons_intel(const monster* mon);
+mon_intel_type mons_intel(const monster& mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
@@ -300,7 +300,7 @@ int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster* mon, bool known = false);
 
 bool mons_class_can_regenerate(monster_type mc);
-bool mons_can_regenerate(const monster* mon);
+bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster* mon);
