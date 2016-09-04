@@ -677,7 +677,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
 static bool _yred_enslave_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(*mons)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
@@ -1472,7 +1472,7 @@ static string _killer_type_name(killer_type killer)
  */
 static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
-    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
+    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(*mons))
     {
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
@@ -1520,7 +1520,7 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                 roll_zombie_hp(undead);
             }
 
-            name_zombie(undead, mons);
+            name_zombie(*undead, *mons);
 
             undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
             if (bound_soul)
@@ -1541,7 +1541,7 @@ static void _druid_final_boon(const monster* mons)
     vector<monster*> beasts;
     for (monster_near_iterator mi(mons); mi; ++mi)
     {
-        if (mons_is_beast(mons_base_type(*mi)) && mons_aligned(mons, *mi))
+        if (mons_is_beast(mons_base_type(**mi)) && mons_aligned(mons, *mi))
             beasts.push_back(*mi);
     }
 
@@ -2541,14 +2541,14 @@ item_def* monster_die(monster* mons, killer_type killer,
         }
     }
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
     {
         if (destroy_tentacles(mons)
             && !in_transit
             && you.see_cell(mons->pos())
             && !was_banished)
         {
-            if (mons_base_type(mons) == MONS_KRAKEN)
+            if (mons_base_type(*mons) == MONS_KRAKEN)
                 mpr("The dead kraken's tentacles slide back into the water.");
             else if (mons->type == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
@@ -2833,7 +2833,7 @@ void monster_cleanup(monster* mons)
     // cleaned up first, we wouldn't get a message anyway.
     mons->stop_constricting_all(false, true);
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
 
     const mid_t mid = mons->mid;
@@ -2865,7 +2865,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     monster mon;
     mon.type = mc;
     mon.moveto(daddy->pos());
-    define_monster(&mon); // assumes mc is not a zombie
+    define_monster(mon); // assumes mc is not a zombie
     mon.flags = daddy->flags;
 
     // Need to copy ENCH_ABJ etc. or we could get real XP/meat from a summon.
@@ -3362,7 +3362,7 @@ void elven_twins_pacify(monster* twin)
     simple_monster_message(*mons, " likewise turns neutral.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
-    mons_pacify(mons, ATT_NEUTRAL);
+    mons_pacify(*mons, ATT_NEUTRAL);
 }
 
 /**

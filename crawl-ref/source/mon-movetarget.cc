@@ -30,9 +30,9 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 {
     const mon_intel_type intel = mons_intel(*mon);
     const bool flies         = mon->airborne();
-    const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
-    const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
-    const habitat_type habit = mons_primary_habitat(mon);
+    const bool amphibious    = (mons_habitat(*mon) == HT_AMPHIBIOUS);
+    const bool amph_lava     = (mons_habitat(*mon) == HT_AMPHIBIOUS_LAVA);
+    const habitat_type habit = mons_primary_habitat(*mon);
 
     for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
@@ -54,7 +54,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
             continue;
 
         // Monsters of differing habitats might prefer different routes.
-        if (mons_primary_habitat(m) != habit)
+        if (mons_primary_habitat(*m) != habit)
             continue;
 
         // Wall clinging monsters use different pathfinding.
@@ -64,8 +64,8 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
         if (!flies && m->airborne()
-            || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS
-            || !amph_lava  && mons_habitat(m) == HT_AMPHIBIOUS_LAVA)
+            || !amphibious && mons_habitat(*m) == HT_AMPHIBIOUS
+            || !amph_lava  && mons_habitat(*m) == HT_AMPHIBIOUS_LAVA)
         {
             continue;
         }
@@ -134,7 +134,7 @@ bool try_pathfind(monster* mon)
     // realise that.
     if (need_pathfind
         && !mon->friendly()
-        && mons_has_ranged_attack(mon)
+        && mons_has_ranged_attack(*mon)
         && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
     {
         need_pathfind = false;
@@ -1004,7 +1004,7 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
         {
             // Ignore teleportation and shaft traps that the monster
             // shouldn't know about.
-            if (!mons_is_native_in_branch(mon)
+            if (!mons_is_native_in_branch(*mon)
                 && grd(e[i].target) == DNGN_UNDISCOVERED_TRAP)
             {
                 continue;

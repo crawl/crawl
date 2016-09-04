@@ -230,7 +230,7 @@ protected:
                                    coord_def pos, int pow)
         : final_effect(0, serpent, coord_def()), oppressor(rudedude),
           position(pos), power(pow),
-        attitude(mons_attitude(serpent->as_monster()))
+        attitude(mons_attitude(*serpent->as_monster()))
     {
     }
     const actor &oppressor;

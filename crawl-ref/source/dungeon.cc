@@ -5482,7 +5482,7 @@ static int _make_delicious_corpse()
     // Create corpse object.
     monster dummy;
     dummy.type = mon_type;
-    define_monster(&dummy);
+    define_monster(dummy);
 
     item_def* corpse = place_monster_corpse(dummy, true, true);
     if (!corpse)

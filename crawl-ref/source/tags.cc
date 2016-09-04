@@ -5673,7 +5673,7 @@ void unmarshallMonster(reader &th, monster& m)
     m.spells.clear();
     for (mon_spell_slot &slot : oldspells)
     {
-        if (mons_is_zombified(&m) && !mons_enslaved_soul(&m)
+        if (mons_is_zombified(m) && !mons_enslaved_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells

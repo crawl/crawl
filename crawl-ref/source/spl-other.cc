@@ -183,7 +183,7 @@ bool try_recall(mid_t mid)
         else
         {
             coord_def empty;
-            if (find_habitable_spot_near(you.pos(), mons_base_type(mons), 3, false, empty)
+            if (find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
                 && mons->move_to_pos(empty))
             {
                 recall_orders(mons);

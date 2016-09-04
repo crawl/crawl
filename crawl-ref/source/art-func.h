@@ -665,7 +665,7 @@ static bool is_dragonkind(const actor *act)
     // Else the actor is a monster.
     const monster* mon = act->as_monster();
 
-    if (mons_is_zombified(mon)
+    if (mons_is_zombified(*mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
             || mons_genus(mon->base_monster) == MONS_DRAKE
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))

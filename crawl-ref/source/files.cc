@@ -873,7 +873,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
     // behind it that might want to push through.
     // This means we don't actually send it on transit, but we do
     // return true, so adjacent real followers are handled correctly. (jpeg)
-    if (!mons_can_use_stairs(fol))
+    if (!mons_can_use_stairs(*fol))
         return true;
 
     level_id dest = level_id::current();
@@ -912,7 +912,7 @@ static void _grab_followers()
         if (mons_is_mons_class(fol, MONS_DOWAN) && fol->alive())
             dowan = fol;
 
-        if (fol->wont_attack() && !mons_can_use_stairs(fol))
+        if (fol->wont_attack() && !mons_can_use_stairs(*fol))
         {
             non_stair_using_allies++;
             // If the class can normally use stairs it

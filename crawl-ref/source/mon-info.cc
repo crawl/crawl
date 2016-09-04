@@ -281,7 +281,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(other)
+            && !mons_is_zombified(*other)
             && !_tentacle_pos_unknown(other, m->pos()))
         {
             mi.props[key] = h_pos - m->pos();
@@ -422,7 +422,7 @@ monster_info::monster_info(const monster* m, int milev)
     attitude = ATT_HOSTILE;
     pos = m->pos();
 
-    attitude = mons_attitude(m);
+    attitude = mons_attitude(*m);
 
     type = m->type;
     threat = mons_threat_level(m);
@@ -546,8 +546,8 @@ monster_info::monster_info(const monster* m, int milev)
     can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
-    mbase_speed = mons_base_speed(m, true);
-    menergy = mons_energy(m);
+    mbase_speed = mons_base_speed(*m, true);
+    menergy = mons_energy(*m);
 
     if (m->airborne())
         mb.set(MB_AIRBORNE);
@@ -749,7 +749,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
-    if (mons_has_known_ranged_attack(m))
+    if (mons_has_known_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
 
     // this must be last because it provides this structure to Lua code

@@ -141,7 +141,7 @@ static void _monster_regenerate(monster* mons)
     }
 
     // Non-land creatures out of their element cannot regenerate.
-    if (mons_primary_habitat(mons) != HT_LAND
+    if (mons_primary_habitat(*mons) != HT_LAND
         && !monster_habitable_grid(mons, grd(mons->pos())))
     {
         return;
@@ -160,8 +160,8 @@ static void _escape_water_hold(monster& mons)
 {
     if (mons.has_ench(ENCH_WATER_HOLD))
     {
-        if (mons_habitat(&mons) != HT_AMPHIBIOUS
-            && mons_habitat(&mons) != HT_WATER)
+        if (mons_habitat(mons) != HT_AMPHIBIOUS
+            && mons_habitat(mons) != HT_WATER)
         {
             mons.speed_increment -= 5;
         }
@@ -312,7 +312,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
                 return false;
             }
 
-            if (mons_has_ranged_attack(ally))
+            if (mons_has_ranged_attack(*ally))
                 return true;
         }
         break;
@@ -380,16 +380,16 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORC:
     case DNGN_EXIT_ORC:
-        return mons_is_native_in_branch(mon, BRANCH_ORC);
+        return mons_is_native_in_branch(*mon, BRANCH_ORC);
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELF:
     case DNGN_EXIT_ELF:
-        return mons_is_native_in_branch(mon, BRANCH_ELF);
+        return mons_is_native_in_branch(*mon, BRANCH_ELF);
 
     // Spiders...
     case DNGN_ENTER_SPIDER:
-        return mons_is_native_in_branch(mon, BRANCH_SPIDER);
+        return mons_is_native_in_branch(*mon, BRANCH_SPIDER);
 
     default:
         return false;
@@ -1792,7 +1792,7 @@ void handle_monster_move(monster* mons)
     if (!mons->alive())
         return;
 
-    if (!disabled && mons_is_tentacle_head(mons_base_type(mons)))
+    if (!disabled && mons_is_tentacle_head(mons_base_type(*mons)))
         move_child_tentacles(mons);
 
     old_pos = mons->pos();
@@ -2279,12 +2279,12 @@ void handle_monster_move(monster* mons)
         ASSERT_IN_BOUNDS_OR_ORIGIN(mons->target);
     }
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
     {
         move_child_tentacles(mons);
 
         mons->move_spurt += (old_energy - mons->speed_increment)
-                             * _tentacle_move_speed(mons_base_type(mons));
+                             * _tentacle_move_speed(mons_base_type(*mons));
         ASSERT(mons->move_spurt > 0);
         while (mons->move_spurt >= 100)
         {
@@ -2917,7 +2917,7 @@ static bool _no_habitable_adjacent_grids(const monster* mon)
 static bool _same_tentacle_parts(const monster* mpusher,
                                const monster* mpushee)
 {
-    if (!mons_is_tentacle_head(mons_base_type(mpusher)))
+    if (!mons_is_tentacle_head(mons_base_type(*mpusher)))
         return false;
 
     if (mpushee->is_child_tentacle_of(mpusher))
@@ -3058,7 +3058,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
 
     const dungeon_feature_type target_grid = grd(targ);
-    const habitat_type habitat = mons_primary_habitat(mons);
+    const habitat_type habitat = mons_primary_habitat(*mons);
 
     // No monster may enter the open sea.
     if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
@@ -3593,7 +3593,7 @@ static bool _monster_move(monster* mons)
     ASSERT(mons); // XXX: change to monster &mons
     move_array good_move;
 
-    const habitat_type habitat = mons_primary_habitat(mons);
+    const habitat_type habitat = mons_primary_habitat(*mons);
     bool deep_water_available = false;
 
     // Berserking monsters make a lot of racket.

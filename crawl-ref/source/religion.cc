@@ -2533,7 +2533,7 @@ static bool _fedhas_protects_species(monster_type mc)
 
 bool fedhas_protects(const monster* target)
 {
-    return target && _fedhas_protects_species(mons_base_type(target));
+    return target && _fedhas_protects_species(mons_base_type(*target));
 }
 
 // Fedhas neutralises most plants and fungi
@@ -4256,7 +4256,7 @@ int get_monster_tension(const monster* mons, god_type god)
             return 0;
     }
 
-    const mon_attitude_type att = mons_attitude(mons);
+    const mon_attitude_type att = mons_attitude(*mons);
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
         return 0;
 

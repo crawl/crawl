@@ -121,7 +121,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && mon->mname != "freed slave";
 
     case DACT_OLD_ENSLAVED_SOULS_POOF:
-        return mons_enslaved_soul(mon);
+        return mons_enslaved_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(mon);
@@ -436,7 +436,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
         orig.type     = MONS_HUMAN;
         orig.attitude = mon->attitude;
         orig.mid = mon->mid;
-        define_monster(&orig);
+        define_monster(orig);
     }
     // Keep at same spot. This position is irrelevant if the hog is in transit.
     // See below.

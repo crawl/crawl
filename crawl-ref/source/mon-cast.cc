@@ -909,7 +909,7 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
     if (!mons_atts_aligned(caster.temp_attitude(), targ.real_attitude()))
         return false;
 
-    if (caster.type == MONS_IRONBRAND_CONVOKER || mons_enslaved_soul(&caster))
+    if (caster.type == MONS_IRONBRAND_CONVOKER || mons_enslaved_soul(caster))
         return true; // will buff any ally
 
     if (targ.is_holy() && caster.is_holy())
@@ -1225,7 +1225,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.thrower      = KILL_MISC;
     beam.pierce       = false;
     beam.is_explosion = false;
-    beam.attitude     = mons_attitude(mons);
+    beam.attitude     = mons_attitude(*mons);
 
     beam.range = _mons_spell_range(spell_cast, *mons);
 
@@ -1915,7 +1915,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 static bool _mons_can_bind_soul(monster* binder, monster* bound)
 {
     return bound->holiness() & MH_NATURAL
-            && mons_can_be_zombified(bound)
+            && mons_can_be_zombified(*bound)
             && !bound->has_ench(ENCH_BOUND_SOUL)
             && mons_aligned(binder, bound);
 }
@@ -2008,8 +2008,8 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && callee->get_experience_level() <= 20
            && !callee->is_shapeshifter()
            && !caller->see_cell(callee->pos())
-           && mons_habitat(callee) != HT_WATER
-           && mons_habitat(callee) != HT_LAVA
+           && mons_habitat(*callee) != HT_WATER
+           && mons_habitat(*callee) != HT_LAVA
            && !callee->is_travelling();
 }
 
@@ -2778,7 +2778,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     for (monster *mon : mon_list)
     {
         coord_def empty;
-        if (find_habitable_spot_near(target, mons_base_type(mon),
+        if (find_habitable_spot_near(target, mons_base_type(*mon),
                                      3, false, empty)
             && mon->move_to_pos(empty))
         {
@@ -2918,7 +2918,7 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
         int tries = 0;
         while (tries < 10 && base_spot.origin())
         {
-            find_habitable_spot_near(area, mons_base_type(beast), 3, false, base_spot);
+            find_habitable_spot_near(area, mons_base_type(*beast), 3, false, base_spot);
             if (cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
                 base_spot.reset();
             ++tries;
@@ -5029,7 +5029,7 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster *ally : allies)
     {
         coord_def empty;
-        if (find_habitable_spot_near(foepos, mons_base_type(ally), 1, false, empty))
+        if (find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
         {
             if (ally->blink_to(empty))
             {

@@ -245,7 +245,7 @@ mon_attitude_type monster::temp_attitude() const
 bool monster::swimming() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER;
+    return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
 bool monster::submerged() const
@@ -288,10 +288,10 @@ bool monster::floundering_at(const coord_def p) const
             || (feat_is_water(grid)
                 // Can't use monster_habitable_grid() because that'll return
                 // true for non-water monsters in shallow water.
-                && mons_primary_habitat(this) != HT_WATER
+                && mons_primary_habitat(*this) != HT_WATER
                 // Use real_amphibious to detect giant non-water monsters in
                 // deep water, who flounder despite being treated as amphibious.
-                && mons_habitat(this, true) != HT_AMPHIBIOUS
+                && mons_habitat(*this, true) != HT_AMPHIBIOUS
                 && !extra_balanced_at(p)))
            && !cannot_fight()
            && ground_level();
@@ -304,7 +304,7 @@ bool monster::floundering() const
 
 bool monster::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return mons_class_can_pass(mons_base_type(this), grid);
+    return mons_class_can_pass(mons_base_type(*this), grid);
 }
 
 bool monster::is_habitable_feat(dungeon_feature_type actual_grid) const
@@ -317,7 +317,7 @@ bool monster::can_drown() const
     // Presumably a electric eel in lava or a lavafish in deep water could
     // drown, but that should never happen, so this simple check should
     // be enough.
-    switch (mons_primary_habitat(this))
+    switch (mons_primary_habitat(*this))
     {
     case HT_WATER:
     case HT_LAVA:
@@ -712,7 +712,7 @@ void monster::bind_melee_flags()
 
 void monster::bind_spell_flags()
 {
-    if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(this))
+    if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(*this))
         flags |= MF_SEEN_RANGED;
 }
 
@@ -1690,8 +1690,8 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         return false;
 
     const monster_type genus = mons_genus(mons_species(true));
-    const monster_type base_type = mons_is_zombified(this) ? base_monster
-                                                           : type;
+    const monster_type base_type = mons_is_zombified(*this) ? base_monster
+                                                            : type;
     equipment_type eq = EQ_NONE;
 
     // HACK to allow nagas/centaurs to wear bardings. (jpeg)
@@ -1946,7 +1946,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
             // Spellcasters should not waste time with ammunition.
             // Neither summons nor hostile enchantments are counted for
             // this purpose.
-            if (!force && mons_has_ranged_spell(this, true, false))
+            if (!force && mons_has_ranged_spell(*this, true, false))
                 return false;
 
             // Monsters in a fight will only pick up missiles if doing so
@@ -3909,7 +3909,7 @@ int monster::res_water_drowning() const
     if (is_unbreathing())
         rw++;
 
-    habitat_type hab = mons_habitat(this);
+    habitat_type hab = mons_habitat(*this);
     if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
         rw++;
 
@@ -4205,7 +4205,7 @@ bool monster::airborne() const
     // ghost_demon is created, so check for a nullptr ghost. -cao
     return mons_is_ghost_demon(type) && ghost.get() && ghost->flies
            // check both so spectral humans and zombified dragons both fly
-           || mons_class_flag(mons_base_type(this), M_FLIES)
+           || mons_class_flag(mons_base_type(*this), M_FLIES)
            || mons_class_flag(type, M_FLIES)
            || has_facet(BF_BAT)
            || scan_artefacts(ARTP_FLY) > 0
@@ -4769,7 +4769,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Friendlies will try not to be parted from you.
-    if (intelligent_ally(this) && (trap.type == TRAP_TELEPORT
+    if (intelligent_ally(*this) && (trap.type == TRAP_TELEPORT
                                    || trap.type == TRAP_TELEPORT_PERMANENT)
         && player_knows_trap && can_see(you))
     {
@@ -4955,7 +4955,7 @@ bool monster::needs_abyss_transit() const
     return (mons_is_unique(type)
             || (flags & MF_BANISHED)
             || get_experience_level() > 8 + random2(25)
-            && mons_can_use_stairs(this))
+            && mons_can_use_stairs(*this))
         && !is_summoned()
         && !mons_is_conjured(type);
 }
@@ -4989,7 +4989,7 @@ void monster::load_ghost_spells()
 
 bool monster::has_hydra_multi_attack() const
 {
-    return mons_genus(mons_base_type(this)) == MONS_HYDRA
+    return mons_genus(mons_base_type(*this)) == MONS_HYDRA
         || mons_species(true) == MONS_SERPENT_OF_HELL;
 }
 
@@ -5007,7 +5007,7 @@ int monster::heads() const
 
 bool monster::has_multitargeting() const
 {
-    return has_hydra_multi_attack() && !mons_is_zombified(this);
+    return has_hydra_multi_attack() && !mons_is_zombified(*this);
 }
 
 bool monster::is_priest() const
@@ -5085,7 +5085,7 @@ bool monster::sicken(int amount)
 // Recalculate movement speed.
 void monster::calc_speed()
 {
-    speed = mons_base_speed(this);
+    speed = mons_base_speed(*this);
 
     if (type == MONS_BOULDER_BEETLE && has_ench(ENCH_ROLLING))
         speed = 14;
@@ -5502,7 +5502,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     if (alive()
-        && (mons_habitat(this) == HT_WATER || mons_habitat(this) == HT_LAVA)
+        && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
         && !monster_habitable_grid(this, grd(pos()))
         && !has_ench(ENCH_AQUATIC_LAND))
     {
@@ -5730,7 +5730,7 @@ int monster::action_energy(energy_use_type et) const
     if (!find_monsterentry())
         return 10;
 
-    const mon_energy_usage &mu = mons_energy(this);
+    const mon_energy_usage &mu = mons_energy(*this);
     int move_cost = 0;
     switch (et)
     {
@@ -6145,7 +6145,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
             type = fly_died ? MONS_SPRIGGAN : MONS_WASP;
-            define_monster(this);
+            define_monster(*this);
             hit_points = min(old_hp, hit_points);
             flags          = old_flags;
             enchantments   = old_ench;
@@ -6213,7 +6213,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         monster_drop_things(this, mons_aligned(oppressor, &you));
 
         type = MONS_BAI_SUZHEN_DRAGON;
-        define_monster(this);
+        define_monster(*this);
         hit_points = min(old_hp, hit_points);
         flags          = old_flags;
         enchantments   = old_ench;
@@ -6663,7 +6663,7 @@ bool monster::is_divine_companion() const
            && (mons_is_god_gift(this, GOD_BEOGH)
                || mons_is_god_gift(this, GOD_YREDELEMNUL)
                || mons_is_god_gift(this, GOD_HEPLIAKLQANA))
-           && mons_can_use_stairs(this);
+           && mons_can_use_stairs(*this);
 }
 
 bool monster::is_projectile() const

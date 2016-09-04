@@ -207,7 +207,7 @@ static bool _monster_random_space(const monster* mons, coord_def& target,
 void mons_relocated(monster* mons)
 {
     // If the main body teleports get rid of the tentacles
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
     {
         for (monster_iterator mi; mi; ++mi)
         {
