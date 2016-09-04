@@ -1294,7 +1294,7 @@ void bolt::do_fire()
                    && monster_at(pos())
                    && you.can_see(*monster_at(pos()))
                    && !ignores_monster(monster_at(pos()))
-                   && mons_is_firewood(monster_at(pos())))
+                   && mons_is_firewood(*monster_at(pos())))
             // and it's a player tracer...
             // (!is_targeting so you don't get prompted while adjusting the aim)
             && is_tracer && !is_targeting && YOU_KILL(thrower)
@@ -1680,7 +1680,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         else if (rhe < -1)
             hurted = hurted * 3 / 2;
 
-        if (doFlavouredEffects && !mons_is_firewood(mons))
+        if (doFlavouredEffects && !mons_is_firewood(*mons))
         {
             simple_monster_message(*mons,
                                    hurted == 0 ? " appears unharmed."
@@ -1854,7 +1854,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     }
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
-    else if (mons_is_firewood(mons))
+    else if (mons_is_firewood(*mons))
         return true;
     else  // trying to enchant an unnatural creature doesn't work
     {
@@ -4561,7 +4561,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             mon->put_to_sleep(agent(), 0);
     }
 
-    if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(mon))
+    if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))
         you.pet_target = mon->mindex();
 
     // Sticky flame.

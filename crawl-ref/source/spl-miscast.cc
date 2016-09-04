@@ -1689,7 +1689,7 @@ void MiscastEffect::_divination_you(int severity)
 void MiscastEffect::_divination_mon(int severity)
 {
     // Nothing is appropriate for unmoving plants.
-    if (mons_is_firewood(target->as_monster()))
+    if (mons_is_firewood(*target->as_monster()))
         return;
 
     switch (severity)

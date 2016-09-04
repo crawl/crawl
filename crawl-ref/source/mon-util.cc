@@ -756,9 +756,9 @@ bool mons_class_is_firewood(monster_type mc)
  * @param mon             The monster
  * @returns True if the monster is firewood, false otherwise.
  */
-bool mons_is_firewood(const monster* mon)
+bool mons_is_firewood(const monster& mon)
 {
-    return mons_class_is_firewood(mon->type);
+    return mons_class_is_firewood(mon.type);
 }
 
 // "body" in a purely grammatical sense.
@@ -3302,7 +3302,7 @@ bool mons_just_slept(const monster* m)
 // So does preparing resurrect, struggling against a net, etc.
 bool mons_is_immotile(const monster* mons)
 {
-    return mons_is_firewood(mons)
+    return mons_is_firewood(*mons)
         || mons->petrified()
         || mons->asleep()
         || mons->paralysed();

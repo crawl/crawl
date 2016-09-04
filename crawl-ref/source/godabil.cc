@@ -6430,7 +6430,7 @@ static int _apply_apocalypse(coord_def where)
     enchant_type enchantment = ENCH_NONE;
 
     int effect = random2(4);
-    if (mons_is_firewood(mons))
+    if (mons_is_firewood(*mons))
         effect = 99; // > 2 is just damage -- no slowed toadstools
 
     int num_dice;

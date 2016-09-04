@@ -2137,7 +2137,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (mons_is_firewood(mons) || mons_is_conjured(mons->type))
+        if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
         {
             mpr("You cannot imprison that!");
             return SPRET_ABORT;

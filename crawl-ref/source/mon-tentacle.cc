@@ -349,7 +349,7 @@ struct tentacle_attack_constraints
                     temp.path_distance += 1;
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
-                else if (mons_at && mons_is_firewood(mons_at)
+                else if (mons_at && mons_is_firewood(*mons_at)
                     && !mons_aligned(base_monster, mons_at))
                 {
                     temp.path_distance += 10;
@@ -668,7 +668,7 @@ static void _collect_foe_positions(monster* mons,
     for (monster_iterator mi; mi; ++mi)
     {
         monster* test = *mi;
-        if (!mons_is_firewood(test)
+        if (!mons_is_firewood(*test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
             && sight_check(mons, test))
