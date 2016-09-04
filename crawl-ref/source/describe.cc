@@ -3547,6 +3547,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << _describe_mutant_beast(mi) << "\n";
         break;
 
+    case MONS_BLOCK_OF_ICE:
+        if (mi.is(MB_SLOWLY_DYING))
+            inf.body << "\nIt is quickly melting away.\n";
+        break;
+
+    case MONS_PILLAR_OF_SALT:
+        if (mi.is(MB_SLOWLY_DYING))
+            inf.body << "\nIt is quickly crumbling away.\n";
+        break;
+
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload. Please report "
