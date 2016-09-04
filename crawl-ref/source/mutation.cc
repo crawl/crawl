@@ -521,8 +521,8 @@ static const string _vampire_Ascreen_footer = (
 #else
     "Press '<w>!</w>'"
 #endif
-    " to toggle between mutations and properties depending on your\n"
-    "hunger status.\n");
+    " to toggle between mutations and properties depending on your blood\n"
+    "level.\n");
 
 #if TAG_MAJOR_VERSION == 34
 static const string _lava_orc_Ascreen_footer = (
