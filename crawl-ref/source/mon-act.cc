@@ -1756,7 +1756,7 @@ static void _pre_monster_move(monster& mons)
     // every single movement, and we want these monsters to
     // hit and run. -- bwr
     if (mons.foe != MHITNOT && mons_is_wandering(&mons)
-        && mons_is_batty(&mons))
+        && mons_is_batty(mons))
     {
         mons.behaviour = BEH_SEEK;
     }
@@ -2189,7 +2189,7 @@ void handle_monster_move(monster* mons)
                 else
                     fight_melee(mons, &you);
 
-                if (mons_is_batty(mons))
+                if (mons_is_batty(*mons))
                 {
                     mons->behaviour = BEH_WANDER;
                     set_random_target(mons);
@@ -2233,7 +2233,7 @@ void handle_monster_move(monster* mons)
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
-                if (mons_is_batty(mons))
+                if (mons_is_batty(*mons))
                 {
                     mons->behaviour = BEH_WANDER;
                     set_random_target(mons);
@@ -2978,7 +2978,7 @@ static bool _mons_can_displace(const monster* mpusher,
         return false;
 
     // Batty monsters are unpushable.
-    if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
+    if (mons_is_batty(*mpusher) || mons_is_batty(*mpushee))
         return false;
 
     // Anyone can displace a submerged monster.

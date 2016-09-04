@@ -3308,9 +3308,9 @@ bool mons_is_immotile(const monster& mons)
         || mons.paralysed();
 }
 
-bool mons_is_batty(const monster* m)
+bool mons_is_batty(const monster& m)
 {
-    return mons_class_flag(m->type, M_BATTY) || m->has_facet(BF_BAT);
+    return mons_class_flag(m.type, M_BATTY) || m.has_facet(BF_BAT);
 }
 
 bool mons_looks_stabbable(const monster* m)

@@ -385,7 +385,7 @@ stab_type find_stab_type(const actor *attacker,
     // Distracted (but not batty); this only applies to players.
     // Under TSO, monsters are never distracted by your allies.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(def)
+        && def && def->foe != MHITYOU && !mons_is_batty(*def)
         && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
     {
         return STAB_DISTRACTED;
