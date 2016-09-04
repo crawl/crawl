@@ -388,8 +388,8 @@ monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
 bool mons_is_siren_beholder(const monster* mons);
 
-bool mons_looks_stabbable(const monster* m);
-bool mons_looks_distracted(const monster* m);
+bool mons_looks_stabbable(const monster& m);
+bool mons_looks_distracted(const monster& m);
 
 void mons_start_fleeing_from_sanctuary(monster* mons);
 void mons_stop_fleeing_from_sanctuary(monster* mons);
