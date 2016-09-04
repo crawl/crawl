@@ -1633,6 +1633,7 @@ void abyss_teleport()
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    stop_delay(true);
     forget_map(false);
     clear_excludes();
     more();

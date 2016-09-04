@@ -20,6 +20,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
+#include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
@@ -1537,6 +1538,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                     && act->is_habitable(newpos))
                 {
                     act->move_to_pos(newpos);
+                    if (act->is_player())
+                        stop_delay(true);
                     --push;
                     pushed = true;
                 }
@@ -1553,6 +1556,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                             && act->is_habitable(*di))
                         {
                             act->move_to_pos(*di);
+                            if (act->is_player())
+                                stop_delay(true);
+
                             --push;
                             pushed = true;
 
