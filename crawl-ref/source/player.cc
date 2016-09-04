@@ -1161,7 +1161,7 @@ int player_regen()
         else if (you.hunger_state < HS_SATIATED)
             rr /= 2;  // Halved regeneration for hungry vampires.
         else if (you.hunger_state >= HS_FULL)
-            rr += 10; // Bonus regeneration for full vampires.
+            rr += 20; // Bonus regeneration for full vampires.
     }
 #if TAG_MAJOR_VERSION == 34
 
