@@ -394,8 +394,6 @@ bool mons_looks_distracted(const monster* m);
 void mons_start_fleeing_from_sanctuary(monster* mons);
 void mons_stop_fleeing_from_sanctuary(monster* mons);
 
-bool mons_landlubbers_in_reach(const monster* mons);
-
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
