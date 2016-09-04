@@ -627,7 +627,7 @@ A greater demon, wreathed in snow and lightning.
 %%%%
 block of ice
 
-A large block of ice that is quickly melting.
+A large block of ice, shaped like a statue, but worked by no living hands.
 %%%%
 blood saint
 
@@ -1883,7 +1883,7 @@ place for long.
 %%%%
 pillar of salt
 
-A large pillar of salt that is quickly crumbling away.
+A large pillar of salt, shaped like a statue, but worked by no living hands.
 %%%%
 plant
 

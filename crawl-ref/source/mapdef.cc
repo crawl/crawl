@@ -4071,6 +4071,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             MAYBE_COPY(MUTANT_BEAST_FACETS);
             MAYBE_COPY(MGEN_BLOB_SIZE);
             MAYBE_COPY(MGEN_NUM_HEADS);
+            MAYBE_COPY(MGEN_NO_AUTO_CRUMBLE);
 #undef MAYBE_COPY
         }
 
@@ -4147,6 +4148,22 @@ string mons_list::set_mons(int index, const string &s)
     return error;
 }
 
+static monster_type _fixup_mon_type(monster_type orig)
+{
+    if (mons_class_flag(orig, M_CANT_SPAWN))
+        return MONS_PROGRAM_BUG;
+
+    if (orig < 0)
+        orig = MONS_PROGRAM_BUG;
+
+    monster_type dummy_mons = MONS_PROGRAM_BUG;
+    coord_def dummy_pos;
+    dungeon_char_type dummy_feat;
+    level_id place = level_id::current();
+    return resolve_monster_type(orig, dummy_mons, PROX_ANYWHERE, &dummy_pos, 0,
+                                &dummy_feat, &place);
+}
+
 void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
@@ -4181,22 +4198,12 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     trim_string(s);
 
     mons_spec base_monster = mons_by_name(s);
-    if (mons_class_flag(base_monster.type, M_CANT_SPAWN))
+    base_monster.type = _fixup_mon_type(base_monster.type);
+    if (base_monster.type == MONS_PROGRAM_BUG)
     {
         spec.type = MONS_PROGRAM_BUG;
         return;
     }
-
-    if (base_monster.type < 0)
-        base_monster.type = MONS_PROGRAM_BUG;
-
-    monster_type dummy_mons = MONS_PROGRAM_BUG;
-    coord_def dummy_pos;
-    dungeon_char_type dummy_feat;
-    level_id place = level_id::current();
-    base_monster.type = resolve_monster_type(base_monster.type, dummy_mons,
-                                             PROX_ANYWHERE, &dummy_pos, 0,
-                                             &dummy_feat, &place);
 
     spec.monbase = static_cast<monster_type>(base_monster.type);
     if (base_monster.props.exists(MGEN_NUM_HEADS))
@@ -4282,6 +4289,31 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 
     mons_spec spec(MONS_SLIME_CREATURE);
     spec.props[MGEN_BLOB_SIZE] = slime_size;
+    return spec;
+}
+
+/**
+ * Build a monster specification for a specified pillar of salt. The pillar of
+ * salt won't crumble over time, since that seems unuseful for any version of
+ * this function.
+ *
+ * @param name      The description of the pillar of salt; e.g.
+ *                  "human-shaped pillar of salt",
+ *                  "titanic slime creature-shaped pillar of salt."
+ *                  XXX: doesn't currently work with zombie specifiers
+ *                  e.g. "zombie-shaped..." (does this matter?)
+ * @return          A specifier for a pillar of salt.
+ */
+mons_spec mons_list::get_salt_spec(const string &name) const
+{
+    const string prefix = name.substr(0, name.find("-shaped pillar of salt"));
+    mons_spec base_mon = mons_by_name(prefix);
+    if (base_mon.type == MONS_PROGRAM_BUG)
+        return base_mon; // invalid specifier
+
+    mons_spec spec(MONS_PILLAR_OF_SALT);
+    spec.monbase = _fixup_mon_type(base_mon.type);
+    spec.props[MGEN_NO_AUTO_CRUMBLE] = true;
     return spec;
 }
 
@@ -4522,6 +4554,9 @@ mons_spec mons_list::mons_by_name(string name) const
 
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
+
+    if (ends_with(name, "-shaped pillar of salt"))
+        return get_salt_spec(name);
 
     const auto m_index = name.find(" mutant beast");
     if (m_index != string::npos)
