@@ -803,10 +803,8 @@ static void _describe_regen(status_info* inf)
 
         if (you.hunger_state < HS_SATIATED)
             inf->short_text += " slowly";
-        else if (you.hunger_state < HS_ENGORGED)
-            inf->short_text += " quickly";
         else
-            inf->short_text += " very quickly";
+            inf->short_text += " quickly";
     }
 }
 

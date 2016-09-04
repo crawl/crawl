@@ -412,8 +412,6 @@ string describe_mutations(bool center_title)
     {
         if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
-        else if (you.hunger_state == HS_ENGORGED)
-            result += "<green>Your natural rate of healing is extremely fast.</green>\n";
         else if (you.hunger_state < HS_SATIATED)
             result += "<green>You heal slowly.</green>\n";
         else if (you.hunger_state >= HS_FULL)
@@ -544,66 +542,60 @@ static void _display_vampire_attributes()
     string result;
 
     const int lines = 12;
-    string column[lines][7] =
+    string column[lines][5] =
     {
-        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
-         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
-         "<lightred>Bloodless</lightred>"},
-                                 //Alive          Full       Satiated      Thirsty   Near...      Bloodless
-        {"Metabolism           ", "very fast  ", "fast    ", "fast      ", "normal   ", "slow     ", "none  "},
+        {"                     ", "<green>Full</green>       ", "Satiated   ", "<yellow>Thirsty</yellow>    ", "<lightred>Bloodless</lightred>"},
+                                 //Full       Satiated      Thirsty         Bloodless
+        {"Metabolism           ", "fast       ", "normal     ", "slow       ", "none  "},
 
-        {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "slow     ", "slow     ", "none  "},
+        {"Regeneration         ", "fast       ", "normal     ", "slow       ", "none  "},
 
-        {"Stealth boost        ", "none       ", "none    ", "none      ", "minor    ", "major    ", "large "},
+        {"Stealth boost        ", "none       ", "none       ", "minor      ", "major "},
 
-        {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
+        {"Hunger costs         ", "full       ", "full       ", "halved     ", "none  "},
 
         {"\n<w>Resistances</w>\n"
-         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", "immune"},
+         "Poison resistance    ", "           ", "           ", "+          ", "immune"},
 
-        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
+        {"Cold resistance      ", "           ", "           ", "+          ", "++    "},
 
-        {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
+        {"Negative resistance  ", "           ", " +         ", "++         ", "+++   "},
 
-        {"Rotting resistance   ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
+        {"Rotting resistance   ", "           ", "           ", "+          ", "+     "},
 
-        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
+        {"Torment resistance   ", "           ", "           ", "           ", "+     "},
 
         {"\n<w>Transformations</w>\n"
-         "Bat form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
+         "Bat form             ", "no         ", "yes        ", "yes        ", "yes   "},
 
         {"Other forms and \n"
-         "berserk              ", "yes        ", "yes     ", "yes       ", "no       ", "no       ", "no    "}
+         "berserk              ", "yes        ", "yes        ", "no         ", "no    "}
     };
 
     int current = 0;
     switch (you.hunger_state)
     {
     case HS_ENGORGED:
-        current = 1;
-        break;
     case HS_VERY_FULL:
     case HS_FULL:
-        current = 2;
+        current = 1;
         break;
     case HS_SATIATED:
-        current = 3;
+        current = 2;
         break;
     case HS_HUNGRY:
     case HS_VERY_HUNGRY:
-        current = 4;
-        break;
     case HS_NEAR_STARVING:
-        current = 5;
+        current = 3;
         break;
     case HS_STARVING:
     case HS_FAINTING:
-        current = 6;
+        current = 4;
     }
 
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
-        for (int x = 0; x < 7; x++)  // columns (hunger states)
+        for (int x = 0; x < 5; x++)  // columns (hunger states)
         {
             if (y > 0 && x == current)
                 result += "<w>";

@@ -1158,8 +1158,6 @@ int player_regen()
     {
         if (you.hunger_state <= HS_STARVING)
             rr = 0;   // No regeneration for starving vampires.
-        else if (you.hunger_state == HS_ENGORGED)
-            rr += 20; // More bonus regeneration for engorged vampires.
         else if (you.hunger_state < HS_SATIATED)
             rr /= 2;  // Halved regeneration for hungry vampires.
         else if (you.hunger_state >= HS_FULL)
@@ -1236,9 +1234,6 @@ int player_hunger_rate(bool temp)
 {
     int hunger = 3;
 
-    if (temp && you.form == TRAN_BAT && you.species == SP_VAMPIRE)
-        return 1;
-
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
@@ -1269,25 +1264,20 @@ int player_hunger_rate(bool temp)
         {
         case HS_FAINTING:
         case HS_STARVING:
-        case HS_NEAR_STARVING:
             hunger -= 3;
             break;
+        case HS_NEAR_STARVING:
         case HS_VERY_HUNGRY:
-            hunger -= 2;
-            break;
         case HS_HUNGRY:
             hunger--;
             break;
         case HS_SATIATED:
             break;
         case HS_FULL:
-            hunger++;
-            break;
         case HS_VERY_FULL:
+        case HS_ENGORGED:
             hunger += 2;
             break;
-        case HS_ENGORGED:
-            hunger += 3;
         }
     }
     else
@@ -1476,7 +1466,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (you.hunger_state <= HS_NEAR_STARVING)
+            if (you.hunger_state <= HS_STARVING)
                 rc += 2;
             else if (you.hunger_state < HS_SATIATED)
                 rc++;
@@ -1917,9 +1907,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         {
         case HS_FAINTING:
         case HS_STARVING:
-        case HS_NEAR_STARVING:
             pl = 3;
             break;
+        case HS_NEAR_STARVING:
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
             pl = 2;
@@ -3144,13 +3134,11 @@ static int _stealth_mod()
             break;
 
         case HS_NEAR_STARVING:
-            species_stealth_mod += 2;
-            break;
-
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
             species_stealth_mod += 1;
             break;
+
         default:
             break;
         }
@@ -3366,37 +3354,22 @@ static void _display_vampire_status()
             attrib.push_back("do not heal.");
             break;
         case HS_NEAR_STARVING:
-            attrib.push_back("resist poison");
-            attrib.push_back("significantly resist cold");
-            attrib.push_back("strongly resist negative energy");
-            attrib.push_back("have an extremely slow metabolism");
-            attrib.push_back("heal slowly.");
-            break;
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
             attrib.push_back("resist poison");
             attrib.push_back("resist cold");
             attrib.push_back("significantly resist negative energy");
-            if (you.hunger_state == HS_HUNGRY)
-                attrib.push_back("have a slow metabolism");
-            else
-                attrib.push_back("have a very slow metabolism");
+            attrib.push_back("have a slow metabolism");
             attrib.push_back("heal slowly.");
             break;
         case HS_SATIATED:
             attrib.push_back("resist negative energy.");
             break;
         case HS_FULL:
+        case HS_VERY_FULL:
+        case HS_ENGORGED:
             attrib.push_back("have a fast metabolism");
             attrib.push_back("heal quickly.");
-            break;
-        case HS_VERY_FULL:
-            attrib.push_back("have a very fast metabolism");
-            attrib.push_back("heal quickly.");
-            break;
-        case HS_ENGORGED:
-            attrib.push_back("have an extremely fast metabolism");
-            attrib.push_back("heal extremely quickly.");
             break;
     }
 
@@ -5641,12 +5614,12 @@ void player::banish(actor* /*agent*/, const string &who, const int power,
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities
-// to 50% (hungry, very hungry) or zero (near starving, starving).
+// to 50% (hungry, very hungry, near starving) or zero (starving).
 int calc_hunger(int food_cost)
 {
     if (you.undead_state() == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED)
     {
-        if (you.hunger_state <= HS_NEAR_STARVING)
+        if (you.hunger_state <= HS_STARVING)
             return 0;
 
         return food_cost/2;
