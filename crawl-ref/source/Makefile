@@ -967,7 +967,7 @@ else
       fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
       for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
       do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % \( -type f -or -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
+    } | xargs -I% find % \( -type f -o -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
   ifneq (,$(SYS_PROPORTIONAL_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
@@ -992,7 +992,7 @@ else
       fc-list | sed 's/: .*//' | grep -Fi "/$$name";\
       for dir in /usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts;\
       do [ -d $$dir ] && echo $$dir; done;\
-    } | xargs -I% find % \( -type f -or -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
+    } | xargs -I% find % \( -type f -o -type l \) -iname $$name -print | head -n1; } 2>/dev/null)
   ifneq (,$(SYS_MONOSPACED_FONT))
     ifeq (,$(COPY_FONTS))
       DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
