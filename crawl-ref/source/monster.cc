@@ -446,7 +446,7 @@ item_def *monster::weapon(int which_attack) const
     // for various values of right.
     int weap = inv[MSLOT_WEAPON];
 
-    if (which_attack && mons_wields_two_weapons(this))
+    if (which_attack && mons_wields_two_weapons(*this))
     {
         const int offhand = _mons_offhand_weapon_index(this);
         if (offhand != NON_ITEM
@@ -522,7 +522,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     int       avail_slots = 1;
     item_def* weap2       = nullptr;
-    if (mons_wields_two_weapons(this))
+    if (mons_wields_two_weapons(*this))
     {
         if (!weap1 || hands_reqd(*weap1) != HANDS_TWO)
             avail_slots = 2;
@@ -1202,7 +1202,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     if (eslot == MSLOT_WEAPON
         || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_JEWELLERY
-        || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
+        || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*this))
     {
         if (!unequip(pitem, msg))
             return false;
@@ -1438,7 +1438,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
         return false;
     }
 
-    const bool dual_wielding = mons_wields_two_weapons(this);
+    const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
@@ -1557,7 +1557,7 @@ bool monster::wants_weapon(const item_def &weap) const
 
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
-    if (mons_wields_two_weapons(this)
+    if (mons_wields_two_weapons(*this)
         && hands_reqd(weap) == HANDS_TWO)
     {
         return false;
@@ -1589,7 +1589,7 @@ bool monster::wants_armour(const item_def &item) const
     // Monsters that are capable of dual wielding won't pick up shields.
     // Neither will monsters that are already wielding a two-hander.
     if (is_shield(item)
-        && (mons_wields_two_weapons(this)
+        && (mons_wields_two_weapons(*this)
             || mslot_item(MSLOT_WEAPON)
                && hands_reqd(*mslot_item(MSLOT_WEAPON))
                       == HANDS_TWO))
@@ -1653,7 +1653,7 @@ static int _get_monster_armour_value(const monster *mon,
 
     // Poison becomes much less valuable if the monster is
     // intrinsically resistant.
-    if (get_mons_resist(mon, MR_RES_POISON) <= 0)
+    if (get_mons_resist(*mon, MR_RES_POISON) <= 0)
         value += get_armour_res_poison(item, true);
 
     // Same for life protection.
@@ -1818,7 +1818,7 @@ static int _get_monster_jewellery_value(const monster *mon,
 
     // Poison becomes much less valuable if the monster is
     // intrinsically resistant.
-    if (get_mons_resist(mon, MR_RES_POISON) <= 0)
+    if (get_mons_resist(*mon, MR_RES_POISON) <= 0)
         value += get_jewellery_res_poison(item, true);
 
     // Same for life protection.
@@ -2904,7 +2904,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
 
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && mons_gives_xp(this, agent))
+    if (agent && mons_gives_xp(*this, *agent))
     {
         // Double the existing damage blame counts, so the unassigned xp for
         // remaining hp is effectively halved. No need to pass flags this way.
@@ -3251,7 +3251,7 @@ static int _weapons_with_prop(const monster *mon, brand_type brand,
 {
     int wielded = 0;
 
-    const mon_inv_type last_weap_slot = mons_wields_two_weapons(mon) ?
+    const mon_inv_type last_weap_slot = mons_wields_two_weapons(*mon) ?
                                         MSLOT_ALT_WEAPON :
                                         MSLOT_WEAPON;
     for (int i = MSLOT_WEAPON; i <= last_weap_slot; i++)
@@ -3771,14 +3771,14 @@ bool monster::is_insubstantial() const
 /// Is this monster completely immune to Damnation-flavoured damage?
 bool monster::res_damnation() const
 {
-    return get_mons_resist(this, MR_RES_DAMNATION);
+    return get_mons_resist(*this, MR_RES_DAMNATION);
 }
 
 int monster::res_fire() const
 {
-    int u = get_mons_resist(this, MR_RES_FIRE);
+    int u = get_mons_resist(*this, MR_RES_FIRE);
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += scan_artefacts(ARTP_FIRE);
 
@@ -3816,7 +3816,7 @@ int monster::res_fire() const
 
 int monster::res_steam() const
 {
-    int res = get_mons_resist(this, MR_RES_STEAM);
+    int res = get_mons_resist(*this, MR_RES_STEAM);
     if (wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
 
@@ -3830,9 +3830,9 @@ int monster::res_steam() const
 
 int monster::res_cold() const
 {
-    int u = get_mons_resist(this, MR_RES_COLD);
+    int u = get_mons_resist(*this, MR_RES_COLD);
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += scan_artefacts(ARTP_COLD);
 
@@ -3870,10 +3870,10 @@ int monster::res_elec() const
     // This is a variable, not a player_xx() function, so can be above 1.
     int u = 0;
 
-    u += get_mons_resist(this, MR_RES_ELEC);
+    u += get_mons_resist(*this, MR_RES_ELEC);
 
     // Don't bother checking equipment if the monster can't use it.
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += scan_artefacts(ARTP_ELECTRICITY);
 
@@ -3913,7 +3913,7 @@ int monster::res_water_drowning() const
     if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
         rw++;
 
-    if (get_mons_resist(this, MR_VUL_WATER))
+    if (get_mons_resist(*this, MR_VUL_WATER))
         rw--;
 
     return sgn(rw);
@@ -3921,7 +3921,7 @@ int monster::res_water_drowning() const
 
 int monster::res_poison(bool temp) const
 {
-    int u = get_mons_resist(this, MR_RES_POISON);
+    int u = get_mons_resist(*this, MR_RES_POISON);
 
     if (temp && has_ench(ENCH_POISON_VULN))
         u--;
@@ -3929,7 +3929,7 @@ int monster::res_poison(bool temp) const
     if (u > 0)
         return u;
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += scan_artefacts(ARTP_POISON);
 
@@ -3965,7 +3965,7 @@ bool monster::res_sticky_flame() const
 {
     return is_insubstantial()
            || wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR)
-           || get_mons_resist(this, MR_RES_STICKY_FLAME) > 0;
+           || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
 int monster::res_rotting(bool /*temp*/) const
@@ -3990,7 +3990,7 @@ int monster::res_rotting(bool /*temp*/) const
 
     if (is_insubstantial())
         res = 3;
-    if (get_mons_resist(this, MR_RES_ROTTING))
+    if (get_mons_resist(*this, MR_RES_ROTTING))
         res += 1;
 
     return min(3, res);
@@ -4025,9 +4025,9 @@ int monster::res_negative_energy(bool intrinsic_only) const
     if (!(holiness() & MH_NATURAL))
         return 3;
 
-    int u = get_mons_resist(this, MR_RES_NEG);
+    int u = get_mons_resist(*this, MR_RES_NEG);
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT && !intrinsic_only)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT && !intrinsic_only)
     {
         u += scan_artefacts(ARTP_NEGATIVE_ENERGY);
 
@@ -4059,17 +4059,17 @@ bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
     return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
-            || get_mons_resist(this, MR_RES_TORMENT) > 0;
+            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const
 {
-    return has_ench(ENCH_TORNADO) || get_mons_resist(this, MR_RES_WIND) > 0;
+    return has_ench(ENCH_TORNADO) || get_mons_resist(*this, MR_RES_WIND) > 0;
 }
 
 bool monster::res_petrify(bool /*temp*/) const
 {
-    return is_insubstantial() || get_mons_resist(this, MR_RES_PETRIFY) > 0;
+    return is_insubstantial() || get_mons_resist(*this, MR_RES_PETRIFY) > 0;
 }
 
 int monster::res_constrict() const
@@ -4087,7 +4087,7 @@ int monster::res_constrict() const
 
 bool monster::res_corr(bool calc_unid, bool items) const
 {
-    if (get_mons_resist(this, MR_RES_ACID) > 0)
+    if (get_mons_resist(*this, MR_RES_ACID) > 0)
         return true;
 
     return actor::res_corr(calc_unid, items);
@@ -4095,7 +4095,7 @@ bool monster::res_corr(bool calc_unid, bool items) const
 
 int monster::res_acid(bool calc_unid) const
 {
-    int u = max(get_mons_resist(this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
+    int u = max(get_mons_resist(*this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
@@ -4112,7 +4112,7 @@ int monster::res_acid(bool calc_unid) const
  */
 int monster::res_magic(bool calc_unid) const
 {
-    if (mons_immune_magic(this))
+    if (mons_immune_magic(*this))
         return MAG_IMMUNE;
 
     const int type_mr = (get_monster_data(type))->resist_magic;
@@ -4526,7 +4526,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
         // Ditto poison DOT, and also for flavor reasons in that case.
-        if (agent && agent->is_player() && mons_gives_xp(this, agent)
+        if (agent && agent->is_player() && mons_gives_xp(*this, *agent)
             && flavour != BEAM_SHARED_PAIN)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
@@ -5825,7 +5825,7 @@ bool monster::can_drink() const
     if (mons_class_is_stationary(type))
         return false;
 
-    if (mons_itemuse(this) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) < MONUSE_STARTING_EQUIPMENT)
         return false;
 
     // These monsters cannot drink.
@@ -5986,7 +5986,7 @@ bool monster::can_evoke_jewellery(jewellery_type jtype) const
     if (mons_class_is_stationary(type))
         return false;
 
-    if (mons_itemuse(this) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) < MONUSE_STARTING_EQUIPMENT)
         return false;
 
     switch (jtype)

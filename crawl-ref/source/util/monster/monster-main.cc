@@ -806,7 +806,7 @@ int main(int argc, char* argv[])
     {
         monster* mp = &menv[index];
         const string mname = mp->name(DESC_PLAIN, true);
-        exper += exper_value(mp);
+        exper += exper_value(*mp);
         mac += mp->armour_class();
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
@@ -1141,7 +1141,7 @@ int main(int argc, char* argv[])
         mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags,
                         colour(LIGHTRED, "breaks doors"));
 
-        mons_check_flag(mons_wields_two_weapons(&mon), monsterflags,
+        mons_check_flag(mons_wields_two_weapons(mon), monsterflags,
                         "two-weapon");
         mons_check_flag(mon.is_fighter(), monsterflags, "fighter");
         if (mon.is_archer())

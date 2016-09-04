@@ -745,7 +745,7 @@ bool melee_attack::attack()
     }
 
     if (attacker != defender && attacker->is_monster()
-        && mons_self_destructs(attacker->as_monster()))
+        && mons_self_destructs(*attacker->as_monster()))
     {
         attacker->self_destruct();
         return did_hit = perceived_attack = true;

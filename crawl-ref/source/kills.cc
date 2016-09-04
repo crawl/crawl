@@ -399,7 +399,7 @@ int Kills::num_kills(kill_monster_desc desc) const
 
 kill_def::kill_def(const monster* mon) : kills(0), exp(0)
 {
-    exp = exper_value(mon);
+    exp = exper_value(*mon);
     add_kill(mon, level_id::current());
 }
 
@@ -591,7 +591,7 @@ void kill_def::load(reader& inf)
 
 kill_ghost::kill_ghost(const monster* mon)
 {
-    exp = exper_value(mon);
+    exp = exper_value(*mon);
     place = level_id::current();
     ghost_name = mon->ghost->name;
 

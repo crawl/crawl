@@ -437,7 +437,7 @@ void gozag_check_bribe(monster* traitor)
     if (branch_bribe[branch] == 0)
         return; // Do nothing if branch isn't currently bribed.
 
-    const int base_cost = max(1, exper_value(traitor) / 20);
+    const int base_cost = max(1, exper_value(*traitor) / 20);
 
     int cost = 0;
 

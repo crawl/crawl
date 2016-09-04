@@ -1208,7 +1208,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         // winner, since self-destruction is their purpose. But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
-        else if (mons_self_destructs(mons) && MON_KILL(killer))
+        else if (mons_self_destructs(*mons) && MON_KILL(killer))
         {
             if (mons->attitude == ATT_FRIENDLY)
                 arena::faction_a.won = true;

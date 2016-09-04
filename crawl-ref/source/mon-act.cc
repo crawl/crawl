@@ -438,7 +438,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && !mons->confused() // they don't get here anyway
            && !mons->berserk_or_insane()
            && !mons->submerged()
-           && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
+           && mons_itemuse(*mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
            && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
            && mitm[mons->inv[MSLOT_WAND]].charges > 0;
@@ -753,7 +753,7 @@ static bool _handle_potion(monster& mons)
     if (mons.asleep()
         || !potion
         || !one_chance_in(3)
-        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || potion->base_type != OBJ_POTIONS)
     {
         return false;
@@ -799,7 +799,7 @@ static bool _handle_evoke_equipment(monster& mons)
         || mons_is_confused(&mons)
         || !jewel
         || !one_chance_in(3)
-        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || jewel->base_type != OBJ_JEWELLERY)
     {
         return false;
@@ -969,7 +969,7 @@ static bool _handle_scroll(monster& mons)
         || !scroll
         || mons.has_ench(ENCH_BLIND)
         || !one_chance_in(3)
-        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || silenced(mons.pos())
         || scroll->base_type != OBJ_SCROLLS)
     {
@@ -1195,7 +1195,7 @@ static bool _handle_rod(monster &mons)
         || mons_is_confused(&mons)
         || mons_is_fleeing(&mons)
         || mons.pacified()
-        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || coinflip()
         || !rod
@@ -1310,7 +1310,7 @@ static bool _handle_wand(monster& mons)
         || mons.asleep()
         || mons_is_fleeing(&mons)
         || mons.pacified()
-        || mons_itemuse(&mons) < MONUSE_STARTING_EQUIPMENT
+        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
         || !wand
@@ -1430,7 +1430,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+    if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
         && mons->type != MONS_SPECTRAL_THING)
     {
         return false;
@@ -2806,7 +2806,7 @@ static bool _handle_pickup(monster* mons)
     if (mons_eats_items(mons) && _monster_eat_item(mons))
         return false;
 
-    if (mons_itemuse(mons) < MONUSE_WEAPONS_ARMOUR)
+    if (mons_itemuse(*mons) < MONUSE_WEAPONS_ARMOUR)
         return false;
 
     // Keep neutral, charmed, and friendly monsters from
@@ -3076,7 +3076,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
            && (mons_class_flag(mons->type, M_BURROWS) || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
-        || feat_is_tree(target_grid) && mons_flattens_trees(mons)
+        || feat_is_tree(target_grid) && mons_flattens_trees(*mons)
         || target_grid == DNGN_GRATE && digs)
     {
     }
@@ -3764,7 +3764,7 @@ static bool _monster_move(monster* mons)
     }
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
-    const bool flattens_trees = mons_flattens_trees(mons);
+    const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
     // Take care of formicid/Dissolution burrowing, lerny, etc

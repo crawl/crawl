@@ -244,13 +244,13 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
 static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
 {
-    const int experience = exper_value(victim);
+    const int experience = exper_value(*victim);
 
     if (!experience || !MON_KILL(killer) || invalid_monster_index(killer_index))
         return 0;
 
     monster* mon = &menv[killer_index];
-    if (!mon->alive() || !mons_gives_xp(victim, mon))
+    if (!mon->alive() || !mons_gives_xp(*victim, *mon))
         return 0;
 
     return experience;
@@ -299,7 +299,7 @@ static void _beogh_spread_experience(int exp)
 
 static int _calc_player_experience(const monster* mons)
 {
-    int experience = exper_value(mons);
+    int experience = exper_value(*mons);
     if (!experience)
         return 0;
 
@@ -434,7 +434,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
     bool goldify = have_passive(passive_t::goldify_corpses)
-                   && mons_gives_xp(&mons, &you)
+                   && mons_gives_xp(mons, you)
                    && !force;
 
     const bool no_coinflip =
@@ -1895,7 +1895,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     const bool hard_reset    = testbits(mons->flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
     const bool fake_abjure   = mons->has_ench(ENCH_FAKE_ABJURATION);
-    const bool gives_player_xp = mons_gives_xp(mons, &you);
+    const bool gives_player_xp = mons_gives_xp(*mons, you);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons->submerged();
     bool in_transit          = false;

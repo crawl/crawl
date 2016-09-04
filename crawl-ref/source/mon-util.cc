@@ -391,15 +391,15 @@ resists_t get_mons_resists(const monster& m)
     return _apply_holiness_resists(resists, mon.holiness());
 }
 
-int get_mons_resist(const monster* mon, mon_resist_flags res)
+int get_mons_resist(const monster& mon, mon_resist_flags res)
 {
-    return get_resist(get_mons_resists(*mon), res);
+    return get_resist(get_mons_resists(mon), res);
 }
 
 // Returns true if the monster successfully resists this attempt to poison it.
-const bool monster_resists_this_poison(const monster* mons, bool force)
+const bool monster_resists_this_poison(const monster& mons, bool force)
 {
-    const int res = mons->res_poison();
+    const int res = mons.res_poison();
     if (res >= 3)
         return true;
     if (!force && res >= 1 && x_chance_in_y(2, 3))
@@ -437,7 +437,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_WEAPON:
     case EQ_STAFF:
         {
-            const mon_inv_type end = mons_wields_two_weapons(this)
+            const mon_inv_type end = mons_wields_two_weapons(*this)
                                      ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
 
             for (int i = MSLOT_WEAPON; i <= end; i = i + 1)
@@ -504,7 +504,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     {
     case EQ_WEAPON:
         {
-            const mon_inv_type end = mons_wields_two_weapons(this)
+            const mon_inv_type end = mons_wields_two_weapons(*this)
                                      ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
 
             for (int i = MSLOT_WEAPON; i <= end; i++)
@@ -567,7 +567,7 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
     int ret = 0;
 
     // TODO: do we really want to prevent randarts from working for zombies?
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int weap      = inv[MSLOT_WEAPON];
         const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
@@ -582,7 +582,7 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]) && mons_wields_two_weapons(this))
+            && is_artefact(mitm[second]) && mons_wields_two_weapons(*this))
         {
             ret += artefact_property(mitm[second], ra_prop);
         }
@@ -697,18 +697,16 @@ bool mons_class_gives_xp(monster_type mc, bool indirect)
  * @returns True if killing the monster will reward the agent with xp, false
  * otherwise.
  */
-bool mons_gives_xp(const monster* victim, const actor* agent)
+bool mons_gives_xp(const monster& victim, const actor& agent)
 {
-    ASSERT(victim && agent);
-
     const bool mon_killed_friend
-        = agent->is_monster() && mons_aligned(victim, agent);
-    return !victim->is_summoned()                   // no summons
-        && !victim->has_ench(ENCH_ABJ)              // not-really-summons
-        && !victim->has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
-        && mons_class_gives_xp(victim->type)        // class must reward xp
-        && !testbits(victim->flags, MF_WAS_NEUTRAL) // no neutral monsters
-        && !testbits(victim->flags, MF_NO_REWARD)   // no reward for no_reward
+        = agent.is_monster() && mons_aligned(&victim, &agent);
+    return !victim.is_summoned()                   // no summons
+        && !victim.has_ench(ENCH_ABJ)              // not-really-summons
+        && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
+        && mons_class_gives_xp(victim.type)        // class must reward xp
+        && !testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
+        && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
         && !mon_killed_friend;
 }
 
@@ -1145,9 +1143,9 @@ void discover_mimic(const coord_def& pos)
         discover_mimic(pos);
 }
 
-void discover_shifter(monster* shifter)
+void discover_shifter(monster& shifter)
 {
-    shifter->flags |= MF_KNOWN_SHIFTER;
+    shifter.flags |= MF_KNOWN_SHIFTER;
 }
 
 bool mons_is_demon(monster_type mc)
@@ -1562,12 +1560,12 @@ mon_itemuse_type mons_class_itemuse(monster_type mc)
     return smc->gmon_use;
 }
 
-mon_itemuse_type mons_itemuse(const monster* mon)
+mon_itemuse_type mons_itemuse(const monster& mon)
 {
-    if (mons_enslaved_soul(mon))
-        return mons_class_itemuse(mons_zombie_base(mon));
+    if (mons_enslaved_soul(&mon))
+        return mons_class_itemuse(mons_zombie_base(&mon));
 
-    return mons_class_itemuse(mon->type);
+    return mons_class_itemuse(mon.type);
 }
 
 int mons_class_colour(monster_type mc)
@@ -2016,9 +2014,9 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
-bool mons_immune_magic(const monster* mon)
+bool mons_immune_magic(const monster& mon)
 {
-    return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
+    return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;
 }
 
 bool mons_skeleton(monster_type mc)
@@ -2031,9 +2029,9 @@ bool mons_zombifiable(monster_type mc)
     return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
 }
 
-bool mons_flattens_trees(const monster* mon)
+bool mons_flattens_trees(const monster& mon)
 {
-    return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
+    return mons_base_type(&mon) == MONS_LERNAEAN_HYDRA;
 }
 
 bool mons_class_res_wind(monster_type mc)
@@ -2177,27 +2175,27 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
     return me->avg_hp_10x * 133 / 1000;
 }
 
-int exper_value(const monster* mon, bool real)
+int exper_value(const monster& mon, bool real)
 {
     int x_val = 0;
 
     // These four are the original arguments.
-    const monster_type mc = mon->type;
-    int hd                = mon->get_experience_level();
-    int maxhp             = mon->max_hit_points;
+    const monster_type mc = mon.type;
+    int hd                = mon.get_experience_level();
+    int maxhp             = mon.max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
     // up the exact value anyway. Especially for pillusions.
-    if (real || mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
+    if (real || mon.type == MONS_PLAYER_GHOST || mon.type == MONS_PLAYER_ILLUSION)
     {
         // A berserking monster is much harder, but the xp value shouldn't
         // depend on whether it was berserk at the moment of death.
-        if (mon->has_ench(ENCH_BERSERK))
+        if (mon.has_ench(ENCH_BERSERK))
             maxhp = (maxhp * 2 + 1) / 3;
     }
     else
     {
-        const monsterentry *m = get_monster_data(mons_base_type(mon));
+        const monsterentry *m = get_monster_data(mons_base_type(&mon));
         ASSERT(m);
 
         // Use real hd, zombies would use the basic species and lose
@@ -2213,16 +2211,16 @@ int exper_value(const monster* mon, bool real)
     // Hacks to make merged slime creatures not worth so much exp. We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
-    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
-        maxhp /= mon->blob_size;
+    if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
+        maxhp /= mon.blob_size;
 
     // These are some values we care about.
-    const int speed       = mons_base_speed(mon);
+    const int speed       = mons_base_speed(&mon);
     const int modifier    = _mons_exp_mod(mc);
     const int item_usage  = mons_itemuse(mon);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mon->has_spells();
+    const bool spellcaster = mon.has_spells();
 
     // Early out for no XP monsters.
     if (!mons_class_gives_xp(mc))
@@ -2236,7 +2234,7 @@ int exper_value(const monster* mon, bool real)
     // Let's look for big spells.
     if (spellcaster)
     {
-        for (const mon_spell_slot &slot : mon->spells)
+        for (const mon_spell_slot &slot : mon.spells)
         {
             switch (slot.spell)
             {
@@ -2347,11 +2345,11 @@ int exper_value(const monster* mon, bool real)
     }
 
     // Scale starcursed mass exp by what percentage of the whole it represents
-    if (mon->type == MONS_STARCURSED_MASS)
-        x_val = (x_val * mon->blob_size) / 12;
+    if (mon.type == MONS_STARCURSED_MASS)
+        x_val = (x_val * mon.blob_size) / 12;
 
     // Further reduce xp from zombies
-    if (mons_is_zombified(mon))
+    if (mons_is_zombified(&mon))
         x_val /= 2;
 
     // Reductions for big values. - bwr
@@ -2364,8 +2362,8 @@ int exper_value(const monster* mon, bool real)
     // of blobs merged. -cao
     // Has to be after the stepdown to prevent issues with 4-5 merged slime
     // creatures. -pf
-    if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
-        x_val *= mon->blob_size;
+    if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
+        x_val *= mon.blob_size;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
@@ -3020,31 +3018,31 @@ static string _get_proper_monster_name(const monster* mon)
 }
 
 // Names a previously unnamed monster.
-bool give_monster_proper_name(monster* mon, bool orcs_only)
+bool give_monster_proper_name(monster& mon, bool orcs_only)
 {
     // Already has a unique name.
-    if (mon->is_named())
+    if (mon.is_named())
         return false;
 
     // Since this is called from the various divine blessing routines,
     // don't bless non-orcs, and normally don't bless plain orcs, either.
     if (orcs_only)
     {
-        if (mons_genus(mon->type) != MONS_ORC
-            || mon->type == MONS_ORC && !one_chance_in(8))
+        if (mons_genus(mon.type) != MONS_ORC
+            || mon.type == MONS_ORC && !one_chance_in(8))
         {
             return false;
         }
     }
 
-    mon->mname = _get_proper_monster_name(mon);
-    if (!mon->props.exists("dbname"))
-        mon->props["dbname"] = mons_class_name(mon->type);
+    mon.mname = _get_proper_monster_name(&mon);
+    if (!mon.props.exists("dbname"))
+        mon.props["dbname"] = mons_class_name(mon.type);
 
-    if (mon->friendly())
-        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname));
+    if (mon.friendly())
+        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon.mname));
 
-    return mon->is_named();
+    return mon.is_named();
 }
 
 // See mons_init for initialization of mon_entry array.
@@ -3219,21 +3217,21 @@ bool mons_class_wields_two_weapons(monster_type mc)
     return mons_class_flag(mc, M_TWO_WEAPONS);
 }
 
-bool mons_wields_two_weapons(const monster* mon)
+bool mons_wields_two_weapons(const monster& mon)
 {
-    if (testbits(mon->flags, MF_TWO_WEAPONS))
+    if (testbits(mon.flags, MF_TWO_WEAPONS))
         return true;
 
-    return mons_class_wields_two_weapons(mons_base_type(mon));
+    return mons_class_wields_two_weapons(mons_base_type(&mon));
 }
 
-bool mons_self_destructs(const monster* m)
+bool mons_self_destructs(const monster& m)
 {
-    return m->type == MONS_GIANT_SPORE
-        || m->type == MONS_BALL_LIGHTNING
-        || m->type == MONS_LURKING_HORROR
-        || m->type == MONS_ORB_OF_DESTRUCTION
-        || m->type == MONS_FULMINANT_PRISM;
+    return m.type == MONS_GIANT_SPORE
+        || m.type == MONS_BALL_LIGHTNING
+        || m.type == MONS_LURKING_HORROR
+        || m.type == MONS_ORB_OF_DESTRUCTION
+        || m.type == MONS_FULMINANT_PRISM;
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
@@ -3365,7 +3363,7 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
         && !testbits(mon->flags, MF_NO_REWARD))
     {
         // Give the player half of the monster's XP.
-        gain_exp((exper_value(mon) + 1) / 2);
+        gain_exp((exper_value(*mon) + 1) / 2);
     }
     mon->flags |= MF_PACIFIED;
 
@@ -3916,7 +3914,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 
 static bool _mons_can_open_doors(const monster* mon)
 {
-    return mons_itemuse(mon) >= MONUSE_OPEN_DOORS;
+    return mons_itemuse(*mon) >= MONUSE_OPEN_DOORS;
 }
 
 // Some functions that check whether a monster can open/eat/pass a
@@ -4714,7 +4712,7 @@ const char* mons_class_name(monster_type mc)
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
 {
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(mon, real) / (1 + factor);
+    const int tension = exper_value(*mon, real) / (1 + factor);
 
     if (tension <= 0)
     {
