@@ -1259,9 +1259,6 @@ static void _zin_saltify(monster* mon)
     if (monster *pillar = create_monster(
                         mgen_data(MONS_PILLAR_OF_SALT,
                                   BEH_HOSTILE,
-                                  0,
-                                  0,
-                                  0,
                                   where,
                                   MHITNOT,
                                   MG_FORCE_PLACE).set_base(pillar_type),
@@ -2355,9 +2352,8 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
     if (radius_points[chosen_idx].size() < min_spawn)
         return 0;
 
-    mgen_data temp(MONS_TOADSTOOL,
-                   BEH_GOOD_NEUTRAL, 0, 0, 0,
-                   coord_def(), MHITNOT, MG_FORCE_PLACE);
+    mgen_data temp(MONS_TOADSTOOL, BEH_GOOD_NEUTRAL, coord_def(), MHITNOT,
+                   MG_FORCE_PLACE);
     temp.set_col(corpse.get_colour());
 
     float target_arc_len = 2 * sqrtf(2.0f);
@@ -2443,9 +2439,6 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
             monster *mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
                                   BEH_GOOD_NEUTRAL,
-                                  0,
-                                  0,
-                                  0,
                                   current,
                                   MHITNOT,
                                   MG_FORCE_PLACE).set_col(corpse.get_colour()),
@@ -2560,12 +2553,10 @@ int fedhas_fungal_bloom()
                     if (create_monster(
                                 mgen_data(MONS_TOADSTOOL,
                                           BEH_GOOD_NEUTRAL,
-                                          &you,
-                                          0,
-                                          0,
                                           pos,
                                           MHITNOT,
-                                          MG_FORCE_PLACE).set_col(colour),
+                                          MG_FORCE_PLACE).set_col(colour)
+                                       .set_summoned(&you, 0, 0),
                                           false))
                     {
                         seen_mushrooms++;
@@ -2648,13 +2639,11 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
 
     if (monster *plant = create_monster(mgen_data(MONS_PLANT,
                                             BEH_FRIENDLY,
-                                            &you,
-                                            0,
-                                            0,
                                             target,
                                             MHITNOT,
                                             MG_FORCE_PLACE,
-                                            GOD_FEDHAS)))
+                                            GOD_FEDHAS)
+                                        .set_summoned(&you, 0, 0)))
     {
         plant->flags |= MF_NO_REWARD;
         plant->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -3179,13 +3168,11 @@ int fedhas_rain(const coord_def &target)
                 if (create_monster(mgen_data(
                                       coinflip() ? MONS_PLANT : MONS_FUNGUS,
                                       BEH_GOOD_NEUTRAL,
-                                      &you,
-                                      0,
-                                      0,
                                       *rad,
                                       MHITNOT,
                                       MG_FORCE_PLACE,
-                                      GOD_FEDHAS)))
+                                      GOD_FEDHAS)
+                                   .set_summoned(&you, 0, 0)))
                 {
                     spawned_count++;
                 }
@@ -3325,13 +3312,11 @@ int fedhas_corpse_spores(beh_type attitude)
 
         if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                attitude,
-                                               &you,
-                                               0,
-                                               0,
                                                si->pos,
                                                MHITNOT,
                                                MG_FORCE_PLACE,
-                                               GOD_FEDHAS)))
+                                               GOD_FEDHAS)
+                                            .set_summoned(&you, 0, 0)))
         {
             plant->flags |= MF_NO_REWARD;
 

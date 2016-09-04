@@ -538,10 +538,10 @@ static void _beogh_blessing_reinforcements()
         else
             follower_type = RANDOM_ELEMENT(followers);
 
-        delayed_monster(
-                         mgen_data(follower_type, BEH_FRIENDLY, &you, 0, 0,
-                                   you.pos(), MHITYOU, MG_NONE, GOD_BEOGH),
-                         _beogh_reinf_callback);
+        delayed_monster(mgen_data(follower_type, BEH_FRIENDLY, you.pos(),
+                                   MHITYOU)
+                        .set_summoned(&you, 0, 0, GOD_BEOGH),
+                        _beogh_reinf_callback);
     }
 }
 

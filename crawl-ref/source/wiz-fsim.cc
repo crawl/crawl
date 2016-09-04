@@ -281,7 +281,7 @@ static monster* _init_fsim()
                 you.unique_creatures.set(mtype, false);
         }
 
-        mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
+        mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false,
                                                you.pos(), MG_DONT_COME);
 
         temp.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;

@@ -558,11 +558,11 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
     create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ?
                                 BEH_HOSTILE :
-                                BEH_FRIENDLY),
-                             actor_by_mid(cloud.source), 1,
-                             SPELL_SPECTRAL_CLOUD, cloud.pos,
+                                BEH_FRIENDLY), cloud.pos,
                              (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE)
-                             .set_base(basetype));
+                    .set_base(basetype)
+                    .set_summoned(actor_by_mid(cloud.source), 1,
+                                  SPELL_SPECTRAL_CLOUD));
 }
 
 void manage_clouds()

@@ -1364,10 +1364,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
 static void _infestation_create_scarab(monster* mons)
 {
     if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
-                                                   BEH_FRIENDLY, &you, 0,
-                                                   SPELL_INFESTATION,
-                                                   mons->pos(), MHITYOU,
-                                                   MG_AUTOFOE),
+                                                   BEH_FRIENDLY, mons->pos(),
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
                                          false))
     {
         scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
@@ -1480,11 +1480,11 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                      bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
                      // Simulacra aren't summons, and we want them to stick
                      // around even after killing the necromancer.
-                     bound_soul ? nullptr : &you,
-                     0,
-                     bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
-                     mons->pos(), MHITYOU, MG_NONE,
-                     bound_soul ?
+                     mons->pos(), MHITYOU);
+        mg.set_summoned(bound_soul ? nullptr : &you,
+                        0,
+                        bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
+                        bound_soul ?
                         GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         mg.set_base(mons->type);
         if (mons->mons_species() == MONS_HYDRA)
@@ -3432,8 +3432,7 @@ void mons_felid_revive(monster* mons)
     monster *newmons =
         create_monster(
             mgen_data(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
-                             : SAME_ATTITUDE(mons)),
-                      0, 0, 0, revive_place, mons->foe));
+                             : SAME_ATTITUDE(mons)), revive_place, mons->foe));
 
     if (newmons)
     {

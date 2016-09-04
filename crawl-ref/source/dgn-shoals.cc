@@ -445,7 +445,7 @@ static void _shoals_make_plant_at(coord_def p)
     {
         // [ds] Why is hostile_at() saddled with unnecessary parameters
         // related to summoning?
-        mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+        mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, p));
         --shoals_plant_quota;
     }
 }

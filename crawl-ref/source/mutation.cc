@@ -2371,10 +2371,9 @@ void check_demonic_guardian()
             die("Invalid demonic guardian level: %d", mutlevel);
         }
 
-        monster *guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
-                                                     2, 0, you.pos(),
-                                                     MHITYOU, MG_FORCE_BEH
-                                                              | MG_AUTOFOE));
+        monster *guardian = create_monster(
+            mgen_data(mt, BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_FORCE_BEH | MG_AUTOFOE).set_summoned(&you, 2, 0));
 
         if (!guardian)
             return;

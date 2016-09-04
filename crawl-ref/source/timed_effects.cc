@@ -147,7 +147,7 @@ static void _themed_hell_summon_or_miscast()
             = spec->fiend_types[random2(spec->fiend_types.size())];
         create_monster(
                        mgen_data::hostile_at(fiend, "the effects of Hell",
-                                             true, 0, 0, you.pos()));
+                                             true, you.pos()));
     }
     else
     {
@@ -860,8 +860,8 @@ static void _jiyva_effects(int /*time_delta*/)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
-            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
-                         MHITNOT, MG_NONE, GOD_JIYVA);
+            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, newpos);
+            mg.god = GOD_JIYVA;
             mg.non_actor_summoner = "Jiyva";
 
             if (create_monster(mg))
@@ -1639,13 +1639,10 @@ void timeout_malign_gateways(int duration)
 
                 mgen_data mg = mgen_data(MONS_ELDRITCH_TENTACLE,
                                          mmark->behaviour,
-                                         caster,
-                                         0,
-                                         0,
                                          mmark->pos,
                                          MHITNOT,
-                                         MG_FORCE_PLACE,
-                                         mmark->god);
+                                         MG_FORCE_PLACE);
+                mg.set_summoned(caster, 0, 0, mmark->god);
                 if (!is_player)
                     mg.non_actor_summoner = mmark->summoner_string;
 

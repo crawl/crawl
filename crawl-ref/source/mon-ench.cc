@@ -1343,9 +1343,10 @@ static void _merfolk_avatar_song(monster* mons)
 
             for (int i = 0; i < num; ++i)
             {
-                monster* soul = create_monster(mgen_data(MONS_DROWNED_SOUL,
-                                 SAME_ATTITUDE(mons), mons, 1, SPELL_NO_SPELL,
-                                 deep_water[i], mons->foe, MG_FORCE_PLACE));
+                monster* soul = create_monster(
+                    mgen_data(MONS_DROWNED_SOUL, SAME_ATTITUDE(mons),
+                              deep_water[i], mons->foe, MG_FORCE_PLACE)
+                    .set_summoned(mons, 1, SPELL_NO_SPELL));
 
                 // Scale down drowned soul damage for low level merfolk avatars
                 if (soul)
@@ -1629,9 +1630,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
                     if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                             plant_attitude,
-                                                            nullptr,
-                                                            0,
-                                                            0,
                                                             *ai,
                                                             MHITNOT,
                                                             MG_FORCE_PLACE)))

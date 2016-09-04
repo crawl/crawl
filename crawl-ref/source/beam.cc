@@ -2785,9 +2785,6 @@ void bolt::affect_ground()
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
-                                         nullptr,
-                                         0,
-                                         0,
                                          pos(),
                                          MHITNOT,
                                          MG_FORCE_PLACE,
@@ -2964,8 +2961,8 @@ void bolt::affect_place_explosion_clouds()
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
             actor* summ = agent();
-            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 1, SPELL_FIRE_STORM,
-                         p, MHITNOT, MG_NONE, god);
+            mgen_data mg(MONS_FIRE_VORTEX, att, p, MHITNOT, MG_NONE, god);
+            mg.set_summoned(summ, 1, SPELL_FIRE_STORM);
 
             // Spell-summoned monsters need to have a live summoner.
             if (summ == nullptr || !summ->alive())
@@ -4511,9 +4508,6 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
     if (monster *pillar = create_monster(
                         mgen_data(MONS_BLOCK_OF_ICE,
                                   BEH_HOSTILE,
-                                  0,
-                                  0,
-                                  0,
                                   where,
                                   MHITNOT,
                                   MG_FORCE_PLACE).set_base(pillar_type),

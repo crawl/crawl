@@ -201,9 +201,6 @@ static monster* _do_split(monster* thing, const coord_def & target)
     // Create a new slime.
     mgen_data new_slime_data = mgen_data(thing->type,
                                          SAME_ATTITUDE(thing),
-                                         0,
-                                         0,
-                                         0,
                                          target,
                                          thing->foe,
                                          MG_FORCE_PLACE);
@@ -939,8 +936,8 @@ void treant_release_fauna(monster* mons)
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(mons),
-                            mons, 0, SPELL_NO_SPELL, mons->pos(),
-                            mons->foe);
+                            mons->pos(),  mons->foe);
+        fauna_data.set_summoned(mons, 0, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
         monster* fauna = create_monster(fauna_data);
 

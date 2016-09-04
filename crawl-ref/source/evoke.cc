@@ -257,8 +257,8 @@ static bool _evoke_horn_of_geryon(item_def &item)
 
         if (!will_anger && random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, &you, 3, SPELL_NO_SPELL, you.pos(),
-                     MHITYOU, MG_FORCE_BEH);
+        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mg.set_summoned(&you, 3, SPELL_NO_SPELL);
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
@@ -1002,11 +1002,9 @@ static bool _box_of_beasts(item_def &box)
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
-    mgen_data mg = mgen_data(MONS_MUTANT_BEAST,
-                             BEH_FRIENDLY, &you,
-                             3 + random2(3), 0,
-                             you.pos(),
-                             MHITYOU, MG_AUTOFOE);
+    mgen_data mg(MONS_MUTANT_BEAST, BEH_FRIENDLY, you.pos(), MHITYOU,
+                 MG_AUTOFOE);
+    mg.set_summoned(&you, 3 + random2(3), 0);
 
     auto &avoids = mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector();
     for (int facet = BF_FIRST; facet <= BF_LAST; ++facet)
@@ -1074,11 +1072,8 @@ static bool _sack_of_spiders(item_def &sack)
                                                  you.skill(SK_EVOCATIONS),
                                                  surge))),
                                              _sack_of_spiders_veto_mon);
-        mgen_data mg = mgen_data(mon,
-                                 BEH_FRIENDLY, &you,
-                                 3 + random2(4), 0,
-                                 you.pos(),
-                                 MHITYOU, MG_AUTOFOE);
+        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, 3 + random2(4), 0);
         if (create_monster(mg))
             success = true;
     }
@@ -1743,9 +1738,9 @@ static bool _phial_of_floods()
             attitude = BEH_HOSTILE;
         for (int n = 0; n < num; ++n)
         {
-            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, &you, 3,
-                          SPELL_NO_SPELL, elementals[n], 0,
+            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, elementals[n], 0,
                           MG_FORCE_BEH | MG_FORCE_PLACE);
+            mg.set_summoned(&you, 3, SPELL_NO_SPELL);
             mg.set_prox(PROX_CLOSE_TO_PLAYER);
             mg.hd = player_adjust_evoc_power(
                         6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15), surge);

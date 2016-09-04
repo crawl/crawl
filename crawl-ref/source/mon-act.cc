@@ -1018,8 +1018,9 @@ static bool _handle_scroll(monster& mons)
             for (int i = 0; i < count; ++i)
             {
                 create_monster(
-                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)), &mons,
-                              3, MON_SUMM_SCROLL, mons.pos(), mons.foe));
+                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
+                              mons.pos(), mons.foe)
+                    .set_summoned(&mons, 3, MON_SUMM_SCROLL));
             }
         }
         break;
@@ -3388,7 +3389,7 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
         attitude = BEH_GOOD_NEUTRAL;
 
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
-                                              nullptr, 0, 0, position, MHITNOT,
+                                              position, MHITNOT,
                                               MG_FORCE_PLACE));
 
     if (!plant)
@@ -3755,10 +3756,8 @@ static bool _monster_move(monster* mons)
         {
             const coord_def target(mons->pos() + mmov);
             create_monster(
-                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), mons,
-                          2, MON_SUMM_ANIMATE,
-                          target, MHITNOT,
-                          MG_NONE, GOD_LUGONU));
+                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), target)
+                    .set_summoned(mons, 2, MON_SUMM_ANIMATE, GOD_LUGONU));
             destroy_wall(target);
         }
     }

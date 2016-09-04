@@ -85,10 +85,8 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     for (int i = 0; i < how_many; ++i)
     {
         if (create_monster(
-                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, &you,
-                          3, SPELL_SUMMON_BUTTERFLIES,
-                          you.pos(), MHITYOU,
-                          MG_NONE, god)))
+                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU)
+                .set_summoned(&you, 3, SPELL_SUMMON_BUTTERFLIES, god)))
         {
             success = true;
         }
@@ -112,10 +110,8 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
         mon = MONS_QUOKKA;
 
     if (!create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
-                      3, SPELL_SUMMON_SMALL_MAMMAL,
-                      you.pos(), MHITYOU,
-                      MG_AUTOFOE, god)))
+            mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
+            .set_summoned(&you, 3, SPELL_SUMMON_SMALL_MAMMAL, god)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -187,9 +183,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         }
         else
             mon = MONS_BALL_PYTHON;
-        if (monster *snake = create_monster(mgen_data(mon, BEH_FRIENDLY, &you,
-                                      0, SPELL_STICKS_TO_SNAKES, you.pos(),
-                                      MHITYOU, MG_AUTOFOE, god), false))
+        if (monster *snake = create_monster(
+                mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
+                .set_summoned(&you, 0, SPELL_STICKS_TO_SNAKES, god),
+              false))
         {
             count++;
             dec_inv_item_quantity(letter_to_index(stick->slot), 1);
@@ -236,11 +233,8 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (!create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
-                      dur, SPELL_CALL_CANINE_FAMILIAR,
-                      you.pos(),
-                      MHITYOU,
-                      MG_AUTOFOE, god)))
+            mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
+            .set_summoned(&you, dur, SPELL_CALL_CANINE_FAMILIAR, god)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -253,10 +247,9 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     fail_check();
     const int dur = min(2 + (random2(pow) / 4), 4);
 
-    mgen_data ice_beast = mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
-                                    dur, SPELL_SUMMON_ICE_BEAST,
-                                    you.pos(), MHITYOU,
-                                    MG_AUTOFOE, god);
+    mgen_data ice_beast = mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, you.pos(),
+                                    MHITYOU, MG_AUTOFOE);
+    ice_beast.set_summoned(&you, dur, SPELL_SUMMON_ICE_BEAST, god);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
@@ -287,12 +280,10 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
 
     const int hd_bonus = div_rand_round(pow - 50, 25);
 
-    mgen_data mdata = mgen_data(type, BEH_COPY, caster, 4,
-                                SPELL_MONSTROUS_MENAGERIE, caster->pos(),
-                                (caster->is_player()) ?
-                                    MHITYOU : caster->as_monster()->foe,
-                                MG_AUTOFOE | MG_DONT_CAP, god);
-
+    mgen_data mdata(type, BEH_COPY, caster->pos(),
+                    caster->is_player() ? MHITYOU : caster->as_monster()->foe,
+                    MG_AUTOFOE | MG_DONT_CAP);
+    mdata.set_summoned(caster, 4, SPELL_MONSTROUS_MENAGERIE);
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD +  hd_bonus;
 
@@ -347,11 +338,11 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     const int heads = max(4, min(random2(pow) / 6, maxheads));
 
     // Duration is always very short - just 1.
-    mgen_data mg(MONS_HYDRA, BEH_COPY, caster,
-                 1, SPELL_SUMMON_HYDRA, caster->pos(),
-                 (caster->is_player()) ?
-                    MHITYOU : caster->as_monster()->foe,
-                 MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god);
+    mgen_data mg(MONS_HYDRA, BEH_COPY, caster->pos(),
+                 caster->is_player() ? MHITYOU : caster->as_monster()->foe,
+                 MG_AUTOFOE);
+    mg.set_summoned(caster, 1, SPELL_SUMMON_HYDRA,
+                    (god == GOD_NO_GOD) ? caster->deity() : god);
     mg.props[MGEN_NUM_HEADS] = heads;
     if (monster *hydra = create_monster(mg))
     {
@@ -440,10 +431,9 @@ static bool _place_dragon()
             continue;
 
         const coord_def pos = spots[random2(spots.size())];
-        monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
-                                                   2, SPELL_DRAGON_CALL,
-                                                   pos, MHITYOU,
-                                                   MG_FORCE_PLACE | MG_AUTOFOE));
+        monster *dragon = create_monster(
+            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_FORCE_PLACE | MG_AUTOFOE)
+            .set_summoned(&you, 2, SPELL_DRAGON_CALL));
         if (!dragon)
             continue;
 
@@ -538,7 +528,6 @@ void doom_howl(int time)
         const coord_def pos = spots[random2(spots.size())];
 
         monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
-                                                 NULL, 0, SPELL_NO_SPELL,
                                                  pos, target->mindex(),
                                                  MG_FORCE_BEH));
         if (mons)
@@ -582,12 +571,11 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
-                mgen_data(mon, BEH_COPY, caster,
-                          6, SPELL_SUMMON_DRAGON,
-                          caster->pos(),
-                          (caster->is_player()) ? MHITYOU
-                            : caster->as_monster()->foe,
-                          MG_AUTOFOE, god)))
+                mgen_data(mon, BEH_COPY, caster->pos(),
+                          caster->is_player() ? MHITYOU
+                                              : caster->as_monster()->foe,
+                          MG_AUTOFOE)
+                .set_summoned(caster, 6, SPELL_SUMMON_DRAGON)))
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
@@ -605,10 +593,9 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data viper = mgen_data(MONS_MANA_VIPER, BEH_FRIENDLY, &you,
-                                2, SPELL_SUMMON_MANA_VIPER,
-                                you.pos(), MHITYOU,
-                                MG_AUTOFOE, god);
+    mgen_data viper = mgen_data(MONS_MANA_VIPER, BEH_FRIENDLY,
+                                you.pos(), MHITYOU, MG_AUTOFOE);
+    viper.set_summoned(&you, 2, SPELL_SUMMON_MANA_VIPER, god);
     viper.hd = (5 + div_rand_round(pow, 12));
 
     // Don't scale hp at the same time as their antimagic power
@@ -674,11 +661,12 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         }
     }
 
-    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, caster ? dur : 0,
-                 0, caster ? caster->pos() : you.pos(),
-                 (caster && caster->is_monster())
-                     ? ((monster*)caster)->foe : MHITYOU,
-                 MG_AUTOFOE, GOD_TROG);
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
+                 caster ? caster->pos() : you.pos(),
+                 (caster && caster->is_monster()) ? ((monster*)caster)->foe
+                                                  : MHITYOU,
+                 MG_AUTOFOE);
+    mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
 
     if (!caster)
     {
@@ -700,10 +688,10 @@ bool summon_holy_warrior(int pow, bool punish)
 {
     mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA),
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
-                 punish ? 0 : &you,
-                 punish ? 0 : min(2 + (random2(pow) / 4), 6),
-                 0, you.pos(), MHITYOU,
-                 MG_FORCE_BEH | MG_AUTOFOE, GOD_SHINING_ONE);
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE);
+    mg.set_summoned(punish ? 0 : &you,
+                    punish ? 0 : min(2 + (random2(pow) / 4), 6),
+                    SPELL_NO_SPELL, GOD_SHINING_ONE);
 
     if (punish)
     {
@@ -847,11 +835,10 @@ static void _animate_weapon(int pow, actor* target)
 
     mgen_data mg(MONS_DANCING_WEAPON,
                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                 &you,
-                 dur, SPELL_TUKIMAS_DANCE,
                  target->pos(),
                  (target_is_player || sac_love) ? MHITYOU : target->mindex(),
                  sac_love ? MG_NONE : MG_FORCE_BEH);
+    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -926,8 +913,8 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
 
-    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you, 0,
-                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, MG_NONE, god);
+    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, you.pos());
+    cbl.set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
     cbl.hd = 5 + div_rand_round(pow, 20);
 
     for (int i = 0; i < how_many; ++i)
@@ -986,9 +973,9 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
     fail_check();
 
-    mgen_data spire = mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
-                                SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
-                                MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god);
+    mgen_data spire(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, where, MHITYOU,
+                    MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    spire.set_summoned(&you, dur, SPELL_SUMMON_LIGHTNING_SPIRE,  god);
     spire.hd = max(1, div_rand_round(pow, 10));
 
     if (create_monster(spire))
@@ -1007,9 +994,9 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data golem = mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, &you, 3,
-                                SPELL_SUMMON_GUARDIAN_GOLEM, you.pos(), MHITYOU,
-                                MG_FORCE_BEH, god);
+    mgen_data golem(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, you.pos(), MHITYOU,
+                    MG_FORCE_BEH);
+    golem.set_summoned(&you, 3, SPELL_SUMMON_GUARDIAN_GOLEM, god);
     golem.hd = 4 + div_rand_round(pow, 16);
 
     monster* mons = (create_monster(golem));
@@ -1073,8 +1060,9 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
     const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (monster *imp = create_monster(
-            mgen_data(imp_type, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
-                      you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
+            mgen_data(imp_type, BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_FORCE_BEH | MG_AUTOFOE)
+            .set_summoned(&you, dur, SPELL_CALL_IMP, god)))
     {
         mpr(_imp_summon_messages[imp_type]);
 
@@ -1096,8 +1084,10 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     if (monster *demon = create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
-                          charmed ? BEH_CHARMED : BEH_HOSTILE, &you,
-                      dur, spell, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
+                       charmed ? BEH_CHARMED
+                               : BEH_HOSTILE,
+                      you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
+            .set_summoned(&you, dur, spell, god)))
     {
         success = true;
 
@@ -1211,11 +1201,10 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
     for (int i = 0; i < num; ++i)
     {
         if (monster *mons = create_monster(
-            mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, &you,
+            mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
+                      MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      (scroll ? 2 : 1),
-                      st, you.pos(), MHITYOU,
-                      MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god)
+                      .set_summoned(&you, scroll ? 2 : 1, st, god)
                       .set_place(place),
             false))
         {
@@ -1382,10 +1371,9 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     while (num_abominations-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
-                         3, SPELL_SUMMON_HORRIBLE_THINGS,
-                         you.pos(), MHITYOU,
-                         MG_FORCE_BEH | MG_AUTOFOE, god)))
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, you.pos(),
+                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
+               .set_summoned(&you, 3, SPELL_SUMMON_HORRIBLE_THINGS, god)))
         {
             count++;
             player_angers_monster(mons);
@@ -1395,10 +1383,9 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     while (num_tmons-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
-                         3, SPELL_SUMMON_HORRIBLE_THINGS,
-                         you.pos(), MHITYOU,
-                         MG_FORCE_BEH | MG_AUTOFOE, god)))
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, you.pos(),
+                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
+               .set_summoned(&you, 3, SPELL_SUMMON_HORRIBLE_THINGS, god)))
         {
             count++;
             player_angers_monster(mons);
@@ -1496,9 +1483,9 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         mpr("A forested plane collides here with a resounding crunch!");
         noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
-        mgen_data dryad_data = mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1,
-                                         SPELL_SUMMON_FOREST, caster->pos(),
-                                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god);
+        mgen_data dryad_data(MONS_DRYAD, BEH_FRIENDLY, caster->pos(),  MHITYOU,
+                             MG_FORCE_BEH | MG_AUTOFOE);
+        dryad_data.set_summoned(&you, 1, SPELL_SUMMON_FOREST, god);
         dryad_data.hd = 5 + div_rand_round(pow, 18);
 
         if (monster *dryad = create_monster(dryad_data))
@@ -1655,8 +1642,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    mgen_data mg(mon, beha, as, 0, 0, pos, hitting,
-                 MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE, god);
+    mgen_data mg(mon, beha, pos, hitting,
+                 MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    mg.set_summoned(as, 0, 0, god);
     mg.set_base(monnum);
 
     if (item.props.exists(CORPSE_HEADS))
@@ -1983,8 +1971,9 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
-    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
-                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god);
+    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, you.pos(), MHITYOU,
+                 MG_FORCE_BEH | MG_AUTOFOE);
+    mg.set_summoned(&you, 0, SPELL_SIMULACRUM, god);
     mg.set_base(corpse.mon_type);
 
     // Can't create more than the max for the monster.
@@ -2060,12 +2049,11 @@ bool monster_simulacrum(monster *mon, bool actual)
                 continue;
             }
 
-            mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
-                         SPELL_SIMULACRUM, *ri, mon->foe,
+            mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), *ri, mon->foe,
                          MG_FORCE_BEH
-                         | (cast_visible ? MG_DONT_COME : MG_NONE),
-                         mon->god);
+                         | (cast_visible ? MG_DONT_COME : MG_NONE));
             mg.set_base(si->mon_type);
+            mg.set_summoned(mon, 0, SPELL_SIMULACRUM, mon->god);
             if (si->props.exists(CORPSE_HEADS))
             {
                 if (si->props[CORPSE_HEADS].get_short() == 0)
@@ -2219,14 +2207,12 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         else
             montype = MONS_CRAWLING_CORPSE;
 
-        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe,
-                     MG_FORCE_BEH | MG_AUTOFOE, god);
+        mgen_data mg(montype, beha, *ri, foe, MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(caster, 0, 0, god);
         if (monster *mons = create_monster(mg))
         {
             // Set hit dice, AC, and HP.
             init_abomination(*mons, hd);
-
-            mons->god = god;
 
             if (num_corpses > 1)
             {
@@ -2335,10 +2321,8 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
         const monster_type mon = pick_random_wraith();
 
         if (monster *mons = create_monster(
-                mgen_data(mon,
-                          BEH_FRIENDLY, &you,
-                          3, SPELL_HAUNT,
-                          where, mi, MG_FORCE_BEH, god)))
+                mgen_data(mon, BEH_FRIENDLY, where, mi, MG_FORCE_BEH)
+                .set_summoned(&you, 3, SPELL_HAUNT, god)))
         {
             success++;
 
@@ -2483,9 +2467,9 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data mdata(MONS_SPELLFORGED_SERVITOR, BEH_FRIENDLY, &you,
-                    4, SPELL_SPELLFORGED_SERVITOR, you.pos(), MHITYOU,
-                    MG_AUTOFOE, god);
+    mgen_data mdata(MONS_SPELLFORGED_SERVITOR, BEH_FRIENDLY, you.pos(),
+                    MHITYOU, MG_AUTOFOE);
+    mdata.set_summoned(&you, 4, SPELL_SPELLFORGED_SERVITOR, god);
 
     if (monster* mon = create_monster(mdata))
         init_servitor(mon, &you);
@@ -2612,8 +2596,8 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         mgen_data mg (MONS_BATTLESPHERE,
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
-                      agent, 0, SPELL_BATTLESPHERE, agent->pos(),
-                      agent->mindex(), MG_NONE, god);
+                      agent->pos(), agent->mindex());
+        mg.set_summoned(agent, 0, SPELL_BATTLESPHERE, god);
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 
@@ -3056,8 +3040,8 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                      caster->is_player()
                                      ? BEH_FRIENDLY
                                      : SAME_ATTITUDE(caster->as_monster()),
-                                     caster, 0, SPELL_FULMINANT_PRISM,
                                      where, MHITNOT, MG_FORCE_PLACE);
+    prism_data.set_summoned(caster, 0, SPELL_FULMINANT_PRISM);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
@@ -3126,14 +3110,11 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
         end_spectral_weapon(old_mons, false);
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
-            agent->is_player() ? BEH_FRIENDLY
-                               : SAME_ATTITUDE(agent->as_monster()),
-            agent,
-            dur, SPELL_SPECTRAL_WEAPON,
-            agent->pos(),
-            agent->mindex(),
-            MG_NONE, god);
-
+                 agent->is_player() ? BEH_FRIENDLY
+                                    : SAME_ATTITUDE(agent->as_monster()),
+                 agent->pos(),
+                 agent->mindex());
+    mg.set_summoned(agent, dur, SPELL_SPECTRAL_WEAPON, god);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
