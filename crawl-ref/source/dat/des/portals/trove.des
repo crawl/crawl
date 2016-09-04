@@ -667,7 +667,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
+ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
