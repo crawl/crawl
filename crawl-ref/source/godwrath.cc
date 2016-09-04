@@ -125,7 +125,7 @@ static bool _yred_random_zombified_hostile()
 
     mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
                                            _god_wrath_name(GOD_YREDELEMNUL),
-                                           true, 0, 0, you.pos(), MG_NONE,
+                                           true, you.pos(), MG_NONE,
                                            GOD_YREDELEMNUL).set_base(z_base);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -170,7 +170,7 @@ static bool _okawaru_random_servant()
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
                                            _god_wrath_name(GOD_OKAWARU),
-                                           true, 0, 0, you.pos(), MG_NONE,
+                                           true, you.pos(), MG_NONE,
                                            GOD_OKAWARU);
 
     // Don't send dream sheep into battle, but otherwise let bands in.
@@ -193,7 +193,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
                                            _god_wrath_name(GOD_DITHMENOS),
-                                           true, 0, 0, you.pos(), MG_NONE,
+                                           true, you.pos(), MG_NONE,
                                            GOD_DITHMENOS);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -640,7 +640,7 @@ static bool _makhleb_summon_servant(monster_type servant)
 
     mgen_data temp = mgen_data::hostile_at(servant,
                                            _god_wrath_name(GOD_MAKHLEB),
-                                           true, 0, 0, you.pos(), MG_NONE,
+                                           true, you.pos(), MG_NONE,
                                            GOD_MAKHLEB);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -937,8 +937,7 @@ static bool _beogh_retribution()
             if (monster *mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        _god_wrath_name(god),
-                        true, 0, 0, you.pos(), MG_NONE, god)))
+                        _god_wrath_name(god), true, you.pos(), MG_NONE, god)))
             {
                 ASSERT(mon->weapon() != nullptr);
                 item_def& wpn(*mon->weapon());
@@ -1000,7 +999,7 @@ static bool _beogh_retribution()
 
         mgen_data temp = mgen_data::hostile_at(punisher,
                                                _god_wrath_name(god),
-                                               true, 0, 0, you.pos(),
+                                               true, you.pos(),
                                                MG_PERMIT_BANDS, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -1155,8 +1154,8 @@ static void _lugonu_minion_retribution()
             );
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true, 0,
-                                               0, you.pos(), MG_NONE, god);
+                                               _god_wrath_name(god), true,
+                                               you.pos(), MG_NONE, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1171,8 +1170,8 @@ static void _lugonu_minion_retribution()
                                                      MONS_STARCURSED_MASS);
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true, 0,
-                                               0, you.pos(), MG_NONE, god);
+                                               _god_wrath_name(god), true,
+                                               you.pos(), MG_NONE, god);
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
         if (create_monster(temp, false))
@@ -1388,7 +1387,7 @@ static void _jiyva_summon_slimes()
         mgen_data temp =
             mgen_data::hostile_at(static_cast<monster_type>(slime),
                                   _god_wrath_name(god),
-                                  true, 0, 0, you.pos(), MG_NONE, god);
+                                  true, you.pos(), MG_NONE, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1471,8 +1470,7 @@ static bool _fedhas_summon_plants()
     mgen_data temp =
         mgen_data::hostile_at(MONS_OKLOB_PLANT,
                               _god_wrath_name(god),
-                              false, 0, 0,
-                              coord_def(-1, -1),
+                              false, coord_def(-1, -1),
                               MG_FORCE_PLACE, god);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -1604,11 +1602,12 @@ static bool _dithmenos_retribution()
         {
             if (create_monster(
                     mgen_data(
-                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, 0,
-                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, MG_NONE, god)
+                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
+                              MG_NONE, god)
                             .set_place(level_id(BRANCH_DUNGEON,
                                                 min(27,
                                                     you.experience_level + 5)))
+                            .set_summoned(nullptr, 4, MON_SUMM_WRATH)
                             .set_non_actor_summoner(_god_wrath_name(god))))
             {
                 count++;
@@ -1675,8 +1674,8 @@ static void _qazlal_summon_elementals()
                                              you.experience_level);
 
         mgen_data temp =
-            mgen_data::hostile_at(mon, _god_wrath_name(god),
-                                  true, 0, 0, you.pos(), MG_NONE, god);
+            mgen_data::hostile_at(mon, _god_wrath_name(god), true, you.pos(),
+                                  MG_NONE, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 

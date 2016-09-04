@@ -113,32 +113,18 @@ struct mgen_data
 
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
-              const actor* sner = nullptr,
-              int abj = 0,
-              int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
               mgen_flags genflags = MG_NONE,
               god_type which_god = GOD_NO_GOD)
 
-        : cls(mt), behaviour(beh), summoner(sner), abjuration_duration(abj),
-          summon_type(st), pos(p), foe(mfoe), flags(genflags), god(which_god),
+        : cls(mt), behaviour(beh), summoner(nullptr), abjuration_duration(0),
+          summon_type(0), pos(p), foe(mfoe), flags(genflags), god(which_god),
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
           extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
           initial_shifter(RANDOM_MONSTER)
-    {
-        ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
-               || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
-               || mt == MONS_BATTLESPHERE
-               || summon_type == SPELL_STICKS_TO_SNAKES
-               || summon_type == SPELL_DEATH_CHANNEL
-               || summon_type == SPELL_BIND_SOULS
-               || summon_type == SPELL_SIMULACRUM
-               || summon_type == SPELL_AWAKEN_VINES
-               || summon_type == SPELL_FULMINANT_PRISM
-               || summon_type == SPELL_INFESTATION);
-    }
+    { }
 
     mgen_data &set_non_actor_summoner(string nas)
     {
@@ -170,6 +156,28 @@ struct mgen_data
         return *this;
     }
 
+    mgen_data &set_summoned(const actor* _summoner, int abjuration_dur,
+                            int _summon_type, god_type _god = GOD_NO_GOD)
+    {
+        summoner = _summoner;
+        abjuration_duration = abjuration_dur;
+        summon_type = _summon_type;
+        if (_god != GOD_NO_GOD)
+            god = _god;
+
+        ASSERT(summon_type == 0 || abjuration_dur >= 1 && abjuration_dur <= 6
+               || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
+               || cls == MONS_BATTLESPHERE
+               || summon_type == SPELL_STICKS_TO_SNAKES
+               || summon_type == SPELL_DEATH_CHANNEL
+               || summon_type == SPELL_BIND_SOULS
+               || summon_type == SPELL_SIMULACRUM
+               || summon_type == SPELL_AWAKEN_VINES
+               || summon_type == SPELL_FULMINANT_PRISM
+               || summon_type == SPELL_INFESTATION);
+        return *this;
+    }
+
     bool permit_bands() const
     {
         // The permit flag is set but the forbid flag is not.
@@ -189,24 +197,19 @@ struct mgen_data
                                 const coord_def &where,
                                 mgen_flags genflags = MG_NONE)
     {
-        return mgen_data(what, BEH_SLEEP, 0, 0, MF_NO_FLAGS, where,
-                         MHITNOT, genflags);
+        return mgen_data(what, BEH_SLEEP, where, MHITNOT, genflags);
     }
 
     static mgen_data hostile_at(monster_type mt,
                                 string nsummoner,
                                 bool alert = false,
-                                int abj = 0,
-                                int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
                                 mgen_flags genflags = MG_NONE,
                                 god_type ngod = GOD_NO_GOD)
 
     {
-        return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
-                         alert ? MHITYOU : MHITNOT,
-                         genflags, ngod)
-                         .set_non_actor_summoner(nsummoner);
+        return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT,
+                         genflags, ngod).set_non_actor_summoner(nsummoner);
     }
 };
 

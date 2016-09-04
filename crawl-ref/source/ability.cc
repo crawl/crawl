@@ -2685,7 +2685,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_JIYVA_CALL_JELLY:
     {
         fail_check();
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, you.pos(),
+        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos(),
                      MHITNOT, MG_NONE, GOD_JIYVA);
 
         mg.non_actor_summoner = "Jiyva";

@@ -1084,8 +1084,8 @@ static void _xom_send_allies(int sever)
     {
         monster_type mon_type = _xom_random_demon(sever);
 
-        mgen_data mg(mon_type, BEH_FRIENDLY, &you, 3, MON_SUMM_AID,
-                     you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
 
         // Even though the friendlies are charged to you for accounting,
         // they should still show as Xom's fault if one of them kills you.
@@ -1111,8 +1111,8 @@ static void _xom_send_one_ally(int sever)
 {
     const monster_type mon_type = _xom_random_demon(sever);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, &you, 6, MON_SUMM_AID,
-                 you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
+    mg.set_summoned(&you, 6, MON_SUMM_AID, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -1431,9 +1431,8 @@ static void _xom_animate_monster_weapon(int sever)
 
     const int dur = min(2 + (random2(sever) / 5), 6);
 
-    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
-                 SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
-                 MG_NONE, GOD_XOM);
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex());
+    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -2674,9 +2673,8 @@ static void _xom_summon_hostiles(int sever)
         {
             if (create_monster(
                     mgen_data::hostile_at(
-                        RANDOM_MOBILE_MONSTER, "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
-                        GOD_XOM)))
+                        RANDOM_MOBILE_MONSTER, "Xom", true, you.pos())
+                    .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)))
             {
                 num_summoned++;
             }
@@ -2703,9 +2701,8 @@ static void _xom_summon_hostiles(int sever)
         {
             if (create_monster(
                     mgen_data::hostile_at(
-                        _xom_random_demon(sever), "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
-                        GOD_XOM)))
+                        _xom_random_demon(sever), "Xom", true, you.pos())
+                    .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)))
             {
                 num_summoned++;
             }

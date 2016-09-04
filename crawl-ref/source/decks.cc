@@ -1498,9 +1498,9 @@ static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
 
 static monster* _friendly(monster_type mt, int dur)
 {
-    return create_monster(mgen_data(mt,
-                             BEH_FRIENDLY, &you, dur, 0, you.pos(), MHITYOU,
-                             MG_AUTOFOE));
+    return create_monster(mgen_data(mt, BEH_FRIENDLY, you.pos(), MHITYOU,
+                                    MG_AUTOFOE)
+                          .set_summoned(&you, dur, 0));
 }
 
 static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
@@ -1733,8 +1733,8 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     const bool hostile = one_chance_in(power_level + 4);
 
     if (!create_monster(mgen_data(dct, hostile ? BEH_HOSTILE : BEH_FRIENDLY,
-                                  &you, 5 - power_level, 0, you.pos(), MHITYOU,
-                                  MG_AUTOFOE)))
+                                  you.pos(), MHITYOU, MG_AUTOFOE)
+                        .set_summoned(&you, 5 - power_level, 0)))
     {
         mpr("You see a puff of smoke.");
     }
@@ -1789,8 +1789,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 
     monster *mon =
         create_monster(
-            mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you,
-                      power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE),
+            mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_AUTOFOE).set_summoned(&you, power_level + 2, 0),
             false);
 
     if (!mon)
@@ -1882,8 +1882,8 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
         create_monster(
             mgen_data(result,
-                      hostile ? BEH_HOSTILE : BEH_FRIENDLY, &you,
-                      3, 0, you.pos(), MHITYOU, MG_AUTOFOE));
+                      hostile ? BEH_HOSTILE : BEH_FRIENDLY, you.pos(), MHITYOU,
+                      MG_AUTOFOE).set_summoned(&you, 3, 0));
 
         if (hostile && mons_class_flag(result, M_INVIS) && !you.can_see_invisible())
             hostile_invis = true;

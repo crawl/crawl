@@ -869,8 +869,8 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
                                                    : 1;
 
     mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, 0, 0, you.pos(), MHITYOU, MG_NONE,
-                 GOD_YREDELEMNUL);
+                 you.pos(), MHITYOU);
+    mg.set_summoned(!force_hostile ? &you : 0, 0, 0, GOD_YREDELEMNUL);
 
     if (force_hostile)
         mg.non_actor_summoner = "the anger of Yredelemnul";
@@ -1327,8 +1327,8 @@ mgen_data hepliaklqana_ancestor_gen_data()
     const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
         (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
         MONS_ANCESTOR;
-    mgen_data mg(type, BEH_FRIENDLY, &you, 0, 0, you.pos(),
-                 MHITYOU, MG_AUTOFOE, GOD_HEPLIAKLQANA);
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, 0, 0, GOD_HEPLIAKLQANA);
     mg.hd = _hepliaklqana_ally_hd();
     mg.hp = _hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
@@ -3417,8 +3417,8 @@ static void _join_jiyva()
     if (_has_jelly())
         return;
 
-    mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
-                 MHITNOT, MG_NONE, GOD_JIYVA);
+    mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos());
+    mg.set_summoned(&you, 0, 0, GOD_JIYVA);
 
     delayed_monster(mg);
     simple_god_message(" grants you a jelly!");

@@ -80,9 +80,9 @@ static bool _evoke_sceptre_of_asmodeus()
                                    1, MONS_BRIMSTONE_FIEND,
                                    0);
 
-    mgen_data mg(mon, BEH_CHARMED, &you,
-                 0, 0, you.pos(), MHITYOU,
+    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
                  MG_FORCE_BEH, you.religion);
+    mg.set_summoned(&you, 0, 0);
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     monster *m = create_monster(mg);
@@ -575,8 +575,8 @@ static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
         {
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_COMMON),
-                          SAME_ATTITUDE(mons), mons, 6, SPELL_SUMMON_DEMON,
-                          mons->pos(), mons->foe));
+                          SAME_ATTITUDE(mons), mons->pos(), mons->foe)
+                .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
         else
             cast_summon_demon(50+random2(100));
