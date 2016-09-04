@@ -912,7 +912,7 @@ bool mons_allows_beogh_now(const monster* mon)
                && !mon->is_summoned() && !mon->friendly()
                && !silenced(mon->pos()) && !mon->has_ench(ENCH_MUTE)
                && !mons_is_confused(mon) && mons_is_seeking(mon)
-               && mon->foe == MHITYOU && !mons_is_immotile(mon)
+               && mon->foe == MHITYOU && !mons_is_immotile(*mon)
                && you.visible_to(mon) && you.can_see(*mon);
 }
 
@@ -3300,12 +3300,12 @@ bool mons_just_slept(const monster* m)
 
 // Moving body parts, turning oklob flowers and so on counts as motile here.
 // So does preparing resurrect, struggling against a net, etc.
-bool mons_is_immotile(const monster* mons)
+bool mons_is_immotile(const monster& mons)
 {
-    return mons_is_firewood(*mons)
-        || mons->petrified()
-        || mons->asleep()
-        || mons->paralysed();
+    return mons_is_firewood(mons)
+        || mons.petrified()
+        || mons.asleep()
+        || mons.paralysed();
 }
 
 bool mons_is_batty(const monster* m)

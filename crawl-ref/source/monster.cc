@@ -4579,7 +4579,7 @@ void monster::petrify(actor *atk, bool force)
 
 bool monster::fully_petrify(actor *atk, bool quiet)
 {
-    bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(this) ?
+    bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(*this) ?
                          " turns to stone!" : " stops moving altogether!");
 
     add_ench(ENCH_PETRIFIED);

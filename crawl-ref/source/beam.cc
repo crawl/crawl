@@ -1939,7 +1939,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
     // asleep monsters can still be paralysed (and will be always woken by
     // trying to resist); the message might seem wrong but paralysis is
     // always visible.
-    if (!mons_is_immotile(mons)
+    if (!mons_is_immotile(*mons)
         && simple_monster_message(*mons, " suddenly stops moving!"))
     {
         mons->stop_constricting_all();
@@ -1973,7 +1973,7 @@ void bolt::apply_bolt_petrify(monster* mons)
     }
     else if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, 0, agent())))
     {
-        if (!mons_is_immotile(mons)
+        if (!mons_is_immotile(*mons)
             && simple_monster_message(*mons, " is moving more slowly."))
         {
             obvious_effect = true;
@@ -5490,7 +5490,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             && !mon->is_stationary()
             && mon->add_ench(ENCH_HASTE))
         {
-            if (!mons_is_immotile(mon)
+            if (!mons_is_immotile(*mon)
                 && simple_monster_message(*mon, " seems to speed up."))
             {
                 obvious_effect = true;
