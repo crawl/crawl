@@ -649,7 +649,7 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    int colour; // either COLOUR_INHERIT for "default", COLOUR_INDEF for any
+    int colour; // either COLOUR_INHERIT for "default", COLOUR_UNDEF for any
                 // colour upon creation, or an otherwise valid colour_t value.
 
     god_type god;
