@@ -2456,7 +2456,10 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     {
                         actor_at(dc)->move_to_pos(newpos);
                         if (act->is_player())
+                        {
+                            stop_delay(true);
                             player_pushed = true;
+                        }
                         veto_spots.push_back(newpos);
                     }
                 }
@@ -7648,6 +7651,7 @@ static void _throw_to(const monster &thrower, actor &victim,
         mprf("%s throws you!",
              (thrower_seen ? thrower_name.c_str() : "Something"));
         move_player_to_grid(chosen_dest, false);
+        stop_delay(true);
     }
     else
     {

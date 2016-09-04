@@ -4684,6 +4684,8 @@ void bolt::knockback_actor(actor *act, int dam)
         }
 
         act->move_to_pos(newpos);
+        if (act->is_player())
+            stop_delay(true);
     }
 
     if (newpos == oldpos)

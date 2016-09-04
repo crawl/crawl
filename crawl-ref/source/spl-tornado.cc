@@ -9,6 +9,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "env.h"
 #include "fineff.h"
@@ -423,6 +424,8 @@ void tornado_damage(actor *caster, int dur)
             if (mgrd(act->pos()) == act->mindex())
                 mgrd(act->pos()) = NON_MONSTER;
             act->moveto(coord_def());
+            if (act->is_player())
+                stop_delay(true);
         }
 
     // Need to check available positions again, as the damage call could
