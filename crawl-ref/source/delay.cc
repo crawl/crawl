@@ -1281,7 +1281,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             ASSERT(!ash_id);
             zin_id = true;
             mon->props["zin_id"] = true;
-            discover_shifter(mon);
+            discover_shifter(*mon);
             god_warning = uppercase_first(god_name(you.religion))
                           + " warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))

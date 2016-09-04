@@ -198,8 +198,8 @@ int get_mons_class_ac(monster_type mc) IMMUTABLE;
 int get_mons_class_ev(monster_type mc) IMMUTABLE;
 resists_t get_mons_class_resists(monster_type mc) IMMUTABLE;
 resists_t get_mons_resists(const monster& mon);
-int get_mons_resist(const monster* mon, mon_resist_flags res);
-const bool monster_resists_this_poison(const monster* mons, bool force = false);
+int get_mons_resist(const monster& mon, mon_resist_flags res);
+const bool monster_resists_this_poison(const monster& mons, bool force = false);
 
 void init_monsters();
 void init_monster_symbols();
@@ -209,14 +209,14 @@ monster *monster_at(const coord_def &pos);
 // this is the old moname()
 string mons_type_name(monster_type type, description_level_type desc);
 
-bool give_monster_proper_name(monster* mon, bool orcs_only = true);
+bool give_monster_proper_name(monster& mon, bool orcs_only = true);
 
-bool mons_flattens_trees(const monster* mon);
+bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
 bool mons_class_res_wind(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
-mon_itemuse_type mons_itemuse(const monster* mon);
+mon_itemuse_type mons_itemuse(const monster& mon);
 
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);
@@ -238,7 +238,7 @@ int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc);
 int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
-int exper_value(const monster* mon, bool real = true);
+int exper_value(const monster& mon, bool real = true);
 
 int hit_points(int avg_hp, int scale = 10);
 
@@ -246,7 +246,7 @@ int mons_class_hit_dice(monster_type mc);
 int mons_class_res_magic(monster_type type, monster_type base);
 bool mons_class_sees_invis(monster_type type, monster_type base);
 
-bool mons_immune_magic(const monster* mon);
+bool mons_immune_magic(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = false);
 
@@ -260,7 +260,7 @@ string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
 void discover_mimic(const coord_def& pos);
-void discover_shifter(monster* shifter);
+void discover_shifter(monster& shifter);
 
 bool mons_is_statue(monster_type mc);
 bool mons_is_demon(monster_type mc);
@@ -273,8 +273,8 @@ bool mons_is_avatar(monster_type mc);
 int mons_demon_tier(monster_type mc);
 
 bool mons_class_wields_two_weapons(monster_type mc);
-bool mons_wields_two_weapons(const monster* m);
-bool mons_self_destructs(const monster* m);
+bool mons_wields_two_weapons(const monster& m);
+bool mons_self_destructs(const monster& m);
 
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
@@ -532,7 +532,7 @@ string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 bool mons_class_is_threatening(monster_type mo);
 bool mons_is_threatening(const monster* mon);
 bool mons_class_gives_xp(monster_type mc, bool indirect = false);
-bool mons_gives_xp(const monster* mon, const actor* agent);
+bool mons_gives_xp(const monster& mon, const actor& agent);
 bool mons_is_notable(const monster& mon);
 
 int max_mons_charge(monster_type m);

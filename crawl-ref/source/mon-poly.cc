@@ -414,7 +414,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (could_see && shifter.ench != ENCH_NONE)
-            discover_shifter(mons);
+            discover_shifter(*mons);
     }
 
     if (old_mon_caught)
@@ -674,7 +674,7 @@ void seen_monster(monster* mons)
 
     if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (mons_gives_xp(mons, &you) && !crawl_state.game_is_arena())
+        if (mons_gives_xp(*mons, you) && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
                             true, mons);

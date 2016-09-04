@@ -1323,7 +1323,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
     if (!apply_visible_monsters([=](monster& mon)
           {
               bool affected = false;
-              if (!mons_immune_magic(&mon))
+              if (!mons_immune_magic(mon))
               {
                   const bool hostile = !mon.wont_attack();
                   const bool haste_immune = (mon.check_stasis(false)

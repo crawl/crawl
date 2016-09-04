@@ -1009,7 +1009,7 @@ static bool _beogh_retribution()
 
         // sometimes name band leader
         if (mons && one_chance_in(3))
-            give_monster_proper_name(mons);
+            give_monster_proper_name(*mons);
 
         simple_god_message(
             mons ? " sends forth an army of orcs."

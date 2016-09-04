@@ -4771,7 +4771,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // immune to being scared. Same-aligned monsters are
         // never affected, even though they aren't immune.
         // Will not further scare a monster that is already afraid.
-        if (mons_immune_magic(*mi)
+        if (mons_immune_magic(**mi)
             || !(mi->holiness() & MH_NATURAL)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
@@ -4845,7 +4845,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_immune_magic(*mi)
+        if (mons_immune_magic(**mi)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mons->has_ench(ENCH_HEXED))
@@ -4910,7 +4910,7 @@ static int _mons_control_undead(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_immune_magic(*mi)
+        if (mons_immune_magic(**mi)
             || mons_is_firewood(**mi)
             || (mons_atts_aligned(mi->attitude, mons->attitude)
                 && !mi->has_ench(bad))

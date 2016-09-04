@@ -438,7 +438,7 @@ static bool _blessing_healing(monster* mon)
     {
         // A high-HP monster might get a unique name.
         if (x_chance_in_y(mon->max_hit_points + 1, 100))
-            give_monster_proper_name(mon);
+            give_monster_proper_name(*mon);
         return true;
     }
 
@@ -509,7 +509,7 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 
     // For high level orcs, there's a chance of being named.
     if (high_level && one_chance_in(5))
-        give_monster_proper_name(mon);
+        give_monster_proper_name(*mon);
 }
 
 // If you don't currently have any followers, send a small band to help
@@ -674,7 +674,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     // If they got a good blessing (priesthood or equipment), maybe give them
     // a name.
     if (!blessing.empty())
-        give_monster_proper_name(follower);
+        give_monster_proper_name(*follower);
 
     // ~85% chance of trying to heal.
     if (blessing.empty())

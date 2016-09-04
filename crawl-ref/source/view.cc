@@ -535,7 +535,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
         // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
         {
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);

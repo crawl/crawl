@@ -2421,7 +2421,7 @@ static void _vulnerability_scroll()
         if (monster* mon = monster_at(*ri))
         {
             // If relevant, monsters have their MR halved.
-            if (!mons_immune_magic(mon))
+            if (!mons_immune_magic(*mon))
                 mon->add_ench(lowered_mr);
 
             // Annoying but not enough to turn friendlies against you.
@@ -2801,7 +2801,7 @@ void read_scroll(item_def& scroll)
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_immune_magic(*mi) || mi->is_summoned())
+            if (mons_immune_magic(**mi) || mi->is_summoned())
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))

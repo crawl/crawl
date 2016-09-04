@@ -2038,7 +2038,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (!mons->alive() || levels <= 0)
         return false;
 
-    if (monster_resists_this_poison(mons, force))
+    if (monster_resists_this_poison(*mons, force))
         return false;
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
@@ -4184,7 +4184,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     // Only count tracers as hitting creatures they could potentially affect
     if (ench_flavour_affects_monster(flavour, mon, true)
         && !(has_saving_throw() && flavour != BEAM_VIRULENCE
-             && mons_immune_magic(mon)))
+             && mons_immune_magic(*mon)))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -5264,7 +5264,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_INFESTATION:
-        rc = mons_gives_xp(mon, &you) && !mon->has_ench(ENCH_INFESTATION);
+        rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_INFESTATION);
         break;
 
     default:
@@ -5331,7 +5331,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     // Check magic resistance.
     if (has_saving_throw() && !irresistible)
     {
-        if (mons_immune_magic(mon))
+        if (mons_immune_magic(*mon))
             return MON_UNAFFECTED;
 
         // (Very) ugly things and shapeshifters will never resist
