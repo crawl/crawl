@@ -88,6 +88,9 @@ struct mgen_data
     // Fiend ... summoned by the effects of Hell.
     string          non_actor_summoner;
 
+    // This simply stores the initial shape-shifter type.
+    monster_type    initial_shifter;
+
     // A grid feature to prefer when finding a place to create monsters.
     // For instance, using DNGN_FLOOR when placing flying monsters or
     // merfolk in the Shoals will force them to appear on land.
@@ -116,21 +119,14 @@ struct mgen_data
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
               mgen_flags genflags = MG_NONE,
-              god_type which_god = GOD_NO_GOD,
-              monster_type base = MONS_NO_MONSTER,
-              int moncolour = COLOUR_INHERIT,
-              proximity_type prox = PROX_ANYWHERE,
-              level_id _place = level_id::current(),
-              int mhd = 0, int mhp = 0,
-              monster_flags_t extflags = MF_NO_FLAGS,
-              string monname = "",
-              string nas = "")
+              god_type which_god = GOD_NO_GOD)
 
         : cls(mt), behaviour(beh), summoner(sner), abjuration_duration(abj),
           summon_type(st), pos(p), foe(mfoe), flags(genflags), god(which_god),
-          base_type(base), colour(moncolour),
-          proximity(prox), place(_place), hd(mhd), hp(mhp),
-          extra_flags(extflags), mname(monname), non_actor_summoner(nas)
+          base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
+          proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
+          extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
+          initial_shifter(RANDOM_MONSTER)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
@@ -142,6 +138,36 @@ struct mgen_data
                || summon_type == SPELL_AWAKEN_VINES
                || summon_type == SPELL_FULMINANT_PRISM
                || summon_type == SPELL_INFESTATION);
+    }
+
+    mgen_data &set_non_actor_summoner(string nas)
+    {
+        non_actor_summoner = nas;
+        return *this;
+    }
+
+    mgen_data &set_place(level_id _place)
+    {
+        place = _place;
+        return *this;
+    }
+
+    mgen_data &set_prox(proximity_type prox)
+    {
+        proximity = prox;
+        return *this;
+    }
+
+    mgen_data &set_col(int col)
+    {
+        colour = col;
+        return *this;
+    }
+
+    mgen_data &set_base(monster_type base)
+    {
+        base_type = base;
+        return *this;
     }
 
     bool permit_bands() const
@@ -174,15 +200,13 @@ struct mgen_data
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
                                 mgen_flags genflags = MG_NONE,
-                                god_type ngod = GOD_NO_GOD,
-                                monster_type base = MONS_NO_MONSTER)
+                                god_type ngod = GOD_NO_GOD)
 
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, COLOUR_INHERIT,
-                         PROX_ANYWHERE, level_id::current(), 0, 0, MF_NO_FLAGS,
-                         "", nsummoner);
+                         genflags, ngod)
+                         .set_non_actor_summoner(nsummoner);
     }
 };
 

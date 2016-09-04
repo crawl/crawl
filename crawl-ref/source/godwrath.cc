@@ -126,7 +126,7 @@ static bool _yred_random_zombified_hostile()
     mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
                                            _god_wrath_name(GOD_YREDELEMNUL),
                                            true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_YREDELEMNUL, z_base);
+                                           GOD_YREDELEMNUL).set_base(z_base);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1605,11 +1605,11 @@ static bool _dithmenos_retribution()
             if (create_monster(
                     mgen_data(
                         RANDOM_MOBILE_MONSTER, BEH_HOSTILE, 0,
-                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, MG_NONE, god,
-                        MONS_NO_MONSTER, COLOUR_UNDEF, PROX_ANYWHERE,
-                        level_id(BRANCH_DUNGEON,
-                                 min(27, you.experience_level + 5)),
-                        0, 0, MF_NO_FLAGS, "", _god_wrath_name(god))))
+                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, MG_NONE, god)
+                            .set_place(level_id(BRANCH_DUNGEON,
+                                                min(27,
+                                                    you.experience_level + 5)))
+                            .set_non_actor_summoner(_god_wrath_name(god))))
             {
                 count++;
             }

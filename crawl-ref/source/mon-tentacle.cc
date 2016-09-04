@@ -220,8 +220,8 @@ static void _establish_connection(monster* tentacle,
     {
         mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
                      0, 0, last->pos, head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+                     MG_FORCE_PLACE, head->god);
+        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -265,8 +265,8 @@ static void _establish_connection(monster* tentacle,
          // place a connector
         mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
                      0, 0, current->pos, head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+                     MG_FORCE_PLACE, head->god);
+        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -1258,8 +1258,8 @@ void mons_create_tentacles(monster* head)
     {
         mgen_data mg(tent_type, SAME_ATTITUDE(head), head,
                      0, 0, adj_squares[i], head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+                     MG_FORCE_PLACE, head->god);
+        mg.set_prox(PROX_CLOSE_TO_PLAYER).set_col(head->colour);
         mg.props[MGEN_TENTACLE_CONNECT] = int(head->mid);
         if (monster *tentacle = create_monster(mg))
         {

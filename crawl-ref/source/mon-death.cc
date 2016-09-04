@@ -1485,8 +1485,8 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
                      bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
                      mons->pos(), MHITYOU, MG_NONE,
                      bound_soul ?
-                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                     mons->type);
+                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+        mg.set_base(mons->type);
         if (mons->mons_species() == MONS_HYDRA)
         {
             // No undead 0-headed hydras, sorry.

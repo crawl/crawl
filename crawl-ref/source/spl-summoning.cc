@@ -1215,8 +1215,8 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                       // This duration is only used for band members.
                       (scroll ? 2 : 1),
                       st, you.pos(), MHITYOU,
-                      MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god,
-                      MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE, place),
+                      MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god)
+                      .set_place(place),
             false))
         {
             // In the rare cases that a specific spell set of a monster will
@@ -1656,8 +1656,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting,
-                 MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE,
-                 god, monnum);
+                 MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE, god);
+    mg.set_base(monnum);
 
     if (item.props.exists(CORPSE_HEADS))
     {
@@ -1984,8 +1984,8 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
-                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
-                 corpse.mon_type);
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god);
+    mg.set_base(corpse.mon_type);
 
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
@@ -2064,7 +2064,8 @@ bool monster_simulacrum(monster *mon, bool actual)
                          SPELL_SIMULACRUM, *ri, mon->foe,
                          MG_FORCE_BEH
                          | (cast_visible ? MG_DONT_COME : MG_NONE),
-                         mon->god, si->mon_type);
+                         mon->god);
+            mg.set_base(si->mon_type);
             if (si->props.exists(CORPSE_HEADS))
             {
                 if (si->props[CORPSE_HEADS].get_short() == 0)

@@ -1264,9 +1264,7 @@ static void _zin_saltify(monster* mon)
                                   0,
                                   where,
                                   MHITNOT,
-                                  MG_FORCE_PLACE,
-                                  GOD_NO_GOD,
-                                  pillar_type),
+                                  MG_FORCE_PLACE).set_base(pillar_type),
                                   false))
     {
         // Enemies with more HD leave longer-lasting pillars of salt.
@@ -2359,12 +2357,8 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
 
     mgen_data temp(MONS_TOADSTOOL,
                    BEH_GOOD_NEUTRAL, 0, 0, 0,
-                   coord_def(),
-                   MHITNOT,
-                   MG_FORCE_PLACE,
-                   GOD_NO_GOD,
-                   MONS_NO_MONSTER,
-                   corpse.get_colour());
+                   coord_def(), MHITNOT, MG_FORCE_PLACE);
+    temp.set_col(corpse.get_colour());
 
     float target_arc_len = 2 * sqrtf(2.0f);
 
@@ -2454,10 +2448,7 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
                                   0,
                                   current,
                                   MHITNOT,
-                                  MG_FORCE_PLACE,
-                                  GOD_NO_GOD,
-                                  MONS_NO_MONSTER,
-                                  corpse.get_colour()),
+                                  MG_FORCE_PLACE).set_col(corpse.get_colour()),
                                   false);
 
             if (mushroom)
@@ -2574,10 +2565,7 @@ int fedhas_fungal_bloom()
                                           0,
                                           pos,
                                           MHITNOT,
-                                          MG_FORCE_PLACE,
-                                          GOD_NO_GOD,
-                                          MONS_NO_MONSTER,
-                                          colour),
+                                          MG_FORCE_PLACE).set_col(colour),
                                           false))
                     {
                         seen_mushrooms++;
