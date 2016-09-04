@@ -148,6 +148,29 @@ MAP
 .......
 ENDMAP
 
+NAME:       portal_desolation_entry_garden
+TAGS:       transparent no_monster_gen extra
+: desolation_portal(_G)
+SUBST:      c = 1 .:15
+SUBST:      b = 1 .:40
+SUBST:      a = 1 .:80
+MONS:       human-shaped pillar of salt / minotaur-shaped pillar of salt w:1 /\
+            dwarf-shaped pillar of salt w:3 / elf-shaped pillar of salt w:3 /\
+            orc-shaped pillar of salt w:3 / naga-shaped pillar of salt w:1 /\
+            draconian-shaped pillar of salt w:1
+KMASK:      1 = no_item_gen
+MAP
+aaaaaaaaa
+aaabbbaaa
+aabbbbbaa
+abbcccbba
+abbcOcbba
+abbcccbba
+aabbbbbaa
+aaabbbaaa
+aaaaaaaaa
+ENDMAP
+
 ##############################################################################
 # Desolation mini-ruins entries
 #
