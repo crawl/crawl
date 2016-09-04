@@ -3313,18 +3313,16 @@ bool mons_is_batty(const monster& m)
     return mons_class_flag(m.type, M_BATTY) || m.has_facet(BF_BAT);
 }
 
-bool mons_looks_stabbable(const monster* m)
+bool mons_looks_stabbable(const monster& m)
 {
-    ASSERT(m); // TODO: should be const monster &m
-    const stab_type st = find_stab_type(&you, *m);
-    return !m->friendly() && stab_bonus_denom(st) == 1; // top-tier stab
+    const stab_type st = find_stab_type(&you, m);
+    return !m.friendly() && stab_bonus_denom(st) == 1; // top-tier stab
 }
 
-bool mons_looks_distracted(const monster* m)
+bool mons_looks_distracted(const monster& m)
 {
-    ASSERT(m); // TODO: should be const monster &m
-    const stab_type st = find_stab_type(&you, *m);
-    return !m->friendly()
+    const stab_type st = find_stab_type(&you, m);
+    return !m.friendly()
            && st != STAB_NO_STAB
            && !mons_looks_stabbable(m);
 }

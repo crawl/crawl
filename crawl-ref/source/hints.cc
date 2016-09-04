@@ -771,9 +771,9 @@ static bool _mons_is_highlighted(const monster* mons)
 {
     return mons->friendly()
                && Options.friend_brand != CHATTR_NORMAL
-           || mons_looks_stabbable(mons)
+           || mons_looks_stabbable(*mons)
                && Options.stab_brand != CHATTR_NORMAL
-           || mons_looks_distracted(mons)
+           || mons_looks_distracted(*mons)
                && Options.may_stab_brand != CHATTR_NORMAL;
 }
 
