@@ -4516,9 +4516,7 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
                                   0,
                                   where,
                                   MHITNOT,
-                                  MG_FORCE_PLACE,
-                                  GOD_NO_GOD,
-                                  pillar_type),
+                                  MG_FORCE_PLACE).set_base(pillar_type),
                                   false))
     {
         // Enemies with more HD leave longer-lasting blocks of ice.

@@ -2880,7 +2880,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         if (monster* vine = create_monster(
             mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), mon,
                         0, SPELL_AWAKEN_VINES, spot, mon->foe,
-                        MG_FORCE_PLACE, mon->god, MONS_NO_MONSTER)))
+                        MG_FORCE_PLACE, mon->god)))
         {
             vine->props["vine_awakener"].get_int() = mon->mid;
             mon->props["vines_awakened"].get_int()++;
@@ -4501,7 +4501,7 @@ static void _mons_cast_spectral_orcs(monster* mons)
         if (monster *orc = create_monster(
                   mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), mons,
                           abj, SPELL_SUMMON_SPECTRAL_ORCS, fpos, mons->foe,
-                          MG_NONE, mons->god, mon)))
+                          MG_NONE, mons->god).set_base(mon)))
         {
             // set which base type this orc is pretending to be for gear
             // purposes
@@ -5946,9 +5946,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
-                          5, spell_cast, mons->pos(), mons->foe, MG_NONE, god,
-                          MONS_NO_MONSTER, COLOUR_INHERIT, PROX_ANYWHERE,
-                          place));
+                          5, spell_cast, mons->pos(), mons->foe, MG_NONE, god)
+                          .set_place(place));
         }
         return;
     }
