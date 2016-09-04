@@ -456,7 +456,7 @@ void debug_stethoscope(int mon)
     }
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat(&mons);
+    const habitat_type hab = mons_habitat(mons);
 
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);

@@ -171,7 +171,7 @@ bool trap_def::is_known(const actor* act) const
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
             // * Allied zombies won't fall through shafts. (No herding!)
-            return intel > I_BRAINLESS && mons_is_native_in_branch(mons)
+            return intel > I_BRAINLESS && mons_is_native_in_branch(*mons)
                    || player_knows && mons->wont_attack();
         }
         else
@@ -181,7 +181,7 @@ bool trap_def::is_known(const actor* act) const
             if (player_knows && mons->wont_attack())
                 return true;
 
-            return mons_is_native_in_branch(mons);
+            return mons_is_native_in_branch(*mons);
         }
     }
     die("invalid actor type");

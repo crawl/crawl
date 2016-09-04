@@ -223,7 +223,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
         simple_monster_message(mon, " turns neutral.");
 
     record_monster_defeat(&mon, KILL_PACIFIED);
-    mons_pacify(&mon, ATT_NEUTRAL);
+    mons_pacify(mon, ATT_NEUTRAL);
 
     heal_monster(mon, healed);
     return SPRET_SUCCESS;

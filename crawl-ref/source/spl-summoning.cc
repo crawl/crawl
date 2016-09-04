@@ -1230,7 +1230,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                 if (mons_class_is_zombified(mons->type))
                     define_zombie(mons, mons->base_monster, mons->type);
                 else
-                    define_monster(mons);
+                    define_monster(*mons);
                 mons->enchantments = ench;
                 mons->ench_cache = cache;
             }
@@ -1703,7 +1703,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!name.empty()
         && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
-        name_zombie(mons, monnum, name);
+        name_zombie(*mons, monnum, name);
     }
 
     // Re-equip the zombie.
@@ -2223,7 +2223,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (monster *mons = create_monster(mg))
         {
             // Set hit dice, AC, and HP.
-            init_abomination(mons, hd);
+            init_abomination(*mons, hd);
 
             mons->god = god;
 

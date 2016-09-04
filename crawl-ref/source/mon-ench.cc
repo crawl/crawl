@@ -1472,7 +1472,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_AQUATIC_LAND:
         // Aquatic monsters lose hit points every turn they spend on dry land.
-        ASSERT(mons_habitat(this) == HT_WATER || mons_habitat(this) == HT_LAVA);
+        ASSERT(mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA);
         if (monster_habitable_grid(this, grd(pos())))
         {
             del_ench(ENCH_AQUATIC_LAND);
@@ -1480,7 +1480,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
         // Zombies don't take damage from flopping about on land.
-        if (mons_is_zombified(this))
+        if (mons_is_zombified(*this))
             break;
 
         hurt(me.agent(), 1 + random2(5), BEAM_NONE);

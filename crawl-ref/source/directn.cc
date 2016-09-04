@@ -2390,7 +2390,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return true;
     case TARG_HOSTILE:
     case TARG_HOSTILE_SUBMERGED:
-        return mons_attitude(mon) == ATT_HOSTILE;
+        return mons_attitude(*mon) == ATT_HOSTILE;
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_INJURED_FRIEND:

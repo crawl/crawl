@@ -193,7 +193,7 @@ static string monster_speed(const monster& mon, const monsterentry* me,
     else
         speed += to_string(speed_max);
 
-    const mon_energy_usage& cost = mons_energy(&mon);
+    const mon_energy_usage& cost = mons_energy(mon);
     string qualifiers;
 
     bool skip_action = false;
@@ -896,7 +896,7 @@ int main(int argc, char* argv[])
         string defenses;
         if (mon.is_spiny() > 0)
             defenses += colour(YELLOW, "(spiny 5d4)");
-        if (mons_species(mons_base_type(&mon)) == MONS_MINOTAUR)
+        if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
         if (defenses != "")
             printf(" %s", defenses.c_str());

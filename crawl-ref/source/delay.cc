@@ -1247,9 +1247,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
-            if (mons_primary_habitat(mon) == HT_LAVA)
+            if (mons_primary_habitat(*mon) == HT_LAVA)
                 text += "lava";
-            else if (mons_primary_habitat(mon) == HT_WATER)
+            else if (mons_primary_habitat(*mon) == HT_WATER)
                 text += "water";
             else
                 text += "realm of bugdom";

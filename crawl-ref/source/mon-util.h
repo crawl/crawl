@@ -281,13 +281,13 @@ mon_intel_type mons_intel(const monster& mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
-habitat_type mons_habitat(const monster* mon, bool real_amphibious = false);
+habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
 habitat_type mons_class_primary_habitat(monster_type mc);
-habitat_type mons_primary_habitat(const monster* mon);
+habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
-habitat_type mons_secondary_habitat(const monster* mon);
+habitat_type mons_secondary_habitat(const monster& mon);
 
-bool intelligent_ally(const monster* mon);
+bool intelligent_ally(const monster& mon);
 
 bool mons_skeleton(monster_type mc);
 bool mons_zombifiable(monster_type mc);
@@ -295,31 +295,31 @@ bool mons_zombifiable(monster_type mc);
 int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
-mon_energy_usage mons_energy(const monster* mon);
+mon_energy_usage mons_energy(const monster& mon);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
-int mons_base_speed(const monster* mon, bool known = false);
+int mons_base_speed(const monster& mon, bool known = false);
 
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
 int mons_zombie_size(monster_type mc);
-monster_type mons_zombie_base(const monster* mon);
+monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_hybrid(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
-monster_type mons_base_type(const monster* mon);
+monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_class_leaves_hide(monster_type mc);
-bool mons_is_zombified(const monster* mons);
+bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
-bool mons_can_be_zombified(const monster* mon);
+bool mons_can_be_zombified(const monster& mon);
 bool mons_class_can_use_stairs(monster_type mc);
-bool mons_can_use_stairs(const monster* mon,
+bool mons_can_use_stairs(const monster& mon,
                          dungeon_feature_type stair = DNGN_UNSEEN);
-bool mons_enslaved_body_and_soul(const monster* mon);
-bool mons_enslaved_soul(const monster* mon);
-void name_zombie(monster* mon, monster_type mc, const string &mon_name);
-void name_zombie(monster* mon, const monster* orig);
+bool mons_enslaved_body_and_soul(const monster& mon);
+bool mons_enslaved_soul(const monster& mon);
+void name_zombie(monster& mon, monster_type mc, const string &mon_name);
+void name_zombie(monster& mon, const monster& orig);
 
 int mons_power(monster_type mc);
 
@@ -332,22 +332,22 @@ monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 monster_type random_demonspawn_monster_species();
 
-bool init_abomination(monster* mon, int hd);
-void define_monster(monster* mons);
+bool init_abomination(monster& mon, int hd);
+void define_monster(monster& mons);
 
-void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
+void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
 
 bool mons_should_fire(bolt &beam, bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
-bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
+bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
-bool mons_has_ranged_attack(const monster* mon);
-bool mons_has_known_ranged_attack(const monster* mon);
-bool mons_can_attack(const monster* mon);
-bool mons_has_incapacitating_spell(const monster* mon, const actor* foe);
-bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe);
+bool mons_has_ranged_attack(const monster& mon);
+bool mons_has_known_ranged_attack(const monster& mon);
+bool mons_can_attack(const monster& mon);
+bool mons_has_incapacitating_spell(const monster& mon, const actor& foe);
+bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
@@ -356,9 +356,9 @@ bool mons_aligned(const actor *m1, const actor *m2);
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 
 bool mons_att_wont_attack(mon_attitude_type fr);
-mon_attitude_type mons_attitude(const monster* m);
+mon_attitude_type mons_attitude(const monster& m);
 
-bool mons_is_native_in_branch(const monster* mons,
+bool mons_is_native_in_branch(const monster& mons,
                               const branch_type branch = you.where_are_you);
 
 // Whether the monster is temporarily confused (class_too = false)

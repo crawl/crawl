@@ -649,7 +649,7 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     if (attacker.is_player())
     {
         return defender.wont_attack()
-               || mons_attitude(defender.as_monster()) == ATT_NEUTRAL;
+               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL;
     }
 
     return false;

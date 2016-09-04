@@ -535,7 +535,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         const monster* mon = agent->as_monster();
 
-        beam.attitude      = mons_attitude(mon);
+        beam.attitude      = mons_attitude(*mon);
         beam.thrower       = KILL_MON_MISSILE;
     }
 

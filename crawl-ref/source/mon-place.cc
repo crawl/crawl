@@ -120,7 +120,7 @@ bool monster_habitable_grid(const monster* mon,
     // Zombified monsters enjoy the same habitat as their original,
     // except lava-based monsters.
     const monster_type mt = fixup_zombie_type(mon->type,
-                                              mons_base_type(mon));
+                                              mons_base_type(*mon));
 
     return monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN, mon->airborne());
 }
@@ -208,7 +208,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return false;
     if (mons_class_flag(mon->type, M_SUBMERGES))
     {
-        switch (mons_habitat(mon))
+        switch (mons_habitat(*mon))
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
@@ -1313,7 +1313,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         define_zombie(mon, ztype, mg.cls);
     }
     else
-        define_monster(mon);
+        define_monster(*mon);
 
     if (mon->type == MONS_MUTANT_BEAST)
     {
@@ -1984,7 +1984,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
     mon->base_monster = MONS_PROGRAM_BUG;
-    define_monster(mon);
+    define_monster(*mon);
 
     // Zombies and such can't cast spells, except they should still be
     // able to make tentacles!
@@ -3171,7 +3171,7 @@ bool can_spawn_mushrooms(coord_def where)
 
     monster dummy;
     dummy.type = MONS_TOADSTOOL;
-    define_monster(&dummy);
+    define_monster(dummy);
 
     return actor_cloud_immune(&dummy, *cloud);
 }
@@ -3185,7 +3185,7 @@ conduct_type player_will_anger_monster(monster_type type)
     if (mons_class_is_zombified(type))
         define_zombie(&dummy, MONS_GOBLIN, type);
     else
-        define_monster(&dummy);
+        define_monster(dummy);
 
     return player_will_anger_monster(dummy);
 }

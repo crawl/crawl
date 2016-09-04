@@ -280,7 +280,7 @@ bool melee_attack::handle_phase_dodged()
     {
         if (defender->is_player() ?
                 you.species == SP_MINOTAUR :
-                mons_species(mons_base_type(defender->as_monster()))
+                mons_species(mons_base_type(*defender->as_monster()))
                     == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();

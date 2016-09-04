@@ -740,7 +740,7 @@ int monster::umbra_radius() const
         return -1;
 
     // Enslaved holies get an umbra.
-    if (mons_enslaved_soul(this))
+    if (mons_enslaved_soul(*this))
         return _mons_class_halo_radius(base_monster);
 
     switch (type)

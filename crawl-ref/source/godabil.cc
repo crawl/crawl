@@ -1245,8 +1245,8 @@ static void _zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
     const monster_type pillar_type =
-        mons_is_zombified(mon) ? mons_zombie_base(mon)
-                               : mons_species(mon->type);
+        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
+                                : mons_species(mon->type);
     const int hd = mon->get_hit_dice();
 
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
@@ -1890,7 +1890,7 @@ bool yred_injury_mirror()
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_enslaved_body_and_soul(mon));
+    ASSERT(mons_enslaved_body_and_soul(*mon));
 
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
     remove_enslaved_soul_companion();
@@ -1950,7 +1950,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
 
-    name_zombie(mon, &orig);
+    name_zombie(*mon, orig);
 
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
     add_companion(mon);
@@ -2026,7 +2026,7 @@ bool kiku_receive_corpses(int pow)
         // Create corpse object.
         monster dummy;
         dummy.type = mon_type;
-        define_monster(&dummy);
+        define_monster(dummy);
         dummy.position = *ri;
 
         item_def* corpse = place_monster_corpse(dummy, true, true);
@@ -2532,7 +2532,7 @@ int fedhas_fungal_bloom()
             {
             case MONS_ZOMBIE:
                 // Maybe turn a zombie into a skeleton.
-                if (mons_skeleton(mons_zombie_base(target)))
+                if (mons_skeleton(mons_zombie_base(*target)))
                 {
                     simple_monster_message(*target, "'s flesh rots away.");
 
@@ -3961,7 +3961,7 @@ void spare_beogh_convert()
 
         ++witc;
         orc->del_ench(ENCH_CHARM);
-        mons_pacify(orc, ATT_GOOD_NEUTRAL, true);
+        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
     }
 
     you.religion = GOD_BEOGH;

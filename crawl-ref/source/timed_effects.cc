@@ -1185,8 +1185,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
     }
 
     // Don't move non-land or stationary monsters around.
-    if (mons_primary_habitat(mon) != HT_LAND
-        || mons_is_zombified(mon)
+    if (mons_primary_habitat(*mon) != HT_LAND
+        || mons_is_zombified(*mon)
            && mons_class_primary_habitat(mon->base_monster) != HT_LAND
         || mon->is_stationary())
     {
@@ -1229,7 +1229,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // restore behaviour later if we start fleeing
     unwind_var<beh_type> saved_beh(mon->behaviour);
 
-    if (!forgot && mons_has_ranged_attack(mon))
+    if (!forgot && mons_has_ranged_attack(*mon))
     {
         // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will

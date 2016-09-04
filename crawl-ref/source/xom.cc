@@ -821,7 +821,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
 static bool _choose_chaos_upgrade(const monster* mon)
 {
     // Only choose monsters that will attack.
-    if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
+    if (!mon->alive() || mons_attitude(*mon) != ATT_HOSTILE
         || mons_is_fleeing(mon))
     {
         return false;

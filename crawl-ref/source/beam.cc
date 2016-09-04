@@ -2219,7 +2219,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
     pbolt.is_tracer     = true;
     pbolt.source        = mons->pos();
     pbolt.source_id     = mons->mid;
-    pbolt.attitude      = mons_attitude(mons);
+    pbolt.attitude      = mons_attitude(*mons);
 
     // Init tracer variables.
     pbolt.foe_info.reset();
@@ -4148,7 +4148,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
 
 void bolt::update_hurt_or_helped(monster* mon)
 {
-    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+    if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
     {
         if (nasty_to(mon))
             foe_info.hurt++;
@@ -4187,7 +4187,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
              && mons_immune_magic(*mon)))
     {
         // Update friend or foe encountered.
-        if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+        if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
         {
             foe_info.count++;
             foe_info.power += mon->get_experience_level();
@@ -4331,7 +4331,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         // 1/3 damage, then power of 5 would be applied.
 
         // Counting foes is only important for monster tracers.
-        if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+        if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
         {
             foe_info.power += 2 * final * mon->get_experience_level() / preac;
             foe_info.count++;
@@ -4497,8 +4497,8 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 {
     const coord_def where = mon->pos();
     const monster_type pillar_type =
-        mons_is_zombified(mon) ? mons_zombie_base(mon)
-                               : mons_species(mon->type);
+        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
+                                : mons_species(mon->type);
     const int hd = mon->get_experience_level();
 
     simple_monster_message(*mon, " is frozen into a solid block of ice!");
@@ -5215,7 +5215,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
               || mon->holiness() & MH_DEMONIC
               || mon->holiness() & MH_HOLY)
              && !mon->is_summoned()
-             && !mons_enslaved_body_and_soul(mon)
+             && !mons_enslaved_body_and_soul(*mon)
              && mon->attitude != ATT_FRIENDLY
              && mons_intel(*mon) >= I_HUMAN
              && mon->type != MONS_PANDEMONIUM_LORD;

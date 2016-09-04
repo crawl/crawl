@@ -31,7 +31,7 @@
 void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
-    const monster_type mc = mons_base_type(mon);
+    const monster_type mc = mons_base_type(*mon);
 
     if (mons_is_tentacle_head(mc)
         || mons_is_solo_tentacle(mc))

@@ -220,7 +220,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
 
     // trj spills out jellies when polied, as if he'd been hit for mhp.
@@ -335,14 +335,14 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->number       = 0;
 
-    // Note: define_monster() will clear out all enchantments! - bwr
-    if (!slimified && mons_is_zombified(mons))
+    // Note: define_monster(*) will clear out all enchantments! - bwr
+    if (!slimified && mons_is_zombified(*mons))
         define_zombie(mons, targetc, mons->type);
     else
     {
         mons->type         = targetc;
         mons->base_monster = MONS_NO_MONSTER;
-        define_monster(mons);
+        define_monster(*mons);
     }
 
     mons->mname = name;

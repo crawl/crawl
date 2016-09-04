@@ -96,7 +96,7 @@ bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
 
 monster_type mons_tentacle_parent_type(const monster* mons)
 {
-    const monster_type mc = mons_base_type(mons);
+    const monster_type mc = mons_base_type(*mons);
 
     for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[1])
@@ -115,7 +115,7 @@ monster_type mons_tentacle_parent_type(const monster* mons)
 
 monster_type mons_tentacle_child_type(const monster* mons)
 {
-    const monster_type mc = mons_base_type(mons);
+    const monster_type mc = mons_base_type(*mons);
 
     for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[0])
@@ -134,12 +134,12 @@ monster_type mons_tentacle_child_type(const monster* mons)
 
 bool monster::is_child_tentacle() const
 {
-    return mons_is_child_tentacle(mons_base_type(this));
+    return mons_is_child_tentacle(mons_base_type(*this));
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return mons_is_child_tentacle_segment(mons_base_type(this));
+    return mons_is_child_tentacle_segment(mons_base_type(*this));
 }
 
 bool monster::is_child_monster() const
@@ -149,13 +149,13 @@ bool monster::is_child_monster() const
 
 bool monster::is_child_tentacle_of(const monster* mons) const
 {
-    return mons_base_type(mons) == mons_tentacle_parent_type(this)
+    return mons_base_type(*mons) == mons_tentacle_parent_type(this)
            && tentacle_connect == mons->mid;
 }
 
 bool monster::is_parent_monster_of(const monster* mons) const
 {
-    return mons_base_type(this) == mons_tentacle_parent_type(mons)
+    return mons_base_type(*this) == mons_tentacle_parent_type(mons)
            && mons->tentacle_connect == mid;
 }
 
@@ -163,7 +163,7 @@ bool monster::is_parent_monster_of(const monster* mons) const
 //to the parent monster
 bool mons_tentacle_adjacent(const monster* parent, const monster* child)
 {
-    return mons_is_tentacle_head(mons_base_type(parent))
+    return mons_is_tentacle_head(mons_base_type(*parent))
            && mons_is_tentacle_segment(child->type)
            && child->props.exists("inwards")
            && child->props["inwards"].get_int() == (int) parent->mid;
@@ -730,7 +730,7 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_solo_tentacle(monster* tentacle)
 {
-    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
+    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(*tentacle)))
         return;
 
     vector<coord_def> foe_positions;
@@ -957,7 +957,7 @@ void move_solo_tentacle(monster* tentacle)
 
 void move_child_tentacles(monster* mons)
 {
-    if (!mons_is_tentacle_head(mons_base_type(mons))
+    if (!mons_is_tentacle_head(mons_base_type(*mons))
         || mons->asleep())
     {
         return;
@@ -1204,7 +1204,7 @@ bool destroy_tentacles(monster* head)
 
 static int _max_tentacles(const monster* mon)
 {
-    if (mons_base_type(mon) == MONS_KRAKEN)
+    if (mons_base_type(*mon) == MONS_KRAKEN)
         return MAX_ACTIVE_KRAKEN_TENTACLES;
     else if (mon->type == MONS_TENTACLED_STARSPAWN)
         return MAX_ACTIVE_STARSPAWN_TENTACLES;
@@ -1273,7 +1273,7 @@ void mons_create_tentacles(monster* head)
         }
     }
 
-    if (mons_base_type(head) == MONS_KRAKEN)
+    if (mons_base_type(*head) == MONS_KRAKEN)
     {
         if (visible_count == 1)
             mpr("A tentacle rises from the water!");
