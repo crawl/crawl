@@ -75,6 +75,13 @@ static void _monster_greeting(monster *mons, const string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
+static mgen_data _pal_data(monster_type pal, int dur, god_type god,
+                           spell_type spell)
+{
+    return mgen_data(pal, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
+           .set_summoned(&you, dur, spell, god);
+}
+
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -84,9 +91,8 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (create_monster(
-                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU)
-                .set_summoned(&you, 3, SPELL_SUMMON_BUTTERFLIES, god)))
+        if (create_monster(_pal_data(MONS_BUTTERFLY, 3, god,
+                                     SPELL_SUMMON_BUTTERFLIES)))
         {
             success = true;
         }
@@ -109,12 +115,8 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     else
         mon = MONS_QUOKKA;
 
-    if (!create_monster(
-            mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
-            .set_summoned(&you, 3, SPELL_SUMMON_SMALL_MAMMAL, god)))
-    {
+    if (!create_monster(_pal_data(mon, 3, god, SPELL_SUMMON_SMALL_MAMMAL)))
         canned_msg(MSG_NOTHING_HAPPENS);
-    }
 
     return SPRET_SUCCESS;
 }
@@ -183,10 +185,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         }
         else
             mon = MONS_BALL_PYTHON;
-        if (monster *snake = create_monster(
-                mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
-                .set_summoned(&you, 0, SPELL_STICKS_TO_SNAKES, god),
-              false))
+        if (monster *snake = create_monster(_pal_data(mon, 0, god,
+                                                      SPELL_STICKS_TO_SNAKES),
+                                            false))
         {
             count++;
             dec_inv_item_quantity(letter_to_index(stick->slot), 1);
@@ -232,12 +233,8 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
-    if (!create_monster(
-            mgen_data(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE)
-            .set_summoned(&you, dur, SPELL_CALL_CANINE_FAMILIAR, god)))
-    {
+    if (!create_monster(_pal_data(mon, dur, god, SPELL_CALL_CANINE_FAMILIAR)))
         canned_msg(MSG_NOTHING_HAPPENS);
-    }
 
     return SPRET_SUCCESS;
 }
@@ -247,9 +244,8 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     fail_check();
     const int dur = min(2 + (random2(pow) / 4), 4);
 
-    mgen_data ice_beast = mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, you.pos(),
-                                    MHITYOU, MG_AUTOFOE);
-    ice_beast.set_summoned(&you, dur, SPELL_SUMMON_ICE_BEAST, god);
+    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, dur, god,
+                                    SPELL_SUMMON_ICE_BEAST);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
@@ -593,9 +589,8 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data viper = mgen_data(MONS_MANA_VIPER, BEH_FRIENDLY,
-                                you.pos(), MHITYOU, MG_AUTOFOE);
-    viper.set_summoned(&you, 2, SPELL_SUMMON_MANA_VIPER, god);
+    mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
+                                SPELL_SUMMON_MANA_VIPER);
     viper.hd = (5 + div_rand_round(pow, 12));
 
     // Don't scale hp at the same time as their antimagic power
@@ -994,9 +989,9 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data golem(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, you.pos(), MHITYOU,
-                    MG_FORCE_BEH);
-    golem.set_summoned(&you, 3, SPELL_SUMMON_GUARDIAN_GOLEM, god);
+    mgen_data golem = _pal_data(MONS_GUARDIAN_GOLEM, 3, god,
+                                SPELL_SUMMON_GUARDIAN_GOLEM);
+    golem.flags &= ~MG_AUTOFOE; // !!!
     golem.hd = 4 + div_rand_round(pow, 16);
 
     monster* mons = (create_monster(golem));
@@ -1059,10 +1054,9 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
-    if (monster *imp = create_monster(
-            mgen_data(imp_type, BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_FORCE_BEH | MG_AUTOFOE)
-            .set_summoned(&you, dur, SPELL_CALL_IMP, god)))
+    mgen_data imp_data = _pal_data(imp_type, dur, god, SPELL_CALL_IMP);
+    imp_data.flags |= MG_FORCE_BEH; // disable player_angers_monster()
+    if (monster *imp = create_monster(imp_data))
     {
         mpr(_imp_summon_messages[imp_type]);
 
@@ -1370,26 +1364,18 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
     while (num_abominations-- > 0)
     {
-        if (monster *mons = create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, you.pos(),
-                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
-               .set_summoned(&you, 3, SPELL_SUMMON_HORRIBLE_THINGS, god)))
-        {
-            count++;
-            player_angers_monster(mons);
-        }
+        const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, 3, god,
+                                         SPELL_SUMMON_HORRIBLE_THINGS);
+        if (create_monster(abom))
+            ++count;
     }
 
     while (num_tmons-- > 0)
     {
-        if (monster *mons = create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, you.pos(),
-                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
-               .set_summoned(&you, 3, SPELL_SUMMON_HORRIBLE_THINGS, god)))
-        {
-            count++;
-            player_angers_monster(mons);
-        }
+        const mgen_data tmons = _pal_data(MONS_TENTACLED_MONSTROSITY, 3, god,
+                                          SPELL_SUMMON_HORRIBLE_THINGS);
+        if (create_monster(tmons))
+            ++count;
     }
 
     if (!count)
@@ -1483,14 +1469,12 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         mpr("A forested plane collides here with a resounding crunch!");
         noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
-        mgen_data dryad_data(MONS_DRYAD, BEH_FRIENDLY, caster->pos(),  MHITYOU,
-                             MG_FORCE_BEH | MG_AUTOFOE);
-        dryad_data.set_summoned(&you, 1, SPELL_SUMMON_FOREST, god);
+        mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
+                                         SPELL_SUMMON_FOREST);
         dryad_data.hd = 5 + div_rand_round(pow, 18);
 
         if (monster *dryad = create_monster(dryad_data))
         {
-            player_angers_monster(dryad);
             mon_enchant abj = dryad->get_ench(ENCH_ABJ);
             abj.duration = duration - 10;
             dryad->update_ench(abj);
@@ -1971,9 +1955,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
-    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, you.pos(), MHITYOU,
-                 MG_FORCE_BEH | MG_AUTOFOE);
-    mg.set_summoned(&you, 0, SPELL_SIMULACRUM, god);
+    mgen_data mg = _pal_data(MONS_SIMULACRUM, 0, god, SPELL_SIMULACRUM);
     mg.set_base(corpse.mon_type);
 
     // Can't create more than the max for the monster.
@@ -1998,23 +1980,17 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     int count = 0;
     for (int i = 0; i < how_many; ++i)
     {
-        // Use the original monster type as the zombified type here,
-        // to get the proper stats from it.
         if (monster *sim = create_monster(mg))
         {
             count++;
-            player_angers_monster(sim);
             sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
         }
     }
 
-    if (count)
-    {
-        if (!turn_corpse_into_skeleton(corpse))
-            butcher_corpse(corpse, MB_FALSE, false);
-    }
-    else
+    if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
+    else if (!turn_corpse_into_skeleton(corpse))
+        butcher_corpse(corpse, MB_FALSE, false);
 
     return SPRET_SUCCESS;
 }
@@ -2467,9 +2443,8 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    mgen_data mdata(MONS_SPELLFORGED_SERVITOR, BEH_FRIENDLY, you.pos(),
-                    MHITYOU, MG_AUTOFOE);
-    mdata.set_summoned(&you, 4, SPELL_SPELLFORGED_SERVITOR, god);
+    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 4, god,
+                                SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
         init_servitor(mon, &you);
