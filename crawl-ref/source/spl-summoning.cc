@@ -803,7 +803,7 @@ static bool _check_tukima_validity(const actor *target)
 
         if (mons_class_is_animated_weapon(target->type))
         {
-            simple_monster_message((monster*)target,
+            simple_monster_message(*(monster*)target,
                                    " is already dancing.");
         }
         else
@@ -2463,7 +2463,7 @@ void init_servitor(monster* servitor, actor* caster)
              caster->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
-        simple_monster_message(servitor, " appears!");
+        simple_monster_message(*servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;
     for (const mon_spell_slot &slot : servitor->spells)
@@ -2535,7 +2535,7 @@ static int _abjuration(int pow, monster *mon)
 
         mon_enchant abj = mon->get_ench(ENCH_ABJ);
         if (!mon->lose_ench_duration(abj, sockage) && !shielded)
-            simple_monster_message(mon, " shudders.");
+            simple_monster_message(*mon, " shudders.");
     }
 
     return true;
@@ -2629,11 +2629,11 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             {
                 if (you.can_see(*agent) && you.can_see(*battlesphere))
                 {
-                    simple_monster_message(agent->as_monster(),
+                    simple_monster_message(*agent->as_monster(),
                                            " conjures a globe of magical energy!");
                 }
                 else if (you.can_see(*battlesphere))
-                    simple_monster_message(battlesphere, " appears!");
+                    simple_monster_message(*battlesphere, " appears!");
                 battlesphere->props["band_leader"].get_int() = agent->mid;
             }
             battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
@@ -2675,7 +2675,7 @@ void end_battlesphere(monster* mons, bool killed)
                 mpr("You feel your bond with your battlesphere wane.");
         }
         else if (you.can_see(*mons))
-            simple_monster_message(mons, " dissipates.");
+            simple_monster_message(*mons, " dissipates.");
 
         if (!cell_is_solid(mons->pos()))
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
@@ -2933,7 +2933,7 @@ bool fire_battlesphere(monster* mons)
                     != beam.path_taken.end()))
         {
             beam.thrower = (agent->is_player()) ? KILL_YOU : KILL_MON;
-            simple_monster_message(mons, " fires!");
+            simple_monster_message(*mons, " fires!");
             beam.fire();
 
             used = true;
@@ -3154,10 +3154,10 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             string buf = " draws out ";
             buf += agent->pronoun(PRONOUN_POSSESSIVE);
             buf += " weapon's spirit!";
-            simple_monster_message(agent->as_monster(), buf.c_str());
+            simple_monster_message(*agent->as_monster(), buf.c_str());
         }
         else if (you.can_see(*mons))
-            simple_monster_message(mons, " appears!");
+            simple_monster_message(*mons, " appears!");
 
         mons->props["band_leader"].get_int() = agent->mid;
         mons->foe = agent->mindex();
@@ -3185,7 +3185,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     {
         if (you.can_see(*mons))
         {
-            simple_monster_message(mons, " fades away.",
+            simple_monster_message(*mons, " fades away.",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
         }
         else if (owner && owner->is_player())

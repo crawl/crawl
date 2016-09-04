@@ -489,7 +489,7 @@ void create_sanctuary(const coord_def& center, int time)
         mprf(MSGCH_GOD, "By Zin's power, all blood is cleared from the sanctuary.");
 
     if (scare_count == 1 && seen_mon != nullptr)
-        simple_monster_message(seen_mon, " turns to flee the light!");
+        simple_monster_message(*seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
 }

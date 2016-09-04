@@ -651,7 +651,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
         if (!agent)
             mpr(global_msg);
         else if (you.can_see(*agent))
-            simple_monster_message(mons, mons_vis_msg);
+            simple_monster_message(*mons, mons_vis_msg);
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
 
@@ -1481,7 +1481,7 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
         mpr("You erupt in a fountain of uncontrolled magic!");
     else
     {
-        simple_monster_message(who->as_monster(),
+        simple_monster_message(*who->as_monster(),
                                " erupts in a fountain of uncontrolled magic!");
     }
 
@@ -1626,7 +1626,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
 
-    simple_monster_message(mon, " seems to burn from within!");
+    simple_monster_message(*mon, " seems to burn from within!");
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
@@ -2774,7 +2774,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     else
     {
         monster* mon_agent = agent->as_monster();
-        simple_monster_message(mon_agent,
+        simple_monster_message(*mon_agent,
                                " begins to radiate toxic energy.");
 
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,

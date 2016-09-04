@@ -193,7 +193,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_YRED_SLAVE:
             if (mon->type == MONS_ZOMBIE)
             {
-                simple_monster_message(mon, " crumbles into dust!");
+                simple_monster_message(*mon, " crumbles into dust!");
                 monster_die(mon, KILL_DISMISSED, NON_MONSTER);
                 break;
             }
@@ -223,12 +223,12 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (local && (act == DACT_ALLY_TROG
                           || act == DACT_ALLY_MAKHLEB))
             {
-                simple_monster_message(mon, " turns against you!");
+                simple_monster_message(*mon, " turns against you!");
             }
             break;
 
         case DACT_ALLY_HEPLIAKLQANA:
-            simple_monster_message(mon, " returns to the mists of memory.");
+            simple_monster_message(*mon, " returns to the mists of memory.");
             monster_die(mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
@@ -238,7 +238,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
-            simple_monster_message(mon, " is freed.");
+            simple_monster_message(*mon, " is freed.");
             // The monster disappears.
             monster_die(mon, KILL_DISMISSED, NON_MONSTER);
             break;
@@ -262,7 +262,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 mon->mname = "freed slave";
             }
             else if (local)
-                simple_monster_message(mon, hostile ? " turns on you!" : " becomes indifferent.");
+                simple_monster_message(*mon, hostile ? " turns on you!" : " becomes indifferent.");
             mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
             break;
         }

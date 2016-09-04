@@ -1235,7 +1235,7 @@ static int _actor_cloud_damage(const actor *act,
             mpr("You are struck by lightning!");
         else if (you.can_see(*act))
         {
-            simple_monster_message(act->as_monster(),
+            simple_monster_message(*act->as_monster(),
                                    " is struck by lightning.");
         }
         else if (you.see_cell(act->pos()))

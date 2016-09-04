@@ -143,7 +143,7 @@ bool make_god_gifts_disappear()
             && mi->has_ench(ENCH_ABJ)
             && mons_is_god_gift(*mi, god))
         {
-            if (simple_monster_message(*mi, " abandons you!"))
+            if (simple_monster_message(**mi, " abandons you!"))
                 count++;
 
             // The monster disappears.

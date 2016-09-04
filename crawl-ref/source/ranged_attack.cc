@@ -536,7 +536,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         {
             if (defender->is_monster())
             {
-                simple_monster_message(defender->as_monster(),
+                simple_monster_message(*defender->as_monster(),
                                        " is unaffected.");
             }
             else
@@ -579,7 +579,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         if (needs_message)
         {
             if (defender->is_monster())
-                simple_monster_message(defender->as_monster(), " resists.");
+                simple_monster_message(*defender->as_monster(), " resists.");
             else
                 canned_msg(MSG_YOU_RESIST);
         }

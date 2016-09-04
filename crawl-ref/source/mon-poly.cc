@@ -226,7 +226,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // trj spills out jellies when polied, as if he'd been hit for mhp.
     if (mons->type == MONS_ROYAL_JELLY)
     {
-        simple_monster_message(mons, "'s form twists and warps, and jellies "
+        simple_monster_message(*mons, "'s form twists and warps, and jellies "
                                "spill out!");
         trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
                                    mons->hit_points);
@@ -459,7 +459,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // make one, let's ban this outright.
     if (source_tier == -1)
     {
-        return simple_monster_message(mons,
+        return simple_monster_message(*mons,
             "'s appearance momentarily alters.");
     }
     relax = 1;
@@ -480,7 +480,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return simple_monster_message(mons, " shudders.");
+                return simple_monster_message(*mons, " shudders.");
         }
         while (tries-- && (!_valid_morph(mons, targetc)
                            || source_tier != target_tier && !x_chance_in_y(relax, 200)
@@ -514,7 +514,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
 
     if (!_valid_morph(mons, targetc))
-        return simple_monster_message(mons, " looks momentarily different.");
+        return simple_monster_message(*mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
 
@@ -614,7 +614,7 @@ void slimify_monster(monster* mon, bool hostile)
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, grd(mon->pos())))
     {
-        simple_monster_message(mon, " quivers momentarily.");
+        simple_monster_message(*mon, " quivers momentarily.");
         return;
     }
 

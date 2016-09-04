@@ -2310,7 +2310,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // The monster can be no more than lightly wounded/damaged.
         if (mons_get_damage_level(mons) > MDAM_LIGHTLY_DAMAGED)
         {
-            simple_monster_message(mons, "'s soul is too badly injured.");
+            simple_monster_message(*mons, "'s soul is too badly injured.");
             return SPRET_ABORT;
         }
         fail_check();

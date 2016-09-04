@@ -327,7 +327,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     {
         if (!quiet)
         {
-            simple_monster_message(mons,
+            simple_monster_message(*mons,
                 make_stringf(" is %s!", held_status(mons)).c_str());
         }
         return false;
@@ -336,14 +336,14 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (mons->is_constricted())
     {
         if (!quiet)
-            simple_monster_message(mons, " is being constricted!");
+            simple_monster_message(*mons, " is being constricted!");
         return false;
     }
 
     if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
     {
         if (!quiet)
-            simple_monster_message(mons, " cannot move out of your way!");
+            simple_monster_message(*mons, " cannot move out of your way!");
         return false;
     }
 
@@ -386,7 +386,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     {
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? - bwr
-        simple_monster_message(mons, " cannot make way for you.");
+        simple_monster_message(*mons, " cannot make way for you.");
         // FIXME: AI_HIT_MONSTER isn't ideal.
         interrupt_activity(AI_HIT_MONSTER, mons);
     }
