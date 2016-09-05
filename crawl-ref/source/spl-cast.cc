@@ -138,13 +138,13 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     // spell name
     desc << chop_string(spell_title(spell), 30);
 
-    // spell power, spell range, hunger level, level
+    // spell power, spell range, hunger level, noise
     const string rangestring = spell_range_string(spell);
 
-    desc << chop_string(spell_power_string(spell), 14)
-         << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
-         << chop_string(spell_hunger_string(spell), 12)
-         << spell_difficulty(spell);
+    desc << chop_string(spell_power_string(spell), 13)
+         << chop_string(rangestring, 9 + tagged_string_tag_length(rangestring))
+         << chop_string(spell_hunger_string(spell), 8)
+         << chop_string(spell_noise_string(spell, 10), 15);
 
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -176,9 +176,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " " + titlestring + "         Type          "
-                "                Failure   Level",
-                " " + titlestring + "         Power         "
-                "Range           " + "Hunger" + "    Level",
+                "                Failure  Level",
+                " " + titlestring + "         Power        "
+                "Range    " + "Hunger  " + "Noise          ",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -187,9 +187,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " " + titlestring + "         Type          "
-            "                Failure   Level",
-            " " + titlestring + "         Power         "
-            "Range           " + "Hunger" + "    Level",
+            "                Failure  Level",
+            " " + titlestring + "         Power        "
+            "Range    " + "Hunger  " + "Noise          ",
             MEL_TITLE));
 #endif
     spell_menu.set_highlighter(nullptr);
@@ -2150,7 +2150,7 @@ string spell_hunger_string(spell_type spell, bool rod)
     return hunger_cost_string(spell_hunger(spell, rod));
 }
 
-string spell_noise_string(spell_type spell)
+string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
     int effect_noise = spell_effect_noise(spell);
@@ -2182,7 +2182,17 @@ string spell_noise_string(spell_type spell)
 
 #ifdef WIZARD
     if (you.wizard)
-        return make_stringf("%s (%d)", desc, noise);
+    {
+        if (chop_wiz_display_width > 0)
+        {
+            ostringstream shortdesc;
+            shortdesc << chop_string(desc, chop_wiz_display_width)
+                      << "(" << to_string(noise) << ")";
+            return shortdesc.str();
+        }
+        else
+            return make_stringf("%s (%d)", desc, noise);
+    }
     else
 #endif
         return desc;
