@@ -2660,7 +2660,7 @@ static void _xom_torment(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-monster* _xom_summon_hostile(monster_type hostile)
+static monster* _xom_summon_hostile(monster_type hostile)
 {
     return create_monster(mgen_data::hostile_at(hostile, true, you.pos())
                           .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
