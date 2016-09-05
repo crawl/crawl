@@ -538,7 +538,7 @@ tutorial4 undead
 # TODO: This is more like hints mode stuff. Not sure if there's any harm though,
 #       and the mouse interface hint is good.
 Unlike most monsters, zombies and skeletons do not regenerate health.
-<localtiles> Incidentally, you can also cast spells by pressing
+<localtiles> You can also attempt to re-cast the last spell you used by pressing
 <input>Ctrl+leftclick</input> on the monster.</localtiles>
 %%%%
 tutorial4 spell_success
