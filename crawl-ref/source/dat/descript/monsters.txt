@@ -2136,9 +2136,6 @@ sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with
 lightning speed. It sprays sparks as it goes.
-
-It can heal from electrical damage, although being hit by more than it can
-handle will have rather violent results.
 %%%%
 skeletal warrior
 
