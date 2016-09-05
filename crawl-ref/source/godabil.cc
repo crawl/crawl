@@ -1624,7 +1624,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
         return false;
     }
 
-    if (!is_orcish_follower(mons))
+    if (!is_orcish_follower(*mons))
     {
         if (!quiet)
             mpr("That's not an orcish ally!");
@@ -1947,7 +1947,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     name_zombie(*mon, orig);
 
-    mons_make_god_gift(mon, GOD_YREDELEMNUL);
+    mons_make_god_gift(*mon, GOD_YREDELEMNUL);
     add_companion(mon);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
@@ -2648,7 +2648,7 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
         plant->flags |= MF_NO_REWARD;
         plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        mons_make_god_gift(plant, GOD_FEDHAS);
+        mons_make_god_gift(*plant, GOD_FEDHAS);
 
         plant->max_hit_points += hp_adjust;
         plant->hit_points += hp_adjust;
@@ -3324,7 +3324,7 @@ int fedhas_corpse_spores(beh_type attitude)
             {
                 plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-                mons_make_god_gift(plant, GOD_FEDHAS);
+                mons_make_god_gift(*plant, GOD_FEDHAS);
 
                 plant->behaviour = BEH_WANDER;
                 plant->foe = MHITNOT;
@@ -3505,7 +3505,7 @@ spret_type fedhas_evolve_flora(bool fail)
     plant->flags |= MF_NO_REWARD;
     plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-    mons_make_god_gift(plant, GOD_FEDHAS);
+    mons_make_god_gift(*plant, GOD_FEDHAS);
 
     plant->attitude = ATT_FRIENDLY;
 

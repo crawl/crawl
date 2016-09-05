@@ -56,8 +56,8 @@ void mons_att_changed(monster* mon)
     }
 
     if (mon->attitude == ATT_HOSTILE
-        && (mons_is_god_gift(mon, GOD_BEOGH)
-           || mons_is_god_gift(mon, GOD_YREDELEMNUL)))
+        && (mons_is_god_gift(*mon, GOD_BEOGH)
+           || mons_is_god_gift(*mon, GOD_YREDELEMNUL)))
     {
         remove_companion(mon);
     }
@@ -119,7 +119,7 @@ void fedhas_neutralise(monster* mons)
 {
     if (have_passive(passive_t::friendly_plants)
         && mons->attitude == ATT_HOSTILE
-        && fedhas_neutralises(mons)
+        && fedhas_neutralises(*mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         _fedhas_neutralise_plant(mons);
@@ -141,7 +141,7 @@ bool make_god_gifts_disappear()
     {
         if (is_follower(**mi)
             && mi->has_ench(ENCH_ABJ)
-            && mons_is_god_gift(*mi, god))
+            && mons_is_god_gift(**mi, god))
         {
             if (simple_monster_message(**mi, " abandons you!"))
                 count++;
@@ -166,7 +166,7 @@ bool yred_slaves_abandon_you()
         if (mons == nullptr)
             continue;
 
-        if (is_yred_undead_slave(mons))
+        if (is_yred_undead_slave(*mons))
         {
             num_slaves++;
 
@@ -218,8 +218,8 @@ bool beogh_followers_abandon_you()
             continue;
 
         // Note that orc high priests' summons are gifts of Beogh,
-        // so we can't use is_orcish_follower() here.
-        if (mons_is_god_gift(mons, GOD_BEOGH))
+        // so we can't use is_orcish_follower(*) here.
+        if (mons_is_god_gift(*mons, GOD_BEOGH))
         {
             num_followers++;
 
@@ -339,7 +339,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     if (!orc->alive())
         orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
 
-    mons_make_god_gift(orc, GOD_BEOGH);
+    mons_make_god_gift(*orc, GOD_BEOGH);
     add_companion(orc);
 
     // Avoid immobile "followers".
@@ -351,7 +351,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 static void _fedhas_neutralise_plant(monster* plant)
 {
     if (!plant
-        || !fedhas_neutralises(plant)
+        || !fedhas_neutralises(*plant)
         || plant->attitude != ATT_HOSTILE
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
@@ -389,7 +389,7 @@ static void _jiyva_convert_slime(monster* slime)
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
-    mons_make_god_gift(slime, GOD_JIYVA);
+    mons_make_god_gift(*slime, GOD_JIYVA);
 
     mons_att_changed(slime);
 }

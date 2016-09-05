@@ -91,29 +91,29 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->wont_attack() && mon->is_actual_spellcaster();
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
-        return is_yred_undead_slave(mon);
+        return is_yred_undead_slave(*mon);
     case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
-        return mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH);
+        return mon->wont_attack() && mons_is_god_gift(*mon, GOD_BEOGH);
     case DACT_ALLY_SLIME:
-        return is_fellow_slime(mon);
+        return is_fellow_slime(*mon);
     case DACT_ALLY_PLANT:
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
         return mons_is_plant(*mon);
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_UPGRADE_ANCESTOR:
-        return mon->wont_attack() && mons_is_god_gift(mon, GOD_HEPLIAKLQANA);
+        return mon->wont_attack() && mons_is_god_gift(*mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
     case DACT_ALLY_TROG:
-        return mon->friendly() && mons_is_god_gift(mon, GOD_TROG);
+        return mon->friendly() && mons_is_god_gift(*mon, GOD_TROG);
     case DACT_ALLY_MAKHLEB:
-        return mon->friendly() && mons_is_god_gift(mon, GOD_MAKHLEB);
+        return mon->friendly() && mons_is_god_gift(*mon, GOD_MAKHLEB);
     case DACT_HOLY_PETS_GO_NEUTRAL:
         return mon->friendly()
                && !mon->has_ench(ENCH_CHARM)
                && mon->is_holy()
-               && mons_is_god_gift(mon, GOD_SHINING_ONE);
+               && mons_is_god_gift(*mon, GOD_SHINING_ONE);
     case DACT_PIKEL_SLAVES:
         return mon->type == MONS_SLAVE
                && testbits(mon->flags, MF_BAND_MEMBER)

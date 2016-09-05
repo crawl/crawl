@@ -5085,7 +5085,7 @@ void bolt::affect_monster(monster* mon)
         // FIXME: Should be a better way of doing this. For now, we are
         // just falsifying the death report... -cao
         else if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
-            && fedhas_protects(mon))
+            && fedhas_protects(*mon))
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
@@ -6687,7 +6687,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     }
 
     return (origin_worships_fedhas
-            && fedhas_protects(victim))
+            && fedhas_protects(*victim))
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN))
            && !beam.is_enchantment()

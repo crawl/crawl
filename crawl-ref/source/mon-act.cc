@@ -3385,7 +3385,7 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
     // Try to make a ballistomycete.
     beh_type attitude = attitude_creation_behavior(mons.attitude);
     // Make Fedhas ballistos neutral, so as not to inflict extra piety loss.
-    if (mons_is_god_gift(&mons, GOD_FEDHAS))
+    if (mons_is_god_gift(mons, GOD_FEDHAS))
         attitude = BEH_GOOD_NEUTRAL;
 
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
