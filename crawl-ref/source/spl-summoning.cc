@@ -644,8 +644,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
             // trolls
             mon = random_choose_weighted(3, MONS_TROLL,
                                          3, MONS_DEEP_TROLL,
-                                         2, MONS_IRON_TROLL,
-                                         0);
+                                         2, MONS_IRON_TROLL);
         }
         else
         {
@@ -2257,8 +2256,7 @@ monster_type pick_random_wraith()
                                   1, MONS_SHADOW_WRAITH,
                                   5, MONS_WRAITH,
                                   2, MONS_FREEZING_WRAITH,
-                                  2, MONS_PHANTASMAL_WARRIOR,
-                                  0);
+                                  2, MONS_PHANTASMAL_WARRIOR);
 }
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)

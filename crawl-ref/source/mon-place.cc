@@ -2697,23 +2697,20 @@ static monster_type _band_member(band_type band, int which,
         if (one_chance_in(7))
         {
             return random_choose_weighted(50, MONS_LICH,
-                                          10, MONS_ANCIENT_LICH,
-                                           0);
+                                          10, MONS_ANCIENT_LICH);
         }
         else if (one_chance_in(6))
         {
             return random_choose_weighted(50, MONS_ABOMINATION_SMALL,
                                           40, MONS_ABOMINATION_LARGE,
-                                          10, MONS_TENTACLED_MONSTROSITY,
-                                           0);
+                                          10, MONS_TENTACLED_MONSTROSITY);
         }
         else
         {
             return summon_any_demon(random_choose_weighted(
                                           50, RANDOM_DEMON_COMMON,
                                           20, RANDOM_DEMON_GREATER,
-                                          10, RANDOM_DEMON,
-                                           0),
+                                          10, RANDOM_DEMON),
                                     true);
         }
         break;
@@ -2725,8 +2722,7 @@ static monster_type _band_member(band_type band, int which,
                                           11, MONS_NAGA_MAGE,
                                            6, MONS_NAGA_RITUALIST,
                                            8, MONS_NAGA_SHARPSHOOTER,
-                                           6, MONS_SALAMANDER_MYSTIC,
-                                           0);
+                                           6, MONS_SALAMANDER_MYSTIC);
         }
         else
             return one_chance_in(7) ? MONS_SALAMANDER : MONS_NAGA;
@@ -2743,8 +2739,7 @@ static monster_type _band_member(band_type band, int which,
                 2, MONS_DRACONIAN_SHIFTER,
                 2, MONS_DRACONIAN_ANNIHILATOR,
                 2, MONS_DRACONIAN_SCORCHER,
-                2, MONS_DRACONIAN_ZEALOT,
-                0);
+                2, MONS_DRACONIAN_ZEALOT);
         }
 
         return random_draconian_monster_species();
@@ -2759,16 +2754,14 @@ static monster_type _band_member(band_type band, int which,
             return random_choose_weighted(5, MONS_WRAITH,
                                           6, MONS_FREEZING_WRAITH,
                                           3, MONS_PHANTASMAL_WARRIOR,
-                                          3, MONS_SKELETAL_WARRIOR,
-                                          0);
+                                          3, MONS_SKELETAL_WARRIOR);
 
     case BAND_MONSTROUS_DEMONSPAWN:
         if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 2, MONS_DEMONIC_CRAWLER,
                                            2, MONS_SIXFIRHY,
-                                           3, MONS_MONSTROUS_DEMONSPAWN,
-                                           0);
+                                           3, MONS_MONSTROUS_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 
@@ -2776,8 +2769,7 @@ static monster_type _band_member(band_type band, int which,
         if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 4, MONS_ICE_DEVIL,
-                                           3, MONS_GELID_DEMONSPAWN,
-                                           0);
+                                           3, MONS_GELID_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 
@@ -2786,8 +2778,7 @@ static monster_type _band_member(band_type band, int which,
         {
             return random_choose_weighted( 2, MONS_RED_DEVIL,
                                            2, MONS_SUN_DEMON,
-                                           3, MONS_INFERNAL_DEMONSPAWN,
-                                           0);
+                                           3, MONS_INFERNAL_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 
@@ -2796,8 +2787,7 @@ static monster_type _band_member(band_type band, int which,
         {
             return random_choose_weighted( 2, MONS_HELLWING,
                                            2, MONS_ORANGE_DEMON,
-                                           3, MONS_PUTRID_DEMONSPAWN,
-                                           0);
+                                           3, MONS_PUTRID_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 
@@ -2806,8 +2796,7 @@ static monster_type _band_member(band_type band, int which,
         {
             return random_choose_weighted( 2, MONS_ORANGE_DEMON,
                                            2, MONS_SIXFIRHY,
-                                           3, MONS_TORTUROUS_DEMONSPAWN,
-                                           0);
+                                           3, MONS_TORTUROUS_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 
@@ -2944,8 +2933,7 @@ static monster_type _pick_zot_exit_defender()
         30, RANDOM_DEMON,
         20, pick_monster_no_rarity(BRANCH_PANDEMONIUM),
         15, MONS_ORB_GUARDIAN,
-        5, RANDOM_DEMON_GREATER,
-        0);
+        5, RANDOM_DEMON_GREATER);
 }
 
 monster* mons_place(mgen_data mg)

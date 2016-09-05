@@ -570,8 +570,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
             10, BEAM_AGILITY,
-             2, BEAM_ENSNARE,
-            0);
+             2, BEAM_ENSNARE);
     }
     while (beam->origin_spell == SPELL_CHAIN_OF_CHAOS
            && (flavour == BEAM_BANISH

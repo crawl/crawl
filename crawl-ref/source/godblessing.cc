@@ -90,16 +90,14 @@ static int _orc_weapon_gift_type(monster_type mon_type)
         case MONS_ORC_SORCERER:
             return random_choose_weighted(2, WPN_HAND_AXE, // orcs love axes
                                           1, WPN_SHORT_SWORD,
-                                          1, WPN_MACE,
-                                          0);
+                                          1, WPN_MACE);
         case MONS_ORC_WARRIOR:
         case MONS_ORC_KNIGHT:
         case MONS_ORC_WARLORD:
             return random_choose_weighted(2, WPN_WAR_AXE, // orcs love axes
                                           1, WPN_LONG_SWORD,
                                           1, WPN_FLAIL,
-                                          1, WPN_SPEAR,
-                                          0);
+                                          1, WPN_SPEAR);
             // give a lower tier of polearms; reaching is good on followers
         default:
             return WPN_CLUB; // shouldn't ever come up?

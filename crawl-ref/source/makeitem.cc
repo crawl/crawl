@@ -524,8 +524,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     30, SPMSL_CONFUSION,
                                     10, SPMSL_PARALYSIS,
                                     10, SPMSL_FRENZY,
-                                    nw, SPMSL_POISONED,
-                                    0);
+                                    nw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
         rc = random_choose_weighted(30, SPMSL_RETURNING,
@@ -533,8 +532,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     32, SPMSL_POISONED,
                                     21, SPMSL_STEEL,
                                     20, SPMSL_SILVER,
-                                    nw, SPMSL_NORMAL,
-                                    0);
+                                    nw, SPMSL_NORMAL);
         break;
     case MI_TOMAHAWK:
         rc = random_choose_weighted(15, SPMSL_POISONED,
@@ -543,8 +541,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     12, SPMSL_DISPERSAL,
                                     28, SPMSL_RETURNING,
                                     15, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL,
-                                    0);
+                                    nw, SPMSL_NORMAL);
         break;
     }
 
@@ -663,8 +660,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    3,  MI_TOMAHAWK,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
-                                   1,  MI_LARGE_ROCK,
-                                   0);
+                                   1,  MI_LARGE_ROCK);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -794,8 +790,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       120, SPARM_POISON_RESISTANCE,
                                       120, SPARM_POSITIVE_ENERGY,
                                       240, SPARM_REFLECTION,
-                                      480, SPARM_PROTECTION,
-                                      0);
+                                      480, SPARM_PROTECTION);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
@@ -807,8 +802,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       3, SPARM_MAGIC_RESISTANCE,
                                       2, SPARM_INTELLIGENCE,
                                       2, SPARM_SEE_INVISIBLE,
-                                      1, SPARM_SPIRIT_SHIELD,
-                                      0);
+                                      1, SPARM_SPIRIT_SHIELD);
 
     case ARM_HELMET:
         return coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
@@ -834,8 +828,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
                                       2, SPARM_POSITIVE_ENERGY,
-                                      4, SPARM_MAGIC_RESISTANCE,
-                                      0);
+                                      4, SPARM_MAGIC_RESISTANCE);
 
     case ARM_PLATE_ARMOUR:
         return random_choose_weighted(26, SPARM_FIRE_RESISTANCE,
@@ -843,8 +836,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       19, SPARM_POISON_RESISTANCE,
                                       15, SPARM_MAGIC_RESISTANCE,
                                        7, SPARM_POSITIVE_ENERGY,
-                                       7, SPARM_PONDEROUSNESS,
-                                       0);
+                                       7, SPARM_PONDEROUSNESS);
 
     // other body armour
     default:
@@ -864,8 +856,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                   28, SPARM_COLD_RESISTANCE,
                                   20, SPARM_POISON_RESISTANCE,
                                   16, SPARM_MAGIC_RESISTANCE,
-                                   8, SPARM_POSITIVE_ENERGY,
-                                   0);
+                                   8, SPARM_POSITIVE_ENERGY);
 }
 
 /**
@@ -1032,8 +1023,7 @@ static armour_type _get_random_armour_type(int item_level)
                                          // Shield slot
                                          2, ARM_SHIELD,
                                          3, ARM_BUCKLER,
-                                         1, ARM_LARGE_SHIELD,
-                                         0);
+                                         1, ARM_LARGE_SHIELD);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
@@ -1269,8 +1259,7 @@ static int _random_wand_subtype()
                                   3, WAND_ENSLAVEMENT,
                                   3, WAND_TELEPORTATION,
                                   1, WAND_HASTING,
-                                  1, WAND_HEAL_WOUNDS,
-                                  0);
+                                  1, WAND_HEAL_WOUNDS);
 }
 
 /**
@@ -1330,8 +1319,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                                                 30, FOOD_MEAT_RATION,
                                                 15, FOOD_BEEF_JERKY,
                                                 10, FOOD_PIZZA,
-                                                 5, FOOD_ROYAL_JELLY,
-                                                 0);
+                                                 5, FOOD_ROYAL_JELLY);
     }
     else
         item.sub_type = force_type;
@@ -1403,8 +1391,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             35, POT_AMBROSIA,
                                             29, POT_CURE_MUTATION,
                                             11, POT_BENEFICIAL_MUTATION,
-                                             2, POT_EXPERIENCE,
-                                             0);
+                                             2, POT_EXPERIENCE);
         }
         while (agent == GOD_XOM
                && _is_boring_item(OBJ_POTIONS, stype)
@@ -1457,8 +1444,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
-                 0);
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
@@ -1536,8 +1522,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     {
         int choice = random_choose_weighted(
             58, BOOK_RANDART_THEME,
-             2, BOOK_RANDART_LEVEL, // 1/30
-             0);
+             2, BOOK_RANDART_LEVEL);
 
         item.sub_type = choice;
     }
@@ -1793,8 +1778,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         {
             item.deck_rarity = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
                                                      20, DECK_RARITY_RARE,
-                                                     72, DECK_RARITY_COMMON,
-                                                      0);
+                                                     72, DECK_RARITY_COMMON);
         }
         init_deck(item);
     }
@@ -1890,8 +1874,7 @@ int items(bool allow_uniques,
                                    176, OBJ_POTIONS,
                                    300, OBJ_MISSILES,
                                    320, OBJ_SCROLLS,
-                                   440, OBJ_GOLD,
-                                     0);
+                                   440, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 5000))
