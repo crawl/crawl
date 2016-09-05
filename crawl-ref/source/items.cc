@@ -3131,11 +3131,10 @@ static void _do_autopickup()
     while (o != NON_ITEM)
     {
         const int next = mitm[o].link;
+        item_def& mi = mitm[o];
 
-        if (item_needs_autopickup(mitm[o]))
+        if (item_needs_autopickup(mi))
         {
-            item_def& mi = mitm[o];
-
             if (_should_autobutcher(mi))
                 butchery(&mi);
 
@@ -3143,17 +3142,17 @@ static void _do_autopickup()
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.
             const bool interesting_pickup
-                = _interesting_explore_pickup(mitm[o]);
+                = _interesting_explore_pickup(mi);
 
-            const iflags_t iflags(mitm[o].flags);
+            const iflags_t iflags(mi.flags);
             if ((iflags & ISFLAG_THROWN))
                 learned_something_new(HINT_AUTOPICKUP_THROWN);
 
-            clear_item_pickup_flags(mitm[o]);
+            clear_item_pickup_flags(mi);
 
-            const bool pickup_result = move_item_to_inv(o, mitm[o].quantity);
-            if (mitm[o].is_type(OBJ_FOOD, FOOD_CHUNK))
-                mitm[o].flags |= ISFLAG_DROPPED;
+            const bool pickup_result = move_item_to_inv(o, mi.quantity);
+            if (mi.is_type(OBJ_FOOD, FOOD_CHUNK))
+                mi.flags |= ISFLAG_DROPPED;
 
             if (pickup_result)
             {
@@ -3165,10 +3164,9 @@ static void _do_autopickup()
             {
                 n_tried_pickup++;
                 pickup_warning = "Your pack is full.";
-                mitm[o].flags = iflags;
+                mi.flags = iflags;
             }
         }
-
         o = next;
     }
 
