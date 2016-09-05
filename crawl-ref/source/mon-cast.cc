@@ -1202,8 +1202,7 @@ static spell_type _legendary_destruction_spell()
 {
     return random_choose_weighted(25, SPELL_FIREBALL,
                                   20, SPELL_ICEBLAST,
-                                  15, SPELL_GHOSTLY_FIREBALL,
-                                  0);
+                                  15, SPELL_GHOSTLY_FIREBALL);
 }
 
 // TODO: documentme
@@ -2205,8 +2204,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
                                                     15, BEAM_VULNERABILITY,
                                                     15, BEAM_MALMUTATE,
                                                     15, BEAM_POLYMORPH,
-                                                    15, BEAM_INNER_FLAME,
-                                                     0);
+                                                    15, BEAM_INNER_FLAME);
 
         enchant_actor_with_flavour(*mi,
                                    flavour == BEAM_BLINK_CLOSE
@@ -4400,8 +4398,7 @@ static monster_type _pick_vermin()
                                   5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
                                   2, MONS_JUMPING_SPIDER,
-                                  3, MONS_DEMONIC_CRAWLER,
-                                  0);
+                                  3, MONS_DEMONIC_CRAWLER);
 }
 
 static monster_type _pick_drake()
@@ -4411,8 +4408,7 @@ static monster_type _pick_drake()
                                   5, MONS_WIND_DRAKE,
                                   6, MONS_RIME_DRAKE,
                                   6, MONS_DEATH_DRAKE,
-                                  3, MONS_LINDWURM,
-                                  0);
+                                  3, MONS_LINDWURM);
 }
 
 static void _do_high_level_summon(monster* mons, spell_type spell_cast,
@@ -6024,8 +6020,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                         1, MONS_IRON_IMP,
                         2, MONS_SHADOW_IMP,
                         2, MONS_WHITE_IMP,
-                        4, MONS_CRIMSON_IMP,
-                        0),
+                        4, MONS_CRIMSON_IMP),
                       SAME_ATTITUDE(mons), mons->pos(), mons->foe)
             .set_summoned(mons, duration, spell_cast, god));
         return;
@@ -6266,8 +6261,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(random_choose_weighted(
                             100, MONS_ANGEL,     80,  MONS_CHERUB,
-                            50,  MONS_DAEVA,      1,  MONS_OPHAN,
-                             0),
+                            50,  MONS_DAEVA,      1,  MONS_OPHAN),
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, duration, spell_cast, god));
         }
@@ -6411,8 +6405,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
-                                        10, MONS_EYE_OF_DEVASTATION,
-                                         0);
+                                        10, MONS_EYE_OF_DEVASTATION);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
@@ -6476,8 +6469,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                        3, MONS_SUN_DEMON,
                                        3, MONS_BALRUG,
                                        2, MONS_HELLION,
-                                       1, MONS_BRIMSTONE_FIEND,
-                                       0);
+                                       1, MONS_BRIMSTONE_FIEND);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)

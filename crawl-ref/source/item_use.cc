@@ -2026,8 +2026,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     23, SPWPN_VENOM,
                                     23, SPWPN_VORPAL,
                                     5, SPWPN_ELECTROCUTION,
-                                    3, SPWPN_CHAOS,
-                                    0);
+                                    3, SPWPN_CHAOS);
         }
         else
         {
@@ -2040,8 +2039,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     15, SPWPN_ELECTROCUTION,
                                     12, SPWPN_PROTECTION,
                                     8, SPWPN_VAMPIRISM,
-                                    3, SPWPN_CHAOS,
-                                    0);
+                                    3, SPWPN_CHAOS);
         }
     }
 

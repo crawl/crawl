@@ -927,8 +927,7 @@ static bool _give_nemelex_gift(bool forced = false)
         misc_item_type gift_type = random_choose_weighted(
                                         5, MISC_DECK_OF_DESTRUCTION,
                                         4, MISC_DECK_OF_SUMMONING,
-                                        2, MISC_DECK_OF_ESCAPE,
-                                        0);
+                                        2, MISC_DECK_OF_ESCAPE);
 
         int thing_created = items(true, OBJ_MISCELLANY, gift_type, 1, 0,
                                   GOD_NEMELEX_XOBEH);
@@ -957,8 +956,7 @@ static bool _give_nemelex_gift(bool forced = false)
             const deck_rarity_type rarity = random_choose_weighted(
                 common_weight, DECK_RARITY_COMMON,
                 rare_weight,   DECK_RARITY_RARE,
-                legend_weight, DECK_RARITY_LEGENDARY,
-                0);
+                legend_weight, DECK_RARITY_LEGENDARY);
 
             item_def &deck(mitm[thing_created]);
 

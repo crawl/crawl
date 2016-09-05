@@ -1008,7 +1008,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     const int choice = random_choose_weighted(
                                     30, BOOK_RANDART_THEME,
        agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
-                                     1, BOOK_RANDART_LEVEL, 0);
+                                     1, BOOK_RANDART_LEVEL);
 
     switch (choice)
     {

@@ -551,8 +551,7 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                                6,   MONS_HYDRA,
                                3,   MONS_SNAPPING_TURTLE,
                                2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
-                               100, RANDOM_MONSTER,
-                               0);
+                               100, RANDOM_MONSTER);
 
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
@@ -1643,8 +1642,7 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         // total weight 16
         return random_choose_weighted(9, YELLOW,
                                       4, RED,
-                                      3, LIGHTRED,
-                                      0);
+                                      3, LIGHTRED);
 
     case CLOUD_COLD:
         if (cloud.decay <= 20)
@@ -1655,8 +1653,7 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         // total weight 16
         return random_choose_weighted(9, WHITE,
                                       4, BLUE,
-                                      3, LIGHTBLUE,
-                                      0);
+                                      3, LIGHTBLUE);
         break;
 
     default:

@@ -1176,8 +1176,7 @@ static string _abyss_monster_creation_message(const monster* mon)
             10, " coalesces out of seething chaos.",
              2, " punctures the fabric of time!",
              7, " punctures the fabric of the universe.",
-             3, " manifests%2$s!%1$.0s",
-             0),
+             3, " manifests%2$s!%1$.0s"),
         mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
         silenced(you.pos()) ? "" : " with a bang");
 }

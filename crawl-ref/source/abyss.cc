@@ -115,8 +115,7 @@ static dungeon_feature_type _abyss_proto_feature()
                                    600, DNGN_ROCK_WALL,
                                    300, DNGN_STONE_WALL,
                                    100, DNGN_METAL_WALL,
-                                     1, DNGN_CLOSED_DOOR,
-                                     0);
+                                     1, DNGN_CLOSED_DOOR);
 }
 
 static void _write_abyssal_features()
@@ -1472,8 +1471,7 @@ static colour_t _roll_abyss_floor_colour()
          313, LIGHTMAGENTA,
          // no YELLOW (halo)
          890, WHITE,
-          50, ETC_FIRE,
-    0);
+          50, ETC_FIRE);
 }
 
 static colour_t _roll_abyss_rock_colour()
@@ -1494,8 +1492,7 @@ static colour_t _roll_abyss_rock_colour()
          377, LIGHTMAGENTA,
          105, YELLOW,
          101, WHITE,
-          60, ETC_FIRE,
-    0);
+          60, ETC_FIRE);
 }
 
 static void _abyss_generate_new_area()

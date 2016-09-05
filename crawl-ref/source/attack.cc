@@ -459,8 +459,7 @@ bool attack::distortion_affects_defender()
                                                        15, BLINK,
                                                        10, TELE_INSTANT,
                                                        10, TELE_DELAYED,
-                                                       5,  NONE,
-                                                       0);
+                                                       5,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
         return false;
@@ -717,8 +716,7 @@ void attack::chaos_affects_defender()
             level0_chance, 0,
             level1_chance, 1,
             level2_chance, 2,
-            level3_chance, 3,
-            0);
+            level3_chance, 3);
 
         miscast_level  = level;
         miscast_type   = SPTYP_RANDOM;
@@ -834,8 +832,7 @@ brand_type attack::random_chaos_brand()
                      5, SPWPN_HOLY_WRATH,
                      5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
-                     2, SPWPN_DISTORTION,
-                     0));
+                     2, SPWPN_DISTORTION));
 
         if (one_chance_in(3))
             break;
@@ -1495,8 +1492,7 @@ attack_flavour attack::random_chaos_attack_flavour()
                                           5, AF_HOLY,
                                           5, AF_ANTIMAGIC,
                                           2, AF_CONFUSE,
-                                          2, AF_DISTORT,
-                                          0);
+                                          2, AF_DISTORT);
 
         if (one_chance_in(3))
             break;
