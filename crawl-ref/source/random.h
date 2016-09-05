@@ -160,8 +160,6 @@ A random_choose_weighted(int cweight, A curr, int nweight, B next, Args... args)
                                   args...);
 }
 
-const char* random_choose_weighted(int weight, const char* first, ...);
-
 struct dice_def
 {
     int num;
