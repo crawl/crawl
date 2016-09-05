@@ -1521,8 +1521,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         int choice = random_choose_weighted(
-            58, BOOK_RANDART_THEME,
-             2, BOOK_RANDART_LEVEL);
+            29, BOOK_RANDART_THEME,
+             1, BOOK_RANDART_LEVEL);
 
         item.sub_type = choice;
     }
