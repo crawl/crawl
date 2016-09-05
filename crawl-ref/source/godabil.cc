@@ -3873,12 +3873,9 @@ bool can_convert_to_beogh()
     if (silenced(you.pos()))
         return false;
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        const monster * const mon = monster_at(*ri);
-        if (mons_allows_beogh_now(*mon))
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        if (mons_allows_beogh_now(**mi))
             return true;
-    }
 
     return false;
 }
