@@ -139,28 +139,25 @@ int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 }
 
 template <typename T>
-T random_choose_weighted(int weight, T first, ...)
+T random_choose_weighted(int cweight, T curr)
 {
-    va_list args;
-    va_start(args, first);
-    T chosen = first;
-    int cweight = weight, nargs = 100;
+    return curr;
+}
 
-    while (nargs-- > 0)
-    {
-        const int nweight = va_arg(args, int);
-        if (!nweight)
-            break;
+template <typename T>
+T random_choose_weighted(int cweight, T curr, int sentinel)
+{
+    ASSERT(sentinel == 0); // legacy support for va_args version
+    return curr;
+}
 
-        const int choice = va_arg(args, int);
-        if (random2(cweight += nweight) < nweight)
-            chosen = static_cast<T>(choice);
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-
-    return chosen;
+template <typename A, typename B, typename... Args>
+A random_choose_weighted(int cweight, A curr, int nweight, B next, Args... args)
+{
+    return random_choose_weighted(cweight + nweight,
+                                  random2(cweight + nweight) < nweight ? static_cast<A>(next)
+                                                                       : curr,
+                                  args...);
 }
 
 const char* random_choose_weighted(int weight, const char* first, ...);
