@@ -1705,10 +1705,6 @@ sixfirhy
 
 Une petite créature vile qui bouge par saccades, s'arrêtant puis dardant à une
 vitesse fulgurante. Elle à l'air de lancer des étincelles autour d'elle.
-
-Cette bête peut se soigner avec les dégâts électriques, cependant, si elle se
-fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
-résultats plutôt violents.
 %%%%
 skeletal warrior
 

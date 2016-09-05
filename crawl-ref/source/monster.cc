@@ -6043,15 +6043,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
 void monster::react_to_damage(const actor *oppressor, int damage,
                                beam_type flavour)
 {
-    if (type == MONS_SIXFIRHY && flavour == BEAM_ELECTRICITY)
-    {
-        if (!alive()) // overcharging is deadly
-            simple_monster_message(*this, " explodes in a shower of sparks!");
-        else if (heal(damage*2))
-            simple_monster_message(*this, " seems to be charged up!");
-        return;
-    }
-
     if (has_ench(ENCH_PAIN_BOND))
         radiate_pain_bond(*this, damage);
 
