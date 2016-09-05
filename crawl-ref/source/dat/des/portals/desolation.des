@@ -45,7 +45,7 @@ function desolation_portal(e)
   e.tags("uniq_desolation no_monster_gen chance_desolation")
   e.kfeat("O = enter_desolation")
   e.depth("Elf, !Elf:$, Vaults, !Vaults:$")
-  e.chance(10000)
+  e.chance(500)
 end
 
 function desolation_ruins_setup(e)
@@ -63,7 +63,7 @@ end
 
 ##############################################################################
 NAME:       portal_desolation_entry_ruin
-TAGS:       transparent extra
+TAGS:       transparent
 FTILE:      ;O = FLOOR_SALT
 : desolation_portal(_G)
 MAP
@@ -81,7 +81,7 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_holy_temple
-TAGS:       transparent no_monster_gen extra
+TAGS:       transparent no_monster_gen
 # XXX: no_item_gen?
 : desolation_portal(_G)
 KFEAT:      B = altar_zin
@@ -109,7 +109,7 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_twin_temple
-TAGS:       transparent no_monster_gen extra
+TAGS:       transparent no_monster_gen
 # XXX: no_item_gen?
 : desolation_portal(_G)
 : set_feature_name("granite_statue", "ruined idol")
@@ -132,7 +132,7 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_salt
-TAGS:       transparent no_monster_gen extra
+TAGS:       transparent no_monster_gen
 : desolation_portal(_G)
 KMONS:      O = saltling band
 SUBST:      . = ;.
@@ -149,7 +149,7 @@ MAP
 ENDMAP
 
 NAME:       portal_desolation_entry_garden
-TAGS:       transparent no_monster_gen extra
+TAGS:       transparent no_monster_gen
 : desolation_portal(_G)
 SUBST:      c = 1 .:15
 SUBST:      b = 1 .:40
