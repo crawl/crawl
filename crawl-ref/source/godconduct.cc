@@ -17,7 +17,7 @@
 #include <functional>
 
 // Forward declarations.
-static bool _god_likes_killing(const monster* victim);
+static bool _god_likes_killing(const monster& victim);
 
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger
@@ -255,8 +255,8 @@ static dislike_response _on_attack_friend(const char* desc)
         desc, true,
         1, 3, " forgives your inadvertent attack on an ally, just this once.",
         nullptr, [] (const monster* victim) -> bool {
-            dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
-            return god_hates_attacking_friend(you.religion, victim);
+            dprf("hates friend : %d", god_hates_attacking_friend(you.religion, *victim));
+            return god_hates_attacking_friend(you.religion, *victim);
         }
     };
 }
@@ -269,7 +269,7 @@ static dislike_response _on_fedhas_friend_death(const char* desc)
         desc, false,
         1, 0, nullptr, nullptr, [] (const monster* victim) -> bool {
             // ballistomycetes are penalized separately.
-            return victim && fedhas_protects(victim)
+            return victim && fedhas_protects(*victim)
             && victim->mons_species() != MONS_BALLISTOMYCETE;
         }
     };
@@ -337,14 +337,14 @@ static peeve_map divine_peeves[] =
             "you attack intelligent monsters in an unchivalric manner", true,
             1, 2, " forgives your inadvertent dishonourable attack, just"
                       " this once.", nullptr, [] (const monster* victim) -> bool {
-                return !victim || !tso_unchivalric_attack_safe_monster(victim);
+                return !victim || !tso_unchivalric_attack_safe_monster(*victim);
             }
         } },
         { DID_POISON, {
             "you poison monsters", true,
             1, 2, " forgives your inadvertent dishonourable attack, just"
                       " this once.", nullptr, [] (const monster* victim) -> bool {
-                return !victim || !tso_unchivalric_attack_safe_monster(victim);
+                return !victim || !tso_unchivalric_attack_safe_monster(*victim);
             }
         } },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
@@ -571,7 +571,7 @@ struct like_response
     {
         // if the conduct filters on affected monsters, & the relevant monster
         // isn't valid, don't trigger the conduct's consequences.
-        if (victim && !_god_likes_killing(victim))
+        if (victim && !_god_likes_killing(*victim))
             return;
 
         god_acting gdact;
@@ -673,7 +673,7 @@ static like_response okawaru_kill(const char* desc)
         desc, false,
         0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
         {
-            piety = get_fuzzied_monster_difficulty(victim);
+            piety = get_fuzzied_monster_difficulty(*victim);
             dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
             denom = 550;
 
@@ -999,7 +999,7 @@ static like_map divine_likes[] =
  * Will your god give you piety for killing the given monster, assuming that
  * its death triggers a conduct that the god sometimes likes?
  */
-static bool _god_likes_killing(const monster* victim)
+static bool _god_likes_killing(const monster& victim)
 {
     return !god_hates_attacking_friend(you.religion, victim);
 }

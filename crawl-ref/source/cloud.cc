@@ -860,7 +860,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 
     if (!player
         && (you_worship(GOD_FEDHAS)
-            && fedhas_protects(act->as_monster())
+            && fedhas_protects(*act->as_monster())
             || testbits(act->as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))

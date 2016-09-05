@@ -2313,7 +2313,7 @@ static bool _balance_demonic_guardian()
 
     for (int i = 0; mons && i <= 20/mutlevel; ++mons)
     {
-        mons_val = get_monster_tension(*mons, GOD_NO_GOD);
+        mons_val = get_monster_tension(**mons, GOD_NO_GOD);
         const mon_attitude_type att = mons_attitude(**mons);
 
         if (testbits(mons->flags, MF_DEMONIC_GUARDIAN)

@@ -1154,7 +1154,7 @@ static bool _give_pakellas_gift()
     return false;
 }
 
-void mons_make_god_gift(monster* mon, god_type god)
+void mons_make_god_gift(monster& mon, god_type god)
 {
     const god_type acting_god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -1166,41 +1166,41 @@ void mons_make_god_gift(monster* mon, god_type god)
     if (god == GOD_NO_GOD)
         god = acting_god;
 
-    if (mon->flags & MF_GOD_GIFT)
+    if (mon.flags & MF_GOD_GIFT)
     {
         dprf("Monster '%s' was already a gift of god '%s', now god '%s'.",
-             mon->name(DESC_PLAIN, true).c_str(),
-             god_name(mon->god).c_str(),
+             mon.name(DESC_PLAIN, true).c_str(),
+             god_name(mon.god).c_str(),
              god_name(god).c_str());
     }
 
-    mon->god = god;
-    mon->flags |= MF_GOD_GIFT;
+    mon.god = god;
+    mon.flags |= MF_GOD_GIFT;
 }
 
-bool mons_is_god_gift(const monster* mon, god_type god)
+bool mons_is_god_gift(const monster& mon, god_type god)
 {
-    return (mon->flags & MF_GOD_GIFT) && mon->god == god;
+    return (mon.flags & MF_GOD_GIFT) && mon.god == god;
 }
 
-bool is_yred_undead_slave(const monster* mon)
+bool is_yred_undead_slave(const monster& mon)
 {
-    return mon->alive() && mon->holiness() & MH_UNDEAD
-           && mon->attitude == ATT_FRIENDLY
+    return mon.alive() && mon.holiness() & MH_UNDEAD
+           && mon.attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
 
-bool is_orcish_follower(const monster* mon)
+bool is_orcish_follower(const monster& mon)
 {
-    return mon->alive() && mons_genus(mon->type) == MONS_ORC
-           && mon->attitude == ATT_FRIENDLY
+    return mon.alive() && mons_genus(mon.type) == MONS_ORC
+           && mon.attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_BEOGH);
 }
 
-bool is_fellow_slime(const monster* mon)
+bool is_fellow_slime(const monster& mon)
 {
-    return mon->alive() && mons_is_slime(*mon)
-           && mon->attitude == ATT_STRICT_NEUTRAL
+    return mon.alive() && mons_is_slime(mon)
+           && mon.attitude == ATT_STRICT_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
@@ -1215,7 +1215,7 @@ static bool _has_jelly()
     ASSERT(you_worship(GOD_JIYVA));
 
     for (monster_iterator mi; mi; ++mi)
-        if (mons_is_god_gift(*mi, GOD_JIYVA))
+        if (mons_is_god_gift(**mi, GOD_JIYVA))
             return true;
     return false;
 }
@@ -1223,11 +1223,11 @@ static bool _has_jelly()
 bool is_follower(const monster& mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_slave(&mon);
+        return is_yred_undead_slave(mon);
     else if (will_have_passive(passive_t::convert_orcs))
-        return is_orcish_follower(&mon);
+        return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
-        return is_fellow_slime(&mon);
+        return is_fellow_slime(mon);
     else if (you_worship(GOD_FEDHAS))
         return _is_plant_follower(&mon);
     else
@@ -2531,18 +2531,18 @@ static bool _fedhas_protects_species(monster_type mc)
            && mc != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
-bool fedhas_protects(const monster* target)
+bool fedhas_protects(const monster& target)
 {
-    return target && _fedhas_protects_species(mons_base_type(*target));
+    return &target && _fedhas_protects_species(mons_base_type(target));
 }
 
 // Fedhas neutralises most plants and fungi
-bool fedhas_neutralises(const monster* target)
+bool fedhas_neutralises(const monster& target)
 {
-    return target && mons_is_plant(*target)
-           && target->holiness() & MH_PLANT
-           && target->type != MONS_SNAPLASHER_VINE
-           && target->type != MONS_SNAPLASHER_VINE_SEGMENT;
+    return &target && mons_is_plant(target)
+           && target.holiness() & MH_PLANT
+           && target.type != MONS_SNAPLASHER_VINE
+           && target.type != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 static string _god_hates_your_god_reaction(god_type god, god_type your_god)
@@ -2940,12 +2940,12 @@ void nemelex_death_message()
     mpr((you.backlit() ? glowing_messages : messages)[rank]);
 }
 
-bool god_hates_attacking_friend(god_type god, const monster *fr)
+bool god_hates_attacking_friend(god_type god, const monster& fr)
 {
-    if (!fr || fr->kill_alignment() != KC_FRIENDLY)
+    if (fr.kill_alignment() != KC_FRIENDLY)
         return false;
 
-    monster_type species = fr->mons_species();
+    monster_type species = fr.mons_species();
 
     if (mons_is_object(species))
         return false;
@@ -3797,22 +3797,22 @@ bool god_hates_your_god(god_type god, god_type your_god)
     return is_evil_god(your_god);
 }
 
-bool god_hates_killing(god_type god, const monster* mon)
+bool god_hates_killing(god_type god, const monster& mon)
 {
     // Must be at least a creature of sorts. Smacking down an enchanted
     // weapon or disrupting a lightning doesn't count. Technically, this
     // might raise a concern about necromancy but zombies traditionally
     // count as creatures and that's the average person's (even if not ours)
     // intuition.
-    if (mons_is_object(mon->type))
+    if (mons_is_object(mon.type))
         return false;
 
     // kill as many illusions as you want.
-    if (mon->is_illusion())
+    if (mon.is_illusion())
         return false;
 
     bool retval = false;
-    const mon_holy_type holiness = mon->holiness();
+    const mon_holy_type holiness = mon.holiness();
 
     if (holiness & MH_HOLY)
         retval = (is_good_god(god));
@@ -4235,41 +4235,41 @@ int piety_breakpoint(int i)
 
 // Returns true if the Shining One doesn't mind your using unchivalric
 // attacks on this creature.
-bool tso_unchivalric_attack_safe_monster(const monster* mon)
+bool tso_unchivalric_attack_safe_monster(const monster& mon)
 {
-    const mon_holy_type holiness = mon->holiness();
-    return mons_intel(*mon) < I_HUMAN
-           || mons_is_object(mon->mons_species())
-           || mon->undead_or_demonic()
-           || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)
-           || !mon->is_holy() && !(holiness & MH_NATURAL);
+    const mon_holy_type holiness = mon.holiness();
+    return mons_intel(mon) < I_HUMAN
+           || mons_is_object(mon.mons_species())
+           || mon.undead_or_demonic()
+           || mon.is_shapeshifter() && (mon.flags & MF_KNOWN_SHIFTER)
+           || !mon.is_holy() && !(holiness & MH_NATURAL);
 }
 
-int get_monster_tension(const monster* mons, god_type god)
+int get_monster_tension(const monster& mons, god_type god)
 {
-    if (!mons->alive())
+    if (!mons.alive())
         return 0;
 
-    if (you.see_cell(mons->pos()))
+    if (you.see_cell(mons.pos()))
     {
-        if (!mons_can_hurt_player(mons))
+        if (!mons_can_hurt_player(&mons))
             return 0;
     }
 
-    const mon_attitude_type att = mons_attitude(*mons);
+    const mon_attitude_type att = mons_attitude(mons);
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
         return 0;
 
-    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
+    if (mons.cannot_act() || mons.asleep() || mons_is_fleeing(mons))
         return 0;
 
-    int exper = exper_value(*mons);
+    int exper = exper_value(mons);
     if (exper <= 0)
         return 0;
 
     // Almost dead monsters don't count as much.
-    exper *= mons->hit_points;
-    exper /= mons->max_hit_points;
+    exper *= mons.hit_points;
+    exper /= mons.max_hit_points;
 
     bool gift = false;
 
@@ -4297,34 +4297,34 @@ int get_monster_tension(const monster* mons, god_type god)
 
     if (att != ATT_FRIENDLY)
     {
-        if (!you.visible_to(mons))
+        if (!you.visible_to(&mons))
             exper /= 2;
-        if (!mons->visible_to(&you))
+        if (!mons.visible_to(&you))
             exper *= 2;
     }
 
-    if (mons->confused() || mons->caught())
+    if (mons.confused() || mons.caught())
         exper /= 2;
 
-    if (mons->has_ench(ENCH_SLOW))
+    if (mons.has_ench(ENCH_SLOW))
     {
         exper *= 2;
         exper /= 3;
     }
 
-    if (mons->has_ench(ENCH_HASTE))
+    if (mons.has_ench(ENCH_HASTE))
     {
         exper *= 3;
         exper /= 2;
     }
 
-    if (mons->has_ench(ENCH_MIGHT))
+    if (mons.has_ench(ENCH_MIGHT))
     {
         exper *= 5;
         exper /= 4;
     }
 
-    if (mons->berserk_or_insane())
+    if (mons.berserk_or_insane())
     {
         // in addition to haste and might bonuses above
         exper *= 3;
@@ -4345,7 +4345,7 @@ int get_tension(god_type god)
 
         if (mon && mon->alive() && you.can_see(*mon))
         {
-            int exper = get_monster_tension(mon, god);
+            int exper = get_monster_tension(*mon, god);
 
             if (!mon->wont_attack() && !mon->withdrawn())
                 nearby_monster = true;
@@ -4415,10 +4415,10 @@ int get_tension(god_type god)
     return max(0, tension);
 }
 
-int get_fuzzied_monster_difficulty(const monster *mons)
+int get_fuzzied_monster_difficulty(const monster& mons)
 {
     double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int exp = exper_value(*mons) * 100;
+    int exp = exper_value(mons) * 100;
     exp = random2(exp) + random2(exp);
     return exp / (1 + factor);
 }

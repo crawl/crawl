@@ -1642,7 +1642,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                             MHITNOT,
                                                             MG_FORCE_PLACE)))
                     {
-                        if (mons_is_god_gift(this, GOD_FEDHAS))
+                        if (mons_is_god_gift(*this, GOD_FEDHAS))
                         {
                             plant->flags |= MF_NO_REWARD;
 
@@ -1650,7 +1650,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                             {
                                 plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-                                mons_make_god_gift(plant, GOD_FEDHAS);
+                                mons_make_god_gift(*plant, GOD_FEDHAS);
                             }
                         }
 

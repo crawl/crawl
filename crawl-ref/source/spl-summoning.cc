@@ -2470,7 +2470,7 @@ static int _abjuration(int pow, monster *mon)
 
         bool shielded = false;
         // TSO and Trog's abjuration protection.
-        if (mons_is_god_gift(mon, GOD_SHINING_ONE))
+        if (mons_is_god_gift(*mon, GOD_SHINING_ONE))
         {
             sockage = sockage * (30 - mon->get_hit_dice()) / 45;
             if (sockage < duration)
@@ -2480,7 +2480,7 @@ static int _abjuration(int pow, monster *mon)
                 shielded = true;
             }
         }
-        else if (mons_is_god_gift(mon, GOD_TROG))
+        else if (mons_is_god_gift(*mon, GOD_TROG))
         {
             sockage = sockage * 8 / 15;
             if (sockage < duration)

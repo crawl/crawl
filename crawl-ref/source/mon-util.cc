@@ -1789,7 +1789,7 @@ static int _downscale_zombie_damage(int damage)
     return max(1, 4 * damage / 5);
 }
 
-static mon_attack_def _downscale_zombie_attack(const monster* mons,
+static mon_attack_def _downscale_zombie_attack(const monster& mons,
                                                mon_attack_def attk)
 {
     switch (attk.type)
@@ -1802,9 +1802,9 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
         break;
     }
 
-    if (mons->type == MONS_SIMULACRUM)
+    if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons->type == MONS_SPECTRAL_THING && coinflip())
+    else if (mons.type == MONS_SPECTRAL_THING && coinflip())
         attk.flavour = AF_DRAIN_XP;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
@@ -2003,7 +2003,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(&mon, attk) : attk;
+    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)
@@ -3003,9 +3003,9 @@ string mons_type_name(monster_type mc, description_level_type desc)
     return result;
 }
 
-static string _get_proper_monster_name(const monster* mon)
+static string _get_proper_monster_name(const monster& mon)
 {
-    const monsterentry *me = mon->find_monsterentry();
+    const monsterentry *me = mon.find_monsterentry();
     if (!me)
         return "";
 
@@ -3013,7 +3013,7 @@ static string _get_proper_monster_name(const monster* mon)
     if (!name.empty())
         return name;
 
-    return getRandNameString(get_monster_data(mons_genus(mon->type))->name,
+    return getRandNameString(get_monster_data(mons_genus(mon.type))->name,
                              " name");
 }
 
@@ -3035,7 +3035,7 @@ bool give_monster_proper_name(monster& mon, bool orcs_only)
         }
     }
 
-    mon.mname = _get_proper_monster_name(&mon);
+    mon.mname = _get_proper_monster_name(mon);
     if (!mon.props.exists("dbname"))
         mon.props["dbname"] = mons_class_name(mon.type);
 

@@ -282,7 +282,7 @@ static void _beogh_spread_experience(int exp)
 
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (is_orcish_follower(*mi))
+        if (is_orcish_follower(**mi))
             total_hd += mi->get_experience_level();
     }
 
@@ -290,7 +290,7 @@ static void _beogh_spread_experience(int exp)
         return;
 
     for (monster_near_iterator mi(&you); mi; ++mi)
-        if (is_orcish_follower(*mi))
+        if (is_orcish_follower(**mi))
         {
             _give_monster_experience(exp * mi->get_experience_level() / total_hd,
                                          mi->mindex());
@@ -739,7 +739,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
-        || !you.see_cell(mons.pos()) || mons_is_god_gift(&mons))
+        || !you.see_cell(mons.pos()) || mons_is_god_gift(mons))
     {
         return false;
     }
@@ -1672,7 +1672,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         return;
 
     // player gets credit for reflection kills, but not blame
-    const bool blameworthy = god_hates_killing(you.religion, &mons)
+    const bool blameworthy = god_hates_killing(you.religion, mons)
                              && killer_index != YOU_FAULTLESS;
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
@@ -1722,7 +1722,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     // Fedhas shrooms cause confusion which leads to subsequent
     // confusion kills, sometimes of the player's own plants
-    if (fedhas_protects(&mons) && killer != KILL_YOU_CONF)
+    if (fedhas_protects(mons) && killer != KILL_YOU_CONF)
         did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.

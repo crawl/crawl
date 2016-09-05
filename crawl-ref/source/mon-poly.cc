@@ -628,7 +628,7 @@ void slimify_monster(monster* mon, bool hostile)
     else
         mon->attitude = ATT_HOSTILE;
 
-    mons_make_god_gift(mon, GOD_JIYVA);
+    mons_make_god_gift(*mon, GOD_JIYVA);
 
     // Don't want shape-shifters to shift into non-slimes.
     mon->del_ench(ENCH_GLOWING_SHAPESHIFTER);

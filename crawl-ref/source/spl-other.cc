@@ -114,7 +114,7 @@ void start_recall(recall_t type)
         }
         else if (type == RECALL_BEOGH)
         {
-            if (!is_orcish_follower(*mi))
+            if (!is_orcish_follower(**mi))
                 continue;
         }
 

@@ -1332,7 +1332,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
-        mons_make_god_gift(mon, mg.god);
+        mons_make_god_gift(*mon, mg.god);
     // Not a god gift, give priestly monsters a god.
     else if (mon->is_priest())
     {
