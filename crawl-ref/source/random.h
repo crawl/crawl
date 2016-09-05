@@ -144,13 +144,13 @@ T random_choose_weighted(int cweight, T curr)
     return curr;
 }
 
-template <typename A, typename B, typename... Args>
-A random_choose_weighted(int cweight, A curr, int nweight, B next, Args... args)
+template <typename T, typename... Args>
+T random_choose_weighted(int cweight, T curr, int nweight, T next, Args... args)
 {
-    return random_choose_weighted(cweight + nweight,
-                                  random2(cweight + nweight) < nweight ? static_cast<A>(next)
-                                                                       : curr,
-                                  args...);
+    return random_choose_weighted<T>(cweight + nweight,
+                                     random2(cweight+nweight) < nweight ? next
+                                                                        : curr,
+                                     args...);
 }
 
 struct dice_def

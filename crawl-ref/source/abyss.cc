@@ -1455,7 +1455,7 @@ void destroy_abyss()
 
 static colour_t _roll_abyss_floor_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          108, BLUE,
          632, GREEN,
          // no CYAN (silence)
@@ -1476,7 +1476,7 @@ static colour_t _roll_abyss_floor_colour()
 
 static colour_t _roll_abyss_rock_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          130, BLUE,
          409, GREEN,
          // no CYAN (metal)
