@@ -7323,8 +7323,7 @@ bool player::polymorph(int pow)
              20, TRAN_ICE_BEAST,
               5, TRAN_STATUE,
               2, TRAN_HYDRA,
-              1, TRAN_DRAGON,
-              0);
+              1, TRAN_DRAGON);
         // need to do a dry run first, as Zin's protection has a random factor
         if (transform(pow, f, true, true))
             break;

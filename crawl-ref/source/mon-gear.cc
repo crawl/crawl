@@ -1079,8 +1079,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type  = random_choose_weighted(10, WPN_SPEAR,
                                                     10, WPN_TRIDENT,
                                                     5, WPN_HALBERD,
-                                                    5, WPN_GLAIVE,
-                                                    0);
+                                                    5, WPN_GLAIVE);
         }
         break;
 
@@ -1720,8 +1719,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
                                                     2, ARM_RING_MAIL,
                                                     1, ARM_SCALE_MAIL,
-                                                    1, ARM_CHAIN_MAIL,
-                                                    0);
+                                                    1, ARM_CHAIN_MAIL);
         }
         else
             return;
@@ -1762,8 +1760,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_IMPERIAL_MYRMIDON:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
-                                                2, ARM_RING_MAIL,
-                                                0);
+                                                2, ARM_RING_MAIL);
         break;
 
     case MONS_TERENCE:
@@ -1771,8 +1768,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(1, ARM_RING_MAIL,
                                                 3, ARM_SCALE_MAIL,
-                                                2, ARM_CHAIN_MAIL,
-                                                0);
+                                                2, ARM_CHAIN_MAIL);
         break;
 
     case MONS_SLAVE:
@@ -1799,8 +1795,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(10, ARM_CHAIN_MAIL,
                                                9, ARM_PLATE_ARMOUR,
-                                               1, ARM_CRYSTAL_PLATE_ARMOUR,
-                                               0);
+                                               1, ARM_CRYSTAL_PLATE_ARMOUR);
         break;
 
     case MONS_JORGRUN:
@@ -1847,8 +1842,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(3, ARM_MOTTLED_DRAGON_ARMOUR,
                                                1, ARM_SWAMP_DRAGON_ARMOUR,
-                                               6, ARM_FIRE_DRAGON_ARMOUR,
-                                               0);
+                                               6, ARM_FIRE_DRAGON_ARMOUR);
         break;
 
     case MONS_HELLBINDER:
@@ -1862,15 +1856,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DEATH_KNIGHT:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(7, ARM_CHAIN_MAIL,
-                                                1, ARM_PLATE_ARMOUR,
-                                                0);
+                                                1, ARM_PLATE_ARMOUR);
         break;
 
     case MONS_MERFOLK_IMPALER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(6, ARM_ROBE,
-                                               4, ARM_LEATHER_ARMOUR,
-                                               0);
+                                               4, ARM_LEATHER_ARMOUR);
         if (one_chance_in(16))
             level = ISPEC_GOOD_ITEM;
         break;
@@ -2080,8 +2072,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                 3, ARM_RING_MAIL,
                                                 5, ARM_SCALE_MAIL,
                                                 3, ARM_CHAIN_MAIL,
-                                                2, ARM_PLATE_ARMOUR,
-                                                0);
+                                                2, ARM_PLATE_ARMOUR);
         break;
 
     case MONS_BLOOD_SAINT:
@@ -2121,8 +2112,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                 100, ARM_PLATE_ARMOUR,
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
-                                                  5, ARM_MOTTLED_DRAGON_ARMOUR,
-                                                  0);
+                                                  5, ARM_MOTTLED_DRAGON_ARMOUR);
         break;
 
     case MONS_HALAZID_WARLOCK:

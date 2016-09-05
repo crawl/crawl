@@ -1127,8 +1127,7 @@ static void _lugonu_minion_retribution()
                 15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
                 you.experience_level/2,         MONS_ABOMINATION_LARGE,
                 6,                              MONS_THRASHING_HORROR,
-                3,                              MONS_ANCIENT_ZYME,
-                0
+                3,                              MONS_ANCIENT_ZYME
             );
 
         if (create_monster(_wrath_mon_data(to_summon, god), false))

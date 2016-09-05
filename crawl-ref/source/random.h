@@ -144,13 +144,6 @@ T random_choose_weighted(int cweight, T curr)
     return curr;
 }
 
-template <typename T>
-T random_choose_weighted(int cweight, T curr, int sentinel)
-{
-    ASSERT(sentinel == 0); // legacy support for va_args version
-    return curr;
-}
-
 template <typename A, typename B, typename... Args>
 A random_choose_weighted(int cweight, A curr, int nweight, B next, Args... args)
 {

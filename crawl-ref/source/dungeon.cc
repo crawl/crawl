@@ -1291,8 +1291,7 @@ static void _fixup_walls()
         if (you.depth == branches[BRANCH_VAULTS].numlevels)
         {
             wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
-                                               9, DNGN_METAL_WALL,
-                                               0);
+                                               9, DNGN_METAL_WALL);
         }
         break;
     }
@@ -3558,7 +3557,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
 
             mg.base_type = mg.cls;
             int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 0)];
         }
 
         place_monster(mg);
@@ -4364,8 +4363,7 @@ static object_class_type _superb_object_class()
             10, OBJ_BOOKS,
             9, OBJ_STAVES,
             1, OBJ_RODS,
-            10, OBJ_MISCELLANY,
-            0);
+            10, OBJ_MISCELLANY);
 }
 
 int dgn_place_item(const item_spec &spec,

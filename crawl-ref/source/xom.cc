@@ -1002,8 +1002,7 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
                                      10, POT_BERSERK_RAGE,
-                                     1,  POT_EXPERIENCE,
-                                     0);
+                                     1,  POT_EXPERIENCE);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
@@ -2605,8 +2604,7 @@ static void _xom_cloud_trail(int /*sever*/)
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
-                               5,  CLOUD_NEGATIVE_ENERGY,
-                               0);
+                               5,  CLOUD_NEGATIVE_ENERGY);
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
 

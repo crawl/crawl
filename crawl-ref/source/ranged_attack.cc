@@ -449,8 +449,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                      5, SPMSL_FRENZY,
                      2, SPMSL_CURARE,
                      2, SPMSL_CONFUSION,
-                     2, SPMSL_DISPERSAL,
-                     0));
+                     2, SPMSL_DISPERSAL));
 
         if (one_chance_in(3))
             break;
