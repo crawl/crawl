@@ -5612,8 +5612,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player", TILEP_MONS_PLAYER_GHOST)
 {
     MONS_SIXFIRHY, '3', LIGHTBLUE, "sixfirhy",
     M_NO_FLAGS,
-    MR_NO_FLAGS, // Can't have RES_ELEC since most sources of damage do nothing
-                 // in that case. We want to "suffer" the damage to get healed.
+    MR_RES_ELEC,
     6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, 60,
     { {AT_HIT, AF_ELEC, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     9, 385,

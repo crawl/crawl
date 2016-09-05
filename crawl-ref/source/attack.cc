@@ -442,27 +442,6 @@ void attack::alert_defender()
 
 bool attack::distortion_affects_defender()
 {
-    //jmf: blink frogs *like* distortion
-    // I think could be amended to let blink frogs "grow" like
-    // jellies do {dlb}
-    if (defender->is_monster()
-        && mons_genus(defender->type) == MONS_BLINK_FROG)
-    {
-        if (one_chance_in(5))
-        {
-            if (defender_visible)
-            {
-                special_damage_message =
-                    make_stringf("%s %s in the distortional energy.",
-                                 defender_name(false).c_str(),
-                                 defender->conj_verb("bask").c_str());
-            }
-
-            defender->heal(1 + random2avg(7, 2)); // heh heh
-        }
-        return false;
-    }
-
     enum disto_effect
     {
         SMALL_DMG,
