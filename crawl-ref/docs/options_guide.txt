@@ -16,9 +16,8 @@ The contents of this text are:
 0-e     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
-                combo, random_pick, good_random, restart_after_game,
-                restart_after_save, default_manual_training,
-                autopickup_starting_ammo
+                combo, restart_after_game, restart_after_save,
+                default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
@@ -350,16 +349,6 @@ combo += (HuFi . short sword | Human Monk | ...), <combo>, ...
         in full. If multiple combos are specified, one is selected randomly
         from the specified combos. The weapon, species, and background
         options are overriden by (and override) this option.
-
-random_pick = false
-        The random_pick option will randomly generate a character.
-        The above options (weapons and species/background options) will
-        override where appropriate.
-
-good_random = true
-        Whenever random_pick is used, species or background are set
-        random, or a remembered random choice is executed in the character
-        selection, the game will only pick good (viable) combinations.
 
 restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
