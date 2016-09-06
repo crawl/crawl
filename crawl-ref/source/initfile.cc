@@ -189,6 +189,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
+        // [ds] Default to jazzy colours.
+        new ColourGameOption(SIMPLE_NAME(detected_item_colour), GREEN),
+        new ColourGameOption(SIMPLE_NAME(detected_monster_colour), LIGHTRED),
+        new ColourGameOption(SIMPLE_NAME(remembered_monster_colour), DARKGREY),
+        new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN, false),
+        new ColourGameOption(SIMPLE_NAME(background_colour), BLACK, false),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -948,13 +954,6 @@ void game_options::reset_options()
     tc_exclude_circle      = RED;
     tc_dangerous           = CYAN;
     tc_disconnected        = DARKGREY;
-
-    background_colour      = BLACK;
-    // [ds] Default to jazzy colours.
-    detected_item_colour   = GREEN;
-    detected_monster_colour = LIGHTRED;
-    remembered_monster_colour = DARKGREY;
-    status_caption_colour  = BROWN;
 
     assign_item_slot       = SS_FORWARD;
     show_god_gift          = MB_MAYBE;
@@ -2453,18 +2452,6 @@ static void _handle_list(vector<T> &value_list, string field,
 
 void game_options::read_option_line(const string &str, bool runscript)
 {
-#define COLOUR_OPTION_NAMED(_opt_str, _opt_var, elemental)              \
-    if (key == _opt_str) do {                                           \
-        const int col = str_to_colour(field, -1, true, elemental);      \
-        if (col != -1) {                                                \
-            _opt_var = col;                                             \
-        } else {                                                        \
-            /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
-            report_error("Bad %s -- %s\n", key.c_str(), field.c_str()); \
-        }                                                               \
-    } while (false)
-#define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt, true)
-#define UI_COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt, false)
 
 #define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
     if (key == _opt_str) do {                       \
@@ -2614,7 +2601,11 @@ void game_options::read_option_line(const string &str, bool runscript)
 
     GameOption *const *option = map_find(options_by_name, key);
     if (option)
-        (*option)->loadFromString(field);
+    {
+        const string error = (*option)->loadFromString(field);
+        if (!error.empty())
+            report_error("%s", error.c_str());
+    }
     else if (key == "include")
         include(field, true, runscript);
     else if (key == "opt" || key == "option")
@@ -2735,10 +2726,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (col == MSGCOL_NONE)
             fprintf(stderr, "Bad colour -- %s\n", field.c_str());
     }
-    else UI_COLOUR_OPTION(background_colour);
-    else COLOUR_OPTION(detected_item_colour);
-    else COLOUR_OPTION(detected_monster_colour);
-    else COLOUR_OPTION(remembered_monster_colour);
     else if (key == "use_animations")
     {
         if (plain)
@@ -2814,7 +2801,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else CURSES_OPTION(trap_item_brand);
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
-    else UI_COLOUR_OPTION(status_caption_colour);
     else if (key == "arena_teams")
         game.arena_teams = field;
     // [ds] Allow changing map only if the map hasn't been set on the
