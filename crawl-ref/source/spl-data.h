@@ -3489,6 +3489,7 @@ static const struct spell_desc spelldata[] =
     TILEG_ERROR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_THROW, "Throw",
     SPTYP_TRANSLOCATION,
@@ -3499,6 +3500,7 @@ static const struct spell_desc spelldata[] =
     0, 5,
     TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_CORRUPTING_PULSE, "Corrupting Pulse",

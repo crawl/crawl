@@ -832,7 +832,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRON_GIANT,
       {
        { SPELL_IRON_SHOT, 40, MON_SPELL_WIZARD },
-       { SPELL_THROW, 80, MON_SPELL_NATURAL },
+       { SPELL_THROW_ALLY, 80, MON_SPELL_NATURAL },
       }
     },
 

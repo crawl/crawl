@@ -95,11 +95,7 @@ static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_conjure_flame_pos(const monster &mon);
 static coord_def _mons_prism_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
-static bool _mons_consider_throwing(const monster &mons);
-static bool _throw(const monster &thrower, actor &victim, int pow);
 static void _maybe_throw_ally(const monster &mons);
-static int _throw_site_score(const monster &thrower, const actor &victim,
-                             const coord_def &site);
 static void _siren_sing(monster* mons, bool avatar);
 static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
@@ -6784,10 +6780,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _corrupting_pulse(mons);
         return;
 
-    case SPELL_THROW:
-        _mons_consider_throwing(*mons);
-        return;
-
     case SPELL_THROW_ALLY:
         _maybe_throw_ally(*mons);
         return;
@@ -7383,9 +7375,17 @@ static coord_def _choose_throwing_target(const monster &thrower,
 
 static bool _will_throw_ally(const monster& thrower, const monster& throwee)
 {
-    return thrower.type == MONS_ROBIN && throwee.mons_species() == MONS_GOBLIN
-           || thrower.type == MONS_POLYPHEMUS
-              && mons_genus(throwee.type) == MONS_YAK;
+    switch (thrower.type)
+    {
+    case MONS_ROBIN:
+        return throwee.mons_species() == MONS_GOBLIN;
+    case MONS_POLYPHEMUS:
+        return mons_genus(throwee.type) == MONS_YAK;
+    case MONS_IRON_GIANT:
+        return true;
+    default:
+        return false;
+    }
 }
 
 static monster* _find_ally_to_throw(const monster &mons)
@@ -7517,222 +7517,6 @@ static void _maybe_throw_ally(const monster &mons)
         return;
 
     _throw_ally_to(mons, *throwee, toss_target);
-}
-
-/**
- * Find the best creature for the given monster to toss.
- *
- * @param mons      The monster thinking about throwing.
- * @return          The victim for the monster to throw. Can be null.
- */
-static actor *_get_throw_victim(const monster &mons)
-{
-    // Always throw the player first, if possible.
-    if (!mons.wont_attack() && adjacent(you.pos(), mons.pos())
-        && !(mons.is_constricted() && mons.constricted_by == MID_PLAYER)
-        && mons.can_constrict(&you))
-    {
-        return &you;
-    }
-
-    for (fair_adjacent_iterator ai(mons.pos()); ai; ++ai)
-    {
-        actor* victim = actor_at(*ai);
-        // Only throw real, living victims.
-        if (!victim || !victim->alive())
-            continue;
-
-        // Don't throw allies.
-        if (mons_aligned(&mons, victim))
-            continue;
-
-        // Don't try to throw anything constricting the thrower.
-        if (mons.is_constricted() && mons.constricted_by == victim->mid)
-            continue;
-
-        // Don't throw statues or tentacles.
-        if (mons_class_is_stationary(victim->type))
-            continue;
-
-        // See if we *could* execute a grab attack, and if so, they're
-        // a valid target.
-        if (mons.can_constrict(victim))
-            return victim;
-    }
-
-    // Nope.
-    return nullptr;
-}
-
-/**
- * Make the given monster try to throw a constricted victim, if possible.
- *
- * @param mons       The monster doing the throwing.
- * @return           Whether a throw attempt was made.
- */
-static bool _mons_consider_throwing(const monster &mons)
-{
-    actor *victim = _get_throw_victim(mons);
-    if (!victim)
-        return false;
-
-    return _throw(mons, *victim, mons.get_hit_dice() * 4);
-}
-
-/**
- * Find the actual landing place for a throw.
- *
- * @param thrower       The monster performing the toss.
- * @param victim        The actor being thrown.
- * @param target_site   The intended destination.
- * @return              The actual destination, somewhere along a ray between
- *                      the victim's initial position and the intended
- *                      destination.
- */
-static coord_def _choose_throw_dest(const monster &thrower,
-                                            const actor &victim,
-                                            const coord_def &target_site)
-{
-    ray_def ray;
-    vector<coord_weight> dests;
-    const bool found_ray
-        = find_ray(thrower.pos(), target_site, ray, opc_solid_see);
-    // Should have already been rejected by _choose_throwing_target.
-    ASSERT(found_ray);
-    while (ray.advance())
-    {
-        if (_valid_throw_dest(thrower, victim, ray.pos()))
-        {
-            const int dist = thrower.pos().distance_from(ray.pos());
-            const int weight = sqr(LOS_RADIUS - dist + 1);
-            dests.emplace_back(ray.pos(), weight);
-        }
-        if (ray.pos() == target_site)
-            break;
-    }
-
-    ASSERT(dests.size());
-    const coord_def* const choice = random_choose_weighted(dests);
-    ASSERT(choice);
-    ASSERT(in_bounds(*choice));
-    return *choice;
-}
-
-/**
- * Actually perform a throw to the specified destination.
- *
- * @param thrower       The monster doing the tossing.
- * @param victim        The tossee.
- * @param pow           The power of the throw; determines damage.
- * @param chosen_dest   The final destination of the victim.
- */
-static void _throw_to(const monster &thrower, actor &victim,
-                              int pow, const coord_def &chosen_dest)
-{
-    ASSERT(in_bounds(chosen_dest));
-
-    const bool thrower_seen = you.can_see(thrower);
-    const bool victim_was_seen = you.can_see(victim);
-    const string thrower_name = thrower.name(DESC_THE);
-
-    const int dam = victim.apply_ac(random2(pow));
-    victim.stop_being_constricted(true);
-    if (victim.is_player())
-    {
-        mprf("%s throws you!",
-             (thrower_seen ? thrower_name.c_str() : "Something"));
-        move_player_to_grid(chosen_dest, false);
-        stop_delay(true);
-    }
-    else
-    {
-        monster * const vmon = victim.as_monster();
-        const string victim_name = victim.name(DESC_THE);
-        const coord_def old_pos = victim.pos();
-
-        if (!(vmon->flags & MF_WAS_IN_VIEW))
-            vmon->seen_context = SC_THROWN_IN;
-        vmon->move_to_pos(chosen_dest);
-        vmon->apply_location_effects(old_pos);
-        vmon->check_redraw(old_pos);
-        if (thrower_seen || victim_was_seen)
-        {
-            mprf("%s throws %s%s!",
-                 (thrower_seen ? thrower_name.c_str() : "Something"),
-                 (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(*vmon) ? "" : " out of view"));
-        }
-    }
-    victim.hurt(&thrower, dam, BEAM_MISSILE, KILLED_BY_BEING_THROWN, "", "",
-                true);
-}
-
-/**
- * The actor throws the victim to a habitable square within LOS of the victim
- * and at least as far as a distance of 2 from the thrower, which deals
- * AC-checking damage. A hostile monster prefers to throw the player into a
- * dangerous spot, and a monster throwing another monster prefers to throw far
- * from the player, regardless of alignment.
- * @param thrower  The thrower.
- * @param victim   The victim.
- * @param pow      The throw power, which is the die size for damage.
- * @return         True if the victim was thrown, False otherwise.
- */
-static bool _throw(const monster &thrower, actor &victim, int pow)
-{
-    const coord_def throw_target = _choose_throwing_target(thrower, victim,
-                                                           _throw_site_score);
-    if (throw_target.origin())
-        return false;
-
-    const coord_def chosen_dest = _choose_throw_dest(thrower, victim,
-                                                             throw_target);
-    _throw_to(thrower, victim, pow, chosen_dest);
-    return true;
-}
-
-/**
- * Score a landing site for purposes of throwing the victim. This uses monster
- * difficulty and number of open (habitable) squares as a score if the victim
- * is the player, or distance from player otherwise.
- * @param   thrower  The thrower.
- * @param   victim   The victim.
- * @param   site     The site to score.
- * @return           An integer score >= 0
- */
-static int _throw_site_score(const monster &thrower, const actor &victim,
-                             const coord_def &site)
-{
-    const int open_site_score = 1;
-    const monster * const vmons = victim.as_monster();
-
-    // Initial score is just as far away from player as possible, and
-    // we stop there if the thrower or victim is friendly.
-    int score = you.pos().distance_from(site);
-    if (thrower.friendly() || (vmons && vmons->friendly()))
-        return score;
-
-    for (adjacent_iterator ai(site); ai; ++ai)
-    {
-        if (!thrower.see_cell(*ai))
-            continue;
-
-        // Being next to open space is bad for players, who thrive in crannies
-        // and nooks, like the vermin they are.
-        if (victim.is_habitable(*ai))
-            score += open_site_score;
-
-        // Being next to dangerous monsters is also bad.
-        const monster * const mons = monster_at(*ai);
-        if (mons && !mons->friendly()
-            && mons != &thrower
-            && !mons_is_firewood(*mons))
-        {
-            score += sqr(mons_threat_level(*mons) + 2);
-        }
-    }
-
-    return score;
 }
 
 /**
@@ -8227,13 +8011,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_MASS_CONFUSION:
         return _mons_mass_confuse(mon, false) < 0;
-
-    case SPELL_THROW:
-    {
-        const actor* victim = _get_throw_victim(*mon);
-        return !victim || _choose_throwing_target(*mon, *victim,
-                                                  _throw_site_score).origin();
-    }
 
     case SPELL_THROW_ALLY:
         return !_find_ally_to_throw(*mon);
