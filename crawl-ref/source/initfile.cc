@@ -195,6 +195,18 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(remembered_monster_colour), DARKGREY),
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN, false),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK, false),
+        new CursesGameOption(SIMPLE_NAME(friend_brand),
+                             CHATTR_HILITE | (GREEN << 8)),
+        new CursesGameOption(SIMPLE_NAME(neutral_brand),
+                             CHATTR_HILITE | (LIGHTGREY << 8)),
+        new CursesGameOption(SIMPLE_NAME(stab_brand),
+                             CHATTR_HILITE | (BLUE << 8)),
+        new CursesGameOption(SIMPLE_NAME(may_stab_brand),
+                             CHATTR_HILITE | (YELLOW << 8)),
+        new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
+        // no_dark_brand applies here as well.
+        new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -605,36 +617,6 @@ static int _read_bool_or_number(const string &field, int def_value,
     return ret;
 }
 
-static unsigned curses_attribute(const string &field)
-{
-    if (field == "standout")               // probably reverses
-        return CHATTR_STANDOUT;
-    else if (field == "bold")              // probably brightens fg
-        return CHATTR_BOLD;
-    else if (field == "blink")             // probably brightens bg
-        return CHATTR_BLINK;
-    else if (field == "underline")
-        return CHATTR_UNDERLINE;
-    else if (field == "reverse")
-        return CHATTR_REVERSE;
-    else if (field == "dim")
-        return CHATTR_DIM;
-    else if (starts_with(field, "hi:")
-             || starts_with(field, "hilite:")
-             || starts_with(field, "highlight:"))
-    {
-        int col = field.find(":");
-        int colour = str_to_colour(field.substr(col + 1));
-        if (colour == -1)
-            Options.report_error("Bad highlight string -- %s\n", field.c_str());
-        else
-            return CHATTR_HILITE | (colour << 8);
-    }
-    else if (field != "none")
-        Options.report_error("Bad colour -- %s\n", field.c_str());
-    return CHATTR_NORMAL;
-}
-
 void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
 {
     vector<string> colour_list = split_string(" ", colours, true, true);
@@ -1006,14 +988,6 @@ void game_options::reset_options()
     // XXX: These need a better place.
     sc_entries             = 0;
     sc_format              = -1;
-
-    friend_brand       = CHATTR_HILITE | (GREEN << 8);
-    neutral_brand      = CHATTR_HILITE | (LIGHTGREY << 8);
-    stab_brand         = CHATTR_HILITE | (BLUE << 8);
-    may_stab_brand     = CHATTR_HILITE | (YELLOW << 8);
-    heap_brand         = CHATTR_REVERSE;
-    feature_item_brand = CHATTR_REVERSE;
-    trap_item_brand    = CHATTR_REVERSE;
 
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
@@ -2453,12 +2427,6 @@ static void _handle_list(vector<T> &value_list, string field,
 void game_options::read_option_line(const string &str, bool runscript)
 {
 
-#define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
-    if (key == _opt_str) do {                       \
-        _opt_var = curses_attribute(field);   \
-    } while (false)
-#define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
-
 #define INT_OPTION_NAMED(_opt_str, _opt_var, _min_val, _max_val)        \
     if (key == _opt_str) do {                                           \
         const int min_val = (_min_val);                                 \
@@ -2793,14 +2761,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
     }
-    else CURSES_OPTION(friend_brand);
-    else CURSES_OPTION(neutral_brand);
-    else CURSES_OPTION(stab_brand);
-    else CURSES_OPTION(may_stab_brand);
-    else CURSES_OPTION(feature_item_brand);
-    else CURSES_OPTION(trap_item_brand);
-    // no_dark_brand applies here as well.
-    else CURSES_OPTION(heap_brand);
     else if (key == "arena_teams")
         game.arena_teams = field;
     // [ds] Allow changing map only if the map hasn't been set on the

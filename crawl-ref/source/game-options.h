@@ -55,6 +55,20 @@ private:
     bool elemental;
 };
 
+class CursesGameOption : public GameOption
+{
+public:
+    CursesGameOption(unsigned &val, std::set<std::string> _names,
+                     unsigned _default)
+        : GameOption(_names), value(val), default_value(_default) { }
+    void reset() const override;
+    string loadFromString(std::string field) const override;
+
+private:
+    unsigned &value;
+    unsigned default_value;
+};
+
 bool read_bool(const std::string &field, bool def_value);
 
 #endif // GAME_OPTION_H
