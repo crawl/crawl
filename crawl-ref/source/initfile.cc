@@ -862,8 +862,6 @@ void game_options::reset_options()
     tc_dangerous           = CYAN;
     tc_disconnected        = DARKGREY;
 
-    show_waypoints         = true;
-
     background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
