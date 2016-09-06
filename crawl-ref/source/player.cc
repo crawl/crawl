@@ -2392,9 +2392,9 @@ int player_shield_class()
     }
 
     // mutations
-    // +2, +3, +4 (displayed values)
+    // +4, +6, +8 (displayed values)
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200 + 200
+               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
 
     shield += qazlal_sh_boost() * 100;
@@ -6094,9 +6094,6 @@ int player::armour_class(bool /*calc_unid*/) const
               // +1, +2, +3
     AC += _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL) * 200;
               // +2, +4, +6
-    AC += _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL) * 100 : 0;
-              // +2, +3, +4
 #if TAG_MAJOR_VERSION == 34
     AC += _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL)
           ? -100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;
