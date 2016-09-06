@@ -30,6 +30,7 @@
 #include "end.h"
 #include "errors.h"
 #include "files.h"
+#include "game-options.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -82,6 +83,217 @@ extern char **NXArgv;
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
+
+static map<string, GameOption*> _build_options_map()
+{
+    return {
+    { "autopickup_starting_ammo",
+        new BoolGameOption(Options.autopickup_starting_ammo, true) },
+    { "default_show_all_skills",
+        new BoolGameOption(Options.default_show_all_skills, false) },
+#ifndef DGAMELAUNCH
+    { "restart_after_game",
+        new BoolGameOption(Options.restart_after_game,
+#if defined(USE_TILE_LOCAL)
+                            true) },
+#else
+                            false) },
+#endif
+    { "restart_after_save",
+        new BoolGameOption(Options.restart_after_save, false) },
+#endif
+    { "read_persist_options",
+        new BoolGameOption(Options.read_persist_options, false) },
+    { "auto_switch",
+        new BoolGameOption(Options.auto_switch, false) },
+    { "suppress_startup_errors",
+        new BoolGameOption(Options.suppress_startup_errors, false) },
+    { "show_uncursed",
+        new BoolGameOption(Options.show_uncursed, true) },
+    { "easy_quit_item_prompts",
+        new BoolGameOption(Options.easy_quit_item_prompts, true) },
+    { "travel_open_doors",
+        new BoolGameOption(Options.travel_open_doors, true) },
+    { "easy_unequip",
+        new BoolGameOption(Options.easy_unequip, true) },
+    { "equip_unequip",
+        new BoolGameOption(Options.equip_unequip, false) },
+    { "jewellery_prompt",
+        new BoolGameOption(Options.jewellery_prompt, false) },
+    { "easy_door",
+        new BoolGameOption(Options.easy_door, true) },
+    { "warn_hatches",
+        new BoolGameOption(Options.warn_hatches, false) },
+    { "enable_recast_spell",
+        new BoolGameOption(Options.enable_recast_spell, true) },
+    { "auto_butcher",
+        new BoolGameOption(Options.auto_butcher, false) },
+    { "easy_eat_chunks",
+        new BoolGameOption(Options.easy_eat_chunks, false) },
+    { "auto_eat_chunks",
+        new BoolGameOption(Options.auto_eat_chunks, true) },
+// This is useful for terms where dark grey does
+// not have standout modes (since it's black on black).
+// This option will use light-grey instead in these cases.
+    { "no_dark_brand",
+        new BoolGameOption(Options.no_dark_brand, true) },
+    { "regex_search",
+        new BoolGameOption(Options.regex_search, false) },
+    { "autopickup_search",
+        new BoolGameOption(Options.autopickup_search, false) },
+    { "show_newturn_mark",
+        new BoolGameOption(Options.show_newturn_mark, true) },
+    { "show_game_turns",
+        new BoolGameOption(Options.show_game_turns, true) },
+    { "mouse_input",
+        new BoolGameOption(Options.mouse_input, false) },
+    { "mlist_allow_alternate_layout",
+        new BoolGameOption(Options.mlist_allow_alternate_layout, false) },
+    { "messages_at_top",
+        new BoolGameOption(Options.messages_at_top, false) },
+    { "msg_condense_repeats",
+        new BoolGameOption(Options.msg_condense_repeats, true) },
+    { "msg_condense_short",
+        new BoolGameOption(Options.msg_condense_short, true) },
+    { "view_lock_x",
+        new BoolGameOption(Options.view_lock_x, true) },
+    { "view_lock_y",
+        new BoolGameOption(Options.view_lock_y, true) },
+    { "center_on_scroll",
+        new BoolGameOption(Options.center_on_scroll, false) },
+    { "symmetric_scroll",
+        new BoolGameOption(Options.symmetric_scroll, true) },
+    { "always_show_exclusions",
+        new BoolGameOption(Options.always_show_exclusions, true) },
+    { "note_all_skill_levels",
+        new BoolGameOption(Options.note_all_skill_levels, false) },
+    { "note_skill_max",
+        new BoolGameOption(Options.note_skill_max, true) },
+    { "note_xom_effects",
+        new BoolGameOption(Options.note_xom_effects, true) },
+    { "note_chat_messages",
+        new BoolGameOption(Options.note_chat_messages, false) },
+    { "note_dgl_messages",
+        new BoolGameOption(Options.note_dgl_messages, true) },
+    { "clear_messages",
+        new BoolGameOption(Options.clear_messages, false) },
+    { "show_more",
+        new BoolGameOption(Options.show_more,
+#if defined(TOUCH_UI)
+                           false) },
+#else
+                            true) },
+#endif
+    { "small_more",
+        new BoolGameOption(Options.small_more, false) },
+    { "pickup_thrown",
+        new BoolGameOption(Options.pickup_thrown, true) },
+    { "show_travel_trail",
+        new BoolGameOption(Options.show_travel_trail,
+#if defined(DGAMELAUNCH)
+                           true) },
+#else
+                           false) },
+#endif
+    { "use_fake_cursor",
+        new BoolGameOption(Options.use_fake_cursor,
+#if defined(UNIX)
+                           true) },
+#else
+                           false) },
+#endif
+    { "use_fake_player_cursor",
+        new BoolGameOption(Options.use_fake_player_cursor, true) },
+    { "show_player_species",
+        new BoolGameOption(Options.show_player_species, false) },
+    { "easy_exit_menu",
+        new BoolGameOption(Options.easy_exit_menu, false) },
+    { "ability_menu",
+        new BoolGameOption(Options.ability_menu, true) },
+    { "easy_floor_use",
+        new BoolGameOption(Options.easy_floor_use, true) },
+    { "dos_use_background_intensity",
+        new BoolGameOption(Options.dos_use_background_intensity, true) },
+    { "explore_greedy",
+        new BoolGameOption(Options.explore_greedy, true) },
+    { "explore_improved",
+        new BoolGameOption(Options.explore_improved, false) },
+    { "explore_auto_rest",
+        new BoolGameOption(Options.explore_auto_rest, false) },
+    { "travel_key_stop",
+        new BoolGameOption(Options.travel_key_stop, true) },
+    { "auto_sacrifice",
+        new BoolGameOption(Options.auto_sacrifice, false) },
+    { "dump_on_save",
+        new BoolGameOption(Options.dump_on_save, true) },
+    { "rest_wait_both",
+        new BoolGameOption(Options.rest_wait_both, false) },
+    { "cloud_status",
+        new BoolGameOption(Options.cloud_status, is_tiles()) },
+    { "darken_beyond_range",
+        new BoolGameOption(Options.darken_beyond_range, true) },
+    { "dump_book_spells",
+        new BoolGameOption(Options.dump_book_spells, true) },
+    { "arena_dump_msgs",
+        new BoolGameOption(Options.arena_dump_msgs, false) },
+    { "arena_dump_msgs_all",
+        new BoolGameOption(Options.arena_dump_msgs_all, false) },
+    { "arena_list_eq",
+        new BoolGameOption(Options.arena_list_eq, false) },
+#ifdef DGL_SIMPLE_MESSAGING
+    { "messaging",
+        new BoolGameOption(Options.messaging, false) },
+#endif
+#ifdef USE_TILE
+    { "tile_skip_title",
+        new BoolGameOption(Options.tile_skip_title, false) },
+    { "tile_menu_icons",
+        new BoolGameOption(Options.tile_menu_icons, true) },
+    { "tile_filter_scaling",
+        new BoolGameOption(Options.tile_filter_scaling, false) },
+    { "tile_force_overlay",
+        new BoolGameOption(Options.tile_force_overlay, false) },
+    { "tile_show_minihealthbar",
+        new BoolGameOption(Options.tile_show_minihealthbar, true) },
+    { "tile_show_minimagicbar",
+        new BoolGameOption(Options.tile_show_minimagicbar, true) },
+    { "tile_show_demon_tier",
+        new BoolGameOption(Options.tile_show_demon_tier, false) },
+    { "tile_water_anim",
+        new BoolGameOption(Options.tile_water_anim,
+#ifdef USE_TILE_WEB
+                           // disabled by default due to performance issues
+                           false) },
+#else
+                            true) },
+#endif
+    { "mlist_targeting",
+        new BoolGameOption(Options.mlist_targeting, false) },
+    { "tile_misc_anim",
+        new BoolGameOption(Options.tile_misc_anim, true) },
+#endif
+#ifdef USE_TILE_WEB
+    { "tile_realtime_anim",
+        new BoolGameOption(Options.tile_realtime_anim, false) },
+    { "tile_level_map_hide_messages",
+        new BoolGameOption(Options.tile_level_map_hide_messages, true) },
+    { "tile_level_map_hide_sidebar",
+        new BoolGameOption(Options.tile_level_map_hide_sidebar, false) },
+#endif
+#ifdef USE_FT
+    { "tile_font_ft_light",
+        new BoolGameOption(Options.tile_font_ft_light, false) },
+#endif
+#ifdef WIZARD
+    { "fsim_csv",
+        new BoolGameOption(Options.fsim_csv, false) },
+#endif
+#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
+    { "remember_name",
+        new BoolGameOption(Options.remember_name, true) },
+#endif
+};
+}
 
 template <class L, class E>
 static L& remove_matching(L& lis, const E& entry)
@@ -420,19 +632,6 @@ job_type str_to_job(const string &str)
     return job;
 }
 
-static bool _read_bool(const string &field, bool def_value)
-{
-    bool ret = def_value;
-
-    if (field == "true" || field == "1" || field == "yes")
-        ret = true;
-
-    if (field == "false" || field == "0" || field == "no")
-        ret = false;
-
-    return ret;
-}
-
 // read a value which can be either a boolean (in which case return
 // 0 for true, -1 for false), or a string of the form PREFIX:NUMBER
 // (e.g., auto:7), in which case return NUMBER as an int.
@@ -678,6 +877,9 @@ static string _resolve_dir(const char* path, const char* suffix)
 
 void game_options::reset_options()
 {
+    for (auto option : options_by_name)
+        option.second->reset();
+
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
@@ -693,15 +895,6 @@ void game_options::reset_options()
     quiet_debug_messages.set(DIAG_MONINDEX);
 # endif
 #endif
-
-#if defined(USE_TILE_LOCAL)
-    restart_after_game = true;
-#else
-    restart_after_game = false;
-#endif
-    restart_after_save = false;
-
-    read_persist_options = false;
 
     macro_dir = SysEnv.macro_dir;
 
@@ -741,39 +934,19 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    mouse_input = false;
-
     view_max_width   = max(VIEW_BASE_WIDTH, VIEW_MIN_WIDTH);
     view_max_height  = max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 4;
     msg_min_height   = max(7, MSG_MIN_HEIGHT);
     msg_max_height   = max(10, MSG_MIN_HEIGHT);
-    mlist_allow_alternate_layout = false;
-    messages_at_top  = false;
-    mlist_targeting  = false;
-    msg_condense_repeats = true;
-    msg_condense_short = true;
 
-    view_lock_x = true;
-    view_lock_y = true;
-
-    center_on_scroll = false;
-    symmetric_scroll = true;
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
-    always_show_exclusions = true;
 
     autopickup_on    = 1;
-    autopickup_starting_ammo = true;
     default_manual_training = false;
-    default_show_all_skills = false;
-
-    show_newturn_mark = true;
-    show_game_turns = true;
 
     game = newgame_def();
-
-    remember_name = true;
 
     char_set      = CSET_DEFAULT;
 
@@ -787,61 +960,28 @@ void game_options::reset_options()
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
     autopickups.set(OBJ_RODS);
-    auto_switch             = false;
-    suppress_startup_errors = false;
 
-    show_uncursed          = true;
-    travel_open_doors      = true;
-    easy_unequip           = true;
-    equip_unequip          = false;
-    jewellery_prompt       = false;
-    easy_door              = true;
-    warn_hatches           = false;
-    enable_recast_spell    = true;
     confirm_butcher        = CONFIRM_AUTO;
-    auto_butcher           = false;
-    easy_eat_chunks        = false;
-    auto_eat_chunks        = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
-    easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
     autofight_warning      = 0;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
-    cloud_status           = !is_tiles();
-    darken_beyond_range    = true;
 
     user_note_prefix       = "";
-    note_all_skill_levels  = false;
-    note_skill_max         = true;
-    note_xom_effects       = true;
-    note_chat_messages     = false;
-    note_dgl_messages      = true;
     note_hp_percent        = 5;
 
     fail_severity_to_confirm = 3;
-
-    clear_messages         = false;
-#ifdef TOUCH_UI
-    show_more              = false;
-#else
-    show_more              = true;
-#endif
-    small_more             = false;
-
-    pickup_thrown          = true;
 
 #ifdef DGAMELAUNCH
     travel_delay           = -1;
     explore_delay          = -1;
     rest_delay             = -1;
-    show_travel_trail       = true;
 #else
     travel_delay           = 20;
     explore_delay          = -1;
     rest_delay             = 0;
-    show_travel_trail       = false;
 #endif
 
     travel_stair_cost      = 500;
@@ -869,23 +1009,11 @@ void game_options::reset_options()
     remembered_monster_colour = DARKGREY;
     status_caption_colour  = BROWN;
 
-    easy_exit_menu         = false;
-    ability_menu           = true;
-    easy_floor_use         = true;
-    dos_use_background_intensity = true;
-
     assign_item_slot       = SS_FORWARD;
     show_god_gift          = MB_MAYBE;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
-#ifdef UNIX
-    use_fake_cursor        = true;
-#else
-    use_fake_cursor        = false;
-#endif
-    use_fake_player_cursor = true;
-    show_player_species    = false;
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
@@ -894,20 +1022,13 @@ void game_options::reset_options()
     explore_stop_pickup_ignore.clear();
 
     explore_item_greed     = 10;
-    explore_greedy         = true;
 
     explore_wall_bias      = 0;
-    explore_auto_rest      = false;
-    explore_improved       = false;
-    travel_key_stop        = true;
-    auto_sacrifice         = false;
 
-    dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
     dump_item_origin_price = -1;
-    dump_book_spells       = true;
 
     pickup_menu_limit      = 1;
 
@@ -928,12 +1049,8 @@ void game_options::reset_options()
 
     pizzas.clear();
 
-    regex_search = false;
-    autopickup_search = false;
-
 #ifdef WIZARD
     fsim_rounds = 4000L;
-    fsim_csv    = false;
     fsim_mons   = "";
     fsim_scale.clear();
     fsim_kit.clear();
@@ -952,8 +1069,6 @@ void game_options::reset_options()
     feature_item_brand = CHATTR_REVERSE;
     trap_item_brand    = CHATTR_REVERSE;
 
-    no_dark_brand      = true;
-
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
@@ -970,8 +1085,6 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
-    tile_skip_title      = false;
-    tile_menu_icons      = true;
 
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
@@ -1021,11 +1134,6 @@ void game_options::reset_options()
     tile_font_lbl_size   = 0;
 #endif
 #ifdef USE_TILE_LOCAL
-#ifdef USE_FT
-    // TODO: init this from system settings. This would probably require
-    // using fontconfig, but that's planned.
-    tile_font_ft_light   = false;
-#endif
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
@@ -1045,9 +1153,7 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     tile_cell_pixels      = 32;
-    tile_filter_scaling   = false;
     tile_map_pixels       = 0;
-    tile_force_overlay    = false;
     // delays
     tile_update_rate      = 1000;
     tile_runrest_rate     = 100;
@@ -1057,15 +1163,7 @@ void game_options::reset_options()
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
                                                         : TAGPREF_ENEMY;
 
-    tile_show_minihealthbar  = true;
-    tile_show_minimagicbar   = true;
     tile_show_demon_tier     = false;
-#ifdef USE_TILE_WEB
-    // disabled by default due to performance issues
-    tile_water_anim          = false;
-#else
-    tile_water_anim          = true;
-#endif
     tile_misc_anim           = true;
     tile_use_monster         = MONS_PROGRAM_BUG;
     tile_player_tile         = 0;
@@ -1076,10 +1174,7 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE_WEB
-    tile_realtime_anim = false;
     tile_display_mode = "tiles";
-    tile_level_map_hide_messages = true;
-    tile_level_map_hide_sidebar = false;
 #endif
 
     // map each colour to itself as default
@@ -1154,7 +1249,6 @@ void game_options::reset_options()
     item_glyph_overrides.clear();
     item_glyph_cache.clear();
 
-    rest_wait_both = false;
     rest_wait_percent = 100;
 
     // Map each category to itself. The user can override in init.txt
@@ -1704,7 +1798,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr)
+    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr),
+      options_by_name(_build_options_map())
 {
     reset_options();
 }
@@ -2412,9 +2507,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
     if (key == _opt_str) do {                               \
-        _opt_var = _read_bool(field, _opt_var); \
+        _opt_var = read_bool(field, _opt_var); \
     } while (false)
-#define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
 
 #define COLOUR_OPTION_NAMED(_opt_str, _opt_var, elemental)              \
     if (key == _opt_str) do {                                           \
@@ -2575,7 +2669,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         lowercase(field);
     }
 
-    if (key == "include")
+    GameOption *const *option = map_find(options_by_name, key);
+    if (option)
+        (*option)->loadFromString(field);
+    else if (key == "include")
         include(field, true, runscript);
     else if (key == "opt" || key == "option")
         split_parse(field, ",", &game_options::set_option_fragment);
@@ -2620,27 +2717,18 @@ void game_options::read_option_line(const string &str, bool runscript)
         set_fake_langs(field);
     else if (key == "default_autopickup")
     {
-        if (_read_bool(field, true))
+        if (read_bool(field, true))
             autopickup_on = 1;
         else
             autopickup_on = 0;
     }
-    else BOOL_OPTION(autopickup_starting_ammo);
     else if (key == "default_manual_training")
     {
-        if (_read_bool(field, true))
+        if (read_bool(field, true))
             default_manual_training = true;
         else
             default_manual_training = false;
     }
-    else BOOL_OPTION(default_show_all_skills);
-#ifndef DGAMELAUNCH
-    else BOOL_OPTION(restart_after_game);
-    else BOOL_OPTION(restart_after_save);
-#endif
-    else BOOL_OPTION(read_persist_options);
-    else BOOL_OPTION(auto_switch);
-    else BOOL_OPTION(suppress_startup_errors);
     else if (key == "easy_confirm")
     {
         // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
@@ -2660,18 +2748,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
     }
-    else BOOL_OPTION(show_uncursed);
-    else BOOL_OPTION(easy_quit_item_prompts);
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
-    else BOOL_OPTION(travel_open_doors);
-    else BOOL_OPTION(easy_unequip);
-    else BOOL_OPTION(equip_unequip);
-    else BOOL_OPTION(jewellery_prompt);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
-    else BOOL_OPTION(easy_door);
-    else BOOL_OPTION(warn_hatches);
-    else BOOL_OPTION(enable_recast_spell);
     else if (key == "confirm_butcher")
     {
         if (field == "always")
@@ -2681,9 +2760,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
-    else BOOL_OPTION(auto_butcher);
-    else BOOL_OPTION(easy_eat_chunks);
-    else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -2796,10 +2872,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else CURSES_OPTION(may_stab_brand);
     else CURSES_OPTION(feature_item_brand);
     else CURSES_OPTION(trap_item_brand);
-    // This is useful for terms where dark grey does
-    // not have standout modes (since it's black on black).
-    // This option will use light-grey instead in these cases.
-    else BOOL_OPTION(no_dark_brand);
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else UI_COLOUR_OPTION(status_caption_colour);
@@ -2882,19 +2954,12 @@ void game_options::read_option_line(const string &str, bool runscript)
         copy_if(all_pizzas.begin(), all_pizzas.end(), back_inserter(pizzas),
                 [](string p) { return !trimmed_string(p).empty(); });
     }
-    else BOOL_OPTION(regex_search);
-    else BOOL_OPTION(autopickup_search);
-#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
-    else BOOL_OPTION(remember_name);
-#endif
 #ifndef DGAMELAUNCH
     else if (key == "save_dir")
         save_dir = field;
     else if (key == "morgue_dir")
         morgue_dir = field;
 #endif
-    else BOOL_OPTION(show_newturn_mark);
-    else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION(autofight_warning, 0, 1000);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
@@ -2914,33 +2979,20 @@ void game_options::read_option_line(const string &str, bool runscript)
         macro_dir = field;
 #endif
 #endif
-#ifdef DGL_SIMPLE_MESSAGING
-    else BOOL_OPTION(messaging);
-#endif
-    else BOOL_OPTION(mouse_input);
     // These need to be odd, hence allow +1.
     else INT_OPTION(view_max_width, VIEW_MIN_WIDTH, GXM + 1);
     else INT_OPTION(view_max_height, VIEW_MIN_HEIGHT, GYM + 1);
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
     else INT_OPTION(msg_min_height, MSG_MIN_HEIGHT, INT_MAX);
     else INT_OPTION(msg_max_height, MSG_MIN_HEIGHT, INT_MAX);
-    else BOOL_OPTION(mlist_allow_alternate_layout);
-    else BOOL_OPTION(messages_at_top);
 #ifndef USE_TILE
-    else BOOL_OPTION(mlist_targeting);
     else BOOL_OPTION_NAMED("mlist_targetting", mlist_targeting);
 #endif
-    else BOOL_OPTION(msg_condense_repeats);
-    else BOOL_OPTION(msg_condense_short);
-    else BOOL_OPTION(view_lock_x);
-    else BOOL_OPTION(view_lock_y);
     else if (key == "view_lock")
     {
-        const bool lock = _read_bool(field, true);
+        const bool lock = read_bool(field, true);
         view_lock_x = view_lock_y = lock;
     }
-    else BOOL_OPTION(center_on_scroll);
-    else BOOL_OPTION(symmetric_scroll);
     else if (key == "scroll_margin_x")
     {
         scroll_margin_x = atoi(field.c_str());
@@ -2960,7 +3012,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
     }
-    else BOOL_OPTION(always_show_exclusions);
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
@@ -2970,40 +3021,32 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "toggle")
             skill_focus = SKM_FOCUS_TOGGLE;
-        else if (_read_bool(field, true))
+        else if (read_bool(field, true))
             skill_focus = SKM_FOCUS_ON;
         else
             skill_focus = SKM_FOCUS_OFF;
     }
-    else BOOL_OPTION(note_all_skill_levels);
-    else BOOL_OPTION(note_skill_max);
-    else BOOL_OPTION(note_xom_effects);
-    else BOOL_OPTION(note_chat_messages);
-    else BOOL_OPTION(note_dgl_messages);
-    else BOOL_OPTION(clear_messages);
-    else BOOL_OPTION(show_more);
-    else BOOL_OPTION(small_more);
     else if (key == "flush")
     {
         if (subkey == "failure")
         {
             flush_input[FLUSH_ON_FAILURE]
-                = _read_bool(field, flush_input[FLUSH_ON_FAILURE]);
+                = read_bool(field, flush_input[FLUSH_ON_FAILURE]);
         }
         else if (subkey == "command")
         {
             flush_input[FLUSH_BEFORE_COMMAND]
-                = _read_bool(field, flush_input[FLUSH_BEFORE_COMMAND]);
+                = read_bool(field, flush_input[FLUSH_BEFORE_COMMAND]);
         }
         else if (subkey == "message")
         {
             flush_input[FLUSH_ON_MESSAGE]
-                = _read_bool(field, flush_input[FLUSH_ON_MESSAGE]);
+                = read_bool(field, flush_input[FLUSH_ON_MESSAGE]);
         }
         else if (subkey == "lua")
         {
             flush_input[FLUSH_LUA]
-                = _read_bool(field, flush_input[FLUSH_LUA]);
+                = read_bool(field, flush_input[FLUSH_LUA]);
         }
     }
     else if (key == "wiz_mode")
@@ -3345,11 +3388,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             auto_letters.push_back(entry);
     }
-    else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else BOOL_OPTION(fsim_csv);
     else LIST_OPTION(fsim_scale);
     else LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
@@ -3396,7 +3437,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (rest_delay > 2000)
             rest_delay = 2000;
     }
-    else BOOL_OPTION(show_travel_trail);
     else if (key == "level_map_cursor_step")
     {
         level_map_cursor_step = atoi(field.c_str());
@@ -3405,9 +3445,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (level_map_cursor_step > 50)
             level_map_cursor_step = 50;
     }
-    else BOOL_OPTION(use_fake_cursor);
-    else BOOL_OPTION(use_fake_player_cursor);
-    else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message" || key == "flash_screen_message")
     {
         vector<message_filter> &filters = (key == "force_more_message" ? force_more_message : flash_screen_message);
@@ -3463,10 +3500,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
     else LIST_OPTION(auto_exclude);
-    else BOOL_OPTION(easy_exit_menu);
-    else BOOL_OPTION(ability_menu);
-    else BOOL_OPTION(easy_floor_use);
-    else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
     else if (key == "explore_stop")
@@ -3489,7 +3522,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (explore_item_greed < -1000)
             explore_item_greed = -1000;
     }
-    else BOOL_OPTION(explore_greedy);
     else if (key == "explore_wall_bias")
     {
         explore_wall_bias = atoi(field.c_str());
@@ -3498,10 +3530,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (explore_wall_bias < 0)
             explore_wall_bias = 0;
     }
-    else BOOL_OPTION(explore_improved);
-    else BOOL_OPTION(explore_auto_rest);
-    else BOOL_OPTION(travel_key_stop);
-    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
         if (plain)
@@ -3584,7 +3612,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         new_dump_fields(field, !minus_equal, caret_equal);
     }
-    else BOOL_OPTION(dump_on_save);
     else if (key == "dump_kill_places")
     {
         dump_kill_places = (field == "none" ? KDO_NO_PLACES :
@@ -3612,10 +3639,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else BOOL_OPTION(rest_wait_both);
     else INT_OPTION(rest_wait_percent, 0, 100);
-    else BOOL_OPTION(cloud_status);
-    else BOOL_OPTION(darken_beyond_range);
     else if (key == "dump_message_count")
     {
         // Capping is implicit
@@ -3665,7 +3689,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
     }
-    else BOOL_OPTION(dump_book_spells);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
@@ -3688,8 +3711,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef USE_TILE
     else if (key == "tile_show_items")
         tile_show_items = field;
-    else BOOL_OPTION(tile_skip_title);
-    else BOOL_OPTION(tile_menu_icons);
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -3762,17 +3783,13 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(tile_font_tip_size, 0, INT_MAX);
     else INT_OPTION(tile_font_lbl_size, 0, INT_MAX);
 #ifdef USE_TILE_LOCAL
-#ifdef USE_FT
-    else BOOL_OPTION(tile_font_ft_light);
-#endif
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
-        tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
+        tile_full_screen = (screen_mode)read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
 #endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
-//    else BOOL_OPTION(tile_use_small_layout);
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
@@ -3784,17 +3801,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #endif
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
-    else BOOL_OPTION(tile_filter_scaling);
     else INT_OPTION(tile_map_pixels, 0, INT_MAX);
-    else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else INT_OPTION(tile_runrest_rate, 0, INT_MAX);
-    else BOOL_OPTION(tile_show_minihealthbar);
-    else BOOL_OPTION(tile_show_minimagicbar);
-    else BOOL_OPTION(tile_show_demon_tier);
-    else BOOL_OPTION(tile_water_anim);
-    else BOOL_OPTION(tile_misc_anim);
     else if (key == "tile_show_player_species" && field == "true")
     {
         field = "playermons";
@@ -3810,14 +3820,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #ifdef USE_TILE_WEB
-    else BOOL_OPTION(tile_realtime_anim);
     else if (key == "tile_display_mode")
     {
         if (field == "tiles" || field == "glyphs" || field == "hybrid")
             tile_display_mode = field;
     }
-    else BOOL_OPTION(tile_level_map_hide_messages);
-    else BOOL_OPTION(tile_level_map_hide_sidebar);
 #endif
 #endif // USE_TILE
 
@@ -3833,9 +3840,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             constants.insert(field);
     }
     else INT_OPTION(view_delay, 0, INT_MAX);
-    else BOOL_OPTION(arena_dump_msgs);
-    else BOOL_OPTION(arena_dump_msgs_all);
-    else BOOL_OPTION(arena_list_eq);
     else INT_OPTION(fail_severity_to_confirm, -1, 3);
 
     // Catch-all else, copies option into map
@@ -5161,7 +5165,7 @@ bool game_options::o_bool(const char *name, bool def) const
 {
     bool val = def;
     if (const string *value = map_find(named_options, name))
-        val = _read_bool(*value, val);
+        val = read_bool(*value, val);
     return val;
 }
 
