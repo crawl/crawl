@@ -84,215 +84,162 @@ const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-static map<string, GameOption*> _build_options_map()
+const vector<GameOption*> game_options::build_options_list()
 {
-    return {
-    { "autopickup_starting_ammo",
-        new BoolGameOption(Options.autopickup_starting_ammo, true) },
-    { "default_show_all_skills",
-        new BoolGameOption(Options.default_show_all_skills, false) },
-#ifndef DGAMELAUNCH
-    { "restart_after_game",
-        new BoolGameOption(Options.restart_after_game,
-#if defined(USE_TILE_LOCAL)
-                            true) },
+    const bool USING_TOUCH =
+#if defined(TOUCH_UI)
+        true;
 #else
-                            false) },
+        false;
 #endif
-    { "restart_after_save",
-        new BoolGameOption(Options.restart_after_save, false) },
+    const bool USING_DGL =
+#if defined(DGAMELAUNCH)
+        true;
+#else
+        false;
 #endif
-    { "read_persist_options",
-        new BoolGameOption(Options.read_persist_options, false) },
-    { "auto_switch",
-        new BoolGameOption(Options.auto_switch, false) },
-    { "suppress_startup_errors",
-        new BoolGameOption(Options.suppress_startup_errors, false) },
-    { "show_uncursed",
-        new BoolGameOption(Options.show_uncursed, true) },
-    { "easy_quit_item_prompts",
-        new BoolGameOption(Options.easy_quit_item_prompts, true) },
-    { "travel_open_doors",
-        new BoolGameOption(Options.travel_open_doors, true) },
-    { "easy_unequip",
-        new BoolGameOption(Options.easy_unequip, true) },
-    { "equip_unequip",
-        new BoolGameOption(Options.equip_unequip, false) },
-    { "jewellery_prompt",
-        new BoolGameOption(Options.jewellery_prompt, false) },
-    { "easy_door",
-        new BoolGameOption(Options.easy_door, true) },
-    { "warn_hatches",
-        new BoolGameOption(Options.warn_hatches, false) },
-    { "enable_recast_spell",
-        new BoolGameOption(Options.enable_recast_spell, true) },
-    { "auto_butcher",
-        new BoolGameOption(Options.auto_butcher, false) },
-    { "easy_eat_chunks",
-        new BoolGameOption(Options.easy_eat_chunks, false) },
-    { "auto_eat_chunks",
-        new BoolGameOption(Options.auto_eat_chunks, true) },
+    const bool USING_UNIX =
+#if defined(UNIX)
+        true;
+#else
+        false;
+#endif
+    const bool USING_LOCAL_TILES =
+#if defined(USE_TILE_LOCAL)
+        true;
+#else
+        false;
+#endif
+    const bool USING_WEB_TILES =
+#if defined(USE_TILE_WEB)
+        true;
+#else
+        false;
+#endif
+
+    #define SIMPLE_NAME(_opt) _opt, {#_opt}
+    vector<GameOption*> options = {
+        new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
+        new BoolGameOption(SIMPLE_NAME(easy_door), true),
+        new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
+        new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
+        new BoolGameOption(SIMPLE_NAME(auto_switch), false),
+        new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
+        new BoolGameOption(SIMPLE_NAME(show_uncursed), true),
+        new BoolGameOption(easy_quit_item_prompts,
+                           { "easy_quit_item_prompts", "easy_quit_item_lists" },
+                           true),
+        new BoolGameOption(SIMPLE_NAME(travel_open_doors), true),
+        new BoolGameOption(easy_unequip,
+                           { "easy_unequip", "easy_armour", "easy_armor" },
+                           true),
+        new BoolGameOption(SIMPLE_NAME(equip_unequip), false),
+        new BoolGameOption(SIMPLE_NAME(jewellery_prompt), false),
+        new BoolGameOption(SIMPLE_NAME(easy_door), true),
+        new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
+        new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
+        new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
+        new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
+        new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
 // This is useful for terms where dark grey does
 // not have standout modes (since it's black on black).
 // This option will use light-grey instead in these cases.
-    { "no_dark_brand",
-        new BoolGameOption(Options.no_dark_brand, true) },
-    { "regex_search",
-        new BoolGameOption(Options.regex_search, false) },
-    { "autopickup_search",
-        new BoolGameOption(Options.autopickup_search, false) },
-    { "show_newturn_mark",
-        new BoolGameOption(Options.show_newturn_mark, true) },
-    { "show_game_turns",
-        new BoolGameOption(Options.show_game_turns, true) },
-    { "mouse_input",
-        new BoolGameOption(Options.mouse_input, false) },
-    { "mlist_allow_alternate_layout",
-        new BoolGameOption(Options.mlist_allow_alternate_layout, false) },
-    { "messages_at_top",
-        new BoolGameOption(Options.messages_at_top, false) },
-    { "msg_condense_repeats",
-        new BoolGameOption(Options.msg_condense_repeats, true) },
-    { "msg_condense_short",
-        new BoolGameOption(Options.msg_condense_short, true) },
-    { "view_lock_x",
-        new BoolGameOption(Options.view_lock_x, true) },
-    { "view_lock_y",
-        new BoolGameOption(Options.view_lock_y, true) },
-    { "center_on_scroll",
-        new BoolGameOption(Options.center_on_scroll, false) },
-    { "symmetric_scroll",
-        new BoolGameOption(Options.symmetric_scroll, true) },
-    { "always_show_exclusions",
-        new BoolGameOption(Options.always_show_exclusions, true) },
-    { "note_all_skill_levels",
-        new BoolGameOption(Options.note_all_skill_levels, false) },
-    { "note_skill_max",
-        new BoolGameOption(Options.note_skill_max, true) },
-    { "note_xom_effects",
-        new BoolGameOption(Options.note_xom_effects, true) },
-    { "note_chat_messages",
-        new BoolGameOption(Options.note_chat_messages, false) },
-    { "note_dgl_messages",
-        new BoolGameOption(Options.note_dgl_messages, true) },
-    { "clear_messages",
-        new BoolGameOption(Options.clear_messages, false) },
-    { "show_more",
-        new BoolGameOption(Options.show_more,
-#if defined(TOUCH_UI)
-                           false) },
-#else
-                            true) },
-#endif
-    { "small_more",
-        new BoolGameOption(Options.small_more, false) },
-    { "pickup_thrown",
-        new BoolGameOption(Options.pickup_thrown, true) },
-    { "show_travel_trail",
-        new BoolGameOption(Options.show_travel_trail,
-#if defined(DGAMELAUNCH)
-                           true) },
-#else
-                           false) },
-#endif
-    { "use_fake_cursor",
-        new BoolGameOption(Options.use_fake_cursor,
-#if defined(UNIX)
-                           true) },
-#else
-                           false) },
-#endif
-    { "use_fake_player_cursor",
-        new BoolGameOption(Options.use_fake_player_cursor, true) },
-    { "show_player_species",
-        new BoolGameOption(Options.show_player_species, false) },
-    { "easy_exit_menu",
-        new BoolGameOption(Options.easy_exit_menu, false) },
-    { "ability_menu",
-        new BoolGameOption(Options.ability_menu, true) },
-    { "easy_floor_use",
-        new BoolGameOption(Options.easy_floor_use, true) },
-    { "dos_use_background_intensity",
-        new BoolGameOption(Options.dos_use_background_intensity, true) },
-    { "explore_greedy",
-        new BoolGameOption(Options.explore_greedy, true) },
-    { "explore_improved",
-        new BoolGameOption(Options.explore_improved, false) },
-    { "explore_auto_rest",
-        new BoolGameOption(Options.explore_auto_rest, false) },
-    { "travel_key_stop",
-        new BoolGameOption(Options.travel_key_stop, true) },
-    { "auto_sacrifice",
-        new BoolGameOption(Options.auto_sacrifice, false) },
-    { "dump_on_save",
-        new BoolGameOption(Options.dump_on_save, true) },
-    { "rest_wait_both",
-        new BoolGameOption(Options.rest_wait_both, false) },
-    { "cloud_status",
-        new BoolGameOption(Options.cloud_status, is_tiles()) },
-    { "darken_beyond_range",
-        new BoolGameOption(Options.darken_beyond_range, true) },
-    { "dump_book_spells",
-        new BoolGameOption(Options.dump_book_spells, true) },
-    { "arena_dump_msgs",
-        new BoolGameOption(Options.arena_dump_msgs, false) },
-    { "arena_dump_msgs_all",
-        new BoolGameOption(Options.arena_dump_msgs_all, false) },
-    { "arena_list_eq",
-        new BoolGameOption(Options.arena_list_eq, false) },
+        new BoolGameOption(SIMPLE_NAME(no_dark_brand), true),
+        new BoolGameOption(SIMPLE_NAME(regex_search), false),
+        new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
+        new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
+        new BoolGameOption(SIMPLE_NAME(show_game_turns), true),
+        new BoolGameOption(SIMPLE_NAME(mouse_input), false),
+        new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
+        new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
+        new BoolGameOption(SIMPLE_NAME(msg_condense_repeats), true),
+        new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
+        new BoolGameOption(SIMPLE_NAME(view_lock_x), true),
+        new BoolGameOption(SIMPLE_NAME(view_lock_y), true),
+        new BoolGameOption(SIMPLE_NAME(center_on_scroll), false),
+        new BoolGameOption(SIMPLE_NAME(symmetric_scroll), true),
+        new BoolGameOption(SIMPLE_NAME(always_show_exclusions), true),
+        new BoolGameOption(SIMPLE_NAME(note_all_skill_levels), false),
+        new BoolGameOption(SIMPLE_NAME(note_skill_max), true),
+        new BoolGameOption(SIMPLE_NAME(note_xom_effects), true),
+        new BoolGameOption(SIMPLE_NAME(note_chat_messages), false),
+        new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),
+        new BoolGameOption(SIMPLE_NAME(clear_messages), false),
+        new BoolGameOption(SIMPLE_NAME(show_more), !USING_TOUCH),
+        new BoolGameOption(SIMPLE_NAME(small_more), false),
+        new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
+        new BoolGameOption(SIMPLE_NAME(use_fake_cursor), USING_UNIX ),
+        new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
+        new BoolGameOption(SIMPLE_NAME(show_player_species), false),
+        new BoolGameOption(SIMPLE_NAME(easy_exit_menu), false),
+        new BoolGameOption(SIMPLE_NAME(ability_menu), true),
+        new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
+        new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
+        new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
+        new BoolGameOption(SIMPLE_NAME(explore_improved), false),
+        new BoolGameOption(SIMPLE_NAME(explore_auto_rest), false),
+        new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
+        new BoolGameOption(SIMPLE_NAME(auto_sacrifice), false),
+        new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
+        new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
+        new BoolGameOption(SIMPLE_NAME(cloud_status), is_tiles()),
+        new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
+        new BoolGameOption(SIMPLE_NAME(dump_book_spells), true),
+        new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
+        new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
+        new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
 #ifdef DGL_SIMPLE_MESSAGING
-    { "messaging",
-        new BoolGameOption(Options.messaging, false) },
+        new BoolGameOption(SIMPLE_NAME(messaging), false),
+#endif
+#ifndef DGAMELAUNCH
+        new BoolGameOption(SIMPLE_NAME(restart_after_save), false),
+        new BoolGameOption(SIMPLE_NAME(restart_after_game), USING_LOCAL_TILES),
 #endif
 #ifdef USE_TILE
-    { "tile_skip_title",
-        new BoolGameOption(Options.tile_skip_title, false) },
-    { "tile_menu_icons",
-        new BoolGameOption(Options.tile_menu_icons, true) },
-    { "tile_filter_scaling",
-        new BoolGameOption(Options.tile_filter_scaling, false) },
-    { "tile_force_overlay",
-        new BoolGameOption(Options.tile_force_overlay, false) },
-    { "tile_show_minihealthbar",
-        new BoolGameOption(Options.tile_show_minihealthbar, true) },
-    { "tile_show_minimagicbar",
-        new BoolGameOption(Options.tile_show_minimagicbar, true) },
-    { "tile_show_demon_tier",
-        new BoolGameOption(Options.tile_show_demon_tier, false) },
-    { "tile_water_anim",
-        new BoolGameOption(Options.tile_water_anim,
-#ifdef USE_TILE_WEB
-                           // disabled by default due to performance issues
-                           false) },
+        new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
+        new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
+        new BoolGameOption(SIMPLE_NAME(tile_filter_scaling), false),
+        new BoolGameOption(SIMPLE_NAME(tile_force_overlay), false),
+        new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
+        new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
+        new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
+        // disabled by default due to performance issues
+        new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
+        new BoolGameOption(SIMPLE_NAME(tile_misc_anim), true),
 #else
-                            true) },
-#endif
-    { "mlist_targeting",
-        new BoolGameOption(Options.mlist_targeting, false) },
-    { "tile_misc_anim",
-        new BoolGameOption(Options.tile_misc_anim, true) },
+        new BoolGameOption(mlist_targeting,
+                           { "mlist_targeting", "mlist_targetting" },
+                           false),
 #endif
 #ifdef USE_TILE_WEB
-    { "tile_realtime_anim",
-        new BoolGameOption(Options.tile_realtime_anim, false) },
-    { "tile_level_map_hide_messages",
-        new BoolGameOption(Options.tile_level_map_hide_messages, true) },
-    { "tile_level_map_hide_sidebar",
-        new BoolGameOption(Options.tile_level_map_hide_sidebar, false) },
+        new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
+        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
+        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
 #endif
 #ifdef USE_FT
-    { "tile_font_ft_light",
-        new BoolGameOption(Options.tile_font_ft_light, false) },
+        new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
 #endif
 #ifdef WIZARD
-    { "fsim_csv",
-        new BoolGameOption(Options.fsim_csv, false) },
+        new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
 #endif
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
-    { "remember_name",
-        new BoolGameOption(Options.remember_name, true) },
+        new BoolGameOption(SIMPLE_NAME(remember_name), true),
 #endif
-};
+    };
+
+#undef SIMPLE_NAME
+    return options;
+}
+
+map<string, GameOption*> game_options::build_options_map(
+    const vector<GameOption*> &options)
+{
+    map<string, GameOption*> option_map;
+    for (GameOption* option : options)
+        for (string name : option->getNames())
+            option_map[name] = option;
+    return option_map;
 }
 
 template <class L, class E>
@@ -877,8 +824,8 @@ static string _resolve_dir(const char* path, const char* suffix)
 
 void game_options::reset_options()
 {
-    for (auto option : options_by_name)
-        option.second->reset();
+    for (GameOption* option : option_behaviour)
+        option->reset();
 
     filename     = "unknown";
     basefilename = "unknown";
@@ -1799,7 +1746,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr),
-      options_by_name(_build_options_map())
+      option_behaviour(build_options_list()),
+      options_by_name(build_options_map(option_behaviour))
 {
     reset_options();
 }
@@ -2505,11 +2453,6 @@ static void _handle_list(vector<T> &value_list, string field,
 
 void game_options::read_option_line(const string &str, bool runscript)
 {
-#define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
-    if (key == _opt_str) do {                               \
-        _opt_var = read_bool(field, _opt_var); \
-    } while (false)
-
 #define COLOUR_OPTION_NAMED(_opt_str, _opt_var, elemental)              \
     if (key == _opt_str) do {                                           \
         const int col = str_to_colour(field, -1, true, elemental);      \
@@ -2748,9 +2691,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
     }
-    else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
-    else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
-    else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else if (key == "confirm_butcher")
     {
         if (field == "always")
@@ -2899,6 +2839,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.allowed_weapons.clear();
         NEWGAME_OPTION(game.allowed_combos, string, string);
     }
+    else if (key == "fully_random")
+        game.fully_random = read_bool(field, game.fully_random);
     else if (key == "species" || key == "race")
     {
         game.allowed_combos.clear();
@@ -2916,7 +2858,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.allowed_combos.clear();
         NEWGAME_OPTION(game.allowed_weapons, str_to_weapon, weapon_type);
     }
-    BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
     {
         if (isaalpha(field[0]))
@@ -2985,9 +2926,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
     else INT_OPTION(msg_min_height, MSG_MIN_HEIGHT, INT_MAX);
     else INT_OPTION(msg_max_height, MSG_MIN_HEIGHT, INT_MAX);
-#ifndef USE_TILE
-    else BOOL_OPTION_NAMED("mlist_targetting", mlist_targeting);
-#endif
     else if (key == "view_lock")
     {
         const bool lock = read_bool(field, true);
