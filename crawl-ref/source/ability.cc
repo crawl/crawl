@@ -278,7 +278,7 @@ static const ability_def Ability_List[] =
     // NON_ABILITY should always come first
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, {}, abflag::NONE },
     { ABIL_SPIT_POISON, "Spit Poison",
-        0, 0, 40, 0, {FAIL_XL, 40, 1}, abflag::BREATH },
+        0, 0, 40, 0, {FAIL_XL, 20, 1}, abflag::BREATH },
 
     { ABIL_BLINK, "Blink", 0, 50, 50, 0, {FAIL_XL, -1}, abflag::NONE },
     // ^ failure special-cased
@@ -990,12 +990,8 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
 {
     switch (ability)
     {
-    case ABIL_SPIT_POISON:
-        return base_chance - 10 * player_mutation_level(MUT_SPIT_POISON);
-
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
-    case ABIL_BREATHE_POISON:
     case ABIL_SPIT_ACID:
     case ABIL_BREATHE_LIGHTNING:
     case ABIL_BREATHE_POWER:
@@ -1709,6 +1705,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_POWER:        return 7;
     case ABIL_BREATHE_STICKY_FLAME: return 1;
     case ABIL_BREATHE_STEAM:        return 6;
+    case ABIL_SPIT_POISON:          return 5;
     case ABIL_BREATHE_POISON:       return 6;
     default:
         die("Bad breath type!");
@@ -1809,11 +1806,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_SPIT_POISON:      // Spit poison mutation
+    case ABIL_SPIT_POISON:      // Naga poison spit
     {
-        int power = you.experience_level
-                + player_mutation_level(MUT_SPIT_POISON) * 5;
-        beam.range = 5;         // following Venom Bolt
+        int power = 10 + you.experience_level;
+        beam.range = _calc_breath_ability_range(abil.ability);
 
         if (!spell_direction(abild, beam)
             || !player_tracer(ZAP_SPIT_POISON, power, beam))
@@ -3323,7 +3319,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     // Spit Poison, possibly upgraded to Breathe Poison.
-    if (player_mutation_level(MUT_SPIT_POISON) == 3)
+    if (player_mutation_level(MUT_SPIT_POISON) == 2)
         _add_talent(talents, ABIL_BREATHE_POISON, check_confused);
     else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
