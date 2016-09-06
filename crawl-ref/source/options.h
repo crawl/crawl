@@ -230,7 +230,7 @@ public:
     confirm_prompt_type allow_self_target;      // yes, no, prompt
 
     int         colour[16];      // macro fg colours to other colours
-    int         background_colour; // select default background colour
+    unsigned    background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range

@@ -17,11 +17,11 @@ class GameOption
     virtual ~GameOption() {};
 
     virtual void reset() const = 0;
-    virtual void loadFromString(std::string field) const = 0;
+    virtual string loadFromString(std::string field) const = 0;
 
     const std::set<std::string> &getNames() { return names; }
 
-    private:
+    protected:
     std::set<std::string> names;
 };
 
@@ -32,11 +32,27 @@ class BoolGameOption : public GameOption
                    bool _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    void loadFromString(std::string field) const override;
+    string loadFromString(std::string field) const override;
 
     private:
     bool &value;
     bool default_value;
+};
+
+class ColourGameOption : public GameOption
+{
+public:
+    ColourGameOption(unsigned &val, std::set<std::string> _names,
+                     unsigned _default, bool _elemental = true)
+        : GameOption(_names), value(val), default_value(_default),
+          elemental(_elemental) { }
+    void reset() const override;
+    string loadFromString(std::string field) const override;
+
+private:
+    unsigned &value;
+    unsigned default_value;
+    bool elemental;
 };
 
 bool read_bool(const std::string &field, bool def_value);
