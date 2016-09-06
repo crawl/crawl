@@ -301,6 +301,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\food.cc" />
     <ClCompile Include="..\format.cc" />
     <ClCompile Include="..\fprop.cc" />
+    <ClCompile Include="..\game-options.cc" />
     <ClCompile Include="..\geom2d.cc" />
     <ClCompile Include="..\ghost.cc" />
     <ClCompile Include="..\glwrapper-ogl.cc" />
@@ -697,6 +698,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />
+    <ClInclude Include="..\game-options.h" />
     <ClInclude Include="..\geom2d.h" />
     <ClInclude Include="..\ghost.h" />
     <ClInclude Include="..\glwrapper-ogl.h" />
