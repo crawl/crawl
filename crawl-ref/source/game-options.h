@@ -19,7 +19,8 @@ class GameOption
     virtual void reset() const = 0;
     virtual string loadFromString(std::string field) const = 0;
 
-    const std::set<std::string> &getNames() { return names; }
+    const std::set<std::string> &getNames() const { return names; }
+    const std::string name() const { return *names.begin(); }
 
     protected:
     std::set<std::string> names;
@@ -67,6 +68,21 @@ public:
 private:
     unsigned &value;
     unsigned default_value;
+};
+
+class IntGameOption : public GameOption
+{
+public:
+    IntGameOption(int &val, std::set<std::string> _names, int _default,
+                  int min_val, int max_val)
+        : GameOption(_names), value(val), default_value(_default),
+          min_value(min_val), max_value(max_val) { }
+    void reset() const override;
+    string loadFromString(std::string field) const override;
+
+private:
+    int &value;
+    int default_value, min_value, max_value;
 };
 
 bool read_bool(const std::string &field, bool def_value);

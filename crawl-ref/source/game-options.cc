@@ -67,20 +67,31 @@ string ColourGameOption::loadFromString(string field) const
 {
     const int col = str_to_colour(field, -1, true, elemental);
     if (col == -1)
-    {
-        return make_stringf("Bad %s -- %s\n",
-                            names.begin()->c_str(), field.c_str());
-    }
+        return make_stringf("Bad %s -- %s\n", name().c_str(), field.c_str());
 
     value = col;
     return "";
 }
-
 
 void CursesGameOption::reset() const { value = default_value; }
 
 string CursesGameOption::loadFromString(string field) const
 {
     value = _curses_attribute(field);
+    return "";
+}
+
+void IntGameOption::reset() const { value = default_value; }
+
+string IntGameOption::loadFromString(string field) const
+{
+    int val = default_value;
+    if (!parse_int(field.c_str(), val))
+        return make_stringf("Bad %s: \"%s\"", name().c_str(), field.c_str());
+    if (val < min_value)
+        return make_stringf("Bad %s: %d < %d", name().c_str(), val, min_value);
+    if (val > max_value)
+        return make_stringf("Bad %s: %d > %d", name().c_str(), val, max_value);
+    value = val;
     return "";
 }
