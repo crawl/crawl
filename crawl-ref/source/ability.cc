@@ -1703,7 +1703,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_LIGHTNING:    return 7;
     case ABIL_SPIT_ACID:            return 7;
     case ABIL_BREATHE_POWER:        return 7;
-    case ABIL_BREATHE_STICKY_FLAME: return 1;
+    case ABIL_BREATHE_STICKY_FLAME: return 3;
     case ABIL_BREATHE_STEAM:        return 6;
     case ABIL_SPIT_POISON:          return 5;
     case ABIL_BREATHE_POISON:       return 6;
@@ -1828,7 +1828,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_STICKY_FLAME:
     {
         targetter_splash hitfunc(&you);
-        beam.range = 1;
+        beam.range = _calc_breath_ability_range(abil.ability);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
