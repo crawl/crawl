@@ -362,16 +362,13 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 // If we've a waypoint on the current square, *and* the
                 // square is a normal floor square with nothing on it,
                 // show the waypoint number.
-                if (Options.show_waypoints)
+                // XXX: This is a horrible hack.
+                ucs_t bc   = cell->glyph;
+                uint8_t ch = is_waypoint(c);
+                if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
+                           || bc == _get_magicmap_char(DNGN_FLOOR)))
                 {
-                    // XXX: This is a horrible hack.
-                    ucs_t bc   = cell->glyph;
-                    uint8_t ch = is_waypoint(c);
-                    if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
-                               || bc == _get_magicmap_char(DNGN_FLOOR)))
-                    {
-                        cell->glyph = ch;
-                    }
+                    cell->glyph = ch;
                 }
 
                 if (Options.show_travel_trail && travel_trail_index(c) >= 0)

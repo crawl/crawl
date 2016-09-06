@@ -52,7 +52,6 @@ static option_handler handlers[] =
     { "clear_messages",  &Options.clear_messages, option_hboolean },
     { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
-    { "show_waypoints",  &Options.show_waypoints, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },

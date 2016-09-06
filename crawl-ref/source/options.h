@@ -316,8 +316,6 @@ public:
 
     int         travel_stair_cost;
 
-    bool        show_waypoints;
-
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
     unsigned    remembered_monster_colour;  // Colour of remembered monsters
