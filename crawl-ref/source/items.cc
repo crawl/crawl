@@ -937,10 +937,10 @@ void item_check()
 /// If the given item is an unknown book, ID it; return whether we did.
 static bool _id_floor_book(item_def &book)
 {
-    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
+    if (book.base_type != OBJ_BOOKS)
         return false;
 
-    if (fully_identified(book))
+    if (fully_identified(book) && book.sub_type != BOOK_MANUAL)
         return false;
 
     // fix autopickup for previously-unknown books (hack)
@@ -951,11 +951,11 @@ static bool _id_floor_book(item_def &book)
     return true;
 }
 
-/// Auto-ID whatever spellbooks the player stands on.
+/// Auto-ID whatever spellbooks and manuals the player stands on.
 void id_floor_books()
 {
     for (stack_iterator si(you.pos()); si; ++si)
-        if (si->base_type == OBJ_BOOKS && si->sub_type != BOOK_MANUAL)
+        if (si->base_type == OBJ_BOOKS)
             _id_floor_book(*si);
 }
 
