@@ -1326,7 +1326,8 @@ static const mutation_def mut_data[] =
    "Your molten scales recede somewhat."},
 },
 
-{ MUT_ROUGH_BLACK_SCALES, 2, 3, mutflag::GOOD, true,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_ROUGH_BLACK_SCALES, 0, 3, mutflag::GOOD, true,
   "rough black scales",
 
   {"You are partially covered in rough black scales. (AC +2, Dex -1)",
@@ -1341,6 +1342,7 @@ static const mutation_def mut_data[] =
    "Your rough black scales recede somewhat.",
    "Your rough black scales recede somewhat."},
 },
+#endif
 
 { MUT_RUGGED_BROWN_SCALES, 2, 3, mutflag::GOOD, true,
   "rugged brown scales",

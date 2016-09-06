@@ -234,7 +234,10 @@ static const mutation_type _all_scales[] =
 {
     MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
     MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
+    MUT_MOLTEN_SCALES,
+#if TAG_MAJOR_VERSION == 34
+    MUT_ROUGH_BLACK_SCALES,
+#endif
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
@@ -278,7 +281,11 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             return MUTACT_FULL;
         }
         // Dex and HP changes are kept in all forms.
-        if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
+#if TAG_MAJOR_VERSION == 34
+        if (mut == MUT_ROUGH_BLACK_SCALES)
+            return MUTACT_PARTIAL;
+#endif
+        if (mut == MUT_RUGGED_BROWN_SCALES)
             return MUTACT_PARTIAL;
         else if (_get_mutation_def(mut).form_based)
             return MUTACT_INACTIVE;
@@ -298,7 +305,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_IRIDESCENT_SCALES:
             return MUTACT_INACTIVE;
         case MUT_LARGE_BONE_PLATES:
+#if TAG_MAJOR_VERSION == 34
         case MUT_ROUGH_BLACK_SCALES:
+#endif
         case MUT_RUGGED_BROWN_SCALES:
             return MUTACT_PARTIAL;
         case MUT_YELLOW_SCALES:
@@ -1960,8 +1969,6 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
       { -33, -33, 0 } },
     { 1, { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
-      { -33, -33, 0 } },
-    { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
            MUT_RUGGED_BROWN_SCALES },
