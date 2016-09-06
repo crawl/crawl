@@ -105,6 +105,7 @@ enum use_animation_type
 DEF_BITFIELD(use_animations_type, use_animation_type);
 
 class LineInput;
+class GameOption;
 struct game_options
 {
 public:
@@ -602,6 +603,8 @@ private:
     void set_tile_offsets(const string &s, bool set_shield);
 
     static const string interrupt_prefix;
+
+    const map<string, GameOption*> options_by_name;
 };
 
 ucs_t get_glyph_override(int c);
