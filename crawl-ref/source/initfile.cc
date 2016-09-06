@@ -893,10 +893,6 @@ void game_options::reset_options()
                               | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
-    // The prompt conditions will be combined into explore_stop after
-    // reading options.
-    explore_stop_prompt    = ES_NONE;
-
     explore_stop_pickup_ignore.clear();
 
     explore_item_greed     = 10;
@@ -1884,8 +1880,6 @@ void game_options::read_options(LineInput &il, bool runscript,
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
-
-    Options.explore_stop |= Options.explore_stop_prompt;
 
     evil_colour = str_to_colour(variables["evil"]);
 }
@@ -3487,16 +3481,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
-    }
-    else if (key == "explore_stop_prompt")
-    {
-        if (plain)
-            explore_stop_prompt = ES_NONE;
-        const int new_conditions = read_explore_stop_conditions(field);
-        if (minus_equal)
-            explore_stop_prompt &= ~new_conditions;
-        else
-            explore_stop_prompt |= new_conditions;
     }
     else LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")

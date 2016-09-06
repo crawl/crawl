@@ -543,14 +543,6 @@ static bool _is_branch_stair(const coord_def& pos)
     return next.branch != curr.branch;
 }
 
-// Prompts the user to stop explore if necessary for the given
-// explore-stop condition, returns true if explore should be stopped.
-static bool _prompt_stop_explore(int es_why)
-{
-    return !(Options.explore_stop_prompt & es_why)
-           || yesno("Stop exploring?", true, 'y', true, false);
-}
-
 #define ES_item   (Options.explore_stop & ES_ITEM)
 #define ES_greedy (Options.explore_stop & ES_GREEDY_ITEM)
 #define ES_glow   (Options.explore_stop & ES_GLOWING_ITEM)
@@ -849,7 +841,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK
                                                   : ES_NONE;
 
-        if ((Options.explore_stop & estop) && _prompt_stop_explore(estop))
+        if (Options.explore_stop & estop)
         {
             stop_delay();
             _reset_zigzag_info();
@@ -995,15 +987,10 @@ command_type travel()
             if (newpos == you.running.pos)
             {
                 const LevelStashes *lev = StashTrack.find_current_level();
-                const bool stack = lev && lev->needs_stop(newpos)
-                                   && ES_stack;
-                if (stack)
+                if (lev && lev->needs_stop(newpos))
                 {
-                    if (_prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK))
-                    {
-                        explore_stopped_pos = newpos;
-                        stop_running();
-                    }
+                    explore_stopped_pos = newpos;
+                    stop_running();
                     return direction_to_command(*move_x, *move_y);
                 }
             }
@@ -4416,7 +4403,7 @@ vector<string> explore_discoveries::apply_quantities(
     return things;
 }
 
-bool explore_discoveries::prompt_stop() const
+bool explore_discoveries::stop_explore() const
 {
     const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
 
@@ -4436,9 +4423,7 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(runed_doors), "runed door");
 
-    return (Options.explore_stop_prompt & es_flags) != es_flags
-           || marker_stop
-           || _prompt_stop_explore(es_flags);
+    return true;
 }
 
 void do_interlevel_travel()
@@ -4565,7 +4550,7 @@ bool check_for_interesting_features()
         }
     }
 
-    return discoveries.prompt_stop();
+    return discoveries.stop_explore();
 }
 
 void clear_level_target()
