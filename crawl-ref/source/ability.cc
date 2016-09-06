@@ -2383,7 +2383,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
     {
-        beam.range = 6;
+        beam.range = 5;
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
