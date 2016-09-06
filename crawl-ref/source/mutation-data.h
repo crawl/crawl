@@ -381,20 +381,20 @@ static const mutation_def mut_data[] =
   {"Your body's shape seems more normal.", "", ""},
 },
 
-{ MUT_SPIT_POISON, 8, 3, mutflag::GOOD, false,
+{ MUT_SPIT_POISON, 8, 2, mutflag::GOOD, false,
   "spit poison",
 
-  {"You can spit weak poison.",
-   "You can spit poison.",
-   "You can exhale a cloud of poison."},
+  {"You can spit poison.",
+   "You can exhale a cloud of poison.",
+   ""},
 
   {"There is a nasty taste in your mouth for a moment.",
    "There is a nasty taste in your mouth for a moment.",
-   "There is a nasty taste in your mouth for a moment."},
+   ""},
 
   {"You feel an ache in your throat.",
    "You feel an ache in your throat.",
-   "You feel an ache in your throat."},
+   ""},
 },
 
 #if TAG_MAJOR_VERSION == 34
