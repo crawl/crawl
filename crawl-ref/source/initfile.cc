@@ -207,6 +207,26 @@ const vector<GameOption*> game_options::build_options_list()
         new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
         // no_dark_brand applies here as well.
         new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
+        new IntGameOption(SIMPLE_NAME(note_hp_percent), 5, 0, 100),
+        new IntGameOption(SIMPLE_NAME(hp_warning), 30, 0, 100),
+        new IntGameOption(magic_point_warning, {"mp_warning"}, 0, 0, 100),
+        new IntGameOption(SIMPLE_NAME(autofight_warning), 0, 0, 1000),
+        // These need to be odd, hence allow +1.
+        new IntGameOption(SIMPLE_NAME(view_max_width),
+                      max(VIEW_BASE_WIDTH, VIEW_MIN_WIDTH),
+                      VIEW_MIN_WIDTH, GXM + 1),
+        new IntGameOption(SIMPLE_NAME(view_max_height), max(21, VIEW_MIN_HEIGHT),
+                      VIEW_MIN_HEIGHT, GYM + 1),
+        new IntGameOption(SIMPLE_NAME(mlist_min_height), 4, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(msg_min_height), max(7, MSG_MIN_HEIGHT),
+                          MSG_MIN_HEIGHT, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(msg_max_height), max(10, MSG_MIN_HEIGHT),
+                          MSG_MIN_HEIGHT, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(rest_wait_percent), 100, 0, 100),
+        new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY,
+                          0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -225,10 +245,25 @@ const vector<GameOption*> game_options::build_options_list()
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
         new BoolGameOption(SIMPLE_NAME(tile_misc_anim), true),
+        new IntGameOption(SIMPLE_NAME(tile_font_crt_size), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_font_msg_size), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_font_stat_size), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_font_tip_size), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_font_lbl_size), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_cell_pixels), 32, 1, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_map_pixels), 0, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 500, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
 #else
         new BoolGameOption(mlist_targeting,
                            { "mlist_targeting", "mlist_targetting" },
                            false),
+#endif
+#ifdef USE_TILE_LOCAL
+        new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -869,12 +904,6 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    view_max_width   = max(VIEW_BASE_WIDTH, VIEW_MIN_WIDTH);
-    view_max_height  = max(21, VIEW_MIN_HEIGHT);
-    mlist_min_height = 4;
-    msg_min_height   = max(7, MSG_MIN_HEIGHT);
-    msg_max_height   = max(10, MSG_MIN_HEIGHT);
-
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
 
@@ -899,15 +928,9 @@ void game_options::reset_options()
     confirm_butcher        = CONFIRM_AUTO;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
-    hp_warning             = 30;
-    autofight_warning      = 0;
-    magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
-    note_hp_percent        = 5;
-
-    fail_severity_to_confirm = 3;
 
 #ifdef DGAMELAUNCH
     travel_delay           = -1;
@@ -920,8 +943,6 @@ void game_options::reset_options()
 #endif
 
     travel_stair_cost      = 500;
-
-    view_delay             = DEFAULT_VIEW_DELAY;
 
     arena_dump_msgs        = false;
     arena_dump_msgs_all    = false;
@@ -957,8 +978,6 @@ void game_options::reset_options()
     dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
     dump_item_origin_price = -1;
-
-    pickup_menu_limit      = 1;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -1046,19 +1065,10 @@ void game_options::reset_options()
     tile_font_lbl_family  = "monospace";
 #endif
 
-#ifdef USE_TILE
-    tile_font_crt_size   = 0;
-    tile_font_stat_size  = 0;
-    tile_font_msg_size   = 0;
-    tile_font_tip_size   = 0;
-    tile_font_lbl_size   = 0;
-#endif
 #ifdef USE_TILE_LOCAL
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
-    tile_window_width     = -90;
-    tile_window_height    = -90;
 # ifdef TOUCH_UI
     tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
                                              "inventory, command2, spell, "
@@ -1072,13 +1082,6 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
-    tile_cell_pixels      = 32;
-    tile_map_pixels       = 0;
-    // delays
-    tile_update_rate      = 1000;
-    tile_runrest_rate     = 100;
-    tile_key_repeat_delay = 200;
-    tile_tooltip_ms       = 500;
     // XXX: arena may now be chosen after options are read.
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
                                                         : TAGPREF_ENEMY;
@@ -1168,8 +1171,6 @@ void game_options::reset_options()
     mon_glyph_overrides.clear();
     item_glyph_overrides.clear();
     item_glyph_cache.clear();
-
-    rest_wait_percent = 100;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -2427,23 +2428,6 @@ static void _handle_list(vector<T> &value_list, string field,
 void game_options::read_option_line(const string &str, bool runscript)
 {
 
-#define INT_OPTION_NAMED(_opt_str, _opt_var, _min_val, _max_val)        \
-    if (key == _opt_str) do {                                           \
-        const int min_val = (_min_val);                                 \
-        const int max_val = (_max_val);                                 \
-        int val = _opt_var;                                             \
-        if (!parse_int(field.c_str(), val))                             \
-            report_error("Bad %s: \"%s\"", _opt_str, field.c_str());    \
-        else if (val < min_val)                                         \
-            report_error("Bad %s: %d < %d", _opt_str, val, min_val);    \
-        else if (val > max_val)                                         \
-            report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
-        else                                                            \
-            _opt_var = val;                                             \
-    } while (false)
-#define INT_OPTION(_opt, _min_val, _max_val) \
-    INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
-
 #define LIST_OPTION_NAMED(_opt_str, _opt_var)                                \
     if (key == _opt_str) do {                                                \
         _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
@@ -2847,12 +2831,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "morgue_dir")
         morgue_dir = field;
 #endif
-    else INT_OPTION(hp_warning, 0, 100);
-    else INT_OPTION(autofight_warning, 0, 1000);
-    else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else LIST_OPTION(note_monsters);
     else LIST_OPTION(note_messages);
-    else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
@@ -2866,12 +2846,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         macro_dir = field;
 #endif
 #endif
-    // These need to be odd, hence allow +1.
-    else INT_OPTION(view_max_width, VIEW_MIN_WIDTH, GXM + 1);
-    else INT_OPTION(view_max_height, VIEW_MIN_HEIGHT, GYM + 1);
-    else INT_OPTION(mlist_min_height, 0, INT_MAX);
-    else INT_OPTION(msg_min_height, MSG_MIN_HEIGHT, INT_MAX);
-    else INT_OPTION(msg_max_height, MSG_MIN_HEIGHT, INT_MAX);
     else if (key == "view_lock")
     {
         const bool lock = read_bool(field, true);
@@ -3523,7 +3497,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else INT_OPTION(rest_wait_percent, 0, 100);
     else if (key == "dump_message_count")
     {
         // Capping is implicit
@@ -3573,7 +3546,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
     }
-    else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
         // TODO: this option could probably be improved. For now, keep the
@@ -3661,17 +3633,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_font_lbl_family")
         tile_font_lbl_family = field;
 #endif
-    else INT_OPTION(tile_font_crt_size, 0, INT_MAX);
-    else INT_OPTION(tile_font_msg_size, 0, INT_MAX);
-    else INT_OPTION(tile_font_stat_size, 0, INT_MAX);
-    else INT_OPTION(tile_font_tip_size, 0, INT_MAX);
-    else INT_OPTION(tile_font_lbl_size, 0, INT_MAX);
 #ifdef USE_TILE_LOCAL
-    else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)read_bool(field, tile_full_screen);
-    else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
-    else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
 #endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
     else if (key == "tile_use_small_layout")
@@ -3684,11 +3648,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             tile_use_small_layout = MB_MAYBE;
     }
 #endif
-    else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
-    else INT_OPTION(tile_map_pixels, 0, INT_MAX);
-    else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
-    else INT_OPTION(tile_update_rate, 50, INT_MAX);
-    else INT_OPTION(tile_runrest_rate, 0, INT_MAX);
     else if (key == "tile_show_player_species" && field == "true")
     {
         field = "playermons";
@@ -3723,8 +3682,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             constants.insert(field);
     }
-    else INT_OPTION(view_delay, 0, INT_MAX);
-    else INT_OPTION(fail_severity_to_confirm, -1, 3);
 
     // Catch-all else, copies option into map
     else if (runscript)
