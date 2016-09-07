@@ -231,6 +231,11 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY,
                           0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
+        new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
+                          -1, 2000),
+        new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
+        new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0, INT_MAX),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
@@ -312,6 +317,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(SIMPLE_NAME(fsim_kit)),
         new StringGameOption(SIMPLE_NAME(fsim_mode), ""),
         new StringGameOption(SIMPLE_NAME(fsim_mons), ""),
+        new IntGameOption(SIMPLE_NAME(fsim_rounds), 4000, 1000, 500000),
 #endif
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
         new BoolGameOption(SIMPLE_NAME(remember_name), true),
@@ -932,9 +938,6 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    scroll_margin_x  = 2;
-    scroll_margin_y  = 2;
-
     autopickup_on    = 1;
     default_manual_training = false;
 
@@ -959,16 +962,6 @@ void game_options::reset_options()
     skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
-
-#ifdef DGAMELAUNCH
-    travel_delay           = -1;
-    explore_delay          = -1;
-    rest_delay             = -1;
-#else
-    travel_delay           = 20;
-    explore_delay          = -1;
-    rest_delay             = 0;
-#endif
 
     travel_stair_cost      = 500;
 
@@ -1021,10 +1014,6 @@ void game_options::reset_options()
     item_stack_summary_minimum = 4;
 
     pizzas.clear();
-
-#ifdef WIZARD
-    fsim_rounds = 4000L;
-#endif
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -2810,18 +2799,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         const bool lock = read_bool(field, true);
         view_lock_x = view_lock_y = lock;
     }
-    else if (key == "scroll_margin_x")
-    {
-        scroll_margin_x = atoi(field.c_str());
-        if (scroll_margin_x < 0)
-            scroll_margin_x = 0;
-    }
-    else if (key == "scroll_margin_y")
-    {
-        scroll_margin_y = atoi(field.c_str());
-        if (scroll_margin_y < 0)
-            scroll_margin_y = 0;
-    }
     else if (key == "scroll_margin")
     {
         int scrollmarg = atoi(field.c_str());
@@ -3200,48 +3177,11 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             auto_letters.push_back(entry);
     }
-#ifdef WIZARD
-    else if (key == "fsim_rounds")
-    {
-        fsim_rounds = atol(field.c_str());
-        if (fsim_rounds < 1000)
-            fsim_rounds = 1000;
-        if (fsim_rounds > 500000L)
-            fsim_rounds = 500000L;
-    }
-#endif // WIZARD
     else if (key == "sort_menus")
     {
         for (const string &frag : split_string(";", field))
             if (!frag.empty())
                 set_menu_sort(frag);
-    }
-    else if (key == "travel_delay")
-    {
-        // Read travel delay in milliseconds.
-        travel_delay = atoi(field.c_str());
-        if (travel_delay < -1)
-            travel_delay = -1;
-        if (travel_delay > 2000)
-            travel_delay = 2000;
-    }
-    else if (key == "explore_delay")
-    {
-        // Read explore delay in milliseconds.
-        explore_delay = atoi(field.c_str());
-        if (explore_delay < -1)
-            explore_delay = -1;
-        if (explore_delay > 2000)
-            explore_delay = 2000;
-    }
-    else if (key == "rest_delay")
-    {
-        // Read explore delay in milliseconds.
-        rest_delay = atoi(field.c_str());
-        if (rest_delay < -1)
-            rest_delay = -1;
-        if (rest_delay > 2000)
-            rest_delay = 2000;
     }
     else if (key == "level_map_cursor_step")
     {
