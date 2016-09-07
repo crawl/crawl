@@ -7,6 +7,7 @@
 
 #include "colour.h"
 #include "game-options.h"
+#include "options.h"
 
 static unsigned _curses_attribute(const string &field)
 {
@@ -92,5 +93,13 @@ string IntGameOption::loadFromString(string field, rc_line_type) const
     if (val > max_value)
         return make_stringf("Bad %s: %d > %d", name().c_str(), val, max_value);
     value = val;
+    return "";
+}
+
+void StringGameOption::reset() const { value = default_value; }
+
+string StringGameOption::loadFromString(string field, rc_line_type) const
+{
+    value = field;
     return "";
 }
