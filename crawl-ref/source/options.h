@@ -315,8 +315,6 @@ public:
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.
 
-    int         travel_stair_cost;
-
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
     unsigned    remembered_monster_colour;  // Colour of remembered monsters

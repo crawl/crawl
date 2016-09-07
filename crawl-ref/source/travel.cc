@@ -2713,7 +2713,7 @@ static int _find_transtravel_stair(const level_id &cur,
             si.distance = dist2stair;
 
             // Account for the cost of taking the stairs
-            dist2stair += Options.travel_stair_cost;
+            dist2stair += 500; // XXX: this seems large?
 
             // Already too expensive? Short-circuit.
             if (local_distance != -1 && dist2stair >= local_distance)
