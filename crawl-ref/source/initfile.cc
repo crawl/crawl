@@ -912,12 +912,7 @@ static string _resolve_dir(string path, string suffix)
 
 static string _get_save_path(string subdir)
 {
-#if defined(TARGET_OS_MACOSX)
-    return _user_home_subpath("Library/Application Support/" CRAWL)
-            + "/" + subdir;
-#else
     return _resolve_dir(SysEnv.crawl_dir, subdir);
-#endif
 }
 
 void game_options::reset_options()
@@ -3735,6 +3730,14 @@ void get_system_environment()
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
+
+#if defined(TARGET_OS_MACOSX)
+    if (SysEnv.crawl_dir.empty())
+    {
+        SysEnv.crawl_dir
+            = _user_home_subpath("Library/Application Support/" CRAWL);
+    }
+#endif
 
 #ifdef SAVE_DIR_PATH
     if (SysEnv.crawl_dir == "")
