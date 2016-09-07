@@ -227,6 +227,13 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY,
                           0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -255,6 +262,14 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 500, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
+        new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
+#ifdef TOUCH_UI
+            split_string(",", "minimap, command, gold_turn, inventory, "
+                              "command2, spell, ability, monster")),
+#else
+            split_string(",", "minimap, inventory, gold_turn, command, "
+                              "spell, ability, monster")),
+#endif
 #else
         new BoolGameOption(mlist_targeting,
                            { "mlist_targeting", "mlist_targetting" },
@@ -275,6 +290,8 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
+        new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
+        new ListGameOption<string>(SIMPLE_NAME(fsim_kit)),
 #endif
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
         new BoolGameOption(SIMPLE_NAME(remember_name), true),
@@ -293,13 +310,6 @@ map<string, GameOption*> game_options::build_options_map(
         for (string name : option->getNames())
             option_map[name] = option;
     return option_map;
-}
-
-template <class L, class E>
-static L& remove_matching(L& lis, const E& entry)
-{
-    lis.erase(remove(lis.begin(), lis.end(), entry), lis.end());
-    return lis;
 }
 
 object_class_type item_class_by_sym(ucs_t c)
@@ -350,12 +360,6 @@ object_class_type item_class_by_sym(ucs_t c)
     default:
         return NUM_OBJECT_CLASSES;
     }
-}
-
-template<class A, class B> static void _merge_lists(A &dest, const B &src,
-                                                    bool prepend)
-{
-    dest.insert(prepend ? dest.begin() : dest.end(), src.begin(), src.end());
 }
 
 // Returns MSGCOL_NONE if unmatched else returns 0-15.
@@ -693,7 +697,7 @@ void game_options::new_dump_fields(const string &text, bool add, bool prepend)
     // Easy; chardump.cc has most of the intelligence.
     vector<string> fields = split_string(",", text, true, true);
     if (add)
-        _merge_lists(dump_order, fields, prepend);
+        merge_lists(dump_order, fields, prepend);
     else
     {
         for (const string &field : fields)
@@ -968,8 +972,6 @@ void game_options::reset_options()
                               | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
-    explore_stop_pickup_ignore.clear();
-
     explore_item_greed     = 10;
 
     explore_wall_bias      = 0;
@@ -999,8 +1001,6 @@ void game_options::reset_options()
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_mons   = "";
-    fsim_scale.clear();
-    fsim_kit.clear();
 #endif
 
     // These are only used internally, and only from the commandline:
@@ -1069,15 +1069,6 @@ void game_options::reset_options()
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
-# ifdef TOUCH_UI
-    tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
-                                             "inventory, command2, spell, "
-                                             "ability, monster");
-# else
-    tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
-                                             "command, spell, ability, "
-                                             "monster");
-# endif
     tile_use_small_layout = MB_MAYBE;
 #endif
 
@@ -1142,10 +1133,7 @@ void game_options::reset_options()
     visual_monster_hp = false;
 
     force_autopickup.clear();
-    note_monsters.clear();
-    note_messages.clear();
     autoinscriptions.clear();
-    note_items.clear();
     note_skill_levels.reset();
     note_skill_levels.set(1);
     note_skill_levels.set(5);
@@ -1157,11 +1145,9 @@ void game_options::reset_options()
     auto_ability_letters.clear();
     force_more_message.clear();
     flash_screen_message.clear();
-    confirm_action.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
     message_colour_mappings.clear();
-    drop_filter.clear();
     map_file_name.clear();
     named_options.clear();
 
@@ -2403,36 +2389,8 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
     return l.first > r.first;
 }
 
-// T must be convertible to from a string.
-template <class T>
-static void _handle_list(vector<T> &value_list, string field,
-                         bool append, bool prepend, bool subtract)
-{
-    if (!append && !prepend && !subtract)
-        value_list.clear();
-
-    vector<T> new_entries;
-    for (const auto &part : split_string(",", field))
-    {
-        if (part.empty())
-            continue;
-
-        if (subtract)
-            remove_matching(value_list, part);
-        else
-            new_entries.push_back(part);
-    }
-    _merge_lists(value_list, new_entries, prepend);
-}
-
 void game_options::read_option_line(const string &str, bool runscript)
 {
-
-#define LIST_OPTION_NAMED(_opt_str, _opt_var)                                \
-    if (key == _opt_str) do {                                                \
-        _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
-    } while (false)
-#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt)
 #define NEWGAME_OPTION(_opt, _conv, _type)                                     \
     if (plain)                                                                 \
         _opt.clear();                                                          \
@@ -2454,6 +2412,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     bool plus_equal  = false;
     bool caret_equal = false;
     bool minus_equal = false;
+    rc_line_type line_type = RCFILE_LINE_EQUALS;
 
     const int first_equals = str.find('=');
 
@@ -2470,18 +2429,21 @@ void game_options::read_option_line(const string &str, bool runscript)
     if (prequal.length() && prequal[prequal.length() - 1] == '+')
     {
         plus_equal = true;
+        line_type = RCFILE_LINE_PLUS;
         prequal = prequal.substr(0, prequal.length() - 1);
         trim_string(prequal);
     }
     else if (prequal.length() && prequal[prequal.length() - 1] == '-')
     {
         minus_equal = true;
+        line_type = RCFILE_LINE_MINUS;
         prequal = prequal.substr(0, prequal.length() - 1);
         trim_string(prequal);
     }
     else if (prequal.length() && prequal[prequal.length() - 1] == '^')
     {
         caret_equal = true;
+        line_type = RCFILE_LINE_CARET;
         prequal = prequal.substr(0, prequal.length() - 1);
         trim_string(prequal);
     }
@@ -2554,7 +2516,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     GameOption *const *option = map_find(options_by_name, key);
     if (option)
     {
-        const string error = (*option)->loadFromString(field);
+        const string error = (*option)->loadFromString(field, line_type);
         if (!error.empty())
             report_error("%s", error.c_str());
     }
@@ -2830,10 +2792,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         save_dir = field;
     else if (key == "morgue_dir")
         morgue_dir = field;
-#endif
-    else LIST_OPTION(note_monsters);
-    else LIST_OPTION(note_messages);
-#ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
@@ -2957,7 +2915,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 new_entries.push_back(f_a);
         }
-        _merge_lists(force_autopickup, new_entries, caret_equal);
+        merge_lists(force_autopickup, new_entries, caret_equal);
     }
     else if (key == "autopickup_exceptions")
     {
@@ -2984,9 +2942,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 new_entries.push_back(f_a);
         }
-        _merge_lists(force_autopickup, new_entries, caret_equal);
+        merge_lists(force_autopickup, new_entries, caret_equal);
     }
-    else LIST_OPTION(note_items);
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
     else
@@ -3249,8 +3206,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else LIST_OPTION(fsim_scale);
-    else LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -3334,10 +3289,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 new_entries.push_back(mf);
         }
-        _merge_lists(filters, new_entries, caret_equal);
+        merge_lists(filters, new_entries, caret_equal);
     }
-    else LIST_OPTION(confirm_action);
-    else LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
     {
         // TODO: allow resetting (need reset_forbidden_terrain())
@@ -3357,7 +3310,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_dangerous = str_to_colour(field, tc_dangerous);
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    else LIST_OPTION(auto_exclude);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
     else if (key == "explore_stop")
@@ -3371,7 +3323,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
-    else LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -3408,7 +3359,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                     new_entries.push_back(entry);
             }
         }
-        _merge_lists(sound_mappings, new_entries, caret_equal);
+        merge_lists(sound_mappings, new_entries, caret_equal);
     }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
@@ -3453,7 +3404,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 new_entries.push_back(mapping);
         }
-        _merge_lists(menu_colour_mappings, new_entries, caret_equal);
+        merge_lists(menu_colour_mappings, new_entries, caret_equal);
     }
     else if (key == "message_colour" || key == "message_color")
     {
@@ -3653,7 +3604,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         field = "playermons";
         set_player_tile(field);
     }
-    else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_player_tile")
         set_player_tile(field);
     else if (key == "tile_weapon_offsets")
