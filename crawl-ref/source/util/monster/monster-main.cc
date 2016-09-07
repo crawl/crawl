@@ -1088,6 +1088,7 @@ int main(int argc, char* argv[])
                 case AF_POISON_INT:
                 case AF_POISON_STAT:
                 case AF_FIREBRAND:
+                case AF_MIASMATA:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
