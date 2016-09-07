@@ -193,6 +193,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
+        new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
+        new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
+        new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
+        new ColourGameOption(SIMPLE_NAME(tc_dangerous), CYAN),
+        new ColourGameOption(SIMPLE_NAME(tc_disconnected), DARKGREY),
         // [ds] Default to jazzy colours.
         new ColourGameOption(SIMPLE_NAME(detected_item_colour), GREEN),
         new ColourGameOption(SIMPLE_NAME(detected_monster_colour), LIGHTRED),
@@ -221,21 +227,26 @@ const vector<GameOption*> game_options::build_options_list()
                       VIEW_MIN_WIDTH, GXM + 1),
         new IntGameOption(SIMPLE_NAME(view_max_height), max(21, VIEW_MIN_HEIGHT),
                       VIEW_MIN_HEIGHT, GYM + 1),
-        new IntGameOption(SIMPLE_NAME(mlist_min_height), 4, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(mlist_min_height), 4, 0),
         new IntGameOption(SIMPLE_NAME(msg_min_height), max(7, MSG_MIN_HEIGHT),
-                          MSG_MIN_HEIGHT, INT_MAX),
+                          MSG_MIN_HEIGHT),
         new IntGameOption(SIMPLE_NAME(msg_max_height), max(10, MSG_MIN_HEIGHT),
-                          MSG_MIN_HEIGHT, INT_MAX),
+                          MSG_MIN_HEIGHT),
         new IntGameOption(SIMPLE_NAME(rest_wait_percent), 100, 0, 100),
-        new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1, INT_MIN, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY,
-                          0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1),
+        new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY, 0),
         new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
         new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
-        new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(explore_item_greed), 10, -1000, 1000),
+        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, 0, 1000),
+        new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0),
+        new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0),
+        new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
+        new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
+        new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
+        new IntGameOption(SIMPLE_NAME(dump_message_count), 20),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
@@ -963,7 +974,6 @@ void game_options::reset_options()
 #endif
 
     autopickup_on    = 1;
-    default_manual_training = false;
 
     game = newgame_def();
 
@@ -995,30 +1005,16 @@ void game_options::reset_options()
     sort_menus.clear();
     set_menu_sort("pickup: true");
 
-    tc_reachable           = BLUE;
-    tc_excluded            = LIGHTMAGENTA;
-    tc_exclude_circle      = RED;
-    tc_dangerous           = CYAN;
-    tc_disconnected        = DARKGREY;
-
     assign_item_slot       = SS_FORWARD;
     show_god_gift          = MB_MAYBE;
 
-    // 10 was the cursor step default on Linux.
-    level_map_cursor_step  = 7;
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
-    explore_item_greed     = 10;
-
-    explore_wall_bias      = 0;
-
     dump_kill_places       = KDO_ONE_PLACE;
-    dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
-    dump_item_origin_price = -1;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -1032,8 +1028,6 @@ void game_options::reset_options()
                    "javelin / tomahawk / stone / rock / net, "
                    "inscribed",
                    false, false);
-
-    item_stack_summary_minimum = 4;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1066,8 +1060,6 @@ void game_options::reset_options()
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
                                                         : TAGPREF_ENEMY;
 
-    tile_show_demon_tier     = false;
-    tile_misc_anim           = true;
     tile_use_monster         = MONS_PROGRAM_BUG;
     tile_player_tile         = 0;
     tile_weapon_offsets.first  = INT_MAX;
@@ -1119,7 +1111,6 @@ void game_options::reset_options()
     enemy_hp_colour.push_back(MAGENTA);
     enemy_hp_colour.push_back(RED);
     enemy_hp_colour.push_back(LIGHTGREY);
-    visual_monster_hp = false;
 
     force_autopickup.clear();
     autoinscriptions.clear();
@@ -2558,13 +2549,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autopickup_on = 0;
     }
-    else if (key == "default_manual_training")
-    {
-        if (read_bool(field, true))
-            default_manual_training = true;
-        else
-            default_manual_training = false;
-    }
     else if (key == "easy_confirm")
     {
         // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
@@ -3170,14 +3154,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (!frag.empty())
                 set_menu_sort(frag);
     }
-    else if (key == "level_map_cursor_step")
-    {
-        level_map_cursor_step = atoi(field.c_str());
-        if (level_map_cursor_step < 1)
-            level_map_cursor_step = 1;
-        if (level_map_cursor_step > 50)
-            level_map_cursor_step = 50;
-    }
     else if (key == "force_more_message" || key == "flash_screen_message")
     {
         vector<message_filter> &filters = (key == "force_more_message" ? force_more_message : flash_screen_message);
@@ -3217,21 +3193,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         for (const string &seg : split_string(",", field))
             prevent_travel_to(seg);
     }
-    else if (key == "tc_reachable")
-        tc_reachable = str_to_colour(field, tc_reachable);
-    else if (key == "tc_excluded")
-        tc_excluded = str_to_colour(field, tc_excluded);
-    else if (key == "tc_exclude_circle")
-    {
-        tc_exclude_circle =
-            str_to_colour(field, tc_exclude_circle);
-    }
-    else if (key == "tc_dangerous")
-        tc_dangerous = str_to_colour(field, tc_dangerous);
-    else if (key == "tc_disconnected")
-        tc_disconnected = str_to_colour(field, tc_disconnected);
-    else if (key == "item_stack_summary_minimum")
-        item_stack_summary_minimum = atoi(field.c_str());
     else if (key == "explore_stop")
     {
         if (plain)
@@ -3242,22 +3203,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
-    }
-    else if (key == "explore_item_greed")
-    {
-        explore_item_greed = atoi(field.c_str());
-        if (explore_item_greed > 1000)
-            explore_item_greed = 1000;
-        else if (explore_item_greed < -1000)
-            explore_item_greed = -1000;
-    }
-    else if (key == "explore_wall_bias")
-    {
-        explore_wall_bias = atoi(field.c_str());
-        if (explore_wall_bias > 1000)
-            explore_wall_bias = 1000;
-        else if (explore_wall_bias < 0)
-            explore_wall_bias = 0;
     }
     else if (key == "sound")
     {
@@ -3368,11 +3313,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "dump_message_count")
-    {
-        // Capping is implicit
-        dump_message_count = atoi(field.c_str());
-    }
     else if (key == "dump_item_origins")
     {
         if (plain)
@@ -3410,12 +3350,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             else if (ch == "all" || ch == "everything")
                 dump_item_origins = IODS_EVERYTHING;
         }
-    }
-    else if (key == "dump_item_origin_price")
-    {
-        dump_item_origin_price = atoi(field.c_str());
-        if (dump_item_origin_price < -1)
-            dump_item_origin_price = -1;
     }
     else if (key == "additional_macro_file")
     {
@@ -4791,39 +4725,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
     }
 
     return true;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// game_options
-
-int game_options::o_int(const char *name, int def) const
-{
-    int val = def;
-    if (const string *value = map_find(named_options, name))
-        val = atoi(value->c_str());
-    return val;
-}
-
-bool game_options::o_bool(const char *name, bool def) const
-{
-    bool val = def;
-    if (const string *value = map_find(named_options, name))
-        val = read_bool(*value, val);
-    return val;
-}
-
-string game_options::o_str(const char *name, const char *def) const
-{
-    return lookup(named_options, name, def ? def : "");
-}
-
-int game_options::o_colour(const char *name, int def) const
-{
-    string val = o_str(name);
-    trim_string(val);
-    lowercase(val);
-    int col = str_to_colour(val);
-    return col == -1? def : col;
 }
 
 ///////////////////////////////////////////////////////////////////////

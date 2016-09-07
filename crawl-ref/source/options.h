@@ -276,7 +276,6 @@ public:
     vector<pair<int, int> > mp_colour;
     vector<pair<int, int> > stat_colour;
     vector<int> enemy_hp_colour;
-    bool visual_monster_hp;
 
     string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
@@ -307,11 +306,11 @@ public:
     vector<message_filter> flash_screen_message;
     vector<text_pattern> confirm_action;
 
-    int         tc_reachable;   // Colour for squares that are reachable
-    int         tc_excluded;    // Colour for excluded squares.
-    int         tc_exclude_circle; // Colour for squares in the exclusion radius
-    int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
-    int         tc_disconnected;// Areas that are completely disconnected.
+    unsigned    tc_reachable;   // Colour for squares that are reachable
+    unsigned    tc_excluded;    // Colour for excluded squares.
+    unsigned    tc_exclude_circle; // Colour for squares in the exclusion radius
+    unsigned    tc_dangerous;   // Colour for trapped squares, deep water, lava.
+    unsigned    tc_disconnected;// Areas that are completely disconnected.
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.
 
@@ -545,12 +544,6 @@ private:
     set<string>    included;  // Files we've included already.
 
 public:
-    // Convenience accessors for the second-class options in named_options.
-    int         o_int(const char *name, int def = 0) const;
-    bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = nullptr) const;
-    int         o_colour(const char *name, int def = LIGHTGREY) const;
-
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
 
