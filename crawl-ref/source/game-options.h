@@ -9,6 +9,7 @@
 #include <string>
 #include <set>
 
+#include "colour.h"
 #include "stringutil.h"
 
 enum rc_line_type
@@ -120,8 +121,24 @@ public:
 private:
     string &value;
     string default_value;
-
 };
+
+#ifdef USE_TILE
+class TileColGameOption : public GameOption
+{
+public:
+    TileColGameOption(VColour &val, std::set<std::string> _names,
+                      string _default)
+        : GameOption(_names), value(val),
+          default_value(str_to_tile_colour(_default)) { }
+    void reset() const override;
+    string loadFromString(std::string field, rc_line_type) const override;
+
+private:
+    VColour &value;
+    VColour default_value;
+};
+#endif
 
 // T must be convertible to a string.
 template<typename T>
