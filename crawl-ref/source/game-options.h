@@ -98,7 +98,7 @@ class IntGameOption : public GameOption
 {
 public:
     IntGameOption(int &val, std::set<std::string> _names, int _default,
-                  int min_val, int max_val)
+                  int min_val = INT_MIN, int max_val = INT_MAX)
         : GameOption(_names), value(val), default_value(_default),
           min_value(min_val), max_value(max_val) { }
     void reset() const override;
