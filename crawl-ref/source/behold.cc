@@ -132,8 +132,12 @@ void player::beholders_check_noise(int loudness, bool axe)
     }
 }
 
-static void _removed_beholder_msg(const monster& mon)
+static void _removed_beholder_msg(const monster *mons)
 {
+    if (!mons)
+        return;
+
+    const monster &mon = *mons;
     if (!mon.alive() || !mons_is_siren_beholder(mon)
         || mon.submerged() || !you.see_cell(mon.pos()))
     {
@@ -209,7 +213,7 @@ void player::update_beholders()
             // printing any subsequent messages, or a --more-- can
             // crash (#6547).
             _removed_beholder(true);
-            _removed_beholder_msg(*mon);
+            _removed_beholder_msg(mon);
         }
     }
     if (removed)
@@ -228,7 +232,7 @@ void player::update_beholder(const monster* mon)
             // Do this dance to clear the duration before printing messages
             // (#8844), but still print all messages in the right order.
             _removed_beholder(true);
-            _removed_beholder_msg(*mon);
+            _removed_beholder_msg(mon);
             _removed_beholder();
             return;
         }
