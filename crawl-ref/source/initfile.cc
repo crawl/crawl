@@ -277,6 +277,29 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 500, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
+        // minimap colours
+        new TileColGameOption(SIMPLE_NAME(tile_branchstairs_col), "#ff7788"),
+        new TileColGameOption(SIMPLE_NAME(tile_deep_water_col), "#001122"),
+        new TileColGameOption(SIMPLE_NAME(tile_door_col), "#775544"),
+        new TileColGameOption(SIMPLE_NAME(tile_downstairs_col), "#ff00ff"),
+        new TileColGameOption(SIMPLE_NAME(tile_excl_centre_col), "#552266"),
+        new TileColGameOption(SIMPLE_NAME(tile_excluded_col), "#552266"),
+        new TileColGameOption(SIMPLE_NAME(tile_feature_col), "#997700"),
+        new TileColGameOption(SIMPLE_NAME(tile_floor_col), "#333333"),
+        new TileColGameOption(SIMPLE_NAME(tile_item_col), "#005544"),
+        new TileColGameOption(SIMPLE_NAME(tile_lava_col), "#552211"),
+        new TileColGameOption(SIMPLE_NAME(tile_mapped_floor_col), "#222266"),
+        new TileColGameOption(SIMPLE_NAME(tile_mapped_wall_col), "#444499"),
+        new TileColGameOption(SIMPLE_NAME(tile_monster_col), "#660000"),
+        new TileColGameOption(SIMPLE_NAME(tile_plant_col), "#446633"),
+        new TileColGameOption(SIMPLE_NAME(tile_player_col), "white"),
+        new TileColGameOption(SIMPLE_NAME(tile_portal_col), "#ffdd00"),
+        new TileColGameOption(SIMPLE_NAME(tile_trap_col), "#aa6644"),
+        new TileColGameOption(SIMPLE_NAME(tile_unseen_col), "black"),
+        new TileColGameOption(SIMPLE_NAME(tile_upstairs_col), "cyan"),
+        new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
+        new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
+        new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
 #ifdef TOUCH_UI
             split_string(",", "minimap, command, gold_turn, inventory, "
@@ -1030,32 +1053,6 @@ void game_options::reset_options()
 #endif
 #endif
     terp_files.clear();
-
-#ifdef USE_TILE
-    // minimap colours
-    tile_player_col       = str_to_tile_colour("white");
-    tile_monster_col      = str_to_tile_colour("#660000");
-    tile_plant_col        = str_to_tile_colour("#446633");
-    tile_item_col         = str_to_tile_colour("#005544");
-    tile_unseen_col       = str_to_tile_colour("black");
-    tile_floor_col        = str_to_tile_colour("#333333");
-    tile_wall_col         = str_to_tile_colour("#666666");
-    tile_mapped_floor_col = str_to_tile_colour("#222266");
-    tile_mapped_wall_col  = str_to_tile_colour("#444499");
-    tile_door_col         = str_to_tile_colour("#775544");
-    tile_downstairs_col   = str_to_tile_colour("#ff00ff");
-    tile_upstairs_col     = str_to_tile_colour("cyan");
-    tile_branchstairs_col = str_to_tile_colour("#ff7788");
-    tile_portal_col       = str_to_tile_colour("#ffdd00");
-    tile_feature_col      = str_to_tile_colour("#997700");
-    tile_trap_col         = str_to_tile_colour("#aa6644");
-    tile_water_col        = str_to_tile_colour("#114455");
-    tile_deep_water_col   = str_to_tile_colour("#001122");
-    tile_lava_col         = str_to_tile_colour("#552211");
-    tile_excluded_col     = str_to_tile_colour("#552266");
-    tile_excl_centre_col  = str_to_tile_colour("#552266");
-    tile_window_col       = str_to_tile_colour("#558855");
-#endif
 
 #ifdef USE_TILE_LOCAL
 
@@ -3439,50 +3436,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
-    else if (key == "tile_player_col")
-        tile_player_col = str_to_tile_colour(field);
-    else if (key == "tile_monster_col")
-        tile_monster_col = str_to_tile_colour(field);
-    else if (key == "tile_plant_col")
-        tile_plant_col = str_to_tile_colour(field);
-    else if (key == "tile_item_col")
-        tile_item_col = str_to_tile_colour(field);
-    else if (key == "tile_unseen_col")
-        tile_unseen_col = str_to_tile_colour(field);
-    else if (key == "tile_floor_col")
-        tile_floor_col = str_to_tile_colour(field);
-    else if (key == "tile_wall_col")
-        tile_wall_col = str_to_tile_colour(field);
-    else if (key == "tile_mapped_floor_col")
-        tile_mapped_floor_col = str_to_tile_colour(field);
-    else if (key == "tile_mapped_wall_col")
-        tile_mapped_wall_col = str_to_tile_colour(field);
-    else if (key == "tile_door_col")
-        tile_door_col = str_to_tile_colour(field);
-    else if (key == "tile_downstairs_col")
-        tile_downstairs_col = str_to_tile_colour(field);
-    else if (key == "tile_upstairs_col")
-        tile_upstairs_col = str_to_tile_colour(field);
-    else if (key == "tile_branchstairs_col")
-        tile_branchstairs_col = str_to_tile_colour(field);
-    else if (key == "tile_portal_col")
-        tile_portal_col = str_to_tile_colour(field);
-    else if (key == "tile_feature_col")
-        tile_feature_col = str_to_tile_colour(field);
-    else if (key == "tile_trap_col")
-        tile_trap_col = str_to_tile_colour(field);
-    else if (key == "tile_water_col")
-        tile_water_col = str_to_tile_colour(field);
-    else if (key == "tile_deep_water_col")
-        tile_deep_water_col = str_to_tile_colour(field);
-    else if (key == "tile_lava_col")
-        tile_lava_col = str_to_tile_colour(field);
-    else if (key == "tile_excluded_col")
-        tile_excluded_col = str_to_tile_colour(field);
-    else if (key == "tile_excl_centre_col" || key == "tile_excl_center_col")
-        tile_excl_centre_col = str_to_tile_colour(field);
-    else if (key == "tile_window_col")
-        tile_window_col = str_to_tile_colour(field);
 #ifdef USE_TILE_LOCAL
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)read_bool(field, tile_full_screen);

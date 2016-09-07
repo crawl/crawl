@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "colour.h"
 #include "game-options.h"
 #include "options.h"
 
@@ -80,6 +79,16 @@ string CursesGameOption::loadFromString(string field, rc_line_type) const
     value = _curses_attribute(field);
     return "";
 }
+
+#ifdef USE_TILE
+void TileColGameOption::reset() const { value = default_value; }
+
+string TileColGameOption::loadFromString(string field, rc_line_type) const
+{
+    value = str_to_tile_colour(field);
+    return "";
+}
+#endif
 
 void IntGameOption::reset() const { value = default_value; }
 
