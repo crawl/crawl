@@ -9,6 +9,29 @@
 #include <string>
 #include <set>
 
+#include "stringutil.h"
+
+enum rc_line_type
+{
+    RCFILE_LINE_EQUALS, ///< foo = bar
+    RCFILE_LINE_PLUS,   ///< foo += bar
+    RCFILE_LINE_MINUS,  ///< foo -= bar
+    RCFILE_LINE_CARET,  ///< foo ^= bar
+    NUM_RCFILE_LINE_TYPES,
+};
+
+template<class A, class B> void merge_lists(A &dest, const B &src, bool prepend)
+{
+    dest.insert(prepend ? dest.begin() : dest.end(), src.begin(), src.end());
+}
+
+template <class L, class E>
+L& remove_matching(L& lis, const E& entry)
+{
+    lis.erase(remove(lis.begin(), lis.end(), entry), lis.end());
+    return lis;
+}
+
 class GameOption
 {
     public:
@@ -17,7 +40,7 @@ class GameOption
     virtual ~GameOption() {};
 
     virtual void reset() const = 0;
-    virtual string loadFromString(std::string field) const = 0;
+    virtual string loadFromString(std::string field, rc_line_type) const = 0;
 
     const std::set<std::string> &getNames() const { return names; }
     const std::string name() const { return *names.begin(); }
@@ -33,7 +56,7 @@ class BoolGameOption : public GameOption
                    bool _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    string loadFromString(std::string field) const override;
+    string loadFromString(std::string field, rc_line_type) const override;
 
     private:
     bool &value;
@@ -48,7 +71,7 @@ public:
         : GameOption(_names), value(val), default_value(_default),
           elemental(_elemental) { }
     void reset() const override;
-    string loadFromString(std::string field) const override;
+    string loadFromString(std::string field, rc_line_type) const override;
 
 private:
     unsigned &value;
@@ -63,7 +86,7 @@ public:
                      unsigned _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    string loadFromString(std::string field) const override;
+    string loadFromString(std::string field, rc_line_type) const override;
 
 private:
     unsigned &value;
@@ -78,11 +101,46 @@ public:
         : GameOption(_names), value(val), default_value(_default),
           min_value(min_val), max_value(max_val) { }
     void reset() const override;
-    string loadFromString(std::string field) const override;
+    string loadFromString(std::string field, rc_line_type) const override;
 
 private:
     int &value;
     int default_value, min_value, max_value;
+};
+
+// T must be convertible to a string.
+template<typename T>
+class ListGameOption : public GameOption
+{
+    public:
+    ListGameOption(vector<T> &list, std::set<std::string> _names,
+                   vector<T> _default = {})
+        : GameOption(_names), value(list), default_value(_default) { }
+
+    void reset() const override { value = default_value; }
+    string loadFromString(std::string field, rc_line_type ltyp) const override
+    {
+        if (ltyp == RCFILE_LINE_EQUALS)
+            value.clear();
+
+        vector<T> new_entries;
+        for (const auto &part : split_string(",", field))
+        {
+            if (part.empty())
+                continue;
+
+            if (ltyp == RCFILE_LINE_MINUS)
+                remove_matching(value, T(part));
+            else
+                new_entries.emplace_back(part);
+        }
+        merge_lists(value, new_entries, ltyp == RCFILE_LINE_CARET);
+        return "";
+    }
+
+private:
+    vector<T> &value;
+    vector<T> default_value;
 };
 
 bool read_bool(const std::string &field, bool def_value);

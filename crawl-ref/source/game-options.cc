@@ -7,7 +7,6 @@
 
 #include "colour.h"
 #include "game-options.h"
-#include "stringutil.h"
 
 static unsigned _curses_attribute(const string &field)
 {
@@ -55,7 +54,7 @@ bool read_bool(const string &field, bool def_value)
 
 void BoolGameOption::reset() const { value = default_value; }
 
-string BoolGameOption::loadFromString(string field) const
+string BoolGameOption::loadFromString(string field, rc_line_type) const
 {
     value = read_bool(field, default_value);
     return "";
@@ -63,7 +62,7 @@ string BoolGameOption::loadFromString(string field) const
 
 void ColourGameOption::reset() const { value = default_value; }
 
-string ColourGameOption::loadFromString(string field) const
+string ColourGameOption::loadFromString(string field, rc_line_type) const
 {
     const int col = str_to_colour(field, -1, true, elemental);
     if (col == -1)
@@ -75,7 +74,7 @@ string ColourGameOption::loadFromString(string field) const
 
 void CursesGameOption::reset() const { value = default_value; }
 
-string CursesGameOption::loadFromString(string field) const
+string CursesGameOption::loadFromString(string field, rc_line_type) const
 {
     value = _curses_attribute(field);
     return "";
@@ -83,7 +82,7 @@ string CursesGameOption::loadFromString(string field) const
 
 void IntGameOption::reset() const { value = default_value; }
 
-string IntGameOption::loadFromString(string field) const
+string IntGameOption::loadFromString(string field, rc_line_type) const
 {
     int val = default_value;
     if (!parse_int(field.c_str(), val))
