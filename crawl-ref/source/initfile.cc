@@ -84,6 +84,8 @@ const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
+static string _get_save_path(string subdir);
+
 const vector<GameOption*> game_options::build_options_list()
 {
     const bool USING_TOUCH =
@@ -110,11 +112,13 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         false;
 #endif
+#ifdef USE_TILE
     const bool USING_WEB_TILES =
 #if defined(USE_TILE_WEB)
         true;
 #else
         false;
+#endif
 #endif
 
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
@@ -240,6 +244,10 @@ const vector<GameOption*> game_options::build_options_list()
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(restart_after_save), false),
         new BoolGameOption(SIMPLE_NAME(restart_after_game), USING_LOCAL_TILES),
+        new StringGameOption(SIMPLE_NAME(map_file_name), ""),
+        new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
+        new StringGameOption(SIMPLE_NAME(morgue_dir),
+                             _get_save_path("morgue/")),
 #endif
 #ifdef USE_TILE
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
@@ -249,6 +257,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
+        new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/%=([)x}:|\\"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
         new BoolGameOption(SIMPLE_NAME(tile_misc_anim), true),
@@ -279,11 +288,20 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
+        new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT),
+        new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT),
+        new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
+        new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
+        new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
+        new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -292,6 +310,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
         new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
         new ListGameOption<string>(SIMPLE_NAME(fsim_kit)),
+        new StringGameOption(SIMPLE_NAME(fsim_mode), ""),
+        new StringGameOption(SIMPLE_NAME(fsim_mons), ""),
 #endif
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
         new BoolGameOption(SIMPLE_NAME(remember_name), true),
@@ -812,7 +832,7 @@ void game_options::set_activity_interrupt(const string &activity_name,
 }
 
 #if defined(DGAMELAUNCH)
-static string _resolve_dir(const char* path, const char* suffix)
+static string _resolve_dir(string path, string suffix)
 {
     return catpath(path, "");
 }
@@ -840,14 +860,24 @@ static string _user_home_subpath(const string &subpath)
     return catpath(_user_home_dir(), subpath);
 }
 
-static string _resolve_dir(const char* path, const char* suffix)
+static string _resolve_dir(string path, string suffix)
 {
     if (path[0] != '~')
         return catpath(string(path), suffix);
     else
-        return _user_home_subpath(catpath(path + 1, suffix));
+        return _user_home_subpath(catpath(path.substr(1), suffix));
 }
 #endif
+
+static string _get_save_path(string subdir)
+{
+#if defined(TARGET_OS_MACOSX)
+    return _user_home_subpath("Library/Application Support/" CRAWL)
+            + "/" + subdir;
+#else
+    return _resolve_dir(SysEnv.crawl_dir, subdir);
+#endif
+}
 
 void game_options::reset_options()
 {
@@ -885,15 +915,9 @@ void game_options::reset_options()
 
 #if defined(TARGET_OS_MACOSX)
     UNUSED(_resolve_dir);
-    const string tmp_path_base =
-        _user_home_subpath("Library/Application Support/" CRAWL);
-    save_dir   = tmp_path_base + "/saves/";
-    morgue_dir = tmp_path_base + "/morgue/";
+
     if (SysEnv.macro_dir.empty())
-        macro_dir  = tmp_path_base;
-#else
-    save_dir   = _resolve_dir(SysEnv.crawl_dir.c_str(), "saves/");
-    morgue_dir = _resolve_dir(SysEnv.crawl_dir.c_str(), "morgue/");
+        macro_dir  = _get_save_path("");
 #endif
 
 #if defined(SHARED_DIR_PATH)
@@ -1000,7 +1024,6 @@ void game_options::reset_options()
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
-    fsim_mons   = "";
 #endif
 
     // These are only used internally, and only from the commandline:
@@ -1023,8 +1046,6 @@ void game_options::reset_options()
     terp_files.clear();
 
 #ifdef USE_TILE
-    tile_show_items      = "!?/%=([)x}:|\\";
-
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
     tile_monster_col      = str_to_tile_colour("#660000");
@@ -1048,21 +1069,6 @@ void game_options::reset_options()
     tile_excluded_col     = str_to_tile_colour("#552266");
     tile_excl_centre_col  = str_to_tile_colour("#552266");
     tile_window_col       = str_to_tile_colour("#558855");
-#endif
-
-#ifdef USE_TILE_LOCAL
-    // font selection
-    tile_font_crt_file   = MONOSPACED_FONT;
-    tile_font_stat_file  = MONOSPACED_FONT;
-    tile_font_msg_file   = MONOSPACED_FONT;
-    tile_font_tip_file   = MONOSPACED_FONT;
-    tile_font_lbl_file   = PROPORTIONAL_FONT;
-#endif
-#ifdef USE_TILE_WEB
-    tile_font_crt_family  = "monospace";
-    tile_font_stat_family = "monospace";
-    tile_font_msg_family  = "monospace";
-    tile_font_lbl_family  = "monospace";
 #endif
 
 #ifdef USE_TILE_LOCAL
@@ -1148,7 +1154,6 @@ void game_options::reset_options()
     sound_mappings.clear();
     menu_colour_mappings.clear();
     message_colour_mappings.clear();
-    map_file_name.clear();
     named_options.clear();
 
     clear_cset_overrides();
@@ -2788,10 +2793,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 [](string p) { return !trimmed_string(p).empty(); });
     }
 #ifndef DGAMELAUNCH
-    else if (key == "save_dir")
-        save_dir = field;
-    else if (key == "morgue_dir")
-        morgue_dir = field;
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
@@ -2992,10 +2993,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autoinscriptions.push_back(entry);
     }
-#ifndef DGAMELAUNCH
-    else if (key == "map_file_name")
-        map_file_name = field;
-#endif
     else if (key == "hp_colour" || key == "hp_color")
     {
         if (plain)
@@ -3204,8 +3201,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             auto_letters.push_back(entry);
     }
 #ifdef WIZARD
-    else if (key == "fsim_mode")
-        fsim_mode = field;
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -3214,8 +3209,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (fsim_rounds > 500000L)
             fsim_rounds = 500000L;
     }
-    else if (key == "fsim_mons")
-        fsim_mons = field;
 #endif // WIZARD
     else if (key == "sort_menus")
     {
@@ -3516,8 +3509,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
-    else if (key == "tile_show_items")
-        tile_show_items = field;
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -3562,28 +3553,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_excl_centre_col = str_to_tile_colour(field);
     else if (key == "tile_window_col")
         tile_window_col = str_to_tile_colour(field);
-#ifdef USE_TILE_LOCAL
-    else if (key == "tile_font_crt_file")
-        tile_font_crt_file = field;
-    else if (key == "tile_font_msg_file")
-        tile_font_msg_file = field;
-    else if (key == "tile_font_stat_file")
-        tile_font_stat_file = field;
-    else if (key == "tile_font_tip_file")
-        tile_font_tip_file = field;
-    else if (key == "tile_font_lbl_file")
-        tile_font_lbl_file = field;
-#endif
-#ifdef USE_TILE_WEB
-    else if (key == "tile_font_crt_family")
-        tile_font_crt_family = field;
-    else if (key == "tile_font_msg_family")
-        tile_font_msg_family = field;
-    else if (key == "tile_font_stat_family")
-        tile_font_stat_family = field;
-    else if (key == "tile_font_lbl_family")
-        tile_font_lbl_family = field;
-#endif
 #ifdef USE_TILE_LOCAL
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)read_bool(field, tile_full_screen);

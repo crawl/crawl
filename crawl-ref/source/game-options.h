@@ -108,6 +108,21 @@ private:
     int default_value, min_value, max_value;
 };
 
+class StringGameOption : public GameOption
+{
+public:
+    StringGameOption(string &val, std::set<std::string> _names,
+                     string _default)
+        : GameOption(_names), value(val), default_value(_default) { }
+    void reset() const override;
+    string loadFromString(std::string field, rc_line_type) const override;
+
+private:
+    string &value;
+    string default_value;
+
+};
+
 // T must be convertible to a string.
 template<typename T>
 class ListGameOption : public GameOption
