@@ -595,8 +595,8 @@ private:
 
     static const string interrupt_prefix;
 
-    const vector<GameOption*> option_behaviour;
-    const map<string, GameOption*> options_by_name;
+    vector<GameOption*> option_behaviour;
+    map<string, GameOption*> options_by_name;
     const vector<GameOption*> build_options_list();
     map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
 };

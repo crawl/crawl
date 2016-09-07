@@ -917,6 +917,8 @@ static string _get_save_path(string subdir)
 
 void game_options::reset_options()
 {
+    option_behaviour = build_options_list();
+    options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
         option->reset();
 
@@ -1679,9 +1681,7 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr),
-      option_behaviour(build_options_list()),
-      options_by_name(build_options_map(option_behaviour))
+    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr)
 {
     reset_options();
 }
