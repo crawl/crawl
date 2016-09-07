@@ -963,8 +963,6 @@ void game_options::reset_options()
 
     user_note_prefix       = "";
 
-    travel_stair_cost      = 500;
-
     arena_dump_msgs        = false;
     arena_dump_msgs_all    = false;
     arena_list_eq          = false;
