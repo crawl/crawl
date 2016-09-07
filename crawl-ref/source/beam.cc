@@ -3918,14 +3918,6 @@ void bolt::affect_player()
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         }
 
-        // Irresistible portion of resistable effect; must happen before MR
-        // check for the latter to print a proper message.
-        if (flavour == BEAM_VIRULENCE && you.duration[DUR_POISONING])
-        {
-            you.duration[DUR_POISONING] = you.duration[DUR_POISONING] * 3 / 2;
-            mpr("The poison in your body grows stronger.");
-        }
-
         affect_player_enchantment();
         return;
     }
@@ -4179,8 +4171,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
     if (ench_flavour_affects_monster(flavour, mon, true)
-        && !(has_saving_throw() && flavour != BEAM_VIRULENCE
-             && mons_immune_magic(*mon)))
+        && !(has_saving_throw() && mons_immune_magic(*mon)))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
@@ -5171,6 +5162,7 @@ bool bolt::has_saving_throw() const
     case BEAM_UNRAVELLING:
     case BEAM_UNRAVELLED_MAGIC:
     case BEAM_INFESTATION:
+    case BEAM_IRRESISTIBLE_CONFUSION:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5317,12 +5309,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     if (!ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
 
-    // Virulence and irresistible confusion cannot be resisted w/ MR.
-    bool irresistible = flavour == BEAM_IRRESISTIBLE_CONFUSION
-                        || flavour == BEAM_VIRULENCE;
-
     // Check magic resistance.
-    if (has_saving_throw() && !irresistible)
+    if (has_saving_throw())
     {
         if (mons_immune_magic(*mon))
             return MON_UNAFFECTED;
@@ -5711,28 +5699,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_VIRULENCE:
-
-        // Handled before the MR check, since this portion is irresistible
-        if (mon->has_ench(ENCH_POISON))
-        {
-            mon_enchant ench = mon->get_ench(ENCH_POISON);
-            poison_monster(mon, agent(), ench.degree, true, false);
-            if (you.can_see(*mon))
-            {
-                mprf("The poison in %s body grows stronger.",
-                     mon->name(DESC_ITS).c_str());
-            }
-        }
-
-        if (mon->check_res_magic(ench_power) > 0)
-            return MON_RESIST;
-
         if (!mon->has_ench(ENCH_POISON_VULN)
             && mon->add_ench(mon_enchant(ENCH_POISON_VULN, 0, agent(),
                                          random_range(20, 30) * BASELINE_DELAY)))
         {
-            simple_monster_message(*mon, " grows more vulnerable to poison.");
-            obvious_effect = true;
+            if (simple_monster_message(*mon,
+                                       " grows more vulnerable to poison."))
+            {
+                obvious_effect = true;
+            }
         }
         return MON_AFFECTED;
 

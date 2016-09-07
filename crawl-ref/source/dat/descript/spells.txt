@@ -1537,8 +1537,7 @@ Fires a penetrating bolt of poison.
 %%%%
 Virulence spell
 
-Makes a targeted creature more vulnerable to poison, and strengthens any poison
-already in the target's body.
+Makes a targeted creature more vulnerable to poison.
 %%%%
 Volley of Thorns spell
 
