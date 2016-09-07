@@ -238,6 +238,8 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
         new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
                           -1, 2000),
+        new IntGameOption(SIMPLE_NAME(rest_delay), USING_DGL ? -1 : 0,
+                          -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_item_greed), 10, -1000, 1000),
         new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, 0, 1000),
