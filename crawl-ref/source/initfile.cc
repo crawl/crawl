@@ -243,6 +243,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
+        new ListGameOption<string>(pizzas, {"pizza"}),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -1010,8 +1011,6 @@ void game_options::reset_options()
                    false, false);
 
     item_stack_summary_minimum = 4;
-
-    pizzas.clear();
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -2772,13 +2771,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
-    else if (key == "pizza")
-    {
-        const vector<string> all_pizzas = split_string(",", field);
-        // only non-empty pizza strings
-        copy_if(all_pizzas.begin(), all_pizzas.end(), back_inserter(pizzas),
-                [](string p) { return !trimmed_string(p).empty(); });
-    }
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
