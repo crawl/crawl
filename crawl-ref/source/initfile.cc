@@ -940,7 +940,10 @@ void game_options::reset_options()
 
     macro_dir = SysEnv.macro_dir;
 
-#if !defined(DGAMELAUNCH)
+#ifdef DGAMELAUNCH
+    save_dir = _get_save_path("saves/");
+    morgue_dir = _get_save_path("morgue/");
+#else
     if (macro_dir.empty())
     {
 #ifdef UNIX
