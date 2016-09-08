@@ -919,6 +919,8 @@ static string _get_save_path(string subdir)
 
 void game_options::reset_options()
 {
+    for (GameOption* option : option_behaviour)
+        delete option;
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
