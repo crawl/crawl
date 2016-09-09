@@ -141,6 +141,9 @@ force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
 force_more_message += Found .* abyssal rune of Zot
 
+# Water nymph stair temp-drowning - people seem to miss these...
+force_more_message += watery aura .* (staircase|hatch)
+
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
 
