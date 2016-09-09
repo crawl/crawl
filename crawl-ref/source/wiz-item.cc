@@ -1465,7 +1465,7 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_CORRODE",
         "ARTP_DRAIN",
-        "ARTP_CONFUSE",
+        "ARTP_SLOW",
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
     };

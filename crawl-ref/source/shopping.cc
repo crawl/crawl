@@ -167,7 +167,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_DRAIN ])
         ret -= 8;
 
-    if (prop[ ARTP_CONFUSE ])
+    if (prop[ ARTP_SLOW ])
         ret -= 8;
 
     if (prop[ ARTP_FRAGILE ])

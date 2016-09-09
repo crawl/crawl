@@ -4074,7 +4074,7 @@ enum artefact_prop_type
 #endif
     ARTP_CORRODE,
     ARTP_DRAIN,
-    ARTP_CONFUSE,
+    ARTP_SLOW,
     ARTP_FRAGILE,
     ARTP_SHIELDING,
     ARTP_NUM_PROPERTIES
