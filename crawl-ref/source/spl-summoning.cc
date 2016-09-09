@@ -379,7 +379,8 @@ static monster_type _choose_dragon_type(int pow, god_type god, bool player)
 
 spret_type cast_dragon_call(int pow, bool fail)
 {
-    if (you.duration[DUR_DRAGON_CALL_COOLDOWN])
+    if (you.duration[DUR_DRAGON_CALL]
+        || you.duration[DUR_DRAGON_CALL_COOLDOWN])
     {
         mpr("You cannot issue another dragon's call so soon.");
         return SPRET_ABORT;
@@ -395,10 +396,12 @@ spret_type cast_dragon_call(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static bool _place_dragon()
+static void _place_dragon()
 {
+
     const int pow = calc_spell_power(SPELL_DRAGON_CALL, true);
     monster_type mon = _choose_dragon_type(pow, you.religion, true);
+    int mp_cost = random_range(2, 3);
 
     vector<monster*> targets;
 
@@ -428,6 +431,15 @@ static bool _place_dragon()
         if (spots.size() <= 0)
             continue;
 
+        // Abort if we lack sufficient MP, but the dragon call duration
+        // remains, as the player might soon have enough again.
+        if (!enough_mp(mp_cost, true))
+        {
+            mpr("A dragon tries to answer your call, but you don't have enough "
+                "magical power!");
+            return;
+        }
+
         const coord_def pos = spots[random2(spots.size())];
         monster *dragon = create_monster(
             mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_FORCE_PLACE | MG_AUTOFOE)
@@ -435,27 +447,16 @@ static bool _place_dragon()
         if (!dragon)
             continue;
 
-        dec_mp(random_range(2, 3));
-
+        dec_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
             mpr("A dragon arrives to answer your call!");
 
         // The dragon is allowed to act immediately here
         dragon->flags &= ~MF_JUST_SUMMONED;
-
-        if (!enough_mp(2, true))
-        {
-            mprf(MSGCH_DURATION, "Having expended the last of your magical "
-                                 "power, your connection to the dragon horde "
-                                 "fades.");
-            you.duration[DUR_DRAGON_CALL] = 0;
-            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
-        }
-
-        return true;
+        return;
     }
 
-    return false;
+    return;
 }
 
 void do_dragon_call(int time)
