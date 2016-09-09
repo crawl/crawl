@@ -3702,6 +3702,10 @@ static bool _worth_hexing(const monster &caster, spell_type spell)
     if (mons_intel(caster) < I_HUMAN)
         return true;
 
+    // Simulate Strip Resistance's 1/3 chance of ignoring MR
+    if (spell == SPELL_STRIP_RESISTANCE && one_chance_in(3))
+        return true;
+
     // We'll estimate the target's resistance to magic, by first getting
     // the actual value and then randomising it.
     const int est_magic_resist = foe->res_magic() + random2(60) - 30; // +-30
