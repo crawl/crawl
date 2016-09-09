@@ -72,7 +72,6 @@
 # * blink:    Lets wearer evoke the blink ability.
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
-# * confuse:  Randomly causes confusion when taking damage.
 # * corrode:  Randomly causes corrosion when taking damage.
 # * cursed:   Item is generated cursed.
 # * drain:    Causes draining when unequipped.
@@ -100,6 +99,7 @@
 # * seeinv:   Lets wearer see invisible.
 # * skip_ego: The item's ego is skipped in its inscription, to be replaced by
 #             an INSCRIP: entry.
+# * slow:     Randomly causes slowing when taking damage.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.

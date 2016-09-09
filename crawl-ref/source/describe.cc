@@ -189,7 +189,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_NOISE,                 PROPN_PLAIN },
         { ARTP_CORRODE,               PROPN_PLAIN },
         { ARTP_DRAIN,                 PROPN_PLAIN },
-        { ARTP_CONFUSE,               PROPN_PLAIN },
+        { ARTP_SLOW,                  PROPN_PLAIN },
         { ARTP_FRAGILE,               PROPN_PLAIN },
 
         // Evokable abilities come second
@@ -460,7 +460,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_RMUT, "It protects you from mutation.", false},
         { ARTP_CORRODE, "It may corrode you when you take damage.", false},
         { ARTP_DRAIN, "It causes draining when unequipped.", false},
-        { ARTP_CONFUSE, "It may confuse you when you take damage.", false},
+        { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
     };

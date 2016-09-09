@@ -709,7 +709,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
+    { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
@@ -1679,12 +1679,7 @@ static void _make_faerie_armour(item_def &item)
             continue;
 
         if (one_chance_in(20))
-        {
-            // Replace Confusing if present.
-            if (artefact_property(doodad, ARTP_CONFUSE))
-                artefact_set_property(doodad, ARTP_CONFUSE, 0);
             artefact_set_property(doodad, ARTP_CLARITY, 1);
-        }
         if (one_chance_in(20))
             artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
         if (one_chance_in(20))

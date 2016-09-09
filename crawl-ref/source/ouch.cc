@@ -712,18 +712,13 @@ static void _maybe_corrode()
 }
 
 /**
- * Maybe confuse the player after taking damage if they're wearing *Confuse.
+ * Maybe slow the player after taking damage if they're wearing *Slow.
  **/
-static void _maybe_confuse()
+static void _maybe_slow()
 {
-    int confusion_sources = you.scan_artefacts(ARTP_CONFUSE);
-    if (x_chance_in_y(confusion_sources, 100))
-    {
-        const bool conf = you.confused();
-
-        if (confuse_player(5 + random2(3), true))
-            mprf(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
-    }
+    int slow_sources = you.scan_artefacts(ARTP_SLOW);
+    if (x_chance_in_y(slow_sources, 100))
+        slow_player(10 + random2(5));
 }
 
 /**
@@ -1016,7 +1011,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             if (death_type != KILLED_BY_POISON)
             {
                 _maybe_corrode();
-                _maybe_confuse();
+                _maybe_slow();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
