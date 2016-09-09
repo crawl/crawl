@@ -377,7 +377,6 @@ static bool _get_mem_list(spell_list &mem_spells,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
     bool          book_errors      = false;
-    unsigned int  num_unknown      = 0;
     spell_set     available_spells;
 
     // Collect the list of all spells in all available spellbooks.
@@ -398,12 +397,6 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!item_is_spellbook(book))
             continue;
 
-        if (!item_type_known(book))
-        {
-            num_unknown++;
-            continue;
-        }
-
         book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
@@ -418,11 +411,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
         {
-            if (num_unknown > 1)
-                mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
-            else if (num_unknown == 1)
-                mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
-            else if (book_errors)
+            if (book_errors)
                 mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
             else
                 mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
