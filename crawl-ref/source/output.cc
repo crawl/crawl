@@ -2621,6 +2621,9 @@ static string _status_mut_abilities(int sw)
     if (you.can_water_walk())
         mutations.emplace_back("walk on water");
 
+    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
+        mutations.emplace_back("reduced essence");
+
     string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
