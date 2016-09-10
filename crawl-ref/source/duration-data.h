@@ -30,6 +30,17 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
+static void _expire_vehumet_gifts()
+{
+    for (const spell_type spell : you.spells)
+        if (you.expiring_vehumet_gifts.count(spell))
+        {
+            you.vehumet_gifts.erase(spell);
+            you.expiring_vehumet_gifts.erase(spell);
+            del_spell_from_memory(spell);
+        }
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -586,6 +597,8 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
       {{ "You regain access to your magic." }, {}, true }},
+    { DUR_VEHUMET_GIFT_EXPIRY, 0, "", "", "vehumet gift expiry", "",
+      D_NO_FLAGS, {{"", []() { _expire_vehumet_gifts(); }}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

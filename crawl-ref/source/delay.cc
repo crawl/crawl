@@ -506,7 +506,7 @@ void MemoriseDelay::start()
 {
     if (vehumet_is_offering(spell))
     {
-        string message = make_stringf(" grants you knowledge of %s.",
+        string message = make_stringf(" grants you permanent knowledge of %s.",
             spell_title(spell));
         simple_god_message(message.c_str());
     }
@@ -898,8 +898,10 @@ void FeedVampireDelay::finish()
 void MemoriseDelay::finish()
 {
     mpr("You finish memorising.");
-    add_spell_to_memory(spell);
-    vehumet_accept_gift(spell);
+    if (vehumet_is_offering(spell))
+        vehumet_accept_gift(spell);
+    else
+        add_spell_to_memory(spell);
 }
 
 void PasswallDelay::finish()

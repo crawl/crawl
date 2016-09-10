@@ -2620,6 +2620,12 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        + " supports the use of this spell.\n";
     }
 
+    if (vehumet_is_offering(spell))
+    {
+        description += uppercase_first(god_name(you.religion))
+                       + " has granted you temporary knowledge of this spell.\n";
+    }
+
     if (!you_can_memorise(spell))
     {
         description += "\nYou cannot memorise this spell because "

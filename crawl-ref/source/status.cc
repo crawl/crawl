@@ -662,6 +662,31 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case DUR_VEHUMET_GIFT_EXPIRY:
+    {
+        vector<const char *> spellnames;
+        for (const spell_type spell : you.spells)
+            if (you.expiring_vehumet_gifts.count(spell))
+                spellnames.push_back(spell_title(spell));
+
+        if (!spellnames.empty())
+        {
+            inf->light_text   = "Vehumet";
+            inf->light_colour = RED;
+            inf->short_text = make_stringf("forgetting %s",
+                                  comma_separated_line(spellnames.begin(),
+                                                       spellnames.end(),
+                                                       ", ", ", ").c_str());
+            inf->long_text = make_stringf("Your %s of %s %s fading.",
+                                 (spellnames.size() > 1) ? "memories"
+                                                         : "memory",
+                                 comma_separated_line(spellnames.begin(),
+                                                      spellnames.end()).c_str(),
+                                 (spellnames.size() > 1) ? "are" : "is");
+        }
+        break;
+    }
+
     default:
         if (!found)
         {

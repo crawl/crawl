@@ -1603,6 +1603,8 @@ void vehumet_accept_gift(spell_type spell)
 {
     if (vehumet_is_offering(spell))
     {
+        if (you.expiring_vehumet_gifts.count(spell))
+            you.expiring_vehumet_gifts.erase(spell);
         you.vehumet_gifts.erase(spell);
         you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
@@ -1944,10 +1946,36 @@ bool do_god_gift(bool forced)
                 set<spell_type> offers = _vehumet_get_spell_gifts();
                 if (!offers.empty())
                 {
-                    you.vehumet_gifts = offers;
-                    string prompt = " offers you knowledge of ";
+                    vector<const char *> expiring;
+                    for (const spell_type spell : you.spells)
+                        if (vehumet_is_offering(spell))
+                        {
+                            expiring.push_back(spell_title(spell));
+                            you.expiring_vehumet_gifts.insert(spell);
+                        }
+
+                    if (!you.expiring_vehumet_gifts.empty())
+                    {
+                        mprf(MSGCH_GOD, "Your %s of %s begin%s to fade.",
+                             (expiring.size() > 1) ? "memories" : "memory",
+                             comma_separated_line(expiring.begin(),
+                                                  expiring.end()).c_str(),
+                             (expiring.size() > 1) ? "" : "s");
+
+                        you.increase_duration(DUR_VEHUMET_GIFT_EXPIRY, 100);
+                    }
+                    you.vehumet_gifts.insert(offers.begin(), offers.end());
+                    string prompt = "";
+                    bool is_final_gift = gifts >= NUM_VEHUMET_GIFTS - 1;
                     for (auto it = offers.begin(); it != offers.end(); ++it)
                     {
+                        if (it == offers.begin())
+                        {
+                            if (is_final_gift)
+                                prompt = " offers you knowledge of ";
+                            else
+                                prompt = " grants you temporary knowledge of ";
+                        }
                         if (it != offers.begin())
                         {
                             if (offers.size() > 2)
@@ -1959,14 +1987,17 @@ bool do_god_gift(bool forced)
                                 prompt += "and ";
                         }
                         prompt += spell_title(*it);
+                        if (!is_final_gift)
+                            add_spell_to_memory(*it);
                         _add_to_old_gifts(*it);
                         take_note(Note(NOTE_OFFERED_SPELL, *it));
                     }
                     prompt += ".";
-                    if (gifts >= NUM_VEHUMET_GIFTS - 1)
+                    if (is_final_gift)
                     {
-                        prompt += " These spells will remain available"
-                                  " as long as you worship Vehumet.";
+                        prompt += " These spells cannot be cast until"
+                                  " permanently memorised, but will remain"
+                                  " available as long as you worship Vehumet.";
                     }
 
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
@@ -2674,6 +2705,11 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_VEHUMET:
+        for (const spell_type spell : you.spells)
+            if (vehumet_is_offering(spell))
+                del_spell_from_memory(spell);
+
+        you.expiring_vehumet_gifts.clear()
         you.vehumet_gifts.clear();
         you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);

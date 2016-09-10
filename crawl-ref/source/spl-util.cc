@@ -1405,6 +1405,8 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
 
     if (spell_is_useless(spell, transient))
         default_colour = COL_USELESS;
+    else if (vehumet_is_offering(spell))
+        default_colour = LIGHTBLUE;
 
     return default_colour;
 }

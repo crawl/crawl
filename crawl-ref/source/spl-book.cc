@@ -442,7 +442,7 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
 
     for (const spell_type spell : available_spells)
     {
-        if (you.has_spell(spell))
+        if (you.has_spell(spell) && !vehumet_is_offering(spell))
             num_known++;
         else if (!you_can_memorise(spell))
         {
@@ -834,7 +834,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
         return false;
     }
 
-    if (you.has_spell(specspell))
+    if (you.has_spell(specspell) && !vehumet_is_offering(specspell))
     {
         mpr("You already know that spell!");
         return false;

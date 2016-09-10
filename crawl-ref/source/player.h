@@ -158,7 +158,7 @@ public:
     int obtainable_runes; // can be != 15 in Sprint
 
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
-    set<spell_type> old_vehumet_gifts, vehumet_gifts;
+    set<spell_type> old_vehumet_gifts, vehumet_gifts, expiring_vehumet_gifts;
 
     uint8_t spell_no;
     game_chapter chapter;

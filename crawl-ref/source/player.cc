@@ -1309,7 +1309,7 @@ int player_spell_levels()
         else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
 
-        if (spell != SPELL_NO_SPELL)
+        if (spell != SPELL_NO_SPELL && !vehumet_is_offering(spell))
             sl -= spell_difficulty(spell);
     }
 
