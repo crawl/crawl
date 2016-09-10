@@ -2050,7 +2050,9 @@ void untransform(bool skip_move)
     if (!skip_move)
     {
         // Land the player if we stopped flying.
-        if (was_flying && !you.airborne())
+        if (is_feat_dangerous(grd(you.pos())))
+            enable_emergency_flight();
+        else if (was_flying && !you.airborne())
             move_player_to_grid(you.pos(), false);
 
         // Update merfolk swimming for the form change.

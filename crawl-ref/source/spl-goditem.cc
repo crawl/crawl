@@ -374,7 +374,7 @@ bool player_is_debuffable()
  */
 void debuff_player()
 {
-    bool need_msg = false, danger = false;
+    bool need_msg = false;
 
     // find the list of debuffable effects currently active
     player_debuff_effects buffs;
@@ -392,13 +392,7 @@ void debuff_player()
     for (auto duration : buffs.durations)
     {
         int &len = you.duration[duration];
-        if (duration == DUR_TRANSFORMATION && len > 11)
-        {
-            len = 11;
-            need_msg = true;
-            danger = need_expiration_warning(you.pos());
-        }
-        else if (duration == DUR_TELEPORT)
+        if (duration == DUR_TELEPORT)
         {
             len = 0;
             mprf(MSGCH_DURATION, "You feel strangely stable.");
@@ -422,11 +416,7 @@ void debuff_player()
     }
 
     if (need_msg)
-    {
-        mprf(danger ? MSGCH_DANGER : MSGCH_WARN,
-             "%sYour magical effects are unravelling.",
-             danger ? "Careful! " : "");
-    }
+        mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 
     const int old_contam_level = get_contamination_level();
     contaminate_player(-1 * (1000 + random2(4000)));
