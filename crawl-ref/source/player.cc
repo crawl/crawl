@@ -5031,7 +5031,7 @@ void fly_player(int pow, bool already_flying)
         float_player();
 }
 
-static void _enable_emergency_flight()
+void enable_emergency_flight()
 {
     mpr("You can't land here! You focus on prolonging your flight, but the "
         "process is draining.");
@@ -5051,9 +5051,9 @@ bool land_player(bool quiet)
         return false;
 
     // Handle landing on (formerly) instakill terrain
-    if (is_feat_dangerous(orig_terrain(you.pos()), true, false))
+    if (is_feat_dangerous(grd(you.pos())))
     {
-        _enable_emergency_flight();
+        enable_emergency_flight();
         return false;
     }
 
