@@ -493,11 +493,12 @@ string describe_mutations(bool center_title)
                   "</lightgreen>";
     }
 
-    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
-        result += "<green>Your life essence is reduced. (-10% HP)</green>\n";
-
-    if (you.duration[DUR_FIRE_SHIELD])
-        result += "<green>You are immune to clouds of flame.</green>\n";
+    if (have_passive(passive_t::frail)
+        || player_under_penance(GOD_HEPLIAKLQANA))
+    {
+        result += "<lightred>Your life essence is reduced. (-10% HP)"
+                  "</lightred>\n";
+    }
 
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
