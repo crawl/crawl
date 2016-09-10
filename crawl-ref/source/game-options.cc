@@ -39,24 +39,43 @@ static unsigned _curses_attribute(const string &field)
     return CHATTR_NORMAL;
 }
 
-bool read_bool(const string &field, bool def_value)
+bool _read_bool(const string &field, string &error)
 {
-    bool ret = def_value;
-
     if (field == "true" || field == "1" || field == "yes")
-        ret = true;
+        return true;
 
     if (field == "false" || field == "0" || field == "no")
-        ret = false;
+        return false;
 
-    return ret;
+    error = make_stringf("Bad boolean: %s (should be true or false)",
+                         field.c_str());
+    return false;
+}
+
+bool read_bool(const string &field, bool def_value)
+{
+    string error;
+    const bool result = _read_bool(field, error);
+    if (error.empty())
+        return result;
+
+    Options.report_error("%s", error.c_str());
+    return def_value;
 }
 
 void BoolGameOption::reset() const { value = default_value; }
 
 string BoolGameOption::loadFromString(string field, rc_line_type) const
 {
-    value = read_bool(field, default_value);
+    string error;
+    const bool result = _read_bool(field, error);
+    if (!error.empty())
+    {
+        return make_stringf("Bad %s value: %s (should be true or false)",
+                            name().c_str(), field.c_str());
+    }
+
+    value = result;
     return "";
 }
 
