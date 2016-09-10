@@ -1344,11 +1344,10 @@ status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
 
-enemy_hp_colour = green green brown brown magenta red lightgrey
+enemy_hp_colour = green green brown brown magenta red
         Colours enemy health appropriately in the monster pane. The
         colourings correspond to full health, lightly wounded, moderately
-        wounded, heavily wounded, severely wounded, almost dead, and
-        undead (or otherwise unable to be determined).
+        wounded, heavily wounded, severely wounded, and almost dead.
 
 clear_messages = false
         Setting this option to true will cause messages to cleared
