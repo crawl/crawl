@@ -1114,7 +1114,6 @@ void game_options::reset_options()
     enemy_hp_colour.push_back(BROWN);
     enemy_hp_colour.push_back(MAGENTA);
     enemy_hp_colour.push_back(RED);
-    enemy_hp_colour.push_back(LIGHTGREY);
 
     force_autopickup.clear();
     autoinscriptions.clear();
