@@ -39,7 +39,7 @@ static unsigned _curses_attribute(const string &field, string &error)
     return CHATTR_NORMAL;
 }
 
-bool _read_bool(const string &field, string &error)
+static bool _read_bool(const string &field, string &error)
 {
     if (field == "true" || field == "1" || field == "yes")
         return true;
