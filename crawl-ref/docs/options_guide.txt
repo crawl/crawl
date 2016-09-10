@@ -1338,7 +1338,7 @@ stat_colour = 1:lightred, 3:red
         in the order of their definition. This check takes place before
         the ones for e.g. Might or degeneration.
         For normal grey colouring, set it to
-           stat_colour = 7
+           stat_colour -= 3:red
 
 status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
