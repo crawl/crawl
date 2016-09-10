@@ -1231,7 +1231,6 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
             else if (idx != 0)
             {
                 idx = doll.parts[p] - tile_player_part_start[p] + 1;
-                ASSERT(idx >= 0);
                 if (idx > tile_player_part_count[p])
                     idx = 0;
             }
