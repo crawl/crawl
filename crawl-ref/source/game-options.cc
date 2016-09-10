@@ -8,7 +8,7 @@
 #include "game-options.h"
 #include "options.h"
 
-static unsigned _curses_attribute(const string &field)
+static unsigned _curses_attribute(const string &field, string &error)
 {
     if (field == "standout")               // probably reverses
         return CHATTR_STANDOUT;
@@ -31,11 +31,11 @@ static unsigned _curses_attribute(const string &field)
         if (colour != -1)
             return CHATTR_HILITE | (colour << 8);
 
-        Options.report_error("Bad highlight string -- %s\n",
+        error = make_stringf("Bad highlight string -- %s",
                              field.c_str());
     }
     else if (field != "none")
-        Options.report_error("Bad colour -- %s\n", field.c_str());
+        error = make_stringf("Bad colour -- %s", field.c_str());
     return CHATTR_NORMAL;
 }
 
@@ -95,7 +95,12 @@ void CursesGameOption::reset() const { value = default_value; }
 
 string CursesGameOption::loadFromString(string field, rc_line_type) const
 {
-    value = _curses_attribute(field);
+    string error;
+    const unsigned result = _curses_attribute(field, error);
+    if (!error.empty())
+        return make_stringf("%s (for %s)", error.c_str(), name().c_str());
+
+    value = result;
     return "";
 }
 
