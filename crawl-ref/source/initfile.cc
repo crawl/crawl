@@ -86,6 +86,16 @@ game_options Options;
 
 static string _get_save_path(string subdir);
 
+static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
+{
+    return l.first < r.first;
+}
+
+static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
+{
+    return l.first > r.first;
+}
+
 const vector<GameOption*> game_options::build_options_list()
 {
     const bool USING_TOUCH =
@@ -257,6 +267,12 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
         new ListGameOption<string>(pizzas, {"pizza"}),
+        new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
+                                  "50:yellow, 25:red", _first_greater),
+        new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
+                                  "50:yellow, 25:red", _first_greater),
+        new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
+                                  "3:red", _first_less),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -1097,14 +1113,6 @@ void game_options::reset_options()
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
                       | UA_ALWAYS_ON);
 
-    hp_colour.clear();
-    hp_colour.emplace_back(50, YELLOW);
-    hp_colour.emplace_back(25, RED);
-    mp_colour.clear();
-    mp_colour.emplace_back(50, YELLOW);
-    mp_colour.emplace_back(25, RED);
-    stat_colour.clear();
-    stat_colour.emplace_back(3, RED);
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -2359,16 +2367,6 @@ static bool _is_autopickup_ban(pair<text_pattern, bool> entry)
     return !entry.second;
 }
 
-static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
-{
-    return l.first < r.first;
-}
-
-static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
-{
-    return l.first > r.first;
-}
-
 void game_options::read_option_line(const string &str, bool runscript)
 {
 #define NEWGAME_OPTION(_opt, _conv, _type)                                     \
@@ -2941,126 +2939,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             autoinscriptions.insert(autoinscriptions.begin(), entry);
         else
             autoinscriptions.push_back(entry);
-    }
-    else if (key == "hp_colour" || key == "hp_color")
-    {
-        if (plain)
-            hp_colour.clear();
-
-        vector<string> thesplit = split_string(",", field);
-        for (unsigned i = 0; i < thesplit.size(); ++i)
-        {
-            vector<string> insplit = split_string(":", thesplit[i]);
-            int hp_percent = 100;
-
-            if (insplit.empty() || insplit.size() > 2
-                 || insplit.size() == 1 && i != 0)
-            {
-                report_error("Bad hp_colour string: %s\n", field.c_str());
-                break;
-            }
-
-            if (insplit.size() == 2)
-                hp_percent = atoi(insplit[0].c_str());
-
-            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
-            const int scolour = str_to_colour(colstr);
-            if (scolour > 0)
-            {
-                pair<int, int> entry(hp_percent, scolour);
-                // We do not treat prepend differently since we will be sorting.
-                if (minus_equal)
-                    remove_matching(hp_colour, entry);
-                else
-                    hp_colour.push_back(entry);
-            }
-            else
-            {
-                report_error("Bad hp_colour: %s", colstr.c_str());
-                break;
-            }
-        }
-        stable_sort(hp_colour.begin(), hp_colour.end(), _first_greater);
-    }
-    else if (key == "mp_color" || key == "mp_colour")
-    {
-        if (plain)
-            mp_colour.clear();
-
-        vector<string> thesplit = split_string(",", field);
-        for (unsigned i = 0; i < thesplit.size(); ++i)
-        {
-            vector<string> insplit = split_string(":", thesplit[i]);
-            int mp_percent = 100;
-
-            if (insplit.empty() || insplit.size() > 2
-                 || insplit.size() == 1 && i != 0)
-            {
-                report_error("Bad mp_colour string: %s\n", field.c_str());
-                break;
-            }
-
-            if (insplit.size() == 2)
-                mp_percent = atoi(insplit[0].c_str());
-
-            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
-            const int scolour = str_to_colour(colstr);
-            if (scolour > 0)
-            {
-                pair<int, int> entry(mp_percent, scolour);
-                // We do not treat prepend differently since we will be sorting.
-                if (minus_equal)
-                    remove_matching(mp_colour, entry);
-                else
-                    mp_colour.push_back(entry);
-            }
-            else
-            {
-                report_error("Bad mp_colour: %s", colstr.c_str());
-                break;
-            }
-        }
-        stable_sort(mp_colour.begin(), mp_colour.end(), _first_greater);
-    }
-    else if (key == "stat_colour" || key == "stat_color")
-    {
-        if (plain)
-            stat_colour.clear();
-
-        vector<string> thesplit = split_string(",", field);
-        for (unsigned i = 0; i < thesplit.size(); ++i)
-        {
-            vector<string> insplit = split_string(":", thesplit[i]);
-
-            if (insplit.empty() || insplit.size() > 2
-                || insplit.size() == 1 && i != 0)
-            {
-                report_error("Bad stat_colour string: %s\n", field.c_str());
-                break;
-            }
-
-            int stat_limit = 1;
-            if (insplit.size() == 2)
-                stat_limit = atoi(insplit[0].c_str());
-
-            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
-            const int scolour = str_to_colour(colstr);
-            if (scolour > 0)
-            {
-                pair<int, int> entry(stat_limit, scolour);
-                // We do not treat prepend differently since we will be sorting.
-                if (minus_equal)
-                    remove_matching(stat_colour, entry);
-                else
-                    stat_colour.push_back(entry);
-            }
-            else
-            {
-                report_error("Bad stat_colour: %s", colstr.c_str());
-                break;
-            }
-        }
-        stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {

@@ -136,3 +136,74 @@ string StringGameOption::loadFromString(string field, rc_line_type) const
     value = field;
     return "";
 }
+
+void ColourThresholdOption::reset() const { value = default_value; }
+
+string ColourThresholdOption::loadFromString(string field,
+                                             rc_line_type ltyp) const
+{
+    string error;
+    const colour_thresholds result = parse_colour_thresholds(field, &error);
+    if (!error.empty())
+        return error;
+
+    switch (ltyp)
+    {
+        case RCFILE_LINE_EQUALS:
+            value = result;
+            break;
+        case RCFILE_LINE_PLUS:
+        case RCFILE_LINE_CARET:
+            value.insert(value.end(), result.begin(), result.end());
+            stable_sort(value.begin(), value.end(), ordering_function);
+            break;
+        case RCFILE_LINE_MINUS:
+            for (pair<int, int> entry : result)
+                remove_matching(value, entry);
+            break;
+        default:
+            die("Unknown rc line type for %s: %d!", name().c_str(), ltyp);
+    }
+    return "";
+}
+
+colour_thresholds
+    ColourThresholdOption::parse_colour_thresholds(string field,
+                                                   string* error) const
+{
+    colour_thresholds result;
+    for (string pair_str : split_string(",", field))
+    {
+        const vector<string> insplit = split_string(":", pair_str);
+
+        if (insplit.size() != 2)
+        {
+            const string failure = make_stringf("Bad %s pair: '%s'",
+                                                name().c_str(),
+                                                pair_str.c_str());
+            if (!error)
+                die("%s", failure.c_str());
+            *error = failure;
+            break;
+        }
+
+        const int threshold = atoi(insplit[0].c_str());
+
+        const string colstr = insplit[1];
+        const int scolour = str_to_colour(colstr, -1, true, false);
+        if (scolour <= 0)
+        {
+            const string failure = make_stringf("Bad %s: '%s'",
+                                                name().c_str(),
+                                                colstr.c_str());
+            if (!error)
+                die("%s", failure.c_str());
+            *error = failure;
+            break;
+        }
+
+        result.push_back({threshold, scolour});
+    }
+    stable_sort(result.begin(), result.end(), ordering_function);
+    return result;
+}

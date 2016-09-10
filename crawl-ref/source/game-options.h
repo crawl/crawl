@@ -140,6 +140,31 @@ private:
 };
 #endif
 
+typedef pair<int, int> colour_threshold;
+typedef vector<colour_threshold> colour_thresholds;
+typedef function<bool(const colour_threshold &l, const colour_threshold &r)>
+        colour_ordering;
+
+class ColourThresholdOption : public GameOption
+{
+public:
+    ColourThresholdOption(colour_thresholds &val, std::set<std::string> _names,
+                          string _default, colour_ordering ordering_func)
+        : GameOption(_names), value(val), ordering_function(ordering_func),
+          default_value(parse_colour_thresholds(_default)) { }
+    void reset() const override;
+    string loadFromString(string field, rc_line_type ltyp) const override;
+
+private:
+    colour_thresholds parse_colour_thresholds(string field,
+                                              string* error = nullptr) const;
+
+private:
+    colour_thresholds &value;
+    colour_ordering ordering_function;
+    colour_thresholds default_value;
+};
+
 // T must be convertible to a string.
 template<typename T>
 class ListGameOption : public GameOption
