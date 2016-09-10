@@ -138,14 +138,13 @@ int actor::check_res_magic(int power)
     if (is_monster() && mrs < 6 && coinflip())
         return -1;
 
-    const int orig_power = power;
-    power = ench_power_stepdown(power);
+    const int adj_pow = ench_power_stepdown(power);
 
-    const int mrchance = (100 + mrs) - power;
+    const int mrchance = (100 + mrs) - adj_pow;
     const int mrch2 = random2(100) + random2(101);
 
     dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
-         power, orig_power, mrs, mrchance, mrch2);
+         adj_pow, power, mrs, mrchance, mrch2);
 
     return mrchance - mrch2;
 }
