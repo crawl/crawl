@@ -736,7 +736,7 @@ VColour str_to_tile_colour(string colour)
 }
 #endif
 
-static const string cols[16] =
+static const char* const cols[16] =
 {
     "black", "blue", "green", "cyan", "red", "magenta", "brown",
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
