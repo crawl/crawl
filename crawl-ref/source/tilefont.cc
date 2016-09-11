@@ -3,7 +3,7 @@
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 
-const VColour term_colours[MAX_TERM_COLOUR] =
+const VColour term_colours[NUM_TERM_COLOURS] =
 {
     VColour(  0,   0,   0), // BLACK
     VColour(  0,  82, 255), // BLUE

@@ -40,7 +40,7 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-static VColour _flash_colours[MAX_TERM_COLOUR] =
+static VColour _flash_colours[NUM_TERM_COLOURS] =
 {
     VColour(  0,   0,   0,   0), // BLACK (transparent)
     VColour(  0,   0, 128, 100), // BLUE

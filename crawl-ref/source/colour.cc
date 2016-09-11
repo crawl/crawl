@@ -742,10 +742,11 @@ static const char* const cols[16] =
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
+COMPILE_CHECK(ARRAYSZ(cols) == NUM_TERM_COLOURS);
 
 const string colour_to_str(colour_t colour)
 {
-    if (colour >= 16)
+    if (colour >= NUM_TERM_COLOURS)
         return "lightgrey";
     else
         return cols[colour];
@@ -757,14 +758,14 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
 {
     int ret;
 
-    for (ret = 0; ret < 16; ++ret)
+    for (ret = 0; ret < NUM_TERM_COLOURS; ++ret)
     {
         if (str == cols[ret])
             break;
     }
 
     // Check for alternate spellings.
-    if (ret == 16)
+    if (ret == NUM_TERM_COLOURS)
     {
         if (str == "lightgray")
             ret = 7;
@@ -772,7 +773,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
             ret = 8;
     }
 
-    if (ret == 16 && accept_elemental)
+    if (ret == NUM_TERM_COLOURS && accept_elemental)
     {
         // Maybe we have an element colour attribute.
         if (element_colour_calc **calc = map_find(element_colours_str, str))
@@ -782,17 +783,17 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
         }
     }
 
-    if (ret == 16 && accept_number)
+    if (ret == NUM_TERM_COLOURS && accept_number)
     {
         // Check if we have a direct colour index.
         const char *s = str.c_str();
         char *es = nullptr;
         const int ci = static_cast<int>(strtol(s, &es, 10));
-        if (s != es && es && ci >= 0 && ci < 16)
+        if (s != es && es && ci >= 0 && ci < NUM_TERM_COLOURS)
             ret = ci;
     }
 
-    return (ret == 16) ? default_colour : ret;
+    return (ret == NUM_TERM_COLOURS) ? default_colour : ret;
 }
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)

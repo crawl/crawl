@@ -611,7 +611,7 @@ extern game_options  Options;
 
 static inline short macro_colour(short col)
 {
-    ASSERT(col < MAX_TERM_COLOUR);
+    ASSERT(col < NUM_TERM_COLOURS);
     return col < 0 ? col : Options.colour[ col ];
 }
 
