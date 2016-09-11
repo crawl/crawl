@@ -1269,15 +1269,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
         descs.push_back("not susceptible");
     else
     {
-        int success = hex_success_chance(mr,
-                                         evoked
-                                         ? pakellas_effective_hex_power(pow)
-                                         : pow,
-                                         100);
-
-        // See comment in actor::check_res_magic; monster targets only.
-        if (mr < 6)
-            success = (success + 100)/2;
+        const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
+                                   : pow;
+        const int success = hex_success_chance(mr, adj_pow, 100);
         descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
     }
     return descs;
