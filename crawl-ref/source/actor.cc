@@ -124,20 +124,6 @@ int actor::check_res_magic(int power)
     if (mrs == MAG_IMMUNE)
         return 100;
 
-    // Evil, evil hack to make weak one hd monsters easier for first level
-    // characters who have resistable 1st level spells. Six is a very special
-    // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
-    // level monsters have been adjusted so that the "3" is typically a 1.
-    // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking mons->hit_dice. The
-    // goal here is to make the first level easier for these classes and give
-    // them a better shot at getting to level two or three and spells that can
-    // help them out (or building a level or two of their base skill so they
-    // aren't resisted as often). - bwr
-    // If you change this, also change desc_success_chance() to match.
-    if (is_monster() && mrs < 6 && coinflip())
-        return -1;
-
     const int adj_pow = ench_power_stepdown(power);
 
     const int mrchance = (100 + mrs) - adj_pow;
