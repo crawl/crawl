@@ -414,8 +414,7 @@ static bool _list_available_spells(spell_set &available_spells)
 
 static bool _get_mem_list(spell_list &mem_spells,
                           unsigned int &num_misc,
-                          bool just_check = false,
-                          spell_type current_spell = SPELL_NO_SPELL)
+                          bool just_check = false)
 {
     spell_set     available_spells;
     bool          book_errors      = _list_available_spells(available_spells);
@@ -444,7 +443,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     for (const spell_type spell : available_spells)
     {
-        if (spell == current_spell || you.has_spell(spell))
+        if (you.has_spell(spell))
             num_known++;
         else if (!you_can_memorise(spell))
         {
@@ -457,9 +456,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             mem_spells.push_back(spell);
 
-            int avail_slots = player_spell_levels();
-            if (current_spell != SPELL_NO_SPELL)
-                avail_slots -= spell_levels_required(current_spell);
+            const int avail_slots = player_spell_levels();
 
             if (spell_difficulty(spell) > you.experience_level)
                 num_low_xl++;
@@ -507,15 +504,12 @@ static bool _get_mem_list(spell_list &mem_spells,
     return false;
 }
 
-// If current_spell is a valid spell, returns whether you'll be able to
-// memorise any further spells once this one is committed to memory.
-bool has_spells_to_memorise(bool silent, spell_type current_spell)
+bool has_spells_to_memorise(bool silent)
 {
     spell_list      mem_spells;
     unsigned int    num_misc;
 
-    return _get_mem_list(mem_spells, num_misc, silent,
-                         (spell_type) current_spell);
+    return _get_mem_list(mem_spells, num_misc, silent);
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
