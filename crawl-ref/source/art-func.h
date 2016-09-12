@@ -23,6 +23,7 @@
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "english.h"       // For apostrophise
+#include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
@@ -102,14 +103,13 @@ static bool _evoke_sceptre_of_asmodeus()
     return true;
 }
 
-static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
-                            bool* unevokable)
+static bool _ASMODEUS_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
     if (_evoke_sceptre_of_asmodeus())
     {
         make_hungry(200, false, true);
         *did_work = true;
-        *pract    = 1;
+        practise_evoking(1);
     }
 
     return false;
@@ -179,8 +179,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 
 /////////////////////////////////////////////////////
 
-static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
-                            bool* unevokable)
+static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
     if (!enough_hp(11, true))
     {
@@ -209,7 +208,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     dec_hp(5 + random2avg(19, 2), false);
     dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
-    *pract    = (coinflip() ? 2 : 1);
+    practise_evoking(coinflip() ? 2 : 1);
 
     return false;
 }
@@ -235,8 +234,7 @@ static void _OLGREB_unequip(item_def *item, bool *show_msgs)
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
 }
 
-static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
-                          bool* unevokable)
+static bool _OLGREB_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
     if (!enough_mp(4, false))
     {
@@ -264,7 +262,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 
     dec_mp(4);
     make_hungry(50, false, true);
-    *pract    = 1;
+    practise_evoking(1);
 
     return false;
 }
@@ -424,8 +422,7 @@ static void _wucad_miscast(actor* victim, int power,int fail)
                   "the staff of Wucad Mu", NH_NEVER);
 }
 
-static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
-                            bool* unevokable)
+static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
@@ -458,9 +455,8 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
     inc_mp(3 + random2(5) + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
     make_hungry(50, false, true);
 
-    *pract    = 1;
     *did_work = true;
-
+    practise_evoking(1);
     did_god_conduct(DID_CHANNEL, 10, true);
 
     return false;
