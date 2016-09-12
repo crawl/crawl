@@ -441,7 +441,6 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
-    bool         form           = false;
 
     for (const spell_type spell : available_spells)
     {
@@ -491,17 +490,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     else if (num_misc == total || (num_known + num_misc) == total
             || num_misc + num_known + num_restricted == total)
     {
-        if (form)
-        {
-            mprf(MSGCH_PROMPT, "You cannot currently memorise any of the "
-                 "available spells because you are in %s form.",
-                 uppercase_first(transform_name()).c_str());
-        }
-        else
-        {
-            mprf(MSGCH_PROMPT, "You cannot memorise any of the available "
-                 "spells.");
-        }
+        mprf(MSGCH_PROMPT, "You cannot memorise any of the available spells.");
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
