@@ -293,7 +293,6 @@ bool monster::floundering_at(const coord_def p) const
                 // deep water, who flounder despite being treated as amphibious.
                 && mons_habitat(*this, true) != HT_AMPHIBIOUS
                 && !extra_balanced_at(p)))
-           && !cannot_fight()
            && ground_level();
 }
 
@@ -2751,11 +2750,6 @@ bool monster::fumbles_attack()
         return true;
 
     return false;
-}
-
-bool monster::cannot_fight() const
-{
-    return mons_class_is_firewood(this->type) || mons_is_statue(type);
 }
 
 void monster::attacking(actor * /* other */, bool /* ranged */)

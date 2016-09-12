@@ -673,11 +673,6 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-bool player::cannot_fight() const
-{
-    return false;
-}
-
 void player::attacking(actor *other, bool ranged)
 {
     ASSERT(!crawl_state.game_is_arena());
