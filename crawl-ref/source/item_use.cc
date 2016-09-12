@@ -3162,7 +3162,7 @@ void tile_item_use(int idx)
             if (item_is_spellbook(item)
                 && check_warning_inscriptions(item, OPER_MEMORISE))
             {
-                learn_spell(); // offers all spells, might not be what we want
+                learn_spell_from(item);
             }
             return;
 

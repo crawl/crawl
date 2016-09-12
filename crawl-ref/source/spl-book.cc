@@ -49,6 +49,10 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
+typedef vector<spell_type>                     spell_list;
+typedef unordered_set<spell_type, hash<int>>   spell_set;
+static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -337,23 +341,23 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
 
-typedef vector<spell_type>                     spell_list;
-typedef unordered_set<spell_type, hash<int>>   spell_set;
+static void _mark_book_known(item_def& book)
+{
+    // XXX: revise and check how much of this is needed (if any)
+    mark_had_book(book);
+    set_ident_flags(book, ISFLAG_KNOW_TYPE);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+}
 
 /**
- * Read the given book, identifying it and marking it as owned if necessary,
- * and then list all spells in the book.
+ * List all spells in the given book.
  *
  * @param book      The book to be read.
  * @param spells    The list of spells to populate. Doesn't have to be empty.
  * @return          Whether the given book is invalid (empty).
  */
-static bool _get_book_spells(item_def& book, spell_set &spells)
+static bool _get_book_spells(const item_def& book, spell_set &spells)
 {
-    mark_had_book(book);
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-
     int num_spells = 0;
     for (spell_type spell : spells_in_book(book))
     {
@@ -390,6 +394,7 @@ static bool _list_available_spells(spell_set &available_spells)
         if (!book.defined() || !item_is_spellbook(book))
             continue;
 
+        _mark_book_known(book);
         book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
@@ -402,6 +407,7 @@ static bool _list_available_spells(spell_set &available_spells)
         if (!item_is_spellbook(book))
             continue;
 
+        _mark_book_known(book);
         book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
@@ -514,6 +520,34 @@ static void _get_mem_list(spell_list &mem_spells,
                                                              num_misc);
     if (!just_check && !unavail_reason.empty())
         mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+}
+
+/// Give the player a memorization prompt for the spells from the given book.
+void learn_spell_from(const item_def &book)
+{
+    spell_set available_spells;
+    const bool book_error = _get_book_spells(book, available_spells);
+    if (book_error)
+        more();
+    if (available_spells.empty())
+        return;
+
+    spell_list mem_spells;
+    unsigned int num_misc;
+    const string unavail_reason = _filter_memorizable_spells(available_spells,
+                                                             mem_spells,
+                                                             num_misc);
+    if (!unavail_reason.empty())
+        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+    if (mem_spells.empty())
+        return;
+
+    const spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
+
+    if (specspell == SPELL_NO_SPELL)
+        canned_msg(MSG_OK);
+    else
+        learn_spell(specspell);
 }
 
 bool has_spells_to_memorise(bool silent)
