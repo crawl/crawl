@@ -182,7 +182,7 @@ void practise_stabbing() { exercise(SK_STEALTH, 1 + random2avg(5, 4)); }
 /// Skill training when a monster attacks the player in melee.
 void practise_being_attacked()
 {
-    if (one_chance_in(3))
+    if (one_chance_in(6))
         _check_train_dodging(1);
 }
 
@@ -222,7 +222,7 @@ void practise_being_shot()
 /// Skill training when being attacked with a spell or other ranged attack.
 void practise_being_shot_at()
 {
-    if (coinflip())
+    if (one_chance_in(4))
         _check_train_dodging(1);
 }
 
