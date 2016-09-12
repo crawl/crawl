@@ -1757,7 +1757,7 @@ void melee_attack::set_attack_verb(int damage)
 void melee_attack::player_exercise_combat_skills()
 {
     if (defender && defender->is_monster()
-        && monster_is_firewood(defender->as_monster()))
+        && mons_is_firewood(*defender->as_monster()))
     {
         return;
     }
