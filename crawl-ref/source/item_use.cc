@@ -2012,8 +2012,8 @@ static void _rebrand_weapon(item_def& wpn)
 {
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
-    int old_brand = get_weapon_brand(wpn);
-    int new_brand = old_brand;
+    const brand_type old_brand = get_weapon_brand(wpn);
+    brand_type new_brand = old_brand;
 
     // now try and find an appropriate brand
     while (old_brand == new_brand || god_hates_brand(new_brand))
