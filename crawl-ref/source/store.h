@@ -265,7 +265,7 @@ public:
     const CrawlStoreValue& get_value(const char *key) const
     { return get_value(string(key)); }
     const CrawlStoreValue& operator[] (const string &key) const
-    { return get_value(string(key)); }
+    { return get_value(key); }
     const CrawlStoreValue& operator[] (const char *key) const
     { return get_value(string(key)); }
 
