@@ -3159,15 +3159,11 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
-            if (item.sub_type == BOOK_MANUAL)
-                return;
-            if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
+            if (item_is_spellbook(item)
+                && check_warning_inscriptions(item, OPER_MEMORISE))
             {
-                if (check_warning_inscriptions(item, OPER_READ))
-                    _handle_read_book(you.inv[idx]);
-            } // else it's a spellbook
-            else if (check_warning_inscriptions(item, OPER_MEMORISE))
                 learn_spell(); // offers all spells, might not be what we want
+            }
             return;
 
         case OBJ_SCROLLS:
