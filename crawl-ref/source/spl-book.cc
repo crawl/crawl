@@ -412,28 +412,21 @@ static bool _list_available_spells(spell_set &available_spells)
     return book_errors;
 }
 
-static void _get_mem_list(spell_list &mem_spells,
-                          unsigned int &num_misc,
-                          bool just_check = false)
+/**
+ * Take a list of spells and filter them to only those that the player can
+ * currently memorize.
+ *
+ * @param available_spells      The list of spells to be filtered.
+ * @param mem_spells[out]       The list of memorizeable spells to populate.
+ * @param num_misc[out]         How many spells are unmemorizable for 'misc
+ *                              reasons' (e.g. player species)
+ * @param return                The reason the player can't currently memorize
+ *                              any spells, if they can't. Otherwise, "".
+ */
+static string _filter_memorizable_spells(const spell_set &available_spells,
+                                         spell_list &mem_spells,
+                                         unsigned int &num_misc)
 {
-    spell_set     available_spells;
-    bool          book_errors      = _list_available_spells(available_spells);
-
-    if (book_errors)
-        more();
-
-    if (available_spells.empty())
-    {
-        if (!just_check)
-        {
-            if (book_errors)
-                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
-            else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
-        }
-        return;
-    }
-
     unsigned int num_known      = 0;
                  num_misc       = 0;
     unsigned int num_restricted = 0;
@@ -458,6 +451,9 @@ static void _get_mem_list(spell_list &mem_spells,
 
             const int avail_slots = player_spell_levels();
 
+            // don't filter out spells that are too high-level for us; we
+            // probably still want to see them. (since that's temporary.)
+
             if (spell_difficulty(spell) > you.experience_level)
                 num_low_xl++;
             else if (avail_slots < spell_levels_required(spell))
@@ -467,29 +463,57 @@ static void _get_mem_list(spell_list &mem_spells,
         }
     }
 
-    if (num_memable || just_check)
-        return;
+    if (num_memable || num_low_levels > 0 || num_low_xl > 0)
+        return "";
 
     unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
-            + num_restricted;
+                         + num_restricted;
 
     if (num_known == total)
-        mprf(MSGCH_PROMPT, "You already know all available spells.");
-    else if (num_restricted == total || num_restricted + num_known == total)
+        return "You already know all available spells.";
+    if (num_restricted == total || num_restricted + num_known == total)
     {
-        mprf(MSGCH_PROMPT, "You cannot currently memorise any of the available "
-             "spells because you cannot use those schools of magic.");
+        return "You cannot currently memorise any of the available spells "
+               "because you cannot use those schools of magic.";
     }
-    else if (num_misc == total || (num_known + num_misc) == total
-            || num_misc + num_known + num_restricted == total)
+    if (num_misc == total || (num_known + num_misc) == total
+        || num_misc + num_known + num_restricted == total)
     {
-        mprf(MSGCH_PROMPT, "You cannot memorise any of the available spells.");
+        return "You cannot memorise any of the available spells.";
     }
-    else if (num_low_levels <= 0 && num_low_xl <= 0)
+
+    return "You can't memorise any new spells for an unknown reason; please "
+           "file a bug report.";
+}
+
+
+static void _get_mem_list(spell_list &mem_spells,
+                          unsigned int &num_misc,
+                          bool just_check = false)
+{
+    spell_set     available_spells;
+    bool          book_errors      = _list_available_spells(available_spells);
+
+    if (book_errors)
+        more();
+
+    if (available_spells.empty())
     {
-        mprf(MSGCH_PROMPT, "You can't memorise any new spells for an unknown "
-                           "reason; please file a bug report.");
+        if (!just_check)
+        {
+            if (book_errors)
+                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
+            else
+                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+        }
+        return;
     }
+
+    const string unavail_reason = _filter_memorizable_spells(available_spells,
+                                                             mem_spells,
+                                                             num_misc);
+    if (!just_check && !unavail_reason.empty())
+        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
 }
 
 bool has_spells_to_memorise(bool silent)
