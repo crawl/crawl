@@ -412,7 +412,7 @@ static bool _list_available_spells(spell_set &available_spells)
     return book_errors;
 }
 
-static bool _get_mem_list(spell_list &mem_spells,
+static void _get_mem_list(spell_list &mem_spells,
                           unsigned int &num_misc,
                           bool just_check = false)
 {
@@ -431,7 +431,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             else
                 mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
         }
-        return false;
+        return;
     }
 
     unsigned int num_known      = 0;
@@ -467,12 +467,8 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
     }
 
-    if (num_memable)
-        return true;
-
-    // Return true even if there are only spells we can't memorise _yet_.
-    if (just_check)
-        return num_low_levels > 0 || num_low_xl > 0;
+    if (num_memable || just_check)
+        return;
 
     unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
             + num_restricted;
@@ -489,19 +485,11 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         mprf(MSGCH_PROMPT, "You cannot memorise any of the available spells.");
     }
-    else if (num_low_levels > 0 || num_low_xl > 0)
-    {
-        // Just because we can't memorise them doesn't mean we don't want to
-        // see what we have available. See FR #235. {due}
-        return true;
-    }
-    else
+    else if (num_low_levels <= 0 && num_low_xl <= 0)
     {
         mprf(MSGCH_PROMPT, "You can't memorise any new spells for an unknown "
                            "reason; please file a bug report.");
     }
-
-    return false;
 }
 
 bool has_spells_to_memorise(bool silent)
@@ -509,7 +497,8 @@ bool has_spells_to_memorise(bool silent)
     spell_list      mem_spells;
     unsigned int    num_misc;
 
-    return _get_mem_list(mem_spells, num_misc, silent);
+    _get_mem_list(mem_spells, num_misc, silent);
+    return !mem_spells.empty();
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -549,8 +538,9 @@ vector<spell_type> get_mem_spell_list()
 {
     spell_list      mem_spells;
     unsigned int    num_misc;
+    _get_mem_list(mem_spells, num_misc);
 
-    if (!_get_mem_list(mem_spells, num_misc))
+    if (mem_spells.empty())
         return spell_list();
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
@@ -735,10 +725,10 @@ bool learn_spell()
         return false;
 
     spell_list      mem_spells;
-
     unsigned int num_misc;
+    _get_mem_list(mem_spells, num_misc);
 
-    if (!_get_mem_list(mem_spells, num_misc))
+    if (mem_spells.empty())
         return false;
 
     spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
