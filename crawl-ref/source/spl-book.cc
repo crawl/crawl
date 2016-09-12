@@ -371,13 +371,18 @@ static bool _get_book_spells(item_def& book, spell_set &spells)
     return false;
 }
 
-static bool _get_mem_list(spell_list &mem_spells,
-                          unsigned int &num_misc,
-                          bool just_check = false,
-                          spell_type current_spell = SPELL_NO_SPELL)
+/**
+ * Populate the given list with all spells the player can currently memorize,
+ * from books in inventory, on the ground, or offered by Vehumet. Does not
+ * filter by currently known spells, spell levels, etc.
+ *
+ * @param available_spells  A list to be populated with available spells.
+ * @return                  Whether there were errors while looking for spells.
+ */
+static bool _list_available_spells(spell_set &available_spells)
 {
-    bool          book_errors      = false;
-    spell_set     available_spells;
+
+    bool          book_errors = false;
 
     // Collect the list of all spells in all available spellbooks.
     for (auto &book : you.inv)
@@ -402,7 +407,18 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
-      available_spells.insert(gift);
+        available_spells.insert(gift);
+
+    return book_errors;
+}
+
+static bool _get_mem_list(spell_list &mem_spells,
+                          unsigned int &num_misc,
+                          bool just_check = false,
+                          spell_type current_spell = SPELL_NO_SPELL)
+{
+    spell_set     available_spells;
+    bool          book_errors      = _list_available_spells(available_spells);
 
     if (book_errors)
         more();
