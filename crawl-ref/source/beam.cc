@@ -3343,8 +3343,6 @@ bool bolt::misses_player()
             real_tohit -= 2 + random2(4);
     }
 
-    bool train_shields_more = false;
-
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
@@ -3400,18 +3398,14 @@ bool bolt::misses_player()
         }
 
         // Some training just for the "attempt".
-        train_shields_more = true;
+        practise_shield_block(false);
     }
 
     if (is_enchantment())
-    {
-        if (train_shields_more)
-            practise(EX_SHIELD_BEAM_FAIL);
         return false;
-    }
 
     if (!aimed_at_feet)
-        practise(EX_BEAM_MAY_HIT);
+        practise_being_shot_at();
 
     defer_rand r;
     bool miss = true;
@@ -3445,9 +3439,6 @@ bool bolt::misses_player()
 
         miss = false;
     }
-
-    if (train_shields_more)
-        practise(EX_SHIELD_BEAM_FAIL);
 
     return miss;
 }
@@ -3944,7 +3935,7 @@ void bolt::affect_player()
                     preac, postac);
 #endif
 
-    practise(EX_BEAM_WILL_HIT);
+    practise_being_shot();
 
     bool was_affected = false;
     int  old_hp       = you.hp;

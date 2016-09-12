@@ -1880,8 +1880,7 @@ int attack::player_stab(int damage)
     {
         // Construct reasonable message.
         stab_message();
-
-        practise(EX_WILL_STAB);
+        practise_stabbing();
     }
     else
     {

@@ -721,7 +721,7 @@ void zap_wand(int slot)
     if (wand.charges == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
         wand.used_count = ZAPCOUNT_EMPTY;
 
-    practise(EX_DID_ZAP_WAND);
+    practise_evoking(1);
     count_action(CACT_EVOKE, EVOC_WAND);
     alert_nearby_monsters();
 
@@ -2109,7 +2109,7 @@ bool evoke_item(int slot, bool check_range)
         if (is_deck(item))
         {
             evoke_deck(item);
-            practise(EX_DID_USE_DECK);
+            practise_using_deck();
             count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }
@@ -2262,7 +2262,7 @@ bool evoke_item(int slot, bool check_range)
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
-        practise(EX_DID_EVOKE_ITEM, pract);
+        practise_evoking(pract);
 
     if (!unevokable)
         you.turn_is_over = true;

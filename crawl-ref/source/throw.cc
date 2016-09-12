@@ -817,7 +817,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
-        practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
+        practise_launching(item_attack_skill(*launcher));
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
@@ -828,7 +828,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         break;
     }
     case LRET_THROWN:
-        practise(EX_WILL_THROW_MSL, wepType);
+        practise_throwing((missile_type)wepType);
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
