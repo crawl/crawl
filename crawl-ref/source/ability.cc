@@ -1675,7 +1675,7 @@ bool activate_talent(const talent& tal)
     {
         case SPRET_SUCCESS:
             ASSERT(!fail || testbits(abil.flags, abflag::HOSTILE));
-            practise(EX_USED_ABIL, abil.ability);
+            practise_using_ability(abil.ability);
             _pay_ability_costs(abil);
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
             return true;

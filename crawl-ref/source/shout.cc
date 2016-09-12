@@ -329,7 +329,7 @@ bool check_awaken(monster* mons, int stealth)
         && !mons->neutral() // include pacified monsters
         && mons_class_gives_xp(mons->type))
     {
-        practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
+        practise_sneaking(unnatural_stealthy);
     }
 
     return false;

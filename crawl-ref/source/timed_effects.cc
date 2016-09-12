@@ -815,7 +815,7 @@ static void _handle_magic_contamination(int /*time_delta*/)
 // Exercise armour *xor* stealth skill: {dlb}
 static void _wait_practice(int /*time_delta*/)
 {
-    practise(EX_WAIT);
+    practise_waiting();
 }
 
 static void _lab_change(int /*time_delta*/)

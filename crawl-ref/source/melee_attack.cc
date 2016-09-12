@@ -26,7 +26,6 @@
 #include "exercise.h"
 #include "fineff.h"
 #include "food.h"
-#include "godabil.h" // for USKAYAW_DID_DANCE_ACTION
 #include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::convert_orcs
@@ -241,8 +240,8 @@ bool melee_attack::handle_phase_attempted()
     attack_occurred = true;
 
     // Check for player practicing dodging
-    if (one_chance_in(3) && defender->is_player())
-        practise(EX_MONSTER_MAY_HIT);
+    if (defender->is_player())
+        practise_being_attacked();
 
     return true;
 }
@@ -1764,11 +1763,7 @@ void melee_attack::player_exercise_combat_skills()
     if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
         damage = property(*weapon, PWPN_DAMAGE);
 
-    // Slow down the practice of low-damage weapons.
-    if (x_chance_in_y(damage, 20))
-        practise(EX_WILL_HIT, wpn_skill);
-
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+    practise_hitting(wpn_skill, damage);
 }
 
 /*
@@ -2540,7 +2535,7 @@ bool melee_attack::mons_attack_effects()
     }
 
     if (defender->is_player())
-        practise(EX_MONSTER_WILL_HIT);
+        practise_being_hit();
 
     // A tentacle may have banished its own parent/sibling and thus itself.
     if (!attacker->alive())

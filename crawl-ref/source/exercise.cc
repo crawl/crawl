@@ -16,8 +16,12 @@
 #include "skills.h"
 #include "spl-util.h"
 
-static void _exercise_spell(spell_type spell, bool success)
+/// Skill training for when the player casts or miscasts a spell.
+void practise_casting(spell_type spell, bool success)
 {
+    if (success) // ???
+        you.props[USKAYAW_DID_DANCE_ACTION] = true;
+
     // (!success) reduces skill increase for miscast spells
     int workout = 0;
 
@@ -111,7 +115,8 @@ static bool _check_train_dodging(int amount)
     return false;
 }
 
-static void _check_train_sneak(bool invis)
+/// Skill training while not being noticed by a monster.
+void practise_sneaking(bool invis)
 {
     if (!x_chance_in_y(_armour_mass(), 1000)
         && !you.attribute[ATTR_SHADOWS]
@@ -122,7 +127,8 @@ static void _check_train_sneak(bool invis)
     }
 }
 
-static void _exercise_passive()
+/// Skill training while doing nothing in particular.
+void practise_waiting()
 {
     if (one_chance_in(6) && _check_train_armour(1))
         return; // Armour trained in check_train_armour
@@ -140,147 +146,97 @@ static void _exercise_passive()
     }
 }
 
-void practise(exer_type ex, int param1)
+/// Skill training when the player hits a monster in melee combat.
+void practise_hitting(skill_type attack_sk, int damage)
 {
-    skill_type sk = SK_NONE;
-    int deg = 0;
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 
-    switch (ex)
-    {
-    case EX_WILL_STAB:
-        sk = SK_STEALTH;
-        deg = 1 + random2avg(5, 4);
-        exercise(sk, deg);
-        break;
+    // Slow down the practice of low-damage weapons.
+    if (!x_chance_in_y(damage, 20))
+        return;
 
-    case EX_WILL_HIT:
-        sk = static_cast<skill_type>(param1);
-        exercise(sk, 1);
-        if (coinflip())
-            exercise(SK_FIGHTING, 1);
-        break;
+    exercise(attack_sk, 1);
+    if (coinflip())
+        exercise(SK_FIGHTING, 1);
+}
 
-    case EX_MONSTER_WILL_HIT:
-        if (coinflip())
-            _check_train_armour(coinflip() ? 2 : 1);
-        else if (coinflip())
-            exercise(SK_FIGHTING, 1);
-        break;
+/// Skill training when the player shoots at a monster with a ranged weapon.
+void practise_launching(skill_type attack_sk)
+{
+    exercise(attack_sk, 1);
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+}
 
-    case EX_MONSTER_MAY_HIT:
+/// Skill training when the player throws a projectile at a monster.
+void practise_throwing(missile_type mi_type)
+{
+    if (mi_type == MI_STONE && coinflip())
+        return;
+    exercise(SK_THROWING, 1);
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+}
+
+/// Skill training when the player stabs an vulnerable monster for extra dam.
+void practise_stabbing() { exercise(SK_STEALTH, 1 + random2avg(5, 4)); }
+
+/// Skill training when a monster attacks the player in melee.
+void practise_being_attacked()
+{
+    if (one_chance_in(3))
         _check_train_dodging(1);
-        break;
+}
 
-    case EX_WILL_LAUNCH:
-        sk = static_cast<skill_type>(param1);
-        switch (sk)
-        {
-        case SK_SLINGS:
-        case SK_THROWING: // Probably obsolete.
-        case SK_BOWS:
-        case SK_CROSSBOWS:
-            deg = 1;
-            break;
-        default:
-            break;
-        }
-        exercise(sk, deg);
-        break;
+/// Skill training when a monster hits the player with a melee attack.
+void practise_being_hit()
+{
+    if (coinflip())
+        _check_train_armour(coinflip() ? 2 : 1);
+    else if (coinflip())
+        exercise(SK_FIGHTING, 1);
+}
 
-    case EX_WILL_THROW_MSL:
-        switch (param1) // missile subtype
-        {
-        case MI_TOMAHAWK:
-        case MI_JAVELIN:
-        case MI_THROWING_NET:
-            deg = 1;
-            break;
-        default: // Throwing stones and large rocks.
-            deg = coinflip();
-            break;
-        }
-        exercise(SK_THROWING, deg);
-        break;
+/// Skill training when the player uses a special ability.
+void practise_using_ability(ability_type abil)
+{
+    const skill_type sk = abil_skill(abil);
+    if (sk != SK_NONE)
+        exercise(sk, abil_skill_weight(abil));
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+}
 
-    case EX_USED_ABIL:
-    {
-        ability_type abil = static_cast<ability_type>(param1);
-        sk = abil_skill(abil);
-        deg = abil_skill_weight(abil);
-        if (sk != SK_NONE)
-            exercise(sk, deg);
-        break;
-    }
+/// Skill training when blocking or failing to block attacks with a shield.
+void practise_shield_block(bool successful)
+{
+    const int odds_denom = successful ? 2 : 6;
+    if (one_chance_in(odds_denom))
+        exercise(SK_SHIELDS, 1);
+}
 
-    case EX_DID_CAST:
-    case EX_DID_MISCAST:
-        _exercise_spell(static_cast<spell_type>(param1),
-                        ex == EX_DID_CAST);
-        break;
+/// Skill training when being hit by a spell or other ranged attack.
+void practise_being_shot()
+{
+    if (one_chance_in(4))
+        _check_train_armour(1);
+}
 
-    case EX_SHIELD_BLOCK:
-        if (coinflip())
-            exercise(SK_SHIELDS, 1);
-        break;
+/// Skill training when being attacked with a spell or other ranged attack.
+void practise_being_shot_at()
+{
+    if (coinflip())
+        _check_train_dodging(1);
+}
 
-    case EX_SHIELD_BEAM_FAIL:
-        if (one_chance_in(6))
-            exercise(SK_SHIELDS, 1);
-        break;
+/// Skill training when using an evocable item, such as a wand or rod.
+void practise_evoking(int amount)
+{
+    // XXX: degree determination is just passed in but should be done here.
+    exercise(SK_EVOCATIONS, amount);
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+}
 
-    case EX_BEAM_MAY_HIT:
-        if (coinflip())
-            _check_train_dodging(1);
-        break;
-
-    case EX_BEAM_WILL_HIT:
-        if (one_chance_in(4))
-            _check_train_armour(1);
-        break;
-
-    case EX_SNEAK:
-    case EX_SNEAK_INVIS:
-        _check_train_sneak(ex == EX_SNEAK_INVIS);
-        break;
-
-    case EX_DID_EVOKE_ITEM:
-        // XXX: degree determination is just passed in but
-        // should be done here.
-        exercise(SK_EVOCATIONS, param1);
-        break;
-    case EX_DID_ZAP_WAND:
-        exercise(SK_EVOCATIONS, 1);
-        break;
-
-    case EX_WAIT:
-        _exercise_passive();
-        break;
-
-    case EX_DID_USE_DECK:
-        exercise(SK_INVOCATIONS, 1);
-        break;
-
-    default:
-        break;
-    }
-
-    // Doing a second switch to reduce code duplication
-    // If we did an action that's plausibly an attack, we might gain Uskayaw
-    // piety, assuming monsters were also damaged.
-    // We handle melee attacks in melee_attack::player_exercise_combat_skills()
-    // because it only calls practice() sometimes.
-    switch (ex)
-    {
-        case EX_DID_ZAP_WAND:
-        case EX_DID_EVOKE_ITEM:
-        case EX_DID_USE_DECK:
-        case EX_DID_CAST:
-        case EX_USED_ABIL:
-        case EX_WILL_THROW_MSL:
-        case EX_WILL_LAUNCH:
-        case EX_WILL_STAB:
-            you.props[USKAYAW_DID_DANCE_ACTION] = true;
-        default:
-            break;
-    }
+/// Skill training while using one of Nemelex's decks.
+void practise_using_deck()
+{
+    exercise(SK_INVOCATIONS, 1);
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }

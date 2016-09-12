@@ -845,14 +845,12 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
+    practise_casting(spell, cast_result == SPRET_SUCCESS);
     if (cast_result == SPRET_SUCCESS)
     {
-        practise(EX_DID_CAST, spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
-    else
-        practise(EX_DID_MISCAST, spell);
 
 #if TAG_MAJOR_VERSION == 34
     // Nasty special cases.

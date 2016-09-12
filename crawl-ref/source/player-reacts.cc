@@ -505,7 +505,7 @@ static void _handle_recitation(int step)
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
     // turns.
-    practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
+    practise_using_ability(ABIL_ZIN_RECITE);
 
     noisy(you.shout_volume(), you.pos());
 
