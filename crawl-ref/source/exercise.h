@@ -17,19 +17,15 @@ enum exer_type
     EX_MONSTER_WILL_HIT,     // melee attack was not blocked or dodged
     EX_WILL_LAUNCH,          // launchers
     EX_WILL_THROW_MSL,       // missiles
-    EX_WILL_THROW_WEAPON,    // weapons
-    EX_WILL_THROW_OTHER,     // junk
     EX_USED_ABIL,
     EX_DID_CAST,
     EX_DID_MISCAST,
     EX_SHIELD_BLOCK,
-    EX_DODGE_TRAP,
     EX_SHIELD_BEAM_FAIL,
     EX_SNEAK,
     EX_SNEAK_INVIS,
     EX_DID_EVOKE_ITEM,
     EX_DID_ZAP_WAND,
-    EX_WILL_READ_TOME,
     EX_WAIT,
     EX_DID_USE_DECK,
 };

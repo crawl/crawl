@@ -832,7 +832,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
-        practise(EX_WILL_THROW_OTHER);
         break;
     case LRET_BUGGY:
         dprf("Unknown launch type for weapon."); // should never happen :)

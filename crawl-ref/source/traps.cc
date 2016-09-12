@@ -1334,10 +1334,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     if (!force_hit && trap_hit < act.evasion())
     {
         if (act.is_player())
-        {
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
-            practise(EX_DODGE_TRAP);
-        }
         else if (you.see_cell(act.pos()))
         {
             mprf("%s misses %s!", shot.name(DESC_A).c_str(),

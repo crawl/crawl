@@ -202,16 +202,6 @@ void practise(exer_type ex, int param1)
         exercise(SK_THROWING, deg);
         break;
 
-    case EX_WILL_THROW_WEAPON:
-        if (coinflip())
-            exercise(SK_THROWING, 1);
-        break;
-
-    case EX_WILL_THROW_OTHER:
-        if (one_chance_in(20))
-            exercise(SK_THROWING, 1);
-        break;
-
     case EX_USED_ABIL:
     {
         ability_type abil = static_cast<ability_type>(param1);
@@ -231,11 +221,6 @@ void practise(exer_type ex, int param1)
     case EX_SHIELD_BLOCK:
         if (coinflip())
             exercise(SK_SHIELDS, 1);
-        break;
-
-    case EX_DODGE_TRAP:
-        if (coinflip())
-            _check_train_dodging(1);
         break;
 
     case EX_SHIELD_BEAM_FAIL:
@@ -264,7 +249,6 @@ void practise(exer_type ex, int param1)
         exercise(SK_EVOCATIONS, param1);
         break;
     case EX_DID_ZAP_WAND:
-    case EX_WILL_READ_TOME:
         exercise(SK_EVOCATIONS, 1);
         break;
 
@@ -292,7 +276,6 @@ void practise(exer_type ex, int param1)
         case EX_DID_USE_DECK:
         case EX_DID_CAST:
         case EX_USED_ABIL:
-        case EX_WILL_THROW_WEAPON:
         case EX_WILL_THROW_MSL:
         case EX_WILL_LAUNCH:
         case EX_WILL_STAB:
