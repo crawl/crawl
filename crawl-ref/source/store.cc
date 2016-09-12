@@ -11,7 +11,6 @@
 #include <algorithm>
 
 #include "dlua.h"
-#include "libutil.h" // map_find
 #include "monster.h"
 #include "stringutil.h"
 
@@ -1230,52 +1229,6 @@ string &CrawlStoreValue::operator += (const string &_val)
     return get_string() += _val;
 }
 
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-
-CrawlHashTable::CrawlHashTable()
-{
-    hash_map = nullptr;
-}
-
-CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
-{
-    if (other.hash_map == nullptr)
-    {
-        hash_map = nullptr;
-        return;
-    }
-
-    hash_map = new hash_map_type(*(other.hash_map));
-}
-
-CrawlHashTable::~CrawlHashTable()
-{
-    // NOTE: Not using unique_ptr because making hash_map an unique_ptr
-    // causes compile weirdness in externs.h
-    if (hash_map == nullptr)
-        return;
-
-    delete hash_map;
-    hash_map = nullptr;
-}
-
-CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
-{
-    if (hash_map != nullptr)
-        delete hash_map;
-
-    if (other.hash_map == nullptr)
-    {
-        hash_map = nullptr;
-        return *this;
-    }
-
-    hash_map = new hash_map_type(*(other.hash_map));
-
-    return *this;
-}
-
 //////////////////////////////
 // Read/write from/to savefile
 void CrawlHashTable::write(writer &th) const
@@ -1289,7 +1242,7 @@ void CrawlHashTable::write(writer &th) const
 
     marshallUnsigned(th, size());
 
-    for (const auto &entry : *hash_map)
+    for (const auto &entry : *this)
     {
         marshallString(th, entry.first);
         entry.second.write(th);
@@ -1314,11 +1267,6 @@ void CrawlHashTable::read(reader &th)
     unsigned int _size = unmarshallUnsigned(th);
 #endif
 
-    if (_size == 0)
-        return;
-
-    init_hash_map();
-
     for (unsigned int i = 0; i < _size; i++)
     {
         string           key = unmarshallString(th);
@@ -1342,23 +1290,17 @@ static map<string, int> accesses;
 
 bool CrawlHashTable::exists(const string &key) const
 {
-    if (!hash_map)
-        return false;
-
     ACCESS(key);
     ASSERT_VALIDITY();
-    return hash_map->find(key) != hash_map->end();
+    return find(key) != end();
 }
 
 void CrawlHashTable::assert_validity() const
 {
 #ifdef DEBUG
-    if (hash_map == nullptr)
-        return;
-
     size_t actual_size = 0;
 
-    for (const auto &entry : *hash_map)
+    for (const auto &entry : *this)
     {
         actual_size++;
 
@@ -1419,114 +1361,23 @@ void CrawlHashTable::assert_validity() const
 CrawlStoreValue& CrawlHashTable::get_value(const string &key)
 {
     ASSERT_VALIDITY();
-    init_hash_map();
-
     ACCESS(key);
     // Inserts CrawlStoreValue() if the key was not found.
-    return (*hash_map)[key];
+    return map::operator[](key);
 }
 
 const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
-    ASSERTM(hash_map,
-            "trying to read non-existent property \"%s\"", key.c_str());
     ASSERT_VALIDITY();
-
     ACCESS(key);
-    CrawlStoreValue *store = map_find(*hash_map, key);
+    auto iter = find(key);
+    ASSERTM(iter != end(), "trying to read non-existent property \"%s\"", key.c_str());
 
-    ASSERTM(store, "trying to read non-existent property \"%s\"", key.c_str());
-    ASSERT(store->type != SV_NONE);
-    ASSERT(!(store->flags & SFLAG_UNSET));
+    const CrawlStoreValue& store = iter->second;
+    ASSERT(store.type != SV_NONE);
+    ASSERT(!(store.flags & SFLAG_UNSET));
 
-    return *store;
-}
-
-///////////////////////////
-// std::map style interface
-unsigned int CrawlHashTable::size() const
-{
-    if (hash_map == nullptr)
-        return 0;
-
-    return hash_map->size();
-}
-
-bool CrawlHashTable::empty() const
-{
-    if (hash_map == nullptr)
-        return true;
-
-    return hash_map->empty();
-}
-
-void CrawlHashTable::erase(const string& key)
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    ACCESS(key);
-    iterator i = hash_map->find(key);
-
-    if (i != hash_map->end())
-    {
-#ifdef ASSERTS
-        CrawlStoreValue &val = i->second;
-        ASSERT(!(val.flags & SFLAG_NO_ERASE));
-#endif
-
-        hash_map->erase(i);
-    }
-}
-
-void CrawlHashTable::clear()
-{
-    ASSERT_VALIDITY();
-    if (hash_map == nullptr)
-        return;
-
-    delete hash_map;
-    hash_map = nullptr;
-}
-
-CrawlHashTable::iterator CrawlHashTable::begin()
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    return hash_map->begin();
-}
-
-CrawlHashTable::iterator CrawlHashTable::end()
-{
-    ASSERT_VALIDITY();
-    init_hash_map();
-
-    return hash_map->end();
-}
-
-CrawlHashTable::const_iterator CrawlHashTable::begin() const
-{
-    ASSERT(hash_map != nullptr);
-    ASSERT_VALIDITY();
-
-    return hash_map->begin();
-}
-
-CrawlHashTable::const_iterator CrawlHashTable::end() const
-{
-    ASSERT(hash_map != nullptr);
-    ASSERT_VALIDITY();
-
-    return hash_map->end();
-}
-
-void CrawlHashTable::init_hash_map()
-{
-    if (hash_map != nullptr)
-        return;
-
-    hash_map = new hash_map_type();
+    return store;
 }
 
 /////////////////////////////////////////////////////////////////////////////
