@@ -1971,8 +1971,7 @@ bool evoke_item(int slot, bool check_range)
     if (!item_is_evokable(item, true, false, false, true))
         return false;
 
-    int pract = 0; // By how much Evocations is practised.
-    bool did_work   = false;  // Used for default "nothing happens" message.
+    bool did_work   = false;  // "Nothing happens" message
     bool unevokable = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
@@ -1988,7 +1987,7 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        bool qret = entry->evoke_func(&item, &pract, &did_work, &unevokable);
+        bool qret = entry->evoke_func(&item, &did_work, &unevokable);
 
         if (!unevokable)
             count_action(CACT_EVOKE, item.unrand_idx);
@@ -2009,10 +2008,7 @@ bool evoke_item(int slot, bool check_range)
         if (weapon_reach(item) > REACH_NONE)
         {
             if (_reaching_weapon_attack(item))
-            {
-                pract    = 0;
                 did_work = true;
-            }
             else
                 return false;
         }
@@ -2036,10 +2032,11 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        if (!(pract = _rod_spell(you.inv[slot], check_range)))
+        if (!_rod_spell(you.inv[slot], check_range))
             return false;
 
         did_work = true;  // _rod_spell() handled messages
+        practise_evoking(1);
         count_action(CACT_EVOKE, EVOC_ROD);
         break;
 
@@ -2080,8 +2077,8 @@ bool evoke_item(int slot, bool check_range)
             mpr("You channel some magical energy.");
             inc_mp(1 + random2(3));
             make_hungry(50, false, true);
-            pract = 1;
             did_work = true;
+            practise_evoking(1);
             count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);
 
             did_god_conduct(DID_CHANNEL, 1, true);
@@ -2137,7 +2134,7 @@ bool evoke_item(int slot, bool check_range)
                                                 surge),
                        coord_def());
             expend_xp_evoker(item);
-            pract = 1;
+            practise_evoking(3);
             break;
         }
 
@@ -2150,7 +2147,7 @@ bool evoke_item(int slot, bool check_range)
             if (_lamp_of_fire())
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2172,7 +2169,7 @@ bool evoke_item(int slot, bool check_range)
             if (_phial_of_floods())
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2187,7 +2184,7 @@ bool evoke_item(int slot, bool check_range)
             if (_evoke_horn_of_geryon(item))
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2195,24 +2192,24 @@ bool evoke_item(int slot, bool check_range)
 
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_SACK_OF_SPIDERS:
             if (_sack_of_spiders(item))
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             if (!_check_crystal_ball())
                 unevokable = true;
             else if (_ball_of_energy())
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_QUAD_DAMAGE:
@@ -2235,7 +2232,7 @@ bool evoke_item(int slot, bool check_range)
                     dec_inv_item_quantity(item.link, 1);
                     // deliberate fall-through
                 case SPRET_FAIL:
-                    pract = 1;
+                    practise_evoking(1);
                     break;
             }
             break;
@@ -2261,8 +2258,6 @@ bool evoke_item(int slot, bool check_range)
 
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (pract > 0)
-        practise_evoking(pract);
 
     if (!unevokable)
         you.turn_is_over = true;

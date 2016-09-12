@@ -66,8 +66,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
-    bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
-                       bool* unevokable);
+    bool (*evoke_func)(item_def *item, bool* did_work, bool* unevokable);
 };
 
 bool is_known_artefact(const item_def &item);
