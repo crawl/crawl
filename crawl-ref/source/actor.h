@@ -155,9 +155,6 @@ public:
     {
         return true;
     }
-    // Returns true if the actor has no way to attack (plants, statues).
-    // (statues have only indirect attacks).
-    virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;

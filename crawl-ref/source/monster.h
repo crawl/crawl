@@ -324,7 +324,6 @@ public:
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
 
     bool fumbles_attack() override;
-    bool cannot_fight() const override;
 
     int  skill(skill_type skill, int scale = 1,
                bool real = false, bool drained = true) const override;
