@@ -2213,7 +2213,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
     }
 }
 
-void full_describe_square(const coord_def &c)
+void full_describe_square(const coord_def &c, bool cleanup)
 {
     // NOTE: Keep this function in sync with get_square_desc.
 
@@ -2233,7 +2233,11 @@ void full_describe_square(const coord_def &c)
         describe_feature_wide(c);
     }
 
-    clear_messages();
+    if (cleanup)
+    {
+        redraw_screen();
+        clear_messages();
+    }
 }
 
 static void _extend_move_to_edge(dist &moves)

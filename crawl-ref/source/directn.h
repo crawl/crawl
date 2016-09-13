@@ -295,7 +295,7 @@ void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-void full_describe_square(const coord_def &c);
+void full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();

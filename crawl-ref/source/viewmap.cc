@@ -1214,7 +1214,7 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_DESCRIBE:
                 if (map_bounds(lpos.pos) && env.map_knowledge(lpos.pos).known())
                 {
-                    full_describe_square(lpos.pos);
+                    full_describe_square(lpos.pos, false);
                     redraw_map = true;
                 }
                 break;
