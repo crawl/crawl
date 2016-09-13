@@ -1160,25 +1160,30 @@ static string _abyss_monster_creation_message(const monster* mon)
                           : " pops from nullspace!";
     }
 
-    return make_stringf(
-        random_choose_weighted(
-            17, " appears in a shower of translocational energy.",
-            34, " appears in a shower of sparks.",
-            45, " materialises.",
-            13, " emerges from chaos.",
-            26, " emerges from the beyond.",
-            33, " assembles %s!",
-             9, " erupts from nowhere!",
-            18, " bursts from nowhere!",
-             7, " is cast out of space!",
-            14, " is cast out of reality!",
-             5, " coalesces out of pure chaos.",
-            10, " coalesces out of seething chaos.",
-             2, " punctures the fabric of time!",
-             7, " punctures the fabric of the universe.",
-             3, " manifests%2$s!%1$.0s"),
-        mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
-        silenced(you.pos()) ? "" : " with a bang");
+    // You may ask: "Why these weights?" So would I!
+    const vector<pair<string, int>> messages = {
+        { " appears in a shower of translocational energy.", 17 },
+        { " appears in a shower of sparks.", 34 },
+        { " materialises.", 45 },
+        { " emerges from chaos.", 13 },
+        { " emerges from the beyond.", 26 },
+        { make_stringf(" assembles %s!",
+                       mon->pronoun(PRONOUN_REFLEXIVE).c_str()), 33 },
+        { " erupts from nowhere.", 9 },
+        { " bursts from nowhere.", 18 },
+        { " is cast out of space.", 7 },
+        { " is cast out of reality.", 14 },
+        { " coalesces out of pure chaos.", 5 },
+        { " coalesces out of seething chaos.", 10 },
+        { " punctures the fabric of time!", 2 },
+        { " punctures the fabric of the universe.", 7 },
+        { make_stringf(" manifests%s!",
+                       silenced(you.pos()) ? "" : " with a bang"), 3 },
+
+
+    };
+
+    return *random_choose_weighted(messages);
 }
 
 static inline bool _monster_warning(activity_interrupt_type ai,
