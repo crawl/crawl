@@ -854,6 +854,9 @@ void monster::equip_weapon(item_def &item, bool msg)
         case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
             break;
+        case SPWPN_ACID:
+            mprf("It begins to drip corrosive slime!");
+            break;
 
         default:
             // A ranged weapon without special message is known to be unbranded.
