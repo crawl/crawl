@@ -106,7 +106,6 @@ queen_bee MONS_QUEEN_BEE
 ../meliai MONS_MELIAI
 
 ## Lizards ('l')
-giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
 iguana MONS_IGUANA
 basilisk MONS_BASILISK

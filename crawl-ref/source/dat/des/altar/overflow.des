@@ -1758,14 +1758,14 @@ DEPTH: D:2-9
 SHUFFLE: MCSBP
 KFEAT: _ = altar_ru
 KMONS: P = ball python perm_ench:paralysis / rat perm_ench:paralysis / \
-  giant newt perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
+  giant cockroach perm_ench:paralysis / \
   quokka perm_ench:paralysis / kobold w:5 perm_ench:paralysis / \
   goblin w:5 perm_ench:paralysis / hobgoblin w:5 perm_ench:paralysis
 KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
   kobold perm_ench:corona / goblin perm_ench:corona / hobgoblin perm_ench:corona
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
-KMONS: B = ball python perm_ench:blind / giant newt perm_ench:blind / \
+KMONS: B = ball python perm_ench:blind / \
   giant cockroach perm_ench:blind / bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
@@ -2085,11 +2085,11 @@ TAGS:   overflow_altar_trog
 DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
-MONS:   giant gecko / rat / giant newt / quokka
+MONS:   giant gecko / rat / quokka
 {{
   dgn.delayed_decay(_G, 'd',
                     'giant gecko chunk q:1 / rat chunk q:1 / ' ..
-                    'giant newt chunk q:1 / quokka chunk q:1')
+                    'quokka chunk q:1')
 }}
 : else
 MONS:   orc warrior ; war axe . animal skin

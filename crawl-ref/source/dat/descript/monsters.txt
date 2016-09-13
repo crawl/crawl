@@ -1185,11 +1185,6 @@ giant leech
 
 An aggressive blood-sucking annelid that thrives in swamps and marshlands.
 %%%%
-giant newt
-
-A tenacious little amphibian, several times the size of a normal newt, but
-still not very threatening.
-%%%%
 giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
