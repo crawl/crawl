@@ -9,8 +9,8 @@
 
 #include "itemprop-enum.h" // missile_type
 
-void practise_hitting(skill_type attack_sk, int damage);
-void practise_launching(skill_type attack_sk);
+void practise_hitting(const item_def *weapon);
+void practise_launching(const item_def &weapon);
 void practise_throwing(missile_type mi_type);
 void practise_stabbing();
 
