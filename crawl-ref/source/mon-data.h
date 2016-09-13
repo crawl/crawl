@@ -269,7 +269,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_WIGLAF)
     AXED_MON(MONS_SHEEP)
     AXED_MON(MONS_ANUBIS_GUARD)
-    AXED_MON(MONS_GIANT_NEWT)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -1448,6 +1447,19 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake", TILEP_MONS_SWAMP_DRAKE)
 
 // lizards ('l')
 DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_GIANT_GECKO)
+
+{
+    MONS_FRILLED_LIZARD, 'l', BROWN, "frilled lizard",
+    M_COLD_BLOOD,
+    MR_NO_FLAGS,
+    10, MONS_GIANT_LIZARD, MONS_FRILLED_LIZARD, MH_NATURAL, 0,
+    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    1, 25,
+    0, 15, MST_FRILLED_LIZARD, CE_CLEAN, S_HISS,
+    I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED,
+    {TILEP_MONS_FRILLED_LIZARD}, TILE_CORPSE_FRILLED_LIZARD
+},
 
 {
     MONS_GIANT_GECKO, 'l', YELLOW, "giant gecko",

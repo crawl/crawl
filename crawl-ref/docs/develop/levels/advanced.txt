@@ -389,7 +389,7 @@ This example is from sewer.des:
 
 {{
 function sewer_random_monster_list(e)
-  e.set_random_mon_list("bat w:20 / giant cockroach w:20 / small snake / \
+  e.set_random_mon_list("bat w:20 / frilled lizard w:20 / small snake / \
                          ooze / worm / snake / vampire mosquito w:15")
 end
 }}

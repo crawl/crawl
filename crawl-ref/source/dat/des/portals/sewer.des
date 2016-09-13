@@ -339,7 +339,7 @@ WEIGHT: 15
 ORIENT: encompass
 MONS:   rat / river rat w:3
 MONS:   kobold / big kobold w:1
-MONS:   ball python / adder w:5 / ooze w:1
+MONS:   ball python / adder w:5 / frilled lizard w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
@@ -391,7 +391,7 @@ NAME:    kennysheep_pipe_town
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / big kobold w:2
-MONS:    bat / rat / ooze w:5 / ball python / \
+MONS:    bat / rat / ooze w:5 / ball python / frilled lizard w:5 /\
          giant cockroach w:5 / adder w:1
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
@@ -453,8 +453,8 @@ SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
-MONS:     ball python w:5 / giant cockroach / \
-          generate_awake ball python w:5 / \
+MONS:     frilled lizard / ball python w:5 / giant cockroach / \
+          generate_awake frilled lizard / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake \
           giant gecko / adder w:8 / nothing w:8
 NSUBST:   ! = 2:! / *:w
@@ -500,7 +500,7 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = ball python / giant cockroach / \
+KMONS:    W = frilled lizard / ball python / giant cockroach / \
               giant gecko / ooze / adder w:4 / \
               nothing w:270
 KFEAT:    W = W
@@ -554,7 +554,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: de
 MONS:    rat / river rat w:2
-MONS:    ball python / adder w:5 / ooze w:1
+MONS:    ball python / adder w:5 / frilled lizard w:2 / ooze w:1
 MONS:    giant frog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
@@ -713,8 +713,8 @@ SUBST:   R = .
 #      lesser monsters.
 KFEAT:   1 = w
 COLOUR:  1 = green
-KMONS:   1 = giant cockroach / ball python w:5 / \
-         generate_awake giant cockroach / generate_awake ball python w:5 / \
+KMONS:   1 = frilled lizard / ball python w:5 / \
+         generate_awake frilled lizard / generate_awake ball python w:5 / \
          adder w:4 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
@@ -777,7 +777,7 @@ ENDMAP
 NAME:   kennysheep_door_sewer
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold w:40 / bat / giant cockroach / \
+MONS:   kobold w:40 / bat / frilled lizard / giant cockroach / \
         adder w:5 / big kobold w:1
 KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
@@ -832,13 +832,13 @@ COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = bat / ball python / giant cockroach / \
+KMONS:    ? = bat / frilled lizard / ball python / giant cockroach / \
               giant gecko / ooze w:4 / worm w:4 / adder w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     bat / ball python / giant cockroach / \
+MONS:     bat / frilled lizard / ball python / giant cockroach / \
           giant gecko / ooze w:4 / worm w:4 / adder w:2
 SHUFFLE:  23
 MONS:     bat / nothing w:2
@@ -902,8 +902,8 @@ WEIGHT: 5
 MONS:   rat w:4 / nothing w:1, rat / river rat w:5
 KMONS:  G = siren hd:3 name:sickly name_adjective name_species
 KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
-KMONS:  hJ = ball python / adder / nothing w:2
-KMONS:  g = ball python / giant cockroach / \
+KMONS:  hJ = frilled lizard / ball python / adder / nothing w:2
+KMONS:  g = frilled lizard / ball python / giant cockroach / \
             giant gecko / nothing w:7
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
@@ -1118,8 +1118,8 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 #      water creatures
-MONS:    giant cockroach / ball python w:5 / \
-         generate_awake giant cockroach / generate_awake ball python w:5 / \
+MONS:    frilled lizard / ball python w:5 / \
+         generate_awake frilled lizard / generate_awake ball python w:5 / \
          adder w:2 / nothing w:4
 KMONS:   2 = adder
 KFEAT:   2 = W
@@ -1195,7 +1195,7 @@ KMONS:   P = plant / nothing
 #      pipe monsters.
 KFEAT:   1 = W
 COLOUR:  1 = lightgreen
-KMONS:   1 = giant cockroach / ball python w:5 / generate_awake ball python w:5 / \
+KMONS:   1 = frilled lizard / ball python w:5 / generate_awake ball python w:5 / \
          adder w:7
 SUBST:   1 = 1111W
 #      other monsters
