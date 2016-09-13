@@ -285,7 +285,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
             continue;
         }
 
-        if (!divine && monsters.size() == 1)
+        if (!divine && (ash_ided || monsters.size() == 1))
             continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
