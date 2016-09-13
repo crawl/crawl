@@ -2207,7 +2207,6 @@ void full_describe_square(const coord_def &c)
         describe_feature_wide(c);
     }
 
-    redraw_screen();
     clear_messages();
 }
 
