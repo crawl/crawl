@@ -319,13 +319,14 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_ANTIMAGIC:
-    case SPWPN_REAPING:
+    case SPWPN_REAPING: // only exists on Sword of Zonguldrok
         if (is_range_weapon(item))
             return false;
         break;
 
     // Ranged-only brands.
     case SPWPN_PENETRATION:
+    case SPWPN_ACID: // Only exists on Punk
         if (!is_range_weapon(item))
             return false;
         break;
@@ -342,7 +343,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
 #endif
 
-    case SPWPN_ACID:
     case SPWPN_CONFUSE:
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:

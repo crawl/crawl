@@ -2110,6 +2110,11 @@ static void _brand_weapon(item_def &wpn)
         mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
         break;
 
+    case SPWPN_ACID:
+        flash_colour = ETC_SLIME;
+        mprf("%s oozes corrosive slime.", itname.c_str());
+        break;
+
     default:
         success = false;
         break;
