@@ -78,9 +78,9 @@ default-depth: D:9-, Depths, Elf
 #
 ###############################################################################
 
-NAME:  minmay_newt_pond
-DEPTH: D:1-2
-KMONS: 1 = giant newt
+NAME:  minmay_gecko_pond
+DEPTH: D:4-5
+KMONS: 1 = giant gecko
 KFEAT: 1 = W
 SUBST: W = WWW1
 MAP
@@ -974,7 +974,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, giant newt / giant gecko, worm, ooze
+MONS:    rat, bat, giant gecko, worm, ooze
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
@@ -4311,7 +4311,7 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    giant newt, giant gecko, iguana, crocodile, basilisk, plant
+MONS:    giant gecko, iguana, crocodile, basilisk, plant
 SUBST:   6 = 61, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 433221

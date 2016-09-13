@@ -1440,7 +1440,7 @@ NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair:1-, !Lair:$
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
-MONS:    giant gecko / giant newt, crocodile, iguana
+MONS:    giant gecko, crocodile, iguana
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
@@ -2482,7 +2482,7 @@ KMONS: T = mummy priest w:5 / guardian mummy / sphinx / mummy / reaper
 KMONS: H = balrug w:5 / blizzard demon w:5 / shadow demon w:5 / \
            hell beast w:5 / sun demon / ice devil / rust devil / soul eater / \
            hell knight w:5
-KMONS: D = giant newt / kobold / hobgoblin w:5 / goblin / adder
+KMONS: D = giant cockroach / kobold / hobgoblin w:5 / goblin / adder
 MAP
 xxvvvvvvvvvvvvvxx
 xvv..vvvvvvv..vvx
