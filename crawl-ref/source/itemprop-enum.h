@@ -135,7 +135,7 @@ enum brand_type // item_def.special
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,
 
-    SPWPN_ACID,    // acid bite only for the moment
+    SPWPN_ACID,    // acid bite and Punk
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif

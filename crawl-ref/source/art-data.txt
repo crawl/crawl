@@ -397,12 +397,12 @@ STR:     3
 
 NAME:    greatsling "Punk"
 OBJ:     OBJ_WEAPONS/WPN_GREATSLING
-PLUS:    +7
-COLOUR:  ETC_ICE
+PLUS:    +3
+COLOUR:  ETC_SLIME
 TILE:    urand_punk
 TILE_EQ: punk
-BRAND:   SPWPN_FREEZING
-COLD:    1
+BRAND:   SPWPN_ACID
+BOOL:    rCorr
 
 ENUM:     KRISHNA
 NAME:     bow of Krishna "Sharnga"
