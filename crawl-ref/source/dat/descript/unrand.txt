@@ -132,8 +132,9 @@ A long and sharp scythe, specially modified to be quickly swung in combat.
 %%%%
 greatsling "Punk"
 
-A sling made of weird blue leather. Originally the weapon of a notorious
-mischief-maker and general scamp, it's since fallen into less savoury hands.
+A sling made of weird green leather, oozing corrosive slime. Originally the
+weapon of a notorious mischief-maker and general scamp, it's since fallen into
+less savoury hands.
 %%%%
 bow of Krishna "Sharnga"
 
