@@ -817,7 +817,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
-        practise_launching(item_attack_skill(*launcher));
+        practise_launching(*launcher);
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->unrand_idx)->type_name)
         {

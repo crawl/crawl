@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "ability.h"
+#include "fight.h"
 #include "godabil.h" // for USKAYAW_DID_DANCE_ACTION
 #include "itemprop.h"
 #include "skills.h"
@@ -146,24 +147,51 @@ void practise_waiting()
     }
 }
 
-/// Skill training when the player hits a monster in melee combat.
-void practise_hitting(skill_type attack_sk, int damage)
+/// Skill training when the player uses the given weapon.
+static void _practise_weapon_use(const item_def &weapon)
 {
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+    const skill_type weapon_skill = item_attack_skill(weapon);
+    const int mindelay_skill = weapon_min_delay_skill(weapon);
+    const int your_skill = you.skills[weapon_skill];
+    if (your_skill >= mindelay_skill)
+        exercise(weapon_skill, coinflip()); //1/2 past mindelay
+    else
+    {
+        // 3 at 0 skill, 2 at 1/2 mindelay skill, 1 at mindelay
+        const int degree
+            = 1 + div_rand_round(2 * (mindelay_skill - your_skill),
+                                 mindelay_skill);
+        exercise(weapon_skill, degree);
+    }
 
-    // Slow down the practice of low-damage weapons.
-    if (!x_chance_in_y(damage, 20))
-        return;
-
-    exercise(attack_sk, 1);
     if (coinflip())
         exercise(SK_FIGHTING, 1);
 }
 
-/// Skill training when the player shoots at a monster with a ranged weapon.
-void practise_launching(skill_type attack_sk)
+/// Skill training when the player hits a monster in melee combat.
+void practise_hitting(const item_def *weapon)
 {
-    exercise(attack_sk, 1);
+    you.props[USKAYAW_DID_DANCE_ACTION] = true;
+
+    if (!weapon)
+    {
+        exercise(SK_UNARMED_COMBAT, 1);
+        return;
+    }
+    if (!is_melee_weapon(*weapon))
+        return;
+
+    // Slow down the practice of low-damage weapons. XXX: use speed instead?
+    const int damage = property(*weapon, PWPN_DAMAGE);
+    if (x_chance_in_y(damage, 20))
+        _practise_weapon_use(*weapon);
+}
+
+/// Skill training when the player shoots at a monster with a ranged weapon.
+void practise_launching(const item_def &weapon)
+{
+    if (coinflip()) // XXX: arbitrary; test and revise
+        _practise_weapon_use(weapon);
     you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 

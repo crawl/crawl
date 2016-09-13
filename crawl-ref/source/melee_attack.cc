@@ -1757,16 +1757,10 @@ void melee_attack::set_attack_verb(int damage)
 void melee_attack::player_exercise_combat_skills()
 {
     if (defender && defender->is_monster()
-        && mons_is_firewood(*defender->as_monster()))
+        && !mons_is_firewood(*defender->as_monster()))
     {
-        return;
+        practise_hitting(weapon);
     }
-
-    int damage = 10; // Default for unarmed.
-    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
-        damage = property(*weapon, PWPN_DAMAGE);
-
-    practise_hitting(wpn_skill, damage);
 }
 
 /*
