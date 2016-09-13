@@ -108,10 +108,12 @@ function init_aquarium(e)
     e.subst('w = W_')
     e.kfeat('W = W')
     e.kmons('W = w:' .. nothing_weight .. [[ nothing /
-                 w:10 generate_awake bat ]] )
+                 w:10 generate_awake bat /
+                 w:5  generate_awake frilled lizard ]] )
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:50 fungus /
-                 w:10 generate_awake bat ] )
+                 w:10 generate_awake bat /
+                 w:5  generate_awake frilled lizard ]] )
   elseif you.absdepth() <= 9 then
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /

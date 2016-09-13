@@ -3622,7 +3622,7 @@ void cheibriados_time_bend(int pow)
 
 static int _slouch_damage(monster *mon)
 {
-    // Please change handle_monster_move to match.
+    // Please change handle_monster_move in mon-act.cc to match.
     const int jerk_num = mon->type == MONS_SIXFIRHY ? 8
                        : mon->type == MONS_JIANGSHI ? 48
                                                     : 1;

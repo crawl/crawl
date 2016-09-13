@@ -6295,6 +6295,13 @@ default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
 %%%%
+################## Frilled lizard ##############################
+frilled lizard
+
+@The_monster@ suddenly unfolds @possessive@ giant frill!
+
+@The_monster@ hisses at @foe_name@ and fully extends @possessive@ frill.
+%%%%
 ################## Ice statue ##############################
 default ice statue
 
