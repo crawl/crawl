@@ -629,7 +629,7 @@ KMONS:  1 = merfolk
 KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
 KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
-KMONS:  5 = yak / hog / giant frog w:40
+KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:5 / manticore w:2 / hippogriff w:2 / black bear w:19
 KITEM:  o5 = fruit q:1 / nothing w:400
 SUBST:  M = tww.!, p = pP!!!!!

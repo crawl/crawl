@@ -123,7 +123,7 @@ function choose_mset_1(e)
 -- Lair
   elseif rnd < 29 then
     e.kmons("1 = river rat / iguana / porcupine / yak w:5 /\
-               jackal / wolf w:5 / giant frog w:5")
+               jackal / wolf w:5 / bullfrog w:5")
 -- Spider
   elseif rnd < 39 then
     e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5")
@@ -212,7 +212,7 @@ function choose_mset_2(e)
 -- Lair
   elseif rnd < 29 then
     e.kmons("1 =  river rat / iguana / porcupine / yak /\
-               jackal / wolf / giant frog / spiny frog w:5 /\
+               jackal / wolf / bullfrog / spiny frog w:5 /\
                komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
 -- Spider
   elseif rnd < 34 then

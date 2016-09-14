@@ -1706,7 +1706,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         *motions_r |= DEAD_ARE_SLITHERING;
     }
-    else if (mons_genus(zombie_type)    == MONS_GIANT_FROG
+    else if (mons_genus(zombie_type)    == MONS_FROG
              || mons_genus(zombie_type) == MONS_QUOKKA)
     {
         *motions_r |= DEAD_ARE_HOPPING;

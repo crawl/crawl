@@ -102,7 +102,7 @@ function beast_lair_populate_mons_small(e)
     else
         local monster_list = {}
         if you.depth() < 4 then
-            monster_list = { "porcupine", "porcupine", "iguana", "giant frog",
+            monster_list = { "porcupine", "porcupine", "iguana", "bullfrog",
                              "wolf", "yak", "komodo dragon", "spiny frog",
                              "crocodile" }
         else
@@ -216,7 +216,7 @@ MONS:    w:100 nothing / w:40 yak / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    river rat / porcupine / hell rat / quokka / rat
-MONS:    w:90 nothing / w:30 giant frog / blink frog / spiny frog
+MONS:    w:90 nothing / w:30 bullfrog / blink frog / spiny frog
 SHUFFLE: 1234
 KFEAT:   O = enter_lair
 MAP
@@ -2698,13 +2698,13 @@ NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
 WEIGHT: 5
-MONS:   giant frog, spiny frog, vampire mosquito
+MONS:   bullfrog, spiny frog, vampire mosquito
 MONS:   blink frog, komodo dragon / hydra
 KMONS:  6 = patrolling giant leech
 KMONS:  p = plant
 ITEM:   any good_item
 KFEAT:  4p = W
-# Previously 11.6 giant frogs, 16.6 spiny frogs,
+# Previously 11.6 bullfrogs, 16.6 spiny frogs,
 # and 7.1 vampire mosquitoes on average.
 NSUBST: XW. = 6:1 / 8:2 / 4:3 / 12 = 11... / 16 = 22... / 8 = 44...
 NSUBST: W = 3 = 66w / *:W, 5 = 1:5 / *:4

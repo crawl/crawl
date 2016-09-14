@@ -139,7 +139,7 @@ function species_mock(e)
   elseif you.race() == "Kobold" then
     e.kmons("1 = boggart")
   elseif you.race() == "Merfolk" then
-    e.kmons("1 = giant frog")
+    e.kmons("1 = bullfrog")
   elseif you.race() == "Minotaur" then
     e.kmons("1 = yak")
   elseif you.race() == "Mummy" then

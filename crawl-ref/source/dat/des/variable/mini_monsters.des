@@ -635,7 +635,7 @@ NAME:  pond
 TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / water moccasin / river rat / swamp drake w:2
+MONS:  bullfrog w:30 / water moccasin / river rat / swamp drake w:2
 MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.

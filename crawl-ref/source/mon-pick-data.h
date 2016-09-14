@@ -42,7 +42,7 @@ static const pop_entry pop_d[] =
   {  5, 15,  192, PEAK, MONS_WATER_MOCCASIN },
   {  5, 16, 1000, FLAT, MONS_ZOMBIE },
   {  6, 13,  285, SEMI, MONS_BLACK_BEAR },
-  {  6, 16, 1000, FLAT, MONS_GIANT_FROG },
+  {  6, 16, 1000, FLAT, MONS_BULLFROG },
   {  6, 16,  825, SEMI, MONS_ORC_WARRIOR },
   {  6, 16,  335, SEMI, MONS_WIGHT },
   {  6, 16,  335, SEMI, MONS_NO_MONSTER }, // Old giant spore weight.
@@ -225,7 +225,7 @@ static const pop_entry pop_lair[] =
   {  0,  5,   25, PEAK, MONS_SCORPION },
   {  0,  6,  260, SEMI, MONS_BASILISK },
   {  0,  6,  260, SEMI, MONS_WOLF },
-  {  1,  5, 1000, FLAT, MONS_GIANT_FROG },
+  {  1,  5, 1000, FLAT, MONS_BULLFROG },
   {  1,  5, 1000, FLAT, MONS_PORCUPINE },
   {  1,  6,  880, FLAT, MONS_SPINY_FROG },
   {  1,  6,  980, FLAT, MONS_CROCODILE },
