@@ -3869,7 +3869,7 @@ enum mutation_type
     MUT_NON_MUTATION,
 };
 
-enum object_class_type                 // mitm[].base_type
+enum object_class_type : uint8_t           // mitm[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,
