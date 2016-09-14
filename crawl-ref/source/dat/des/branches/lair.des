@@ -2603,7 +2603,7 @@ NAME:    wormcave
 PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
-MONS:    torpor snail, giant leech, lindwurm, wasp
+MONS:    torpor snail, tyrant leech, lindwurm, wasp
 MONS:    fire dragon / ice dragon
 KMONS:   p = plant
 SHUFFLE: ABC
@@ -2700,7 +2700,7 @@ ORIENT: float
 WEIGHT: 5
 MONS:   bullfrog, spiny frog, vampire mosquito
 MONS:   blink frog, komodo dragon / hydra
-KMONS:  6 = patrolling giant leech
+KMONS:  6 = patrolling tyrant leech
 KMONS:  p = plant
 ITEM:   any good_item
 KFEAT:  4p = W

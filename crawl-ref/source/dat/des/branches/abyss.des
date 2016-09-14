@@ -1984,7 +1984,7 @@ NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
 MONS:    hell hound, raiju, great orb of eyes
 MONS:    giant orange brain, swamp drake, wind drake, torpor snail
-KMONS:   8 = giant leech
+KMONS:   8 = tyrant leech
 KMONS:   9 = mana viper
 KMONS:   0 = anaconda
 KMONS:   A = ball lightning
