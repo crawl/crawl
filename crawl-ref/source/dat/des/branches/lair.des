@@ -237,7 +237,7 @@ ENDMAP
 NAME:   dpeg_oklobed_lair
 TAGS:   lair_entry no_monster_gen no_pool_fixup no_rotate
 ORIENT: float
-: if you.absdepth() >= 12 then
+: if you.absdepth() >= 11 then
 MONS:   plant, oklob plant / w:50 plant
 : elseif you.absdepth() >= 10 then
 MONS:   plant, oklob plant / w:150 plant
