@@ -88,6 +88,25 @@ function callback.hep_ancestral_shrine_los(data, triggerable, triggerer, marker,
   end
 end
 
+function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.xom_gg_heard and you.god() == "Xom" then
+    dgn.persist.xom_gg_heard = true
+    dgn.persist.xom_gg_granted = true
+  elseif not dgn.persist.xom_gg_heard and you.god() ~= "Xom" then
+    crawl.god_speaks("Xom", '"WORSHIP ME, MORTAL," Xom booms, "AND I SHALL'
+                            .. ' GRANT YOU THE GREATEST GIFT OF ALL."')
+    dgn.persist.xom_gg_heard = true
+  elseif not dgn.persist.xom_gg_granted and you.god() == "Xom" then
+    local pos = dgn.find_marker_positions_by_prop("gift", "altar")
+    dgn.create_monster(pos[1].x, pos[1].y, "generate_awake att:good_neutral goblin")
+    crawl.god_speaks("Xom", 'A goblin pops into existence! It looks at you'
+                     .. ' with admiration.')
+    crawl.god_speaks("Xom", '"Friendship. The greatest gift is friendship!"')
+
+    dgn.persist.xom_gg_granted = true
+  end
+end
+
 function species_mock(e)
   if you.race() == "Centaur" then
     e.kmons("1 = dart slug")
@@ -2454,6 +2473,29 @@ MAP
  .........
   ._..._.
   .......
+ENDMAP
+
+NAME:    brannock_xom_greatest_gift
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
+DEPTH:   D:2-
+KFEAT:   _ = altar_xom
+MARKER:  _ = lua:portal_desc {gift="altar"}
+{{
+    dgn.persist.xom_gg_granted = false
+
+    local los_marker = TriggerableFunction:new {
+      func="callback.xom_greatest_gift",
+      repeated=true
+    }
+    los_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+
+    lua_marker('_', los_marker)
+}}
+MAP
+...
+._.
+...
 ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
