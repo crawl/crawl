@@ -795,7 +795,7 @@ bool mons_has_flesh(const monster& mon)
     // 3. pulp, flesh -- (a soft moist part of a fruit)
     // yet I exclude sense 3 anyway but include arthropods and molluscs.
     return !(mon.holiness() & (MH_PLANT | MH_NONLIVING))
-           && mons_genus(mon.type) != MONS_GIANT_EYEBALL
+           && mons_genus(mon.type) != MONS_FLOATING_EYE
            && mons_genus(mon.type) != MONS_GIANT_ORANGE_BRAIN
            && mons_genus(mon.type) != MONS_JELLY
            && mon.type != MONS_DEATH_COB; // plant!
@@ -996,7 +996,7 @@ bool mons_is_abyssal_only(monster_type mc)
 bool mons_class_is_slime(monster_type mc)
 {
     return mons_genus(mc) == MONS_JELLY
-           || mons_genus(mc) == MONS_GIANT_EYEBALL
+           || mons_genus(mc) == MONS_FLOATING_EYE
            || mons_genus(mc) == MONS_GIANT_ORANGE_BRAIN;
 }
 
@@ -5366,7 +5366,7 @@ int max_mons_charge(monster_type m)
     switch (m)
     {
         case MONS_ORB_SPIDER:
-        case MONS_GIANT_EYEBALL:
+        case MONS_FLOATING_EYE:
             return 1;
         default:
             return 0;

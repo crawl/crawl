@@ -647,7 +647,7 @@ mon/holy/pearl_dragon MONS_PEARL_DRAGON
 giant_spore MONS_GIANT_SPORE
 %sdir mon/eyes
 %rim 1
-giant_eyeball MONS_GIANT_EYEBALL
+floating_eye MONS_FLOATING_EYE
 eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN

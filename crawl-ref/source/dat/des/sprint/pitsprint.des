@@ -13,7 +13,7 @@ function base_monster_setup(e)
            bat / kobold / rat / leopard gecko / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
-           giant eyeball / hound / iguana / ogre / orc wizard band /\
+           floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast / deep elf mage /\
@@ -74,7 +74,7 @@ function base_monster_setup(e)
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
            greater naga / dancing weapon / dire elephant band /\
-           eye of draining / giant eyeball / vault guard / ghoul band w:5 /\
+           eye of draining / floating eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / lorocyproca / daeva / angel /\
@@ -100,7 +100,7 @@ function base_monster_setup(e)
            ball python /\
            bat / kobold / rat / leopard gecko / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
-           orc / worker ant / giant eyeball / skeleton /\
+           orc / worker ant / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
@@ -143,7 +143,7 @@ function base_monster_setup(e)
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            death ooze / azure jelly / acid blob /\
-           giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
+           floating eye w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
   e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\

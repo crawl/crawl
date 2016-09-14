@@ -115,7 +115,7 @@ function choose_mset_1(e)
   local rnd = crawl.random2(132)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / giant eyeball w:5 / golden eye w:5 /\
+    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / floating eye w:5 / golden eye w:5 /\
                eye of draining w:5")
 -- Snake
   elseif rnd < 19 then
@@ -203,7 +203,7 @@ function choose_mset_2(e)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:15 / ooze / slime creature /\
-               giant eyeball w:5 / golden eye w:5 / eye of draining w:5 /\
+               floating eye w:5 / golden eye w:5 / eye of draining w:5 /\
                eye of devastation w:5 / shining eye w:5")
 -- Snake
   elseif rnd < 19 then
@@ -298,7 +298,7 @@ function choose_mset_3(e)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:15 / ooze / slime creature w:30 /\
-               giant eyeball w:2 / golden eye w:5 / eye of draining w:2 /\
+               floating eye w:2 / golden eye w:5 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
                death ooze / azure jelly w:5 / great orb of eyes w:5 /\
                giant orange brain w:2")
@@ -427,7 +427,7 @@ local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:5 / slime creature w:30 /\
-               giant eyeball w:2 / golden eye w:4 / eye of draining w:2 /\
+               floating eye w:2 / golden eye w:4 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                death ooze / azure jelly / great orb of eyes w:4 /\
                giant orange brain w:2")

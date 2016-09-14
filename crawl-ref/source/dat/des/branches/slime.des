@@ -276,7 +276,7 @@ TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   Slime, !Slime:$
 WEIGHT:  1
 KMONS:   1 = slime creature w:30 / nothing w:2
-KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
+KMONS:   2 = shining eye / floating eye / eye of devastation w:5 / \
              great orb of eyes / giant orange brain / random w:1
 KFEAT:   2 = alarm trap / . w:30
 SHUFFLE: AB, CD, EF, GH, ab
