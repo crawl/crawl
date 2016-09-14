@@ -407,9 +407,11 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
 
     if (flags & SDL_WINDOW_FULLSCREEN)
     {
+        const int x = Options.tile_window_width;
+        const int y = Options.tile_window_height;
         // By default, fill the whole screen.
-        m_windowsz->x = _desktop_width;
-        m_windowsz->y = _desktop_height;
+        m_windowsz->x = (x > 0) ? x : _desktop_width + x;
+        m_windowsz->y = (y > 0) ? y : _desktop_height + y;
     }
     else
     {
