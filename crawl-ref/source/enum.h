@@ -2854,7 +2854,7 @@ enum monster_type                      // menv[].type
     MONS_DEMONIC_PLANT,
     MONS_WITHERED_PLANT,
 #endif
-    MONS_GIANT_SPORE,
+    MONS_BALLISTOMYCETE_SPORE,
     MONS_BALLISTOMYCETE,
     MONS_HYPERACTIVE_BALLISTOMYCETE,
 

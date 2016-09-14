@@ -2996,7 +2996,7 @@ void bolt::internal_ouch(int dam)
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (monst && (monst->type == MONS_GIANT_SPORE
+    else if (monst && (monst->type == MONS_BALLISTOMYCETE_SPORE
                        || monst->type == MONS_BALL_LIGHTNING
                        || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE
                        || monst->type == MONS_FULMINANT_PRISM
@@ -4964,7 +4964,7 @@ void bolt::affect_monster(monster* mon)
     update_hurt_or_helped(mon);
     enable_attack_conducts(conducts);
 
-    // We'll say giant spore explosions don't trigger the ally attack conduct
+    // We'll say ballistomycete spore explosions don't trigger the ally attack conduct
     // for Fedhas worshipers. Mostly because you can accidentally blow up a
     // group of 8 plants and get placed under penance until the end of time
     // otherwise. I'd prefer to do this elsewhere but the beam information

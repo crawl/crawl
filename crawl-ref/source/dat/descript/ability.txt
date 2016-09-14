@@ -502,7 +502,7 @@ number of rain-clouds created.
 %%%%
 Reproduction ability
 
-Creates giant spores from corpses in your line of sight. The spores will
+Creates ballistomycete spores from corpses in your line of sight. The spores will
 explode, causing damage to you or your enemies.
 %%%%
 Evolution ability

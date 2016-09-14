@@ -444,7 +444,7 @@ void noisy_equipment()
 static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
-           && mon->type != MONS_GIANT_SPORE
+           && mon->type != MONS_BALLISTOMYCETE_SPORE
            && !mon->berserk_or_insane()
            && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);

@@ -1192,8 +1192,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
     }
 
-    // Don't shift giant spores since that would disrupt their trail.
-    if (mon->type == MONS_GIANT_SPORE)
+    // Don't shift ballistomycete spores since that would disrupt their trail.
+    if (mon->type == MONS_BALLISTOMYCETE_SPORE)
         return;
 
     // special movement code for ioods, boulder beetles...

@@ -320,7 +320,7 @@ VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 # Shouts for specific monsters
 ########################################
 %%%%
-giant spore
+ballistomycete spore
 
 VISUAL:@The_monster@ waves @possessive@ rhizomes.
 %%%%

@@ -1631,12 +1631,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             for (fair_adjacent_iterator ai(pos()); ai; ++ai)
             {
-                if (mons_class_can_pass(MONS_GIANT_SPORE, grd(*ai))
+                if (mons_class_can_pass(MONS_BALLISTOMYCETE_SPORE, grd(*ai))
                     && !actor_at(*ai))
                 {
                     beh_type plant_attitude = SAME_ATTITUDE(this);
 
-                    if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+                    if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
                                                             plant_attitude,
                                                             *ai,
                                                             MHITNOT,
@@ -1658,7 +1658,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         plant->spore_cooldown = 20;
 
                         if (you.see_cell(*ai) && you.see_cell(pos()))
-                            mpr("A ballistomycete spawns a giant spore.");
+                            mpr("A ballistomycete spawns a ballistomycete spore.");
 
                         // Decrease the count and maybe become inactive
                         // again.
@@ -2366,7 +2366,7 @@ int mon_enchant::calc_duration(const monster* mons,
                   * speed_to_duration(mons->speed);
     case ENCH_SPORE_PRODUCTION:
         // This is used as a simple timer, when the enchantment runs out
-        // the monster will create a giant spore.
+        // the monster will create a ballistomycete spore.
         return random_range(475, 525) * 10;
 
     case ENCH_EXPLODING:

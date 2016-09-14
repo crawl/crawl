@@ -3276,7 +3276,7 @@ int fedhas_check_corpse_spores(bool quiet)
         unsigned colour = GREEN | COLFLAG_FRIENDLY_MONSTER;
         colour = real_colour(colour);
 
-        unsigned character = mons_char(MONS_GIANT_SPORE);
+        unsigned character = mons_char(MONS_BALLISTOMYCETE_SPORE);
         put_colour_ch(colour, character);
 #endif
 #ifdef USE_TILE
@@ -3294,7 +3294,7 @@ int fedhas_check_corpse_spores(bool quiet)
 }
 
 // Destroy corpses in the player's LOS (first corpse on a stack only)
-// and make 1 giant spore per corpse. Spores are given the input as
+// and make 1 ballistomycete spore per corpse. Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
 int fedhas_corpse_spores(beh_type attitude)
@@ -3310,7 +3310,7 @@ int fedhas_corpse_spores(beh_type attitude)
     {
         count++;
 
-        if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+        if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
                                                attitude,
                                                si->pos,
                                                MHITNOT,
@@ -3425,7 +3425,7 @@ spret_type fedhas_evolve_flora(bool fail)
 
     if (!mons_is_evolvable(plant))
     {
-        if (plant->type == MONS_GIANT_SPORE)
+        if (plant->type == MONS_BALLISTOMYCETE_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
         else if (!mons_is_plant(*plant))
             mpr("Only plants or fungi may be evolved.");

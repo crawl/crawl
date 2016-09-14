@@ -486,7 +486,7 @@ ENDMAP
 # Lair 1, fedhas
 NAME: sprint_mu_lair_fedhas
 TAGS: sprint_mu_lair no_rotate no_hmirror no_vmirror
-KMONS: P = plant / w:1 giant spore
+KMONS: P = plant / w:1 ballistomycete spore
 KMONS: p = plant
 KMONS: 1 = patrolling wandering mushroom
 KMONS: 2 = komodo dragon
@@ -1167,7 +1167,7 @@ KMONS: 4 = patrolling titanic slime creature
 KMONS: 5 = mummy priest
 KMONS: f = skeletal warrior ; longbow ego:flaming . arrow q:30
 KMONS: 6 = shadow wraith
-KMONS: g = ball lightning / giant spore
+KMONS: g = ball lightning / ballistomycete spore
 KMONS: 7 = patrolling storm dragon
 KMONS: 8 = patrolling nikola
 KMONS: A = col:magenta plant / w:2 deep elf blademaster

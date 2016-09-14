@@ -830,7 +830,7 @@ namespace arena
         trials_done++;
 
         // We bother with all this to properly deal with ties, and with
-        // ball lightning or giant spores winning the fight via suicide.
+        // ball lightning or ballistomycete spores winning the fight via suicide.
         // The sanity checking is probably just paranoia.
         bool was_tied = false;
         if (!faction_a.won && !faction_b.won)

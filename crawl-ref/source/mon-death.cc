@@ -451,7 +451,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         return nullptr;
 
     // The game can attempt to place a corpse for an out-of-bounds monster
-    // if a shifter turns into a giant spore and explodes. In this
+    // if a shifter turns into a ballistomycete spore and explodes. In this
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
     if (!in_bounds(mons.pos()) && !force)
@@ -921,7 +921,7 @@ static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
     else
         target = &menv[index];
 
-    // Mummy was killed by a giant spore or ball lightning?
+    // Mummy was killed by a ballistomycete spore or ball lightning?
     if (!target->alive())
         return;
 
@@ -1028,7 +1028,7 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
 {
     if (!mons || mons->is_summoned()
               || mons->mons_species() != MONS_BALLISTOMYCETE
-                 && mons->type != MONS_GIANT_SPORE)
+                 && mons->type != MONS_BALLISTOMYCETE_SPORE)
     {
         return;
     }
@@ -1051,7 +1051,7 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
         {
             if (mi->type == MONS_BALLISTOMYCETE)
                 ballisto_count++;
-            else if (mi->type == MONS_GIANT_SPORE
+            else if (mi->type == MONS_BALLISTOMYCETE_SPORE
                      || mi->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             {
                 non_activable_count++;
@@ -1235,10 +1235,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     const char* sanct_msg = nullptr;
     actor* agent = mons;
 
-    if (type == MONS_GIANT_SPORE)
+    if (type == MONS_BALLISTOMYCETE_SPORE)
     {
         setup_spore_explosion(beam, *mons);
-        sanct_msg    = "By Zin's power, the giant spore's explosion is "
+        sanct_msg    = "By Zin's power, the ballistomycete spore's explosion is "
                        "contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
@@ -1339,7 +1339,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // used to be, so make sure that mgrd() doesn't get cleared a second
     // time (causing the new monster to become floating) when
     // mons->reset() is called.
-    if (type == MONS_GIANT_SPORE)
+    if (type == MONS_BALLISTOMYCETE_SPORE)
         mons->set_position(coord_def(0,0));
 
     // Exploding kills the monster a bit earlier than normal.
@@ -1981,7 +1981,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
     bool did_death_message = false;
 
-    if (mons->type == MONS_GIANT_SPORE
+    if (mons->type == MONS_BALLISTOMYCETE_SPORE
         || mons->type == MONS_BALL_LIGHTNING
         || mons->type == MONS_LURKING_HORROR
         || (mons->type == MONS_FULMINANT_PRISM && mons->prism_charge > 0)

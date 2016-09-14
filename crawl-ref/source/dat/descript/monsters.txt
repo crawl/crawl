@@ -562,6 +562,11 @@ A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
 dank underground dungeon. When active it will occasionally produce giant
 spores, which in turn will give rise to more ballistomycetes.
 %%%%
+ballistomycete spore
+
+A deceptively fast, floating ball filled with gas and spores, prone to burst at
+the slightest disturbance.
+%%%%
 balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
@@ -1186,11 +1191,6 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
 energies. Every now and then it seems to pulsate.
-%%%%
-giant spore
-
-A deceptively fast, floating ball filled with gas and spores, prone to burst at
-the slightest disturbance.
 %%%%
 glowing shapeshifter
 

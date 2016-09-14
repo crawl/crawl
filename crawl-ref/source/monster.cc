@@ -2467,7 +2467,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_ORB:
         switch (type)
         {
-            case MONS_GIANT_SPORE:
+            case MONS_BALLISTOMYCETE_SPORE:
                 str = "rhizome";
                 break;
 
