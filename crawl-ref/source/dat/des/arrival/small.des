@@ -2443,7 +2443,7 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
-MONS:    worm / giant leech
+MONS:    worm / tyrant leech
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else

@@ -128,7 +128,7 @@ ENDMAP
 NAME:   minmay_swamp_entry_worms
 TAGS:   swamp_entry
 SUBST:  T = tww
-KMONS:  w = swamp worm / giant leech / nothing w:89
+KMONS:  w = swamp worm / tyrant leech / nothing w:89
 KFEAT:  w = w / W
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
@@ -918,7 +918,7 @@ NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
 KMONS:   0 = swamp worm
-MONS:    giant leech, worm
+MONS:    tyrant leech, worm
 KFEAT:   0 = shallow_water
 SHUFFLE: })
 SUBST:   } = }>, ) = <)>, } = }:20 >, ) = ):25 <>, 4 = 23
@@ -1307,7 +1307,7 @@ MONS: necromancer
 KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / hornet zombie / alligator zombie / \
-        hydra zombie / giant leech zombie / hydra zombie / \
+        hydra zombie / tyrant leech zombie / hydra zombie / \
         alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
         swamp dragon simulacrum w:1 / hydra simulacrum w:1
 KFEAT: z = shallow_water
@@ -1491,7 +1491,7 @@ MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
          w:1 freezing wraith
 KMONS:   5 = bog body / spriggan zombie w:4 / troll zombie w:4
 KMONS:   6 = large abomination w:2 / swamp worm zombie / spiny frog zombie / \
-             giant leech zombie w:6 / alligator zombie w:6
+             tyrant leech zombie w:6 / alligator zombie w:6
 KMONS:   q = withered plant
 KFEAT:   56 = W
 KPROP:   ~ = no_tele_into
@@ -1558,7 +1558,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-MONS:  vampire ; potion of blood . long sword . robe, giant leech
+MONS:  vampire ; potion of blood . long sword . robe, tyrant leech
 KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody

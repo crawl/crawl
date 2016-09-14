@@ -157,7 +157,7 @@ function species_mock(e)
   elseif you.race() == "Troll" then
     e.kmons("1 = hungry ghost")
   elseif you.race() == "Vampire" then
-    e.kmons("1 = giant leech")
+    e.kmons("1 = tyrant leech")
   elseif you.race() == "Vine Stalker" then
     e.kmons("1 = thorn hunter")
   else

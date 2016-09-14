@@ -1182,10 +1182,6 @@ A giant floating eyeball, said to be one of the servitors of Jiyva. It
 possesses a gaze that can eventually paralyse even the most strong-willed of
 adventurers.
 %%%%
-giant leech
-
-An aggressive blood-sucking annelid that thrives in swamps and marshlands.
-%%%%
 giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
@@ -2430,6 +2426,11 @@ two-headed ogre
 
 A huge ogre with two heads on top of its bloated body. It is capable of holding
 a weapon in each giant hand.
+%%%%
+tyrant leech
+
+An exceptionally large and aggressive blood-sucking annelid that thrives
+in swamps and marshlands.
 %%%%
 Tzitzimitl
 

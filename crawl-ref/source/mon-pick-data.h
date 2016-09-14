@@ -269,7 +269,7 @@ static const pop_entry pop_swamp[] =
   {  1,  4,  925, FLAT, MONS_BOG_BODY },
   {  1,  4,  925, FLAT, MONS_SWAMP_DRAKE },
   {  1,  4,  915, FLAT, MONS_HYDRA },
-  {  1,  4,  825, FLAT, MONS_GIANT_LEECH },
+  {  1,  4,  825, FLAT, MONS_TYRANT_LEECH },
   {  1,  4,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
   {  1,  4,  500, FLAT, MONS_SWAMP_DRAGON },
   {  1,  4,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
