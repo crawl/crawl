@@ -1506,7 +1506,7 @@ static bool _fedhas_retribution()
     switch (random2(retribution_options))
     {
     case 0:
-        // Try and spawn some hostile giant spores, if none are created
+        // Try and spawn some hostile ballistomycete spores, if none are created
         // fall through to the elemental miscast effects.
         if (fedhas_corpse_spores(BEH_HOSTILE))
         {

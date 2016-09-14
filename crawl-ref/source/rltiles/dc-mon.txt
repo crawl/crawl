@@ -644,7 +644,7 @@ mon/holy/pearl_dragon MONS_PEARL_DRAGON
 
 ## Eyes ('G')
 %sdir mon/fungi_plants
-giant_spore MONS_GIANT_SPORE
+ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
 floating_eye MONS_FLOATING_EYE

@@ -1731,7 +1731,7 @@ static void _pre_monster_move(monster& mons)
 
         // If the monster *merely* died just break from the loop
         // rather than quit altogether, since we have to deal with
-        // giant spores and ball lightning exploding at the end of the
+        // ballistomycete spores and ball lightning exploding at the end of the
         // function, but do return if the monster's data has been
         // reset, since then the monster type is invalid.
         if (mons.type == MONS_NO_MONSTER)
@@ -3355,14 +3355,14 @@ static void _jelly_grows(monster& mons)
 }
 
 /**
- * Possibly place mold & ballistomycetes in giant spores' wake.
+ * Possibly place mold & ballistomycetes in ballistomycete spores' wake.
  *
- * @param mons      The giant spore in question.
+ * @param mons      The ballistomycete spore in question.
  * @param position  Its last location. (Where to place the ballistomycete.)
  */
 static void _ballisto_on_move(monster& mons, const coord_def& position)
 {
-    if (mons.type != MONS_GIANT_SPORE
+    if (mons.type != MONS_BALLISTOMYCETE_SPORE
         || mons.is_summoned())
     {
         return;

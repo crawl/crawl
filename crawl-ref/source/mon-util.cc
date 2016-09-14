@@ -872,7 +872,7 @@ bool mons_is_object(monster_type mc)
     return mons_is_conjured(mc)
            || mc == MONS_TWISTER
            // unloading seeds helps the species
-           || mc == MONS_GIANT_SPORE
+           || mc == MONS_BALLISTOMYCETE_SPORE
            || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON
            || mc == MONS_LIGHTNING_SPIRE;
@@ -3227,7 +3227,7 @@ bool mons_wields_two_weapons(const monster& mon)
 
 bool mons_self_destructs(const monster& m)
 {
-    return m.type == MONS_GIANT_SPORE
+    return m.type == MONS_BALLISTOMYCETE_SPORE
         || m.type == MONS_BALL_LIGHTNING
         || m.type == MONS_LURKING_HORROR
         || m.type == MONS_ORB_OF_DESTRUCTION

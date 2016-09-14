@@ -196,7 +196,7 @@ cloud_neg1
 cloud_neg2
 
 %sdir mon
-fungi_plants/giant_spore SPORE_OVERLAY
+fungi_plants/ballistomycete_spore SPORE_OVERLAY
 
 #########MAP
 %sdir misc

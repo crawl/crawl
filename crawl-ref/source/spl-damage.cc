@@ -701,7 +701,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
     for (auto m : affected_monsters)
     {
         // Watch out for invalidation. Example: Ozocubu's refrigeration on
-        // a bunch of giant spores that blow each other up.
+        // a bunch of ballistomycete spores that blow each other up.
         if (!m->alive())
             continue;
 
