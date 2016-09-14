@@ -350,7 +350,7 @@ NAME:    erik_lair_dragon
 TAGS:    lair_entry no_rotate
 ORIENT:  float
 MONS:    steam dragon / mottled dragon / swamp drake
-MONS:    w:20 iguana / komodo dragon / giant gecko / crocodile / nothing
+MONS:    w:20 iguana / komodo dragon / leopard gecko / crocodile / nothing
 SUBST:   ? = x.c
 SHUFFLE: %*RO
 KITEM:   R = royal jelly

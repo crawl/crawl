@@ -10,7 +10,7 @@ static const pop_entry pop_d[] =
   {  1,  3, 1000, FLAT, MONS_RAT },
   {  1,  3, 1000, FLAT, MONS_HOBGOBLIN },
   {  1,  5,  335, FALL, MONS_DART_SLUG },
-  {  1, 11,  515, SEMI, MONS_GIANT_GECKO },
+  {  1, 11,  515, SEMI, MONS_LEOPARD_GECKO },
   {  1, 11,  335, SEMI, MONS_JACKAL },
   {  1, 11,  192, PEAK, MONS_GNOLL },
   {  2, 12,  925, FLAT, MONS_ADDER },
@@ -954,7 +954,7 @@ static const pop_entry pop_desolation[] =
 static const pop_entry pop_sewer[] =
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_FRILLED_LIZARD },
-  {  1,  1,  515, FLAT, MONS_GIANT_GECKO },
+  {  1,  1,  515, FLAT, MONS_LEOPARD_GECKO },
   {  1,  1, 1000, FLAT, MONS_BAT },
   {  1,  1,  515, FLAT, MONS_BALL_PYTHON },
   {  1,  1,  515, FLAT, MONS_ADDER },
