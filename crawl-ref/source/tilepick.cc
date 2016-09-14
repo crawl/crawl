@@ -1221,7 +1221,6 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_QUOKKA,                  TILEP_MONS_ZOMBIE_QUOKKA },
         { MONS_HOUND,                   TILEP_MONS_ZOMBIE_HOUND },
         { MONS_GIANT_FROG,              TILEP_MONS_ZOMBIE_TOAD },
-        { MONS_BLINK_FROG,              TILEP_MONS_ZOMBIE_TOAD },
         { MONS_CRAB,                    TILEP_MONS_ZOMBIE_CRAB },
         { MONS_SNAPPING_TURTLE,         TILEP_MONS_ZOMBIE_TURTLE },
         { MONS_WORM,                    TILEP_MONS_ZOMBIE_WORM },
