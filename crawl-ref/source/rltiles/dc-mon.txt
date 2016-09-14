@@ -795,7 +795,7 @@ naga_mage MONS_NAGA_MAGE
 naga_ritualist MONS_NAGA_RITUALIST
 naga_sharpshooter MONS_NAGA_SHARPSHOOTER
 naga_warrior MONS_NAGA_WARRIOR
-greater_naga MONS_GREATER_NAGA
+naga_exemplar MONS_NAGA_EXEMPLAR
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC

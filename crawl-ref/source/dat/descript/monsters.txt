@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 __(_suffix_examine
 
 It has been enchanted to dance through the air and attack under its own power.
@@ -1239,10 +1239,6 @@ greater mummy
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
 %%%%
-greater naga
-
-A formidable naga that is skilled in both martial and magical arts.
-%%%%
 green death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
@@ -1696,6 +1692,11 @@ naga
 
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike
 tail. Its mouth drips with venomous saliva.
+%%%%
+naga exemplar
+
+A magnificent example of the species. It is skilled in both martial and
+magical arts.
 %%%%
 naga mage
 

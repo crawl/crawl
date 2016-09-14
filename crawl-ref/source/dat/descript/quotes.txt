@@ -1496,21 +1496,6 @@ greater mummy
 
 <mummy>
 %%%%
-greater naga
-
-“Then there have also come
- nagas from Lake Nabhasa,
- Vesali, and Tacchaka.
- Kambalas, Assataras,
- Payagas, and their kin.
- And from the River Yamuna
- comes the prestigious naga, Dhatarattha.
- The great naga Eravanna:
- He, too, has come
- to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
-     trans. Thanissaro Bhikkhu
-%%%%
 griffon
 
 “As when a Gryphon through the wilderness,
@@ -1968,6 +1953,21 @@ granting boons. Indeed, we too deserve to be followed by others in our train. I
 tell thee, O lady, that we are incapable of being seen by human beings.”
     -Mahābhārata, Santi Parva, Mokshadharma Parva, section CCCLX. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
+%%%%
+naga exemplar
+
+“Then there have also come
+ nagas from Lake Nabhasa,
+ Vesali, and Tacchaka.
+ Kambalas, Assataras,
+ Payagas, and their kin.
+ And from the River Yamuna
+ comes the prestigious naga, Dhatarattha.
+ The great naga Eravanna:
+ He, too, has come
+ to the forest meeting.”
+    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
+     trans. Thanissaro Bhikkhu
 %%%%
 naga mage
 
