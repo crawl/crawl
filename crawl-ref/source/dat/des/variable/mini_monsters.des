@@ -974,7 +974,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, frilled lizard / giant gecko, worm, ooze
+MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
@@ -1346,8 +1346,8 @@ MONS:    big kobold ; dagger . throwing net q:2
 : end
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
-: dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
-MONS:    rat / giant gecko
+: dgn.delayed_decay(_G, 'f', 'leopard gecko skeleton')
+MONS:    rat / leopard gecko
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
@@ -4311,7 +4311,7 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, giant gecko, iguana, crocodile, basilisk, plant
+MONS:    frilled lizard, leopard gecko, iguana, crocodile, basilisk, plant
 SUBST:   6 = 61, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 433221

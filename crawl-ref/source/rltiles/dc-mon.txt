@@ -107,7 +107,7 @@ queen_bee MONS_QUEEN_BEE
 
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
-giant_gecko MONS_GIANT_GECKO
+leopard_gecko MONS_LEOPARD_GECKO
 iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON

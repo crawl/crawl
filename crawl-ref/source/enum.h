@@ -2528,7 +2528,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
 #endif
     MONS_FRILLED_LIZARD,
-    MONS_GIANT_GECKO,
+    MONS_LEOPARD_GECKO,
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
     MONS_BASILISK,

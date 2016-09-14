@@ -2104,10 +2104,10 @@ TAGS:   overflow_altar_trog
 DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
-MONS:   giant gecko / rat / frilled lizard / quokka
+MONS:   leopard gecko / rat / frilled lizard / quokka
 {{
   dgn.delayed_decay(_G, 'd',
-                    'giant gecko chunk q:1 / rat chunk q:1 / ' ..
+                    'leopard gecko chunk q:1 / rat chunk q:1 / ' ..
                     'frilled lizard chunk q:1 / quokka chunk q:1')
 }}
 : else
