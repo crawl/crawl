@@ -1929,10 +1929,11 @@ tile_tag_pref = (none| named | enemy | tutorial )
                        and of named enemy monsters
         Examples for named monsters are uniques and ghosts.
 
-tile_window_width  = 0
-tile_window_height = 0
+tile_window_width  = -90
+tile_window_height = -90
         The width and height of the window, in pixels. If set to zero, it
-        will auto-size the window.
+        will auto-size the window. If set to a negative number (default), it
+        will use the screen's resolution, minus the given value.
 
 tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
