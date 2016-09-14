@@ -68,7 +68,7 @@ WEIGHT:  2
 TAGS:    arrival
 ORIENT:  float
 NSUBST:  % = 1:1 / 1:0 / 1:> / *=%...
-MONS:    gnoll / ogre / giant frog / centaur
+MONS:    gnoll / ogre / bullfrog / centaur
 MAP
 xxxxxxxxxx
 x.......{x
@@ -2759,7 +2759,7 @@ SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant
+MONS:   bullfrog / spiny frog / yak / death yak w:1 / elephant
 MAP
           ccccccccc
        cccctccccctcccc

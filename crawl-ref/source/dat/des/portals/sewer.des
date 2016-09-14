@@ -7,7 +7,7 @@
 # Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
 # and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
-# interesting when encountered at low level (river rat, giant frog etc.) Loot
+# interesting when encountered at low level (river rat, bullfrog etc.) Loot
 # consists of renewable items; the harder maps contain a few good items.
 #
 ##############################################################################
@@ -443,7 +443,7 @@ ENDMAP
 # Giant frogs, specifically. Combined weight 40.
 
 ############################################################################
-# Two fairly watery vaults with (usually) two giant frogs in the end.
+# Two fairly watery vaults with (usually) two bullfrogs in the end.
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
@@ -460,7 +460,7 @@ MONS:     frilled lizard / ball python w:5 / giant cockroach / \
 NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
-KMONS:    ! = giant frog / nothing w:2
+KMONS:    ! = bullfrog / nothing w:2
 : sewer_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccc
@@ -506,7 +506,7 @@ KMONS:    W = frilled lizard / ball python / giant cockroach / \
 KFEAT:    W = W
 KFEAT:    ! = w
 COLOUR:   ! = green
-KMONS:    ! = giant frog / nothing w:2
+KMONS:    ! = bullfrog / nothing w:2
 SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
@@ -555,7 +555,7 @@ ORIENT:  encompass
 SHUFFLE: de
 MONS:    rat / river rat w:2
 MONS:    ball python / adder w:5 / frilled lizard w:2 / ooze w:1
-MONS:    giant frog
+MONS:    bullfrog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\

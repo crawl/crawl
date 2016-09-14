@@ -2607,8 +2607,9 @@ enum monster_type                      // menv[].type
     MONS_GRIFFON,
 #if TAG_MAJOR_VERSION > 34
     MONS_MUTANT_BEAST,
+    MONS_FROG,                  // genus
 #endif
-    MONS_GIANT_FROG,
+    MONS_BULLFROG,
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
@@ -3551,6 +3552,7 @@ enum monster_type                      // menv[].type
     MONS_RAGGED_HIEROPHANT,
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
+    MONS_FROG,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

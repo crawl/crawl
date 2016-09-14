@@ -617,7 +617,7 @@ black sun
 %%%%
 blink frog
 
-A species of giant frog that possesses the ability to blink at will. It can
+A giant species of frog that possesses the ability to blink at will. It can
 blink itself close to its intended prey, or blink away to escape harm. It is
 commonly found in packs.
 %%%%
@@ -675,6 +675,12 @@ bush
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
 not very dense, permitting missiles to pass through it. However, it is firmly
 rooted, and requires significant effort to destroy.
+%%%%
+bullfrog
+
+An unusually aggressive amphibian that pursues its prey with rapid hops.
+Its croak is loud and distinctive, but unlike its smaller counterparts above
+ground, the dungeon bullfrog is as large as it sounds.
 %%%%
 butterfly
 
@@ -1175,11 +1181,6 @@ giant eyeball
 A giant floating eyeball, said to be one of the servitors of Jiyva. It
 possesses a gaze that can eventually paralyse even the most strong-willed of
 adventurers.
-%%%%
-giant frog
-
-A large and unusually aggressive amphibian that can cover distance rapidly by
-hopping.
 %%%%
 giant gecko
 

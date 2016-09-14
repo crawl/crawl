@@ -119,7 +119,7 @@ death_scarab CORPSE_DEATH_SCARAB
 ## Frogs ('F')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-giant_frog CORPSE_GIANT_FROG
+bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
