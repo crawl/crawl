@@ -1113,7 +1113,7 @@ dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 floating eye
 
-A giant floating eyeball, said to be one of the servitors of Jiyva. It
+A floating eyeball, said to be one of the servitors of Jiyva. It
 possesses a gaze that can eventually paralyse even the most strong-willed of
 adventurers.
 %%%%
@@ -1695,7 +1695,7 @@ tail. Its mouth drips with venomous saliva.
 %%%%
 naga exemplar
 
-A magnificent example of the species. It is skilled in both martial and
+A magnificent example of the naga. It is skilled in both martial and
 magical arts.
 %%%%
 naga mage
@@ -2436,7 +2436,7 @@ a weapon in each giant hand.
 %%%%
 tyrant leech
 
-An exceptionally large and aggressive blood-sucking annelid that thrives
+An exceptionally aggressive blood-sucking annelid that thrives
 in swamps and marshlands.
 %%%%
 Tzitzimitl
