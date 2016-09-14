@@ -975,7 +975,7 @@ TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
 MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
-MONS:    giant cockroach, jackal
+MONS:    rhinoceros cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
@@ -3448,7 +3448,7 @@ KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
 KMONS:   i = hell rat
-KMONS:   j = giant cockroach
+KMONS:   j = rhinoceros cockroach
 KMONS:   k = phantom
 KMONS:   l = large abomination
 KMONS:   m = scorpion

@@ -2071,7 +2071,7 @@ void MiscastEffect::_transmutation(int severity)
             // piety, perma-allies-on-hostiles-somehow, etc)
             bool success = false;
             for (int i = 2 + random2(3); i > 0; --i)
-                success |= _create_monster(MONS_GIANT_COCKROACH, 0, true);
+                success |= _create_monster(MONS_RHINOCEROS_COCKROACH, 0, true);
 
             if (success)
             {

@@ -159,7 +159,7 @@ NAME: nicolae_spider_entry_non_spiders
 TAGS: spider_entry ruin_lair
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion / worker ant / worm / giant cockroach
+KMONS: 1 = scorpion / worker ant / worm / rhinoceros cockroach
 KMONS: 2 = demonic crawler / boulder beetle / wasp
 MAP
 ...........
@@ -489,7 +489,7 @@ ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 KMONS:   1 = scorpion w:20 / wasp w:13 / worker ant w:35 / \
-             giant cockroach w:1 / worm w:1
+             rhinoceros cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / redback / vampire mosquito w:5
 KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler

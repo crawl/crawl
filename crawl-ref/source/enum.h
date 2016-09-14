@@ -2724,7 +2724,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,
 #endif
-    MONS_GIANT_COCKROACH,
+    MONS_RHINOCEROS_COCKROACH,
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_CENTIPEDE,
     MONS_GIANT_MITE,

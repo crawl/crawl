@@ -14,7 +14,7 @@
 
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_cockroach CORPSE_GIANT_COCKROACH
+rhinoceros_cockroach CORPSE_RHINOCEROS_COCKROACH
 worker_ant CORPSE_WORKER_ANT
 soldier_ant CORPSE_SOLDIER_ANT
 queen_ant CORPSE_QUEEN_ANT

@@ -856,7 +856,7 @@ bool mons_is_boulder(const monster& mon)
 static bool _mons_class_is_clingy(monster_type type)
 {
     return mons_genus(type) == MONS_SPIDER || type == MONS_LEOPARD_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_DEMONIC_CRAWLER
+        || type == MONS_RHINOCEROS_COCKROACH || type == MONS_DEMONIC_CRAWLER
         || type == MONS_DART_SLUG;
 }
 

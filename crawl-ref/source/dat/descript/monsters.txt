@@ -1182,10 +1182,11 @@ gelid demonspawn
 
 <demonspawn>
 %%%%
-giant cockroach
+giant eyeball
 
-A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
-it is in fact quite susceptible to mutagenic energies.
+A giant floating eyeball, said to be one of the servitors of Jiyva. It
+possesses a gaze that can eventually paralyse even the most strong-willed of
+adventurers.
 %%%%
 giant orange brain
 
@@ -1984,6 +1985,11 @@ victims from afar.
 red draconian
 
 A muscular red-scaled humanoid with a reptilian tail and small wings.
+%%%%
+rhinoceros cockroach
+
+A scurrying brown insect that makes a nasty hissing noise. Contrary to popular
+myth, it is in fact quite susceptible to mutagenic energies.
 %%%%
 hornet
 
