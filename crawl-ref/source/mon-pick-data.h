@@ -1,8 +1,8 @@
 static const pop_entry pop_d[] =
 { // Dungeon (OOD cap: 27)
-  { -3,  7,  515, SEMI, MONS_GIANT_NEWT },
   { -2,  8,  515, SEMI, MONS_GIANT_COCKROACH },
   { -2,  8,  192, PEAK, MONS_BALL_PYTHON },
+  { -1,  5,  640, SEMI, MONS_FRILLED_LIZARD},
   { -1,  7,  136, SEMI, MONS_OOZE },
   {  1,  3, 1000, FLAT, MONS_GOBLIN },
   {  1,  3, 1000, FLAT, MONS_BAT },
@@ -953,7 +953,7 @@ static const pop_entry pop_desolation[] =
 
 static const pop_entry pop_sewer[] =
 { // Sewer
-  {  1,  1, 1000, FLAT, MONS_GIANT_NEWT },
+  {  1,  1, 1000, FLAT, MONS_FRILLED_LIZARD },
   {  1,  1,  515, FLAT, MONS_GIANT_GECKO },
   {  1,  1, 1000, FLAT, MONS_BAT },
   {  1,  1,  515, FLAT, MONS_BALL_PYTHON },

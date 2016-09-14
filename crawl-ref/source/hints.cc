@@ -872,7 +872,7 @@ void hints_monster_seen(const monster& mon)
         text +=
             string("monster is a ") +
             mon.name(DESC_PLAIN).c_str() +
-            ". Examples for typical early monsters are rats, giant newts, "
+            ". Examples for typical early monsters are rats, oozes, "
             "kobolds, or goblins. You can gain information about any monster "
             "by hovering your mouse over its tile, and read the monster "
             "description by clicking on it with your <w>right mouse button</w>.";

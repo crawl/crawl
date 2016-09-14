@@ -2527,7 +2527,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_GIANT_LIZARD,          // genus
 #endif
-    MONS_GIANT_NEWT,
+    MONS_FRILLED_LIZARD,
     MONS_GIANT_GECKO,
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,

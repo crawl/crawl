@@ -1109,6 +1109,12 @@ freed slave
 A human who has just been released from magical enslavement. It tries to stand
 proudly, despite its lingering fear and unkempt appearance.
 %%%%
+frilled lizard
+
+A lizard with a giant and colorful fringe folded around its neck.
+It flares its impressive frill at its victims while hissing angrily,
+before it lunges in the blink of an eye.
+%%%%
 formicid
 
 A sentient ant that walks upright and is competent at digging.
@@ -1184,11 +1190,6 @@ belies its agility.
 giant leech
 
 An aggressive blood-sucking annelid that thrives in swamps and marshlands.
-%%%%
-giant newt
-
-A tenacious little amphibian, several times the size of a normal newt, but
-still not very threatening.
 %%%%
 giant orange brain
 
