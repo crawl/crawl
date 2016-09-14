@@ -486,11 +486,11 @@ eidolon cast targeted
 %%%%
 basilisk cast targeted
 
-@giant eyeball cast targeted@
+@floating eye cast targeted@
 %%%%
 basilisk cast
 
-@giant eyeball cast@
+@floating eye cast@
 %%%%
 wretched star cast
 
@@ -704,15 +704,15 @@ unseen curse skull cast
 
 You hear the clattering of teeth.
 %%%%
-giant eyeball cast targeted
+floating eye cast targeted
 
 @The_monster@ gazes @at@ @target@.
 %%%%
-giant eyeball cast
+floating eye cast
 
 @The_monster@ looks around.
 %%%%
-unseen giant eyeball cast targeted
+unseen floating eye cast targeted
 
 You feel something staring at you. @player_only@
 %%%%

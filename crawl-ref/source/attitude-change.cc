@@ -372,7 +372,7 @@ static void _jiyva_convert_slime(monster* slime)
 
     if (you.can_see(*slime))
     {
-        if (mons_genus(slime->type) == MONS_GIANT_EYEBALL)
+        if (mons_genus(slime->type) == MONS_FLOATING_EYE)
         {
             mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
                             "then relaxes.",

@@ -97,7 +97,7 @@ default-depth: Depths:2-, !Depths:$
 # The River Lethe
 #
 # The two orange statues are placed for maximum pain -- one you're likely to
-# first see while flying, the other aided by a giant eyeball and protective
+# first see while flying, the other aided by a floating eye and protective
 # plants.
 #
 # Lemuel
@@ -120,7 +120,7 @@ MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
 MONS:    ancient lich w:20 / tzitzimitl
 KMONS:   89 = patrolling giant orange brain
 KMONS:   0 = orange crystal statue
-KMONS:   B = giant eyeball
+KMONS:   B = floating eye
 KMONS:   C = 0 band
 KMONS:   W = patrolling water elemental w:40 / \
              patrolling hydra simulacrum / patrolling hydra spectre / \

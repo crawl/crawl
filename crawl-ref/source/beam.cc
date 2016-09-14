@@ -5158,7 +5158,7 @@ bool bolt::has_saving_throw() const
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
-        return !(agent() && agent()->type == MONS_GIANT_EYEBALL);
+        return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:
         return true;
     }

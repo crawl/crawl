@@ -6188,7 +6188,7 @@ orb spider charge
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
 %%%%
-giant eyeball charge
+floating eye charge
 
 @The_monster@'s view fixates on @foe@.
 

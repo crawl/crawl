@@ -2243,7 +2243,7 @@ TAGS:    no_monster_gen no_item_gen transparent patrolling
 ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
-MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
+MONS:    generate_awake floating eye, eye of devastation, giant orange brain
 MONS:    generate_awake golden eye, slime creature, jelly
 KFEAT:   > = known shaft trap
 KFEAT:   n = iron_grate

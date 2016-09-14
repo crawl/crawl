@@ -886,7 +886,7 @@ MONS:       ugly thing, very ugly thing
 MONS:       shapeshifter / glowing shapeshifter w:1
 MONS:       small abomination
 KMONS:      8 = large abomination
-KMONS:      9 = generate_awake giant eyeball
+KMONS:      9 = generate_awake floating eye
 KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \

@@ -363,7 +363,7 @@ static const pop_entry pop_slime[] =
   {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  1,  5,  200, RISE, MONS_DEATH_OOZE },
   {  2,  5,  100, RISE, MONS_GIANT_ORANGE_BRAIN },
-  {  2,  8,   50, SEMI, MONS_GIANT_EYEBALL },
+  {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
   {  1,  5, 2750, FLAT, MONS_NO_MONSTER }, // Old ooze and jelly weight
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1051,7 +1051,7 @@ static const pop_entry pop_depths[] =
   {  1, 14,   60, SEMI, MONS_SPHINX },
   {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },
   {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },
-  {  2, 10,   25, FLAT, MONS_GIANT_EYEBALL },
+  {  2, 10,   25, FLAT, MONS_FLOATING_EYE },
   {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },
   {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },
   {  4, 14,   40, FLAT, MONS_STORM_DRAGON },

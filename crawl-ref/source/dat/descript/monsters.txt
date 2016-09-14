@@ -1106,6 +1106,12 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
+floating eye
+
+A giant floating eyeball, said to be one of the servitors of Jiyva. It
+possesses a gaze that can eventually paralyse even the most strong-willed of
+adventurers.
+%%%%
 flying skull
 
 An undead skull kept aloft and flitting swiftly about by unholy magic.
@@ -1175,12 +1181,6 @@ giant cockroach
 
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
 it is in fact quite susceptible to mutagenic energies.
-%%%%
-giant eyeball
-
-A giant floating eyeball, said to be one of the servitors of Jiyva. It
-possesses a gaze that can eventually paralyse even the most strong-willed of
-adventurers.
 %%%%
 giant orange brain
 

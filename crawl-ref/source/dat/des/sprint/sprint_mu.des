@@ -560,7 +560,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the Royal Jelly, shining eye, giant eyeball, acid blob, azure jelly
+MONS: the Royal Jelly, shining eye, floating eye, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
@@ -799,12 +799,12 @@ ENDMAP
 # D2_1, wish-granting genie
 NAME: sprint_mu_d2_genie
 TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
-MONS: yaktaur / yaktaur captain, giant eyeball, orc priest / \
+MONS: yaktaur / yaktaur captain, floating eye, orc priest / \
  orc high priest hd:5 hp:70
 MONS: spriggan defender hd:5 hp:55 ; dagger
 MONS: obsidian statue / orange crystal statue
 MONS: crystal guardian hd:10 hp:45, skeletal warrior
-KMONS: 2 = giant eyeball
+KMONS: 2 = floating eye
 KITEM: 2 = q:10 scroll of identify ident:all
 KMONS: P = plant
 SUBST: P = PPPPPPPPP.
@@ -1174,7 +1174,7 @@ KMONS: A = col:magenta plant / w:2 deep elf blademaster
 KMONS: B = col:lightmagenta plant
 SUBST: A = AAB
 KFEAT: AB = zot trap w:2 / floor
-KMONS: i = patrolling giant eyeball
+KMONS: i = patrolling floating eye
 KMONS: j = patrolling golden eye
 KMONS: k = patrolling shining eye
 KMONS: m = patrolling giant orange brain

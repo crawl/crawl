@@ -2805,7 +2805,7 @@ NSUBST: ' = 3:* / 1:> / 6:1 / *:., 1 : 2:1 / 2 = 1.. / *:w
 MONS:   lava snake, orange crystal statue
 SUBST:  wW = l
 : elseif crawl.coinflip() then
-MONS:   oklob plant, giant eyeball
+MONS:   oklob plant, floating eye
 MONS:   plant, bush
 SUBST:  w = 334, W = .
 : else
@@ -2977,7 +2977,7 @@ SUBST:   A : x, B : x, C : x, D : x, E : x, F : +, G : l:50 w:50 I
 SUBST:   x : xvcb
 SUBST:   H = 0 ., J = 1 0:100 $:20
 ITEM:    any jewellery
-MONS:    giant eyeball
+MONS:    floating eye
 MAP
 ...........
 ..xHxHxHx..
@@ -3049,7 +3049,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, eye of draining, giant eyeball
+MONS:   golden eye, eye of draining, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KPROP:  13' = no_tele_into

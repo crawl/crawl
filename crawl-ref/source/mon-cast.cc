@@ -6403,7 +6403,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             const monster_type mon = random_choose_weighted(
-                                       100, MONS_GIANT_EYEBALL,
+                                       100, MONS_FLOATING_EYE,
                                         80, MONS_EYE_OF_DRAINING,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
