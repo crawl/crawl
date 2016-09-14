@@ -504,7 +504,7 @@ typedef uint32_t iflags_t;
 
 struct item_def
 {
-    object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
+    object_class_type base_type; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
     union
