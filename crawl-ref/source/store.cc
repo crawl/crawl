@@ -472,6 +472,14 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         COPY_PTR(level_pos);
         break;
 
+    case SV_MONST:
+        COPY_PTR(monster);
+        break;
+
+    case SV_LUA:
+        COPY_PTR(dlua_chunk);
+        break;
+
      default:
         die("CrawlStoreValue has invalid type");
         break;
