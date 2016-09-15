@@ -1256,7 +1256,7 @@ TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
-MONS:   giant cockroach w:30 / butterfly w:20
+MONS:   rhinoceros cockroach w:30 / butterfly w:20
 MONS:   worker ant
 MONS:   killer bee / scorpion / soldier ant w:5
 MAP
@@ -2345,7 +2345,7 @@ MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          spriggan berserker w:3 / spriggan air mage w:4 / \
          deep troll earth mage w:4 / deep elf death mage w:2
 MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
-         sphinx w:5 / greater naga w:5 / mummy priest w:1 / \
+         sphinx w:5 / naga exemplar w:5 / mummy priest w:1 / \
          white draconian knight w:1
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
@@ -2454,7 +2454,7 @@ ORIENT: float
 DEPTH: Depths
 TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
-KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
+KMONS: P = green death / green draconian / naga exemplar w:5 / swamp dragon / \
            redback
 KMONS: F = fire giant w:5 / fire dragon / fire elemental / red draconian / sun demon
 KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
@@ -2470,7 +2470,7 @@ KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
 KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
            merfolk impaler / harpy
-KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
+KMONS: K = naga exemplar w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
 KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
            tarantella
@@ -2893,7 +2893,7 @@ ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
 MONS: mana viper / naga warrior / naga mage
-MONS: greater naga / naga ritualist / w:8 green death
+MONS: naga exemplar / naga ritualist / w:8 green death
 : elseif brnd >= 5 then
 MONS: jumping spider / wolf spider / tarantella
 MONS: emperor scorpion / w:8 green death / w:3 ghost moth
@@ -3016,7 +3016,7 @@ MONS:    necromancer ; wand of lightning . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
-MONS:    frost giant ; great sword ego:flaming
+MONS:    frost giant ; claymore ego:flaming
 MONS:    ettin simulacrum, efreet, deep elf mage
 KITEM:   d = lamp of fire, *
 KITEM:   e = lajatang ego:freezing ident:type, *
@@ -3048,7 +3048,7 @@ xxx                             ..bbbb..
 (<@                              ......
 ENDMAP
 
-# the +4 great sword "Dinovoldo's Tail" {explosions}
+# the +4 claymore "Dinovoldo's Tail" {explosions}
 NAME:   regret_index_qazlal_generations
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 DEPTH:  Depths, !Depths:$, Zot, !Zot:$
@@ -3066,7 +3066,7 @@ KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
 KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
                                 staff of air | staff of earth . \
                                 robe ego:resistance good_item ident:type
-KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
+KMONS:  8 = tengu reaver ; battleaxe ego:flaming | claymore ego:freezing | \
                            halberd ego:electrocution | lajatang ego:vorpal . \
                            fire dragon armour | ice dragon armour
 KMONS:  9 = red draconian / white draconian / black draconian
@@ -7497,7 +7497,7 @@ ENDMAP
 NAME:   minmay_roachtagon
 DEPTH:  D:2-3
 ORIENT: float
-MONS:   giant cockroach
+MONS:   rhinoceros cockroach
 NSUBST: 1 = 5:1 / 10 = 1. / 2:% / 2 = %. / *:.
 SUBST:  " = @x
 MAP

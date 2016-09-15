@@ -334,7 +334,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { WPN_BROAD_AXE,        1 },
         { WPN_MORNINGSTAR,      1 }, };
     static const weapon_list ORC_KNIGHT_WEAPONS =
-    {   { WPN_GREAT_SWORD,      4 },
+    {   { WPN_CLAYMORE,      4 },
         { WPN_LONG_SWORD,       4 },
         { WPN_BATTLEAXE,        4 },
         { WPN_WAR_AXE,          4 },
@@ -392,7 +392,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { WPN_BATTLEAXE,        7 },
         { WPN_LONG_SWORD,       8 },
         { WPN_SCIMITAR,         8 },
-        { WPN_GREAT_SWORD,      8 },
+        { WPN_CLAYMORE,      8 },
         { WPN_BROAD_AXE,        9 },
         { WPN_DOUBLE_SWORD,     10 },
         { WPN_EVENINGSTAR,      13 },
@@ -412,7 +412,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     static const weapon_list DS_WEAPONS =
     {   { WPN_LONG_SWORD,       10 },
         { WPN_SCIMITAR,         10 },
-        { WPN_GREAT_SWORD,      10 },
+        { WPN_CLAYMORE,      10 },
         { WPN_DEMON_BLADE,      10 },
         { WPN_MACE,             10 },
         { WPN_MORNINGSTAR,      8 },
@@ -459,7 +459,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                 { WPN_SHORT_SWORD,      7 },
                 { WPN_LONG_SWORD,       7 },
                 { WPN_SCIMITAR,         7 },
-                { WPN_GREAT_SWORD,      7 },
+                { WPN_CLAYMORE,      7 },
                 { WPN_HAND_AXE,         7 },
                 { WPN_BATTLEAXE,        7 },
                 { WPN_SPEAR,            7 },
@@ -473,7 +473,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             { { { WPN_MORNINGSTAR,      5 },
                 { WPN_GREAT_MACE,       5 },
                 { WPN_HALBERD,          5 },
-                { WPN_GREAT_SWORD,      5 },
+                { WPN_CLAYMORE,      5 },
                 { WPN_GLAIVE,           8 },
                 { WPN_BROAD_AXE,        10 },
                 { WPN_BATTLEAXE,        15 },
@@ -481,7 +481,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { MONS_GNOLL,                   { GNOLL_WEAPONS } },
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
-        { MONS_GREATER_NAGA,            { GNOLL_WEAPONS } },
+        { MONS_NAGA_EXEMPLAR,           { GNOLL_WEAPONS } },
         { MONS_GNOLL_SHAMAN,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
@@ -601,7 +601,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             // Rupert favours big two-handers with visceral up-close
             // effects, i.e. no polearms.
             { { { WPN_GREAT_MACE,       10 },
-                { WPN_GREAT_SWORD,      6 },
+                { WPN_CLAYMORE,      6 },
                 { WPN_TRIPLE_SWORD,     2 },
                 { WPN_BATTLEAXE,        8 },
                 { WPN_EXECUTIONERS_AXE, 2 },
@@ -690,7 +690,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             { { SPWPN_FLAMING, 1 } },
         } },
         { MONS_SERAPH, {
-            { { WPN_GREAT_SWORD,        1 } },
+            { { WPN_CLAYMORE,        1 } },
             { 1, 3, 8 }, // highly enchanted, we're top rank
             { { SPWPN_FLAMING, 1 } },
         } },
@@ -721,7 +721,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                 { WPN_BATTLEAXE,        1 },
                 { WPN_LONG_SWORD,       1 },
                 { WPN_SCIMITAR,         1 },
-                { WPN_GREAT_SWORD,      1 },
+                { WPN_CLAYMORE,      1 },
                 { WPN_BROAD_AXE,        1 }, },
               { 1, 0, 5 },
               HELL_KNIGHT_BRANDS
@@ -737,7 +737,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                 { WPN_BATTLEAXE,        1 },
                 { WPN_LONG_SWORD,       1 },
                 { WPN_SCIMITAR,         1 },
-                { WPN_GREAT_SWORD,      1 },
+                { WPN_CLAYMORE,      1 },
                 { WPN_BROAD_AXE,        1 }, },
               { 1, 0, 5 },
               HELL_KNIGHT_BRANDS
@@ -745,7 +745,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { MONS_URUG,                    { URUG_WEAPONS } },
         { MONS_FREDERICK,               { URUG_WEAPONS } },
         { MONS_FIRE_GIANT, {
-            { { WPN_GREAT_SWORD,        1 } }, {},
+            { { WPN_CLAYMORE,        1 } }, {},
             { { SPWPN_FLAMING, 1 } },
         } },
         { MONS_FROST_GIANT, {
@@ -818,7 +818,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { MONS_ANCIENT_CHAMPION, {
             { { WPN_GREAT_MACE,         1 },
               { WPN_BATTLEAXE,          1 },
-              { WPN_GREAT_SWORD,        1 }, },
+              { WPN_CLAYMORE,        1 }, },
             { 1, 0, 3 },
             { { SPWPN_DRAINING,      13 }, // total 45
               { SPWPN_VORPAL,        7 },
@@ -829,7 +829,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         } },
         { MONS_SOJOBO, {
             { { WPN_TRIPLE_SWORD,       1 },
-              { WPN_GREAT_SWORD,        5 } }, {},
+              { WPN_CLAYMORE,        5 } }, {},
             { { SPWPN_ELECTROCUTION, 2 },
               { NUM_SPECIAL_WEAPONS, 1 } },
             1,
@@ -849,7 +849,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
               { WPN_DEMON_WHIP,         10 },
               { WPN_DEMON_TRIDENT,      10 },
               { WPN_BATTLEAXE,          7 },
-              { WPN_GREAT_SWORD,        5 },
+              { WPN_CLAYMORE,        5 },
               { WPN_DOUBLE_SWORD,       2 },
               { WPN_DIRE_FLAIL,         5 },
               { WPN_GREAT_MACE,         2 },
@@ -1910,16 +1910,16 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
-    case MONS_GREATER_NAGA:
-        if (one_chance_in(type == MONS_NAGA         ?  800 :
-                          type == MONS_NAGA_WARRIOR ?  300 :
-                          type == MONS_GREATER_NAGA ?  100
-                                                    :  200))
+    case MONS_NAGA_EXEMPLAR:
+        if (one_chance_in(type == MONS_NAGA             ?  800 :
+                          type == MONS_NAGA_WARRIOR     ?  300 :
+                          type == MONS_NAGA_EXEMPLAR    ?  100
+                                                        :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_NAGA_BARDING;
         }
-        else if (type == MONS_GREATER_NAGA
+        else if (type == MONS_NAGA_EXEMPLAR
                  || type == MONS_NAGA_RITUALIST
                  || one_chance_in(3))
         {

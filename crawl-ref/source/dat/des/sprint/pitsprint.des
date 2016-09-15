@@ -9,7 +9,7 @@
 {{
 
 function base_monster_setup(e)
-  e.kmons("A = goblin / frilled lizard / giant cockroach / ooze / ball python /\
+  e.kmons("A = goblin / frilled lizard / rhinoceros cockroach / ooze / ball python /\
            bat / kobold / rat / leopard gecko / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
@@ -56,7 +56,7 @@ function base_monster_setup(e)
            wind drake / deep elf mage w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
-           merfolk avatar / alligator snapping turtle / anaconda / greater naga /\
+           merfolk avatar / alligator snapping turtle / anaconda / naga exemplar /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
@@ -73,7 +73,7 @@ function base_monster_setup(e)
            deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
-           greater naga / dancing weapon / dire elephant band /\
+           naga exemplar / dancing weapon / dire elephant band /\
            eye of draining / floating eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
@@ -96,7 +96,7 @@ function base_monster_setup(e)
   e.kmons("F = orb of fire / electric golem / ancient lich / greater mummy /\
            hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
            pandemonium lord w:20 / pearl dragon / titan")
-  e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
+  e.kmons("G = goblin / frilled lizard / rhinoceros cockroach / ooze /\
            ball python /\
            bat / kobold / rat / leopard gecko / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
@@ -216,8 +216,8 @@ function general_item_setup(e)
     triple sword plus:5 randart not_cursed ident:all /\
     demon blade plus:11 good_item not_cursed ident:all /\
     demon blade plus:9 randart not_cursed ident:all /\
-    great sword plus:9 good_item not_cursed ident:all /\
-    great sword plus:7 randart not_cursed ident:all /\
+    claymore plus:9 good_item not_cursed ident:all /\
+    claymore plus:7 randart not_cursed ident:all /\
     lajatang plus:9 good_item not_cursed ident:all /\
     lajatang plus:7 randart not_cursed ident:all /\
     longbow plus:7 ego:vorpal not_cursed ident:all w:15 /\
@@ -280,8 +280,8 @@ function general_item_setup(e)
     triple sword plus:0 good_item not_cursed ident:all /\
     demon blade plus:6 ego:none not_cursed ident:all /\
     demon blade plus:3 good_item not_cursed ident:all /\
-    great sword plus:6 ego:none not_cursed ident:all /\
-    great sword plus:3 good_item not_cursed ident:all /\
+    claymore plus:6 ego:none not_cursed ident:all /\
+    claymore plus:3 good_item not_cursed ident:all /\
     lajatang plus:6 ego:none not_cursed ident:all /\
     lajatang plus:3 good_item not_cursed ident:all /\
     longbow plus:5 good_item not_cursed ident:all w:15 /\
@@ -425,7 +425,7 @@ function armoury_setup(e)
           demon whip plus:3 not_cursed ident:all w:5 /\
           giant spiked club plus:3 not_cursed ident:all /\
           quick blade plus:5 not_cursed ident:all /\
-          great sword plus:3 not_cursed ident:all /\
+          claymore plus:3 not_cursed ident:all /\
           double sword plus:3 not_cursed ident:all /\
           demon blade plus:3 not_cursed ident:all w:3 /\
           triple sword plus:1 not_cursed ident:all w:3 /\
@@ -475,7 +475,7 @@ function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
         deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
         sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
-        naga mage / greater naga / base draconian w:20")
+        naga mage / naga exemplar / base draconian w:20")
   e.kmons("9 = Frederick / Margery band / Boris / Frances")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")

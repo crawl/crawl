@@ -124,7 +124,7 @@ string pluralise(const string &name, const char * const qualifiers[],
     else if (ends_with(name, "ch") || ends_with(name, "sh")
              || ends_with(name, "x"))
     {
-        // To handle cockroaches, sphinxes, and bushes.
+        // To handle rhinoceros cockroaches, sphinxes, and bushes.
         return name + "es";
     }
     else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))

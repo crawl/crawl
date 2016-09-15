@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 __(_suffix_examine
 
 It has been enchanted to dance through the air and attack under its own power.
@@ -1113,7 +1113,7 @@ dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 floating eye
 
-A giant floating eyeball, said to be one of the servitors of Jiyva. It
+A floating eyeball, said to be one of the servitors of Jiyva. It
 possesses a gaze that can eventually paralyse even the most strong-willed of
 adventurers.
 %%%%
@@ -1182,10 +1182,11 @@ gelid demonspawn
 
 <demonspawn>
 %%%%
-giant cockroach
+giant eyeball
 
-A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
-it is in fact quite susceptible to mutagenic energies.
+A giant floating eyeball, said to be one of the servitors of Jiyva. It
+possesses a gaze that can eventually paralyse even the most strong-willed of
+adventurers.
 %%%%
 giant orange brain
 
@@ -1237,10 +1238,6 @@ greater mummy
 
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
-%%%%
-greater naga
-
-A formidable naga that is skilled in both martial and magical arts.
 %%%%
 green death
 
@@ -1696,6 +1693,11 @@ naga
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike
 tail. Its mouth drips with venomous saliva.
 %%%%
+naga exemplar
+
+A magnificent example of the naga. It is skilled in both martial and
+magical arts.
+%%%%
 naga mage
 
 A naga that has trained in the use of magic, trailed by an eldritch nimbus. It
@@ -1984,6 +1986,11 @@ victims from afar.
 red draconian
 
 A muscular red-scaled humanoid with a reptilian tail and small wings.
+%%%%
+rhinoceros cockroach
+
+A scurrying brown insect that makes a nasty hissing noise. Contrary to popular
+myth, it is in fact quite susceptible to mutagenic energies.
 %%%%
 hornet
 
@@ -2429,7 +2436,7 @@ a weapon in each giant hand.
 %%%%
 tyrant leech
 
-An exceptionally large and aggressive blood-sucking annelid that thrives
+An exceptionally aggressive blood-sucking annelid that thrives
 in swamps and marshlands.
 %%%%
 Tzitzimitl

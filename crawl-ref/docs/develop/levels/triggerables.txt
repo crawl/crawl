@@ -350,7 +350,7 @@ KFEAT:  ABCDEFG = metal_wall
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
         spells:iron_shot;.;haste;pain;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        great sword ego:pain | great sword ego:draining | great sword \
+        claymore ego:pain | claymore ego:draining | claymore \
         ego:flaming | w:3 triple sword ego:vorpal
 KMONS:  2 = col:gold skeletal warrior name:ancient_champion name_replace \
         spells:bolt_of_draining;.;haste;throw_frost;.;. actual_spells \
@@ -364,7 +364,7 @@ KMONS:  3 = col:gold skeletal warrior name:ancient_champion name_replace \
 KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        great sword ego:pain | great sword ego:draining | great sword \
+        claymore ego:pain | claymore ego:draining | claymore \
         ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain | \
         triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123

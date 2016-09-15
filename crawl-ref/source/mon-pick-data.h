@@ -1,6 +1,6 @@
 static const pop_entry pop_d[] =
 { // Dungeon (OOD cap: 27)
-  { -2,  8,  515, SEMI, MONS_GIANT_COCKROACH },
+  { -2,  8,  515, SEMI, MONS_RHINOCEROS_COCKROACH },
   { -2,  8,  192, PEAK, MONS_BALL_PYTHON },
   { -1,  5,  640, SEMI, MONS_FRILLED_LIZARD},
   { -1,  7,  136, SEMI, MONS_OOZE },
@@ -326,7 +326,7 @@ static const pop_entry pop_snake[] =
   {  1,  4,  200, FLAT, MONS_MANA_VIPER },
   {  1,  7,  225, PEAK, MONS_GUARDIAN_SERPENT },
   {  2,  5,  110, PEAK, MONS_SALAMANDER_MYSTIC },
-  {  2,  8,  245, SEMI, MONS_GREATER_NAGA },
+  {  2,  8,  245, SEMI, MONS_NAGA_EXEMPLAR },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -960,7 +960,7 @@ static const pop_entry pop_sewer[] =
   {  1,  1,  515, FLAT, MONS_ADDER },
   {  1,  1,  515, FLAT, MONS_WORM },
   {  1,  1,  515, FLAT, MONS_OOZE },
-  {  1,  1,  515, FLAT, MONS_GIANT_COCKROACH },
+  {  1,  1,  515, FLAT, MONS_RHINOCEROS_COCKROACH },
   { 0,0,0,FLAT,MONS_0 }
 };
 

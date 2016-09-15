@@ -568,8 +568,8 @@ double_sword3
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
-great_sword_slant GREAT_SWORD_SLANT
-great_sword_slant2
+claymore_slant CLAYMORE_SLANT
+claymore_slant2
 triple_sword TRIPLE_SWORD
 triple_sword2
 katana_slant KATANA_SLANT

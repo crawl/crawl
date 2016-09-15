@@ -213,7 +213,7 @@ function ice_cave_caverns_natural_giant_loot(e)
   e.item("animal skin " .. goodcoldres .. " / \
           battleaxe " .. goodfreezeweap .. " w:4 / \
           glaive " .. goodfreezeweap .. " w:4 / \
-          great sword " .. goodfreezeweap .. " w:2 / nothing")
+          claymore " .. goodfreezeweap .. " w:2 / nothing")
   e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
           arbalest ego:freezing good_item no_uniq ident:type / \
           longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
@@ -541,15 +541,15 @@ MONS:    frost giant / white draconian w:1 ; \
          battleaxe ego:freezing . cloak
 MONS:    ice statue
 ITEM:    giant club / giant spiked club / great mace w:9 / \
-         battleaxe w:7 / glaive w:8 / halberd w:8 / great sword w:6 / \
+         battleaxe w:7 / glaive w:8 / halberd w:8 / claymore w:6 / \
          nothing w:58
 ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
-         halberd good_item / great sword good_item / nothing w:50
+         halberd good_item / claymore good_item / nothing w:50
 : ice_cave_item_attributes(_G)
 : item("battleaxe " .. freezeweap .. " / glaive " .. freezeweap ..
-:   " / halberd " .. freezeweap .. " / great sword " .. freezeweap ..
+:   " / halberd " .. freezeweap .. " / claymore " .. freezeweap ..
 :   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
-:   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
+:   " / halberd " .. goodfreezeweap .. " / claymore " .. goodfreezeweap ..
 :   " / nothing w:80")
 : item("cloak " .. coldres .. " w:15 / hat good_item " ..
 :   " / shield " .. coldres ..  " / large shield " .. coldres ..
@@ -778,12 +778,12 @@ SUBST:   ` = .
 : ice_cave_item_attributes(_G)
 : item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
 :   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
-:   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
+:   " / quick blade " .. freezeweap .. " / claymore " .. freezeweap ..
 :   " / triple sword " .. freezeweap .. " / giant spiked club " .. freezeweap ..
 :   " / demon trident " .. freezeweap)
 : item("battleaxe " .. goodfreezeweap .. " / executioner's axe " .. goodfreezeweap ..
 :   " / glaive " .. goodfreezeweap .. " / halberd " .. goodfreezeweap ..
-:   " / great sword " .. goodfreezeweap .. " / quick blade " .. goodfreezeweap ..
+:   " / claymore " .. goodfreezeweap .. " / quick blade " .. goodfreezeweap ..
 :   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
 :   " / giant spiked club " .. goodfreezeweap)
 ITEM: demon whip good_item / demon blade good_item / demon trident good_item

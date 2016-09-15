@@ -4455,7 +4455,7 @@ void unmarshallItem(reader &th, item_def &item)
         case WPN_BLESSED_LONG_SWORD:   item.sub_type = WPN_LONG_SWORD; break;
         case WPN_BLESSED_SCIMITAR:     item.sub_type = WPN_SCIMITAR; break;
         case WPN_BLESSED_DOUBLE_SWORD: item.sub_type = WPN_DOUBLE_SWORD; break;
-        case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_GREAT_SWORD; break;
+        case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_CLAYMORE; break;
         case WPN_BLESSED_TRIPLE_SWORD: item.sub_type = WPN_TRIPLE_SWORD; break;
         default:                       break;
         }

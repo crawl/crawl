@@ -1225,7 +1225,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_SNAPPING_TURTLE,         TILEP_MONS_ZOMBIE_TURTLE },
         { MONS_WORM,                    TILEP_MONS_ZOMBIE_WORM },
         { MONS_BEETLE,                  TILEP_MONS_ZOMBIE_BEETLE },
-        { MONS_GIANT_COCKROACH,         TILEP_MONS_ZOMBIE_ROACH },
+        { MONS_RHINOCEROS_COCKROACH,               TILEP_MONS_ZOMBIE_ROACH },
         { MONS_SCORPION,                TILEP_MONS_ZOMBIE_SCORPION },
         { MONS_KRAKEN,                  TILEP_MONS_ZOMBIE_KRAKEN },
         { MONS_OCTOPODE,                TILEP_MONS_ZOMBIE_OCTOPODE },
@@ -1959,7 +1959,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_RAPIER:                return TILE_WPN_RAPIER;
     case WPN_FALCHION:              return TILE_WPN_FALCHION;
     case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
-    case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
+    case WPN_CLAYMORE:           return TILE_WPN_CLAYMORE;
     case WPN_SCIMITAR:              return TILE_WPN_SCIMITAR;
     case WPN_DOUBLE_SWORD:          return TILE_WPN_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:          return TILE_WPN_TRIPLE_SWORD;

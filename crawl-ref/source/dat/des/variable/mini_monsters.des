@@ -758,7 +758,7 @@ ENDMAP
 NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: Depths
-MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
+MONS:  naga / naga warrior w:2 / naga mage w:1, naga exemplar / guardian serpent
 MONS:  ball python / adder / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
@@ -975,7 +975,7 @@ TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
 MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
-MONS:    giant cockroach, jackal
+MONS:    rhinoceros cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
@@ -1843,7 +1843,7 @@ DEPTH:   Snake, Elf, Orc, Zot
 ITEM:    gold / any scroll / any book w:4
 SUBST:   ? = 123d
 : if you.in_branch("Snake") then
-MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
+MONS:    naga, naga warrior, naga mage w:9 / naga exemplar w:1
 : elseif you.in_branch("Elf") then
 MONS:    deep elf mage, deep elf knight / deep elf archer, deep elf mage
 : elseif you.in_branch("Orc") then
@@ -3448,7 +3448,7 @@ KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
 KMONS:   i = hell rat
-KMONS:   j = giant cockroach
+KMONS:   j = rhinoceros cockroach
 KMONS:   k = phantom
 KMONS:   l = large abomination
 KMONS:   m = scorpion
@@ -5530,7 +5530,7 @@ NSUBST:  . = 1:* / 1:d / 6 = *:2 d:3 / *:.
 NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:( / 1:> / *:.
 KMONS:   0 = zombie / skeleton / necromancer w:6
 KITEM:   * = battleaxe no_pickup / great mace no_pickup / \
-             great sword no_pickup / glaive no_pickup / \
+             claymore no_pickup / glaive no_pickup / \
              scythe good_item no_pickup w:5 / demon whip no_pickup w:5 / \
              demon blade no_pickup w:5 / demon trident no_pickup w:5
 : dgn.delayed_decay(_G, 'd', 'human skeleton')
@@ -5574,7 +5574,7 @@ KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
              phantasmal warrior / skeletal warrior ; mundane arbalest . \
              mundane bolt . mace good_item
 KMONS:   8 = war gargoyle / iron dragon /  \
-             dancing weapon ; great sword good_item | great mace good_item | \
+             dancing weapon ; claymore good_item | great mace good_item | \
                               glaive good_item | battleaxe good_item
 KMONS:   7 = hell sentinel
 SUBST:   xc = v, F~ = G
@@ -6055,8 +6055,8 @@ TAGS:    no_monster_gen patrolling vaults_hard
 DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
 KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . shield
 KMONS:   B = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
-KMONS:   C = Blork the orc / orc warrior ; great sword . chain mail | plate armour, \
-                             orc warrior ; great sword . chain mail | plate armour / nothing
+KMONS:   C = Blork the orc / orc warrior ; claymore . chain mail | plate armour, \
+                             orc warrior ; claymore . chain mail | plate armour / nothing
 KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . shield, \
                          orc warrior ; long sword | falchion . chain mail . shield / nothing
 KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
@@ -6074,10 +6074,10 @@ KMONS:   M = Rupert / vampire knight, vampire knight / nothing
 KMONS:   N = Asterion / ancient champion, ancient champion / nothing
 KMONS:   O = Frederick / draconian knight, draconian knight / nothing
 KMONS:   P = Sojobo / tengu reaver, tengu reaver / nothing
-KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
+KMONS:   S = dancing weapon ; long sword good_item | good_item claymore | \
                               demon blade good_item | triple sword good_item | \
                               double sword good_item
-KITEM:   s = long sword good_item / good_item great sword / \
+KITEM:   s = long sword good_item / good_item claymore / \
              demon blade good_item / triple sword good_item / double sword good_item
 KMONS:   o = orc warrior / orc knight w:5
 KMONS:   e = deep elf knight

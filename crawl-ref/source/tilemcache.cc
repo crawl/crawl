@@ -497,7 +497,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -4;
         break;
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGA_EXEMPLAR:
         *ofs_x = -2;
         *ofs_y = -5;
         break;
@@ -862,7 +862,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGA_EXEMPLAR:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -1360,7 +1360,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 
     case SK_LONG_BLADES:
         if (dam > 25)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_SWORD_SLANT;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_CLAYMORE_SLANT;
         else if (dam > 20)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_KATANA_SLANT;
         else if (dam > 15)

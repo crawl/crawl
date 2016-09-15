@@ -427,7 +427,7 @@ KITEM:    b = any weapon level:27 ident:all /\
           demon whip plus:1 not_cursed ident:all w:5 /\
           giant spiked club plus:1 not_cursed ident:all /\
           quick blade plus:3 not_cursed ident:all /\
-          great sword plus:1 not_cursed ident:all /\
+          claymore plus:1 not_cursed ident:all /\
           double sword plus:1 not_cursed ident:all /\
           demon blade plus:1 not_cursed ident:all w:3 /\
           triple sword plus:0 not_cursed ident:all w:3 /\
@@ -618,8 +618,8 @@ KITEM:    b = battleaxe plus:4 ego:none not_cursed ident:all /\
     triple sword plus:0 good_item not_cursed ident:all /\
     demon blade plus:4 ego:none not_cursed ident:all /\
     demon blade plus:1 good_item not_cursed ident:all /\
-    great sword plus:4 ego:none not_cursed ident:all /\
-    great sword plus:1 good_item not_cursed ident:all /\
+    claymore plus:4 ego:none not_cursed ident:all /\
+    claymore plus:1 good_item not_cursed ident:all /\
     lajatang plus:4 ego:none not_cursed ident:all /\
     lajatang plus:1 good_item not_cursed ident:all /\
     longbow plus:3 good_item not_cursed ident:all w:15 /\
@@ -718,9 +718,9 @@ ENDMAP
 
 NAME:     snake_end
 TAGS:     snake_end
-KMONS:    1 = naga / naga warrior / naga mage / greater naga w:20 /\
+KMONS:    1 = naga / naga warrior / naga mage / naga exemplar w:20 /\
               guardian serpent
-KMONS:    2 = greater naga
+KMONS:    2 = naga exemplar
 COLOUR:   12 = lightgreen
 KITEM:    2 = serpentine rune of zot
 COLOUR:   # = yellow
@@ -836,8 +836,8 @@ KITEM:    b = battleaxe plus:5 good_item not_cursed ident:all /\
     triple sword plus:5 randart not_cursed ident:all w:5 /\
     demon blade plus:5 good_item not_cursed ident:all /\
     demon blade plus:5 randart not_cursed ident:all w:5 /\
-    great sword plus:5 good_item not_cursed ident:all /\
-    great sword plus:5 randart not_cursed ident:all w:5 /\
+    claymore plus:5 good_item not_cursed ident:all /\
+    claymore plus:5 randart not_cursed ident:all w:5 /\
     lajatang plus:5 good_item not_cursed ident:all /\
     lajatang plus:5 randart not_cursed ident:all w:5 /\
     longbow plus:5 ego:vorpal not_cursed ident:all w:15 /\

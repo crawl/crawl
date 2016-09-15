@@ -188,7 +188,7 @@ KMONS:   23 = reaper
 KMONS:   45 = hellion
 KMONS:   67 = quicksilver dragon
 KMONS:   89 = iron golem
-KMONS:   AB = dancing weapon ; great sword good_item | battleaxe good_item | \
+KMONS:   AB = dancing weapon ; claymore good_item | battleaxe good_item | \
                                glaive good_item | great mace good_item
 KMONS:   CD = war gargoyle
 KMONS:   E = lich
@@ -206,7 +206,7 @@ KMONS:   AB = curse toe
 KMONS:   CD = electric golem
 KMONS:   E = orb of fire
 KMONS:   F = ancient lich
-KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
+KMONS:   ! = base draconian w:30 ; cloak . claymore good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
              fire dragon / ice dragon / storm dragon / bone dragon w:5
 KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
@@ -253,7 +253,7 @@ MONS:    rust devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
          iron dragon zombie w:5 / iron troll skeleton w:5 / \
          iron troll zombie w:5 / hell knight w:15
 MONS:    hellion / tormentor / reaper / ancient champion / \
-         dancing weapon w:20 ; great sword good_item | battleaxe good_item | \
+         dancing weapon w:20 ; claymore good_item | battleaxe good_item | \
                                glaive good_item | great mace good_item
 SHUFFLE: ABa / CDb / EFc
 NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
@@ -629,7 +629,7 @@ MONS:    reaper / hellion / tormentor / executioner w:2      / \
 KFEAT:   Z = known zot trap
 # Standard floor spawn equipment drops, not real loot.
 KITEM:   d = battleaxe no_pickup / great mace no_pickup      / \
-             great sword no_pickup / glaive no_pickup        / \
+             claymore no_pickup / glaive no_pickup        / \
              scythe good_item no_pickup w:5
 NSUBST:  > = 1 = ((<d / 1 = ))>e / 2 = >:1 .:49 / * = ...de
 # Always place at least one door per room, possibly wider or multiplied.
@@ -1102,7 +1102,7 @@ MONS:    patrolling Dispater
 KMONS:   8 = vampire knight w:8 / hell knight band w:8 / ancient champion w:18 / \
          reaper w:6 / cacodemon w:2 / executioner w:6 / balrug w:4 / \
          dancing weapon w:12 ; great mace good_item | glaive good_item | \
-                               battleaxe good_item | great sword w:15 good_item
+                               battleaxe good_item | claymore w:15 good_item
 NSUBST:  - = 1:+ / 1 : v:14 +:1 / *:v, = = 1:+ / 1 : v:14 +:1 / *:v
 NSUBST:  0 = 2:8 / 5 = 0:29 8:1 / 2:. / * = 0:49 .:1
 NSUBST:  9 = 3:8 / 3 = 9:4 8:1 / *:9

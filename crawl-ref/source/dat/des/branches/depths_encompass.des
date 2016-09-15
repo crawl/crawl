@@ -655,7 +655,7 @@ MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
                                long sword ego:flaming | long sword ego:freezing | \
                                flail ego:flaming | flail ego:freezing
 MONS:     fire giant ; battleaxe ego:freezing / spriggan air mage / sphinx w:5 / \
-          frost giant ; great sword ego:flaming / deep troll earth mage / \
+          frost giant ; claymore ego:flaming / deep troll earth mage / \
           tengu reaver / ettin ; great mace ego:flaming . great mace ego:freezing / \
           deep elf annihilator ; ice dragon armour | fire dragon armour . \
                                  scimitar ego:flaming | scimitar ego:freezing
@@ -665,7 +665,7 @@ MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
           ghost moth w:5 / glowing shapeshifter w:15 / spark wasp / \
           dancing weapon ; glaive ego:flaming | glaive ego:freezing | \
                            battleaxe ego:flaming | battleaxe ego:freezing | \
-                           great sword ego:flaming | great sword ego:freezing | \
+                           claymore ego:flaming | claymore ego:freezing | \
                            great mace ego:flaming | great mace ego:freezing
 KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
                                      rapier ego:flaming . rapier ego:freezing
