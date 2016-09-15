@@ -1511,15 +1511,6 @@ greater naga
     -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
      trans. Thanissaro Bhikkhu
 %%%%
-griffon
-
-“As when a Gryphon through the wilderness,
- With winged course, o’er hill and moory dale,
- Pursues the Arimaspian who by stealth
- Hath from his wakeful custody purloined
- His guarded gold.”
-    -Milton, _Paradise Lost_, Book II. 1667.
-%%%%
 guardian golem
 
 “‘Listen Reb _Golem_,’ the old man said, wagging his finger. ‘Pay attention to

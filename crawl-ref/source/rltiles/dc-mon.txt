@@ -666,7 +666,6 @@ ophan MONS_OPHAN
 hippogriff MONS_HIPPOGRIFF
 minotaur MONS_MINOTAUR
 manticore MONS_MANTICORE
-griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 tengu MONS_TENGU

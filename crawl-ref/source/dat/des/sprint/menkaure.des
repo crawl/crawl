@@ -635,7 +635,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_11
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   griffon
+MONS:   manticore
 KITEM:  $ = gold q:81
 MAP
 11

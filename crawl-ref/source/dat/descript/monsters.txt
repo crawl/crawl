@@ -1252,11 +1252,6 @@ grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
 %%%%
-griffon
-
-A hybrid with the hindquarters of a lion and the wings, head and talons of a
-great eagle.
-%%%%
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
