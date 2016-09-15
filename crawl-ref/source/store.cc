@@ -30,109 +30,12 @@ CrawlStoreValue::CrawlStoreValue()
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
+    : type(SV_NONE), flags(SFLAG_UNSET)
 {
     ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
 
     val.ptr = nullptr;
-
-    type  = other.type;
-    flags = other.flags;
-
-    if (flags & SFLAG_UNSET)
-    {
-        val = other.val;
-        return;
-    }
-
-    switch (type)
-    {
-    case SV_NONE:
-    case SV_BOOL:
-    case SV_BYTE:
-    case SV_SHORT:
-    case SV_INT:
-    case SV_INT64:
-    case SV_FLOAT:
-        val = other.val;
-        break;
-
-    case SV_STR:
-    {
-        string* str;
-        str = new string(*static_cast<string*>(other.val.ptr));
-        val.ptr = static_cast<void*>(str);
-        break;
-    }
-
-    case SV_COORD:
-    {
-        coord_def* coord;
-        coord = new coord_def(*static_cast<coord_def*>(other.val.ptr));
-        val.ptr = static_cast<void*>(coord);
-        break;
-    }
-
-    case SV_ITEM:
-    {
-        item_def* item;
-        item = new item_def(*static_cast<item_def*>(other.val.ptr));
-        val.ptr = static_cast<void*>(item);
-        break;
-    }
-
-    case SV_HASH:
-    {
-        CrawlHashTable* hash;
-        CrawlHashTable* tmp = static_cast<CrawlHashTable*>(other.val.ptr);
-        hash = new CrawlHashTable(*tmp);
-        val.ptr = static_cast<void*>(hash);
-        break;
-    }
-
-    case SV_VEC:
-    {
-        CrawlVector* vec;
-        CrawlVector* tmp = static_cast<CrawlVector*>(other.val.ptr);
-        vec = new CrawlVector(*tmp);
-        val.ptr = static_cast<void*>(vec);
-        break;
-    }
-
-    case SV_LEV_ID:
-    {
-        level_id* id;
-        id = new level_id(*static_cast<level_id*>(other.val.ptr));
-        val.ptr = static_cast<void*>(id);
-        break;
-    }
-
-    case SV_LEV_POS:
-    {
-        level_pos* pos;
-        pos = new level_pos(*static_cast<level_pos*>(other.val.ptr));
-        val.ptr = static_cast<void*>(pos);
-        break;
-    }
-
-    case SV_MONST:
-    {
-        monster* mon;
-        mon = new monster(*static_cast<monster* >(other.val.ptr));
-        val.ptr = static_cast<void*>(mon);
-        break;
-    }
-
-    case SV_LUA:
-    {
-        dlua_chunk* chunk;
-        chunk = new dlua_chunk(*static_cast<dlua_chunk*>(other.val.ptr));
-        val.ptr = static_cast<void*>(chunk);
-        break;
-    }
-
-    case NUM_STORE_VAL_TYPES:
-        die("unknown stored value type");
-    }
+    *this = other;
 }
 
 CrawlStoreValue::CrawlStoreValue(const store_flags _flags,
