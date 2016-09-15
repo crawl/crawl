@@ -566,7 +566,8 @@ destroyed, it fell into disuse and vanished from history.
 great mace "Firestarter"
 
 A huge mace imbued with potent fire magic. It fills those it strikes with
-inner flame, and offers protection against the resulting devastation.
+inner flame, and offers protection against the resulting devastation as well
+as immunity to clouds of flame.
 %%%%
 orange crystal plate armour
 
@@ -627,7 +628,7 @@ frozen axe "Frostbite"
 
 A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air, and
-grants its wielder protection from freezing vapours.
+grants its wielder immunity to freezing vapours.
 %%%%
 armour of Talos
 
