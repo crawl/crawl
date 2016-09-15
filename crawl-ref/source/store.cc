@@ -378,14 +378,11 @@ void CrawlStoreValue::unset(bool force)
     flags |= SFLAG_UNSET;
 }
 
-#define COPY_PTR(ptr_type) \
-    { \
-        ptr_type *ptr = static_cast<ptr_type*>(val.ptr); \
-        if (ptr != nullptr) \
-            delete ptr; \
-        ptr = static_cast<ptr_type*>(other.val.ptr); \
-        val.ptr = (void*) new ptr_type (*ptr);  \
-    }
+#define DELETE_PTR(ptr_type) (delete static_cast<ptr_type*>(val.ptr))
+
+#define COPY_PTR(ptr_type) val.ptr = (void*) new ptr_type( \
+        *(static_cast<ptr_type*>(other.val.ptr)) \
+        )
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 {
@@ -400,10 +397,42 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
             ASSERT(type == SV_NONE || type == other.type);
     }
 
-    type  = other.type;
-    flags = other.flags;
-
+    // clean up any memory allocated for old pointer-typed values
     switch (type)
+    {
+    case SV_STR:
+        DELETE_PTR(string);
+        break;
+
+    case SV_COORD:
+        DELETE_PTR(coord_def);
+        break;
+
+    case SV_ITEM:
+        DELETE_PTR(item_def);
+        break;
+
+    case SV_HASH:
+        DELETE_PTR(CrawlHashTable);
+        break;
+
+    case SV_VEC:
+        DELETE_PTR(CrawlVector);
+        break;
+
+    case SV_LEV_ID:
+        DELETE_PTR(level_id);
+        break;
+
+     case SV_LEV_POS:
+        DELETE_PTR(level_pos);
+        break;
+
+    default:
+        break; // nothing to delete for non-pointers
+    }
+
+    switch (other.type)
     {
     case SV_NONE:
     case SV_BOOL:
@@ -447,6 +476,9 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         die("CrawlStoreValue has invalid type");
         break;
     }
+
+    type  = other.type;
+    flags = other.flags;
 
     return *this;
 }
