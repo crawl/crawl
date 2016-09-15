@@ -6147,10 +6147,10 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 //Your chance of eligiblity scales with piety.
 bool will_ru_retaliate()
 {
-    // Scales up to a 33% chance of retribution
+    // Scales up to a 25% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(480, you.piety));
+           && one_chance_in(div_rand_round(640, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
