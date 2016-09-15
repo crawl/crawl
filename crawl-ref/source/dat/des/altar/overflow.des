@@ -2478,6 +2478,7 @@ ENDMAP
 NAME:    brannock_xom_greatest_gift
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 DEPTH:   D:2-
+WEIGHT:  2
 KFEAT:   _ = altar_xom
 MARKER:  _ = lua:portal_desc {gift="altar"}
 {{
