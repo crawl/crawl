@@ -1128,9 +1128,9 @@ proudly, despite its lingering fear and unkempt appearance.
 %%%%
 frilled lizard
 
-A lizard with a giant and colorful fringe folded around its neck.
-It flares its impressive frill at its victims while hissing angrily,
-before it lunges in the blink of an eye.
+A lizard with a giant and colourful fringe folded around its neck. It flares
+its impressive frill at its victims while hissing angrily, before it lunges in
+the blink of an eye.
 %%%%
 formicid
 
@@ -1561,9 +1561,9 @@ at passers-by.
 %%%%
 leopard gecko
 
-A brightly-colored lizard with pads on its toes allowing it to cling to walls
-and ceilings, and huge, sharp teeth. It is many times larger than a
-normal gecko, yet its size belies its agility.
+A brightly-coloured lizard with pads on its toes allowing it to cling to walls
+and ceilings, and huge, sharp teeth. It is many times larger than a normal
+gecko, yet its size belies its agility.
 %%%%
 lich
 
