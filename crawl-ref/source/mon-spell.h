@@ -372,12 +372,6 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('l') Lizards.
-    { MST_FRILLED_LIZARD,
-      {
-        { SPELL_SPRINT, 50, MON_SPELL_NATURAL },
-      }
-    },
-
     {  MST_BASILISK,
       {
        { SPELL_PETRIFY, 56, MON_SPELL_MAGICAL },

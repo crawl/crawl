@@ -448,7 +448,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SWIFT:
         if (!quiet)
         {
-            if (type == MONS_ALLIGATOR || type == MONS_FRILLED_LIZARD)
+            if (type == MONS_ALLIGATOR)
                 simple_monster_message(*this, " slows down.");
             else
                 simple_monster_message(*this, " is no longer moving somewhat quickly.");
