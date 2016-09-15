@@ -616,6 +616,8 @@ void CrawlStoreValue::write(writer &th) const
 
 void CrawlStoreValue::read(reader &th)
 {
+    ASSERT(type == SV_NONE);
+
     type = static_cast<store_val_type>(unmarshallByte(th));
     flags = (store_flags) unmarshallByte(th);
 
