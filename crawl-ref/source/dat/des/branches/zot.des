@@ -1074,9 +1074,9 @@ WEIGHT:  3
 # Gifts, too.
 KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great mace ego:chaos | randart battleaxe ego:chaos| \
-             randart great sword ego:chaos | randart glaive ego:chaos | \
+             randart claymore ego:chaos | randart glaive ego:chaos | \
              randart scythe ego:chaos | randart dire flail | \
-             randart great mace | randart battleaxe | randart great sword | \
+             randart great mace | randart battleaxe | randart claymore | \
              randart glaive | randart scythe
 KMONS:   3 = guardian mummy ; randart greatsling ego:chaos . sling bullet / \
              guardian mummy ; randart longbow ego:chaos . arrow / \

@@ -326,6 +326,10 @@ chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
+claymore
+
+A two-handed sword with a very long, heavy blade and a long handle.
+%%%%
 cloak
 
 A cloth cloak.
@@ -507,10 +511,6 @@ greatsling
 A large piece of cloth and leather, reinforced with a rigid frame. It deals
 more damage when launching purpose-made projectiles, rather than stones found
 on the floor.
-%%%%
-great sword
-
-A sword with a very long, heavy blade and a long handle.
 %%%%
 halberd
 

@@ -76,9 +76,9 @@ scimitar3
 long_sword1 WPN_LONG_SWORD
 long_sword2
 long_sword3
-greatsword1 WPN_GREAT_SWORD
-greatsword2
-greatsword3
+claymore1 WPN_CLAYMORE
+claymore2
+claymore3
 double_sword WPN_DOUBLE_SWORD
 double_sword2
 double_sword3

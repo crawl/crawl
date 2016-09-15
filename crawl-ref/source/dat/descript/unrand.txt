@@ -170,7 +170,7 @@ fires with the raw power of its namesake, irresistible by any mortal armour.
 # TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
-An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
+An adamantine claymore. Its first wielder was a worshipper of Yredelemnul
 who eschewed the use of magic in combat, preferring to destroy her enemies with
 brute force. Unfortunately for her, not all of her opponents shared her
 limitations.

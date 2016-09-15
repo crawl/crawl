@@ -188,7 +188,7 @@ function setup_loot (e)
              potion of experience q:1 w:1 / potion of resistance]])
     e.item(make_fiery_weapon(e, {"rapier w:20", "morningstar w:20", "eveningstar w:1",
                                   "demon whip w:1", "dire flail w:7", "great mace w:3",
-                                  "scimitar w:20", "great sword", "demon blade w:1",
+                                  "scimitar w:20", "claymore", "demon blade w:1",
                                   "triple sword w:1", "war axe w:8", "broad axe w:3",
                                   "battleaxe w:20", "executioner's axe w:1", "trident w:5",
                                   "glaive", "halberd w:15", "demon trident w:1",
@@ -233,7 +233,7 @@ function fiery_guardians (e, intelligent, village)
                              .. " . ring mail " .. res
                              .. " | scale mail " .. res
         local knightstuff = "great mace " .. flame
-                            .. " | great sword " .. flame
+                            .. " | claymore " .. flame
                             .. " | glaive " .. flame
                             .. " . chain mail " .. res
         local magestuff = "spear " .. flame

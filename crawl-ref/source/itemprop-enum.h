@@ -548,7 +548,7 @@ enum weapon_type
     WPN_FALCHION,
     WPN_LONG_SWORD,
     WPN_SCIMITAR,
-    WPN_GREAT_SWORD,
+    WPN_CLAYMORE,
 
     WPN_HAND_AXE,
     WPN_WAR_AXE,

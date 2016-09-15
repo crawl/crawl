@@ -1066,6 +1066,10 @@ triple sword
 
 <demon blade>
 %%%%
+claymore
+
+<demon blade>
+%%%%
 cloak
 
 “O Bell my wife, why dost thou flyte?
@@ -1487,10 +1491,6 @@ great mace
  and reverse thy fortunes, and strike thee down with a cow-headed mace.”
     -Firdausi, _Shahnameh_. ca. 1000 A.D.
      trans. Helen Zimmern, 1883.
-%%%%
-great sword
-
-<demon blade>
 %%%%
 greater mummy
 

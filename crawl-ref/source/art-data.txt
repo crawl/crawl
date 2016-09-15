@@ -205,7 +205,7 @@ BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 
 NAME:    sword of Power
-OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
 PLUS:    +0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
@@ -273,7 +273,7 @@ BOOL:    evil, corpse_violating
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
 TYPE:    flamberge
-OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
 BASE_DAM: +1
 BASE_ACC: +1
 PLUS:    +6
@@ -456,7 +456,7 @@ BOOL:    evil
 
 # TAG_MAJOR_VERSION == 34
 NAME:    sword of the Doom Knight
-OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
 PLUS:    +13
 COLOUR:  BLUE
 TILE:    urand_doom_knight

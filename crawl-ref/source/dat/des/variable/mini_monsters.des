@@ -5530,7 +5530,7 @@ NSUBST:  . = 1:* / 1:d / 6 = *:2 d:3 / *:.
 NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:( / 1:> / *:.
 KMONS:   0 = zombie / skeleton / necromancer w:6
 KITEM:   * = battleaxe no_pickup / great mace no_pickup / \
-             great sword no_pickup / glaive no_pickup / \
+             claymore no_pickup / glaive no_pickup / \
              scythe good_item no_pickup w:5 / demon whip no_pickup w:5 / \
              demon blade no_pickup w:5 / demon trident no_pickup w:5
 : dgn.delayed_decay(_G, 'd', 'human skeleton')
@@ -5574,7 +5574,7 @@ KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
              phantasmal warrior / skeletal warrior ; mundane arbalest . \
              mundane bolt . mace good_item
 KMONS:   8 = war gargoyle / iron dragon /  \
-             dancing weapon ; great sword good_item | great mace good_item | \
+             dancing weapon ; claymore good_item | great mace good_item | \
                               glaive good_item | battleaxe good_item
 KMONS:   7 = hell sentinel
 SUBST:   xc = v, F~ = G
@@ -6055,8 +6055,8 @@ TAGS:    no_monster_gen patrolling vaults_hard
 DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
 KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . shield
 KMONS:   B = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
-KMONS:   C = Blork the orc / orc warrior ; great sword . chain mail | plate armour, \
-                             orc warrior ; great sword . chain mail | plate armour / nothing
+KMONS:   C = Blork the orc / orc warrior ; claymore . chain mail | plate armour, \
+                             orc warrior ; claymore . chain mail | plate armour / nothing
 KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . shield, \
                          orc warrior ; long sword | falchion . chain mail . shield / nothing
 KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
@@ -6074,10 +6074,10 @@ KMONS:   M = Rupert / vampire knight, vampire knight / nothing
 KMONS:   N = Asterion / ancient champion, ancient champion / nothing
 KMONS:   O = Frederick / draconian knight, draconian knight / nothing
 KMONS:   P = Sojobo / tengu reaver, tengu reaver / nothing
-KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
+KMONS:   S = dancing weapon ; long sword good_item | good_item claymore | \
                               demon blade good_item | triple sword good_item | \
                               double sword good_item
-KITEM:   s = long sword good_item / good_item great sword / \
+KITEM:   s = long sword good_item / good_item claymore / \
              demon blade good_item / triple sword good_item / double sword good_item
 KMONS:   o = orc warrior / orc knight w:5
 KMONS:   e = deep elf knight

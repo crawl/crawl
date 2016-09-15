@@ -3016,7 +3016,7 @@ MONS:    necromancer ; wand of lightning . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
-MONS:    frost giant ; great sword ego:flaming
+MONS:    frost giant ; claymore ego:flaming
 MONS:    ettin simulacrum, efreet, deep elf mage
 KITEM:   d = lamp of fire, *
 KITEM:   e = lajatang ego:freezing ident:type, *
@@ -3048,7 +3048,7 @@ xxx                             ..bbbb..
 (<@                              ......
 ENDMAP
 
-# the +4 great sword "Dinovoldo's Tail" {explosions}
+# the +4 claymore "Dinovoldo's Tail" {explosions}
 NAME:   regret_index_qazlal_generations
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 DEPTH:  Depths, !Depths:$, Zot, !Zot:$
@@ -3066,7 +3066,7 @@ KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
 KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
                                 staff of air | staff of earth . \
                                 robe ego:resistance good_item ident:type
-KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
+KMONS:  8 = tengu reaver ; battleaxe ego:flaming | claymore ego:freezing | \
                            halberd ego:electrocution | lajatang ego:vorpal . \
                            fire dragon armour | ice dragon armour
 KMONS:  9 = red draconian / white draconian / black draconian

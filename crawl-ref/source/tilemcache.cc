@@ -1360,7 +1360,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 
     case SK_LONG_BLADES:
         if (dam > 25)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_SWORD_SLANT;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_CLAYMORE_SLANT;
         else if (dam > 20)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_KATANA_SLANT;
         else if (dam > 15)

@@ -51,7 +51,7 @@
     "never_corpse col:red generate_awake " ..
     "spells:blink_close.90.wizard " ..
     "; ring of slaying plus:200 not_cursed ident:all " ..
-    "no_pickup . great sword plus:9 ego:vorpal ident:all no_pickup"
+    "no_pickup . claymore plus:9 ego:vorpal ident:all no_pickup"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe " ..
@@ -65,7 +65,7 @@
     "n_des n_spe n_zom never_corpse col:red generate_awake " ..
     "spells:twisted_resurrection.80.natural " ..
     "; ring of slaying plus:250 not_cursed ident:all " ..
-    "no_pickup . great sword plus:9 not_cursed ego:none " ..
+    "no_pickup . claymore plus:9 not_cursed ego:none " ..
     "ident:all no_pickup"
 
   local observer =

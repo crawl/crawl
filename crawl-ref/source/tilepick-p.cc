@@ -146,8 +146,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_LONG_SWORD:
         tile = TILEP_HAND1_LONG_SWORD_SLANT;
         break;
-    case WPN_GREAT_SWORD:
-        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+    case WPN_CLAYMORE:
+        tile = TILEP_HAND1_CLAYMORE_SLANT;
         break;
     case WPN_SCIMITAR:
         tile = TILEP_HAND1_SCIMITAR;
