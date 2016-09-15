@@ -378,7 +378,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         COPY_PTR(level_id);
         break;
 
-     case SV_LEV_POS:
+    case SV_LEV_POS:
         COPY_PTR(level_pos);
         break;
 
