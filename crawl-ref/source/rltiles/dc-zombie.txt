@@ -28,7 +28,6 @@ zombie_hydra4
 zombie_hydra5
 zombie_troll MONS_ZOMBIE_TROLL
 zombie_draconian MONS_ZOMBIE_DRACONIAN
-zombie_griffon MONS_ZOMBIE_GRIFFON
 zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE

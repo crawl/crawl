@@ -1018,11 +1018,6 @@ green death
 Une forme boursoufflée, couverte de plaies suppurantes et expirant un poison
 mortel.
 %%%%
-griffon
-
-Une grande créature avec le postérieur d'un lion et les ailes, la tête et les
-serres d'un aigle.
-%%%%
 guardian mummy
 
 Un ancien guerrier, déshonoré et maudit, forcé à errer dans la non-vie pour

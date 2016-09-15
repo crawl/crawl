@@ -258,7 +258,6 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 %sdir mon
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 hippogriff CORPSE_HIPPOGRIFF
-griffon CORPSE_GRIFFON
 manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR

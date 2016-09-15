@@ -1314,7 +1314,7 @@ NAME:   lemuel_bear_cage
 ORIENT: float
 DEPTH:  D:7-
 MONS:   black bear / polar bear
-MONS:   hippogriff / griffon
+MONS:   hippogriff / manticore w:3
 MONS:   yak / dream sheep w:5 / death yak w:3
 MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
@@ -2399,7 +2399,7 @@ ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
-MONS:    death yak / griffon / catoblepas / dire elephant
+MONS:    death yak / manticore / catoblepas / dire elephant
 MONS:    hydra / anaconda / hornet w:2 / redback w:3 / wolf spider w:5 / harpy
 MONS:    spriggan druid, spriggan rider
 MONS:    sphinx / hell beast w:5 / caustic shrike w:5

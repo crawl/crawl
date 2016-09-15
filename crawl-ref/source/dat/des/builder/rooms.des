@@ -257,16 +257,15 @@ function sroom_mythical_zoo(e)
     mons[3] = "wyvern w:" .. math.max(44 - Z * 2, 1)
     mons[4] = "hippogriff w:" .. math.max(44 - Z * 2, 1)
     mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
-    mons[6] = "griffon w:" .. math.max(Z * 2 - 28, 1)
-    mons[7] = "hydra w:" .. math.max(Z * 2 - 26, 1)
+    mons[6] = "hydra w:" .. math.max(Z * 2 - 26, 1)
 
     if Z >= 16 then
-        mons[8] = "manticore w:" .. (Z * 2 - 24)
-        mons[9] = "harpy w:" .. (Z - 15)
+        mons[7] = "manticore w:" .. (Z * 2 - 24)
+        mons[8] = "harpy w:" .. (Z - 15)
     end
     if Z >= 19 then
-        mons[10] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[11] = "sphinx w:" .. (Z - 16)
+        mons[9] = "fire dragon w:" .. (Z * 2 - 37)
+        mons[10] = "sphinx w:" .. (Z - 16)
     end
 
     if Z >= 21 then

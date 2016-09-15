@@ -1691,7 +1691,7 @@ DEPTH:  Lair:2-, !Lair:$
 ORIENT: north
 KMONS:  p = plant / fungus / toadstool
 KMONS:  q = plant / fungus / toadstool
-KMONS:  1 = electric eel / rime drake / elephant / griffon
+KMONS:  1 = electric eel / rime drake / elephant / hippogriff w:5
 KMONS:  2 = lindwurm / dire elephant / catoblepas
 KITEM:  2 = * / |
 KFEAT:  q = W
@@ -2897,7 +2897,7 @@ PLACE:   Lair:$
 # mythological or dragon-y reptiles
 MONS:    basilisk, rime drake, komodo dragon, hydra
 # mythological non-reptiles
-MONS:    hippogriff, griffon, manticore
+MONS:    hippogriff, manticore
 KMONS:   8 = catoblepas
 # fast things
 KMONS:   9 = water moccasin
@@ -3069,7 +3069,7 @@ TAGS:    patrolling no_pool_fixup no_monster_gen
 ORIENT:  float
 KMONS:   ~ = plant
 KMONS:   1 = water moccasin / crocodile / wasp / wyvern / spiny frog
-KMONS:   2 = elephant / komodo dragon / griffon / polar bear / rime drake
+KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / hydra / wind drake / harpy
 KMONS:   4 = dire elephant
 KMONS:   5 = merfolk avatar
