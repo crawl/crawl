@@ -34,7 +34,14 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 {
     ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
 
-    val.ptr = nullptr;
+    // very shallow copy for unset values
+    if (other.flags & SFLAG_UNSET)
+    {
+        type = other.type;
+        flags = other.flags;
+        val = other.val;
+        return;
+    }
     *this = other;
 }
 
