@@ -343,6 +343,24 @@ static const map<species_type, species_def> species_data =
     { SK_UNARMED_COMBAT },
 } },
 
+{ SP_FEN_ELF, {
+    "Fn",
+    "Fen Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -1, 1,
+    15, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 11, 10, // 28
+    { STAT_INT, STAT_DEX }, 3,
+    {},
+    {},
+    {},
+    { JOB_HUNTER, JOB_ASSASSIN, JOB_SKALD, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
+      JOB_ENCHANTER, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_BOWS },
+} },
+
 { SP_FORMICID, {
     "Fo",
     "Formicid", nullptr, "Ant",
@@ -422,24 +440,6 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
-} },
-
-{ SP_HIGH_ELF, {
-    "HE",
-    "High Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    -1, -1, 1,
-    15, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 11, 10, // 28
-    { STAT_INT, STAT_DEX }, 3,
-    {},
-    {},
-    {},
-    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
-      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_HILL_ORC, {
@@ -772,6 +772,24 @@ static const map<species_type, species_def> species_data =
     { "fire immunity", "cold vulnerability" },
     {}, // not a starting race
     {}, // not a starting race
+} },
+
+{ SP_HIGH_ELF, {
+    "HE",
+    "High Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -1, 1,
+    15, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 11, 10, // 28
+    { STAT_INT, STAT_DEX }, 3,
+    {},
+    {},
+    {},
+    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 #endif
 // Ideally this wouldn't be necessary...

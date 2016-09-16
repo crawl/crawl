@@ -1373,7 +1373,7 @@ end
 function intrinsic_dodgy()
   local sp = you.race()
   return (sp == "Deep Elf" or sp:find("Draconian") or sp == "Felid"
-          or sp == "Halfling" or sp == "High Elf" or sp == "Kobold"
+          or sp == "Halfling" or sp == "Fen Elf" or sp == "Kobold"
           or sp == "Merfolk" or sp == "Ogre" or sp == "Octopode"
           or sp == "Spriggan" or sp == "Troll")
 end
@@ -1416,7 +1416,7 @@ function weapon_choice()
   sp = you.race()
   if sp == "Felid" or sp == "Troll" or sp == "Ghoul" then
     return "Unarmed Combat"
-  elseif sp == "Halfling" or sp == "High Elf" then
+  elseif sp == "Halfling" or sp == "Fen Elf" then
     return "Long Blades"
   elseif sp == "Ogre" or sp == "Kobold" then
     return "Maces & Flails"
