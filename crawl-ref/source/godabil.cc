@@ -5943,7 +5943,6 @@ bool ru_do_sacrifice(ability_type sac)
     string mile_text;
     string sac_text;
     const bool is_sac_arcana = sac == ABIL_RU_SACRIFICE_ARCANA;
-    int piety_gain = _ru_get_sac_piety_gain(sac);
 
     // For variable sacrifices, we need to compose the text that will be
     // displayed at the time of sacrifice offer and as a milestone if the
@@ -6061,7 +6060,7 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    int new_piety = you.piety + piety_gain;
+    int new_piety = you.piety + _ru_get_sac_piety_gain(sac);
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);
