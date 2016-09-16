@@ -99,7 +99,6 @@
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
-    Can of Worms
     Edgar Carballo
     Cedor
     Rahul Chandra
@@ -274,6 +273,7 @@ The Dungeon Crawl Stone Soup development team is:
     Adam Borowski
     Samuel Bronson
     Jude Brown
+    CanOfWorms
     Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
