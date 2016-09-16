@@ -5752,12 +5752,10 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
     you.sacrifices[sacrifice] += 1;
 }
 
-static bool _execute_sacrifice(int piety_gain, const char* message)
+static bool _execute_sacrifice(ability_type sac, const char* message)
 {
     mprf("Ru asks you to %s.", message);
-    mprf("This is %s sacrifice. Piety after sacrifice: %s",
-         _describe_sacrifice_piety_gain(piety_gain),
-         _piety_asterisks(you.piety + piety_gain).c_str());
+    mpr_nojoin(MSGCH_PLAIN, ru_sacrifice_description(sac));
     if (!yesno("Do you really want to make this sacrifice?",
                false, 'n'))
     {
@@ -5908,6 +5906,33 @@ string ru_sac_text(ability_type sac)
     return make_stringf(" (%s)", school_names.c_str());
 }
 
+static int _ru_get_sac_piety_gain(ability_type sac)
+{
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
+
+    // If we're haven't yet calculated piety gain, get it now. Otherwise,
+    // use the calculated value and then add in the skill piety, which isn't
+    // saved because it can change over time.
+    const int base_piety_gain = you.sacrifice_piety[sac];
+
+    if (base_piety_gain == 0)
+        return get_sacrifice_piety(sac);
+
+    if (sac_def.sacrifice_skill != SK_NONE)
+        return base_piety_gain + _piety_for_skill_by_sacrifice(sac);
+
+    return base_piety_gain;
+}
+
+string ru_sacrifice_description(ability_type sac)
+{
+    const int piety_gain = _ru_get_sac_piety_gain(sac);
+    return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
+                        _describe_sacrifice_piety_gain(piety_gain),
+                        _piety_asterisks(you.piety + piety_gain).c_str());
+}
+
+
 bool ru_do_sacrifice(ability_type sac)
 {
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
@@ -5918,7 +5943,7 @@ bool ru_do_sacrifice(ability_type sac)
     string mile_text;
     string sac_text;
     const bool is_sac_arcana = sac == ABIL_RU_SACRIFICE_ARCANA;
-    int piety_gain = 0;
+    int piety_gain = _ru_get_sac_piety_gain(sac);
 
     // For variable sacrifices, we need to compose the text that will be
     // displayed at the time of sacrifice offer and as a milestone if the
@@ -5970,17 +5995,8 @@ bool ru_do_sacrifice(ability_type sac)
         mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 
-    // If we're haven't yet calculated piety gain, get it now. Otherwise,
-    // use the calculated value and then add in the skill piety, which isn't
-    // saved because it can change over time.
-    piety_gain = you.sacrifice_piety[sac];
-    if (piety_gain == 0)
-        piety_gain = get_sacrifice_piety(sac);
-    else if (sac_def.sacrifice_skill != SK_NONE)
-        piety_gain += _piety_for_skill_by_sacrifice(sac);
-
     // get confirmation that the sacrifice is desired.
-    if (!_execute_sacrifice(piety_gain, offer_text.c_str()))
+    if (!_execute_sacrifice(sac, offer_text.c_str()))
         return false;
     // Apply the sacrifice, starting by mutating the player.
     if (variable_sac)
