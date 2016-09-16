@@ -32,7 +32,7 @@ The contents of this text are:
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
                 heap_brand, feature_item_brand, trap_item_brand
 3-d     Level Map Functions.
-                level_map_cursor_step, show_waypoints
+                level_map_cursor_step
 3-e     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
@@ -598,10 +598,6 @@ trap_item_brand = reverse
 level_map_cursor_step = 7
         How many squares the cursor moves on the level map when using
         Shift-direction.
-
-show_waypoints = true
-        Whether to display a number on the level map to indicate
-        waypoints (placed with the Ctrl-W command).
 
 3-e     Viewport Display Options.
 ---------------------------------
