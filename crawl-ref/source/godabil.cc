@@ -5755,7 +5755,7 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
 static bool _execute_sacrifice(ability_type sac, const char* message)
 {
     mprf("Ru asks you to %s.", message);
-    mpr_nojoin(MSGCH_PLAIN, ru_sacrifice_description(sac));
+    mpr(ru_sacrifice_description(sac));
     if (!yesno("Do you really want to make this sacrifice?",
                false, 'n'))
     {
@@ -6060,10 +6060,8 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    int new_piety = you.piety + _ru_get_sac_piety_gain(sac);
-    if (new_piety > piety_breakpoint(5))
-        new_piety = piety_breakpoint(5);
-    set_piety(new_piety);
+    set_piety(min(piety_breakpoint(5),
+                  you.piety + _ru_get_sac_piety_gain(sac)));
 
     if (you.piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
