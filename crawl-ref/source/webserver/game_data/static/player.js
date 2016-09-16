@@ -367,7 +367,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_stat("int");
         update_stat("dex");
 
-        if (options.get("show_game_turns") === true)
+        if (options.get("show_game_time") === true)
         {
             $("#stats_time_caption").text("Time:");
             $("#stats_time").text((player.time / 10.0).toFixed(1));

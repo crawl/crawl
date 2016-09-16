@@ -552,7 +552,7 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolour(HUD_VALUE_COLOUR);
-    if (Options.show_game_turns)
+    if (Options.show_game_time)
     {
         CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
                 (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
@@ -1473,7 +1473,7 @@ void draw_border()
 #endif
     CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
-    CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
+    CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
 }
 
