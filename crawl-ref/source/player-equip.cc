@@ -566,6 +566,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     mpr("Space warps around you for a moment!");
                     break;
 
+                case SPWPN_ACID:
+                    mprf("%s begins to ooze corrosive slime!", item_name.c_str());
+                    break;
+
                 default:
                     break;
                 }
@@ -716,6 +720,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
                 // NOTE: When more are added here, *must* duplicate unwielding
                 // effect in brand weapon scroll effect in read_scroll.
+
+            case SPWPN_ACID:
+                mprf("%s stops oozing corrosive slime.", msg.c_str());
+                break;
             }
 
             if (you.duration[DUR_EXCRUCIATING_WOUNDS])

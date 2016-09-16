@@ -1767,6 +1767,11 @@ bool attack::apply_damage_brand(const char *what)
         antimagic_affects_defender(damage_done * 8);
         break;
 
+    case SPWPN_ACID:
+        defender->splash_with_acid(attacker);
+        break;
+
+
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
         {
