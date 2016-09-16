@@ -1071,17 +1071,19 @@ static string _sacrifice_desc(const ability_type ability)
         "will become stronger in proportion to the value of the "
         "sacrifice, and you may gain new powers as well.\n\n"
         "Sacrifices cannot be taken back.\n";
+    const string piety_info = ru_sacrifice_description( ability );
+    const string desc = boilerplate + piety_info;
 
     const string sac_vec_key = ru_sacrifice_vector(ability);
     if (sac_vec_key.empty())
-        return boilerplate;
+        return desc;
 
     ASSERT(you.props.exists(sac_vec_key));
     const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
     return "\nAfter this sacrifice, you will find that "
             + comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
                                  _desc_sac_mut)
-            + ".\n" + boilerplate;
+            + ".\n" + desc;
 }
 
 // XXX: should this be in describe.cc?
