@@ -755,7 +755,7 @@ function arena_sprint_init_boss_table()
               "floating eye / golden eye / eye of devastation / " ..
               "eye of draining / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
-              "giant orange brain / titan / lich / draconian annihilator / " ..
+              "glowing orange brain / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
     bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}

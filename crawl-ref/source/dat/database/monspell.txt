@@ -427,7 +427,7 @@ Paralyse Xtahua cast
 ########################################################################
 # Individual monsters
 ########################################################################
-giant orange brain cast
+glowing orange brain cast
 
 @The_monster@ pulsates.
 %%%%

@@ -277,7 +277,7 @@ DEPTH:   Slime, !Slime:$
 WEIGHT:  1
 KMONS:   1 = slime creature w:30 / nothing w:2
 KMONS:   2 = shining eye / floating eye / eye of devastation w:5 / \
-             great orb of eyes / giant orange brain / random w:1
+             great orb of eyes / glowing orange brain / random w:1
 KFEAT:   2 = alarm trap / . w:30
 SHUFFLE: AB, CD, EF, GH, ab
 SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX

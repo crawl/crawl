@@ -796,7 +796,7 @@ bool mons_has_flesh(const monster& mon)
     // yet I exclude sense 3 anyway but include arthropods and molluscs.
     return !(mon.holiness() & (MH_PLANT | MH_NONLIVING))
            && mons_genus(mon.type) != MONS_FLOATING_EYE
-           && mons_genus(mon.type) != MONS_GIANT_ORANGE_BRAIN
+           && mons_genus(mon.type) != MONS_GLOWING_ORANGE_BRAIN
            && mons_genus(mon.type) != MONS_JELLY
            && mon.type != MONS_DEATH_COB; // plant!
 }
@@ -997,7 +997,7 @@ bool mons_class_is_slime(monster_type mc)
 {
     return mons_genus(mc) == MONS_JELLY
            || mons_genus(mc) == MONS_FLOATING_EYE
-           || mons_genus(mc) == MONS_GIANT_ORANGE_BRAIN;
+           || mons_genus(mc) == MONS_GLOWING_ORANGE_BRAIN;
 }
 
 bool mons_is_slime(const monster& mon)

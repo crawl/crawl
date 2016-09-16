@@ -103,7 +103,7 @@ ENDMAP
 
 NAME: gammafunk_enter_depths_forms
 MONS: ugly thing w:8 / shapeshifter / rakshasa w:2
-MONS: giant orange brain / boggart band w:6, slime creature band
+MONS: glowing orange brain / boggart band w:6, slime creature band
 MONS: glowing shapeshifter
 NSUBST: . = 4:1 / *:., 3 = 1:2 / 1:3
 : depths_entry(_G)
