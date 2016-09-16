@@ -403,7 +403,7 @@ static const char * const book_of_zin[][3] =
 
     {
         "The law of Zin demands thee...",
-        "...be @virtue@, and that the punishment for @sin_noun@...",
+        "...be @virtuous@, and that the punishment for @sin_noun@...",
         "...shall be swift and harsh!",
     },
 
