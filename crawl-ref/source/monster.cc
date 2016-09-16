@@ -2482,7 +2482,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 str = "pupil";
                 break;
 
-            case MONS_GIANT_ORANGE_BRAIN:
+            case MONS_GLOWING_ORANGE_BRAIN:
             default:
                 if (rand)
                     str = "rhizome";

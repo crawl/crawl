@@ -2670,7 +2670,7 @@ enum monster_type                      // menv[].type
     MONS_SHINING_EYE,
     MONS_EYE_OF_DEVASTATION,
     MONS_GREAT_ORB_OF_EYES,
-    MONS_GIANT_ORANGE_BRAIN,
+    MONS_GLOWING_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34

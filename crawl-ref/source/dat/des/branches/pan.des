@@ -54,7 +54,7 @@ function pan_lord_setup(_G, name)
                  "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
-                 "green death w:200 / giant orange brain / rakshasa / " ..
+                 "green death w:200 / glowing orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
                  "titan w:5 / lich w:5 / gelid blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
@@ -790,7 +790,7 @@ NAME:      lom_lobon
 TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, giant orange brain, rakshasa
+MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
 MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
@@ -957,7 +957,7 @@ ORIENT:  north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS: patrolling Lom Lobon
 MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / giant orange brain / \
+      wizard w:20 / rakshasa w:20 / glowing orange brain / \
       blizzard demon / green death / titan w:5 / \
       spriggan air mage w:5 / lich w:5
 SUBST:   W = ww.
@@ -1017,7 +1017,7 @@ SHUFFLE: O2
 MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
 MONS:    blizzard demon / titan / spriggan air mage / storm dragon
 MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / giant orange brain / \
+         wizard w:20 / rakshasa w:20 / glowing orange brain / \
          blizzard demon / green death / titan w:5 / \
          spriggan air mage w:5 / lich w:5
 epilogue{{

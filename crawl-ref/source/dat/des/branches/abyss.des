@@ -490,7 +490,7 @@ ENDMAP
 
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
-MONS:    guardian serpent, great orb of eyes, giant orange brain
+MONS:    guardian serpent, great orb of eyes, glowing orange brain
 MONS:    boggart, rakshasa, cacodemon, shadow demon
 KMONS:   0 = wizard
 KMONS:   8 = orc sorcerer
@@ -690,7 +690,7 @@ NAME:    hangedman_classic_abyss_death
 TAGS:    transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
          skeleton / sixfirhy / smoke demon / neqoxec / \
-         efreet / rakshasa / giant orange brain / ugly thing / \
+         efreet / rakshasa / glowing orange brain / ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
@@ -1142,7 +1142,7 @@ ENDMAP
 # being separated from their forced union as runed doors...
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
-KMONS:  1 = giant orange brain
+KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / eye of draining w:4 / floating eye w:2
 KMONS:  3O = flying skull
 KMONS:  4 = large abomination / small abomination w:6 / macabre mass w:2
@@ -1983,7 +1983,7 @@ ENDMAP
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
 MONS:    hell hound, raiju, great orb of eyes
-MONS:    giant orange brain, swamp drake, wind drake, torpor snail
+MONS:    glowing orange brain, swamp drake, wind drake, torpor snail
 KMONS:   8 = tyrant leech
 KMONS:   9 = mana viper
 KMONS:   0 = anaconda

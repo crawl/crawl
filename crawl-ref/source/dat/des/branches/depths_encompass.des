@@ -11,7 +11,7 @@
             e.kmons('3 = draconian zealot / draconian monk w:2')
         else
             e.kmons('1 = tengu warrior / tengu conjurer / '
-                    .. 'giant orange brain / spriggan berserker w:5 / '
+                    .. 'glowing orange brain / spriggan berserker w:5 / '
                     .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
                     .. 'nothing w:68')
             e.kmons('2 = spriggan berserker / tengu warrior w:20')
@@ -44,7 +44,7 @@
         e.kmons("a = air elemental")
         e.kmons("o = iron golem")
         e.kmons("r = molten gargoyle / gargoyle")
-        e.kmons("t = giant orange brain / wind drake w:5")
+        e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
         e.kfeat("W = deep_water")
         e.shuffle("wKLMN / lghij")
@@ -118,7 +118,7 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
 MONS:    ancient lich w:20 / tzitzimitl
-KMONS:   89 = patrolling giant orange brain
+KMONS:   89 = patrolling glowing orange brain
 KMONS:   0 = orange crystal statue
 KMONS:   B = floating eye
 KMONS:   C = 0 band
@@ -870,7 +870,7 @@ MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          deep elf annihilator w:4 / deep elf sorcerer w:4 / \
          deep elf death mage w:2 / deep elf elementalist w:2
 MONS:    large slime creature / ugly thing w:20 / shapeshifter w:20 / \
-         great orb of eyes / giant orange brain / deep troll
+         great orb of eyes / glowing orange brain / deep troll
 MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
          titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
