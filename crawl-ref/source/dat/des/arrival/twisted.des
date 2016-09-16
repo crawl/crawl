@@ -80,7 +80,7 @@ ENDMAP
 #########################################
 # Representatives of all player genuses, locked up.
 NAME:    kb_arrival_jail
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
@@ -149,14 +149,14 @@ ENDMAP
 #########################################
 # A horror show for the beginning adventurer
 NAME:    shiori_arrival_whats_in_store_for_you
-TAGS:    arrival no_monster_gen no_pool_fixup
+TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
 KPROP:   M = no_tele_into
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = permanent teleport trap
+KFEAT:   E = permanent known teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
