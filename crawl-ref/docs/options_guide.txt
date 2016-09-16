@@ -63,14 +63,13 @@ The contents of this text are:
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
-                show_more, small_more, show_newturn_mark,
-                show_game_turns, item_stack_summary_minimum,
-                mlist_min_height, mlist_allow_alternate_layout,
-                mlist_targeting, msg_min_height, msg_max_height,
-                messages_at_top, skill_focus, msg_condense_repeats,
-                msg_condense_short, show_travel_trail, monster_list_colour,
-                view_delay, force_more_message, flash_screen_message,
-                use_animations, darken_beyond_range, cloud_status
+                show_more, small_more, show_newturn_mark, show_game_time,
+                item_stack_summary_minimum, mlist_min_height,
+                mlist_allow_alternate_layout, mlist_targeting, msg_min_height,
+                msg_max_height, messages_at_top, skill_focus,
+                msg_condense_repeats, msg_condense_short, show_travel_trail,
+                monster_list_colour, view_delay, force_more_message,
+                flash_screen_message, use_animations, darken_beyond_range
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1358,17 +1357,16 @@ show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in
         front of the first line of a turn.
 
-show_game_turns = true
-        By default, the turn counter in the stat area displays game turns, which
-        means absolute turns of constant duration. Most actions take one turn,
-        but some are quicker (putting a ring, wielding a weapon, ...) and
-        others are slower (ending a transformation, changing armour,...). The
-        duration of the last action is displayed in parenthesis, after the turn
-        count.
-        When set to false, the turn counter will display player turns instead,
-        which is the number of actions done, regardless of their duration. It
-        is this turn count which is used for scoring (and this turn count is
-        always visible on the % overview screen).
+show_game_time = true
+        By default, the counter in the stat area displays elapsed game time.
+        Most actions take one unit of time, but some are quicker (putting on a
+        ring, wielding a weapon, ...) and others are slower (swinging a weapon
+        with low skill, changing armour, ...). The duration of the last action
+        is displayed in parenthesis, after the time display.
+        When set to false, the counter will display player turns instead, which
+        is the number of actions taken regardless of their duration. It is this
+        turn count which is used for scoring (and this turn count is always
+        visible on the % overview screen).
 
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in

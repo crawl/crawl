@@ -162,7 +162,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
-        new BoolGameOption(SIMPLE_NAME(show_game_turns), true),
+        new BoolGameOption(SIMPLE_NAME(show_game_time), true),
         new BoolGameOption(SIMPLE_NAME(mouse_input), false),
         new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
@@ -4072,7 +4072,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
 
-    tiles.json_write_bool("show_game_turns", Options.show_game_turns);
+    tiles.json_write_bool("show_game_time", Options.show_game_time);
 
     _write_minimap_colours();
 
