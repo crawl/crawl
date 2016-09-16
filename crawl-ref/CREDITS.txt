@@ -236,7 +236,6 @@
     Sigurd
     Edgar Simo
     Skrybe
-    Isaac Sloat
     Alex Smith
     Keanan Smith
     Richard Soderberg
@@ -308,6 +307,7 @@ The Dungeon Crawl Stone Soup development team is:
     Aaron Pixton
     David Ploog
     Sage
+    Isaac Sloat
     Marc H. Thoben
     Chris West
     Samuel Wilson
