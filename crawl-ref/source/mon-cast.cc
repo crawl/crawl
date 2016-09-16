@@ -696,8 +696,11 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
         const char* msgs[] =
         {
             " casts a cantrip, but nothing happens.",
+            " begins to cast a cantrip, but forgets the words!",
             " miscasts a cantrip.",
             " looks braver for a moment.",
+            " looks encouraged for a moment.",
+            " looks satisfied for a moment.",
         };
 
         simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
