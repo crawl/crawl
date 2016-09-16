@@ -1071,7 +1071,7 @@ static string _sacrifice_desc(const ability_type ability)
         "will become stronger in proportion to the value of the "
         "sacrifice, and you may gain new powers as well.\n\n"
         "Sacrifices cannot be taken back.\n";
-    const string piety_info = ru_sacrifice_description( ability );
+    const string piety_info = ru_sacrifice_description(ability);
     const string desc = boilerplate + piety_info;
 
     const string sac_vec_key = ru_sacrifice_vector(ability);
