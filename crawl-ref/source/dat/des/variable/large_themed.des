@@ -1201,10 +1201,8 @@ ORIENT: northeast
 DEPTH:  Depths
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
-COLOUR: = = red
 TILE:   v = DNGN_STONE_WALL_RED
 FTILE:  v'4! = FLOOR_PEBBLE_RED
-FTILE:  = = FLOOR_PEBBLE_RED
 FTILE:  G1BC = FLOOR_VAULT
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 20, \
@@ -1243,7 +1241,7 @@ xc2.........Gcccccc.cccc++cccc
 ccccGcGcc...cccvvvc.+........c
 ccGcccccG...Gccv4vccc...ccc..c
 ...2ccccc...vvvv'vvvv....ccc.c
-@.......+...=''4!4''=...5_cc2c
+@.......+...+''4!4''+...5_cc2c
 ...2ccccc...vvvv'vvvv....ccc.c
 ccGcccccG...Gccv4vccc...ccc..c
 ccccGcGcc...cccvvvc.+........c
