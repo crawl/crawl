@@ -608,7 +608,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_CLOUD:
     {
         cloud_type cloud = cloud_type_at(you.pos());
-        if (Options.cloud_status && cloud != CLOUD_NONE)
+        if (!is_tiles() && cloud != CLOUD_NONE)
         {
             inf->light_text = "Cloud";
             // TODO: make the colour based on the cloud's color; requires elemental
