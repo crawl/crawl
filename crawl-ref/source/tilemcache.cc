@@ -332,7 +332,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
-    case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
@@ -350,8 +349,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GRUM:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
-    case TILEP_MONS_SPRIGGAN_DEFENDER:
-    case TILEP_MONS_SPRIGGAN_BERSERKER:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
@@ -439,7 +436,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     // Shift downwards.
     case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_GUARDIAN_SERPENT:
-    case TILEP_MONS_THE_ENCHANTRESS:
     case TILEP_MONS_DEEP_DWARF:
     case TILEP_MONS_RUST_DEVIL:
         *ofs_x = 0;
@@ -481,6 +477,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_NECROPHAGE:
         *ofs_x = -2;
+        *ofs_y = -2;
+        break;
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
+        *ofs_x = -3;
         *ofs_y = -2;
         break;
     case TILEP_MONS_SPRIGGAN_AIR_MAGE:
@@ -532,7 +532,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 1;
         *ofs_y = -1;
         break;
-    case TILEP_MONS_AGNES:
+    case TILEP_MONS_AGNES_STAVELESS:
         *ofs_x = 0;
         *ofs_y = 1;
         break;
@@ -595,6 +595,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_URUG:
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_HIGH_PRIEST:
+    case TILEP_MONS_SPRIGGAN:
+    case TILEP_MONS_SPRIGGAN_DEFENDER:
         *ofs_x = -1;
         *ofs_y = 1;
         break;
@@ -607,6 +609,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_FROST_GIANT:
     case TILEP_MONS_FIRE_GIANT:
     case TILEP_MONS_IRON_GIANT:
+    case TILEP_MONS_THE_ENCHANTRESS:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
