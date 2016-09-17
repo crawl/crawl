@@ -191,7 +191,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
-        new BoolGameOption(SIMPLE_NAME(explore_improved), false),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), false),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new BoolGameOption(SIMPLE_NAME(auto_sacrifice), false),

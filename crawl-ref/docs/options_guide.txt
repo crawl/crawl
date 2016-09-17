@@ -41,13 +41,12 @@ The contents of this text are:
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, explore_improved, auto_sacrifice,
-                travel_key_stop, tc_reachable, tc_dangerous, tc_disconnected,
-                tc_excluded, tc_exclude_circle,
-                runrest_ignore_message, runrest_stop_message,
-                runrest_safe_poison, runrest_ignore_monster,
-                rest_wait_both, rest_wait_percent, explore_auto_rest,
-                auto_exclude
+                explore_wall_bias, auto_sacrifice, travel_key_stop,
+                tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
+                tc_exclude_circle, runrest_ignore_message,
+                runrest_stop_message, runrest_safe_poison,
+                runrest_ignore_monster, rest_wait_both, rest_wait_percent,
+                explore_auto_rest, auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target, auto_butcher,
@@ -786,13 +785,6 @@ explore_wall_bias = 0
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
         will not favour them at all.
-
-explore_improved = false
-        If set to true explore will attempt to reduce zig-zagging during
-        auto-explore. On average it increases the number of turns taken
-        by about 0.9%, sometimes actually speeding it up slightly and
-        sometimes increasing the turns taken by up to 5%, with
-        pathological cases causing a 13% increase.
 
 auto_sacrifice = false
        If set to true, the player is worshipping Fedhas, and there are corpses

@@ -349,9 +349,6 @@ public:
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
 
-    // Some experimental improvements to explore
-    bool        explore_improved;
-
     bool        travel_key_stop;   // Travel stops on keypress.
 
     bool        auto_sacrifice;
