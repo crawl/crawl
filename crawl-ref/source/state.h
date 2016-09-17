@@ -97,12 +97,7 @@ struct game_state
     bool viewport_monster_hp;
     bool viewport_weapons;
 
-#ifndef USE_TILE_LOCAL
-    // Are we currently targeting using the mlist?
-    // This is global because the monster pane uses this when
-    // drawing.
-    bool mlist_targeting;
-#else
+#ifdef USE_TILE_LOCAL
     bool tiles_disabled;
     bool title_screen;
 #endif

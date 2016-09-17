@@ -1683,7 +1683,6 @@ bool beogh_gift_item()
     args.mode = TARG_BEOGH_GIFTABLE;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.may_target_monster = true;
     args.self = CONFIRM_CANCEL;
     args.show_floor_desc = true;
     args.top_prompt = "Select a follower to give a gift to.";
@@ -2683,7 +2682,6 @@ spret_type fedhas_sunlight(bool fail)
     args.mode = TARG_HOSTILE_SUBMERGED;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.may_target_monster = false;
     args.top_prompt = "Select sunlight destination.";
     direction(spelld, args);
 
@@ -3397,7 +3395,6 @@ spret_type fedhas_evolve_flora(bool fail)
     args.mode = TARG_EVOLVABLE_PLANTS;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.may_target_monster = false;
     args.self = CONFIRM_CANCEL;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
@@ -6269,7 +6266,6 @@ bool ru_power_leap()
         args.mode = TARG_ANY;
         args.range = 3;
         args.needs_path = false;
-        args.may_target_monster = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
         args.self = CONFIRM_CANCEL;
         const int explosion_size = 1;
@@ -6770,7 +6766,6 @@ bool uskayaw_grand_finale()
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
-        args.may_target_monster = true;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
         args.self = CONFIRM_CANCEL;
         targetter_smite tgt(&you, 7, 0, 0);
@@ -6988,7 +6983,6 @@ static coord_def _get_transference_target()
     args.mode = TARG_MOBILE_MONSTER;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.may_target_monster = true;
     args.self = CONFIRM_NONE;
     args.show_floor_desc = true;
     args.top_prompt = "Select a target.";

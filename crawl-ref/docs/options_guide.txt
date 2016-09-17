@@ -65,11 +65,11 @@ The contents of this text are:
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
                 item_stack_summary_minimum, mlist_min_height,
-                mlist_allow_alternate_layout, mlist_targeting, msg_min_height,
-                msg_max_height, messages_at_top, skill_focus,
-                msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour, view_delay, force_more_message,
-                flash_screen_message, use_animations, darken_beyond_range
+                mlist_allow_alternate_layout, msg_min_height, msg_max_height,
+                messages_at_top, skill_focus, msg_condense_repeats,
+                msg_condense_short, show_travel_trail, monster_list_colour,
+                view_delay, force_more_message, flash_screen_message,
+                use_animations, darken_beyond_range
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1389,12 +1389,6 @@ mlist_allow_alternate_layout = false
         your console display, usually to the left of the map, rather
         than using the fixed position below the stat area.
         This option is not supported in the tiles build.
-
-mlist_targeting = false
-        Using the monster list you can directly target monsters in targeting
-        mode. This can be toggled during a game with Ctrl-L while in targeting
-        mode, and this option controls the initial setting at game start or
-        reload.
 
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
