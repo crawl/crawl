@@ -665,19 +665,6 @@ static int _find_explore_status(const travel_pathfind &tp)
     return explore_status;
 }
 
-static int prev_travel_moves[2] = {-1, -1};
-static int prev_travel_index    = 0;
-
-static int anti_zigzag_dir = -1;
-
-static void _reset_zigzag_info()
-{
-    prev_travel_moves[0] = -1;
-    prev_travel_moves[1] = -1;
-    prev_travel_index    =  0;
-    anti_zigzag_dir      = -1;
-}
-
 static void _set_target_square(const coord_def &target)
 {
     you.running.pos = target;
@@ -685,7 +672,6 @@ static void _set_target_square(const coord_def &target)
 
 static void _explore_find_target_square()
 {
-    bool fallback = false;
     bool runed_door_pause = false;
 
     travel_pathfind tp;
@@ -697,7 +683,6 @@ static void _explore_find_target_square()
     // If we didn't find an explore target the first time, try fallback mode
     if (!whereto.x && !whereto.y)
     {
-        fallback = true;
         travel_pathfind fallback_tp;
         fallback_tp.set_floodseed(you.pos(), true);
         whereto = fallback_tp.pathfind(static_cast<run_mode_type>(you.running.runmode), true);
@@ -726,75 +711,8 @@ static void _explore_find_target_square()
 
     if (whereto.x || whereto.y)
     {
-        // Anti-zigzag turned off, or found a greedy target so we
-        // don't need anti-zigzaging.
-        if (!Options.explore_improved || whereto != tp.unexplored_square())
-        {
-            _set_target_square(whereto);
-            _reset_zigzag_info();
-            return;
-        }
-
-        // If the two previous travel moves are perpendicular to each
-        // other...
-        if (prev_travel_moves[0] != -1
-            && prev_travel_moves[1] != -1
-            && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2)
-        {
-            ASSERT(anti_zigzag_dir == -1);
-
-            // Try moving along the line that bisects the right angle.
-            if ((abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
-                && prev_travel_moves[0] + prev_travel_moves[1] == 8)
-            {
-                anti_zigzag_dir = 0;
-            }
-            else
-            {
-                anti_zigzag_dir = min(prev_travel_moves[0],
-                                      prev_travel_moves[1]) + 1;
-            }
-        }
-
-        // anti_zigzag_dir might have just been set, or might have
-        // persisted from the previous call to
-        // _explore_find_target_square().
-        if (anti_zigzag_dir != -1)
-        {
-            coord_def target = you.pos();
-            coord_def delta  = Compass[anti_zigzag_dir];
-
-            dungeon_feature_type feature;
-            do
-            {
-                target += delta;
-                feature = grd(target);
-            }
-            while (_is_travelsafe_square(target, fallback)
-                   && feat_is_traversable_now(feature, fallback)
-                   && _feature_traverse_cost(feature) == 1);
-
-            target -= delta;
-
-            // Has moving along the straight line found an unexplored
-            // square?
-            if (!env.map_knowledge(target + delta).seen() && target != you.pos()
-                && target != whereto)
-            {
-                // Auto-explore is only zigzagging if the preferred
-                // target (whereto) and the anti-zigzag target are
-                // close together.
-                if (grid_distance(target, whereto) <= 5
-                    && distance2(target, whereto) <= 34)
-                {
-                    _set_target_square(target);
-                    return;
-                }
-            }
-            anti_zigzag_dir = -1;
-        }
-
         _set_target_square(whereto);
+        return;
     }
     else
     {
@@ -842,10 +760,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                                                   : ES_NONE;
 
         if (Options.explore_stop & estop)
-        {
             stop_delay();
-            _reset_zigzag_info();
-        }
     }
 
     // Greedy explore has no good way to deal with an item that we can't
@@ -873,7 +788,6 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
         }
         explore_stopped_pos = you.pos();
         stop_delay();
-        _reset_zigzag_info();
     }
 }
 
@@ -964,19 +878,6 @@ command_type travel()
         // Get the next step to make. If the travel command can't find a route,
         // we turn off travel (find_travel_pos does that automatically).
         find_travel_pos(you.pos(), move_x, move_y);
-
-        if (you.running < 0 && (*move_x || *move_y))
-        {
-            const int delta_to_dir[9] =
-            {
-                7,  0, 1,
-                6, -1, 2,
-                5,  4, 3,
-            };
-            prev_travel_moves[prev_travel_index] =
-                delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
-            prev_travel_index = !prev_travel_index;
-        }
 
         // Stop greedy explore when visiting an unverified stash.
         if ((*move_x || *move_y)
@@ -4061,8 +3962,6 @@ void runrest::stop(bool clear_delays)
 
     if (need_redraw)
         viewwindow();
-
-    _reset_zigzag_info();
 }
 
 bool runrest::is_rest() const
@@ -4120,8 +4019,6 @@ void runrest::clear()
     mp = hp = travel_speed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
-
-    _reset_zigzag_info();
 }
 
 /////////////////////////////////////////////////////////////////////////////
