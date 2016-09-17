@@ -210,7 +210,7 @@ VISUAL:@The_monster@ shimmers violently.
 
 VISUAL:@The_monster@ glows brightly for a moment.
 
-VISUAL:@The_monster@'s fingertips start to glow.
+VISUAL:@The_monster@'s @hands@ start to glow.
 
 VISUAL:You feel disoriented. @player_only@
 
@@ -1938,7 +1938,7 @@ VISUAL:@The_monster@ looks angry.
 %%%%
 _Blork_rare_
 
-@The_monster@ screams @at_foe@, "I'll cut your head off!"
+@The_monster@ screams @at_foe@, "I'll rip your head off!"
 
 @The_monster@ screams @at_foe@, "I'll break your legs!"
 
