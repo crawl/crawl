@@ -1102,7 +1102,7 @@ public:
         const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
 
         if (player_mutation_level(MUT_ACIDIC_BITE))
-            return fang_damage + str_damage + roll_dice(2,4);
+            return fang_damage + str_damage;
 
         return fang_damage + str_damage;
     }
@@ -1339,11 +1339,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         player_announce_aux_hit();
 
         if (damage_brand == SPWPN_ACID)
-        {
-            mprf("%s is splashed with acid.",
-                 defender->name(DESC_THE).c_str());
-            defender->splash_with_acid(&you);
-        }
+            defender->splash_with_acid(&you, 3);
 
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
@@ -2456,19 +2452,6 @@ void melee_attack::mons_do_napalm()
     }
 }
 
-void melee_attack::splash_defender_with_acid(int strength)
-{
-    if (defender->is_player())
-        mpr("You are splashed with acid!");
-    else
-    {
-        special_damage += roll_dice(2, 4);
-        if (defender_visible)
-            mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-    }
-    defender->splash_with_acid(attacker, strength);
-}
-
 static void _print_resist_messages(actor* defender, int base_damage,
                                    beam_type flavour)
 {
@@ -2842,7 +2825,7 @@ void melee_attack::mons_apply_attack_flavour()
     }
 
     case AF_ACID:
-        splash_defender_with_acid(3);
+        defender->splash_with_acid(attacker, 3);
         break;
 
     case AF_CORRODE:

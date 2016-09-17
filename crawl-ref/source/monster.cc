@@ -4424,8 +4424,17 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
                                bool /*allow_corrosion*/, const char* /*hurt_msg*/)
 {
+    const int dam = roll_dice(2, 4);
+    const int post_res_dam = resist_adjust_damage(this, BEAM_ACID, dam);
+
+    if (this->observable())
+         mprf("%s is splashed with acid.", this->name(DESC_THE).c_str());
+
     if (!one_chance_in(3))
         corrode_equipment();
+
+    if (post_res_dam > 0)
+        hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
