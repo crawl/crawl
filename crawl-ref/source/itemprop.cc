@@ -284,14 +284,14 @@ static const vector<brand_weight_tuple> DEMON_BRANDS = {
 
 /// brand weights for long blades.
 static const vector<brand_weight_tuple> LBL_BRANDS = {
-    { SPWPN_HOLY_WRATH,     23 },
-    { SPWPN_NORMAL,         19 },
-    { SPWPN_VORPAL,         15 },
-    { SPWPN_ELECTROCUTION,  10 },
+    { SPWPN_NORMAL,         21 },
+    { SPWPN_VORPAL,         18 },
+    { SPWPN_HOLY_WRATH,     14 },
+    { SPWPN_ELECTROCUTION,  11 },
     { SPWPN_PROTECTION,      8 },
-    { SPWPN_FREEZING,        5 },
-    { SPWPN_FLAMING,         5 },
-    { SPWPN_DRAINING,        5 },
+    { SPWPN_FREEZING,        6 },
+    { SPWPN_FLAMING,         6 },
+    { SPWPN_DRAINING,        6 },
     { SPWPN_VAMPIRISM,       4 },
     { SPWPN_VENOM,           2 },
     { SPWPN_DISTORTION,      2 },
