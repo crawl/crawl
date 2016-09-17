@@ -533,6 +533,8 @@ terence MONS_TERENCE
 %sdir mon
 %rim 0
 human MONS_HUMAN
+human2
+human3
 entropy_weaver MONS_ENTROPY_WEAVER
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
