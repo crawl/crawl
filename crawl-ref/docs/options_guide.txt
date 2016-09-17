@@ -917,10 +917,6 @@ jewellery_prompt = false
         an item to remove, instead of skipping the prompt if only one item
         of jewellery is equipped.
 
-show_uncursed = true
-        Whether items that are known to be uncursed will contain "uncursed"
-        as part of their displayed name.
-
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
            none = force capitals on Y/N questions

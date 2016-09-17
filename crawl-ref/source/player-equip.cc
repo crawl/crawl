@@ -1283,14 +1283,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot)
 {
     // The ring/amulet must already be removed from you.equip at this point.
-
-    // Turn off show_uncursed before getting the item name, because this item
-    // was just removed, and the player knows it's uncursed.
-    const bool old_showuncursed = Options.show_uncursed;
-    Options.show_uncursed = false;
-
-    Options.show_uncursed = old_showuncursed;
-
     switch (item.sub_type)
     {
     case RING_FIRE:
