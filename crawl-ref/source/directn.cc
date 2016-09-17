@@ -99,11 +99,6 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
                                    targetter *hitfunc);
-#ifndef USE_TILE_LOCAL
-static bool _find_mlist(const coord_def& where, int idx, bool need_path,
-                        int range, targetter *hitfunc,
-                        const vector<monster_info>& mlist, bool full_info);
-#endif
 static bool _find_object(const coord_def& where, bool need_path, int range,
                          targetter *hitfunc);
 
@@ -508,7 +503,6 @@ direction_chooser::direction_chooser(dist& moves_,
     range(args.range),
     just_looking(args.just_looking),
     needs_path(args.needs_path),
-    may_target_monster(args.may_target_monster),
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
@@ -839,7 +833,6 @@ void do_look_around(const coord_def &whence)
     args.just_looking = true;
     args.needs_path = false;
     args.target_prefix = "Here";
-    args.may_target_monster = "Move the cursor around to observe a square.";
     args.default_place = whence;
     direction(lmove, args);
     if (lmove.isValid && lmove.isTarget && !lmove.isCancel
@@ -849,73 +842,6 @@ void do_look_around(const coord_def &whence)
     }
 }
 
-#ifndef USE_TILE_LOCAL
-void direction_chooser::update_mlist(bool enable)
-{
-    crawl_state.mlist_targeting = enable;
-    const int full_info = update_monster_pane();
-    if (enable && full_info != -1)
-    {
-        mlist_full_info = full_info;
-
-        mlist.clear();
-        get_monster_info(mlist);
-        auto last = unique(begin(mlist), end(mlist),
-                           [this](const monster_info& first,
-                                  const monster_info& second)
-                           {
-                               // If first ≮ second, and second ≮ first (since
-                               // it's sorted), then first == second.
-                               return !monster_info::less_than(first, second,
-                                                               mlist_full_info);
-                           });
-        mlist.erase(last, end(mlist));
-    }
-    else
-        crawl_state.mlist_targeting = false;
-}
-
-// Skip all letters that have a special meaning in the targeting interface.
-// FIXME: Probably doesn't work well with redefined keys.
-// XXX: make sure to add exceptions to this and mlist_index_to_letter.
-static int _mlist_letter_to_index(char ltr)
-{
-    if (ltr >= 'b')
-        ltr--;
-    if (ltr >= 'e')
-        ltr--;
-    if (ltr >= 'h')
-        ltr--;
-    if (ltr >= 'j')
-        ltr--;
-    if (ltr >= 'k')
-        ltr--;
-    if (ltr >= 'l')
-        ltr--;
-
-    return ltr - 'a';
-}
-
-char mlist_index_to_letter(int index)
-{
-    index += 'a';
-
-    if (index >= 'b')
-        index++;
-    if (index >= 'e')
-        index++;
-    if (index >= 'h')
-        index++;
-    if (index >= 'j')
-        index++;
-    if (index >= 'k')
-        index++;
-    if (index >= 'l')
-        index++;
-
-    return index;
-}
-#endif
 
 range_view_annotator::range_view_annotator(targetter *range)
 {
@@ -1875,29 +1801,6 @@ bool direction_chooser::tiles_update_target()
     return false;
 }
 
-void direction_chooser::handle_mlist_cycle_command(command_type key_command)
-{
-#ifndef USE_TILE_LOCAL
-    if (key_command >= CMD_TARGET_CYCLE_MLIST
-        && key_command <= CMD_TARGET_CYCLE_MLIST_END)
-    {
-        const int idx = _mlist_letter_to_index(key_command + 'a'
-                                               - CMD_TARGET_CYCLE_MLIST);
-
-        if (_find_square_wrapper(monsfind_pos, 1,
-                                 bind(_find_mlist, placeholders::_1, idx,
-                                      needs_path, range, hitfunc, cref(mlist),
-                                      mlist_full_info),
-                                 hitfunc))
-        {
-            set_target(monsfind_pos);
-        }
-        else
-            flush_input_buffer(FLUSH_ON_FAILURE);
-    }
-#endif
-}
-
 void direction_chooser::move_to_you()
 {
     moves.isValid  = true;
@@ -1939,13 +1842,6 @@ bool direction_chooser::do_main_loop()
     switch (key_command)
     {
     case CMD_TARGET_SHOW_PROMPT: describe_cell(); break;
-
-#ifndef USE_TILE_LOCAL
-    case CMD_TARGET_TOGGLE_MLIST:
-        Options.mlist_targeting = !Options.mlist_targeting;
-        update_mlist(Options.mlist_targeting);
-        break;
-#endif
 
     case CMD_TARGET_TOGGLE_BEAM:
         if (!just_looking)
@@ -2034,7 +1930,6 @@ bool direction_chooser::do_main_loop()
     default:
         // Some blocks of keys with similar handling.
         handle_movement_key(key_command, &loop_done);
-        handle_mlist_cycle_command(key_command);
         handle_wizard_command(key_command, &loop_done);
         break;
     }
@@ -2087,16 +1982,6 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-#ifdef USE_TILE_LOCAL
-    UNUSED(may_target_monster);
-#else
-    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
-        update_mlist(true);
-#endif
-
-    // NOTE: Even if just_looking is set, moves is still interesting,
-    // because we can travel there!
-
     if (restricts == DIR_DIR)
         return choose_compass();
 
@@ -2137,9 +2022,6 @@ bool direction_chooser::choose_direction()
         ;
 
     msgwin_set_temporary(false);
-#ifndef USE_TILE_LOCAL
-    update_mlist(false);
-#endif
     finalize_moves();
     return moves.isValid;
 }
@@ -2332,70 +2214,6 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
 
     return true;
 }
-
-#ifndef USE_TILE_LOCAL
-static bool _find_mlist(const coord_def& where, int idx, bool need_path,
-                        int range, targetter *hitfunc,
-                        const vector<monster_info>& mlist, bool full_info)
-{
-    if (static_cast<int>(mlist.size()) <= idx)
-        return false;
-
-    if (!_is_target_in_range(where, range, hitfunc) || !you.see_cell(where))
-        return false;
-
-    const monster_info* mon = env.map_knowledge(where).monsterinfo();
-    if (mon == nullptr)
-        return false;
-
-    int real_idx = 0;
-    for (unsigned int i = 0; i+1 < mlist.size(); ++i)
-    {
-        if (real_idx == idx)
-        {
-            real_idx = i;
-            break;
-        }
-
-        // While the monsters are identical, don't increase real_idx.
-        if (!monster_info::less_than(mlist[i], mlist[i+1], full_info))
-            continue;
-
-        real_idx++;
-    }
-
-    const monster* real_mon = monster_at(where);
-    ASSERT(real_mon);
-    if (!_mons_is_valid_target(real_mon, TARG_ANY, range))
-        return false;
-
-    if (need_path && _blocked_ray(where))
-        return false;
-
-    const monster_info* monl = &mlist[real_idx];
-
-    if (mon->attitude != monl->attitude)
-        return false;
-
-    if (mon->type != monl->type)
-        return false;
-
-    if (full_info)
-    {
-        if (mons_class_is_zombified(mon->type)) // Both monsters are zombies.
-            return mon->base_type == monl->base_type;
-
-        if (mons_genus(mon->base_type) == MONS_HYDRA)
-            return mon->num_heads == monl->num_heads;
-    }
-
-    if (mons_is_pghost(mon->type))
-        return mon->mname == monl->mname;
-
-    // Else the two monsters are identical.
-    return true;
-}
-#endif
 
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targetter* hitfunc)
@@ -3743,12 +3561,6 @@ command_type targeting_behaviour::get_command(int key)
     command_type cmd = key_to_command(key, KMC_TARGETING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
         return cmd;
-
-#ifndef USE_TILE_LOCAL
-    // Overrides the movement keys while mlist_targeting is active.
-    if (crawl_state.mlist_targeting && isalower(key))
-        return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
-#endif
 
     // XXX: hack
     if (cmd == CMD_TARGET_SELECT && key == ' ' && just_looking)

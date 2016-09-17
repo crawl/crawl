@@ -170,7 +170,6 @@ public:
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
-    bool        mlist_targeting;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 

@@ -335,10 +335,6 @@ const vector<GameOption*> game_options::build_options_list()
             split_string(",", "minimap, inventory, gold_turn, command, "
                               "spell, ability, monster")),
 #endif
-#else
-        new BoolGameOption(mlist_targeting,
-                           { "mlist_targeting", "mlist_targetting" },
-                           false),
 #endif
 #ifdef USE_TILE_LOCAL
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
