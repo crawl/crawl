@@ -1652,6 +1652,17 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return base + 1;
         }
 
+        case MONS_AGNES:
+        {
+            // For if Agnes loses her lajatang
+            const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon->is_type(OBJ_WEAPONS, WPN_LAJATANG))
+                return TILEP_MONS_AGNES;
+            else
+                return TILEP_MONS_AGNES_STAVELESS;
+        }
+
+
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;

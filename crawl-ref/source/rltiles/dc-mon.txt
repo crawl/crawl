@@ -976,6 +976,7 @@ spriggan_air_mage MONS_SPRIGGAN_AIR_MAGE
 %rim 1
 mon/unique/enchantress MONS_THE_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
+mon/unique/agnes_staveless MONS_AGNES_STAVELESS
 
 ## Merfolk ('m')
 # note: water tiles must be immediately after base tiles
