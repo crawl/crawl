@@ -1425,8 +1425,6 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
     if (weap.cursed())
         return "cursed ";
 
-    if (!Options.show_uncursed)
-        return "";
     // We don't bother printing "uncursed" if the item is identified
     // for pluses (its state should be obvious), this is so that
     // the weapon name is kept short (there isn't a lot of room
@@ -1687,7 +1685,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses)
+            else if (!know_pluses)
                 buff << "uncursed ";
 
         }
@@ -1915,7 +1913,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
+            else if (desc != DESC_PLAIN
                      && (!is_randart || !know_type)
                      && (!jewellery_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
@@ -2025,7 +2023,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
+            else if (desc != DESC_PLAIN
                      && (!know_type || !is_artefact(*this)))
             {
                 buff << "uncursed ";
@@ -3860,8 +3858,7 @@ string item_prefix(const item_def &item, bool temp)
     else
         prefixes.push_back("unidentified");
 
-    // Sometimes this is abbreviated out of the item name, or suppressed
-    // by the show_uncursed option.
+    // Sometimes this is abbreviated out of the item name.
     if (item_type_has_curses(item.base_type)
         && item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed())
     {
