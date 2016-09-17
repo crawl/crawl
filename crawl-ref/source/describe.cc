@@ -3082,12 +3082,14 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param value[in]         The current value represented by the bar.
  * @param max[in]           The max value that can be represented by the bar.
  * @param scale[in]         The value that each + and . represents.
+ * @param quadratic[in]     The value to increment each +/.'s scale.
  * @param name              The name of the bar.
  * @param result[in,out]    The stringstream to append to.
  * @param base_value[in]    The 'base' value represented by the bar. If
  *                          INT_MAX, is ignored.
  */
 static void _print_bar(int value, int max, int scale,
+                       int quadratic,
                        string name, ostringstream &result,
                        int base_value = INT_MAX)
 {
@@ -3096,24 +3098,24 @@ static void _print_bar(int value, int max, int scale,
 
     result << name << " ";
 
-    const int cur_bars = value / scale;
-    const int base_bars = base_value / scale;
-    const int bars = cur_bars ? cur_bars : base_bars;
-    const int max_bars = max / scale;
-
-    const bool currently_disabled = !cur_bars && base_bars;
+    const int display_max = value ? value : base_value;
+    const bool currently_disabled = !value && base_value;
 
     if (currently_disabled)
-        result << "(";
+      result << "(";
 
-    for (int i = 0; i < min(bars, max_bars); i++)
+    int current = 0;
+    for (int i = 0; current < max; i++)
+    {
+      current = current + scale + (i * quadratic);
+      if (display_max > current)
         result << "+";
+      else
+        result << ".";
+    }
 
     if (currently_disabled)
-        result << ")";
-
-    for (int i = max_bars - 1; i >= bars; --i)
-        result << ".";
+      result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
     result << " (" << value << ")";
@@ -3132,6 +3134,17 @@ static void _print_bar(int value, int max, int scale,
 }
 
 /**
+ * Append information about a given monster's HP to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
+{
+    _print_bar(mons_avg_hp(mi.type), 600, 5, 5, "HP", result);
+}
+
+/**
  * Append information about a given monster's AC to the provided stream.
  *
  * @param mi[in]            Player-visible info about the monster in question.
@@ -3140,7 +3153,7 @@ static void _print_bar(int value, int max, int scale,
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
     // max ac 40 (dispater)
-    _print_bar(mi.ac, 40, 5, "AC", result);
+    _print_bar(mi.ac, 40, 5, 0, "AC", result);
 }
 
 /**
@@ -3152,7 +3165,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     // max ev 30 (eresh) (also to make space for parens)
-    _print_bar(mi.ev, 30, 5, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 30, 5, 0, "EV", result, mi.base_ev);
 }
 
 /**
@@ -3165,13 +3178,13 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 {
     if (mi.res_magic() == MAG_IMMUNE)
     {
-        result << "MR ∞";
+        result << "MR ∞\n";
         return;
     }
 
     const int max_mr = 200; // export this? is this already exported?
     const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), max_mr, bar_scale, "MR", result);
+    _print_bar(mi.res_magic(), max_mr, bar_scale, 0, "MR", result);
 }
 
 
@@ -3181,6 +3194,7 @@ static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
 
+    _describe_monster_hp(mi, result);
     _describe_monster_ac(mi, result);
     _describe_monster_ev(mi, result);
     _describe_monster_mr(mi, result);
