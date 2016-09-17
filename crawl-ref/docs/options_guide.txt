@@ -925,7 +925,10 @@ easy_confirm = (none | safe | all)
         yes to questions.
 
 simple_targeting =
-        Things here.
+        If set to true, disables smart targeting for explosion and bouncing
+        bolt spells, making them automatically target the closest monster in
+        range rather than trying to find a spot that affects multiple monsters
+        while avoiding the player.
 
 allow_self_target = (yes | no | prompt)
         Allow targeting yourself with risky magic (e.g., the spell
