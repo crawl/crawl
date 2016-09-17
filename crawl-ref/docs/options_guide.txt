@@ -15,16 +15,15 @@ The contents of this text are:
 0-d     List options.
 0-e     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, species, background,
-                combo, restart_after_game, restart_after_save,
+                name, remember_name, weapon, species, background, combo,
+                restart_after_game, restart_after_save,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot,
-                pickup_menu_limit, drop_filter
+                pickup_thrown, assign_item_slot, pickup_menu_limit, drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -120,10 +119,10 @@ The contents of this text are:
                 dump_item_origins, dump_item_origin_price, dump_message_count,
                 dump_order, dump_book_spells
 4-c     Notes.
-                user_note_prefix, note_items, note_monsters,
-                note_hp_percent, note_skill_levels, note_all_skill_levels,
-                note_skill_max, note_xom_effects, note_messages,
-                note_chat_messages, note_dgl_messages
+                user_note_prefix, note_items, note_monsters, note_hp_percent,
+                note_skill_levels, note_all_skill_levels, note_skill_max,
+                note_xom_effects, note_messages, note_chat_messages,
+                note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
@@ -504,9 +503,6 @@ drop_filter += <regex>, <regex>, ...
         For instance, to quickly select items forbidden by your god, you could
         use:
              drop_filter += forbidden
-        Other choices can come in handy as well, e.g. if you want to
-        regularly sacrifice all weapons except axes, use:
-             drop_filter += axe, broadaxe
 
         drop_filter will match against the same keywords menu_colour uses,
         except that it lacks identification status and chunk information. It
