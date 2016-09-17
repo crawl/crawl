@@ -695,9 +695,10 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
             (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 18)},
     };
 
-    int result = *random_choose_weighted(choices);
+    const int * const choice = random_choose_weighted(choices);
 
-    return result;
+    // Could be nullptr if all the weights were 0.
+    return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;
 }
 
 /**
