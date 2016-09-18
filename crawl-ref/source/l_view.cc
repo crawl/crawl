@@ -26,7 +26,7 @@ LUAFN(view_feature_at)
     const coord_def p = player2grid(s);
     if (!map_bounds(p))
     {
-        lua_pushnil(ls);
+        lua_pushstring(ls, "unseen");
         return 1;
     }
     dungeon_feature_type f = env.map_knowledge(p).feat();
