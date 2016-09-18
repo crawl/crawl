@@ -1554,9 +1554,8 @@ at passers-by.
 %%%%
 leopard gecko
 
-A brightly-coloured lizard with pads on its toes allowing it to cling to walls
-and ceilings, and huge, sharp teeth. It is many times larger than a normal
-gecko, yet its size belies its agility.
+A brightly-coloured lizard with huge, sharp teeth. The pads on its toes allow
+it to cling to walls and ceilings.
 %%%%
 lich
 
