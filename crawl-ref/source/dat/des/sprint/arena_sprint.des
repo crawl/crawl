@@ -1091,7 +1091,7 @@ KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ;
 KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             quad damage | quad damage | quad damage |\
             wand of heal wounds charges:5 | wand of heal wounds charges:5 |\
-            wand of hasting charges:5 | crystal ball of energy
+            crystal ball of energy
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             fruit q:100 | potion of blood q:5 | potion of blood q:5 |\
             potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\
