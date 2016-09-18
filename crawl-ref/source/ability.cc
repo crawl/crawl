@@ -3605,6 +3605,9 @@ int find_ability_slot(const ability_type abil, char firstletter)
 
     switch (abil)
     {
+    case ABIL_DESPERATE_HASTE:
+        first_slot = letter_to_index('D');
+        break;
     case ABIL_ELYVILON_LIFESAVING:
         first_slot = letter_to_index('p');
         break;
