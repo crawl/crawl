@@ -259,7 +259,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // All species
+    ABIL_ADRENALINE_RUSH,
+    ABIL_MAX_INTRINSIC = ABIL_ADRENALINE_RUSH,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

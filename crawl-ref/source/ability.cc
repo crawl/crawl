@@ -316,6 +316,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
+    { ABIL_ADRENALINE_RUSH, "Adrenaline Rush", 0, 0, 0, 0, {}, abflag::NONE },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1776,6 +1777,24 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             if (yesno("Are you sure you want to shaft yourself?", true, 'n'))
                 start_delay<ShaftSelfDelay>(1);
+            else
+                return SPRET_ABORT;
+        }
+        else
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_ADRENALINE_RUSH:
+        fail_check();
+        if (!you.props[ADRENALINE_RUSH_USED].get_bool())
+        {
+            if (yesno("Are you sure you want a rush of adrenaline?", true, 'n'))
+            {
+                // We could tie duration to something -- % hp remaining?
+                haste_player(40 + random2(40));
+                did_god_conduct(DID_HASTY, 10, true);
+                you.props[ADRENALINE_RUSH_USED] = true;
+            }
             else
                 return SPRET_ABORT;
         }
@@ -3307,6 +3326,9 @@ static void _add_talent(vector<talent>& vec, const ability_type ability,
 vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
     vector<talent> talents;
+
+    if (!you.props[ADRENALINE_RUSH_USED].get_bool())
+        _add_talent(talents, ABIL_ADRENALINE_RUSH, check_confused);
 
     // Species-based abilities.
     if (you.species == SP_DEEP_DWARF)

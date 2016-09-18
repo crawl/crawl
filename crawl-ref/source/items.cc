@@ -1840,6 +1840,13 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (it.sub_type == RUNE_ABYSSAL)
         mpr("You feel the abyssal rune guiding you out of this place.");
+
+    if (you.props[ADRENALINE_RUSH_USED].get_bool())
+    {
+        you.props.erase(ADRENALINE_RUSH_USED);
+        mpr("The strange power of the rune fills you with determination. "
+            "You can use your adrenaline rush again.");
+    }
 }
 
 /**
