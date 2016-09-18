@@ -10,6 +10,7 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
+#include "player.h"
 #include "terrain.h"
 #include "travel.h"
 
@@ -65,6 +66,20 @@ LUAFN(l_find_deepest_explored)
     PLUARET(number, find_deepest_explored(lid).depth);
 }
 
+LUAFN(l_waypoint_delta)
+{
+    int waynum = luaL_checkint(ls, 1);
+    if (waynum < 0 || waynum > 9)
+        return 0;
+    const level_pos waypoint = travel_cache.get_waypoint(waynum);
+    if (waypoint.id != level_id::current())
+        return 0;
+    coord_def delta = you.pos() - waypoint.pos;
+    lua_pushnumber(ls, delta.x);
+    lua_pushnumber(ls, delta.y);
+    return 2;
+}
+
 static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
@@ -72,6 +87,7 @@ static const struct luaL_reg travel_lib[] =
     { "feature_traversable", l_feature_is_traversable },
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
+    { "waypoint_delta", l_waypoint_delta },
 
     { nullptr, nullptr }
 };
