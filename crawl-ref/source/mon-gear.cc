@@ -695,11 +695,17 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             { { SPWPN_FLAMING, 1 } },
         } },
         { MONS_DAEVA,                   DAEVA_WSPEC },
-        { MONS_MENNAS,                  DAEVA_WSPEC },
         { MONS_PROFANE_SERVITOR,
             { { { WPN_DEMON_WHIP,       1 },
                 { WPN_WHIP,             3 }, },
-              { 1, 1, 3 },
+            { 1, 1, 3 },
+        } },
+        { MONS_MENNAS, {
+            { { WPN_TRISHULA,       1},
+              { WPN_SACRED_SCOURGE, 1},
+              { WPN_EUDEMON_BLADE,  1}, },
+            { 1, 0, 5},
+            { { SPWPN_HOLY_WRATH, 1}}
         } },
         { MONS_DONALD,
             { { { WPN_SCIMITAR,         12 },
@@ -1085,7 +1091,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_ANGEL:
     case MONS_DAEVA:
-    case MONS_MENNAS:
     case MONS_PROFANE_SERVITOR:
         set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
         break;
