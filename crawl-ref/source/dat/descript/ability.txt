@@ -7,6 +7,12 @@ Spit Poison ability
 
 Spits poison at a targeted creature.
 %%%%
+Desperate Haste ability
+
+Draw on your deepest reserves for a burst of speed equal to drinking a potion
+of haste. You must gain a significant amount of experience to regain this
+ability after it is used.
+%%%%%%%%
 Blink ability
 
 Randomly translocates the user a short distance.
