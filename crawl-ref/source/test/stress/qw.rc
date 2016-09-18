@@ -1117,7 +1117,7 @@ local scary_monsters = {
   {17, "white ugly thing"},
   {17, "white very ugly thing"},
 
-  {20, "greater naga"},
+  {20, "nagaraja"},
   {20, "naga sharpshooter"},
   {20, "emperor scorpion"},
   {20, "Rupert"},

@@ -1107,7 +1107,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // Shared with greater naga.
+    // Shared with nagaraja.
     {  MST_NAGA_MAGE,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },

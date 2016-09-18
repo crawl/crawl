@@ -338,7 +338,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Shoals:$ w:20 / w:6 merfolk avatar / w:5 harpy",
                 "place:Swamp:$ w:20 / w:6 hydra / w:5 swamp dragon",
                 "place:Spider:$ w:20 / w:5 wolf spider / w:5 orb spider / w:2 emperor scorpion",
-                "place:Snake:$ w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
+                "place:Snake:$ w:20 / w:5 naga mage / w:5 naga warrior / w:5 nagaraja",
                 "place:Slime",
                 "killer bee / queen bee / w:1 oklob plant",
                 "place:Crypt / w:2 josephine",
@@ -387,7 +387,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Swamp:$ / hydra / swamp dragon / w:5 green death",
                 "place:Spider:$ / wolf spider / orb spider / w:5 emperor scorpion /\
                     w:5 ghost moth",
-                "place:Snake:$ / naga mage / naga warrior / greater naga /\
+                "place:Snake:$ / naga mage / naga warrior / nagaraja /\
                     guardian serpent / anaconda",
                 "place:Slime:$",
                 "dancing weapon",
@@ -457,7 +457,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "hydra / swamp dragon / green death / death drake",
                 "place:Spider:$ w:5 / wolf spider / orb spider / emperor scorpion /\
                     ghost moth / moth of wrath",
-                "place:Snake:$ w:5 / naga mage / naga warrior / w:20 greater naga /\
+                "place:Snake:$ w:5 / naga mage / naga warrior / w:20 nagaraja /\
                     guardian serpent / w:5 anaconda",
                 "place:Slime:$ / acid blob / azure jelly / great orb of eyes",
                 "dancing weapon",
@@ -530,7 +530,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "green death / death drake",
                 "place:Spider:$ w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
-                "place:Snake:$ w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
+                "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / floating eye /\
                     eye of draining",
                 "dancing weapon ; bardiche",
@@ -603,7 +603,7 @@ function arena_sprint_get_monster_set(round, boss)
                     blizzard demon / ice fiend",
                 "green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
-                "w:40 greater naga / guardian serpent / w:5 anaconda",
+                "w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "w:30 acid blob / azure jelly / floating eye / eye of draining",
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage",

@@ -23,29 +23,29 @@
 # For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
 # instead of "wizard."
 #
-# For example, a greater naga casting Teleport Self:
-# * Teleport Self greater naga cast
+# For example, a nagaraja casting Teleport Self:
+# * Teleport Self nagaraja cast
 # * Teleport Self naga cast
 # * Teleport Self naga cast
 # * Teleport Self wizard cast
 # * Teleport Self cast real
 # * Teleport Self cast gestures
 # * Teleport Self cast
-# * greater naga cast
+# * nagaraja cast
 # * naga cast
 # * naga cast
 # * wizard cast
 #
 # And one "casting" Spit Poison:
-# * Spit Poison greater naga cast
+# * Spit Poison nagaraja cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison natural cast
 # * Spit Poison cast gestures
 # * Spit Poison cast
-# * greater naga cast targeted
-# * greater naga cast
+# * nagaraja cast targeted
+# * nagaraja cast
 # * naga cast targeted
 # * naga cast
 # * naga cast targeted

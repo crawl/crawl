@@ -325,7 +325,7 @@ ORIENT: float
 TAGS:   no_pool_fixup patrolling
 SHUFFLE: }])
 SUBST:  ) = >>)
-MONS:   guardian serpent, greater naga, naga mage, naga warrior
+MONS:   guardian serpent, nagaraja, naga mage, naga warrior
 MAP
        xxxxxxxx
      xxx......xx
@@ -350,7 +350,7 @@ SUBST:  B : @xx
 SUBST:  C : @xx
 SUBST:  T : TTTVVUY
 MONS:   naga, naga warrior
-MONS:   naga mage w:25 / greater naga w:5
+MONS:   naga mage w:25 / nagaraja w:5
 MAP
              xxxxxx
            xxx.G.GxxxxxAAxx
@@ -373,8 +373,8 @@ ORIENT: float
 SHUFFLE: ]})>
 SUBST:  ) = )>
 : if you.absdepth() > 14 then
-KMONS:  A = patrolling Aizul, patrolling greater naga
-KMONS:  B = guardian serpent / greater naga
+KMONS:  A = patrolling Aizul, patrolling nagaraja
+KMONS:  B = guardian serpent / nagaraja
 : else
 KMONS:  A = patrolling Aizul, patrolling guardian serpent
 KMONS:  B = naga mage / guardian serpent
@@ -617,7 +617,7 @@ KMONS:  D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
 : else
 KMONS:  A = naga warrior / naga mage / naga
 KMONS:  B = black mamba w:6 / anaconda
-KMONS:  C = greater naga / naga mage w:5 / guardian serpent w:5
+KMONS:  C = nagaraja / naga mage w:5 / guardian serpent w:5
 KMONS:  D = guardian serpent / anaconda w:2
 : end
 SHUFFLE: @123<= / &456"-, EF
@@ -1028,11 +1028,11 @@ WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
 MONS:    naga / nothing
-MONS:    greater naga / nothing
+MONS:    nagaraja / nothing
 MONS:    guardian serpent / nothing
 MONS:    naga warrior / naga sharpshooter w:5 / nothing w:15
 MONS:    naga mage w:40 / naga ritualist / naga sharpshooter / nothing w:60
-MONS:    greater naga / guardian serpent
+MONS:    nagaraja / guardian serpent
 SHUFFLE: 'Y / "Z
 SHUFFLE: 'Y / 'Y / AB, "Z / CD
 SUBST:   ABCD = x
@@ -1096,7 +1096,7 @@ PLACE:  Snake:$
 WEIGHT: 20
 ORIENT: southwest
 TAGS:   no_rotate
-MONS:   greater naga, naga
+MONS:   nagaraja, naga
 MONS:   naga mage w:40 / naga ritualist / naga sharpshooter
 MONS:   naga warrior / naga sharpshooter w:5
 SUBST:  C = c .:1
@@ -1151,7 +1151,7 @@ ORIENT:  southwest
 MONS:    naga
 MONS:    naga warrior / naga sharpshooter w:5
 MONS:    naga mage w:40 / naga ritualist / naga sharpshooter
-MONS:    greater naga
+MONS:    nagaraja
 SHUFFLE: ABC
 SUBST:   A = x, B : xx., C = ., c : c:20 v:5, 1 = 111.
 NSUBST:  2 = 6 = 23 / 6:. / * = 23..
@@ -1216,7 +1216,7 @@ TAGS:   no_rotate
 MONS:   naga
 MONS:   naga mage w:40 / naga ritualist / naga sharpshooter
 MONS:   naga warrior / naga sharpshooter w:5
-MONS:   greater naga, guardian serpent
+MONS:   nagaraja, guardian serpent
 MONS:   w:21 anaconda / black mamba / shock serpent w:7 / mana viper w:13 / \
         nothing w:30
 KITEM:  O = serpentine rune of Zot
@@ -1276,8 +1276,8 @@ ORIENT: centre
 MONS:   naga / nothing
 MONS:   naga warrior / naga sharpshooter w:5 / naga w:15
 MONS:   naga mage w:20 / naga ritualist / naga sharpshooter / naga w:40
-MONS:   greater naga / guardian serpent
-MONS:   greater naga w:20 / naga warrior w:5 / naga mage w:5 / \
+MONS:   nagaraja / guardian serpent
+MONS:   nagaraja w:20 / naga warrior w:5 / naga mage w:5 / \
         naga ritualist w:5 / naga sharpshooter w:5
 NSUBST: O = 1:A / 1:B
 KITEM:  A = serpentine rune of Zot
@@ -1313,7 +1313,7 @@ NAME: grunt_snake_rune_pools
 PLACE: Snake:$
 TAGS: no_trap_gen no_monster_gen
 ORIENT: north
-MONS: greater naga, guardian serpent
+MONS: nagaraja, guardian serpent
 MONS: naga warrior / naga sharpshooter w:5
 MONS: naga mage w:40 / naga ritualist / naga sharpshooter
 MONS: naga
@@ -1361,10 +1361,10 @@ ENDMAP
 NAME:   grunt_snake_rune_serpentine_throne
 PLACE:  Snake:$
 ORIENT: north
-KMONS:  L = greater naga
+KMONS:  L = nagaraja
 KITEM:  O = serpentine rune of Zot
 KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
-MONS:   greater naga w:20 / naga warrior w:5 / naga mage w:5 / \
+MONS:   nagaraja w:20 / naga warrior w:5 / naga mage w:5 / \
         naga ritualist w:5 / naga sharpshooter w:5
 MONS:   naga mage w:20 / naga ritualist / naga sharpshooter / naga w:40
 MONS:   naga / nothing
@@ -1418,10 +1418,10 @@ MONS:   naga mage w:20 / naga ritualist / naga sharpshooter / naga w:30 / \
         nothing w:20
 MONS:   guardian serpent / salamander mystic w:5 / naga ritualist w:5 / \
         nothing
-MONS:   greater naga w:30 / naga warrior w:5 / naga sharpshooter w:5
+MONS:   nagaraja w:30 / naga warrior w:5 / naga sharpshooter w:5
 MONS:   anaconda / black mamba / shock serpent w:5 / mana viper
 
-KMONS:  Z = Vashnia / greater naga, greater naga
+KMONS:  Z = Vashnia / nagaraja, nagaraja
 SUBST:  Z = ZZZ5
 
 NSUBST: 5 = 6:5 / *:55.

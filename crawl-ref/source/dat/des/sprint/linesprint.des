@@ -718,9 +718,9 @@ ENDMAP
 
 NAME:     snake_end
 TAGS:     snake_end
-KMONS:    1 = naga / naga warrior / naga mage / greater naga w:20 /\
+KMONS:    1 = naga / naga warrior / naga mage / nagaraja w:20 /\
               guardian serpent
-KMONS:    2 = greater naga
+KMONS:    2 = nagaraja
 COLOUR:   12 = lightgreen
 KITEM:    2 = serpentine rune of zot
 COLOUR:   # = yellow
