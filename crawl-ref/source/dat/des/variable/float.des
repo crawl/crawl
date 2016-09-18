@@ -1588,7 +1588,7 @@ DEPTH:  D, Depths, Lair
 ORIENT: float
 MONS:   spriggan, spriggan rider, spriggan defender
 MONS:   boggart, spriggan druid
-: if you.absdepth() < 5 then
+: if you.absdepth() < 8 then
 SUBST:  130 = ., 245 = 0
 : elseif you.absdepth() < 13 then
 SUBST:  1 = 1., 2 = 1, 35 = 0.
@@ -2206,7 +2206,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_bat_island
-DEPTH:  D:8-, !D:$
+DEPTH:  D:12-, !D:$
 ORIENT: float
 WEIGHT: 4
 FTILE: >.12t = floor_grass
