@@ -599,7 +599,6 @@ static const char* _wand_type_name(int wandtype)
     {
     case WAND_FLAME:           return "flame";
     case WAND_SLOWING:         return "slowing";
-    case WAND_HASTING:         return "hasting";
     case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
@@ -3183,9 +3182,6 @@ bool is_emergency_item(const item_def &item)
     case OBJ_WANDS:
         switch (item.sub_type)
         {
-        case WAND_HASTING:
-            return !have_passive(passive_t::no_haste)
-                && you.species != SP_FORMICID;
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
         case WAND_HEAL_WOUNDS:
@@ -3563,15 +3559,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)
             && !you.can_device_heal()
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
-        // haste wand is useless for Formicid if they can't get allies
-        if (item.sub_type == WAND_HASTING
-            && item_type_known(item)
-            && you.species == SP_FORMICID
             && player_mutation_level(MUT_NO_LOVE))
         {
             return true;

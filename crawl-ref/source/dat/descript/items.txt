@@ -1332,10 +1332,6 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-wand of hasting
-
-A magical device which speeds up the actions of a targeted creature.
-%%%%
 wand of heal wounds
 
 A magical device which can heal a creature's wounds.

@@ -1369,7 +1369,7 @@ KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
 KITEM: ! = potion of resistance ident:all q:3, potion of agility ident:all q:3, \
-           wand of hasting ident:type
+           potion of haste q:5 ident:all
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \

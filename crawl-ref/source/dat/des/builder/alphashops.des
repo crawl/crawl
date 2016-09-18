@@ -132,7 +132,7 @@
        "greatsling", "great sword", "pair of gloves" }
 
       elseif s == "H" then i = { "amulet of harm", "halberd",
-       "hand axe", "hand crossbow", "hunting sling", "wand of hasting",
+       "hand axe", "hand crossbow", "hunting sling",
        "potion of heal wounds", "potion of haste", "scroll of holy word",
        "wand of heal wounds", "manual of hexes", "hat", "helmet" }
 

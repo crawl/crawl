@@ -1632,7 +1632,6 @@ int wand_charge_value(int type)
     {
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
-    case WAND_HASTING:
         return 3;
 
     case WAND_ICEBLAST:
@@ -1700,7 +1699,6 @@ bool is_offensive_wand(const item_def& item)
     case WAND_DIGGING:
 
     // Monsters will use them on themselves.
-    case WAND_HASTING:
     case WAND_HEAL_WOUNDS:
         return false;
 

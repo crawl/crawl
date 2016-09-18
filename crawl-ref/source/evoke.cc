@@ -549,7 +549,6 @@ void zap_wand(int slot)
         break;
 
     case WAND_HEAL_WOUNDS:
-    case WAND_HASTING:
         targ_mode = TARG_FRIEND;
         break;
 
@@ -600,8 +599,6 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
-            return;
     }
 
     if (!has_charges)

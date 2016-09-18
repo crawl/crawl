@@ -529,7 +529,7 @@ gem_plastic
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
-i-hasting WAND_HASTING
+i-hasting WAND_REMOVEME6
 i-flame WAND_REMOVEME2
 i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS

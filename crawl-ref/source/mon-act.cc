@@ -1358,15 +1358,6 @@ static bool _handle_wand(monster& mons)
         return false;
 
     // These are wands that monsters will aim at themselves {dlb}:
-    case WAND_HASTING:
-        if (!mons.has_ench(ENCH_HASTE))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
     case WAND_HEAL_WOUNDS:
         if (mons.hit_points <= mons.max_hit_points / 2)
         {

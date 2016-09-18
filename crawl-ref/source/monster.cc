@@ -783,7 +783,6 @@ bool monster::likes_wand(const item_def &item) const
     {
         case WAND_TELEPORTATION:
         case WAND_HEAL_WOUNDS:
-        case WAND_HASTING:
             return true; // goodwands
         default:
             // kind of a hack

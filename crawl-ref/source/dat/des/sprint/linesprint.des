@@ -874,7 +874,7 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     large shield plus:3 good_item not_cursed ident:all /\
     naga barding plus:4 not_cursed ident:all w:5 /\
     centaur barding plus:4 not_cursed ident:all w:5
-KITEM:     e = wand of hasting charges:5 ident:all
+KITEM:     e = potion of haste q:5
 KITEM:     f = crystal ball of energy ident:all
 : line_setup(_G)
 : general_item_setup(_G)

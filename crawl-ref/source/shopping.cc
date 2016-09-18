@@ -388,7 +388,6 @@ unsigned int item_value(item_def item, bool ident)
             bool good = false;
             switch (item.sub_type)
             {
-            case WAND_HASTING:
             case WAND_HEAL_WOUNDS:
                 valued += 240;
                 good = true;
