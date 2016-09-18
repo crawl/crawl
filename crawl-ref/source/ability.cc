@@ -1786,14 +1786,21 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_DESPERATE_HASTE:
         fail_check();
-        if (!you.props[DESPERATE_HASTE_USED].get_bool())
+        if (you.props[DESPERATE_HASTE_XP_DEBT].get_int() == 0)
         {
             if (yesno("Are you sure you want to use your desperate haste?", true, 'n'))
             {
                 // We could tie duration to something -- % hp remaining?
                 haste_player(40 + random2(40));
                 did_god_conduct(DID_HASTY, 10, true);
-                you.props[DESPERATE_HASTE_USED] = true;
+
+                // If we can't calculate the xp debt based on amount needed for
+                // next level, instead multiply out the current level.
+                int next_level_xp = (int)exp_needed(you.experience_level+1, 0);
+                int this_level_xp = (int)exp_needed(you.experience_level, 0);
+                int xp_debt = (next_level_xp - this_level_xp) * 7;
+
+                you.props[DESPERATE_HASTE_XP_DEBT] = xp_debt;
             }
             else
                 return SPRET_ABORT;
@@ -3327,7 +3334,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
     vector<talent> talents;
 
-    if (!you.props[DESPERATE_HASTE_USED].get_bool())
+    if (you.props[DESPERATE_HASTE_XP_DEBT].get_int() == 0)
         _add_talent(talents, ABIL_DESPERATE_HASTE, check_confused);
 
     // Species-based abilities.

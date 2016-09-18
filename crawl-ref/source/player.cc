@@ -2565,6 +2565,22 @@ static void _recharge_xp_evokers(int exp)
     }
 }
 
+static void _recharge_desperate_haste(int exp)
+{
+    int debt = you.props[DESPERATE_HASTE_XP_DEBT].get_int();
+    if (debt <= 0)
+        return;
+
+    debt -= exp;
+    if (debt <= 0)
+    {
+        you.props.erase(DESPERATE_HASTE_XP_DEBT);
+        mprf(MSGCH_INTRINSIC_GAIN, "You can once more use your desperate haste.");
+        more();
+    } else
+        you.props[DESPERATE_HASTE_XP_DEBT] = debt;
+}
+
 /// Make progress toward the abyss spawning an exit/stairs.
 static void _reduce_abyss_xp_timer(int exp)
 {
@@ -2717,6 +2733,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
+    _recharge_desperate_haste(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_xp_drain(skill_xp);
 
