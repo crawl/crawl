@@ -1256,7 +1256,7 @@ WEIGHT:  25
 MONS:    ancient zyme, wretched star, starcursed mass, lurking horror
 MONS:    thrashing horror, tentacled starspawn, apocalypse crab
 # Worldbinders summon from other branches....
-KMONS:   8 = greater naga / ghost moth / thorn hunter / merfolk javelineer
+KMONS:   8 = nagaraja / ghost moth / thorn hunter / merfolk javelineer
 KMONS:   9 = guardian serpent / entropy weaver / swamp dragon / satyr
 KMONS:   0 = place:Abyss:$
 KMONS:   O = worldbinder

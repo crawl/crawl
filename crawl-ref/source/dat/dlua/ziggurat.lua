@@ -213,7 +213,7 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
+         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -448,7 +448,7 @@ mset(with_props(spec_fn(function ()
   local e = 10 + you.zigs_completed() * 4
   return "wizard / necromancer / ogre mage w:5 / orc sorcerer w:5 / " ..
          "naga mage / salamander mystic w:5 / merfolk aquamancer w:5 / " ..
-         "spriggan air mage w:" .. d - 5 .. " / greater naga w:" .. d .. " / " ..
+         "spriggan air mage w:" .. d - 5 .. " / nagaraja w:" .. d .. " / " ..
          "deep elf annihilator w:" .. d .. " / deep elf sorcerer w:" .. d .. " / " ..
          "tengu reaver w:" .. d .. " / draconian knight w:" .. d - 5 .. " / " ..
          "draconian scorcher w:" .. d - 5 .. " / lich w:" .. d - 5 .. " / " ..
@@ -476,7 +476,7 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local e = 10 + you.zigs_completed()
   return "place:Snake:$ w:" .. d .. " / place:Swamp:$ w:" .. d .. " / " ..
          "place:Shoals:$ w:" .. d .. " / place:Spider:$ w:" .. d .. " / " ..
-         "greater naga w:" .. e + 2 .. " / guardian serpent w:8 / " ..
+         "nagaraja w:" .. e + 2 .. " / guardian serpent w:8 / " ..
          "hydra w:5 / swamp dragon w:5 / tentacled monstrosity w:" .. e .. " / " ..
          "merfolk aquamancer w:6 / merfolk javelineer w:" .. e - 2 .. " / " ..
          "alligator snapping turtle w:6 / ghost moth w:" .. e - 2 .. " / " ..

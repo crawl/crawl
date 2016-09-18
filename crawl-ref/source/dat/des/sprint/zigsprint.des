@@ -305,7 +305,7 @@ function choose_mset_3(e)
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python / adder / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga w:5 /\
+               black mamba / naga mage / naga warrior / nagaraja w:5 /\
                anaconda w:5 / guardian serpent")
 -- Lair
   elseif rnd < 19 then
@@ -434,7 +434,7 @@ local rnd = crawl.random2(142)
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python w:5 / adder w:5 / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga /\
+               black mamba / naga mage / naga warrior / nagaraja /\
                anaconda / guardian serpent")
 -- Lair
   elseif rnd < 19 then

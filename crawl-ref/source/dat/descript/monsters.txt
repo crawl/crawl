@@ -1230,10 +1230,6 @@ greater mummy
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
 %%%%
-greater naga
-
-A formidable naga that is skilled in both martial and magical arts.
-%%%%
 green death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
@@ -1701,6 +1697,11 @@ obstruction.
 naga warrior
 
 A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
+%%%%
+nagaraja
+
+A magnificent example of the naga. It is an expert at both martial and magical
+arts.
 %%%%
 necromancer
 

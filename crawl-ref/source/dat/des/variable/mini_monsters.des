@@ -758,7 +758,7 @@ ENDMAP
 NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: Depths
-MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
+MONS:  naga / naga warrior w:2 / naga mage w:1, nagaraja / guardian serpent
 MONS:  ball python / adder / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
@@ -1843,7 +1843,7 @@ DEPTH:   Snake, Elf, Orc, Zot
 ITEM:    gold / any scroll / any book w:4
 SUBST:   ? = 123d
 : if you.in_branch("Snake") then
-MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
+MONS:    naga, naga warrior, naga mage w:9 / nagaraja w:1
 : elseif you.in_branch("Elf") then
 MONS:    deep elf mage, deep elf knight / deep elf archer, deep elf mage
 : elseif you.in_branch("Orc") then

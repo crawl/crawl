@@ -481,7 +481,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { MONS_GNOLL,                   { GNOLL_WEAPONS } },
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
-        { MONS_GREATER_NAGA,            { GNOLL_WEAPONS } },
+        { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
         { MONS_GNOLL_SHAMAN,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
@@ -1915,16 +1915,16 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
-    case MONS_GREATER_NAGA:
+    case MONS_NAGARAJA:
         if (one_chance_in(type == MONS_NAGA         ?  800 :
                           type == MONS_NAGA_WARRIOR ?  300 :
-                          type == MONS_GREATER_NAGA ?  100
+                          type == MONS_NAGARAJA ?  100
                                                     :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_NAGA_BARDING;
         }
-        else if (type == MONS_GREATER_NAGA
+        else if (type == MONS_NAGARAJA
                  || type == MONS_NAGA_RITUALIST
                  || one_chance_in(3))
         {

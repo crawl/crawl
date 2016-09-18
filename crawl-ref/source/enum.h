@@ -2936,7 +2936,7 @@ enum monster_type                      // menv[].type
     MONS_NAGA_RITUALIST,
     MONS_NAGA_SHARPSHOOTER,
 #endif
-    MONS_GREATER_NAGA,
+    MONS_NAGARAJA,
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
     MONS_MERFOLK,

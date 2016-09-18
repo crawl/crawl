@@ -11,7 +11,7 @@ mon_glyph += wight : lightgrey W
 mon_glyph += spider : brown s
 
 # nagas
-mon_glyph += greater naga : lightred N
+mon_glyph += nagaraja : lightred N
 mon_glyph += guardian serpent : lightgreen N
 mon_glyph += salamander : lightred S
 
