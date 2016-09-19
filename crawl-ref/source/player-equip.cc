@@ -496,7 +496,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_PROTECTION:
-                    mpr("You feel protected!");
+                    mprf("%s hums with potential!", item_name.c_str());
                     break;
 
                 case SPWPN_DRAINING:
@@ -668,7 +668,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
             case SPWPN_PROTECTION:
                 if (showMsgs)
-                    mpr("You feel less protected.");
+                    mprf("%s goes still.", msg.c_str());
+                you.attribute[ATTR_SPWPN_PROTECTION] = 0;
+                you.props[SPWPN_PROTECTION_DURATION] = 0;
                 you.redraw_armour_class = true;
                 break;
 

@@ -379,6 +379,22 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+static void _decrement_spwpn_protection(int time_taken)
+{
+    int duration = you.props[SPWPN_PROTECTION_DURATION].get_int();
+    if (duration <= 0)
+        return;
+
+    duration -= time_taken;
+    if (duration <= 0)
+    {
+        you.attribute[ATTR_SPWPN_PROTECTION] = 0;
+        you.redraw_armour_class = true;
+    }
+
+    you.props[SPWPN_PROTECTION_DURATION] = duration;
+}
+
 // Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
@@ -474,6 +490,7 @@ void player_reacts_to_monsters()
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
+    _decrement_spwpn_protection(you.time_taken);
 }
 
 static bool _check_recite()

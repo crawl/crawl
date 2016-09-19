@@ -6054,9 +6054,6 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
-    if (wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
-        AC += 500;
-
     if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
         AC += 300;
 
@@ -6075,6 +6072,7 @@ int player::armour_class(bool /*calc_unid*/) const
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
+    AC += you.attribute[ATTR_SPWPN_PROTECTION] * 100;
     AC += sanguine_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
@@ -8632,4 +8630,23 @@ void activate_sanguine_armour()
         mpr("Your blood congeals into armour.");
         you.redraw_armour_class = true;
     }
+}
+
+/**
+ * Adds or increases the protective aura around the player after striking with
+ * a weapon of protection. The duration is very short.
+ */
+void increment_weapon_protection()
+{
+    if (you.attribute[ATTR_SPWPN_PROTECTION] > 0)
+        mpr("Your weapon's aura of protection strengthens.");
+    else
+        mpr("Your weapon begins to exude an aura of protection.");
+
+    you.attribute[ATTR_SPWPN_PROTECTION] += 1;
+
+    int duration = you.props[SPWPN_PROTECTION_DURATION].get_int();
+
+    you.props[SPWPN_PROTECTION_DURATION] = max(duration, 30 + random2(10));
+    you.redraw_armour_class = true;
 }
