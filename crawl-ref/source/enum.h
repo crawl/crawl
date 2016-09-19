@@ -571,6 +571,7 @@ enum attribute_type
 #endif
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
+    ATTR_SPWPN_PROTECTION,     // Bonus AC from the SPWPN brand.
     NUM_ATTRIBUTES
 };
 

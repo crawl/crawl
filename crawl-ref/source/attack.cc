@@ -1580,7 +1580,7 @@ bool attack::apply_damage_brand(const char *what)
 
     if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
         && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRISM
-        && !defender->alive())
+        && brand != SPWPN_PROTECTION && !defender->alive())
     {
         // Most brands have no extra effects on just killed enemies, and the
         // effect would be often inappropriate.
@@ -1598,6 +1598,15 @@ bool attack::apply_damage_brand(const char *what)
 
     switch (brand)
     {
+    case SPWPN_PROTECTION:
+        {
+            monster * const mon = defender->as_monster();
+            const bool firewood = mon && mons_is_firewood(*mon);
+            if (!firewood)
+                increment_weapon_protection();
+        }
+        break;
+
     case SPWPN_FLAMING:
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",

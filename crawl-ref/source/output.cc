@@ -498,7 +498,8 @@ static bool _boosted_ac()
            || player_icemail_armour_class()
            || you.duration[DUR_QAZLAL_AC]
            || sanguine_armour_bonus()
-           || you.attribute[ATTR_BONE_ARMOUR] > 0;
+           || you.attribute[ATTR_BONE_ARMOUR] > 0
+           || you.attribute[ATTR_SPWPN_PROTECTION] > 0;
 }
 
 static bool _boosted_ev()

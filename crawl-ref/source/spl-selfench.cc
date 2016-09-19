@@ -135,7 +135,6 @@ int harvest_corpses(const actor &harvester, bool dry_run)
     return harvested;
 }
 
-
 /**
  * Casts the player spell "Cigotuvi's Embrace", pulling all corpses into LOS
  * around the caster to serve as armour.
@@ -174,7 +173,6 @@ spret_type corpse_armour(int pow, bool fail)
 
     return SPRET_SUCCESS;
 }
-
 
 spret_type missile_prot(int pow, bool fail)
 {
