@@ -19,7 +19,7 @@ const char * const standard_plural_qualifiers[] =
     " of ", " labeled ", nullptr
 };
 
-bool is_vowel(const ucs_t chr)
+bool is_vowel(const char32_t chr)
 {
     const char low = towlower(chr);
     return low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u';

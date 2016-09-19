@@ -699,7 +699,7 @@ void InventoryRegion::update()
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
-    ucs_t c;
+    char32_t c;
     const char *tp = Options.tile_show_items.c_str();
     int s;
     do // Do one last iteration with the 0 char at the end.

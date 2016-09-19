@@ -285,7 +285,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         if (!keys)
             return;
 
-        ucs_t wc;
+        char32_t wc;
         while (int len = utf8towc(&wc, keys))
         {
             macro_sendkeys_end_add_expanded(wc);

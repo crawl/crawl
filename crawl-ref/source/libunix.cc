@@ -477,7 +477,7 @@ void cprintf(const char *format, ...)
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
 
-    ucs_t c;
+    char32_t c;
     char *bp = buffer;
     while (int s = utf8towc(&c, bp))
     {
@@ -486,7 +486,7 @@ void cprintf(const char *format, ...)
     }
 }
 
-void putwch(ucs_t chr)
+void putwch(char32_t chr)
 {
     wchar_t c = chr;
     if (!c)
@@ -495,7 +495,7 @@ void putwch(ucs_t chr)
     addnwstr(&c, 1);
 
 #ifdef USE_TILE_WEB
-    ucs_t buf[2];
+    char32_t buf[2];
     buf[0] = chr;
     buf[1] = 0;
     tiles.put_ucs_string(buf);

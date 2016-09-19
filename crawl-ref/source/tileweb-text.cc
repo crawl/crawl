@@ -49,9 +49,9 @@ void WebTextArea::resize(int x, int y)
     }
 
     int size = mx * my;
-    m_cbuf = new ucs_t[size];
+    m_cbuf = new char32_t[size];
     m_abuf = new uint8_t[size];
-    m_old_cbuf = new ucs_t[size];
+    m_old_cbuf = new char32_t[size];
     m_old_abuf = new uint8_t[size];
 
     for (int i = 0; i < mx * my; i++)
@@ -78,7 +78,7 @@ void WebTextArea::clear()
     m_dirty = true;
 }
 
-void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
+void WebTextArea::put_character(char32_t chr, int fg, int bg, int x, int y)
 {
     ASSERT_RANGE(x, 0, mx);
     ASSERT_RANGE(y, 0, my);
@@ -113,7 +113,7 @@ void WebTextArea::send(bool force)
 
         for (int x = 0; x < mx; ++x)
         {
-            ucs_t chr = m_cbuf[x + y * mx];
+            char32_t chr = m_cbuf[x + y * mx];
             uint8_t col = m_abuf[x + y * mx];
 
             if (chr != m_old_cbuf[x + y * mx] ||

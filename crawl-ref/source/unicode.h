@@ -13,8 +13,8 @@ string chop_string(const string &s, int width, bool spaces = true);
 string chop_tagged_string(const char *s, int width, bool spaces = true);
 string chop_tagged_string(const string &s, int width, bool spaces = true);
 
-int wctoutf8(char *d, ucs_t s);
-int utf8towc(ucs_t *d, const char *s);
+int wctoutf8(char *d, char32_t s);
+int utf8towc(char32_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS
 typedef wchar_t utf16_t;
 wstring utf8_to_16(const char *s);
@@ -43,10 +43,10 @@ static inline string mb_to_utf8(const string &s)
     return mb_to_utf8(s.c_str());
 }
 
-int wclen(ucs_t c);
+int wclen(char32_t c);
 
 #ifndef UNIX
-int wcwidth(ucs_t c);
+int wcwidth(char32_t c);
 #endif
 
 char *prev_glyph(char *s, char *start);

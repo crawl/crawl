@@ -145,7 +145,7 @@ string get_menu_colour_prefix_tags(const item_def &item,
 void            init_item_name_cache();
 item_kind item_kind_by_name(const string &name);
 
-vector<string> item_name_list_for_glyph(unsigned glyph);
+vector<string> item_name_list_for_glyph(char32_t glyph);
 
 const char* rune_type_name(short p);
 

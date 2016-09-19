@@ -137,9 +137,9 @@ public:
 
     // View options
     map<dungeon_feature_type, feature_def> feature_colour_overrides;
-    map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
+    map<dungeon_feature_type, FixedVector<char32_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
-    ucs_t cset_override[NUM_DCHAR_TYPES];
+    char32_t cset_override[NUM_DCHAR_TYPES];
     typedef pair<string, cglyph_t> item_glyph_override_type;
     vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
@@ -253,7 +253,7 @@ public:
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
     char_set_type  char_set;
-    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
+    FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
@@ -596,8 +596,8 @@ private:
     map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
 };
 
-ucs_t get_glyph_override(int c);
-object_class_type item_class_by_sym(ucs_t c);
+char32_t get_glyph_override(int c);
+object_class_type item_class_by_sym(char32_t c);
 
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)

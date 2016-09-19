@@ -4069,7 +4069,7 @@ item_kind item_kind_by_name(const string &name)
                   { OBJ_UNASSIGNED, 0, 0, 0 });
 }
 
-vector<string> item_name_list_for_glyph(unsigned glyph)
+vector<string> item_name_list_for_glyph(char32_t glyph)
 {
     return lookup(item_names_by_glyph_cache, glyph, {});
 }

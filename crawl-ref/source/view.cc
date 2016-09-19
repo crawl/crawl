@@ -806,7 +806,7 @@ string screenshot()
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
                                      coord_def(x, y));
-            ucs_t ch =
+            char32_t ch =
                   (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;

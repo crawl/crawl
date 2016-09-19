@@ -6,7 +6,7 @@
 #include "unicode.h"
 
 // For order and meaning of symbols, see dungeon_char_type in enum.h.
-static const ucs_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
+static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 {
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
@@ -80,7 +80,7 @@ void init_char_table(char_set_type set)
 {
     for (int i = 0; i < NUM_DCHAR_TYPES; i++)
     {
-        ucs_t c;
+        char32_t c;
         if (Options.cset_override[i])
             c = Options.cset_override[i];
         else
@@ -91,7 +91,7 @@ void init_char_table(char_set_type set)
     }
 }
 
-ucs_t dchar_glyph(dungeon_char_type dchar)
+char32_t dchar_glyph(dungeon_char_type dchar)
 {
     if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
         return Options.char_table[dchar];
@@ -99,7 +99,7 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
         return 0;
 }
 
-string stringize_glyph(ucs_t glyph)
+string stringize_glyph(char32_t glyph)
 {
     char buf[5];
     buf[wctoutf8(buf, glyph)] = 0;

@@ -48,7 +48,7 @@ struct bolt
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
     int         range = -2;
-    ucs_t       glyph = '*';           // missile gfx
+    char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
     beam_type   flavour = BEAM_MAGIC;
     beam_type   real_flavour = BEAM_MAGIC; // for random and chaos beams this
