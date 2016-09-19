@@ -1308,7 +1308,6 @@ enum conduct_type
     DID_UNCLEAN,                          // Zin (used unclean weapon/magic)
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
-    DID_DESTROY_ORCISH_IDOL,              // Beogh
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
     DID_HASTY,                            // Cheibriados

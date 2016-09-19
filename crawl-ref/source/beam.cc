@@ -1036,12 +1036,7 @@ void bolt::destroy_wall_effect()
 
     obvious_effect = _destroy_wall_msg(feat, pos());
 
-    if (feat == DNGN_ORCISH_IDOL)
-    {
-        if (source_id == MID_PLAYER)
-            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
-    }
-    else if (feat_is_tree(feat))
+    if (feat_is_tree(feat))
     {
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);

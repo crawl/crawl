@@ -495,42 +495,6 @@ else
 end
 }}
 %%%%
-############################################
-# Beogh rants on destroying an orcish idol #
-############################################
-# Beogh's messiah has destroyed an idol
-Beogh idol follower
-
-Beogh fumes, "This is no small sin, orc. Repent!"
-
-Beogh whispers, "You will suffer for this misdeed."
-
-Beogh rages, "An eye for an eye..."
-%%%%
-# an unbelieving orc has destroyed an idol
-Beogh idol orc
-
-Beogh's voice booms out: "Heretic, die!"
-
-You hear Beogh's thundering voice: "Suffer, infidel!"
-
-Beogh roars, "Feel my power, apostate!"
-%%%%
-# a character of another species has destroyed an idol
-Beogh idol other
-
-Beogh is not amused by that idol's destruction.
-
-Beogh seems highly displeased.
-
-Your arrogance infuriates Beogh.
-
-Beogh utters a curse on your species.
-
-Beogh curses everyone not orcish, especially @player_genus_plural@.
-
-Beogh swears eternal hatred towards @player_god@.
-%%%%
 recite_closure
 
 "Amen!"
