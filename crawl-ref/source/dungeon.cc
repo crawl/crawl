@@ -5049,24 +5049,19 @@ static void _vault_grid_mons(vault_placement &place,
         _vault_grid_glyph_mons(place, where, vgrid);
 }
 
-// Currently only used for Slime: branch end
-// where it will turn the stone walls into clear rock walls
-// once the Royal Jelly has been killed.
-bool seen_replace_feat(dungeon_feature_type old_feat,
-                       dungeon_feature_type new_feat)
+// Only used for Slime:$ where it will turn the stone walls into floor once the
+// Royal Jelly has been killed, or at 6* Jiyva piety.
+bool seen_destroy_feat(dungeon_feature_type old_feat)
 {
-    ASSERT(old_feat != new_feat);
-
     coord_def p1(0, 0);
     coord_def p2(GXM - 1, GYM - 1);
 
     bool seen = false;
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
     {
-        if (grd(*ri) == old_feat)
+        if (orig_terrain(*ri) == old_feat)
         {
-            grd(*ri) = new_feat;
-            set_terrain_changed(*ri);
+            destroy_wall(*ri);
             if (you.see_cell(*ri))
                 seen = true;
         }
