@@ -440,42 +440,6 @@ else
 end
 }}
 %%%%
-############################################
-# Beogh rants on destroying an orcish idol #
-############################################
-# Beogh's messiah has destroyed an idol
-Beogh idol follower
-
-Beogh się złości: „To niemały grzech, orku!”
-
-Beogh szepcze: „Będziesz cierpiał za tą sprawkę.”
-
-Beogh się gniewa: „Oko za oko, ząb za ząb.”
-%%%%
-# an unbelieving orc has destroyed an idol
-Beogh idol orc
-
-Beogh grzmi: „Giń, heretyku!”
-
-Słyszysz grzmiący głos Beogha: „Cierp, niewierny!”
-
-Beogh ryczy: „Poczuj mą moc, odstępco!”
-%%%%
-# a character of another species has destroyed an idol
-Beogh idol other
-
-Beogh nie jest zachwycony zniszczeniem tego posągu.
-
-Beogh wydaje się być mocno rozgniewany.
-
-To mocno wkurzyło Beogha.
-
-Beogh rzuca klątwę na twój rodzaj.
-
-Beogh przeklina wszyskich nie-orków.
-
-Beogh obiecuje ci wieczną wrogość.
-%%%%
 #################################################
 # The Shining One rants on killing a holy being #
 #################################################

@@ -253,7 +253,7 @@ A shop that has been abandoned.
 %%%%
 An orcish idol
 
-An idol of the orc god Beogh. Destroying it is likely to incur Beogh's wrath.
+An idol of the orc god Beogh.
 %%%%
 An iron grate
 
