@@ -2003,8 +2003,8 @@ enum enchant_type
 #endif
     ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
-    ENCH_WITHDRAWN,
 #if TAG_MAJOR_VERSION == 34
+    ENCH_WITHDRAWN,
     ENCH_ATTACHED,
 #endif
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.

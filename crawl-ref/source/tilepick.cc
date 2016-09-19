@@ -1628,10 +1628,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_BALLISTOMYCETE:
             return base + (mon.is_active ? 1 : 0);
 
-        case MONS_SNAPPING_TURTLE:
-        case MONS_ALLIGATOR_SNAPPING_TURTLE:
-            return base + (mon.is(MB_WITHDRAWN) ? 1 : 0);
-
         case MONS_DUVESSA:
         case MONS_DOWAN:
             return mon.props.exists(ELVEN_IS_ENERGIZED_KEY) ? base + 1 : base;
