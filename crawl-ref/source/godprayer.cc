@@ -192,9 +192,9 @@ void pray(bool allow_conversion)
         you.turn_is_over = fedhas_fungal_bloom();
 
     if (you_worship(GOD_XOM))
-        mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
+        god_speaks(GOD_XOM, getSpeakString("Xom prayer").c_str());
     else if (you_worship(GOD_GOZAG))
-        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
+        god_speaks(GOD_GOZAG, getSpeakString("Gozag prayer").c_str());
     else if (player_under_penance())
         simple_god_message(" demands penance!");
     else
