@@ -3384,10 +3384,6 @@ int monster::armour_class(bool calc_unid) const
         ac += jewellery_plus;
     }
 
-    // Extra AC for snails/turtles drawn into their shells.
-    if (has_ench(ENCH_WITHDRAWN))
-        ac += 10;
-
     // various enchantments
     if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         ac += 4 + get_hit_dice() / 3;
@@ -5322,7 +5318,7 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 
 bool monster::is_stationary() const
 {
-    return mons_class_is_stationary(type) || has_ench(ENCH_WITHDRAWN);
+    return mons_class_is_stationary(type);
 }
 
 /**

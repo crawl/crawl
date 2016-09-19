@@ -736,11 +736,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             forest_message(pos(), "The forest calms down.");
         break;
 
-    case ENCH_WITHDRAWN:
-        if (!quiet)
-            simple_monster_message(*this, " emerges from its shell.");
-        break;
-
     case ENCH_LIQUEFYING:
         invalidate_agrid();
 
@@ -1385,17 +1380,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(*this, " looks more energetic.");
             del_ench(ENCH_SLOW, true);
         }
-        break;
-
-    case ENCH_WITHDRAWN:
-        if (hit_points >= (max_hit_points - max_hit_points / 4)
-                && !one_chance_in(3))
-        {
-            del_ench(ENCH_WITHDRAWN);
-            break;
-        }
-
-        decay_enchantment(en);
         break;
 
     case ENCH_SLOW:
@@ -2101,9 +2085,8 @@ static const char *enchant_names[] =
     "stoneskin",
 #endif
     "fear inspiring", "temporarily pacified",
-    "withdrawn",
 #if TAG_MAJOR_VERSION == 34
-    "attached",
+    "withdrawn", "attached",
 #endif
     "guardian_timer", "flight", "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
@@ -2284,10 +2267,6 @@ int mon_enchant::calc_duration(const monster* mons,
     // monster HD via modded_speed(). Use _mod_speed instead!
     switch (ench)
     {
-    case ENCH_WITHDRAWN:
-        cturn = 5000 / _mod_speed(25, mons->speed);
-        break;
-
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;

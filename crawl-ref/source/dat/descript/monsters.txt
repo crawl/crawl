@@ -499,8 +499,7 @@ An aggressive crocodilian with great crunching jaws full of sharp teeth.
 alligator snapping turtle
 
 A particularly large and nasty snapping turtle. Like its smaller relative, it
-can reach out and bite from afar, and will retreat inside its shell when
-threatened.
+can reach out and bite from afar.
 %%%%
 anaconda
 
@@ -2168,8 +2167,7 @@ from which it surges.
 snapping turtle
 
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
-extensible and can reach out and bite from afar. When threatened, it will
-retreat inside its shell.
+extensible and can reach out and bite from afar.
 %%%%
 soldier ant
 

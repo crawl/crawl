@@ -1283,16 +1283,6 @@ void monster::timeout_enchantments(int levels)
     {
         switch (entry.first)
         {
-        case ENCH_WITHDRAWN:
-            if (hit_points >= (max_hit_points - max_hit_points / 4)
-                && !one_chance_in(3))
-            {
-                del_ench(entry.first);
-                break;
-            }
-            lose_ench_levels(entry.second, levels);
-            break;
-
         case ENCH_POISON: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
