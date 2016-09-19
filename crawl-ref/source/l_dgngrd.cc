@@ -124,12 +124,11 @@ LUAFN(dgn_distance)
     return 1;
 }
 
-LUAFN(dgn_seen_replace_feat)
+LUAFN(dgn_seen_destroy_feat)
 {
-    dungeon_feature_type f1 = _get_lua_feature(ls, 1);
-    dungeon_feature_type f2 = _get_lua_feature(ls, 2);
+    dungeon_feature_type feat = _get_lua_feature(ls, 1);
 
-    lua_pushboolean(ls, seen_replace_feat(f1, f2));
+    lua_pushboolean(ls, seen_destroy_feat(feat));
     return 1;
 }
 
@@ -139,7 +138,7 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "feature_name", dgn_feature_name },
 { "feature_desc", dgn_feature_desc },
 { "feature_desc_at", dgn_feature_desc_at },
-{ "seen_replace_feat", dgn_seen_replace_feat },
+{ "seen_destroy_feat", dgn_seen_destroy_feat },
 
 { "grid", dgn_grid },
 { "max_bounds", dgn_max_bounds },
