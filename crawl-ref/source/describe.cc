@@ -3080,7 +3080,6 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * Print a bar of +s and .s representing a given stat to a provided stream.
  *
  * @param value[in]         The current value represented by the bar.
- * @param max[in]           The max value that can be represented by the bar.
  * @param scale[in]         The value that each + and . represents.
  * @param quadratic[in]     The value to increment each +/.'s scale.
  * @param name              The name of the bar.
@@ -3088,8 +3087,7 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param base_value[in]    The 'base' value represented by the bar. If
  *                          INT_MAX, is ignored.
  */
-static void _print_bar(int value, int max, int scale,
-                       int quadratic,
+static void _print_bar(int value, int scale, int quadratic,
                        string name, ostringstream &result,
                        int base_value = INT_MAX)
 {
@@ -3105,13 +3103,13 @@ static void _print_bar(int value, int max, int scale,
       result << "(";
 
     int current = 0;
-    for (int i = 0; current < max; i++)
+    for (int i = 0; current < display_max; i++)
     {
-      current = current + scale + (i * quadratic);
-      if (display_max > current)
+        current = current + scale + (i * quadratic);
+
         result << "+";
-      else
-        result << ".";
+        if (i % 5 == 4)
+            result << " ";
     }
 
     if (currently_disabled)
@@ -3129,8 +3127,6 @@ static void _print_bar(int value, int max, int scale,
         result << " (" << base_value << ")";
 #endif
     }
-
-    result << "\n";
 }
 
 /**
@@ -3141,7 +3137,8 @@ static void _print_bar(int value, int max, int scale,
  */
 static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mons_avg_hp(mi.type), 600, 5, 5, "HP", result);
+    _print_bar(mons_avg_hp(mi.type), 5, 5, "HP", result);
+    result << " (Max)\n";
 }
 
 /**
@@ -3152,8 +3149,9 @@ static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
-    // max ac 40 (dispater)
-    _print_bar(mi.ac, 40, 5, 0, "AC", result);
+    // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
+    _print_bar(mi.ac, 5, 0, "AC", result);
+    result << "\n";
 }
 
 /**
@@ -3164,8 +3162,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    // max ev 30 (eresh) (also to make space for parens)
-    _print_bar(mi.ev, 30, 5, 0, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, 0, "EV", result, mi.base_ev);
+    result << "\n";
 }
 
 /**
@@ -3182,9 +3180,9 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
         return;
     }
 
-    const int max_mr = 200; // export this? is this already exported?
     const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), max_mr, bar_scale, 0, "MR", result);
+    _print_bar(mi.res_magic(), bar_scale, 0, "MR", result);
+    result << "\n";
 }
 
 
