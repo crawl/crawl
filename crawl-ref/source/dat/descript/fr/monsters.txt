@@ -500,11 +500,6 @@ Une créature mort-vivante conservée par les eaux saumâtres d'une tourbière.
 Même si elle a été réanimée par quelque magie méconnue, cette magie ne peut
 l'empêcher de se décomposer.
 %%%%
-boulder beetle
-
-Un gros scarabée gris avec une carapace dure comme la pierre, capable de rouler
-sur ses adversaires à une grande vitesse.
-%%%%
 brain worm
 
 Un ver mauve et visqueux avec un grande tête distendue, cette créature se

@@ -409,7 +409,6 @@ bool cheibriados_thinks_mons_is_fast(const monster& mon);
 bool mons_is_fiery(const monster& mon);
 bool mons_is_projectile(monster_type mc);
 bool mons_is_projectile(const monster& mon);
-bool mons_is_boulder(const monster& mon);
 bool mons_can_cling_to_walls(const monster& mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);

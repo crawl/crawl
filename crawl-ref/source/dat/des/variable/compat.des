@@ -190,4 +190,9 @@ function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
     dgn.grid(x, y, "floor")
   end
 end
+
+function callback.boulder_grate_trap_stepped(data, triggerable, triggerer,
+                                             marker, ev)
+  -- do nothing
+end
 }}

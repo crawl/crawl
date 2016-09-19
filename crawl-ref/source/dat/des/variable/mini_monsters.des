@@ -353,7 +353,7 @@ TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
 KMONS:   1 = tyrant leech
-KMONS:   2 = boulder beetle
+KMONS:   2 = earth elemental
 KMONS:   3 = redback w:5 / orb spider w:5 / nothing
 KMONS:   4 = thrashing horror
 KITEM:   ' = stone no_pickup q:1 w:5 / nothing
@@ -2225,13 +2225,12 @@ MAP
 ...........
 ENDMAP
 
-##### Demonic crawlers (s) and beetles.
+##### Demonic crawlers (s) and mosquitos.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling
 DEPTH: D:13-, Elf, Spider
 MONS:  demonic crawler
-MONS:  vampire mosquito / boulder beetle w:8 / demonic crawler w:2 / \
-       nothing
+MONS:  vampire mosquito w:15 / demonic crawler w:5 / nothing
 MAP
 ..........
 .m.mmmmmm.

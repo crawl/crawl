@@ -1098,37 +1098,6 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
-    case MONS_BOULDER_BEETLE:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (!mons->has_ench(ENCH_ROLLING)
-            && !feat_is_water(grd(mons->pos())))
-        {
-            bolt beem = setup_targetting_beam(*mons);
-
-            // Fleeing check
-            if (mons_is_fleeing(*mons))
-            {
-                if (coinflip())
-                {
-                //  behaviour_event(mons, ME_CORNERED);
-                    simple_monster_message(*mons, " curls into a ball and rolls away!");
-                    boulder_start(mons, &beem);
-                    used = true;
-                }
-            }
-            // Normal check - don't roll at adjacent targets
-            else if (one_chance_in(3)
-                     && !adjacent(mons->pos(), beem.target))
-            {
-                simple_monster_message(*mons, " curls into a ball and starts rolling!");
-                boulder_start(mons, &beem);
-                used = true;
-            }
-        }
-        break;
-
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->blob_size,8) && x_chance_in_y(2,3)
             && mons->hit_points >= 8)

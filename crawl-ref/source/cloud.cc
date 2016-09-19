@@ -227,10 +227,10 @@ static const cloud_data clouds[] = {
       ETC_TORNADO,                              // colour
       { TILE_ERROR },                           // tile
     },
-    // CLOUD_DUST_TRAIL,
+    // CLOUD_DUST,
     { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
-      { TILE_CLOUD_DUST_TRAIL, CTVARY_DUR },    // tile
+      { TILE_CLOUD_DUST, CTVARY_DUR },          // tile
     },
     // CLOUD_SPECTRAL,
     { "spectral mist", nullptr,                 // terse, verbose name

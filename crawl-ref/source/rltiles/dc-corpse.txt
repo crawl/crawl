@@ -111,8 +111,6 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 
 ## Beetles ('B')
-%sdir mon/animals
-boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 

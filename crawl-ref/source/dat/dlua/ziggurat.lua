@@ -368,7 +368,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   local f = 20 + you.zigs_completed() * 4
-  return "gargoyle w:20 / earth elemental w:20 / boulder beetle w:20 / " ..
+  return "gargoyle w:30 / earth elemental w:30 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..

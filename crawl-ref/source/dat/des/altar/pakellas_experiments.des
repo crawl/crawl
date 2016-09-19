@@ -325,7 +325,7 @@ KFEAT:  g = iron_grate
 KFEAT:  _ = altar_pakellas
 MONS:   gargoyle ; nothing / deep elf knight ; nothing / manticore / cyclops \
         / hydra / deep elf annihilator ; nothing / very ugly thing \
-        / fire dragon / ice dragon / boulder beetle / sphinx \
+        / fire dragon / ice dragon / sphinx \
         / tengu reaver ; nothing
 MONS:   lightning spire att:neutral
 KMONS:  P = bush

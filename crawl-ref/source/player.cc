@@ -316,7 +316,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons->is_projectile())
+    if (mons_is_projectile(*mons))
     {
         if (!quiet)
             mpr("It's unwise to walk into this.");

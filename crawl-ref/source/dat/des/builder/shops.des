@@ -329,7 +329,7 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
+KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \

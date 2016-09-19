@@ -248,7 +248,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 tyrant leech / insubstantial wisp / w:5 swamp drake /\
                     bullfrog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",
-                "w:20 scorpion / w:2 boulder beetle / w:12 jumping spider /\
+                "w:20 scorpion / w:14 jumping spider /\
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
@@ -263,8 +263,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 fire bat / fire elemental / w:5 mottled dragon",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
-                "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
-                    w:15 rust devil / w:15 iron imp",
+                "w:20 earth elemental / gargoyle / w:15 rust devil /\
+                     w:15 iron imp",
                 "w:20 ice beast / w:20 simulacrum / rime drake / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
@@ -305,8 +305,8 @@ function arena_sprint_get_monster_set(round, boss)
                     w:5 sun demon / w:2 efreet / hell hound",
                 "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
-                "earth elemental w:15 / gargoyle w:5 / boulder beetle /\
-                    rust devil / iron imp / w:5 iron troll",
+                "earth elemental w:20 / gargoyle / rust devil / iron imp /\
+                     w:5 iron troll",
                 "ice beast / rime drake / ogre simulacrum / water elemental",
                 "wraith w:20 / w:5 eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
@@ -350,9 +350,8 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hog / w:5 fire crab",
                 "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
                     insubstantial wisp",
-                "earth elemental w:20 / boulder beetle /\
-                    rust devil / w:5 iron troll / w:1 roxanne /\
-                    w:2 iron dragon / w:3 iron elemental",
+                "earth elemental w:30 / rust devil / w:5 iron troll /\
+                    w:1 roxanne / w:2 iron dragon / w:3 iron elemental",
                 "ice beast w:5 / rime drake w:5 / hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental",
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
@@ -370,7 +369,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec",
                 "moth of wrath / w:20 hill giant", "ball lightning",
-                "boulder beetle", "orb spider", "redback / sea snake w:3",
+                "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye"
             }
         elseif round <= 20 then
@@ -436,8 +435,8 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant", "ball lightning",
-                "boulder beetle", "orb spider",
-                "hungry ghost / harpy", "shining eye", "tormentor",
+                "orb spider", "hungry ghost / harpy", "shining eye",
+                "tormentor",
                 "skeletal warrior / w:5 skeletal warrior ; blowgun . needle ego:confusion"
             }
         elseif round <= 26 then
@@ -503,7 +502,6 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; blowgun . needle ego:confusion",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
@@ -571,7 +569,6 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
@@ -642,7 +639,6 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",

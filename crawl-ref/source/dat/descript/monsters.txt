@@ -654,11 +654,6 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
-boulder beetle
-
-A grey beetle with an almost impenetrable rocky carapace, capable of rolling at
-its foes at high speed.
-%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and

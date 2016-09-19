@@ -150,7 +150,6 @@ function init_aquarium(e)
                  w:1  generate_awake wolf spider simulacrum /
                  w:1  generate_awake wolf simulacrum /
                  w:1  generate_awake polar bear simulacrum /
-                 w:1  generate_awake boulder beetle simulacrum /
                  w:1  generate_awake fire dragon simulacrum /
                  w:1  generate_awake hydra simulacrum]] )
     e.ftile('! = floor_frozen')
