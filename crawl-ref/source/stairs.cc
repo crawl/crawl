@@ -97,11 +97,6 @@ static void _player_change_level(level_id lev)
     you.where_are_you = lev.branch;
 }
 
-static bool _marker_vetoes_level_change()
-{
-    return marker_vetoes_operation("veto_level_change");
-}
-
 static void _maybe_destroy_shaft(const coord_def &p)
 {
     trap_def* trap = trap_at(p);
@@ -520,10 +515,6 @@ static level_id _travel_destination(const dungeon_feature_type how,
 
         break;
     }
-
-    // Bail if any markers veto the move.
-    if (_marker_vetoes_level_change())
-        return dest;
 
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
