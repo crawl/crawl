@@ -3082,15 +3082,13 @@ static void _add_energy_to_string(int speed, int energy, string what,
  *
  * @param value[in]         The current value represented by the bar.
  * @param scale[in]         The value that each + and . represents.
- * @param quadratic[in]     The value to increment each +/.'s scale.
  * @param name              The name of the bar.
  * @param result[in,out]    The stringstream to append to.
  * @param base_value[in]    The 'base' value represented by the bar. If
  *                          INT_MAX, is ignored.
  */
-static void _print_bar(int value, int scale, int quadratic,
-                       string name, ostringstream &result,
-                       int base_value = INT_MAX)
+static void _print_bar(int value, int scale, string name,
+                       ostringstream &result, int base_value = INT_MAX)
 {
     if (base_value == INT_MAX)
         base_value = value;
@@ -3103,11 +3101,8 @@ static void _print_bar(int value, int scale, int quadratic,
     if (currently_disabled)
       result << "(";
 
-    int current = 0;
-    for (int i = 0; current < display_max; i++)
+    for (int i = 0; i * scale < display_max; i++)
     {
-        current = current + scale + (i * quadratic);
-
         result << "+";
         if (i % 5 == 4)
             result << " ";
@@ -3138,8 +3133,7 @@ static void _print_bar(int value, int scale, int quadratic,
  */
 static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mons_avg_hp(mi.type), 5, 5, "HP", result);
-    result << " (Max)\n";
+    result << "Max HP: about " << mons_avg_hp(mi.type) << "\n";
 }
 
 /**
@@ -3151,7 +3145,7 @@ static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
     // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
-    _print_bar(mi.ac, 5, 0, "AC", result);
+    _print_bar(mi.ac, 5, "AC", result);
     result << "\n";
 }
 
@@ -3163,7 +3157,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mi.ev, 5, 0, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
     result << "\n";
 }
 
@@ -3182,7 +3176,7 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
     }
 
     const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), bar_scale, 0, "MR", result);
+    _print_bar(mi.res_magic(), bar_scale, "MR", result);
     result << "\n";
 }
 
