@@ -180,7 +180,7 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
-    bool can_affect_wall(dungeon_feature_type feat) const;
+    bool can_affect_wall(const coord_def& p) const;
     bool ignores_monster(const monster* mon) const;
     bool can_knockback(const actor *act = nullptr, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
