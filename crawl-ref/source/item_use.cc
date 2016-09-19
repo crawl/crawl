@@ -2746,7 +2746,10 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_ACQUIREMENT:
-        mpr("This is a scroll of acquirement!");
+        if (!alreadyknown)
+        {
+            mpr("This is a scroll of acquirement!");
+        }
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
