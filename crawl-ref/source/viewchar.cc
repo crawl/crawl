@@ -11,27 +11,18 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
     {
-    //       ▓
-        '#', 0x2593, '*', '.', ',', '\'', '+', '^', '>', '<',
-    //            ∩       ⌠       ≈
-        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
+         '#', U'▓',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',
+         '#',  '_', U'∩', U'⌠', U'≈',  '8',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
-    //  ⌂
-        0x2302, // CP437 but "optional" in WGL4
+        U'⌂', // CP437 but "optional" in WGL4
 #else
-    //  ∆
-        0x2206, // WGL4 and DEC
+        U'∆', // WGL4 and DEC
 #endif
-    //       φ
-        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
-    //                       †       ÷               §     ♣       ©
-        ':', '|', '\\', '}', 0x2020, 0xF7, '$', '"', 0xA7, 0x2663, 0xA9,
-    //                 ÷
-        ' ', '#', '*', 0xF7, 'X', '`', '#',  // space .. explosion
-    //  ═       ║       ╔       ╗       ╚       ╝       ─       │
-        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d, 0x2500, 0x2502, '/',
-    //        ┌       ┐       └       ┘            Λ
-        '\\', 0x250C, 0x2510, 0x2514, 0x2518, 'V', 0x39B, '>', '<'
+         '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(',
+         ':',  '|', '\\',  '}', U'†', U'÷',  '$',  '"', U'§', U'♣', U'©',
+         ' ',  '#',  '*', U'÷',  'X',  '`',  '#',  // space .. explosion
+        U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
+        '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
     },
     // CSET_ASCII
     {
