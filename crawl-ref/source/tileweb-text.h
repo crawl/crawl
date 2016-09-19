@@ -14,17 +14,17 @@ public:
 
     void clear();
 
-    void put_character(ucs_t chr, int fg, int bg, int x, int y);
+    void put_character(char32_t chr, int fg, int bg, int x, int y);
 
     void send(bool force = false);
 
     int mx, my; // Size
 
 protected:
-    ucs_t   *m_cbuf; // Character buffer
+    char32_t *m_cbuf; // Character buffer
     uint8_t *m_abuf; // Color buffer
 
-    ucs_t   *m_old_cbuf;
+    char32_t *m_old_cbuf;
     uint8_t *m_old_abuf;
 
     string m_client_side_name;

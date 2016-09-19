@@ -182,7 +182,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return true;
 }
 
-void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
+void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
 {
     // get on with rendering the new glyph
     FT_Error error;
@@ -285,7 +285,7 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
     }
 }
 
-unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
+unsigned int FTFontWrapper::map_unicode(char32_t uchar)
 {
     unsigned int c;  // index in m_glyphs
     if (!m_glyphmap.count(uchar))
@@ -369,7 +369,7 @@ unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
 }
 
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
-                                     ucs_t *chars,
+                                     char32_t *chars,
                                      uint8_t *colours,
                                      unsigned int width, unsigned int height,
                                      bool drop_shadow)
@@ -650,7 +650,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     unsigned int max_rows = 1;
     unsigned int cols = 0;
     unsigned int max_cols = 0;
-    ucs_t c;
+    char32_t c;
     for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
     {
         int w = wcwidth(c);
@@ -669,7 +669,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     }
 
     // Create the text block
-    ucs_t *chars = (ucs_t*)malloc(max_rows * max_cols * sizeof(ucs_t));
+    char32_t *chars = (char32_t*)malloc(max_rows * max_cols * sizeof(char32_t));
     uint8_t *colours = (uint8_t*)malloc(max_rows * max_cols);
     for (unsigned int i = 0; i < max_rows * max_cols; i++)
         chars[i] = ' ';
@@ -752,7 +752,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const string &str, const VColour &col, float orig_x)
 {
     const char *sp = str.c_str();
-    ucs_t c;
+    char32_t c;
     while (int s = utf8towc(&c, sp))
     {
         sp += s;
@@ -794,7 +794,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          ucs_t ch, const VColour &col)
+                          char32_t ch, const VColour &col)
 {
     unsigned int c = map_unicode(ch);
     if (!m_glyphs[c].renderable)

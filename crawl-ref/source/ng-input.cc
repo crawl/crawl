@@ -179,7 +179,7 @@ bool validate_player_name(const string &name, bool verbose)
         return false;
     }
 
-    ucs_t c;
+    char32_t c;
     for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
     {
         // The technical reasons are gone, but enforcing some sanity doesn't

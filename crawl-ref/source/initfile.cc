@@ -385,7 +385,7 @@ map<string, GameOption*> game_options::build_options_map(
     return option_map;
 }
 
-object_class_type item_class_by_sym(ucs_t c)
+object_class_type item_class_by_sym(char32_t c)
 {
     switch (c)
     {
@@ -1167,7 +1167,7 @@ void game_options::clear_feature_overrides()
     feature_symbol_overrides.clear();
 }
 
-ucs_t get_glyph_override(int c)
+char32_t get_glyph_override(int c)
 {
     if (c < 0)
         c = -c;
@@ -1188,7 +1188,7 @@ static int read_symbol(string s)
         s = s.substr(1);
 
     {
-        ucs_t c;
+        char32_t c;
         const char *nc = s.c_str();
         nc += utf8towc(&c, nc);
         // no control, combining or CJK characters, please
@@ -1416,7 +1416,7 @@ void game_options::add_feature_override(const string &text, bool prepend)
         if (feat >= NUM_FEATURES)
             continue; // TODO: handle other object types.
 
-#define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
+#define SYM(n, field) if (char32_t s = read_symbol(iprops[n])) \
                           feature_symbol_overrides[feat][n] = s; \
                       else \
                           feature_symbol_overrides[feat][n] = '\0';
@@ -2299,8 +2299,8 @@ static void _bindkey(string field)
                                         end_bracket - start_bracket - 1);
     const char *s = key_str.c_str();
 
-    ucs_t wc;
-    vector<ucs_t> wchars;
+    char32_t wc;
+    vector<char32_t> wchars;
     while (int l = utf8towc(&wc, s))
     {
         s += l;
@@ -2501,7 +2501,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         // clear out autopickup
         autopickups.reset();
 
-        ucs_t c;
+        char32_t c;
         for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
         {
             object_class_type type = item_class_by_sym(c);

@@ -50,7 +50,7 @@
 #include "viewchar.h"
 
 
-typedef vector<string> (*keys_by_glyph)(ucs_t showchar);
+typedef vector<string> (*keys_by_glyph)(char32_t showchar);
 typedef vector<string> (*simple_key_list)();
 typedef void (*db_keys_recap)(vector<string>&);
 typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
@@ -298,7 +298,7 @@ static vector<string> _get_desc_keys(string regex, db_find_filter filter)
     return all_matches;
 }
 
-static vector<string> _get_monster_keys(ucs_t showchar)
+static vector<string> _get_monster_keys(char32_t showchar)
 {
     vector<string> mon_keys;
 
@@ -315,7 +315,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
         if (me->mc != i)
             continue;
 
-        if ((ucs_t)me->basechar != showchar)
+        if ((char32_t)me->basechar != showchar)
             continue;
 
         if (mons_species(i) == MONS_SERPENT_OF_HELL)

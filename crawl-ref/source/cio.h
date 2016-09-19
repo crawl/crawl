@@ -253,7 +253,7 @@ protected:
     void kill_to_begin();
     void calc_pos();
 
-    bool is_wordchar(ucs_t c);
+    bool is_wordchar(char32_t c);
 
 protected:
     char            *buffer;

@@ -2273,7 +2273,7 @@ string spell_range_string(spell_type spell, bool rod)
  *                      Usually @ for the player.
  * @return              See above.
  */
-string range_string(int range, int maxrange, ucs_t caster_char)
+string range_string(int range, int maxrange, char32_t caster_char)
 {
     if (range <= 0)
         return "N/A";

@@ -92,8 +92,8 @@ void wizard_create_spec_object_by_name()
 
 void wizard_create_spec_object()
 {
-    char           specs[80];
-    ucs_t          keyin;
+    char specs[80];
+    char32_t keyin;
     object_class_type class_wanted;
 
     do

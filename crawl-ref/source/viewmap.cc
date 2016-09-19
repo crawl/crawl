@@ -115,18 +115,18 @@ static bool _is_explore_horizon(const coord_def& c)
 #endif
 
 #ifndef USE_TILE_LOCAL
-static ucs_t _get_sightmap_char(dungeon_feature_type feat)
+static char32_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).symbol();
 }
 
-static ucs_t _get_magicmap_char(dungeon_feature_type feat)
+static char32_t _get_magicmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).magic_symbol();
 }
 #endif
 
-static bool _is_player_defined_feature(ucs_t feature)
+static bool _is_player_defined_feature(char32_t feature)
 {
     return feature == 'E' || feature == 'F' || feature == 'W';
 }
@@ -139,7 +139,7 @@ static bool _is_player_defined_feature(ucs_t feature)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(ucs_t feature, const coord_def& where)
+bool is_feature(char32_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !you.see_cell(where) && !_is_player_defined_feature(feature))
         return false;
@@ -176,7 +176,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
     }
 }
 
-static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
+static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !_is_player_defined_feature(glyph))
         return false;
@@ -200,7 +200,7 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
     return false;
 }
 
-static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
+static int _find_feature(char32_t glyph, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
                          int ignore_count, int *move_x, int *move_y)
 {
@@ -261,7 +261,7 @@ static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
 }
 
 static int _find_feature(const vector<coord_def>& features,
-                         ucs_t feature, int curs_x, int curs_y,
+                         char32_t feature, int curs_x, int curs_y,
                          int start_x, int start_y,
                          int ignore_count,
                          int *move_x, int *move_y,
@@ -363,7 +363,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 // square is a normal floor square with nothing on it,
                 // show the waypoint number.
                 // XXX: This is a horrible hack.
-                ucs_t bc   = cell->glyph;
+                char32_t bc   = cell->glyph;
                 uint8_t ch = is_waypoint(c);
                 if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
                            || bc == _get_magicmap_char(DNGN_FLOOR)))
@@ -1083,7 +1083,7 @@ bool show_map(level_pos &lpos,
             {
                 bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
 
-                ucs_t getty;
+                char32_t getty;
                 switch (cmd)
                 {
                 case CMD_MAP_FIND_UPSTAIR:
