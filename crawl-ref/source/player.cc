@@ -8645,8 +8645,7 @@ void increment_weapon_protection()
 
     you.attribute[ATTR_SPWPN_PROTECTION] += 1;
 
-    int duration = you.props[SPWPN_PROTECTION_DURATION].get_int();
-
-    you.props[SPWPN_PROTECTION_DURATION] = max(duration, 30 + random2(10));
+    int& duration = you.props[SPWPN_PROTECTION_DURATION];
+    duration = max(duration, 30 + random2(10));
     you.redraw_armour_class = true;
 }
