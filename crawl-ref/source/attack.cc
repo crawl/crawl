@@ -1600,9 +1600,8 @@ bool attack::apply_damage_brand(const char *what)
     {
     case SPWPN_PROTECTION:
         {
-            monster * const mon = defender->as_monster();
-            const bool firewood = mon && mons_is_firewood(*mon);
-            if (!firewood)
+            const monster* mon = defender->as_monster();
+            if (mon && !mons_is_firewood(*mon))
                 increment_weapon_protection();
         }
         break;

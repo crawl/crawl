@@ -381,18 +381,16 @@ static void _update_cowardice()
 
 static void _decrement_spwpn_protection(int time_taken)
 {
-    int duration = you.props[SPWPN_PROTECTION_DURATION].get_int();
+    int& duration = you.props[SPWPN_PROTECTION_DURATION];
     if (duration <= 0)
         return;
 
-    duration -= time_taken;
-    if (duration <= 0)
+    duration = max(0, duration - time_taken);
+    if (duration == 0)
     {
         you.attribute[ATTR_SPWPN_PROTECTION] = 0;
         you.redraw_armour_class = true;
     }
-
-    you.props[SPWPN_PROTECTION_DURATION] = duration;
 }
 
 // Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
@@ -490,7 +488,6 @@ void player_reacts_to_monsters()
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
-    _decrement_spwpn_protection(you.time_taken);
 }
 
 static bool _check_recite()
@@ -878,6 +875,8 @@ static void _decrement_durations()
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+
+    _decrement_spwpn_protection(delay);
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
