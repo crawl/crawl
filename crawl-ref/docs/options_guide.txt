@@ -1511,6 +1511,11 @@ flash_screen_message += <regex>, <regex>
         indeed.
         The syntax is identical to that of force_more_message.
 
+cloud_status = true
+        Whether to show the "Cloud" status light; defaults to true, except if
+        playing with tiles, where you can see the cloud on top of you, where it
+        defaults to false.
+
 3-i     Colours (messages and menus)
 -----------------
 
