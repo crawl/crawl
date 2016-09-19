@@ -848,11 +848,6 @@ bool mons_is_projectile(const monster& mon)
     return mons_is_projectile(mon.type);
 }
 
-bool mons_is_boulder(const monster& mon)
-{
-    return mon.type == MONS_BOULDER_BEETLE && mon.rolling();
-}
-
 static bool _mons_class_is_clingy(monster_type type)
 {
     return mons_genus(type) == MONS_SPIDER || type == MONS_LEOPARD_GECKO

@@ -97,8 +97,8 @@ enum monster_info_flags
     MB_NO_REGEN,
 #if TAG_MAJOR_VERSION == 34
     MB_SUPPRESSED,
-#endif
     MB_ROLLING,
+#endif
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,

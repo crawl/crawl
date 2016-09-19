@@ -2721,7 +2721,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
     if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
-    if (is_projectile())
+    if (mons_is_projectile(*this))
     {
         // Assume some means of displacement, normal moves will overwrite this.
         props[IOOD_X].get_float() += c.x - pos().x;
@@ -5093,9 +5093,6 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(*this);
 
-    if (type == MONS_BOULDER_BEETLE && has_ench(ENCH_ROLLING))
-        speed = 14;
-
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
@@ -5684,7 +5681,7 @@ bool monster::do_shaft()
 
     const bool reveal = simple_monster_message(*this, msg.c_str());
 
-    place_cloud(CLOUD_DUST_TRAIL, pos(), 1 + random2(3), this);
+    place_cloud(CLOUD_DUST, pos(), 1 + random2(3), this);
 
     // Monster is no longer on this level.
     destroy_inventory();
@@ -6661,11 +6658,6 @@ bool monster::is_divine_companion() const
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
                || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
            && mons_can_use_stairs(*this);
-}
-
-bool monster::is_projectile() const
-{
-    return mons_is_projectile(*this) || mons_is_boulder(*this);
 }
 
 bool monster::is_jumpy() const

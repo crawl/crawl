@@ -932,10 +932,10 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
-MONS:   orc ; hunting sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling . stone q:30
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 5:1 / *:d
+NSUBST: b = 6:1 / *:d
 SUBST:  1 = 1 .
 MAP
      . .

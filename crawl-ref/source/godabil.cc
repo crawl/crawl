@@ -4947,7 +4947,7 @@ spret_type qazlal_elemental_force(bool fail)
             case CLOUD_FOREST_FIRE:
             case CLOUD_PETRIFY:
             case CLOUD_RAIN:
-            case CLOUD_DUST_TRAIL:
+            case CLOUD_DUST:
             case CLOUD_STORM:
                 targets.push_back(*ri);
                 break;
@@ -4994,7 +4994,7 @@ spret_type qazlal_elemental_force(bool fail)
             mg.cls = MONS_WATER_ELEMENTAL; // maybe ice beasts for cold?
             break;
         case CLOUD_PETRIFY:
-        case CLOUD_DUST_TRAIL:
+        case CLOUD_DUST:
             mg.cls = MONS_EARTH_ELEMENTAL;
             break;
         case CLOUD_BLACK_SMOKE:

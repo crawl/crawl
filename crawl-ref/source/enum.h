@@ -935,7 +935,7 @@ enum cloud_type
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
     CLOUD_TORNADO,
-    CLOUD_DUST_TRAIL,
+    CLOUD_DUST,
     CLOUD_SPECTRAL,
     CLOUD_ACID,
     CLOUD_STORM,
@@ -2026,8 +2026,8 @@ enum enchant_type
     ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
 #if TAG_MAJOR_VERSION == 34
     ENCH_DEATHS_DOOR,
-#endif
     ENCH_ROLLING,        // Boulder Beetle in ball form
+#endif
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
@@ -2717,11 +2717,11 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SPARK_WASP,
 #endif
-    MONS_BEETLE,
 #if TAG_MAJOR_VERSION == 34
+    MONS_BEETLE,
     MONS_BORING_BEETLE,
-#endif
     MONS_BOULDER_BEETLE,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,
 #endif

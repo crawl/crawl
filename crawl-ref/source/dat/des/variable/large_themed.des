@@ -30,7 +30,7 @@ function grandhive_vaults(e, hivewallglyph)
                      blink frog w:8 / manticore w:4 / hell rat w:4')
         e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
-                     boulder beetle w:2 / catoblepas w:2')
+                     catoblepas w:4')
     end
 end
 }}

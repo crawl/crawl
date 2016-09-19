@@ -1108,7 +1108,7 @@ ENDMAP
 NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
-MONS:    catoblepas, earth elemental, basilisk, boulder beetle
+MONS:    catoblepas, earth elemental, basilisk, gargoyle
 MONS:    catoblepas skeleton, air elemental, death drake
 ITEM:    potion of flight q:1 ident:type
 KMONS:   O = patrolling war gargoyle

@@ -100,7 +100,6 @@ static const pop_entry pop_d[] =
   { 16, 24,   25, PEAK, MONS_SHADOW_WRAITH },
   { 16, 27,   92, PEAK, MONS_ICE_DRAGON },
   { 17, 23,   89, PEAK, MONS_VERY_UGLY_THING },
-  { 17, 24,  245, PEAK, MONS_BOULDER_BEETLE },
   { 17, 24,  102, SEMI, MONS_GREAT_ORB_OF_EYES },
   { 17, 24,   52, SEMI, MONS_NECROMANCER },
   { 17, 25,  136, SEMI, MONS_DEEP_ELF_KNIGHT },
@@ -246,7 +245,6 @@ static const pop_entry pop_lair[] =
   {  2,  8,   80, SEMI, MONS_TORPOR_SNAIL },
   {  2,  8,   52, SEMI, MONS_CATOBLEPAS },
   {  2,  7,   25, PEAK, MONS_OKLOB_PLANT },
-  {  3,  6,   89, RISE, MONS_BOULDER_BEETLE },
   {  3,  8,   52, SEMI, MONS_POLAR_BEAR },
   {  3,  8,   25, PEAK, MONS_LINDWURM },
   {  4,  7,  144, PEAK, MONS_DREAM_SHEEP },
@@ -330,7 +328,6 @@ static const pop_entry pop_snake[] =
 static const pop_entry pop_spider[] =
 { // Spider Nest
   { -1,  4,  260, RISE, MONS_HORNET },
-  { -1,  6,   89, SEMI, MONS_BOULDER_BEETLE },
   { -1,  9,  765, SEMI, MONS_DEMONIC_CRAWLER },
   {  1,  4,  955, FLAT, MONS_WOLF_SPIDER },
   {  1,  4,  985, FLAT, MONS_JUMPING_SPIDER },
@@ -379,7 +376,6 @@ static const pop_entry pop_vaults[] =
   { -2,  6,  136, SEMI, MONS_DEEP_ELF_ARCHER },
   { -2,  6,  178, PEAK, MONS_ICE_DRAGON },
   { -2,  6,   89, PEAK, MONS_HARPY },
-  { -2,  8,  245, PEAK, MONS_BOULDER_BEETLE },
   { -1,  5,   89, PEAK, MONS_GLOWING_ORANGE_BRAIN },
   { -1,  9,  260, PEAK, MONS_FREEZING_WRAITH },
   { -1,  9,   89, PEAK, MONS_SHADOW_WRAITH },
