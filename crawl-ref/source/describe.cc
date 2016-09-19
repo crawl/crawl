@@ -1203,8 +1203,11 @@ static string _describe_ammo(const item_def &item)
             description += "It is coated with poison.";
             break;
         case SPMSL_CURARE:
-            description += "It is tipped with impact poison. It is twice as "
-                           "likely to be destroyed on impact as other needles.";
+            description += "It is tipped with a substance that causes "
+                           "asphyxiation, dealing direct damage as well as "
+                           "poisoning and slowing those it strikes.\n"
+                           "It is twice as likely to be destroyed on impact as "
+                           "other needles.";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";
@@ -1221,39 +1224,37 @@ static string _describe_ammo(const item_def &item)
             break;
 #endif
         case SPMSL_FRENZY:
-            description += "It is tipped with a substance that causes a mindless "
-                "rage, making people attack friend and foe alike.";
+            description += "It is tipped with a substance that sends those it "
+                           "hits into a mindless rage, attacking friend and "
+                           "foe alike.";
             break;
         case SPMSL_RETURNING:
-            description += "A skilled user can throw it in such a way "
-                "that it will return to its owner.";
+            description += "A skilled user can throw it in such a way that it "
+                           "will return to its owner.";
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
-                "potentially hitting all targets in its path until it "
-                "reaches maximum range.";
+                           "potentially hitting all targets in its path until "
+                           "it reaches its maximum range.";
             break;
         case SPMSL_DISPERSAL:
-            description += "Any target it hits will blink, with a "
-                "tendency towards blinking further away from the one "
-                "who " + threw_or_fired + " it.";
+            description += "It will cause any target it hits to blink, with a "
+                           "tendency towards blinking further away from the "
+                           "one who " + threw_or_fired + " it.";
             break;
         case SPMSL_EXPLODING:
-            description += "It will explode into fragments upon "
-                "hitting a target, hitting an obstruction, or reaching "
-                "the end of its range.";
+            description += "It will explode into fragments upon hitting a "
+                           "target, hitting an obstruction, or reaching its "
+                           "maximum range.";
             break;
         case SPMSL_STEEL:
-            description += "Compared to normal ammo, it does increased "
-                "damage.";
+            description += "It deals increased damage compared to normal ammo.";
             break;
         case SPMSL_SILVER:
-            description += "Silver sears all those touched by chaos. "
-                "Compared to normal ammo, it does 75% more damage to "
-                "chaotic and magically transformed beings. It also does "
-                "extra damage against mutated beings according to how "
-                "mutated they are. With due care, silver ammo can still "
-                "be handled by those it affects.";
+            description += "It deals substantially increased damage to chaotic "
+                           "and magically transformed beings. It also inflicts "
+                           "extra damage against mutated beings, according to "
+                           "how mutated they are.";
             break;
         }
     }
