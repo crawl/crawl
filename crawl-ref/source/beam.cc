@@ -895,7 +895,7 @@ void bolt::burn_wall_effect()
     if (you.see_cell(pos()))
     {
         if (player_in_branch(BRANCH_SWAMP))
-            emit_message("The tree smolders and burns.");
+            emit_message("The tree smoulders and burns.");
         else
             emit_message("The tree burns like a torch!");
     }
@@ -1067,7 +1067,7 @@ void bolt::affect_wall()
 {
     if (is_tracer)
     {
-        if (!can_affect_wall(grd(pos())))
+        if (!can_affect_wall(pos()))
             finish_beam();
 
         // potentially warn about offending your god by burning/disinting trees
@@ -1129,7 +1129,7 @@ bool bolt::need_regress() const
     //      others obsolete.
     return (is_explosion && !in_explosion_phase)
            || drop_item
-           || cell_is_solid(pos()) && !can_affect_wall(grd(pos()))
+           || cell_is_solid(pos()) && !can_affect_wall(pos())
            || origin_spell == SPELL_PRIMAL_WAVE;
 }
 
@@ -1337,7 +1337,7 @@ void bolt::do_fire()
             // Well, we warned them.
         }
 
-        if (feat_is_solid(feat) && !can_affect_wall(feat))
+        if (feat_is_solid(feat) && !can_affect_wall(pos()))
         {
             if (is_bouncy(feat))
                 bounce();
@@ -1377,7 +1377,7 @@ void bolt::do_fire()
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
         ASSERT(!cell_is_solid(pos())
-               || is_tracer && can_affect_wall(grd(pos()))
+               || is_tracer && can_affect_wall(pos())
                || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
@@ -2817,8 +2817,14 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_INNER_FLAME;
 }
 
-bool bolt::can_affect_wall(dungeon_feature_type wall) const
+bool bolt::can_affect_wall(const coord_def& p) const
 {
+    dungeon_feature_type wall = grd(p);
+
+    // Temporary trees (from Summon Forest) can't be burned/distintegrated.
+    if (feat_is_tree(wall) && is_temp_terrain(p))
+        return false;
+
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
@@ -6190,14 +6196,14 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore
         // solid cells at the center of the explosion.
-        if (stop_at_walls && !(delta.origin() && can_affect_wall(dngn_feat)))
+        if (stop_at_walls && !(delta.origin() && can_affect_wall(loc)))
             return;
         // But remember that we are at a wall.
         at_wall = true;
     }
 
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
-        && !can_affect_wall(dngn_feat) && stop_at_statues)
+        && !can_affect_wall(loc) && stop_at_statues)
     {
         return;
     }

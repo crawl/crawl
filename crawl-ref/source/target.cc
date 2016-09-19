@@ -126,7 +126,7 @@ void targetter_beam::set_explosion_target(bolt &tempbeam)
     tempbeam.target = origin;
     for (auto c : path_taken)
     {
-        if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
+        if (cell_is_solid(c) && !tempbeam.can_affect_wall(c))
             break;
         tempbeam.target = c;
         if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
@@ -162,7 +162,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     for (auto pc : path_taken)
     {
         if (cell_is_solid(pc)
-            && !beam.can_affect_wall(grd(pc))
+            && !beam.can_affect_wall(pc)
             && max_expl_rad > 0)
         {
             break;
@@ -176,7 +176,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
                 on_path = true;
             else if (cell_is_solid(pc))
             {
-                bool res = beam.can_affect_wall(grd(pc));
+                bool res = beam.can_affect_wall(pc);
                 if (res)
                     return current;
                 else
@@ -200,7 +200,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     {
         if ((loc - c).rdist() <= 9)
         {
-            bool aff_wall = beam.can_affect_wall(grd(loc));
+            bool aff_wall = beam.can_affect_wall(loc);
             if (!cell_is_solid(loc) || aff_wall)
             {
                 coord_def centre(9,9);
