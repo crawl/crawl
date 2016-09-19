@@ -51,7 +51,7 @@ end
 function desolation_ruins_setup(e)
   e.mons("saltling band")
   e.mons("imperial myrmidon / halazid warlock / crystal guardian")
-  e.nsubst("% = 5:% / 4:| / *:.")
+  e.nsubst("% = 4:% / 3:| / *:.")
   e.kitem("% = any weapon good_item / any armour good_item /\
                any jewellery randart w:5 / randbook w:5")
   e.subst(".=,")
