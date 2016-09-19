@@ -63,7 +63,7 @@ static int _gold_level()
 
 static int _invocations_level()
 {
-    int invo = you.skill(SK_INVOCATIONS);
+    int invo = you.skills[SK_INVOCATIONS];
     return (invo == 27) ? 7 :
            (invo >= 24) ? 6 :
            (invo >= 20) ? 5 :
