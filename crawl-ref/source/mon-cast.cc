@@ -140,6 +140,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 static function<bool(const monster&)> _setup_hex_check(spell_type spell);
 static bool _worth_hexing(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(actor* victim);
+static function<bool(const monster&)> _should_selfench(enchant_type ench);
 
 enum spell_logic_flag
 {
@@ -171,30 +172,21 @@ static mons_spell_logic _hex_logic(spell_type spell,
                                    = nullptr,
                                    int power_hd_factor = 0);
 
+
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_MIGHT, {
-        [](const monster &caster) { return !caster.has_ench(ENCH_MIGHT); },
+        _should_selfench(ENCH_MIGHT),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_MIGHT),
     } },
     { SPELL_INVISIBILITY, {
-        [](const monster &caster) { return !caster.has_ench(ENCH_INVIS); },
+        _should_selfench(ENCH_INVIS),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
-        [](const monster &caster)
-        {
-            // keep non-summoned pals with haste from spamming constantly
-            if (caster.friendly()
-                && !caster.get_foe()
-                && !caster.is_summoned())
-            {
-                return false;
-            }
-            return !caster.has_ench(ENCH_HASTE);
-        },
+        _should_selfench(ENCH_INVIS),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
@@ -594,6 +586,21 @@ static function<void(bolt&, const monster&, int)>
         beam.flavour = flavour;
         if (!_caster_is_player_shadow(caster))
             beam.target = caster.pos();
+    };
+}
+
+/**
+ * Build a function that tests whether it's worth casting a buff spell that
+ * applies the given enchantment to the caster.
+ */
+static function<bool(const monster&)> _should_selfench(enchant_type ench)
+{
+    return [ench](const monster &caster)
+    {
+        // keep non-summoned pals with haste from spamming constantly
+        if (caster.friendly() && !caster.get_foe() && !caster.is_summoned())
+            return false;
+        return !caster.has_ench(ench);
     };
 }
 
