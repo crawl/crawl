@@ -3283,10 +3283,8 @@ int check_stealth()
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
-    // this penalty is dependent on the actual amount of ambient noise
-    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= STEALTH_PIP + ambient_noise();
+        stealth -= STEALTH_PIP;
 
     // Mutations.
     stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
@@ -3296,9 +3294,6 @@ int check_stealth()
     const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
     if (how_transparent)
         stealth += 15 * (how_transparent);
-
-    // it's easier to be stealthy when there's a lot of background noise
-    stealth += 2 * ambient_noise();
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
