@@ -6068,12 +6068,14 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
+    if (duration[DUR_SPWPN_PROTECTION])
+        AC += 700;
+
     if (duration[DUR_CORROSION])
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
     AC += sanguine_armour_bonus();
-    AC += you.props[SPWPN_PROTECTION_DURATION].get_int() ? 700 : 0;
 
     AC += get_form()->get_ac_bonus();
 
@@ -8638,10 +8640,9 @@ void activate_sanguine_armour()
  */
 void refresh_weapon_protection()
 {
-    int& duration = you.props[SPWPN_PROTECTION_DURATION];
-    if (duration == 0)
+    if (!you.duration[DUR_SPWPN_PROTECTION])
         mpr("Your weapon exudes an aura of protection.");
 
-    duration = max(duration, 30 + random2(20));
+    you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
     you.redraw_armour_class = true;
 }
