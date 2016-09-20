@@ -83,7 +83,6 @@ static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
 static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
 static int _mons_spellpower(spell_type spell, const monster &mons);
-static bool _is_wiz_cast();
 static monster* _get_allied_target(const monster &caster, bolt &tracer);
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
 static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
@@ -470,8 +469,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
 /// Is the 'monster' actually a proxy for the player?
 static bool _caster_is_player_shadow(const monster &mons)
 {
-    // XXX: just check if type is MONS_PLAYER_SHADOW instead?
-    return mons.mid == MID_PLAYER && !_is_wiz_cast();
+    return mons.type == MONS_PLAYER_SHADOW;
 }
 
 /// Create the appropriate casting logic for a simple conjuration.
