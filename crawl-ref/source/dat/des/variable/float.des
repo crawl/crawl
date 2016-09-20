@@ -3436,6 +3436,226 @@ vGvGvv...vvGvGv
 vvvvvvvvvvvvvvv
 ENDMAP
 
+NAME: cheibrodos_frozen_isle
+DEPTH: D:8-
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: ice statue, ice devil, ufetubus
+KPROP: 1-' = no_tele_into
+NSUBST: ' = 5=*$ / *:%
+NSUBST: - = 4:2 / 4:3 / 4=23 / *:.
+MAP
+        ...
+       ..x..
+  ......xxx......
+  .xx..wwwww..xx.
+  .xxxwwWWWwwxxx.
+  ..xxWW---WWxx..
+  ..wWW-----WWw..
+ ..wwW-mm-mm-Www..
+..xwW--m'''m--Wwx..
+@xxwW---'1'---Wwxx@
+..xwW--m'''m--Wwx..
+ ..wwW-mm-mm-Www..
+  ..wWW-----WWw..
+  ..xxWW---WWxx..
+  .xxxwwWWWwwxxx.
+  .xx..wwwww..xx.
+  ......xxx......
+       ..x..
+        ...
+ENDMAP
+
+NAME: cheibrodos_iron_armory
+DEPTH: D:5-10
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: rust devil, orc warrior
+ITEM: scimitar / w:1 scimitar good_item, halberd / w:1 halberd good_item
+ITEM: war axe / w:1 war axe good_item, morningstar / w:1 morningstar good_item
+ITEM: plate armour / w:1 plate armour good_item
+ITEM: chain mail / w:1 chain mail good_item
+NSUBST: " = 1:h / 1:i
+NSUBST: - = 1:d / 1:e / 1:f / 1:g
+MAP
+    .....
+  ...vvv...
+ ..nvvAvvn..
+ .vvt1.1tvv.
+..v-.....-v..
+.vvv.....vvv.
+.v"+.2G2.+"v.
+.vvv.....vvv.
+..v-.....-v..
+ .vvt...tvv.
+ ..nvv)vvn..
+  ...vvv...
+    .....
+ENDMAP
+
+NAME: cheibrodos_quashed
+DEPTH: D:4-8
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: quasit
+KPROP: -A = no_tele_into
+NSUBST: - = 2:1 / 2=1. / 1:* / 5=%$.
+MAP
+ .......
+..xxxxx..
+.xx---xx.
+@m--A--m@
+.xx---xx.
+..xxxxx..
+ .......
+ENDMAP
+
+NAME: cheibrodos_shockbox
+DEPTH: D:7-
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+KMONS: - = sixfirhy
+KITEM: - = star_item / w:1 superb_item / w:1 demon blade ego:electrocution / \
+           w:1 glaive ego:electrocution / w:1 broad axe ego:electrocution
+MAP
+..@..
+.vnv.
+.n-n.
+.v=v.
+.....
+ENDMAP
+
+NAME: cheibrodos_two_vegetables
+DEPTH: D:5-10
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+KMONS: 1 = electric eel
+SUBST: ; = .W
+NSUBST: - = 3:1 / w, _ = 3:1 / w, A = 3:% / 1:* / 2:. / W
+NSUBST: B = 2:% / 1:* / 3:. / W, ` = 7:C / 4:. / W
+KFEAT: C = W
+KFEAT: 1 = w
+KMONS: C = plant
+MAP
+  xxxxxxxxxx
+ xx0..;WWWWxx
+xx;xxxxxxxx;xx
+xWxx..`BB_xx0x
+xWx...``B__x.x
+x;x....`BB_m.x
+x.x+..``B__x;x
+x..x..`BB_xxWxx
+xx;xxxxxxxxxxWxx
+ xWWxx..`AA-xxWx
+ xxWx...``A--x;x
+  x;x....`AA-m.x
+  x.x+..``A--x.x
+  x..x..`AA-xx+x
+  xx9xxxxxxxx.@.
+   xxx
+ENDMAP
+
+NAME: cheibrodos_hall_of_evolution
+DEPTH: Depths
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+NSUBST: A = 6:l / *:., l = 4=hi / *:l, B = 2:j / 1:k / 2=jjjk / 4:W / *:.
+NSUBST: w = 2:p / 1:q / 2=pppq / *:w, C = 5:P / 1:3 / *:.
+NSUBST: D = 4:% / 3:* / 1:| / *:$
+MONS: juggernaut, stone giant
+KMONS: 3 = spriggan defender band
+KMONS: h = fire elemental
+KMONS: i = salamander
+KMONS: jp = hydra simulacrum
+KMONS: kq = water elemental
+KMONS: P = plant
+KFEAT: hi = l
+KFEAT: jk = W
+KFEAT: pq = w
+MAP
+     ccccc  cccccc     ccccc  cccccc
+   ccclllccccwwwwcc  ccctttccccDDD.cc
+  ccllAAAlc.wBBBBwccccttCCCtc..DGD.Tcc
+ ccAAA....+......BBc.CCC....+..DDD..2c
+@+......AAc.BBB....+......CCc....DDD1c
+ cclAAAAlccccwwBBBwc.tCCCCtccccT.DGD2c
+  ccllllcc  cccwwwccccttttcc  cccDDDcc
+   cccccc     ccccc  cccccc     ccccc
+ENDMAP
+
+NAME: cheibrodos_quadrivalence
+DEPTH: D:12-, Depths
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+: if you.branch() == "Depths" then
+MONS: smoke demon / sun demon, balrug / w:2 nothing
+MONS: ynoxinul , blizzard demon / w:2 nothing
+: else
+MONS: red devil ; trident, sun demon / w:5 smoke demon / w:3 nothing
+MONS: ice devil, ynoxinul / w:2 nothing
+: end
+SHUFFLE: l2'/w4B
+NSUBST: ' = 3:1 / 3=1. / *:., B = 3:3 / 3=3. / *:., - = 2=|* / 4:* / 6=$%
+MAP
+...................
+.ccccc.......ccccc.
+.c-c-ccccccccc-c-c.
+.cc2c+c'''''c+c2cc.
+.c-cnc'lllll.cnc-c.
+.cc+c'll...l..c+cc.
+..cc'll..l..l..cc..
+..c'll..lll..ll'c..
+..c'l..lllll..l'c..
+..c'l.ll.)lll.l'c..
+..c'l.....ll..l'c..
+..c'll...ll..ll'c..
+..cc'll..l..ll'cc..
+.cc+c'll...ll'c+cc.
+.c-cnc'lllll'cnc-c.
+.cc2c+c'''''c+c2cc.
+.c-c-ccccccccc-c-c.
+.ccccc.......ccccc.
+...................
+ENDMAP
+
+NAME: cheibrodos_tormentor_scu
+DEPTH: D:11-, Depths
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+: if you.branch() == "Depths" then
+MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
+: else
+MONS: tormentor
+MONS: death knight / w:5 wraith / w:1 freezing wraith / w:4 skeletal warrior
+: end
+ITEM: demon whip ego:pain / demon whip ego: draining / demon blade ego:pain \
+      / demon blade ego:draining / demon trident ego:pain \
+      / demon trident ego:draining
+KFEAT: - = iron_grate
+NSUBST: " = 2 = w:2 d | / 5:* / 5=%$.
+NSUBST: ' = 3:* / 6:% / *:.
+NSUBST: ` = 5:2 / 4=2.
+MAP
+@..xxxxxxxxxxxxxxx
+.................x
+..............-c.x
+x...`````````-c-.x
+x..``````````--..x
+x..```''''cc-``..x
+x..``''-----c``..x
+x..``'--"""-c``..x
+x..``'-""1"-'``..x
+x..``'-"1""-'``..x
+x..``c-"""--'``..x
+x..``c-----''``..x
+x..``-cc''''```..x
+x..--``````````..x
+x.-c-`````````...x
+x.c-..............
+x.................
+xxxxxxxxxxxxxxx..@
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
@@ -7569,4 +7789,28 @@ x.CE*EB.x
 xx.BAC.xx
  xx*D9xx
   xxxxx
+ENDMAP
+
+NAME: cheibrodos_elevator_heist
+DEPTH: D:8-,!D:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MAP
+vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvv
+vv9...........]vv
+vv0............vv
+vv..vvvv.vvvn..vv
+vv..v......9v..vv
+vv..v.......v..vv
+vv..v..*$%..v..vv
+vv..v..$|$..v..vv
+vv..v..%$*..v..vv
+vv..v.......v..vv
+vv..v9......v..vv
+vv..nvvv.vvvv..vv
+vv............0vv
+vv[...........9vv
+vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvv
 ENDMAP
