@@ -2630,8 +2630,6 @@ w:50
 
 @The_monster@ says, "What's with all the gesturing? I hate that."
 
-@The_monster@ says, "I don't get the difference between high elves and deep elves."
-
 @The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."

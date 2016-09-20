@@ -20,10 +20,6 @@ Halfling
 Mazi, taču rūdīgi, hobiti ir nepārspējami ar lingām. Tiem ir arī palielināta
 pretestība pret mutagēnisku iedarbību.
 %%%%
-High Elf
-
-Cēli elfi, kas spējīgi burties tikpat labi kā cīnīties ar zobenu.
-%%%%
 Merfolk
 
 Kā puszivis un puscilvēki jūrcilvēki ir gan ūdens, gan zemes iemītnieki. Tie ir
