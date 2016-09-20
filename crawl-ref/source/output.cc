@@ -2588,8 +2588,9 @@ static string _status_mut_abilities(int sw)
     }
 
     // a bit more stuff
-    if (you.species == SP_OGRE || you.species == SP_TROLL
-        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
+    if (you.species == SP_BASAJAUN || you.species == SP_OGRE
+        || you.species == SP_TROLL || species_is_draconian(you.species)
+        || you.species == SP_SPRIGGAN)
     {
         mutations.emplace_back("unfitting armour");
     }

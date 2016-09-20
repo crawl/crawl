@@ -1482,6 +1482,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,     -1),
+
+    // SP_BASAJAUN
+    APT(SP_BASAJAUN,        SK_FIGHTING,        1),
+    APT(SP_BASAJAUN,        SK_SHORT_BLADES,   -1),
+    APT(SP_BASAJAUN,        SK_LONG_BLADES,    -1),
+    APT(SP_BASAJAUN,        SK_AXES,           -1),
+    APT(SP_BASAJAUN,        SK_MACES_FLAILS,   -1),
+    APT(SP_BASAJAUN,        SK_POLEARMS,       -1),
+    APT(SP_BASAJAUN,        SK_STAVES,         -1),
+    APT(SP_BASAJAUN,        SK_SLINGS,         -2),
+    APT(SP_BASAJAUN,        SK_BOWS,           -2),
+    APT(SP_BASAJAUN,        SK_CROSSBOWS,      -2),
+    APT(SP_BASAJAUN,        SK_THROWING,       -2),
+    APT(SP_BASAJAUN,        SK_ARMOUR,         -2),
+    APT(SP_BASAJAUN,        SK_DODGING,        -2),
+    APT(SP_BASAJAUN,        SK_STEALTH,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BASAJAUN,        SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_BASAJAUN,        SK_SHIELDS,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BASAJAUN,        SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_BASAJAUN,        SK_UNARMED_COMBAT, -1),
+    APT(SP_BASAJAUN,        SK_SPELLCASTING,    1),
+    APT(SP_BASAJAUN,        SK_CONJURATIONS,    0),
+    APT(SP_BASAJAUN,        SK_HEXES,           1),
+    APT(SP_BASAJAUN,        SK_CHARMS,          2),
+    APT(SP_BASAJAUN,        SK_SUMMONINGS,      0),
+    APT(SP_BASAJAUN,        SK_NECROMANCY,      0),
+    APT(SP_BASAJAUN,        SK_TRANSLOCATIONS,  0),
+    APT(SP_BASAJAUN,        SK_TRANSMUTATIONS,  0),
+    APT(SP_BASAJAUN,        SK_FIRE_MAGIC,      0),
+    APT(SP_BASAJAUN,        SK_ICE_MAGIC,       0),
+    APT(SP_BASAJAUN,        SK_AIR_MAGIC,       0),
+    APT(SP_BASAJAUN,        SK_EARTH_MAGIC,     0),
+    APT(SP_BASAJAUN,        SK_POISON_MAGIC,    0),
+    APT(SP_BASAJAUN,        SK_INVOCATIONS,     0),
+    APT(SP_BASAJAUN,        SK_EVOCATIONS,      0),
 };
 
 #endif

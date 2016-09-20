@@ -3552,6 +3552,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
+    MONS_BASAJAUN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4260,6 +4261,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_BASAJAUN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

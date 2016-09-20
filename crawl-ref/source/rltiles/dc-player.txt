@@ -77,6 +77,8 @@ djinni_m
 formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
+basajaun_f BASAJAUN
+basajaun_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

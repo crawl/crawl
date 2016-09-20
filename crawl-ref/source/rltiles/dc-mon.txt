@@ -361,7 +361,7 @@ black_sun MONS_BLACK_SUN
 ## From the Wucad Mu wizard laboratory
 mon/vault/demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
 
-## Spiritual beings ('R')
+## Spiritual and magical beings ('R')
 %sdir mon/unique
 %rim 1
 mara MONS_MARA
@@ -378,6 +378,8 @@ ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
 ancestor_hexer MONS_ANCESTOR_HEXER
 %rim 1
+%sdir mon
+basajaun MONS_BASAJAUN
 
 ## Abominations ('X')
 %sdir mon/demons

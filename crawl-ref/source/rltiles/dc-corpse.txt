@@ -121,7 +121,13 @@ bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
+## Spiritual and magical creatures ('R')
+%sdir mon
+basajaun CORPSE_BASAJAUN
+
+
 ## Snakes ('S')
+%sdir mon/animals
 ball_python CORPSE_BALL_PYTHON
 adder CORPSE_ADDER
 black_mamba CORPSE_BLACK_MAMBA

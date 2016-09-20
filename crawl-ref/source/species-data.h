@@ -701,6 +701,26 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
+
+{ SP_BASAJAUN, {
+    "Ba",
+    "Basajaun", nullptr, nullptr,
+    SPF_NONE,
+    -1, 2, 1,
+    9, 4,
+    MONS_BASAJAUN,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
+    10, 9, 5, // 24
+    { STAT_STR, STAT_INT }, 3,
+    {},
+    {},
+    {},
+    { JOB_SKALD, JOB_ENCHANTER, JOB_WIZARD, JOB_AIR_ELEMENTALIST,
+      JOB_EARTH_ELEMENTALIST, JOB_SUMMONER, JOB_NECROMANCER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
     "SE",

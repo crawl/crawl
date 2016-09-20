@@ -1531,6 +1531,15 @@ Trolls
   from even the most terrible wounds. They learn slowly indeed - as slowly as
   Demon Spawn - and need a great amount of food to survive.
 
+Basajaunak
+  Basajaunak are large, hair-covered creatures said to rule the forest. They
+  possess great strength and intelligence, yet mature somewhat slowly.
+
+  Although Basajaunak prefer the use of magic over physical combat, which they
+  learn poorly, their size allows them use of the largest weapons as well as
+  boulders for throwing. Their resilient bodies provide a natural offset to
+  their lack of combat skill and limited choice of armour.
+
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of

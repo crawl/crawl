@@ -36,7 +36,8 @@ static const map<job_type, job_def> job_data =
 { JOB_AIR_ELEMENTALIST, {
     "AE", "Air Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA, SP_VINE_STALKER, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA,
+      SP_VINE_STALKER, },
     { "robe", "book of Air" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_AIR_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
@@ -101,7 +102,8 @@ static const map<job_type, job_def> job_data =
 { JOB_CONJURER, {
     "Cj", "Conjurer",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN,
+      SP_DEMIGOD, },
     { "robe", "book of Conjurations" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
@@ -122,7 +124,8 @@ static const map<job_type, job_def> job_data =
 { JOB_ENCHANTER, {
     "En", "Enchanter",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN,
+      SP_NAGA, SP_VAMPIRE, },
     { "dagger plus:1", "robe plus:1", "book of Maledictions" },
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
@@ -143,7 +146,8 @@ static const map<job_type, job_def> job_data =
 { JOB_FIRE_ELEMENTALIST, {
     "FE", "Fire Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD,
+      SP_GARGOYLE, },
     { "robe", "book of Flames" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_FIRE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
@@ -174,8 +178,8 @@ static const map<job_type, job_def> job_data =
 { JOB_ICE_ELEMENTALIST, {
     "IE", "Ice Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
-      SP_GARGOYLE, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN,
+      SP_DEMIGOD, SP_GARGOYLE, },
     { "robe", "book of Frost" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_ICE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
@@ -207,7 +211,8 @@ static const map<job_type, job_def> job_data =
 { JOB_SKALD, {
     "Sk", "Skald",
     4, 4, 4,
-    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, },
+    { SP_BASAJAUN, SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN,
+      SP_VAMPIRE, },
     { "leather armour", "book of Battle" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
@@ -273,8 +278,8 @@ static const map<job_type, job_def> job_data =
 { JOB_WIZARD, {
     "Wz", "Wizard",
     -1, 10, 3,
-    { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_MUMMY, },
+    { SP_BASAJAUN, SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE,
+      SP_HUMAN, SP_MUMMY, },
     { "robe", "hat", "book of Minor Magic" },
     WCHOICE_NONE,
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
