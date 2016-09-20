@@ -32,7 +32,7 @@ const Branch branches[NUM_BRANCHES] =
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
       BROWN, BROWN,
-      'O', {}, 4 },
+      'O', {}, 0 },
 
     { BRANCH_ELF, BRANCH_ORC, 2, 2, 3, 15,
       BFLAG_DANGEROUS_END,
@@ -58,7 +58,7 @@ const Branch branches[NUM_BRANCHES] =
       "Lair", "the Lair of Beasts", "Lair",
       nullptr,
       GREEN, BROWN,
-      'L', {}, 4 },
+      'L', {}, 0 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END | BFLAG_SPOTTY,
@@ -74,7 +74,7 @@ const Branch branches[NUM_BRANCHES] =
       "Shoals", "the Shoals", "Shoals",
       nullptr,
       BROWN, BROWN,
-      'A', { RUNE_SHOALS }, 4 },
+      'A', { RUNE_SHOALS }, 6 },
 
     { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END,
@@ -123,7 +123,7 @@ const Branch branches[NUM_BRANCHES] =
       "Crypt", "the Crypt", "Crypt",
       nullptr,
       LIGHTGREY, BROWN,
-      'C', {}, -3 },
+      'C', {}, -6 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 3, 3, 21,
       BFLAG_ISLANDED | BFLAG_DANGEROUS_END | BFLAG_NO_SHAFTS,
@@ -131,7 +131,7 @@ const Branch branches[NUM_BRANCHES] =
       "Tomb", "the Tomb of the Ancients", "Tomb",
       nullptr,
       BROWN, BROWN,
-      'W', { RUNE_TOMB }, -10 },
+      'W', { RUNE_TOMB }, -6 },
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
       BFLAG_NO_ITEMS,
@@ -306,5 +306,5 @@ const Branch branches[NUM_BRANCHES] =
       "Desolation", "the Desolation of Salt", "Desolation",
       "You enter a great desolation of salt!",
       LIGHTGREY, BROWN, // TODO
-      '9', {}, 4 },
+      '9', {}, 6 },
 };
