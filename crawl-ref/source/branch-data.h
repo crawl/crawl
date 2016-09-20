@@ -74,7 +74,7 @@ const Branch branches[NUM_BRANCHES] =
       "Shoals", "the Shoals", "Shoals",
       nullptr,
       BROWN, BROWN,
-      'A', { RUNE_SHOALS }, 3 },
+      'A', { RUNE_SHOALS }, 4 },
 
     { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 4, 15,
       BFLAG_DANGEROUS_END,
@@ -306,5 +306,5 @@ const Branch branches[NUM_BRANCHES] =
       "Desolation", "the Desolation of Salt", "Desolation",
       "You enter a great desolation of salt!",
       LIGHTGREY, BROWN, // TODO
-      '9', {}, 2 },
+      '9', {}, 4 },
 };
