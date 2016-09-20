@@ -211,9 +211,11 @@ branch_type branch_by_shortname(const string &branch)
     return NUM_BRANCHES;
 }
 
-int current_level_ambient_noise()
+int ambient_noise(branch_type branch)
 {
-    return branches[you.where_are_you].ambient_noise;
+    if (branch == NUM_BRANCHES)
+        return branches[you.where_are_you].ambient_noise;
+    return branches[branch].ambient_noise;
 }
 
 branch_type get_branch_at(const coord_def& pos)
