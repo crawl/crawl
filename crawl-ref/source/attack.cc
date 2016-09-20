@@ -1602,7 +1602,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             const monster* mon = defender->as_monster();
             if (mon && !mons_is_firewood(*mon))
-                increment_weapon_protection();
+                refresh_weapon_protection();
         }
         break;
 

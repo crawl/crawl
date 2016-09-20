@@ -6072,8 +6072,8 @@ int player::armour_class(bool /*calc_unid*/) const
         AC -= 400 * you.props["corrosion_amount"].get_int();
 
     AC += _bone_armour_bonus();
-    AC += you.attribute[ATTR_SPWPN_PROTECTION] * 100;
     AC += sanguine_armour_bonus();
+    AC += you.props[SPWPN_PROTECTION_DURATION].get_int() ? 700 : 0;
 
     AC += get_form()->get_ac_bonus();
 
@@ -8633,19 +8633,15 @@ void activate_sanguine_armour()
 }
 
 /**
- * Adds or increases the protective aura around the player after striking with
+ * Refreshes the protective aura around the player after striking with
  * a weapon of protection. The duration is very short.
  */
-void increment_weapon_protection()
+void refresh_weapon_protection()
 {
-    if (you.attribute[ATTR_SPWPN_PROTECTION] > 0)
-        mpr("Your weapon's aura of protection strengthens.");
-    else
-        mpr("Your weapon begins to exude an aura of protection.");
-
-    you.attribute[ATTR_SPWPN_PROTECTION] += 1;
-
     int& duration = you.props[SPWPN_PROTECTION_DURATION];
-    duration = max(duration, 30 + random2(10));
+    if (duration == 0)
+        mpr("Your weapon exudes an aura of protection.");
+
+    duration = max(duration, 30 + random2(20));
     you.redraw_armour_class = true;
 }
