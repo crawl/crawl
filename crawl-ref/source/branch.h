@@ -93,7 +93,7 @@ level_id current_level_parent();
 branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);
 branch_type branch_by_shortname(const string &branch);
 
-int current_level_ambient_noise();
+int ambient_noise(branch_type branch = NUM_BRANCHES);
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
