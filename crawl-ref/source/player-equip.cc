@@ -669,7 +669,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_PROTECTION:
                 if (showMsgs)
                     mprf("%s goes still.", msg.c_str());
-                you.attribute[ATTR_SPWPN_PROTECTION] = 0;
                 you.props[SPWPN_PROTECTION_DURATION] = 0;
                 you.redraw_armour_class = true;
                 break;

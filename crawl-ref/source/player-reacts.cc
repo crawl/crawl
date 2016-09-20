@@ -387,10 +387,7 @@ static void _decrement_spwpn_protection(int time_taken)
 
     duration = max(0, duration - time_taken);
     if (duration == 0)
-    {
-        you.attribute[ATTR_SPWPN_PROTECTION] = 0;
         you.redraw_armour_class = true;
-    }
 }
 
 // Uskawyaw piety decays incredibly fast, but only to a baseline level of *.

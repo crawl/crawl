@@ -1055,7 +1055,7 @@ string describe_contamination(int level);
 bool sanguine_armour_valid();
 void activate_sanguine_armour();
 
-void increment_weapon_protection();
+void refresh_weapon_protection();
 
 void set_mp(int new_amount);
 
