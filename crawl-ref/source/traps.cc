@@ -1109,20 +1109,13 @@ void search_around()
 
         int dist = ri->distance_from(you.pos());
 
-        // Own square is not excluded; may be flying.
-        // XXX: Currently, flying over a trap will always detect it.
+        // Note: Currently, being on an untriggered trap will always detect it.
+        // (But that probably can't happen?)
 
         int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
 
         trap_def* ptrap = trap_at(*ri);
-        if (!ptrap)
-        {
-            // Maybe we shouldn't kill the trap for debugging
-            // purposes - oh well.
-            grd(*ri) = DNGN_FLOOR;
-            dprf("You found a buggy trap! It vanishes!");
-            continue;
-        }
+        ASSERT(ptrap);
 
         if (effective > ptrap->skill_rnd)
         {
