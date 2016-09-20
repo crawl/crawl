@@ -1525,7 +1525,7 @@ Trolls
 
   They can rip creatures apart with their claws, and regenerate very quickly
   from even the most terrible wounds. They learn slowly indeed - as slowly as
-  High Elves - and need a great amount of food to survive.
+  Demonspawn - and need a great amount of food to survive.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1600,6 +1600,14 @@ Deep Dwarves
 
   Deep Dwarves can tinker with wands so as to recharge them. However, each time
   they do so, they lose a bit of their magical essence.
+
+Deep Elves
+   This is an Elven species who long ago fled the overworld to live in darkness
+   underground. There, they developed their mental powers, evolving a natural
+   gift for all forms of magic (including necromancy and earth magic), and
+   adapted physically to their new environment, becoming shorter, weaker, and
+   losing all colouration. They are poor at hand-to-hand combat, but excellent
+   at fighting from a distance.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1688,37 +1696,6 @@ Vine Stalkers
   magic quite competently and then switching to a hybrid style when their
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
-
-Elves
-========================================
-
-There are a number of distinct species of Elf. Elves are all physically slight
-but long-lived people, quicker-witted than Humans, but sometimes slower to learn
-new things. Elves are especially good at using those skills which require a
-degree of finesse, such as stealth, sword-fighting and archery, but tend to be
-poor at using brute force and inelegant forms of combat. They find heavy armour
-to be uncomfortable.
-
-Due to their fey natures, all Elves are good at using magic in general and
-elemental magic in particular, while their affinity for other types of magic
-varies among the different sub-species.
-
-High Elves
-  This is a tall and powerful Elven species who advance in levels slowly,
-  requiring half again as much experience as Humans. They have good intelligence
-  and dexterity, but suffer in strength. Compared with Humans, they have fewer
-  HP but more magic. Among all races, they are best with blades and bows. They
-  are not very good with necromancy or with earth or poison magic, but are
-  highly skilled with most other forms of magic, especially Air and Charms.
-
-Deep Elves
-  This is an Elven species who long ago fled the overworld to live in darkness
-  underground. There, they developed their mental powers, evolving a natural
-  gift for all forms of magic (including necromancy and earth magic), and
-  adapted physically to their new environment, becoming shorter and weaker than
-  High Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels at the same
-  speed as High Elves.
 
 The Undead
 ========================================
