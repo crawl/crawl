@@ -499,7 +499,7 @@ static bool _boosted_ac()
            || you.duration[DUR_QAZLAL_AC]
            || sanguine_armour_bonus()
            || you.attribute[ATTR_BONE_ARMOUR] > 0
-           || you.props[SPWPN_PROTECTION_DURATION].get_int() > 0;
+           || you.duration[DUR_SPWPN_PROTECTION];
 }
 
 static bool _boosted_ev()

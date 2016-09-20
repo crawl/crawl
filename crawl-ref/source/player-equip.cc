@@ -578,10 +578,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             // effect second
             switch (special)
             {
-            case SPWPN_PROTECTION:
-                you.redraw_armour_class = true;
-                break;
-
             case SPWPN_VAMPIRISM:
                 if (you.species != SP_VAMPIRE
                     && you.undead_state() == US_ALIVE
@@ -669,8 +665,11 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_PROTECTION:
                 if (showMsgs)
                     mprf("%s goes still.", msg.c_str());
-                you.props[SPWPN_PROTECTION_DURATION] = 0;
-                you.redraw_armour_class = true;
+                if (you.duration[DUR_SPWPN_PROTECTION])
+                {
+                    you.duration[DUR_SPWPN_PROTECTION] = 0;
+                    you.redraw_armour_class = true;
+                }
                 break;
 
             case SPWPN_VAMPIRISM:

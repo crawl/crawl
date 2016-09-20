@@ -534,6 +534,9 @@ static const duration_def duration_data[] =
       "sanguine armour", "",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
+    { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
+      "Your weapon is exuding a protective aura.", D_NO_FLAGS,
+      {{ "", _redraw_armour }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
