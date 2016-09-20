@@ -993,6 +993,29 @@ xx.........xxxx
      xxxxx
 ENDMAP
 
+NAME: cheibrodos_toxic_ritual
+DEPTH: Snake
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: green death, naga ritualist, naga mage, naga
+NSUBST: - = 2:2 / *:.
+NSUBST: _ = 2:2 / *:.
+NSUBST: ' = 1:3 / 2:4 / 3=34 / *:.
+NSUBST: " = 1:| / 3:* / 4=$%
+MAP
+.............
+..ccc...ccc..
+.cc"cc.cc"cc.
+.c"""ncn"""c.
+.c'''''''''c.
+.c'''''''''c.
+.c---c=c___c.
+.c-1-n.n_1_c.
+.ccAcc.ccAcc.
+..ccc...ccc..
+......@......
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
