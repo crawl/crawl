@@ -1044,6 +1044,8 @@ static string _describe_action(caction_type type)
         return " Stab";
     case CACT_EAT:
         return "  Eat";
+    case CACT_RIPOSTE:
+        return "Rpst.";
     default:
         return "Error";
     }
@@ -1095,6 +1097,7 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     }
     case CACT_MELEE:
     case CACT_FIRE:
+    case CACT_RIPOSTE:
         if (subtype == -1)
         {
             if (auxtype == -1)
