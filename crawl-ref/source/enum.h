@@ -847,6 +847,7 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_BLOCK,      // armour subtype or subtype = -1 and
                      //   auxtype used for special cases
                      //   (reflection, god ability, spell, etc)
+    CACT_RIPOSTE,    // as CACT_MELEE
     NUM_CACTIONS,
 };
 
