@@ -1966,44 +1966,7 @@ static bool actor_can_lose_heads(const actor* defender)
  */
 bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
 {
-    // hydras and hydra-like things only.
-    if (!actor_can_lose_heads(defender))
-        return false;
-
-    // no decapitate on riposte (Problematic)
-    if (is_riposte)
-        return false;
-
-    // Monster attackers+defenders have only a 25% chance of making the
-    // chop-check to prevent runaway head inflation.
-    // XXX: Tentatively making an exception for spectral weapons
-    const bool player_spec_weap = attacker->is_monster()
-                                    && attacker->type == MONS_SPECTRAL_WEAPON
-                                    && attacker->as_monster()->summoner
-                                        == MID_PLAYER;
-    if (attacker->is_monster() && defender->is_monster()
-        && !player_spec_weap && !one_chance_in(4))
-    {
-        return false;
-    }
-
-    // Only cutting implements.
-    if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
-        && dam_type != DVORP_CLAWING)
-    {
-        return false;
-    }
-
-    // Small claws are not big enough.
-    if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
-        return false;
-
-    // You need to have done at least some damage.
-    if (dam <= 0 || dam < 4 && coinflip())
-        return false;
-
-    // ok, good enough!
-    return true;
+    return false;
 }
 
 /**
