@@ -149,7 +149,6 @@ halo_player TSO
 %rim 0
 %sdir player/ench
 sticky_flame STICKY_FLAME
-%rim 1
 %end_ctg
 
 ###Cloak
@@ -159,21 +158,46 @@ red RED FIRST_NORM
 blue BLUE
 magenta MAGENTA
 yellow YELLOW
-black BLACK
 gray GRAY
-brown LBROWN
+black BLACK
 green GREEN
 cyan CYAN
 white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+#shorter, for tailed species
+red-s RED_SHORT FIRST_SHORT
+blue-s BLUE_SHORT
+magenta-s MAGENTA_SHORT
+yellow-s YELLOW_SHORT
+gray-s GRAY_SHORT
+black-s BLACK_SHORT
+green-s GREEN_SHORT
+cyan-s CYAN_SHORT
+white-s WHITE_SHORT
+#unrand
+ratskin-s RATSKIN_CLOAK_SHORT
+dragonskin-s DRAGONSKIN_CLOAK_SHORT
+#centaur caparisons
+red-c RED_CENTAUR FIRST_CENTAUR
+blue-c BLUE_CENTAUR
+magenta-c MAGENTA_CENTAUR
+yellow-c YELLOW_CENTAUR
+gray-c GRAY_CENTAUR
+black-c BLACK_CENTAUR
+green-c GREEN_CENTAUR
+cyan-c CYAN_CENTAUR
+white-c WHITE_CENTAUR
+#unrand
+ratskin-s RATSKIN_CLOAK_CENTAUR
+dragonskin-s DRAGONSKIN_CLOAK_CENTAUR
 %end_ctg
 
 ###Boots
 %parts_ctg BOOTS
 %sdir player/boots
-
+%rim 1
 short_red SHORT_RED FIRST_NORM
 short_purple SHORT_PURPLE
 short_brown SHORT_BROWN
@@ -199,17 +223,16 @@ spider SPIDER
 ## Mutations
 hooves HOOVES
 ## Bardings
-%rim 1
 %sdir player/barding
-naga_barding_blue NAGA_BARDING
-naga_barding_metal NAGA_BARDING_METAL
-naga_barding_magenta NAGA_BARDING_MAGENTA
-naga_barding_red NAGA_BARDING_RED
-centaur_barding_blue CENTAUR_BARDING
-centaur_barding_metal CENTAUR_BARDING_METAL
-centaur_barding_magenta CENTAUR_BARDING_MAGENTA
-centaur_barding_red CENTAUR_BARDING_RED
 %rim 0
+naga_barding_magenta NAGA_BARDING
+naga_barding_gold NAGA_BARDING_GOLD
+naga_barding_metal NAGA_BARDING_METAL
+naga_barding_red NAGA_BARDING_RED NAGA_BARDING_LAST
+centaur_barding_steel CENTAUR_BARDING
+centaur_barding_iron CENTAUR_BARDING_IRON
+centaur_barding_bronze CENTAUR_BARDING_BRONZE
+centaur_barding_white CENTAUR_BARDING_WHITE CENTAUR_BARDING_LAST
 lightning_scales LIGHTNING_SCALES
 black_knight BLACK_KNIGHT
 %end_ctg

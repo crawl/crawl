@@ -433,8 +433,6 @@ tileidx_t tilep_equ_boots(const item_def &item)
     if (item.props.exists("worn_tile"))
         return item.props["worn_tile"].get_short();
 
-    int etype = enchant_to_int(item);
-
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -443,10 +441,16 @@ tileidx_t tilep_equ_boots(const item_def &item)
     }
 
     if (item.sub_type == ARM_NAGA_BARDING)
-        return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
+    {
+        return _modrng(item.rnd, TILEP_BOOTS_NAGA_BARDING,
+                       TILEP_BOOTS_NAGA_BARDING_LAST);
+    }
 
     if (item.sub_type == ARM_CENTAUR_BARDING)
-        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
+    {
+        return _modrng(item.rnd, TILEP_BOOTS_CENTAUR_BARDING,
+                       TILEP_BOOTS_CENTAUR_BARDING_LAST);
+    }
 
     if (item.sub_type != ARM_BOOTS)
         return 0;

@@ -389,6 +389,24 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_CLOAK] ? -1 : you.equip[EQ_CLOAK];
         if (item == -1)
             result.parts[TILEP_PART_CLOAK] = 0;
+        else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                TILEP_BASE_NAGA) ||
+                 is_player_tile(result.parts[TILEP_PART_BASE],
+                                TILEP_BASE_MERFOLK_WATER) ||
+                 (TILEP_BASE_DRACONIAN_FIRST <= result.parts[TILEP_PART_BASE] &&
+                  result.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST))
+            {
+                // These have tails, so they need shorter cloaks.
+                result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item])
+                        + TILEP_CLOAK_FIRST_SHORT - TILEP_CLOAK_FIRST_NORM;
+            }
+        else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                TILEP_BASE_CENTAUR))
+            {
+                // Caparisons.
+                result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item])
+                        + TILEP_CLOAK_FIRST_CENTAUR - TILEP_CLOAK_FIRST_NORM;
+            }
         else
             result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item]);
     }
@@ -550,7 +568,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
                                         TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_LAST
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
@@ -560,10 +578,17 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
                                         TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_LAST
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    // Centaur "cloaks" go over the base tile.
+    if (is_cent)
+    {
+        p_order[4] = TILEP_PART_BASE;
+        p_order[5] = TILEP_PART_CLOAK;
     }
 
     // Set up mcache data based on equipment. We don't need this lookup if both
