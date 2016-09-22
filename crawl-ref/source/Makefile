@@ -432,7 +432,7 @@ endif
 
 # Find the oldest SDK available, in attempt to make this build as
 # backward-compatible as we possibly can.
-SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | grep -v "MacOSX.sdk" | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
 
 ifeq ($(SDK_VER),10.4u)
 SDK_VER := 10.4
