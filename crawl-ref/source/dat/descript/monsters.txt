@@ -1378,13 +1378,8 @@ the bodies of its victims, hoping to inflict its own miserable fate on others.
 %%%%
 hydra
 
-A great and nightmarish lacertilian beast. It has many heads, and the potential
-to grow many more!
-
-Hitting it with any bladed weapon bigger than a short blade risks lopping a
-head off and causing two more to grow in its place. Very large claws, such as
-trolls', are long enough to do the same. Only a weapon branded with flame will
-cauterize the wound and prevent more heads from growing.
+A great and nightmarish lacertilian beast. It has many heads, each of which
+seeks to devour its foes.
 %%%%
 hyperactive ballistomycete
 

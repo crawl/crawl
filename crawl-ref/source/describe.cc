@@ -882,7 +882,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     const int spec_ench = (is_artefact(item) || verbose)
                           ? get_weapon_brand(item) : SPWPN_NORMAL;
-    const int damtype = get_vorpal_type(item);
 
     if (verbose)
     {
@@ -938,12 +937,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += " causing extra injury to most foes and up to half "
                            "again as much damage against particularly "
                            "susceptible opponents.";
-            if (!is_range_weapon(item) &&
-                (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
-            {
-                description += " Big, fiery blades are also staple "
-                    "armaments of hydra-hunters.";
-            }
             break;
         case SPWPN_FREEZING:
             if (is_range_weapon(item))
