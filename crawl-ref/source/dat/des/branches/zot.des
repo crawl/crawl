@@ -2081,15 +2081,19 @@ ORIENT: float
 {{
   local teams = { "black", "yellow", "green", "purple", "red", "white",
                   "mottled" }
-  local team1 = crawl.random2(#teams) + 1
-  local team2 = 0
-  repeat
-    team2 = crawl.random2(#teams) + 1
-  until team2 ~= team1
-  mons(teams[team1] .. " draconian")
-  mons(teams[team1] .. " draconian knight")
-  mons(teams[team2] .. " draconian")
-  mons(teams[team2] .. " draconian knight")
+
+  local team1num = crawl.random2(#teams) + 1
+  local team1 = teams[team1num]
+
+  -- ensures we can't roll the same team twice
+  teams[team1num] = teams[#teams]
+
+  local team2 = teams[crawl.random2(#teams - 1) + 1]
+
+  mons(team1 .. " draconian")
+  mons(team1 .. " draconian knight")
+  mons(team2 .. " draconian")
+  mons(team2 .. " draconian knight")
 }}
 # The refs:
 MONS:   Killer Klown
