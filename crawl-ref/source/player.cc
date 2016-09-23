@@ -6030,9 +6030,18 @@ int player::racial_ac(bool temp) const
     return 0;
 }
 
-int player::armour_class(bool /*calc_unid*/) const
+/**
+ * The player's "base" armour class, before transitory buffs are applied.
+ *
+ * (This is somewhat arbitrarily defined - forms, for example, are considered
+ * to be long-lived for these purposes.)
+ *
+ * @param   A scale by which the player's base AC is multiplied.
+ * @return  The player's AC, multiplied by the given scale.
+ */
+int player::base_ac(int scale) const
 {
-    int AC = 0;
+    int AC = 100;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
@@ -6053,24 +6062,6 @@ int player::armour_class(bool /*calc_unid*/) const
         AC += 300;
 
     AC += scan_artefacts(ARTP_AC) * 100;
-
-    if (duration[DUR_ICY_ARMOUR])
-        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
-
-    if (mutation[MUT_ICEMAIL])
-        AC += 100 * player_icemail_armour_class();
-
-    if (duration[DUR_QAZLAL_AC])
-        AC += 300;
-
-    if (duration[DUR_SPWPN_PROTECTION])
-        AC += 700;
-
-    if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
-
-    AC += _bone_armour_bonus();
-    AC += sanguine_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
 
@@ -6114,7 +6105,34 @@ int player::armour_class(bool /*calc_unid*/) const
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
           ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;
               // +3, +6, +9
-    return AC / 100;
+
+    return AC * scale / 100;
+}
+
+int player::armour_class(bool /*calc_unid*/) const
+{
+    const int scale = 100;
+    int AC = base_ac(scale);
+
+    if (duration[DUR_ICY_ARMOUR])
+        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
+
+    if (mutation[MUT_ICEMAIL])
+        AC += 100 * player_icemail_armour_class();
+
+    if (duration[DUR_QAZLAL_AC])
+        AC += 300;
+
+    if (duration[DUR_SPWPN_PROTECTION])
+        AC += 700;
+
+    if (duration[DUR_CORROSION])
+        AC -= 400 * you.props["corrosion_amount"].get_int();
+
+    AC += _bone_armour_bonus();
+    AC += sanguine_armour_bonus();
+
+    return AC / scale;
 }
  /**
   * Guaranteed damage reduction.
