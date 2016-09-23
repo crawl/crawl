@@ -766,6 +766,7 @@ public:
     bool can_sleep(bool holi_only = false) const override;
 
     int racial_ac(bool temp) const;
+    int base_ac(int scale) const;
     int armour_class(bool /*calc_unid*/ = true) const override;
     int gdr_perc() const override;
     int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
