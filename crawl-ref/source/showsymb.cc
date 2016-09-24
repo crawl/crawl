@@ -217,6 +217,10 @@ static int _get_mons_colour(const monster_info& mi)
     {
         col |= COLFLAG_MAYSTAB;
     }
+    else if (mi.reach_range() == REACH_TWO)
+    {
+        col |= COLFLAG_NEUTRAL_MONSTER;
+	 }
     else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
