@@ -450,7 +450,8 @@ string describe_mutations(bool center_title)
         switch (you.body_size(PSIZE_TORSO, true))
         {
         case SIZE_LITTLE:
-            result += "You are tiny and cannot use many weapons and most armour.\n";
+            result += "You are very small and have problems with some larger weapons.\n"
+                      "You are too small for most types of armour.\n";
             break;
         case SIZE_SMALL:
             result += "You are small and have problems with some larger weapons.\n";
@@ -466,7 +467,7 @@ string describe_mutations(bool center_title)
     // Could move this into species-data, but then the hack that assumes
     // _dragon_abil should get called on all draconian fake muts would break.
     if (species_is_draconian(you.species))
-        result += "Your body does not fit into most forms of armour.\n";
+        result += "You cannot fit into any form of body armour.\n";
 
     if (player_res_poison(false, false, false) == 3)
         result += "You are immune to poison.\n";
