@@ -1136,8 +1136,8 @@ static void _free_self_from_web()
     trap_def *trap = trap_at(you.pos());
     if (trap && trap->type == TRAP_WEB)
     {
-        // if so, roll a chance to escape the web (based on str).
-        if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
+        // if so, roll a chance to escape the web.
+        if (x_chance_in_y(3, 10))
         {
             mpr("You struggle to detach yourself from the web.");
             // but you actually accomplished nothing!
