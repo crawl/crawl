@@ -75,6 +75,7 @@ webtiles.log
 debuglog.txt
 dolls.txt
 macro.txt
+init.txt.persist
 
 # Valgrind logs from misc/grind.sh
 /source/grind.log
