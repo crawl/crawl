@@ -4,8 +4,44 @@ use Text::Tabs;
 use Getopt::Std;
 use strict;
 
-our ($opt_a, $opt_m, $opt_M, $opt_n, $opt_t, $opt_r);
-getopts('amMnt:r'); # removes options from @ARGV;
+sub HELP_MESSAGE
+{
+    my $fh = shift;
+    print $fh <<"EOF"
+Usage: $0 [options] [files]
+
+Correct whitespace errors in the Crawl repository.
+
+If no files are specified, defaults to files found beneath the current
+directory, modified by the following options (which have no effect if file
+arguments were provided):
+  -a          Check the whole repository, not just the current directory.
+  -m          Check only files that have been modified and added to the index.
+  -M          Check only files that have been modified.
+
+Other options are:
+  -n          Dry run: Do not actually modify files.
+  -t <N>      When expanding tabs, assume N-column tab stops (default 8).
+  -r          Do not remove carriage returns.
+  -h, --help  Display this help and exit.
+
+Exit status:
+  0 if there were no whitespace errors, or if errors were corrected.
+  1 if there are still whitespace errors (only with the -n option).
+  2 if an unknown option was supplied.
+EOF
+}
+
+our ($opt_a, $opt_m, $opt_M, $opt_n, $opt_t, $opt_r, $opt_h);
+
+# Send --help to stdout, and exit (with success) when it is provided.
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+# Fail, and display help to stderr, on a bad option.
+getopts('amMnt:rh')
+    or do { HELP_MESSAGE(\*STDERR); exit 2; };
+# Make -h work the same as --help.
+$opt_h and do { HELP_MESSAGE(\*STDOUT); exit 0; };
+
 my $top_level = $opt_a;
 my $modified_only = $opt_m || $opt_M;
 my $modified_cached = $opt_m && !$opt_M;
