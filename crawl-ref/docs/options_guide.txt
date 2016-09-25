@@ -2503,12 +2503,63 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
+no_dark_brand = true
+        Assume that dark grey will end up rendered identically to black.
+        I.e., bright black rendering is assumed to be broken for the terminal.
+
+blink_brightens_background = false
+        Assume that a blink text attribute will end up brightening the
+        background colour.
+
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for normal/bright color combos of the same
+        base colour.
+
+bold_brightens_background = false
+        Assume that a bold text attribute will end up brightening the foreground
+        colour.
+
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for bright/normal color combos of the same
+        base colour.
+
+allow_extended_colours = false
+        Allow an *attempt* to use more than the eight basic terminal colours
+        for crawl's bright colours.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        If both of these conditions are not met, crawl will fall back to
+        rendering bright colors using character attributes.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
-        colour other than black (such as an xterm), but this option is
-        still experimental and the results may not be very good.
+        colour other than black (such as an xterm) and don't want to change
+        the terminal's palette just for crawl.
+
+        Internally, black is mapped to the the passed background colour and
+        vice-versa.
+
+        This option requires extended support by the terminal library as well
+        as the terminal itself. Additionally, bright default colors are not
+        available unless extended color support is present and enabled. If
+        support is not present, either outright or for the selected colour,
+        this option will have an effective value of black.
+
+        The allow_extended_colors option may help with with enabling bright
+        background colors.  Beware of buggy or misleading terminfo files.
+
+foreground_color = lightgrey
+        Sets the default foreground colour by name (defaults to LIGHTGREY).
+
+        Internally, lightgrey is mapped to the passed foreground colour and
+        vice-versa.
+
+        This option comes with the same baggage as the background_colour option.
+        See its documentation for more details.
 
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and
