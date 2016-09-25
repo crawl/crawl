@@ -159,6 +159,9 @@ const vector<GameOption*> game_options::build_options_list()
 // not have standout modes (since it's black on black).
 // This option will use light-grey instead in these cases.
         new BoolGameOption(SIMPLE_NAME(no_dark_brand), true),
+        new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
+        new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
+        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
@@ -214,6 +217,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(remembered_monster_colour), DARKGREY),
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN, false),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK, false),
+        new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY, false),
         new CursesGameOption(SIMPLE_NAME(friend_brand),
                              CHATTR_HILITE | (GREEN << 8)),
         new CursesGameOption(SIMPLE_NAME(neutral_brand),
