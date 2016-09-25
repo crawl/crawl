@@ -681,4 +681,3 @@ void iood_catchup(monster* mons, int pturns)
         if (_iood_catchup_move(mon))
             return;
 }
-
