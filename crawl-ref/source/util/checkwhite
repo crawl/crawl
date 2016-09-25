@@ -4,8 +4,8 @@ use Text::Tabs;
 use Getopt::Std;
 use strict;
 
-our ($opt_a, $opt_m, $opt_M, $opt_n, $opt_t);
-getopts('amMnt:'); # this removes -t and -n from @ARGV;
+our ($opt_a, $opt_m, $opt_M, $opt_n, $opt_t, $opt_r);
+getopts('amMnt:r'); # removes options from @ARGV;
 my $top_level = $opt_a;
 my $modified_only = $opt_m || $opt_M;
 my $modified_cached = $opt_m && !$opt_M;
@@ -13,6 +13,7 @@ my $dry_run = $opt_n;
 my $any_bad = 0;
 # Imported from Text::Tabs, so use our, not my.
 our $tabstop = $opt_t if ($opt_t);
+my $strip_cr = !$opt_r;
 
 my @files = @ARGV;
 unless (@files)
@@ -73,7 +74,7 @@ for (@files)
     print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
     $_=expand $_, print "tab: $file\n" if !$tab && /\t/;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
-    print "CR: $file\n" if s/\r//sg;
+    print "CR: $file\n" if $strip_cr and s/\r//sg;
     # Note: it's a byte string, as we had to handle invalid encodings above,
     # and $cont may be invalid.
     print "zero width space: $file\n" if s/\xe2\x80\x8b//sg; # U+200B
