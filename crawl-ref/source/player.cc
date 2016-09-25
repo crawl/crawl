@@ -5979,10 +5979,10 @@ int sanguine_armour_bonus()
  */
 int player::base_ac_from(const item_def &armour, int scale) const
 {
-    const int base_ac     = property(armour, PARM_AC) * scale;
+    const int base = property(armour, PARM_AC) * scale;
 
     // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
-    const int AC = base_ac * (440 + skill(SK_ARMOUR, 20)) / 440;
+    const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
@@ -5990,7 +5990,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
             && (player_mutation_level(MUT_DEFORMED)
                 || player_mutation_level(MUT_PSEUDOPODS)))
     {
-        return AC - base_ac / 2;
+        return AC - base / 2;
     }
 
     return AC;
