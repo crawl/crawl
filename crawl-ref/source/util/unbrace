@@ -2,8 +2,43 @@
 use Getopt::Std;
 use strict;
 
-our ($opt_a, $opt_A, $opt_m, $opt_M, $opt_n);
-getopts('aAmMn');
+sub HELP_MESSAGE
+{
+    my $fh = shift;
+    print $fh <<"EOF"
+Usage: $0 [options] [files]
+
+Correct indentation, bracing, and other code style in the Crawl repository.
+
+If no files are specified, defaults to files found beneath the current
+directory, modified by the following options (which have no effect if file
+arguments were provided):
+  -a          Check the whole repository, not just the current directory.
+  -m          Check only files that have been modified and added to the index.
+  -M          Check only files that have been modified.
+
+Other options are:
+  -n          Dry run: Do not actually modify files.
+  -A          Do not add missing braces around blocks.
+  -h, --help  Display this help and exit.
+
+Exit status:
+  0 if there were no style errors, or if errors were corrected.
+  1 if there are still style errors (only with the -n option).
+  2 if an unknown option was supplied.
+EOF
+}
+
+our ($opt_a, $opt_A, $opt_m, $opt_M, $opt_n, $opt_h);
+
+# Send --help to stdout, and exit (with success) when it is provided.
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+# Fail, and display help to stderr, on a bad option.
+getopts('aAmMnh')
+    or do { HELP_MESSAGE(\*STDERR); exit 2; };
+# Make -h work the same as --help.
+$opt_h and do { HELP_MESSAGE(\*STDOUT); exit 0; };
+
 my $top_level = $opt_a;
 my $add_braces = !$opt_A;
 my $modified_only = $opt_m || $opt_M;

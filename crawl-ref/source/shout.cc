@@ -788,7 +788,7 @@ bool noisy(int original_loudness, const coord_def& where,
         return false;
 
     // high ambient noise makes sounds harder to hear
-    const int ambient = current_level_ambient_noise();
+    const int ambient = ambient_noise();
     const int loudness =
         ambient < 0? original_loudness + random2avg(abs(ambient), 3)
                    : original_loudness - random2avg(abs(ambient), 3);

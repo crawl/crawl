@@ -36,7 +36,6 @@
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
-#define SPWPN_PROTECTION_DURATION "spwpn_protection_duration"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -767,6 +766,7 @@ public:
     bool can_sleep(bool holi_only = false) const override;
 
     int racial_ac(bool temp) const;
+    int base_ac(int scale) const;
     int armour_class(bool /*calc_unid*/ = true) const override;
     int gdr_perc() const override;
     int evasion(ev_ignore_type evit = EV_IGNORE_NONE,

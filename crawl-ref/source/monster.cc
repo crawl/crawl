@@ -6536,7 +6536,6 @@ bool monster::nightvision() const
 
 bool monster::attempt_escape(int attempts)
 {
-    size_type thesize;
     int attfactor;
     int randfact;
 
@@ -6544,18 +6543,17 @@ bool monster::attempt_escape(int attempts)
         return true;
 
     escape_attempts += attempts;
-    thesize = body_size(PSIZE_BODY);
-    attfactor = thesize * escape_attempts;
+    attfactor = 3 * escape_attempts;
 
     if (constricted_by != MID_PLAYER)
     {
-        randfact = roll_dice(1,5) + 5;
+        randfact = roll_dice(1, 5) + 5;
         const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
         randfact += roll_dice(1, themonst->get_hit_dice());
     }
     else
-        randfact = roll_dice(1, you.strength());
+        randfact = roll_dice(1, 3 + you.experience_level);
 
     if (attfactor > randfact)
     {

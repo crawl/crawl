@@ -6,7 +6,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
     var stat_boosters = {
-        "str": "vitalised|mighty|berserk|immense fortitude",
+        "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile",
         "hp": "divinely vigorous|berserk",
@@ -14,9 +14,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
     };
 
     var defense_boosters = {
-        "ac": "icy armour|corpse armour|stone skin|protected from physical damage",
+        "ac": "icy armour|protected from physical damage|sanguine armour|corpse armour|protection aura",
         "ev": "phasing|agile",
-        "sh": "shielded|corpse armour",
+        "sh": "divine shield|corpse armour",
     }
 
     /**

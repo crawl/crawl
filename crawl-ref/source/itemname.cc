@@ -3967,24 +3967,16 @@ string item_prefix(const item_def &item, bool temp)
 string get_menu_colour_prefix_tags(const item_def &item,
                                    description_level_type desc)
 {
-    string cprf       = item_prefix(item);
-    string colour     = "";
-    string colour_off = "";
-    string item_name  = item.name(desc);
-    int col = menu_colour(item_name, cprf, "pickup");
+    const string cprf      = item_prefix(item);
+    const string item_name = item.name(desc);
 
-    if (col != -1)
-        colour = colour_to_str(col);
+    const int col = menu_colour(item_name, cprf, "pickup");
+    if (col == -1)
+        return item_name;
 
-    if (!colour.empty())
-    {
-        // Order is important here.
-        colour_off  = "</" + colour + ">";
-        colour      = "<" + colour + ">";
-        item_name = colour + item_name + colour_off;
-    }
-
-    return item_name;
+    const string colour = colour_to_str(col);
+    const char * const colour_z = colour.c_str();
+    return make_stringf("<%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
 }
 
 typedef map<string, item_kind> item_names_map;

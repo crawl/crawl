@@ -395,14 +395,6 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_SPWPN_PROTECTION:
-        if (you.props[SPWPN_PROTECTION_DURATION].get_int() > 0)
-        {
-            inf->short_text = "weapon aura";
-            inf->long_text = "Your weapon is exuding a protective aura.";
-        }
-        break;
-
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {

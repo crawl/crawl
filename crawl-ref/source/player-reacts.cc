@@ -379,17 +379,6 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
-static void _decrement_spwpn_protection(int time_taken)
-{
-    int& duration = you.props[SPWPN_PROTECTION_DURATION];
-    if (duration <= 0)
-        return;
-
-    duration = max(0, duration - time_taken);
-    if (duration == 0)
-        you.redraw_armour_class = true;
-}
-
 // Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
@@ -872,8 +861,6 @@ static void _decrement_durations()
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
-
-    _decrement_spwpn_protection(delay);
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)

@@ -1109,20 +1109,13 @@ void search_around()
 
         int dist = ri->distance_from(you.pos());
 
-        // Own square is not excluded; may be flying.
-        // XXX: Currently, flying over a trap will always detect it.
+        // Note: Currently, being on an untriggered trap will always detect it.
+        // (But that probably can't happen?)
 
         int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
 
         trap_def* ptrap = trap_at(*ri);
-        if (!ptrap)
-        {
-            // Maybe we shouldn't kill the trap for debugging
-            // purposes - oh well.
-            grd(*ri) = DNGN_FLOOR;
-            dprf("You found a buggy trap! It vanishes!");
-            continue;
-        }
+        ASSERT(ptrap);
 
         if (effective > ptrap->skill_rnd)
         {
@@ -1143,8 +1136,8 @@ static void _free_self_from_web()
     trap_def *trap = trap_at(you.pos());
     if (trap && trap->type == TRAP_WEB)
     {
-        // if so, roll a chance to escape the web (based on str).
-        if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
+        // if so, roll a chance to escape the web.
+        if (x_chance_in_y(3, 10))
         {
             mpr("You struggle to detach yourself from the web.");
             // but you actually accomplished nothing!

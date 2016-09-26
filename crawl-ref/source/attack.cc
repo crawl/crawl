@@ -120,7 +120,7 @@ bool attack::handle_phase_damaged()
 
 bool attack::handle_phase_killed()
 {
-    monster * const mon = defender->as_monster();
+    monster* mon = defender->as_monster();
     if (!invalid_monster(mon))
         monster_die(mon, attacker);
 
@@ -1599,6 +1599,7 @@ bool attack::apply_damage_brand(const char *what)
     switch (brand)
     {
     case SPWPN_PROTECTION:
+        if (attacker->is_player())
         {
             const monster* mon = defender->as_monster();
             if (mon && !mons_is_firewood(*mon))

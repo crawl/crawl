@@ -39,8 +39,6 @@ void end_weapon_brand(item_def &weapon, bool verbose)
 
     you.wield_change = true;
     const brand_type real_brand = get_weapon_brand(weapon);
-    if (real_brand == SPWPN_PROTECTION)
-        you.redraw_armour_class = true;
     if (real_brand == SPWPN_ANTIMAGIC)
         calc_mp();
 }
@@ -103,8 +101,11 @@ spret_type cast_excruciating_wounds(int power, bool fail)
         you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
-        if (orig_brand == SPWPN_PROTECTION)
+        if (you.duration[DUR_SPWPN_PROTECTION])
+        {
+            you.duration[DUR_SPWPN_PROTECTION] = 0;
             you.redraw_armour_class = true;
+        }
         if (orig_brand == SPWPN_ANTIMAGIC)
             calc_mp();
     }

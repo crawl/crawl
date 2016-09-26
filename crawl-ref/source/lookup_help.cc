@@ -1239,7 +1239,7 @@ static string _branch_subbranches(branch_type br)
 static string _branch_noise(branch_type br)
 {
     string desc;
-    const int noise = branches[br].ambient_noise;
+    const int noise = ambient_noise(br);
     if (noise != 0)
     {
         desc = "\n\nThis branch is ";

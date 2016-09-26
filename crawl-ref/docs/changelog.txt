@@ -1,4 +1,4 @@
-Stone Soup 0.19 (up to 0.19-a0-1375-g616abca)
+Stone Soup 0.19 (up to 0.19-a0-1694-g2dd932f)
 --------------------------------------------
 
 Highlights
@@ -15,20 +15,26 @@ Branches, Environment
   - Many powerful artefacts resting within ancient ruins.
 * Lair is now six floors (formerly eight).
 * Slime is now five floors (formerly six).
+* The Slime treasure vault's walls disappear entirely on their master's death.
 * Webs are no longer destroyed after creatures escape from them.
+* Beogh will no longer smite creatures that destroy orcish idols.
+* Ambient noise is more significant in Shoals, the Desolation, Crypt, and Tomb.
+  Lair and Orc no longer have ambient noise.
 * Storm cloud damage is more common and much less severe.
 * Non-opaque clouds created by the player vanish instantly when out of LOS.
 
 Character
 ---------
-* Flight expiring over deep water or lava no longer causes instant death;
-  instead, it causes heavy drain over time until reaching land.
+* Flight or transformations expiring over deep water or lava no longer causes
+  instant death. Instead, they cause heavy drain over time until reaching land.
 * Potions, scrolls and books can be used while still on the floor.
 * Resistances granted by rN (to e.g. Pain effects) now scale with rN, only
   reaching full immunity at rN+++ (instead of at rN+).
 * Monks can now choose a weapon to start with.
 * Corrosion slaying penalties now affect unarmed & auxiliary attacks.
-* Satiated vampires can now berserk and transform; previously required Full.
+* Spriggans can wield any weapons that kobolds and halflings can.
+* Kobolds and halflings rebalanced toward & away from casting, respectively.
+* Vampire blood level effects have been simplified and reworked.
 * The undead always take stat damage if mutated, instead of sometimes rotting.
 * Temporary mutations only have a 50% chance of affecting the undead.
 * Mummy self-restoration has been removed.
@@ -86,6 +92,8 @@ Interface
 * In tiles, monster attitude is indicated with colored auras instead of icons.
 * Descriptions of monsters with multiple spellsets show which spells you've
   seen them cast.
+* Monster descriptions list their average max HP.
+* New auto_butcher option, which butchers edible corpses during autoexplore.
 
 Items
 -----
@@ -100,6 +108,7 @@ Items
   - Fencer's Gloves no longer increase Sbl/Lbl skill or provide +EV/AC, but let
     the player riposte with any weapon (details below).
   - Wyrmbane now has rC+ instead of +Rage.
+  - The greatsling Punk has a unique 'acid' brand, instead of freezing.
 * Evocations:
   - Wands of random effects can no longer produce digging or disintegration.
   - Boxes of beasts and sacks of spiders have a fixed chance of destruction
@@ -108,6 +117,7 @@ Items
   - Phials of floods impact damage significantly reduced.
 * Players using long blades sometimes riposte when dodging attacks, launching
   instant, automatic counterattacks.
+* Weapons of protection give a temporary +7 AC on hit, replacing a passive +5.
 * Amulets of harm now increase damage dealt more than damage taken, and are no
   longer evil.
 * Elemental enhancers no longer penalise spells of the opposite element.
@@ -134,6 +144,7 @@ Monsters
   - ...and the residents of the Desolation of Salt.
 * Uniques:
   - Urug's weapons are now much nastier for their depth.
+  - Mennas always spawns with a sacred weapon.
   - Donald can now cast Haste and Might.
   - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
   - Xtahua can now roar to cast Paralyse.
@@ -153,12 +164,25 @@ Monsters
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
 * Death scarabs no longer trail miasma, but are somewhat tougher.
+* Tzitzimimeh's melee slows and rots victims, instead of creating miasma.
 * Friendly monsters will no longer open doors.
 * Jellies no longer eat unseen items for non-Jiyva worshippers.
+* Turtles no longer withdraw into their shells when injured.
 * Giant eyeballs charge up their paralysis-stare 50% faster.
+* Statues are now stabbable; obsidian & orange crystal statues gain sInv.
 * Ushabti gain Dispel Undead and Warning Cry.
+* Renamed monsters:
+  - Giant newt -> frilled lizard.
+  - Giant frog -> bullfrog.
+  - Giant gecko -> leopard gecko.
+  - Giant leech -> tyrant leech.
+  - Giant eyeball -> floating eye.
+  - Giant spore -> ballistomycete spore.
+  - Giant orange brain -> glowing orange brain.
 * Removed monsters:
   - Anubis guards.
+  - Boulder beetles.
+  - Griffons.
   - Salamander stormcallers.
   - Sheep.
   - Norris.

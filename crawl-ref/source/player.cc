@@ -3283,10 +3283,8 @@ int check_stealth()
     // a personal silence spell would naturally be different, but this
     // silence radiates for a distance and prevents monster spellcasting,
     // which pretty much gives away the stealth game.
-    // this penalty is dependent on the actual amount of ambient noise
-    // in the level -doy
     if (you.duration[DUR_SILENCE])
-        stealth -= STEALTH_PIP + current_level_ambient_noise();
+        stealth -= STEALTH_PIP;
 
     // Mutations.
     stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
@@ -3296,9 +3294,6 @@ int check_stealth()
     const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
     if (how_transparent)
         stealth += 15 * (how_transparent);
-
-    // it's easier to be stealthy when there's a lot of background noise
-    stealth += 2 * current_level_ambient_noise();
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
@@ -5984,10 +5979,10 @@ int sanguine_armour_bonus()
  */
 int player::base_ac_from(const item_def &armour, int scale) const
 {
-    const int base_ac     = property(armour, PARM_AC) * scale;
+    const int base = property(armour, PARM_AC) * scale;
 
     // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
-    const int AC = base_ac * (440 + skill(SK_ARMOUR, 20)) / 440;
+    const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
@@ -5995,7 +5990,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
             && (player_mutation_level(MUT_DEFORMED)
                 || player_mutation_level(MUT_PSEUDOPODS)))
     {
-        return AC - base_ac / 2;
+        return AC - base / 2;
     }
 
     return AC;
@@ -6035,9 +6030,18 @@ int player::racial_ac(bool temp) const
     return 0;
 }
 
-int player::armour_class(bool /*calc_unid*/) const
+/**
+ * The player's "base" armour class, before transitory buffs are applied.
+ *
+ * (This is somewhat arbitrarily defined - forms, for example, are considered
+ * to be long-lived for these purposes.)
+ *
+ * @param   A scale by which the player's base AC is multiplied.
+ * @return  The player's AC, multiplied by the given scale.
+ */
+int player::base_ac(int scale) const
 {
-    int AC = 0;
+    int AC = 100;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
@@ -6058,22 +6062,6 @@ int player::armour_class(bool /*calc_unid*/) const
         AC += 300;
 
     AC += scan_artefacts(ARTP_AC) * 100;
-
-    if (duration[DUR_ICY_ARMOUR])
-        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
-
-    if (mutation[MUT_ICEMAIL])
-        AC += 100 * player_icemail_armour_class();
-
-    if (duration[DUR_QAZLAL_AC])
-        AC += 300;
-
-    if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
-
-    AC += _bone_armour_bonus();
-    AC += sanguine_armour_bonus();
-    AC += you.props[SPWPN_PROTECTION_DURATION].get_int() ? 700 : 0;
 
     AC += get_form()->get_ac_bonus();
 
@@ -6117,7 +6105,34 @@ int player::armour_class(bool /*calc_unid*/) const
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
           ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;
               // +3, +6, +9
-    return AC / 100;
+
+    return AC * scale / 100;
+}
+
+int player::armour_class(bool /*calc_unid*/) const
+{
+    const int scale = 100;
+    int AC = base_ac(scale);
+
+    if (duration[DUR_ICY_ARMOUR])
+        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
+
+    if (mutation[MUT_ICEMAIL])
+        AC += 100 * player_icemail_armour_class();
+
+    if (duration[DUR_QAZLAL_AC])
+        AC += 300;
+
+    if (duration[DUR_SPWPN_PROTECTION])
+        AC += 700;
+
+    if (duration[DUR_CORROSION])
+        AC -= 400 * you.props["corrosion_amount"].get_int();
+
+    AC += _bone_armour_bonus();
+    AC += sanguine_armour_bonus();
+
+    return AC / scale;
 }
  /**
   * Guaranteed damage reduction.
@@ -7619,11 +7634,11 @@ bool player::attempt_escape(int attempts)
     ASSERT(themonst);
     escape_attempts += attempts;
 
-    // player breaks free if (4+n)d(8+str/4) >= 5d(8+HD/4)
-    if (roll_dice(4 + escape_attempts, 8 + div_rand_round(strength(), 4))
+    // player breaks free if (4+n)d13 >= 5d(8+HD/4)
+    if (roll_dice(4 + escape_attempts, 13)
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
-        mprf("You escape %s's grasp.", themonst->name(DESC_THE, true).c_str());
+        mprf("You escape %s grasp.", themonst->name(DESC_ITS, true).c_str());
 
         // Stun the monster to prevent it from constricting again right away.
         themonst->speed_increment -= 5;
@@ -7634,9 +7649,8 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        mprf("Your attempt to break free from %s fails, but you feel that "
-             "another attempt might succeed.",
-             themonst->name(DESC_THE, true).c_str());
+        mprf("%s grasp on you weakens, but your attempt to escape fails.",
+             themonst->name(DESC_ITS, true).c_str());
         turn_is_over = true;
         return false;
     }
@@ -8638,10 +8652,9 @@ void activate_sanguine_armour()
  */
 void refresh_weapon_protection()
 {
-    int& duration = you.props[SPWPN_PROTECTION_DURATION];
-    if (duration == 0)
+    if (!you.duration[DUR_SPWPN_PROTECTION])
         mpr("Your weapon exudes an aura of protection.");
 
-    duration = max(duration, 30 + random2(20));
+    you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
     you.redraw_armour_class = true;
 }
