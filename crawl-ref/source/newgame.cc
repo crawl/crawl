@@ -1754,14 +1754,13 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
     case WPN_MACE:
         return WPN_FLAIL;
     case WPN_HAND_AXE:
-        // Little fighters can't use war axes with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_WAR_AXE;
+        return WPN_WAR_AXE;
     case WPN_SPEAR:
         // Small fighters can't use tridents with a shield.
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
         // Little fighters can't use long swords with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_LONG_SWORD;
+        return WPN_LONG_SWORD;
     default:
         return wp;
     }

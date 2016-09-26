@@ -87,13 +87,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     if (ng.species == SP_FELID && wpn != WPN_UNARMED)
         return CC_BANNED;
 
-    // Can't use them with a shield.
-    if (ng.species == SP_SPRIGGAN && ng.job == JOB_FIGHTER
-        && (wpn == WPN_TRIDENT || wpn == WPN_SPEAR))
-    {
-        return CC_BANNED;
-    }
-
     // These recommend short blades because they're good at stabbing,
     // but the fighter's armour hinders that.
     if ((ng.species == SP_NAGA || ng.species == SP_VAMPIRE)

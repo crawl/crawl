@@ -6018,9 +6018,6 @@ bool ru_do_sacrifice(ability_type sac)
     // but not the others.
     if (sac == ABIL_RU_SACRIFICE_HAND)
     {
-        // No one-handed polearms or staves for spriggans.
-        if (you.species == SP_SPRIGGAN)
-            _ru_kill_skill(SK_POLEARMS);
         // No one-handed staves for small races.
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
