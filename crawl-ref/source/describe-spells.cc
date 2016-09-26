@@ -171,6 +171,31 @@ static bool _book_valid(const vector<mon_spell_slot> &book,
                   [&](int spell){return _spell_in_book((spell_type)spell, book);});
 }
 
+static void _split_by_silflag(unique_books &books)
+{
+    unique_books result;
+
+    for (auto book : books)
+    {
+        vector<mon_spell_slot> silflag;
+        vector<mon_spell_slot> no_silflag;
+
+        for (auto i : book)
+        {
+            if (i.flags & MON_SPELL_NO_SILENT)
+                silflag.push_back(i);
+            else no_silflag.push_back(i);
+        }
+
+        if (!no_silflag.empty())
+            result.push_back(no_silflag);
+        if (!silflag.empty())
+            result.push_back(silflag);
+    }
+
+    books = result;
+}
+
 /**
  * Append all spells of a given type that a given monster may know to the
  * provided vector.
@@ -184,7 +209,18 @@ static void _monster_spellbooks(const monster_info &mi,
                                 mon_spell_slot_flag type,
                                 spellset &all_books)
 {
-    const unique_books books = get_unique_spells(mi, type);
+    unique_books books = get_unique_spells(mi, type);
+
+    // Books of natural abilities get special treatment, because there should
+    // be information about silence in the label(s).
+    const bool ability_case =
+        (bool) (type & (MON_SPELL_MAGICAL | MON_SPELL_NATURAL));
+    // We must split them now; later we'll label them separately.
+    if (ability_case)
+    {
+        _split_by_silflag(books);
+    }
+
     const size_t num_books = books.size();
 
     if (num_books == 0)
@@ -215,8 +251,7 @@ static void _monster_spellbooks(const monster_info &mi,
                 return slot.flags & MON_SPELL_NO_SILENT;
             });
 
-
-        if (i == 0)
+        if (i == 0 || ability_case)
         {
             output_book.label +=
                 "\n" +
@@ -225,7 +260,7 @@ static void _monster_spellbooks(const monster_info &mi,
                 _booktype_header(type, valid_books.size(), has_silencable,
                                  filtered_books, mi.pronoun(PRONOUN_OBJECTIVE));
         }
-        if (valid_books.size() > 1)
+        else
         {
             output_book.label += make_stringf("\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
