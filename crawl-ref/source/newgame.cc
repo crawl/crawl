@@ -1759,7 +1759,6 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
         // Small fighters can't use tridents with a shield.
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
-        // Little fighters can't use long swords with a shield.
         return WPN_LONG_SWORD;
     default:
         return wp;
