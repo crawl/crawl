@@ -333,7 +333,7 @@ KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
+         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | \
          w:7 crystal ball of energy | \
          w:4 wand of digging | w:5 randbook disc:earth | \

@@ -577,7 +577,7 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION > 34
     WPN_HUNTING_SLING,
-    WPN_GREATSLING,
+    WPN_FUSTIBALUS,
 #endif
 
     WPN_DEMON_WHIP,
@@ -612,7 +612,7 @@ enum weapon_type
     WPN_TRISHULA,
 
 #if TAG_MAJOR_VERSION == 34
-    WPN_GREATSLING,
+    WPN_FUSTIBALUS,
     WPN_HAND_CROSSBOW,
     WPN_TRIPLE_CROSSBOW,
 

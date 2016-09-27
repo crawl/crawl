@@ -130,7 +130,7 @@ scythe "Finisher"
 
 A long and sharp scythe, specially modified to be quickly swung in combat.
 %%%%
-greatsling "Punk"
+sling "Punk"
 
 A sling made of weird green leather, oozing corrosive slime. Originally the
 weapon of a notorious mischief-maker and general scamp, it's since fallen into

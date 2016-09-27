@@ -749,7 +749,7 @@ KITEM:    J = hand crossbow mundane not_cursed ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
               longbow mundane not_cursed ident:all plus:5, \
               hunting sling mundane not_cursed ident:all plus:5, \
-              greatsling mundane not_cursed ident:all plus:5, \
+              fustibalus mundane not_cursed ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \

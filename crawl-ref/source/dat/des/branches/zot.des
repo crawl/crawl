@@ -1078,10 +1078,10 @@ KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart scythe ego:chaos | randart dire flail | \
              randart great mace | randart battleaxe | randart great sword | \
              randart glaive | randart scythe
-KMONS:   3 = guardian mummy ; randart greatsling ego:chaos . sling bullet / \
+KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
              guardian mummy ; randart longbow ego:chaos . arrow / \
              guardian mummy ; randart triple crossbow . bolt / \
-             guardian mummy ; randart greatsling . sling bullet / \
+             guardian mummy ; randart fustibalus . sling bullet / \
              guardian mummy ; randart longbow . arrow / \
              guardian mummy ; randart arbalest . bolt
 KMONS:   5 = guardian mummy ; rod of shadows | rod of destruction | \

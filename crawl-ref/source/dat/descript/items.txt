@@ -464,6 +464,12 @@ fruit
 
 A delicious edible flower ovary.
 %%%%
+fustibalus
+
+A length of wood with a reinforced sling at one end, able to fire projectiles
+at high velocity. It deals more damage when launching purpose-made ammunition,
+rather than stones found on the floor.
+%%%%
 giant club
 
 A giant lump of wood.
@@ -502,12 +508,6 @@ great mace
 
 An enormous metal war club, of great cumbrousness.
 %%%%
-greatsling
-
-A large piece of cloth and leather, reinforced with a rigid frame. It deals
-more damage when launching purpose-made projectiles, rather than stones found
-on the floor.
-%%%%
 great sword
 
 A sword with a very long, heavy blade and a long handle.
@@ -544,7 +544,7 @@ hunting sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
 game like rabbits or goblins. It deals more damage when launching purpose-made
-projectiles, rather than rocks found on the floor.
+ammunition, rather than rocks found on the floor.
 %%%%
 ice dragon armour
 
