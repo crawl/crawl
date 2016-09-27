@@ -848,8 +848,16 @@ bool show_map(level_pos &lpos,
 
             if (key == CK_REDRAW)
             {
-                viewwindow();
-                display_message_window();
+                if (Options.messages_at_top)
+                {
+                    display_message_window();
+                    viewwindow();
+                }
+                else
+                {
+                    viewwindow();
+                    display_message_window();
+                }
                 continue;
             }
 

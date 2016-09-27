@@ -1514,11 +1514,17 @@ void redraw_screen()
         update_turn_count();
     }
 
-    viewwindow();
+    if (Options.messages_at_top)
+    {
+        display_message_window();
+        viewwindow();
+    }
+    else
+    {
+        viewwindow();
+        display_message_window();
+    }
 
-    // Display the message window at the end because it places
-    // the cursor behind possible prompts.
-    display_message_window();
     update_screen();
 }
 
