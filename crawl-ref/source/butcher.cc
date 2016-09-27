@@ -218,7 +218,7 @@ void butchery(item_def* specific_corpse)
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
             if (you.undead_state() == US_ALIVE)
-                corpse_name = get_menu_colour_prefix_tags(*it, DESC_A);
+                corpse_name = menu_colour_item_name(*it, DESC_A);
 
             bool repeat_prompt = false;
             // Shall we butcher this corpse?

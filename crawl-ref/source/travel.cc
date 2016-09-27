@@ -4183,7 +4183,7 @@ void explore_discoveries::add_item(const item_def &i)
         item.thing.quantity = orig_quantity;
     }
 
-    string itemname = get_menu_colour_prefix_tags(i, DESC_A);
+    string itemname = menu_colour_item_name(i, DESC_A);
     monster* mon = monster_at(i.pos);
     if (mon && mons_species(mon->type) == MONS_BUSH)
         itemname += " (under bush)";
