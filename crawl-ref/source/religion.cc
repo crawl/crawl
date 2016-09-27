@@ -269,7 +269,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Qazlal
     {
-      { 0, "Qazlal grants you immunity to your own clouds." },
+      { 0, "Qazlal grants you immunity to clouds." },
       { 1, "You are surrounded by a storm.", "Your storm dissipates completely." },
       { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
       { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },

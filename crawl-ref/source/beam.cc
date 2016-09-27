@@ -3138,13 +3138,13 @@ bool bolt::is_harmless(const monster* mon) const
 }
 
 // N.b. only called for player-originated beams; if that is changed,
-// be sure to adjust the Qazlal cloud immunity below, and various other
-// assumptions based on the spells/abilities available to the player.
+// be sure to adjust various assumptions based on the spells/abilities
+// available to the player.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (have_passive(passive_t::resist_own_clouds) && is_big_cloud())
+    if (have_passive(passive_t::cloud_immunity) && is_big_cloud())
         return true;
 
     switch (flavour)

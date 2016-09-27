@@ -3906,9 +3906,9 @@ bool runrest::run_should_stop() const
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
 
+    // XXX: probably this should ignore cosmetic clouds (non-opaque)
     if (tcell.cloud() != CLOUD_NONE
-        && (!have_passive(passive_t::resist_own_clouds)
-            || !YOU_KILL(tcell.cloudinfo()->killer)))
+        && !have_passive(passive_t::cloud_immunity))
     {
         return true;
     }
