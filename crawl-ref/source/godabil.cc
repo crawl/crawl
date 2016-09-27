@@ -4937,7 +4937,11 @@ spret_type qazlal_elemental_force(bool fail)
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
         const cloud_struct* cloud = cloud_at(*ri);
-        if (cloud && elemental_clouds.count(cloud->type))
+        if (!cloud || !elemental_clouds.count(cloud->type))
+            continue;
+
+        const actor *agent = actor_by_mid(cloud->source);
+        if (agent && agent->is_player())
             targets.push_back(*ri);
     }
 
@@ -4962,10 +4966,7 @@ spret_type qazlal_elemental_force(bool fail)
         coord_def pos = targets[i];
         ASSERT(cloud_at(pos));
         const cloud_struct &cl = *cloud_at(pos);
-        actor *agent = actor_by_mid(cl.source);
-        mg.behaviour = !agent             ? BEH_NEUTRAL :
-                       agent->is_player() ? BEH_FRIENDLY
-                                          : SAME_ATTITUDE(agent->as_monster());
+        mg.behaviour = BEH_FRIENDLY;
         mg.pos       = pos;
         mg.cls = *map_find(elemental_clouds, cl.type);
         if (!create_monster(mg))
