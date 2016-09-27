@@ -6224,6 +6224,13 @@ confused Bennu permanently killed
 
 @Bennu permanently killed@
 %%%%
+################## Bullfrog ################################
+bullfrog
+
+@The_monster@ swells and bulges before releasing a deep croak.
+
+@The_monster@ snags a nearby @_frog_food_@ with @possessive@ tongue and gulps it down.
+%%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.
