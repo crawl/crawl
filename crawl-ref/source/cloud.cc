@@ -867,8 +867,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return true;
     }
 
-    // Qazlalites get immunity to their own clouds.
-    if (player && YOU_KILL(cloud.killer) && have_passive(passive_t::resist_own_clouds))
+    // Qazlalites get immunity to clouds.
+    if (player && have_passive(passive_t::cloud_immunity))
         return true;
 #if TAG_MAJOR_VERSION == 34
 
