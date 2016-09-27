@@ -3964,7 +3964,14 @@ string item_prefix(const item_def &item, bool temp)
     return result;
 }
 
-string get_menu_colour_prefix_tags(const item_def &item,
+/**
+ * Return an item's name surrounded by colour tags, using menu colouring
+ *
+ * @param item_def The item being queried
+ * @param desc The description level to use for the name string.
+ * @return A string containing the item's name surrounded by colour tags.
+ */
+string menu_colour_item_name(const item_def &item,
                                    description_level_type desc)
 {
     const string cprf      = item_prefix(item);

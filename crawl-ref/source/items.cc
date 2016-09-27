@@ -849,7 +849,7 @@ void item_check()
     if (items.size() == 1)
     {
         const item_def& it(*items[0]);
-        string name = get_menu_colour_prefix_tags(it, DESC_A);
+        string name = menu_colour_item_name(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
         _maybe_give_corpse_hint(it);
         return;
@@ -908,7 +908,7 @@ void item_check()
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
         for (const item_def *it : items)
         {
-            mprf_nocap("%s", get_menu_colour_prefix_tags(*it, DESC_A).c_str());
+            mprf_nocap("%s", menu_colour_item_name(*it, DESC_A).c_str());
             _maybe_give_corpse_hint(*it);
         }
     }
@@ -1424,8 +1424,7 @@ void pickup(bool partial_quantity)
                 string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
-                     get_menu_colour_prefix_tags(mitm[o],
-                                                 DESC_A).c_str());
+                     menu_colour_item_name(mitm[o], DESC_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_YESNO);
                 keyin = getchk();
@@ -1469,7 +1468,7 @@ void pickup(bool partial_quantity)
         if (!any_selectable)
         {
             for (stack_iterator si(you.pos(), true); si; ++si)
-                mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
+                mprf_nocap("%s", menu_colour_item_name(*si, DESC_A).c_str());
         }
 
         if (!pickup_warning.empty())
@@ -1900,7 +1899,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
         if (!quiet)
         {
             mprf_nocap("%s (gained %d)",
-                        get_menu_colour_prefix_tags(you.inv[inv_slot],
+                        menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
@@ -2036,8 +2035,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         return newitem->link;
     else if (!quiet)
     {
-        mprf_nocap("%s", get_menu_colour_prefix_tags(item,
-                                                     DESC_INVENTORY).c_str());
+        mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
     }
 
     return item.link;

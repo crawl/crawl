@@ -2235,7 +2235,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Output identified item.
-    mprf_nocap("%s", get_menu_colour_prefix_tags(item, DESC_INVENTORY_EQUIP).c_str());
+    mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
     if (in_inventory(item))
     {
         if (item.link == you.equip[EQ_WEAPON])
