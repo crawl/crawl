@@ -651,50 +651,47 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# The Golem Gauntlet (by Mu.)
+# The Constructs Gauntlet (by Mu, modernized by HangedMan)
 #
 # Each room is progressively more challenging; both the golems, and their
 # creators.
-#
-# (With the drop-off of golems, this vault has been revamped into general
-#  "constructs". hangedman sends his regards.)
 NAME:   constructs_gauntlet_mu_hangedman
-DEPTH:  Depths, !Depths:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
+DEPTH:  Depths, !Depths:$
 ORIENT: east
-MARKER: m = lua:fog_machine { \
+MARKER: y = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "flame" \
-            }
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "flame" }
 MARKER: z = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "freezing vapour" \
-            }
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" }
 MONS:   gargoyle, earth elemental, air elemental
 MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
-KFEAT:  o = granite_statue
-KFEAT:  m = .
-KFEAT:  z = .
-KMONS:  A = wizard / Erica, wizard
-KMONS:  B = orc sorcerer / Nergalle, orc sorcerer
-KMONS:  C = ogre mage / Erolcha, ogre mage
+KMONS:  A = wizard
+KMONS:  B = orc sorcerer
+KMONS:  C = ogre mage
 KMONS:  D = deep elf sorcerer
-KMONS:  E = lich / Boris, lich
-KMONS:  F = ancient lich
+KMONS:  E = lich
+KMONS:  F = ancient lich / Boris w:2, ancient lich
+KFEAT:  yz = .
+COLOUR: y = yellow
+COLOUR: z = lightblue
+FTILE:  y = floor_rough_red
+FTILE:  z = floor_rough_blue
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
- ccmcccccc.....cczcccccc...6$cc
+ ccycccccc.....cczcccccc...6$cc
  cc.....cc*.E5.cc.....cc..F.$cc
- ccccccmcc|.5..cccccczcc.6..$cc
+ ccccccycc|.5..cccccczcc.6.>$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
- cc...4.clcccclcc$..3.cwccccwcc
+ cc...4.clcccclcc$>.3.cwccccwcc
  cc..D..+.cllllcc$3C..+.cwwwwcc
  cc%4...ccclccccc..3..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
@@ -703,9 +700,9 @@ MAP
 .cc......+...$$ccWWWWWW+.....cc
 .cc.cccccc..1.$ccWcccccc...2.cc
 .cc.....cc..A..ccWWWWWWc..B..cc
-occcccc.cc..1..cccccccWc.2.1$cc
+Gcccccc.cc..1..cccccccWc.2.1$cc
 @+......cc.....+WWWWWWWc...$%cc
-occcccccccccccccccccccccccccccc
+Gcccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
 ENDMAP
 
