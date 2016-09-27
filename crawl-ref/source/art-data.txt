@@ -395,8 +395,8 @@ TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
 STR:     3
 
-NAME:    greatsling "Punk"
-OBJ:     OBJ_WEAPONS/WPN_GREATSLING
+NAME:    sling "Punk"
+OBJ:     OBJ_WEAPONS/WPN_FUSTIBALUS
 PLUS:    +3
 COLOUR:  ETC_SLIME
 TILE:    urand_punk

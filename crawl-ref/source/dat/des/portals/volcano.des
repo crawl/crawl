@@ -193,7 +193,7 @@ function setup_loot (e)
                                   "battleaxe w:20", "executioner's axe w:1", "trident w:5",
                                   "glaive", "halberd w:15", "demon trident w:1",
                                   "bardiche w:1", "longbow w:5", "arbalest w:5",
-                                  "greatsling w:5", "quarterstaff", "lajatang w:1"}))
+                                  "fustibalus w:5", "quarterstaff", "lajatang w:1"}))
     e.item("any")
 end
 

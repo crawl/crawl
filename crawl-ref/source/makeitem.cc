@@ -138,7 +138,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         && x_chance_in_y(10 + item_level, 100))
     {
         return random_choose(WPN_LAJATANG,
-                             WPN_GREATSLING,
+                             WPN_FUSTIBALUS,
                              WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,

@@ -233,8 +233,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_HUNTING_SLING:
         tile = TILEP_HAND1_HUNTING_SLING;
         break;
-    case WPN_GREATSLING:
-        tile = TILEP_HAND1_GREATSLING;
+    case WPN_FUSTIBALUS:
+        tile = TILEP_HAND1_FUSTIBALUS;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;

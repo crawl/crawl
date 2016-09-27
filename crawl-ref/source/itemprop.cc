@@ -604,7 +604,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,
         SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
-    { WPN_GREATSLING,        "greatsling",          8, -1, 14,
+    { WPN_FUSTIBALUS,        "fustibalus",          8, -1, 14,
         SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 2, 2, 150, RANGED_BRANDS },
 

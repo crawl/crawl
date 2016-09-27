@@ -152,8 +152,8 @@ blowgun2
 sling1 WPN_HUNTING_SLING
 sling2
 %rim 0
-greatsling WPN_GREATSLING
-greatsling2
+fustibalus WPN_FUSTIBALUS
+fustibalus2
 
 shortbow1 WPN_SHORTBOW
 shortbow2
