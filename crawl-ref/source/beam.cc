@@ -2923,7 +2923,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_SPECTRAL, p, random2(6) + 5, agent());
 
     if (origin_spell == SPELL_DEATH_RATTLE)
-        place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());
+        place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
 }
 
 void bolt::affect_place_explosion_clouds()

@@ -7771,8 +7771,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || _foe_should_res_negative_energy(foe);
 
     case SPELL_DEATH_RATTLE:
-        return !foe || _foe_should_res_negative_energy(foe) || no_clouds;
-
     case SPELL_MIASMA_BREATH:
         return !foe || foe->res_rotting() || no_clouds;
 
