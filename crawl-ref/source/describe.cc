@@ -3133,7 +3133,10 @@ static void _print_bar(int value, int scale, string name,
  */
 static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 {
-    result << "Max HP: about " << mons_avg_hp(mi.type) << "\n";
+    const int mhp = mons_is_hepliaklqana_ancestor(mi.type) ?
+                        hepliaklqana_ally_hp() : // not randomized
+                        mons_avg_hp(mi.type);
+    result << "Max HP: about " << mhp << "\n";
 }
 
 /**
