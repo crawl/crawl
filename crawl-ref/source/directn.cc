@@ -1496,7 +1496,7 @@ void direction_chooser::print_target_object_description() const
     // FIXME: remove the duplication with print_items_description().
     mprf(MSGCH_PROMPT, "%s: %s",
          target_prefix ? target_prefix : "Aim",
-         get_menu_colour_prefix_tags(*item, DESC_A).c_str());
+         menu_colour_item_name(*item, DESC_A).c_str());
 }
 
 void direction_chooser::print_items_description() const
@@ -1510,7 +1510,7 @@ void direction_chooser::print_items_description() const
 
     // Print the first item.
     mprf(MSGCH_FLOOR_ITEMS, "%s.",
-         get_menu_colour_prefix_tags(*item, DESC_A).c_str());
+         menu_colour_item_name(*item, DESC_A).c_str());
 
     if (multiple_items_at(target()))
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
@@ -3365,7 +3365,7 @@ static bool _print_item_desc(const coord_def where)
     if (targ_item == NON_ITEM)
         return false;
 
-    string name = get_menu_colour_prefix_tags(mitm[targ_item], DESC_A);
+    string name = menu_colour_item_name(mitm[targ_item], DESC_A);
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)

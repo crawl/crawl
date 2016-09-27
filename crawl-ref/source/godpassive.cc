@@ -1160,7 +1160,7 @@ void pakellas_id_device_charges()
             set_ident_flags(you.inv[which_item], ISFLAG_KNOW_TYPE);
         set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
         mprf_nocap("%s",
-                   get_menu_colour_prefix_tags(you.inv[which_item],
+                   menu_colour_item_name(you.inv[which_item],
                                                DESC_INVENTORY).c_str());
     }
 }
