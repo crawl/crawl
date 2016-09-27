@@ -3967,12 +3967,11 @@ string item_prefix(const item_def &item, bool temp)
 /**
  * Return an item's name surrounded by colour tags, using menu colouring
  *
- * @param item_def The item being queried
- * @param desc The description level to use for the name string.
- * @return A string containing the item's name surrounded by colour tags.
+ * @param item The item being queried
+ * @param desc The description level to use for the name string
+ * @return A string containing the item's name surrounded by colour tags
  */
-string menu_colour_item_name(const item_def &item,
-                                   description_level_type desc)
+string menu_colour_item_name(const item_def &item, description_level_type desc)
 {
     const string cprf      = item_prefix(item);
     const string item_name = item.name(desc);
