@@ -1305,7 +1305,7 @@ static int _hepliaklqana_ally_hd()
  * @return      5/hd from 1-11 HD, 10/hd from 12-18.
  *              (That is, 5 HP at 1 HD, 120 at 18.)
  */
-static int _hepliaklqana_ally_hp()
+int hepliaklqana_ally_hp()
 {
     const int HD = _hepliaklqana_ally_hd();
     return HD * 5 + max(0, (HD - 12) * 5);
@@ -1328,7 +1328,7 @@ mgen_data hepliaklqana_ancestor_gen_data()
     mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
     mg.set_summoned(&you, 0, 0, GOD_HEPLIAKLQANA);
     mg.hd = _hepliaklqana_ally_hd();
-    mg.hp = _hepliaklqana_ally_hp();
+    mg.hp = hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
     mg.mname = hepliaklqana_ally_name();
     mg.props[MON_GENDER_KEY]
@@ -1412,7 +1412,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         return; // assume nothing changes except at different HD
 
     const int old_mhp = ancestor->max_hit_points;
-    ancestor->max_hit_points = _hepliaklqana_ally_hp();
+    ancestor->max_hit_points = hepliaklqana_ally_hp();
     ancestor->hit_points =
         div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
                        old_mhp);
