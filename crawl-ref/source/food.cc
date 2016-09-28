@@ -88,14 +88,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         _describe_food_change(-hunger_amount);
 }
 
-// Must match the order of hunger_state_t enums
-static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-{
-    HUNGER_FAINTING, HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY,
-    HUNGER_HUNGRY, HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL,
-    HUNGER_ENGORGED
-};
-
 /**
  * Attempt to reduce the player's hunger.
  *
