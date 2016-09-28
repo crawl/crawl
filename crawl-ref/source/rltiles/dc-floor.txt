@@ -274,8 +274,13 @@ swamp3
 salt0 FLOOR_SALT
 %weight 2
 salt1
-%weight 10
 salt2
+%weight 10
+salt3
+salt4
+%weight 5
+salt5
+%weight 10
 
 %weight 20
 spider00 FLOOR_SPIDER
