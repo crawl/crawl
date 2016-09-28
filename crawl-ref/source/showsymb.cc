@@ -105,6 +105,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
+    if (feat_is_tree(feat) && env.forest_awoken_until)
+        colour = ETC_AWOKEN_FOREST;
+
     if (feat == DNGN_FLOOR)
     {
         if (cell.flags & MAP_LIQUEFIED)

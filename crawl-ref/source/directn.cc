@@ -2880,6 +2880,17 @@ string feature_description_at(const coord_def& where, bool covering,
                    "UNAMED PORTAL VAULT ENTRY");
 #endif
 
+    case DNGN_TREE:
+    {
+        string desc = "";
+        if (env.forest_awoken_until)
+            desc += "awoken ";
+        desc += grid == grd(where) ? raw_feature_description(where)
+                                   : _base_feature_desc(grid, trap);
+        desc += covering_description;
+        return thing_do_grammar(dtype, add_stop, false, desc);
+    }
+
     case DNGN_FLOOR:
         if (dtype == DESC_A)
             dtype = DESC_THE;
