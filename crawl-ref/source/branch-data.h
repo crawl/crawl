@@ -98,7 +98,7 @@ const Branch branches[NUM_BRANCHES] =
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
       GREEN, BROWN,
-      'M', { RUNE_SLIME }, -5 },
+      'M', { RUNE_SLIME }, -6 },
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
       BFLAG_DANGEROUS_END,
