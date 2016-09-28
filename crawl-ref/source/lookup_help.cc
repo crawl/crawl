@@ -1236,32 +1236,6 @@ static string _branch_subbranches(branch_type br)
     return desc;
 }
 
-static string _branch_noise(branch_type br)
-{
-    string desc;
-    const int noise = ambient_noise(br);
-    if (noise != 0)
-    {
-        desc = "\n\nThis branch is ";
-        if (noise > 0)
-        {
-            desc += make_stringf("filled with %snoise, and thus all sounds "
-                                 "travel %sless far.",
-                                 noise > 5 ? "deafening " : "",
-                                 noise > 5 ? "much " : "");
-        }
-        else
-        {
-            desc += make_stringf("%s, and thus all sounds travel %sfurther.",
-                                 noise < -5 ? "unnaturally silent"
-                                            : "very quiet",
-                                 noise < -5 ? "much " : "");
-        }
-    }
-
-    return desc;
-}
-
 /**
  * Describe the branch with the given name.
  *
@@ -1277,13 +1251,17 @@ static int _describe_branch(const string &key, const string &suffix,
     const branch_type branch = branch_by_shortname(branch_name);
     ASSERT(branch != NUM_BRANCHES);
 
-    const string info  = _branch_noise(branch)
-                         + _branch_location(branch)
-                         + _branch_entry_runes(branch)
-                         + _branch_depth(branch)
-                         + _branch_subbranches(branch)
-                         + "\n\n"
-                         + branch_rune_desc(branch, false);
+    string info = "";
+    const string noise_desc = branch_noise_desc(branch);
+    if (!noise_desc.empty())
+        info += "\n\n" + noise_desc;
+
+    info += _branch_location(branch)
+            + _branch_entry_runes(branch)
+            + _branch_depth(branch)
+            + _branch_subbranches(branch)
+            + "\n\n"
+            + branch_rune_desc(branch, false);
 
     return _describe_key(key, suffix, footer, info);
 }

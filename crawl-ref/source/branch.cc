@@ -256,6 +256,37 @@ int runes_for_branch(branch_type branch)
 }
 
 /**
+ * Describe the ambient noise level in this branch.
+ *
+ * @param branch The branch in question.
+ * @returns      A string describing how noisy or quiet the branch is.
+ */
+string branch_noise_desc(branch_type br)
+{
+    string desc;
+    const int noise = ambient_noise(br);
+    if (noise != 0)
+    {
+        desc = "This branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("%snoisy, and so sound travels %sless far.",
+                                 noise > 5 ? "very " : "",
+                                 noise > 5 ? "much " : "");
+        }
+        else
+        {
+            desc += make_stringf("%s, and so sound travels %sfurther.",
+                                 noise < -5 ? "unnaturally silent"
+                                            : "very quiet",
+                                 noise < -5 ? "much " : "");
+        }
+    }
+
+    return desc;
+}
+
+/**
  * Write a description of the rune(s), if any, this branch contains.
  *
  * @param br             the branch in question
