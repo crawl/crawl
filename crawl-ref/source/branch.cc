@@ -213,9 +213,17 @@ branch_type branch_by_shortname(const string &branch)
 
 int ambient_noise(branch_type branch)
 {
-    if (branch == NUM_BRANCHES)
-        return branches[you.where_are_you].ambient_noise;
-    return branches[branch].ambient_noise;
+    switch (branches[branch].ambient_noise)
+    {
+    case BRANCH_NOISE_NORMAL:
+        return 0;
+    case BRANCH_NOISE_QUIET:
+        return -BRANCH_NOISE_AMOUNT;
+    case BRANCH_NOISE_LOUD:
+        return BRANCH_NOISE_AMOUNT;
+    default:
+        die("Invalid noise level!");
+    };
 }
 
 branch_type get_branch_at(const coord_def& pos)
@@ -270,16 +278,14 @@ string branch_noise_desc(branch_type br)
         desc = "This branch is ";
         if (noise > 0)
         {
-            desc += make_stringf("%snoisy, and so sound travels %sless far.",
-                                 noise > 5 ? "very " : "",
-                                 noise > 5 ? "much " : "");
+            desc += make_stringf("very noisy, and so sound travels much less "
+                                 "far.");
         }
         else
         {
-            desc += make_stringf("%s, and so sound travels %sfurther.",
-                                 noise < -5 ? "unnaturally silent"
-                                            : "very quiet",
-                                 noise < -5 ? "much " : "");
+            desc += make_stringf("unnaturally silent, and so sound travels "
+                                 "much further.");
+
         }
     }
 

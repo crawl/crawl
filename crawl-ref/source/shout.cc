@@ -790,8 +790,8 @@ bool noisy(int original_loudness, const coord_def& where,
     // high ambient noise makes sounds harder to hear
     const int ambient = ambient_noise();
     const int loudness =
-        ambient < 0? original_loudness + random2avg(abs(ambient), 3)
-                   : original_loudness - random2avg(abs(ambient), 3);
+        ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
+                    : original_loudness - random2avg(abs(ambient), 3);
 
     dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          loudness, original_loudness, ambient, where.x, where.y);
