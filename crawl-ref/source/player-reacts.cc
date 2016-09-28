@@ -701,13 +701,6 @@ static void _decrement_durations()
         }
     }
 
-
-    if (you.duration[DUR_BERSERK]
-        && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
-    {
-        you.duration[DUR_BERSERK] = 1; // end
-    }
-
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
     // (killing monsters, offering items, ...) might be confusing for characters

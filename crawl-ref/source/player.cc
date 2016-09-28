@@ -8582,9 +8582,6 @@ void player_end_berserk()
 
     slow_player(dur);
 
-    make_hungry(BERSERK_NUTRITION, true);
-    you.hunger = max(HUNGER_STARVING - 100, you.hunger);
-
     // 1KB: No berserk healing.
     set_hp((you.hp + 1) * 2 / 3);
     calc_hp();
