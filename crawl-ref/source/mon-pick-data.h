@@ -217,8 +217,6 @@ static const pop_entry pop_blade[] =
 
 static const pop_entry pop_lair[] =
 { // Lair
-  { -3,  5,  825, SEMI, MONS_IGUANA },
-  { -2,  6,  750, SEMI, MONS_RIVER_RAT },
   { -1,  4,   52, SEMI, MONS_BLACK_BEAR },
   {  0,  5,   25, PEAK, MONS_SCORPION },
   {  0,  6,  260, SEMI, MONS_BASILISK },
@@ -249,7 +247,7 @@ static const pop_entry pop_lair[] =
   {  3,  8,   25, PEAK, MONS_LINDWURM },
   {  4,  7,  144, PEAK, MONS_DREAM_SHEEP },
   {  4,  9,   66, RISE, MONS_FIRE_CRAB },
-  {  1,  5, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
+  {  1,  5, 5500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
