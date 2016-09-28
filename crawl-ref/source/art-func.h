@@ -826,7 +826,9 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                            actor* defender, bool mondied,
                                            int dam)
 {
-    if (!mondied && one_chance_in(5))
+    if (!mondied && one_chance_in(5)
+        && (!defender->is_monster()
+             || !mons_immune_magic(*defender->as_monster())))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_TRANSMUTATION,
