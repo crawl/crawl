@@ -1798,7 +1798,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 // next level, instead multiply out the current level.
                 int next_level_xp = (int)exp_needed(you.experience_level+1, 0);
                 int this_level_xp = (int)exp_needed(you.experience_level, 0);
-                int xp_debt = (next_level_xp - this_level_xp) * 7;
+                int xp_debt = (next_level_xp - this_level_xp) * 15;
 
                 you.props[DESPERATE_HASTE_XP_DEBT] = xp_debt;
             }
