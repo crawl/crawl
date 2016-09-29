@@ -288,7 +288,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     },
     // Wudzu
     {
-        // None (yet)
+        {  0, passive_t::thorn_armour, "are coated in thorny armour" },
     },
 };
 
@@ -1470,4 +1470,17 @@ void uskayaw_bonds_audience()
     }
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
+}
+
+int wudzu_body_ac_boost(int piety)
+{
+	if (!have_passive(passive_t::thorn_armour))
+		return 0;
+	// smaller AC bonus if you can't wear body armour already
+	if (species_is_draconian(you.species) || you.species == SP_OCTOPODE
+	  || you.species == SP_FELID || you.species == SP_SPRIGGAN
+	  || you.species == SP_OGRE || you.species == SP_TROLL)
+		return max(3, 2 + min(piety, piety_breakpoint(5)) / 32);
+	else
+		return max(6, 4 + min(piety, piety_breakpoint(5)) / 16);
 }
