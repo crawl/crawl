@@ -5077,9 +5077,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         case RED:          // infernal demonspawn
             mi.type = MONS_INFERNAL_DEMONSPAWN;
             break;
-        case GREEN:        // putrid demonspawn
-            mi.type = MONS_PUTRID_DEMONSPAWN;
-            break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
             if (mi.spells[0].spell == SPELL_PORTAL_PROJECTILE)
                 mi.type = MONS_NAGA_SHARPSHOOTER;
@@ -5829,9 +5826,6 @@ void unmarshallMonster(reader &th, monster& m)
             break;
         case RED:          // infernal demonspawn
             m.type = MONS_INFERNAL_DEMONSPAWN;
-            break;
-        case GREEN:        // putrid demonspawn
-            m.type = MONS_PUTRID_DEMONSPAWN;
             break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
             if (m.spells[0].spell == SPELL_PORTAL_PROJECTILE)

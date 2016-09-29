@@ -842,7 +842,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         } },
         { MONS_INFERNAL_DEMONSPAWN,     { DS_WEAPONS } },
         { MONS_GELID_DEMONSPAWN,        { DS_WEAPONS } },
-        { MONS_PUTRID_DEMONSPAWN,       { DS_WEAPONS } },
         { MONS_TORTUROUS_DEMONSPAWN,    { DS_WEAPONS } },
         { MONS_CORRUPTER,               { DS_WEAPONS } },
         { MONS_BLACK_SUN,               { DS_WEAPONS } },
@@ -2068,7 +2067,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:

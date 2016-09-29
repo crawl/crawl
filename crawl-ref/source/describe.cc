@@ -2878,8 +2878,6 @@ static string _describe_demonspawn_base(int species)
         return "It is covered in icy armour.";
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
-    case MONS_PUTRID_DEMONSPAWN:
-        return "It is surrounded by sickly fumes and gases.";
     case MONS_TORTUROUS_DEMONSPAWN:
         return "It menaces with bony spines.";
     }
@@ -3527,7 +3525,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_BLOOD_SAINT:
     case MONS_CHAOS_CHAMPION:

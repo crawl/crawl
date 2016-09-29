@@ -2377,8 +2377,18 @@ monster_type random_demonspawn_monster_species()
 {
     const int num_demons = MONS_LAST_BASE_DEMONSPAWN
                             - MONS_FIRST_BASE_DEMONSPAWN + 1;
-    return static_cast<monster_type>(MONS_FIRST_BASE_DEMONSPAWN
-                                     + random2(num_demons));
+
+#if TAG_MAJOR_VERSION > 34
+    int select_demon = random2(num_demons);
+#endif
+#if TAG_MAJOR_VERSION == 34
+    // Special case to skip putrid demonspawn
+    int select_demon = 3;
+    while (select_demon == 3)
+        select_demon = random2(num_demons);
+#endif
+
+    return static_cast<monster_type>(MONS_FIRST_BASE_DEMONSPAWN + select_demon);
 }
 
 // Note: For consistent behavior in player_will_anger_monster(), all
@@ -2899,6 +2909,7 @@ monster_type draconian_colour_by_name(const string &name)
     return MONS_PROGRAM_BUG;
 }
 
+// TODO: Remove "putrid" when TAG_MAJOR_VERSION > 34
 static const char *demonspawn_base_names[] =
 {
     "monstrous", "gelid", "infernal", "putrid", "torturous",
