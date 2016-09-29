@@ -294,7 +294,7 @@ COLOURS SkillMenuEntry::get_colour() const
                  || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
     {
         if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
-            return you.train[m_sk] ? LIGHTBLUE : BLUE;
+            return you.train[m_sk] ? LIGHTGREEN : GREEN;
         else
             return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
     }
@@ -305,8 +305,8 @@ COLOURS SkillMenuEntry::get_colour() const
     else if (skill_has_manual(m_sk))
     {
         if (is_set(SKMF_APTITUDE))
-            return LIGHTGREEN;
-        return you.train[m_sk] ? LIGHTGREEN : GREEN;
+            return LIGHTRED;
+        return you.train[m_sk] ? LIGHTRED : RED;
     }
     else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
@@ -504,7 +504,7 @@ void SkillMenuEntry::set_cost()
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
     if (skill_has_manual(m_sk))
-        m_progress->set_fg_colour(LIGHTGREEN);
+        m_progress->set_fg_colour(LIGHTRED);
     else
         m_progress->set_fg_colour(CYAN);
 
@@ -589,7 +589,7 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("cross-training");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
-                     + " are in <blue>blue</blue>.";
+                     + " are in <green>green</green>.";
         }
 
         if (skm.is_set(SKMF_REDUCED))
@@ -630,7 +630,7 @@ string SkillMenuSwitch::get_help()
                "<cyan>cyan</cyan>";
         if (skm.is_set(SKMF_MANUAL))
         {
-            result += " (or <lightgreen>green</lightgreen> if enhanced by a "
+            result += " (or <lightred>red</lightred> if enhanced by a "
                       "manual)";
         }
         result += ".\n";
@@ -1312,7 +1312,7 @@ void SkillMenu::set_default_help()
             text += "The species aptitude is in <white>white</white>. ";
 
         if (is_set(SKMF_MANUAL))
-            text += "Bonus from skill manuals is in <lightgreen>green</lightgreen>. ";
+            text += "Bonus from skill manuals is in <lightred>red</lightred>. ";
     }
 
     // This one takes priority.
