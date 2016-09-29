@@ -3181,8 +3181,14 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
+		
+		int wudzu_spine = 0;
+		if (in_good_standing(GOD_WUDZU))
+		if (have_passive(passive_t::spiny_thorns))
+			wudzu_spine = 1;
+		
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
-                        : player_mutation_level(MUT_SPINY);
+                        : min(3,player_mutation_level(MUT_SPINY)+wudzu_spine);
 
         if (mut && attacker->alive() && coinflip())
         {
