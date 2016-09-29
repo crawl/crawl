@@ -1460,32 +1460,32 @@ static void _generate_scroll_item(item_def& item, int force_type,
     item.plus = 0;
 }
 
+/// Choose a random spellbook type for the given level.
+static book_type _choose_book_type(int item_level)
+{
+    const book_type book = static_cast<book_type>(random2(NUM_FIXED_BOOKS));
+    if (item_type_removed(OBJ_BOOKS, book))
+        return _choose_book_type(item_level); // choose something else
+
+    // If this book is really rare for this depth, continue trying.
+    const int rarity = book_rarity(book);
+    ASSERT(rarity != 100); // 'removed item' - ugh...
+
+    if (!one_chance_in(100) && x_chance_in_y(rarity-1, item_level+1))
+        return _choose_book_type(item_level); // choose something else
+
+    return book;
+}
+
 static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
+    else if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
+        item.sub_type = BOOK_MANUAL; // skill manual - rare!
     else
-    {
-        while (true)
-        {
-            item.sub_type = random2(NUM_FIXED_BOOKS);
-            if (item_type_removed(OBJ_BOOKS, item.sub_type))
-                continue;
-
-            // If this book is really rare for this depth, continue trying.
-            const int rarity
-                = book_rarity(static_cast<book_type>(item.sub_type));
-            ASSERT(rarity != 100); // 'removed item' - ugh...
-
-            if (one_chance_in(100) || !x_chance_in_y(rarity-1, item_level+1))
-                break;
-        }
-
-        // Skill manuals - rare.
-        if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
-            item.sub_type = BOOK_MANUAL;
-    }
+        item.sub_type = _choose_book_type(item_level);
 
     // Determine which skill for a manual.
     if (item.sub_type == BOOK_MANUAL)
