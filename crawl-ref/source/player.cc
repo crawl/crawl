@@ -6041,7 +6041,7 @@ int player::racial_ac(bool temp) const
  */
 int player::base_ac(int scale) const
 {
-    int AC = 100;
+    int AC = 0;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
