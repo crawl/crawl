@@ -278,6 +278,10 @@ void SkillMenuEntry::_clear()
 }
 COLOURS SkillMenuEntry::get_colour() const
 {
+    // Skills being actively trained may get further distinction.
+    bool use_bright_colour = you.train[m_sk] == TRAINING_ENABLED
+        || you.train[m_sk] == TRAINING_FOCUSED;
+
     if (is_set(SKMF_HELP))
         return DARKGREY;
     else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
@@ -294,9 +298,9 @@ COLOURS SkillMenuEntry::get_colour() const
                  || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
     {
         if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
-            return you.train[m_sk] ? LIGHTGREEN : GREEN;
+            return use_bright_colour ? LIGHTGREEN : GREEN;
         else
-            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
+            return use_bright_colour ? LIGHTMAGENTA : MAGENTA;
     }
     else if (mastered())
         return YELLOW;
@@ -306,7 +310,7 @@ COLOURS SkillMenuEntry::get_colour() const
     {
         if (is_set(SKMF_APTITUDE))
             return LIGHTRED;
-        return you.train[m_sk] ? LIGHTRED : RED;
+        return use_bright_colour ? LIGHTRED : RED;
     }
     else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
