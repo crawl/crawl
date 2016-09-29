@@ -3123,3 +3123,67 @@ MAP
 "aa--aa--aa--aa--aa--aa"
 """"""""""""""""""""""""
 ENDMAP
+
+NAME: cheibrodos_lair_hotspot
+PLACE: Lair:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: iguana, gargoyle, fire dragon, lindwurm / fire crab
+MONS: hell hound, komodo dragon / w:7 wyvern / w:5 basilisk
+MONS: mottled dragon / steam dragon / nothing
+# Generate one of two paths leading to central chamber
+SHUFFLE: ABCDEHIJKL / MNOPQRSTUV
+SUBST: A = @, B = x, C = ., D = _, E = =
+SUBST: H = x, I = ., J = l, K = ., L = c
+SUBST: M = x, N = ., O = l, P = ., Q = c
+SUBST: R = @, S = x, T = ., U = _, V = =
+# Generate one of two perches for dangerous enemies
+SHUFFLE: WXYZ / zz^&
+SUBST: W = 4, X = ., Y = l, Z = l
+SUBST: z = l, ^ = 4, & = .
+# Monster and loot placement
+SHUFFLE: ';`
+NSUBST: ' = 3:5 / 2:5. / 2=6 / 2=16. / 1=7. / *:.
+NSUBST: ; = 3:6 / 4=16. / 1=7. / *:.
+NSUBST: ` = 3:6 / 4=16. / 1=7. / *:.
+NSUBST: - = 1:3
+NSUBST: _ = 1=|* / 2=*% / 3=$% / 2:$
+NSUBST: l = 5:Y
+KMONS: Y = lava snake
+KFEAT: Y = lava
+MAP
+            xxxxxxxxxxxx
+           xxllxllxllxxxx
+          xxxxlllllllllxxxxx
+       xxxxxlllllxxx.llllxxxx
+      xxlxxllxxxxxx'.'xlllxxxxxx
+      xlllxllx2xGx'.'.'xxllxxxlxx
+      xxxlxlxxx....'.'.xxxlllxllx
+       xxlllxxG.'.'.'.'xxxxllllxx
+        xxlllxx'.'.'.'.'xxxxxlxx
+       xxxxllxx.'.'.'.'..xxxxlxx
+       xxxxxll.'.'.'.'.'.xxxllxx
+      xxxxxxl..x'.'.'.'.xxlllllx
+   xxxxxx.;x..lxxJJl..xIIllllllxx
+  xxxxxx.;.;.lZllJJllxxlIIllxxllxx
+xxxxxx;.;.;.xllZlJJlllllIIlxxxllxx
+xxx....;.;.;llZccLLccllllIIxxxxxxx
+A.....;.;.xllZccDDDDccllxx`.xGx2xx
+A....;.;xxlllYcDD..DDcllx`.`...xxx
+xxxx..;.;.;.lln..--..nlx`.`...xGxx
+xxxxx..;.;.;xln..--..nlX.`.`.`xxx
+  xxxx;.;.;.xlcKK..KKcXl`.`.`.xxx
+  xxxG...;.xxlccKKKKccXlx`.`.`xxxx
+   xxx..;.BBlllccEEccWllx.`.`..xxx
+    x2xG.xxBBllllCCllllx.`.`.....H
+    xxxx;llBBxxllCCll.`.`.`.`....H
+     xxxllllBB;.lCCl.`.`.`.`...xxx
+    xxxllllxx`.`..`.`.`.`.`.xxxxxx
+    xlllxllll.`.`..`.`.llllxxxxxx
+   xxllxxxxxllll.`..`llllxxxxxx
+   xllxxxxxxxlllll.`lllxxxxxx
+   xxxxx  xxxxxxllllllllxxxx
+            xxxxxxxxxxxllxxx
+               xxxxxxxxllxx
+                   xxxxxxx
+ENDMAP
