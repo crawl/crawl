@@ -449,6 +449,9 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
+	//Wudzu
+	ABIL_WUDZU_NOTHING = 1270,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -1659,6 +1662,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+	DNGN_ALTAR_WUDZU,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1725,6 +1729,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+	DNGN_ALTAR_WUDZU,
 
     DNGN_ENDLESS_SALT,
 #endif
@@ -2223,6 +2228,7 @@ enum god_type
     GOD_PAKELLAS,
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
+	GOD_WUDZU,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
