@@ -40,6 +40,7 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail);
 bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, bool punish);
+bool summon_vines(int pow);
 
 bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);

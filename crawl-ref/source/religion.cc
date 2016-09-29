@@ -320,10 +320,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
 	// Wudzu
-	{ { 0, ABIL_WUDZU_NOTHING, "do nothing" },
-	  { 0, "You are coated in thorny armour." },
+	{ { 0, "You are coated in thorny armour." },
 	  { 1, "Your thorn armour can damage attacking foes.",
 		   "Your thorn armour can no longer damage attacking foes."},
+	  { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
 	},
 };
 

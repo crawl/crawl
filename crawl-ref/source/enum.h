@@ -450,7 +450,7 @@ enum ability_type
 #endif
 
 	//Wudzu
-	ABIL_WUDZU_NOTHING = 1270,
+	ABIL_WUDZU_SUMMON_VINES = 1270,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
