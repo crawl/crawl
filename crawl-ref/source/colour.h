@@ -64,6 +64,7 @@ enum element_type
 #endif
     ETC_PAKELLAS,       // Pakellas altar colours
     ETC_AWOKEN_FOREST,  // Angry trees.
+	ETC_WUDZU,			// Wudzu altar colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
