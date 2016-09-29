@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 __(_suffix_examine
 
 It has been enchanted to dance through the air and attack under its own power.
@@ -2155,15 +2155,12 @@ from afar.
 %%%%
 snaplasher vine
 
-A swift and sinuous vine brought alive by a dryad's magic. It can quickly bind
-and entangle the dryad's foes, dragging them back to the forest from which it
-surges.
+A swift and sinuous vine. It can quickly bind and entangle its foes, dragging them back to the place from which it surges.
 %%%%
 snaplasher vine segment
 
-Part of a swift and sinuous vine brought alive by a dryad's magic. It can
-quickly bind and entangle the dryad's foes, dragging them back to the forest
-from which it surges.
+Part of a swift and sinuous vine. It can quickly bind and entangle 
+its foes, dragging them back to the place from which it surges.
 %%%%
 snapping turtle
 

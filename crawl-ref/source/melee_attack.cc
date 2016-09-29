@@ -3183,7 +3183,6 @@ void melee_attack::do_spines()
     {
 		
 		int wudzu_spine = 0;
-		if (in_good_standing(GOD_WUDZU))
 		if (have_passive(passive_t::spiny_thorns))
 			wudzu_spine = 1;
 		
