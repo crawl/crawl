@@ -6415,6 +6415,9 @@ int player::res_constrict() const
     {
         return 3;
     }
+	if (have_passive(passive_t::spiny_thorns))
+		return 3;
+
     return 0;
 }
 

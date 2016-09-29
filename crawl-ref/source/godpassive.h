@@ -245,6 +245,9 @@ enum class passive_t
 
 	/// Wudzu gives you thorny armour
 	thorn_armour,
+
+	/// Wudzu's armour gets spiny
+	spiny_thorns,
 };
 
 enum ru_interference
