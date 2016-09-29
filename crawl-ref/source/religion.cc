@@ -324,6 +324,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 	  { 1, "Your thorn armour can damage attacking foes.",
 		   "Your thorn armour can no longer damage attacking foes."},
 	  { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
+	  { 5, ABIL_WUDZU_BRIAR_PATCH, "grow briar patches" },
 	},
 };
 

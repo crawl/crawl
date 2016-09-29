@@ -627,6 +627,8 @@ static const ability_def Ability_List[] =
 	//Wudzu
 	{ ABIL_WUDZU_SUMMON_VINES, "Summon Vines",
 	5, 0, 200, 3, {FAIL_INVO, 60, 5, 20}, abflag::NONE },
+	{ ABIL_WUDZU_BRIAR_PATCH, "Briar Patch",
+	7, 0, 300, 6, {FAIL_INVO, 70, 4, 25}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3059,6 +3061,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 		summon_vines(20 + you.skill(SK_INVOCATIONS, 3));
 	break;
 	}
+
+	case ABIL_WUDZU_BRIAR_PATCH:
+		return wudzu_briars(fail);
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
