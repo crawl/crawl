@@ -321,6 +321,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 	
 	// Wudzu
 	{ { 0, ABIL_WUDZU_NOTHING, "do nothing" },
+	  { 0, "You are coated in thorny armour." },
 	},
 };
 
@@ -2365,6 +2366,12 @@ static void _gain_piety_point()
     {
         you.redraw_armour_class = true;
     }
+	
+	if (you_worship(GOD_WUDZU)
+		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
+	{
+		you.redraw_armour_class = true;
+	}
 
     if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
@@ -2511,6 +2518,12 @@ void lose_piety(int pgn)
     {
         you.redraw_armour_class = true;
     }
+	
+	if (you_worship(GOD_WUDZU)
+		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
+	{
+		you.redraw_armour_class = true;
+	}
 
     if (will_have_passive(passive_t::halo)
         || will_have_passive(passive_t::umbra))
@@ -3413,6 +3426,18 @@ static void _join_hepliaklqana()
                                     mg.mname.c_str()).c_str());
 }
 
+/// setup when joining wudzu
+static void _join_wudzu() 
+    {
+		if (!you.melded[EQ_BODY_ARMOUR])
+		{
+			remove_one_equip(EQ_BODY_ARMOUR, false, false);
+			you.redraw_armour_class = true;
+            if (you.skills[SK_ARMOUR])
+                you.train[SK_ARMOUR] = TRAINING_DISABLED;
+		}
+	}
+
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3506,6 +3531,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
     { GOD_HEPLIAKLQANA, _join_hepliaklqana },
+	{ GOD_WUDZU, _join_wudzu },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power

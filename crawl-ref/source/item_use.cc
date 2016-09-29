@@ -984,6 +984,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             mpr("You can't wear that in your present form.");
         return false;
     }
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_BODY_ARMOUR)
+	{
+		if (verbose)
+			mpr("Your thorny armour prevents you from wearing that.");
+		return false;
+	}
 
     return true;
 }

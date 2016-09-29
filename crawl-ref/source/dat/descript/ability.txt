@@ -874,7 +874,7 @@ Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
 # Wudzu
-Nothing ability
+Do Nothing ability
 
 This does nothing, just filler.
 %%%%
