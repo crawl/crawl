@@ -289,6 +289,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Wudzu
     {
         {  0, passive_t::thorn_armour, "are coated in thorny armour" },
+		{  1, passive_t::spiny_thorns, "Your thorn armour can damage attacking foes" },
     },
 };
 
