@@ -231,6 +231,11 @@ static const char *divine_title[][8] =
     // Hepliaklqana -- memory/ancestry theme
     {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
+
+	// Wudzu -- destructive nature/thorn theme.
+    {"Prey",               "Wild",            "Prickly",         "Thorned @Genus@",
+        "Feral",    "Invasive Species",               "Savage",             "Apex Predator"},
+
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
