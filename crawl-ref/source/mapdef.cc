@@ -4616,7 +4616,6 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("demonspawn") != string::npos
         || name.find("black sun") != string::npos
         || name.find("blood saint") != string::npos
-        || name.find("chaos champion") != string::npos
         || name.find("corrupter") != string::npos
         || name.find("warmonger") != string::npos)
     {

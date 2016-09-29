@@ -2852,8 +2852,6 @@ static string _describe_demonspawn_role(monster_type type)
     {
     case MONS_BLOOD_SAINT:
         return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_CHAOS_CHAMPION:
-        return "It possesses chaotic, reality-warping powers.";
     case MONS_WARMONGER:
         return "It is devoted to combat, disrupting the magic of its foes as "
                "it battles endlessly.";
@@ -3527,7 +3525,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_INFERNAL_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_BLOOD_SAINT:
-    case MONS_CHAOS_CHAMPION:
     case MONS_WARMONGER:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:

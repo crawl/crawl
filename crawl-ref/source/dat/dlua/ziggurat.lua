@@ -402,7 +402,7 @@ mset(spec_fn(function ()
   return "chaos spawn w:" .. d .. " / ugly thing w:" .. d .. " / " ..
          "very ugly thing w:4 / apocalypse crab w:4 / " ..
          "shapeshifter hd:16 w:" .. e .. " / glowing shapeshifter w:" .. e .. " / " ..
-         "killer klown w:8 / chaos champion w:2 / " ..
+         "killer klown w:8 / " ..
          "greater demon w:2 / pandemonium lord w:" .. f
 end))
 

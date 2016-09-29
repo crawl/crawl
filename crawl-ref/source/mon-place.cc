@@ -2240,7 +2240,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
     { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
     { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 5} }}}},
-    { MONS_CHAOS_CHAMPION,  { {}, {{ BAND_CHAOS_CHAMPION, {1, 4} }}}},
     { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 5} }}}},
     { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 5} }}}},
     { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 5} }}}},
@@ -2799,20 +2798,6 @@ static monster_type _band_member(band_type band, int which,
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
                                  MONS_LAST_NONBASE_DEMONSPAWN));
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_CHAOS_CHAMPION:
-        if (which == 1 || which == 2 && one_chance_in(6))
-        {
-            if (x_chance_in_y(2, 5))
-                return one_chance_in(3) ? MONS_TORMENTOR : MONS_HELL_BEAST;
-            else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
         }
         return random_demonspawn_monster_species();
 

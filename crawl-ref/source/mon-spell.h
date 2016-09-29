@@ -1572,13 +1572,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEMONSPAWN_CHAOS_CHAMPION,
-      {
-       { SPELL_RANDOM_BOLT, 32, MON_SPELL_PRIEST },
-       { SPELL_CALL_OF_CHAOS, 32, MON_SPELL_PRIEST },
-      }
-    },
-
     // ('8') Animate / statues.
     {  MST_USHABTI,
       {
