@@ -5089,9 +5089,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
             else
                 mi.type = MONS_SHOCK_SERPENT;
             break;
-        case ETC_RANDOM:   // chaos champion
-            mi.type = MONS_CHAOS_CHAMPION;
-            break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (mi.base_type != MONS_NO_MONSTER)
                 mi.type = MONS_WARMONGER;
@@ -5838,9 +5835,6 @@ void unmarshallMonster(reader &th, monster& m)
                 m.type = MONS_BLOOD_SAINT;
             else
                 m.type = MONS_SHOCK_SERPENT;
-            break;
-        case ETC_RANDOM:   // chaos champion
-            m.type = MONS_CHAOS_CHAMPION;
             break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (m.base_monster != MONS_NO_MONSTER)

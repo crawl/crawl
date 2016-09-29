@@ -587,7 +587,6 @@ static void rebind_mspec(string* requested_name,
             || requested_name->find("blood saint") == 0
             || requested_name->find("corrupter") == 0
             || requested_name->find("warmonger") == 0
-            || requested_name->find("chaos champion") == 0
             || requested_name->find("black sun") == 0))
     {
         // If the user requested a drac, the game might generate a

@@ -1178,28 +1178,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
-    case MONS_CHAOS_CHAMPION:
-        item.base_type = OBJ_WEAPONS;
-        do
-        {
-            item.sub_type = random2(NUM_WEAPONS);
-        }
-        while (melee_only && is_ranged_weapon_type(item.sub_type)
-               || is_blessed_weapon_type(item.sub_type)
-               || is_magic_weapon_type(item.sub_type)
-               || is_giant_club_type(item.sub_type)
-               || !property(item, PWPN_ACQ_WEIGHT)); // extra-weird weapons
-
-        if (one_chance_in(100))
-        {
-            force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
-            item.plus  = random2(9) - 2;
-        }
-        else
-            level = random2(300);
-        break;
-
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -2083,28 +2061,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        break;
-
-    case MONS_CHAOS_CHAMPION:
-        item.base_type = OBJ_ARMOUR;
-        if (one_chance_in(30))
-        {
-            item.sub_type  = random_choose(ARM_TROLL_LEATHER_ARMOUR,
-                                           ARM_FIRE_DRAGON_ARMOUR,
-                                           ARM_ICE_DRAGON_ARMOUR,
-                                           ARM_STEAM_DRAGON_ARMOUR,
-                                           ARM_MOTTLED_DRAGON_ARMOUR,
-                                           ARM_STORM_DRAGON_ARMOUR,
-                                           ARM_SWAMP_DRAGON_ARMOUR);
-        }
-        else
-        {
-            item.sub_type  = random_choose(ARM_ROBE,         ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL,    ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL,   ARM_PLATE_ARMOUR);
-        }
-        // Yes, this overrides the spec. Xom thinks this is hilarious!
-        level = random2(150);
         break;
 
     case MONS_WARMONGER:
