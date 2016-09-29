@@ -451,6 +451,7 @@ enum ability_type
 
 	//Wudzu
 	ABIL_WUDZU_SUMMON_VINES = 1270,
+	ABIL_WUDZU_BRIAR_PATCH,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

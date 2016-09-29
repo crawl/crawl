@@ -874,7 +874,12 @@ Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
 # Wudzu
-Do Nothing ability
+Summon Vines ability
 
-This does nothing, just filler.
+Summon snaplasher vines from the floor. The strength and quantity
+of vines will increase with Invocations skill.
+%%%%
+Briar Patch ability
+
+Summon a patch of briars on open areas on and around a selected space.
 %%%%

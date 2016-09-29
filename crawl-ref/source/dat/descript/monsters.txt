@@ -2155,11 +2155,12 @@ from afar.
 %%%%
 snaplasher vine
 
-A swift and sinuous vine. It can quickly bind and entangle its foes, dragging them back to the place from which it surges.
+A swift and sinuous vine. It can quickly bind and entangle its foes, 
+dragging them back to the place from which it surges.
 %%%%
 snaplasher vine segment
 
-Part of a swift and sinuous vine. It can quickly bind and entangle 
+Part of a swift and sinuous vine. It can quickly bind and entangle  
 its foes, dragging them back to the place from which it surges.
 %%%%
 snapping turtle
