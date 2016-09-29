@@ -617,12 +617,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_BASE_DEMONSPAWN)
         mon_type = random_demonspawn_monster_species();
     else if (mon_type == RANDOM_NONBASE_DEMONSPAWN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                             MONS_LAST_NONBASE_DEMONSPAWN));
-    }
+        mon_type = random_demonspawn_job();
 
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
@@ -2795,9 +2790,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
             else
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2807,11 +2800,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_EXECUTIONER : MONS_REAPER;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2821,11 +2810,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_CACODEMON : MONS_SHADOW_DEMON;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2835,11 +2820,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(3) ? MONS_LOROCYPROCA : MONS_SOUL_EATER;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
