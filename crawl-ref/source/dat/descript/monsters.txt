@@ -1906,10 +1906,6 @@ purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.
 %%%%
-putrid demonspawn
-
-<demonspawn>
-%%%%
 quasit
 
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws

@@ -2238,7 +2238,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
     { MONS_GELID_DEMONSPAWN, { {2}, {{ BAND_GELID_DEMONSPAWN, {1, 3} }}}},
     { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
-    { MONS_PUTRID_DEMONSPAWN, { {2}, {{ BAND_PUTRID_DEMONSPAWN, {1, 3} }}}},
     { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
     { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 5} }}}},
     { MONS_CHAOS_CHAMPION,  { {}, {{ BAND_CHAOS_CHAMPION, {1, 4} }}}},
@@ -2779,15 +2778,6 @@ static monster_type _band_member(band_type band, int which,
             return random_choose_weighted( 2, MONS_RED_DEVIL,
                                            2, MONS_SUN_DEMON,
                                            3, MONS_INFERNAL_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_PUTRID_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
-        {
-            return random_choose_weighted( 2, MONS_HELLWING,
-                                           2, MONS_ORANGE_DEMON,
-                                           3, MONS_PUTRID_DEMONSPAWN);
         }
         return random_demonspawn_monster_species();
 

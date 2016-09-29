@@ -1925,8 +1925,8 @@ MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
 MONS: orc knight
 # non-monstrous demonspawn only (1/3 chance of none)
-MONS: gelid demonspawn / infernal demonspawn / putrid demonspawn /\
-      torturous demonspawn / nothing w:20
+MONS: gelid demonspawn / infernal demonspawn / \
+      torturous demonspawn / nothing w:15
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
 KFEAT: A = general shop / food shop / distillery shop / scroll shop
