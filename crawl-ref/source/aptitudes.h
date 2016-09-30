@@ -26,7 +26,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HUMAN,           SK_THROWING,        0),
     APT(SP_HUMAN,           SK_ARMOUR,          0),
     APT(SP_HUMAN,           SK_DODGING,         0),
-    APT(SP_HUMAN,           SK_STEALTH,         1),
+    APT(SP_HUMAN,           SK_STEALTH,         0),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_HUMAN,           SK_STABBING,      UNUSABLE_SKILL),
 #endif
@@ -35,7 +35,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HUMAN,           SK_TRAPS,         UNUSABLE_SKILL),
 #endif
     APT(SP_HUMAN,           SK_UNARMED_COMBAT,  0),
-    APT(SP_HUMAN,           SK_SPELLCASTING,   -1),
+    APT(SP_HUMAN,           SK_SPELLCASTING,    0),
     APT(SP_HUMAN,           SK_CONJURATIONS,    0),
     APT(SP_HUMAN,           SK_HEXES,           0),
     APT(SP_HUMAN,           SK_CHARMS,          0),
@@ -48,7 +48,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HUMAN,           SK_AIR_MAGIC,       0),
     APT(SP_HUMAN,           SK_EARTH_MAGIC,     0),
     APT(SP_HUMAN,           SK_POISON_MAGIC,    0),
-    APT(SP_HUMAN,           SK_INVOCATIONS,     1),
+    APT(SP_HUMAN,           SK_INVOCATIONS,     0),
     APT(SP_HUMAN,           SK_EVOCATIONS,      0),
 
     // SP_HIGH_ELF
