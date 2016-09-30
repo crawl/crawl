@@ -193,7 +193,9 @@ static bool _is_public_key(string key)
      || key == MUTANT_BEAST_TIER
      || key == DOOM_HOUND_HOWLED_KEY
      || key == MON_GENDER_KEY
-     || key == SEEN_SPELLS_KEY)
+     || key == SEEN_SPELLS_KEY
+     || key == KNOWN_MAX_HP_KEY
+     || key == VAULT_HD_KEY )
     {
         return true;
     }
@@ -656,6 +658,7 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
         i_ghost.damage = quantise(ghost.damage, 5);
+        props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
 
         // describe abnormal (branded) ghost weapons
         if (ghost.brand != SPWPN_NORMAL)
@@ -764,6 +767,23 @@ monster_info::monster_info(const monster* m, int milev)
     client_id = m->get_client_id();
 }
 
+/// Player-known max HP information for a monster: "about 55", "243".
+string monster_info::get_max_hp_desc() const
+{
+    if (props.exists(KNOWN_MAX_HP_KEY))
+        return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
+
+    const int base_avg_hp = mons_avg_hp(type);
+    int mhp = base_avg_hp;
+    if (props.exists(VAULT_HD_KEY))
+    {
+        const int xl = props[VAULT_HD_KEY].get_int();
+        const int base_xl = mons_class_hit_dice(type);
+        mhp = base_avg_hp * xl / base_xl; // rounds down - close enough
+    }
+
+    return make_stringf("about %d", mhp);
+}
 
 
 /**
