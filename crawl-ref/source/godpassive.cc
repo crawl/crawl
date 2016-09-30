@@ -290,6 +290,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     {
         {  0, passive_t::thorn_armour, "are coated in thorny armour" },
 		{  1, passive_t::spiny_thorns, "Your thorn armour can damage attacking foes" },
+		{  2, passive_t::thorn_vestment, "are coated in a vestment of thorns" },
+		{  4, passive_t::thorn_regalia, "are coated in a regalia of thorns" },
     },
 };
 
@@ -1146,6 +1148,31 @@ ru_interference get_ru_attack_interference_level()
         return DO_NOTHING;
 }
 
+bool does_wudzu_wanna_block(monster* mon)
+{
+    return ((you.props["wudzu_boots_picked_v"].get_int() == 1
+	    && have_passive(passive_t::thorn_vestment))
+		|| (you.props["wudzu_boots_picked_r"].get_int() == 1
+		&& have_passive(passive_t::thorn_regalia)))
+            && !mon->friendly()
+            && you.see_cell(mon->pos())
+          //  && !mons_is_firewood(mon)
+            && !mon->submerged()
+            && !mons_is_projectile(mon->type);
+}
+
+wudzu_boots_interference get_wudzu_boots_attack_interference()
+{
+    int r = random2(100);
+    int chance = 5;
+
+    // 5% chance of stopping any melee attack
+    if (r < chance)
+        return DO_BLOCK_MELEE_ATTACK;
+	else
+        return DONT_BLOCK_MELEE_ATTACK;
+}
+
 /**
  * ID the charges of wands and rods in the player's possession.
  */
@@ -1484,4 +1511,82 @@ int wudzu_body_ac_boost(int piety)
 		return max(3, 2 + min(piety, piety_breakpoint(5)) / 32);
 	else
 		return max(6, 4 + min(piety, piety_breakpoint(5)) / 16);
+}
+
+int wudzu_cloak_ac_boost(int piety)
+{
+
+	if ((have_passive(passive_t::thorn_vestment) &&
+	  you.props["wudzu_cloak_picked_v"].get_int() == 1) ||
+	  (have_passive(passive_t::thorn_regalia) &&
+	  you.props["wudzu_cloak_picked_r"].get_int() == 1))
+	{
+		// smaller AC bonus if you can't use the cloak slot
+		if (you.species == SP_OCTOPODE || you.species == SP_FELID)
+			return 1;
+		else
+			return 3;
+	}
+	else
+		return 0;
+
+}
+
+int wudzu_hat_ac_boost(int piety)
+{
+	if ((have_passive(passive_t::thorn_vestment) &&
+	  you.props["wudzu_hat_picked_v"].get_int() == 1) ||
+	  (have_passive(passive_t::thorn_regalia) &&
+	  you.props["wudzu_hat_picked_r"].get_int() == 1))
+	{
+		// smaller AC bonus if you can't use the hat slot
+		if (you.species == SP_FELID ||
+		player_mutation_level(MUT_ANTENNAE, false) == 3 ||
+		player_mutation_level(MUT_HORNS, false) == 3)
+			return 1;
+		else
+			return 3;
+	}
+	else
+		return 0;
+}
+
+int wudzu_gloves_ac_boost(int piety)
+{
+	if ((have_passive(passive_t::thorn_vestment) &&
+	  you.props["wudzu_gloves_picked_v"].get_int() == 1) ||
+	  (have_passive(passive_t::thorn_regalia) &&
+	  you.props["wudzu_gloves_picked_r"].get_int() == 1))
+	{
+		// smaller AC bonus if you can't use the gloves slot
+		if (you.species == SP_FELID || you.species == SP_SPRIGGAN ||
+		you.species == SP_OGRE || you.species == SP_OCTOPODE ||
+		player_mutation_level(MUT_CLAWS, false) == 3)
+			return 1;
+		else
+			return 3;
+	}
+	else
+		return 0;
+}
+
+int wudzu_boots_ac_boost(int piety)
+{
+	if ((have_passive(passive_t::thorn_vestment) &&
+	  you.props["wudzu_boots_picked_v"].get_int() == 1) ||
+	  (have_passive(passive_t::thorn_regalia) &&
+	  you.props["wudzu_boots_picked_r"].get_int() == 1))
+	{
+		// smaller AC bonus if you can't use the boots slot
+		if (you.species==SP_FELID || you.species==SP_SPRIGGAN ||
+		you.species==SP_OGRE || you.species==SP_OCTOPODE ||
+		you.species==SP_TROLL || (player_mutation_level(MUT_HOOVES, false)
+		==3 && you.species!=SP_CENTAUR) ||
+		player_mutation_level(MUT_TALONS,false) == 3)
+			return 1;
+		else
+			return 3;
+	}
+	else
+		return 0;
 }
