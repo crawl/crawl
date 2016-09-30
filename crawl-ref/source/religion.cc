@@ -320,16 +320,16 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
 	// Wudzu
-	{ { 2, ABIL_WUDZU_VESTMENT_CLOAK, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
+	{ { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
+	  { 5, ABIL_WUDZU_BRIAR_PATCH, "grow briar patches" },
+	  { 2, ABIL_WUDZU_VESTMENT_CLOAK, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
 	  { 2, ABIL_WUDZU_VESTMENT_HAT, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
 	  { 2, ABIL_WUDZU_VESTMENT_GLOVES, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
 	  { 2, ABIL_WUDZU_VESTMENT_BOOTS, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
-	  { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
 	  { 4, ABIL_WUDZU_REGALIA_CLOAK, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
 	  { 4, ABIL_WUDZU_REGALIA_HAT, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
 	  { 4, ABIL_WUDZU_REGALIA_GLOVES, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
 	  { 4, ABIL_WUDZU_REGALIA_BOOTS, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
-	  { 5, ABIL_WUDZU_BRIAR_PATCH, "grow briar patches" },
 	},
 };
 
