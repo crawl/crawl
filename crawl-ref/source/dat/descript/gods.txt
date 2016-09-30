@@ -186,7 +186,7 @@ possible.
 %%%%
 Wudzu
 
-Wudzu is a god of wild plants and natural selection. Followers forgo the use of most armour, instead becoming encased by ever-growing masses of thorns. These thorns provide protection and various unique benefits. Followers will also be able to harness the destructive powers of plants by hurling barbs, unleashing constricting vines, and spreading massive briar patches.
+Wudzu is a god of wild plants and natural selection. Followers forgo the use of most armour, instead becoming encased by ever-growing masses of thorns. These thorns provide protection and various unique benefits. Followers will also be able to harness the destructive powers of plants by unleashing constricting vines and spreading massive briar patches.
 %%%%
 Xom
 
@@ -435,7 +435,7 @@ Wudzu powers
 
 Worshippers of Wudzu will lose several armour slots to masses of thorns, which
 provide protection from attacks and varying unique benefits. As piety increases
-they gain access to the ability to fling thorns at enemies, to summon constricting vines, and to spread briar patches.
+they gain access to the ability to summon constricting vines and to spread briar patches.
 %%%%
 Xom powers
 
