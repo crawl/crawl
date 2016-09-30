@@ -3913,6 +3913,16 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
         first_slot = letter_to_index('G');
         break;
+	case ABIL_WUDZU_VESTMENT_BOOTS:
+	case ABIL_WUDZU_VESTMENT_CLOAK:
+	case ABIL_WUDZU_VESTMENT_HAT:
+	case ABIL_WUDZU_VESTMENT_GLOVES:
+	case ABIL_WUDZU_REGALIA_BOOTS:
+	case ABIL_WUDZU_REGALIA_CLOAK:
+	case ABIL_WUDZU_REGALIA_HAT:
+	case ABIL_WUDZU_REGALIA_GLOVES:
+		first_slot = letter_to_index('D');
+		break;
     default:
         break;
     }
