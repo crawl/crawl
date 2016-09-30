@@ -2838,7 +2838,7 @@ ENDMAP
 NAME:    pan_disco_hall
 TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate
 ORIENT:  southeast
-MONS:    rakshasa, corrupter
+MONS:    rakshasa, corrupter, blood saint
 MONS:    dancing weapon ; demon trident good_item ego:distortion
 MONS:    dancing weapon ; lajatang good_item ego:distortion
 MONS:    dancing weapon ; demon blade good_item ego:distortion
