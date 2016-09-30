@@ -320,10 +320,15 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
 	// Wudzu
-	{ { 0, "You are coated in thorny armour." },
-	  { 1, "Your thorn armour can damage attacking foes.",
-		   "Your thorn armour can no longer damage attacking foes."},
+	{ { 2, ABIL_WUDZU_VESTMENT_CLOAK, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
+	  { 2, ABIL_WUDZU_VESTMENT_HAT, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
+	  { 2, ABIL_WUDZU_VESTMENT_GLOVES, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
+	  { 2, ABIL_WUDZU_VESTMENT_BOOTS, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
 	  { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
+	  { 4, ABIL_WUDZU_REGALIA_CLOAK, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
+	  { 4, ABIL_WUDZU_REGALIA_HAT, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
+	  { 4, ABIL_WUDZU_REGALIA_GLOVES, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
+	  { 4, ABIL_WUDZU_REGALIA_BOOTS, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
 	  { 5, ABIL_WUDZU_BRIAR_PATCH, "grow briar patches" },
 	},
 };
@@ -362,6 +367,63 @@ void god_power::display(bool gaining, const char* fmt) const
     {
         return;
     }
+
+	if (you.props["vest1"].get_int() == 1 || you.props["vest2"].get_int() == 1 || !you_worship(GOD_WUDZU))
+	{
+		if (abil == ABIL_WUDZU_VESTMENT_HAT)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_GLOVES)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
+			return;
+	}
+	else if (you.props["vest1"].get_int() == 2 || you.props["vest2"].get_int() == 2)
+	{
+		if (abil == ABIL_WUDZU_VESTMENT_CLOAK)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_GLOVES)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
+			return;
+	}
+	else if (you.props["vest1"].get_int() == 3 || you.props["vest2"].get_int() == 3)
+	{
+		if (abil == ABIL_WUDZU_VESTMENT_CLOAK)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_HAT)
+			return;
+		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
+			return;
+	}
+
+	if (you.props["reg1"].get_int() == 1 || you.props["reg2"].get_int() == 1 || !you_worship(GOD_WUDZU))
+	{
+		if (abil == ABIL_WUDZU_REGALIA_HAT)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_GLOVES)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
+			return;
+	}
+	else if (you.props["reg1"].get_int() == 2 || you.props["reg2"].get_int() == 2)
+	{
+		if (abil == ABIL_WUDZU_REGALIA_CLOAK)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_GLOVES)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
+			return;
+	}
+	else if (you.props["reg1"].get_int() == 3 || you.props["reg2"].get_int() == 3)
+	{
+		if (abil == ABIL_WUDZU_REGALIA_CLOAK)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_HAT)
+			return;
+		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
+			return;
+	}
+
     const char* str = gaining ? gain : loss;
     if (isupper(str[0]))
         god_speaks(you.religion, str);
@@ -3439,6 +3501,34 @@ static void _join_wudzu()
             if (you.skills[SK_ARMOUR])
                 you.train[SK_ARMOUR] = TRAINING_DISABLED;
 		}
+
+		//assign aux slots to each thorn replacement skill on first worship
+		if (you.worshipped[GOD_WUDZU] == 0)
+		{
+			you.props["wudzu_cloak_picked_v"] = 0;
+			you.props["wudzu_hat_picked_v"] = 0;
+			you.props["wudzu_gloves_picked_v"] = 0;
+			you.props["wudzu_boots_picked_v"] = 0;
+			you.props["wudzu_cloak_picked_r"] = 0;
+			you.props["wudzu_hat_picked_r"] = 0;
+			you.props["wudzu_gloves_picked_r"] = 0;
+			you.props["wudzu_boots_picked_r"] = 0;
+			you.props["wudzu_vestment_picked"] = 0;
+			you.props["wudzu_regalia_picked"] = 0;
+
+			you.props["vest1"] = random2(4) + 1;
+			you.props["vest2"] = random2(4) + 1;
+			while (you.props["vest2"].get_int() == you.props["vest1"].get_int())
+				you.props["vest2"] = random2(4) + 1;
+
+			you.props["reg1"] = random2(4) + 1;
+			while (you.props["reg1"].get_int() == you.props["vest1"].get_int() || you.props["reg1"].get_int() == you.props["vest2"].get_int())
+				you.props["reg1"] = random2(4) + 1;
+
+			you.props["reg2"] = 10 - you.props["vest1"].get_int() - you.props["vest2"].get_int() - you.props["reg1"].get_int();
+
+		}
+
 	}
 
 /// Setup when joining the gelatinous groupies of Jiyva.
