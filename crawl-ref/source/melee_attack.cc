@@ -285,6 +285,14 @@ bool melee_attack::handle_phase_dodged()
         {
             do_minotaur_retaliation();
         }
+        else if ((you.props["wudzu_hat_picked_v"].get_int() == 1 
+		  && have_passive(passive_t::thorn_vestment))
+		  || (you.props["wudzu_hat_picked_r"].get_int() == 1 
+		  && have_passive(passive_t::thorn_regalia)))
+        {
+			if (coinflip())
+				do_wudzu_hat_retaliation();
+        }
 
         // Retaliations can kill!
         if (!attacker->alive())
@@ -468,6 +476,14 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
+		if ((you.props["wudzu_gloves_picked_v"].get_int() == 1
+	      && have_passive(passive_t::thorn_vestment))
+	      || (you.props["wudzu_gloves_picked_r"].get_int() == 1
+	      && have_passive(passive_t::thorn_regalia)))
+	    {
+		if (coinflip())
+			poison_monster(defender->as_monster(), &you);
+	    }
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -3305,6 +3321,48 @@ void melee_attack::do_minotaur_retaliation()
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
+        dmg = player_stat_modify_damage(dmg);
+        dmg = random2(dmg);
+        dmg = player_apply_fighting_skill(dmg, true);
+        dmg = player_apply_misc_modifiers(dmg);
+        dmg = player_apply_slaying_bonuses(dmg, true);
+        dmg = player_apply_final_multipliers(dmg);
+        int hurt = attacker->apply_ac(dmg);
+
+        mpr("You furiously retaliate!");
+        dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
+        if (hurt <= 0)
+        {
+            mprf("You headbutt %s, but do no damage.",
+                 attacker->name(DESC_THE).c_str());
+            return;
+        }
+        else
+        {
+            mprf("You headbutt %s%s",
+                 attacker->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(hurt).c_str());
+            attacker->hurt(&you, hurt);
+        }
+    }
+}
+
+void melee_attack::do_wudzu_hat_retaliation()
+{
+    if (defender->cannot_act()
+        || defender->confused()
+        || !attacker->alive()
+        || defender->is_player() && you.duration[DUR_LIFESAVING])
+    {
+        return;
+    }
+
+    const int mut = player_mutation_level(MUT_HORNS);
+
+    if (5 * you.strength() + 7 * you.dex() > random2(600))
+    {
+        // Use the same damage formula as a regular headbutt, plus some for thorns.
+        int dmg = 7 + mut * 3;
         dmg = player_stat_modify_damage(dmg);
         dmg = random2(dmg);
         dmg = player_apply_fighting_skill(dmg, true);
