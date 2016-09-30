@@ -939,6 +939,10 @@ void treant_release_fauna(monster* mons)
                             mons->pos(),  mons->foe);
         fauna_data.set_summoned(mons, 0, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
+		
+		if (mons->is_perm_summoned())
+			fauna_data.extra_flags |= (MF_HARD_RESET | MF_NO_REWARD);
+		
         monster* fauna = create_monster(fauna_data);
 
         if (fauna)
