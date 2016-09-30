@@ -1436,6 +1436,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             bonus_hp = mbase->avg_hp_10x;
         }
         mon->set_hit_dice(mg.hd);
+        mon->props[VAULT_HD_KEY] = mg.hd;
         // Re-roll HP.
         const int base_avg_hp = m_ent->avg_hp_10x + bonus_hp;
         const int new_avg_hp = div_rand_round(base_avg_hp * mg.hd, m_ent->HD);
@@ -1452,6 +1453,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         mon->max_hit_points = mg.hp;
         mon->hit_points = mg.hp;
+        mon->props[KNOWN_MAX_HP_KEY] = mg.hp;
     }
 
     if (!crawl_state.game_is_arena())
