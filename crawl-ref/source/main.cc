@@ -3380,7 +3380,6 @@ static void _move_player(coord_def move)
         {
             mpr("You're too terrified to move while being watched!");
             stop_running();
-            moving = false;
             you.turn_is_over = false;
             return;
         }
