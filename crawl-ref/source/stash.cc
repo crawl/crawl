@@ -1516,7 +1516,7 @@ bool StashTracker::display_search_results(
     if (results_in.empty())
         return false;
 
-    vector<stash_search_result> * results = &results_in;
+    vector<stash_search_result> * results;
     vector<stash_search_result> results_filtered;
 
     if (filter_useless)
