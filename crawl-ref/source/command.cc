@@ -855,7 +855,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n");
+            "<h>Rest:\n");
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
@@ -1143,7 +1143,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n");
+            "<h>Rest:\n");
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
