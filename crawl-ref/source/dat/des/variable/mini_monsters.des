@@ -121,7 +121,7 @@ ENDMAP
 NAME:   hive_lemuel
 TAGS:   no_trap_gen
 DEPTH:  D:9-, Spider
-MONS:   killer bee, meliai, queen bee, wasp, hornet
+MONS:   killer bee, meliai, queen bee, hornet
 KMONS:  *R = worm
 KITEM:  * = *
 KITEM:  R = royal jelly
@@ -132,7 +132,7 @@ SUBST:  * : * R:3
 TAGS:   uniq_beehive
 NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
 : else
-TAGS:   uniq_wasphive
+TAGS:   uniq_hornetnest
 SUBST:  1 : 4 5:4
 : end
 COLOUR: x = yellow
@@ -874,7 +874,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = wasp
+KMONS:  7 = hornet
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
@@ -929,7 +929,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = wasp
+KMONS:  7 = hornet
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush
@@ -3454,7 +3454,7 @@ KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
 KMONS:   p = hornet
-KMONS:   q = wasp
+KMONS:   q = insubstantial wisp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklnopqr

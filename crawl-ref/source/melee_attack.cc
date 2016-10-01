@@ -2788,7 +2788,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_PARALYSE:
     {
-        // Only wasps at the moment, so Zin vitalisation
+        // Only hornets at the moment, so Zin vitalisation
         // protects from the paralysis and slow.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {

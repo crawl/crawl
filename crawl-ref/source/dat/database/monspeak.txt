@@ -924,7 +924,7 @@ default confused 'r'
 
 VISUAL:@The_monster@ runs around in a circle.
 %%%%
-# Bees and wasps - moths and giant fireflies have separate speech.
+# Bees and hornets - moths and giant fireflies have separate speech.
 default confused 'y'
 
 SOUND:@The_monster@ buzzes around in tight circles.
@@ -5582,13 +5582,13 @@ mosquito
 w:2
 spider
 
-wasp
-
 centipede
 
 millipede
 
 w:1
+hornet
+
 small bird
 
 mouse

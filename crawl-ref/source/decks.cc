@@ -1861,7 +1861,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     const monster_type flytypes[] =
     {
         MONS_INSUBSTANTIAL_WISP, MONS_WYVERN, MONS_KILLER_BEE,
-        MONS_VAMPIRE_MOSQUITO, MONS_WASP, MONS_HORNET
+        MONS_VAMPIRE_MOSQUITO, MONS_HORNET
     };
     const int num_flytypes = ARRAYSZ(flytypes);
 

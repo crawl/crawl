@@ -1965,7 +1965,7 @@ A muscular red-scaled humanoid with a reptilian tail and small wings.
 %%%%
 hornet
 
-A huge hornet with a vicious stinger dripping with potent paralytic poison.
+A buzzing hornet with a vicious stinger dripping with paralytic poison.
 %%%%
 redback
 
@@ -2240,7 +2240,7 @@ twig.
 %%%%
 spriggan rider
 
-A spriggan that has tamed a wasp as its mount, and is tasked with protecting
+A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
 %%%%
 starcursed mass
@@ -2601,11 +2601,6 @@ around to do its bidding.
 yellow draconian
 
 A muscular yellow-scaled humanoid with a reptilian tail and small wings.
-%%%%
-wasp
-
-A giant wasp covered with thick plates of yellow chitinous armour. Its deadly
-venom can render most beings unable to move.
 %%%%
 ynoxinul
 

@@ -21,7 +21,7 @@ function grandhive_vaults(e, hivewallglyph)
     e.colour(hivewallglyph .. ' = yellow')
     -- Lair has lots of randomization and thin scaling in its
     -- monster set, so specify some monsters for Lair. Also,
-    -- avoid wasps and bears, because nature or whatever.
+    -- avoid hornets and bears, because nature or whatever.
     if you.branch() == "Lair" then
         e.kmons('0 = yak / hippogriff / wolf w:8 / \
                      water moccasin w:8 / wyvern w:8 / basilisk w:8 / \

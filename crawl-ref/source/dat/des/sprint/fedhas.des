@@ -33,7 +33,7 @@ KMONS:  V = Agnes
 KMONS:  W = spriggan defender
 KMONS:  X = spriggan rider ; storm_bow . arrow
 KMONS:  Y = bush
-KMONS:  a = wasp
+KMONS:  a = hornet
 KMONS:  b = ghost moth
 KMONS:  d = oklob plant name:meteorologist n_suf \
             spells:spit_acid.67.natural;lightning_bolt.30.wizard;\

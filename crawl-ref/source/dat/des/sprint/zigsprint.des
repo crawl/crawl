@@ -312,7 +312,7 @@ function choose_mset_3(e)
     e.kmons("1 =  place:Lair:2 / place:Lair:4 / place:Lair:$ w:5")
 -- Spider
   elseif rnd < 24 then
-    e.kmons("1 = place:Spider:$ w:70 / wasp / hornet")
+    e.kmons("1 = place:Spider:$ w:70 / hornet")
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
@@ -441,7 +441,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
 -- Spider
   elseif rnd < 26 then
-    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / wasp / hornet /\
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / hornet /\
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then

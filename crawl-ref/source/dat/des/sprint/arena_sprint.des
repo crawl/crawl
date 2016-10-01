@@ -358,7 +358,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
                 "w:15 ugly thing / w:1 very ugly thing",
-                "vampire mosquito / hornet w:5 / wasp",
+                "vampire mosquito / hornet",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
                 "rime drake w:5 / swamp drake / swamp dragon /\
