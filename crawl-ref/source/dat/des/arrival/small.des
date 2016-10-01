@@ -2790,16 +2790,16 @@ NSUBST:  w = @ / w
 SUBST:   w : wwwwwwtt.
 : end
 SUBST:   r : x
-NSUBST:  y = { / ...cc> / .
+NSUBST:  y = { / .....> / .
 KMASK:   W = no_monster_gen
 MONS:    anaconda / death yak / black mamba / elephant / hydra
 MAP
   xxxxxx
- xxccccxx
-xxtcyyctxx
-xt1cyyc1tx
-xtcc..cctx
-x.cc++cc.x
+xxxccccxxx
+xtttyytttx
+xt1tyyt1tx
+xcnc..cncx
+x..c++c..x
 r........z
 xuwwwwwwux
 ENDMAP
