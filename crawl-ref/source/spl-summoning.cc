@@ -706,42 +706,6 @@ bool summon_holy_warrior(int pow, bool punish)
     return true;
 }
 
-bool summon_vines(int pow)
-{
-	int count = 0;
-	pow = pow + random_range(-10,10);
-	if (pow < 51)
-		count = 1;
-	else if (pow < 78)
-		count = 2;
-	else
-		count = 3;
-
-    for (int i = 0; i < count; ++i)
-	{
-		mgen_data vine(MONS_SNAPLASHER_VINE,
-                 BEH_FRIENDLY, you.pos(), MHITYOU,
-                 MG_FORCE_BEH | MG_AUTOFOE);
-		vine.set_summoned(&you, min(2 + (random2(pow) / 10), 6),
-						  SPELL_NO_SPELL, GOD_WUDZU);
-		vine.hd = max(8, min(27,5+you.skill(SK_INVOCATIONS)));
-
-		monster *summon = create_monster(vine);
-
-		if (!summon)
-			return false;
-
-		summon->flags |= MF_ATT_CHANGE_ATTEMPT;
-	}
-
-	if (count == 1)
-		mpr("A vine bursts forth from the floor.");
-	if (count > 1)
-		mpr("Vines burst forth from the floor.");
-
-    return true;
-}
-
 /**
  * Essentially a macro to allow for a generic fail pattern to avoid leaking
  * information about invisible enemies. (Not implemented as a macro because I

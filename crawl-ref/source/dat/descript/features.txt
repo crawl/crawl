@@ -1,4 +1,4 @@
-﻿########################################################################
+########################################################################
 ### Altars
 ########################################################################
 A detected altar
@@ -121,10 +121,6 @@ A radiant altar of Vehumet
 
 An altar, ablaze in the lights of Iskenderun and promising great destructive
 powers to those who would follow Vehumet.
-%%%%
-An overgrown altar of Wudzu
-
-An altar to Wudzu the Untamed, choked by writhing vines and thorned plants.
 %%%%
 A shimmering altar of Xom
 

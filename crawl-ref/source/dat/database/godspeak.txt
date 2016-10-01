@@ -829,10 +829,6 @@ Vehumet welcome
 
 Vehumet says: Let it end in hellfire!
 %%%%
-Wudzu welcome
-
-Wudzu says: Unleash the savagery of nature!
-%%%%
 Xom bored
 
 Xom yawns.

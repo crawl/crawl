@@ -242,18 +242,6 @@ enum class passive_t
 
     /// Hep reduces your max HP
     frail,
-
-	/// Wudzu gives you thorny armour
-	thorn_armour,
-
-	/// Wudzu's armour gets spiny
-	spiny_thorns,
-
-	///Wudzu's thorn vestment
-	thorn_vestment,
-
-	///Wudzu's thorn regalia
-	thorn_regalia,
 };
 
 enum ru_interference
@@ -261,12 +249,6 @@ enum ru_interference
     DO_NOTHING,
     DO_BLOCK_ATTACK,
     DO_REDIRECT_ATTACK
-};
-
-enum wudzu_boots_interference
-{
-	DO_BLOCK_MELEE_ATTACK,
-	DONT_BLOCK_MELEE_ATTACK
 };
 
 bool have_passive(passive_t passive);
@@ -298,12 +280,5 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
-bool does_wudzu_wanna_block(monster* mon);
-wudzu_boots_interference get_wudzu_boots_attack_interference();
-int wudzu_body_ac_boost(int piety = you.piety);
-int wudzu_cloak_ac_boost(int piety = you.piety);
-int wudzu_hat_ac_boost(int piety = you.piety);
-int wudzu_gloves_ac_boost(int piety = you.piety);
-int wudzu_boots_ac_boost(int piety = you.piety);
 
 #endif
