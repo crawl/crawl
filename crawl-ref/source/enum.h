@@ -508,9 +508,7 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
     ATTR_NOISES,
-#endif
     ATTR_SHADOWS,              // Lantern of shadows effect.
-#if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.

@@ -667,10 +667,6 @@ void update_vision_range()
         denom *= LOS_RADIUS;
     }
 
-    // Lantern of shadows.
-    if (you.attribute[ATTR_SHADOWS])
-        nom *= 3, denom *= 4;
-
     // the Darkness spell.
     if (you.duration[DUR_DARKNESS])
         nom *= 3, denom *= 4;
@@ -3202,9 +3198,10 @@ int check_stealth()
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    // lantern of shadows, berserking, "clumsy" (0-dex).
-    if (you.attribute[ATTR_SHADOWS] || you.berserk()
-        || you.duration[DUR_CLUMSY] || player_mutation_level(MUT_NO_STEALTH))
+    // berserking, "clumsy" (0-dex), sacrifice stealth.
+    if (you.berserk()
+        || you.duration[DUR_CLUMSY]
+        || player_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
