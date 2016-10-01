@@ -431,10 +431,10 @@ void check_net_will_hold_monster(monster* mons)
 static bool _player_caught_in_web()
 {
     if (you.attribute[ATTR_HELD] ||
-	  ((you.props["wudzu_cloak_picked_v"].get_int() == 1
-	  && have_passive(passive_t::thorn_vestment))
-	  || (you.props["wudzu_cloak_picked_r"].get_int() == 1
-	  && have_passive(passive_t::thorn_regalia))))
+          ((you.props["wudzu_cloak_picked_v"].get_int() == 1
+          && have_passive(passive_t::thorn_vestment))
+          || (you.props["wudzu_cloak_picked_r"].get_int() == 1
+          && have_passive(passive_t::thorn_regalia))))
         return false;
 
     you.attribute[ATTR_HELD] = 1;
@@ -802,10 +802,10 @@ void trap_def::trigger(actor& triggerer)
             break;
         }
         if ((you.props["wudzu_cloak_picked_v"].get_int() == 1
-	      && have_passive(passive_t::thorn_vestment))
-	      || (you.props["wudzu_cloak_picked_r"].get_int() == 1
-	      && have_passive(passive_t::thorn_regalia)))
-		{
+              && have_passive(passive_t::thorn_vestment))
+              || (you.props["wudzu_cloak_picked_r"].get_int() == 1
+              && have_passive(passive_t::thorn_regalia)))
+                {
             trap_destroyed = true;
             if (you_trigger)
                 mprf("Your thorns tear through %s web.", you_know ? "the" : "a");
@@ -1178,17 +1178,17 @@ void free_self_from_net()
         return;
     }
     if ((you.props["wudzu_cloak_picked_v"].get_int() == 1
-	  && have_passive(passive_t::thorn_vestment))
-	  || (you.props["wudzu_cloak_picked_r"].get_int() == 1
-	  && have_passive(passive_t::thorn_regalia)))
-	{
-		mprf("Your thorns tear through the net.");
-		destroy_item(net);
+          && have_passive(passive_t::thorn_vestment))
+          || (you.props["wudzu_cloak_picked_r"].get_int() == 1
+          && have_passive(passive_t::thorn_regalia)))
+        {
+                mprf("Your thorns tear through the net.");
+                destroy_item(net);
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
         you.redraw_evasion = true;
-		return;
-	}
+                return;
+        }
 
     int hold = mitm[net].net_durability;
     dprf("net.net_durability: %d", hold);
