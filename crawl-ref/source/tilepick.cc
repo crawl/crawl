@@ -3404,8 +3404,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Jiyva
     case ABIL_JIYVA_CALL_JELLY:
         return TILEG_ABILITY_JIYVA_REQUEST_JELLY;
-    case ABIL_JIYVA_JELLY_PARALYSE:
-        return TILEG_ABILITY_JIYVA_PARALYSE_JELLY;
     case ABIL_JIYVA_SLIMIFY:
         return TILEG_ABILITY_JIYVA_SLIMIFY;
     case ABIL_JIYVA_CURE_BAD_MUTATION:
