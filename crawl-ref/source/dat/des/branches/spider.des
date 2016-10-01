@@ -160,7 +160,7 @@ TAGS: spider_entry ruin_lair
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
 KMONS: 1 = scorpion / worker ant / worm / giant cockroach
-KMONS: 2 = demonic crawler / wasp
+KMONS: 2 = demonic crawler / hornet
 MAP
 ...........
 ..xx...xx..
@@ -252,7 +252,7 @@ NAME:   spiders_nest_scorpion_pit
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast
 DEPTH:  Spider, !Spider:$
-KMONS:  1 = wasp
+KMONS:  1 = hornet
 KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = redback / nothing w:15
 KMONS:  74 = redback / wolf spider / nothing w:15
@@ -434,7 +434,7 @@ ENDMAP
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:  Spider:1-2, Zot, !Zot:$
-KMONS:  0 = patrolling wasp
+KMONS:  0 = patrolling hornet
 KMONS:  1 = tarantella
 : if you.in_branch("Zot") then
 KMONS:  2* = jumping spider / orb spider w:5
@@ -488,7 +488,7 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-KMONS:   1 = scorpion w:20 / wasp w:13 / worker ant w:35 / \
+KMONS:   1 = scorpion w:20 / hornet w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / redback / vampire mosquito w:5
 KMONS:   3aAdD = demonic crawler
@@ -534,11 +534,11 @@ xxx....12x'''''xx42%%%24xxx''''x21....xxx
   ' '     'xxx'     ' '
 ENDMAP
 
-# Some wasp vaults. Wasps eat spiders (and players).
-NAME:   spiders_nest_wasp_nest
+# Some hornet vaults. Hornets eat spiders (and players).
+NAME:   spiders_nest_hornet_nest
 TAGS:   no_trap_gen uniq_wasphive
 DEPTH:  Spider
-MONS:   hornet / w:5 wasp
+MONS:   hornet
 NSUBST: 1 = 1:% / 1:1 / * = %1
 SUBST:  a = .a, A = a
 COLOUR: a = brown
@@ -558,11 +558,11 @@ MAP
   ......
 ENDMAP
 
-NAME:   lemuel_wasp_nest
-TAGS:   uniq_wasphive
+NAME:   lemuel_hornet_nest
+TAGS:   uniq_hornetnest
 DEPTH:  Spider
 WEIGHT: 2
-MONS:   wasp / hornet w:2
+MONS:   hornet
 SUBST:  1=1 .:15
 SUBST:  ?=a.
 COLOUR: a = brown
@@ -586,10 +586,10 @@ aa?...a.a...?aa
       aaa
 ENDMAP
 
-NAME:   guppyfry_wasp_nest
-TAGS:   no_monster_gen no_trap_gen uniq_wasphive
+NAME:   guppyfry_hornet_nest
+TAGS:   no_monster_gen no_trap_gen uniq_hornetnest
 DEPTH:  Spider
-MONS:   wasp / hornet / nothing
+MONS:   hornet / nothing
 SUBST:  - = wW.%
 MAP
 @WxxxxxxxxxxxxxxW@
@@ -994,7 +994,7 @@ NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
 KMONS:  bcdefghi = tarantella / redback w:15 / wolf spider / \
         jumping spider / orb spider / demonic crawler / \
         scorpion / emperor scorpion / \
-        wasp / hornet / nothing w:100
+        hornet / nothing w:100
 SUBST: X = xxxx^....0
 KFEAT: ^ = web / floor w:20
 MAP
@@ -1386,7 +1386,7 @@ PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
-MONS:   ghost moth, hornet / w:5 wasp, emperor scorpion / w:5 spark wasp
+MONS:   ghost moth, hornet, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   redback / nothing w:15
 MONS:   ghost moth
@@ -1484,7 +1484,7 @@ KMONS:  O = ghost moth
 KITEM:  *d = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
-MONS:   wasp / hornet / w:5 nothing
+MONS:   hornet / w:5 nothing
 MONS:   w:2 demonic crawler / w:4 emperor scorpion / w:1 spark wasp
 MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
         w:7 nothing
@@ -1581,7 +1581,7 @@ NSUBST:  d = 1:O / 3:d / *:.
 KITEM:   O = gossamer rune of Zot
 ITEM:    potion of ambrosia ident:type
 MONS:    ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
-MONS:    hornet / wasp w:2, orb spider
+MONS:    hornet, orb spider
 MONS:    wolf spider, redback / tarantella
 KMONS:   8 = jumping spider / demonic crawler
 SHUFFLE: efgh, ijk
@@ -1636,7 +1636,7 @@ NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
 KMONS:  e = emperor scorpion / spark wasp w:5
 KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
-KMONS:  p = wasp w:30 / hornet
+KMONS:  p = hornet
 KMONS:  o = orb spider w:40 / demonic crawler
 KMONS:  t = redback / nothing
 KMONS:  s = torpor snail / entropy weaver

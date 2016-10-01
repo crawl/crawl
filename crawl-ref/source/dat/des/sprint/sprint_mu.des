@@ -1179,7 +1179,7 @@ KMONS: j = patrolling golden eye
 KMONS: k = patrolling shining eye
 KMONS: m = patrolling glowing orange brain
 KMONS: o = patrolling yellow draconian
-KMONS: q = generate_awake wasp / generate_awake hornet
+KMONS: q = generate_awake hornet
 KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  iron troll simulacrum / anaconda zombie / anaconda simulacrum / stone giant skeleton /\
  titan zombie

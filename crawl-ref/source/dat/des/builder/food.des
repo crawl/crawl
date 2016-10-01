@@ -167,8 +167,8 @@ DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   wasp / worm w:5 / worker ant
-MONS:   wasp w:7 / soldier ant w:13
+MONS:   hornet / worm w:5 / worker ant
+MONS:   hornet w:7 / soldier ant w:13
 ITEM:   beef jerky q:3 / fruit q:3
 ITEM:   royal jelly q:3, royal jelly q:6
 MAP

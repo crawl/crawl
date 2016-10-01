@@ -169,7 +169,6 @@ torpor_snail MONS_TORPOR_SNAIL
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
-wasp MONS_WASP
 hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH

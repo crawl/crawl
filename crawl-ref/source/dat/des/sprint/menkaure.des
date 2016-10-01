@@ -423,7 +423,7 @@ MARKER: z = lua: timed_marker {  \
                  low=4000, high=4400, msg=messager, floor = 'floor' }
 KFEAT:  z = stone_wall
 MONS:   patrolling polar bear, patrolling swamp drake, patrolling crystal guardian, patrolling toenail golem, patrolling iron golem
-KMONS:  a = patrolling wasp
+KMONS:  a = patrolling hornet
 KITEM:  m = gold q:81
 KMONS:  m = patrolling yaktaur
 KMONS:  b = patrolling death drake

@@ -23,14 +23,14 @@ function base_monster_setup(e)
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / crocodile / hippogriff /\
-           killer bee band / wasp / eye of draining / manticore /\
+           killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
-           deep elf mage / hornet /\
+           deep elf mage /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            redback w:20 / phantasmal warrior / spiny frog / hell rat /\
