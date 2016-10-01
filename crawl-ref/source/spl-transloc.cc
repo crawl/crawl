@@ -766,9 +766,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             mons->del_ench(ENCH_HELD, true);
     }
 
-    // Heavy items require more power to apport directly to your feet.
-    // They might end up just moving a few squares, depending on spell
-    // power and item mass.
     beam.is_tracer = true;
     beam.aimed_at_spot = true;
     beam.affects_nothing = true;
@@ -787,9 +784,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
     int location_on_path = max(-1, dist - max_dist);
-    // Don't move mimics under you.
-    if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
-        location_on_path = 0;
     coord_def new_spot;
     if (location_on_path == -1)
         new_spot = you.pos();
