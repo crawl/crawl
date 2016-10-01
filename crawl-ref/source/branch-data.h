@@ -177,7 +177,8 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_ZOT, DNGN_EXIT_ZOT, NUM_FEATURES,
       "Zot", "the Realm of Zot", "Zot",
-      nullptr,
+      "Welcome to the Realm of Zot!\n"
+      "You feel the power of the Orb interfering with translocations here.",
       BLACK, BLACK, // set per-map
       'Z', {}, BRANCH_NOISE_NORMAL },
 #if TAG_MAJOR_VERSION == 34
