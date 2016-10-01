@@ -802,6 +802,10 @@ Lehudib's Crystal Spear spell
 
 Hurls a lethally sharp shard of crystal.
 %%%%
+Lesser Beckoning spell
+
+Beckons the target forward, attempting to place them adjacent to the caster.
+%%%%
 Lightning Bolt spell
 
 Fires a mighty bolt of lightning. It inflicts less damage than other similar

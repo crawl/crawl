@@ -19,6 +19,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -30,6 +31,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "nearby-danger.h"
 #include "orb.h"
@@ -1014,4 +1016,62 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
                                    : "empty space");
     fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
+}
+
+/**
+ * Where is the closest point along the given path to its source that the given
+ * actor can be moved to?
+ *
+ * @param beckoned      The actor to be moved.
+ * @param path          The path for the actor to be moved along
+ * @return              The closest point for the actor to be moved to;
+ *                      guaranteed to be on the path or its original location.
+ */
+static coord_def _beckon_destination(const actor &beckoned, const bolt &path)
+{
+    if (beckoned.is_stationary()  // don't move statues, etc
+        || mons_is_tentacle_or_tentacle_segment(beckoned.type)) // a mess...
+    {
+        return beckoned.pos();
+    }
+
+    for (coord_def pos : path.path_taken)
+    {
+        if (actor_at(pos) || !beckoned.is_habitable(pos))
+            continue; // actor could be caster, or a bush
+
+        return pos;
+    }
+
+    return beckoned.pos(); // failed to find any point along the path
+}
+
+/**
+ * Attempt to move the beckoned creature to the spot on the path closest to its
+ * beginning (that is, to the caster of the effect). Also handles some
+ * messaging.
+ *
+ * @param beckoned  The creature being moved.
+ * @param path      The path to move the creature along.
+ * @return          Whether the beckoned creature actually moved.
+ */
+bool beckon(actor &beckoned, const bolt &path)
+{
+    const coord_def dest = _beckon_destination(beckoned, path);
+    if (dest == beckoned.pos())
+        return false;
+
+    const coord_def old_pos = beckoned.pos();
+    if (!beckoned.move_to_pos(dest))
+        return false;
+
+    mprf("%s %s suddenly forward!",
+         beckoned.name(DESC_THE).c_str(),
+         beckoned.conj_verb("hurl").c_str());
+
+    beckoned.apply_location_effects(old_pos); // traps, etc.
+    if (beckoned.is_monster())
+        mons_relocated(beckoned.as_monster()); // cleanup tentacle segments
+
+    return true;
 }
