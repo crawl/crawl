@@ -507,8 +507,6 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & SPTYP_AIR)
         enhanced += player_spec_air();
 
-    if (you.attribute[ATTR_SHADOWS])
-        enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
 
