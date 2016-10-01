@@ -707,7 +707,7 @@ static const map<species_type, species_def> species_data =
     "Basajaun", nullptr, nullptr,
     SPF_NONE,
     -1, 2, 1,
-    9, 4,
+    15, 4,
     MONS_BASAJAUN,
     HT_LAND, US_ALIVE, SIZE_LARGE,
     10, 9, 5, // 24

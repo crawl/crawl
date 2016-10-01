@@ -1497,7 +1497,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BASAJAUN,        SK_THROWING,       -2),
     APT(SP_BASAJAUN,        SK_ARMOUR,         -2),
     APT(SP_BASAJAUN,        SK_DODGING,        -2),
-    APT(SP_BASAJAUN,        SK_STEALTH,        -1),
+    APT(SP_BASAJAUN,        SK_STEALTH,        +2),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_BASAJAUN,        SK_STABBING,      UNUSABLE_SKILL),
 #endif
