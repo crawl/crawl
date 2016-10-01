@@ -85,7 +85,6 @@ bool trog_burn_spellbooks();
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
-void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);

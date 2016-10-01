@@ -1826,35 +1826,6 @@ bool beogh_resurrect()
     return true;
 }
 
-void jiyva_paralyse_jellies()
-{
-    mprf("You call upon nearby slimes to pray to %s.",
-         god_name(you.religion).c_str());
-
-    int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mon = monster_at(*ri);
-        const int dur = 20 + random2(11);
-        if (mon != nullptr && mons_is_slime(*mon) && !mon->is_shapeshifter())
-        {
-            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      &you, dur * BASELINE_DELAY));
-            jelly_count++;
-        }
-    }
-
-    if (jelly_count > 0)
-    {
-        if (jelly_count > 1)
-            mpr("The nearby slimes join the prayer.");
-        else
-            mpr("A nearby slime joins the prayer.");
-
-        lose_piety(max(5, min(jelly_count, 20)));
-    }
-}
-
 bool jiyva_remove_bad_mutation()
 {
     if (!how_mutated())
