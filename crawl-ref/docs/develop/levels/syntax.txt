@@ -75,8 +75,7 @@ Features
  G - Granite statue (does nothing) - you can see through but not walk through.
      Also, sight-based effects like smiting work past granite statues, as does
      apportation.
- I - orcish idol. As granite statue, but anyone who destroys an idol will be
-     smitten by the hand of Beogh for massive damage. Generally used for theme.
+ I - orcish idol. As granite statue, generally used for theme.
 
  T - Water fountain
  U - Magic fountain
