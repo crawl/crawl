@@ -375,7 +375,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OGRE,            SK_THROWING,        0),
     APT(SP_OGRE,            SK_ARMOUR,         -2),
     APT(SP_OGRE,            SK_DODGING,        -1),
-    APT(SP_OGRE,            SK_STEALTH,        -1),
+    APT(SP_OGRE,            SK_STEALTH,        -2),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_OGRE,            SK_STABBING,      UNUSABLE_SKILL),
 #endif
@@ -414,7 +414,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_TROLL,           SK_THROWING,       -1),
     APT(SP_TROLL,           SK_ARMOUR,         -2),
     APT(SP_TROLL,           SK_DODGING,        -2),
-    APT(SP_TROLL,           SK_STEALTH,        -4),
+    APT(SP_TROLL,           SK_STEALTH,        -5),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_TROLL,           SK_STABBING,      UNUSABLE_SKILL),
 #endif
@@ -843,7 +843,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CENTAUR,         SK_THROWING,        1),
     APT(SP_CENTAUR,         SK_ARMOUR,         -3),
     APT(SP_CENTAUR,         SK_DODGING,        -3),
-    APT(SP_CENTAUR,         SK_STEALTH,        -3),
+    APT(SP_CENTAUR,         SK_STEALTH,        -4),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_CENTAUR,         SK_STABBING,      UNUSABLE_SKILL),
 #endif
