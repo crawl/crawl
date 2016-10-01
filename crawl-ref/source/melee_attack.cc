@@ -2796,30 +2796,27 @@ void melee_attack::mons_apply_attack_flavour()
             break;
         }
 
-        // doesn't affect poison-immune enemies
-        if (defender->res_poison() >= 3)
-            break;
-
-        if (attacker->type == MONS_HORNET || one_chance_in(3))
+        // Same frequency as AF_POISON and AF_STRONG_POISON
+        // Doesn't affect poison-immune enemies
+        if (one_chance_in(3) && !(defender->res_poison() >= 3))
         {
             int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
                                    attacker->get_hit_dice() * 5 / 2);
             defender->poison(attacker, dmg);
-        }
 
-        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
+            // In sum 1/9 chance to paralyse, 5/9 chance to slow, 3/9 nothing
+            const bool strong_result = one_chance_in(6);
 
-        const bool strong_result = one_chance_in(paralyse_roll);
-
-        if (strong_result
-            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
-        {
-            defender->paralyse(attacker, roll_dice(1, 3));
-        }
-        else if (strong_result
-                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
-        {
-            defender->slow_down(attacker, roll_dice(1, 3));
+            if (strong_result
+                && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+            {
+                defender->paralyse(attacker, roll_dice(1, 3));
+            }
+            else if (strong_result
+                     || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+            {
+                defender->slow_down(attacker, roll_dice(1, 3));
+            }
         }
 
         break;
