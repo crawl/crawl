@@ -183,7 +183,7 @@ tutorial2 rest_and_chop_reminder
 Don't forget about chopping corpses for food (with
 <input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
 mouseclick</input></localtiles>), or resting (with
-<input>$cmd[CMD_REST]</input><localtiles> or the third button in the command
+<input>$cmd[CMD_REST]</input><localtiles> or the button in the command
 bar</localtiles>)!
 %%%%
 tutorial2 wait
