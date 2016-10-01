@@ -362,7 +362,7 @@ spret_type cast_controlled_blink(bool fail, bool safe)
         return SPRET_ABORT;
     }
 
-    if (player_has_orb())
+    if (orb_limits_translocation())
     {
         if (!yesno("Your blink will be uncontrolled - continue anyway?",
                    false, 'n'))
@@ -399,7 +399,7 @@ void you_teleport()
             mpr("You feel the power of the Abyss delaying your translocation!");
             teleport_delay += 5 + random2(10);
         }
-        else if (player_has_orb())
+        else if (orb_limits_translocation())
         {
             mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
             teleport_delay += 5 + random2(5);
@@ -820,6 +820,12 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)
 {
+    if (orb_limits_translocation())
+    {
+        mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
+        return SPRET_ABORT;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;

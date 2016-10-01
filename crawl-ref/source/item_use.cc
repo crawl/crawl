@@ -43,6 +43,7 @@
 #include "mon-behv.h"
 #include "mutation.h"
 #include "nearby-danger.h"
+#include "orb.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -2622,7 +2623,7 @@ void read(item_def* scroll)
 
     // need to handle this before we waste time (with e.g. blurryvis)
     if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
-        && player_has_orb()
+        && orb_limits_translocation()
         && !yesno("Your blink will be uncontrolled - continue anyway?",
                   false, 'n'))
     {
@@ -2715,7 +2716,7 @@ void read_scroll(item_def& scroll)
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
 
-        if (player_has_orb())
+        if (orb_limits_translocation())
         {
             mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
             uncontrolled_blink();
