@@ -103,8 +103,6 @@ private:
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);
-	void do_wudzu_hat_retaliation();
-
 private:
     // Monster-attack specific stuff
     bool mons_attack_effects() override;

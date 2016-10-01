@@ -35,7 +35,6 @@
 #include "mutation.h"
 #include "notes.h"
 #include "player-stats.h"
-#include "potion.h" // wudzu
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -86,7 +85,6 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
-	"savagery",			// Wudzu
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1753,133 +1751,6 @@ static bool _uskayaw_retribution()
     return true;
 }
 
-static const pop_entry _wudzu_plants[] =
-{
-  {  1,  27,   1, FLAT, MONS_SNAPLASHER_VINE },
-  {  10,  27,   1, RISE, MONS_SHAMBLING_MANGROVE },
-  {  14,  27,   1, RISE, MONS_THORN_HUNTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static bool _wudzu_summon_plant()
-{
-
-    monster_type plant = pick_monster_from(_wudzu_plants,
-                                              you.experience_level);
-
-	mgen_data temp = _wrath_mon_data(plant, GOD_WUDZU);
-
-    /*mgen_data temp = mgen_data::hostile_at(plant,
-                                           _god_wrath_name(GOD_WUDZU),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_WUDZU);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);*/
-
-	if (plant==MONS_SNAPLASHER_VINE)
-		temp.hd=min(27,5+you.experience_level);
-
-    return create_monster(temp, false);
-}
-
-static bool _wudzu_summon_plants()
-{
-    // up to 6 at XL25+
-	const int total_plants = 1 + (random2(you.experience_level)
-                   + random2(you.experience_level)) / 10;
-
-    int summoned = 0;
-
-    for (int i = 0; i < total_plants; i++)
-    {
-        if (_wudzu_summon_plant())
-            summoned++;
-    }
-
-    simple_god_message(summoned > 1 ? " sends predatory plants to devour you." :
-                       summoned > 0 ? " sends a predatory plant to devour you."
-                       : "'s minions fail to arrive.", GOD_WUDZU);
-
-    return true;
-
-}
-
-static bool _wudzu_call_down_thorns()
-{
-    const god_type god = GOD_WUDZU;
-
-    monster* avatar = get_avatar(god);
-    // can't be const because mons_cast() doesn't accept const monster*
-
-    if (avatar == nullptr)
-    {
-        simple_god_message("has no time to deal with you just now.", god);
-        return false; // not a very dazzling divine experience...
-    }
-
-	if (you.experience_level<13)
-		_spell_retribution(avatar, SPELL_THROW_BARBS, god);
-	else
-	{
-		//at higher XL throw barbs damage becomes insignificant, so replace
-		//with thorn hunter's spell for damage, and manually ensure
-		//that the player will be skewered
-		_spell_retribution(avatar, SPELL_THORN_VOLLEY, god);
-        mpr("The thorns become lodged in your body.");
-        if (!you.duration[DUR_BARBS])
-            you.set_duration(DUR_BARBS,  random_range(3, 6));
-        else
-            you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
-
-        if (you.attribute[ATTR_BARBS_POW])
-            you.attribute[ATTR_BARBS_POW] = min(6, you.attribute[ATTR_BARBS_POW]++);
-        else
-            you.attribute[ATTR_BARBS_POW] = 4;
-	}
-    shadow_monster_reset(avatar);
-    return true;
-}
-
-static bool _wudzu_retribution()
-{
-
-    const god_type god = GOD_WUDZU;
-
-    int tension = get_tension(GOD_WUDZU);
-    int wrath_value = random2(tension);
-
-    // Determine the level of wrath
-    int wrath_type = 0;
-    if (wrath_value < 2)       { wrath_type = 0; }
-    else 					   { wrath_type = 1; }
-
-	if (wrath_type == 0)
-	{
-        return _wudzu_summon_plants();
-	}
-	else
-	{
-		if (coinflip())
-		{
-			if (coinflip())
-				return _wudzu_summon_plants();
-			else
-			{
-				if (you.form!=TRAN_TREE)
-				{
-					simple_god_message(" turns you into a tree.", god);
-					potionlike_effect(POT_LIGNIFY, 100);
-					return true;
-				}
-				else
-					return _wudzu_call_down_thorns();
-			}
-		}
-		else
-			return _wudzu_call_down_thorns();
-	}
-}
-
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -1925,7 +1796,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
-	case GOD_WUDZU:			do_more = _wudzu_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

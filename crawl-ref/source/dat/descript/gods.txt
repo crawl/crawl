@@ -1,4 +1,4 @@
-﻿# Goals for the prose section: pitch the god to a player/potential worshipper.
+# Goals for the prose section: pitch the god to a player/potential worshipper.
 # Why should they worship this god? What are the advantages & limitations?
 # What's 'cool' about this god?
 %%%%
@@ -183,10 +183,6 @@ assistance in commanding the hermetic arts, and the most favoured stand to gain
 access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
-%%%%
-Wudzu
-
-Wudzu is a god of wild plants and natural selection. Followers forgo the use of most armour, instead becoming encased by ever-growing masses of thorns. These thorns provide protection and various unique benefits. Followers will also be able to harness the destructive powers of plants by unleashing constricting vines and spreading massive briar patches.
 %%%%
 Xom
 
@@ -431,12 +427,6 @@ their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
 %%%%
-Wudzu powers
-
-Worshippers of Wudzu will lose several armour slots to masses of thorns, which
-provide protection from attacks and varying unique benefits. As piety increases
-they gain access to the ability to summon constricting vines and to spread briar patches.
-%%%%
 Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower worshippers
@@ -623,10 +613,6 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
-%%%%
-Wudzu wrath
-
-Wudzu's wrath turns the fury of nature against you. Deserters will suffer onslaughts from ambulatory plant creatures. They can also find themselves skewered by thorns or turned into a tree at inopportune moments.
 %%%%
 Xom wrath
 

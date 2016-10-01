@@ -318,19 +318,6 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
-
-	// Wudzu
-	{ { 3, ABIL_WUDZU_SUMMON_VINES, "summon vines" },
-	  { 5, ABIL_WUDZU_BRIAR_PATCH, "grow briar patches" },
-	  { 2, ABIL_WUDZU_VESTMENT_CLOAK, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
-	  { 2, ABIL_WUDZU_VESTMENT_HAT, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
-	  { 2, ABIL_WUDZU_VESTMENT_GLOVES, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
-	  { 2, ABIL_WUDZU_VESTMENT_BOOTS, "Wudzu is ready to spread more thorns over you.", "Wudzu is no longer ready to spread more thorns over you."},
-	  { 4, ABIL_WUDZU_REGALIA_CLOAK, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
-	  { 4, ABIL_WUDZU_REGALIA_HAT, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
-	  { 4, ABIL_WUDZU_REGALIA_GLOVES, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
-	  { 4, ABIL_WUDZU_REGALIA_BOOTS, "Wudzu is ready to spread even more thorns over you.", "Wudzu is no longer ready to spread even more thorns over you."},
-	},
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -367,63 +354,6 @@ void god_power::display(bool gaining, const char* fmt) const
     {
         return;
     }
-
-	if (you.props["vest1"].get_int() == 1 || you.props["vest2"].get_int() == 1 || !you_worship(GOD_WUDZU))
-	{
-		if (abil == ABIL_WUDZU_VESTMENT_HAT)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_GLOVES)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
-			return;
-	}
-	else if (you.props["vest1"].get_int() == 2 || you.props["vest2"].get_int() == 2)
-	{
-		if (abil == ABIL_WUDZU_VESTMENT_CLOAK)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_GLOVES)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
-			return;
-	}
-	else if (you.props["vest1"].get_int() == 3 || you.props["vest2"].get_int() == 3)
-	{
-		if (abil == ABIL_WUDZU_VESTMENT_CLOAK)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_HAT)
-			return;
-		if (abil == ABIL_WUDZU_VESTMENT_BOOTS)
-			return;
-	}
-
-	if (you.props["reg1"].get_int() == 1 || you.props["reg2"].get_int() == 1 || !you_worship(GOD_WUDZU))
-	{
-		if (abil == ABIL_WUDZU_REGALIA_HAT)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_GLOVES)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
-			return;
-	}
-	else if (you.props["reg1"].get_int() == 2 || you.props["reg2"].get_int() == 2)
-	{
-		if (abil == ABIL_WUDZU_REGALIA_CLOAK)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_GLOVES)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
-			return;
-	}
-	else if (you.props["reg1"].get_int() == 3 || you.props["reg2"].get_int() == 3)
-	{
-		if (abil == ABIL_WUDZU_REGALIA_CLOAK)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_HAT)
-			return;
-		if (abil == ABIL_WUDZU_REGALIA_BOOTS)
-			return;
-	}
-
     const char* str = gaining ? gain : loss;
     if (isupper(str[0]))
         god_speaks(you.religion, str);
@@ -2120,7 +2050,6 @@ string god_name(god_type which_god, bool long_name)
     case GOD_PAKELLAS:      return "Pakellas";
     case GOD_USKAYAW:        return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
-	case GOD_WUDZU:			return "Wudzu";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2432,12 +2361,6 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 
-	if (you_worship(GOD_WUDZU)
-		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
-	{
-		you.redraw_armour_class = true;
-	}
-
     if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
@@ -2583,12 +2506,6 @@ void lose_piety(int pgn)
     {
         you.redraw_armour_class = true;
     }
-
-	if (you_worship(GOD_WUDZU)
-		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
-	{
-		you.redraw_armour_class = true;
-	}
 
     if (will_have_passive(passive_t::halo)
         || will_have_passive(passive_t::umbra))
@@ -3491,46 +3408,6 @@ static void _join_hepliaklqana()
                                     mg.mname.c_str()).c_str());
 }
 
-/// setup when joining wudzu
-static void _join_wudzu()
-    {
-		if (!you.melded[EQ_BODY_ARMOUR])
-		{
-			remove_one_equip(EQ_BODY_ARMOUR, false, false);
-			you.redraw_armour_class = true;
-            if (you.skills[SK_ARMOUR])
-                you.train[SK_ARMOUR] = TRAINING_DISABLED;
-		}
-
-		//assign aux slots to each thorn replacement skill on first worship
-		if (you.worshipped[GOD_WUDZU] == 0)
-		{
-			you.props["wudzu_cloak_picked_v"] = 0;
-			you.props["wudzu_hat_picked_v"] = 0;
-			you.props["wudzu_gloves_picked_v"] = 0;
-			you.props["wudzu_boots_picked_v"] = 0;
-			you.props["wudzu_cloak_picked_r"] = 0;
-			you.props["wudzu_hat_picked_r"] = 0;
-			you.props["wudzu_gloves_picked_r"] = 0;
-			you.props["wudzu_boots_picked_r"] = 0;
-			you.props["wudzu_vestment_picked"] = 0;
-			you.props["wudzu_regalia_picked"] = 0;
-
-			you.props["vest1"] = random2(4) + 1;
-			you.props["vest2"] = random2(4) + 1;
-			while (you.props["vest2"].get_int() == you.props["vest1"].get_int())
-				you.props["vest2"] = random2(4) + 1;
-
-			you.props["reg1"] = random2(4) + 1;
-			while (you.props["reg1"].get_int() == you.props["vest1"].get_int() || you.props["reg1"].get_int() == you.props["vest2"].get_int())
-				you.props["reg1"] = random2(4) + 1;
-
-			you.props["reg2"] = 10 - you.props["vest1"].get_int() - you.props["vest2"].get_int() - you.props["reg1"].get_int();
-
-		}
-
-	}
-
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3624,7 +3501,6 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
     { GOD_HEPLIAKLQANA, _join_hepliaklqana },
-	{ GOD_WUDZU, _join_wudzu },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
@@ -4124,7 +4000,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
-		case GOD_WUDZU:
         case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
@@ -4225,7 +4100,6 @@ int god_colour(god_type god) // mv - added
 
     case GOD_QAZLAL:
     case GOD_RU:
-	case GOD_WUDZU:
         return BROWN;
 
     case GOD_PAKELLAS:

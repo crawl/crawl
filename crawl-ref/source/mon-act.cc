@@ -2173,19 +2173,6 @@ void handle_monster_move(monster* mons)
                             }
                         }
                     }
-					if (does_wudzu_wanna_block(mons))
-                    {
-                        wudzu_boots_interference interference =
-                                get_wudzu_boots_attack_interference();
-                        if (interference == DO_BLOCK_MELEE_ATTACK)
-                        {
-                            simple_monster_message(*mons,
-                                " is tripped up by roots and fails to attack.",
-                                MSGCH_GOD);
-                            mons->speed_increment -= non_move_energy;
-                            return;
-                        }
-                    }
                 }
 
                 if (new_target)
