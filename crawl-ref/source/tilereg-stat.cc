@@ -39,7 +39,7 @@ bool StatRegion::update_tip_text(string& tip)
     if (tiles.is_using_small_layout())
         tip = "[L-Click] Show player information";
     else
-        tip = "[L-Click] Rest / Search for a while";
+        tip = "[L-Click] Rest for a while";
     return true;
 }
 
