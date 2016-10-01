@@ -534,11 +534,10 @@ static int _draconian_colour(int race, int level)
         case MONS_YELLOW_DRACONIAN: return 2;
         case MONS_GREY_DRACONIAN:   return 3;
         case MONS_GREEN_DRACONIAN:  return 4;
-        case MONS_MOTTLED_DRACONIAN:return 5;
-        case MONS_PALE_DRACONIAN:   return 6;
-        case MONS_PURPLE_DRACONIAN: return 7;
-        case MONS_RED_DRACONIAN:    return 8;
-        case MONS_WHITE_DRACONIAN:  return 9;
+        case MONS_PALE_DRACONIAN:   return 5;
+        case MONS_PURPLE_DRACONIAN: return 6;
+        case MONS_RED_DRACONIAN:    return 7;
+        case MONS_WHITE_DRACONIAN:  return 8;
         }
     }
     switch (race)

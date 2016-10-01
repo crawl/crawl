@@ -315,12 +315,6 @@ deep_troll CORPSE_DEEP_TROLL
 %finish CORPSE_DRACONIAN_GREY
 
 %start
-%compose drcwing/drcwing_mottled
-%compose base/draconian_mottled_m
-%compose drchead/drchead_mottled
-%finish CORPSE_DRACONIAN_MOTTLED
-
-%start
 %compose drcwing/drcwing_pale
 %compose base/draconian_pale_f
 %compose drchead/drchead_pale
