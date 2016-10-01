@@ -1719,9 +1719,6 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
 
-    if (you.species == SP_MOTTLED_DRACONIAN)
-        rsf++;
-
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
     if (body_armour)
         rsf += armour_type_prop(body_armour->sub_type, ARMF_RES_STICKY_FLAME);
