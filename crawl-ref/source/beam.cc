@@ -219,6 +219,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_BANISH:
     case BEAM_BLINK:
     case BEAM_BLINK_CLOSE:
+    case BEAM_BECKONING:
         elem = ETC_WARP;
         break;
     case BEAM_MAGIC:
@@ -3594,6 +3595,10 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_BECKONING:
+        obvious_effect = beckon(you, *this);
+        break;
+
     case BEAM_ENSLAVE:
         mprf(MSGCH_WARN, "Your will is overpowered!");
         confuse_player(5 + random2(3));
@@ -5144,6 +5149,7 @@ bool bolt::has_saving_throw() const
     case BEAM_ENSLAVE_SOUL:
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
+    case BEAM_BECKONING:
     case BEAM_MALIGN_OFFERING:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
@@ -5358,6 +5364,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         blink_other_close(mon, source);
         return MON_AFFECTED;
+
+    case BEAM_BECKONING:
+        obvious_effect = beckon(*mon, *this);
+        return obvious_effect ? MON_AFFECTED : MON_OTHER; // ?
 
     case BEAM_POLYMORPH:
         if (mon->polymorph(ench_power))
@@ -6535,6 +6545,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DISINTEGRATION:        return "disintegration";
     case BEAM_BLINK:                 return "blink";
     case BEAM_BLINK_CLOSE:           return "blink close";
+    case BEAM_BECKONING:             return "beckoning";
     case BEAM_PETRIFY:               return "petrify";
     case BEAM_CORONA:                return "backlight";
     case BEAM_PORKALATOR:            return "porkalator";

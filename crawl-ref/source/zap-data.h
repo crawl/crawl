@@ -1340,4 +1340,22 @@ _mon_hex_zap(ZAP_VIRULENCE, BEAM_VIRULENCE),
 _mon_hex_zap(ZAP_SAP_MAGIC, BEAM_SAP_MAGIC),
 _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
 
+{
+    ZAP_BECKONING,
+    "beckoning",
+    200,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    ETC_WARP,
+    true,
+    BEAM_BECKONING,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    false,
+    0
+},
+
 };

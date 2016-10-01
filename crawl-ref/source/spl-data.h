@@ -3848,6 +3848,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BECKONING, "Lesser Beckoning",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+    3,
+    50,
+    2, LOS_RADIUS,
+    2, 0,
+    TILEG_BECKONING,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
