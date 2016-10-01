@@ -602,7 +602,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_RED_DRACONIAN,           { NAGA_WEAPONS } },
         { MONS_WHITE_DRACONIAN,         { NAGA_WEAPONS } },
         { MONS_GREEN_DRACONIAN,         { NAGA_WEAPONS } },
-        { MONS_MOTTLED_DRACONIAN,       { NAGA_WEAPONS } },
         { MONS_BLACK_DRACONIAN,         { NAGA_WEAPONS } },
         { MONS_YELLOW_DRACONIAN,        { NAGA_WEAPONS } },
         { MONS_PURPLE_DRACONIAN,        { NAGA_WEAPONS } },

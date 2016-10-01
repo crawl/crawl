@@ -2693,7 +2693,6 @@ mon_spell_slot drac_breath(monster_type drac_type)
     switch (drac_type)
     {
     case MONS_BLACK_DRACONIAN:   sp = SPELL_LIGHTNING_BOLT; break;
-    case MONS_MOTTLED_DRACONIAN: sp = SPELL_STICKY_FLAME_SPLASH; break;
     case MONS_YELLOW_DRACONIAN:  sp = SPELL_SPIT_ACID; break;
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
@@ -3025,7 +3024,7 @@ int ugly_thing_colour_offset(colour_t colour)
 
 static const char *drac_colour_names[] =
 {
-    "black", "mottled", "yellow", "green", "purple", "red", "white", "grey", "pale"
+    "black", "", "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
 string draconian_colour_name(monster_type mon_type)

@@ -3012,7 +3012,9 @@ enum monster_type                      // menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,
     MONS_FIRST_BASE_DRACONIAN = MONS_BLACK_DRACONIAN,
+#if TAG_MAJOR_VERSION == 34
     MONS_MOTTLED_DRACONIAN,
+#endif
     MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,

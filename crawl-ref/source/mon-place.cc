@@ -2162,7 +2162,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
     { MONS_PURPLE_DRACONIAN, basic_drac_set },
-    { MONS_MOTTLED_DRACONIAN, basic_drac_set },
     { MONS_YELLOW_DRACONIAN, basic_drac_set },
     { MONS_BLACK_DRACONIAN, basic_drac_set },
     { MONS_GREEN_DRACONIAN, basic_drac_set },

@@ -232,7 +232,7 @@ MONS:   grey draconian, wyvern
 : end
 # medium: 3, 4
 : if crawl.coinflip() then
-MONS:   mottled draconian, mottled dragon
+MONS:   yellow draconian, mottled dragon
 : else
 MONS:   green draconian, swamp dragon
 : end
@@ -851,7 +851,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire
 MONS:   fire elemental
-MONS:   red draconian / weight:2 mottled draconian
+MONS:   red draconian
 MONS:   any nonbase red draconian
 MONS:   efreet
 SUBST:  1=122, 3=322

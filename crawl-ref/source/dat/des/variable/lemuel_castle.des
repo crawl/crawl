@@ -74,7 +74,7 @@ function castle_lemuel_subvault_setup(e)
             e.nsubst("1 = 14:1 / *:.")
             e.mons("red draconian / white draconian / green draconian / \
                     black draconian / purple draconian / nothing w:30")
-            e.mons("mottled draconian monk / purple draconian annihilator / \
+            e.mons("yellow draconian monk / purple draconian annihilator / \
                     green draconian monk / golden dragon w:5")
             e.mons("red draconian scorcher / white draconian knight / \
                     purple draconian zealot / black draconian shifter")

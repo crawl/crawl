@@ -2799,7 +2799,6 @@ static string _describe_draconian(const monster_info& mi)
         switch (subsp)
         {
         case MONS_BLACK_DRACONIAN:      description += "black ";   break;
-        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
         case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
         case MONS_GREEN_DRACONIAN:      description += "green ";   break;
         case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
@@ -2818,9 +2817,6 @@ static string _describe_draconian(const monster_info& mi)
     {
     case MONS_BLACK_DRACONIAN:
         description += "Sparks flare out of its mouth and nostrils.";
-        break;
-    case MONS_MOTTLED_DRACONIAN:
-        description += "Liquid flames drip from its mouth.";
         break;
     case MONS_YELLOW_DRACONIAN:
         description += "Acidic fumes swirl around it.";
@@ -3643,7 +3639,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_WHITE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:

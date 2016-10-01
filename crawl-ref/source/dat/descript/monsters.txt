@@ -1657,10 +1657,6 @@ A moth known for its ability to inspire insane rages by touching its foes, or
 merely gazing at its friends. For some inexplicable reason, it was eradicated
 from the surface centuries ago.
 %%%%
-mottled draconian
-
-A muscular humanoid with mottled scales, a reptilian tail and small wings.
-%%%%
 mottled dragon
 
 A small purple dragon with curiously mottled scales, its mouth dripping with a
