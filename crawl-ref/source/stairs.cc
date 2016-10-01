@@ -727,13 +727,11 @@ void floor_transition(dungeon_feature_type how,
                 if (branches[branch].entry_message)
                     mpr(branches[branch].entry_message);
                 else if (branch != BRANCH_ABYSS) // too many messages...
-                {
                     mprf("Welcome to %s!", branches[branch].longname);
 
-                    const string noise_desc = branch_noise_desc(branch);
-                    if (!noise_desc.empty())
-                        mpr(noise_desc);
-                }
+                const string noise_desc = branch_noise_desc(branch);
+                if (!noise_desc.empty())
+                    mpr(noise_desc);
 
                 const string rune_msg = branch_rune_desc(branch, true);
                 if (!rune_msg.empty())
