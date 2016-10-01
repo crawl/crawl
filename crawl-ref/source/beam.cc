@@ -3999,8 +3999,7 @@ void bolt::affect_player()
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE
-        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
+        || origin_spell == SPELL_STICKY_FLAME_RANGE)
     {
         if (!player_res_sticky_flame())
         {
@@ -4532,8 +4531,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE
-        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
+        || origin_spell == SPELL_STICKY_FLAME_RANGE)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
@@ -4756,7 +4754,6 @@ bool bolt::bush_immune(const monster &mons) const
         && target != mons.pos()
         && origin_spell != SPELL_STICKY_FLAME
         && origin_spell != SPELL_STICKY_FLAME_RANGE
-        && origin_spell != SPELL_STICKY_FLAME_SPLASH
         && origin_spell != SPELL_CHAIN_LIGHTNING;
 }
 
@@ -6449,8 +6446,7 @@ string bolt::get_short_name() const
 
     if (flavour == BEAM_FIRE
         && (origin_spell == SPELL_STICKY_FLAME
-            || origin_spell == SPELL_STICKY_FLAME_RANGE
-            || origin_spell == SPELL_STICKY_FLAME_SPLASH))
+            || origin_spell == SPELL_STICKY_FLAME_RANGE))
     {
         return "sticky fire";
     }

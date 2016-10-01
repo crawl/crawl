@@ -272,7 +272,6 @@ spit_acid SPIT_ACID
 spit_poison SPIT_POISON
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
-sticky_flame_splash STICKY_FLAME_SPLASH
 %sdir misc
 error STRIP_RESISTANCE
 %sdir gui/spells/monster
