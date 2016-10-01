@@ -1794,11 +1794,19 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 haste_player(40 + random2(40));
                 did_god_conduct(DID_HASTY, 10, true);
 
-                // If we can't calculate the xp debt based on amount needed for
-                // next level, instead multiply out the current level.
-                int next_level_xp = (int)exp_needed(you.experience_level+1, 0);
                 int this_level_xp = (int)exp_needed(you.experience_level, 0);
-                int xp_debt = (next_level_xp - this_level_xp) * 15;
+                int next_level_xp = (int)exp_needed(you.experience_level+1, 0);
+                int level_plus_2_xp = (int)exp_needed(you.experience_level+2, 0);
+
+                // average the amount of xp needed to get to the next level
+                // with the amount of xp needed to get the level after that
+                // based on current progress to next level in order to avoid
+                // breakpoints at level-up.
+                int progress = get_exp_progress();
+                int xp_debt = (next_level_xp - this_level_xp)
+                                      * (100-progress) / 100
+                               + (level_plus_2_xp - next_level_xp)
+                                      * progress / 100;
 
                 you.props[DESPERATE_HASTE_XP_DEBT] = xp_debt;
             }
