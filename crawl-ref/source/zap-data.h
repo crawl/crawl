@@ -992,24 +992,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_BREATHE_STICKY_FLAME,
-    "splash of liquid fire",
-    100,
-    new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<11, 1, 10>,
-    new dicedef_calculator<3, 3, 1, 50>,
-    new tohit_calculator<18, 1, 15>,
-    RED,
-    false,
-    BEAM_FIRE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    false,
-    1
-},
-
-{
     ZAP_BREATHE_MEPHITIC,
     "blast of choking fumes",
     50,

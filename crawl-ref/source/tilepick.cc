@@ -3176,8 +3176,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_LIGHTNING;
     case ABIL_BREATHE_POWER:
         return TILEG_ABILITY_BREATHE_ENERGY;
-    case ABIL_BREATHE_STICKY_FLAME:
-        return TILEG_ABILITY_BREATHE_STICKY_FLAME;
     case ABIL_BREATHE_STEAM:
         return TILEG_ABILITY_BREATHE_STEAM;
     case ABIL_BREATHE_MEPHITIC:
