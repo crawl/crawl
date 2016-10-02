@@ -2432,12 +2432,6 @@ static void _gain_piety_point()
         you.redraw_armour_class = true;
     }
 	
-	if (you_worship(GOD_WUDZU)
-		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
-	{
-		you.redraw_armour_class = true;
-	}
-
         if (you_worship(GOD_WUDZU)
                 && wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
         {
@@ -2589,12 +2583,6 @@ void lose_piety(int pgn)
     {
         you.redraw_armour_class = true;
     }
-	
-	if (you_worship(GOD_WUDZU)
-		&& wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
-	{
-		you.redraw_armour_class = true;
-	}
 
         if (you_worship(GOD_WUDZU)
                 && wudzu_body_ac_boost(old_piety) != wudzu_body_ac_boost())
