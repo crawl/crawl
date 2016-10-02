@@ -377,7 +377,7 @@ ancestor_hexer MONS_ANCESTOR_HEXER
 %rim 1
 
 ## Abominations ('X')
-%sdir mon/demons
+%sdir mon/aberrations
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
 abomination_large2
@@ -393,7 +393,7 @@ tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 
 ## Ugly things ('u')
-%sdir mon/aberr
+%sdir mon/aberrations
 ugly_thing MONS_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -409,7 +409,7 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
-%sdir mon/demons
+%sdir mon/aberrations
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 %sdir mon/aquatic
