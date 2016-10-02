@@ -79,9 +79,16 @@ class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;
 
+// Constexpr sign.
 template <typename Z> static constexpr Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
+}
+
+// Constexpr absolute value.
+template <typename Z> static constexpr Z abs_ce(Z x)
+{
+    return x < 0 ? -x : x;
 }
 
 struct coord_def
@@ -215,10 +222,10 @@ struct coord_def
         return x * x + y * y;
     }
 
-    int rdist() const
+    constexpr int rdist() const
     {
-        // Replace with max(::abs(x), ::abs(y) when we require C++14.
-        return ::abs(x) > ::abs(y) ? ::abs(x) : ::abs(y);
+        // Replace with max(abs_ce(x), abs_ce(y) when we require C++14.
+        return abs_ce(x) > abs_ce(y) ? abs_ce(x) : abs_ce(y);
     }
 
     constexpr bool origin() const
