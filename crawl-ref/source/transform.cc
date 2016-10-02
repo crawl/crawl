@@ -100,7 +100,7 @@ Form::Form(const form_entry &fe)
       hand_name(fe.hand_name), foot_name(fe.foot_name),
       flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), stealth_mod(fe.stealth_mod),
+      resists(fe.resists),
       base_unarmed_damage(fe.base_unarmed_damage),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       flat_ac(fe.flat_ac), power_ac(fe.power_ac), xl_ac(fe.xl_ac),
@@ -779,17 +779,6 @@ public:
     monster_type get_equivalent_mons() const override
     {
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
-    }
-
-    /**
-     * Get a multiplier for skill when calculating stealth values.
-     *
-     * @return  The stealth modifier for the given form. (0 = default to
-     *          racial values.)
-     */
-    int get_stealth_mod() const override
-    {
-        return you.species == SP_VAMPIRE ? 21 : stealth_mod;
     }
 
     /**
