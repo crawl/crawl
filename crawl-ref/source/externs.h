@@ -215,7 +215,7 @@ struct coord_def
         return x * x + y * y;
     }
 
-    constexpr int rdist() const
+    int rdist() const
     {
         // Replace with max(::abs(x), ::abs(y) when we require C++14.
         return ::abs(x) > ::abs(y) ? ::abs(x) : ::abs(y);
