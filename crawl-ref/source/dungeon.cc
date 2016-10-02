@@ -4211,7 +4211,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false, false);
+        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
@@ -5477,9 +5477,6 @@ static int _make_delicious_corpse()
     if (!corpse)
         return NON_ITEM;
 
-    // no hides allowed, I guess?
-    if (mons_class_leaves_hide(mon_type))
-        corpse->props[MANGLED_CORPSE_KEY] = true;
     return corpse->index();
 }
 

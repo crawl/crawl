@@ -812,7 +812,7 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
+ITEM:    gold dragon armour / storm dragon armour / fire dragon armour / troll leather armour / any useful armour good_item
 ITEM:    arrow good_item / bolt good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123

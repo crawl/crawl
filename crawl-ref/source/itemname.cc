@@ -1700,14 +1700,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list hides or QDA as +0.
-        if (know_pluses
-            && !((armour_is_hide(*this)
-                  || sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
-                 && plus == 0))
-        {
+        // Don't list QDA as +0.
+        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
             buff << make_stringf("%+d ", plus);
-        }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
@@ -2067,12 +2062,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
-
-        if (item_typ == CORPSE_BODY && props.exists(MANGLED_CORPSE_KEY)
-            && !dbname)
-        {
-            buff << "mangled ";
-        }
 
         monster_flags_t name_flags;
         const string _name = get_corpse_name(*this, &name_flags);

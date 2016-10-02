@@ -88,8 +88,8 @@ special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
 int armour_max_enchant(const item_def &item) PURE;
-bool armour_type_is_hide(int type, bool inc_made = false) PURE;
-bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
+bool armour_type_is_hide(armour_type type) PURE;
+bool armour_is_hide(const item_def &item) PURE;
 bool armour_is_special(const item_def &item) PURE;
 int armour_acq_weight(const armour_type armour) PURE;
 
@@ -100,9 +100,7 @@ bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
 
 armour_type hide_for_monster(monster_type mc) PURE;
-armour_type armour_for_hide(armour_type hide_type) PURE;
 monster_type monster_for_hide(armour_type arm) PURE;
-bool  hide2armour(item_def &item);
 
 int fit_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(const item_def &item, size_type size) PURE;

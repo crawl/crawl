@@ -416,16 +416,6 @@ crystal_plate3
 armour_mummy ARMOUR_MUMMY
 
 ##cloth_u_sail SAILOR
-dragonsc_red DRAGONSC_RED
-dragonsc_white DRAGONSC_WHITE
-dragonsc_magenta DRAGONSC_MAGENTA
-dragonsc_quicksilver DRAGONSC_QUICKSILVER
-dragonsc_cyan DRAGONSC_CYAN
-dragonsc_brown DRAGONSC_BROWN
-dragonsc_blue DRAGONSC_BLUE
-dragonsc_shadow DRAGONSC_SHADOW
-dragonsc_gold DRAGONSC_GOLD
-dragonsc_pearl DRAGONSC_PEARL
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA

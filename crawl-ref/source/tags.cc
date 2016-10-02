@@ -4478,13 +4478,8 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_MANGLE_CORPSES)
-    {
         if (item.props.exists("never_hide"))
-        {
             item.props.erase("never_hide");
-            item.props[MANGLED_CORPSE_KEY] = true;
-        }
-    }
 
     if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
         && item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
@@ -4551,6 +4546,24 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_RODS && item.cursed())
         do_uncurse_item(item); // rods can't be cursed anymore
+
+    // turn old hides into the corresponding armour
+    static const map<int, armour_type> hide_to_armour = {
+        { ARM_TROLL_HIDE,               ARM_TROLL_LEATHER_ARMOUR },
+        { ARM_FIRE_DRAGON_HIDE,         ARM_FIRE_DRAGON_ARMOUR },
+        { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
+        { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
+        { ARM_MOTTLED_DRAGON_HIDE,      ARM_MOTTLED_DRAGON_ARMOUR },
+        { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
+        { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
+        { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
+        { ARM_PEARL_DRAGON_HIDE,        ARM_PEARL_DRAGON_ARMOUR },
+        { ARM_SHADOW_DRAGON_HIDE,       ARM_SHADOW_DRAGON_ARMOUR },
+        { ARM_QUICKSILVER_DRAGON_HIDE,  ARM_QUICKSILVER_DRAGON_ARMOUR },
+    };
+    // ASSUMPTION: there was no such thing as an artefact hide
+    if (item.base_type == OBJ_ARMOUR && hide_to_armour.count(item.sub_type))
+        item.sub_type = *map_find(hide_to_armour, item.sub_type);
 #endif
 
     if (is_unrandom_artefact(item))

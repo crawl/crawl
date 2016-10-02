@@ -416,8 +416,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
  *
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
- * @param force whether to always make a corpse (no goldification and no 50%
- *              chance not to -- being summoned etc. still matters)
+ * @param force whether to always make a corpse (no 50% chance not to make a
+                corpse, no goldification, no hides -- being summoned etc. still
+  *             matters, though)
  * @returns a pointer to an item; it may be null, if the monster can't leave a
  *          corpse or if the 50% chance is rolled; it may be gold, if the player
  *          worships Gozag, or it may be the corpse.
@@ -496,7 +497,11 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     }
 
     if (in_bounds(mons.pos()))
+    {
         move_item_to_grid(&o, mons.pos(), !mons.swimming());
+        if (!force)
+            maybe_drop_monster_hide(corpse);
+    }
 
     if (o == NON_ITEM)
         return nullptr;
