@@ -1938,6 +1938,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
+{ SPELL_ACID_SPLASH, "Acid Splash",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_SPIT_ACID,
+},
+
 // Monster version of the spell (with full range)
 {
     SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",

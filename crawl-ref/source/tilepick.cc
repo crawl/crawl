@@ -3180,8 +3180,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_STEAM;
     case ABIL_BREATHE_MEPHITIC:
         return TILEG_ABILITY_BREATHE_MEPHITIC;
-    case ABIL_SPIT_ACID:
-        return TILEG_ABILITY_SPIT_ACID;
+    case ABIL_BREATHE_ACID:
+        return TILEG_ABILITY_BREATHE_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
 

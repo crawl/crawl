@@ -1,6 +1,7 @@
 %sdir gui/abilities
 bat_form ABILITY_BAT_FORM
 blink ABILITY_BLINK
+breathe_acid ABILITY_BREATHE_ACID
 breathe_energy ABILITY_BREATHE_ENERGY
 breathe_fire ABILITY_BREATHE_FIRE
 breathe_frost ABILITY_BREATHE_FROST
@@ -22,7 +23,6 @@ flight ABILITY_FLIGHT
 hurl_damnation ABILITY_HURL_DAMNATION
 recharge ABILITY_RECHARGE
 shaft_self ABILITY_SHAFT_SELF
-spit_acid ABILITY_SPIT_ACID
 spit_poison ABILITY_SPIT_POISON
 stop_recall ABILITY_STOP_RECALL
 stop_singing ABILITY_STOP_SINGING

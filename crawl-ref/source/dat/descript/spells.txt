@@ -3,6 +3,11 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Splash spell
+
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly
