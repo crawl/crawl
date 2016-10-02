@@ -322,17 +322,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PLATE_ARMOUR:          tile = TILEP_BODY_PLATE; break;
     case ARM_CRYSTAL_PLATE_ARMOUR:  tile = TILEP_BODY_CRYSTAL_PLATE; break;
 
-    case ARM_FIRE_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_RED; break;
-    case ARM_ICE_DRAGON_HIDE:       tile = TILEP_BODY_DRAGONSC_CYAN; break;
-    case ARM_STEAM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_WHITE; break;
-    case ARM_MOTTLED_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_MAGENTA; break;
-    case ARM_QUICKSILVER_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_QUICKSILVER; break;
-    case ARM_STORM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BLUE; break;
-    case ARM_SHADOW_DRAGON_HIDE:    tile = TILEP_BODY_DRAGONSC_SHADOW; break;
-    case ARM_GOLD_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_GOLD; break;
-    case ARM_SWAMP_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BROWN; break;
-    case ARM_PEARL_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_PEARL; break;
-
     case ARM_FIRE_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_RED; break;
     case ARM_ICE_DRAGON_ARMOUR:     tile = TILEP_BODY_DRAGONARM_CYAN; break;
     case ARM_STEAM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_WHITE; break;
@@ -345,7 +334,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
 
     case ARM_ANIMAL_SKIN:           tile = TILEP_BODY_ANIMAL_SKIN; break;
-    case ARM_TROLL_HIDE:            tile = TILEP_BODY_TROLL_HIDE; break;
     case ARM_TROLL_LEATHER_ARMOUR:  tile = TILEP_BODY_TROLL_LEATHER; break;
 
     default:                        tile = 0;

@@ -1998,10 +1998,6 @@ bool kiku_receive_corpses(int pow)
         if (!corpse)
             continue;
 
-        // no scumming for hides
-        if (mons_class_leaves_hide(mon_type))
-            corpse->props[MANGLED_CORPSE_KEY] = true;
-
         // Higher piety means fresher corpses.
         int rottedness = 200 -
             (!one_chance_in(10) ? random2(200 - you.piety)

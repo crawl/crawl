@@ -3507,7 +3507,7 @@ colour_t item_def::armour_colour() const
     if (is_artefact(*this))
         return randart_colour();
 
-    if (armour_type_is_hide(sub_type, true))
+    if (armour_type_is_hide((armour_type)sub_type))
         return mons_class_colour(monster_for_hide((armour_type)sub_type));
 
 
@@ -4813,7 +4813,7 @@ item_info get_item_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, DRAWN_CARD_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY,
+        FORCED_ITEM_COLOUR_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))

@@ -2278,25 +2278,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         return false;
     }
 
-    // Turn hides into mails where applicable.
-    // NOTE: It is assumed that armour which changes in this way does
-    // not change into a form of armour with a different evasion modifier.
-    if (armour_is_hide(arm, false))
-    {
-        if (!quiet)
-        {
-            mprf("%s glows purple and changes!",
-                 _item_name(arm).c_str());
-        }
-
-        ac_change = property(arm, PARM_AC);
-        hide2armour(arm);
-        ac_change = property(arm, PARM_AC) - ac_change;
-
-        // No additional enchantment.
-        return true;
-    }
-
     // Output message before changing enchantment and curse status.
     if (!quiet)
     {
