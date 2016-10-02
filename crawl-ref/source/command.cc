@@ -996,7 +996,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
     _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "show resistances", 2);
+    _add_command(cols, 1, CMD_RESISTS_SCREEN, "character overview", 2);
     _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
