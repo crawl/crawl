@@ -1769,13 +1769,6 @@ static bool _wudzu_summon_plant()
 
         mgen_data temp = _wrath_mon_data(plant, GOD_WUDZU);
 
-    /*mgen_data temp = mgen_data::hostile_at(plant,
-                                           _god_wrath_name(GOD_WUDZU),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_WUDZU);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);*/
-
         if (plant==MONS_SNAPLASHER_VINE)
                 temp.hd=min(27,5+you.experience_level);
 

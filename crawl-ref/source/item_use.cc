@@ -984,6 +984,77 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             mpr("You can't wear that in your present form.");
         return false;
     }
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_BODY_ARMOUR)
+	{
+		if (verbose)
+			mpr("Your thorny armour prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_CLOAK && 
+	  you.props["wudzu_cloak_picked_v"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Vestment of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_CLOAK && 
+	  you.props["wudzu_cloak_picked_r"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Regalia of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_HELMET && 
+	  you.props["wudzu_hat_picked_v"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Vestment of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_HELMET && 
+	  you.props["wudzu_hat_picked_r"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Regalia of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_GLOVES && 
+	  you.props["wudzu_gloves_picked_v"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Vestment of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_GLOVES && 
+	  you.props["wudzu_gloves_picked_r"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Regalia of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_BOOTS && 
+	  you.props["wudzu_boots_picked_v"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Vestment of Thorns prevents you from wearing that.");
+		return false;
+	}
+	
+	if (you_worship(GOD_WUDZU) && slot == EQ_BOOTS && 
+	  you.props["wudzu_boots_picked_r"].get_int() == 1)
+	{
+		if (verbose)
+			mpr("Your Regalia of Thorns prevents you from wearing that.");
+		return false;
+	}
 
         if (you_worship(GOD_WUDZU) && slot == EQ_BODY_ARMOUR)
         {
