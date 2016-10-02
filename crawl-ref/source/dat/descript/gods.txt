@@ -361,10 +361,8 @@ elemental clouds to appear near them, blocking attacks, and (for the
 particularly devout) deflecting incoming projectiles. Qazlal allows followers
 to incite nature against their foes, causing a localised natural disturbance
 or, for particularly devout followers, a more widespread disaster.
-Followers of Qazlal can give life to elemental clouds, turning them into
-elementals whose loyalty depends on the origin of the cloud. Followers can
-gain temporary resistances against the elements on taking damage from that
-element.
+Followers of Qazlal eventually gain temporary resistances after taking damage,
+and can give life to clouds, turning them into allied elementals.
 %%%%
 Ru powers
 
