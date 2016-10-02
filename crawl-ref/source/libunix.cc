@@ -287,18 +287,16 @@ static short translate_colour(COLOURS col)
  *    We will likely run out of pairs in a 256-color terminal.
  *
  *    For short = int16, highest pair = 2^15 - 1:
- *    Assuming an implicit default pair and pruning high fg=bg colors:
- *      1: (bg_max * num_colors) - 1 - num_colours + 8 <= 2^15 - 1
- *      2: num_colors = 2^8
- *    Solving for bg_max, we get:
- *      (2^8)*bg_max - 2^8 + 2^3 <= 2^15
- *      bg_max <= (2^15 + 2^8 - 2^3) / 2^8
- *      bg_max <= 128 + (248/256)
- *    We can use the fully use the first 128 background colors.
+ *    Assuming an implicit default pair:
+ *      (bg_max * num_colors) - 1 = 2^15 - 1; num_colors = 2^8
+ *       bg_max = 2^15/2^8 = 2^7 = 128
+ *    So, 128 maximum background colors for 256 foreground colors.
+ *
+ *    Alternatively, limit to a 181-color palette; sqrt(2^15) = ~181.02
  *
  * @todo
  *  If having access to all possible 256-color pairs (non-simultaneously) is
- *  important for the project, implement a color-pair cache.
+ *  important for the project, implement paging for color-pairs.
  */
 static void setup_colour_pairs()
 {
@@ -875,25 +873,12 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
 
 /**
  * @internal
- *  Organize the color pairs in as follows:
- *  * Order by background, then by foreground, starting at index 1.
- *  * Always use the default pair, 0, for the current default (fg, bg) combo.
- *  * For pairs where fg=bg:
- *    - For basic curses colors, allow.
- *    - For extended colors, do not allow (return pair 0).
- *  * For the pair (fg=white, bg=black):
+ *  Always use the default pair, 0, for the current default (fg, bg) combo.
+ *  For the pair (fg=white, bg=black):
  *    Use a pair index which depends on the current default color combination.
- *     - If the default combo is this special combo, simply use pair 0.
- *     - Otherwise, use the color pair that would correspond to the default
- *       combo if the default combo was not the default.
- *
- *  This organization ensures a few things:
- *  * For the standard 8-color / 64-pair terminals, there is a pair for every
- *    color combination.
- *  * For 16-color / 256-pair mode, There is a pair for every @em visible color
- *    combination.
- *  * For 256-colors with 2^15-1 pairs, this scheme squeezes out an extra
- *    usable background colour using an exhaustive, static palette.
+ *    - If the default combo is this special combo, simply use pair 0.
+ *    - Otherwise, use the color pair that would correspond to the default
+ *      combo if the default combo was not the default.
  */
 static short curs_calc_pair_safe(short fg, short bg, bool raw)
 {
@@ -929,53 +914,15 @@ static short curs_calc_pair_safe(short fg, short bg, bool raw)
             bg_stripped = bg_col_default_curses;
         }
 
-        // The last low color index.
-        const short low_color_max = 7;
+        // Work around the *default* default combination hole.
+        const short num_colors = curs_palette_size();
+        const short default_color_hole = 1 + COLOR_BLACK * num_colors
+            + COLOR_WHITE;
 
-        if (bg_stripped <= low_color_max || bg_stripped != fg_stripped)
-        {
-            const short num_colors = curs_palette_size();
-
-            // The low color index component.
-            // This range includes pairs which have fg=bg.
-            long pair_component_low = 0;
-            short bg_low = bg_stripped;
-            if (bg_stripped > low_color_max)
-                bg_low = low_color_max;
-            short fg_low = fg_stripped;
-            if (bg_stripped > low_color_max)
-                fg_low = num_colors - 1;
-
-            // The high color index component
-            // This range does *not* include pairs which have fg=bg.
-            long pair_component_high = 0;
-            short bg_high = 0;
-            if (bg_stripped > low_color_max)
-                bg_high = bg_stripped - (low_color_max + 1);
-            short fg_high = 0;
-            if (bg_stripped > low_color_max)
-                fg_high = fg_stripped;
-            // Adjust fg index for stripped high fg=bg colors.
-            if (fg_high > bg_stripped)
-                fg_high--;
-
-            // Calculate each component
-            // Work around the implicit 0 pair.
-            long default_color_hole = COLOR_BLACK * num_colors + COLOR_WHITE;
-
-            pair_component_low = bg_low * num_colors + fg_low;
-            if (pair_component_low > default_color_hole)
-                pair_component_low--;
-            pair_component_high = bg_high * (num_colors - 1) + fg_high;
-
-            // Combine to get the actual pair index, starting from 1.
-            pair = 1 + pair_component_low + pair_component_high;
-        }
-        else
-        {
-            // Disallowed high-color fg=bg combo.
-            pair = 0;
-        }
+        // Combine to get the actual pair index, starting from 1.
+        pair = 1 + bg_stripped * num_colors + fg_stripped;
+        if (pair > default_color_hole)
+            pair--;
     }
 
     // Last, guard against overflow and bogus input.
