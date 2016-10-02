@@ -654,10 +654,9 @@ or rubble. Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
-Causes elemental clouds around you to coalesce into elementals. Your own
-clouds create friendly elementals; hostile clouds create hostile elementals;
-natural clouds create neutral elementals. Invocations skill increases the
-maximum number of elementals that can be created with one use of the ability.
+Causes your elemental clouds to coalesce into friendly elementals. Your
+Invocations skill increases the maximum number of elementals that can be
+created with one use of the ability.
 %%%%
 Disaster Area ability
 
