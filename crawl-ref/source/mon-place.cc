@@ -2236,10 +2236,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GELID_DEMONSPAWN, { {2}, {{ BAND_GELID_DEMONSPAWN, {1, 3} }}}},
     { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
     { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
-    { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 5} }}}},
-    { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 5} }}}},
-    { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 5} }}}},
-    { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 5} }}}},
+    { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 4} }}}},
+    { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 4} }}}},
+    { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 4} }}}},
+    { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 4} }}}},
     { MONS_VASHNIA,         { {}, {{ BAND_VASHNIA, {3, 6}, true }}}},
     { MONS_ROBIN,           { {}, {{ BAND_ROBIN, {10, 13}, true }}}},
     { MONS_RAKSHASA,        { {2, 0, []() {
@@ -2752,7 +2752,7 @@ static monster_type _band_member(band_type band, int which,
                                           3, MONS_SKELETAL_WARRIOR);
 
     case BAND_MONSTROUS_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
+        if (which == 1 || x_chance_in_y(2, 3))
         {
             return random_choose_weighted( 2, MONS_DEMONIC_CRAWLER,
                                            2, MONS_SIXFIRHY,
@@ -2761,7 +2761,7 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_GELID_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
+        if (which == 1 || x_chance_in_y(2, 3))
         {
             return random_choose_weighted( 4, MONS_ICE_DEVIL,
                                            3, MONS_GELID_DEMONSPAWN);
@@ -2769,7 +2769,7 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_INFERNAL_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
+        if (which == 1 || x_chance_in_y(2, 3))
         {
             return random_choose_weighted( 2, MONS_RED_DEVIL,
                                            2, MONS_SUN_DEMON,
@@ -2778,7 +2778,7 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_TORTUROUS_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
+        if (which == 1 || x_chance_in_y(2, 3))
         {
             return random_choose_weighted( 2, MONS_ORANGE_DEMON,
                                            2, MONS_SIXFIRHY,
@@ -2787,9 +2787,9 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_BLOOD_SAINT:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || which == 2 && one_chance_in(3))
         {
-            if (x_chance_in_y(3, 5))
+            if (x_chance_in_y(2, 3))
                 return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
             else
                 return random_demonspawn_job();
@@ -2797,9 +2797,9 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_WARMONGER:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || which == 2 && one_chance_in(3))
         {
-            if (x_chance_in_y(3, 5))
+            if (x_chance_in_y(2, 3))
                 return one_chance_in(4) ? MONS_EXECUTIONER : MONS_REAPER;
             else
                 return random_demonspawn_job();
@@ -2807,9 +2807,9 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_CORRUPTER:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || which == 2 && one_chance_in(3))
         {
-            if (x_chance_in_y(3, 5))
+            if (x_chance_in_y(2, 3))
                 return one_chance_in(4) ? MONS_CACODEMON : MONS_SHADOW_DEMON;
             else
                 return random_demonspawn_job();
@@ -2817,9 +2817,9 @@ static monster_type _band_member(band_type band, int which,
         return random_demonspawn_monster_species();
 
     case BAND_BLACK_SUN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || which == 2 && one_chance_in(3))
         {
-            if (x_chance_in_y(3, 5))
+            if (x_chance_in_y(2, 3))
                 return one_chance_in(3) ? MONS_LOROCYPROCA : MONS_SOUL_EATER;
             else
                 return random_demonspawn_job();
