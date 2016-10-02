@@ -366,61 +366,56 @@ void hints_starting_screen()
 // Called each turn from _input. Better name welcome.
 void hints_new_turn()
 {
-    if (crawl_state.game_is_hints())
+    if (!crawl_state.game_is_hints())
+        return;
+
+    Hints.hints_just_triggered = false;
+
+    if (you.attribute[ATTR_HELD])
     {
-        Hints.hints_just_triggered = false;
-
-        if (you.attribute[ATTR_HELD])
-            learned_something_new(HINT_CAUGHT_IN_NET);
-        else if (i_feel_safe() && !player_in_branch(BRANCH_ABYSS))
-        {
-            // We don't want those "Whew, it's safe to rest now" messages
-            // if you were just cast into the Abyss. Right?
-
-            if (2 * you.hp < you.hp_max
-                || 2 * you.magic_points < you.max_magic_points)
-            {
-                _hints_healing_reminder();
-            }
-            else if (!you.running
-                     && Hints.hints_events[HINT_SHIFT_RUN]
-                     && you.num_turns >= 200
-                     && you.hp == you.hp_max
-                     && you.magic_points == you.max_magic_points)
-            {
-                learned_something_new(HINT_SHIFT_RUN);
-            }
-            else if (!you.running
-                     && Hints.hints_events[HINT_MAP_VIEW]
-                     && you.num_turns >= 500
-                     && you.hp == you.hp_max
-                     && you.magic_points == you.max_magic_points)
-            {
-                learned_something_new(HINT_MAP_VIEW);
-            }
-            else if (!you.running
-                     && Hints.hints_events[HINT_AUTO_EXPLORE]
-                     && you.num_turns >= 700
-                     && you.hp == you.hp_max
-                     && you.magic_points == you.max_magic_points)
-            {
-                learned_something_new(HINT_AUTO_EXPLORE);
-            }
-        }
-        else
-        {
-            if (poison_is_lethal())
-            {
-                if (Hints.hints_events[HINT_NEED_POISON_HEALING])
-                    learned_something_new(HINT_NEED_POISON_HEALING);
-            }
-            else if (2*you.hp < you.hp_max)
-                learned_something_new(HINT_RUN_AWAY);
-
-            if (Hints.hints_type == HINT_MAGIC_CHAR && you.magic_points < 1)
-                learned_something_new(HINT_RETREAT_CASTER);
-        }
+        learned_something_new(HINT_CAUGHT_IN_NET);
+        return;
     }
+
+    if (i_feel_safe() && !player_in_branch(BRANCH_ABYSS))
+    {
+        // We don't want those "Whew, it's safe to rest now" messages
+        // if you were just cast into the Abyss. Right?
+
+        if (2 * you.hp < you.hp_max
+            || 2 * you.magic_points < you.max_magic_points)
+        {
+            _hints_healing_reminder();
+            return;
+        }
+
+        if (you.running
+                 || you.hp != you.hp_max
+                 || you.magic_points != you.max_magic_points)
+        {
+            return;
+        }
+
+        if (Hints.hints_events[HINT_SHIFT_RUN] && you.num_turns >= 200)
+            learned_something_new(HINT_SHIFT_RUN);
+        else if (Hints.hints_events[HINT_MAP_VIEW] && you.num_turns >= 500)
+            learned_something_new(HINT_MAP_VIEW);
+        else if (Hints.hints_events[HINT_AUTO_EXPLORE] && you.num_turns >= 700)
+            learned_something_new(HINT_AUTO_EXPLORE);
+
+        return;
+    }
+
+    if (poison_is_lethal())
+    {
+        if (Hints.hints_events[HINT_NEED_POISON_HEALING])
+            learned_something_new(HINT_NEED_POISON_HEALING);
+    }
+    else if (2*you.hp < you.hp_max)
+        learned_something_new(HINT_RUN_AWAY);
+
+    if (Hints.hints_type == HINT_MAGIC_CHAR && you.magic_points < 1)
+        learned_something_new(HINT_RETREAT_CASTER);
 }
 
 /**
