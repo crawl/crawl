@@ -54,7 +54,7 @@ static option_handler handlers[] =
                                    option_hboolean },
     { "bold_brightens_foreground", &Options.bold_brightens_foreground,
                                    option_hboolean },
-    { "allow_extended_colors", &Options.allow_extended_colours,
+    { "allow_extended_colours", &Options.allow_extended_colours,
                                option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
