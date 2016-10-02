@@ -2173,7 +2173,7 @@ void handle_monster_move(monster* mons)
                             }
                         }
                     }
-					if (does_wudzu_wanna_block(mons))
+                                        if (does_wudzu_wanna_block(mons))
                     {
                         wudzu_boots_interference interference =
                                 get_wudzu_boots_attack_interference();

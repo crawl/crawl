@@ -70,8 +70,8 @@ Spits acid at a targeted creature.
 Fly ability
 
 Starts flight. During flight you can safely cross water and similar obstacles.
-Be warned, though, that some forms of flight are temporary and may time out at
-an inopportune moment, causing you to fall to your death.
+Be warned, though, that some forms of flight are temporary and may expire at
+inopportune moments.
 %%%%
 Hurl Damnation ability
 
@@ -876,8 +876,8 @@ gender. This does not take any time.
 # Wudzu
 Summon Vines ability
 
-Summon snaplasher vines from the floor. The strength and quantity
-of vines will increase with Invocations skill.
+Summon snaplasher vines from the floor. The strength and quantity of vines will
+increase with Invocations skill.
 %%%%
 Briar Patch ability
 
@@ -885,57 +885,55 @@ Summon a patch of briars on open areas on and around a selected space.
 %%%%
 Vestment of Thorns - Head ability
 
-Adorns your head with a vestment of thorns. This will block your hat slot
-if it was usable. It will also provide a small AC boost, a retaliatory
-headbutt, and clarity. This is permanent, and will remove the other 
-vestment option.
+Adorns your head with a vestment of thorns. This will block your hat slot if it
+was usable. It will also provide a small AC boost, a retaliatory headbutt, and
+clarity. This is permanent, and will remove the other vestment option.
 %%%%
 Regalia of Thorns - Head ability
 
-Adorns your head with a regalia of thorns. This will block your hat slot 
-if it was usable. It will also provide a small AC boost, a retaliatory
-headbutt, and clarity. This is permanent, and will remove the other 
-regalia option.
+Adorns your head with a regalia of thorns. This will block your hat slot if it
+was usable. It will also provide a small AC boost, a retaliatory headbutt, and
+clarity. This is permanent, and will remove the other regalia option.
 %%%%
 Vestment of Thorns - Shoulders ability
 
-Adorns your shoulders with a vestment of thorns. This will block your cloak 
-slot if it was usable. It will also provide a small AC boost, let you rip 
-through nets and webs, and make you more spiny. This is permanent, and will 
-remove the other vestment option.
+Adorns your shoulders with a vestment of thorns. This will block your cloak slot
+if it was usable. It will also provide a small AC boost, let you rip through
+nets and webs, and make you more spiny. This is permanent, and will remove the
+other vestment option.
 %%%%
 Regalia of Thorns - Shoulders ability
 
-Adorns your shoulders with a regalia of thorns. This will block your cloak 
-slot if it was usable. It will also provide a small AC boost, let you rip 
-through nets and webs, and make you more spiny. This is permanent, and will 
-remove the other regalia option.
+Adorns your shoulders with a regalia of thorns. This will block your cloak slot
+if it was usable. It will also provide a small AC boost, let you rip through
+nets and webs, and make you more spiny. This is permanent, and will remove the
+other regalia option.
 %%%%
 Vestment of Thorns - Hands ability
 
-Adorns your hands with a vestment of thorns. This will block your gloves 
-slot if it was usable. It will also provide a small AC boost and give you
-a chance to poison enemies with melee attacks. This is permanent, and 
-will remove the other vestment option.
+Adorns your hands with a vestment of thorns. This will block your gloves slot if
+it was usable. It will also provide a small AC boost and give you a chance to
+poison enemies with melee attacks. This is permanent, and will remove the other
+vestment option.
 %%%%
 Regalia of Thorns - Hands ability
 
-Adorns your hands with a regalia of thorns. This will block your gloves 
-slot if it was usable. It will also provide a small AC boost and give you
-a chance to poison enemies with melee attacks. This is permanent, and 
-will remove the other vestment option.
+Adorns your hands with a regalia of thorns. This will block your gloves slot if
+it was usable. It will also provide a small AC boost and give you a chance to
+poison enemies with melee attacks. This is permanent, and will remove the other
+vestment option.
 %%%%
 Vestment of Thorns - Feet ability
 
-Adorns your feet with a vestment of thorns. This will block your boots slot if 
-it was usable. It will also provide a small AC boost and provide a small chance 
-for enemies to fail to melee attack you. This is permanent, and will remove the 
+Adorns your feet with a vestment of thorns. This will block your boots slot if
+it was usable. It will also provide a small AC boost and provide a small chance
+for enemies to fail to melee attack you. This is permanent, and will remove the
 other vestment option.
 %%%%
 Regalia of Thorns - Feet ability
 
-Adorns your feet with a regalia of thorns. This will block your boots slot if 
-it was usable. It will also provide a small AC boost and provide a small chance 
-for enemies to fail to melee attack you. This is permanent, and will remove the 
+Adorns your feet with a regalia of thorns. This will block your boots slot if it
+was usable. It will also provide a small AC boost and provide a small chance for
+enemies to fail to melee attack you. This is permanent, and will remove the
 other regalia option.
 %%%%

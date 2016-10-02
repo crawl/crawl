@@ -64,7 +64,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? (Leave blank for a random name) ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name, or use Escape to go back.) ");
 
     textcolour(LIGHTGREY);
 }

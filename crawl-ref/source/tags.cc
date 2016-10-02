@@ -5077,9 +5077,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         case RED:          // infernal demonspawn
             mi.type = MONS_INFERNAL_DEMONSPAWN;
             break;
-        case GREEN:        // putrid demonspawn
-            mi.type = MONS_PUTRID_DEMONSPAWN;
-            break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
             if (mi.spells[0].spell == SPELL_PORTAL_PROJECTILE)
                 mi.type = MONS_NAGA_SHARPSHOOTER;
@@ -5091,9 +5088,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
                 mi.type = MONS_BLOOD_SAINT;
             else
                 mi.type = MONS_SHOCK_SERPENT;
-            break;
-        case ETC_RANDOM:   // chaos champion
-            mi.type = MONS_CHAOS_CHAMPION;
             break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (mi.base_type != MONS_NO_MONSTER)
@@ -5830,9 +5824,6 @@ void unmarshallMonster(reader &th, monster& m)
         case RED:          // infernal demonspawn
             m.type = MONS_INFERNAL_DEMONSPAWN;
             break;
-        case GREEN:        // putrid demonspawn
-            m.type = MONS_PUTRID_DEMONSPAWN;
-            break;
         case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
             if (m.spells[0].spell == SPELL_PORTAL_PROJECTILE)
                 m.type = MONS_NAGA_SHARPSHOOTER;
@@ -5844,9 +5835,6 @@ void unmarshallMonster(reader &th, monster& m)
                 m.type = MONS_BLOOD_SAINT;
             else
                 m.type = MONS_SHOCK_SERPENT;
-            break;
-        case ETC_RANDOM:   // chaos champion
-            m.type = MONS_CHAOS_CHAMPION;
             break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (m.base_monster != MONS_NO_MONSTER)

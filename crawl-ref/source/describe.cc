@@ -2852,8 +2852,6 @@ static string _describe_demonspawn_role(monster_type type)
     {
     case MONS_BLOOD_SAINT:
         return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_CHAOS_CHAMPION:
-        return "It possesses chaotic, reality-warping powers.";
     case MONS_WARMONGER:
         return "It is devoted to combat, disrupting the magic of its foes as "
                "it battles endlessly.";
@@ -2878,8 +2876,6 @@ static string _describe_demonspawn_base(int species)
         return "It is covered in icy armour.";
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
-    case MONS_PUTRID_DEMONSPAWN:
-        return "It is surrounded by sickly fumes and gases.";
     case MONS_TORTUROUS_DEMONSPAWN:
         return "It menaces with bony spines.";
     }
@@ -3133,10 +3129,7 @@ static void _print_bar(int value, int scale, string name,
  */
 static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 {
-    const int mhp = mons_is_hepliaklqana_ancestor(mi.type) ?
-                        hepliaklqana_ally_hp() : // not randomized
-                        mons_avg_hp(mi.type);
-    result << "Max HP: about " << mhp << "\n";
+    result << "Max HP: " << mi.get_max_hp_desc() << "\n";
 }
 
 /**
@@ -3527,10 +3520,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_BLOOD_SAINT:
-    case MONS_CHAOS_CHAMPION:
     case MONS_WARMONGER:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:

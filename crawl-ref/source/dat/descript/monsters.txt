@@ -712,10 +712,6 @@ centaur warrior
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
-chaos champion
-
-<demonspawn>
-%%%%
 chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing
@@ -1906,10 +1902,6 @@ purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.
 %%%%
-putrid demonspawn
-
-<demonspawn>
-%%%%
 quasit
 
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws
@@ -2155,12 +2147,12 @@ from afar.
 %%%%
 snaplasher vine
 
-A swift and sinuous vine. It can quickly bind and entangle its foes, 
+A swift and sinuous vine. It can quickly bind and entangle its foes,
 dragging them back to the place from which it surges.
 %%%%
 snaplasher vine segment
 
-Part of a swift and sinuous vine. It can quickly bind and entangle  
+Part of a swift and sinuous vine. It can quickly bind and entangle
 its foes, dragging them back to the place from which it surges.
 %%%%
 snapping turtle

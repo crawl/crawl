@@ -351,10 +351,8 @@ demonspawn MONS_DEMONSPAWN
 monstrous MONS_MONSTROUS_DEMONSPAWN
 gelid MONS_GELID_DEMONSPAWN
 infernal MONS_INFERNAL_DEMONSPAWN
-putrid MONS_PUTRID_DEMONSPAWN
 torturous MONS_TORTUROUS_DEMONSPAWN
 blood_saint MONS_BLOOD_SAINT
-chaos_champion MONS_CHAOS_CHAMPION
 warmonger MONS_WARMONGER
 corrupter MONS_CORRUPTER
 black_sun MONS_BLACK_SUN
@@ -435,8 +433,6 @@ saltling MONS_SALTLING
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
-# For the Eringya WizLab
-vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique

@@ -623,28 +623,28 @@ static const ability_def Ability_List[] =
 
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
-		
-	//Wudzu
- 	{ ABIL_WUDZU_SUMMON_VINES, "Summon Vines", 
-	5, 0, 200, 3, {FAIL_INVO, 60, 5, 20}, abflag::NONE },
-	{ ABIL_WUDZU_BRIAR_PATCH, "Briar Patch",
-	7, 0, 300, 6, {FAIL_INVO, 70, 4, 25}, abflag::NONE },
-	{ ABIL_WUDZU_VESTMENT_CLOAK, "Vestment of Thorns - Shoulders",
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_VESTMENT_HAT, "Vestment of Thorns - Head",
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_VESTMENT_GLOVES, "Vestment of Thorns - Hands", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_VESTMENT_BOOTS, "Vestment of Thorns - Feet", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_REGALIA_CLOAK, "Regalia of Thorns - Shoulders", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_REGALIA_HAT, "Regalia of Thorns - Head", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_REGALIA_GLOVES, "Regalia of Thorns - Hands", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-	{ ABIL_WUDZU_REGALIA_BOOTS, "Regalia of Thorns - Feet", 
-	0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+
+        //Wudzu
+        { ABIL_WUDZU_SUMMON_VINES, "Summon Vines",
+        5, 0, 200, 3, {FAIL_INVO, 60, 5, 20}, abflag::NONE },
+        { ABIL_WUDZU_BRIAR_PATCH, "Briar Patch",
+        7, 0, 300, 6, {FAIL_INVO, 70, 4, 25}, abflag::NONE },
+        { ABIL_WUDZU_VESTMENT_CLOAK, "Vestment of Thorns - Shoulders",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_VESTMENT_HAT, "Vestment of Thorns - Head",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_VESTMENT_GLOVES, "Vestment of Thorns - Hands",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_VESTMENT_BOOTS, "Vestment of Thorns - Feet",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_REGALIA_CLOAK, "Regalia of Thorns - Shoulders",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_REGALIA_HAT, "Regalia of Thorns - Head",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_REGALIA_GLOVES, "Regalia of Thorns - Hands",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        { ABIL_WUDZU_REGALIA_BOOTS, "Regalia of Thorns - Feet",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1001,68 +1001,68 @@ ability_type fixup_ability(ability_type ability)
         if (you.attribute[ATTR_DIVINE_ENERGY])
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
-		
-	case ABIL_WUDZU_VESTMENT_CLOAK:
-		if (you_worship(GOD_WUDZU))
-		{
-			if (you.props["wudzu_vestment_picked"].get_int() == 1 || 
-			(you.props["vest1"].get_int() != 1 && you.props["vest2"].get_int() != 1))
-				return ABIL_NON_ABILITY;
-			else
-				return ability;
-		}
-		else
-			return ability;
-		
-	case ABIL_WUDZU_VESTMENT_HAT:
-	    if (you.props["wudzu_vestment_picked"].get_int() == 1 || 
-		(you.props["vest1"].get_int() != 2 && you.props["vest2"].get_int() != 2))
+
+        case ABIL_WUDZU_VESTMENT_CLOAK:
+                if (you_worship(GOD_WUDZU))
+                {
+                        if (you.props["wudzu_vestment_picked"].get_int() == 1 ||
+                        (you.props["vest1"].get_int() != 1 && you.props["vest2"].get_int() != 1))
+                                return ABIL_NON_ABILITY;
+                        else
+                                return ability;
+                }
+                else
+                        return ability;
+
+        case ABIL_WUDZU_VESTMENT_HAT:
+            if (you.props["wudzu_vestment_picked"].get_int() == 1 ||
+                (you.props["vest1"].get_int() != 2 && you.props["vest2"].get_int() != 2))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
-	case ABIL_WUDZU_VESTMENT_GLOVES:
-	    if (you.props["wudzu_vestment_picked"].get_int() == 1 || 
-		(you.props["vest1"].get_int() != 3 && you.props["vest2"].get_int() != 3))
+                else
+                        return ability;
+        case ABIL_WUDZU_VESTMENT_GLOVES:
+            if (you.props["wudzu_vestment_picked"].get_int() == 1 ||
+                (you.props["vest1"].get_int() != 3 && you.props["vest2"].get_int() != 3))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
-	case ABIL_WUDZU_VESTMENT_BOOTS:
-	    if (you.props["wudzu_vestment_picked"].get_int() == 1 || 
-		(you.props["vest1"].get_int() != 4 && you.props["vest2"].get_int() != 4))
+                else
+                        return ability;
+        case ABIL_WUDZU_VESTMENT_BOOTS:
+            if (you.props["wudzu_vestment_picked"].get_int() == 1 ||
+                (you.props["vest1"].get_int() != 4 && you.props["vest2"].get_int() != 4))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
-		
-	case ABIL_WUDZU_REGALIA_CLOAK:
-		if (you_worship(GOD_WUDZU))
-		{
-			if (you.props["wudzu_regalia_picked"].get_int() == 1 || 
-			(you.props["reg1"].get_int() != 1 && you.props["reg2"].get_int() != 1))
-				return ABIL_NON_ABILITY;
-			else
-				return ability;
-		}
-		else
-			return ability;
-		
-	case ABIL_WUDZU_REGALIA_HAT:
-	    if (you.props["wudzu_regalia_picked"].get_int() == 1 || 
-		(you.props["reg1"].get_int() != 2 && you.props["reg2"].get_int() != 2))
+                else
+                        return ability;
+
+        case ABIL_WUDZU_REGALIA_CLOAK:
+                if (you_worship(GOD_WUDZU))
+                {
+                        if (you.props["wudzu_regalia_picked"].get_int() == 1 ||
+                        (you.props["reg1"].get_int() != 1 && you.props["reg2"].get_int() != 1))
+                                return ABIL_NON_ABILITY;
+                        else
+                                return ability;
+                }
+                else
+                        return ability;
+
+        case ABIL_WUDZU_REGALIA_HAT:
+            if (you.props["wudzu_regalia_picked"].get_int() == 1 ||
+                (you.props["reg1"].get_int() != 2 && you.props["reg2"].get_int() != 2))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
-	case ABIL_WUDZU_REGALIA_GLOVES:
-	    if (you.props["wudzu_regalia_picked"].get_int() == 1 || 
-		(you.props["reg1"].get_int() != 3 && you.props["reg2"].get_int() != 3))
+                else
+                        return ability;
+        case ABIL_WUDZU_REGALIA_GLOVES:
+            if (you.props["wudzu_regalia_picked"].get_int() == 1 ||
+                (you.props["reg1"].get_int() != 3 && you.props["reg2"].get_int() != 3))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
-	case ABIL_WUDZU_REGALIA_BOOTS:
-	    if (you.props["wudzu_regalia_picked"].get_int() == 1 || 
-		(you.props["reg1"].get_int() != 4 && you.props["reg2"].get_int() != 4))
+                else
+                        return ability;
+        case ABIL_WUDZU_REGALIA_BOOTS:
+            if (you.props["wudzu_regalia_picked"].get_int() == 1 ||
+                (you.props["reg1"].get_int() != 4 && you.props["reg2"].get_int() != 4))
             return ABIL_NON_ABILITY;
-		else
-			return ability;
+                else
+                        return ability;
 
     default:
         return ability;
@@ -1829,8 +1829,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     dist abild;
     bolt beam;
     dist spd;
-	string lower_body;
-	string hands;
+        string lower_body;
+        string hands;
 
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
@@ -3134,217 +3134,217 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_HEPLIAKLQANA_IDENTITY:
         hepliaklqana_choose_identity();
         break;
-		
-	case ABIL_WUDZU_SUMMON_VINES:
-	{
-		fail_check();
-		summon_vines(20 + you.skill(SK_INVOCATIONS, 3));
-	break;
-	}
-	
-	case ABIL_WUDZU_BRIAR_PATCH:
-		return wudzu_briars(fail);
-		
-	case ABIL_WUDZU_VESTMENT_CLOAK:
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.", 
-			you.species != SP_OCTOPODE ? "shoulders" : "mantle");
-	    if (!yesno("Do you really want to take this vestment?",
+
+        case ABIL_WUDZU_SUMMON_VINES:
+        {
+                fail_check();
+                summon_vines(20 + you.skill(SK_INVOCATIONS, 3));
+        break;
+        }
+
+        case ABIL_WUDZU_BRIAR_PATCH:
+                return wudzu_briars(fail);
+
+        case ABIL_WUDZU_VESTMENT_CLOAK:
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        you.species != SP_OCTOPODE ? "shoulders" : "mantle");
+            if (!yesno("Do you really want to take this vestment?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_vestment_picked"] = 1;
-		you.props["wudzu_cloak_picked_v"] = 1;
-		mprf(MSGCH_GOD, "Your %s coated with a vestment of thorns.",
-		(you.species != SP_OCTOPODE ? "shoulders are" : "mantle is"));
-		if (!you.melded[EQ_CLOAK])
-		{
-			remove_one_equip(EQ_CLOAK, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_VESTMENT_HAT:
-	    mprf(MSGCH_GOD, "Wudzu will cover your head in thorns.");
-	    if (!yesno("Do you really want to take this vestment?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_vestment_picked"] = 1;
+                you.props["wudzu_cloak_picked_v"] = 1;
+                mprf(MSGCH_GOD, "Your %s coated with a vestment of thorns.",
+                (you.species != SP_OCTOPODE ? "shoulders are" : "mantle is"));
+                if (!you.melded[EQ_CLOAK])
+                {
+                        remove_one_equip(EQ_CLOAK, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_VESTMENT_HAT:
+            mprf(MSGCH_GOD, "Wudzu will cover your head in thorns.");
+            if (!yesno("Do you really want to take this vestment?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_vestment_picked"] = 1;
-		you.props["wudzu_hat_picked_v"] = 1;
-		mprf(MSGCH_GOD, "A vestment of thorns coats your head.");
-		if (!you.melded[EQ_HELMET])
-		{
-			remove_one_equip(EQ_HELMET, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_VESTMENT_GLOVES:
-	
-		if (you.species==SP_OCTOPODE)
-			hands="front tentacles";
-		else if (you.species==SP_FELID)
-			hands="front paws";
-		else
-			hands=you.hand_name(true).c_str();
-	
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.", 
-			hands.c_str());
-	    if (!yesno("Do you really want to take this vestment?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_vestment_picked"] = 1;
+                you.props["wudzu_hat_picked_v"] = 1;
+                mprf(MSGCH_GOD, "A vestment of thorns coats your head.");
+                if (!you.melded[EQ_HELMET])
+                {
+                        remove_one_equip(EQ_HELMET, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_VESTMENT_GLOVES:
+
+                if (you.species==SP_OCTOPODE)
+                        hands="front tentacles";
+                else if (you.species==SP_FELID)
+                        hands="front paws";
+                else
+                        hands=you.hand_name(true).c_str();
+
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        hands.c_str());
+            if (!yesno("Do you really want to take this vestment?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_vestment_picked"] = 1;
-		you.props["wudzu_gloves_picked_v"] = 1;
-		mprf(MSGCH_GOD, "Your %s are coated with a vestment of thorns.",
-			hands.c_str());
-		if (!you.melded[EQ_GLOVES])
-		{
-			remove_one_equip(EQ_GLOVES, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_VESTMENT_BOOTS:
-	
-		if (you.species==SP_OCTOPODE)
-			lower_body="back tentacles";
-		else if (you.species==SP_CENTAUR)
-			lower_body="equine half";
-		else if (you.species==SP_NAGA)
-			lower_body="serpentine half";
-		else if (you.species==SP_FELID)
-			lower_body="back paws";
-		else
-			lower_body=you.foot_name(true).c_str();
-	
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
-			lower_body.c_str());
-	    if (!yesno("Do you really want to take this vestment?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_vestment_picked"] = 1;
+                you.props["wudzu_gloves_picked_v"] = 1;
+                mprf(MSGCH_GOD, "Your %s are coated with a vestment of thorns.",
+                        hands.c_str());
+                if (!you.melded[EQ_GLOVES])
+                {
+                        remove_one_equip(EQ_GLOVES, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_VESTMENT_BOOTS:
+
+                if (you.species==SP_OCTOPODE)
+                        lower_body="back tentacles";
+                else if (you.species==SP_CENTAUR)
+                        lower_body="equine half";
+                else if (you.species==SP_NAGA)
+                        lower_body="serpentine half";
+                else if (you.species==SP_FELID)
+                        lower_body="back paws";
+                else
+                        lower_body=you.foot_name(true).c_str();
+
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        lower_body.c_str());
+            if (!yesno("Do you really want to take this vestment?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_vestment_picked"] = 1;
-		you.props["wudzu_boots_picked_v"] = 1;
-		
-		mprf(MSGCH_GOD, "Your %s %s coated with a vestment of thorns.",
-			lower_body.c_str(), ((you.species==SP_NAGA || 
-			you.species==SP_CENTAUR || you.fishtail)
-			? "is" : "are"));
-		if (!you.melded[EQ_BOOTS])
-		{
-			remove_one_equip(EQ_BOOTS, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_REGALIA_CLOAK:
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.", 
-			you.species != SP_OCTOPODE ? "shoulders" : "mantle");
-	    if (!yesno("Do you really want to take this regalia?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_vestment_picked"] = 1;
+                you.props["wudzu_boots_picked_v"] = 1;
+
+                mprf(MSGCH_GOD, "Your %s %s coated with a vestment of thorns.",
+                        lower_body.c_str(), ((you.species==SP_NAGA ||
+                        you.species==SP_CENTAUR || you.fishtail)
+                        ? "is" : "are"));
+                if (!you.melded[EQ_BOOTS])
+                {
+                        remove_one_equip(EQ_BOOTS, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_REGALIA_CLOAK:
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        you.species != SP_OCTOPODE ? "shoulders" : "mantle");
+            if (!yesno("Do you really want to take this regalia?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_regalia_picked"] = 1;
-		you.props["wudzu_cloak_picked_r"] = 1;
-		mprf(MSGCH_GOD, "Your %s coated with a regalia of thorns.",
-			(you.species != SP_OCTOPODE ? "shoulders are" : "mantle is"));
-		if (!you.melded[EQ_CLOAK])
-		{
-			remove_one_equip(EQ_CLOAK, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_REGALIA_HAT:
-	    mprf(MSGCH_GOD, "Wudzu will cover your head in thorns.");
-	    if (!yesno("Do you really want to take this regalia?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_regalia_picked"] = 1;
+                you.props["wudzu_cloak_picked_r"] = 1;
+                mprf(MSGCH_GOD, "Your %s coated with a regalia of thorns.",
+                        (you.species != SP_OCTOPODE ? "shoulders are" : "mantle is"));
+                if (!you.melded[EQ_CLOAK])
+                {
+                        remove_one_equip(EQ_CLOAK, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_REGALIA_HAT:
+            mprf(MSGCH_GOD, "Wudzu will cover your head in thorns.");
+            if (!yesno("Do you really want to take this regalia?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_regalia_picked"] = 1;
-		you.props["wudzu_hat_picked_r"] = 1;
-		mprf(MSGCH_GOD, "A regalia of thorns coats your head.");
-		if (!you.melded[EQ_HELMET])
-		{
-			remove_one_equip(EQ_HELMET, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_REGALIA_GLOVES:
-		if (you.species==SP_OCTOPODE)
-			hands="front tentacles";
-		else if (you.species==SP_FELID)
-			hands="front paws";
-		else
-			hands=you.hand_name(true).c_str();	
-	
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.", 
-			hands.c_str());
-	    if (!yesno("Do you really want to take this regalia?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_regalia_picked"] = 1;
+                you.props["wudzu_hat_picked_r"] = 1;
+                mprf(MSGCH_GOD, "A regalia of thorns coats your head.");
+                if (!you.melded[EQ_HELMET])
+                {
+                        remove_one_equip(EQ_HELMET, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_REGALIA_GLOVES:
+                if (you.species==SP_OCTOPODE)
+                        hands="front tentacles";
+                else if (you.species==SP_FELID)
+                        hands="front paws";
+                else
+                        hands=you.hand_name(true).c_str();
+
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        hands.c_str());
+            if (!yesno("Do you really want to take this regalia?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_regalia_picked"] = 1;
-		you.props["wudzu_gloves_picked_r"] = 1;
-		mprf(MSGCH_GOD, "Your %s are coated with a regalia of thorns.",
-			hands.c_str());
-		if (!you.melded[EQ_GLOVES])
-		{
-			remove_one_equip(EQ_GLOVES, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
-		
-	case ABIL_WUDZU_REGALIA_BOOTS:
-	
-		if (you.species==SP_OCTOPODE)
-			lower_body="back tentacles";
-		else if (you.species==SP_CENTAUR)
-			lower_body="equine half";
-		else if (you.species==SP_NAGA)
-			lower_body="serpentine half";
-		else if (you.species==SP_FELID)
-			lower_body="back paws";
-		else
-			lower_body=you.foot_name(true).c_str();	
-	
-	    mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
-			lower_body.c_str());
-	    if (!yesno("Do you really want to take this regalia?",
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_regalia_picked"] = 1;
+                you.props["wudzu_gloves_picked_r"] = 1;
+                mprf(MSGCH_GOD, "Your %s are coated with a regalia of thorns.",
+                        hands.c_str());
+                if (!you.melded[EQ_GLOVES])
+                {
+                        remove_one_equip(EQ_GLOVES, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
+
+        case ABIL_WUDZU_REGALIA_BOOTS:
+
+                if (you.species==SP_OCTOPODE)
+                        lower_body="back tentacles";
+                else if (you.species==SP_CENTAUR)
+                        lower_body="equine half";
+                else if (you.species==SP_NAGA)
+                        lower_body="serpentine half";
+                else if (you.species==SP_FELID)
+                        lower_body="back paws";
+                else
+                        lower_body=you.foot_name(true).c_str();
+
+            mprf(MSGCH_GOD, "Wudzu will cover your %s in thorns.",
+                        lower_body.c_str());
+            if (!yesno("Do you really want to take this regalia?",
                false, 'n'))
-		{
-			canned_msg(MSG_OK);
-			break;
-		}
-		you.props["wudzu_regalia_picked"] = 1;
-		you.props["wudzu_boots_picked_r"] = 1;
-		
-		mprf(MSGCH_GOD, "Your %s %s coated with a regalia of thorns.",
-			lower_body.c_str(), ((you.species==SP_NAGA || 
-			you.species==SP_CENTAUR || you.fishtail)
-			? "is" : "are"));
-		if (!you.melded[EQ_BOOTS])
-		{
-			remove_one_equip(EQ_BOOTS, false, false);
-			you.redraw_armour_class = true;
-		}
-	break;
+                {
+                        canned_msg(MSG_OK);
+                        break;
+                }
+                you.props["wudzu_regalia_picked"] = 1;
+                you.props["wudzu_boots_picked_r"] = 1;
+
+                mprf(MSGCH_GOD, "Your %s %s coated with a regalia of thorns.",
+                        lower_body.c_str(), ((you.species==SP_NAGA ||
+                        you.species==SP_CENTAUR || you.fishtail)
+                        ? "is" : "are"));
+                if (!you.melded[EQ_BOOTS])
+                {
+                        remove_one_equip(EQ_BOOTS, false, false);
+                        you.redraw_armour_class = true;
+                }
+        break;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
@@ -3913,16 +3913,16 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
         first_slot = letter_to_index('G');
         break;
-	case ABIL_WUDZU_VESTMENT_BOOTS:
-	case ABIL_WUDZU_VESTMENT_CLOAK:
-	case ABIL_WUDZU_VESTMENT_HAT:
-	case ABIL_WUDZU_VESTMENT_GLOVES:
-	case ABIL_WUDZU_REGALIA_BOOTS:
-	case ABIL_WUDZU_REGALIA_CLOAK:
-	case ABIL_WUDZU_REGALIA_HAT:
-	case ABIL_WUDZU_REGALIA_GLOVES:
-		first_slot = letter_to_index('D');
-		break;
+        case ABIL_WUDZU_VESTMENT_BOOTS:
+        case ABIL_WUDZU_VESTMENT_CLOAK:
+        case ABIL_WUDZU_VESTMENT_HAT:
+        case ABIL_WUDZU_VESTMENT_GLOVES:
+        case ABIL_WUDZU_REGALIA_BOOTS:
+        case ABIL_WUDZU_REGALIA_CLOAK:
+        case ABIL_WUDZU_REGALIA_HAT:
+        case ABIL_WUDZU_REGALIA_GLOVES:
+                first_slot = letter_to_index('D');
+                break;
     default:
         break;
     }

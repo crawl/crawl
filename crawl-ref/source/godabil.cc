@@ -2848,14 +2848,14 @@ spret_type wudzu_briars(bool fail)
     {
         if (!in_bounds(*ai) || cell_is_solid(*ai) || actor_at(*ai))
             continue;
-		
+
 		mgen_data briar(MONS_BRIAR_PATCH,
                  BEH_FRIENDLY, *ai, MHITYOU,
                  MG_FORCE_BEH | MG_FORCE_PLACE);
 		briar.set_summoned(&you, min(6,2+random2(you.skill(SK_INVOCATIONS))/5),
 						  SPELL_NO_SPELL, GOD_WUDZU);
 		briar.hd = max(10, min(45,5+you.skill(SK_INVOCATIONS)*2));
-		
+
 		create_monster(briar);
     }
     return SPRET_SUCCESS;

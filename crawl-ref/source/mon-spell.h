@@ -1552,7 +1552,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEMONSPAWN_BLOOD_SAINT,
       {
-       { SPELL_LEGENDARY_DESTRUCTION, 48, MON_SPELL_PRIEST },
+       { SPELL_LEGENDARY_DESTRUCTION, 40, MON_SPELL_PRIEST },
+       { SPELL_CALL_OF_CHAOS, 20, MON_SPELL_PRIEST },
       }
     },
 
@@ -1569,13 +1570,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 13, MON_SPELL_PRIEST },
        { SPELL_DISPEL_UNDEAD, 13, MON_SPELL_PRIEST },
        { SPELL_BLACK_MARK, 26, MON_SPELL_PRIEST },
-      }
-    },
-
-    {  MST_DEMONSPAWN_CHAOS_CHAMPION,
-      {
-       { SPELL_RANDOM_BOLT, 32, MON_SPELL_PRIEST },
-       { SPELL_CALL_OF_CHAOS, 32, MON_SPELL_PRIEST },
       }
     },
 

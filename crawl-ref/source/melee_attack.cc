@@ -285,13 +285,13 @@ bool melee_attack::handle_phase_dodged()
         {
             do_minotaur_retaliation();
         }
-        else if ((you.props["wudzu_hat_picked_v"].get_int() == 1 
-		  && have_passive(passive_t::thorn_vestment))
-		  || (you.props["wudzu_hat_picked_r"].get_int() == 1 
-		  && have_passive(passive_t::thorn_regalia)))
+        else if ((you.props["wudzu_hat_picked_v"].get_int() == 1
+                  && have_passive(passive_t::thorn_vestment))
+                  || (you.props["wudzu_hat_picked_r"].get_int() == 1
+                  && have_passive(passive_t::thorn_regalia)))
         {
-			if (coinflip())
-				do_wudzu_hat_retaliation();
+                        if (coinflip())
+                                do_wudzu_hat_retaliation();
         }
 
         // Retaliations can kill!
@@ -476,14 +476,14 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-		if ((you.props["wudzu_gloves_picked_v"].get_int() == 1
-	      && have_passive(passive_t::thorn_vestment))
-	      || (you.props["wudzu_gloves_picked_r"].get_int() == 1
-	      && have_passive(passive_t::thorn_regalia)))
-	    {
-		if (coinflip())
-			poison_monster(defender->as_monster(), &you);
-	    }
+                if ((you.props["wudzu_gloves_picked_v"].get_int() == 1
+              && have_passive(passive_t::thorn_vestment))
+              || (you.props["wudzu_gloves_picked_r"].get_int() == 1
+              && have_passive(passive_t::thorn_regalia)))
+            {
+                if (coinflip())
+                        poison_monster(defender->as_monster(), &you);
+            }
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -3197,16 +3197,11 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-		
-		int wudzu_spine = 0;
-		if (have_passive(passive_t::spiny_thorns))
-			wudzu_spine = 1;
-		if ((you.props["wudzu_cloak_picked_v"].get_int() == 1 
-		  && have_passive(passive_t::thorn_vestment))
-		  || (you.props["wudzu_cloak_picked_r"].get_int() == 1 
-		  && have_passive(passive_t::thorn_regalia)))
-			wudzu_spine = 3;
-		
+
+                int wudzu_spine = 0;
+                if (have_passive(passive_t::spiny_thorns))
+                        wudzu_spine = 1;
+
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : min(3,player_mutation_level(MUT_SPINY)+wudzu_spine);
 

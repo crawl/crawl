@@ -1460,59 +1460,61 @@ static void _generate_scroll_item(item_def& item, int force_type,
     item.plus = 0;
 }
 
+/// Choose a random spellbook type for the given level.
+static book_type _choose_book_type(int item_level)
+{
+    const book_type book = static_cast<book_type>(random2(NUM_FIXED_BOOKS));
+    if (item_type_removed(OBJ_BOOKS, book))
+        return _choose_book_type(item_level); // choose something else
+
+    // If this book is really rare for this depth, continue trying.
+    const int rarity = book_rarity(book);
+    ASSERT(rarity != 100); // 'removed item' - ugh...
+
+    if (!one_chance_in(100) && x_chance_in_y(rarity-1, item_level+1))
+        return _choose_book_type(item_level); // choose something else
+
+    return book;
+}
+
+/// Choose a random skill for a manual to be generated for.
+static skill_type _choose_manual_skill()
+{
+    // spell skill (or invo/evo)
+    if (one_chance_in(4))
+    {
+        return static_cast<skill_type>(
+            SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING));
+    }
+
+    // mundane skill
+#if TAG_MAJOR_VERSION == 34
+    skill_type skill = SK_TRAPS;
+    while (skill == SK_TRAPS || skill == SK_STABBING)
+        skill = static_cast<skill_type>(random2(SK_LAST_MUNDANE+1));
+    return skill;
+#else
+    return static_cast<skill_type>(random2(SK_LAST_MUNDANE + 1));
+#endif
+}
+
 static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
+    else if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
+        item.sub_type = BOOK_MANUAL; // skill manual - rare!
     else
-    {
-        do
-        {
-            item.sub_type = random2(NUM_FIXED_BOOKS);
+        item.sub_type = _choose_book_type(item_level);
 
-            if (!one_chance_in(100)
-                && x_chance_in_y(book_rarity(static_cast<book_type>(item.sub_type))-1, item_level+1))
-            {
-                // If this book is really rare for this depth, continue trying.
-                continue;
-            }
-        }
-        while (book_rarity(static_cast<book_type>(item.sub_type)) == 100);
-
-        // Skill manuals - rare.
-        if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
-            item.sub_type = BOOK_MANUAL;
-    }
-
-    // Determine which skill for a manual.
     if (item.sub_type == BOOK_MANUAL)
     {
-        if (one_chance_in(4))
-        {
-            item.skill = static_cast<skill_type>(SK_SPELLCASTING +
-                                                 random2(NUM_SKILLS -
-                                                         SK_SPELLCASTING));
-        }
-        else
-#if TAG_MAJOR_VERSION == 34
-        {
-            item.skill = static_cast<skill_type>(random2(SK_UNARMED_COMBAT));
-            if (item.skill == SK_STABBING)
-                item.skill = SK_UNARMED_COMBAT;
-            if (item.skill == SK_TRAPS)
-                item.skill = SK_STEALTH;
-        }
-#else
-            item.plus = random2(SK_UNARMED_COMBAT + 1);
-#endif
+        item.skill = _choose_manual_skill();
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
+        return; // rare enough without being replaced with randarts
     }
-
-    // Manuals are rare enough without replacing them with randart books.
-    if (item.sub_type == BOOK_MANUAL)
-        return;
 
     // Only randomly generate randart books for OBJ_RANDOM, since randart
     // spellbooks aren't merely of-the-same-type-but-better, but

@@ -242,18 +242,18 @@ enum class passive_t
 
     /// Hep reduces your max HP
     frail,
-	
-	/// Wudzu gives you thorny armour
-	thorn_armour,
-	
-	/// Wudzu's armour gets spiny
-	spiny_thorns,
-	
-	///Wudzu's thorn vestment
-	thorn_vestment,
-	
-	///Wudzu's thorn regalia
-	thorn_regalia,
+
+        /// Wudzu gives you thorny armour
+        thorn_armour,
+
+        /// Wudzu's armour gets spiny
+        spiny_thorns,
+
+        ///Wudzu's thorn vestment
+        thorn_vestment,
+
+        ///Wudzu's thorn regalia
+        thorn_regalia,
 };
 
 enum ru_interference
@@ -265,8 +265,8 @@ enum ru_interference
 
 enum wudzu_boots_interference
 {
-	DO_BLOCK_MELEE_ATTACK,
-	DONT_BLOCK_MELEE_ATTACK
+        DO_BLOCK_MELEE_ATTACK,
+        DONT_BLOCK_MELEE_ATTACK
 };
 
 bool have_passive(passive_t passive);

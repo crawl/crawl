@@ -617,12 +617,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_BASE_DEMONSPAWN)
         mon_type = random_demonspawn_monster_species();
     else if (mon_type == RANDOM_NONBASE_DEMONSPAWN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                             MONS_LAST_NONBASE_DEMONSPAWN));
-    }
+        mon_type = random_demonspawn_job();
 
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
@@ -1441,6 +1436,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             bonus_hp = mbase->avg_hp_10x;
         }
         mon->set_hit_dice(mg.hd);
+        mon->props[VAULT_HD_KEY] = mg.hd;
         // Re-roll HP.
         const int base_avg_hp = m_ent->avg_hp_10x + bonus_hp;
         const int new_avg_hp = div_rand_round(base_avg_hp * mg.hd, m_ent->HD);
@@ -1457,6 +1453,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         mon->max_hit_points = mg.hp;
         mon->hit_points = mg.hp;
+        mon->props[KNOWN_MAX_HP_KEY] = mg.hp;
     }
 
     if (!crawl_state.game_is_arena())
@@ -2238,10 +2235,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
     { MONS_GELID_DEMONSPAWN, { {2}, {{ BAND_GELID_DEMONSPAWN, {1, 3} }}}},
     { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
-    { MONS_PUTRID_DEMONSPAWN, { {2}, {{ BAND_PUTRID_DEMONSPAWN, {1, 3} }}}},
     { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
     { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 5} }}}},
-    { MONS_CHAOS_CHAMPION,  { {}, {{ BAND_CHAOS_CHAMPION, {1, 4} }}}},
     { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 5} }}}},
     { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 5} }}}},
     { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 5} }}}},
@@ -2782,15 +2777,6 @@ static monster_type _band_member(band_type band, int which,
         }
         return random_demonspawn_monster_species();
 
-    case BAND_PUTRID_DEMONSPAWN:
-        if (which == 1 || one_chance_in(5))
-        {
-            return random_choose_weighted( 2, MONS_HELLWING,
-                                           2, MONS_ORANGE_DEMON,
-                                           3, MONS_PUTRID_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
     case BAND_TORTUROUS_DEMONSPAWN:
         if (which == 1 || one_chance_in(5))
         {
@@ -2806,23 +2792,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
             else
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_CHAOS_CHAMPION:
-        if (which == 1 || which == 2 && one_chance_in(6))
-        {
-            if (x_chance_in_y(2, 5))
-                return one_chance_in(3) ? MONS_TORMENTOR : MONS_HELL_BEAST;
-            else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2832,11 +2802,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_EXECUTIONER : MONS_REAPER;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2846,11 +2812,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_CACODEMON : MONS_SHADOW_DEMON;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
@@ -2860,11 +2822,7 @@ static monster_type _band_member(band_type band, int which,
             if (x_chance_in_y(3, 5))
                 return one_chance_in(3) ? MONS_LOROCYPROCA : MONS_SOUL_EATER;
             else
-            {
-                return static_cast<monster_type>(
-                    random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
-            }
+                return random_demonspawn_job();
         }
         return random_demonspawn_monster_species();
 
