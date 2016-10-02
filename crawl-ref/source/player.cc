@@ -3280,6 +3280,9 @@ int check_stealth()
         stealth /= umbra_div;
     }
 
+    if (you.form == TRAN_SHADOW)
+        stealth *= 2;
+
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (have_passive(passive_t::storm_shield))
     {
