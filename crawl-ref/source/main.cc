@@ -681,15 +681,7 @@ static void _startup_hints_mode()
 {
     // Don't allow triggering at game start.
     Hints.hints_just_triggered = true;
-
-    msg::streams(MSGCH_TUTORIAL)
-        << "Press any key to start the hints mode intro, or Escape to skip it."
-        << endl;
-
-    flush_prev_message();
-    const int ch = getch_ck();
-    if (!key_is_escape(ch))
-        hints_starting_screen();
+    hints_starting_screen();
 }
 
 // required so that maybe_identify_base_type works correctly
