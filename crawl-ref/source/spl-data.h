@@ -3088,17 +3088,6 @@ static const struct spell_desc spelldata[] =
     TILEG_SAP_MAGIC,
 },
 
-{
-    SPELL_CORRUPT_BODY, "Corrupt Body",
-    SPTYP_TRANSMUTATION | SPTYP_HEXES,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_NEEDS_TRACER,
-    4,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    3, 0,
-    TILEG_CORRUPT_BODY,
-},
-
 #if TAG_MAJOR_VERSION == 34
 {
     SPELL_REARRANGE_PIECES, "Rearrange the Pieces",

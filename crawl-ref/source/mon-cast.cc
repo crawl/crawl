@@ -1583,10 +1583,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit      = 5 + power / 3;
         break;
 
-    case SPELL_CORRUPT_BODY:
-        beam.flavour    = BEAM_CORRUPT_BODY;
-        break;
-
     case SPELL_SHADOW_BOLT:
         beam.name     = "shadow bolt";
         beam.pierce   = true;

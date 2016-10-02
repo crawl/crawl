@@ -663,7 +663,6 @@ enum beam_type                  // bolt::flavour
     BEAM_VIRULENCE,
     BEAM_AGILITY,
     BEAM_SAP_MAGIC,
-    BEAM_CORRUPT_BODY,
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
@@ -4619,8 +4618,8 @@ enum spell_type : int
     SPELL_GRAND_AVATAR,
 #endif
     SPELL_SAP_MAGIC,
-    SPELL_CORRUPT_BODY,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_CORRUPT_BODY,
     SPELL_REARRANGE_PIECES,
 #endif
     SPELL_MAJOR_DESTRUCTION,
