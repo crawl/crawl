@@ -126,15 +126,18 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
  *
- * When in basic curses color mode, strips any brightening flags.
  * Explicitly returns the default pair (0) if the pair would exceed COLOR_PAIRS.
  *
  * @param fg
  *  The flagged curses color index for the foreground.
  * @param bg
  *  The flagged curses color index for the background.
+ * @param raw
+ *  If true, never strip brightening flags.
+ *  Otherwise, fg and bg may have their brightening flags stripped depending on
+ *  cur_can_use_extended_colors().
  */
-static short curs_calc_pair_safe(short fg, short bg);
+static short curs_calc_pair_safe(short fg, short bg, bool raw = false);
 
 /**
  * @brief Can extended colors be used directly instead of character attributes?
@@ -161,11 +164,14 @@ static bool curs_can_use_extended_colors();
 static short curs_get_fg_color_non_identical(short fg, short bg);
 
 /**
- * @brief Return the currently available terminal palette size.
+ * @brief Get the @em maximum palette size currently supported by the program.
  *
- * Respects curs_can_use_extended_colors().
+ * This value is limited by both the internal color palette and reported
+ * terminal color capabilities.
  *
- * @return The number of distinct terminal colors available to use.
+ * This value is @em not affected by the rendering assumption options.
+ *
+ * @return The maximum palette size currently supported by the program.
  */
 static short curs_palette_size();
 
@@ -175,20 +181,6 @@ static short curs_palette_size();
  * Attempt to set the default colors for the terminal based on the current
  * game options. If a default color cannot be set, the curses default will be
  * used (COLOR_WHITE for foreground, COLOR_BLACK for background).
- *
- * @internal
- * There are ncurses-specific extension to change the default colour pair
- * from COLOR_WHITE on COLOR_BLACK.
- *
- * However, use_default_colors() alone is dangerous to use for the program.
- *
- * The color_content() function cannot be used on a default color, and
- * use_default_colors() may or may not be matched with a color in the game's
- * 8 or 16-colors. So, there's a very likely chance of a color collision which
- * cannot be avoided programmatically.
- *
- * This leaves the assume_default_colors() function using a manually-specified
- * background_colour option.
  */
 static void curs_set_default_colors();
 
@@ -284,24 +276,43 @@ static short translate_colour(COLOURS col)
     }
 }
 
+/**
+ * @internal
+ * Attempt to exhaustively allocate color pairs, relying on
+ * curs_calc_pair_safe() to order pairs and reject unwanted combinations.
+ *
+ * 256-color considerations:
+ *  - For ncurses stable, need ncurses 6.0 or later for >256 pairs.
+ *  - Pairs use a short type.
+ *    We will likely run out of pairs in a 256-color terminal.
+ *
+ *    For short = int16, highest pair = 2^15 - 1:
+ *    Assuming an implicit default pair and pruning high fg=bg colors:
+ *      1: (bg_max * num_colors) - 1 - num_colours - 8 <= 2^15 - 1
+ *      2: num_colors = 2^8
+ *    Solving for bg_max, we get:
+ *      bg_max <= (2^15 - 2^8 + 2^3) / 2^8
+ *      bg_max <= 127 + (8/256)
+ *    We can use the fully use the first 127 background colors.
+ *
+ * @todo
+ *  If having access to all possible 256-color pairs (non-simultaneously) is
+ *  important for the project, implement a color-pair cache.
+ */
 static void setup_colour_pairs()
 {
-    short i, j;
+    // Only generate pairs which we may need.
+    short num_colors = curs_palette_size();
 
-    short palette_size = curs_palette_size();
-
-    // Note: This exhaustive pair approach will fail for 256-colors.
-    // Generally, the final (fg=bg) pair can't fit in even with 8/16 colors.
-    for (i = 0; i < palette_size; i++)
+    for (short i = 0; i < num_colors; i++)
     {
-        for (j = 0; j < palette_size; j++)
+        for (short j = 0; j < num_colors; j++)
         {
-            short pair = curs_calc_pair_safe(j, i);
+            short pair = curs_calc_pair_safe(j, i, true);
             if (pair > 0)
                 init_pair(pair, j, i);
         }
     }
-
 }
 
 static void unix_handle_terminal_resize();
@@ -861,25 +872,113 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     attr |= flags;
 }
 
-// see declaration
-static short curs_calc_pair_safe(short fg, short bg)
+/**
+ * @internal
+ *  Organize the color pairs in as follows:
+ *  * Order by background, then by foreground, starting at index 1.
+ *  * Always use the default pair, 0, for the current default (fg, bg) combo.
+ *  * For pairs where fg=bg:
+ *    - For basic curses colors, allow.
+ *    - For extended colors, do not allow (return pair 0).
+ *  * For the pair (fg=white, bg=black):
+ *    Use a pair index which depends on the current default color combination.
+ *     - If the default combo is this special combo, simply use pair 0.
+ *     - Otherwise, use the color pair that would correspond to the default
+ *       combo if the default combo was not the default.
+ *
+ *  This organization ensures a few things:
+ *  * For the standard 8-color / 64-pair terminals, there is a pair for every
+ *    color combination.
+ *  * For 16-color / 256-pair mode, There is a pair for every @em visible color
+ *    combination.
+ *  * For 256-colors with 2^15-1 pairs, this scheme squeezes out an extra
+ *    usable background colour using an exhaustive, static palette.
+ */
+static short curs_calc_pair_safe(short fg, short bg, bool raw)
 {
     // Use something wider than short for the calculation in case of overflow.
-    // This allows 256-colors to sort-of-work with a half-exhaustive palette.
-    int pair;
+    long pair = 0;
+
     short fg_stripped = fg;
     short bg_stripped = bg;
+    short fg_col_default_curses = curses_color_to_internal_colour(
+        FG_COL_DEFAULT);
+    short bg_col_default_curses = curses_color_to_internal_colour(
+        BG_COL_DEFAULT);
 
-    // Strip out all the bits above the raw 3-bit colour definition
-    if (!curs_can_use_extended_colors())
+    if (!raw && !curs_can_use_extended_colors())
     {
+        // Strip out all the bits above the raw 3-bit colour definition
         fg_stripped &= 0x07;
         bg_stripped &= 0x07;
     }
 
-    pair = bg_stripped * curs_palette_size() + fg_stripped + 1;
+    if (fg_stripped == fg_col_default_curses
+        && bg_stripped == bg_col_default_curses)
+    {
+        // This pair is the current default.
+        pair = 0;
+    }
+    else
+    {
+        // Remap the default curses default pair, if necessary.
+        if (fg_stripped == COLOR_WHITE && bg_stripped == COLOR_BLACK)
+        {
+            fg_stripped = fg_col_default_curses;
+            bg_stripped = bg_col_default_curses;
+        }
 
-    if (pair > COLOR_PAIRS)
+        // The last low color index.
+        const short low_color_max = 7;
+
+        if (bg_stripped <= low_color_max || bg_stripped != fg_stripped)
+        {
+            const short num_colors = curs_palette_size();
+
+            // The low color index component.
+            // This range includes pairs which have fg=bg.
+            long pair_component_low = 0;
+            short bg_low = bg_stripped;
+            if (bg_stripped > low_color_max)
+                bg_low = low_color_max;
+            short fg_low = fg_stripped;
+            if (bg_stripped > low_color_max)
+                fg_low = num_colors - 1;
+
+            // The high color index component
+            // This range does *not* include pairs which have fg=bg.
+            long pair_component_high = 0;
+            short bg_high = 0;
+            if (bg_stripped > low_color_max)
+                bg_high = bg_stripped - (low_color_max + 1);
+            short fg_high = 0;
+            if (bg_stripped > low_color_max)
+                fg_high = fg_stripped;
+            // Adjust fg index for stripped high fg=bg colors.
+            if (fg_high > bg_stripped)
+                fg_high--;
+
+            // Calculate each component
+            // Work around the implicit 0 pair.
+            long default_color_hole = COLOR_BLACK * num_colors + COLOR_WHITE;
+
+            pair_component_low = bg_low * num_colors + fg_low;
+            if (pair_component_low > default_color_hole)
+                pair_component_low--;
+            pair_component_high = bg_high * (num_colors - 1) + fg_high;
+
+            // Combine to get the actual pair index, starting from 1.
+            pair = 1 + pair_component_low + pair_component_high;
+        }
+        else
+        {
+            // Disallowed high-color fg=bg combo.
+            pair = 0;
+        }
+    }
+
+    // Last, guard against overflow and bogus input.
+    if (pair > COLOR_PAIRS || pair < 0)
         pair = 0;
 
     return static_cast<short>(pair);
@@ -996,31 +1095,76 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
 // see declaration
 static short curs_palette_size()
 {
-    short palette_size = 8;
+    int palette_size = std::min(COLORS, static_cast<int>(NUM_TERM_COLOURS));
 
-    if (curs_can_use_extended_colors())
-        palette_size = NUM_TERM_COLOURS;
+    if (palette_size > SHRT_MAX)
+        palette_size = SHRT_MAX;
 
     return palette_size;
 }
 
-// see declaration
+/**
+ * @internal
+ * There are ncurses-specific extensions to change the default color pair
+ * from COLOR_WHITE on COLOR_BLACK.
+ *
+ * However, use_default_colors() alone is dangerous to use for the program.
+ *
+ * The color_content() function cannot be used on a default color, and
+ * use_default_colors() may or may not be matched with an existing color in the
+ * game's palette. So, there's a very likely chance of a color collision which
+ * cannot be avoided programmatically.
+ *
+ * This leaves the assume_default_colors() function using a manually-specified
+ * background_colour option.
+ */
 static void curs_set_default_colors()
 {
+    // The *default* default curses colors.
+    const COLOURS failsafe_fg = curses_color_to_internal_colour(COLOR_WHITE);
+    const COLOURS failsafe_bg = curses_color_to_internal_colour(COLOR_BLACK);
+
     int default_colors_loaded = ERR;
+    COLOURS default_fg_prev = FG_COL_DEFAULT;
+    COLOURS default_bg_prev = BG_COL_DEFAULT;
     COLOURS default_fg = static_cast<COLOURS>(Options.foreground_colour);
     COLOURS default_bg = static_cast<COLOURS>(Options.background_colour);
 
 #ifdef NCURSES_VERSION
-    // Deny colours outside the standard 8-color palette as necessary.
     if (!curs_can_use_extended_colors())
     {
+        // Deny colours outside the standard 8-color palette.
         if (is_high_colour(default_fg))
-            default_fg = LIGHTGREY;
+            default_fg = failsafe_fg;
         if (is_high_colour(default_bg))
-            default_bg = BLACK;
+            default_bg = failsafe_bg;
+    }
+    else
+    {
+        // Deny default background colours which can't be indexed.
+        short default_fg_curses = translate_colour(default_fg);
+        short default_bg_curses = translate_colour(default_bg);
+
+        if (!(default_fg_curses == COLOR_BLACK
+            && default_bg_curses == COLOR_WHITE))
+        {
+            FG_COL_DEFAULT = failsafe_fg;
+            BG_COL_DEFAULT = failsafe_bg;
+
+            if (!curs_calc_pair_safe(curs_palette_size() - 1,
+                default_bg_curses))
+            {
+                // Can't index all combinations with that background.  Denied.
+                default_fg = failsafe_fg;
+                default_bg = failsafe_bg;
+            }
+
+            FG_COL_DEFAULT = default_fg_prev;
+            BG_COL_DEFAULT = default_bg_prev;
+        }
     }
 
+    // Assume new default colors.
     use_default_colors();
     default_colors_loaded = assume_default_colors(translate_colour(default_fg),
         translate_colour(default_bg));
@@ -1029,13 +1173,41 @@ static void curs_set_default_colors()
     // Check if a failsafe is needed.
     if (default_colors_loaded == ERR)
     {
-        default_fg = LIGHTGREY;
-        default_bg = BLACK;
+        default_fg = failsafe_fg;
+        default_bg = failsafe_bg;
     }
 
-    // Store the validate default colors.
+    // Store the validated default colors.
     FG_COL_DEFAULT = default_fg;
     BG_COL_DEFAULT = default_bg;
+
+    // The new default color pair is now in pair 0.
+    // Make sure the *default* default color pair has a home.
+    short fg_col_default_curses = translate_colour(FG_COL_DEFAULT);
+    short bg_col_default_curses = translate_colour(BG_COL_DEFAULT);
+    if (!(fg_col_default_curses == COLOR_WHITE
+        && bg_col_default_curses == COLOR_BLACK))
+    {
+        init_pair(curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK), COLOR_WHITE,
+            COLOR_BLACK);
+    }
+
+    // Restore the previous default color pair to normal.
+    if (!(default_fg == default_fg_prev && default_bg == default_bg_prev))
+    {
+        short default_fg_prev_curses = translate_colour(default_fg_prev);
+        short default_bg_prev_curses = translate_colour(default_bg_prev);
+        // ... but not if it was the *default* default pair.
+        if (!(default_fg_prev_curses == COLOR_WHITE
+            && default_bg_prev_curses == COLOR_BLACK))
+        {
+            init_pair(
+                curs_calc_pair_safe(default_fg_prev_curses,
+                    default_bg_prev_curses, true), default_fg_prev_curses,
+                default_bg_prev_curses);
+        }
+    }
+
 }
 
 // see declaration
