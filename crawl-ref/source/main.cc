@@ -818,7 +818,7 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_artefact(); break;
+    case 'v': wizard_value_item(); break;
     case 'V': wizard_toggle_xray_vision(); break;
     case 'E': wizard_freeze_time(); break;
     // case CONTROL('V'): break;
