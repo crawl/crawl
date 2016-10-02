@@ -274,6 +274,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BEETLE)
     AXED_MON(MONS_PUTRID_DEMONSPAWN)
     AXED_MON(MONS_CHAOS_CHAMPION)
+    AXED_MON(MONS_WASP)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
