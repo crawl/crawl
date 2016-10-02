@@ -288,12 +288,13 @@ static short translate_colour(COLOURS col)
  *
  *    For short = int16, highest pair = 2^15 - 1:
  *    Assuming an implicit default pair and pruning high fg=bg colors:
- *      1: (bg_max * num_colors) - 1 - num_colours - 8 <= 2^15 - 1
+ *      1: (bg_max * num_colors) - 1 - num_colours + 8 <= 2^15 - 1
  *      2: num_colors = 2^8
  *    Solving for bg_max, we get:
- *      bg_max <= (2^15 - 2^8 + 2^3) / 2^8
- *      bg_max <= 127 + (8/256)
- *    We can use the fully use the first 127 background colors.
+ *      (2^8)*bg_max - 2^8 + 2^3 <= 2^15
+ *      bg_max <= (2^15 + 2^8 - 2^3) / 2^8
+ *      bg_max <= 128 + (248/256)
+ *    We can use the fully use the first 128 background colors.
  *
  * @todo
  *  If having access to all possible 256-color pairs (non-simultaneously) is
