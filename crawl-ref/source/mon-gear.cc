@@ -406,23 +406,22 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     // Demonspawn probably want to use weapons close to the "natural"
     // demon weapons - demon blades, demon whips, and demon tridents.
     // So pick from a selection of good weapons from those classes
-    // with about a 1/4 chance in each category of having the demon
-    // weapon.
+    // with a 2/5 chance in each category of having the demon weapon.
     // XXX: this is so ridiculously overengineered
     static const weapon_list DS_WEAPONS =
     {   { WPN_LONG_SWORD,       10 },
         { WPN_SCIMITAR,         10 },
         { WPN_GREAT_SWORD,      10 },
-        { WPN_DEMON_BLADE,      10 },
+        { WPN_DEMON_BLADE,      20 },
         { WPN_MACE,             10 },
         { WPN_MORNINGSTAR,      8 },
         { WPN_EVENINGSTAR,      2 },
         { WPN_DIRE_FLAIL,       10 },
-        { WPN_DEMON_WHIP,       10 },
+        { WPN_DEMON_WHIP,       20 },
         { WPN_TRIDENT,          10 },
         { WPN_HALBERD,          10 },
         { WPN_GLAIVE,           10 },
-        { WPN_DEMON_TRIDENT,    10 } };
+        { WPN_DEMON_TRIDENT,    20 } };
     static const weapon_list GARGOYLE_WEAPONS =
     {   { WPN_MACE,             15 },
         { WPN_FLAIL,            10 },
