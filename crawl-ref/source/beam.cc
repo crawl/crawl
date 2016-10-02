@@ -209,7 +209,6 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -3756,17 +3755,6 @@ void bolt::affect_player_enchantment(bool resistible)
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
-    case BEAM_CORRUPT_BODY:
-        if (temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body"))
-        {
-            if (one_chance_in(4))
-                temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
-            mprf(MSGCH_WARN, "A corruption grows within you!");
-        }
-        else
-           mpr("You feel corrupt for a moment.");
-        break;
-
     case BEAM_DRAIN_MAGIC:
     {
         int amount = min(you.magic_points, random2avg(ench_power / 8, 3));
@@ -5154,7 +5142,6 @@ bool bolt::has_saving_throw() const
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_SAP_MAGIC:
     case BEAM_UNRAVELLING:
     case BEAM_UNRAVELLED_MAGIC:
@@ -5177,7 +5164,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     switch (flavour)
     {
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_UNRAVELLED_MAGIC:
         rc = mon->can_mutate();
         break;
@@ -5740,10 +5726,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
-
-    case BEAM_CORRUPT_BODY:
-        mon->corrupt();
-        break;
 
     case BEAM_DRAIN_MAGIC:
     {
@@ -6566,7 +6548,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VIRULENCE:             return "virulence";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
-    case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";

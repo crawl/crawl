@@ -203,7 +203,6 @@ error CHAOS_BREATH
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
-error CORRUPT_BODY
 error CREATE_TENTACLES
 error CRYSTAL_BOLT
 error DEATH_RATTLE
