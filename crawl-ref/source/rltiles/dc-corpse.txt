@@ -209,7 +209,7 @@ dwarf CORPSE_DWARF
 deep_dwarf CORPSE_DEEP_DWARF
 
 ## Ugly things ('u')
-%sdir mon/aberr
+%sdir mon/aberrations
 ugly_thing CORPSE_UGLY_THING
 ugly_thing1
 ugly_thing2
