@@ -282,7 +282,7 @@ ability_type draconian_breath(species_type species)
     case SP_GREEN_DRACONIAN:   return ABIL_BREATHE_MEPHITIC;
     case SP_RED_DRACONIAN:     return ABIL_BREATHE_FIRE;
     case SP_WHITE_DRACONIAN:   return ABIL_BREATHE_FROST;
-    case SP_YELLOW_DRACONIAN:  return ABIL_SPIT_ACID;
+    case SP_YELLOW_DRACONIAN:  return ABIL_BREATHE_ACID;
     case SP_BLACK_DRACONIAN:   return ABIL_BREATHE_LIGHTNING;
     case SP_PURPLE_DRACONIAN:  return ABIL_BREATHE_POWER;
     case SP_PALE_DRACONIAN:    return ABIL_BREATHE_STEAM;

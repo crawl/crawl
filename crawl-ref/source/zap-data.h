@@ -697,7 +697,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
     ZAP_BREATHE_ACID,
-    "acid",
+    "glob of acid",
     50,
     new dicedef_calculator<3, 4, 1, 3>,
     new tohit_calculator<7, 1, 6>,

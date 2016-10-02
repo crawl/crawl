@@ -4535,26 +4535,29 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
+    }
 
-        if (origin_spell == SPELL_STICKY_FLAME_SPLASH)
-            for (adjacent_iterator ai(source); ai; ++ai)
+    // Acid splash.
+    if (origin_spell == SPELL_ACID_SPLASH)
+    {
+        mon->splash_with_acid(agent(), 3);
+
+        for (adjacent_iterator ai(source); ai; ++ai)
+        {
+            // the acid can splash onto adjacent targets
+            if (grid_distance(*ai, target) != 1)
+                continue;
+            if (actor *victim = actor_at(*ai))
             {
-                // the breath weapon can splash to adjacent people
-                if (grid_distance(*ai, target) != 1)
-                    continue;
-                if (actor *victim = actor_at(*ai))
+                if (you.see_cell(*ai))
                 {
-                    if (you.see_cell(*ai))
-                    {
-                        mprf("The sticky flame splashes onto %s!",
-                             victim->name(DESC_THE).c_str());
-                    }
-                    if (victim->is_player())
-                        napalm_player(levels, get_source_name(), aux_source);
-                    else
-                        napalm_monster(victim->as_monster(), agent(), levels);
+                    mprf("The acid splashes onto %s!",
+                         victim->name(DESC_THE).c_str());
                 }
+
+                victim->splash_with_acid(agent(), 3);
             }
+        }
     }
 
     // Handle missile effects.

@@ -1389,6 +1389,16 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_ACID;
         break;
 
+    case SPELL_ACID_SPLASH:      // yellow draconian
+        beam.colour   = YELLOW;
+        beam.name     = "glob of acid";
+        beam.damage   = dice_def(3, 7);
+
+        // Natural ability, so don't use spell_hd here
+        beam.hit      = 20 + (3 * mons->get_hit_dice());
+        beam.flavour  = BEAM_ACID;
+        break;
+
     case SPELL_MEPHITIC_CLOUD:
         beam.name     = "stinking cloud";
         beam.damage   = dice_def(1, 0);
