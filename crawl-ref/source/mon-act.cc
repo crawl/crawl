@@ -2825,13 +2825,15 @@ static bool _handle_pickup(monster* mons)
     // (jpeg)
     for (stack_iterator si(mons->pos()); si; ++si)
     {
-        if ((never_pickup
-             // Monsters being able to pick up items you've seen encourages
-             // tediously moving everything away from a place where they could
-             // use them. Maurice being able to pick up such items encourages
-             // killing Maurice, since there's just one of him. Usually.
-             || (testbits(si->flags, ISFLAG_SEEN)
-                 && !mons->has_attack_flavour(AF_STEAL)))
+        if (!crawl_state.game_is_arena()
+            && (never_pickup
+                // Monsters being able to pick up items you've seen encourages
+                // tediously moving everything away from a place where they
+                // could use them. Maurice being able to pick up such items
+                // encourages killing Maurice, since there's just one of him.
+                // Usually.
+                || (testbits(si->flags, ISFLAG_SEEN)
+                    && !mons->has_attack_flavour(AF_STEAL)))
             // ...but it's ok if it dropped the item itself.
             && !(si->props.exists(DROPPER_MID_KEY)
                  && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
