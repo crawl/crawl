@@ -256,21 +256,21 @@ static short translate_colour(COLOURS col)
     case LIGHTGREY:
         return COLOR_WHITE;
     case DARKGREY:
-        return (COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_BLACK | COLFLAG_CURSES_BRIGHTEN;
     case LIGHTBLUE:
-        return (COLOR_BLUE | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_BLUE | COLFLAG_CURSES_BRIGHTEN;
     case LIGHTGREEN:
-        return (COLOR_GREEN | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_GREEN | COLFLAG_CURSES_BRIGHTEN;
     case LIGHTCYAN:
-        return (COLOR_CYAN | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_CYAN | COLFLAG_CURSES_BRIGHTEN;
     case LIGHTRED:
-        return (COLOR_RED | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_RED | COLFLAG_CURSES_BRIGHTEN;
     case LIGHTMAGENTA:
-        return (COLOR_MAGENTA | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_MAGENTA | COLFLAG_CURSES_BRIGHTEN;
     case YELLOW:
-        return (COLOR_YELLOW | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_YELLOW | COLFLAG_CURSES_BRIGHTEN;
     case WHITE:
-        return (COLOR_WHITE | COLFLAG_CURSES_BRIGHTEN);
+        return COLOR_WHITE | COLFLAG_CURSES_BRIGHTEN;
     default:
         return COLOR_GREEN;
     }
@@ -1102,7 +1102,7 @@ static void curs_set_default_colors()
             if (!curs_calc_pair_safe(curs_palette_size() - 1,
                 default_bg_curses))
             {
-                // Can't index all combinations with that background.  Denied.
+                // Can't index all combinations with that background. Denied.
                 default_fg = failsafe_fg;
                 default_bg = failsafe_bg;
             }
