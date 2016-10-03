@@ -1803,12 +1803,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 // based on current progress to next level in order to avoid
                 // breakpoints at level-up.
                 int progress = get_exp_progress();
-                int xp_debt = (next_level_xp - this_level_xp)
-                                      * (100-progress) / 100
-                               + (level_plus_2_xp - next_level_xp)
-                                      * progress / 100;
+                int xp_debt = ((next_level_xp - this_level_xp)
+                                      * (100-progress) / 10)
+                               + ((level_plus_2_xp - next_level_xp)
+                                      * progress / 10);
 
                 you.props[DESPERATE_HASTE_XP_DEBT] = xp_debt;
+
+                take_note(Note(NOTE_MESSAGE, 0, 0, "Used Desperate Haste."));
             }
             else
                 return SPRET_ABORT;

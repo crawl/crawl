@@ -2574,10 +2574,12 @@ static void _recharge_desperate_haste(int exp)
     debt -= exp;
     if (debt <= 0)
     {
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Desperate Haste recharged."));
         you.props.erase(DESPERATE_HASTE_XP_DEBT);
         mprf(MSGCH_INTRINSIC_GAIN, "You can once more use your desperate haste.");
         more();
-    } else
+    }
+    else
         you.props[DESPERATE_HASTE_XP_DEBT] = debt;
 }
 
