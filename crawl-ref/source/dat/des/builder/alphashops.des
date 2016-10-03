@@ -10,42 +10,13 @@
 # new items at some point in the future.
 
 {{
-   -- random_subset function by gammafunk.
-   -- Given a table of elements, choose a subset of size n without replacement.
-   function random_subset(set, n)
-       result = {}
-       cmap = {}
-       for i=1,n,1 do
-           vals = {}
-           indices = {}
-           count = 0
-           for j,v in ipairs(set) do
-               if not cmap[j] then
-                   indices[count + 1] = j
-                   vals[count + 1] = v
-                   count = count + 1
-               end
-           end
-           if count == 0 then
-               break
-           end
-           ind = crawl.random2(count) + 1
-           table.insert(result, vals[ind])
-           cmap[indices[ind]] = true
-       end
-       return result
-   end
+   require("dlua/util.lua")
 
    function ownername(s)
-     if s == "N" and crawl.one_chance_in( 50000 ) then
-       -- WORTH A SHOT
-       return "Nicolae"
-     else
-       -- The string.lower and .gsub calls are to crunch names with spaces down
-       -- into a single word. Otherwise it messes up the "KFEAT" shop line.
-       local name = s .. string.sub(string.lower(crawl.make_name()), 2)
-       return string.gsub( name, " ", "" )
-     end
+     -- The string.lower and .gsub calls are to crunch names with spaces down
+     -- into a single word. Otherwise it messes up the "KFEAT" shop line.
+     local name = s .. string.sub(string.lower(crawl.make_name()), 2)
+     return string.gsub(name, " ", "")
    end
 
    function shopname(s)
@@ -124,12 +95,13 @@
        "book of frost", "falchion", "fan of gales", "fire dragon armour",
        "potion of flight", "ring of fire", "scroll of fear", "staff of fire",
        "fen folio", "ring of flight", "scroll of fog", "fruit", "wand of flame",
-       "manual of fighting", "amulet of faith", "manual of fire magic" }
+       "manual of fighting", "amulet of faith", "manual of fire magic",
+       "fustibalus" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "amulet of the gourmand", "book of geomancy",
        "glaive", "gold dragon armour", "grand grimoire", "great mace",
-       "fustibalus", "great sword", "pair of gloves" }
+       "great sword", "pair of gloves" }
 
       elseif s == "H" then i = { "amulet of harm", "halberd",
        "hand axe", "hand crossbow", "hunting sling", "wand of hasting",
@@ -154,8 +126,8 @@
       elseif s == "M" then i = { "manual of maces & flails", "meat ration",
        "book of minor magic", "book of misfortune", "book of maledictions",
        "morningstar", "mace", "mottled dragon armour", "potion of magic",
-       "ring of magical power", "amulet of magic regeneration", "potion of might",
-       "potion of mutation", "scroll of magic mapping", }
+       "ring of magical power", "amulet of magic regeneration",
+       "potion of mutation", "potion of might", "scroll of magic mapping", }
 
       elseif s == "N" then i = { "book of necromancy", "naga barding",
        "necronomicon", "needle", "scroll of noise", "manual of necromancy" }
@@ -229,10 +201,10 @@
          local itemcount = #itemlist
          itemcount = itemcount + 1
          if itemcount < 5 then
-            alphabet = string.gsub( alphabet, checkletter, "-" )
+            alphabet = string.gsub(alphabet, checkletter, "-")
          end
       end
-      local options = string.gsub( alphabet, "-", "" )
+      local options = string.gsub(alphabet, "-", "")
       local number = crawl.random2(string.len(options)) + 1
       local letter = string.sub(options, number, number)
       return letter
@@ -243,9 +215,9 @@ NAME: nicolae_alphabet_shops
 TAGS: transparent allow_dup extra
 DEPTH: D:4-, Depths, Orc, Elf, Snake, Shoals
 WEIGHT: 5
-## We allow shop lists with no fewer than 5 item types, and place 5-15
-## items or place itemcount items, whichever is less, where itemcount is
-## the number of item types.
+# We allow shop lists with no fewer than 5 item types, and place 5-15
+# items or place itemcount items, whichever is less, where itemcount is
+# the number of item types.
 {{
 local letter = pickletter()
 local itemlist = shopcontents(letter)
@@ -254,10 +226,10 @@ maxcount = math.min(15, itemcount)
 -- random2 returns 0 for values <= 1
 local shopcount = 5 + crawl.random2(maxcount - 4)
 shopcount = math.min(itemcount, shopcount)
-inventory = util.join(" | ", itemlist)
+inventory = util.join(" | ", util.random_subset(itemlist, shopcount))
 tags("uniq_alphashops_" .. letter)
 kfeat("s = general shop name:" .. ownername(letter) .. shopname(letter) ..
-      " count:" .. shopcount .. " use_all ; " .. inventory )
+      " count:" .. shopcount .. " use_all ; " .. inventory)
 }}
 MAP
  ...
