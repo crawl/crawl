@@ -1259,6 +1259,8 @@ static void flip_colour(cchar_t &ch)
     attr_t attr = 0;
     short color_pair = 0;
     wchar_t *wch = nullptr;
+    short fg = COLOR_WHITE;
+    short bg = COLOR_BLACK;
 
     // Make sure to allocate enough space for the characters.
     int chars_to_allocate = getcchar(&ch, nullptr, &attr, &color_pair, nullptr);
@@ -1268,38 +1270,31 @@ static void flip_colour(cchar_t &ch)
     // Good to go. Grab the color / attr info.
     getcchar(&ch, wch, &attr, &color_pair, nullptr);
 
-    if (color_pair == 0)
-    {
-        // Cannot get meaningful color information from the default pair.
-        // So, invert the reverse flag and hope for the best.
-        if (attr & A_REVERSE)
-            attr &= ~A_REVERSE;
-        else
-            attr |= A_REVERSE;
-    }
+    if (color_pair != 0)
+        pair_content(color_pair, &fg, &bg);
     else
     {
-        // Have a color pair which can be manually reversed.
-        short fg = COLOR_WHITE;
-        short bg = COLOR_BLACK;
-        pair_content(color_pair, &fg, &bg);
-
-        // Check if these were brightened colours.
-        if (!curs_can_use_extended_colors())
-        {
-            if (attr & A_BOLD)
-                fg |= COLFLAG_CURSES_BRIGHTEN;
-            if (attr & A_BLINK)
-                bg |= COLFLAG_CURSES_BRIGHTEN;
-            attr &= ~(A_BOLD | A_BLINK);
-        }
-
-        // Perform the flip, preserving most attrs.
-        attr_t newattr;
-        curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
-            curses_color_to_internal_colour(fg));
-        attr |= newattr;
+        // Default pair; use the current default colors.
+        fg = translate_colour(FG_COL_DEFAULT);
+        bg = translate_colour(BG_COL_DEFAULT);
     }
+
+    // Adjust flags for low-color modes.
+    if (!curs_can_use_extended_colors())
+    {
+        // Check if these were brightened colours.
+        if (attr & A_BOLD)
+            fg |= COLFLAG_CURSES_BRIGHTEN;
+        if (attr & A_BLINK)
+            bg |= COLFLAG_CURSES_BRIGHTEN;
+        attr &= ~(A_BOLD | A_BLINK);
+    }
+
+    // Perform the flip, preserving most attrs.
+    attr_t newattr;
+    curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
+        curses_color_to_internal_colour(fg));
+    attr |= newattr;
 
     // Assign the new, reversed info and clean up.
     setcchar(&ch, wch, attr, color_pair, nullptr);
