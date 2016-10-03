@@ -5708,6 +5708,11 @@ void unmarshallMonster(reader &th, monster& m)
         {
             m.spells.push_back(slot);
         }
+        else if (slot.spell == SPELL_CORRUPT_BODY)
+        {
+            slot.spell = SPELL_CORRUPTING_PULSE;
+            m.spells.push_back(slot);
+        }
     }
 #endif
     }
