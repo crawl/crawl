@@ -3581,13 +3581,6 @@ bool player::clarity(bool calc_unid, bool items) const
 
     if (have_passive(passive_t::clarity))
         return true;
-	
-	//if have wudzu head slot taken
-    if ((you.props["wudzu_hat_picked_v"].get_int() == 1 
-	  && have_passive(passive_t::thorn_vestment))
-	  || (you.props["wudzu_hat_picked_r"].get_int() == 1 
-	  && have_passive(passive_t::thorn_regalia)))
-		return true;
 
         //if have wudzu head slot taken
     if ((you.props["wudzu_hat_picked_v"].get_int() == 1
@@ -6136,21 +6129,6 @@ int player::armour_class(bool /*calc_unid*/) const
 
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
-	
-	if (wudzu_body_ac_boost() > 0)
-		AC += wudzu_body_ac_boost() * 100;
-	
-	if (wudzu_cloak_ac_boost() > 0)
-		AC += wudzu_cloak_ac_boost() * 100;
-	
-	if (wudzu_hat_ac_boost() > 0)
-		AC += wudzu_hat_ac_boost() * 100;
-	
-	if (wudzu_gloves_ac_boost() > 0)
-		AC += wudzu_gloves_ac_boost() * 100;
-	
-	if (wudzu_boots_ac_boost() > 0)
-		AC += wudzu_boots_ac_boost() * 100;
 
     if (duration[DUR_SPWPN_PROTECTION])
         AC += 700;
