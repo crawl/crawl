@@ -126,18 +126,42 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
  *
- * Explicitly returns the default pair (0) if the pair would exceed COLOR_PAIRS.
+ * Strips brightening flags from the passed colors according to the game
+ * options. The current FG_COL_DEFAULT and BG_COL_DEFAULT values are used for
+ * determining the default pair.
  *
  * @param fg
  *  The flagged curses color index for the foreground.
  * @param bg
  *  The flagged curses color index for the background.
- * @param raw
- *  If true, never strip brightening flags.
- *  Otherwise, fg and bg may have their brightening flags stripped depending on
- *  cur_can_use_extended_colors().
+ *
+ * @return
+ *  Returns the pair index associated with the combination, or the default
+ *  pair, 0, if there is no associated pair.
  */
-static short curs_calc_pair_safe(short fg, short bg, bool raw = false);
+static short curs_calc_pair_safe(short fg, short bg);
+
+/**
+ * @brief Returns a curses color pair index for the passed fg/bg combo.
+ *
+ * Unlike curs_calc_pair_safe(short, short), the passed colors are treated
+ * as-is and default colors are passed explicitly.
+ *
+ * @param fg
+ *  The curses color index for the foreground.
+ * @param bg
+ *  The curses color index for the background.
+ * @param fg_default
+ *  The explicit curses color to consider the default foreground.
+ * @param bg_default
+ *  The explicit curses color to consider the default background.
+ *
+ * @return
+ *  Returns the pair index associated with the combination, or the default
+ *  pair, 0, if there is no associated pair.
+ */
+static short curs_calc_pair_safe(short fg, short bg, short fg_default,
+    short bg_default);
 
 /**
  * @brief Can extended colors be used directly instead of character attributes?
@@ -146,6 +170,19 @@ static short curs_calc_pair_safe(short fg, short bg, bool raw = false);
  *  True if extended colors can be used in lieu of attributes, false otherwise.
  */
 static bool curs_can_use_extended_colors();
+
+/**
+ * @brief Is there a curses pair for the passed color combination?
+ *
+ * @param fg
+ *  The raw curses foreground color.
+ * @param bg
+ *  The raw curses background color.
+ *
+ * @return
+ *  True if there is a valid curses color pair for the combo, false otherwise.
+ */
+static bool curs_color_combo_has_pair(short fg, short bg);
 
 /**
  * @brief Get a foreground color which is not the same as the background.
@@ -279,7 +316,7 @@ static short translate_colour(COLOURS col)
 /**
  * @internal
  * Attempt to exhaustively allocate color pairs, relying on
- * curs_calc_pair_safe() to order pairs and reject unwanted combinations.
+ * curs_calc_pair_safe() to order pairs.
  *
  * 256-color considerations:
  *  - For ncurses stable, need ncurses 6.0 or later for >256 pairs.
@@ -307,7 +344,7 @@ static void setup_colour_pairs()
     {
         for (short j = 0; j < num_colors; j++)
         {
-            short pair = curs_calc_pair_safe(j, i, true);
+            short pair = curs_calc_pair_safe(j, i, COLOR_WHITE, COLOR_BLACK);
             if (pair > 0)
                 init_pair(pair, j, i);
         }
@@ -614,9 +651,10 @@ void console_startup()
     meta(stdscr, TRUE);
     unixcurses_defkeys();
     start_color();
-    // Set up defaults before pairs on the off-chance it increases COLOR_PAIRS.
-    curs_set_default_colors();
+
     setup_colour_pairs();
+    // Since it may swap pairs, set default colors *after* setting up all pairs.
+    curs_set_default_colors();
 
     scrollok(stdscr, FALSE);
 
@@ -884,6 +922,30 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     attr |= flags;
 }
 
+// see declaration
+static short curs_calc_pair_safe(short fg, short bg)
+{
+    short fg_stripped = fg;
+    short bg_stripped = bg;
+    short fg_col_default_curses = curses_color_to_internal_colour(
+        FG_COL_DEFAULT);
+    short bg_col_default_curses = curses_color_to_internal_colour(
+        BG_COL_DEFAULT);
+
+    if (!curs_can_use_extended_colors())
+    {
+        // Strip out all the bits above the raw 3-bit colour definition
+        fg_stripped &= 0x07;
+        bg_stripped &= 0x07;
+    }
+
+    // Pass along to the more generic function for the heavy lifting.
+    short pair = curs_calc_pair_safe(fg_stripped, bg_stripped,
+        fg_col_default_curses, bg_col_default_curses);
+
+    return pair;
+}
+
 /**
  * @internal
  *  Always use the default pair, 0, for the current default (fg, bg) combo.
@@ -893,38 +955,24 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
  *    - Otherwise, use the color pair that would correspond to the default
  *      combo if the default combo was not the default.
  */
-static short curs_calc_pair_safe(short fg, short bg, bool raw)
+static short curs_calc_pair_safe(short fg, short bg, short fg_default,
+    short bg_default)
 {
     // Use something wider than short for the calculation in case of overflow.
     long pair = 0;
 
-    short fg_stripped = fg;
-    short bg_stripped = bg;
-    short fg_col_default_curses = curses_color_to_internal_colour(
-        FG_COL_DEFAULT);
-    short bg_col_default_curses = curses_color_to_internal_colour(
-        BG_COL_DEFAULT);
-
-    if (!raw && !curs_can_use_extended_colors())
-    {
-        // Strip out all the bits above the raw 3-bit colour definition
-        fg_stripped &= 0x07;
-        bg_stripped &= 0x07;
-    }
-
-    if (fg_stripped == fg_col_default_curses
-        && bg_stripped == bg_col_default_curses)
-    {
-        // This pair is the current default.
+    if (fg == fg_default && bg == bg_default)
         pair = 0;
-    }
     else
     {
-        // Remap the default curses default pair, if necessary.
-        if (fg_stripped == COLOR_WHITE && bg_stripped == COLOR_BLACK)
+        // Remap the *default* default curses pair as necessary.
+        short fg_mapped = fg;
+        short bg_mapped = bg;
+
+        if (fg == COLOR_WHITE && bg == COLOR_BLACK)
         {
-            fg_stripped = fg_col_default_curses;
-            bg_stripped = bg_col_default_curses;
+            fg_mapped = fg_default;
+            bg_mapped = bg_default;
         }
 
         // Work around the *default* default combination hole.
@@ -932,13 +980,13 @@ static short curs_calc_pair_safe(short fg, short bg, bool raw)
         const short default_color_hole = 1 + COLOR_BLACK * num_colors
             + COLOR_WHITE;
 
-        // Combine to get the actual pair index, starting from 1.
-        pair = 1 + bg_stripped * num_colors + fg_stripped;
+        // Calculate the pair index, starting from 1.
+        pair = 1 + bg_mapped * num_colors + fg_mapped;
         if (pair > default_color_hole)
             pair--;
     }
 
-    // Last, guard against overflow and bogus input.
+    // Last, validate the pair. Guard against overflow and bogus input.
     if (pair > COLOR_PAIRS || pair < 0)
         pair = 0;
 
@@ -949,6 +997,25 @@ static short curs_calc_pair_safe(short fg, short bg, bool raw)
 static bool curs_can_use_extended_colors()
 {
     return Options.allow_extended_colours && COLORS >= NUM_TERM_COLOURS;
+}
+
+// see declaration
+static bool curs_color_combo_has_pair(short fg, short bg)
+{
+    short fg_col_curses = translate_colour(FG_COL_DEFAULT);
+    short bg_col_curses = translate_colour(BG_COL_DEFAULT);
+
+    bool has_pair = false;
+
+    if (curs_palette_size() > 0)
+    {
+        if (fg == fg_col_curses && bg == bg_col_curses)
+            has_pair = true;
+        else
+            has_pair = curs_calc_pair_safe(fg, bg, COLOR_WHITE, COLOR_BLACK);
+    }
+
+    return has_pair;
 }
 
 // see declaration
@@ -1104,21 +1171,12 @@ static void curs_set_default_colors()
             default_bg = failsafe_bg;
     }
 
-    // Deny default background colours which can't be indexed.
-    FG_COL_DEFAULT = failsafe_fg;
-    BG_COL_DEFAULT = failsafe_bg;
-
-    if (curs_calc_pair_safe(curs_palette_size() - 1,
-        translate_colour(default_bg)) == 0)
+    // Deny default background colours which can't pair with all foregrounds.
+    if (!curs_color_combo_has_pair(curs_palette_size() - 1,
+        translate_colour(default_bg)))
     {
-        // Either we can't index all combinations with that background or
-        // we're already using the failsafe pair.
-        default_fg = failsafe_fg;
         default_bg = failsafe_bg;
     }
-
-    FG_COL_DEFAULT = default_fg_prev;
-    BG_COL_DEFAULT = default_bg_prev;
 
     // Assume new default colors.
     if (curs_palette_size() == 0)
@@ -1128,7 +1186,6 @@ static void curs_set_default_colors()
         default_colors_loaded = assume_default_colors(
             translate_colour(default_fg), translate_colour(default_bg));
     }
-
 #endif
 
     // Check if a failsafe is needed.
@@ -1139,36 +1196,27 @@ static void curs_set_default_colors()
     }
 
     // Store the validated default colors.
+    // The new default color pair is now in pair 0.
     FG_COL_DEFAULT = default_fg;
     BG_COL_DEFAULT = default_bg;
 
-    // The new default color pair is now in pair 0.
+    // Restore the previous default color pair.
+    short default_fg_prev_curses = translate_colour(default_fg_prev);
+    short default_bg_prev_curses = translate_colour(default_bg_prev);
+    short prev_default_pair = curs_calc_pair_safe(default_fg_prev_curses,
+        default_bg_prev_curses, COLOR_WHITE, COLOR_BLACK);
+    if (prev_default_pair != 0)
+    {
+        init_pair(prev_default_pair, default_fg_prev_curses,
+            default_bg_prev_curses);
+    }
+
     // Make sure the *default* default color pair has a home.
-    short fg_col_default_curses = translate_colour(FG_COL_DEFAULT);
-    short bg_col_default_curses = translate_colour(BG_COL_DEFAULT);
-    if (!(fg_col_default_curses == COLOR_WHITE
-        && bg_col_default_curses == COLOR_BLACK))
-    {
-        init_pair(curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK), COLOR_WHITE,
-            COLOR_BLACK);
-    }
-
-    // Restore the previous default color pair to normal.
-    if (!(default_fg == default_fg_prev && default_bg == default_bg_prev))
-    {
-        short default_fg_prev_curses = translate_colour(default_fg_prev);
-        short default_bg_prev_curses = translate_colour(default_bg_prev);
-        // ... but not if it was the *default* default pair.
-        if (!(default_fg_prev_curses == COLOR_WHITE
-            && default_bg_prev_curses == COLOR_BLACK))
-        {
-            init_pair(
-                curs_calc_pair_safe(default_fg_prev_curses,
-                    default_bg_prev_curses, true), default_fg_prev_curses,
-                default_bg_prev_curses);
-        }
-    }
-
+    short new_default_default_pair = curs_calc_pair_safe(COLOR_WHITE,
+        COLOR_BLACK, translate_colour(default_fg),
+        translate_colour(default_bg));
+    if (new_default_default_pair != 0)
+        init_pair(new_default_default_pair, COLOR_WHITE, COLOR_BLACK);
 }
 
 // see declaration
@@ -1274,7 +1322,6 @@ static void flip_colour(cchar_t &ch)
     wchar_t *wch = nullptr;
     short fg = COLOR_WHITE;
     short bg = COLOR_BLACK;
-    bool clear_reverse_flag = false;
 
     // Make sure to allocate enough space for the characters.
     int chars_to_allocate = getcchar(&ch, nullptr, &attr, &color_pair, nullptr);
@@ -1293,7 +1340,9 @@ static void flip_colour(cchar_t &ch)
         bg = translate_colour(BG_COL_DEFAULT);
     }
 
-    // Adjust flags for low-color modes.
+    bool need_attribute_only_flip = !curs_color_combo_has_pair(bg, fg);
+
+    // Adjust brightness flags for low-color modes.
     if (!curs_can_use_extended_colors())
     {
         // Check if these were brightened colours.
@@ -1302,19 +1351,41 @@ static void flip_colour(cchar_t &ch)
         if (attr & A_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
         attr &= ~(A_BOLD | A_BLINK);
-
-        // Handle already-reversed monochrome glyphs.
-        if (curs_palette_size() == 0 && (attr & A_REVERSE))
-            clear_reverse_flag = true;
     }
 
-    // Perform the flip, preserving most attrs.
-    attr_t newattr;
-    curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
-        curses_color_to_internal_colour(fg));
-    attr |= newattr;
-    if (clear_reverse_flag)
-        attr &= ~A_REVERSE;
+    if (!need_attribute_only_flip)
+    {
+        // Perform a flip using the inverse color pair.
+        attr_t newattr;
+        curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
+            curses_color_to_internal_colour(fg));
+        attr |= newattr;
+    }
+    else
+    {
+        // The best we can do is a purely attribute-based flip.
+
+        // Swap potential brightness flags.
+        if (!curs_can_use_extended_colors())
+        {
+            if ((fg & COLFLAG_CURSES_BRIGHTEN)
+                && !(bg & COLFLAG_CURSES_BRIGHTEN))
+            {
+                attr |= A_BLINK;
+            }
+            else if ((bg & COLFLAG_CURSES_BRIGHTEN)
+                && !(fg & COLFLAG_CURSES_BRIGHTEN))
+            {
+                attr |= A_BOLD;
+            }
+        }
+
+        // Toggle the reverse video bit.
+        if (attr & A_REVERSE)
+            attr &= ~A_REVERSE;
+        else
+            attr |= A_REVERSE;
+    }
 
     // Assign the new, reversed info and clean up.
     setcchar(&ch, wch, attr, color_pair, nullptr);
