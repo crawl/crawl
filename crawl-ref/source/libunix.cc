@@ -1071,15 +1071,16 @@ static short curs_palette_size()
  * There are ncurses-specific extensions to change the default color pair
  * from COLOR_WHITE on COLOR_BLACK.
  *
- * However, use_default_colors() alone is dangerous to use for the program.
+ * The use_default_colors() function is dangerous to use for the program,
+ * unless it is running on a monochrome terminal.
  *
  * The color_content() function cannot be used on a default color, and
  * use_default_colors() may or may not be matched with an existing color in the
- * game's palette. So, there's a very likely chance of a color collision which
+ * game's palette. There's a very likely chance of a color collision which
  * cannot be avoided programmatically.
  *
- * This leaves the assume_default_colors() function using a manually-specified
- * background_colour option.
+ * So, use the safer assume_default_colors() function with manually-defined
+ * default colors for color terminals.
  */
 static void curs_set_default_colors()
 {
@@ -1102,35 +1103,32 @@ static void curs_set_default_colors()
         if (is_high_colour(default_bg))
             default_bg = failsafe_bg;
     }
-    else
+
+    // Deny default background colours which can't be indexed.
+    FG_COL_DEFAULT = failsafe_fg;
+    BG_COL_DEFAULT = failsafe_bg;
+
+    if (curs_calc_pair_safe(curs_palette_size() - 1,
+        translate_colour(default_bg)) == 0)
     {
-        // Deny default background colours which can't be indexed.
-        short default_fg_curses = translate_colour(default_fg);
-        short default_bg_curses = translate_colour(default_bg);
-
-        if (!(default_fg_curses == COLOR_BLACK
-            && default_bg_curses == COLOR_WHITE))
-        {
-            FG_COL_DEFAULT = failsafe_fg;
-            BG_COL_DEFAULT = failsafe_bg;
-
-            if (!curs_calc_pair_safe(curs_palette_size() - 1,
-                default_bg_curses))
-            {
-                // Can't index all combinations with that background. Denied.
-                default_fg = failsafe_fg;
-                default_bg = failsafe_bg;
-            }
-
-            FG_COL_DEFAULT = default_fg_prev;
-            BG_COL_DEFAULT = default_bg_prev;
-        }
+        // Either we can't index all combinations with that background or
+        // we're already using the failsafe pair.
+        default_fg = failsafe_fg;
+        default_bg = failsafe_bg;
     }
 
+    FG_COL_DEFAULT = default_fg_prev;
+    BG_COL_DEFAULT = default_bg_prev;
+
     // Assume new default colors.
-    use_default_colors();
-    default_colors_loaded = assume_default_colors(translate_colour(default_fg),
-        translate_colour(default_bg));
+    if (curs_palette_size() == 0)
+        default_colors_loaded = use_default_colors();
+    else
+    {
+        default_colors_loaded = assume_default_colors(
+            translate_colour(default_fg), translate_colour(default_bg));
+    }
+
 #endif
 
     // Check if a failsafe is needed.
