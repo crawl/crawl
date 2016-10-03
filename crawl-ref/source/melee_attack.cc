@@ -2807,19 +2807,10 @@ void melee_attack::mons_apply_attack_flavour()
             defender->poison(attacker, dmg);
         }
 
-        // In sum 1/9 chance to paralyse, 5/9 chance to slow, 3/9 nothing
-        const bool strong_result = one_chance_in(6);
-
-        if (strong_result
-            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
-        {
+        if (defender->res_poison() <= 0 && one_chance_in(12))
             defender->paralyse(attacker, roll_dice(1, 3));
-        }
-        else if (strong_result
-                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
-        {
+        else if (defender->res_poison() <= 0 || coinflip())
             defender->slow_down(attacker, roll_dice(1, 3));
-        }
 
         break;
     }
