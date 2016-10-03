@@ -3090,6 +3090,17 @@ static const struct spell_desc spelldata[] =
 
 #if TAG_MAJOR_VERSION == 34
 {
+    SPELL_CORRUPT_BODY, "Corrupt Body",
+    SPTYP_TRANSMUTATION | SPTYP_HEXES,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_NEEDS_TRACER,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    3, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_REARRANGE_PIECES, "Rearrange the Pieces",
     SPTYP_HEXES,
     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_CHAOTIC,
