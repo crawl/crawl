@@ -2499,6 +2499,26 @@ MAP
 ...
 ENDMAP
 
+NAME:   doesnt_xom_only_xom
+TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
+KFEAT:  _ = altar_xom
+KFEAT:  C = C mimic
+MAP
+xxxxxxxxxxx
+x.G.G.G.G.x
+xGC..C..CGx
+x.........x
+x.........x
+xG.......Gx
+x.C.._..C.x
+xG.......Gx
+xxxx...xxxx
+   x...x
+   x...x
+   xG.Gx
+   xx+xx
+ENDMAP
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_generic

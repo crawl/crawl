@@ -1559,6 +1559,34 @@ MAP
  ...""""A""""...
 ENDMAP
 
+NAME:   doesnt_abyss_rune_brain_food
+TAGS:   abyss_rune unrand patrolling no_pool_fixup
+MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   starcursed mass
+KITEM:  O = abyssal rune of Zot
+COLOUR: n = lightmagenta
+NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
+SUBST:  l : lw
+{{
+dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+                           'troll corpse / ogre corpse')
+}}
+MAP
+  cccnccc
+ cc-nOn-cc
+ c.--n--.c
+cc.-n-n-.cc
+c---...---c
+nll-...-lln
+n3l-...-l3n
+nll-...-lln
+n---...---n
+nn.......nn
+ nn.....nn
+  nn...nn
+ENDMAP
+
+
 ###############################################################################
 # Abyss Exit Vaults
 # Note: Don't tag your abyss exit with allow_dup unless it's small and

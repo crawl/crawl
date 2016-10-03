@@ -2241,3 +2241,22 @@ xxxxxxxwwwxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:    doesnt_quadruple_sword
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:13-
+ORIENT:  north
+MONS:    dancing weapon ; long sword
+ITEM:    double sword, triple sword
+KPROP:   .* = bloody
+NSUBST:  . = 4:1 / 2=1.. / 1:d / 1:e / 1:f / 4=ff.
+SUBST:   c : cbxv
+: dgn.delayed_decay(_G, 'f', 'wizard corpse')
+MAP
+cccccccccc
+c.**..**.c
+c........c
+c........c
+c........c
+cccc==cccc
+ENDMAP
