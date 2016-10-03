@@ -813,6 +813,10 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
         // but various termcaps may disagree (in whole or in part)
         if (bg_curses & COLFLAG_CURSES_BRIGHTEN)
             flags |= A_BLINK;
+
+        // Do the best we can for monochrome terminals.
+        if (curs_palette_size() == 0 && bg_curses != COLOR_BLACK)
+            flags |= A_REVERSE;
     }
 
     // Got everything we need -- write out the results.
@@ -867,7 +871,16 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     else if (bg_mod == BG_COL_DEFAULT)
         bg_mod = BLACK;
 
+    // Done with color mapping; get the resulting attributes.
     curs_attr(attr, color_pair, fg_mod, bg_mod);
+
+    // Negate double-reversals.
+    if ((flags & A_REVERSE) && (attr & A_REVERSE))
+    {
+        attr &= ~A_REVERSE;
+        flags &= ~A_REVERSE;
+    }
+
     attr |= flags;
 }
 
@@ -1047,6 +1060,8 @@ static short curs_palette_size()
 
     if (palette_size > SHRT_MAX)
         palette_size = SHRT_MAX;
+    else if (palette_size < 8)
+        palette_size = 0;
 
     return palette_size;
 }
@@ -1261,6 +1276,7 @@ static void flip_colour(cchar_t &ch)
     wchar_t *wch = nullptr;
     short fg = COLOR_WHITE;
     short bg = COLOR_BLACK;
+    bool clear_reverse_flag = false;
 
     // Make sure to allocate enough space for the characters.
     int chars_to_allocate = getcchar(&ch, nullptr, &attr, &color_pair, nullptr);
@@ -1288,6 +1304,10 @@ static void flip_colour(cchar_t &ch)
         if (attr & A_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
         attr &= ~(A_BOLD | A_BLINK);
+
+        // Handle already-reversed monochrome glyphs.
+        if (curs_palette_size() == 0 && (attr & A_REVERSE))
+            clear_reverse_flag = true;
     }
 
     // Perform the flip, preserving most attrs.
@@ -1295,6 +1315,8 @@ static void flip_colour(cchar_t &ch)
     curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
         curses_color_to_internal_colour(fg));
     attr |= newattr;
+    if (clear_reverse_flag)
+        attr &= ~A_REVERSE;
 
     // Assign the new, reversed info and clean up.
     setcchar(&ch, wch, attr, color_pair, nullptr);
