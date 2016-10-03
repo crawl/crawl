@@ -6130,6 +6130,21 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
+        if (wudzu_body_ac_boost() > 0)
+                AC += wudzu_body_ac_boost() * 100;
+
+        if (wudzu_cloak_ac_boost() > 0)
+                AC += wudzu_cloak_ac_boost() * 100;
+
+        if (wudzu_hat_ac_boost() > 0)
+                AC += wudzu_hat_ac_boost() * 100;
+
+        if (wudzu_gloves_ac_boost() > 0)
+                AC += wudzu_gloves_ac_boost() * 100;
+
+        if (wudzu_boots_ac_boost() > 0)
+                AC += wudzu_boots_ac_boost() * 100;
+
     if (duration[DUR_SPWPN_PROTECTION])
         AC += 700;
 
