@@ -1287,7 +1287,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<tiles> or by <w>left-clicking</w> on it</tiles>"
                 ". However, it is usually best to conserve rations and fruit, "
                 "since raw meat from corpses is generally plentiful.";
-            cmd.push_back(CMD_DISPLAY_INVENTORY); // ????
         break;
 
     case HINT_SEEN_CARRION:
@@ -1401,7 +1400,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "your inventory, takes up no space in your inventory, weighs "
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and is appreciated by certain gods.";
-            cmd.push_back(CMD_WIELD_WEAPON); /// ???
         break;
 
     case HINT_SEEN_STAIRS:
@@ -2729,6 +2727,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         string output = text.str();
         if (!cmd.empty())
             insert_commands(output, cmd);
+        else
+            output = untag_tiles_console(output); // also in insert_commands
         mprf(MSGCH_TUTORIAL, "%s", output.c_str());
 
         stop_running();
