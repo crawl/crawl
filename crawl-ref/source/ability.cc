@@ -2023,7 +2023,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_EVOKE_TURN_INVISIBLE:     // ring, cloaks, randarts
+    case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())
             return SPRET_ABORT;
         fail_check();

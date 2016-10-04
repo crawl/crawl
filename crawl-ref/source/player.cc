@@ -4159,7 +4159,7 @@ int get_contamination_level()
     if (glow > 5000)
         return 3;
     if (glow > 3500) // An indicator that using another contamination-causing
-        return 2;    // ability is likely to cause yellow glow.
+        return 2;    // ability might risk causing yellow glow.
     if (glow > 0)
         return 1;
 
@@ -4768,7 +4768,7 @@ bool haste_player(int turns, bool rageext)
     else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(1000, true); // always deliberate
+        contaminate_player(750 + random2(500), true); // always deliberate
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
