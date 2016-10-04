@@ -68,7 +68,7 @@ spret_type cast_disjunction(int pow, bool fail)
     you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
-    contaminate_player(1000, true);
+    contaminate_player(750 + random2(500), true);
     disjunction();
     return SPRET_SUCCESS;
 }
@@ -312,7 +312,7 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target, false);
     // Controlling teleport contaminates the player. -- bwr
-    contaminate_player(1000, true);
+    contaminate_player(750 + random2(500), true);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
