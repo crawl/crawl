@@ -3169,13 +3169,6 @@ int check_stealth()
 
     int stealth = you.dex() * 3;
 
-    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
-        && !you.airborne())
-    {
-        stealth -= 50; // klack klack klack go the blade paws
-        // this is an absurd special case but also it's really funny so w/e
-    }
-
     stealth += you.skill(SK_STEALTH, 15);
 
     if (you.confused())
@@ -3194,6 +3187,9 @@ int check_stealth()
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
         stealth -= penalty;
+
+        const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
+        stealth += pips * STEALTH_PIP;
     }
 
     stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
@@ -3201,18 +3197,36 @@ int check_stealth()
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
     stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (body_armour)
-    {
-        const int pips = armour_type_prop(body_armour->sub_type, ARMF_STEALTH);
-        stealth += pips * STEALTH_PIP;
-    }
-
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 
     if (you.duration[DUR_AGILITY])
         stealth += STEALTH_PIP;
+
+    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
+        && !you.airborne())
+    {
+        stealth -= STEALTH_PIP; // klack klack klack go the blade paws
+        // this is an absurd special case but also it's really funny so w/e
+    }
+
+    // Mutations.
+    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += (STEALTH_PIP / 2)
+                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
+    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
+    if (how_transparent)
+        stealth += 15 * (how_transparent);
+
+    // Radiating silence is the negative complement of shouting all the
+    // time... a sudden change from background noise to no noise is going
+    // to clue anything in to the fact that something is very wrong...
+    // a personal silence spell would naturally be different, but this
+    // silence radiates for a distance and prevents monster spellcasting,
+    // which pretty much gives away the stealth game.
+    if (you.duration[DUR_SILENCE])
+        stealth -= STEALTH_PIP;
 
     if (!you.airborne())
     {
@@ -3224,34 +3238,13 @@ int check_stealth()
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
-
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += STEALTH_PIP;
-
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
-
         else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
             stealth += 20;  // paws
     }
-
-    // Radiating silence is the negative complement of shouting all the
-    // time... a sudden change from background noise to no noise is going
-    // to clue anything in to the fact that something is very wrong...
-    // a personal silence spell would naturally be different, but this
-    // silence radiates for a distance and prevents monster spellcasting,
-    // which pretty much gives away the stealth game.
-    if (you.duration[DUR_SILENCE])
-        stealth -= STEALTH_PIP;
-
-    // Mutations.
-    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
-    stealth += (STEALTH_PIP / 2)
-                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
-    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
-    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
-    if (how_transparent)
-        stealth += 15 * (how_transparent);
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
