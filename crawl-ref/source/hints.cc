@@ -2573,7 +2573,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "some powerful magics, like invisibility or haste, or from "
                 "miscasting spells. ";
 
-        if (get_contamination_level() < 2)
+        if (!player_severe_contamination())
         {
             text << "As long as the status only shows in grey nothing will "
                     "actually happen as a result of it, but as you continue "

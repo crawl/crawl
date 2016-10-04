@@ -4149,19 +4149,26 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60000)
-        return glow / 20000 + 3;
+        return glow / 20000 + 4;
     if (glow > 40000)
-        return 5;
+        return 6;
     if (glow > 25000)
-        return 4;
+        return 5;
     if (glow > 15000)
-        return 3;
+        return 4;
     if (glow > 5000)
-        return 2;
+        return 3;
+    if (glow > 3500) // An indicator that using another contamination-causing
+        return 2;    // ability is likely to cause yellow glow.
     if (glow > 0)
         return 1;
 
     return 0;
+}
+
+bool player_severe_contamination()
+{
+    return get_contamination_level() >= SEVERE_CONTAM_LEVEL;
 }
 
 /**
@@ -4180,6 +4187,7 @@ string describe_contamination(int cont)
     {
         "",
         "You are very lightly contaminated with residual magic.",
+        "You are lightly contaminated with residual magic.",
         "You are contaminated with residual magic.",
         "You are heavily infused with residual magic.",
         "You are practically glowing with residual magic!",
@@ -4192,15 +4200,15 @@ string describe_contamination(int cont)
                                    ARRAYSZ(contam_descriptions) - 1)];
 }
 
-// controlled is true if the player actively did something to cause
-// contamination (such as drink a known potion of resistance),
-// status_only is true only for the status output
+// Controlled is true if the player actively did something to cause
+// contamination.
 void contaminate_player(int change, bool controlled, bool msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
+    bool was_glowing = player_severe_contamination();
     int new_level  = 0;
 
     if (change > 0 && player_equip_unrand(UNRAND_ETHERIC_CAGE))
@@ -4214,23 +4222,26 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.magic_contamination != old_amount)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
-    if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
-        mpr(describe_contamination(new_level));
-    else if (msg && new_level != old_level)
+    if (new_level > old_level)
+    {
+        if (msg)
+        {
+            mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
+                 "%s", describe_contamination(new_level).c_str());
+        }
+        xom_is_stimulated(new_level * 25);
+    }
+    else if (msg && new_level < old_level)
     {
         if (old_level == 1 && new_level == 0)
             mpr("Your magical contamination has completely faded away.");
-        else
+        else if (player_severe_contamination() || was_glowing)
         {
-            mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-                 "You feel %s contaminated with magical energies.",
-                 (change > 0) ? "more" : "less");
+            mprf(MSGCH_RECOVERY,
+                 "You feel less contaminated with magical energies.");
         }
 
-        if (change > 0)
-            xom_is_stimulated(new_level * 25);
-
-        if (old_level > 1 && new_level <= 1 && you.invisible())
+        if (!player_severe_contamination() && was_glowing && you.invisible())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
@@ -4244,11 +4255,11 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (old_level < 2 && new_level >= 2)
+        if (!was_glowing && player_severe_contamination())
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
-        else if (controlled && change > 0 && old_level > 1)
+        else if (controlled && change > 0 && was_glowing)
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
 }
