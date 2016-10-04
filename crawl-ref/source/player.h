@@ -63,7 +63,7 @@ static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 class targetter;
 class Delay;
 
-int check_stealth();
+int player_stealth();
 
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
@@ -774,7 +774,7 @@ public:
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
-    int stealth() const override     { return check_stealth(); }
+    int stealth() const override     { return player_stealth(); }
 
     bool shielded() const override;
     int shield_bonus() const override;

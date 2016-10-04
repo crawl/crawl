@@ -1880,7 +1880,7 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth  ";
-    const int stealth_num = _stealth_breakpoint(check_stealth());
+    const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
     for (int i = 0; i < 10 - stealth_num; i++)

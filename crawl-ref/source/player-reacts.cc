@@ -997,7 +997,7 @@ void player_reacts()
     search_around();
 
     //XXX: does this _need_ to be calculated up here?
-    const int stealth = check_stealth();
+    const int stealth = player_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
