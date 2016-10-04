@@ -1043,8 +1043,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals its "
-                "wielder somewhat when it strikes a living foe.";
+            description += "It inflicts no extra harm, but heals "
+                "its wielder when it wounds a living foe.";
             break;
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
