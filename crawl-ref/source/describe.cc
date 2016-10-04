@@ -2956,7 +2956,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_FIRE:            return "deal extra fire damage";
     case AF_HUNGER:          return "cause hungering";
     case AF_MUTATE:          return "cause mutations";
-    case AF_PARALYSE:        return "poison and cause paralysis or slowing";
+    case AF_POISON_PARALYSE: return "poison and cause paralysis or slowing";
     case AF_POISON:          return "cause poisoning";
     case AF_POISON_STRONG:   return "cause strong poisoning";
     case AF_ROT:             return "cause rotting";
