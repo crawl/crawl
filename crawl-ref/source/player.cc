@@ -3228,6 +3228,15 @@ int check_stealth()
     if (you.duration[DUR_SILENCE])
         stealth -= STEALTH_PIP;
 
+    // Thirsty vampires are stealthier.
+    if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state <= HS_STARVING || you.form == TRAN_BAT)
+            stealth += STEALTH_PIP * 2;
+        else if (you.hunger_state <= HS_HUNGRY)
+            stealth += STEALTH_PIP;
+    }
+
     if (!you.airborne())
     {
         if (you.in_water())
