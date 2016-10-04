@@ -832,6 +832,8 @@ static inline unsigned get_brand(int col)
 static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
 {
     attr_t flags = 0;
+    short temp_color_pair = 0;
+    bool monochrome_output_requested = curs_palette_size() == 0;
 
     // Convert over to curses colors.
     short fg_curses = translate_colour(fg);
@@ -839,6 +841,19 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
 
     // Resolve fg/bg color conflicts.
     fg_curses = curs_get_fg_color_non_identical(fg_curses, bg_curses);
+
+    if (!monochrome_output_requested)
+    {
+        // Grab the color pair.
+        temp_color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
+
+        // Request decolorize if the pair doesn't actually exist.
+        if (temp_color_pair == 0
+            && !curs_color_combo_has_pair(fg_curses, bg_curses))
+        {
+            monochrome_output_requested = true;
+        }
+    }
 
     if (!curs_can_use_extended_colors())
     {
@@ -851,14 +866,21 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
         // but various termcaps may disagree (in whole or in part)
         if (bg_curses & COLFLAG_CURSES_BRIGHTEN)
             flags |= A_BLINK;
+    }
 
-        // Do the best we can for monochrome terminals.
-        if (curs_palette_size() == 0 && bg_curses != COLOR_BLACK)
+    if (monochrome_output_requested)
+    {
+        // Decolorize the output if necessary.
+        if (curs_palette_size() != 0)
+            temp_color_pair = curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK);
+
+        // Do the best we can for backgrounds with monochrome output.
+        if (bg_curses != COLOR_BLACK)
             flags |= A_REVERSE;
     }
 
     // Got everything we need -- write out the results.
-    color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
+    color_pair = temp_color_pair;
     attr = flags;
 }
 
