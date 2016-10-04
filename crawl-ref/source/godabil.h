@@ -44,7 +44,6 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
 #define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
-#define USKAYAW_DID_DANCE_ACTION "uskayaw_did_dance_action"
 #define USKAYAW_NUM_MONSTERS_HURT "uskayaw_num_monsters_hurt"
 #define USKAYAW_MONSTER_HURT_VALUE "uskayaw_monster_hurt_value"
 #define USKAYAW_AUT_SINCE_PIETY_GAIN "uskayaw_aut_since_piety_gain"
