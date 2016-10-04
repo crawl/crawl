@@ -797,8 +797,8 @@ static void _magic_contamination_effects()
 static void _handle_magic_contamination(int /*time_delta*/)
 {
     // [ds] Move magic contamination effects closer to b26 again.
-    const bool glow_effect = get_contamination_level() > 1
-            && x_chance_in_y(you.magic_contamination, 12000);
+    const bool glow_effect = player_severe_contamination()
+                             && x_chance_in_y(you.magic_contamination, 12000);
 
     if (glow_effect)
     {

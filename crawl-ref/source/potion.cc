@@ -503,7 +503,7 @@ public:
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed())
                 afflictions.push_back("halo");
-            if (get_contamination_level() > 1)
+            if (player_severe_contamination())
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
                 afflictions.push_back("corona");
