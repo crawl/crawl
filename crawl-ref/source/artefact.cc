@@ -504,7 +504,9 @@ static void _add_randart_weapon_brand(const item_def &item,
             13, SPWPN_VAMPIRISM,
             13, SPWPN_PAIN,
             13, SPWPN_ANTIMAGIC,
-             3, SPWPN_DISTORTION);
+            13, SPWPN_PROTECTION,
+             3, SPWPN_DISTORTION,
+             3, SPWPN_CHAOS);
     }
 
     // no brand = magic flag to reject and retry
