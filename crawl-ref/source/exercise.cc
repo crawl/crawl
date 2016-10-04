@@ -12,7 +12,6 @@
 
 #include "ability.h"
 #include "fight.h"
-#include "godabil.h" // for USKAYAW_DID_DANCE_ACTION
 #include "itemprop.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -20,9 +19,6 @@
 /// Skill training for when the player casts or miscasts a spell.
 void practise_casting(spell_type spell, bool success)
 {
-    if (success) // ???
-        you.props[USKAYAW_DID_DANCE_ACTION] = true;
-
     // (!success) reduces skill increase for miscast spells
     int workout = 0;
 
@@ -170,8 +166,6 @@ static void _practise_weapon_use(const item_def &weapon)
 /// Skill training when the player hits a monster in melee combat.
 void practise_hitting(const item_def *weapon)
 {
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
-
     if (!weapon)
     {
         exercise(SK_UNARMED_COMBAT, 1);
@@ -191,7 +185,6 @@ void practise_launching(const item_def &weapon)
 {
     if (coinflip()) // XXX: arbitrary; test and revise
         _practise_weapon_use(weapon);
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /// Skill training when the player throws a projectile at a monster.
@@ -200,7 +193,6 @@ void practise_throwing(missile_type mi_type)
     if (mi_type == MI_STONE && coinflip())
         return;
     exercise(SK_THROWING, 1);
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /// Skill training when the player stabs an vulnerable monster for extra dam.
@@ -228,7 +220,6 @@ void practise_using_ability(ability_type abil)
     const skill_type sk = abil_skill(abil);
     if (sk != SK_NONE)
         exercise(sk, abil_skill_weight(abil));
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /// Skill training when blocking or failing to block attacks with a shield.
@@ -258,12 +249,10 @@ void practise_evoking(int amount)
 {
     // XXX: degree determination is just passed in but should be done here.
     exercise(SK_EVOCATIONS, amount);
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }
 
 /// Skill training while using one of Nemelex's decks.
 void practise_using_deck()
 {
     exercise(SK_INVOCATIONS, 1);
-    you.props[USKAYAW_DID_DANCE_ACTION] = true;
 }

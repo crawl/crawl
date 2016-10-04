@@ -981,7 +981,8 @@ static like_map divine_likes[] =
     // GOD_USKAYAW
     {
         { DID_HURT_FOE, {
-            "you hurt your foes", true, 1, 1, 0, nullptr,
+            "you hurt your foes; however, effects that cause damage over "
+            "time do not interest Uskayaw", true, 1, 1, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 denom = 1;
