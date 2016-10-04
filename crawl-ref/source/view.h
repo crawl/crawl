@@ -8,11 +8,11 @@
 
 #include "defines.h"
 #include "options.h"
-#include "player.h" // check_stealth()
+#include "player.h" // player_stealth()
 #include "viewgeom.h"
 
 bool mon_enemies_around(const monster* mons);
-void seen_monsters_react(int stealth = check_stealth());
+void seen_monsters_react(int stealth = player_stealth());
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,

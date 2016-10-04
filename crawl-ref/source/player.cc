@@ -3144,15 +3144,12 @@ void adjust_level(int diff, bool just_xp)
 /**
  * Get the player's current stealth value.
  *
- * XXX: rename this to something more reasonable
-
- *
  * (Keep in mind, while tweaking this function: the order in which stealth
  * modifiers are applied is significant!)
  *
  * @return  The player's current stealth value.
  */
-int check_stealth()
+int player_stealth()
 {
     ASSERT(!crawl_state.game_is_arena());
     // Extreme stealthiness can be enforced by wizmode stealth setting.
