@@ -21,15 +21,14 @@ two other ways:
  +5  exceptional aptitude
 
 There are four special values: HP, MP, Experience and Magic Resistance:
-- The HP value indicates the percentage of hit points gained per level,
-  100% being the Human standard.
+- The HP value indicates the percentage of hit points gained per experience
+  level, 100% being the Human standard.
 - The MP value indicates a fixed additive modifier to magic points.
 - The Experience value indicates how much experience has to be earned in
-  order to gain a new level. +1 is the Human standard, and all other
-  species (apart from Formicid, Halfling and Kobold) are slower. These
+  order to gain a new experience level, +1 being the Human standard. These
   values use the same scale as the skill aptitudes.
-- The Magic Resistance value indicates the improvement in resistance to
-  hostile enchantments per level, 3 being the Human standard.
+- The Magic Resistance value indicates resistance to hostile enchantments per
+  experience level, +3 being the Human standard.
 
 The abbreviations used for the skills are:
 
