@@ -313,8 +313,6 @@ struct player_debuff_effects
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
-    /// Whether there's any contam to be removed by a debuff.
-    bool contam;
 };
 
 /**
@@ -348,8 +346,6 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         // anything already at 1 aut, or flight/transform while <= 11 aut
         // that's probably not an actual problem
     }
-
-    buffs.contam = get_contamination_level() > 0;
 }
 
 /**
@@ -361,9 +357,8 @@ bool player_is_debuffable()
 {
     player_debuff_effects buffs;
     _dispellable_player_buffs(buffs);
-    return buffs.contam
-            || !buffs.durations.empty()
-            || !buffs.attributes.empty();
+    return !buffs.durations.empty()
+           || !buffs.attributes.empty();
 }
 
 /**
@@ -417,11 +412,6 @@ void debuff_player()
 
     if (need_msg)
         mprf(MSGCH_WARN, "Your magical effects are unravelling.");
-
-    const int old_contam_level = get_contamination_level();
-    contaminate_player(-1 * (1000 + random2(4000)));
-    if (old_contam_level && old_contam_level == get_contamination_level())
-        mpr("You feel slightly less contaminated with magical energies.");
 }
 
 
