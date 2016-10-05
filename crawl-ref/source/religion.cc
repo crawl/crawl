@@ -1434,7 +1434,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
     if (ancestor->weapon())
     {
         if (!ancestor_offlevel)
-            upgrade_hepliaklqana_weapon(*ancestor, *ancestor->weapon());
+            upgrade_hepliaklqana_weapon(ancestor->type, *ancestor->weapon());
 
         const weapon_type wpn = _hepliaklqana_weapon_type(ancestor->type, hd);
         const brand_type brand = _hepliaklqana_weapon_brand(ancestor->type, hd);
@@ -1528,22 +1528,22 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
  * Setup an ancestor's weapon after their class is chosen, when the player
  * levels up, or after they're resummoned (or initially created for wrath).
  *
- * @param[in]   ancestor      The ancestor for whom the weapon is intended.
+ * @param[in]   mtyp          The ancestor for whom the weapon is intended.
  * @param[out]  item          The item to be configured.
  * @param       notify        Whether messages should be printed when something
  *                            changes. (Weapon type or brand.)
  */
-void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item)
+void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
 {
-    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
-    if (ancestor.type == MONS_ANCESTOR)
+    ASSERT(mons_is_hepliaklqana_ancestor(mtyp));
+    if (mtyp == MONS_ANCESTOR)
         return; // bare-handed!
 
     item.base_type = OBJ_WEAPONS;
-    item.sub_type = _hepliaklqana_weapon_type(ancestor.type,
-                                              ancestor.get_experience_level());
-    item.brand = _hepliaklqana_weapon_brand(ancestor.type,
-                                            ancestor.get_experience_level());
+    item.sub_type = _hepliaklqana_weapon_type(mtyp,
+                                              _hepliaklqana_ally_hd());
+    item.brand = _hepliaklqana_weapon_brand(mtyp,
+                                            _hepliaklqana_ally_hd());
     item.plus = 0;
     item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
 }
