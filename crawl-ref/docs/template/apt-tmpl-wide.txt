@@ -27,7 +27,8 @@ There are four special values: HP, MP, Experience and Magic Resistance:
 - The Experience value indicates how much experience has to be earned in
   order to gain a new experience level, +1 being the Human standard. These
   values use the same scale as the skill aptitudes.
-- The Magic Resistance value indicates resistance to hostile enchantments per     experience level, +3 being the Human standard.
+- The Magic Resistance value indicates resistance to hostile enchantments per
+  experience level, +3 being the Human standard.
 
 The abbreviations used for the skills are:
 
