@@ -4514,7 +4514,10 @@ static void _mons_cast_spectral_orcs(monster* mons)
             }
 
             // give gear using the base type
-            give_item(orc, env.absdepth0, true, true);
+            const int lvl = env.absdepth0;
+            give_specific_item(orc, make_mons_weapon(orc->base_monster, lvl));
+            give_specific_item(orc, make_mons_armour(orc->base_monster, lvl));
+            // XXX: and a shield, for warlords...? (wasn't included before)
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
