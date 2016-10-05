@@ -2804,10 +2804,10 @@ void melee_attack::mons_apply_attack_flavour()
         // chance to resist with rPois.
         if (one_chance_in(6))
         {
-            if (!(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+            if (defender->res_poison() <= 0 || one_chance_in(3))
                 defender->paralyse(attacker, roll_dice(1, 3));
         }
-        else if (!(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        else if (defender->res_poison() <= 0 || one_chance_in(3))
             defender->slow_down(attacker, roll_dice(1, 3));
 
         break;
