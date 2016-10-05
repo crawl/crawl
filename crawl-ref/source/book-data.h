@@ -261,7 +261,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Wizardry
     SPELL_FORCE_LANCE,
     SPELL_AGONY,
-    SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
