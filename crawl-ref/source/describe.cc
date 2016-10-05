@@ -3623,18 +3623,24 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (in_good_standing(GOD_ZIN, 0))
     {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
-            inf.body << It << " is too strong to be recited to.";
-        else if (check >= -5)
-            inf.body << It << " may be too strong to be recited to.";
+        recite_counts retval;
+        monster *m = monster_at(mi.pos);
+        if (zin_check_recite_to_single_monster(m, retval) == RE_INELIGIBLE)
+            inf.body << "There is no point in reciting to " << it <<".";
         else
-            inf.body << It << " is weak enough to be recited to.";
-
-        if (you.wizard)
         {
-            inf.body << " (Recite power:" << zin_recite_power()
-                     << ", Hit dice:" << mi.hd << ")";
+            const int check = mi.hd - zin_recite_power();
+            if (check >= 0)
+                inf.body << It << " is too strong to be recited to.";
+            else if (check >= -5)
+                inf.body << It << " may be too strong to be recited to.";
+            else
+                inf.body << It << " is weak enough to be recited to.";
+            if (you.wizard)
+            {
+                inf.body << " (Recite power:" << zin_recite_power()
+                        << ", Hit dice:" << mi.hd << ")";
+            }
         }
         inf.body << "\n";
     }
