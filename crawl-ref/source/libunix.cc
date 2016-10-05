@@ -1312,23 +1312,12 @@ void gotoxy_sys(int x, int y)
     move(y - 1, x - 1);
 }
 
-typedef cchar_t char_info;
-static inline bool operator == (const cchar_t &a, const cchar_t &b)
-{
-    return a.attr == b.attr && *a.chars == *b.chars;
-}
-
-static inline char_info character_at(int y, int x)
+static inline cchar_t character_at(int y, int x)
 {
     cchar_t c;
     // (void) is to hush an incorrect clang warning.
     (void)mvin_wch(y, x, &c);
     return c;
-}
-
-static inline bool valid_char(const cchar_t &c)
-{
-    return *c.chars;
 }
 
 static inline void write_char_at(int y, int x, const cchar_t &ch)
@@ -1415,27 +1404,15 @@ static void flip_colour(cchar_t &ch)
         delete [] wch;
 }
 
-static char_info oldch, oldmangledch;
-static int faked_x = -1, faked_y;
-
 void fakecursorxy(int x, int y)
 {
-    if (valid_char(oldch) && faked_x != -1
-        && character_at(faked_y, faked_x) == oldmangledch)
-    {
-        if (faked_x != x - 1 || faked_y != y - 1)
-            write_char_at(faked_y, faked_x, oldch);
-        else
-            return;
-    }
+    int x_curses = x - 1;
+    int y_curses = y - 1;
 
-    char_info c = character_at(y - 1, x - 1);
-    oldch   = c;
-    faked_x = x - 1;
-    faked_y = y - 1;
+    cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
-    write_char_at(y - 1, x - 1, oldmangledch = c);
-    move(y - 1, x - 1);
+    write_char_at(y_curses, x_curses, c);
+    move(y_curses, x_curses);
 }
 
 int wherex()
