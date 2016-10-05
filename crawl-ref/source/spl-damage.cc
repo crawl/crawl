@@ -1504,7 +1504,7 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
     }, who->pos(), true, 8);
 
     if (who->is_player())
-        contaminate_player(750 + random2(1500));
+        contaminate_player(1000 + random2(500));
     return SPRET_SUCCESS;
 }
 
