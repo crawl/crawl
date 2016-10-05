@@ -4229,7 +4229,8 @@ void contaminate_player(int change, bool controlled, bool msg)
             mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
                  "%s", describe_contamination(new_level).c_str());
         }
-        xom_is_stimulated(new_level * 25);
+        if (player_severe_contamination())
+            xom_is_stimulated(new_level * 25);
     }
     else if (msg && new_level < old_level)
     {
