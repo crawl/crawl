@@ -8,6 +8,9 @@
 
 #include "enum.h"
 #include "itemprop-enum.h"
+#include "player.h"
+
+#define BRANCH_NOISE_AMOUNT 6
 
 enum branch_flag_type
 {
@@ -20,6 +23,13 @@ enum branch_flag_type
     BFLAG_DANGEROUS_END   = (1 << 4), // bottom level is more dangerous than normal
     BFLAG_SPOTTY          = (1 << 5), // Connect vaults with more open paths, not hallways.
     BFLAG_NO_SHAFTS       = (1 << 6), // Don't generate random shafts.
+};
+
+enum branch_noise_level
+{
+    BRANCH_NOISE_NORMAL,
+    BRANCH_NOISE_QUIET,
+    BRANCH_NOISE_LOUD,
 };
 
 struct Branch
@@ -46,7 +56,7 @@ struct Branch
     colour_t rock_colour;
     int travel_shortcut;         // Which key to press for travel.
     vector<rune_type> runes;      // Contained rune(s) (if any).
-    int ambient_noise;           // affects noise loudness and player stealth
+    branch_noise_level ambient_noise; // affects noise loudness
 };
 
 enum branch_iterator_type
@@ -93,7 +103,7 @@ level_id current_level_parent();
 branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);
 branch_type branch_by_shortname(const string &branch);
 
-int ambient_noise(branch_type branch = NUM_BRANCHES);
+int ambient_noise(branch_type branch = you.where_are_you);
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
@@ -101,6 +111,7 @@ bool branch_is_unfinished(branch_type branch);
 branch_type parent_branch(branch_type branch);
 int runes_for_branch(branch_type branch);
 
+string branch_noise_desc(branch_type br);
 string branch_rune_desc(branch_type br, bool remaining_only);
 branch_type rune_location(rune_type rune);
 #endif

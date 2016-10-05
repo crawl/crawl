@@ -1496,21 +1496,6 @@ greater mummy
 
 <mummy>
 %%%%
-greater naga
-
-“Then there have also come
- nagas from Lake Nabhasa,
- Vesali, and Tacchaka.
- Kambalas, Assataras,
- Payagas, and their kin.
- And from the River Yamuna
- comes the prestigious naga, Dhatarattha.
- The great naga Eravanna:
- He, too, has come
- to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
-     trans. Thanissaro Bhikkhu
-%%%%
 guardian golem
 
 “‘Listen Reb _Golem_,’ the old man said, wagging his finger. ‘Pay attention to
@@ -1963,6 +1948,21 @@ tell thee, O lady, that we are incapable of being seen by human beings.”
 naga mage
 
 <naga>
+%%%%
+nagaraja
+
+“Then there have also come
+ nagas from Lake Nabhasa,
+ Vesali, and Tacchaka.
+ Kambalas, Assataras,
+ Payagas, and their kin.
+ And from the River Yamuna
+ comes the prestigious naga, Dhatarattha.
+ The great naga Eravanna:
+ He, too, has come
+ to the forest meeting.”
+    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
+     trans. Thanissaro Bhikkhu
 %%%%
 naga warrior
 
@@ -2717,7 +2717,7 @@ smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
 %%%%
-greatsling
+fustibalus
 
 “Thrice whirling round his head
  The whistling thong, Mezentius took his aim.

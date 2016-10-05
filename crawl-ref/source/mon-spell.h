@@ -1107,7 +1107,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // Shared with greater naga.
+    // Shared with nagaraja.
     {  MST_NAGA_MAGE,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
@@ -1545,37 +1545,30 @@ static const mon_spellbook mspell_list[] =
     // ('6') Demonspawn.
     {  MST_DEMONSPAWN_WARMONGER,
       {
-       { SPELL_SAP_MAGIC, 16, MON_SPELL_PRIEST },
+       { SPELL_SAP_MAGIC, 18, MON_SPELL_PRIEST },
        { SPELL_HASTE_OTHER, 32, MON_SPELL_PRIEST },
       }
     },
 
     {  MST_DEMONSPAWN_BLOOD_SAINT,
       {
-       { SPELL_LEGENDARY_DESTRUCTION, 48, MON_SPELL_PRIEST },
+       { SPELL_LEGENDARY_DESTRUCTION, 40, MON_SPELL_PRIEST },
+       { SPELL_CALL_OF_CHAOS, 20, MON_SPELL_PRIEST },
       }
     },
 
     {  MST_DEMONSPAWN_CORRUPTER,
       {
-       { SPELL_PLANEREND, 32, MON_SPELL_PRIEST },
-       { SPELL_CORRUPT_BODY, 32, MON_SPELL_PRIEST },
+       { SPELL_PLANEREND, 40, MON_SPELL_PRIEST },
+       { SPELL_CORRUPTING_PULSE, 20, MON_SPELL_PRIEST },
       }
     },
 
     {  MST_DEMONSPAWN_BLACK_SUN,
       {
-       { SPELL_MALIGN_OFFERING, 13, MON_SPELL_PRIEST },
-       { SPELL_BOLT_OF_DRAINING, 13, MON_SPELL_PRIEST },
-       { SPELL_DISPEL_UNDEAD, 13, MON_SPELL_PRIEST },
-       { SPELL_BLACK_MARK, 26, MON_SPELL_PRIEST },
-      }
-    },
-
-    {  MST_DEMONSPAWN_CHAOS_CHAMPION,
-      {
-       { SPELL_RANDOM_BOLT, 32, MON_SPELL_PRIEST },
-       { SPELL_CALL_OF_CHAOS, 32, MON_SPELL_PRIEST },
+       { SPELL_BOLT_OF_DRAINING, 18, MON_SPELL_PRIEST },
+       { SPELL_DISPEL_UNDEAD, 18, MON_SPELL_PRIEST },
+       { SPELL_BLACK_MARK, 28, MON_SPELL_PRIEST },
       }
     },
 

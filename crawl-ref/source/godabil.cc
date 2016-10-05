@@ -1826,35 +1826,6 @@ bool beogh_resurrect()
     return true;
 }
 
-void jiyva_paralyse_jellies()
-{
-    mprf("You call upon nearby slimes to pray to %s.",
-         god_name(you.religion).c_str());
-
-    int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mon = monster_at(*ri);
-        const int dur = 20 + random2(11);
-        if (mon != nullptr && mons_is_slime(*mon) && !mon->is_shapeshifter())
-        {
-            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      &you, dur * BASELINE_DELAY));
-            jelly_count++;
-        }
-    }
-
-    if (jelly_count > 0)
-    {
-        if (jelly_count > 1)
-            mpr("The nearby slimes join the prayer.");
-        else
-            mpr("A nearby slime joins the prayer.");
-
-        lose_piety(max(5, min(jelly_count, 20)));
-    }
-}
-
 bool jiyva_remove_bad_mutation()
 {
     if (!how_mutated())
@@ -4919,30 +4890,30 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 
 spret_type qazlal_elemental_force(bool fail)
 {
+    static const map<cloud_type, monster_type> elemental_clouds = {
+        { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
+        { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+        { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
+        { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
+        { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
+        { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
+        { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
+        { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
+        { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
+        { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+        { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
+    };
+
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
-        if (cloud_struct* cloud = cloud_at(*ri))
-        {
-            switch (cloud->type)
-            {
-            case CLOUD_FIRE:
-            case CLOUD_COLD:
-            case CLOUD_BLACK_SMOKE:
-            case CLOUD_GREY_SMOKE:
-            case CLOUD_BLUE_SMOKE:
-            case CLOUD_PURPLE_SMOKE:
-            case CLOUD_FOREST_FIRE:
-            case CLOUD_PETRIFY:
-            case CLOUD_RAIN:
-            case CLOUD_DUST:
-            case CLOUD_STORM:
-                targets.push_back(*ri);
-                break;
-            default:
-                break;
-            }
-        }
+        const cloud_struct* cloud = cloud_at(*ri);
+        if (!cloud || !elemental_clouds.count(cloud->type))
+            continue;
+
+        const actor *agent = actor_by_mid(cloud->source);
+        if (agent && agent->is_player())
+            targets.push_back(*ri);
     }
 
     if (targets.empty())
@@ -4965,36 +4936,10 @@ spret_type qazlal_elemental_force(bool fail)
     {
         coord_def pos = targets[i];
         ASSERT(cloud_at(pos));
-        cloud_struct &cl = *cloud_at(pos);
-        actor *agent = actor_by_mid(cl.source);
-        mg.behaviour = !agent             ? BEH_NEUTRAL :
-                       agent->is_player() ? BEH_FRIENDLY
-                                          : SAME_ATTITUDE(agent->as_monster());
+        const cloud_struct &cl = *cloud_at(pos);
+        mg.behaviour = BEH_FRIENDLY;
         mg.pos       = pos;
-        switch (cl.type)
-        {
-        case CLOUD_FIRE:
-        case CLOUD_FOREST_FIRE:
-            mg.cls = MONS_FIRE_ELEMENTAL;
-            break;
-        case CLOUD_COLD:
-        case CLOUD_RAIN:
-            mg.cls = MONS_WATER_ELEMENTAL; // maybe ice beasts for cold?
-            break;
-        case CLOUD_PETRIFY:
-        case CLOUD_DUST:
-            mg.cls = MONS_EARTH_ELEMENTAL;
-            break;
-        case CLOUD_BLACK_SMOKE:
-        case CLOUD_GREY_SMOKE:
-        case CLOUD_BLUE_SMOKE:
-        case CLOUD_PURPLE_SMOKE:
-        case CLOUD_STORM:
-            mg.cls = MONS_AIR_ELEMENTAL; // maybe sky beasts for storm?
-            break;
-        default:
-            continue;
-        }
+        mg.cls = *map_find(elemental_clouds, cl.type);
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
@@ -5369,9 +5314,6 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
     if (sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        // No one-handed polearms for spriggans.
-        if (you.species == SP_SPRIGGAN)
-            piety_gain += _piety_for_skill(SK_POLEARMS);
         // No one-handed staves for small races.
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);

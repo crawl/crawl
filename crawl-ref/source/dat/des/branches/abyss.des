@@ -311,7 +311,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf demonologist
-MONS:   worker ant w:40 / vampire mosquito w:20 / wasp
+MONS:   worker ant w:40 / vampire mosquito w:20 / hornet
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -333,9 +333,9 @@ C   111111 ww 444444   C
 ENDMAP
 
 NAME:   hangedman_abyss_sting
-TAGS:   no_item_gen no_monster_gen uniq_wasphive
+TAGS:   no_item_gen no_monster_gen uniq_hornetnest
 KMONS:  1 = orange demon
-KMONS:  2 = hornet / wasp / killer bee w:2 / nothing w:2
+KMONS:  2 = hornet / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
 KITEM:  3 = royal jelly
@@ -1256,7 +1256,7 @@ WEIGHT:  25
 MONS:    ancient zyme, wretched star, starcursed mass, lurking horror
 MONS:    thrashing horror, tentacled starspawn, apocalypse crab
 # Worldbinders summon from other branches....
-KMONS:   8 = greater naga / ghost moth / thorn hunter / merfolk javelineer
+KMONS:   8 = nagaraja / ghost moth / thorn hunter / merfolk javelineer
 KMONS:   9 = guardian serpent / entropy weaver / swamp dragon / satyr
 KMONS:   0 = place:Abyss:$
 KMONS:   O = worldbinder
@@ -1558,6 +1558,34 @@ MAP
  .cccWWwwwWWccc.
  ...""""A""""...
 ENDMAP
+
+NAME:   doesnt_abyss_rune_brain_food
+TAGS:   abyss_rune unrand patrolling no_pool_fixup
+MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   starcursed mass
+KITEM:  O = abyssal rune of Zot
+COLOUR: n = lightmagenta
+NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
+SUBST:  l : lw
+{{
+dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+                           'troll corpse / ogre corpse')
+}}
+MAP
+  cccnccc
+ cc-nOn-cc
+ c.--n--.c
+cc.-n-n-.cc
+c---...---c
+nll-...-lln
+n3l-...-l3n
+nll-...-lln
+n---...---n
+nn.......nn
+ nn.....nn
+  nn...nn
+ENDMAP
+
 
 ###############################################################################
 # Abyss Exit Vaults

@@ -480,8 +480,6 @@ static const ability_def Ability_List[] =
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
       2, 0, 0, 1, {FAIL_INVO}, abflag::NONE },
-    { ABIL_JIYVA_JELLY_PARALYSE, "Jelly Paralyse",
-      3, 0, 0, 0, {FAIL_INVO}, abflag::PIETY },
     { ABIL_JIYVA_SLIMIFY, "Slimify",
       4, 0, 0, 8, {FAIL_INVO, 90, 0, 2}, abflag::NONE },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
@@ -2025,7 +2023,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_EVOKE_TURN_INVISIBLE:     // ring, cloaks, randarts
+    case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())
             return SPRET_ABORT;
         fail_check();
@@ -2692,11 +2690,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
     }
-
-    case ABIL_JIYVA_JELLY_PARALYSE:
-        fail_check();
-        jiyva_paralyse_jellies();
-        break;
 
     case ABIL_JIYVA_SLIMIFY:
     {

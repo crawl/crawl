@@ -23,14 +23,14 @@ function base_monster_setup(e)
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / crocodile / hippogriff /\
-           killer bee band / wasp / eye of draining / manticore /\
+           killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
-           deep elf mage / hornet /\
+           deep elf mage /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            redback w:20 / phantasmal warrior / spiny frog / hell rat /\
@@ -56,7 +56,7 @@ function base_monster_setup(e)
            wind drake / deep elf mage w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
-           merfolk avatar / alligator snapping turtle / anaconda / greater naga /\
+           merfolk avatar / alligator snapping turtle / anaconda / nagaraja /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
@@ -73,7 +73,7 @@ function base_monster_setup(e)
            deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
-           greater naga / dancing weapon / dire elephant band /\
+           nagaraja / dancing weapon / dire elephant band /\
            eye of draining / floating eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
@@ -475,7 +475,7 @@ function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
         deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
         sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
-        naga mage / greater naga / base draconian w:20")
+        naga mage / nagaraja / base draconian w:20")
   e.kmons("9 = Frederick / Margery band / Boris / Frances")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")

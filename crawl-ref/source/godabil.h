@@ -44,7 +44,6 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
 #define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
-#define USKAYAW_DID_DANCE_ACTION "uskayaw_did_dance_action"
 #define USKAYAW_NUM_MONSTERS_HURT "uskayaw_num_monsters_hurt"
 #define USKAYAW_MONSTER_HURT_VALUE "uskayaw_monster_hurt_value"
 #define USKAYAW_AUT_SINCE_PIETY_GAIN "uskayaw_aut_since_piety_gain"
@@ -85,7 +84,6 @@ bool trog_burn_spellbooks();
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
-void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);

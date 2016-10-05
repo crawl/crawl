@@ -605,9 +605,9 @@ void MacroDelay::handle()
     {
         dprf("Expiring macro delay on turn: %d", you.num_turns);
         stop_delay();
-        return;
     }
-    run_macro();
+    else
+        run_macro();
 
     // Macros may not use up turns, but unless we zero time_taken,
     // main.cc will call world_reacts and increase turn count.

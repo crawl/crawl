@@ -172,25 +172,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne()
-#if TAG_MAJOR_VERSION == 34
-            || species == SP_DJINNI
-#endif
-            )
-    {
-        return true;
-    }
-
-    if (
-#if TAG_MAJOR_VERSION == 34
-        actual_grid == DNGN_LAVA && species != SP_LAVA_ORC ||
-#endif
-        actual_grid == DNGN_DEEP_WATER && !can_swim())
-    {
-        return false;
-    }
-
-    return true;
+    return !is_feat_dangerous(actual_grid);
 }
 
 size_type player::body_size(size_part_type psize, bool base) const

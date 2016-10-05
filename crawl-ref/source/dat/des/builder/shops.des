@@ -333,7 +333,7 @@ KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
+         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | \
          w:7 crystal ball of energy | \
          w:4 wand of digging | w:5 randbook disc:earth | \
@@ -644,6 +644,36 @@ MAP
 .mmmmmmm.
 .........
 ENDMAP
+
+NAME:   doesnt_shop_hydraphobe
+DEPTH:  D:5-11
+WEIGHT: 5
+TAGS:   transparent no_pool_fixup
+KPROP:  -1wP = no_tele_into
+KMASK:  -w = no_monster_gen
+KMASK:  -1wP = no_item_gen
+MONS:   hydra
+KMONS:  P = plant
+KFEAT:  P = shallow_water
+KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
+    long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
+    hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
+    battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
+    scythe ego:flaming | glaive ego:flaming | hand crossbow ego:freezing | \
+    arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
+FTILE:  -1wP = floor_lair
+COLOUR: -1 = brown
+MAP
+.......
+.ccccc.
+.cwP1c.
+.c---c.
+.cnnnc.
+.......
+...S...
+.......
+ENDMAP
+
 
 ###############################################################################
 # <<3>> Multi.

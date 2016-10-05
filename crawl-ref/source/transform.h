@@ -127,13 +127,6 @@ public:
     bool res_petrify() const;
 
     /**
-     * A multiplier to Stealth skill for player stealth calculations.
-     *
-     * If 0, fall back to species values.
-     */
-    virtual int get_stealth_mod() const { return stealth_mod; }
-
-    /**
      * Base unarmed damage provided by the form.
      */
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
@@ -223,9 +216,6 @@ protected:
      * by the form.
      */
     const int resists;
-
-    /// See Form::get_stealth_mod().
-    const int stealth_mod;
 
     /// See Form::get_base_unarmed_damage().
     const int base_unarmed_damage;

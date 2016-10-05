@@ -681,15 +681,7 @@ static void _startup_hints_mode()
 {
     // Don't allow triggering at game start.
     Hints.hints_just_triggered = true;
-
-    msg::streams(MSGCH_TUTORIAL)
-        << "Press any key to start the hints mode intro, or Escape to skip it."
-        << endl;
-
-    flush_prev_message();
-    const int ch = getch_ck();
-    if (!key_is_escape(ch))
-        hints_starting_screen();
+    hints_starting_screen();
 }
 
 // required so that maybe_identify_base_type works correctly
@@ -818,7 +810,7 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_artefact(); break;
+    case 'v': wizard_value_item(); break;
     case 'V': wizard_toggle_xray_vision(); break;
     case 'E': wizard_freeze_time(); break;
     // case CONTROL('V'): break;
@@ -3380,7 +3372,6 @@ static void _move_player(coord_def move)
         {
             mpr("You're too terrified to move while being watched!");
             stop_running();
-            moving = false;
             you.turn_is_over = false;
             return;
         }

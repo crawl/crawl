@@ -127,7 +127,7 @@ MARKER: H = lua:fog_machine { cloud_type = "thin mist", pow_min = 3, \
                               pow_max = 10, delay = 10, start_clouds = 1, \
                               size_min = 1, size_max = 3, walk_dist = 2 }
 # Monsters specified here to omit aquatic placements.
-MONS: plant w:150 / fungus w:99 / wasp w:20 / bullfrog w:30 / \
+MONS: plant w:150 / fungus w:99 / hornet w:20 / bullfrog w:30 / \
       swamp drake w:80 / alligator band w:150 / water moccasin w:75
 KPROP: w = no_tele_into
 SUBST: w = wwwWWt1
@@ -177,7 +177,7 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_spider
 TAGS: grunt_ashenzari_visionary_spider no_trap_gen no_monster_gen unrand
-MONS: giant cockroach w:15 / scorpion w:35 / worm w:20 / wasp w:15 / \
+MONS: giant cockroach w:15 / scorpion w:35 / worm w:20 / hornet w:15 / \
       redback w:100 / wolf spider w:50
 KPROP:  . = no_tele_into
 SUBST:  . = ....x1

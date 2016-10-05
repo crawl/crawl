@@ -180,8 +180,11 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
     {
         spell_type which_spell = spells_in_book(item)[0];
-        if (!spell_is_useless(which_spell, false, true))
+        if (!spell_is_useless(which_spell, false, true)
+            && spell_difficulty(which_spell) <= 1)
+        {
             add_spell_to_memory(which_spell);
+        }
     }
 
     return &item;

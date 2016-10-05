@@ -213,9 +213,17 @@ branch_type branch_by_shortname(const string &branch)
 
 int ambient_noise(branch_type branch)
 {
-    if (branch == NUM_BRANCHES)
-        return branches[you.where_are_you].ambient_noise;
-    return branches[branch].ambient_noise;
+    switch (branches[branch].ambient_noise)
+    {
+    case BRANCH_NOISE_NORMAL:
+        return 0;
+    case BRANCH_NOISE_QUIET:
+        return -BRANCH_NOISE_AMOUNT;
+    case BRANCH_NOISE_LOUD:
+        return BRANCH_NOISE_AMOUNT;
+    default:
+        die("Invalid noise level!");
+    };
 }
 
 branch_type get_branch_at(const coord_def& pos)
@@ -253,6 +261,35 @@ int runes_for_branch(branch_type branch)
     case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
     default:              return 0;
     }
+}
+
+/**
+ * Describe the ambient noise level in this branch.
+ *
+ * @param branch The branch in question.
+ * @returns      A string describing how noisy or quiet the branch is.
+ */
+string branch_noise_desc(branch_type br)
+{
+    string desc;
+    const int noise = ambient_noise(br);
+    if (noise != 0)
+    {
+        desc = "This branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("very noisy, and so sound travels much less "
+                                 "far.");
+        }
+        else
+        {
+            desc += make_stringf("unnaturally silent, and so sound travels "
+                                 "much further.");
+
+        }
+    }
+
+    return desc;
 }
 
 /**

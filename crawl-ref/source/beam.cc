@@ -209,7 +209,6 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -219,6 +218,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_BANISH:
     case BEAM_BLINK:
     case BEAM_BLINK_CLOSE:
+    case BEAM_BECKONING:
         elem = ETC_WARP;
         break;
     case BEAM_MAGIC:
@@ -2923,7 +2923,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_SPECTRAL, p, random2(6) + 5, agent());
 
     if (origin_spell == SPELL_DEATH_RATTLE)
-        place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());
+        place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -3138,13 +3138,13 @@ bool bolt::is_harmless(const monster* mon) const
 }
 
 // N.b. only called for player-originated beams; if that is changed,
-// be sure to adjust the Qazlal cloud immunity below, and various other
-// assumptions based on the spells/abilities available to the player.
+// be sure to adjust various assumptions based on the spells/abilities
+// available to the player.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (have_passive(passive_t::resist_own_clouds) && is_big_cloud())
+    if (have_passive(passive_t::cloud_immunity) && is_big_cloud())
         return true;
 
     switch (flavour)
@@ -3529,7 +3529,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_HASTE:
         haste_player(40 + random2(ench_power));
         did_god_conduct(DID_HASTY, 10, blame_player);
-        contaminate_player(1000, blame_player);
+        contaminate_player(750 + random2(500), blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3592,6 +3592,10 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_BLINK_CLOSE:
         blink_other_close(&you, source);
         obvious_effect = true;
+        break;
+
+    case BEAM_BECKONING:
+        obvious_effect = beckon(you, *this);
         break;
 
     case BEAM_ENSLAVE:
@@ -3749,17 +3753,6 @@ void bolt::affect_player_enchantment(bool resistible)
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
-        break;
-
-    case BEAM_CORRUPT_BODY:
-        if (temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body"))
-        {
-            if (one_chance_in(4))
-                temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
-            mprf(MSGCH_WARN, "A corruption grows within you!");
-        }
-        else
-           mpr("You feel corrupt for a moment.");
         break;
 
     case BEAM_DRAIN_MAGIC:
@@ -5144,11 +5137,11 @@ bool bolt::has_saving_throw() const
     case BEAM_ENSLAVE_SOUL:
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
+    case BEAM_BECKONING:
     case BEAM_MALIGN_OFFERING:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_SAP_MAGIC:
     case BEAM_UNRAVELLING:
     case BEAM_UNRAVELLED_MAGIC:
@@ -5171,7 +5164,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     switch (flavour)
     {
     case BEAM_MALMUTATE:
-    case BEAM_CORRUPT_BODY:
     case BEAM_UNRAVELLED_MAGIC:
         rc = mon->can_mutate();
         break;
@@ -5358,6 +5350,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         blink_other_close(mon, source);
         return MON_AFFECTED;
+
+    case BEAM_BECKONING:
+        obvious_effect = beckon(*mon, *this);
+        return obvious_effect ? MON_AFFECTED : MON_OTHER; // ?
 
     case BEAM_POLYMORPH:
         if (mon->polymorph(ench_power))
@@ -5730,10 +5726,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
-
-    case BEAM_CORRUPT_BODY:
-        mon->corrupt();
-        break;
 
     case BEAM_DRAIN_MAGIC:
     {
@@ -6535,6 +6527,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DISINTEGRATION:        return "disintegration";
     case BEAM_BLINK:                 return "blink";
     case BEAM_BLINK_CLOSE:           return "blink close";
+    case BEAM_BECKONING:             return "beckoning";
     case BEAM_PETRIFY:               return "petrify";
     case BEAM_CORONA:                return "backlight";
     case BEAM_PORKALATOR:            return "porkalator";
@@ -6555,7 +6548,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VIRULENCE:             return "virulence";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
-    case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";

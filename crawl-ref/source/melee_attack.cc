@@ -147,21 +147,23 @@ bool melee_attack::handle_phase_attempted()
         // Set delay now that we know the attack won't be cancelled.
         if (!is_riposte)
             you.time_taken = you.attack_delay().roll();
+
+        const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
                 if (is_unrandom_artefact(*weapon)
                     && get_unrand_entry(weapon->unrand_idx)->type_name)
                 {
-                    count_action(CACT_MELEE, weapon->unrand_idx);
+                    count_action(cact_typ, weapon->unrand_idx);
                 }
                 else
-                    count_action(CACT_MELEE, weapon->sub_type);
+                    count_action(cact_typ, weapon->sub_type);
             else if (weapon->base_type == OBJ_STAVES)
-                count_action(CACT_MELEE, WPN_STAFF);
+                count_action(cact_typ, WPN_STAFF);
         }
         else
-            count_action(CACT_MELEE, -1, -1); // unarmed subtype/auxtype
+            count_action(cact_typ, -1, -1); // unarmed subtype/auxtype
     }
     else
     {
@@ -2394,7 +2396,6 @@ void melee_attack::announce_hit()
 bool melee_attack::mons_do_poison()
 {
     int amount = 1;
-    bool force = false;
 
     if (attk_flavour == AF_POISON_STRONG)
     {
@@ -2407,7 +2408,7 @@ bool melee_attack::mons_do_poison()
                               attacker->get_hit_dice() * 4);
     }
 
-    if (!defender->poison(attacker, amount, force))
+    if (!defender->poison(attacker, amount))
         return false;
 
     if (needs_message)
@@ -2415,12 +2416,6 @@ bool melee_attack::mons_do_poison()
         mprf("%s poisons %s!",
                 atk_name(DESC_THE).c_str(),
                 defender_name(true).c_str());
-        if (force)
-        {
-            mprf("%s partially resist%s.",
-                defender_name(false).c_str(),
-                defender->is_player() ? "" : "s");
-        }
     }
 
     return true;
@@ -2786,41 +2781,34 @@ void melee_attack::mons_apply_attack_flavour()
             drain_defender();
         break;
 
-    case AF_PARALYSE:
+    case AF_POISON_PARALYSE:
     {
-        // Only wasps at the moment, so Zin vitalisation
-        // protects from the paralysis and slow.
+        // Doesn't affect the poison-immune.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {
             mpr("Your divine stamina protects you from poison!");
             break;
         }
-
-        // doesn't affect poison-immune enemies
-        if (defender->res_poison() >= 3)
+        else if (defender->res_poison() >= 3)
             break;
 
-        if (attacker->type == MONS_HORNET || one_chance_in(3))
+        // Same frequency as AF_POISON and AF_POISON_STRONG.
+        if (one_chance_in(3))
         {
             int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
                                    attacker->get_hit_dice() * 5 / 2);
             defender->poison(attacker, dmg);
         }
 
-        int paralyse_roll = attacker->type == MONS_HORNET ? 4 : 8;
-
-        const bool strong_result = one_chance_in(paralyse_roll);
-
-        if (strong_result
-            && !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
+        // Try to apply either paralysis or slowing, with the normal 2/3
+        // chance to resist with rPois.
+        if (one_chance_in(6))
         {
-            defender->paralyse(attacker, roll_dice(1, 3));
+            if (defender->res_poison() <= 0 || one_chance_in(3))
+                defender->paralyse(attacker, roll_dice(1, 3));
         }
-        else if (strong_result
-                 || !(defender->res_poison() > 0 || x_chance_in_y(2, 3)))
-        {
+        else if (defender->res_poison() <= 0 || one_chance_in(3))
             defender->slow_down(attacker, roll_dice(1, 3));
-        }
 
         break;
     }

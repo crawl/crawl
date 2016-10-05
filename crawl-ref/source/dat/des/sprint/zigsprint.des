@@ -305,14 +305,14 @@ function choose_mset_3(e)
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python / adder / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga w:5 /\
+               black mamba / naga mage / naga warrior / nagaraja w:5 /\
                anaconda w:5 / guardian serpent")
 -- Lair
   elseif rnd < 19 then
     e.kmons("1 =  place:Lair:2 / place:Lair:4 / place:Lair:$ w:5")
 -- Spider
   elseif rnd < 24 then
-    e.kmons("1 = place:Spider:$ w:70 / wasp / hornet")
+    e.kmons("1 = place:Spider:$ w:70 / hornet")
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
@@ -434,14 +434,14 @@ local rnd = crawl.random2(142)
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python w:5 / adder w:5 / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga /\
+               black mamba / naga mage / naga warrior / nagaraja /\
                anaconda / guardian serpent")
 -- Lair
   elseif rnd < 19 then
     e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
 -- Spider
   elseif rnd < 26 then
-    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / wasp / hornet /\
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / hornet /\
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then
@@ -749,7 +749,7 @@ KITEM:    J = hand crossbow mundane not_cursed ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
               longbow mundane not_cursed ident:all plus:5, \
               hunting sling mundane not_cursed ident:all plus:5, \
-              greatsling mundane not_cursed ident:all plus:5, \
+              fustibalus mundane not_cursed ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \

@@ -122,6 +122,7 @@ Items
   longer evil.
 * Elemental enhancers no longer penalise spells of the opposite element.
 * Jewellery acquirement creates twice as many randarts.
+* The *Confuse randart property is now *Slow.
 * Books can no longer be destroyed to forget spells.
 * Rods are created through misc. acquirement instead of staff acquirement.
 * It's no longer possible to acquire ammunition.

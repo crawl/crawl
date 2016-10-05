@@ -508,9 +508,7 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
     ATTR_NOISES,
-#endif
     ATTR_SHADOWS,              // Lantern of shadows effect.
-#if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
@@ -650,6 +648,7 @@ enum beam_type                  // bolt::flavour
     BEAM_DISINTEGRATION,
     BEAM_BLINK,
     BEAM_BLINK_CLOSE,
+    BEAM_BECKONING,
     BEAM_PETRIFY,
     BEAM_CORONA,
     BEAM_PORKALATOR,
@@ -664,7 +663,6 @@ enum beam_type                  // bolt::flavour
     BEAM_VIRULENCE,
     BEAM_AGILITY,
     BEAM_SAP_MAGIC,
-    BEAM_CORRUPT_BODY,
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
@@ -848,6 +846,7 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_BLOCK,      // armour subtype or subtype = -1 and
                      //   auxtype used for special cases
                      //   (reflection, god ability, spell, etc)
+    CACT_RIPOSTE,    // as CACT_MELEE
     NUM_CACTIONS,
 };
 
@@ -2710,8 +2709,8 @@ enum monster_type                      // menv[].type
     MONS_VAMPIRE_MOSQUITO,
 #if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
-#endif
     MONS_WASP,
+#endif
     MONS_HORNET,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPARK_WASP,
@@ -2763,12 +2762,10 @@ enum monster_type                      // menv[].type
     MONS_FIRST_BASE_DEMONSPAWN = MONS_MONSTROUS_DEMONSPAWN,
     MONS_GELID_DEMONSPAWN,
     MONS_INFERNAL_DEMONSPAWN,
-    MONS_PUTRID_DEMONSPAWN,
     MONS_TORTUROUS_DEMONSPAWN,
     MONS_LAST_BASE_DEMONSPAWN = MONS_TORTUROUS_DEMONSPAWN,
     MONS_BLOOD_SAINT,
     MONS_FIRST_NONBASE_DEMONSPAWN = MONS_BLOOD_SAINT,
-    MONS_CHAOS_CHAMPION,
     MONS_WARMONGER,
     MONS_CORRUPTER,
     MONS_BLACK_SUN,
@@ -2936,7 +2933,7 @@ enum monster_type                      // menv[].type
     MONS_NAGA_RITUALIST,
     MONS_NAGA_SHARPSHOOTER,
 #endif
-    MONS_GREATER_NAGA,
+    MONS_NAGARAJA,
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
     MONS_MERFOLK,
@@ -3476,12 +3473,12 @@ enum monster_type                      // menv[].type
     MONS_FIRST_BASE_DEMONSPAWN = MONS_MONSTROUS_DEMONSPAWN,
     MONS_GELID_DEMONSPAWN,
     MONS_INFERNAL_DEMONSPAWN,
-    MONS_PUTRID_DEMONSPAWN,
+    MONS_PUTRID_DEMONSPAWN,     // removed
     MONS_TORTUROUS_DEMONSPAWN,
     MONS_LAST_BASE_DEMONSPAWN = MONS_TORTUROUS_DEMONSPAWN,
     MONS_BLOOD_SAINT,
     MONS_FIRST_NONBASE_DEMONSPAWN = MONS_BLOOD_SAINT,
-    MONS_CHAOS_CHAMPION,
+    MONS_CHAOS_CHAMPION,        // removed
     MONS_WARMONGER,
     MONS_CORRUPTER,
     MONS_BLACK_SUN,
@@ -4625,8 +4622,8 @@ enum spell_type : int
     SPELL_GRAND_AVATAR,
 #endif
     SPELL_SAP_MAGIC,
-    SPELL_CORRUPT_BODY,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_CORRUPT_BODY,
     SPELL_REARRANGE_PIECES,
 #endif
     SPELL_MAJOR_DESTRUCTION,
@@ -4713,6 +4710,7 @@ enum spell_type : int
     SPELL_RESONANCE_STRIKE,
     SPELL_GHOSTLY_SACRIFICE,
     SPELL_DREAM_DUST,
+    SPELL_BECKONING,
     NUM_SPELLS
 };
 
@@ -4893,6 +4891,7 @@ enum zap_type
     ZAP_SAP_MAGIC,
     ZAP_VIRULENCE,
     ZAP_DRAIN_MAGIC,
+    ZAP_BECKONING,
     NUM_ZAPS
 };
 

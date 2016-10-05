@@ -247,6 +247,13 @@ enough to sustain large plants, there are spots where, with the grace of
 Fedhas, trees as big as those on the surface can grow underground. It is
 susceptible to bolts of lightning and to sufficiently intense sources of fire.
 %%%%
+An awoken tree
+
+A large tree that has been enchanted to grant it some limited motility,
+allowing it to lash out out at any adjacent enemies of the creature who awoke
+it. It is susceptible to bolts of lightning and to sufficiently intense sources
+of fire.
+%%%%
 An abandoned shop
 
 A shop that has been abandoned.

@@ -381,7 +381,7 @@ a state of spectral slavery.
 %%%%
 Death Rattle spell
 
-Exhales the essence of the dying, creating clouds of negative energy.
+Exhales the essence of the dying, creating clouds of noxious miasma.
 %%%%
 Death's Door spell
 
@@ -801,6 +801,10 @@ be any mix of Fireball, Iceblast, and Ghostly Fireball.
 Lehudib's Crystal Spear spell
 
 Hurls a lethally sharp shard of crystal.
+%%%%
+Lesser Beckoning spell
+
+Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 

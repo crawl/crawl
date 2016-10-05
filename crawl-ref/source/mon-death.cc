@@ -2579,7 +2579,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_FLAYED_GHOST)
         end_flayed_effect(mons);
-    // Give the treant a last chance to release its wasps if it is killed in a
+    // Give the treant a last chance to release its hornets if it is killed in a
     // single blow from above half health
     else if (mons->type == MONS_SHAMBLING_MANGROVE && !was_banished
              && !mons->pacified() && (!summoned || duration > 0) && !wizard
@@ -2613,7 +2613,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         if (mons->type == MONS_SPRIGGAN_RIDER)
         {
-            daddy_corpse = mounted_kill(mons, MONS_WASP, killer, killer_index);
+            daddy_corpse = mounted_kill(mons, MONS_HORNET, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
         corpse = place_monster_corpse(*mons, silent);

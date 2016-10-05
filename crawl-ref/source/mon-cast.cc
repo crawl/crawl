@@ -617,7 +617,7 @@ static function<void(bolt&, const monster&, int)>
     {
         beam.flavour = flavour;
         const monster* target = _get_allied_target(caster, beam);
-        beam.target = target ? target->pos() : coord_def();
+        beam.target = target ? target->pos() : coord_def(GXM+1, GYM+1);
     };
 }
 
@@ -652,7 +652,7 @@ static void _setup_heal_other(bolt &beam, const monster &caster, int)
 {
     _setup_healing_beam(beam, caster);
     const monster* target = _get_allied_target(caster, beam);
-    beam.target = target ? target->pos() : coord_def();
+    beam.target = target ? target->pos() : coord_def(GXM+1, GYM+1);
 }
 
 /**
@@ -1581,10 +1581,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
         beam.hit      = 5 + power / 3;
-        break;
-
-    case SPELL_CORRUPT_BODY:
-        beam.flavour    = BEAM_CORRUPT_BODY;
         break;
 
     case SPELL_SHADOW_BOLT:
@@ -3376,7 +3372,7 @@ static coord_def _mons_conjure_flame_pos(const monster &mons)
     // Don't bother if our target is sufficiently fire-resistant,
     // or doesn't exist.
     if (!foe || foe->res_fire() >= 3)
-        return coord_def();
+        return coord_def(GXM+1, GYM+1);
 
     const coord_def foe_pos = foe->pos();
     const coord_def a = foe_pos - mon->pos();
@@ -3426,7 +3422,7 @@ static coord_def _mons_conjure_flame_pos(const monster &mons)
     // If we found something, pick a square at random to block.
     const int count = targets.size();
     if (!count)
-        return coord_def();
+        return coord_def(GXM+1, GYM+1);
 
     return targets[random2(count)];
 }
@@ -3444,7 +3440,7 @@ static coord_def _mons_prism_pos(const monster &mons)
     actor* foe = mon->get_foe();
     // Don't bother if our target doesn't exist.
     if (!foe)
-        return coord_def();
+        return coord_def(GXM+1, GYM+1);
 
     const int foe_speed =
         foe->is_player() ? player_movement_speed()
@@ -4518,7 +4514,10 @@ static void _mons_cast_spectral_orcs(monster* mons)
             }
 
             // give gear using the base type
-            give_item(orc, env.absdepth0, true, true);
+            const int lvl = env.absdepth0;
+            give_specific_item(orc, make_mons_weapon(orc->base_monster, lvl));
+            give_specific_item(orc, make_mons_armour(orc->base_monster, lvl));
+            // XXX: and a shield, for warlords...? (wasn't included before)
 
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
@@ -5177,7 +5176,7 @@ static const pop_entry _planerend_snake[] =
 { // Snake enemies
   {  1,   1,   40, FLAT, MONS_ANACONDA },
   {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
-  {  1,   1,  100, FLAT, MONS_GREATER_NAGA },
+  {  1,   1,  100, FLAT, MONS_NAGARAJA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -7771,8 +7770,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe || _foe_should_res_negative_energy(foe);
 
     case SPELL_DEATH_RATTLE:
-        return !foe || _foe_should_res_negative_energy(foe) || no_clouds;
-
     case SPELL_MIASMA_BREATH:
         return !foe || foe->res_rotting() || no_clouds;
 

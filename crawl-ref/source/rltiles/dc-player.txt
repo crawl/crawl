@@ -729,7 +729,7 @@ axe_short AXE_SHORT
 
 ## launchers
 sling HUNTING_SLING
-greatsling GREATSLING
+fustibalus FUSTIBALUS
 bow BOW
 bow_two BOW2
 bow_three BOW3

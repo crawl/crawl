@@ -734,7 +734,7 @@ TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
-MONS:   basilisk / komodo dragon / wasp
+MONS:   basilisk / komodo dragon / hornet
 MONS:   adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
@@ -2603,7 +2603,7 @@ NAME:    wormcave
 PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
-MONS:    torpor snail, tyrant leech, lindwurm, wasp
+MONS:    torpor snail, tyrant leech, lindwurm, hornet
 MONS:    fire dragon / ice dragon
 KMONS:   p = plant
 SHUFFLE: ABC
@@ -2747,7 +2747,7 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / polar bear w:12, wolf, redback / wasp w:20
+MONS:   black bear / polar bear w:12, wolf, redback / hornet w:20
 MONS:   spriggan, spriggan rider, boggart
 KITEM:  * = gold no_pickup, star_item no_pickup, star_item no_pickup
 KITEM:  | = gold no_pickup, superb_item no_pickup, star_item no_pickup
@@ -3021,8 +3021,8 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / wyvern, wasp
-MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
+MONS:    water moccasin / wyvern, hornet
+MONS:    spiny frog, black mamba, redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus
 KMONS:   P = plant
@@ -3068,7 +3068,7 @@ PLACE:   Lair:$
 TAGS:    patrolling no_pool_fixup no_monster_gen
 ORIENT:  float
 KMONS:   ~ = plant
-KMONS:   1 = water moccasin / crocodile / wasp / wyvern / spiny frog
+KMONS:   1 = water moccasin / crocodile / hornet / wyvern / spiny frog
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / hydra / wind drake / harpy
 KMONS:   4 = dire elephant

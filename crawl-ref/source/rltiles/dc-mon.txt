@@ -169,7 +169,6 @@ torpor_snail MONS_TORPOR_SNAIL
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
-wasp MONS_WASP
 hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
@@ -351,10 +350,8 @@ demonspawn MONS_DEMONSPAWN
 monstrous MONS_MONSTROUS_DEMONSPAWN
 gelid MONS_GELID_DEMONSPAWN
 infernal MONS_INFERNAL_DEMONSPAWN
-putrid MONS_PUTRID_DEMONSPAWN
 torturous MONS_TORTUROUS_DEMONSPAWN
 blood_saint MONS_BLOOD_SAINT
-chaos_champion MONS_CHAOS_CHAMPION
 warmonger MONS_WARMONGER
 corrupter MONS_CORRUPTER
 black_sun MONS_BLACK_SUN
@@ -382,7 +379,7 @@ ancestor_hexer MONS_ANCESTOR_HEXER
 basajaun MONS_BASAJAUN
 
 ## Abominations ('X')
-%sdir mon/demons
+%sdir mon/aberrations
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
 abomination_large2
@@ -398,7 +395,7 @@ tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 
 ## Ugly things ('u')
-%sdir mon/aberr
+%sdir mon/aberrations
 ugly_thing MONS_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -414,7 +411,7 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
-%sdir mon/demons
+%sdir mon/aberrations
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 %sdir mon/aquatic
@@ -437,8 +434,6 @@ saltling MONS_SALTLING
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
-# For the Eringya WizLab
-vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
@@ -788,7 +783,7 @@ naga_mage MONS_NAGA_MAGE
 naga_ritualist MONS_NAGA_RITUALIST
 naga_sharpshooter MONS_NAGA_SHARPSHOOTER
 naga_warrior MONS_NAGA_WARRIOR
-greater_naga MONS_GREATER_NAGA
+nagaraja MONS_NAGARAJA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC

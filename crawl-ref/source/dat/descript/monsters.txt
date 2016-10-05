@@ -718,10 +718,6 @@ centaur warrior
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
-chaos champion
-
-<demonspawn>
-%%%%
 chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing
@@ -1236,10 +1232,6 @@ greater mummy
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
 %%%%
-greater naga
-
-A formidable naga that is skilled in both martial and magical arts.
-%%%%
 green death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
@@ -1708,6 +1700,11 @@ naga warrior
 
 A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
 %%%%
+nagaraja
+
+A magnificent example of the naga. It is an expert at both martial and magical
+arts.
+%%%%
 necromancer
 
 An evil wizard who is devoted to the practice of death magic, the mastery of
@@ -1911,10 +1908,6 @@ purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.
 %%%%
-putrid demonspawn
-
-<demonspawn>
-%%%%
 quasit
 
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws
@@ -1978,7 +1971,7 @@ A muscular red-scaled humanoid with a reptilian tail and small wings.
 %%%%
 hornet
 
-A huge hornet with a vicious stinger dripping with potent paralytic poison.
+A buzzing hornet with a vicious stinger dripping with paralytic poison.
 %%%%
 redback
 
@@ -2253,7 +2246,7 @@ twig.
 %%%%
 spriggan rider
 
-A spriggan that has tamed a wasp as its mount, and is tasked with protecting
+A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
 %%%%
 starcursed mass
@@ -2614,11 +2607,6 @@ around to do its bidding.
 yellow draconian
 
 A muscular yellow-scaled humanoid with a reptilian tail and small wings.
-%%%%
-wasp
-
-A giant wasp covered with thick plates of yellow chitinous armour. Its deadly
-venom can render most beings unable to move.
 %%%%
 ynoxinul
 

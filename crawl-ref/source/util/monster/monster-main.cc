@@ -587,7 +587,6 @@ static void rebind_mspec(string* requested_name,
             || requested_name->find("blood saint") == 0
             || requested_name->find("corrupter") == 0
             || requested_name->find("warmonger") == 0
-            || requested_name->find("chaos champion") == 0
             || requested_name->find("black sun") == 0))
     {
         // If the user requested a drac, the game might generate a
@@ -999,7 +998,7 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
-                case AF_PARALYSE:
+                case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
                     break;
                 case AF_POISON:
@@ -1242,7 +1241,7 @@ int main(int argc, char* argv[])
         res2(LIGHTBLUE, drown, mon.res_water_drowning());
         res2(LIGHTRED, rot, mon.res_rotting());
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
-        res2(YELLOW, holy, mon.res_holy_energy(&you));
+        res2(YELLOW, cleanse, mon.res_holy_energy(&you));
         res2(LIGHTMAGENTA, torm, mon.res_torment());
         res2(LIGHTBLUE, wind, mon.res_wind());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());

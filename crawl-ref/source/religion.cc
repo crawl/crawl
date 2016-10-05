@@ -214,7 +214,6 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Jiyva
     { { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
-      { 2, ABIL_JIYVA_JELLY_PARALYSE, "temporarily halt your jellies' item consumption" },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" },
     },
@@ -269,7 +268,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Qazlal
     {
-      { 0, "Qazlal grants you immunity to your own clouds." },
+      { 0, "Qazlal grants you immunity to clouds." },
       { 1, "You are surrounded by a storm.", "Your storm dissipates completely." },
       { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
       { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },
@@ -1305,7 +1304,7 @@ static int _hepliaklqana_ally_hd()
  * @return      5/hd from 1-11 HD, 10/hd from 12-18.
  *              (That is, 5 HP at 1 HD, 120 at 18.)
  */
-static int _hepliaklqana_ally_hp()
+int hepliaklqana_ally_hp()
 {
     const int HD = _hepliaklqana_ally_hd();
     return HD * 5 + max(0, (HD - 12) * 5);
@@ -1328,7 +1327,7 @@ mgen_data hepliaklqana_ancestor_gen_data()
     mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
     mg.set_summoned(&you, 0, 0, GOD_HEPLIAKLQANA);
     mg.hd = _hepliaklqana_ally_hd();
-    mg.hp = _hepliaklqana_ally_hp();
+    mg.hp = hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
     mg.mname = hepliaklqana_ally_name();
     mg.props[MON_GENDER_KEY]
@@ -1412,7 +1411,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         return; // assume nothing changes except at different HD
 
     const int old_mhp = ancestor->max_hit_points;
-    ancestor->max_hit_points = _hepliaklqana_ally_hp();
+    ancestor->max_hit_points = hepliaklqana_ally_hp();
     ancestor->hit_points =
         div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
                        old_mhp);
@@ -1435,7 +1434,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
     if (ancestor->weapon())
     {
         if (!ancestor_offlevel)
-            upgrade_hepliaklqana_weapon(*ancestor, *ancestor->weapon());
+            upgrade_hepliaklqana_weapon(ancestor->type, *ancestor->weapon());
 
         const weapon_type wpn = _hepliaklqana_weapon_type(ancestor->type, hd);
         const brand_type brand = _hepliaklqana_weapon_brand(ancestor->type, hd);
@@ -1529,22 +1528,22 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
  * Setup an ancestor's weapon after their class is chosen, when the player
  * levels up, or after they're resummoned (or initially created for wrath).
  *
- * @param[in]   ancestor      The ancestor for whom the weapon is intended.
+ * @param[in]   mtyp          The ancestor for whom the weapon is intended.
  * @param[out]  item          The item to be configured.
  * @param       notify        Whether messages should be printed when something
  *                            changes. (Weapon type or brand.)
  */
-void upgrade_hepliaklqana_weapon(const monster &ancestor, item_def &item)
+void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
 {
-    ASSERT(mons_is_hepliaklqana_ancestor(ancestor.type));
-    if (ancestor.type == MONS_ANCESTOR)
+    ASSERT(mons_is_hepliaklqana_ancestor(mtyp));
+    if (mtyp == MONS_ANCESTOR)
         return; // bare-handed!
 
     item.base_type = OBJ_WEAPONS;
-    item.sub_type = _hepliaklqana_weapon_type(ancestor.type,
-                                              ancestor.get_experience_level());
-    item.brand = _hepliaklqana_weapon_brand(ancestor.type,
-                                            ancestor.get_experience_level());
+    item.sub_type = _hepliaklqana_weapon_type(mtyp,
+                                              _hepliaklqana_ally_hd());
+    item.brand = _hepliaklqana_weapon_brand(mtyp,
+                                            _hepliaklqana_ally_hd());
     item.plus = 0;
     item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
 }

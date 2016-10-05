@@ -41,6 +41,8 @@
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
+#define SEVERE_CONTAM_LEVEL 3
+
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
@@ -63,7 +65,7 @@ static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 class targetter;
 class Delay;
 
-int check_stealth();
+int player_stealth();
 
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
@@ -774,7 +776,7 @@ public:
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
-    int stealth() const override     { return check_stealth(); }
+    int stealth() const override     { return player_stealth(); }
 
     bool shielded() const override;
     int shield_bonus() const override;
@@ -1050,6 +1052,7 @@ int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();
+bool player_severe_contamination();
 string describe_contamination(int level);
 
 bool sanguine_armour_valid();

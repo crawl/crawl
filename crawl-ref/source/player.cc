@@ -667,10 +667,6 @@ void update_vision_range()
         denom *= LOS_RADIUS;
     }
 
-    // Lantern of shadows.
-    if (you.attribute[ATTR_SHADOWS])
-        nom *= 3, denom *= 4;
-
     // the Darkness spell.
     if (you.duration[DUR_DARKNESS])
         nom *= 3, denom *= 4;
@@ -3146,79 +3142,31 @@ void adjust_level(int diff, bool just_xp)
 }
 
 /**
- * Return a multiplier for skill when calculating stealth values, based on the
- * player's species & form.
- *
- * @return The player's current stealth multiplier value.
- */
-static int _stealth_mod()
-{
-    const int form_stealth_mod = get_form()->get_stealth_mod();
-
-    if (form_stealth_mod != 0)
-        return form_stealth_mod;
-
-    int species_stealth_mod = species_stealth_modifier(you.species);
-    if (you.form == TRAN_STATUE)
-        species_stealth_mod -= 3;
-    // Thirsty vampires are (much) more stealthy
-    if (you.species == SP_VAMPIRE)
-    {
-        switch (you.hunger_state)
-        {
-        case HS_FAINTING:
-        case HS_STARVING:
-            species_stealth_mod += 3;
-            break;
-
-        case HS_NEAR_STARVING:
-        case HS_VERY_HUNGRY:
-        case HS_HUNGRY:
-            species_stealth_mod += 1;
-            break;
-
-        default:
-            break;
-        }
-    }
-    return species_stealth_mod;
-}
-
-/**
  * Get the player's current stealth value.
- *
- * XXX: rename this to something more reasonable
-
  *
  * (Keep in mind, while tweaking this function: the order in which stealth
  * modifiers are applied is significant!)
  *
  * @return  The player's current stealth value.
  */
-int check_stealth()
+int player_stealth()
 {
     ASSERT(!crawl_state.game_is_arena());
     // Extreme stealthiness can be enforced by wizmode stealth setting.
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    // lantern of shadows, berserking, "clumsy" (0-dex).
-    if (you.attribute[ATTR_SHADOWS] || you.berserk()
-        || you.duration[DUR_CLUMSY] || player_mutation_level(MUT_NO_STEALTH))
+    // berserking, "clumsy" (0-dex), sacrifice stealth.
+    if (you.berserk()
+        || you.duration[DUR_CLUMSY]
+        || player_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
 
     int stealth = you.dex() * 3;
 
-    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
-        && !you.airborne())
-    {
-        stealth -= 50; // klack klack klack go the blade paws
-        // this is an absurd special case but also it's really funny so w/e
-    }
-
-    stealth += you.skill(SK_STEALTH, _stealth_mod());
+    stealth += you.skill(SK_STEALTH, 15);
 
     if (you.confused())
         stealth /= 3;
@@ -3236,6 +3184,9 @@ int check_stealth()
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
         stealth -= penalty;
+
+        const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
+        stealth += pips * STEALTH_PIP;
     }
 
     stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
@@ -3243,18 +3194,45 @@ int check_stealth()
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
     stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (body_armour)
-    {
-        const int pips = armour_type_prop(body_armour->sub_type, ARMF_STEALTH);
-        stealth += pips * STEALTH_PIP;
-    }
-
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 
     if (you.duration[DUR_AGILITY])
         stealth += STEALTH_PIP;
+
+    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
+        && !you.airborne())
+    {
+        stealth -= STEALTH_PIP; // klack klack klack go the blade paws
+        // this is an absurd special case but also it's really funny so w/e
+    }
+
+    // Mutations.
+    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += (STEALTH_PIP / 2)
+                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
+    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
+    if (how_transparent)
+        stealth += 15 * (how_transparent);
+
+    // Radiating silence is the negative complement of shouting all the
+    // time... a sudden change from background noise to no noise is going
+    // to clue anything in to the fact that something is very wrong...
+    // a personal silence spell would naturally be different, but this
+    // silence radiates for a distance and prevents monster spellcasting,
+    // which pretty much gives away the stealth game.
+    if (you.duration[DUR_SILENCE])
+        stealth -= STEALTH_PIP;
+
+    // Thirsty vampires are stealthier.
+    if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state <= HS_STARVING || you.form == TRAN_BAT)
+            stealth += STEALTH_PIP * 2;
+        else if (you.hunger_state <= HS_HUNGRY)
+            stealth += STEALTH_PIP;
+    }
 
     if (!you.airborne())
     {
@@ -3266,34 +3244,13 @@ int check_stealth()
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
-
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += STEALTH_PIP;
-
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
-
         else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
             stealth += 20;  // paws
     }
-
-    // Radiating silence is the negative complement of shouting all the
-    // time... a sudden change from background noise to no noise is going
-    // to clue anything in to the fact that something is very wrong...
-    // a personal silence spell would naturally be different, but this
-    // silence radiates for a distance and prevents monster spellcasting,
-    // which pretty much gives away the stealth game.
-    if (you.duration[DUR_SILENCE])
-        stealth -= STEALTH_PIP;
-
-    // Mutations.
-    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
-    stealth += (STEALTH_PIP / 2)
-                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
-    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
-    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
-    if (how_transparent)
-        stealth += 15 * (how_transparent);
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
@@ -3319,6 +3276,9 @@ int check_stealth()
         stealth *= umbra_mul;
         stealth /= umbra_div;
     }
+
+    if (you.form == TRAN_SHADOW)
+        stealth *= 2;
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (have_passive(passive_t::storm_shield))
@@ -4189,19 +4149,26 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60000)
-        return glow / 20000 + 3;
+        return glow / 20000 + 4;
     if (glow > 40000)
-        return 5;
+        return 6;
     if (glow > 25000)
-        return 4;
+        return 5;
     if (glow > 15000)
-        return 3;
+        return 4;
     if (glow > 5000)
-        return 2;
+        return 3;
+    if (glow > 3500) // An indicator that using another contamination-causing
+        return 2;    // ability might risk causing yellow glow.
     if (glow > 0)
         return 1;
 
     return 0;
+}
+
+bool player_severe_contamination()
+{
+    return get_contamination_level() >= SEVERE_CONTAM_LEVEL;
 }
 
 /**
@@ -4220,6 +4187,7 @@ string describe_contamination(int cont)
     {
         "",
         "You are very lightly contaminated with residual magic.",
+        "You are lightly contaminated with residual magic.",
         "You are contaminated with residual magic.",
         "You are heavily infused with residual magic.",
         "You are practically glowing with residual magic!",
@@ -4232,15 +4200,15 @@ string describe_contamination(int cont)
                                    ARRAYSZ(contam_descriptions) - 1)];
 }
 
-// controlled is true if the player actively did something to cause
-// contamination (such as drink a known potion of resistance),
-// status_only is true only for the status output
+// Controlled is true if the player actively did something to cause
+// contamination.
 void contaminate_player(int change, bool controlled, bool msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
+    bool was_glowing = player_severe_contamination();
     int new_level  = 0;
 
     if (change > 0 && player_equip_unrand(UNRAND_ETHERIC_CAGE))
@@ -4254,23 +4222,27 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.magic_contamination != old_amount)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
-    if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
-        mpr(describe_contamination(new_level));
-    else if (msg && new_level != old_level)
+    if (new_level > old_level)
+    {
+        if (msg)
+        {
+            mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
+                 "%s", describe_contamination(new_level).c_str());
+        }
+        if (player_severe_contamination())
+            xom_is_stimulated(new_level * 25);
+    }
+    else if (msg && new_level < old_level)
     {
         if (old_level == 1 && new_level == 0)
             mpr("Your magical contamination has completely faded away.");
-        else
+        else if (player_severe_contamination() || was_glowing)
         {
-            mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
-                 "You feel %s contaminated with magical energies.",
-                 (change > 0) ? "more" : "less");
+            mprf(MSGCH_RECOVERY,
+                 "You feel less contaminated with magical energies.");
         }
 
-        if (change > 0)
-            xom_is_stimulated(new_level * 25);
-
-        if (old_level > 1 && new_level <= 1 && you.invisible())
+        if (!player_severe_contamination() && was_glowing && you.invisible())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
@@ -4284,11 +4256,11 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (old_level < 2 && new_level >= 2)
+        if (!was_glowing && player_severe_contamination())
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
-        else if (controlled && change > 0 && old_level > 1)
+        else if (controlled && change > 0 && was_glowing)
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
 }
@@ -4797,7 +4769,7 @@ bool haste_player(int turns, bool rageext)
     else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(1000, true); // always deliberate
+        contaminate_player(750 + random2(500), true); // always deliberate
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
@@ -6041,7 +6013,7 @@ int player::racial_ac(bool temp) const
  */
 int player::base_ac(int scale) const
 {
-    int AC = 100;
+    int AC = 0;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {

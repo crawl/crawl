@@ -1413,7 +1413,8 @@ dngn/grate DNGN_GRATE
 
 crystal_wall_green DNGN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 
-desolation WALL_DESOLATION
+desolation1 WALL_DESOLATION
+desolation2
 
 %variation DNGN_CRYSTAL blue
 crystal_wall_blue DNGN_CRYSTAL_BLUE

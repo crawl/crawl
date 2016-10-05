@@ -730,9 +730,15 @@ static void _describe_glow(status_info* inf)
         return;
 
     const unsigned int cont = signed_cont; // so we don't get compiler warnings
-    inf->light_colour = DARKGREY;
-    if (cont > 1)
-        inf->light_colour = _bad_ench_colour(cont, 3, 4);
+    if (player_severe_contamination())
+    {
+        inf->light_colour = _bad_ench_colour(cont, SEVERE_CONTAM_LEVEL + 1,
+                                                   SEVERE_CONTAM_LEVEL + 2);
+    }
+    else if (cont > 1)
+        inf->light_colour = LIGHTGREY;
+    else
+        inf->light_colour = DARKGREY;
 #if TAG_MAJOR_VERSION == 34
     if (cont > 1 || you.species != SP_DJINNI)
 #endif
@@ -743,6 +749,7 @@ static void _describe_glow(status_info* inf)
     {
         "",
         "very slightly ",
+        "slightly",
         "",
         "heavily ",
         "very heavily ",

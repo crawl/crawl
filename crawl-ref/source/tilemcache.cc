@@ -374,6 +374,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SKELETON_LARGE:
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_BIG_KOBOLD:
+    case TILEP_MONS_EFREET:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -497,7 +498,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -4;
         break;
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGARAJA:
         *ofs_x = -2;
         *ofs_y = -5;
         break;
@@ -872,7 +873,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGARAJA:
         *ofs_x = -3;
         *ofs_y = 0;
         break;

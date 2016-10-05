@@ -383,8 +383,7 @@ static void _update_cowardice()
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
 {
-    if (you.props[USKAYAW_DID_DANCE_ACTION].get_bool()
-            && you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
+    if (you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
     {
         int num_hurt = you.props[USKAYAW_NUM_MONSTERS_HURT];
         int hurt_val = you.props[USKAYAW_MONSTER_HURT_VALUE];
@@ -416,7 +415,6 @@ static void _handle_uskayaw_piety(int time_taken)
     }
 
     // Re-initialize Uskayaw piety variables
-    you.props[USKAYAW_DID_DANCE_ACTION] = false;
     you.props[USKAYAW_NUM_MONSTERS_HURT] = 0;
     you.props[USKAYAW_MONSTER_HURT_VALUE] = 0;
 }
@@ -999,7 +997,7 @@ void player_reacts()
     search_around();
 
     //XXX: does this _need_ to be calculated up here?
-    const int stealth = check_stealth();
+    const int stealth = player_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.

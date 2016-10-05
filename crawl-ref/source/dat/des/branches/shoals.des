@@ -952,7 +952,7 @@ ORIENT: float
 SHUFFLE: 1Ww / 2DD
 MONS: merfolk, faun
 MONS: merfolk impaler ; demon trident good_item | trident good_item . gold
-MONS: satyr ; greatsling good_item . sling bullet good_item . gold / \
+MONS: satyr ; fustibalus good_item . sling bullet good_item . gold / \
       satyr ; longbow good_item . arrow good_item . gold
 COLOUR:   c = white
 COLOUR:   1234'D = cyan
@@ -1171,7 +1171,7 @@ MONS:    faun, satyr, meliai, minotaur
 KMONS:   _ = merfolk javelineer
 KMONS:   b = bush
 KMONS:   p = plant
-ITEM:    any potion, longbow good_item, greatsling good_item
+ITEM:    any potion, longbow good_item, fustibalus good_item
 # Bacchus-approved.
 KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI

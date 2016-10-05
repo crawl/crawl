@@ -79,9 +79,16 @@ class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;
 
-template <typename Z> static inline Z sgn(Z x)
+// Constexpr sign.
+template <typename Z> static constexpr Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
+}
+
+// Constexpr absolute value.
+template <typename Z> static constexpr Z abs_ce(Z x)
+{
+    return x < 0 ? -x : x;
 }
 
 struct coord_def
@@ -89,8 +96,8 @@ struct coord_def
     int         x;
     int         y;
 
-    coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
-    coord_def() : coord_def(0,0) { }
+    constexpr coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
+    constexpr coord_def() : coord_def(0,0) { }
 
     void set(int xi, int yi)
     {
@@ -103,24 +110,27 @@ struct coord_def
         set(0, 0);
     }
 
-    int distance_from(const coord_def &b) const PURE;
+    constexpr int distance_from(const coord_def &b) const
+    {
+        return (b - *this).rdist();
+    }
 
-    bool operator == (const coord_def &other) const
+    constexpr bool operator == (const coord_def &other) const
     {
         return x == other.x && y == other.y;
     }
 
-    bool operator != (const coord_def &other) const
+    constexpr bool operator != (const coord_def &other) const
     {
         return !operator == (other);
     }
 
-    bool operator <  (const coord_def &other) const
+    constexpr bool operator <  (const coord_def &other) const
     {
         return x < other.x || (x == other.x && y < other.y);
     }
 
-    bool operator >  (const coord_def &other) const
+    constexpr bool operator >  (const coord_def &other) const
     {
         return x > other.x || (x == other.x && y > other.y);
     }
@@ -167,80 +177,75 @@ struct coord_def
         return *this;
     }
 
-    coord_def operator + (const coord_def &other) const
+    constexpr coord_def operator + (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return { x + other.x, y + other.y };
     }
 
-    coord_def operator + (int other) const
+    constexpr coord_def operator + (int other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return *this + coord_def(other, other);
     }
 
-    coord_def operator - (const coord_def &other) const
+    constexpr coord_def operator - (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return { x - other.x, y - other.y };
     }
 
-    coord_def operator -() const
+    constexpr coord_def operator -() const
     {
-        return coord_def(0, 0) - *this;
+        return { -x, -y };
     }
 
-    coord_def operator - (int other) const
+    constexpr coord_def operator - (int other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return *this - coord_def(other, other);
     }
 
-    coord_def operator / (int div) const
+    constexpr coord_def operator / (int div) const
     {
-        coord_def copy = *this;
-        return copy /= div;
+        return { x / div, y / div };
     }
 
-    coord_def operator * (int mul) const
+    constexpr coord_def operator * (int mul) const
     {
-        coord_def copy = *this;
-        return copy *= mul;
+        return { x * mul, y * mul };
     }
 
-    coord_def sgn() const
+    constexpr coord_def sgn() const
     {
         return coord_def(::sgn(x), ::sgn(y));
     }
 
-    int abs() const
+    constexpr int abs() const
     {
         return x * x + y * y;
     }
 
-    int rdist() const
+    constexpr int rdist() const
     {
-        return max(::abs(x), ::abs(y));
+        // Replace with max(abs_ce(x), abs_ce(y) when we require C++14.
+        return abs_ce(x) > abs_ce(y) ? abs_ce(x) : abs_ce(y);
     }
 
-    bool origin() const
+    constexpr bool origin() const
     {
         return !x && !y;
     }
 
-    bool zero() const
+    constexpr bool zero() const
     {
         return origin();
     }
 
-    bool equals(const int xi, const int yi) const
+    constexpr bool equals(const int xi, const int yi) const
     {
-        return xi == x && yi == y;
+        return *this == coord_def(xi, yi);
     }
 };
 
-extern const coord_def INVALID_COORD;
-extern const coord_def NO_CURSOR;
+constexpr coord_def INVALID_COORD {-1, -1};
+constexpr coord_def NO_CURSOR { INVALID_COORD };
 
 typedef bool (*coord_predicate)(const coord_def &c);
 

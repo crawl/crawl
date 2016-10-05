@@ -1514,11 +1514,17 @@ void redraw_screen()
         update_turn_count();
     }
 
-    viewwindow();
+    if (Options.messages_at_top)
+    {
+        display_message_window();
+        viewwindow();
+    }
+    else
+    {
+        viewwindow();
+        display_message_window();
+    }
 
-    // Display the message window at the end because it places
-    // the cursor behind possible prompts.
-    display_message_window();
     update_screen();
 }
 
@@ -1874,7 +1880,7 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth  ";
-    const int stealth_num = _stealth_breakpoint(check_stealth());
+    const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
     for (int i = 0; i < 10 - stealth_num; i++)

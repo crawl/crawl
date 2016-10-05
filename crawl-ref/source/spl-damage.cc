@@ -1504,12 +1504,7 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
     }, who->pos(), true, 8);
 
     if (who->is_player())
-    {
-        contaminate_player(1500 + random2(1500)); // on avg, a bit under 50% of
-                                                  // yellow contam
-                                                  // another cast might or
-                                                  // might not push you over
-    }
+        contaminate_player(1000 + random2(500));
     return SPRET_SUCCESS;
 }
 

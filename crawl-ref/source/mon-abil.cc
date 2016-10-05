@@ -928,8 +928,7 @@ void treant_release_fauna(monster* mons)
     int count = mons->mangrove_pests;
     bool created = false;
 
-    monster_type fauna_t = (one_chance_in(6) ? MONS_HORNET
-                                             : MONS_WASP);
+    monster_type fauna_t = MONS_HORNET;
 
     mon_enchant abj = mons->get_ench(ENCH_ABJ);
 

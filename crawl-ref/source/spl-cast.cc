@@ -507,8 +507,6 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & SPTYP_AIR)
         enhanced += player_spec_air();
 
-    if (you.attribute[ATTR_SHADOWS])
-        enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
 
@@ -1396,12 +1394,8 @@ spret_type your_spells(spell_type spell, int powc,
             return SPRET_ABORT;
         }
 
-        if (spd.isMe()
-            && (spell == SPELL_HASTE && check_stasis(NO_HASTE_MSG)
-                || spell == SPELL_INVISIBILITY && !invis_allowed()))
-        {
+        if (spd.isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
             return SPRET_ABORT;
-        }
     }
 
     if (evoked)

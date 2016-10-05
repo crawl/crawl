@@ -4527,9 +4527,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
-        // Ditto poison DOT, and also for flavor reasons in that case.
+        // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player() && mons_gives_xp(*this, *agent)
-            && flavour != BEAM_SHARED_PAIN)
+            && flavour != BEAM_SHARED_PAIN
+            && flavour != BEAM_STICKY_FLAME
+            && kill_type != KILLED_BY_POISON
+            && kill_type != KILLED_BY_CLOUD)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
@@ -6134,7 +6137,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            type = fly_died ? MONS_SPRIGGAN : MONS_WASP;
+            type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
             define_monster(*this);
             hit_points = min(old_hp, hit_points);
             flags          = old_flags;
@@ -6145,7 +6148,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!old_name.empty())
                 mname = old_name;
 
-            mounted_kill(this, fly_died ? MONS_WASP : MONS_SPRIGGAN,
+            mounted_kill(this, fly_died ? MONS_HORNET : MONS_SPRIGGAN,
                 !oppressor ? KILL_MISC
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,

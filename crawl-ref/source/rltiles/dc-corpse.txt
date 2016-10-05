@@ -96,7 +96,6 @@ killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
 vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
 ../meliai CORPSE_MELIAI
-wasp CORPSE_WASP
 hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP
 ghost_moth CORPSE_GHOST_MOTH
@@ -216,7 +215,7 @@ dwarf CORPSE_DWARF
 deep_dwarf CORPSE_DEEP_DWARF
 
 ## Ugly things ('u')
-%sdir mon/aberr
+%sdir mon/aberrations
 ugly_thing CORPSE_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -363,7 +362,6 @@ demonspawn CORPSE_DEMONSPAWN
 monstrous CORPSE_MONSTROUS_DEMONSPAWN
 gelid CORPSE_GELID_DEMONSPAWN
 infernal CORPSE_INFERNAL_DEMONSPAWN
-putrid CORPSE_PUTRID_DEMONSPAWN
 torturous CORPSE_TORTUROUS_DEMONSPAWN
 
 %corpse 0

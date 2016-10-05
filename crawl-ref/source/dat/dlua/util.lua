@@ -293,6 +293,31 @@ function util.random_weighted_keys(weightfn, list, order)
   return chosen
 end
 
+-- Given a table of elements, choose a subset of size n without replacement.
+function util.random_subset(set, n)
+   local result = {}
+   local cmap = {}
+   for i=1,n,1 do
+       local vals = {}
+       local indices = {}
+       local count = 0
+       for j,v in ipairs(set) do
+           if not cmap[j] then
+               indices[count + 1] = j
+               vals[count + 1] = v
+               count = count + 1
+           end
+       end
+       if count == 0 then
+           break
+       end
+       local ind = crawl.random2(count) + 1
+       table.insert(result, vals[ind])
+       cmap[indices[ind]] = true
+   end
+   return result
+end
+
 -- Uses a predefined weight function allowing list items
 -- to be weighted according to branch
 function util.random_branch_weighted(list)

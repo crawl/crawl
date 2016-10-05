@@ -479,18 +479,21 @@ static bool _make_book_randart(item_def &book)
     return true;
 }
 
-void wizard_value_artefact()
+/// Prompt for an item in inventory & print its base shop value.
+void wizard_value_item()
 {
-    int i = prompt_invent_item("Value of which artefact?", MT_INVLIST, -1);
+    const int i = prompt_invent_item("Value of which item?", MT_INVLIST, -1);
 
-    if (!prompt_failed(i))
-    {
-        const item_def& item(you.inv[i]);
-        if (!is_artefact(item))
-            mpr("That item is not an artefact!");
-        else
-            mpr(debug_art_val_str(item));
-    }
+    if (prompt_failed(i))
+        return;
+
+    const item_def& item(you.inv[i]);
+    const int real_value = item_value(item, true);
+    const int known_value = item_value(item, false);
+    if (real_value != known_value)
+        mprf("Real value: %d (known: %d)", real_value, known_value);
+    else
+        mprf("Value: %d", real_value);
 }
 
 void wizard_create_all_artefacts()

@@ -2373,12 +2373,42 @@ monster_type random_draconian_monster_species()
     return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
 }
 
+// TODO: Clean up special cases when save compatibility is broken.
 monster_type random_demonspawn_monster_species()
 {
     const int num_demons = MONS_LAST_BASE_DEMONSPAWN
                             - MONS_FIRST_BASE_DEMONSPAWN + 1;
-    return static_cast<monster_type>(MONS_FIRST_BASE_DEMONSPAWN
-                                     + random2(num_demons));
+
+#if TAG_MAJOR_VERSION > 34
+    int select_demon = random2(num_demons);
+#endif
+#if TAG_MAJOR_VERSION == 34
+    // Special case to skip putrid demonspawn
+    int select_demon = 3;
+    while (select_demon == 3)
+        select_demon = random2(num_demons);
+#endif
+
+    return static_cast<monster_type>(MONS_FIRST_BASE_DEMONSPAWN + select_demon);
+}
+
+// TODO: Clean up special cases when save compatibility is broken.
+monster_type random_demonspawn_job()
+{
+    const int num_demons = MONS_LAST_NONBASE_DEMONSPAWN
+                            - MONS_FIRST_NONBASE_DEMONSPAWN + 1;
+
+#if TAG_MAJOR_VERSION > 34
+    int select_demon = random2(num_demons);
+#endif
+#if TAG_MAJOR_VERSION == 34
+    // Special case to skip chaos champions
+    int select_demon = 1;
+    while (select_demon == 1)
+        select_demon = random2(num_demons);
+#endif
+
+    return static_cast<monster_type>(MONS_FIRST_NONBASE_DEMONSPAWN + select_demon);
 }
 
 // Note: For consistent behavior in player_will_anger_monster(), all
@@ -2899,6 +2929,7 @@ monster_type draconian_colour_by_name(const string &name)
     return MONS_PROGRAM_BUG;
 }
 
+// TODO: Remove "putrid" when TAG_MAJOR_VERSION > 34
 static const char *demonspawn_base_names[] =
 {
     "monstrous", "gelid", "infernal", "putrid", "torturous",

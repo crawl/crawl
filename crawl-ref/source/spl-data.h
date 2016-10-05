@@ -3088,6 +3088,7 @@ static const struct spell_desc spelldata[] =
     TILEG_SAP_MAGIC,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CORRUPT_BODY, "Corrupt Body",
     SPTYP_TRANSMUTATION | SPTYP_HEXES,
@@ -3096,10 +3097,9 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    TILEG_CORRUPT_BODY,
+    TILEG_ERROR,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_REARRANGE_PIECES, "Rearrange the Pieces",
     SPTYP_HEXES,
@@ -3845,6 +3845,17 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
     TILEG_ERROR,
+},
+
+{
+    SPELL_BECKONING, "Lesser Beckoning",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+    3,
+    50,
+    2, LOS_RADIUS,
+    2, 0,
+    TILEG_BECKONING,
 },
 
 {

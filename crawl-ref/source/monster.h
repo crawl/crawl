@@ -14,6 +14,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define MON_SPEED_KEY "speed"
 #define CUSTOM_SPELLS_KEY "custom_spells"
 #define SEEN_SPELLS_KEY "seen_spells"
+#define KNOWN_MAX_HP_KEY "known_max_hp"
+#define VAULT_HD_KEY "vault_hd"
 
 #define FAKE_BLINK_KEY "fake_blink"
 

@@ -2345,7 +2345,7 @@ MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          spriggan berserker w:3 / spriggan air mage w:4 / \
          deep troll earth mage w:4 / deep elf death mage w:2
 MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
-         sphinx w:5 / greater naga w:5 / mummy priest w:1 / \
+         sphinx w:5 / nagaraja w:5 / mummy priest w:1 / \
          white draconian knight w:1
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
@@ -2454,7 +2454,7 @@ ORIENT: float
 DEPTH: Depths
 TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
-KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
+KMONS: P = green death / green draconian / nagaraja w:5 / swamp dragon / \
            redback
 KMONS: F = fire giant w:5 / fire dragon / fire elemental / red draconian / sun demon
 KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
@@ -2470,7 +2470,7 @@ KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
 KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
            merfolk impaler / harpy
-KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
+KMONS: K = nagaraja w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
 KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
            tarantella
@@ -2893,7 +2893,7 @@ ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
 MONS: mana viper / naga warrior / naga mage
-MONS: greater naga / naga ritualist / w:8 green death
+MONS: nagaraja / naga ritualist / w:8 green death
 : elseif brnd >= 5 then
 MONS: jumping spider / wolf spider / tarantella
 MONS: emperor scorpion / w:8 green death / w:3 ghost moth

@@ -32,8 +32,7 @@ static void _strip_item_ego(item_def &item)
     item_set_appearance(item);
 }
 
-static void _give_monster_item(monster* mon, int thing,
-                               bool force_item = false)
+void give_specific_item(monster* mon, int thing)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -84,7 +83,7 @@ static void _give_monster_item(monster* mon, int thing,
         return;
     ASSERT(mthing.holding_monster() == mon);
 
-    if (!force_item || !mthing.appearance_initialized())
+    if (!mthing.appearance_initialized())
         item_colour(mthing);
 }
 
@@ -95,7 +94,7 @@ void give_specific_item(monster* mon, const item_def& tpl)
         return;
 
     mitm[thing] = tpl;
-    _give_monster_item(mon, thing, true);
+    give_specific_item(mon, thing);
 }
 
 static bool _should_give_unique_item(monster* mon)
@@ -120,7 +119,7 @@ static void _give_book(monster* mon, int level)
         if (coinflip())
             make_book_roxanne_special(&mitm[thing_created]);
 
-        _give_monster_item(mon, thing_created, true);
+        give_specific_item(mon, thing_created);
     }
 }
 
@@ -170,7 +169,7 @@ static void _give_wand(monster* mon, int level)
     }
 
     wand.flags = 0;
-    _give_monster_item(mon, idx);
+    give_specific_item(mon, idx);
 }
 
 static void _give_potion(monster* mon, int level)
@@ -186,7 +185,7 @@ static void _give_potion(monster* mon, int level)
             return;
 
         mitm[thing_created].flags = ISFLAG_KNOW_TYPE;
-        _give_monster_item(mon, thing_created);
+        give_specific_item(mon, thing_created);
     }
     else if (mons_is_unique(mon->type) && one_chance_in(4)
                 && _should_give_unique_item(mon))
@@ -198,7 +197,7 @@ static void _give_potion(monster* mon, int level)
             return;
 
         mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created, false);
+        give_specific_item(mon, thing_created);
     }
 }
 
@@ -274,8 +273,17 @@ static bool _apply_weapon_spec(const mon_weapon_spec &spec, item_def &item,
     return true;
 }
 
-static void _give_weapon(monster* mon, int level, bool melee_only = false,
-                         bool give_aux_melee = true, bool spectral_orcs = false)
+/**
+ * Make a weapon for the given monster.
+ *
+ * @param mtyp          The type of monster; e.g. MONS_ORC_WARRIOR.
+ * @param level         The quality of the weapon to make, usually absdepth.
+ * @param melee_only    If this monster can be given both melee and ranged
+ *                      weapons, whether to restrict this to melee weapons.
+ * @return              The index of the newly-created weapon, or NON_ITEM if
+ *                      none was made.
+ */
+int make_mons_weapon(monster_type type, int level, bool melee_only)
 {
     static const weapon_list GOBLIN_WEAPONS = // total 10
     {   { WPN_DAGGER,           3 },
@@ -406,23 +414,22 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     // Demonspawn probably want to use weapons close to the "natural"
     // demon weapons - demon blades, demon whips, and demon tridents.
     // So pick from a selection of good weapons from those classes
-    // with about a 1/4 chance in each category of having the demon
-    // weapon.
+    // with a 2/5 chance in each category of having the demon weapon.
     // XXX: this is so ridiculously overengineered
     static const weapon_list DS_WEAPONS =
     {   { WPN_LONG_SWORD,       10 },
         { WPN_SCIMITAR,         10 },
         { WPN_GREAT_SWORD,      10 },
-        { WPN_DEMON_BLADE,      10 },
+        { WPN_DEMON_BLADE,      20 },
         { WPN_MACE,             10 },
         { WPN_MORNINGSTAR,      8 },
         { WPN_EVENINGSTAR,      2 },
         { WPN_DIRE_FLAIL,       10 },
-        { WPN_DEMON_WHIP,       10 },
+        { WPN_DEMON_WHIP,       20 },
         { WPN_TRIDENT,          10 },
         { WPN_HALBERD,          10 },
         { WPN_GLAIVE,           10 },
-        { WPN_DEMON_TRIDENT,    10 } };
+        { WPN_DEMON_TRIDENT,    20 } };
     static const weapon_list GARGOYLE_WEAPONS =
     {   { WPN_MACE,             15 },
         { WPN_FLAIL,            10 },
@@ -481,7 +488,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         { MONS_GNOLL,                   { GNOLL_WEAPONS } },
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
-        { MONS_GREATER_NAGA,            { GNOLL_WEAPONS } },
+        { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
         { MONS_GNOLL_SHAMAN,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
@@ -842,7 +849,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         } },
         { MONS_INFERNAL_DEMONSPAWN,     { DS_WEAPONS } },
         { MONS_GELID_DEMONSPAWN,        { DS_WEAPONS } },
-        { MONS_PUTRID_DEMONSPAWN,       { DS_WEAPONS } },
         { MONS_TORTUROUS_DEMONSPAWN,    { DS_WEAPONS } },
         { MONS_CORRUPTER,               { DS_WEAPONS } },
         { MONS_BLACK_SUN,               { DS_WEAPONS } },
@@ -920,12 +926,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         } } },
         { MONS_FAUN, { { { WPN_HUNTING_SLING, 1 } } } },
         { MONS_SATYR,
-            { { { WPN_GREATSLING,               1 },
+            { { { WPN_FUSTIBALUS,               1 },
                 { WPN_LONGBOW,                  2 },
         } } },
         { MONS_CHERUB,
             { { { WPN_HUNTING_SLING,            1 },
-                { WPN_GREATSLING,               1 },
+                { WPN_FUSTIBALUS,               1 },
                 { WPN_SHORTBOW,                 1 },
                 { WPN_LONGBOW,                  1 },
         } } },
@@ -961,8 +967,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     item_def item;
     item.base_type = OBJ_UNASSIGNED;
     item.quantity = 1;
-
-    monster_type type = spectral_orcs ? mon->base_monster : mon->type;
 
     // do we have a secondary weapon to give the monster? (usually ranged)
     const mon_weapon_spec *secondary_spec = map_find(secondary_weapon_specs,
@@ -1029,17 +1033,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         if (one_chance_in(3))
             do_curse_item(item);
         break;
-
-    case MONS_DEEP_ELF_BLADEMASTER:
-    {
-        ASSERT(item.base_type == OBJ_WEAPONS);
-        // If the blademaster already has a weapon, give him the exact same
-        // sub_type to match.
-        const item_def *weap = mon->mslot_item(MSLOT_WEAPON);
-        if (weap && weap->base_type == OBJ_WEAPONS)
-            item.sub_type = weap->sub_type;
-        break;
-    }
 
     case MONS_DEEP_ELF_ARCHER:
     case MONS_VASHNIA:
@@ -1119,9 +1112,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_QUARTERSTAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
-            // this might not be the best place for this logic, but:
-            make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
-                                  0, 1, ISFLAG_KNOW_TYPE);
         }
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
@@ -1179,33 +1169,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
-    case MONS_CHAOS_CHAMPION:
-        item.base_type = OBJ_WEAPONS;
-        do
-        {
-            item.sub_type = random2(NUM_WEAPONS);
-        }
-        while (melee_only && is_ranged_weapon_type(item.sub_type)
-               || is_blessed_weapon_type(item.sub_type)
-               || is_magic_weapon_type(item.sub_type)
-               || is_giant_club_type(item.sub_type)
-               || !property(item, PWPN_ACQ_WEIGHT)); // extra-weird weapons
-
-        if (one_chance_in(100))
-        {
-            force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
-            item.plus  = random2(9) - 2;
-        }
-        else
-            level = random2(300);
-        break;
-
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
         force_item = true;
-        upgrade_hepliaklqana_weapon(*mon, item);
+        upgrade_hepliaklqana_weapon(type, item);
         break;
 
     default:
@@ -1214,11 +1182,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
-        return;
+        return NON_ITEM;
 
     if (!force_item && mons_is_unique(type))
     {
-        if (x_chance_in_y(10 + mon->get_experience_level(), 100))
+        if (x_chance_in_y(10 + mons_class_hit_dice(type), 100))
             level = ISPEC_GOOD_ITEM;
         else if (level != ISPEC_GOOD_ITEM)
             level += 5;
@@ -1235,7 +1203,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 item.brand));
 
     if (thing_created == NON_ITEM)
-        return;
+        return NON_ITEM;
 
     // Copy temporary item into the item array if were forcing it, since
     // items() won't have done it for us.
@@ -1248,7 +1216,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
-        return;
+        return NON_ITEM;
     }
 
     if (force_item)
@@ -1268,17 +1236,54 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         bind_item_tile(mitm[thing_created]);
     }
 
-    _give_monster_item(mon, thing_created, force_item);
+    return thing_created;
+}
 
-    if (give_aux_melee &&
-        ((i.base_type != OBJ_WEAPONS && i.base_type != OBJ_STAVES
-          && i.base_type != OBJ_MISCELLANY) // don't double-gift geryon horn
-        || is_range_weapon(i)))
+/**
+ * If you give a monster a weapon, he's going to ask for a glass of milk.
+ *
+ * @param mon               The monster to give a weapon to.
+ * @param level             Item level, which might be absdepth.
+ * @param second_weapon     Whether this is a recursive call to the function
+ *                          to give the monster a melee weapon, after we've
+ *                          already given them something else.
+ */
+static void _give_weapon(monster *mon, int level, bool second_weapon = false)
+{
+    ASSERT(mon); // TODO: change to monster &mon
+
+    if (mon->type == MONS_DEEP_ELF_BLADEMASTER && mon->weapon())
     {
-        _give_weapon(mon, level, true, false);
+        const item_def &first_sword = *mon->weapon();
+        ASSERT(first_sword.base_type == OBJ_WEAPONS);
+        item_def twin_sword = first_sword; // copy
+        give_specific_item(mon, twin_sword);
+        return;
     }
 
-    return;
+    const int thing_created = make_mons_weapon(mon->type, level, second_weapon);
+    if (thing_created == NON_ITEM)
+        return;
+
+    give_specific_item(mon, thing_created);
+    if (second_weapon)
+        return;
+
+    const item_def &i = mitm[thing_created];
+
+    if ((i.base_type != OBJ_WEAPONS
+                && i.base_type != OBJ_STAVES
+                && i.base_type != OBJ_MISCELLANY) // don't double-gift geryon horn
+               || is_range_weapon(i))
+    {
+        _give_weapon(mon, level, true);
+    }
+
+    if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
+    {
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
+                              0, 1, ISFLAG_KNOW_TYPE);
+    }
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
@@ -1357,7 +1362,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 break;
         }
 
-        _give_monster_item(mon, thing_created);
+        give_specific_item(mon, thing_created);
     }
     else
     {
@@ -1469,7 +1474,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
             w.quantity = qty;
-            _give_monster_item(mon, thing_created, false);
+            give_specific_item(mon, thing_created);
         }
     }
 }
@@ -1492,7 +1497,7 @@ static item_def* make_item_for_monster(
 
     mitm[thing_created].flags |= flags;
 
-    _give_monster_item(mons, thing_created);
+    give_specific_item(mons, thing_created);
     return &mitm[thing_created];
 }
 
@@ -1527,12 +1532,6 @@ static void _give_shield(monster* mon, int level)
         // Big shields interfere with ranged combat, at least theme-wise.
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
         break;
-
-    case MONS_MINOTAUR:
-        // Don't pre-equip the Lab minotaur.
-        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
-            break;
-        // deliberate fall-through
 
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
@@ -1674,7 +1673,7 @@ static void _give_shield(monster* mon, int level)
             break;
 
         mitm[thing_created] = shld;
-        _give_monster_item(mon, thing_created, true);
+        give_specific_item(mon, thing_created);
     }
         break;
 
@@ -1683,7 +1682,7 @@ static void _give_shield(monster* mon, int level)
     }
 }
 
-static void _give_armour(monster* mon, int level, bool spectral_orcs)
+int make_mons_armour(monster_type type, int level)
 {
     item_def               item;
 
@@ -1691,10 +1690,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     item.quantity  = 1;
 
     bool force_item = false;
-    monster_type type = mon->type;
-
-    if (spectral_orcs)
-        type = mon->base_monster;
 
     switch (type)
     {
@@ -1727,7 +1722,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                     1, ARM_CHAIN_MAIL);
         }
         else
-            return;
+            return NON_ITEM; // er...
         break;
 
     case MONS_ERICA:
@@ -1809,12 +1804,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
-
-    case MONS_MINOTAUR:
-        // Don't pre-equip the Lab minotaur.
-        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
-            break;
-        // deliberate fall through
 
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
@@ -1907,7 +1896,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             item.sub_type  = ARM_CENTAUR_BARDING;
         }
         else
-            return;
+            return NON_ITEM; // ???
         break;
 
     case MONS_NAGA:
@@ -1915,16 +1904,16 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
-    case MONS_GREATER_NAGA:
+    case MONS_NAGARAJA:
         if (one_chance_in(type == MONS_NAGA         ?  800 :
                           type == MONS_NAGA_WARRIOR ?  300 :
-                          type == MONS_GREATER_NAGA ?  100
+                          type == MONS_NAGARAJA ?  100
                                                     :  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_NAGA_BARDING;
         }
-        else if (type == MONS_GREATER_NAGA
+        else if (type == MONS_NAGARAJA
                  || type == MONS_NAGA_RITUALIST
                  || one_chance_in(3))
         {
@@ -1932,7 +1921,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             item.sub_type  = ARM_ROBE;
         }
         else
-            return;
+            return NON_ITEM; // ???
         break;
 
     case MONS_VASHNIA:
@@ -2068,7 +2057,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:
@@ -2085,28 +2073,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        break;
-
-    case MONS_CHAOS_CHAMPION:
-        item.base_type = OBJ_ARMOUR;
-        if (one_chance_in(30))
-        {
-            item.sub_type  = random_choose(ARM_TROLL_LEATHER_ARMOUR,
-                                           ARM_FIRE_DRAGON_ARMOUR,
-                                           ARM_ICE_DRAGON_ARMOUR,
-                                           ARM_STEAM_DRAGON_ARMOUR,
-                                           ARM_MOTTLED_DRAGON_ARMOUR,
-                                           ARM_STORM_DRAGON_ARMOUR,
-                                           ARM_SWAMP_DRAGON_ARMOUR);
-        }
-        else
-        {
-            item.sub_type  = random_choose(ARM_ROBE,         ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL,    ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL,   ARM_PLATE_ARMOUR);
-        }
-        // Yes, this overrides the spec. Xom thinks this is hilarious!
-        level = random2(150);
         break;
 
     case MONS_WARMONGER:
@@ -2126,19 +2092,19 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     default:
-        return;
+        return NON_ITEM;
     }
 
     // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
-        return;
+        return NON_ITEM;
 
     const object_class_type xitc = item.base_type;
     const int xitt = item.sub_type;
 
     if (!force_item && mons_is_unique(type) && level != ISPEC_GOOD_ITEM)
     {
-        if (x_chance_in_y(9 + mon->get_experience_level(), 100))
+        if (x_chance_in_y(9 + mons_class_hit_dice(type), 100))
             level = ISPEC_GOOD_ITEM;
         else
             level = level * 2 + 5;
@@ -2151,7 +2117,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         ((force_item) ? get_mitm_slot() : items(false, xitc, xitt, level));
 
     if (thing_created == NON_ITEM)
-        return;
+        return NON_ITEM;
 
     // Copy temporary item into the item array if were forcing it, since
     // items() won't have done it for us.
@@ -2163,23 +2129,29 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     if (force_item)
         item_set_appearance(i);
 
-    _give_monster_item(mon, thing_created, force_item);
+    return thing_created;
+}
+
+static void _give_armour(monster* mon, int level)
+{
+    ASSERT(mon); // TODO: make monster &mon
+    give_specific_item(mon, make_mons_armour(mon->type, level));
 }
 
 static void _give_gold(monster* mon, int level)
 {
     const int it = items(false, OBJ_GOLD, 0, level);
-    _give_monster_item(mon, it);
+    give_specific_item(mon, it);
 }
 
-void give_weapon(monster *mons, int level_number, bool spectral_orcs)
+void give_weapon(monster *mons, int level_number)
 {
-    _give_weapon(mons, level_number, false, true, spectral_orcs);
+    _give_weapon(mons, level_number);
 }
 
 void give_armour(monster *mons, int level_number)
 {
-    _give_armour(mons, 1 + level_number/2, false);
+    _give_armour(mons, 1 + level_number/2);
 }
 
 void give_shield(monster *mons)
@@ -2187,7 +2159,7 @@ void give_shield(monster *mons)
     _give_shield(mons, -1);
 }
 
-void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(monster *mons, int level_number, bool mons_summoned)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
@@ -2197,8 +2169,8 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
     _give_book(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
-    _give_weapon(mons, level_number, false, true, spectral_orcs);
+    _give_weapon(mons, level_number);
     _give_ammo(mons, level_number, mons_summoned);
-    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
+    _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
 }

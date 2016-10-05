@@ -4,7 +4,7 @@ local niters = 10000
 local mons = {  [1]="ball python",
                 [5]="naga",
                 [10]="naga_warrior",
-                [15]="greater_naga",
+                [15]="nagaraja",
                 [23]="tentacled_monstrosity"
             }
 
