@@ -3555,7 +3555,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
 
             mg.base_type = mg.cls;
             int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 0)];
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2)];
         }
 
         place_monster(mg);
