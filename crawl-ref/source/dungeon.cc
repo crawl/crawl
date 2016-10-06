@@ -3550,12 +3550,11 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
             && player_in_hell()
             && mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3] =
-                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
             mg.base_type = mg.cls;
-            int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2)];
+            const int skel_chance = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+                                            8,           MONS_ZOMBIE,
+                                            1,           MONS_SIMULACRUM);
         }
 
         place_monster(mg);
