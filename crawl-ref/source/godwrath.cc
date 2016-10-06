@@ -1743,7 +1743,7 @@ static bool _uskayaw_retribution()
         }
         // else we intentionally fall through
 
-    case 5:
+    case 4:
         simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
         noisy(35, you.pos());
         break;
