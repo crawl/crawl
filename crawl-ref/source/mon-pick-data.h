@@ -216,7 +216,7 @@ static const pop_entry pop_blade[] =
 #endif
 
 static const pop_entry pop_lair[] =
-{ // Lair
+{ // Lair (OOD cap: 12)
   { -1,  4,   52, SEMI, MONS_BLACK_BEAR },
   {  0,  5,   25, PEAK, MONS_SCORPION },
   {  0,  6,  260, SEMI, MONS_BASILISK },
