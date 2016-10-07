@@ -3134,7 +3134,15 @@ static void _do_autopickup()
         if (item_needs_autopickup(mi))
         {
             if (_should_autobutcher(mi))
-                butchery(&mi);
+            {
+                if (you_are_delayed() && current_delay()->want_autoeat())
+                    butchery(&mi);
+                else
+                {
+                    o = next;
+                    continue;
+                }
+            }
 
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
