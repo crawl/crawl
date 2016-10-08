@@ -39,18 +39,8 @@ function minmay_elemental_octagon_setup(e)
     e.subst('C : .xcvbmGTdE')
     e.subst('D : .xcvbmGTd1')
     e.subst('E : .:60 cvbmGT')
-    if you.in_branch('Geh') or you.in_branch('Coc') then
-        e.nsubst('1 = 8:1 / * = 1..')
-        e.nsubst('d = 1:4 / 1:} / *:3')
-        if you.in_branch('Geh') then
-            e.subst('bmT = l')
-        elseif you.in_branch("Coc") then
-            e.subst('bmG = w')
-        end
-    else
-        e.nsubst('1 = 4:1 / 4 = 1.. / *:.')
-        e.nsubst('d = 1:2 / *:d')
-    end
+    e.nsubst('1 = 4:1 / 4 = 1.. / *:.')
+    e.nsubst('d = 1:2 / *:d')
 end
 }}
 
@@ -3257,11 +3247,10 @@ xxB.A.A.A.A.Bxx
 ENDMAP
 
 NAME:   minmay_coctagon
-DEPTH:  D:10-, Elf, Coc, !Coc:$
+DEPTH:  D:10-, Elf
 ORIENT: float
 MONS:   polar bear w:6 / rime drake / ice beast
-KMONS:  23 = frost giant / ice dragon
-KMONS:  4 = ice fiend
+KMONS:  2 = frost giant / ice dragon
 ITEM:   book of frost / book of ice / manual of ice magic / \
         wand of iceblast ident:type / staff of cold ident:type / \
         ring of ice ident:type / phial of floods / ice dragon armour w:5
@@ -3297,8 +3286,7 @@ NAME:   minmay_firetagon
 DEPTH:  D:10-, Elf, Geh, !Geh:$
 ORIENT: float
 MONS:   fire bat
-KMONS:  23 = fire giant / fire dragon
-KMONS:  4 = brimstone fiend
+KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
         rod of ignition ident:type / staff of fire ident:type / \
         ring of fire ident:type / lamp of fire / fire dragon armour w:5

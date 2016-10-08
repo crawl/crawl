@@ -6374,7 +6374,7 @@ MONS:    flying skull
 MONS:    curse skull
 NSUBST:  d = 1:d / *:*
 : else
-MONS:    death knight
+MONS:    skeletal warrior
 NSUBST:  d = 1:d / *:%
 : end
 : if you.unrands("skullcrusher") then
