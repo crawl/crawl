@@ -70,11 +70,11 @@ struct armour_def
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_HIDE, "removed " name " dragon hide", 0, 0, 0,  \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },             \
-    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour",  ac, evp, prc,   \
+    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
 #else
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)
-    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour",  ac, evp, prc,   \
+    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
 #endif
 
@@ -1337,8 +1337,8 @@ static set<armour_type> _hide_armour_set = _make_hide_armour_set();
  */
 bool armour_is_hide(const item_def &item)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    return armour_type_is_hide(static_cast<armour_type>(item.sub_type));
+    return item.base_type == OBJ_ARMOUR
+           && armour_type_is_hide(static_cast<armour_type>(item.sub_type));
 }
 
 /**

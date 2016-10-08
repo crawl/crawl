@@ -4077,6 +4077,19 @@ static void _trim_god_gift_inscrip(item_def& item)
     item.inscription = replace_all(item.inscription, "Sonja", "");
     item.inscription = replace_all(item.inscription, "Donald", "");
 }
+
+/// Replace "dragon armour" with "dragon scales" in an artefact's name.
+static void _fixup_dragon_artefact_name(item_def &item, string name_key)
+{
+    if (!item.props.exists(name_key))
+        return;
+
+    string &name = item.props[name_key].get_string();
+    static const string to_repl = "dragon armour";
+    string::size_type found = name.find(to_repl, 0);
+    if (found != string::npos)
+        name.replace(found, to_repl.length(), "dragon scales");
+}
 #endif
 
 void unmarshallItem(reader &th, item_def &item)
@@ -4564,6 +4577,12 @@ void unmarshallItem(reader &th, item_def &item)
     // ASSUMPTION: there was no such thing as an artefact hide
     if (item.base_type == OBJ_ARMOUR && hide_to_armour.count(item.sub_type))
         item.sub_type = *map_find(hide_to_armour, item.sub_type);
+
+    if (th.getMinorVersion() < TAG_MINOR_HIDE_TO_SCALE && armour_is_hide(item))
+    {
+        _fixup_dragon_artefact_name(item, ARTEFACT_NAME_KEY);
+        _fixup_dragon_artefact_name(item, ARTEFACT_APPEAR_KEY);
+    }
 #endif
 
     if (is_unrandom_artefact(item))

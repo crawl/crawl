@@ -3058,7 +3058,7 @@ KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
                                 robe ego:resistance good_item ident:type
 KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
                            halberd ego:electrocution | lajatang ego:vorpal . \
-                           fire dragon armour | ice dragon armour
+                           fire dragon scales | ice dragon scales
 KMONS:  9 = red draconian / white draconian / black draconian
 KMONS:  0 = red draconian monk / white draconian monk / black draconian monk
 KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
@@ -3188,7 +3188,7 @@ MONS:   raiju / sixfirhy w:2
 KMONS:  2 = shock serpent / storm dragon
 ITEM:   book of air / book of the sky / manual of air magic / \
         lightning rod ident:type / staff of air ident:type / \
-        disc of storms / fan of gales / storm dragon armour w:5
+        disc of storms / fan of gales / storm dragon scales w:5
 : if you.unrands("arc blade") then
 KITEM:  2 = quick blade ego:electrocution randart ident:type
 : else
@@ -3253,7 +3253,7 @@ MONS:   polar bear w:6 / rime drake / ice beast
 KMONS:  2 = frost giant / ice dragon
 ITEM:   book of frost / book of ice / manual of ice magic / \
         wand of iceblast ident:type / staff of cold ident:type / \
-        ring of ice ident:type / phial of floods / ice dragon armour w:5
+        ring of ice ident:type / phial of floods / ice dragon scales w:5
 : if you.unrands("frostbite") then
 KITEM:  2 = executioner's axe ego:freezing randart ident:type / \
             battleaxe ego:freezing randart ident:type / \
@@ -3289,7 +3289,7 @@ MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
         rod of ignition ident:type / staff of fire ident:type / \
-        ring of fire ident:type / lamp of fire / fire dragon armour w:5
+        ring of fire ident:type / lamp of fire / fire dragon scales w:5
 : if you.unrands("firestarter") then
 KITEM:  2 = great mace ego:flaming randart ident:type
 : else
@@ -7121,7 +7121,7 @@ KMONS: _ = torpor snail patrolling
 KFEAT: _ = altar_cheibriados
 KITEM: _ = plate armour good_item ego:ponderousness no_pickup /\
            crystal plate armour good_item ego:ponderousness no_pickup w:5 /\
-           gold dragon armour good_item ego:ponderousness no_pickup w:5
+           gold dragon scales good_item ego:ponderousness no_pickup w:5
 # general settings
 KMONS: T = torpor snail
 KMONS: D = 0 band

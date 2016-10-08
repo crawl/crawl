@@ -307,7 +307,7 @@ BOOL:    evil, nogen
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
 ENUM:    FAERIE
-NAME:    faerie dragon armour
+NAME:    faerie dragon scales
 OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL

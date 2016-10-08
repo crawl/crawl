@@ -6249,7 +6249,7 @@ MONS:    adder / water moccasin
 : if you.unrands("staff_of_olgreb") then
 ITEM:    book of envenomations / young poisoner's handbook / \
          ring of poison resistance ident:type / staff of poison ident:type / \
-         swamp dragon armour
+         swamp dragon scales
 : else
 ITEM:    staff_of_olgreb no_pickup
 : end

@@ -116,11 +116,11 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local arm = {
-       {base="armour", type="gold dragon armour", quant=1+d(2)},
-       {base="armour", type="storm dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="shadow dragon armour", quant=d(2)+d(2)},
-       {base="armour", type="fire dragon armour", quant=d(3)+d(3)},
-       {base="armour", type="ice dragon armour", quant=d(3)+d(3)} }
+       {base="armour", type="gold dragon scales", quant=1+d(2)},
+       {base="armour", type="storm dragon scales", quant=d(2)+d(2)},
+       {base="armour", type="shadow dragon scales", quant=d(2)+d(2)},
+       {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
+       {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
   if you.race() ~= "Felid" and you.race() ~= "Octopode" then
     for _, toll in ipairs(arm) do
@@ -812,7 +812,7 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon armour / storm dragon armour / fire dragon armour / troll leather armour / any useful armour good_item
+ITEM:    gold dragon scales / storm dragon scales / fire dragon scales / troll leather armour / any useful armour good_item
 ITEM:    arrow good_item / bolt good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123

@@ -715,11 +715,11 @@ KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
-              fire dragon armour mundane not_cursed ident:all plus:5, \
-              ice dragon armour mundane not_cursed ident:all plus:5, \
-              storm dragon armour mundane not_cursed ident:all plus:5, \
-              shadow dragon armour mundane not_cursed ident:all plus:5, \
-              gold dragon armour mundane not_cursed ident:all plus:5, \
+              fire dragon scales mundane not_cursed ident:all plus:5, \
+              ice dragon scales mundane not_cursed ident:all plus:5, \
+              storm dragon scales mundane not_cursed ident:all plus:5, \
+              shadow dragon scales mundane not_cursed ident:all plus:5, \
+              gold dragon scales mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
               shield mundane not_cursed ident:all plus:3, \
