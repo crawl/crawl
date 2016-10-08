@@ -302,44 +302,6 @@ done:
     return;
 }
 
-
-static void _create_monster_hide(const item_def &corpse)
-{
-    const armour_type type = hide_for_monster(corpse.mon_type);
-    ASSERT(type != NUM_ARMOURS);
-
-    int o = items(false, OBJ_ARMOUR, type, 0);
-    squash_plusses(o);
-
-    if (o == NON_ITEM)
-        return;
-    item_def& item = mitm[o];
-
-    do_uncurse_item(item);
-
-    // Automatically identify the created hide.
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-    const monster_type montype =
-    static_cast<monster_type>(corpse.orig_monnum);
-    if (!invalid_monster_type(montype) && mons_is_unique(montype))
-        item.inscription = mons_type_name(montype, DESC_PLAIN);
-
-    const coord_def pos = item_pos(corpse);
-    if (pos.origin())
-        return;
-
-    move_item_to_grid(&o, pos);
-    if (you.see_cell(pos))
-        mprf("You see %s.", item.name(DESC_A).c_str());
-}
-
-void maybe_drop_monster_hide(const item_def &corpse)
-{
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
-        _create_monster_hide(corpse);
-}
-
 /** Skeletonise this corpse.
  *
  *  @param item the corpse to be turned into a skeleton.

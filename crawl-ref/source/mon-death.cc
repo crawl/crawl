@@ -411,6 +411,45 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
+static void _create_monster_hide(const monster &mons)
+{
+    const armour_type type = hide_for_monster(mons.type);
+    ASSERT(type != NUM_ARMOURS);
+
+    int o = items(false, OBJ_ARMOUR, type, 0);
+    squash_plusses(o);
+
+    if (o == NON_ITEM)
+        return;
+    item_def& item = mitm[o];
+
+    do_uncurse_item(item);
+
+    // Automatically identify the created hide.
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    if (!invalid_monster_type(mons.type) && mons_is_unique(mons.type))
+        item.inscription = mons_type_name(mons.type, DESC_PLAIN);
+
+    const coord_def pos = mons.pos();
+    if (pos.origin())
+        return;
+
+    move_item_to_grid(&o, pos);
+    if (you.see_cell(pos))
+    {
+        mprf("%s %s intact enough to wear.",
+             apostrophise(mons.name(DESC_THE)).c_str(),
+             mons_genus(mons.type) == MONS_DRAGON ? "scales are" : "hide is");
+    }
+}
+
+static void _maybe_drop_monster_hide(const monster &mons)
+{
+    if (mons_class_leaves_hide(mons.type) && !one_chance_in(3))
+        _create_monster_hide(mons);
+}
+
 /**
  * Create this monster's corpse in mitm at its position.
  *
@@ -500,7 +539,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     {
         move_item_to_grid(&o, mons.pos(), !mons.swimming());
         if (!force)
-            maybe_drop_monster_hide(corpse);
+            _maybe_drop_monster_hide(mons);
     }
 
     if (o == NON_ITEM)
