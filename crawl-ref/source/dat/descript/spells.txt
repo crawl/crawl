@@ -434,7 +434,8 @@ Disjunction spell
 
 Destabilizes the space in a sphere around the caster for a while, causing
 anyone nearby to be randomly blinked. The chance of blinking depends on the
-distance from the caster, being nearly certain when directly adjacent.
+distance from the caster, being nearly certain when directly adjacent. It
+causes magical contamination when cast.
 %%%%
 Dispel Undead spell
 
@@ -752,7 +753,7 @@ Irradiate spell
 Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
 into pure magical energy, blasting and deforming adjacent creatures. The caster
 is not left entirely unaffected; some of the magic lingers, enough to leave
-them dangerously contaminated after just two or three castings.
+them dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
