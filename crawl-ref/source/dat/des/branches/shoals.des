@@ -1227,6 +1227,62 @@ Xwwwwwwwwwwwwww
 XwwwwwwwWWW@WW
 ENDMAP
 
+NAME: cheibrodos_shoals_epimethial_gifts
+DEPTH: Shoals
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+KPROP: . = no_tide
+MONS: sea snake, wind drake, manticore / hippogriff, alligator snapping turtle
+MONS: snapping turtle, merfolk impaler / merfolk aquamancer / merfolk javelineer
+SHUFFLE: -'"
+NSUBST: - = 2:1 / 2=1.., ' = 1:2 / 3=3., " = 1:4 / 2=5., ` = 1=|* / 2=*%
+NSUBST: _ = 2:6 / *=6...
+MAP
+       .cccccc
+cccccc.tc_..`c
+c`.._ct.c.''.c
+c.--.c..c.''.c
+c.--.c..c..._c
+c_...+..+ccccc
+cccccc......t.
+...........t.
+...t...c+cccc
+.......c..._c
+.t.G.t.c."".c
+.......c."".c
+...t...c_..`c
+@......cccccc
+ENDMAP
+
+NAME: cheibrodos_shoals_gigantism
+DEPTH: Shoals
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: titan, cyclops / w:3 stone giant / w:3 frost giant
+SUBST: " = .:2 W, x = c:1 x
+NSUBST: - = 1=|* / 1=|*% / 2=*%
+MAP
+     xxxxxxxxx
+   xxxxxxxxxxxx
+  xxx..x..""xxxx
+ xxx2..+...."xxxx
+ xxG...xx....""xxx
+ xxx".xxxx"...."xxx
+  xx"..xxxx"..."xxx
+ xxxx"..xxx"...."xx
+@xxxxx".2xx"...."xx
+@+..xxx..xxx...."xx
+@xx".xxx."mm...."xx
+ xxx".xx."mm..1..xx
+  xx".Gx."xxG.-.Gxx
+  xx"....xxxx---xxx
+   xx".."xxxxxxxxx
+   xxx2xxxx xxxxx
+    xxxxx    xxx
+     xxx
+ENDMAP
+
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map, by placing many
