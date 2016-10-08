@@ -2801,10 +2801,8 @@ static void _swing_at_target(coord_def move)
         you.turn_is_over = true;
         fight_melee(&you, mon);
 
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
-            you.berserk_penalty = 0;
+        you.berserk_penalty = 0;
         you.apply_berserk_penalty = false;
-
         return;
     }
 
@@ -3032,9 +3030,6 @@ static void _close_door(coord_def move)
 //
 static void _do_berserk_no_combat_penalty()
 {
-    if (you.berserk_penalty == NO_BERSERK_PENALTY)
-        return;
-
     if (you.berserk())
     {
         you.berserk_penalty++;
@@ -3358,11 +3353,7 @@ static void _move_player(coord_def move)
             you.turn_is_over = true;
             fight_melee(&you, targ_monst);
 
-            // We don't want to create a penalty if there isn't
-            // supposed to be one.
-            if (you.berserk_penalty != NO_BERSERK_PENALTY)
-                you.berserk_penalty = 0;
-
+            you.berserk_penalty = 0;
             attacking = true;
         }
     }

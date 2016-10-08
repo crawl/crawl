@@ -757,8 +757,7 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true);
 
-    if (you.berserk_penalty != NO_BERSERK_PENALTY)
-        you.berserk_penalty = 0;
+    you.berserk_penalty = 0;
 
     you.redraw_quiver = true; // Account for no firing.
 
