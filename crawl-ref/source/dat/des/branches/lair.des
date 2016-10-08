@@ -976,20 +976,6 @@ tt1Wttt2.tt
 ENDMAP
 
 ###############################################################################
-# A polar bear lost in the jungle, how odd
-NAME:  roderic_lost_polar_bear
-TAGS:  no_monster_gen
-DEPTH: Lair:3-, !Lair:$
-MONS:  plant, polar_bear, bush
-SUBST: ? = 1t
-SUBST: ' = .:80 1 3:3
-MAP
-??'.
-.'2'
-'??.
-ENDMAP
-
-###############################################################################
 # Wood themed vaults. Can generate in Forest, Lair, and occasionally D.
 # uniq_ tagged by tier: large, medium, small, rock, and decor.
 #
@@ -2479,6 +2465,28 @@ xxx5xxxxxxxx7xx7dx
 xxxx56xxx666xxxxxx
 xxxxxx666xxxxxxxxx
 xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: cheibrodos_lair_lostbears
+DEPTH: Lair
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: p = plant
+MONS: polar bear
+SUBST: v = vvvvvpp..
+NSUBST: - = 2:1 / 3=1., . = 4:p / 2=p.
+MAP
+       ....
+      ..vv.
+   ....vvv..
+ ...vvvvvv..
+..vvvvvvvvv..
+.vvvv-.--vvv.
+@...-.-.-...@
+@....---.-..@
+ ..vvvvvvvv..
+  ..vvvvvv..
+   ........
 ENDMAP
 
 ###############################################################################

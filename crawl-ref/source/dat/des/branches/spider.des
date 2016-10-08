@@ -1377,6 +1377,39 @@ xxxxx"x........x+xxxxx........x"xxxxx
 ..................@..................
 ENDMAP
 
+NAME: cheibrodos_spider_silkery
+DEPTH: Spider
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: entropy weaver, wolf spider, orb spider
+MONS: redback / tarantella / jumping spider
+ITEM: robe good_item / cloak good_item, robe / cloak
+NSUBST: " = 2:1 / 2:2 / 1=2., ' = 1:2 / 1:3 / 6:4 / 4=234.. / 8:^
+NSUBST: - = 2=e% / 4=e%. / 3=%.
+KFEAT: ^ = known web trap
+MAP
+    ..........
+   ..xxxxxxxx..
+  ..xx---x---xx..
+ ..xx'''''''''xx..
+..xxxx'''x'''xxxx..
+.xx'xx'''''''xx'xx.
+.x''''x'xxx'x''''x.
+.x'''''x"""x'''''.@
+.x''''x""x""x''''.@
+.xx'x'x"xdx"x'x'xx.
+@.''''x""x""x''''x.
+@.'''''x"""x'''''x.
+.x''''x'xxx'x''''x.
+.xx'xx'''''''xx'xx.
+..xxxx'''x'''xxxx..
+ ..xx'''''''''xx..
+  ..xx---x---xx..
+   ..xxxxxxxxx..
+    ...........
+ENDMAP
+
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
