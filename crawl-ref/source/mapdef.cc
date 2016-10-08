@@ -4940,9 +4940,11 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         break;
 
     case OBJ_MISSILES:
+#if TAG_MAJOR_VERSION == 34
         // HACK to get an old save to load; remove me soon?
         if (ego_str == "sleeping")
             return SPMSL_SLEEP;
+#endif
         order = missile_order;
         break;
 
