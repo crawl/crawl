@@ -991,12 +991,11 @@ static const pop_entry pop_volcano[] =
   {  1,  1,  515, FLAT, MONS_HELL_HOUND },
   {  1,  1,  385, FLAT, MONS_RED_DEVIL },
   {  1,  1,  515, FLAT, MONS_EFREET },
-  {  1,  1,  515, FLAT, MONS_MANTICORE },
   {  1,  1,  515, FLAT, MONS_LINDWURM },
-  {  1,  1,  385, FLAT, MONS_TOENAIL_GOLEM },
+  {  1,  1,  255, FLAT, MONS_TOENAIL_GOLEM },
   {  1,  1,  515, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  1,  385, FLAT, MONS_GARGOYLE },
-  {  1,  1,  385, FLAT, MONS_MOLTEN_GARGOYLE },
+  {  1,  1,  515, FLAT, MONS_MOLTEN_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
