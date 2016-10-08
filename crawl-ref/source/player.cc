@@ -601,11 +601,6 @@ bool player_likes_lava(bool permanently)
            && form_likes_lava();
 }
 
-bool player_can_open_doors()
-{
-    return you.form != TRAN_BAT;
-}
-
 /**
  * Is the player considered to be closely related, if not the same species, to
  * the given monster? (See mon-data.h for species/genus info.)
