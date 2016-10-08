@@ -2709,7 +2709,7 @@ void excommunication(bool voluntary, god_type new_god)
             if (vehumet_is_offering(spell))
                 del_spell_from_memory(spell);
 
-        you.expiring_vehumet_gifts.clear()
+        you.expiring_vehumet_gifts.clear();
         you.vehumet_gifts.clear();
         you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);
