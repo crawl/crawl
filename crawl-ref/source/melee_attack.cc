@@ -285,10 +285,15 @@ bool melee_attack::handle_phase_dodged()
         {
             do_minotaur_retaliation();
         }
-        else if ((you.props["wudzu_hat_picked_v"].get_int() == 1
-                  && have_passive(passive_t::thorn_vestment))
-                  || (you.props["wudzu_hat_picked_r"].get_int() == 1
-                  && have_passive(passive_t::thorn_regalia)))
+        else if (defender->is_player()
+                    && (
+                        you.props["wudzu_hat_picked_v"].get_int() == 1
+                        && have_passive(passive_t::thorn_vestment)
+                    )
+                    || (
+                        you.props["wudzu_hat_picked_r"].get_int() == 1
+                        && have_passive(passive_t::thorn_regalia)
+                    ))
         {
                         if (coinflip())
                                 do_wudzu_hat_retaliation();
