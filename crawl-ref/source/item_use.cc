@@ -1896,13 +1896,6 @@ void drink(item_def* potion)
         return;
     }
 
-    if (you.form == TRAN_BAT)
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        _vampire_corpse_help();
-        return;
-    }
-
     if (you.duration[DUR_NO_POTIONS])
     {
         mpr("You cannot drink potions in your current state!");

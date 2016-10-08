@@ -247,10 +247,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
             return you.permanent_flight();
-
-        // You can't open doors in bat form.
-        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            return player_can_open_doors();
     }
 
     return feat_is_traversable(grid, try_fallback);
