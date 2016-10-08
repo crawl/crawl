@@ -846,10 +846,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_SOJOBO, {
             { { WPN_TRIPLE_SWORD,       1 },
-              { WPN_GREAT_SWORD,        5 } }, {},
-            { { SPWPN_ELECTROCUTION, 2 },
-              { NUM_SPECIAL_WEAPONS, 1 } },
-            1,
+              { WPN_GREAT_SWORD,        5 } },
         } },
         { MONS_INFERNAL_DEMONSPAWN,     { DS_WEAPONS } },
         { MONS_GELID_DEMONSPAWN,        { DS_WEAPONS } },
@@ -1178,6 +1175,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_ANCESTOR_KNIGHT:
         force_item = true;
         upgrade_hepliaklqana_weapon(type, item);
+        break;
+
+    case MONS_SOJOBO:
+        if (!one_chance_in(3))
+        {
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+            item.plus  = random2(5);
+        }
+        else
+        {
+            level = ISPEC_GOOD_ITEM;
+        }
         break;
 
     default:
