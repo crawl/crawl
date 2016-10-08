@@ -896,6 +896,9 @@ bool melee_attack::attack()
 
 void melee_attack::check_autoberserk()
 {
+    if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
+        return;
+
     if (attacker->is_player())
     {
         for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
