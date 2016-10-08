@@ -22,6 +22,8 @@ Firefly
 
 Scarab
 
+Death Scarab
+
 w:5
 Magpie
 
@@ -208,6 +210,14 @@ the Evening
 the Equinox
 
 the Everdark
+
+the Distant Future
+
+the Past
+
+Yesterday
+
+Tomorrow
 %%%%
 _sky_colour_name_
 
@@ -345,6 +355,10 @@ Youthful Indiscretion
 Foolhardiness
 
 Recklessness
+
+Past Mistakes
+
+Moral Flaws
 %%%%
 _destiny_name_
 
@@ -361,6 +375,7 @@ Kismet
 Wyrd
 
 Doom
+
 %%%%
 _number_or_qualifier_
 
@@ -391,7 +406,19 @@ the Dozen
 
 the Thirteen
 
+w:5
+the Twenty
+
 the Fifty
+
+w:5
+the Sixty-Six
+
+w:5
+the Seventy-Seven
+
+w:5
+the Ninety-Nine
 
 w:5
 a Hundred
@@ -400,6 +427,10 @@ w:5
 the Hundredfold
 
 a Thousand
+
+a Million
+
+a Billion
 
 # vague numbers
 the
@@ -411,6 +442,8 @@ the Countless
 the Assorted
 
 the Manifold
+
+the Several
 
 # other qualifiers
 the Lost
@@ -482,6 +515,27 @@ the Aged
 the Inquisitive
 
 the Thoughtful
+
+the Cool
+
+the Nerdy
+
+the Uncool
+
+the Well-Known
+
+the Sneaky
+
+the Final
+
+the Modern
+
+the Postmodern
+
+the Invisible
+
+the Vanishing
+
 %%%%
 _thing_names_
 
@@ -550,4 +604,37 @@ Songs
 Souls
 
 Tales
+
+Friends
+
+Allies
+
+People
+
+Lovers
+
+Dreams
+
+Scars
+
+Coins
+
+Continents
+
+Princes
+
+Queens
+
+Emperors
+
+Yaks
+
+Shrikes
+
+Stories
+
+Tables
+
+w:5
+Spreadsheets
 %%%%
