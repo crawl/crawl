@@ -2140,7 +2140,7 @@ KMONS:   8 = bone dragon / reaper / doom hound
 KMONS:   _ = tzitzimitl
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, boots_of_the_assassin
-ITEM:    shadow dragon armour randart, ring of stealth randart
+ITEM:    shadow dragon scales randart, ring of stealth randart
 ITEM:    phantom mirror, potion of invisibility ident:type q:2
 KFEAT:   F = floor
 KFEAT:   _ = altar_dithmenos

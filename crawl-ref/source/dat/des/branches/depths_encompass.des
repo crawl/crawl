@@ -657,7 +657,7 @@ MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
 MONS:     fire giant ; battleaxe ego:freezing / spriggan air mage / sphinx w:5 / \
           frost giant ; great sword ego:flaming / deep troll earth mage / \
           tengu reaver / ettin ; great mace ego:flaming . great mace ego:freezing / \
-          deep elf annihilator ; ice dragon armour | fire dragon armour . \
+          deep elf annihilator ; ice dragon scales | fire dragon scales . \
                                  scimitar ego:flaming | scimitar ego:freezing
 MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
           storm dragon w:5 / storm dragon perm_ench:shapeshifter w:5 / \
@@ -669,7 +669,7 @@ MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
                            great mace ego:flaming | great mace ego:freezing
 KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
                                      rapier ego:flaming . rapier ego:freezing
-KMONS:    6 = deep elf master archer ; fire dragon armour | ice dragon armour . \
+KMONS:    6 = deep elf master archer ; fire dragon scales | ice dragon scales . \
                                        longbow ego:flaming | longbow ego:freezing . \
                                        arrow . potion of haste | potion of resistance
 KMONS:    7 = lich / ancient lich w:5

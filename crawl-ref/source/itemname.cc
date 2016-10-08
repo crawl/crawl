@@ -175,6 +175,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     monster_flags_t corpse_flags;
 
+    // no "a dragon scales"
+    const bool always_plural = armour_is_hide(*this)
+                               && sub_type != ARM_TROLL_LEATHER_ARMOUR;
+
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
                & MF_NAME_SPECIES)
@@ -197,7 +201,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             break;
         }
     }
-    else if (quantity > 1)
+    else if (quantity > 1 || always_plural)
     {
         switch (descrip)
         {
@@ -213,7 +217,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         }
 
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
-            && descrip != DESC_DBNAME)
+            && descrip != DESC_DBNAME && !always_plural)
         {
             if (quantity_in_words)
                 buff << number_in_words(quantity) << " ";

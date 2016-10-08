@@ -25,7 +25,7 @@
 # populate the level.
 #
 #   Fire resistance ego armour (any type of armour; this also
-#                               includes dragon armour, which is not
+#                               includes dragon scales, which is not
 #                               given extra rF+)
 #   Flaming ego weapons        (a selection of high-damage weapons)
 #   Gold
@@ -182,7 +182,7 @@ function setup_loot (e)
                                  "large shield w:1", "shield w:2", "buckler w:1"}) ..
                                  "pair of gloves good_item w:6 / helmet good_item w:4 / " ..
                                  "hat good_item w:2 / pair of boots good_item w:6 / " ..
-                                 "fire dragon armour w:8")
+                                 "fire dragon scales w:8")
     e.item([[potion of berserk rage w:14 / potion of might w:5 /
              potion of brilliance w:5 / potion of agility w:5 /
              potion of experience q:1 w:1 / potion of resistance]])

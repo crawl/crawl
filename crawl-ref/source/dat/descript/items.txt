@@ -445,7 +445,7 @@ A small figurine made of some strange material, shaped like a stepped pyramid.
 It is remarkably detailed – almost like a real, vast structure, shrunk somehow
 smaller than a human hand.
 %%%%
-fire dragon armour
+fire dragon scales
 
 The scales of a fire-breathing dragon. It provides great protection from fire,
 while rendering its wearer more susceptible to cold.
@@ -476,7 +476,7 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gold dragon armour
+gold dragon scales
 
 The scales of a gold dragon. It is much heavier than most dragon scale armours,
 and grants its wearer resistance to poison, fire and cold.
@@ -534,7 +534,7 @@ A piece of cloth and leather for launching stones, adequate for hunting small
 game like rabbits or goblins. It deals more damage when launching purpose-made
 ammunition, rather than rocks found on the floor.
 %%%%
-ice dragon armour
+ice dragon scales
 
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
@@ -626,7 +626,7 @@ morningstar
 
 A mace with a head covered in short spikes.
 %%%%
-mottled dragon armour
+mottled dragon scales
 
 The scales of a mottled dragon. Although it does not provide its wearer with as
 much protection as the scales of some larger dragons, it is somewhat lighter
@@ -668,7 +668,7 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 The nacreous scales of a pearl dragon. It grants its wearer resistance to
 negative energies.
@@ -792,7 +792,7 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
-quicksilver dragon armour
+quicksilver dragon scales
 
 The scales of a quicksilver dragon. Although it does not provide its wearer
 with as much protection as the scales of some heavier dragons, it is somewhat
@@ -1176,7 +1176,7 @@ staff of wizardry
 
 A staff that increases the ability of its wielder to use magical spells.
 %%%%
-steam dragon armour
+steam dragon scales
 
 The scales of a steam-breathing dragon. Unlike the scales of some larger
 dragons, it does not provide its wearer with much protection (beyond a
@@ -1187,18 +1187,18 @@ stone
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
 thrown by hand or launched with a sling.
 %%%%
-shadow dragon armour
+shadow dragon scales
 
 The scales of a great umbral dragon. It is heavier than most dragon scale
 armours, but despite this, blends in so well with the shadows as to provide a
 substantial benefit to the wearer's stealth.
 %%%%
-storm dragon armour
+storm dragon scales
 
 The scales of a lightning-breathing dragon. It is heavier than most dragon
 scale armours, and gives its wearer resistance to electrical discharges.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
