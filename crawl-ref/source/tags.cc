@@ -3708,8 +3708,9 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     if (br == -1)
         br = NUM_BRANCHES;
     ASSERT(br >= 0);
+    // at the time NUM_BRANCHES was one above BRANCH_DEPTHS, so we check that
     if (th.getMinorVersion() < TAG_MINOR_GLOBAL_BR_INFO && br == BRANCH_DEPTHS+1)
-        br = GLOBAL_BRANCH_INFO;                             // was NUM_BRANCHES
+        br = GLOBAL_BRANCH_INFO;
     place_info.branch      = static_cast<branch_type>(br);
 #else
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
