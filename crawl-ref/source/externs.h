@@ -60,10 +60,6 @@ protected:
 
 #define MAX_NAME_LENGTH 30
 
-// This value is used to mark that the current berserk is free from
-// penalty (used for Xom's special berserk).
-#define NO_BERSERK_PENALTY    -1
-
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 typedef FixedBitArray<GXM, GYM> map_bitmask;

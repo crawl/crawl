@@ -8540,10 +8540,9 @@ void player_end_berserk()
     //       avoid the mutation being a "death sentence" to
     //       certain characters.
 
-    if (you.berserk_penalty != NO_BERSERK_PENALTY
-        && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
+    if (one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
     {
-        // Note the beauty of Trog!  They get an extra save that's at
+        // Note the beauty of Trog! They get an extra save that's at
         // the very least 20% and goes up to 100%.
         if (have_passive(passive_t::extend_berserk)
             && x_chance_in_y(you.piety, piety_breakpoint(5)))
@@ -8553,7 +8552,7 @@ void player_end_berserk()
         else
         {
             mprf(MSGCH_WARN, "You pass out from exhaustion.");
-            you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
+            you.increase_duration(DUR_PARALYSIS, roll_dice(1, 4));
             you.stop_constricting_all();
         }
     }
@@ -8566,7 +8565,6 @@ void player_end_berserk()
         mpr("You feel less hot-headed.");
 #endif
 
-    // This resets from an actual penalty or from NO_BERSERK_PENALTY.
     you.berserk_penalty = 0;
 
     const int dur = 12 + roll_dice(2, 12);

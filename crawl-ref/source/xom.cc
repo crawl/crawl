@@ -1001,15 +1001,12 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_AGILITY,
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
-                                     10, POT_BERSERK_RAGE,
+                                     5,  POT_BERSERK_RAGE,
                                      1,  POT_EXPERIENCE);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
-
-    if (pot == POT_BERSERK_RAGE)
-        you.berserk_penalty = NO_BERSERK_PENALTY;
 
     if (pot == POT_INVISIBILITY)
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
