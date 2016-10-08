@@ -663,7 +663,7 @@ Chill Winds
 
 Spring Thaw
 
-Partly Cloudy
+Cloud Cover
 %%%%
 _profession_name_
 
