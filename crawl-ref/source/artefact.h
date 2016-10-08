@@ -136,6 +136,7 @@ enum artp_value_type
 {
     ARTP_VAL_BOOL,
     ARTP_VAL_POS,
+    ARTP_VAL_BRAND,
     ARTP_VAL_ANY,
 };
 artp_value_type artp_potential_value_types(artefact_prop_type prop);

@@ -345,6 +345,40 @@ static void _tweak_randart(item_def &item)
                              val);
         break;
     }
+
+    case ARTP_VAL_BRAND:
+    {
+        mprf(MSGCH_PROMPT, "%s was %s.", artp_name(prop),
+             props[prop] ? ego_type_string(item, false).c_str() : "normal");
+
+        char specs[80];
+        msgwin_get_line("New ego? ", specs, sizeof(specs));
+        if (specs[0] == '\0')
+        {
+            canned_msg(MSG_OK);
+            break;
+        }
+
+        const int ego = str_to_ego(item.base_type, specs);
+
+        if (ego == 0 && string(specs) != "normal") // this is secretly a hack
+        {
+            mprf("No such ego as: %s", specs);
+            break;
+        }
+        if (ego == -1)
+        {
+            mprf("Ego '%s' is invalid for %s.",
+                 specs, item.name(DESC_A).c_str());
+            break;
+        }
+
+        // XXX: validate ego further? (is_weapon_brand_ok etc)
+
+        artefact_set_property(item, static_cast<artefact_prop_type>(prop),
+                              ego);
+        break;
+    }
     }
 }
 
