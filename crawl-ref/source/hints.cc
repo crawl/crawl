@@ -1717,7 +1717,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "by killing monsters. By default, experience goes to skills "
                 "you actively use. To view or manage your skills, "
 #ifdef USE_TILE_WEB
-                "type <w>%</w>."
+                "type <w>%</w>.";
 #else
                 "<console>type <w>%</w>.</console>"
                 "<tiles>click on the skill tab in the bottom-right.</tiles>";
