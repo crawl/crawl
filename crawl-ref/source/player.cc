@@ -6180,15 +6180,13 @@ bool player::heal(int amount)
  */
 mon_holy_type player::holiness(bool temp) const
 {
-    mon_holy_type holi = MH_NATURAL;
+    mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
+
     if (species == SP_GARGOYLE ||
         temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
         holi = MH_NONLIVING;
     }
-
-    if (undead_state(temp))
-        holi = MH_UNDEAD;
 
     if (is_good_god(religion))
         holi |= MH_HOLY;
