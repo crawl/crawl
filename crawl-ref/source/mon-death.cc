@@ -411,9 +411,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
-static void _create_monster_hide(const monster &mons)
+static void _create_monster_hide(const item_def &corpse, bool silent)
 {
-    const armour_type type = hide_for_monster(mons.type);
+    const armour_type type = hide_for_monster(mons_species(corpse.mon_type));
     ASSERT(type != NUM_ARMOURS);
 
     int o = items(false, OBJ_ARMOUR, type, 0);
@@ -425,29 +425,31 @@ static void _create_monster_hide(const monster &mons)
 
     do_uncurse_item(item);
 
-    // Automatically identify the created hide.
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-    if (!invalid_monster_type(mons.type) && mons_is_unique(mons.type))
-        item.inscription = mons_type_name(mons.type, DESC_PLAIN);
-
-    const coord_def pos = mons.pos();
+    const coord_def pos = item_pos(corpse);
     if (pos.origin())
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
         return;
+    }
 
     move_item_to_grid(&o, pos);
-    if (you.see_cell(pos))
+    if (you.see_cell(pos) && !silent)
     {
+        // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
-             apostrophise(mons.name(DESC_THE)).c_str(),
-             mons_genus(mons.type) == MONS_DRAGON ? "scales are" : "hide is");
+             item.name(DESC_THE).c_str(),
+             mons_genus(corpse.mon_type) == MONS_DRAGON ? "are"  // scales are
+                                                        : "is"); // hide is
     }
+
+    // after messaging, for better results
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _maybe_drop_monster_hide(const monster &mons)
+static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
 {
-    if (mons_class_leaves_hide(mons.type) && !one_chance_in(3))
-        _create_monster_hide(mons);
+    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
+        _create_monster_hide(corpse, silent);
 }
 
 /**
@@ -536,16 +538,12 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     }
 
     if (in_bounds(mons.pos()))
-    {
         move_item_to_grid(&o, mons.pos(), !mons.swimming());
-        if (!force)
-            _maybe_drop_monster_hide(mons);
-    }
 
     if (o == NON_ITEM)
         return nullptr;
 
-    if (you.see_cell(mons.pos()) && !silent)
+    if (you.see_cell(mons.pos()) && !silent && !goldify)
         hints_dissection_reminder();
 
     return &mitm[o];
@@ -2742,8 +2740,13 @@ item_def* monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && leaves_corpse && corpse)
-        _special_corpse_messaging(*mons);
+    if (leaves_corpse && corpse)
+    {
+        if (!silent && !wizard)
+            _special_corpse_messaging(*mons);
+        // message ordering... :(
+        _maybe_drop_monster_hide(*corpse, silent);
+    }
 
     if (mons->is_divine_companion()
         && killer != KILL_RESET
