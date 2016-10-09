@@ -449,6 +449,9 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
+    // Ieoh Jian
+    ABIL_IEOH_JIAN_COLLECT = 1300,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -1658,6 +1661,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1724,6 +1728,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
 
     DNGN_ENDLESS_SALT,
 #endif
@@ -2222,6 +2227,7 @@ enum god_type
     GOD_PAKELLAS,
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
+    GOD_IEOH_JIAN,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

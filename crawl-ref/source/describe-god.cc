@@ -231,6 +231,10 @@ static const char *divine_title[][8] =
     // Hepliaklqana -- memory/ancestry theme
     {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
+
+    // Ieoh Jian -- animal/chinese martial arts monk theme
+    {"Wooden Rat",       "Young Dog",             "Young Crane",              "Young Tiger",
+        "Red Sash",           "Golden Sash",               "Red Dragon",                "Golden Dragon"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 

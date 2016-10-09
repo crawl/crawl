@@ -317,6 +317,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
+    // Ieoh Jian
+    { { 0, ABIL_IEOH_JIAN_COLLECT, "store a weapon in the Council's sacred vault" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -2047,8 +2050,9 @@ string god_name(god_type which_god, bool long_name)
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
     case GOD_PAKELLAS:      return "Pakellas";
-    case GOD_USKAYAW:        return "Uskayaw";
+    case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
+    case GOD_IEOH_JIAN:     return "Ieoh Jian";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -3999,6 +4003,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
+        case GOD_IEOH_JIAN:
         case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
@@ -4092,6 +4097,9 @@ int god_colour(god_type god) // mv - added
     case GOD_CHEIBRIADOS:
     case GOD_HEPLIAKLQANA:
         return LIGHTCYAN;
+
+    case GOD_IEOH_JIAN:
+        return RED;
 
     case GOD_DITHMENOS:
     case GOD_USKAYAW:
