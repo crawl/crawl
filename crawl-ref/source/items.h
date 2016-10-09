@@ -12,7 +12,8 @@ enum item_source_type
 {
     IT_SRC_NONE   = 0,
 
-    // Empty space for the gods
+    // Gods
+    IT_IEOH_JIAN_BORROW,
 
     AQ_SCROLL     = 100,
 #if TAG_MAJOR_VERSION == 34

@@ -5847,12 +5847,9 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     {
         if (you_worship(GOD_IEOH_JIAN))
         {
-            // All martial skills cross-train to some degree.
+            // All martial skills cross-train fully
             for (skill_type cross : get_secondary_crosstrain_skills(sk))
-                effective_points += skill_points[cross] * 3 / 5;
-            // Skills that already cross-trained do so at extra effectiveness.
-            for (skill_type cross : get_crosstrain_skills(sk))
-                effective_points += skill_points[cross] * 1 / 5;
+                effective_points += skill_points[cross];
         }
         else
         {
@@ -8533,6 +8530,11 @@ int player::inaccuracy() const
     if (player_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;
+}
+
+vector<item_def>& player::get_ieoh_jian_collection()
+{
+    return ieoh_jian_collection;
 }
 
 /**

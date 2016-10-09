@@ -30,6 +30,7 @@ void reroll_brand(item_def &item, int item_level);
 bool is_high_tier_wand(int type);
 
 void squash_plusses(int item_slot);
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
 #endif
