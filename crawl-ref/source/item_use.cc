@@ -159,6 +159,11 @@ void UseItemMenu::populate_menu()
 
     if (!item_floor.empty())
     {
+#ifndef USE_TILE
+        // vertical padding for console
+        if (!item_inv.empty())
+            add_entry(new MenuEntry("", MEL_TITLE));
+#endif
         // Load floor items to menu
         string subtitle_text = "Floor Items";
         if (is_inventory)
