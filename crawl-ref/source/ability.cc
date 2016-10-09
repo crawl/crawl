@@ -622,7 +622,7 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
-    Ieoh Jian
+    // Ieoh Jian
     { ABIL_IEOH_JIAN_COLLECT, "Collect Weapon",
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 

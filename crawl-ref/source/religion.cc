@@ -68,6 +68,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
+#include "player-equip.h"
 
 #ifdef DEBUG_RELIGION
 #    define DEBUG_DIAGNOSTICS
@@ -318,7 +319,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
     // Ieoh Jian
-    { { 0, ABIL_IEOH_JIAN_COLLECT, "store a weapon in the Council's sacred vault" },
+    { { 0, ABIL_IEOH_JIAN_COLLECT, "store weapons in the Council's sacred vault" },
     },
 };
 
@@ -3485,6 +3486,33 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
+// Setup when becoming a Ieoh Jian ninja
+static void _join_ieoh_jian()
+{
+    if (you.shield())
+        mprf(MSGCH_GOD, "'A shield? Cowardice begets weakness!'");
+
+    if (you.weapon())
+        mprf(MSGCH_GOD, "'You won't need that weapon, young dog! You will be given one when you need it, not before.'");
+
+    if (you.weapon() && you.shield())
+    {
+        mprf(MSGCH_GOD, "An invisible force knocks your weapon and shield away.");
+        unwield_item();
+        unequip_item(EQ_SHIELD);
+    }
+    else if (you.weapon())
+    {
+        mprf(MSGCH_GOD, "An invisible force knocks your weapon away.");
+        unwield_item();
+    }
+    else if (you.shield())
+    {
+        mprf(MSGCH_GOD, "An invisible force knocks your shield away.");
+        unequip_item(EQ_SHIELD);
+    }
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3509,6 +3537,7 @@ static const map<god_type, function<void ()>> on_join = {
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_PAKELLAS, _join_pakellas },
+    { GOD_IEOH_JIAN, _join_ieoh_jian },
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },

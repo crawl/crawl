@@ -289,7 +289,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Ieoh Jian
     {
-        //TODO Ieoh Jian passives
+        // TODO
     },
 };
 
