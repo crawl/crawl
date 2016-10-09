@@ -622,6 +622,10 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
+    Ieoh Jian
+    { ABIL_IEOHJIAN_COLLECT, "Collect Weapon",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -1633,6 +1637,7 @@ bool activate_talent(const talent& tal)
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         case ABIL_SIF_MUNA_DIVINE_ENERGY:
         case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
+        case ABIL_IEOHJIAN_COLLECT:
             hungerCheck = false;
             break;
         default:
@@ -3043,6 +3048,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HEPLIAKLQANA_IDENTITY:
         hepliaklqana_choose_identity();
+        break;
+
+    case ABIL_IEOHJIAN_COLLECT:
         break;
 
     case ABIL_RENOUNCE_RELIGION:

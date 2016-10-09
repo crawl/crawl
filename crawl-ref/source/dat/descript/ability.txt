@@ -871,3 +871,8 @@ Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
+%%%%
+Collect Weapon ability
+
+Stores a weapon in your personal collection, at Ieoh Jian Council's sacred vault.
+This replaces the previously stored weapon of the same type.

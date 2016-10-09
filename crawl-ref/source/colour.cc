@@ -655,11 +655,42 @@ void init_element_colours()
                             40, GREEN,
                             40, LIGHTGREEN,
                         0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_IEOHJIAN, "ieohjian",
+                            40, RED,
+                            40, YELLOW,
+                            10, WHITE,
+                        0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
                        ));
 }
+
+// enum COLOURS
+// {
+//     COLOUR_INHERIT = -1,
+//     BLACK,
+//     COLOUR_UNDEF = BLACK,
+//     BLUE,
+//     GREEN,
+//     CYAN,
+//     RED,
+//     MAGENTA,
+//     BROWN,
+//     LIGHTGRAY,
+//     LIGHTGREY = LIGHTGRAY,
+//     DARKGRAY,
+//     DARKGREY = DARKGRAY,
+//     LIGHTBLUE,
+//     LIGHTGREEN,
+//     LIGHTCYAN,
+//     LIGHTRED,
+//     LIGHTMAGENTA,
+//     YELLOW,
+//     WHITE,
+//     NUM_TERM_COLOURS
+// };
 
 int element_colour(int element, bool no_random, const coord_def& loc)
 {

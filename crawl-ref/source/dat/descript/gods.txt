@@ -74,7 +74,7 @@ The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
 after fighting their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
 Path, they will learn to maintain their own weapon collection, become able 
-to manifest blades at will from thin air, and obliterate monsters with 
+to manifest blades at will from thin air, and to obliterate monsters with 
 powerful unarmed strikes.
 %%%%
 Jiyva
@@ -308,6 +308,16 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
+Ieoh Jian powers
+
+Followers of the Ieoh Jian Council can store a weapon of each type in the Council's
+sacred vault. By engaging in close quarters combat, the Council will manifest
+those weapons around the follower, which they can grab at will. They will later be 
+initiated in the path of martial arts, learning to stay mobile while attacking,
+strike pressure points, liquify monster's entrails with deadly palm strikes, and
+finally to command multiple flying weapons to strike at once for a spectacular
+finish. The Council will also provide their own powerful weapons in times of danger.
+%%%%
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
@@ -531,6 +541,16 @@ offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
 too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
+%%%%
+Ieoh Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a thousand
+cuts. No hiding place is secure, no disguise perfect enough to avoid the sudden
+spring of traps, the flying daggers and the armies of animated weapons that will
+torture the betrayer. Still, the Council is equanimous and will eventually forgive
+those who stray from the path... Unless, of course, the betrayer had the audacy
+to steal a weapon from their sacred vault. The punishment reserved for such a sin
+is unspeakable.
 %%%%
 Kikubaaqudgha wrath
 
