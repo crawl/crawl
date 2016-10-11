@@ -1600,11 +1600,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "If you target the altar with <w>x</w>, then press <w>v</w> "
 #endif
                 "you can get a short description.\n"
-                "Press <w>%</w> while standing on the square to join the faith "
+                "Press <w>%</w> or <w>%</w> while standing on the square to join the faith "
                 "or read some information about the god in question. Before "
                 "taking up the corresponding faith you'll be asked for "
                 "confirmation.";
-        cmd.push_back(CMD_PRAY);
+        cmd.push_back(CMD_GO_UPSTAIRS);
+        cmd.push_back(CMD_GO_DOWNSTAIRS);
 
         if (you_worship(GOD_NO_GOD)
             && Hints.hints_type == HINT_MAGIC_CHAR)

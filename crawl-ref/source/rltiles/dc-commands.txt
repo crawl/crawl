@@ -5,7 +5,6 @@ travel CMD_INTERLEVEL_TRAVEL
 autofight CMD_AUTOFIGHT
 waiting CMD_WAIT
 ability CMD_USE_ABILITY
-pray CMD_PRAY
 stash_search CMD_SEARCH_STASHES
 message_history CMD_REPLAY_MESSAGES
 overview CMD_RESISTS_SCREEN

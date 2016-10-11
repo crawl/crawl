@@ -372,11 +372,12 @@ sometimes look like normal floor until discovered.
 Shops
 ========================================
 
-When you visit a shop, you are shown what the shopkeeper has in stock and can
-choose what to buy. Unfortunately, the shopkeepers all have an exclusive deal
-with the Guild of Dungeon Procurers which prevents them using non-guild labour
-to obtain stock, so you can't sell anything in a shop. (But then, what
-shopkeeper would buy stolen goods from a disreputable adventurer, anyway?)
+When you visit a shop (by using < or > while standing on one), you are shown
+what the shopkeeper has in stock and can choose what to buy. Unfortunately,
+the shopkeepers all have an exclusive deal with the Guild of Dungeon Procurers
+which prevents them using non-guild labour to obtain stock, so you can't sell
+anything in a shop. (But then, what shopkeeper would buy stolen goods from a
+disreputable adventurer, anyway?)
 
 To purchase one or more items, select them by pressing the letters of the item
 in the shop menu and then press Enter to make the purchase; you can examine
@@ -1054,7 +1055,7 @@ pray at an altar to dedicate themselves to a life of servitude. There are altars
 scattered all over the dungeon, and there are rumours of a special temple
 somewhere near the surface.
 
-At an altar, you can enter a god's service by pressing 'p' - you'll first be
+At an altar, you can enter a god's service by pressing < or >. You'll first be
 given a description of the god, and then be asked if you really want to join.
 To see a list of the standard gods and which of their altars you've seen in your
 current game, press 'Ctrl-O'. You can also learn about all gods by pressing '?/G'.
@@ -2208,10 +2209,10 @@ Ctrl-direction or * direction
   else attacks without moving (even if no monster is seen).
 
 <
-  Use staircase to go higher or enter a shop or portal.
+  Use staircase to go higher, or use a shop, altar, or portal.
 
 >
-  Use staircase to go deeper or enter a shop or portal.
+  Use staircase to go deeper, or use a shop, altar, or portal.
 
 ;
   Examine occupied tile and auto-pickup eligible items. Can also be used to pick
@@ -2292,9 +2293,6 @@ I
 
 Other game-playing commands
 ----------------------------------------
-
-p
-  Pray, generally in order to convert to a new god at an altar.
 
 z
   Cast a spell. Should the spell demand monsters as targets but there are none
