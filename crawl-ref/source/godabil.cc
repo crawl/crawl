@@ -2594,6 +2594,8 @@ int fedhas_fungal_bloom()
             piety_gain += random2(15); // avg 1.4 piety per corpse
         gain_piety(piety_gain, 10);
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return processed_count;
 }

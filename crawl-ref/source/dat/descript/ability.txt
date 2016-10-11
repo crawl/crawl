@@ -479,6 +479,14 @@ Bring an orc corpse back to life. The orc will be an ally, even if it was not
 already one before it died.
 %%%%
 # Fedhas
+Fungal Bloom ability
+
+Call up Fedhas to accelerate the natural process of decay, transforming all
+corpses nearby into fast-growing, short-lived toadstools. Zombies, ghouls,
+and necrophages are considered walking corpses, and are affected accordingly;
+zombies rot into skeletons, and ghouls and necrophages rot away entirely,
+granting no experience.
+%%%%
 Sunlight ability
 
 Calls sunlight down over a small area of the dungeon. Monsters illuminated by
