@@ -3644,7 +3644,7 @@ x.................
 xxxxxxxxxxxxxxx..@
 ENDMAP
 
-# Certain creatures are attracted to an abandoned site of magical signifigance
+# Certain creatures are attracted to an abandoned site of magical significance
 NAME: cheibrodos_forgotten_conduit
 DEPTH: Spider, Snake
 TAGS: no_item_gen no_monster_gen
