@@ -6439,7 +6439,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_AWAKEN_FOREST:
-        if (have_passive(passive_t::friendly_plants))
+        if (!mons->friendly() && have_passive(passive_t::friendly_plants))
         {
             if (you.can_see(*mons))
             {
