@@ -962,3 +962,29 @@ An exit from the tutorial
 
 A way out of the dungeon, letting you finish this lesson.
 %%%%
+########################################################################
+### Area effects
+########################################################################
+haloed
+
+This area is lit by a divine halo, decreasing your stealth, preventing
+invisibility, and increasing the accuracy of attacks against any illuminated
+creatures.
+%%%%
+umbraed
+
+This area is wreathed by an umbra, improving your stealth if you are attuned to
+the shadows, and decreasing the accuracy of attacks by those unattuned to the
+shadows.
+%%%%
+liquefied
+
+The ground here is liquefied, making movement slow and causing any attempts to
+attack in melee to sometimes fail.
+%%%%
+disjunction haloed
+
+This area is bathed in translocational energy, causing creatures to blink away
+from the originator of the energy with an increasing chance the closer they are
+to the caster.
+%%%%
