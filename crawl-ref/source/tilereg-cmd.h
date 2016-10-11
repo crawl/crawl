@@ -48,7 +48,7 @@ static const command_type ct_action_commands[] =
 {
     CMD_EXPLORE,
     CMD_REST, CMD_WAIT,
-    CMD_PRAY, CMD_BUTCHER,
+    CMD_BUTCHER,
     CMD_DISPLAY_INVENTORY, CMD_DROP,
     CMD_CAST_SPELL, CMD_USE_ABILITY,
     CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,

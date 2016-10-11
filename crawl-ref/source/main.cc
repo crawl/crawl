@@ -1550,13 +1550,15 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // Up and down both work for shops and portals.
-    if (ftype == DNGN_ENTER_SHOP)
+    // Up and down both work for shops, portals, and altars.
+    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
         if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
-        else
+        else if (ftype == DNGN_ENTER_SHOP) // don't convert to capitalism
             shop();
+        else
+            try_god_conversion(feat_altar_god(ftype));
         // Even though we may have "succeeded", return false so we don't keep
         // trying to go downstairs.
         return false;
@@ -2119,7 +2121,6 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
-    case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read();                   break;
     case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;

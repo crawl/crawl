@@ -841,14 +841,9 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                     case CMD_GO_UPSTAIRS:
                         return command_to_key(feat_stair_direction(feat));
                     default:
-                        if (feat_is_altar(feat)
-                            && player_can_join_god(feat_altar_god(feat)))
-                        {
-                            return command_to_key(CMD_PRAY);
-                        }
+                        // otherwise wait
+                        return command_to_key(CMD_WAIT);
                     }
-                    // otherwise wait
-                    return command_to_key(CMD_WAIT);
                 }
                 else
                 {
@@ -873,11 +868,6 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             case CMD_GO_UPSTAIRS:
                 return command_to_key(feat_stair_direction(feat));
             default:
-                if (feat_is_altar(feat)
-                    && player_can_join_god(feat_altar_god(feat)))
-                {
-                    return command_to_key(CMD_PRAY);
-                }
                 return 0;
             }
         }
@@ -1190,6 +1180,11 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             _add_tip(tip, "[Shift + L-Click] ");
             if (feat == DNGN_ENTER_SHOP)
                 tip += "enter shop";
+            else if (feat_is_altar(feat)
+                     && player_can_join_god(feat_altar_god(feat)))
+            {
+                tip += "pray at altar";
+            }
             else if (feat_is_gate(feat))
                 tip += "enter gate";
             else
@@ -1197,12 +1192,6 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
 
             tip += " (%)";
             cmd.push_back(dir);
-        }
-        else if (feat_is_altar(feat)
-                 && player_can_join_god(feat_altar_god(feat)))
-        {
-            _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
-            cmd.push_back(CMD_PRAY);
         }
     }
 
@@ -1217,6 +1206,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
                 || feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
             {
+                // XXX: wrong for golubria, shops?
                 _add_tip(tip, "[L-Click] Use stairs (%)");
                 cmd.push_back(feat_stair_direction(feat));
             }
@@ -1224,7 +1214,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                      && player_can_join_god(feat_altar_god(feat)))
             {
                 _add_tip(tip, "[L-Click] Pray at altar (%)");
-                cmd.push_back(CMD_PRAY);
+                cmd.push_back(feat_stair_direction(feat));
             }
             else
             {

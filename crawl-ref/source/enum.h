@@ -1032,7 +1032,6 @@ enum command_type
     CMD_FORCE_CAST_SPELL,
     CMD_MEMORISE_SPELL,
     CMD_USE_ABILITY,
-    CMD_PRAY,
     CMD_EAT,
     CMD_QUAFF,
     CMD_READ,
