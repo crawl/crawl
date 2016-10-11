@@ -549,8 +549,6 @@ ENDMAP
 # Harder than the two other frog maps. Frogs are guaranteed, exit isn't
 # reachable when frogs come to sight, and loot isn't handed out as a way
 # to handle them.
-#
-# XXX: Still a big outlier in length, openness, and minimal land as a map.
 NAME:    sewer_minmay_w
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
@@ -564,41 +562,44 @@ ITEM:    scroll of teleportation / scroll of blinking w:5 /\
          scroll of fear w:5 / scroll of magic mapping /\
          scroll of recharging / scroll of fog
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
-SUBST:   y = W., Y = Ww, z = x., Z = wxx
+SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
 : sewer_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccc2.2ccccccxxxxxxxxxxxxxxxx
-xccccccxxxxxxxxcc....2...2....ccxxxcccccccccccx
-cc....ccxxxxxxcc...............ccxxcdedcc3..3cc
-c......cxxxxxxc.1.1.1.c.........cxxce<e+2..2.2c
-c..<A..cxxxxxcc1.1.1.cc+cc......ccxcdedc.2..2.c
-c......cxxxxxc1.1.1.cccddcc......cxccccc2.2..2c
-czyyyyzcxxxxxczyyyyzcxcddcczyyyyzcxxxxxczyyyyzc
-cYYWYYYcxxxxxcYYWYYYcxcccccYYYYWYcxxxxxcYYZYYYc
-cwYWYYwcxxxxxcwYWYwwcxxxxxcwwwYWYcxxxxxcYYWYwYc
-cwYYWYwcxxxxxcwYWYYwcxxxxxcwwYYWYcxxxxxcwYWYYwc
-cwwYWYwcxxxxxcwwYWYwcxxxxxcwYYWYYcxxxxxcwYWWYwc
-cwwYWYwcxxxxxcwwYWYYcxxxxxcYWWYYwcxxxxxcwYYZYYc
-cwYYZYwcxxxxxcwwYYWYcxxxxxcWYYYwwcxxxxxcwwYYZYc
-cwYZYYwcxxxxxcwwwYZYcxxxxxcWWYYYwcxxxxxcwwwYWYc
-cw.WYwwcxxxxxcwwwwYWcxxxxxcZyyyyZcxxxxxcwwwY.Yc
-cwYZYYwcxxxxxcwwwwY.cxxxxxcyy%%ywcxxxxxcwwYYZYc
-cwYYZ.wcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwYZYYc
-cwwYWYwcxxxxxcwwwYZYcxxxxxcYWWYwwcxxxxxcwYY.Ywc
-cwwYWYwcxxxxxcwwYYWYcxxxxxcYYYWYwcxxxxxcwYWWYwc
-cwwYWYwcxxxxxcwwYWYYcxxxxxcwYWYwwcxxxxxcwYWYYwc
-cwwYWYwcxxxxxcwYYWYwcxxxxxcwYWYwwcxxxxxcwYWYwYc
-cYYYWYYcxxxxxcwYWYwwcxxxxxcYYYWYYcxcccccYYWYYYc
-czyyyyzcxxxxxczyyyyzcxxxxxczyyyyzcxceecczyyyyzc
-c1.1.1.ccxxxcc......cxxxxxc1.1.1.ccceecc......c
-cc1.1.1.ccxcc......ccxxxxxcc1.1.1.cc+cc2.....cc
-xc.......ccc.......cxxxxxxxc.1.1.1.c.........cx
-xcc...............ccxxxxxxxcc.1.1.1.........ccx
-xxcccc.........ccccxxxxxxxxxcccc.2......2ccccxx
-xxxxxcccc2.2ccccxxxxxxxxxxxxxxxcccc2.2ccccxxxxx
-xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxcccc2..2ccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxccc..........cccxxxxxxxxxxxxxxxxx
+xccccccxxxxxxxxxcc..............ccxxxxcccccccccccx
+cc....ccxxxxxxxcc................ccxxxcdedcc3..3cc
+c......cxxxxxxxc.1.1.1.2cc2.......cxxxce<e+2..2.2c
+c..<A..cxxxxxxcc1.1.1.cccc+c......ccxxcdedc.2..2.c
+c......cxxxxxxc1.1.1.ccxcddcc......cxxccccc2.2..2c
+cyyyyyycxxxxxxcyyyyyycxxcddccyyyyyycxxxxxxcyyyyyyc
+cYYWYYYcxxxxxxcYYWYYYcxxcccccYYYYWYcxxxxxxcYYWYYYc
+cwYWYYwcxxxxxxcwYWYwwcxxxxxxcwwwYWYcxxxxxxcYYWYwYc
+cwYYWYwcxxxxxxcwYWYYwcxxxxxxcwwYYWYcxxxxxxcwYWYYwc
+cwwYWYwcxxxxxxcwwYWYwcxxxxxxcwYYWYYcxxxxxxcwYWWYwc
+cwwYWYwcxxxxxxcwwYWYYcxxxxxxcYWWYYwcxxxxxxcwYYWYYc
+cwYYWYwcxxxxxxcwwYYWYcxxxxxxcWYYYwwcxxxxxxcwwYWWYc
+cwYWYYwcxxxxxxcwwwYWYcxxxxxxcWWYYYwcxxxxxxcwwYYWYc
+cwYWYwwcxxxxxxcwwwYYWcxxxxxxcYWyWYYcxxxxxxcwwwYWYc
+cwYWYwwcxxxxxxcwwwwYWcxxxxxxcWyyyyWcxxxxxxcwwYYWYc
+cwYWYYwcxxxxxxcwwwwYWcxxxxxxcyy%%yycxxxxxxcwwYWWYc
+cwYYWYwcxxxxxxcwwwYYWcxxxxxxcWyyyyWcxxxxxxcwwYWYYc
+cwwYWYwcxxxxxxcwwwYWYcxxxxxxcYWWYWYcxxxxxxcwYYWYwc
+cwwYWYwcxxxxxxcwwYYWYcxxxxxxcYYYWYYcxxxxxxcwYWWYwc
+cwwYWYwcxxxxxxcwwYWYYcxxxxxxcwYWYYwcxxxxxxcwYWYYwc
+cwwYWYwcxxxxxxcwYYWYwcxxxxxxcwYWYYwcxxxxxxcYYWYwYc
+cYYYWYYcxxxxxxcwYWYwwcxxxxxxcYYYWYYcxxcccccYYWYYYc
+cyyyyyycxxxxxxcyyyyyycxxxxxxcyyyyyycxxceeccyyyyyyc
+c1.1.1.ccxxxxcc......cxxxxxxc1.1.1.ccxceecc......c
+cc1.1.1.cccccc......ccxxxxxxcc1.1.1.cccc+c......cc
+xc........cc........cxxxxxxxxc.1.1.1.2cc2.......cx
+xcc................ccxxxxxxxxcc.1.1.1..........ccx
+xxcc..............ccxxxxxxxxxxcc...2.2..2.2...ccxx
+xxxccc..........cccxxxxxxxxxxxxccc..........cccxxx
+xxxxxcccc2..2ccccxxxxxxxxxxxxxxxxcccc2..2ccccxxxxx
+xxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxx
 ENDMAP
 
 ## BIG BADDIE (Purgy) ######################################################
