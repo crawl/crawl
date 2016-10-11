@@ -188,9 +188,6 @@ void pray(bool allow_conversion)
          you.cannot_speak() ? "silent " : "",
          god_name(you.religion).c_str());
 
-    if (you_worship(GOD_FEDHAS))
-        you.turn_is_over = fedhas_fungal_bloom();
-
     if (you_worship(GOD_XOM))
         god_speaks(GOD_XOM, getSpeakString("Xom prayer").c_str());
     else if (you_worship(GOD_GOZAG))

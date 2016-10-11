@@ -486,6 +486,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {FAIL_INVO}, abflag::NONE },
 
     // Fedhas
+    { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_FEDHAS_EVOLUTION, "Evolution",
       2, 0, 0, 0, {FAIL_INVO, 30, 6, 20}, abflag::VARIABLE_FRUIT },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
@@ -2642,6 +2644,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mpr("You stop recalling your allies.");
         end_recall();
         break;
+
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+        fedhas_fungal_bloom();
+        return SPRET_SUCCESS;
 
     case ABIL_FEDHAS_SUNLIGHT:
         return fedhas_sunlight(fail);
