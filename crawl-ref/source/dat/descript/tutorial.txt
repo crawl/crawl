@@ -663,10 +663,10 @@ found so far.
 %%%%
 tutorial5 altar
 
-You can pray on an altar with <input>$cmd[CMD_PRAY]</input><localtiles> (or by
-<input>clicking in the command panel</input> or <input>left clicking</input>
-on your character)</localtiles> to get an idea what a god offers you, and to
-join the faith. If you press <input>!</input><localtiles> or
+You can pray on an altar with <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> (or by <input>left clicking</input> on your character)</localtiles>
+to get an idea what a god offers you, and to join the faith. If
+you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
 more detailed description.
 
@@ -729,7 +729,7 @@ tutorial5 exit
 # A single screen recapping all commands.
 :nowrap
 <yellow>Religious commands</yellow>
-  <input>$cmd[CMD_PRAY]</input>  pray at an altar to join a god, or sacrifice a corpse
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  pray at an altar to join a god
   <input>$cmd[CMD_USE_ABILITY]</input>  use a divine ability
   <input>$cmd[CMD_DISPLAY_RELIGION]</input>  check your religious standing<localtiles>
   A <input>rightclick</input> on the player tile will also bring up the religion screen.</localtiles>
