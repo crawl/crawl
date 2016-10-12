@@ -2324,6 +2324,13 @@ void process_command(command_type cmd)
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
+        if (feat_is_altar(grd(you.pos())))
+        {
+            mprf("Press %s or %s to pray at altars.",
+                 command_to_string(CMD_GO_UPSTAIRS).c_str(),
+                 command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+        }
+
         break;
     }
 
