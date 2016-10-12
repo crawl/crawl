@@ -2029,9 +2029,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;
     else if (!quiet)
-    {
         mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
-    }
 
     return item.link;
 }

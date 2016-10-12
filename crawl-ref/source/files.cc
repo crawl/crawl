@@ -1025,7 +1025,7 @@ static void _do_lost_items()
 }
 
 /// Rot all corpses remaining on the level, giving Fedhas piety for doing so.
-void _fedhas_rot_all_corpses(const level_id& old_level)
+static void _fedhas_rot_all_corpses(const level_id& old_level)
 {
     bool messaged = false;
     for (auto &item : mitm)

@@ -177,7 +177,7 @@ struct coord_def
     {
         return { x + other.x, y + other.y };
     }
-    
+
     constexpr coord_def operator + (int other) const
     {
         return *this + coord_def(other, other);
