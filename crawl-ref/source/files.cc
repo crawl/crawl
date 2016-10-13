@@ -1031,7 +1031,6 @@ static void _fedhas_rot_all_corpses(const level_id& old_level)
     for (auto &item : mitm)
     {
         if (!item.defined()
-            || item.link == ITEM_IN_SHOP
             || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
             || item.props.exists(CORPSE_NEVER_DECAYS))
         {
