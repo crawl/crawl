@@ -550,4 +550,6 @@ bool apply_visible_monsters(monster_func mf,
                             const coord_def& center = you.pos(),
                             los_type los = LOS_NO_TRANS);
 
+int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
+
 #endif
