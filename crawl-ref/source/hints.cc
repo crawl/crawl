@@ -2833,7 +2833,7 @@ static string _hints_target_mode(bool spells = false)
     }
 
     result += "</w> fires at the same target again.";
-    insert_commands(result, cmd, 0);
+    insert_commands(result, { cmd });
 
     return result;
 }
@@ -2888,7 +2888,7 @@ static string _hints_throw_stuff(const item_def &item)
     result += ". You'll ";
     result += _hints_target_mode();
 
-    insert_commands(result, CMD_FIRE, 0);
+    insert_commands(result, { CMD_FIRE });
     return result;
 }
 
