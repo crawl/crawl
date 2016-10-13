@@ -1850,7 +1850,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_MARGERY:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(3, ARM_MOTTLED_DRAGON_ARMOUR,
+        item.sub_type = random_choose_weighted(3, ARM_ACID_DRAGON_ARMOUR,
                                                1, ARM_SWAMP_DRAGON_ARMOUR,
                                                6, ARM_FIRE_DRAGON_ARMOUR);
         break;
@@ -2099,7 +2099,7 @@ int make_mons_armour(monster_type type, int level)
                                                 100, ARM_PLATE_ARMOUR,
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
-                                                  5, ARM_MOTTLED_DRAGON_ARMOUR);
+                                                  5, ARM_ACID_DRAGON_ARMOUR);
         break;
 
     case MONS_HALAZID_WARLOCK:

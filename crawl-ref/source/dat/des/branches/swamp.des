@@ -1458,7 +1458,7 @@ ENDMAP
 NAME:    hangedman_swamp_double_dragon
 TAGS:    no_monster_gen patrolling
 DEPTH:   Swamp:2-, !Swamp:$
-MONS:    fire dragon, lindwurm / mottled dragon w:8
+MONS:    fire dragon, lindwurm
 MONS:    ice dragon, bog body / hydra simulacrum w:8
 MONS:    swamp dragon, alligator / hydra w:8
 ITEM:    any good_item
@@ -2025,7 +2025,7 @@ TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
 MONS:    fire dragon, lindwurm / fire crab w:8, swamp dragon / hydra w:12
-MONS:    mottled dragon w:6 / swamp drake / steam dragon w:4
+MONS:    swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \

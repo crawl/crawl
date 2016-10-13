@@ -420,7 +420,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   return "swamp drake w:20 / rime drake w:20 / wind drake / death drake w:20 / " ..
-         "wyvern / hydra / steam dragon w:20 / mottled dragon w:20 / " ..
+         "wyvern / hydra / steam dragon w:20 / acid dragon w:20 / " ..
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
          "iron dragon w:" .. e .. " / quicksilver dragon w:" .. e .. " / " ..

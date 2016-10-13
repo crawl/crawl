@@ -2638,7 +2638,7 @@ enum monster_type                      // menv[].type
     MONS_DRAGON,                // genus
 #endif
     MONS_STEAM_DRAGON,
-    MONS_MOTTLED_DRAGON,
+    MONS_ACID_DRAGON,
     MONS_SWAMP_DRAGON,
     MONS_FIRE_DRAGON,
     MONS_ICE_DRAGON,

@@ -416,7 +416,7 @@ armour_mummy ARMOUR_MUMMY
 ##cloth_u_sail SAILOR
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
-dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_yellow DRAGONARM_YELLOW
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN

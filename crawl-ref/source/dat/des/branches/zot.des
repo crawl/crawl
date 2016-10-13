@@ -31,7 +31,7 @@ end
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot, !Zot:$")
-    e.kmons("D = mottled dragon / fire dragon w:25 / ice dragon w:25 /\
+    e.kmons("D = acid dragon / fire dragon w:25 / ice dragon w:25 /\
                storm dragon w:20 / shadow dragon w:20 / golden dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
                lindwurm w:2 / rime drake w:2 / death drake w:2 /\
@@ -232,7 +232,7 @@ MONS:   grey draconian, wyvern
 : end
 # medium: 3, 4
 : if crawl.coinflip() then
-MONS:   yellow draconian, mottled dragon
+MONS:   yellow draconian, acid dragon
 : else
 MONS:   green draconian, swamp dragon
 : end
@@ -2079,8 +2079,7 @@ DEPTH: Zot, !Zot:$
 ORIENT: float
 # The competitors:
 {{
-  local teams = { "black", "yellow", "green", "purple", "red", "white",
-                  "mottled" }
+  local teams = { "black", "yellow", "green", "purple", "red", "white", }
 
   local team1num = crawl.random2(#teams) + 1
   local team1 = teams[team1num]

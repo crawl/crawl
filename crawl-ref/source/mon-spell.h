@@ -844,9 +844,9 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_MOTTLED_DRAGON,
+    {  MST_ACID_DRAGON,
       {
-       { SPELL_STICKY_FLAME_RANGE, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+       { SPELL_SPIT_ACID, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                         | MON_SPELL_NOISY },
       }
     },

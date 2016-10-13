@@ -247,6 +247,10 @@ A tree
 other things do.”
     -Willa Cather, _O Pioneers_. 1913.
 %%%%
+acid dragon scales
+
+<steam dragon hide>
+%%%%
 Agony spell
 
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
@@ -1936,14 +1940,6 @@ throwing away their arms of defence, reckless of every danger, sometimes having
 nothing but a club, which carried with it death and destruction.”
     -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
      Customs of the Ancestors of the English Speaking Nations_. 1889.
-%%%%
-mottled dragon scales
-
-<steam dragon hide>
-%%%%
-mottled dragon hide
-
-<steam dragon hide>
 %%%%
 mummy
 

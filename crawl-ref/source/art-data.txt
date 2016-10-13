@@ -308,7 +308,7 @@ BOOL:    evil, nogen
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon scales
-OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_ACID_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
