@@ -2326,10 +2326,9 @@ void process_command(command_type cmd)
 
         if (feat_is_altar(grd(you.pos())))
         {
-            // CMD_GO_UPSTAIRS needs to be escaped as "<<".
-            mprf("Press <w><%s</w> or <w>%s</w> to pray at altars.",
-                 command_to_string(CMD_GO_UPSTAIRS).c_str(),
-                 command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+            string msg = "Press <w>%</w> or <w>%</w> to pray at altars.";
+            insert_commands(msg, { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
+            mpr(msg);
         }
 
         break;
