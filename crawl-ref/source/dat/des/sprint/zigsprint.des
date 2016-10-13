@@ -253,7 +253,7 @@ function choose_mset_2(e)
     e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon / wyvern")
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon / wyvern")
 -- Ranged
   elseif rnd < 94 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:3 /\
@@ -369,7 +369,7 @@ function choose_mset_3(e)
                quicksilver dragon w:5")
 -- Dragon
   elseif rnd < 81 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
                hydra")
 -- Ranged
@@ -502,7 +502,7 @@ local rnd = crawl.random2(142)
                quicksilver dragon")
 -- Dragon
   elseif rnd < 90 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
                golden dragon / wyvern / hydra")

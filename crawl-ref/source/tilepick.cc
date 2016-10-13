@@ -1185,7 +1185,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
     // specific per-species zombies - use to override genuses
     static const map<monster_type, tileidx_t> species_tiles = {
         { MONS_JUGGERNAUT,              TILEP_MONS_ZOMBIE_JUGGERNAUT },
-        { MONS_MOTTLED_DRAGON,          TILEP_MONS_ZOMBIE_DRAKE },
+        { MONS_ACID_DRAGON,             TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_STEAM_DRAGON,            TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_JACKAL,                  TILEP_MONS_ZOMBIE_JACKAL },
         { MONS_ADDER,                   TILEP_MONS_ZOMBIE_ADDER },
@@ -2164,8 +2164,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_STEAM_DRAGON_ARMOUR:
         return TILE_ARM_STEAM_DRAGON_ARMOUR;
 
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        return TILE_ARM_MOTTLED_DRAGON_ARMOUR;
+    case ARM_ACID_DRAGON_ARMOUR:
+        return TILE_ARM_ACID_DRAGON_ARMOUR;
 
     case ARM_QUICKSILVER_DRAGON_ARMOUR:
         return TILE_ARM_QUICKSILVER_DRAGON_ARMOUR;

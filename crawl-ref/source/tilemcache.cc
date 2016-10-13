@@ -362,7 +362,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT_5:
     case TILEP_MONS_TIAMAT_6:
     case TILEP_MONS_TIAMAT_7:
-    case TILEP_MONS_TIAMAT_8:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:

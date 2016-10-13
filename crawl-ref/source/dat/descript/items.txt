@@ -1,4 +1,11 @@
 %%%%
+acid dragon scales
+
+The scales of an acid dragon. Although it does not provide its wearer with as
+much protection as the armour made from the scales of some larger dragons, it is
+somewhat lighter and less encumbering. It is also remarkably smooth, letting
+corrosive slime flow off it like water.
+%%%%
 amulet of faith
 
 A talisman crafted to call the attention of the gods to its wearer. This divine
@@ -618,13 +625,6 @@ A filling ration of dried and preserved meats.
 morningstar
 
 A mace with a head covered in short spikes.
-%%%%
-mottled dragon scales
-
-The scales of a mottled dragon. Although it does not provide its wearer with as
-much protection as the scales of some larger dragons, it is somewhat lighter
-and less encumbering. It is also remarkably smooth, letting sticky flames
-flow off it like water.
 %%%%
 mutagenic chunk of flesh
 

@@ -3938,9 +3938,7 @@ int monster::res_poison(bool temp) const
 
 bool monster::res_sticky_flame() const
 {
-    return is_insubstantial()
-           || wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR)
-           || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
+    return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
 int monster::res_rotting(bool /*temp*/) const

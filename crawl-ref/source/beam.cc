@@ -4537,7 +4537,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         napalm_monster(mon, agent(), levels);
     }
 
-    // Acid splash.
+    // Acid splash from yellow draconians / acid dragons
     if (origin_spell == SPELL_ACID_SPLASH)
     {
         mon->splash_with_acid(agent(), 3);

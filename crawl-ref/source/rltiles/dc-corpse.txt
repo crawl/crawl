@@ -243,7 +243,7 @@ hydra5 CORPSE_HYDRA
 steam_dragon CORPSE_STEAM_DRAGON
 ice_dragon CORPSE_ICE_DRAGON
 swamp_dragon CORPSE_SWAMP_DRAGON
-mottled_dragon CORPSE_MOTTLED_DRAGON
+acid_dragon CORPSE_ACID_DRAGON
 quicksilver_dragon CORPSE_QUICKSILVER_DRAGON
 iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON

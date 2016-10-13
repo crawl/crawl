@@ -260,7 +260,7 @@ function arena_sprint_get_monster_set(round, boss)
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
-                "w:20 fire bat / fire elemental / w:5 mottled dragon",
+                "w:20 fire bat / fire elemental",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:20 earth elemental / gargoyle / w:15 rust devil /\
@@ -301,7 +301,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death
-                "fire bat / fire elemental / mottled dragon /\
+                "fire bat / fire elemental /\
                     w:5 sun demon / w:2 efreet / hell hound",
                 "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
@@ -316,7 +316,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "rime drake / swamp drake / steam dragon / swamp dragon /\
-                 mottled dragon / komodo dragon",
+                 acid dragon / komodo dragon",
                 "necrophage / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
                 "polar bear",
@@ -345,7 +345,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "common demon w:30 / kobold demonologist w:5 / frances w:3",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
                 -- Fire, Air, Earth, Water, Death
-                "w:5 fire bat / fire elemental / mottled dragon /\
+                "w:5 fire bat / fire elemental /\
                     sun demon / efreet / hell hound /\
                     hell hog / w:5 fire crab",
                 "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
@@ -362,7 +362,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
                 "rime drake w:5 / swamp drake / swamp dragon /\
-                    mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
+                    acid dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     fire dragon w:5 / ice dragon w:5 / storm dragon w:1",
                 "necrophage / ghoul / bog body",
                 "shapeshifter",
@@ -1058,7 +1058,7 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed shadow dragon scales | mundane not_cursed quicksilver dragon scales |\
             mundane not_cursed ice dragon scales | mundane not_cursed gold dragon scales |\
             mundane not_cursed steam dragon scales | mundane not_cursed swamp dragon scales |\
-            mundane not_cursed pearl dragon scales | mundane not_cursed mottled dragon scales |\
+            mundane not_cursed pearl dragon scales | mundane not_cursed acid dragon scales |\
             mundane not_cursed troll leather armour | mundane not_cursed crystal plate armour |\
             mundane not_cursed plate armour | mundane not_cursed naga barding |\
             mundane not_cursed centaur barding | mundane not_cursed cloak |\

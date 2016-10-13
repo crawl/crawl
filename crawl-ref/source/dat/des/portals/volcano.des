@@ -1405,7 +1405,7 @@ ORIENT:  encompass
 WEIGHT:  10
 # groups of lesser enemies led by a few nastier ones
 MONS:    patrolling fire dragon
-MONS:    salamander / mottled dragon
+MONS:    salamander
 MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
          crocodile / fire bat
 MONS:    patrolling fire bat band
