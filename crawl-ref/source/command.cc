@@ -1101,10 +1101,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
-    insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
-                    CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
-                    CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
-                    0);
+    insert_commands(text, { CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                            CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                            CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS,
+                            CMD_USE_ABILITY
+                          });
     linebreak_string(text, 40);
 
     cols.add_formatted(
