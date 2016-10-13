@@ -264,7 +264,7 @@ static int _num_brand_tries(const item_def& item, int item_level)
     return 0;
 }
 
-static brand_type _determine_weapon_brand(const item_def& item, int item_level)
+brand_type determine_weapon_brand(const item_def& item, int item_level)
 {
     // Forced ego.
     if (item.brand != 0)
@@ -368,6 +368,24 @@ static void _roll_weapon_type(item_def& item, int item_level)
     item.brand = SPWPN_NORMAL; // fall back to no brand
 }
 
+/// Plusses for a non-artefact weapon with positive plusses.
+int determine_nice_weapon_plusses(int item_level)
+{
+    const int chance = (item_level >= ISPEC_GIFT ? 200 : item_level);
+
+    // Odd-looking, but this is how the algorithm compacts {dlb}.
+    int plus = 0;
+    for (int i = 0; i < 4; ++i)
+    {
+        plus += random2(3);
+
+        if (random2(425) > 35 + chance)
+            break;
+    }
+
+    return plus;
+}
+
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int agent = -1)
@@ -433,7 +451,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
-                _determine_weapon_brand(item, 2 + 2 * env.absdepth0));
+                determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
         item.plus -= 1 + random2(3);
 
@@ -448,23 +466,14 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (!no_brand)
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              _determine_weapon_brand(item, item_level));
+                              determine_weapon_brand(item, item_level));
         }
 
         // if acquired item still not ego... enchant it up a bit.
         if (force_good && item.brand == SPWPN_NORMAL)
             item.plus += 2 + random2(3);
 
-        const int chance = (force_good ? 200 : item_level);
-
-        // Odd-looking, but this is how the algorithm compacts {dlb}.
-        for (int i = 0; i < 4; ++i)
-        {
-            item.plus += random2(3);
-
-            if (random2(425) > 35 + chance)
-                break;
-        }
+        item.plus += determine_nice_weapon_plusses(item_level);
 
         // squash boring items.
         if (!force_good && item.brand == SPWPN_NORMAL && item.plus < 3)
@@ -2028,7 +2037,7 @@ void reroll_brand(item_def &item, int item_level)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        item.brand = _determine_weapon_brand(item, item_level);
+        item.brand = determine_weapon_brand(item, item_level);
         break;
     case OBJ_MISSILES:
         item.brand = _determine_missile_brand(item, item_level);
