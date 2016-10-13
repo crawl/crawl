@@ -3930,23 +3930,27 @@ MAP
  xxxxxxxxxxxxx
 ENDMAP
 
-NAME:   chequers_temple_overflow_statue_of_worship_4
+NAME:   chequers_temple_overflow_statue_of_worship
+TAGS:   temple_overflow_generic_2 ttemple_overflow_generic_3
 TAGS:   temple_overflow_generic_4
+{{
+  local altarcount = 2
+  if not is_validating() then
+    altarcount = get_overflow_altar_count(_G)
+  end
+  if altarcount < 4 then
+    subst("D = .")
+  end
+  if altarcount < 3 then
+    subst("E = .")
+  end
+  subst("DE = B")
+}}
 MAP
 .....
-..B..
+..D..
 .BGB.
-..B..
-.....
-ENDMAP
-
-NAME:   chequers_temple_overflow_statue_of_worship_2
-TAGS:   temple_overflow_generic_2
-MAP
-.....
-.....
-.BGB.
-.....
+..E..
 .....
 ENDMAP
 
@@ -3955,13 +3959,11 @@ TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
 TAGS:  temple_overflow_generic_3 temple_overflow_generic_2
 TAGS:  temple_overflow_generic_1
 {{
-  local altarcount = 1
-  if is_validating() then
-    altarcount = 5
-  else
+  local altarcount = 5
+  if not is_validating() then
     altarcount = get_overflow_altar_count(_G)
   end
-  nsubst("O : " .. altarcount .. ":B / *:l")
+  nsubst("O = " .. altarcount .. ":B / *:l")
 }}
 KFEAT: l = altar_ecumenical
 MAP
