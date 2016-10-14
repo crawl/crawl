@@ -3934,23 +3934,22 @@ NAME:   chequers_temple_overflow_statue_of_worship
 TAGS:   temple_overflow_generic_2 ttemple_overflow_generic_3
 TAGS:   temple_overflow_generic_4
 {{
-  local altarcount = 2
-  if not is_validating() then
-    altarcount = get_overflow_altar_count(_G)
+  local altarcount = get_overflow_altar_count(_G)
+  if altarcount == nil then
+    altarcount = "2"
   end
-  if altarcount < 4 then
-    subst("D = .")
+  if altarcount == "2" then
+    subst("C = .")
+  else
+    subst("C = B")
   end
-  if altarcount < 3 then
-    subst("E = .")
-  end
-  subst("DE = B")
+  nsubst("B = " .. altarcount .. ":B / *:.")
 }}
 MAP
 .....
-..D..
+..C..
 .BGB.
-..E..
+..C..
 .....
 ENDMAP
 
