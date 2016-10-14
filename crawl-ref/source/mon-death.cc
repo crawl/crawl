@@ -1520,9 +1520,11 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
         // get the proper stats from it.
         mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
                      bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
-                     // Simulacra aren't summons, and we want them to stick
-                     // around even after killing the necromancer.
-                     mons->pos(), MHITYOU);
+                     mons->pos(),
+                     // XXX: is MHITYOU really correct here?
+                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+        // Simulacra aren't summons, and we want them to stick
+        // around even after killing the necromancer.
         mg.set_summoned(bound_soul ? nullptr : &you,
                         0,
                         bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
