@@ -219,8 +219,8 @@ struct plus_range
 struct mon_weapon_spec {
     /// weighted list of weapon types; NUM_WEAPONS -> no weapon
     weapon_list types;
-    /// extra added weapon plusses; if nonzero, sets force_item
-    plus_range bonus_plus;
+    /// range of possible weapon enchant plusses; if nonzero, sets force_item
+    plus_range plusses;
     /// weighted brand list; NUM_BRANDS -> no forced brand
     vector<pair<brand_type, int>> brands;
     /// extra 1/x chance to generate as ISPEC_GOOD_ITEM
@@ -252,12 +252,12 @@ static bool _apply_weapon_spec(const mon_weapon_spec &spec, item_def &item,
     item.base_type = OBJ_WEAPONS;
     item.sub_type = *wpn_type;
 
-    if (spec.bonus_plus.odds)
+    if (spec.plusses.odds)
     {
-        if (one_chance_in(spec.bonus_plus.odds))
+        if (one_chance_in(spec.plusses.odds))
         {
-            const int rolls = max(1, spec.bonus_plus.nrolls);
-            item.plus += random_range(spec.bonus_plus.min, spec.bonus_plus.max,
+            const int rolls = max(1, spec.plusses.nrolls);
+            item.plus += random_range(spec.plusses.min, spec.plusses.max,
                                       rolls);
             force_item = true;
         }
