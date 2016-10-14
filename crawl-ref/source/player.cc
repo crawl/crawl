@@ -1719,10 +1719,6 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (body_armour)
-        rsf += armour_type_prop(body_armour->sub_type, ARMF_RES_STICKY_FLAME);
-
     // dragonskin cloak: 0.5 to draconic resistances
     if (items && calc_unid
         && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
