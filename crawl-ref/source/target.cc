@@ -228,7 +228,14 @@ bool targetter_beam::affects_monster(const monster_info& mon)
     //     bolt::is_harmless (and transitively, bolt::nasty_to) should
     //     take monster_infos instead.
     const monster* m = monster_at(mon.pos);
-    return m && (!beam.is_harmless(m) || beam.nice_to(mon))
+
+    // Inner flame is the sole thing which affects (unsummoned) allies
+    // while neither harming nor helping them. Therefore, special case.
+    const bool i_fl_spec_case =
+        beam.flavour == BEAM_INNER_FLAME && !(m -> is_summoned())
+        && m -> attitude == ATT_FRIENDLY;
+
+    return m && (!beam.is_harmless(m) || i_fl_spec_case || beam.nice_to(mon))
            && !(beam.is_enchantment() && beam.has_saving_throw()
                 && beam.flavour != BEAM_VIRULENCE
                 && mon.res_magic() == MAG_IMMUNE);
