@@ -700,7 +700,8 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_splash::targetter_splash(const actor* act)
+targetter_splash::targetter_splash(const actor* act, int ran)
+    : range(ran)
 {
     ASSERT(act);
     agent = act;
@@ -709,7 +710,7 @@ targetter_splash::targetter_splash(const actor* act)
 
 bool targetter_splash::valid_aim(coord_def a)
 {
-    if (agent && grid_distance(origin, a) > 1)
+    if (agent && grid_distance(origin, a) > range)
         return notify_fail("Out of range.");
     return true;
 }
