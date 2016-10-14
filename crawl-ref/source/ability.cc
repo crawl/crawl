@@ -1832,8 +1832,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BREATHE_STICKY_FLAME:
     {
-        targetter_splash hitfunc(&you);
         beam.range = _calc_breath_ability_range(abil.ability);
+        targetter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
