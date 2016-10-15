@@ -1137,7 +1137,9 @@ void direction_chooser::draw_beam_if_needed()
                     bcol = (*ri == target()) ? LIGHTCYAN : CYAN;
                 else
                     die("unhandled aff %d", aff);
-                _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
+
+                int mbcol = (*ri == target()) ? bcol : bcol | COLFLAG_REVERSE;
+                _draw_ray_glyph(*ri, bcol, '*', mbcol);
 #endif
             }
 #ifdef USE_TILE
