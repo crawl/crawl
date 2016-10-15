@@ -265,7 +265,6 @@ static unsigned int convert_to_curses_attr(int chattr)
     case CHATTR_BOLD:           return A_BOLD;
     case CHATTR_BLINK:          return A_BLINK;
     case CHATTR_UNDERLINE:      return A_UNDERLINE;
-    case CHATTR_REVERSE:        return A_REVERSE;
     case CHATTR_DIM:            return A_DIM;
     default:                    return A_NORMAL;
     }
@@ -910,6 +909,7 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     if (brand != CHATTR_NORMAL)
     {
         flags |= convert_to_curses_attr(brand);
+
         // Allow highlights to override the current background color.
         if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
             bg_mod = static_cast<COLOURS>((brand & CHATTR_COLMASK) >> 8);
@@ -931,16 +931,16 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     else if (bg_mod == BG_COL_DEFAULT)
         bg_mod = BLACK;
 
-    // Done with color mapping; get the resulting attributes.
-    curs_attr(attr, color_pair, fg_mod, bg_mod);
-
-    // Negate double-reversals.
-    if ((flags & A_REVERSE) && (attr & A_REVERSE))
+    // Reverse color manually to ensure correct brightening attrs.
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
     {
-        attr &= ~A_REVERSE;
-        flags &= ~A_REVERSE;
+        COLOURS fg_mod_backup = fg_mod;
+        fg_mod = bg_mod;
+        bg_mod = fg_mod_backup;
     }
 
+    // Done with color mapping; get the resulting attributes.
+    curs_attr(attr, color_pair, fg_mod, bg_mod);
     attr |= flags;
 }
 
