@@ -2997,6 +2997,39 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
     return descs;
 }
 
+static int _get_chance_for_confusing_touch(const monster_info& mi)
+{
+    /* let's calculate chance based on actual check:
+    const int hdcheck =
+            (defender->holiness() & MH_NATURAL ? random2(30) : random2(22));
+
+        if (hdcheck < defender->get_hit_dice()
+            || one_chance_in(5)
+            || defender->as_monster()->check_clarity(false))
+            
+    */
+    
+    // FIXME ignoring clarity for now
+    int hd_chance;
+    if (mi.holi & MH_NATURAL)
+        hd_chance = 100 * (30 - mi.hd) / 30;
+    else
+        hd_chance = 100 * (22 - mi.hd) / 22;
+    if (hd_chance < 0)
+        hd_chance = 0;
+    return hd_chance * 8 / 10;
+}
+
+static vector<string> _get_monster_chances(const monster_info& mi)
+{
+    vector<string> descs;
+
+    if (you.duration[DUR_CONFUSING_TOUCH])
+        descs.emplace_back("chance to confuse:" + to_string(_get_chance_for_confusing_touch(mi)) + "%");
+
+    return descs;
+}
+
 // FIXME: this duplicates _get_monster_desc(). Unite them.
 static vector<string> _get_monster_desc_vector(const monster_info& mi)
 {
@@ -3009,6 +3042,8 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.emplace_back("mesmerising");
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
+    
+    _append_container(descs, _get_monster_chances(mi));
 
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");
