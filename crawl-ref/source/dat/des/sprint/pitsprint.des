@@ -488,7 +488,6 @@ function coven_setup(e)
           amulet of rage randart not_cursed ident:all /\
           amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
-          amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\
           ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")

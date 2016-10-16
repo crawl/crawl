@@ -81,7 +81,7 @@ ae += [^n]identified.*spellbook
 # Excluding amulets as you only need one of each. (If you know the subtype
 # that means you already have one of it.). Some items may already be excluded
 # as bad_item, e.g. inaccuracy.
-ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|dismissal|harm)
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
 ae += amulet of (rage|guardian spirit|faith|magic regeneration)
 
 # Likewise for some rings.

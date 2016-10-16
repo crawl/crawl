@@ -721,32 +721,6 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
-/**
- * If you have dismissal, consider teleporting away a monster that hurt you.
- **/
-static void _maybe_dismiss(mid_t source, int dam)
-{
-    if (!you.dismissal(true, true))
-        return;
-
-    monster* mon = monster_by_mid(source);
-    if (!mon || mon->no_tele())
-        return;
-
-    ASSERT(you.hp_max > 0);
-    // chance to teleport away monsters that harm you:
-    // 0% for hits that do < 10% of player hp, 10% chance otherwise
-    if (dam < you.hp_max / 10)
-        return;
-
-    if (one_chance_in(10))
-    {
-        item_def *amulet = you.slot_item(EQ_AMULET);
-        mprf("%s vibrates suddenly!", amulet->name(DESC_YOUR).c_str());
-        teleport_fineff::schedule(mon);
-    }
-}
-
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1015,7 +989,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
-            _maybe_dismiss(source, dam);
         }
         if (you.hp > 0)
           return;
