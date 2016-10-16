@@ -1279,6 +1279,7 @@ BRAND:    SPARM_REFLECTION
 NAME:     amulet of invisibility
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
+TILE:     urand_cekugob
 BOOL:     inv, nogen
 
 # This entry must always be last.
