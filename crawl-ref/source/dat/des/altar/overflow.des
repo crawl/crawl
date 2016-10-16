@@ -3955,8 +3955,7 @@ ENDMAP
 
 NAME:  chequers_temple_overflow_minitemple
 TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
-TAGS:  temple_overflow_generic_3 temple_overflow_generic_2
-TAGS:  temple_overflow_generic_1
+TAGS:  temple_overflow_generic_3
 {{
   local altarcount = 5
   if not is_validating() then
