@@ -277,12 +277,12 @@ static unsigned int convert_to_curses_attr(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
-    case CHATTR_STANDOUT:       return A_STANDOUT;
-    case CHATTR_BOLD:           return A_BOLD;
-    case CHATTR_BLINK:          return A_BLINK;
-    case CHATTR_UNDERLINE:      return A_UNDERLINE;
-    case CHATTR_DIM:            return A_DIM;
-    default:                    return A_NORMAL;
+    case CHATTR_STANDOUT:       return WA_STANDOUT;
+    case CHATTR_BOLD:           return WA_BOLD;
+    case CHATTR_BLINK:          return WA_BLINK;
+    case CHATTR_UNDERLINE:      return WA_UNDERLINE;
+    case CHATTR_DIM:            return WA_DIM;
+    default:                    return WA_NORMAL;
     }
 }
 
@@ -872,15 +872,15 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
 
     if (!curs_can_use_extended_colors())
     {
-        // curses typically uses A_BOLD to give bright foreground colour,
+        // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if (fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            flags |= A_BOLD;
+            flags |= WA_BOLD;
 
-        // curses typically uses A_BLINK to give bright background colour,
+        // curses typically uses WA_BLINK to give bright background colour,
         // but various termcaps may disagree (in whole or in part)
         if (bg_curses & COLFLAG_CURSES_BRIGHTEN)
-            flags |= A_BLINK;
+            flags |= WA_BLINK;
     }
 
     if (monochrome_output_requested)
@@ -891,7 +891,7 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
 
         // Do the best we can for backgrounds with monochrome output.
         if (bg_curses != COLOR_BLACK)
-            flags |= A_REVERSE;
+            flags |= WA_REVERSE;
     }
 
     // Got everything we need -- write out the results.
@@ -1399,11 +1399,11 @@ static void flip_colour(cchar_t &ch)
     if (!curs_can_use_extended_colors())
     {
         // Check if these were brightened colours.
-        if (attr & A_BOLD)
+        if (attr & WA_BOLD)
             fg |= COLFLAG_CURSES_BRIGHTEN;
-        if (attr & A_BLINK)
+        if (attr & WA_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
-        attr &= ~(A_BOLD | A_BLINK);
+        attr &= ~(WA_BOLD | WA_BLINK);
     }
 
     if (!need_attribute_only_flip)
@@ -1424,20 +1424,20 @@ static void flip_colour(cchar_t &ch)
             if ((fg & COLFLAG_CURSES_BRIGHTEN)
                 && !(bg & COLFLAG_CURSES_BRIGHTEN))
             {
-                attr |= A_BLINK;
+                attr |= WA_BLINK;
             }
             else if ((bg & COLFLAG_CURSES_BRIGHTEN)
                 && !(fg & COLFLAG_CURSES_BRIGHTEN))
             {
-                attr |= A_BOLD;
+                attr |= WA_BOLD;
             }
         }
 
         // Toggle the reverse video bit.
-        if (attr & A_REVERSE)
-            attr &= ~A_REVERSE;
+        if (attr & WA_REVERSE)
+            attr &= ~WA_REVERSE;
         else
-            attr |= A_REVERSE;
+            attr |= WA_REVERSE;
     }
 
     // Assign the new, reversed info and clean up.
