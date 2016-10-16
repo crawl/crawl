@@ -255,6 +255,22 @@ static void flip_colour(cchar_t &ch);
  */
 static short translate_colour(COLOURS col);
 
+/**
+ * @brief Write a complex curses character to specified screen location.
+ *
+ * There are two additional effects of this function:
+ *  - The screen's character attributes are set to those contained in @p ch.
+ *  - The cursor is moved to the passed coordinate.
+ *
+ * @param y
+ *  The y-component of the location to draw @p ch.
+ * @param x
+ *  The x-component of the location to draw @p ch.
+ * @param ch
+ *  The complex character to render.
+ */
+static void write_char_at(int y, int x, const cchar_t &ch);
+
 static bool cursor_is_enabled = true;
 
 static unsigned int convert_to_curses_attr(int chattr)
@@ -1320,10 +1336,36 @@ static inline cchar_t character_at(int y, int x)
     return c;
 }
 
-static inline void write_char_at(int y, int x, const cchar_t &ch)
+/**
+ * @internal
+ * Writing out a cchar_t to the screen using one of the add_wch functions does
+ * not necessarily set the character attributes contained within.
+ *
+ * So, explicitly set the screen attributes to those contained within the passed
+ * cchar_t before writing it to the screen. This *should* guarantee that that
+ * all attributes within the cchar_t (and only those within the cchar_t) are
+ * actually set.
+ */
+static void write_char_at(int y, int x, const cchar_t &ch)
 {
-    move(y, x);
-    add_wchnstr(&ch, 1);
+    attr_t attr = 0;
+    short color_pair = 0;
+    wchar_t *wch = nullptr;
+
+    // Make sure to allocate enough space for the characters.
+    int chars_to_allocate = getcchar(&ch, nullptr, &attr, &color_pair, nullptr);
+    if (chars_to_allocate > 0)
+        wch = new wchar_t[chars_to_allocate];
+
+    // Good to go. Grab the color / attr info.
+    getcchar(&ch, wch, &attr, &color_pair, nullptr);
+
+    // Clean up.
+    if (chars_to_allocate > 0)
+        delete [] wch;
+
+    attr_set(attr, color_pair, nullptr);
+    mvadd_wchnstr(y, x, &ch, 1);
 }
 
 static void flip_colour(cchar_t &ch)
@@ -1412,7 +1454,6 @@ void fakecursorxy(int x, int y)
     cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
     write_char_at(y_curses, x_curses, c);
-    move(y_curses, x_curses);
 }
 
 int wherex()
