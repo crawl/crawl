@@ -1,11 +1,4 @@
 %%%%
-amulet of dismissal
-
-An amulet which generates a field of translocational energy that will teleport
-away creatures that seriously harm you, one time in ten. It takes a few moments
-to get used to the translocational energy field, initially disorienting the
-wearer for a few turns.
-%%%%
 amulet of faith
 
 A talisman crafted to call the attention of the gods to its wearer. This divine

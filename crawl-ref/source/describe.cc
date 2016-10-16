@@ -134,10 +134,10 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_HARM:                return "Harm";
-    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
@@ -384,13 +384,13 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_HARM:
         return "It increases damage dealt and taken.";
-    case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
     case AMU_MANA_REGENERATION:
         return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif

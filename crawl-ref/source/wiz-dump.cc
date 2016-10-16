@@ -71,8 +71,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_RAGE;
     if (s == "Harm")
         return AMU_HARM;
-    if (s == "Dismiss")
-        return AMU_DISMISSAL;
     if (s == "Gourm")
         return AMU_THE_GOURMAND;
     if (s == "Inacc")
