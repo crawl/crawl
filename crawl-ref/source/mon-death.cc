@@ -2747,7 +2747,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (!silent && !wizard)
             _special_corpse_messaging(*mons);
         // message ordering... :(
-        _maybe_drop_monster_hide(*corpse, silent);
+        if (corpse->base_type == OBJ_CORPSES) // not gold
+            _maybe_drop_monster_hide(*corpse, silent);
     }
 
     if (mons->is_divine_companion()
