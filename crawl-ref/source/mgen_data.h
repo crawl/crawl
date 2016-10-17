@@ -10,6 +10,10 @@
 #define TUKIMA_WEAPON "tukima-weapon"
 #define TUKIMA_POWER "tukima-power"
 
+#define IEOH_JIAN_WEAPON "ieoh-jian-weapon"
+#define IEOH_JIAN_POWER "ieoh-jian-power"
+#define IEOH_JIAN_SLOT "ieoh-jian-slot"
+
 #define MGEN_NUM_HEADS "num_heads"
 #define MGEN_BLOB_SIZE "blob_size"
 #define MGEN_TENTACLE_CONNECT "tentacle_connect"

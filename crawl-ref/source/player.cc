@@ -5372,6 +5372,8 @@ player::player()
         branch_info[it->id].branch = it->id;
         branch_info[it->id].assert_validity();
     }
+
+    ieoh_jian_weapon_manifested.resize(IEOH_JIAN_WEAPON_SLOTS);
 }
 
 void player::init_skills()
@@ -8530,11 +8532,6 @@ int player::inaccuracy() const
     if (player_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;
-}
-
-vector<item_def>& player::get_ieoh_jian_collection()
-{
-    return ieoh_jian_collection;
 }
 
 /**

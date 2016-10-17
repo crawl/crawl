@@ -319,7 +319,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
     // Ieoh Jian
-    { { 0, ABIL_IEOH_JIAN_COLLECT, "store weapons in the Council's sacred vault" },
+    { { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
     },
 };
 
@@ -3486,61 +3486,19 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
-static void _ieoh_jian_init_collection()
-{
-    static const vector<uint8_t> base_collection_types = {
-        WPN_DAGGER,
-        WPN_FALCHION,
-        WPN_SPEAR,
-        WPN_WHIP,
-        WPN_HAND_AXE,
-        WPN_QUARTERSTAFF,
-    };
-    auto& collection = you.get_ieoh_jian_collection();
-    collection.clear();
-    collection.resize(base_collection_types.size());
-
-    for (size_t i = 0; i != base_collection_types.size(); i++)
-    {
-        auto& item = collection[i];
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = base_collection_types[i];
-        item.quantity = 1;
-        item.plus = 2;
-        item.brand = SPWPN_VORPAL;
-        item_colour(item);
-        item_set_appearance(item);
-        set_ident_type(item, true);
-    }
-}
-
 // Setup when becoming a Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
     if (you.shield())
+    {
         mprf(MSGCH_GOD, "'A shield? Cowardice begets weakness!'");
-
-    if (you.weapon())
-        mprf(MSGCH_GOD, "'You won't need that weapon, young dog! You will be given one when you need it, not before.'");
-
-    if (you.weapon() && you.shield())
-    {
-        mprf(MSGCH_GOD, "An invisible force knocks your weapon and shield away.");
-        unwield_item();
-        unequip_item(EQ_SHIELD);
-    }
-    else if (you.weapon())
-    {
-        mprf(MSGCH_GOD, "An invisible force knocks your weapon away.");
-        unwield_item();
-    }
-    else if (you.shield())
-    {
         mprf(MSGCH_GOD, "An invisible force knocks your shield away.");
         unequip_item(EQ_SHIELD);
     }
 
-    _ieoh_jian_init_collection();
+    you.ieoh_jian_weapon_manifested.clear();
+    you.ieoh_jian_weapon_manifested.resize(7);
+    you.ieoh_jian_activity_level = 0;
 }
 
 

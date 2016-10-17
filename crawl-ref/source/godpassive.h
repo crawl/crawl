@@ -242,6 +242,9 @@ enum class passive_t
 
     /// Hep reduces your max HP
     frail,
+
+    /// Spawn flying weapons on melee attack
+    spawn_weapon_on_hit,
 };
 
 enum ru_interference
@@ -280,5 +283,6 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
+void ieoh_jian_spawn_weapon(actor* target);
 
 #endif

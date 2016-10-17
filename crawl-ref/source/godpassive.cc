@@ -289,7 +289,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Ieoh Jian
     {
-        // TODO
+        { -1, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
     },
 };
 
@@ -1378,6 +1378,105 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     shadow_monster_reset(mon);
 }
+
+static item_def ieoh_jian_choose_weapon(int slot)
+{
+    static const vector<uint8_t> base_collection_types = {
+        WPN_DAGGER,
+        WPN_FALCHION,
+        WPN_SPEAR,
+        WPN_WHIP,
+        WPN_HAND_AXE,
+        WPN_QUARTERSTAFF,
+    };
+    item_def weapon;
+
+    weapon.base_type = OBJ_WEAPONS;
+    weapon.sub_type = base_collection_types[slot];
+    weapon.quantity = 1;
+    weapon.plus = 2;
+    weapon.brand = SPWPN_VORPAL;
+    set_ident_type(weapon, true);
+
+    return weapon;
+}
+
+static bool ieoh_jian_increase_activity_level()
+{
+    auto& manifested = you.ieoh_jian_weapon_manifested;
+    auto slots = std::count(manifested.begin(), manifested.end(), false);
+    if (x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
+    {
+        you.ieoh_jian_activity_level++;
+        return true;
+    }
+
+    return false;
+}
+
+void ieoh_jian_spawn_weapon(actor* target)
+{
+    if (!target
+        || !target->alive()
+        || !_in_melee_range(target))
+    {
+        return;
+    }
+
+    // We attempt to increase the activity level (see if the ICJ is interested
+    // in helping by sending more weapons. Less likely the higher it was to begin
+    // with).
+    ieoh_jian_increase_activity_level();
+
+    auto& manifested = you.ieoh_jian_weapon_manifested;
+    auto slots = std::count(manifested.begin(), manifested.end(), false);
+    auto manifested_num = IEOH_JIAN_WEAPON_SLOTS - slots;
+
+    // If the activity level is higher than the number of manifested weapons, we
+    // manifest one. If it isn't, we are done.
+    if (you.ieoh_jian_activity_level <= manifested_num)
+        return;
+
+    auto index = random_range(0, slots - 1);
+
+    int slot = 0;
+    for (; slot != IEOH_JIAN_WEAPON_SLOTS; slot++)
+    {
+        if (you.ieoh_jian_weapon_manifested[slot])
+            continue; // Slot is already manifested
+       
+        if (index-- == 0)
+            break;
+    }
+
+    ASSERT(slot < IEOH_JIAN_WEAPON_SLOTS);
+    item_def wpn = ieoh_jian_choose_weapon(slot);
+
+    const int dur = 3;
+
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 target->pos(),
+                 target->mindex(),
+                 MG_FORCE_BEH,
+                 GOD_IEOH_JIAN);
+    mg.set_summoned(&you, dur, 0);
+    mg.props[IEOH_JIAN_WEAPON] = wpn;
+    mg.props[IEOH_JIAN_POWER] = 1;
+    mg.props[IEOH_JIAN_SLOT] = slot;
+
+    monster * const mons = create_monster(mg);
+
+    if (!mons)
+    {
+        dprf("Failed to animate Ieoh Jian weapon");
+        return;
+    }
+
+    mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
+    manifested[slot] = true;
+}
+
 
 /**
  * check if the monster in this cell exists and is a valid target for Uskayaw

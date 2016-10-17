@@ -1455,6 +1455,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     cloud_type cloud = CLOUD_NONE;
     if (msg.find("smoke") != string::npos)
         cloud = random_smoke_type();
+    if (msg.find("steel") != string::npos)
+        cloud = CLOUD_DUST;
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
 
@@ -1971,12 +1973,14 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player
-    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    // instead. Ditto Dithmenos shadow melee and shadow throw. 
+    // Ditto Ieoh Jian Council weapons.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
              && menv[killer_index].summoner == MID_PLAYER)
-            || mons_is_player_shadow(menv[killer_index])))
+            || mons_is_player_shadow(menv[killer_index])
+            || mons_is_ieoh_jian_weapon(menv[killer_index])))
     {
         killer_index = you.mindex();
     }
@@ -2121,6 +2125,20 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             destroy_item(w_idx);
         }
+    }
+    else if (mons->type == MONS_IEOH_JIAN_WEAPON)
+    {
+        ASSERT(mons->props.exists(IEOH_JIAN_SLOT));
+        int slot = mons->props[IEOH_JIAN_SLOT].get_int();
+
+        // The manifested slot is freed so more weapons of that type can exist.
+        you.ieoh_jian_weapon_manifested[slot] = 0;
+
+        int w_idx = mons->inv[MSLOT_WEAPON];
+        ASSERT(w_idx != NON_ITEM);
+
+        // The weapon is lost forever.
+        destroy_item(w_idx);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
@@ -3109,6 +3127,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
+
+        if (mons->type == MONS_IEOH_JIAN_WEAPON)
+            msg = "shatter%s into a cloud of steel fragments";
     }
 
     // Conjugate.

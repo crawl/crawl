@@ -342,8 +342,12 @@ public:
     // Hash seeds for deterministic stuff.
     FixedVector<uint32_t, NUM_SEEDS> game_seeds;
 
-    // Weapon collection from Ieoh Jian council's vault.
-    vector<item_def> ieoh_jian_collection;
+    // Weapon slots manifested by Ieoh Jian.
+    vector<bool> ieoh_jian_weapon_manifested;
+
+    // Number of weapons that Ieoh Jian wants manifested now.
+    int ieoh_jian_activity_level;
+
     // -------------------
     // Non-saved UI state:
     // -------------------
@@ -845,8 +849,6 @@ public:
     bool form_uses_xl() const;
 
     bool clear_far_engulf() override;
-
-    vector<item_def>& get_ieoh_jian_collection();
 
 protected:
     void _removed_beholder(bool quiet = false);

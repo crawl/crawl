@@ -450,7 +450,7 @@ enum ability_type
 #endif
 
     // Ieoh Jian
-    ABIL_IEOH_JIAN_COLLECT = 1300,
+    ABIL_IEOH_JIAN_DRAGONFLY = 1300,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -2675,6 +2675,7 @@ enum monster_type                      // menv[].type
     MONS_GLOWING_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
+    MONS_IEOH_JIAN_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
 #endif
