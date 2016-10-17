@@ -1,7 +1,7 @@
 When reporting a bug, please include the following:
 
 **PLATFORM:**
-*e.g. "local tiles", "webtiles", or "console". Putting this in the tags is
+*e.g. "local tiles", "webtiles", or "console". Putting this in the labels is
 also fine.*
 
 **VERSION:**
