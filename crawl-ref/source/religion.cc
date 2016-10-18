@@ -3496,9 +3496,8 @@ static void _join_ieoh_jian()
         unequip_item(EQ_SHIELD);
     }
 
-    you.ieoh_jian_weapon_manifested.clear();
-    you.ieoh_jian_weapon_manifested.resize(7);
-    you.ieoh_jian_activity_level = 0;
+    you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = 0;
+    you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = 0;
 }
 
 

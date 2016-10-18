@@ -284,5 +284,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 void ieoh_jian_spawn_weapon(actor* target);
+void ieoh_jian_kill_oldest_weapon();
+vector<monster*> find_ieoh_jian_manifested_weapons();
 
 #endif

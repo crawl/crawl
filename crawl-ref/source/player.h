@@ -342,12 +342,6 @@ public:
     // Hash seeds for deterministic stuff.
     FixedVector<uint32_t, NUM_SEEDS> game_seeds;
 
-    // Weapon slots manifested by Ieoh Jian.
-    vector<bool> ieoh_jian_weapon_manifested;
-
-    // Number of weapons that Ieoh Jian wants manifested now.
-    int ieoh_jian_activity_level;
-
     // -------------------
     // Non-saved UI state:
     // -------------------

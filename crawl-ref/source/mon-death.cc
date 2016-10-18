@@ -2129,10 +2129,9 @@ item_def* monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         ASSERT(mons->props.exists(IEOH_JIAN_SLOT));
-        int slot = mons->props[IEOH_JIAN_SLOT].get_int();
 
         // The manifested slot is freed so more weapons of that type can exist.
-        you.ieoh_jian_weapon_manifested[slot] = 0;
+        you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() - 1;
 
         int w_idx = mons->inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);

@@ -1922,6 +1922,11 @@ skill_type item_attack_skill(const item_def &item)
     return SK_FIGHTING;
 }
 
+skill_type weapon_attack_skill(uint8_t weapon_subtype)
+{
+    return Weapon_prop[ Weapon_index[weapon_subtype] ].skill;
+}
+
 /**
  * Returns the skill used by the given item type to attack.
  *

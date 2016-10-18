@@ -1628,12 +1628,6 @@ static void tag_construct_you(writer &th)
 
     CANARY;
 
-    for (int i = 0; i < 6; i++)
-        marshallBoolean(th, you.ieoh_jian_weapon_manifested[i]);
-
-    marshallInt(th, you.ieoh_jian_activity_level);
-
-    CANARY;
 
     // don't let vault caching errors leave a normal game with sprint scoring
     if (!crawl_state.game_is_sprint())
@@ -3426,19 +3420,6 @@ static void tag_read_you(reader &th)
         you.game_seeds[i] = unmarshallInt(th);
     for (int i = count; i < NUM_SEEDS; i++)
         you.game_seeds[i] = get_uint32();
-#if TAG_MAJOR_VERSION == 34
-    }
-#endif
-
-    EAT_CANARY;
-
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_IEOH_JIAN)
-    {
-#endif
-        for (int i = 0; i < 6; i++)
-            you.ieoh_jian_weapon_manifested.push_back(unmarshallBoolean(th));    
-        you.ieoh_jian_activity_level = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

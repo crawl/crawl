@@ -5372,8 +5372,6 @@ player::player()
         branch_info[it->id].branch = it->id;
         branch_info[it->id].assert_validity();
     }
-
-    ieoh_jian_weapon_manifested.resize(IEOH_JIAN_WEAPON_SLOTS);
 }
 
 void player::init_skills()

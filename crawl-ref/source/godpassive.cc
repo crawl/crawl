@@ -1379,9 +1379,25 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-static item_def ieoh_jian_choose_weapon(int slot)
+// Returns references to all IEOH JIAN weapon monsters, sorted by age.
+vector<monster*> find_ieoh_jian_manifested_weapons()
 {
-    static const vector<uint8_t> base_collection_types = {
+    vector<monster*> monsters;
+
+    for (auto& monster: menv)
+        if (monster.props.exists(IEOH_JIAN_SLOT))
+            monsters.emplace_back(&monster);
+
+    std::sort(monsters.begin(), monsters.end(), [](monster* a, monster* b) {
+        return (a->props[IEOH_JIAN_SLOT].get_int() < b->props[IEOH_JIAN_SLOT].get_int());
+    });
+
+    return monsters;
+}
+
+static item_def ieoh_jian_choose_weapon()
+{
+    static vector<uint8_t> base_collection_types = {
         WPN_DAGGER,
         WPN_FALCHION,
         WPN_SPEAR,
@@ -1389,10 +1405,25 @@ static item_def ieoh_jian_choose_weapon(int slot)
         WPN_HAND_AXE,
         WPN_QUARTERSTAFF,
     };
+
+    auto manifested = find_ieoh_jian_manifested_weapons();
+
+    // We get rid of all base types for which there is already a manifested weapon.
+    for (auto monster: manifested)
+    {
+        auto monster_weapon_type = monster->weapon()->sub_type;
+        std::remove_if(base_collection_types.begin(), base_collection_types.end(), [monster_weapon_type](uint8_t type) {
+            return weapon_attack_skill(type) == weapon_attack_skill(monster_weapon_type);
+        });
+    }
+
+    // There should still be something free!
+    ASSERT(!base_collection_types.empty());
+
     item_def weapon;
 
     weapon.base_type = OBJ_WEAPONS;
-    weapon.sub_type = base_collection_types[slot];
+    weapon.sub_type = base_collection_types[random_range(0, base_collection_types.size() - 1)];
     weapon.quantity = 1;
     weapon.plus = 2;
     weapon.brand = SPWPN_VORPAL;
@@ -1401,13 +1432,22 @@ static item_def ieoh_jian_choose_weapon(int slot)
     return weapon;
 }
 
-static bool ieoh_jian_increase_activity_level()
+
+static bool ieoh_jian_interest()
 {
-    auto& manifested = you.ieoh_jian_weapon_manifested;
-    auto slots = std::count(manifested.begin(), manifested.end(), false);
+    if(you.duration[DUR_IEOH_JIAN_BOREDOM] > 0)
+        you.duration[DUR_IEOH_JIAN_BOREDOM] = 0;
+
+    if(you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
+        mprf(MSGCH_GOD, "You feel a surge of divine interest. The Council is watching!");
+
+    you.duration[DUR_IEOH_JIAN_INTEREST] = 40;
+    
+    auto slots = IEOH_JIAN_WEAPON_SLOTS - you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
     if (x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
     {
-        you.ieoh_jian_activity_level++;
+        ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
+        you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int() + 1;
         return true;
     }
 
@@ -1417,7 +1457,6 @@ static bool ieoh_jian_increase_activity_level()
 void ieoh_jian_spawn_weapon(actor* target)
 {
     if (!target
-        || !target->alive()
         || !_in_melee_range(target))
     {
         return;
@@ -1426,32 +1465,19 @@ void ieoh_jian_spawn_weapon(actor* target)
     // We attempt to increase the activity level (see if the ICJ is interested
     // in helping by sending more weapons. Less likely the higher it was to begin
     // with).
-    ieoh_jian_increase_activity_level();
+    ieoh_jian_interest();
+    dprf("Attempting to spawn weapon from IJC. Activity level is %d", you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int());
 
-    auto& manifested = you.ieoh_jian_weapon_manifested;
-    auto slots = std::count(manifested.begin(), manifested.end(), false);
-    auto manifested_num = IEOH_JIAN_WEAPON_SLOTS - slots;
+    auto manifested_num = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
+    
 
     // If the activity level is higher than the number of manifested weapons, we
-    // manifest one. If it isn't, we are done.
-    if (you.ieoh_jian_activity_level <= manifested_num)
+    // manifest one. If it isn't, or if we have the max already, we are done.
+    if ((you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int() <= manifested_num) 
+         ||(manifested_num >= IEOH_JIAN_WEAPON_SLOTS))
         return;
 
-    auto index = random_range(0, slots - 1);
-
-    int slot = 0;
-    for (; slot != IEOH_JIAN_WEAPON_SLOTS; slot++)
-    {
-        if (you.ieoh_jian_weapon_manifested[slot])
-            continue; // Slot is already manifested
-       
-        if (index-- == 0)
-            break;
-    }
-
-    ASSERT(slot < IEOH_JIAN_WEAPON_SLOTS);
-    item_def wpn = ieoh_jian_choose_weapon(slot);
-
+    item_def wpn = ieoh_jian_choose_weapon();
     const int dur = 3;
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
@@ -1463,7 +1489,7 @@ void ieoh_jian_spawn_weapon(actor* target)
     mg.set_summoned(&you, dur, 0);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
     mg.props[IEOH_JIAN_POWER] = 1;
-    mg.props[IEOH_JIAN_SLOT] = slot;
+    mg.props[IEOH_JIAN_SLOT] = manifested_num + 1;
 
     monster * const mons = create_monster(mg);
 
@@ -1474,7 +1500,7 @@ void ieoh_jian_spawn_weapon(actor* target)
     }
 
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
-    manifested[slot] = true;
+    you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = manifested_num + 1;
 }
 
 

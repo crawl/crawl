@@ -30,6 +30,22 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
+// Self-renewing duration that decreases divine interest (and hence ICJ activity level).
+// Stops self-renewing if the IJC is interested again, or if the activity level reaches 0.
+static void _ieoh_jian_bored()
+{
+    dprf("BORED!!!");
+    ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
+    int activity = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int();
+    if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity > 0))
+    {
+        you.duration[DUR_IEOH_JIAN_BOREDOM] = 80;
+        you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = activity - 1;
+    }
+    else if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity == 0) )
+        mprf(MSGCH_GOD, "The Council is no longer interested in your fight.");
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -537,7 +553,16 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
-
+    { DUR_IEOH_JIAN_INTEREST,
+      RED, "Council",
+      "being watched over by the Council", "IJC interested",
+      "The Council is aiding you in battle.", D_NO_FLAGS,
+      {{ "The Council is losing interest.",  _ieoh_jian_bored }}},
+    { DUR_IEOH_JIAN_BOREDOM,
+      0, "",
+      "being impatiently watched over by the Council", "IJC bored",
+      "The Council wishes you kept fighting.", D_NO_FLAGS,
+      {{ "",  _ieoh_jian_bored }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
