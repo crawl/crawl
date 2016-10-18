@@ -413,7 +413,8 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
 
 static void _create_monster_hide(const item_def &corpse, bool silent)
 {
-    const armour_type type = hide_for_monster(mons_species(corpse.mon_type));
+    const monster_type mtyp = corpse.mon_type;
+    const armour_type type = hide_for_monster(mons_species(mtyp));
     ASSERT(type != NUM_ARMOURS);
 
     int o = items(false, OBJ_ARMOUR, type, 0);
@@ -438,8 +439,9 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
              item.name(DESC_THE).c_str(),
-             mons_genus(corpse.mon_type) == MONS_DRAGON ? "are"  // scales are
-                                                        : "is"); // hide is
+             mons_genus(mtyp) == MONS_DRAGON ? "are"  // scales are
+                                             : "is"); // hide is
+                                                      // XXX: refactor
     }
 
     // after messaging, for better results
