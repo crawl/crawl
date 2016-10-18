@@ -32,7 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "godconduct.h"
-#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs, find_ieoh_jian_manifested_weapons
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -2129,9 +2129,16 @@ item_def* monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         ASSERT(mons->props.exists(IEOH_JIAN_SLOT));
+        // We don't occupy a slot anymore.
+        mons->props.erase(IEOH_JIAN_SLOT);
 
         // The manifested slot is freed so more weapons of that type can exist.
         you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() - 1;
+         
+        // All slot indices are updated, so the age order is always respected.
+        auto monsters = find_ieoh_jian_manifested_weapons();
+        for (size_t i = 0; i != monsters.size(); i++)
+            monsters[i]->props[IEOH_JIAN_SLOT] = (int)i;
 
         int w_idx = mons->inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
@@ -3515,3 +3522,13 @@ bool mons_bennu_can_revive(const monster* mons)
     return !mons->props.exists("bennu_revives")
            || mons->props["bennu_revives"].get_byte() < 1;
 }
+
+void ieoh_jian_kill_oldest_weapon()
+{
+    auto monsters = find_ieoh_jian_manifested_weapons();
+    if (monsters.empty())
+        return;
+
+    monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);
+}
+

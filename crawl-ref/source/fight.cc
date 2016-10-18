@@ -155,6 +155,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
+        if (!simu && will_have_passive(passive_t::spawn_weapon_on_hit))
+            ieoh_jian_spawn_weapon(defender);
+
         if (!attk.attack())
         {
             // Attack was cancelled or unsuccessful...
@@ -172,9 +175,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
-
-        if (!simu && will_have_passive(passive_t::spawn_weapon_on_hit))
-            ieoh_jian_spawn_weapon(defender);
 
         return true;
     }

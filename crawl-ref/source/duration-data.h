@@ -2,6 +2,8 @@
  * Status defaults for durations.
  */
 
+#include "mon-death.h" // ieoh_jian_kill_oldest_weapon
+
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
@@ -34,12 +36,12 @@ static void _redraw_armour()
 // Stops self-renewing if the IJC is interested again, or if the activity level reaches 0.
 static void _ieoh_jian_bored()
 {
-    dprf("BORED!!!");
+    ieoh_jian_kill_oldest_weapon();
     ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
     int activity = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int();
     if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity > 0))
     {
-        you.duration[DUR_IEOH_JIAN_BOREDOM] = 80;
+        you.duration[DUR_IEOH_JIAN_BOREDOM] = 40;
         you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = activity - 1;
     }
     else if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity == 0) )

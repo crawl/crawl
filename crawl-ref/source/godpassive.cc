@@ -1456,6 +1456,7 @@ static bool ieoh_jian_interest()
 
 void ieoh_jian_spawn_weapon(actor* target)
 {
+    dprf("Entering spawn weapon method");
     if (!target
         || !_in_melee_range(target))
     {
