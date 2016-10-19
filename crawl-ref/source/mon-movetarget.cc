@@ -356,7 +356,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
 
     deep = false;
 
-    // Try two iterations, the second more relaxed than the first.  But if
+    // Try two iterations, the second more relaxed than the first. But if
     // we find deep water on the first pass, don't bother with the second.
     for (int iteration = 0; iteration < 2 && !deep; ++iteration)
     {
