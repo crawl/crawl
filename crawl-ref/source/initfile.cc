@@ -76,6 +76,9 @@
 #include <shlobj.h>
 #elif defined (__APPLE__)
 extern char **NXArgv;
+#ifndef DATA_DIR_PATH
+#include <unistd.h>
+#endif
 #elif defined (__linux__)
 #include <unistd.h>
 #endif
@@ -1556,7 +1559,31 @@ void read_init_file(bool runscript)
     }
 
     // Load init.txt.
-    const string init_file_name(find_crawlrc());
+    const string crawl_rc = find_crawlrc();
+    const string init_file_name(crawl_rc);
+
+    /**
+     Mac OS X apps almost always put their user-modifiable configuration files
+     in the Application Support directory.  On Mac OS X when DATA_DIR_PATH is
+     not defined, place a symbolic link to the init.txt file in crawl_dir
+     (probably "~/Library/Application Support/Dungeon Crawl Stone Soup") where
+     the user is likely to go looking for it.
+     */
+#if defined(TARGET_OS_MACOSX) && !defined(DATA_DIR_PATH)
+    char *cwd = getcwd(NULL, 0);
+    if (cwd)
+    {
+        const string absolute_crawl_rc = is_absolute_path(crawl_rc) ? crawl_rc : catpath(cwd, crawl_rc);
+        char *resolved = realpath(absolute_crawl_rc.c_str(), NULL);
+        if (resolved)
+        {
+            const string crawl_dir_init = catpath(SysEnv.crawl_dir.c_str(), "init.txt");
+            symlink(resolved, crawl_dir_init.c_str());
+            free(resolved);
+        }
+        free(cwd);
+    }
+#endif
 
     FileLineInput f(init_file_name.c_str());
 
