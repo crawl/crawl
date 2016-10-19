@@ -384,7 +384,8 @@ bool find_merfolk_avatar_water_target(monster* mon)
             }
             else // water_count == best_water_count
             {
-                const int old_dist = (mon->pos() - best_target).rdist();
+                const int old_dist = best_target.origin() ? INFINITE_DISTANCE
+                                   : (mon->pos() - best_target).rdist();
                 const int new_dist = (mon->pos() - *ri).rdist();
                 if (new_dist > old_dist)
                     continue;
