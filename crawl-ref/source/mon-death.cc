@@ -2719,14 +2719,6 @@ item_def* monster_die(monster* mons, killer_type killer,
     if (crawl_state.game_is_arena())
         arena_monster_died(mons, killer, killer_index, silent, corpse);
 
-    // Monsters haloes should be removed when they die.
-    if (mons->halo_radius()
-        || mons->umbra_radius()
-        || mons->silence_radius())
-    {
-        invalidate_agrid();
-    }
-
     const coord_def mwhere = mons->pos();
     if (drop_items)
     {
@@ -2879,6 +2871,14 @@ void monster_cleanup(monster* mons)
     // So proper messages are printed
     if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
         mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
+
+    // Monsters haloes should be removed when they die.
+    if (mons->halo_radius()
+        || mons->umbra_radius()
+        || mons->silence_radius())
+    {
+        invalidate_agrid();
+    }
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is
