@@ -669,7 +669,7 @@ static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  3 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  3 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  1 },
     { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  1 },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  3 },
