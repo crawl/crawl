@@ -3927,10 +3927,13 @@ void runrest::stop(bool clear_delays)
     _userdef_run_stoprunning_hook();
     runmode = RMODE_NOT_RUNNING;
 
-    // Kill the delay; this is fine because it's not possible to stack
-    // run/rest/travel on top of other delays.
+    // Kill the delay; run/rest delays only
     if (clear_delays)
-        stop_delay();
+    {
+        erase_if(you.delay_queue, [](const shared_ptr<Delay> &d) -> bool {
+                     return d->is_run();
+                 });
+    }
 
 #ifdef USE_TILE_LOCAL
     if (Options.tile_runrest_rate > 0)
