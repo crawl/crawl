@@ -261,13 +261,6 @@ bool food_change(bool initial)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
-            {
-                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                     "your rage any longer.");
-                you.duration[DUR_BERSERK] = 1;
-            }
-
             switch (lifeless_prevents_form())
             {
             case UFR_TOO_DEAD:
