@@ -5670,8 +5670,9 @@ bool monster::do_shaft()
         return false;
 
     // If a pacified monster is leaving the level via a shaft trap, and
-    // has reached its goal, handle it here.
-    if (!pacified())
+    // has reached its goal, vaporize it instead of moving it.
+    // ditto, non-monsters like battlespheres and prisms.
+    if (!pacified() && !mons_is_conjured(type))
         set_transit(lev);
 
     string msg = make_stringf(" %s a shaft!",
