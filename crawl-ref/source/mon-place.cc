@@ -1783,7 +1783,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             ghost.init_ieoh_jian_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
                                       mg.props.exists(IEOH_JIAN_POWER) ?
                                           mg.props[IEOH_JIAN_POWER].get_int() : 100);
-            mon->props[IEOH_JIAN_SLOT] = mg.props[IEOH_JIAN_SLOT].get_int();
         }
         else
         {

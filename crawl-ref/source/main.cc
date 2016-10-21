@@ -3101,9 +3101,19 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
     }
 
-    mpr("You swap places.");
 
-    mons->move_to_pos(loc, true, true);
+    if (mons->type == MONS_IEOH_JIAN_WEAPON)
+    {
+        mons->move_to_pos(loc, true, true);
+        ieoh_jian_weapon_swap(mons);
+    }
+    else
+    {
+        mpr("You swap places.");
+        mons->move_to_pos(loc, true, true);
+    }
+
+
     return;
 }
 

@@ -2129,12 +2129,10 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
-        ASSERT(mons->props.exists(IEOH_JIAN_SLOT));
-
 
         if (killer == KILL_RESET)
         {
-            if (you.can_see(*mons))
+            if (you.can_see(*mons) && !silent && mons->weapon())
                 mprf(MSGCH_GOD, "%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
 
             // The manifested slot is freed so more weapons of that type can exist.
@@ -2142,8 +2140,13 @@ item_def* monster_die(monster* mons, killer_type killer,
          
             // All slot indices are updated, so the age order is always respected.
             auto monsters = find_ieoh_jian_manifested_weapons();
-            for (size_t i = 0; i != monsters.size(); i++)
-                monsters[i]->props[IEOH_JIAN_SLOT] = (int)i;
+            size_t i;
+
+            for (i = 0; i != monsters.size(); i++)
+                monsters[i]->weapon()->props[IEOH_JIAN_SLOT] = (int)i;
+
+            if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+                you.weapon()->props[IEOH_JIAN_SLOT] = (int)i;
         }
         else
         {
@@ -2162,21 +2165,15 @@ item_def* monster_die(monster* mons, killer_type killer,
             mg.set_summoned(&you, dur, 0);
             mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
             mg.props[IEOH_JIAN_POWER] = 1;
-            mg.props[IEOH_JIAN_SLOT] = mons->props[IEOH_JIAN_SLOT];
             if (!create_monster(mg))
                 dprf("Failed to reform Ieoh Jian weapon");
         }
 
         silent = true;
 
-        // We don't occupy that slot anymore.
-        mons->props.erase(IEOH_JIAN_SLOT);
-
         int w_idx = mons->inv[MSLOT_WEAPON];
-        ASSERT(w_idx != NON_ITEM);
-
-        // The weapon is lost forever.
-        destroy_item(w_idx);
+        if (w_idx != NON_ITEM)
+            destroy_item(w_idx);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
@@ -3555,12 +3552,13 @@ bool mons_bennu_can_revive(const monster* mons)
            || mons->props["bennu_revives"].get_byte() < 1;
 }
 
-void ieoh_jian_kill_oldest_weapon()
+bool ieoh_jian_kill_oldest_weapon()
 {
     auto monsters = find_ieoh_jian_manifested_weapons();
     if (monsters.empty())
-        return;
+        return false;
 
     monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);
+    return true;
 }
 

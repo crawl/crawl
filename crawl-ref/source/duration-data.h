@@ -3,7 +3,7 @@
  */
 
 #include "defines.h"
-#include "mon-death.h" // ieoh_jian_kill_oldest_weapon
+#include "godpassive.h"
 
 static void _end_weapon_brand()
 {
@@ -37,13 +37,17 @@ static void _redraw_armour()
 // Stops self-renewing if the IJC is interested again, or if the activity level reaches 0.
 static void _ieoh_jian_bored()
 {
-    ieoh_jian_kill_oldest_weapon();
+    ieoh_jian_despawn_weapon();
     ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
     int activity = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int();
     if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity > 0))
     {
         you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
         you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = activity - 1;
+    }
+    else if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (ieoh_jian_find_your_own_weapon_manifested()))
+    {
+        you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
     }
 }
 

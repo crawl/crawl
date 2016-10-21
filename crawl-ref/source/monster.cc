@@ -32,6 +32,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -50,6 +51,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-monench.h"
@@ -6472,6 +6474,91 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
     dec_inv_item_quantity(steal_what, new_item.quantity);
 
     return &new_item;
+}
+
+/** Swaps weapons with the player, provided both weapons are safe to wield and unwield.
+ *
+ *  @returns false if the swap failed.
+ */
+bool monster::ieoh_jian_swap_weapon_with_player()
+{
+    bool penance;
+    if (!you.weapon() && !weapon())
+    {
+        return false;
+    }
+    else if (!you.weapon())
+    {
+        if (inv_count() == ENDOFPACK)
+            return false; // No room for new weapon
+
+        int item_index = inv[MSLOT_WEAPON];
+        item_def& pitem = mitm[item_index];
+
+        if (!you.can_wield(pitem) || needs_handle_warning(pitem, OPER_WIELD, penance))
+            return false; // Player wouldn't be able to wield it safely.
+
+        if (!unequip(pitem, false))
+            return false; // Unsafe to unequip
+
+        item_def weapon_copy = pitem;
+        monster_die(this, KILL_RESET, NON_MONSTER, true);
+
+        int slot;
+        for (slot = 0; slot < ENDOFPACK; ++slot)
+            if (!you.inv[slot].defined())
+                break;
+
+        weapon_copy.pos = ITEM_IN_INVENTORY;
+        weapon_copy.link = slot;
+        weapon_copy.slot = index_to_letter(slot);
+        you.inv[slot] = weapon_copy;
+        you.equip[get_item_slot(weapon_copy)] = slot;
+    }
+    else if (!weapon())
+    {
+        int index = get_mitm_slot(10);
+        if (index == NON_ITEM)
+            return false; // No slot available.
+
+        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
+            return false; // Can't unwield your current weapon safely.
+
+        item_def &mons_weapon = mitm[index];
+
+        item_def& your_weapon = *(you.weapon());
+
+        mons_weapon = your_weapon;
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+        mons_weapon.pos.reset();
+        mons_weapon.link = NON_ITEM;
+
+        unlink_item(index);
+        inv[MSLOT_WEAPON] = index;
+        mons_weapon.set_holding_monster(*this);
+
+        equip(mons_weapon, true);
+    }
+    else
+    {
+        // Proper swap case
+        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
+            return false; // Can't unwield your current weapon safely.
+
+        if (!you.can_wield(*(weapon())) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
+            return false; // Player wouldn't be able to wield it safely.
+
+        auto your_weapon_copy = *(you.weapon());
+        *(you.weapon()) = *(weapon());
+        *(weapon()) = your_weapon_copy;
+        you.weapon()->pos  = weapon()->pos;
+        you.weapon()->slot = weapon()->slot;
+        you.weapon()->link = weapon()->link;
+        weapon()->set_holding_monster(*this);
+    }
+
+    return true;
 }
 
 /** Disarm this monster, and preferably pull the weapon into your tile.
