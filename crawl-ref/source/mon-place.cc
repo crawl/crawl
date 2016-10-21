@@ -1780,7 +1780,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         else if (mon->type == MONS_IEOH_JIAN_WEAPON)
         {
             /// Ieoh Jian weapons are weaker tukima's with a few extra effects on top.
-            ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+            ghost.init_ieoh_jian_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
                                       mg.props.exists(IEOH_JIAN_POWER) ?
                                           mg.props[IEOH_JIAN_POWER].get_int() : 100);
             mon->props[IEOH_JIAN_SLOT] = mg.props[IEOH_JIAN_SLOT].get_int();

@@ -739,6 +739,10 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
+    // The intention is what counts to IJC, so we attempt to summon here.
+    if (attacker->is_player() && will_have_passive(passive_t::spawn_weapon_on_hit))
+        ieoh_jian_spawn_weapon(you.pos());
+
     if (!cleaving)
     {
         cleave_setup();

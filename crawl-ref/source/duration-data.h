@@ -2,6 +2,7 @@
  * Status defaults for durations.
  */
 
+#include "defines.h"
 #include "mon-death.h" // ieoh_jian_kill_oldest_weapon
 
 static void _end_weapon_brand()
@@ -41,11 +42,9 @@ static void _ieoh_jian_bored()
     int activity = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int();
     if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity > 0))
     {
-        you.duration[DUR_IEOH_JIAN_BOREDOM] = 40;
+        you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
         you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = activity - 1;
     }
-    else if ((you.duration[DUR_IEOH_JIAN_INTEREST] == 0) && (activity == 0) )
-        mprf(MSGCH_GOD, "The Council is no longer interested in your fight.");
 }
 
 // properties of the duration.
@@ -565,6 +564,7 @@ static const duration_def duration_data[] =
       "being impatiently watched over by the Council", "IJC bored",
       "The Council wishes you kept fighting.", D_NO_FLAGS,
       {{ "",  _ieoh_jian_bored }}},
+    { DUR_IEOH_JIAN_ACTIVITY_BACKOFF, 0, "", "", "ICJ backoff", "", D_NO_FLAGS, {{""}}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

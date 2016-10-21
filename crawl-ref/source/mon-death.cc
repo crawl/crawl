@@ -65,6 +65,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
+#include "teleport.h" // random_near_space
 #include "terrain.h"
 #include "timed_effects.h"
 #include "traps.h"
@@ -2129,16 +2130,47 @@ item_def* monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         ASSERT(mons->props.exists(IEOH_JIAN_SLOT));
-        // We don't occupy a slot anymore.
-        mons->props.erase(IEOH_JIAN_SLOT);
 
-        // The manifested slot is freed so more weapons of that type can exist.
-        you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() - 1;
+
+        if (killer == KILL_RESET)
+        {
+            if (you.can_see(*mons))
+                mprf(MSGCH_GOD, "%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
+
+            // The manifested slot is freed so more weapons of that type can exist.
+            you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() - 1;
          
-        // All slot indices are updated, so the age order is always respected.
-        auto monsters = find_ieoh_jian_manifested_weapons();
-        for (size_t i = 0; i != monsters.size(); i++)
-            monsters[i]->props[IEOH_JIAN_SLOT] = (int)i;
+            // All slot indices are updated, so the age order is always respected.
+            auto monsters = find_ieoh_jian_manifested_weapons();
+            for (size_t i = 0; i != monsters.size(); i++)
+                monsters[i]->props[IEOH_JIAN_SLOT] = (int)i;
+        }
+        else
+        {
+            coord_def reform_location;
+            random_near_space(mons, mons->pos(), reform_location, true, false, true);
+            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
+            if (you.can_see(*mons))
+                mprf(MSGCH_GOD, "%s shatters and reforms nearby.", mons->weapon()->name(DESC_THE, false, true).c_str());
+            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                         BEH_FRIENDLY,
+                         reform_location,
+                         MHITYOU,
+                         MG_FORCE_BEH,
+                         GOD_IEOH_JIAN);
+            auto dur = 3;
+            mg.set_summoned(&you, dur, 0);
+            mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
+            mg.props[IEOH_JIAN_POWER] = 1;
+            mg.props[IEOH_JIAN_SLOT] = mons->props[IEOH_JIAN_SLOT];
+            if (!create_monster(mg))
+                dprf("Failed to reform Ieoh Jian weapon");
+        }
+
+        silent = true;
+
+        // We don't occupy that slot anymore.
+        mons->props.erase(IEOH_JIAN_SLOT);
 
         int w_idx = mons->inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
@@ -3115,6 +3147,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg = "degenerate%s into a cloud of primal chaos";
         }
 
+        if (mons->type == MONS_IEOH_JIAN_WEAPON)
+            msg = "shatter%s in a cloud of steel fragments";
+
         if (mons->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
@@ -3133,9 +3168,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
-
-        if (mons->type == MONS_IEOH_JIAN_WEAPON)
-            msg = "shatter%s into a cloud of steel fragments";
     }
 
     // Conjugate.

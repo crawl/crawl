@@ -615,6 +615,36 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
+// TODO properly differentiate this from Tukima's.
+void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
+{
+    int delay = property(weapon, PWPN_SPEED);
+    int damg  = property(weapon, PWPN_DAMAGE);
+
+    if (power > 100)
+        power = 100;
+
+    colour = weapon.get_colour();
+    flies = true;
+
+    xl = 15;
+
+    speed   = 30 - delay;
+    ev      = 25 - delay / 2;
+    ac      = damg;
+    damage  = 2 * damg;
+
+    // Don't allow the speed to become too low.
+    speed = max(3, (speed / 2) * (1 + power / 100));
+
+    ev    = max(3, ev * power / 100);
+    ac = ac * power / 100;
+
+    // Ieoh Jian weapons always die in one hit, but they are reformed immediately.
+    max_hp = 1;
+    damage = max(1, damage * power / 100);
+}
+
 void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)
 {
     int damg = property(weapon, PWPN_DAMAGE);

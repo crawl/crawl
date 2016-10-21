@@ -1441,28 +1441,25 @@ static bool ieoh_jian_interest()
     if(you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
         mprf(MSGCH_GOD, "You feel a surge of divine interest. The Council is watching!");
 
-    you.duration[DUR_IEOH_JIAN_INTEREST] = 40;
-    
+    you.duration[DUR_IEOH_JIAN_INTEREST] = IEOH_JIAN_ATTENTION_SPAN;
+   
     auto slots = IEOH_JIAN_WEAPON_SLOTS - you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
-    if (x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
+    if (slots <= 0)
+        return false;
+
+    if ((you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] == 0) && x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
     {
         ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
         you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int() + 1;
+        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = IEOH_JIAN_ATTENTION_SPAN;
         return true;
     }
 
     return false;
 }
 
-void ieoh_jian_spawn_weapon(actor* target)
+void ieoh_jian_spawn_weapon(const coord_def& position)
 {
-    dprf("Entering spawn weapon method");
-    if (!target
-        || !_in_melee_range(target))
-    {
-        return;
-    }
-
     // We attempt to increase the activity level (see if the ICJ is interested
     // in helping by sending more weapons. Less likely the higher it was to begin
     // with).
@@ -1471,7 +1468,6 @@ void ieoh_jian_spawn_weapon(actor* target)
 
     auto manifested_num = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
     
-
     // If the activity level is higher than the number of manifested weapons, we
     // manifest one. If it isn't, or if we have the max already, we are done.
     if ((you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int() <= manifested_num) 
@@ -1483,8 +1479,8 @@ void ieoh_jian_spawn_weapon(actor* target)
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                  BEH_FRIENDLY,
-                 target->pos(),
-                 target->mindex(),
+                 position,
+                 MHITYOU,
                  MG_FORCE_BEH,
                  GOD_IEOH_JIAN);
     mg.set_summoned(&you, dur, 0);
