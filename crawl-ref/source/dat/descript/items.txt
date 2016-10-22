@@ -425,8 +425,8 @@ A long single-edged sword with a slightly curved blade.
 %%%%
 fan of gales
 
-An enchanted fan inhabited by benevolent air spirits. Swinging the fan
-unleashes a powerful blast of wind around the bearer.
+An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
+the bearer.
 %%%%
 fen folio
 
@@ -561,8 +561,8 @@ half-moon blades at both ends.
 %%%%
 lamp of fire
 
-A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
-the spirits free to trail clouds of searing flame around the target.
+A magical lamp which can be aimed at a creature to unleash trails of searing
+flame around the target.
 %%%%
 large rock
 
