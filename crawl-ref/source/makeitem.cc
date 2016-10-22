@@ -1195,6 +1195,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
         item.plus = 0;
 
+    // Never give brands to scales or hides, in case of misbehaving vaults.
+    if (armour_type_is_hide(static_cast<armour_type>(item.sub_type)))
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
+
     // squash boring items.
     if (!force_good && item.brand == SPARM_NORMAL && item.plus > 0
         && item.plus < _armour_plus_threshold(get_armour_slot(item)))
