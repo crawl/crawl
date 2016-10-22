@@ -46,7 +46,6 @@ function ($, comm, dr, gui, map_knowledge, enums) {
         });
     $(window)
         .off("mouseup.mouse_control mousemove.mouse_control mousedown.mouse_control")
-        })
         .on("mousemove.mouse_control mousedown.mouse_control", function (ev) {
             hide_tooltip();
         });
