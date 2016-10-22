@@ -150,7 +150,7 @@ The floor.
 %%%%
 Some deep water
 
-A pool of deep water. Only very large creatures can wade through this, and only
+A pool of deep water. Only giant creatures can wade through this, and only
 those well-adapted to water can swim through it; for the rest, the only way
 through is to fly over.
 %%%%
@@ -161,9 +161,10 @@ Nothing but the mythical salamander can cross this without flight.
 %%%%
 Some shallow water
 
-A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
-landlubbers — this is sometimes dangerous, but never directly fatal.
-#TODO: explain naga/grey drac/ogre/troll lack of fumbling penalties
+A pool of cloudy, waist-deep water. Those well-adapted to water can swim
+through it; other creatures can wade through it slowly. Non-swimmers will
+occasionally fail to attack in melee when wading through shallow water,
+although large creatures are able to keep their balance and avoid fumbling.
 %%%%
 The open sea
 

@@ -1004,7 +1004,7 @@ damage bypasses poison resistance.
 %%%%
 Poisonous Cloud spell
 
-Conjures forth a great cloud of lethal gasses.
+Conjures forth a great cloud of lethal gases.
 %%%%
 Polymorph spell
 
