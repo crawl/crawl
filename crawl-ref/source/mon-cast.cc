@@ -3439,8 +3439,9 @@ static coord_def _mons_prism_pos(const monster &mons)
     const monster *mon = &mons; // TODO: rewriteme
     actor* foe = mon->get_foe();
     // Don't bother if our target doesn't exist.
+    coord_def target = coord_def(GXM+1, GYM+1);
     if (!foe)
-        return coord_def(GXM+1, GYM+1);
+        return target;
 
     const int foe_speed =
         foe->is_player() ? player_movement_speed()
@@ -3463,7 +3464,6 @@ static coord_def _mons_prism_pos(const monster &mons)
         possible_places.insert(ri->y * GYM + ri->x);
     }
 
-    coord_def target;
     int max_coverage = 0;
     int hits = 1;
 
@@ -3538,42 +3538,37 @@ static coord_def _mons_awaken_earth_target(const monster &mon)
     ray_def ray;
     fallback_ray(pos, start_pos, ray); // straight line from them to mon
 
-    // XXX: make this use coord_def when we have a hash<> for it
-    unordered_set<int> candidates;
+    unordered_set<coord_def> candidates;
 
     // Candidates: everything on or adjacent to a straight line to the target.
     // Strongly prefer cells where we can get lots of elementals.
     while (in_bounds(pos) && pos != start_pos)
     {
         for (adjacent_iterator ai(pos, false); ai; ++ai)
-        {
-            if (!mon.see_cell(pos))
-                continue;
-            candidates.insert(ai->y * GYM + ai->x);
-        }
+            if (mon.see_cell(pos))
+                candidates.insert(*ai);
 
         ray.advance();
         pos = ray.pos();
     }
 
     vector<coord_weight> targets;
-    for (auto candidate : candidates)
+    for (coord_def candidate : candidates)
     {
-        coord_def target(candidate % GYM, candidate / GYM);
-        int neighbours = count_neighbours_with_func(target,
+        int neighbours = count_neighbours_with_func(candidate,
                                                     &_feat_is_awakenable);
 
         // We can target solid cells, which themselves will awaken, so count
         // those as well.
-        if (_feat_is_awakenable(grd(target)))
+        if (_feat_is_awakenable(grd(candidate)))
             neighbours++;
 
         if (neighbours > 0)
-            targets.emplace_back(target, neighbours * neighbours);
+            targets.emplace_back(candidate, neighbours * neighbours);
     }
 
     coord_def* choice = random_choose_weighted(targets);
-    return choice ? *choice : coord_def(0, 0);
+    return choice ? *choice : coord_def(GXM+1, GYM+1);
 }
 
 /**
