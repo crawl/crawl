@@ -34,7 +34,6 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
-#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "state.h"
@@ -167,18 +166,6 @@ bool prompt_eat_item(int slot)
     }
     else
         item = &you.inv[slot];
-
-    if (is_bad_food(*item))
-    {
-        string msg = make_stringf("Really eat %s%s?",
-                                  item->quantity > 1 ? "one of " : "",
-                                  item->name(DESC_THE).c_str());
-
-        if (!yesno(msg.c_str(), false, 'n')) {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
 
     eat_item(*item);
 
