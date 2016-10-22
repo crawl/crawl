@@ -2173,7 +2173,12 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         int w_idx = mons->inv[MSLOT_WEAPON];
         if (w_idx != NON_ITEM)
-            destroy_item(w_idx);
+        {
+            if (mons->weapon()->props[IEOH_JIAN_YOURS])
+                drop_item(w_idx,1);
+            else
+                destroy_item(w_idx);
+        }
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {

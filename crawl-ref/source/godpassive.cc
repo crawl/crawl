@@ -1408,7 +1408,7 @@ monster* ieoh_jian_find_your_own_weapon_manifested()
 
 static item_def ieoh_jian_choose_weapon()
 {
-    static vector<uint8_t> base_collection_types = {
+    vector<uint8_t> base_collection_types = {
         WPN_DAGGER,
         WPN_FALCHION,
         WPN_SPEAR,
@@ -1423,9 +1423,15 @@ static item_def ieoh_jian_choose_weapon()
     for (auto monster: manifested)
     {
         auto monster_weapon_type = monster->weapon()->sub_type;
-        std::remove_if(base_collection_types.begin(), base_collection_types.end(), [monster_weapon_type](uint8_t type) {
+        base_collection_types.erase(std::remove_if(base_collection_types.begin(), base_collection_types.end(), [monster_weapon_type](uint8_t type) {
             return weapon_attack_skill(type) == weapon_attack_skill(monster_weapon_type);
-        });
+        }), base_collection_types.end());
+    }
+    if (you.weapon())
+    {
+        base_collection_types.erase(std::remove_if(base_collection_types.begin(), base_collection_types.end(), [](uint8_t type) {
+            return weapon_attack_skill(type) == weapon_attack_skill(you.weapon()->sub_type);
+        }), base_collection_types.end());
     }
 
     // There should still be something free!
@@ -1434,7 +1440,9 @@ static item_def ieoh_jian_choose_weapon()
     item_def weapon;
 
     weapon.base_type = OBJ_WEAPONS;
-    weapon.sub_type = base_collection_types[random_range(0, base_collection_types.size() - 1)];
+    auto weapon_index = random_range(0, base_collection_types.size() - 1);
+    weapon.sub_type = base_collection_types.at(weapon_index);
+    mprf(MSGCH_GOD, "DEBUG: Granting weapon with vector slot %d, from a vector of size %d", weapon_index, (int)base_collection_types.size());
     weapon.quantity = 1;
     weapon.plus = 2;
     weapon.brand = SPWPN_VORPAL;
@@ -1510,7 +1518,6 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
     item_def wpn = ieoh_jian_choose_weapon();
     wpn.props[IEOH_JIAN_SLOT] = manifested_num + 1;
-    mprf(MSGCH_GOD, "DEBUG: Granting weapon with slot %d",wpn.props[IEOH_JIAN_SLOT].get_int());
     const int dur = 3;
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
