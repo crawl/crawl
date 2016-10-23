@@ -33,19 +33,11 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
-// Self-renewing duration that decreases divine interest (and hence ICJ activity level) and
-// despawns weapons constantly.
+// Self-renewing duration that despawns weapons constantly unless the Council is interested.
 static void _ieoh_jian_bored()
 {
-    ASSERT(you.props.exists(IEOH_JIAN_ACTIVITY_LEVEL_KEY));
-    int activity = you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int();
-
     if (you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
-    {
         ieoh_jian_despawn_weapon();
-        if (you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY].get_int() > 0)
-            you.props[IEOH_JIAN_ACTIVITY_LEVEL_KEY] = activity - 1;
-    }
 
     you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
 }

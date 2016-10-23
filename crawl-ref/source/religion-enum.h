@@ -27,7 +27,6 @@ enum nemelex_gift_types
 /// chosen ancestor class (monster_type)
 #define HEPLIAKLQANA_ALLY_TYPE_KEY "hepliaklqana_ally_type"
 
-#define IEOH_JIAN_ACTIVITY_LEVEL_KEY "ieoh_jian_activity_level"
 #define IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY "ieoh_jian_manifested_weapons"
 
 /// custom monster gender
