@@ -730,7 +730,8 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     }
 
     // ~15% chance of blessing armament (assume that most priest buffs fail)
-    if (blessing.empty() && (force || one_chance_in(7)))
+    if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
+        && (force || one_chance_in(7)))
     {
         blessing = coinflip() ? _beogh_bless_weapon(follower)
                               : _beogh_bless_armour(follower);
