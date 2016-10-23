@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-place.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -665,6 +666,152 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         msg = nullptr;
 
     noisy(level, act->pos(), msg, act->mid);
+}
+
+bool project_weapon(bolt &pbolt, dist *target)
+{
+    ASSERT(you.weapon());
+    dist thr;
+
+    if (you.confused())
+    {
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
+    else if (target)
+        thr = *target;
+    else if (pbolt.target.zero())
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        direction(thr, args);
+
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+
+            return false;
+        }
+    }
+    pbolt.set_target(thr);
+
+    int weapon_index = you.equip[EQ_WEAPON];
+    item_def& thrown = you.inv[weapon_index];
+    ASSERT(thrown.defined());
+
+    // Making a copy of the item.
+    item_def item = thrown;
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    string ammo_name;
+
+    bool returning;
+    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+
+    // Don't trace at all when confused.
+    bool cancelled = false;
+    if (!you.confused())
+    {
+        // Set values absurdly high to make sure the tracer will
+        // complain if we're attempting to fire through allies.
+        pbolt.damage = dice_def(1, 100);
+
+        // Init tracer variables.
+        pbolt.foe_info.reset();
+        pbolt.friend_info.reset();
+        pbolt.foe_ratio = 100;
+        pbolt.is_tracer = true;
+
+        pbolt.fire();
+
+        cancelled = pbolt.beam_cancelled;
+
+        pbolt.hit    = 0;
+        pbolt.damage = dice_def();
+    }
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (cancelled)
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+
+    pbolt.is_tracer = false;
+
+    if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
+        return false;
+
+    // Now start real firing!
+    origin_set_unknown(item);
+
+    // Even though direction is allowed, we're throwing so we
+    // want to use tx, ty to make the missile fly to map edge.
+    pbolt.set_target(thr);
+
+    you.time_taken = you.attack_delay(&item).roll();
+
+    // Create message.
+    mprf(MSGCH_GOD,"You project %s.", item.name(DESC_THE, false, true).c_str());
+
+    // Ensure we're firing a 'missile'-type beam.
+    pbolt.pierce    = false;
+    pbolt.is_tracer = false;
+
+    pbolt.loudness = item.base_type == OBJ_MISSILES
+                   ? ammo_type_damage(item.sub_type) / 3
+                   : 0; // Maybe not accurate, but reflects the damage.
+
+    pbolt.hit = 0;
+
+    bool hit = false;
+
+    pbolt.drop_item = false;
+    pbolt.fire();
+
+    hit = !pbolt.hit_verb.empty();
+
+    _throw_noise(&you, pbolt, thrown);
+
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
+    alert_nearby_monsters();
+
+    you.turn_is_over = true;
+
+    if (pbolt.special_explosion != nullptr)
+        delete pbolt.special_explosion;
+
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 pbolt.target,
+                 MHITYOU,
+                 MG_FORCE_BEH,
+                 GOD_IEOH_JIAN);
+    mg.set_summoned(&you, 3, 0);
+    mg.props[IEOH_JIAN_WEAPON] = thrown;
+
+    int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, true);
+    mg.props[IEOH_JIAN_POWER] = power;
+
+    monster * const mons = create_monster(mg);
+
+    if (!mons)
+        dprf("Failed to animate Ieoh Jian weapon");
+    else
+        you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() + 1;
+
+    dec_inv_item_quantity(weapon_index, 1);
+    canned_msg(MSG_EMPTY_HANDED_NOW);
+
+    return hit;
 }
 
 // throw_it - currently handles player throwing only. Monster

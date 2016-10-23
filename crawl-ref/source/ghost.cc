@@ -629,8 +629,8 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 
     xl = 15;
 
-    speed   = 30 - delay;
-    ev      = 25 - delay / 2;
+    speed   = 35 - delay; // They must be very fast to fly back to combat when knocked away.
+    ev      = 35 - delay / 2; // Slightly more evasive than Tukimas
     ac      = damg;
     damage  = 2 * damg;
 

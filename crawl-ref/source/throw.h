@@ -41,6 +41,9 @@ void throw_item_no_quiver();
 
 bool throw_it(bolt &pbolt, int throw_2, dist *target = nullptr);
 
+// Weapon projection (Ieoh Jian)
+bool project_weapon(bolt &pbolt, dist *target);
+
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
 
 void setup_monster_throw_beam(monster* mons, bolt &beam);

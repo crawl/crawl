@@ -1528,7 +1528,9 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
                  GOD_IEOH_JIAN);
     mg.set_summoned(&you, dur, 0);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
-    mg.props[IEOH_JIAN_POWER] = 1;
+
+    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, true);
+    mg.props[IEOH_JIAN_POWER] = power;
 
     monster * const mons = create_monster(mg);
 

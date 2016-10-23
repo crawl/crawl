@@ -450,7 +450,9 @@ enum ability_type
 #endif
 
     // Ieoh Jian
-    ABIL_IEOH_JIAN_DRAGONFLY = 1300,
+    ABIL_IEOH_JIAN_PROJECT_WEAPON = 1300,
+    ABIL_IEOH_JIAN_RECALL_WEAPON,
+    ABIL_IEOH_JIAN_DRAGONFLY,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

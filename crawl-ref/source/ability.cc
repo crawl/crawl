@@ -72,6 +72,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
@@ -623,6 +624,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
     // Ieoh Jian
+    { ABIL_IEOH_JIAN_PROJECT_WEAPON, "Project Weapon",
+        3, 0, 60, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
+        1, 0, 30, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
         0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
@@ -3050,6 +3055,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         hepliaklqana_choose_identity();
         break;
 
+    case ABIL_IEOH_JIAN_PROJECT_WEAPON:
+        if (!you.weapon())
+        {
+            canned_msg(MSG_NOTHING_CARRIED);
+            return SPRET_ABORT;
+        }
+
+        project_weapon(beam, nullptr);
+        break;
+    case ABIL_IEOH_JIAN_RECALL_WEAPON:
+        break;
     case ABIL_IEOH_JIAN_DRAGONFLY:
         break;
 
@@ -3103,6 +3119,7 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
            ? div_rand_round(original_cost * 5, 2)
            : original_cost;
 }
+
 
 static void _pay_ability_costs(const ability_def& abil)
 {

@@ -85,6 +85,7 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
+#include "throw.h"
 #include "timed_effects.h"
 #include "traps.h"
 #include "viewchar.h"
