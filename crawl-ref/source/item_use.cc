@@ -43,6 +43,7 @@
 #include "mon-behv.h"
 #include "mutation.h"
 #include "nearby-danger.h"
+#include "orb.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -158,6 +159,11 @@ void UseItemMenu::populate_menu()
 
     if (!item_floor.empty())
     {
+#ifndef USE_TILE
+        // vertical padding for console
+        if (!item_inv.empty())
+            add_entry(new MenuEntry("", MEL_TITLE));
+#endif
         // Load floor items to menu
         string subtitle_text = "Floor Items";
         if (is_inventory)
@@ -1895,13 +1901,6 @@ void drink(item_def* potion)
         return;
     }
 
-    if (you.form == TRAN_BAT)
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        _vampire_corpse_help();
-        return;
-    }
-
     if (you.duration[DUR_NO_POTIONS])
     {
         mpr("You cannot drink potions in your current state!");
@@ -2218,8 +2217,20 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     return success;
 }
 
-// Returns true if the scroll is used up.
-static bool _identify(bool alreadyknown, const string &pre_msg)
+/**
+ * Prompt for an item to identify (either in the player's inventory or in
+ * the ground), and then, if one is chosen, identify it.
+ *
+ * @param alreadyknown  Did we know that this was an ID scroll before we
+ *                      started reading it?
+ * @param pre_msg       'As you read the scroll of foo, it crumbles to dust.'
+ * @param link[in,out]  The location of the ID scroll in the player's inventory
+ *                      or, if it's on the floor, -1.
+ *                      auto_assign_item_slot() may require us to update this.
+ * @return  true if the scroll is used up. (That is, whether it was used or
+ *          whether it was previously unknown (& thus uncancellable).)
+ */
+static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
 {
     item_def* itemp = _choose_target_item_for_scroll(alreadyknown, OSEL_UNIDENT,
                        "Identify which item? (\\ to view known items)");
@@ -2248,7 +2259,17 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        auto_assign_item_slot(item);
+        const int target_link = item.link;
+        item_def* moved_target = auto_assign_item_slot(item);
+        if (moved_target != nullptr && moved_target->link == link)
+        {
+            // auto-swapped ID'd item with scrolls being used to ID it
+            // correct input 'link' to the new location of the ID scroll stack
+            // so that we decrement *it* instead of the ID'd item (10663)
+            ASSERT(you.inv[target_link].defined());
+            ASSERT(you.inv[target_link].is_type(OBJ_SCROLLS, SCR_IDENTIFY));
+            link = target_link;
+        }
     }
     return true;
 }
@@ -2277,25 +2298,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
         return false;
-    }
-
-    // Turn hides into mails where applicable.
-    // NOTE: It is assumed that armour which changes in this way does
-    // not change into a form of armour with a different evasion modifier.
-    if (armour_is_hide(arm, false))
-    {
-        if (!quiet)
-        {
-            mprf("%s glows purple and changes!",
-                 _item_name(arm).c_str());
-        }
-
-        ac_change = property(arm, PARM_AC);
-        hide2armour(arm);
-        ac_change = property(arm, PARM_AC) - ac_change;
-
-        // No additional enchantment.
-        return true;
     }
 
     // Output message before changing enchantment and curse status.
@@ -2622,7 +2624,7 @@ void read(item_def* scroll)
 
     // need to handle this before we waste time (with e.g. blurryvis)
     if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
-        && player_has_orb()
+        && orb_limits_translocation()
         && !yesno("Your blink will be uncontrolled - continue anyway?",
                   false, 'n'))
     {
@@ -2677,6 +2679,7 @@ void read_scroll(item_def& scroll)
 {
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
+    int link = in_inventory(scroll) ? scroll.link : -1;
     const bool alreadyknown = item_type_known(scroll);
 
     // For cancellable scrolls leave printing this message to their
@@ -2715,7 +2718,7 @@ void read_scroll(item_def& scroll)
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
 
-        if (player_has_orb())
+        if (orb_limits_translocation())
         {
             mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
             uncontrolled_blink();
@@ -2876,7 +2879,7 @@ void read_scroll(item_def& scroll)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, true);
         }
-        cancel_scroll = !_identify(alreadyknown, pre_succ_msg);
+        cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
         break;
 
     case SCR_RECHARGING:
@@ -2960,7 +2963,7 @@ void read_scroll(item_def& scroll)
     if (!cancel_scroll)
     {
         if (in_inventory(scroll))
-            dec_inv_item_quantity(scroll.link, 1);
+            dec_inv_item_quantity(link, 1);
         else
             dec_mitm_item_quantity(scroll.index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);

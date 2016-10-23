@@ -3591,7 +3591,7 @@ function plan_use_good_consumables()
         ac = armour_ac()
         if body and not body.artefact and body.plus < ac
            and body_armour_is_great(body)
-           and not body.name():find("quicksilver dragon armour") then
+           and not body.name():find("quicksilver dragon scales") then
           oldname = body.name()
           if read2(it, letter(body)) then
             say("ENCHANTING " .. oldname .. ".")
@@ -3621,7 +3621,7 @@ function plan_use_good_consumables()
         end
         if body and not body.artefact and body.plus < ac
            and body_armour_is_good(body)
-           and not body.name():find("quicksilver dragon armour") then
+           and not body.name():find("quicksilver dragon scales") then
           oldname = body.name()
           if read2(it, letter(body)) then
             say("ENCHANTING " .. oldname .. ".")

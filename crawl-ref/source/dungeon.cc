@@ -3550,12 +3550,11 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
             && player_in_hell()
             && mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3] =
-                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
             mg.base_type = mg.cls;
-            int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 0)];
+            const int skel_chance = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+                                            8,           MONS_ZOMBIE,
+                                            1,           MONS_SIMULACRUM);
         }
 
         place_monster(mg);
@@ -4212,7 +4211,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false, false);
+        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
@@ -5478,9 +5477,6 @@ static int _make_delicious_corpse()
     if (!corpse)
         return NON_ITEM;
 
-    // no hides allowed, I guess?
-    if (mons_class_leaves_hide(mon_type))
-        corpse->props[MANGLED_CORPSE_KEY] = true;
     return corpse->index();
 }
 

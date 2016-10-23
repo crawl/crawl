@@ -1929,34 +1929,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
 void roll_zombie_hp(monster* mon)
 {
+    ASSERT(mon); // TODO: change to monster &mon
     ASSERT(mons_class_is_zombified(mon->type));
 
-    int hp = 0;
-
-    switch (mon->type)
-    {
-    case MONS_ZOMBIE:
-        hp = hit_points(mon->get_hit_dice() * 85);
-        break;
-
-    case MONS_SKELETON:
-        hp = hit_points(mon->get_hit_dice() * 70);
-        break;
-
-    case MONS_SIMULACRUM:
-        // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp = hit_points(mon->get_hit_dice() * 30);
-        break;
-
-    case MONS_SPECTRAL_THING:
-        hp = hit_points(mon->get_hit_dice() * 60);
-        break;
-
-    default:
-        die("invalid zombie type %d (%s)", mon->type,
-            mons_class_name(mon->type));
-    }
-
+    const int avg_hp_10x = derived_undead_avg_hp(mon->type,
+                                                 mon->get_hit_dice());
+    const int hp = hit_points(avg_hp_10x);
     mon->max_hit_points = max(hp, 1);
     mon->hit_points     = mon->max_hit_points;
 }
@@ -2171,10 +2149,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WIGHT,           { {}, {{ BAND_WIGHTS, {2, 5} }}}},
     { MONS_ANCIENT_CHAMPION, { {2}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
     { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
-    { MONS_CYCLOPS,          { { 0, 0, []() {
+    { MONS_CYCLOPS,         { { 0, 0, []() {
         return player_in_branch(BRANCH_SHOALS); }},
                                   {{ BAND_DREAM_SHEEP, {2, 5}, true }}}},
-    { MONS_ALLIGATOR,       { {5}, {{ BAND_ALLIGATOR, {1, 2}, true }}}},
+    { MONS_ALLIGATOR,       { { 5, 0, []() {
+        return !player_in_branch(BRANCH_LAIR); }},
+                                  {{ BAND_ALLIGATOR, {1, 2}, true }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},

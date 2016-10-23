@@ -1,11 +1,4 @@
 %%%%
-amulet of dismissal
-
-An amulet which generates a field of translocational energy that will teleport
-away creatures that seriously harm you, one time in ten. It takes a few moments
-to get used to the translocational energy field, initially disorienting the
-wearer for a few turns.
-%%%%
 amulet of faith
 
 A talisman crafted to call the attention of the gods to its wearer. This divine
@@ -432,8 +425,8 @@ A long single-edged sword with a slightly curved blade.
 %%%%
 fan of gales
 
-An enchanted fan inhabited by benevolent air spirits. Swinging the fan
-unleashes a powerful blast of wind around the bearer.
+An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
+the bearer.
 %%%%
 fen folio
 
@@ -445,16 +438,10 @@ A small figurine made of some strange material, shaped like a stepped pyramid.
 It is remarkably detailed – almost like a real, vast structure, shrunk somehow
 smaller than a human hand.
 %%%%
-fire dragon armour
+fire dragon scales
 
-A suit of armour made from the scales of a fire-breathing dragon. It provides
-great protection from fire, while rendering its wearer more susceptible to
-cold.
-%%%%
-fire dragon hide
-
-The scaly skin of a fire-breathing dragon. It provides great protection from
-fire, while rendering its wearer susceptible to cold.
+The scales of a fire-breathing dragon. It provides great protection from fire,
+while rendering its wearer more susceptible to cold.
 %%%%
 flail
 
@@ -482,16 +469,10 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gold dragon armour
+gold dragon scales
 
-A suit of armour made from the scales of a gold dragon. It is much heavier than
-most dragon scale armours, and grants its wearer resistance to poison, fire and
-cold.
-%%%%
-gold dragon hide
-
-The hide of a gold dragon, covered in extremely hard golden scales. It provides
-resistance to poison, fire and cold.
+The scales of a gold dragon. It is much heavier than most dragon scale armours,
+and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
@@ -546,16 +527,10 @@ A piece of cloth and leather for launching stones, adequate for hunting small
 game like rabbits or goblins. It deals more damage when launching purpose-made
 ammunition, rather than rocks found on the floor.
 %%%%
-ice dragon armour
+ice dragon scales
 
-A suit of armour made from the scales of a cold-breathing dragon. It provides
-great protection from cold, while rendering its wearer more susceptible to
-fire.
-%%%%
-ice dragon hide
-
-The scaly skin of a cold-breathing dragon. It provides great protection from
-cold, while rendering its wearer susceptible to fire.
+The scales of a cold-breathing dragon. It provides great protection from cold,
+while rendering its wearer more susceptible to fire.
 %%%%
 inedible chunk of flesh
 
@@ -586,8 +561,8 @@ half-moon blades at both ends.
 %%%%
 lamp of fire
 
-A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
-the spirits free to trail clouds of searing flame around the target.
+A magical lamp which can be aimed at a creature to unleash trails of searing
+flame around the target.
 %%%%
 large rock
 
@@ -644,17 +619,12 @@ morningstar
 
 A mace with a head covered in short spikes.
 %%%%
-mottled dragon armour
+mottled dragon scales
 
-A suit of armour made from the scales of a mottled dragon. Although it does not
-provide its wearer with as much protection as the armour made from the scales
-of some larger dragons, it is somewhat lighter and less encumbering. It is also
-remarkably smooth, letting sticky flames flow off it like water.
-%%%%
-mottled dragon hide
-
-The weirdly-patterned scaly skin of a mottled dragon. Its smooth surface lets
-sticky flames flow off it like water.
+The scales of a mottled dragon. Although it does not provide its wearer with as
+much protection as the scales of some larger dragons, it is somewhat lighter
+and less encumbering. It is also remarkably smooth, letting sticky flames
+flow off it like water.
 %%%%
 mutagenic chunk of flesh
 
@@ -691,15 +661,10 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
-A suit of armour made from the nacreous scales of a pearl dragon. It grants its
-wearer resistance to negative energies.
-%%%%
-pearl dragon hide
-
-The hide of a pearl dragon, covered in iridescent nacreous scales. It provides
-resistance to negative energy.
+The nacreous scales of a pearl dragon. It grants its wearer resistance to
+negative energies.
 %%%%
 phantom mirror
 
@@ -820,18 +785,12 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
-quicksilver dragon armour
+quicksilver dragon scales
 
-A suit of armour made from the scales of a quicksilver dragon. Although it does
-not provide its wearer with as much protection as the armour made from the
-scales of some heavier dragons, it is somewhat lighter and less encumbering. It
-is excellent at repelling hostile enchantments – and also cannot be enchanted
-beyond its current form as a result.
-%%%%
-quicksilver dragon hide
-
-The sinuous hide of a quicksilver dragon, covered in mercurial scales. It
-provides resistance to hostile enchantments.
+The scales of a quicksilver dragon. Although it does not provide its wearer
+with as much protection as the scales of some heavier dragons, it is somewhat
+lighter and less encumbering. It is excellent at repelling hostile enchantments
+– and also cannot be enchanted beyond its current form as a result.
 %%%%
 quick blade
 
@@ -1210,58 +1169,31 @@ staff of wizardry
 
 A staff that increases the ability of its wielder to use magical spells.
 %%%%
-steam dragon armour
+steam dragon scales
 
-A suit of armour made from the scales of a steam-breathing dragon. Unlike
-armour made from the scales of some larger dragons, it does not provide its
-wearer with much protection (beyond a resistance to scalding steam), but it is
-extremely light and supple.
-%%%%
-steam dragon hide
-
-The soft and supple scaly skin of a steam dragon. It provides protection
-against scalding steam.
+The scales of a steam-breathing dragon. Unlike the scales of some larger
+dragons, it does not provide its wearer with much protection (beyond a
+resistance to scalding steam), but it is extremely light and supple.
 %%%%
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
 thrown by hand or launched with a sling.
 %%%%
-shadow dragon armour
+shadow dragon scales
 
-A suit of armour made from the scales of a great umbral dragon. It is heavier
-than most dragon scale armours, but despite this, blends in so well with the
-shadows as to provide a substantial benefit to the wearer's stealth.
+The scales of a great umbral dragon. It is heavier than most dragon scale
+armours, but despite this, blends in so well with the shadows as to provide a
+substantial benefit to the wearer's stealth.
 %%%%
-shadow dragon hide
+storm dragon scales
 
-The hide of a great umbral dragon, covered in extremely hard blue-black scales.
-It blends in with the shadows, and grants its wearer improved stealth.
+The scales of a lightning-breathing dragon. It is heavier than most dragon
+scale armours, and gives its wearer resistance to electrical discharges.
 %%%%
-storm dragon armour
+swamp dragon scales
 
-A suit of armour made from the scales of a lightning-breathing dragon. It is
-heavier than most dragon scale armours, and gives its wearer resistance to
-electrical discharges.
-%%%%
-storm dragon hide
-
-The hide of a lightning-breathing dragon, covered in extremely hard blue
-scales. It provides resistance to electrical discharges.
-%%%%
-swamp dragon armour
-
-A suit of armour made from the scales of a swamp dragon. It confers resistance
-to poison on its wearer.
-%%%%
-swamp dragon hide
-
-# Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
-The slimy{{
-    if you.can_smell() then
-        return ", smelly"
-    end
-}} skin of a swamp-dwelling dragon. It provides resistance to poison.
+The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
 throwing net
 
@@ -1293,14 +1225,10 @@ A blessed trident moulded by cleansing flame, with three points symbolising the
 combined might of the three holy gods. It is a favoured weapon of the Shining
 One's servants.
 %%%%
-troll hide
-
-The stiff and knobbly hide of a troll, with magical regenerative properties.
-%%%%
 troll leather armour
 
-A suit of armour made from the stiff and knobbly skin of a troll. It magically
-regenerates its wearer's flesh.
+The stiff and knobbly skin of a troll. It magically regenerates its wearer's
+flesh.
 %%%%
 wand of acid
 

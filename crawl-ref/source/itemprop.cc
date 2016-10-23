@@ -64,6 +64,20 @@ struct armour_def
     int                 acquire_weight;
 };
 
+// would be nice to lookup the name from monster_for_armour, but that
+// leads to static initialization races (plus 'gold' special case)
+#if TAG_MAJOR_VERSION == 34
+#define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
+    { ARM_ ## id ## _DRAGON_HIDE, "removed " name " dragon hide", 0, 0, 0,  \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },             \
+    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
+#else
+#define DRAGON_ARMOUR(id, name, ac, evp, prc, res)
+    { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
+#endif
+
 // Note: the Little-Giant range is used to make armours which are very
 // flexible and adjustable and can be worn by any player character...
 // providing they also pass the shape test, of course.
@@ -88,21 +102,10 @@ static const armour_def Armour_prop[] =
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, prc, henum, hname, res, weight) \
-    { henum, hname, (aac)/2, aevp, prc,                                      \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },              \
-    { aenum, aname, aac, aevp, prc-100,                                      \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
-
-#define DRAGON_ARMOUR(id, name, ac, evp, prc, res) \
-    HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                prc, ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
-
-    HIDE_ARMOUR(
-      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,  150,
-      ARM_TROLL_HIDE,           "troll hide",
-        ARMF_REGENERATION, 50
-    ),
+    { ARM_TROLL_HIDE, "removed troll hide",              0,    0,      0,
+       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, ARMF_REGENERATION, 0 },
+    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  4,  -40,    150,
+       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, ARMF_REGENERATION, 50 },
 
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
         ARMF_RES_STEAM),
@@ -126,7 +129,6 @@ static const armour_def Armour_prop[] =
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
 
 #undef DRAGON_HIDE
-#undef HIDE_ARMOUR
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
@@ -667,7 +669,7 @@ static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  3 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  3 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  1 },
     { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  1 },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  3 },
@@ -728,6 +730,7 @@ const set<pair<object_class_type, int> > removed_items =
 #if TAG_MAJOR_VERSION == 34
     { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
     { OBJ_JEWELLERY, AMU_CONSERVATION },
+    { OBJ_JEWELLERY, AMU_DISMISSAL },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
@@ -1254,87 +1257,32 @@ special_armour_type get_armour_ego_type(const item_def &item)
 
 /// A map between monster species & their hides.
 static map<monster_type, armour_type> _monster_hides = {
-    { MONS_TROLL,               ARM_TROLL_HIDE },
-    { MONS_DEEP_TROLL,          ARM_TROLL_HIDE },
-    { MONS_IRON_TROLL,          ARM_TROLL_HIDE },
+    { MONS_TROLL,               ARM_TROLL_LEATHER_ARMOUR },
+    { MONS_DEEP_TROLL,          ARM_TROLL_LEATHER_ARMOUR },
+    { MONS_IRON_TROLL,          ARM_TROLL_LEATHER_ARMOUR },
 
-    { MONS_FIRE_DRAGON,         ARM_FIRE_DRAGON_HIDE },
-    { MONS_ICE_DRAGON,          ARM_ICE_DRAGON_HIDE },
-    { MONS_STEAM_DRAGON,        ARM_STEAM_DRAGON_HIDE },
-    { MONS_MOTTLED_DRAGON,      ARM_MOTTLED_DRAGON_HIDE },
-    { MONS_STORM_DRAGON,        ARM_STORM_DRAGON_HIDE },
-    { MONS_GOLDEN_DRAGON,       ARM_GOLD_DRAGON_HIDE },
-    { MONS_SWAMP_DRAGON,        ARM_SWAMP_DRAGON_HIDE },
-    { MONS_PEARL_DRAGON,        ARM_PEARL_DRAGON_HIDE },
-    { MONS_SHADOW_DRAGON,       ARM_SHADOW_DRAGON_HIDE },
-    { MONS_QUICKSILVER_DRAGON,  ARM_QUICKSILVER_DRAGON_HIDE },
+    { MONS_FIRE_DRAGON,         ARM_FIRE_DRAGON_ARMOUR },
+    { MONS_ICE_DRAGON,          ARM_ICE_DRAGON_ARMOUR },
+    { MONS_STEAM_DRAGON,        ARM_STEAM_DRAGON_ARMOUR },
+    { MONS_MOTTLED_DRAGON,      ARM_MOTTLED_DRAGON_ARMOUR },
+    { MONS_STORM_DRAGON,        ARM_STORM_DRAGON_ARMOUR },
+    { MONS_GOLDEN_DRAGON,       ARM_GOLD_DRAGON_ARMOUR },
+    { MONS_SWAMP_DRAGON,        ARM_SWAMP_DRAGON_ARMOUR },
+    { MONS_PEARL_DRAGON,        ARM_PEARL_DRAGON_ARMOUR },
+    { MONS_SHADOW_DRAGON,       ARM_SHADOW_DRAGON_ARMOUR },
+    { MONS_QUICKSILVER_DRAGON,  ARM_QUICKSILVER_DRAGON_ARMOUR },
 };
 
 /**
- * If a monster of the given type is butchered, what kind of hide can it leave?
+ * If a monster of the given type dies, what kind of armour can it leave?
  *
  * @param mc    The class of monster in question.
- * @return      The armour_type of the given monster's hide, or NUM_ARMOURS if
- *              the monster does not leave a hide.
+ * @return      The armour_type of the given monster's armour, or NUM_ARMOURS
+ *              if the monster does not leave armour.
  */
 armour_type hide_for_monster(monster_type mc)
 {
     return lookup(_monster_hides, mons_species(mc), NUM_ARMOURS);
-}
-
-// in principle, you can imagine specifying something that would generate this
-// & _monster_hides from a set of { monster_type, hide_type, armour_type }
-// triples. possibly loading from a file? ideally in a way that's nicer than
-// the horror that is art-data.*
-
-/// A map between hide & armour types.
-static map<armour_type, armour_type> _hide_armours = {
-    { ARM_TROLL_HIDE,               ARM_TROLL_LEATHER_ARMOUR },
-    { ARM_FIRE_DRAGON_HIDE,         ARM_FIRE_DRAGON_ARMOUR },
-    { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
-    { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
-    { ARM_MOTTLED_DRAGON_HIDE,      ARM_MOTTLED_DRAGON_ARMOUR },
-    { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
-    { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
-    { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
-    { ARM_PEARL_DRAGON_HIDE,        ARM_PEARL_DRAGON_ARMOUR },
-    { ARM_SHADOW_DRAGON_HIDE,       ARM_SHADOW_DRAGON_ARMOUR },
-    { ARM_QUICKSILVER_DRAGON_HIDE,  ARM_QUICKSILVER_DRAGON_ARMOUR },
-};
-
-/**
- * If a hide of the given type is enchanted, what kind of armour will it turn
- * into?
- *
- * @param hide_type     The type of hide armour in question.
- * @return              The corresponding enchanted armour, or NUM_ARMOURS if
- *                      the given armour does not change types when enchanted.
- */
-armour_type armour_for_hide(armour_type hide_type)
-{
-    return lookup(_hide_armours, hide_type, NUM_ARMOURS);
-}
-
-// Armour information and checking functions.
-
-/**
- * Attempt to turn a piece of armour into a new type upon enchanting it.
- *
- * @param item      The armour being enchanted.
- * @return          Whether the armour was transformed.
- */
-bool hide2armour(item_def &item)
-{
-    if (item.base_type != OBJ_ARMOUR)
-        return false;
-
-    const armour_type new_type = armour_for_hide(static_cast<armour_type>
-                                                 (item.sub_type));
-    if (new_type == NUM_ARMOURS)
-        return false;
-
-    item.sub_type = new_type;
-    return true;
 }
 
 /**
@@ -1367,61 +1315,49 @@ int armour_max_enchant(const item_def &item)
 }
 
 /**
- * Find the set of all armours made from hides.
+ * Find the set of all armours made from monsters.
  */
 static set<armour_type> _make_hide_armour_set()
 {
     set<armour_type> _hide_armour_set;
-    // iter over armours created from hides
-    for (auto it: _hide_armours)
+    // iter over armours created from monsters
+    for (auto it: _monster_hides)
         _hide_armour_set.insert(it.second);
     return _hide_armour_set;
 }
 static set<armour_type> _hide_armour_set = _make_hide_armour_set();
 
 /**
- * Is the given armour a type that changes when enchanted (i.e. dragon or troll
- * hide?
+ * Is the given armour a type that drops from dead monsters (i.e. dragon or
+ * troll armour)?
  *
  * @param item      The armour in question.
- * @param inc_made  Whether to also accept armour that has already been
- *                  enchanted & transformed (e.g. fda in addition to fire
- *                  dragon hides, etc)
- * @return          Whether the given item is (or was?) a hide.
- *                  (Note that ARM_ANIMAL_SKIN cannot be enchanted & so doesn't
- *                  count.)
+ * @return          Whether the given item comes from a monster corpse.
+ *                  (Note that ARM_ANIMAL_SKIN doesn't come from in-game
+*                    monsters (these days) and so doesn't count.)
  */
-bool armour_is_hide(const item_def &item, bool inc_made)
+bool armour_is_hide(const item_def &item)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    return armour_type_is_hide(static_cast<armour_type>(item.sub_type),
-                               inc_made);
+    return item.base_type == OBJ_ARMOUR
+           && armour_type_is_hide(static_cast<armour_type>(item.sub_type));
 }
 
 /**
- * Is the given armour a type that changes when enchanted (i.e. dragon or troll
- * hide?
+ * Is the given armour a type that drops from dead monsters (i.e. dragon or
+ * troll armour)?
  *
- * @param type      The armour_type of armour in question.
- * @param inc_made  Whether to also accept armour that has already been
- *                  enchanted & transformed (e.g. fda in addition to fire
- *                  dragon hides, etc)
- * @return          Whether the given item type is (or was?) a hide.
- *                  (Note that ARM_ANIMAL_SKIN cannot be enchanted & so doesn't
- *                  count.)
+ * @param type      The armour_type in question.
+ * @return          Whether the given item comes from a monster corpse.
+ *                  (Note that ARM_ANIMAL_SKIN doesn't come from in-game
+ *                   monsters (these days) and so doesn't count.)
  */
-bool armour_type_is_hide(int _type, bool inc_made)
+bool armour_type_is_hide(armour_type type)
 {
-    const armour_type type = static_cast<armour_type>(_type);
-    // actual hides?
-    if (_hide_armours.count(type))
-        return true;
-    // armour made from hides?
-    return inc_made && _hide_armour_set.count(type);
+    return _hide_armour_set.count(type);
 }
 
 /**
- * Generate a map from hides to the monsters that source them.
+ * Generate a map from monster armours to the monsters that drop them.
  */
 static map<armour_type, monster_type> _make_hide_monster_map()
 {
@@ -1431,15 +1367,10 @@ static map<armour_type, monster_type> _make_hide_monster_map()
         const armour_type hide = monster_data.second;
         const monster_type mon = monster_data.first;
         hide_to_mons[hide] = mon;
-
-        const armour_type *arm = map_find(_hide_armours, hide);
-        ASSERT(arm);
-        hide_to_mons[*arm] = mon;
     }
 
     // troll hides are generated by multiple monsters, so set a canonical troll
     // by hand
-    hide_to_mons[ARM_TROLL_HIDE] = MONS_TROLL;
     hide_to_mons[ARM_TROLL_LEATHER_ARMOUR] = MONS_TROLL;
 
     return hide_to_mons;
@@ -1448,12 +1379,12 @@ static map<armour_type, monster_type> _make_hide_monster_map()
 static map<armour_type, monster_type> hide_to_mons = _make_hide_monster_map();
 
 /**
- * Find the monster that the given type of hide/dragon/troll armour came from.
+ * Find the monster that the given type of dragon/troll armour came from.
  *
  * @param arm   The type of armour in question.
  * @return      The corresponding monster type; e.g. MONS_FIRE_DRAGON for
- *              ARM_FIRE_DRAGON_HIDE or ARM_FIRE_DRAGON_ARMOUR, MONS_TROLL
- *              for ARM_TROLL_HIDE or ARM_TROLL_LEATHER_ARMOUR...
+ *              ARM_FIRE_DRAGON_ARMOUR,
+ *              MONS_TROLL for ARM_TROLL_LEATHER_ARMOUR...
  */
 monster_type monster_for_hide(armour_type arm)
 {

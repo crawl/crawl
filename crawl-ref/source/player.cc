@@ -601,11 +601,6 @@ bool player_likes_lava(bool permanently)
            && form_likes_lava();
 }
 
-bool player_can_open_doors()
-{
-    return you.form != TRAN_BAT;
-}
-
 /**
  * Is the player considered to be closely related, if not the same species, to
  * the given monster? (See mon-data.h for species/genus info.)
@@ -6185,15 +6180,13 @@ bool player::heal(int amount)
  */
 mon_holy_type player::holiness(bool temp) const
 {
-    mon_holy_type holi = MH_NATURAL;
+    mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
+
     if (species == SP_GARGOYLE ||
         temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
         holi = MH_NONLIVING;
     }
-
-    if (undead_state(temp))
-        holi = MH_UNDEAD;
 
     if (is_good_god(religion))
         holi |= MH_HOLY;
@@ -7178,11 +7171,11 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo) const
 {
-    return get_contamination_level() > 1
-        || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES]
-        || duration[DUR_QUAD_DAMAGE]
-        || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
+    return player_severe_contamination()
+           || duration[DUR_CORONA]
+           || duration[DUR_LIQUID_FLAMES]
+           || duration[DUR_QUAD_DAMAGE]
+           || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
 }
 
 bool player::umbra() const
@@ -8540,10 +8533,9 @@ void player_end_berserk()
     //       avoid the mutation being a "death sentence" to
     //       certain characters.
 
-    if (you.berserk_penalty != NO_BERSERK_PENALTY
-        && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
+    if (one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
     {
-        // Note the beauty of Trog!  They get an extra save that's at
+        // Note the beauty of Trog! They get an extra save that's at
         // the very least 20% and goes up to 100%.
         if (have_passive(passive_t::extend_berserk)
             && x_chance_in_y(you.piety, piety_breakpoint(5)))
@@ -8553,7 +8545,7 @@ void player_end_berserk()
         else
         {
             mprf(MSGCH_WARN, "You pass out from exhaustion.");
-            you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
+            you.increase_duration(DUR_PARALYSIS, roll_dice(1, 4));
             you.stop_constricting_all();
         }
     }
@@ -8566,7 +8558,6 @@ void player_end_berserk()
         mpr("You feel less hot-headed.");
 #endif
 
-    // This resets from an actual penalty or from NO_BERSERK_PENALTY.
     you.berserk_penalty = 0;
 
     const int dur = 12 + roll_dice(2, 12);
@@ -8581,9 +8572,6 @@ void player_end_berserk()
     Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
     slow_player(dur);
-
-    make_hungry(BERSERK_NUTRITION, true);
-    you.hunger = max(HUNGER_STARVING - 100, you.hunger);
 
     // 1KB: No berserk healing.
     set_hp((you.hp + 1) * 2 / 3);

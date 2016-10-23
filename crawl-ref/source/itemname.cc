@@ -175,6 +175,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     monster_flags_t corpse_flags;
 
+    // no "a dragon scales"
+    const bool always_plural = armour_is_hide(*this)
+                               && sub_type != ARM_TROLL_LEATHER_ARMOUR;
+
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
                & MF_NAME_SPECIES)
@@ -197,7 +201,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             break;
         }
     }
-    else if (quantity > 1)
+    else if (quantity > 1 || always_plural)
     {
         switch (descrip)
         {
@@ -213,7 +217,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         }
 
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
-            && descrip != DESC_DBNAME)
+            && descrip != DESC_DBNAME && !always_plural)
         {
             if (quantity_in_words)
                 buff << number_in_words(quantity) << " ";
@@ -766,10 +770,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #endif
         case AMU_RAGE:              return "rage";
         case AMU_HARM:              return "harm";
-        case AMU_DISMISSAL:         return "dismissal";
         case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
+        case AMU_DISMISSAL:         return "obsoleteness";
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
@@ -1700,14 +1704,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list hides or QDA as +0.
-        if (know_pluses
-            && !((armour_is_hide(*this)
-                  || sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
-                 && plus == 0))
-        {
+        // Don't list QDA as +0.
+        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
             buff << make_stringf("%+d ", plus);
-        }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
@@ -2067,12 +2066,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
-
-        if (item_typ == CORPSE_BODY && props.exists(MANGLED_CORPSE_KEY)
-            && !dbname)
-        {
-            buff << "mangled ";
-        }
 
         monster_flags_t name_flags;
         const string _name = get_corpse_name(*this, &name_flags);

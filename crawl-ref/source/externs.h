@@ -60,10 +60,6 @@ protected:
 
 #define MAX_NAME_LENGTH 30
 
-// This value is used to mark that the current berserk is free from
-// penalty (used for Xom's special berserk).
-#define NO_BERSERK_PENALTY    -1
-
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 typedef FixedBitArray<GXM, GYM> map_bitmask;
@@ -243,6 +239,18 @@ struct coord_def
         return *this == coord_def(xi, yi);
     }
 };
+
+namespace std {
+    template <>
+    struct hash<coord_def>
+    {
+        constexpr size_t operator()(const coord_def& c) const
+        {
+            // lazy assumption: no coordinate will ever be bigger than 2^16
+            return (c.x << 16) + c.y;
+        }
+    };
+}
 
 constexpr coord_def INVALID_COORD {-1, -1};
 constexpr coord_def NO_CURSOR { INVALID_COORD };

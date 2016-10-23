@@ -302,45 +302,6 @@ done:
     return;
 }
 
-
-static void _create_monster_hide(const item_def &corpse)
-{
-    // make certain sources of dragon hides less scummable
-    // (kiku's corpse drop, gozag ghoul corpse shops)
-    if (corpse.props.exists(MANGLED_CORPSE_KEY))
-        return;
-
-    const armour_type type = hide_for_monster(corpse.mon_type);
-    ASSERT(type != NUM_ARMOURS);
-
-    int o = items(false, OBJ_ARMOUR, type, 0);
-    squash_plusses(o);
-
-    if (o == NON_ITEM)
-        return;
-    item_def& item = mitm[o];
-
-    do_uncurse_item(item);
-
-    // Automatically identify the created hide.
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-    const monster_type montype =
-    static_cast<monster_type>(corpse.orig_monnum);
-    if (!invalid_monster_type(montype) && mons_is_unique(montype))
-        item.inscription = mons_type_name(montype, DESC_PLAIN);
-
-    const coord_def pos = item_pos(corpse);
-    if (!pos.origin())
-        move_item_to_grid(&o, pos);
-}
-
-void maybe_drop_monster_hide(const item_def &corpse)
-{
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
-        _create_monster_hide(corpse);
-}
-
 /** Skeletonise this corpse.
  *
  *  @param item the corpse to be turned into a skeleton.
@@ -373,8 +334,7 @@ static void _bleed_monster_corpse(const item_def &corpse)
     }
 }
 
-void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
-                             bool make_hide)
+void turn_corpse_into_chunks(item_def &item, bool bloodspatter)
 {
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.sub_type == CORPSE_BODY);
@@ -400,10 +360,6 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 
     // Initialise timer depending on corpse age
     init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
-
-    // Happens after the corpse has been butchered.
-    if (make_hide)
-        maybe_drop_monster_hide(corpse);
 }
 
 static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_chunks)
@@ -438,7 +394,6 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
         else
         {
             _bleed_monster_corpse(item);
-            maybe_drop_monster_hide(item);
             turn_corpse_into_skeleton(item);
         }
     }
@@ -449,7 +404,6 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
         else
         {
             _bleed_monster_corpse(item);
-            maybe_drop_monster_hide(item);
             destroy_item(item.index());
         }
     }
@@ -496,9 +450,6 @@ void turn_corpse_into_blood_potions(item_def &item)
     // Initialise timer depending on corpse age
     init_perishable_stack(item,
                           item.freshness * ROT_TIME_FACTOR + FRESHEST_BLOOD);
-
-    // Happens after the blood has been bottled.
-    maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)

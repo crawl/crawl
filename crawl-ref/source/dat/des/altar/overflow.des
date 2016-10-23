@@ -3929,3 +3929,52 @@ MAP
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
 ENDMAP
+
+NAME:   chequers_temple_overflow_statue_of_worship
+TAGS:   temple_overflow_generic_2 ttemple_overflow_generic_3
+TAGS:   temple_overflow_generic_4
+{{
+  local altarcount = get_overflow_altar_count(_G)
+  if altarcount == nil then
+    altarcount = "2"
+  end
+  if altarcount == "2" then
+    subst("C = .")
+  else
+    subst("C = B")
+  end
+  nsubst("B = " .. altarcount .. ":B / *:.")
+}}
+MAP
+.....
+..C..
+.BGB.
+..C..
+.....
+ENDMAP
+
+NAME:  chequers_temple_overflow_minitemple
+TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
+TAGS:  temple_overflow_generic_3 temple_overflow_generic_2
+TAGS:  temple_overflow_generic_1
+{{
+  local altarcount = 5
+  if not is_validating() then
+    altarcount = get_overflow_altar_count(_G)
+  end
+  nsubst("O = " .. altarcount .. ":B / *:l")
+}}
+KFEAT: l = altar_ecumenical
+MAP
+        @
+       c+c
+   ccccc.ccccc
+  cc.........cc
+ccc..ccccccc..ccc
+cO..cccO.Occc..Oc
+ccc..cc...cc..ccc
+  cc.........cc
+   cccc...cccc
+      ccOcc
+       ccc
+ENDMAP

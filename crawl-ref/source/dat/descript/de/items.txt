@@ -311,7 +311,7 @@ Ein verzauberter Fächer von wohlwollenden Luftgeistern bewohnt. Schwingen
 dieses Fächers entfesselt einen starken Windstoß um den Träger und setzt
 Geister frei die des Inhabers Feinde hinwegfegen.
 %%%%
-fire dragon armour
+fire dragon scales
 
 Rüstung von den Skalen eines feueratmenden Drachen gemacht. Es stellt großen
 Schutz vor den Effekten des Feuers zur Verfügung, während es seinen zu den
@@ -332,7 +332,7 @@ glaive
 
 Eine Stange mit einer großen und schweren Klinge an einem Ende.
 %%%%
-gold dragon armour
+gold dragon scales
 
 Rüstung von den Skalen eines Golddrachen gemacht. Es ist viel schwerer als die
 meisten Drache-Skala-Rüstungen, und gewährt seinen Träger-Widerstand gegen
@@ -436,7 +436,7 @@ pair of gloves
 
 Ein Paar Handschuhe
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 Rüstung von den perlmuttartigen Skalen eines Perle-Drachen gemacht. Es gewährt
 seinen Träger-Widerstand gegen negative Energien.
@@ -736,7 +736,7 @@ stone
 Ein kleiner Klotz von dichten, aber sonst unbeachtlichem natürlichem Mineral.
 Es kann mit der Hand geworfen oder mit einer Schleuder gestartet werden.
 %%%%
-storm dragon armour
+storm dragon scales
 
 Rüstung von den Skalen eines blitzatmenden Drachen gemacht. Es ist schwerer als
 die meisten Drache-Skala-Rüstungen, und gibt seinem Träger großen Widerstand
@@ -757,7 +757,7 @@ sultana
 
 Eine kleine Rosine.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 Eine magische Rüstung aus den Schuppen eines Sumpfdrachen. Sie verleiht ihrem
 Träger Giftresistenz.

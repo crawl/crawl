@@ -32,6 +32,8 @@ public:
     void save(writer&) const;
     void load(reader&);
 
+    void rot_all_corpses();
+
     string description() const;
     string feature_description() const;
     vector<item_def> get_items() const;
@@ -175,6 +177,8 @@ public:
 
     // Update stash at (x,y).
     bool  update_stash(const coord_def& c);
+
+    void rot_all_corpses();
 
     // Mark nets at (x,y) as no longer trapping an actor.
     bool unmark_trapping_nets(const coord_def &c);

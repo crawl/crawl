@@ -1856,13 +1856,8 @@ static void _get_orb(const item_def &it, bool quiet)
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
-    if (you.duration[DUR_TELEPORT])
-    {
-        mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
-        you.increase_duration(DUR_TELEPORT, 5 + random2(5));
-    }
-
-    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out of the dungeon!");
+    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
+                                    "of the dungeon!");
 }
 
 /**
@@ -3132,7 +3127,15 @@ static void _do_autopickup()
         if (item_needs_autopickup(mi))
         {
             if (_should_autobutcher(mi))
-                butchery(&mi);
+            {
+                if (you_are_delayed() && current_delay()->want_autoeat())
+                    butchery(&mi);
+                else
+                {
+                    o = next;
+                    continue;
+                }
+            }
 
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
@@ -3502,7 +3505,7 @@ colour_t item_def::armour_colour() const
     if (is_artefact(*this))
         return randart_colour();
 
-    if (armour_type_is_hide(sub_type, true))
+    if (armour_type_is_hide((armour_type)sub_type))
         return mons_class_colour(monster_for_hide((armour_type)sub_type));
 
 
@@ -4808,7 +4811,7 @@ item_info get_item_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, DRAWN_CARD_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY,
+        FORCED_ITEM_COLOUR_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))

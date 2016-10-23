@@ -150,7 +150,7 @@ The floor.
 %%%%
 Some deep water
 
-A pool of deep water. Only very large creatures can wade through this, and only
+A pool of deep water. Only giant creatures can wade through this, and only
 those well-adapted to water can swim through it; for the rest, the only way
 through is to fly over.
 %%%%
@@ -161,9 +161,10 @@ Nothing but the mythical salamander can cross this without flight.
 %%%%
 Some shallow water
 
-A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
-landlubbers — this is sometimes dangerous, but never directly fatal.
-#TODO: explain naga/grey drac/ogre/troll lack of fumbling penalties
+A pool of cloudy, waist-deep water. Those well-adapted to water can swim
+through it; other creatures can wade through it slowly. Non-swimmers will
+occasionally fail to attack in melee when wading through shallow water,
+although large creatures are able to keep their balance and avoid fumbling.
 %%%%
 The open sea
 
@@ -961,4 +962,30 @@ An entrance that the opposition may appear from.
 An exit from the tutorial
 
 A way out of the dungeon, letting you finish this lesson.
+%%%%
+########################################################################
+### Area effects
+########################################################################
+haloed
+
+This area is lit by a divine halo, decreasing your stealth, preventing
+invisibility, and increasing the accuracy of attacks against any illuminated
+creatures.
+%%%%
+umbraed
+
+This area is wreathed by an umbra, improving your stealth if you are attuned to
+the shadows, and decreasing the accuracy of attacks by those unattuned to the
+shadows.
+%%%%
+liquefied
+
+The ground here is liquefied, making movement slow and causing any attempts to
+attack in melee to sometimes fail.
+%%%%
+disjunction haloed
+
+This area is bathed in translocational energy, causing creatures to blink away
+from the originator of the energy with an increasing chance the closer they are
+to the caster.
 %%%%

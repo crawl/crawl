@@ -264,7 +264,7 @@ static int _num_brand_tries(const item_def& item, int item_level)
     return 0;
 }
 
-static brand_type _determine_weapon_brand(const item_def& item, int item_level)
+brand_type determine_weapon_brand(const item_def& item, int item_level)
 {
     // Forced ego.
     if (item.brand != 0)
@@ -368,6 +368,24 @@ static void _roll_weapon_type(item_def& item, int item_level)
     item.brand = SPWPN_NORMAL; // fall back to no brand
 }
 
+/// Plusses for a non-artefact weapon with positive plusses.
+int determine_nice_weapon_plusses(int item_level)
+{
+    const int chance = (item_level >= ISPEC_GIFT ? 200 : item_level);
+
+    // Odd-looking, but this is how the algorithm compacts {dlb}.
+    int plus = 0;
+    for (int i = 0; i < 4; ++i)
+    {
+        plus += random2(3);
+
+        if (random2(425) > 35 + chance)
+            break;
+    }
+
+    return plus;
+}
+
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int agent = -1)
@@ -433,7 +451,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
-                _determine_weapon_brand(item, 2 + 2 * env.absdepth0));
+                determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
         item.plus -= 1 + random2(3);
 
@@ -448,23 +466,14 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (!no_brand)
         {
             set_item_ego_type(item, OBJ_WEAPONS,
-                              _determine_weapon_brand(item, item_level));
+                              determine_weapon_brand(item, item_level));
         }
 
         // if acquired item still not ego... enchant it up a bit.
         if (force_good && item.brand == SPWPN_NORMAL)
             item.plus += 2 + random2(3);
 
-        const int chance = (force_good ? 200 : item_level);
-
-        // Odd-looking, but this is how the algorithm compacts {dlb}.
-        for (int i = 0; i < 4; ++i)
-        {
-            item.plus += random2(3);
-
-            if (random2(425) > 35 + chance)
-                break;
-        }
+        item.plus += determine_nice_weapon_plusses(item_level);
 
         // squash boring items.
         if (!force_good && item.brand == SPWPN_NORMAL && item.plus < 3)
@@ -724,8 +733,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             item.sub_type = coinflip() ? ARM_NAGA_BARDING
                                        : ARM_CENTAUR_BARDING;
         }
-        else
-            hide2armour(item); // No randart hides.
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
@@ -845,7 +852,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
 
     // dragon/troll armour, animal hides, and crystal plate are never generated
     // with egos. (unless they're artefacts, but those aren't handled here.)
-    if (armour_type_is_hide(type, true)
+    // TODO: deduplicate with armour_is_special() (same except for animal skin)
+    if (armour_type_is_hide(type)
         || type == ARM_ANIMAL_SKIN
         || type == ARM_CRYSTAL_PLATE_ARMOUR)
     {
@@ -1027,22 +1035,14 @@ static armour_type _get_random_armour_type(int item_level)
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
-        // High level dragon armours/hides (14 entries)
-        armtype = random_choose(ARM_STEAM_DRAGON_HIDE,
-                                ARM_STEAM_DRAGON_ARMOUR,
-                                ARM_MOTTLED_DRAGON_HIDE,
+        // High level dragon armours
+        armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
                                 ARM_MOTTLED_DRAGON_ARMOUR,
-                                ARM_STORM_DRAGON_HIDE,
                                 ARM_STORM_DRAGON_ARMOUR,
-                                ARM_GOLD_DRAGON_HIDE,
                                 ARM_GOLD_DRAGON_ARMOUR,
-                                ARM_SWAMP_DRAGON_HIDE,
                                 ARM_SWAMP_DRAGON_ARMOUR,
-                                ARM_PEARL_DRAGON_HIDE,
                                 ARM_PEARL_DRAGON_ARMOUR,
-                                ARM_SHADOW_DRAGON_HIDE,
                                 ARM_SHADOW_DRAGON_ARMOUR,
-                                ARM_QUICKSILVER_DRAGON_HIDE,
                                 ARM_QUICKSILVER_DRAGON_ARMOUR);
     }
     else if (x_chance_in_y(11 + item_level, 8000))
@@ -1050,11 +1050,8 @@ static armour_type _get_random_armour_type(int item_level)
         // Crystal plate, some armours which are normally gained by butchering
         // monsters for hides.
         armtype = random_choose(ARM_CRYSTAL_PLATE_ARMOUR,
-                                ARM_TROLL_HIDE,
                                 ARM_TROLL_LEATHER_ARMOUR,
-                                ARM_FIRE_DRAGON_HIDE,
                                 ARM_FIRE_DRAGON_ARMOUR,
-                                ARM_ICE_DRAGON_HIDE,
                                 ARM_ICE_DRAGON_ARMOUR);
 
     }
@@ -1190,12 +1187,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
     }
 
-    // Make sure you don't get a hide from acquirement (since that
-    // would be an enchanted item which somehow didn't get converted
-    // into armour).
-    if (force_good)
-        hide2armour(item);
-
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
@@ -1204,18 +1195,15 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
         item.plus = 0;
 
+    // Never give brands to scales or hides, in case of misbehaving vaults.
+    if (armour_type_is_hide(static_cast<armour_type>(item.sub_type)))
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
+
     // squash boring items.
     if (!force_good && item.brand == SPARM_NORMAL && item.plus > 0
         && item.plus < _armour_plus_threshold(get_armour_slot(item)))
     {
         item.plus = 0;
-    }
-
-    if (armour_is_hide(item))
-    {
-        do_uncurse_item(item);
-        item.plus = 0;
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 }
 
@@ -2053,7 +2041,7 @@ void reroll_brand(item_def &item, int item_level)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        item.brand = _determine_weapon_brand(item, item_level);
+        item.brand = determine_weapon_brand(item, item_level);
         break;
     case OBJ_MISSILES:
         item.brand = _determine_missile_brand(item, item_level);

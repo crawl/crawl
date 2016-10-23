@@ -411,13 +411,57 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
 }
 
+static void _create_monster_hide(const item_def &corpse, bool silent)
+{
+    const monster_type mtyp = corpse.mon_type;
+    const armour_type type = hide_for_monster(mons_species(mtyp));
+    ASSERT(type != NUM_ARMOURS);
+
+    int o = items(false, OBJ_ARMOUR, type, 0);
+    squash_plusses(o);
+
+    if (o == NON_ITEM)
+        return;
+    item_def& item = mitm[o];
+
+    do_uncurse_item(item);
+
+    const coord_def pos = item_pos(corpse);
+    if (pos.origin())
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        return;
+    }
+
+    move_item_to_grid(&o, pos);
+    if (you.see_cell(pos) && !silent)
+    {
+        // XXX: tweak for uniques/named monsters, somehow?
+        mprf("%s %s intact enough to wear.",
+             item.name(DESC_THE).c_str(),
+             mons_genus(mtyp) == MONS_DRAGON ? "are"  // scales are
+                                             : "is"); // hide is
+                                                      // XXX: refactor
+    }
+
+    // after messaging, for better results
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+}
+
+static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
+{
+    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
+        _create_monster_hide(corpse, silent);
+}
+
 /**
  * Create this monster's corpse in mitm at its position.
  *
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
- * @param force whether to always make a corpse (no goldification and no 50%
- *              chance not to -- being summoned etc. still matters)
+ * @param force whether to always make a corpse (no 50% chance not to make a
+                corpse, no goldification, no hides -- being summoned etc. still
+  *             matters, though)
  * @returns a pointer to an item; it may be null, if the monster can't leave a
  *          corpse or if the 50% chance is rolled; it may be gold, if the player
  *          worships Gozag, or it may be the corpse.
@@ -501,7 +545,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
-    if (you.see_cell(mons.pos()) && !silent)
+    if (you.see_cell(mons.pos()) && !silent && !goldify)
         hints_dissection_reminder();
 
     return &mitm[o];
@@ -1478,9 +1522,11 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
         // get the proper stats from it.
         mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
                      bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
-                     // Simulacra aren't summons, and we want them to stick
-                     // around even after killing the necromancer.
-                     mons->pos(), MHITYOU);
+                     mons->pos(),
+                     // XXX: is MHITYOU really correct here?
+                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+        // Simulacra aren't summons, and we want them to stick
+        // around even after killing the necromancer.
         mg.set_summoned(bound_soul ? nullptr : &you,
                         0,
                         bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
@@ -2673,14 +2719,6 @@ item_def* monster_die(monster* mons, killer_type killer,
     if (crawl_state.game_is_arena())
         arena_monster_died(mons, killer, killer_index, silent, corpse);
 
-    // Monsters haloes should be removed when they die.
-    if (mons->halo_radius()
-        || mons->umbra_radius()
-        || mons->silence_radius())
-    {
-        invalidate_agrid();
-    }
-
     const coord_def mwhere = mons->pos();
     if (drop_items)
     {
@@ -2698,8 +2736,14 @@ item_def* monster_die(monster* mons, killer_type killer,
         mons->destroy_inventory();
     }
 
-    if (!silent && !wizard && leaves_corpse && corpse)
-        _special_corpse_messaging(*mons);
+    if (leaves_corpse && corpse)
+    {
+        if (!silent && !wizard)
+            _special_corpse_messaging(*mons);
+        // message ordering... :(
+        if (corpse->base_type == OBJ_CORPSES) // not gold
+            _maybe_drop_monster_hide(*corpse, silent);
+    }
 
     if (mons->is_divine_companion()
         && killer != KILL_RESET
@@ -2827,6 +2871,14 @@ void monster_cleanup(monster* mons)
     // So proper messages are printed
     if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
         mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
+
+    // Monsters haloes should be removed when they die.
+    if (mons->halo_radius()
+        || mons->umbra_radius()
+        || mons->silence_radius())
+    {
+        invalidate_agrid();
+    }
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

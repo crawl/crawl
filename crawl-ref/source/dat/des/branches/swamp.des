@@ -1853,6 +1853,30 @@ __ttt-v...ZZ.....ZZ...v-ttt__
             _____
 ENDMAP
 
+NAME: cheibrodos_swamp_sealed
+DEPTH: Swamp
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: tentacled monstrosity
+NSUBST: " = 1=*| / 3=%$, - = ..twW
+SUBST: ' = t:20 W
+MAP
+   ''''''''
+  'tttttttt'
+ 'ttttW--ttt'
+ 'tttWWWWW-tt
+'tttcc=cc-W-t'
+'ttcc...ccW-t'
+'ttc"..."c-Wt'
+tttc".1."c-Wt'
+tttcc"""ccW-t'
+@.W-ccncc-W-t'
+@..WWWWW-W-tt'
+tttt----WWtt'
+ tttttttttt'
+  '''''''''
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

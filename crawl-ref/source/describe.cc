@@ -16,6 +16,7 @@
 #include <string>
 
 #include "adjust.h"
+#include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
@@ -133,10 +134,10 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_HARM:                return "Harm";
-    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
@@ -383,13 +384,13 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_HARM:
         return "It increases damage dealt and taken.";
-    case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
     case AMU_MANA_REGENERATION:
         return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
@@ -1477,12 +1478,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     else
     {
         const int max_ench = armour_max_enchant(item);
-        if (armour_is_hide(item))
-        {
-            description += "\n\nEnchanting it will turn it into a suit of "
-                           "magical armour.";
-        }
-        else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             description += "\n\nIt can be maximally enchanted to +"
                            + to_string(max_ench) + ".";
@@ -1861,21 +1857,6 @@ string get_item_description(const item_def &item, bool verbose,
         if (item.sub_type == CORPSE_SKELETON)
             break;
 
-        if (mons_class_leaves_hide(item.mon_type))
-        {
-            description << "\n\n";
-            if (item.props.exists(MANGLED_CORPSE_KEY))
-            {
-                description << "This corpse is badly mangled; its hide is "
-                               "beyond any hope of recovery.";
-            }
-            else
-            {
-                description << "Butchering may allow you to recover this "
-                               "creature's hide, which can be enchanted into "
-                               "armour.";
-            }
-        }
         // intentional fall-through
     case OBJ_FOOD:
         if (item.base_type == OBJ_FOOD)
@@ -2115,9 +2096,28 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
-        long_desc += "\n(Pray here to learn more.)\n";
+    {
+        long_desc +=
+            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+                         command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
 
     inf.body << long_desc;
+
+    if (!feat_is_solid(feat))
+    {
+        string area_desc = "";
+        if (haloed(pos) && !umbraed(pos))
+            area_desc += "\n" + getLongDescription("haloed");
+        if (umbraed(pos) && !haloed(pos))
+            area_desc += "\n" + getLongDescription("umbraed");
+        if (liquefied(pos))
+            area_desc += "\n" + getLongDescription("liquefied");
+        if (disjunction_haloed(pos))
+            area_desc += "\n" + getLongDescription("disjunction haloed");
+
+        inf.body << area_desc;
+    }
 
     if (const cloud_type cloud = env.map_knowledge(pos).cloud())
     {
@@ -3661,9 +3661,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
     else if (mons_class_leaves_hide(mi.type))
     {
-        inf.body << "\nIf " << it << " is slain and butchered, it may be "
-                    "possible to recover " << mi.pronoun(PRONOUN_POSSESSIVE)
-                 << " hide, which can be enchanted into armour.\n";
+        inf.body << "\nIf " << it << " is slain, it may be possible to "
+                    "recover " << mi.pronoun(PRONOUN_POSSESSIVE)
+                 << " hide, which can be used as armour.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))

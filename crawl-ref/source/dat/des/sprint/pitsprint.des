@@ -227,19 +227,19 @@ function general_item_setup(e)
     chain mail plus:8 not_cursed ident:all /\
     chain mail plus:6 good_item not_cursed ident:all /\
     robe plus:4 ego:resistance not_cursed ident:all /\
-    fire dragon armour plus:10 not_cursed ident:all /\
-    ice dragon armour plus:10 not_cursed ident:all /\
-    swamp dragon armour plus:9 not_cursed ident:all /\
-    swamp dragon armour plus:5 good_item not_cursed ident:all /\
-    mottled dragon armour plus:8 not_cursed ident:all /\
-    mottled dragon armour plus:4 good_item not_cursed ident:all /\
-    quicksilver dragon armour good_item not_cursed ident:all w:5 /\
-    storm dragon armour plus:12 not_cursed ident:all w:5 /\
-    storm dragon armour plus:8 good_item not_cursed ident:all w:5 /\
-    shadow dragon armour plus:12 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:8 good_item not_cursed ident:all w:5 /\
-    gold dragon armour plus:14 not_cursed ident:all /\
-    gold dragon armour plus:10 good_item not_cursed ident:all /\
+    fire dragon scales plus:10 not_cursed ident:all /\
+    ice dragon scales plus:10 not_cursed ident:all /\
+    swamp dragon scales plus:9 not_cursed ident:all /\
+    swamp dragon scales plus:5 good_item not_cursed ident:all /\
+    mottled dragon scales plus:8 not_cursed ident:all /\
+    mottled dragon scales plus:4 good_item not_cursed ident:all /\
+    quicksilver dragon scales good_item not_cursed ident:all w:5 /\
+    storm dragon scales plus:12 not_cursed ident:all w:5 /\
+    storm dragon scales plus:8 good_item not_cursed ident:all w:5 /\
+    shadow dragon scales plus:12 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:8 good_item not_cursed ident:all w:5 /\
+    gold dragon scales plus:14 not_cursed ident:all /\
+    gold dragon scales plus:10 good_item not_cursed ident:all /\
     pair of gloves plus:4 not_cursed ident:all /\
     pair of gloves plus:2 good_item not_cursed ident:all /\
     pair of boots plus:4 not_cursed ident:all /\
@@ -292,14 +292,14 @@ function general_item_setup(e)
     chain mail plus:4 good_item not_cursed ident:all w:20 /\
     robe plus:4 not_cursed ident:all /\
     robe plus:1 good_item not_cursed ident:all /\
-    fire dragon armour plus:7 not_cursed ident:all /\
-    ice dragon armour plus:7 not_cursed ident:all /\
-    swamp dragon armour plus:5 not_cursed ident:all /\
-    mottled dragon armour plus:5 not_cursed ident:all /\
-    quicksilver dragon armour not_cursed ident:all w:5 /\
-    storm dragon armour plus:6 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:6 not_cursed ident:all w:5 /\
-    gold dragon armour plus:8 not_cursed ident:all /\
+    fire dragon scales plus:7 not_cursed ident:all /\
+    ice dragon scales plus:7 not_cursed ident:all /\
+    swamp dragon scales plus:5 not_cursed ident:all /\
+    mottled dragon scales plus:5 not_cursed ident:all /\
+    quicksilver dragon scales not_cursed ident:all w:5 /\
+    storm dragon scales plus:6 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:6 not_cursed ident:all w:5 /\
+    gold dragon scales plus:8 not_cursed ident:all /\
     pair of gloves plus:2 not_cursed ident:all /\
     pair of gloves plus:0 good_item not_cursed ident:all /\
     pair of boots plus:2 not_cursed ident:all /\
@@ -442,13 +442,13 @@ function armoury_setup(e)
           ring mail plus:4 ident:all not_cursed /\
           scale mail plus:7 ident:all not_cursed /\
           plate armour plus:5 ident:all not_cursed /\
-          fire dragon armour plus:4 not_cursed ident:all /\
-          ice dragon armour plus:4 not_cursed ident:all /\
-          swamp dragon armour plus:2 not_cursed ident:all /\
-          mottled dragon armour plus:2 not_cursed ident:all /\
-          storm dragon armour plus:3 not_cursed ident:all w:5 /\
-          shadow dragon armour plus:3 not_cursed ident:all w:5 /\
-          gold dragon armour plus:2 not_cursed ident:all /\
+          fire dragon scales plus:4 not_cursed ident:all /\
+          ice dragon scales plus:4 not_cursed ident:all /\
+          swamp dragon scales plus:2 not_cursed ident:all /\
+          mottled dragon scales plus:2 not_cursed ident:all /\
+          storm dragon scales plus:3 not_cursed ident:all w:5 /\
+          shadow dragon scales plus:3 not_cursed ident:all w:5 /\
+          gold dragon scales plus:2 not_cursed ident:all /\
           large shield plus:1 not_cursed ident:all /\
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
@@ -488,7 +488,6 @@ function coven_setup(e)
           amulet of rage randart not_cursed ident:all /\
           amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
-          amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\
           ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")

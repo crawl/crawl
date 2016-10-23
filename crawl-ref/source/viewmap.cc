@@ -162,11 +162,15 @@ bool is_feature(char32_t feature, const coord_def& where)
         return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP
                || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
+        // DNGN_UNKNOWN_ALTAR doesn't need to be excluded here, because
+        // feat_is_altar doesn't include it in the first place.
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
+                && !feat_is_altar(grid)
                 && !feat_is_portal_exit(grid)
                 && grid != DNGN_ENTER_SHOP;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
+                && !feat_is_altar(grid)
                 && !feat_is_portal_entrance(grid)
                 && grid != DNGN_ENTER_SHOP;
     case '^':

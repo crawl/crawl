@@ -4822,7 +4822,7 @@ void item_list::set_from_slot(const item_list &list, int slot_index)
 // TODO: More checking for inappropriate combinations, like the holy
 // wrath brand on a demonic weapon or the running ego on a helmet.
 // NOTE: Be sure to update the reference in syntax.txt if this gets moved!
-static int _str_to_ego(item_spec &spec, string ego_str)
+int str_to_ego(object_class_type item_type, string ego_str)
 {
     const char* armour_egos[] =
     {
@@ -4929,7 +4929,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 
     int *order;
 
-    switch (spec.base_type)
+    switch (item_type)
     {
     case OBJ_ARMOUR:
         order = armour_order;
@@ -4940,9 +4940,11 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         break;
 
     case OBJ_MISSILES:
+#if TAG_MAJOR_VERSION == 34
         // HACK to get an old save to load; remove me soon?
         if (ego_str == "sleeping")
             return SPMSL_SLEEP;
+#endif
         order = missile_order;
         break;
 
@@ -5513,7 +5515,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         return true;
     }
 
-    const int ego = _str_to_ego(result, ego_str);
+    const int ego = str_to_ego(result.base_type, ego_str);
 
     if (ego == 0)
     {

@@ -331,7 +331,7 @@ static const ability_def Ability_List[] =
       1, 0, 0, 0, {FAIL_XL, 45, 2}, abflag::PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-      0, 0, 0, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
+      0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {FAIL_EVO, 60, 2}, abflag::NONE },
@@ -424,7 +424,7 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-    { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_TROG_BERSERK, "Berserk", 0, 0, 600, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
       0, 0, 200, 2, {FAIL_INVO, piety_breakpoint(2), 0, 1}, abflag::NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -486,6 +486,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {FAIL_INVO}, abflag::NONE },
 
     // Fedhas
+    { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_FEDHAS_EVOLUTION, "Evolution",
       2, 0, 0, 0, {FAIL_INVO, 30, 6, 20}, abflag::VARIABLE_FRUIT },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
@@ -1274,7 +1276,10 @@ static bool _check_ability_possible(const ability_def& abil,
     // (Losing consciousness possible from 400 downward.)
     if (hungerCheck && !you.undead_state())
     {
-        const int expected_hunger = you.hunger - abil.food_cost * 2;
+        const hunger_state_t state =
+            static_cast<hunger_state_t>(max(0, you.hunger_state - 1));
+        const int expected_hunger = hunger_threshold[state]
+                                    - abil.food_cost * 2;
         if (!quiet)
         {
             dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
@@ -1827,8 +1832,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BREATHE_STICKY_FLAME:
     {
-        targetter_splash hitfunc(&you);
         beam.range = _calc_breath_ability_range(abil.ability);
+        targetter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2639,6 +2644,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mpr("You stop recalling your allies.");
         end_recall();
         break;
+
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+        fedhas_fungal_bloom();
+        return SPRET_SUCCESS;
 
     case ABIL_FEDHAS_SUNLIGHT:
         return fedhas_sunlight(fail);

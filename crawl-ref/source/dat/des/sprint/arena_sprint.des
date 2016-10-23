@@ -1054,11 +1054,11 @@ KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour gre
             shield randart | cloak randart | cloak randart | robe randart | animal skin randart |\
             large shield randart | robe randart | buckler randart | leather armour randart
 KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
-            mundane not_cursed storm dragon armour | mundane not_cursed fire dragon armour |\
-            mundane not_cursed shadow dragon armour | mundane not_cursed quicksilver dragon armour |\
-            mundane not_cursed ice dragon armour | mundane not_cursed gold dragon armour |\
-            mundane not_cursed steam dragon armour | mundane not_cursed swamp dragon armour |\
-            mundane not_cursed pearl dragon armour | mundane not_cursed mottled dragon armour |\
+            mundane not_cursed storm dragon scales | mundane not_cursed fire dragon scales |\
+            mundane not_cursed shadow dragon scales | mundane not_cursed quicksilver dragon scales |\
+            mundane not_cursed ice dragon scales | mundane not_cursed gold dragon scales |\
+            mundane not_cursed steam dragon scales | mundane not_cursed swamp dragon scales |\
+            mundane not_cursed pearl dragon scales | mundane not_cursed mottled dragon scales |\
             mundane not_cursed troll leather armour | mundane not_cursed crystal plate armour |\
             mundane not_cursed plate armour | mundane not_cursed naga barding |\
             mundane not_cursed centaur barding | mundane not_cursed cloak |\

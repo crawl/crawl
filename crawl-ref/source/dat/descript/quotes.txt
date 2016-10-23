@@ -1314,7 +1314,7 @@ breathtaking slenderness and colour which [they] cut down and burned the crab
 meat with.”
     -Douglas Adams, The Hitch-hiker’s Guide to the Galaxy
 %%%%
-fire dragon armour
+fire dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1448,7 +1448,7 @@ goblin
  Below, my lad!”
     -J.R.R. Tolkien, _The Hobbit_
 %%%%
-gold dragon armour
+gold dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1615,7 +1615,7 @@ ice bat
 
 <bat>
 %%%%
-ice dragon armour
+ice dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1916,7 +1916,7 @@ nothing but a club, which carried with it death and destruction.”
     -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
      Customs of the Ancestors of the English Speaking Nations_. 1889.
 %%%%
-mottled dragon armour
+mottled dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2082,7 +2082,7 @@ Passwall spell
 “He says the best way out is always through.”
     -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2900,7 +2900,7 @@ starcursed mass
  up where the stars get lit.”
     -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
 %%%%
-steam dragon armour
+steam dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2936,7 +2936,7 @@ rills of water, along the field.”
      Mancha_, IV, 10. 1605.
      trans. Carlos Fuentes, 1997.
 %%%%
-storm dragon armour
+storm dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2950,7 +2950,7 @@ sun demon
  The shadows lengthening as the vapours rise.”
     -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 <steam dragon hide>
 %%%%

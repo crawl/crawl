@@ -46,7 +46,6 @@
 {'i', CMD_DISPLAY_INVENTORY},
 {'m', CMD_DISPLAY_SKILLS},
 {'o', CMD_EXPLORE},
-{'p', CMD_PRAY},
 {'q', CMD_QUAFF},
 {'r', CMD_READ},
 {'t', CMD_SHOUT},

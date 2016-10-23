@@ -976,20 +976,6 @@ tt1Wttt2.tt
 ENDMAP
 
 ###############################################################################
-# A polar bear lost in the jungle, how odd
-NAME:  roderic_lost_polar_bear
-TAGS:  no_monster_gen
-DEPTH: Lair:3-, !Lair:$
-MONS:  plant, polar_bear, bush
-SUBST: ? = 1t
-SUBST: ' = .:80 1 3:3
-MAP
-??'.
-.'2'
-'??.
-ENDMAP
-
-###############################################################################
 # Wood themed vaults. Can generate in Forest, Lair, and occasionally D.
 # uniq_ tagged by tier: large, medium, small, rock, and decor.
 #
@@ -2481,6 +2467,28 @@ xxxxxx666xxxxxxxxx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME: cheibrodos_lair_lostbears
+DEPTH: Lair
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: p = plant
+MONS: polar bear
+SUBST: v = vvvvvpp..
+NSUBST: - = 2:1 / 3=1., . = 4:p / 2=p.
+MAP
+       ....
+      ..vv.
+   ....vvv..
+ ...vvvvvv..
+..vvvvvvvvv..
+.vvvv-.--vvv.
+@...-.-.-...@
+@....---.-..@
+ ..vvvvvvvv..
+  ..vvvvvv..
+   ........
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################
@@ -3122,4 +3130,61 @@ MAP
 "aa--aa--aa--aa--aa--aa"
 "aa--aa--aa--aa--aa--aa"
 """"""""""""""""""""""""
+ENDMAP
+
+NAME: cheibrodos_lair_end_hotspot
+PLACE: Lair:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: black mamba, mottled dragon / steam dragon, hell hound, molten gargoyle
+MONS: komodo dragon / w:7 wyvern / w:7 basilisk / w:3 hydra
+MONS: lindwurm / fire crab, fire dragon
+# Generate one of two paths leading to central chamber
+SHUFFLE: ABCDE / HIJKL
+SUBST: A = @, BH = x, CIK = ., E = =, J = l, L = c
+# Generate one of two perches for dangerous enemies
+SHUFFLE: MN / OP
+SUBST: M = 6, N = ., OP = l
+# Monster and loot placement
+SHUFFLE: ';`
+NSUBST: ' = 3:3 / 3=3. / 2=5 / 2=15. / 1=2. / *:., ; = 3:5 / 4=15. / 1=2. / *:.
+NSUBST: ` = 3:5 / 4=15. / 1=2. / *:., - = 1:7, D = 1=|* / 2=*% / 3=$% / 2:$
+NSUBST: G = 3:4, l = 5:Y
+KMONS: Y = lava snake
+KFEAT: Y = lava
+MAP
+            xxxxxxxxxxxx
+           xxllxllxllxxxx
+          xxxxlllllllllxxxxx
+       xxxxxlllllxxx.llllxxxx
+      xxlxxllxxxxxG'.'xlllxxxxxx
+      xlllxllxGxGx'.'.'xxllxxxlxx
+      xxxlxlxxx....'.'.xxxlllxllx
+       xxlllxxG.'.'.'.'xxxxllllxx
+        xxlllxx'.'.'.'.'xxxxxlxx
+       xxxxllxx.'.'.'.'..xxxxlxx
+       xxxxxll.'.'.'.'.'.xxxllxx
+      xxxxxxl..x'.'.'.'.xxlllllx
+   xxxxxx.;x..lxxJJl..xIIllllllxx
+  xxxxxx.;.;.lPllJJllxxlIIllxxllxx
+xxxxxx;.;.;.xllPlJJlllllIIlxxxllxx
+xxx....;.;.;llPccLLccllllIIxxxxxxx
+A.....;.;.xllPccDDDDccllxx`.xGxGxx
+A....;.;xxlllOcDD--DDcllx`.`...xxx
+xxxx..;.;.;.lln.----.nlx`.`...xGxx
+xxxxx..;.;.;xln.----.nlN.`.`.`xxx
+  xxxx;.;.;.xlcKK--KKcNl`.`.`.Gxx
+  xxxG...;.xxlccKKKKccNlx`.`.`xxxx
+   xxx..;.BBlllccEEccMllx.`.`..xxx
+    xGxG.xxBBllllCCllllx.`.`.....H
+    xxxx;llBBxxllCCll.`.`.`.`....H
+     xxxllllBB;.lCCl.`.`.`.`...xxx
+    xxxllllxx`.`..`.`.`.`.`.xxxxxx
+    xlllxllll.`.`..`.`.llllxxxxxx
+   xxllxxxxxllll.`..`llllxxxxxx
+   xllxxxxxxxlllll.`lllxxxxxx
+   xxxxx  xxxxxxllllllllxxxx
+            xxxxxxxxxxxllxxx
+               xxxxxxxxllxx
+                   xxxxxxx
 ENDMAP

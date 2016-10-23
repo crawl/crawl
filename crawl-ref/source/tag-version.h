@@ -196,6 +196,7 @@ enum tag_minor_version
     TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
     TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
     TAG_MINOR_SPIT_POISON_AGAIN,   // Make Naga poison spit a 2-level mutation.
+    TAG_MINOR_HIDE_TO_SCALE,       // Rename dragon hides to scales.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

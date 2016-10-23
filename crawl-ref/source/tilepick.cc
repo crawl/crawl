@@ -2152,68 +2152,35 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_ANIMAL_SKIN:
         return TILE_ARM_ANIMAL_SKIN;
 
-    case ARM_TROLL_HIDE:
-        return TILE_ARM_TROLL_HIDE;
-
     case ARM_TROLL_LEATHER_ARMOUR:
         return TILE_ARM_TROLL_LEATHER_ARMOUR;
-
-    case ARM_FIRE_DRAGON_HIDE:
-        return TILE_ARM_FIRE_DRAGON_HIDE;
 
     case ARM_FIRE_DRAGON_ARMOUR:
         return TILE_ARM_FIRE_DRAGON_ARMOUR;
 
-    case ARM_ICE_DRAGON_HIDE:
-        return TILE_ARM_ICE_DRAGON_HIDE;
-
     case ARM_ICE_DRAGON_ARMOUR:
         return TILE_ARM_ICE_DRAGON_ARMOUR;
-
-    case ARM_STEAM_DRAGON_HIDE:
-        return TILE_ARM_STEAM_DRAGON_HIDE;
 
     case ARM_STEAM_DRAGON_ARMOUR:
         return TILE_ARM_STEAM_DRAGON_ARMOUR;
 
-    case ARM_MOTTLED_DRAGON_HIDE:
-        return TILE_ARM_MOTTLED_DRAGON_HIDE;
-
     case ARM_MOTTLED_DRAGON_ARMOUR:
         return TILE_ARM_MOTTLED_DRAGON_ARMOUR;
-
-    case ARM_QUICKSILVER_DRAGON_HIDE:
-        return TILE_ARM_QUICKSILVER_DRAGON_HIDE;
 
     case ARM_QUICKSILVER_DRAGON_ARMOUR:
         return TILE_ARM_QUICKSILVER_DRAGON_ARMOUR;
 
-    case ARM_STORM_DRAGON_HIDE:
-        return TILE_ARM_STORM_DRAGON_HIDE;
-
     case ARM_STORM_DRAGON_ARMOUR:
         return TILE_ARM_STORM_DRAGON_ARMOUR;
-
-    case ARM_SHADOW_DRAGON_HIDE:
-        return TILE_ARM_SHADOW_DRAGON_HIDE;
 
     case ARM_SHADOW_DRAGON_ARMOUR:
         return TILE_ARM_SHADOW_DRAGON_ARMOUR;
 
-    case ARM_GOLD_DRAGON_HIDE:
-        return TILE_ARM_GOLD_DRAGON_HIDE;
-
     case ARM_GOLD_DRAGON_ARMOUR:
         return TILE_ARM_GOLD_DRAGON_ARMOUR;
 
-    case ARM_PEARL_DRAGON_HIDE:
-        return TILE_ARM_PEARL_DRAGON_HIDE;
-
     case ARM_PEARL_DRAGON_ARMOUR:
         return TILE_ARM_PEARL_DRAGON_ARMOUR;
-
-    case ARM_SWAMP_DRAGON_HIDE:
-        return TILE_ARM_SWAMP_DRAGON_HIDE;
 
     case ARM_SWAMP_DRAGON_ARMOUR:
         return TILE_ARM_SWAMP_DRAGON_ARMOUR;
@@ -3098,8 +3065,6 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_WAIT;
     case CMD_USE_ABILITY:
         return TILEG_CMD_USE_ABILITY;
-    case CMD_PRAY:
-        return TILEG_CMD_PRAY;
     case CMD_SEARCH_STASHES:
         return TILEG_CMD_SEARCH_STASHES;
     case CMD_REPLAY_MESSAGES:

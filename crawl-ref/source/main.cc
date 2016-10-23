@@ -1550,13 +1550,15 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // Up and down both work for shops and portals.
-    if (ftype == DNGN_ENTER_SHOP)
+    // Up and down both work for shops, portals, and altars.
+    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
         if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
-        else
+        else if (ftype == DNGN_ENTER_SHOP) // don't convert to capitalism
             shop();
+        else
+            try_god_conversion(feat_altar_god(ftype));
         // Even though we may have "succeeded", return false so we don't keep
         // trying to go downstairs.
         return false;
@@ -2119,7 +2121,6 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
-    case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read();                   break;
     case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
@@ -2183,7 +2184,8 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_RELIGION:
     {
 #ifdef USE_TILE_WEB
-        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+        if (!you_worship(GOD_NO_GOD))
+            tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
 #endif
         describe_god(you.religion, true);
         redraw_screen();
@@ -2322,6 +2324,13 @@ void process_command(command_type cmd)
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
+
+        if (feat_is_altar(grd(you.pos())))
+        {
+            string msg = "Press <w>%</w> or <w>%</w> to pray at altars.";
+            insert_commands(msg, { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
+            mpr(msg);
+        }
 
         break;
     }
@@ -2801,10 +2810,8 @@ static void _swing_at_target(coord_def move)
         you.turn_is_over = true;
         fight_melee(&you, mon);
 
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
-            you.berserk_penalty = 0;
+        you.berserk_penalty = 0;
         you.apply_berserk_penalty = false;
-
         return;
     }
 
@@ -2847,14 +2854,6 @@ static void _open_door(coord_def move)
     {
         free_self_from_net();
         you.turn_is_over = true;
-        return;
-    }
-
-    // If we get here, the player either hasn't picked a direction yet,
-    // or the chosen direction actually contains a closed door.
-    if (!player_can_open_doors())
-    {
-        mpr("You can't open doors in your present form.");
         return;
     }
 
@@ -2948,12 +2947,6 @@ static void _open_door(coord_def move)
 
 static void _close_door(coord_def move)
 {
-    if (!player_can_open_doors())
-    {
-        mpr("You can't close doors in your present form.");
-        return;
-    }
-
     if (you.attribute[ATTR_HELD])
     {
         mprf("You can't close doors while %s.", held_status());
@@ -3032,9 +3025,6 @@ static void _close_door(coord_def move)
 //
 static void _do_berserk_no_combat_penalty()
 {
-    if (you.berserk_penalty == NO_BERSERK_PENALTY)
-        return;
-
     if (you.berserk())
     {
         you.berserk_penalty++;
@@ -3358,11 +3348,7 @@ static void _move_player(coord_def move)
             you.turn_is_over = true;
             fight_melee(&you, targ_monst);
 
-            // We don't want to create a penalty if there isn't
-            // supposed to be one.
-            if (you.berserk_penalty != NO_BERSERK_PENALTY)
-                you.berserk_penalty = 0;
-
+            you.berserk_penalty = 0;
             attacking = true;
         }
     }

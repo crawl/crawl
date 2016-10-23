@@ -242,7 +242,7 @@ eveningstar
 
 这种流星锤上的刺特别长，因此被它打到也特别痛。
 %%%%
-fire dragon armour
+fire dragon scales
 
 一副用火龙鳞片制成的魔法护甲。它赋予穿戴者对火焰的抗性，
 但同时也使穿戴者更容易受到寒冷攻击的伤害。
@@ -260,7 +260,7 @@ glaive
 
 这根棍子的一端绑着大型刀刃。
 %%%%
-gold dragon armour
+gold dragon scales
 
 一副用金龙鳞片制成的魔法护甲。它同时赋予穿戴者对火焰、寒冷、以及毒物的抗性，
 同时也比一般的龙鳞甲重很多。
@@ -363,7 +363,7 @@ pair of gloves
 
 一副手套。
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 一副用珍珠龙鳞片制成的魔法护甲，上面发出圣光。它赋予穿戴者对负能量的抗性。
 %%%%
@@ -612,7 +612,7 @@ stone
 一小块普通矿物。它很重，但除此之外没有什么特别的。它可以用于投掷，
 也可以用作投石索的弹药。
 %%%%
-storm dragon armour
+storm dragon scales
 
 一副用雷龙鳞片制成的魔法护甲。它比绝大多数其他种类的龙鳞甲要重，
 但它能大大强化穿戴者对电击的抗力。
@@ -630,7 +630,7 @@ sultana
 
 一些葡萄干。
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 一副用沼龙鳞片制成的魔法护甲。它赋予穿戴者对毒药的抗性。
 %%%%

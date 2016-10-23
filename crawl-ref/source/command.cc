@@ -942,8 +942,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
                          CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-    _add_insert_commands(cols, 0, 2, "Pray (<w>%</w> and <w>%!</w> for help)",
-                         CMD_PRAY, CMD_DISPLAY_RELIGION, CMD_DISPLAY_RELIGION, 0);
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
     _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
@@ -1103,10 +1101,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
-    insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
-                    CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
-                    CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
-                    0);
+    insert_commands(text, { CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                            CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                            CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS,
+                            CMD_USE_ABILITY
+                          });
     linebreak_string(text, 40);
 
     cols.add_formatted(

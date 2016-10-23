@@ -260,12 +260,13 @@ upon Elyvilon for protection.
 Fedhas powers
 
 Plants and fungi will not attack Fedhas' worshippers without provocation.
-Fedhas' worshippers may walk through plants or fungi, and even fire missiles or
-spells through them without causing harm. Fedhas grants the ability to promote
-plants and fungi into stronger species. Followers can eventually grow a wall of
-plants and create explosive spores from corpses. They are also granted some
-control over the weather, being able to call sunlight and eventually
-rainstorms.
+Corpses on different levels will rot away; followers can also induce this decay
+directly to create fungi. Fedhas' worshippers may walk through plants or fungi,
+and even fire missiles or spells through them without causing harm. Fedhas
+grants the ability to promote plants and fungi into stronger species. Followers
+can eventually grow a wall of plants and create explosive spores from corpses.
+They are also granted some control over the weather, being able to call
+sunlight and eventually rainstorms.
 %%%%
 Gozag powers
 

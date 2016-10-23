@@ -1303,8 +1303,6 @@ VISUAL:@The_monster@ prays.
 %%%%
 Evocations player ghost
 
-@The_monster@ says @to_foe@, "How about a game of cards?"
-
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 
 @The_monster@ says, "I could kill you with a [stone|fan|lamp]."
@@ -1874,8 +1872,6 @@ _Bai_Suzhen_common_
 @The_monster@ roars, "Even the heavens can't separate us forever!"
 
 @The_monster@ inspects @possessive@ gathered herbal reagents.
-
-@The_monster@ asserts, "Choosing our [truths|lies] is central to humanity, anyway."
 
 VISUAL:@The_monster@ twists and twirls @possessive@ body through the storm.
 %%%%
@@ -2574,7 +2570,7 @@ w:50
 
 @The_monster@ says, "You've already taken the rune from here, haven't you?"
 
-@The_monster@ says, "So-called 'good' gods are just as evil as the rest. I hate hypocrisy."
+@The_monster@ says, "The so-called 'good' gods are just as evil as the rest. I hate hypocrisy."
 
 @The_monster@ says, "I hate temples."
 
@@ -2742,11 +2738,7 @@ Slime Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Those amoebas look tasty."
-
 @The_monster@ says, "Where's all the loot?"
-
-@The_monster@ says, "A jelly ate my lunch. I hate jellies."
 
 @The_monster@ says, "I feel like a jelly sandwich, now."
 
@@ -2764,8 +2756,6 @@ w:50
 
 @The_monster@ says, "I always freeze up when I think I'm being watched."
 
-@The_monster@ says, "I dropped a potion and a jelly ate it. I hate jellies!"
-
 @The_monster@ says, "A death ooze jiggled at me. That's naff."
 
 @The_monster@ says, "Acid blobs make me think of reflux. I hate reflux."
@@ -2775,12 +2765,6 @@ w:50
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
 @The_monster@ says, "I hope the rune isn't sticky."
-
-@The_monster@ says, "I bet a jelly ate the rune."
-
-@The_monster@ says, "I hate that slurping noise."
-
-@The_monster@ says, "I hate that squelching noise."
 %%%%
 Snake Donald
 
@@ -2840,8 +2824,6 @@ w:50
 @The_monster@ says, "I asked the warden where the rune was. She slammed the door in my face."
 
 @The_monster@ says, "I don't remember getting an invitation to a convocation."
-
-@The_monster@ says, "What kind of idiots hire shapeshifters to protect treasure?"
 
 @The_monster@ says, "Who designed this place? It's just a bunch of weird little rooms stuck together."
 
@@ -3092,11 +3074,6 @@ w:50
 @The_monster@ says, "Ah. You're responsible for all those zombies upstairs."
 
 @The_monster@ says, "I hate zombies."
-
-w:2
-@The_monster@ says, "Bone dragons? Death cobs? Does your god just put random words together and see what pops into existence?"
-
-@The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
 
@@ -3467,8 +3444,6 @@ w:50
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
-@The_monster@ says, "I bet you can make some really great dragon armour out of gold."
-
 @The_monster@ says, "What do potions have to do with a god of gold, anyway?"
 %%%%
 Qazlal Donald
@@ -3823,7 +3798,7 @@ _Duvessa_rare_
 
 @The_monster@ says @to_foe@, "Beauty is only skin deep, and my weapons penetrate much further than that."
 
-@The_monster@ says @to_foe@, "Practise, practise, practise! One day you'll be as good as me." @player_only@
+@The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
 %%%%
 Duvessa_Dowan_dies
 
@@ -6225,9 +6200,11 @@ confused Bennu permanently killed
 ################## Bullfrog ################################
 bullfrog
 
-@The_monster@ swells and bulges before releasing a deep croak.
+@The_monster@ swells and bulges.
 
-@The_monster@ snags a nearby @_frog_food_@ with @possessive@ tongue and gulps it down.
+@The_monster@ releases a deep croak.
+
+@The_monster@ snags a nearby @_frog_food_@ with @possessive@ tongue.
 %%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
@@ -6303,9 +6280,9 @@ SOUND:@The_monster@ crackles and sizzles.
 ################## Frilled lizard ##############################
 frilled lizard
 
-@The_monster@ suddenly unfolds @possessive@ giant frill!
+@The_monster@ unfolds @possessive@ giant frill.
 
-@The_monster@ hisses @at_foe@ and fully extends @possessive@ frill.
+@The_monster@ hisses @at_foe@.
 %%%%
 ################## Ice statue ##############################
 default ice statue
@@ -7196,7 +7173,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practise.
+proper burial practice.
 
 # demons
 not dealing with demons.

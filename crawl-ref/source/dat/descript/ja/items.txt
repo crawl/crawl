@@ -285,7 +285,7 @@ eveningstar
 
 モーニングスターの対極となる武器だ。
 %%%%
-fire dragon armour
+fire dragon scales
 
 火を吐くドラゴンの鱗で造られた鎧だ。これは火に対する強力な保護効果をもたらすが、
 着用者は冷気の影響によって傷つきやすくなってしまう。
@@ -305,7 +305,7 @@ glaive
 
 長くて重い刃のついた長柄武器だ。
 %%%%
-gold dragon armour
+gold dragon scales
 
 ゴールドドラゴンの鱗で作られた鎧だ。
 これは多くのドラゴンの鱗鎧よりもはるかに重く、装着者に毒、火、
@@ -385,7 +385,7 @@ pair of gloves
 
 一対のグローブだ。
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 パールドラゴンの真珠の鱗で造られた鎧だ。
 これは装着者に負のエネルギーへの耐性を授ける。
@@ -652,7 +652,7 @@ stone
 小さくかなりの量が密集している、ありふれた自然の鉱物だ。
 これは手で投げたりスリングで発射することができる。
 %%%%
-storm dragon armour
+storm dragon scales
 
 稲妻を吐くドラゴンの鱗で造られた鎧だ。
 この鎧はドラゴンの鎧の中では最も重い部類に入るが、
@@ -672,7 +672,7 @@ sultana
 
 質素な干しぶどうだ。
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 沼ドラゴンの鱗で造られた鎧だ。これは着用者に毒への耐性を授ける。
 %%%%

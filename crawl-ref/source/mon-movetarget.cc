@@ -353,57 +353,47 @@ bool find_merfolk_avatar_water_target(monster* mon)
 
     int best_water_count = 0;
     coord_def best_target;
-    bool first = true;
 
     deep = false;
 
-    while (true)
+    // Try two iterations, the second more relaxed than the first. But if
+    // we find deep water on the first pass, don't bother with the second.
+    for (int iteration = 0; iteration < 2 && !deep; ++iteration)
     {
         int best_num = 0;
-        for (radius_iterator ri(mon->pos(), LOS_NO_TRANS);
-             ri; ++ri)
+        for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
         {
             if (!feat_is_water(grd(*ri)))
                 continue;
 
+            const int dist = grid_distance(mon->pos(), *ri);
+
             // In the first iteration only count water grids that are
             // not closer to the player than to the merfolk avatar.
-            if (first && (mon->pos() - *ri).rdist() > (you.pos() - *ri).rdist())
+            if (iteration == 0 && dist > grid_distance(you.pos(), *ri))
                 continue;
 
             // Counts deep water twice.
             const int water_count = _merfolk_avatar_water_score(*ri, deep);
-            if (water_count < best_water_count)
-                continue;
-
             if (water_count > best_water_count)
             {
                 best_water_count = water_count;
                 best_target = *ri;
                 best_num = 1;
             }
-            else // water_count == best_water_count
+            else if (water_count == best_water_count)
             {
-                const int old_dist = (mon->pos() - best_target).rdist();
-                const int new_dist = (mon->pos() - *ri).rdist();
-                if (new_dist > old_dist)
-                    continue;
-
-                if (new_dist < old_dist)
+                const int old_dist = best_target.origin() ? INFINITE_DISTANCE
+                                   : grid_distance(mon->pos(), best_target);
+                if (dist < old_dist)
                 {
                     best_target = *ri;
                     best_num = 1;
                 }
-                else if (one_chance_in(++best_num))
+                else if (dist == old_dist && one_chance_in(++best_num))
                     best_target = *ri;
             }
         }
-
-        if (!first || deep)
-            break;
-
-        // Else start the second iteration.
-        first = false;
     }
 
     if (!best_water_count)

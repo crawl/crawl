@@ -3708,8 +3708,9 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     if (br == -1)
         br = NUM_BRANCHES;
     ASSERT(br >= 0);
+    // at the time NUM_BRANCHES was one above BRANCH_DEPTHS, so we check that
     if (th.getMinorVersion() < TAG_MINOR_GLOBAL_BR_INFO && br == BRANCH_DEPTHS+1)
-        br = GLOBAL_BRANCH_INFO;                             // was NUM_BRANCHES
+        br = GLOBAL_BRANCH_INFO;
     place_info.branch      = static_cast<branch_type>(br);
 #else
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
@@ -4075,6 +4076,19 @@ static void _trim_god_gift_inscrip(item_def& item)
     item.inscription = replace_all(item.inscription, "Psyche", "");
     item.inscription = replace_all(item.inscription, "Sonja", "");
     item.inscription = replace_all(item.inscription, "Donald", "");
+}
+
+/// Replace "dragon armour" with "dragon scales" in an artefact's name.
+static void _fixup_dragon_artefact_name(item_def &item, string name_key)
+{
+    if (!item.props.exists(name_key))
+        return;
+
+    string &name = item.props[name_key].get_string();
+    static const string to_repl = "dragon armour";
+    string::size_type found = name.find(to_repl, 0);
+    if (found != string::npos)
+        name.replace(found, to_repl.length(), "dragon scales");
 }
 #endif
 
@@ -4477,13 +4491,8 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_MANGLE_CORPSES)
-    {
         if (item.props.exists("never_hide"))
-        {
             item.props.erase("never_hide");
-            item.props[MANGLED_CORPSE_KEY] = true;
-        }
-    }
 
     if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
         && item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
@@ -4550,6 +4559,30 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_RODS && item.cursed())
         do_uncurse_item(item); // rods can't be cursed anymore
+
+    // turn old hides into the corresponding armour
+    static const map<int, armour_type> hide_to_armour = {
+        { ARM_TROLL_HIDE,               ARM_TROLL_LEATHER_ARMOUR },
+        { ARM_FIRE_DRAGON_HIDE,         ARM_FIRE_DRAGON_ARMOUR },
+        { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
+        { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
+        { ARM_MOTTLED_DRAGON_HIDE,      ARM_MOTTLED_DRAGON_ARMOUR },
+        { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
+        { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
+        { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
+        { ARM_PEARL_DRAGON_HIDE,        ARM_PEARL_DRAGON_ARMOUR },
+        { ARM_SHADOW_DRAGON_HIDE,       ARM_SHADOW_DRAGON_ARMOUR },
+        { ARM_QUICKSILVER_DRAGON_HIDE,  ARM_QUICKSILVER_DRAGON_ARMOUR },
+    };
+    // ASSUMPTION: there was no such thing as an artefact hide
+    if (item.base_type == OBJ_ARMOUR && hide_to_armour.count(item.sub_type))
+        item.sub_type = *map_find(hide_to_armour, item.sub_type);
+
+    if (th.getMinorVersion() < TAG_MINOR_HIDE_TO_SCALE && armour_is_hide(item))
+    {
+        _fixup_dragon_artefact_name(item, ARTEFACT_NAME_KEY);
+        _fixup_dragon_artefact_name(item, ARTEFACT_APPEAR_KEY);
+    }
 #endif
 
     if (is_unrandom_artefact(item))

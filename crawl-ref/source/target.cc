@@ -228,10 +228,18 @@ bool targetter_beam::affects_monster(const monster_info& mon)
     //     bolt::is_harmless (and transitively, bolt::nasty_to) should
     //     take monster_infos instead.
     const monster* m = monster_at(mon.pos);
-    return m && (!beam.is_harmless(m) || beam.nice_to(mon))
-           && !(beam.is_enchantment() && beam.has_saving_throw()
-                && beam.flavour != BEAM_VIRULENCE
-                && mon.res_magic() == MAG_IMMUNE);
+    if (!m)
+        return false;
+
+    if (beam.is_enchantment() && beam.has_saving_throw()
+        && mon.res_magic() == MAG_IMMUNE)
+    {
+        return false;
+    }
+
+    return !beam.is_harmless(m) || beam.nice_to(mon)
+    // Inner flame affects allies without harming or helping them.
+           || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
@@ -692,7 +700,8 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_splash::targetter_splash(const actor* act)
+targetter_splash::targetter_splash(const actor* act, int ran)
+    : range(ran)
 {
     ASSERT(act);
     agent = act;
@@ -701,7 +710,7 @@ targetter_splash::targetter_splash(const actor* act)
 
 bool targetter_splash::valid_aim(coord_def a)
 {
-    if (agent && grid_distance(origin, a) > 1)
+    if (agent && grid_distance(origin, a) > range)
         return notify_fail("Out of range.");
     return true;
 }

@@ -108,7 +108,7 @@ bool CommandRegion::update_tip_text(string& tip)
     if (command_to_key(cmd) != '\0')
     {
         tip += " (%)";
-        insert_commands(tip, cmd, 0);
+        insert_commands(tip, { cmd });
     }
 
     // tip += "\n[R-Click] Describe";
@@ -185,9 +185,6 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
-    case CMD_PRAY:
-        return you_worship(GOD_NO_GOD)
-               && !feat_is_altar(grd(you.pos()));
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
     case CMD_BUTCHER:

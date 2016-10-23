@@ -1600,11 +1600,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "If you target the altar with <w>x</w>, then press <w>v</w> "
 #endif
                 "you can get a short description.\n"
-                "Press <w>%</w> while standing on the square to join the faith "
+                "Press <w>%</w> or <w>%</w> while standing on the square to join the faith "
                 "or read some information about the god in question. Before "
                 "taking up the corresponding faith you'll be asked for "
                 "confirmation.";
-        cmd.push_back(CMD_PRAY);
+        cmd.push_back(CMD_GO_UPSTAIRS);
+        cmd.push_back(CMD_GO_DOWNSTAIRS);
 
         if (you_worship(GOD_NO_GOD)
             && Hints.hints_type == HINT_MAGIC_CHAR)
@@ -1716,8 +1717,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "use are automatically trained whenever you gain experience, "
                 "by killing monsters. By default, experience goes to skills "
                 "you actively use. To view or manage your skills, "
+#ifdef USE_TILE_WEB
+                "type <w>%</w>.";
+#else
                 "<console>type <w>%</w>.</console>"
                 "<tiles>click on the skill tab in the bottom-right.</tiles>";
+#endif
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
 
@@ -2112,7 +2117,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "Flight will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the "
                     "ability menu (<w>%</w>"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                     " or via <w>mouseclick</w> in the <w>command panel</w>"
 #endif
                     "). Once flying, keep an eye on the status line and "
@@ -2134,7 +2139,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_ITEM_RESISTANCES:
         text << "Equipping this item affects your resistances. Check the "
                 "overview screen (<w>%</w>"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                 " or click on the <w>character overview button</w> in the "
                 "command panel"
 #endif
@@ -2154,7 +2159,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_INACCURACY:
         text << "Not all items are useful, and some of them are outright "
                 "harmful. Press <w>%</w> ";
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         text << "or <w>click</w> on your equipped amulet to remove it.";
 #else
         text << "to remove your amulet.";
@@ -2513,7 +2518,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "of successfully casting a spell increases with your magic "
                     "skills, and can also be improved with the help of some "
                     "items. Use the <w>%</w> command "
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                     "or mouse over the spell tiles "
 #endif
                     "to check your current failure rates.";
@@ -2693,7 +2698,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "memorise more spells, and will suffer less hunger and "
              << "somewhat fewer failures when you cast them.\n"
              << "Press <w>%</w> "
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
              << "(or click on the <w>skill button</w> in the command panel) "
 #endif
              << "to have a look at your skills and manage their training.";
@@ -2828,7 +2833,7 @@ static string _hints_target_mode(bool spells = false)
     }
 
     result += "</w> fires at the same target again.";
-    insert_commands(result, cmd, 0);
+    insert_commands(result, { cmd });
 
     return result;
 }
@@ -2883,7 +2888,7 @@ static string _hints_throw_stuff(const item_def &item)
     result += ". You'll ";
     result += _hints_target_mode();
 
-    insert_commands(result, CMD_FIRE, 0);
+    insert_commands(result, { CMD_FIRE });
     return result;
 }
 

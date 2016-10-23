@@ -97,7 +97,6 @@ void bind_command_to_key(command_type cmd, int key);
 string command_to_string(command_type cmd, bool tutorial = false);
 void insert_commands(string &desc, vector<command_type> cmds,
                      bool formatted = true);
-void insert_commands(string &desc, const int first, ...);
 
 // Let rc files declare macros:
 string read_rc_file_macro(const string& field);
