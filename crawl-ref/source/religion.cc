@@ -1189,8 +1189,7 @@ bool is_yred_undead_slave(const monster& mon)
 
 bool is_orcish_follower(const monster& mon)
 {
-    return mon.alive() && mons_genus(mon.type) == MONS_ORC
-           && mon.attitude == ATT_FRIENDLY
+    return mon.alive() && mon.attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_BEOGH);
 }
 

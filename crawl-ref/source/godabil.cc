@@ -1624,7 +1624,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
         return false;
     }
 
-    if (!is_orcish_follower(*mons))
+    if (!is_orcish_follower(*mons) || mons_genus(mons->type) != MONS_ORC)
     {
         if (!quiet)
             mpr("That's not an orcish ally!");
