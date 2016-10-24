@@ -459,8 +459,8 @@ aff_type targetter_smite::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_transference::targetter_transference(const actor* act) :
-    targetter_smite(act, LOS_RADIUS, 0, 0, false, nullptr)
+targetter_transference::targetter_transference(const actor* act, int aoe) :
+    targetter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
 {
 }
 
