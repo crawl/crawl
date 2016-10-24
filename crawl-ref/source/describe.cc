@@ -2699,7 +2699,10 @@ static bool _get_spell_description(const spell_type spell,
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
-            && mon_owner->attitude != ATT_FRIENDLY)
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            )
         {
             string wiz_info;
 #ifdef WIZARD
