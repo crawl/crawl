@@ -6,7 +6,7 @@ Highlights
 * New gods: Uskayaw the Reveler and Hepliaklqana the Forgotten.
 * New portal: the Desolation of Salt.
 * New spells: Lesser Beckoning and Infestation.
-* Sif Muna has been dramatically reworked.
+* Sif Muna and Nemelex Xobeh have been dramatically reworked.
 * Long blades have a new passive effect, 'riposte'.
 * Lava and deep water no longer cause instant death.
 
