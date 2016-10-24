@@ -2691,7 +2691,7 @@ static bool _get_spell_description(const spell_type spell,
 
     if (mon_owner)
     {
-        const int hd = mon_owner->hd;
+        const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range(spell, hd);
         description += "\nRange : "
                        + range_string(range, range, mons_char(mon_owner->type))

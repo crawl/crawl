@@ -6664,7 +6664,7 @@ bool monster::is_jumpy() const
 }
 
 // HD for spellcasting purposes.
-// Currently only used for Aura of Brilliance.
+// Currently only used for Aura of Brilliance and Hep ancestors.
 int monster::spell_hd(spell_type spell) const
 {
     int hd = get_hit_dice();

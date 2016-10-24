@@ -42,6 +42,8 @@
 #endif
 #include "traps.h"
 
+#define SPELL_HD_KEY "spell_hd"
+
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BERSERK,         MB_BERSERK },
@@ -673,6 +675,11 @@ monster_info::monster_info(const monster* m, int milev)
         props["priest"] = true;
     else if (m->is_actual_spellcaster())
         props["actual_spellcaster"] = true;
+
+    // assumes spell hd modifying effects are always public
+    const int spell_hd = m->spell_hd();
+    if (spell_hd != hd)
+        props[SPELL_HD_KEY] = spell_hd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -1749,6 +1756,14 @@ bool monster_info::has_spells() const
         return spells.size() > 0;
 
     return true;
+}
+
+/// What hd does this monster cast spells with? May vary from actual HD.
+int monster_info::spell_hd() const
+{
+    if (!props.exists(SPELL_HD_KEY))
+        return hd;
+    return props[SPELL_HD_KEY].get_int();
 }
 
 unsigned monster_info::colour(bool base_colour) const
