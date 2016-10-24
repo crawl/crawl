@@ -846,10 +846,10 @@ surroundings.
 Idealise ability
 
 Restores your ancestor to an idyllic vision of their best self. Their wounds
-are forgotten, harmful effects are wiped away, and a glow of perfection infuses
-them, giving them a short-lived but dramatic increase in strength, spellcasting,
-and armour. The quality of the healing and duration of the idealisation granted
-are both improved by the Invocations skill.
+are forgotten and a glow of perfection infuses them, giving them a short-lived
+but dramatic increase in strength, spellcasting, and armour. The quality of the
+healing and duration of the idealisation granted are both improved by the
+Invocations skill.
 %%%%
 Transference ability
 
