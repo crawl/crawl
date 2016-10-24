@@ -1,11 +1,14 @@
-Stone Soup 0.19 (up to 0.19-a0-1889-g9c603be)
+Stone Soup 0.19 (up to 0.19-a0-1923-g9be4e74)
 --------------------------------------------
 
 Highlights
 ----------
 * New gods: Uskayaw the Reveler and Hepliaklqana the Forgotten.
 * New portal: the Desolation of Salt.
-* TODO: decide what else qualifies before release!
+* New spells: Lesser Beckoning and Infestation.
+* Sif Muna has been dramatically reworked.
+* Long blades have a new passive effect, 'riposte'.
+* Lava and deep water no longer cause instant death.
 
 Branches, Environment
 ---------------------
@@ -13,6 +16,7 @@ Branches, Environment
   - Six new enemies, including fragile golems and several supporting allies.
   - Open terrain layout with large, opaque clouds to use as cover.
   - Many powerful artefacts resting within ancient ruins.
+* Volcanoes are now much more dangerous, but offer better rewards.
 * Lair is now six floors (formerly eight).
 * Slime is now five floors (formerly six).
 * The Slime treasure vault's walls disappear entirely on their master's death.
