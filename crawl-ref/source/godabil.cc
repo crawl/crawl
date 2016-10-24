@@ -6832,8 +6832,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
 
 
 /**
- * Heal the player's ancestor, remove a variety of detrimental status effects,
- * and apply resistance for a few turns.
+ * Heal the player's ancestor, and apply the Idealised buff for a few turns.
  *
  * @param fail      Whether the effect should fail after checking validity.
  * @return          Whether the healing succeeded, failed, or was aborted.
@@ -6870,21 +6869,6 @@ spret_type hepliaklqana_idealise(bool fail)
         else
             simple_monster_message(*ancestor, " is healed somewhat.");
     }
-
-    // XXX: consider unifying this with beogh's balms list?
-    static const vector<enchant_type> bad_statuses = {
-        ENCH_FATIGUE, ENCH_SLOW, ENCH_FEAR, ENCH_CONFUSION,
-        ENCH_PARALYSIS, ENCH_PETRIFYING, ENCH_PETRIFIED, ENCH_LOWERED_MR,
-        ENCH_DAZED, ENCH_MUTE, ENCH_BLIND, ENCH_DUMB, ENCH_MAD, ENCH_WRETCHED,
-        ENCH_WEAK, ENCH_CORROSION, ENCH_FIRE_VULN, ENCH_DRAINED,
-    };
-    // XXX: this should be turned into a functional map
-    bool cured = false;
-    for (auto ench : bad_statuses)
-        if (ancestor->del_ench(ench))
-            cured = true;
-    if (cured)
-        simple_monster_message(*ancestor, "'s debilitations are forgotten!");
 
     const int dur = random_range(50, 80)
                     + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
