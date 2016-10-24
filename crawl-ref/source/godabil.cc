@@ -6885,7 +6885,8 @@ static coord_def _get_transference_target()
 {
     dist spd;
 
-    targetter_transference tgt(&you);
+    const int aoe_radius = have_passive(passive_t::transfer_drain) ? 1 : 0;
+    targetter_transference tgt(&you, aoe_radius);
     direction_chooser_args args;
     args.hitfunc = &tgt;
     args.restricts = DIR_TARGET;

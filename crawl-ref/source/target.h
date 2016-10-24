@@ -107,7 +107,7 @@ private:
 class targetter_transference : public targetter_smite
 {
 public:
-    targetter_transference(const actor *act);
+    targetter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
 };
 
