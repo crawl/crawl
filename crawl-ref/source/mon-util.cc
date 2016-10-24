@@ -5480,7 +5480,7 @@ void throw_monster_bits(const monster& mon)
 /// Add an ancestor spell to the given list.
 static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
 {
-    spells.emplace_back(spell, 40, MON_SPELL_WIZARD);
+    spells.emplace_back(spell, 25, MON_SPELL_WIZARD);
 }
 
 /**
@@ -5521,7 +5521,7 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     }
 
     if (HD >= 13)
-        ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
+        ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
 
     if (ancestor.spells.size())
         ancestor.props[CUSTOM_SPELLS_KEY] = true;
