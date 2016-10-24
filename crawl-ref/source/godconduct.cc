@@ -694,7 +694,7 @@ static const like_response EXPLORE_RESPONSE = {
     [] (int &piety, int &denom, const monster* /*victim*/)
     {
         // piety = denom = level at the start of the function
-        piety = 20;
+        piety = 14;
     }
 };
 
@@ -845,19 +845,19 @@ static like_map divine_likes[] =
     },
     // GOD_NEMELEX_XOBEH,
     {
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
+    },
+    // GOD_ELYVILON,
+    {
         { DID_EXPLORATION, {
             "you explore the world", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 14;
+                piety = 20;
             }
         } },
-    },
-    // GOD_ELYVILON,
-    {
-        { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
     // GOD_LUGONU,
     {
