@@ -493,7 +493,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->hd : 0;
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
