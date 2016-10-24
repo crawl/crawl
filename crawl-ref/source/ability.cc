@@ -608,10 +608,10 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
         2, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
-        2, 0, 0, generic_cost::range(4, 5), {FAIL_INVO, 40, 5, 20},
+        2, 0, 0, 3, {FAIL_INVO, 40, 5, 20},
         abflag::NONE },
     { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
-        4, 0, 0, generic_cost::range(5, 6), {FAIL_INVO, 60, 4, 25},
+        4, 0, 0, 4, {FAIL_INVO, 60, 4, 25},
         abflag::NONE },
 
     { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
