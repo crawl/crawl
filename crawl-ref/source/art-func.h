@@ -894,7 +894,7 @@ static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
-    beam->item->special = SPMSL_EXPLODING; // so that it mulches
+    beam->item->special = SPMSL_EXPLODING; // May be unneccessary now that all ammo mulches
     beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
     beam->name    = "damnation bolt";

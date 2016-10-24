@@ -633,7 +633,6 @@ struct missile_def
     int         id;
     const char *name;
     int         dam;
-    int         mulch_rate;
     int         price;
     bool        throwable;
 };
@@ -642,17 +641,17 @@ static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
 #if TAG_MAJOR_VERSION == 34
-    { MI_DART,          "dart",          2, 1,  1,  true  },
+    { MI_DART,          "dart",          2, 1,  true  },
 #endif
-    { MI_NEEDLE,        "needle",        0, 12, 2,  false },
-    { MI_STONE,         "stone",         2, 8,  1,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  2,  false },
-    { MI_BOLT,          "bolt",          0, 8,  2,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
-    { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
-    { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
-    { MI_TOMAHAWK,      "tomahawk",      6, 20, 5,  true  },
+    { MI_NEEDLE,        "needle",        0, 2,  false },
+    { MI_STONE,         "stone",         2, 1,  true  },
+    { MI_ARROW,         "arrow",         0, 2,  false },
+    { MI_BOLT,          "bolt",          0, 2,  false },
+    { MI_LARGE_ROCK,    "large rock",   20, 7,  true  },
+    { MI_SLING_BULLET,  "sling bullet",  4, 5,  false },
+    { MI_JAVELIN,       "javelin",      10, 8,  true  },
+    { MI_THROWING_NET,  "throwing net",  0, 30, true  },
+    { MI_TOMAHAWK,      "tomahawk",      6, 5,  true  },
 };
 
 struct food_def
@@ -2114,44 +2113,6 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
         return LRET_LAUNCHED;
 
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
-}
-
-
-/**
- * Returns whether a given missile will always destroyed on impact.
- *
- * @param missile      The missile in question.
- * @return             Whether the missile should always be destroyed on
- *                     impact.
- */
-bool ammo_always_destroyed(const item_def &missile)
-{
-    const int brand = get_ammo_brand(missile);
-    return brand == SPMSL_CHAOS
-           || brand == SPMSL_DISPERSAL
-           || brand == SPMSL_EXPLODING;
-}
-
-/**
- * Returns whether a given missile will never destroyed on impact.
- *
- * @param missile      The missile in question.
- * @return             Whether the missile should never be destroyed on impact.
- */
-bool ammo_never_destroyed(const item_def &missile)
-{
-    return missile.sub_type == MI_THROWING_NET;
-}
-
-/**
- * Returns the one_chance_in for a missile type for be destroyed on impact.
- *
- * @param missile_type      The missile type to get the mulch chance for.
- * @return                  The inverse of the missile type's mulch chance.
- */
-int ammo_type_destroy_chance(int missile_type)
-{
-    return Missile_prop[ Missile_index[missile_type] ].mulch_rate;
 }
 
 /**

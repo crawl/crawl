@@ -1282,12 +1282,6 @@ static string _describe_ammo(const item_def &item)
         );
     }
 
-
-    if (ammo_always_destroyed(item))
-        description += "\nIt will always be destroyed on impact.";
-    else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
-
     return description;
 }
 

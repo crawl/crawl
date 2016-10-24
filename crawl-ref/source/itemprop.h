@@ -166,9 +166,6 @@ bool is_throwable(const actor *actor, const item_def &wpn,
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile) PURE;
 
-bool ammo_always_destroyed(const item_def &missile) PURE;
-bool ammo_never_destroyed(const item_def &missile) PURE;
-int  ammo_type_destroy_chance(int missile_type) PURE;
 int  ammo_type_damage(int missile_type) PURE;
 
 

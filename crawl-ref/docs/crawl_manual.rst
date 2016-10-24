@@ -728,8 +728,7 @@ If you would rather pick off monsters from a safe distance, you will need
 missiles for your sling, bow or other appropriate launcher. Several kinds of
 missiles, such as javelins, are effective when simply thrown; other kinds
 require you to wield an appropriate device to inflict worthwhile damage. Upon
-impact, missiles may become destroyed. The chance for this to occur depends on
-the type of missile.
+impact, missiles will be destroyed.
 
 The 'f' command fires or throws a missile. The default missile to be fired or
 thrown (your "quiver") is displayed on the main screen beneath your wielded
