@@ -16,6 +16,7 @@
 #include "godconduct.h"
 #include "itemprop.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -266,6 +267,30 @@ bool ranged_attack::handle_phase_dodged()
     return true;
 }
 
+static int calc_damage_for_ijc_weapon(const item_def* weapon)
+{
+    int potential_damage, damage, damage_plus;
+
+    potential_damage = property(*weapon, PWPN_DAMAGE);
+
+    damage = random2(potential_damage+1);
+
+    // Weapon skill
+    damage *= 2500 + (random2(you.skill(weapon_attack_skill(weapon->sub_type))));
+    damage /= 2500;
+
+    // Other modifiers
+    damage_plus = weapon->plus;
+    if (you.duration[DUR_CORROSION])
+        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
+    damage_plus += slaying_bonus(true);
+
+    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
+                                 : (-random2(1 - damage_plus));
+
+    return damage;
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
@@ -286,6 +311,20 @@ bool ranged_attack::handle_phase_hit()
             player_caught_in_net();
         else
             monster_caught_in_net(defender->as_monster(), attacker);
+    }
+    else if (projectile->base_type == OBJ_WEAPONS && projectile->props.exists(IEOH_JIAN_PROJECTED))
+    {
+        if (!defender->alive())
+            damage_done = 0;
+        else
+            damage_done = calc_damage_for_ijc_weapon(projectile);
+
+        // TODO: Lift a bunch of code from melee attacks so projected weapons can deal brand effects.
+        damage_done = apply_defender_ac(damage_done);
+        damage_done = max(0, damage_done);
+
+        set_attack_verb(0);
+        announce_hit();
     }
     else
     {

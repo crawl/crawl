@@ -745,8 +745,6 @@ bool project_weapon(bolt &pbolt, dist *target)
         return false;
     }
 
-    pbolt.is_tracer = false;
-
     if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
         return false;
 
@@ -770,11 +768,12 @@ bool project_weapon(bolt &pbolt, dist *target)
                    ? ammo_type_damage(item.sub_type) / 3
                    : 0; // Maybe not accurate, but reflects the damage.
 
-    pbolt.hit = 0;
-
     bool hit = false;
+    pbolt.hit = property(thrown, PWPN_HIT);
+    pbolt.item->props[IEOH_JIAN_PROJECTED] = true;
 
     pbolt.drop_item = false;
+    pbolt.aimed_at_spot = true;
     pbolt.fire();
 
     hit = !pbolt.hit_verb.empty();
@@ -904,7 +903,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             cancelled = pbolt.beam_cancelled;
 
             pbolt.hit    = 0;
-            pbolt.damage = dice_def();
+            pbolt.is_tracer = false;
         }
     }
 
@@ -916,7 +915,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         return false;
     }
 
-    pbolt.is_tracer = false;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
