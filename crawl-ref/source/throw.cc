@@ -700,7 +700,8 @@ bool project_weapon(bolt &pbolt, dist *target)
     item_def& thrown = you.inv[weapon_index];
     ASSERT(thrown.defined());
 
-    // Making a copy of the item.
+    // Making a copy of the item, and another for the summoned copy.
+    item_def summoned_copy = thrown;
     item_def item = thrown;
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
@@ -786,27 +787,21 @@ bool project_weapon(bolt &pbolt, dist *target)
 
     you.turn_is_over = true;
 
-    if (pbolt.special_explosion != nullptr)
-        delete pbolt.special_explosion;
-
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                  BEH_FRIENDLY,
                  pbolt.target,
                  MHITYOU,
                  MG_FORCE_BEH,
                  GOD_IEOH_JIAN);
-    mg.set_summoned(&you, 3, 0);
-    mg.props[IEOH_JIAN_WEAPON] = thrown;
 
     int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, true);
+    mg.props[IEOH_JIAN_WEAPON] = summoned_copy;
     mg.props[IEOH_JIAN_POWER] = power;
 
     monster * const mons = create_monster(mg);
 
     if (!mons)
         dprf("Failed to animate Ieoh Jian weapon");
-    else
-        you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() + 1;
 
     dec_inv_item_quantity(weapon_index, 1);
     canned_msg(MSG_EMPTY_HANDED_NOW);

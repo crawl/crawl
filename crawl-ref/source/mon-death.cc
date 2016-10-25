@@ -2129,17 +2129,14 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
-
+        bool reformed = false;
         if (killer == KILL_RESET)
         {
             if (you.can_see(*mons) && !silent && mons->weapon())
                 mprf(MSGCH_GOD, "%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
 
-            // The manifested slot is freed so more weapons of that type can exist.
-            you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int() - 1;
-         
             // All slot indices are updated, so the age order is always respected.
-            auto monsters = find_ieoh_jian_manifested_weapons();
+            auto monsters = find_ieoh_jian_manifested_weapons(false);
             size_t i;
 
             for (i = 0; i != monsters.size(); i++)
@@ -2161,20 +2158,21 @@ item_def* monster_die(monster* mons, killer_type killer,
                          MHITYOU,
                          MG_FORCE_BEH,
                          GOD_IEOH_JIAN);
-            auto dur = 3;
-            mg.set_summoned(&you, dur, 0);
             mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
             mg.props[IEOH_JIAN_POWER] = 1;
             if (!create_monster(mg))
                 dprf("Failed to reform Ieoh Jian weapon");
+            else
+                reformed = true;
         }
 
         silent = true;
 
         int w_idx = mons->inv[MSLOT_WEAPON];
-        if (w_idx != NON_ITEM)
+        if (mons->weapon() && (w_idx != NON_ITEM))
         {
-            if (mons->weapon()->props[IEOH_JIAN_YOURS])
+            // Something went wrong with resummoning the player's weapon, so it must be dropped.
+            if (killer != KILL_RESET && !reformed && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
                 drop_item(w_idx,1);
             else
                 destroy_item(w_idx);
@@ -3559,8 +3557,8 @@ bool mons_bennu_can_revive(const monster* mons)
 
 bool ieoh_jian_kill_oldest_weapon()
 {
-    auto monsters = find_ieoh_jian_manifested_weapons();
-    if (monsters.empty())
+    auto monsters = find_ieoh_jian_manifested_weapons(false);
+    if (monsters.empty()) 
         return false;
 
     monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);

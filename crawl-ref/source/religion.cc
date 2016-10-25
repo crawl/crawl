@@ -3497,8 +3497,6 @@ static void _join_ieoh_jian()
         mprf(MSGCH_GOD, "An invisible force knocks your shield away.");
         unequip_item(EQ_SHIELD);
     }
-
-    you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = 0;
 }
 
 

@@ -1380,30 +1380,30 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-// Returns references to all IEOH JIAN weapon monsters, sorted by age.
-vector<monster*> find_ieoh_jian_manifested_weapons()
+// Returns references to all IEOH JIAN weapon monsters, sorted by age (slot).
+vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
 {
     vector<monster*> monsters;
 
-    for (auto& monster: menv)
-        if (monster.type != MONS_NO_MONSTER && monster.weapon() && monster.weapon()->props.exists(IEOH_JIAN_SLOT))
-            monsters.emplace_back(&monster);
+    if (!owned_by_you)
+    {
+        for (auto& monster: menv)
+            if (monster.type == MONS_IEOH_JIAN_WEAPON && monster.weapon()->props.exists(IEOH_JIAN_SLOT))
+                monsters.emplace_back(&monster);
 
-    std::sort(monsters.begin(), monsters.end(), [](monster* a, monster* b) {
-        return (a->weapon()->props[IEOH_JIAN_SLOT].get_int() < b->weapon()->props[IEOH_JIAN_SLOT].get_int());
-    });
+        std::sort(monsters.begin(), monsters.end(), [](monster* a, monster* b) {
+                return (a->weapon()->props[IEOH_JIAN_SLOT].get_int() < b->weapon()->props[IEOH_JIAN_SLOT].get_int());
+        });
+
+    }
+    else
+    {
+        for (auto& monster: menv)
+            if (monster.type == MONS_IEOH_JIAN_WEAPON && !monster.props.exists(IEOH_JIAN_SLOT))
+                monsters.emplace_back(&monster);
+    }
 
     return monsters;
-}
-
-// Returns references to the summoned monster wielding your own personal weapon.
-monster* ieoh_jian_find_your_own_weapon_manifested()
-{
-    for (auto& monster: menv)
-        if (monster.type != MONS_NO_MONSTER && monster.weapon() && monster.weapon()->props.exists(IEOH_JIAN_YOURS))
-            return &monster;
-
-    return nullptr;
 }
 
 static item_def ieoh_jian_choose_weapon()
@@ -1417,7 +1417,9 @@ static item_def ieoh_jian_choose_weapon()
         WPN_QUARTERSTAFF,
     };
 
-    auto manifested = find_ieoh_jian_manifested_weapons();
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+    manifested.insert(manifested.end(), yours.begin(), yours.end());
 
     // We get rid of all base types for which there is already a manifested weapon.
     for (auto monster: manifested)
@@ -1442,7 +1444,6 @@ static item_def ieoh_jian_choose_weapon()
     weapon.base_type = OBJ_WEAPONS;
     auto weapon_index = random_range(0, base_collection_types.size() - 1);
     weapon.sub_type = base_collection_types.at(weapon_index);
-    mprf(MSGCH_GOD, "DEBUG: Granting weapon with vector slot %d, from a vector of size %d", weapon_index, (int)base_collection_types.size());
     weapon.quantity = 1;
     weapon.plus = 2;
     weapon.brand = SPWPN_VORPAL;
@@ -1450,7 +1451,6 @@ static item_def ieoh_jian_choose_weapon()
 
     return weapon;
 }
-
 
 static bool ieoh_jian_interest()
 {
@@ -1462,8 +1462,13 @@ static bool ieoh_jian_interest()
 
     you.duration[DUR_IEOH_JIAN_INTEREST] = IEOH_JIAN_ATTENTION_SPAN;
    
-    auto slots = IEOH_JIAN_WEAPON_SLOTS - you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
-    if (slots <= 0)
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+    manifested.insert(manifested.end(), yours.begin(), yours.end());
+    auto manifested_num = manifested.size();
+    auto slots = IEOH_JIAN_WEAPON_SLOTS - manifested_num;
+
+    if (manifested_num >= IEOH_JIAN_WEAPON_SLOTS)
         return false;
 
     if ((you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] == 0) && x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
@@ -1480,9 +1485,10 @@ void ieoh_jian_despawn_weapon()
     if (ieoh_jian_kill_oldest_weapon())
         return;
 
-    auto monster = ieoh_jian_find_your_own_weapon_manifested();
-    if (monster)
+    auto monsters = find_ieoh_jian_manifested_weapons(true);
+    if (!monsters.empty())
     {
+        auto monster = monsters.at(0);
         monster->ieoh_jian_swap_weapon_with_player();
         mprf(MSGCH_GOD, "%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         if (monster->alive())
@@ -1493,7 +1499,7 @@ void ieoh_jian_despawn_weapon()
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
-        mprf(MSGCH_GOD, "%s dissolves in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+        mprf(MSGCH_GOD, "%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
     }
 }
@@ -1506,11 +1512,13 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     if (!ieoh_jian_interest())
         return;
 
-    auto manifested_num = you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY].get_int();
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto theirs_num = manifested.size();
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+    manifested.insert(manifested.end(), yours.begin(), yours.end());
 
     item_def wpn = ieoh_jian_choose_weapon();
-    wpn.props[IEOH_JIAN_SLOT] = manifested_num + 1;
-    const int dur = 3;
+    wpn.props[IEOH_JIAN_SLOT] = (int)(theirs_num + 1);
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                  BEH_FRIENDLY,
@@ -1518,7 +1526,6 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
                  MHITYOU,
                  MG_FORCE_BEH,
                  GOD_IEOH_JIAN);
-    mg.set_summoned(&you, dur, 0);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 
     int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, true);
@@ -1533,24 +1540,13 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     }
 
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
-    you.props[IEOH_JIAN_NUM_MANIFESTED_WEAPONS_KEY] = manifested_num + 1;
 }
 
 // Grabs a Ieoh Jian floating weapon and leaves the player's weapon behind.
 void ieoh_jian_weapon_swap(monster* mons)
 {
-    bool attempting_to_manifest_personal_weapon = you.weapon() && !(you.weapon()->props.exists(IEOH_JIAN_SLOT));
-
     if (mons->ieoh_jian_swap_weapon_with_player())
-    {
         mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
-
-        if (attempting_to_manifest_personal_weapon)
-            mons->weapon()->props[IEOH_JIAN_YOURS] = true;
-
-        if (you.weapon()->props.exists(IEOH_JIAN_YOURS))
-            you.weapon()->props.erase(IEOH_JIAN_YOURS);
-    }
     else 
         mprf(MSGCH_GOD, "You fail to grab %s from the air.!", mons->weapon()->name(DESC_THE, false, true).c_str());
 }
