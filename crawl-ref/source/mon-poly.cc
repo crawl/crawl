@@ -55,7 +55,9 @@ void monster_drop_things(monster* mons,
                           bool mark_item_origins,
                           bool (*suitable)(const item_def& item))
 {
-    // Drop weapons and missiles last (i.e., on top), so others pick up.
+    // Drop weapons last (i.e., on top), so others pick up.
+    // Destroy all dropped missiles so that missile generation rates aren't
+    // distorted by monster generation rates.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
@@ -64,7 +66,7 @@ void monster_drop_things(monster* mons,
         {
             const bool summoned_item =
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
-            if (summoned_item)
+            if (summoned_item || mitm[item].base_type == OBJ_MISSILES)
             {
                 item_was_destroyed(mitm[item]);
                 destroy_item(item);
