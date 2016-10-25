@@ -21,7 +21,7 @@ freezing vapour cloud
 A cloud of freezing air. Any creature not entirely immune to cold will be hurt
 by time spent inside.
 
-Ranged cold attacks passing through the cloud are substantially reduced in
+Ranged fire attacks passing through the cloud are substantially reduced in
 range, dissipating the cloud in the process.
 
 If placed over lava, the cloud will dissipate much more quickly.
