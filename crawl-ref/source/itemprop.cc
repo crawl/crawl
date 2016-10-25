@@ -1235,15 +1235,6 @@ brand_type get_weapon_brand(const item_def &item)
     return static_cast<brand_type>(item.brand);
 }
 
-special_missile_type get_ammo_brand(const item_def &item)
-{
-    // No artefact arrows yet. -- bwr
-    if (item.base_type != OBJ_MISSILES || is_artefact(item))
-        return SPMSL_NORMAL;
-
-    return static_cast<special_missile_type>(item.brand);
-}
-
 special_armour_type get_armour_ego_type(const item_def &item)
 {
     // Armour ego types are "brands", so we do the randart lookup here.

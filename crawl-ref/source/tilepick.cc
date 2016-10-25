@@ -2020,56 +2020,17 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
 
     switch (item.sub_type)
     {
-    case MI_STONE:        return TILE_MI_STONE;
-    case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
-    case MI_THROWING_NET: return TILE_MI_THROWING_NET;
-    case MI_TOMAHAWK:
-        switch (brand)
-        {
-        default:             return TILE_MI_TOMAHAWK + 1;
-        case 0:              return TILE_MI_TOMAHAWK;
-        case SPMSL_STEEL:    return TILE_MI_TOMAHAWK_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_TOMAHAWK_SILVER;
-        }
-
-    case MI_ARROW:
-        switch (brand)
-        {
-        default:             return TILE_MI_ARROW + 1;
-        case 0:              return TILE_MI_ARROW;
-        case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
-        }
-
-    case MI_BOLT:
-        switch (brand)
-        {
-        default:             return TILE_MI_BOLT + 1;
-        case 0:              return TILE_MI_BOLT;
-        case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
-        }
-
-    case MI_SLING_BULLET:
-        switch (brand)
-        {
-        default:             return TILE_MI_SLING_BULLET + 1;
-        case 0:              return TILE_MI_SLING_BULLET;
-        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
-        }
-
-    case MI_JAVELIN:
-        switch (brand)
-        {
-        default:             return TILE_MI_JAVELIN + 1;
-        case 0:              return TILE_MI_JAVELIN;
-        case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
-        }
+    case MI_STONE:         return TILE_MI_STONE;
+    case MI_LARGE_ROCK:    return TILE_MI_LARGE_ROCK;
+    case MI_THROWING_NET:  return TILE_MI_THROWING_NET;
+    case MI_TOMAHAWK:      return TILE_MI_TOMAHAWK;
     case MI_DART_POISONED: return TILE_MI_NEEDLE_P;
     case MI_DART_CURARE:   return TILE_MI_NEEDLE_CURARE;
     case MI_DART_FRENZY:   return TILE_MI_NEEDLE + 1;
+    case MI_ARROW:         return TILE_MI_ARROW;
+    case MI_BOLT:          return TILE_MI_BOLT;
+    case MI_SLING_BULLET:  return TILE_MI_SLING_BULLET;
+    case MI_JAVELIN:       return TILE_MI_JAVELIN;
     }
 
     return TILE_ERROR;
@@ -2617,18 +2578,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 ch = TILE_MI_STONE0;
                 break;
             case MI_SLING_BULLET:
-                switch (item.brand)
-                {
-                default:
-                    ch = TILE_MI_SLING_BULLET0;
-                    break;
-                case SPMSL_STEEL:
-                    ch = TILE_MI_SLING_BULLET_STEEL0;
-                    break;
-                case SPMSL_SILVER:
-                    ch = TILE_MI_SLING_BULLET_SILVER0;
-                    break;
-                }
+                ch = TILE_MI_SLING_BULLET0;
                 break;
             case MI_LARGE_ROCK:
                 ch = TILE_MI_LARGE_ROCK0;
@@ -3513,48 +3463,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
         const int brand = get_armour_ego_type(item);
         if (brand != SPARM_NORMAL)
             return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
-    }
-    else if (item.base_type == OBJ_MISSILES)
-    {
-        switch (get_ammo_brand(item))
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_FLAME:
-            return TILE_BRAND_FLAME;
-        case SPMSL_FROST:
-            return TILE_BRAND_FROST;
-#endif
-        case SPMSL_POISONED:
-            return TILE_BRAND_POISONED;
-        case SPMSL_CURARE:
-            return TILE_BRAND_CURARE;
-        case SPMSL_RETURNING:
-            return TILE_BRAND_RETURNING;
-        case SPMSL_CHAOS:
-            return TILE_BRAND_CHAOS;
-        case SPMSL_PENETRATION:
-            return TILE_BRAND_PENETRATION;
-        case SPMSL_DISPERSAL:
-            return TILE_BRAND_DISPERSAL;
-        case SPMSL_EXPLODING:
-            return TILE_BRAND_EXPLOSION;
-        case SPMSL_CONFUSION:
-            return TILE_BRAND_CONFUSION;
-        case SPMSL_PARALYSIS:
-            return TILE_BRAND_PARALYSIS;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_SLOW:
-            return TILE_BRAND_SLOWING;
-        case SPMSL_SICKNESS:
-            return TILE_BRAND_SICKNESS;
-#endif
-        case SPMSL_FRENZY:
-            return TILE_BRAND_FRENZY;
-        case SPMSL_SLEEP:
-            return TILE_BRAND_SLEEP;
-        default:
-            break;
-        }
     }
     else if (item.base_type == OBJ_RODS)
     {

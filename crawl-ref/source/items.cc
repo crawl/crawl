@@ -779,8 +779,6 @@ bool item_is_branded(const item_def& item)
         return get_weapon_brand(item) != SPWPN_NORMAL;
     case OBJ_ARMOUR:
         return get_armour_ego_type(item) != SPARM_NORMAL;
-    case OBJ_MISSILES:
-        return get_ammo_brand(item) != SPMSL_NORMAL;
     default:
         return false;
     }

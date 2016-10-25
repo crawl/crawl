@@ -220,31 +220,19 @@ i-sleep BRAND_SLEEP
 %rim 1
 %sdir item/weapon/ranged
 
-######OBJ_MISSILES
+######OBJ_MISSILES # Probably need to fix needles here
 stone MI_STONE
 # flying stone
 effect/stone0 MI_STONE0
 
 sling_bullet1 MI_SLING_BULLET
 sling_bullet2
-steel_sling_bullet1 MI_SLING_BULLET_STEEL
-steel_sling_bullet2
-silver_sling_bullet1 MI_SLING_BULLET_SILVER
-silver_sling_bullet2
 # flying bullets
 effect/sling_bullet0 MI_SLING_BULLET0
 effect/sling_bullet_runed0
-effect/steel_sling_bullet0 MI_SLING_BULLET_STEEL0
-effect/steel_sling_bullet_runed0
-effect/silver_sling_bullet0 MI_SLING_BULLET_SILVER0
-effect/silver_sling_bullet_runed0
 
 arrow1 MI_ARROW
 arrow2
-steel_arrow1 MI_ARROW_STEEL
-steel_arrow2
-silver_arrow1 MI_ARROW_SILVER
-silver_arrow2
 # flying arrows
 effect/arrow0 MI_ARROW0
 effect/arrow1 MI_ARROW1
@@ -257,10 +245,6 @@ effect/arrow7 MI_ARROW7
 
 crossbow_bolt1 MI_BOLT
 crossbow_bolt2
-steel_crossbow_bolt1 MI_BOLT_STEEL
-steel_crossbow_bolt2
-silver_crossbow_bolt1 MI_BOLT_SILVER
-silver_crossbow_bolt2
 # flying bolts
 effect/bolt0 MI_BOLT0
 effect/bolt1 MI_BOLT1
@@ -274,8 +258,6 @@ effect/bolt7 MI_BOLT7
 %rim 0
 tomahawk1 MI_TOMAHAWK
 tomahawk2
-steel_tomahawk MI_TOMAHAWK_STEEL
-silver_tomahawk MI_TOMAHAWK_SILVER
 # flying tomahawks
 effect/tomahawk0 MI_TOMAHAWK0
 effect/tomahawk1 MI_TOMAHAWK1
@@ -304,10 +286,6 @@ effect/needle7 MI_NEEDLE7
 %rim 0
 javelin1 MI_JAVELIN
 javelin2
-steel_javelin1 MI_JAVELIN_STEEL
-steel_javelin2
-silver_javelin1 MI_JAVELIN_SILVER
-silver_javelin2
 %rim 1
 # flying javelins
 effect/javelin0 MI_JAVELIN0

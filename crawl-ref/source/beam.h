@@ -97,8 +97,7 @@ struct bolt
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam
                                         // itself.
-    bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
-                                  // FROST etc so that we can change mulch rate
+    bool   was_missile = false;   // Used to determine whether to mulch an item
     bool   evoked = false;        // Was this beam evoked from a wand?
 
     // Do we draw animations?

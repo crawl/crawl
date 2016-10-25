@@ -788,17 +788,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
     // Leave branded items alone, since this is supposed to be an
     // upgrade.
     if (item.base_type == OBJ_MISSILES)
-    {
-        // Don't make boulders or throwing nets of chaos.
-        if (item.sub_type == MI_LARGE_ROCK
-            || item.sub_type == MI_THROWING_NET)
-        {
-            return false;
-        }
-
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            return true;
-    }
+        return false;
     else
     {
         // If the weapon is a launcher, and the monster is either out

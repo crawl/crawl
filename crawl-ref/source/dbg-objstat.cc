@@ -654,9 +654,6 @@ void objstat_record_item(const item_def &item)
     // Some type-specific calculations.
     switch (itype.base_type)
     {
-    case ITEM_MISSILES:
-        brand = get_ammo_brand(item);
-        break;
     case ITEM_FOOD:
         _record_item_stat(cur_lev, itype, "TotalNormNutr", food_value(item));
         // Set these dietary mutations so we can get accurate nutrition.
@@ -915,9 +912,6 @@ static string _brand_name(const item_type &item, int brand)
             break;
         case ITEM_ARMOUR:
             brand_name = armour_ego_name(dummy_item, true);
-            break;
-        case ITEM_MISSILES:
-            brand_name = missile_brand_name(dummy_item, MBN_TERSE);
             break;
         default:
             break;

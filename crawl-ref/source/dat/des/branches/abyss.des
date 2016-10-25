@@ -68,7 +68,7 @@ ENDMAP
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
 WEIGHT: 5
-MONS:  big kobold ; tomahawk ego:dispersal, kobold demonologist
+MONS:  big kobold ; tomahawk, kobold demonologist
 : abyss_entry(_G, '_')
 MAP
 xxxxxxxxxxxxxxx

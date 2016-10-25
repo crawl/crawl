@@ -1315,20 +1315,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         if (thing_created == NON_ITEM)
             return;
 
-        if (xitt == MI_NEEDLE)
-        {
-        }
-        else
-        {
-            // Sanity check to avoid useless brands.
-            const int bow_brand  = get_weapon_brand(*launcher);
-            const int ammo_brand = get_ammo_brand(mitm[thing_created]);
-            if (ammo_brand != SPMSL_NORMAL
-                && (bow_brand == SPWPN_FLAMING || bow_brand == SPWPN_FREEZING))
-            {
-                mitm[thing_created].brand = SPMSL_NORMAL;
-            }
-        }
         switch (mon->type)
         {
             case MONS_DEEP_ELF_MASTER_ARCHER:
@@ -1472,8 +1458,10 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         {
             item_def& w(mitm[thing_created]);
 
-            if (mon->type == MONS_CHUCK)
-                set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
+// Leaving this here as a reminder to consider creating MI_LARGE_ROCK_RETURNING
+// for Chuck
+//            if (mon->type == MONS_CHUCK)
+//                set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
             w.quantity = qty;
             give_specific_item(mon, thing_created);

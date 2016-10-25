@@ -66,16 +66,13 @@ end
 -- In order to avoid repeating the lengthy monster definitions:
 
 -- Axes.
-function axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3 / \
-          generate_awake hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                                     tomahawk ego:returning ident:type q:3")
+function axe_unlimited(e)
+  e.mons("generate_awake kobold ; tomahawk ident:type q:500 / \
+          generate_awake hobgoblin ; tomahawk ident:type q:500")
 end
 
-function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3")
+function kobold_axe_unlimited(e)
+  e.mons("generate_awake kobold ; tomahawk ident:type q:500")
 end
 
 function easy_axe_fighter(e)
@@ -186,12 +183,9 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; tomahawk ego:returning ident:type q:4 | \
-                 tomahawk ego:returning ident:type q:3 / \
-        hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                    tomahawk ego:returning ident:type q:3 / \
-        orc ; tomahawk ego:returning ident:type q:4 | \
-              tomahawk ego:returning ident:type q:3
+MONS:   goblin ; tomahawk ident:type q:500 / \
+        hobgoblin ; tomahawk ident:type q:500 / \
+        orc ; tomahawk ident:type q:500
 SUBST: 1 = 122
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -215,8 +209,7 @@ NAME: enter_bailey_5
 TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
-               tomahawk ego:returning ident:type q:3
+MONS: goblin ; tomahawk ident:type q:500
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS: goblin ; spear
@@ -320,8 +313,7 @@ TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: orc ; tomahawk ego:returning ident:type q:3 | \
-            tomahawk ego:returning ident:type q:4 . hand axe
+MONS: orc ; tomahawk ident:type q:500 . hand axe
 MONS: gnoll ; hand axe / goblin ; hand axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -391,7 +383,7 @@ TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:   any good_item w:10 / nothing w:5
 #
-: kobold_axe_returning(_G)
+: kobold_axe_unlimited(_G)
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 #
@@ -462,7 +454,7 @@ ENDMAP
 NAME:   bailey_axe_2
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate
-: axe_returning(_G)
+: axe_unlimited(_G)
 MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
@@ -506,7 +498,7 @@ KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 KFEAT:  T = known permanent teleport trap
 #
 # Monsters defined in the header. Do not change order!
-: kobold_axe_returning(_G)
+: kobold_axe_unlimited(_G)
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 #
@@ -579,12 +571,11 @@ SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
 SUBST:   H = W.
-# the following KMONS duplicates monster 1 from kobold_axe_returning
+# the following KMONS duplicates monster 1 from kobold_axe_unlimited
 KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                     tomahawk ego:returning ident:type q:3
+KMONS:   ( = generate_awake kobold ; tomahawk ident:type q:500
 #
-: kobold_axe_returning(_G)
+: kobold_axe_unlimited(_G)
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 SUBST:   2 = 223
@@ -956,9 +947,8 @@ ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
-MONS:   centaur ; javelin ego:returning ident:type q:2 | \
-            javelin ego:returning ident:type q:3 . spear | trident | halberd . \
-            ring mail | scale mail | chain mail
+MONS:   centaur ; javelin ident:type q:200 . spear | trident | \
+        halberd . ring mail | scale mail | chain mail
 NSUBST: _ = 4:2 / 5:1 / *:.
 NSUBST: ; = 6:2 / 6:1 / *:.
 NSUBST: ! = 8:1 / *:.
@@ -1158,7 +1148,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
 ITEM:   potion of beneficial mutation q:1 w:30 / potion of cure mutation / \
             potion of experience q:1 / scroll of acquirement q:1
 : easy_axe_fighter(_G)
-: kobold_axe_returning(_G)
+: kobold_axe_unlimited(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord ; war axe | broad axe w:2 | battleaxe w:1 . \
             ring mail | scale mail | chain mail | plate armour

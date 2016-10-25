@@ -274,52 +274,6 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_MISSILES:          // ammunition
         valued += missile_base_price((missile_type)item.sub_type);
-
-        if (item_type_known(item))
-        {
-            switch (get_ammo_brand(item))
-            {
-            case SPMSL_NORMAL:
-            default:
-                valued *= 10;
-                break;
-
-            case SPMSL_CHAOS:
-                valued *= 40;
-                break;
-
-            case SPMSL_CURARE:
-            case SPMSL_PARALYSIS:
-            case SPMSL_PENETRATION:
-            case SPMSL_SILVER:
-            case SPMSL_STEEL:
-            case SPMSL_DISPERSAL:
-                valued *= 30;
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case SPMSL_FLAME:
-            case SPMSL_FROST:
-#endif
-            case SPMSL_SLEEP:
-            case SPMSL_CONFUSION:
-                valued *= 25;
-                break;
-
-            case SPMSL_EXPLODING:
-            case SPMSL_POISONED:
-            case SPMSL_RETURNING:
-#if TAG_MAJOR_VERSION == 34
-            case SPMSL_SLOW:
-            case SPMSL_SICKNESS:
-#endif
-            case SPMSL_FRENZY:
-                valued *= 20;
-                break;
-            }
-
-            valued /= 10;
-        }
         break;
 
     case OBJ_ARMOUR:

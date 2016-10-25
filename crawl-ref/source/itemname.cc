@@ -325,83 +325,6 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     return buff.str();
 }
 
-static bool _missile_brand_is_prefix(special_missile_type brand)
-{
-    switch (brand)
-    {
-    case SPMSL_POISONED:
-    case SPMSL_CURARE:
-    case SPMSL_EXPLODING:
-    case SPMSL_STEEL:
-    case SPMSL_SILVER:
-        return true;
-    default:
-        return false;
-    }
-}
-
-static bool _missile_brand_is_postfix(special_missile_type brand)
-{
-    return brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand);
-}
-
-const char* missile_brand_name(const item_def &item, mbn_type t)
-{
-    const special_missile_type brand
-        = static_cast<special_missile_type>(item.brand);
-    switch (brand)
-    {
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_FLAME:
-        return "flame";
-    case SPMSL_FROST:
-        return "frost";
-#endif
-    case SPMSL_POISONED:
-        return t == MBN_NAME ? "poisoned" : "poison";
-    case SPMSL_CURARE:
-        return t == MBN_NAME ? "curare-tipped" : "curare";
-    case SPMSL_EXPLODING:
-        return t == MBN_TERSE ? "explode" : "exploding";
-    case SPMSL_STEEL:
-        return "steel";
-    case SPMSL_SILVER:
-        return "silver";
-    case SPMSL_PARALYSIS:
-        return "paralysis";
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_SLOW:
-        return t == MBN_TERSE ? "slow" : "slowing";
-#endif
-    case SPMSL_SLEEP:
-        return t == MBN_TERSE ? "sleep" : "sleeping";
-    case SPMSL_CONFUSION:
-        return t == MBN_TERSE ? "conf" : "confusion";
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_SICKNESS:
-        return t == MBN_TERSE ? "sick" : "sickness";
-#endif
-    case SPMSL_FRENZY:
-        return "frenzy";
-    case SPMSL_RETURNING:
-        return t == MBN_TERSE ? "return" : "returning";
-    case SPMSL_CHAOS:
-        return "chaos";
-    case SPMSL_PENETRATION:
-        return t == MBN_TERSE ? "penet" : "penetration";
-    case SPMSL_DISPERSAL:
-        return t == MBN_TERSE ? "disperse" : "dispersal";
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_BLINDING:
-        return t == MBN_TERSE ? "blind" : "blinding";
-#endif
-    case SPMSL_NORMAL:
-        return "";
-    default:
-        return t == MBN_TERSE ? "buggy" : "bugginess";
-    }
-}
-
 static const char *weapon_brands_terse[] =
 {
     "", "flame", "freeze", "holy", "elec",
@@ -1282,7 +1205,7 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
         // HACKHACKHACK
         if (item.props.exists(DAMNATION_BOLT_KEY))
             return "damnation";
-        return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
+        return "";
     case OBJ_JEWELLERY:
         return jewellery_effect_name(item.sub_type, terse);
     default:
@@ -1654,33 +1577,20 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     case OBJ_MISSILES:
     {
-        special_missile_type msl_brand = get_ammo_brand(*this);
-
+        // I'm pretty sure this can get cleaned up, but I'm not gonna worry
+        // about it right now.
         if (!terse && !dbname)
         {
             if (props.exists(DAMNATION_BOLT_KEY)) // hack alert
                 buff << "damnation ";
-            else if (_missile_brand_is_prefix(msl_brand))
-                buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (msl_brand != SPMSL_NORMAL
-#if TAG_MAJOR_VERSION == 34
-            && msl_brand != SPMSL_BLINDING
-#endif
-            && !basename && !qualname && !dbname)
+        if (!basename && !qualname && !dbname && terse
+            && props.exists(DAMNATION_BOLT_KEY))
         {
-            if (terse)
-            {
-                if (props.exists(DAMNATION_BOLT_KEY)) // still a hack
                     buff << " (damnation)";
-                else
-                    buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
-            }
-            else if (_missile_brand_is_postfix(msl_brand))
-                buff << " of " << missile_brand_name(*this, MBN_NAME);
         }
 
         break;

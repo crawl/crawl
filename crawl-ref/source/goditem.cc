@@ -93,13 +93,6 @@ bool is_potentially_evil_item(const item_def& item)
             return true;
         }
         break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS)
-            return true;
-        }
-        break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_RANDOM_EFFECTS)
             return true;
@@ -228,12 +221,6 @@ bool is_chaotic_item(const item_def& item)
         retval = (item_brand == SPWPN_CHAOS);
         }
         break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_CHAOS);
-        }
-        break;
     case OBJ_WANDS:
         retval = (item.sub_type == WAND_POLYMORPH);
         break;
@@ -264,13 +251,6 @@ static bool _is_potentially_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_CHAOS)
-            return true;
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS || item_brand == SPMSL_FRENZY)
             return true;
         }
         break;
@@ -396,15 +376,6 @@ bool is_fiery_item(const item_def& item)
             return true;
         }
         break;
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_FLAME)
-            return true;
-        }
-        break;
-#endif
     case OBJ_WANDS:
         if (item.sub_type == WAND_FLAME)
             return true;

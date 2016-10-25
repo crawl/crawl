@@ -1965,45 +1965,6 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
     if (!force && !can_use_missile(item))
         return false;
 
-    if (miss)
-    {
-        item_def *launch;
-        for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-        {
-            launch = mslot_item(static_cast<mon_inv_type>(i));
-            if (launch)
-            {
-                const int item_brand = get_ammo_brand(item);
-                // If this ammunition is better, drop the old ones.
-                // Don't upgrade to ammunition whose brand cancels the
-                // launcher brand or doesn't improve it further.
-                // Don't drop huge stacks for tiny stacks.
-                if (item.launched_by(*launch)
-                    && (!miss->launched_by(*launch)
-                        || item.sub_type == MI_SLING_BULLET
-                           && miss->sub_type == MI_STONE
-                        || get_ammo_brand(*miss) == SPMSL_NORMAL
-                           && item_brand != SPMSL_NORMAL)
-                    && item.quantity * 2 > miss->quantity)
-                {
-                    if (!drop_item(MSLOT_MISSILE, msg))
-                        return false;
-                    break;
-                }
-            }
-        }
-
-        // Allow upgrading throwing weapon brands (XXX: improve this!)
-        if (item.sub_type == miss->sub_type
-            && (item.sub_type == MI_TOMAHAWK || item.sub_type == MI_JAVELIN)
-            && get_ammo_brand(*miss) == SPMSL_NORMAL
-            && get_ammo_brand(item) != SPMSL_NORMAL)
-        {
-            if (!drop_item(MSLOT_MISSILE, msg))
-                return false;
-        }
-    }
-
     return pickup(item, MSLOT_MISSILE, msg);
 }
 

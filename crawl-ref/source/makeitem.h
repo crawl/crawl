@@ -22,7 +22,6 @@ void item_set_appearance(item_def &item);
 
 bool is_weapon_brand_ok(int type, int brand, bool strict);
 bool is_armour_brand_ok(int type, int brand, bool strict);
-bool is_missile_brand_ok(int type, int brand, bool strict);
 
 int determine_nice_weapon_plusses(int item_level);
 brand_type determine_weapon_brand(const item_def& item, int item_level);

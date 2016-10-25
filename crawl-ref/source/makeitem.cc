@@ -488,169 +488,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
 }
 
-// Current list is based on dpeg's original post to the Wiki, found at the
-// page: <http://crawl.develz.org/wiki/doku.php?id=DCSS%3Aissue%3A41>.
-// Remember to update the code in is_missile_brand_ok if adding or altering
-// brands that are applied to missiles. {due}
-static special_missile_type _determine_missile_brand(const item_def& item,
-                                                     int item_level)
-{
-    // Forced ego.
-    if (item.brand != 0)
-        return static_cast<special_missile_type>(item.brand);
-
-    const bool force_good = item_level >= ISPEC_GIFT;
-    special_missile_type rc = SPMSL_NORMAL;
-
-    // "Normal weight" of SPMSL_NORMAL.
-    int nw = force_good ? 0 : random2(2000 - 55 * item_level);
-
-    switch (item.sub_type)
-    {
-#if TAG_MAJOR_VERSION == 34
-    case MI_DART:
-#endif
-    case MI_THROWING_NET:
-    case MI_STONE:
-    case MI_LARGE_ROCK:
-    case MI_SLING_BULLET:
-    case MI_ARROW:
-    case MI_BOLT:
-        rc = SPMSL_NORMAL;
-        break;
-    case MI_NEEDLE:
-        // Curare is special cased, all the others aren't.
-        if (got_curare_roll(item_level))
-        {
-            rc = SPMSL_CURARE;
-            break;
-        }
-
-        rc = random_choose_weighted(30, SPMSL_SLEEP,
-                                    30, SPMSL_CONFUSION,
-                                    10, SPMSL_PARALYSIS,
-                                    10, SPMSL_FRENZY,
-                                    nw, SPMSL_POISONED);
-        break;
-    case MI_JAVELIN:
-        rc = random_choose_weighted(30, SPMSL_RETURNING,
-                                    32, SPMSL_PENETRATION,
-                                    32, SPMSL_POISONED,
-                                    21, SPMSL_STEEL,
-                                    20, SPMSL_SILVER,
-                                    nw, SPMSL_NORMAL);
-        break;
-    case MI_TOMAHAWK:
-        rc = random_choose_weighted(15, SPMSL_POISONED,
-                                    10, SPMSL_SILVER,
-                                    10, SPMSL_STEEL,
-                                    12, SPMSL_DISPERSAL,
-                                    28, SPMSL_RETURNING,
-                                    15, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL);
-        break;
-    }
-
-    ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
-
-    return rc;
-}
-
-bool is_missile_brand_ok(int type, int brand, bool strict)
-{
-    // Launcher ammo can never be branded.
-    if ((type == MI_STONE
-        || type == MI_LARGE_ROCK
-        || type == MI_SLING_BULLET
-        || type == MI_ARROW
-        || type == MI_BOLT)
-        && brand != SPMSL_NORMAL
-        && strict)
-    {
-        return false;
-    }
-
-    // Never generates, only used for chaos-branded missiles.
-    if (brand == SPMSL_FLAME || brand == SPMSL_FROST)
-        return false;
-
-    // In contrast, needles should always be branded.
-    // And all of these brands save poison are unique to needles.
-    switch (brand)
-    {
-    case SPMSL_POISONED:
-        if (type == MI_NEEDLE)
-            return true;
-        break;
-
-    case SPMSL_CURARE:
-    case SPMSL_PARALYSIS:
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_SLOW:
-#endif
-    case SPMSL_SLEEP:
-    case SPMSL_CONFUSION:
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_SICKNESS:
-#endif
-    case SPMSL_FRENZY:
-        return type == MI_NEEDLE;
-
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_BLINDING:
-        // possible on ex-pies
-        return type == MI_TOMAHAWK && !strict;
-#endif
-
-    default:
-        if (type == MI_NEEDLE)
-            return false;
-    }
-
-    // Everything else doesn't matter.
-    if (brand == SPMSL_NORMAL)
-        return true;
-
-    // In non-strict mode, everything other than needles is mostly ok.
-    if (!strict)
-        return true;
-
-    // Not a missile?
-    if (type == 0)
-        return true;
-
-    // Specifics
-    switch (brand)
-    {
-    case SPMSL_POISONED:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    case SPMSL_RETURNING:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    case SPMSL_CHAOS:
-        return type == MI_TOMAHAWK || type == MI_JAVELIN;
-    case SPMSL_PENETRATION:
-        return type == MI_JAVELIN;
-    case SPMSL_DISPERSAL:
-        return type == MI_TOMAHAWK;
-    case SPMSL_EXPLODING:
-        return type == MI_TOMAHAWK;
-    case SPMSL_STEEL: // deliberate fall through
-    case SPMSL_SILVER:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    default: break;
-    }
-
-    // Assume no, if we've gotten this far.
-    return false;
-}
-
 static void _generate_missile_item(item_def& item, int force_type,
                                    int item_level)
 {
-    const bool no_brand = (item.brand == SPMSL_FORBID_BRAND);
-    if (no_brand)
-        item.brand = SPMSL_NORMAL;
-
     item.plus = 0;
 
     if (force_type != OBJ_RANDOM)
@@ -688,20 +528,12 @@ static void _generate_missile_item(item_def& item, int force_type,
         return;
     }
 
-    if (!no_brand)
-    {
-        set_item_ego_type(item, OBJ_MISSILES,
-                           _determine_missile_brand(item, item_level));
-    }
-
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
         || item.sub_type == MI_DART_CURARE || item.sub_type == MI_DART_FRENZY)
     {
         item.quantity = random_range(2, 8);
     }
-    else if (get_ammo_brand(item) != SPMSL_NORMAL)
-        item.quantity = 1 + random2(7) + random2(10) + random2(10);
     else
         item.quantity = 1 + random2(7) + random2(10) + random2(10) + random2(12);
 }
@@ -2004,9 +1836,7 @@ int items(bool allow_uniques,
     if (item.base_type == OBJ_WEAPONS
           && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
         || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
-        || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.brand, false))
+          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false))
     {
         mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES
@@ -2040,9 +1870,6 @@ void reroll_brand(item_def &item, int item_level)
     {
     case OBJ_WEAPONS:
         item.brand = determine_weapon_brand(item, item_level);
-        break;
-    case OBJ_MISSILES:
-        item.brand = _determine_missile_brand(item, item_level);
         break;
     case OBJ_ARMOUR:
         item.brand = _generate_armour_ego(item, item_level);

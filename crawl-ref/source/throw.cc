@@ -53,10 +53,9 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 {
     return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
             && projectile.base_type == OBJ_MISSILES
-            && get_ammo_brand(projectile) == SPMSL_PENETRATION
-           || weapon
-              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
-              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+            && weapon
+            && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
+            && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
 }
 
 bool item_is_quivered(const item_def &item)
@@ -252,8 +251,6 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     vector<string> descs;
     if (const item_def* item = active_item())
     {
-        if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
-            descs.emplace_back("chaotic");
         if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
             && (mi.body_size() >= SIZE_GIANT
                 || mons_class_is_stationary(mi.type)
@@ -570,9 +567,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         }
     }
 
-    returning = item.base_type == OBJ_MISSILES
-                && get_ammo_brand(item) == SPMSL_RETURNING;
+    returning = false;
 
+    /* I think I can remove this. Is this going to affect Damnation?
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
     {
@@ -598,6 +595,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         beam.special_explosion = expl;
     }
+    */
 
     if (!is_artefact(item))
         ammo_name = article_a(ammo_name, true);
@@ -806,7 +804,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     const int bow_brand = (projected == LRET_LAUNCHED)
                           ? get_weapon_brand(*you.weapon())
                           : SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand(item);
 
     switch (projected)
     {
@@ -901,7 +898,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             did_return = false;
     }
 
-    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    if (bow_brand == SPWPN_CHAOS)
         did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
 
     if (bow_brand == SPWPN_SPEED)

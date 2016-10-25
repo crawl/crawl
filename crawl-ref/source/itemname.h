@@ -129,7 +129,6 @@ void make_name_tests();
 const char* brand_type_name(int brand, bool terse) PURE;
 const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0) PURE;
 const char* armour_ego_name(const item_def& item, bool terse);
-const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
 bool get_ident_type(const item_def &item);

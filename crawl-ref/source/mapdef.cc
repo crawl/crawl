@@ -4940,11 +4940,6 @@ int str_to_ego(object_class_type item_type, string ego_str)
         break;
 
     case OBJ_MISSILES:
-#if TAG_MAJOR_VERSION == 34
-        // HACK to get an old save to load; remove me soon?
-        if (ego_str == "sleeping")
-            return SPMSL_SLEEP;
-#endif
         order = missile_order;
         break;
 
@@ -5535,9 +5530,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     else if (result.base_type == OBJ_WEAPONS
                 && !is_weapon_brand_ok(result.sub_type, ego, false)
              || result.base_type == OBJ_ARMOUR
-                && !is_armour_brand_ok(result.sub_type, ego, false)
-             || result.base_type == OBJ_MISSILES
-                && !is_missile_brand_ok(result.sub_type, ego, false))
+                && !is_armour_brand_ok(result.sub_type, ego, false))
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());

@@ -414,7 +414,6 @@ TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | wand of heal wounds | \
-   tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
@@ -467,9 +466,8 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of lightning | staff of conjuration | lightning rod | \
-   rod of inaccuracy | iron rod | large rock ego:exploding | \
-   javelin ego:exploding | wand of acid | \
-   tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
+   rod of inaccuracy | iron rod | \
+   wand of acid | rod of ignition | fan of gales | disc of storms | \
    lamp of fire | phial of floods | rod of clouds | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
    manual of evocations

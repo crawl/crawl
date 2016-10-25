@@ -142,13 +142,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (i.is_type(OBJ_MISSILES, MI_ARROW)
             && check_warning_inscriptions(i, OPER_DESTROY))
         {
-            // If the player has bow skill, assume that they
-            // would prefer that their regular ammo would be
-            // used first
-            if (get_ammo_brand(i) == SPMSL_NORMAL)
-                valid_sticks.push_front(&i);
-            else
-                valid_sticks.push_back(&i);
             num_sticks += i.quantity;
         }
 

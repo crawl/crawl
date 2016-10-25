@@ -84,7 +84,6 @@ bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
 brand_type get_weapon_brand(const item_def &item) PURE;
 special_armour_type get_armour_ego_type(const item_def &item) PURE;
-special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
 int armour_max_enchant(const item_def &item) PURE;

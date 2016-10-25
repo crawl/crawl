@@ -4127,7 +4127,6 @@ void unmarshallItem(reader &th, item_def &item)
         item.base_type = OBJ_MISSILES;
         item.sub_type = MI_TOMAHAWK;
         item.plus = item.plus2 = 0;
-        item.brand = SPMSL_NORMAL;
     }
 
     // Strip vestiges of distracting gold.
