@@ -316,8 +316,8 @@ spells without sufficient magical reserves.
 %%%%
 Channel Magic ability
 
-Invokes a magical power regeneration ability for a duration that depends on
-Invocations skill.
+Dramatically increase the user's regeneration of magical power for a duration
+that increases with Invocations skill.
 %%%%
 Forget Spell ability
 
